@@ -880,6 +880,7 @@ de:
         copied_to_clipboard: "Wurde in Zwischenablage kopiert"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
         remaining_codes: "Du hast noch <strong>{{count}}</strong> Wiederherstellungscodes übrig."
+        use: "Benutze einen Backup-Code"
         enable_prerequisites: "Du musst vor dem Generieren von Sicherungscodes einen primären zweiten Faktor aktivieren."
         codes:
           title: "Wiederherstellungscodes generiert"
@@ -887,6 +888,7 @@ de:
       second_factor:
         title: "Zwei-Faktor-Authentifizierung"
         enable: "Zwei-Faktor-Authentifizierung verwalten"
+        forgot_password: "Passwort vergessen?"
         confirm_password_description: "Bitte bestätige dein Passwort um fortzufahren"
         name: "Name"
         label: "Code"
@@ -900,6 +902,7 @@ de:
         extended_description: |
           Zwei-Faktor-Authentifizierung (2FA) sichert dein Konto zusätzlich ab, indem sie zusätzlich zu deinem Passwort einen einmalig gültigen Code anfordert. Codes können auf <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> und <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS-</a>-Geräten generiert werden.
         oauth_enabled_warning: "Beachte bitte, dass soziale Anmelde-Methoden deaktiviert werden, sobald die Zwei-Faktor-Authentifizierung für dein Konto aktiviert ist."
+        use: "Benutze die Authentifizierungs-App"
         enforced_notice: "Du musst Zwei-Faktor-Authentifizierung aktivieren, bevor du auf diese Seite zugreifen kannst."
         disable: "deaktivieren"
         disable_title: "Zweiten Faktor deaktivieren"
@@ -907,12 +910,20 @@ de:
         edit: "Bearbeiten"
         edit_title: "Zweiten Faktor bearbeiten"
         edit_description: "Name des zweiten Faktors"
+        enable_security_key_description: "Wenn Du deinen physischen Sicherheitsschlüssel vorbereitet hast, klicke unten auf die Schaltfläche Registrieren."
         totp:
           title: "Token-basierte Authentifikatoren"
           add: "Neuer Authentifikator"
           default_name: "Mein Authentifikator"
         security_key:
           register: "Registrieren"
+          title: 'Sicherheitsschlüssel'
+          add: "Registriere den Sicherheitsschlüssel"
+          default_name: "Hauptsicherheitsschlüssel"
+          not_allowed_error: "Der Registrierungsvorgang für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
+          already_added_error: "Du hast diesen Sicherheitsschlüssel bereits registriert. Du musst Ihn nicht erneut registrieren.\e"
+          edit: 'Bearbeite den Sicherheitsschlüssel'
+          edit_description: 'Name des Sicherheitsschlüssels'
           delete: 'Löschen'
       change_about:
         title: "„Über mich“ ändern"
@@ -1316,8 +1327,16 @@ de:
       password: "Passwort"
       second_factor_title: "Zwei-Faktor-Authentifizierung"
       second_factor_description: "Bitte gib den Authentifizierungscode aus deiner App ein:"
+      second_factor_backup: "<a href>Anmeldung mit einem Wiederherstellungscode</a>"
       second_factor_backup_title: "Zwei-Faktor-Wiederherstellung"
       second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungs-Codes ein:"
+      second_factor: "Anmeldung mit einer Authentifizierungs-App"
+      security_key_description: "Wenn Du Deinen physischen Sicherheitsschlüssel vorbereitet hast, klicke unten auf die Schaltfläche \"Mit Sicherheitsschlüssel authentifizieren\"."
+      security_key_alternative: "Du kannst Deinen Sicherheitsschlüssel nicht finden oder möchtest eine andere Methode verwenden?"
+      security_key_authenticate: "Mit Sicherheitsschlüssel authentifizieren"
+      security_key_not_allowed_error: "Der Authentifizierungsprozess für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
+      security_key_no_matching_credential_error: "Im angegebenen Sicherheitsschlüssel wurden keine übereinstimmenden Anmeldeinformationen gefunden."
+      security_key_support_missing_error: "Dein aktuelles Gerät oder Browser unterstützt die Verwendung von Sicherheitsschlüsseln nicht. Bitte verwende eine andere Methode."
       email_placeholder: "E-Mail oder Benutzername"
       caps_lock_warning: "Feststelltaste ist aktiviert"
       error: "Unbekannter Fehler"
@@ -1350,27 +1369,21 @@ de:
       google_oauth2:
         name: "Google"
         title: "mit Google"
-        message: "Authentifiziere mit Google (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       twitter:
         name: "Twitter"
         title: "mit Twitter"
-        message: "Authentifiziere mit Twitter (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       instagram:
         name: "Instagram"
         title: "mit Instagram"
-        message: "Authentifiziere mit Instagram (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       facebook:
         name: "Facebook"
         title: "mit Facebook"
-        message: "Authentifiziere mit Facebook (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       github:
         name: "GitHub"
         title: "mit GitHub"
-        message: "Authentifiziere mit GitHub (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       discord:
         name: "Discord"
         title: "mit Discord"
-        message: "Authenitfizierung mit Discord"
       second_factor_toggle:
         totp: "Benutze stattdessen eine Authentifizierungs-App"
         backup_code: "Benutze stattdessen einen Backup Code"
@@ -1391,6 +1404,7 @@ de:
       apple_international: "Apple"
       google: "Google"
       twitter: "Twitter"
+      emoji_one: "JoyPixels (früher EmojiOne)"
       win10: "Windows 10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3025,6 +3039,7 @@ de:
         user: "Benutzer"
         title: "API"
         key: "API-Key"
+        created: Erstellt
         generate: "Erzeugen"
         regenerate: "Erneuern"
         revoke: "Widerrufen"
@@ -3347,6 +3362,7 @@ de:
             other: "Theme liegt {{count}} Commits zurück!"
           compare_commits: "(Siehe neue Beiträge)"
           repo_unreachable: "Das Git-Repository dieses Themes konnte nicht kontaktiert werden. Fehlermeldung:"
+          imported_from_archive: "Das Design wurde von eine .zip Datei importiert"
           scss:
             text: "CSS"
             title: "Gib benutzerdefiniertes CSS ein, wir akzeptieren alle gültigen CSS und SCSS-Stile"

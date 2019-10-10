@@ -1152,23 +1152,18 @@ vi:
       google_oauth2:
         name: "Goole"
         title: "với Google"
-        message: "Chứng thực với Google (chắc chắn rằng cửa sổ pop up blocker không được kích hoạt)"
       twitter:
         name: "Twitter"
         title: "với Twitter"
-        message: "Chứng thực với Twitter(hãy chắc chắn là chăn pop up không bật)"
       instagram:
         name: "Instagram"
         title: "với Instagram"
-        message: "Chứng thực với Instagram (chăc chắn rằng chặn pop-up không bật)"
       facebook:
         name: "Facebook"
         title: "với Facebook"
-        message: "Chứng thực với Facebook(chắc chắn là chặn pop up không bật)"
       github:
         name: "GitHub"
         title: "với GitHub"
-        message: "Chứng thực với GitHub (chắc chắn chặn popup không bật)"
     invites:
       accept_title: "Lời mời"
       welcome_to: "Chào mừng bạn đến với %{site_name}!"
@@ -2266,6 +2261,7 @@ vi:
         user: "Thành viên"
         title: "API"
         key: "API Key"
+        created: Tạo bởi
         generate: "Khởi tạo"
         regenerate: "Khởi tạo lại"
         revoke: "Thu hồi"

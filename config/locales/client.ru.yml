@@ -960,6 +960,7 @@ ru:
         copied_to_clipboard: "Скопировано в буфер"
         copy_to_clipboard_error: "Ошибка при копировании данных в буфер омена"
         remaining_codes: "У вас осталось <strong>{{count}}</strong>резервных кодов"
+        use: "Используйте резервный код"
         enable_prerequisites: "Вы должны включить первичный второй фактор перед генерацией резервных кодов."
         codes:
           title: "Резервные коды созданы"
@@ -981,6 +982,7 @@ ru:
         extended_description: |
           Двухфакторная аутентификация повышает безопасность вашей учетной записи, требуя одноразовый токен в дополнение к вашему паролю. Токены могут быть сгенерированы на устройствах <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> и <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Обратите внимание, что социальные логины будут отключены после включения двухфакторной аутентификации в вашей учетной записи."
+        use: "Используйте приложение для проверки подлинности "
         enforced_notice: "Вы должны включить двухфакторную аутентификацию перед доступом к этому сайту."
         disable: "отключить"
         disable_title: "Отключить Второй Фактор"
@@ -988,12 +990,20 @@ ru:
         edit: "Редактировать"
         edit_title: "Изменение Второго Фактора"
         edit_description: "Имя Второго Фактора"
+        enable_security_key_description: "Когда вы подготовите свой физический ключ безопасности, нажмите кнопку Регистрация ниже."
         totp:
           title: "Token-Based Аутентификация"
           add: "Новый Аутентификатор"
           default_name: "Мой Аутентификатор"
         security_key:
           register: "Зарегистрироваться"
+          title: 'Ключи безопасности'
+          add: "Зарегистрировать ключ безопасности"
+          default_name: "Главный Ключ Безопасности"
+          not_allowed_error: "Время регистрации ключа безопасности истекло или было отменено."
+          already_added_error: "Вы уже зарегистрировали этот ключ безопасности. Вам не нужно регистрировать его снова."
+          edit: 'Изменить Ключ Безопасности'
+          edit_description: 'Имя Ключа Безопасности'
           delete: 'Удалить'
       change_about:
         title: "Изменить информацию обо мне"
@@ -1419,8 +1429,16 @@ ru:
       password: "Пароль"
       second_factor_title: "Двухфакторная аутентификация"
       second_factor_description: "Введите код аутентификации из вашего приложения:"
+      second_factor_backup: "Войти с помощью запасного кода"
       second_factor_backup_title: "Запасной вход двухфакторной аутентификации"
       second_factor_backup_description: "Введите запасной код:"
+      second_factor: "Войти с помощью программы аутентификации"
+      security_key_description: "Когда вы подготовите свой физический ключ безопасности, нажмите кнопку Аутентификация с ключом безопасности ниже."
+      security_key_alternative: "Не удается найти ключ безопасности или хотите использовать другой метод?"
+      security_key_authenticate: "Аутентификация с Ключом Безопасности."
+      security_key_not_allowed_error: "Время проверки подлинности ключа безопасности истекло или было отменено."
+      security_key_no_matching_credential_error: "В указанном ключе безопасности не найдено подходящих учетных данных."
+      security_key_support_missing_error: "Ваше текущее устройство или браузер не поддерживает использование ключей безопасности. Пожалуйста, используйте другой метод."
       email_placeholder: "E-mail или псевдоним"
       caps_lock_warning: "Caps Lock включен"
       error: "Неизвестная ошибка"
@@ -1453,27 +1471,21 @@ ru:
       google_oauth2:
         name: "Google"
         title: "Google"
-        message: "Вход с помощью учетной записи Google (убедитесь, что блокировщик всплывающих окон отключен)"
       twitter:
         name: "Twitter"
         title: "Twitter"
-        message: "Вход с помощью учетной записи Twitter (убедитесь, что блокировщик всплывающих окон отключен)"
       instagram:
         name: "Instagram"
         title: "Instagram"
-        message: "Вход с помощью учетной записи Instagram (убедитесь, что блокировщик всплывающих окон отключен)"
       facebook:
         name: "Facebook"
         title: "Facebook"
-        message: "Вход с помощью учетной записи Facebook (всплывающие окна должны быть разрешены)"
       github:
         name: "GitHub"
         title: "GitHub"
-        message: "Вход с помощью учетной записи GitHub (убедитесь, что блокировщик всплывающих окон отключен)"
       discord:
         name: "Discord"
         title: "с Discord"
-        message: "Аутентификация с помощью Discord"
       second_factor_toggle:
         totp: "Вместо этого используйте приложение для проверки подлинности"
         backup_code: "Вместо этого используйте резервный код"
@@ -1494,6 +1506,7 @@ ru:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
+      emoji_one: "JoyPixels (ранее EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3256,6 +3269,7 @@ ru:
         user: "Пользователь"
         title: "API"
         key: "Ключ API"
+        created: Создано
         generate: "Сгенерировать"
         regenerate: "Перегенерировать"
         revoke: "Отозвать"
@@ -3584,6 +3598,7 @@ ru:
             other: "Тема находится на {{count}} коммитов сзади!"
           compare_commits: "(Смотрите новые коммиты)"
           repo_unreachable: "Не удалось связаться с Git-репозиторием этой темы. Сообщение об ошибке:"
+          imported_from_archive: "Эта тема была импортирована из .zip файла"
           scss:
             text: "CSS"
             title: "Введите CSS; допускаются все стили CSS и SCSS"

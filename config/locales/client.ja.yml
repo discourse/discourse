@@ -1156,23 +1156,18 @@ ja:
       google_oauth2:
         name: "Google"
         title: "Google"
-        message: "Googleによる認証 (ポップアップがブロックされていないことを確認してください)"
       twitter:
         name: "Twitter"
         title: "Twitter"
-        message: "Twitter による認証 (ポップアップがブロックされていないことを確認してください)"
       instagram:
         name: "Instagram"
         title: "Instagram"
-        message: "Instagram による認証 (ポップアップがブロックされていないことを確認してください)"
       facebook:
         name: "Facebook"
         title: "Facebook"
-        message: "Facebook による認証 (ポップアップがブロックされていないことを確認してください)"
       github:
         name: "GitHub"
         title: "GitHub"
-        message: "Github による認証 (ポップアップがブロックされていないことを確認してください)"
     invites:
       accept_title: "招待"
       welcome_to: "%{site_name}へようこそ!"
@@ -2431,6 +2426,7 @@ ja:
         user: "ユーザ"
         title: "API"
         key: "Key"
+        created: 作成者
         generate: "API キーを生成"
         regenerate: "API キーを再生成"
         revoke: "無効化"

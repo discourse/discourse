@@ -96,6 +96,8 @@ id:
   not_found: "URL atau sumber yang diminta tidak dapat ditemukan."
   invalid_access: "Anda tidak diijinkan untuk melihat sumber yang diminta."
   read_only_mode_enabled: "Situs ini dalam modus read-only. Interaksi dinonaktifkan."
+  not_in_group:
+    join_group: "Gabung dengan grup"
   reading_time: "Waktu bacaan"
   likes: "Suka"
   too_many_replies:

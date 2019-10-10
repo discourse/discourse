@@ -1345,26 +1345,20 @@ fa_IR:
       google_oauth2:
         name: "گوگل"
         title: "با گوگل"
-        message: "احراز هویت با گوگل (مطمئن شوید که بازدارنده‌های pop up فعال نباشند)"
       twitter:
         name: "توئیتر"
         title: "با توییتر"
-        message: "احراز هویت با توئیتر (مطمئن شوید که بازدارنده‌های pop up فعال نباشند)"
       instagram:
         name: "اینستاگرام"
         title: "با اینستاگرام"
-        message: "ورود با اینستاگرام (مطمئن شوید که بازدارنده‌های pop up فعال نباشند)"
       facebook:
         name: "فیس بوک"
         title: "با فیسبوک"
-        message: "اعتبارسنجی با فیسبوک (مطمئن شوید که بازدارنده‌های pop up فعال نباشند)"
       github:
         name: "گیت هاب"
         title: "با گیت‌هاب"
-        message: "اعتبارسنجی با گیت‌هاب (مطمئن شوید که بازدارنده‌های pop up فعال نباشند)"
       discord:
         name: "دیسکورد"
-        message: "اعتبارسنجی توسط دیسکورد"
       second_factor_toggle:
         backup_code: "به جای آن از یک کد پشتیبان استفاده کنید"
     invites:
@@ -2942,6 +2936,7 @@ fa_IR:
         user: "کاربر"
         title: "API"
         key: "کلید API"
+        created: ساخته شده
         generate: "تولید کردن"
         regenerate: "ایجاد مجدد"
         revoke: "ابطال"

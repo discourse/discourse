@@ -916,20 +916,15 @@ sq:
       google_oauth2:
         name: "Google"
         title: "me Google"
-        message: "Duke u identifikuar me Google (bllokuesit e popup-eve duhet të jenë të çaktivizuar)"
       twitter:
         name: "Twitter"
         title: "me Twitter"
-        message: "Duke u identifikuar me Twitter (çaktivizoni bllokuesit e popupeve, nëse i përdorni)"
       instagram:
         title: "me Instagram"
-        message: "Duke u identifikuar me Instagram (bllokuesit e popup-eve duhet të jenë të çaktivizuar)"
       facebook:
         title: "me Facebook"
-        message: "Duke u identifikuar me Facebook (çaktivizoni bllokuesit e popupeve, nëse i përdorni)"
       github:
         title: "me GitHub"
-        message: "Duke u identifikuar me Github (bllokuesit e popup-eve duhet të jenë të çaktivizuar)"
     invites:
       accept_title: "Ftesë"
       welcome_to: "Mirë se vini tek %{site_name}!"
@@ -2033,6 +2028,7 @@ sq:
         user: "Përdorues"
         title: "API"
         key: "API Key"
+        created: Krijuar
         generate: "Gjenero"
         regenerate: "Rigjenero"
         revoke: "Revoko"

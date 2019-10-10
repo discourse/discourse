@@ -92,6 +92,8 @@ sq:
   not_found: "The requested URL or resource could not be found."
   invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
+  not_in_group:
+    join_group: "Bashkoju grupit"
   reading_time: "Koha e leximit"
   likes: "Pëlqime"
   embed:

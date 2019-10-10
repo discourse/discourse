@@ -923,6 +923,8 @@ bg:
       complete_email_not_found: "Няма акаунт който да съвпада с <b>%{email}</b>"
       button_ok: "Ок"
     email_login:
+      complete_username_found: "Намерихме профил, който съвпада с %{username}, трябва да получите имейл с линк за логин."
+      complete_email_found: "Намерихме профил, който съвпада с <b>%{email}</b>, трябва да получите имейл с линк за логин."
       complete_username_not_found: "Няма профил, който да съвпада с потребителскоto име <b>%{username}</b>"
       complete_email_not_found: "Няма акаунт който да съвпада с <b>%{email}</b>"
       confirm_title: "Продължете към %{site_name}"
@@ -957,20 +959,15 @@ bg:
       google_oauth2:
         name: "Google"
         title: "с Google"
-        message: "Удостоверяване с Google (проверете за блокирани на поп-ъп прозорци)"
       twitter:
         name: "Twitter"
         title: "с Twitter"
-        message: "Удостоверяване с Twitter (уверете се, pop up блокерите не са разрешени)"
       instagram:
         title: "чрез Instagram"
-        message: "Удостоверява се връзка с Instagram (уверете се, че поп-блокерите не са включени)"
       facebook:
         title: "със Facebook"
-        message: "Удостоверяване със Facebook (проверете за блокирани на поп-ъп прозорци)"
       github:
         title: " с Github"
-        message: "Удостоверяване с Github (уверете се, pop up блокерите не са разрешени)"
     invites:
       welcome_to: "Добре дошли в %{site_name}!"
       success: "Профилът ви е създаден и вече сте влезли в него."
@@ -2057,6 +2054,7 @@ bg:
         user: "Потребител"
         title: "API"
         key: "API ключ"
+        created: Създадени
         generate: "Генраирай"
         regenerate: "Регенерирай"
         revoke: "Анулирай"

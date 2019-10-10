@@ -1328,23 +1328,18 @@ pl_PL:
       google_oauth2:
         name: "Google"
         title: "przez Google"
-        message: "Uwierzytelniam przy pomocy Google (upewnij się wyskakujące okienka nie są blokowane)"
       twitter:
         name: "Twitter"
         title: "przez Twitter"
-        message: "Uwierzytelnianie przy pomocy konta na Twitterze (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
       instagram:
         name: "Instagram"
         title: "z Instagram"
-        message: "Uwierzytelnianie przy pomocy konta na Instagramie (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
       facebook:
         name: "Facebook"
         title: "przez Facebook"
-        message: "Uwierzytelnianie przy pomocy konta Facebook (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
       github:
         name: "GitHub"
         title: "przez GitHub"
-        message: "Uwierzytelnianie przez GitHub (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
       discord:
         name: "Discord"
     invites:
@@ -2807,6 +2802,7 @@ pl_PL:
         user: "Użytkownik"
         title: "API"
         key: "Klucz API"
+        created: Utworzono
         generate: "Generuj"
         regenerate: "Odnów"
         revoke: "Unieważnij"

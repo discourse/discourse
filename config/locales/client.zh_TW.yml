@@ -1230,23 +1230,18 @@ zh_TW:
       google_oauth2:
         name: "Google"
         title: "使用 Google 帳號"
-        message: "使用 Google 帳號認證 ( 請確定你的網頁瀏覽器不會阻擋彈出視窗 )"
       twitter:
         name: "Twitter"
         title: "使用 Twitter"
-        message: "使用 Twitter 認証 （請確定你的網頁瀏覽器未阻擋彈出視窗）"
       instagram:
         name: "Instagram"
         title: "用 Instagram 登入"
-        message: "正在通過 Instagram 帳號驗證登入（請確保瀏覽器沒有阻擋快顯視窗）"
       facebook:
         name: "Facebook"
         title: "使用 Facebook"
-        message: "使用 Facebook 認証 （請確定你的網頁瀏覽器未阻擋彈出視窗）"
       github:
         name: "GitHub"
         title: "使用 GitHub"
-        message: "使用 GitHub 認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
       second_factor_toggle:
         totp: "請改用身份驗證應用程式"
         backup_code: "請改用備用碼"
@@ -2783,6 +2778,7 @@ zh_TW:
         user: "使用者"
         title: "API"
         key: "API 金鑰"
+        created: 已建立
         generate: "產生"
         regenerate: "重新產生"
         revoke: "撤銷"

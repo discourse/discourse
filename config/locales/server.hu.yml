@@ -166,6 +166,8 @@ hu:
   invalid_access: "Nincs engedélye a kért erőforrás megtekintéséhez."
   authenticator_not_found: "A hitelesítési mód nem létezik, vagy ki lett kapcsolva."
   read_only_mode_enabled: "Ez a weboldal írásvédett módban van. Az interakciók le vannak tiltva."
+  not_in_group:
+    join_group: "Csatlakozás a csoporthoz"
   reading_time: "Olvasási Idő"
   likes: "Kedvelések"
   too_many_replies:

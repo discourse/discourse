@@ -108,6 +108,8 @@ tr_TR:
   not_found: "İstenilen URL ya da kaynak bulunamadı."
   invalid_access: "İstenilen kaynağı görüntüleyebilmeniz için izniniz yok."
   read_only_mode_enabled: "Bu site sadece okuma modunda. Eylemler devre dışı."
+  not_in_group:
+    join_group: "Gruba katıl"
   reading_time: "Okuma Zamanı"
   likes: "Beğeniler"
   too_many_replies:

@@ -49,6 +49,7 @@ de:
       about_json_values: "about.json enthält ungültige Werte: %{errors}"
       git: "Fehler beim Klonen des git-Repository, Zugriff verboten oder Repository nicht gefunden."
       unpack_failed: "Fehler beim Entpacken der Datei"
+      file_too_big: "Die unkomprimierte Datei ist zu groß."
       unknown_file_type: "Die Datei, die du hochgeladen hast, scheint kein gültiges Discourse-Theme zu sein."
     errors:
       component_no_user_selectable: "Theme Komponenten können nicht Benutzer auswählbar sein "
@@ -208,6 +209,12 @@ de:
   invalid_grant_badge_reason_link: "Externe oder ungültige Discourse-Links sind nicht erlaubt in der Abzeichen-Begründung."
   email_template_cant_be_modified: "Diese E-Mail-Vorlag kann nicht bearbeitet werden."
   invalid_whisper_access: "Enweder ist Flüstern nicht aktiviert oder du hast keinen Zugang zu Flüster-Beiträgen"
+  not_in_group:
+    title_topic: "Du musst in einer Gruppe sein um dieses Thema zu sehen."
+    title_category: "Du musst in einer Gruppe sein um diese Kategorie zu sehen."
+    request_membership: "Mitgliedschaft anfordern"
+    join_group: "Gruppe beitreten"
+  deleted_topic: "Ups! Dieses Thema wurde gelöscht und ist nicht mehr verfügbar."
   reading_time: "Lesezeit"
   likes: "Likes"
   too_many_replies:
@@ -1950,6 +1957,12 @@ de:
     autoclosed_disabled_lastpost: "Dieses Thema ist jetzt geöffnet. Neue Antworten sind erlaubt."
     auto_deleted_by_timer: "Automatisch gelöscht durch Timer."
   login:
+    security_key_description: "Wenn Du Deinen physischen Sicherheitsschlüssel vorbereitet hast, klicke unten auf die Schaltfläche \"Mit Sicherheitsschlüssel authentifizieren\"."
+    security_key_alternative: "Du kannst Deinen Sicherheitsschlüssel nicht finden oder möchtest eine andere Methode verwenden?"
+    security_key_authenticate: "Mit Sicherheitsschlüssel authentifizieren"
+    security_key_not_allowed_error: "Der Authentifizierungsprozess für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
+    security_key_no_matching_credential_error: "Im angegebenen Sicherheitsschlüssel wurden keine übereinstimmenden Anmeldeinformationen gefunden."
+    security_key_support_missing_error: "Dein aktuelles Gerät oder Browser unterstützt die Verwendung von Sicherheitsschlüsseln nicht. Bitte verwende eine andere Methode."
     not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald dies geschehen ist."
     incorrect_username_email_or_password: "Benutzername, E-Mail-Adresse oder Passwort falsch"
     incorrect_password: "Falsches Passwort"

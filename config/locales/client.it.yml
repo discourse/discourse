@@ -1301,23 +1301,18 @@ it:
       google_oauth2:
         name: "Google"
         title: "con Google"
-        message: "Autenticazione tramite Google (assicurati che il blocco pop up non siano attivo)"
       twitter:
         name: "Twitter"
         title: "con Twitter"
-        message: "Autenticazione con Twitter (assicurati che il blocco pop up non sia attivo)"
       instagram:
         name: "Instagram"
         title: "con Instagram"
-        message: "Autenticazione con Instagram (assicurati che il blocco pop up non sia attivo)"
       facebook:
         name: "Facebook"
         title: "con Facebook"
-        message: "Autenticazione con Facebook (assicurati che il blocco pop up non sia attivo)"
       github:
         name: "GitHub"
         title: "con GitHub"
-        message: "Autenticazione con GitHub (assicurati che il blocco pop up non sia attivo)"
       discord:
         name: "Discord"
       second_factor_toggle:
@@ -2942,6 +2937,7 @@ it:
         user: "Utente"
         title: "API"
         key: "Chiave API"
+        created: Creazione
         generate: "Genera"
         regenerate: "Rigenera"
         revoke: "Revoca"

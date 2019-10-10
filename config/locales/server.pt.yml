@@ -185,6 +185,8 @@ pt:
   not_found: "O URL ou recurso pedido não foi encontrado."
   invalid_access: "Não tem permissões para visualizar o recurso pedido."
   read_only_mode_enabled: "Este sítio encontra-se no modo só de leitura. As interações estão desativadas."
+  not_in_group:
+    join_group: "Aderir ao Grupo"
   reading_time: "Tempo de leitura"
   likes: "Gostos"
   too_many_replies:

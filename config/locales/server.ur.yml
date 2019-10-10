@@ -208,6 +208,8 @@ ur:
   invalid_grant_badge_reason_link: "خارجی یا غلط ڈسکورس لنک کی بَیج وجہ میں اجازت نہیں ہے"
   email_template_cant_be_modified: "اِس اِیمیل ٹَیمپلیٹ کو ترمیم نہیں کیا جاسکتا"
   invalid_whisper_access: "یا تو سرگوشیوں کو فعال نہیں کیا گیا ہے یا آپ کو سرگوشی پوسٹس بنانے کی اجازت نہیں ہے"
+  not_in_group:
+    join_group: "گروپ میں شامل ہوں"
   reading_time: "پڑھنے کیلئے وقت"
   likes: "لائیکس"
   too_many_replies:

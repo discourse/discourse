@@ -1328,23 +1328,18 @@ da:
       google_oauth2:
         name: "Google"
         title: "med google"
-        message: "Validering med Google (vær sikker på at pop up blokeringer er slået fra)"
       twitter:
         name: "Twitter"
         title: "med Twitter"
-        message: "Logger ind med Twitter (kontrollér at pop-op-blokering ikke er aktiv)"
       instagram:
         name: "Instagram"
         title: "med Instagram"
-        message: "Validering med Instagram (vær sikker på at pop-up blokering ikke er slået til)"
       facebook:
         name: "Facebook"
         title: "med Facebook"
-        message: "Logger ind med Facebook (kontrollér at pop-op-blokering ikke er aktiv)"
       github:
         name: "GitHub"
         title: "med GitHub"
-        message: "Logger ind med GitHub (kontrollér at pop-op-blokering ikke er aktiv)"
       discord:
         name: "Discord"
         title: "med Discord"
@@ -2997,6 +2992,7 @@ da:
         user: "Bruger"
         title: "API"
         key: "API-nøgle"
+        created: Oprettet
         generate: "Generér"
         regenerate: "Regenerér"
         revoke: "Tilbagekald"

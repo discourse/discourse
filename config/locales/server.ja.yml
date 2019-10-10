@@ -146,6 +146,8 @@ ja:
   not_found: "リクエストされたURL、リソースは見つかりませんでした"
   invalid_access: "リクエストしたリソースの閲覧が許可されていません"
   read_only_mode_enabled: "このサイトは閲覧専用状態です。変更などの操作は無効になっています。"
+  not_in_group:
+    join_group: "グループに参加"
   reading_time: "閲覧時間"
   likes: "いいね！"
   too_many_replies:

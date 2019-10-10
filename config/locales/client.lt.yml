@@ -1080,23 +1080,18 @@ lt:
       google_oauth2:
         name: "Google"
         title: "per Google"
-        message: "Prisijungiama per Google (įsitikinkite, kad neblokuojate iššokamų langų)"
       twitter:
         name: "Twitter"
         title: "per Twitter"
-        message: "Prisijungiama per Twitter (įsitikinkite, kad neblokuojate iššokamų langų)"
       instagram:
         name: "Instagram"
         title: "su Instagram"
-        message: "Prisijungiama per Instagram (įsitikinkite, kad neblokuojate iššokamų langų)"
       facebook:
         name: "Facebook"
         title: "per Facebook"
-        message: "Prisijungiama per Facebook (įsitikinkite, kad neblokuojate iššokamų langų)"
       github:
         name: "GitHub"
         title: "per GitHub"
-        message: "Prisijungiama per GitHub (įsitikinkite, kad neblokuojate iššokamų langų)"
     invites:
       welcome_to: "Sveiki atvykę į %{site_name}!"
       invited_by: "Jus pakvietė:"
@@ -2428,6 +2423,7 @@ lt:
         user: "Vartotojas"
         title: "API"
         key: "API raktas"
+        created: Sukurta
         generate: "Generuoti"
         regenerate: "Pergeneruoti"
         revoke: "Pašalinti"

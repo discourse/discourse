@@ -141,6 +141,8 @@ ko:
   not_found: "요청한 URL이나 리소스를 찾지 못했습니다."
   invalid_access: "요청한 리소스를 볼 권한이 없습니다."
   read_only_mode_enabled: "사이트는 현재 읽기 전용 모드입니다. 상호소통이 불가능합니다."
+  not_in_group:
+    join_group: "그룹 참여하기"
   reading_time: "읽은 시간"
   likes: "좋아요"
   too_many_replies:

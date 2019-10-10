@@ -828,17 +828,13 @@ sr:
       google_oauth2:
         name: "Google"
         title: "pomoću Google-a"
-        message: "Autentifikacija pomoću Googlea (isključite pop-up blokere)"
       twitter:
         name: "Twitter"
         title: "pomoću Twitter-a"
-        message: "Autentifikacija preko Twittera (isključite pop-up blokere)"
       facebook:
         title: "pomoću Facebook-a"
-        message: "Autentifikacija preko Facebooka (isključite pop-up blokere)"
       github:
         title: "pomoću GitHuba"
-        message: "Autentifikacija preko GitHuba (isključite pop-up blokere)"
     invites:
       welcome_to: "Dobrodošao na %{site_name}!"
       success: "Tvoj nalog je kreiran i sada si ulogovan."
@@ -1659,6 +1655,7 @@ sr:
         user: "Korisnik"
         title: "API"
         key: "API Ključ"
+        created: Napravljeno
         generate: "Generiši"
         regenerate: "Regeneriši"
         revoke: "Povuci"

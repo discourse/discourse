@@ -1471,27 +1471,21 @@ he:
       google_oauth2:
         name: "Google"
         title: "עם Google"
-        message: "אימות עם Google (יש לוודא שחוסם החלונות הקופצים אינו פעיל)"
       twitter:
         name: "Twitter"
         title: "עם Twitter"
-        message: "אימות עם Twitter (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
       instagram:
         name: "Instagram"
         title: "עם אינסטגרם"
-        message: "אימות עם אינסטגרם (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
       facebook:
         name: "Facebook"
         title: "עם Facebook"
-        message: "אימות עם Facebook (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
       github:
         name: "GitHub"
         title: "עם GitHub"
-        message: "אימות עם GitHub (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
       discord:
         name: "Discord"
         title: "עם Discord"
-        message: "אימות עם Discord"
       second_factor_toggle:
         totp: "להשתמש ביישומון אימות במקום"
         backup_code: "להשתמש בקוד גיבוי במקום"
@@ -3277,6 +3271,9 @@ he:
         user: "משתמש"
         title: "API"
         key: "מפתח API"
+        created: נוצר
+        last_used: שימוש אחרון
+        never_used: (אף פעם)
         generate: "ייצר"
         regenerate: "ייצר מחדש"
         revoke: "שלול"

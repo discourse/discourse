@@ -1193,23 +1193,18 @@ hy:
       google_oauth2:
         name: "Google"
         title: "Google-ով"
-        message: "Վավերացում Google-ով (համոզվեք, որ փոփ-ափ արգելափակումները միացված չեն)"
       twitter:
         name: "Twitter"
         title: "Twitter-ով"
-        message: "Վավերացում Twitter-ով (համոզվեք, որ փոփ-ափ արգելափակումները միացված չեն)"
       instagram:
         name: "Instagram"
         title: "Instagram-ով"
-        message: "Վավերացում Instagram-ով (համոզվեք, որ փոփ-ափ արգելափակումները միացված չեն)"
       facebook:
         name: "Facebook"
         title: "Facebook-ով"
-        message: "Վավերացում Facebook-ով (համոզվեք, որ փոփ-ափ արգելափակումները միացված չեն)"
       github:
         name: "GitHub"
         title: "GitHub-ով"
-        message: "Վավերացում GitHub-ով (համոզվեք, որ փոփ-ափ արգելափակումները միացված չեն)"
       discord:
         name: "Discord"
       second_factor_toggle:
@@ -2775,6 +2770,7 @@ hy:
         user: "Օգտատեր"
         title: "API"
         key: "API Key"
+        created: Ստեղծված
         generate: "Գեներացնել"
         regenerate: "Վերագեներացնել"
         revoke: "Հետ կանչել"

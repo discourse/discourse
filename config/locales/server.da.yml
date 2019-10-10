@@ -195,6 +195,8 @@ da:
   read_only_mode_enabled: "Forummet er i \"kun læsning\" tilstand. Interaktioner er deaktiverede."
   email_template_cant_be_modified: "Denne email skabelon kan ikke ændres"
   invalid_whisper_access: "Enten er hvisken ikke aktiveret, eller du har ikke adgang til at oprette hviskende indlæg"
+  not_in_group:
+    join_group: "Bliv medlem af gruppen"
   reading_time: "Læsetid"
   likes: "Synes godt om"
   too_many_replies:

@@ -121,6 +121,8 @@ et:
   not_found: "Päritud URLi või ressurssi ei leitud."
   invalid_access: "Päritud ressursi vaatamiseks puuduvad õigused."
   read_only_mode_enabled: "Sait on kirjutuskaitstud. Interaktsioonid on keelatud."
+  not_in_group:
+    join_group: "Liitu grupiga"
   reading_time: "Lugemise aeg"
   likes: "Meeldimisi"
   too_many_replies:

@@ -1146,23 +1146,18 @@ nb_NO:
       google_oauth2:
         name: "Google"
         title: "med Google"
-        message: "Autentiserer med Google (sørg for at du tillater pop-up vindu)"
       twitter:
         name: "Twitter"
         title: "med Twitter"
-        message: "Autentiserer med Twitter (sørg for at du tillater oppsprettsvindu)"
       instagram:
         name: "Instagram"
         title: "med Instagram"
-        message: "Logger inn med Instagram. Sørg for at du ikke har programvare som blokkerer forgrunnsvinduer."
       facebook:
         name: "Facebook"
         title: "med Facebook"
-        message: "Autentiserer med Facebook (sørg for at du tillater oppsprettsvindu)"
       github:
         name: "GitHub"
         title: "med GitHub"
-        message: "Autentiserer med GitHub (sørg for at du tillater oppsprettsvindu)"
     invites:
       accept_title: "Invitasjon"
       welcome_to: "Velkommen til %{site_name}!"
@@ -2639,6 +2634,7 @@ nb_NO:
         user: "Bruker"
         title: "API"
         key: "Nøkkel"
+        created: Opprettet
         generate: "Generer API-nøkkel"
         regenerate: "Regenerer API-nøkkel"
         revoke: "Trekk tilbake"

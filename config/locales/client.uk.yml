@@ -1215,21 +1215,16 @@ uk:
       google_oauth2:
         name: "Google"
         title: "з Google"
-        message: "Автентифікація через Google (перевірте, щоб блокувальники спливних вікон були вимкнені)"
       twitter:
         name: "Twitter"
         title: "через Twitter"
-        message: "Автентифікація через Twitter (перевірте, щоб блокувальники спливних вікон були вимкнені)"
       instagram:
         name: "Instagram"
         title: "через Instagram"
-        message: "Автентифікація через Instagram (переконайтеся, що у вас дозволені спливні вікна)"
       facebook:
         title: "через Facebook"
-        message: "Автентифікація через Facebook (перевірте, щоб блокувальники спливних вікон були вимкнені)"
       github:
         title: "через GitHub"
-        message: "Автентифікація через GitHub (перевірте, щоб блокувальники спливних вікон були вимкнені)"
     invites:
       welcome_to: "Ласкаво просимо до сайта %{site_name}!"
       name_label: "Ім'я"
@@ -1980,6 +1975,7 @@ uk:
         user: "Користувач"
         title: "API"
         key: "Ключ API"
+        created: Створено
         generate: "Згенерувати"
         regenerate: "Перегенерувати"
         revoke: "Анулювати"

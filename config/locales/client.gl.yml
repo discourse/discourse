@@ -811,20 +811,15 @@ gl:
       google_oauth2:
         name: "Google"
         title: "co Google"
-        message: "Autenticación mediante Google (asegúrate de ter desactivado o bloqueador de xanelas emerxentes)"
       twitter:
         name: "Twitter"
         title: "co Twitter"
-        message: "Autenticación mediante Twitter (asegúrate de ter desactivado o bloqueador de xanelas emerxentes)"
       instagram:
         title: "con Instagram"
-        message: "Autenticación con Instagram (asegúrate que os bloqueadores de publicidade estean desactivados)"
       facebook:
         title: "co Facebook"
-        message: "Autenticación mediante Facebook (asegúrate de ter desactivado o bloqueador de xanelas emerxentes)"
       github:
         title: "co GitHub"
-        message: "Autenticación mediante Github (asegúrate de ter desactivado o bloqueador de xanelas emerxentes)"
     invites:
       welcome_to: "Benvido/a a %{site_name}!"
       name_label: "Nome"
@@ -1783,6 +1778,7 @@ gl:
         user: "Usuario"
         title: "API"
         key: "Chave da API"
+        created: Creado
         generate: "Xerar"
         regenerate: "Rexenerar"
         revoke: "Revogar"

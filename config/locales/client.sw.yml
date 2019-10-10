@@ -1080,23 +1080,18 @@ sw:
       google_oauth2:
         name: "Google"
         title: "na Google"
-        message: "uthibitisho na Google (hakikisha vizuizi vya pop-up havijaruhusiwa)"
       twitter:
         name: "Twitter"
         title: "na Twitter"
-        message: "uthibitisho na Twitter (hakikisha vizuizi vya pop-up havijaruhusiwa)"
       instagram:
         name: "Instagram"
         title: "na Instagram"
-        message: "uthibitisho na Instagram (hakikisha vizuizi vya pop-up havijaruhusiwa)"
       facebook:
         name: "Facebook"
         title: "na Facebook"
-        message: "uthibitisho na Facebook (hakikisha vizuizi vya pop-up havijaruhusiwa)"
       github:
         name: "GitHub"
         title: "na Github"
-        message: "uthibitisho na Github (hakikisha vizuizi vya pop-up havijaruhusiwa)"
       discord:
         name: "Matatizo"
     invites:
@@ -2442,6 +2437,7 @@ sw:
         user: "Mtumiaji"
         title: "API"
         key: "Ufunguo wa API"
+        created: Imetengenezwa
         generate: "Tengeneza"
         regenerate: "Tengeneza Upya"
         revoke: "Futa"

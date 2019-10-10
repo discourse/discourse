@@ -204,6 +204,8 @@ pt_BR:
   invalid_grant_badge_reason_link: "Link de um Discourse externo ou inválido não é permitido no motivo do emblema"
   email_template_cant_be_modified: "Este modelo de e-mail não pode ser modificado"
   invalid_whisper_access: "Os sussurros não estão habilitados ou você não tem acesso para criar postagens de sussurro"
+  not_in_group:
+    join_group: "Entrar no Grupo"
   reading_time: "Tempo de leitura"
   likes: "Curtidas"
   too_many_replies:
