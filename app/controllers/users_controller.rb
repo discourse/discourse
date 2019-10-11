@@ -1425,7 +1425,8 @@ class UsersController < ApplicationController
       :card_background_upload_url
     ]
 
-    permitted << { custom_fields: User.editable_user_custom_fields } unless User.editable_user_custom_fields.blank?
+    editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
+    permitted << { custom_fields: editable_custom_fields } unless editable_custom_fields.blank?
     permitted.concat UserUpdater::OPTION_ATTR
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys

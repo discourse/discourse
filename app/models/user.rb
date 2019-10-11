@@ -260,15 +260,29 @@ class User < ActiveRecord::Base
     @plugin_editable_user_custom_fields ||= {}
   end
 
-  def self.register_plugin_editable_user_custom_field(custom_field_name, plugin)
-    plugin_editable_user_custom_fields[custom_field_name] = plugin
+  def self.plugin_staff_editable_user_custom_fields
+    @plugin_staff_editable_user_custom_fields ||= {}
   end
 
-  def self.editable_user_custom_fields
+  def self.register_plugin_editable_user_custom_field(custom_field_name, plugin, staff_only: false)
+    if staff_only
+      plugin_staff_editable_user_custom_fields[custom_field_name] = plugin
+    else
+      plugin_editable_user_custom_fields[custom_field_name] = plugin
+    end
+  end
+
+  def self.editable_user_custom_fields(by_staff: false)
     fields = []
 
     plugin_editable_user_custom_fields.each do |k, v|
       fields << k if v.enabled?
+    end
+
+    if by_staff
+      plugin_staff_editable_user_custom_fields.each do |k, v|
+        fields << k if v.enabled?
+      end
     end
 
     fields.uniq
