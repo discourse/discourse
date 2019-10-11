@@ -937,6 +937,101 @@ describe Category do
     end
   end
 
+  describe "tree metrics" do
+    fab!(:category) do
+      Category.create!(
+        user: user,
+        name: "foo"
+      )
+    end
+
+    fab!(:subcategory) do
+      Category.create!(
+        user: user,
+        name: "bar",
+        parent_category: category
+      )
+    end
+
+    context "with a self-parent" do
+      before_all do
+        DB.exec(<<-SQL, id: category.id)
+          UPDATE categories
+          SET parent_category_id = :id
+          WHERE id = :id
+        SQL
+      end
+
+      context "#depth_of_descendants" do
+        it "should produce max_depth" do
+          expect(category.depth_of_descendants(3)).to eq(3)
+        end
+      end
+
+      context "#height_of_ancestors" do
+        it "should produce max_height" do
+          expect(category.height_of_ancestors(3)).to eq(3)
+        end
+      end
+    end
+
+    context "with a prospective self-parent" do
+      before do
+        category.parent_category_id = category.id
+      end
+
+      context "#depth_of_descendants" do
+        it "should produce max_depth" do
+          expect(category.depth_of_descendants(3)).to eq(3)
+        end
+      end
+
+      context "#height_of_ancestors" do
+        it "should produce max_height" do
+          expect(category.height_of_ancestors(3)).to eq(3)
+        end
+      end
+    end
+
+    context "with a prospective loop" do
+      before do
+        category.parent_category_id = subcategory.id
+      end
+
+      context "#depth_of_descendants" do
+        it "should produce max_depth" do
+          expect(category.depth_of_descendants(3)).to eq(3)
+        end
+      end
+
+      context "#height_of_ancestors" do
+        it "should produce max_height" do
+          expect(category.height_of_ancestors(3)).to eq(3)
+        end
+      end
+    end
+
+    context "#depth_of_descendants" do
+      it "should be 0 when the category has no descendants" do
+        expect(subcategory.depth_of_descendants).to eq(0)
+      end
+
+      it "should be 1 when the category has a descendant" do
+        expect(category.depth_of_descendants).to eq(1)
+      end
+    end
+
+    context "#height_of_ancestors" do
+      it "should be 0 when the category has no ancestors" do
+        expect(category.height_of_ancestors).to eq(0)
+      end
+
+      it "should be 1 when the category has an ancestor" do
+        expect(subcategory.height_of_ancestors).to eq(1)
+      end
+    end
+  end
+
   describe "#ensure_consistency!" do
     it "creates category topic" do
 
