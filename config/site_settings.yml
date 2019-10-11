@@ -1201,8 +1201,11 @@ files:
     default: 5
     min: 0
     max: 20
-  decompressed_file_max_size_mb:
+  decompressed_theme_max_file_size_mb:
     default: 1000
+    hidden: true
+  decompressed_backup_max_file_size_mb:
+    default: 100000
     hidden: true
 
 trust:
