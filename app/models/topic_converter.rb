@@ -81,6 +81,7 @@ class TopicConverter
       user.user_stat.save!
     end
     @topic.topic_allowed_users.build(user_id: @user.id) unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
+    @topic.topic_allowed_users = @topic.topic_allowed_users.uniq(&:user_id)
     # update topics count
     @topic.user.user_stat.topic_count -= 1
     @topic.user.user_stat.save!
