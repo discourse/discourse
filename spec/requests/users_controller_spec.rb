@@ -1764,38 +1764,54 @@ describe UsersController do
             before do
               plugin = Plugin::Instance.new
               plugin.register_editable_user_custom_field :test2
+              plugin.register_editable_user_custom_field :test3, staff_only: true
             end
 
             after do
               User.plugin_editable_user_custom_fields.clear
+              User.plugin_staff_editable_user_custom_fields.clear
             end
 
             it "only updates allowed user fields" do
-              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2 } }
+              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2, test3: :hello3 } }
 
               expect(response.status).to eq(200)
               expect(user.custom_fields["test1"]).to be_blank
               expect(user.custom_fields["test2"]).to eq("hello2")
+              expect(user.custom_fields["test3"]).to be_blank
             end
 
             it "works alongside a user field" do
               user_field = Fabricate(:user_field, editable: true)
-              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2 }, user_fields: { user_field.id.to_s => 'happy' } }
+              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2, test3: :hello3 }, user_fields: { user_field.id.to_s => 'happy' } }
               expect(response.status).to eq(200)
               expect(user.custom_fields["test1"]).to be_blank
               expect(user.custom_fields["test2"]).to eq("hello2")
+              expect(user.custom_fields["test3"]).to eq(nil)
               expect(user.user_fields[user_field.id.to_s]).to eq('happy')
             end
 
             it "is secure when there are no registered editable fields" do
               User.plugin_editable_user_custom_fields.clear
-              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2 } }
+              User.plugin_staff_editable_user_custom_fields.clear
+              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2, test3: :hello3 } }
               expect(response.status).to eq(200)
               expect(user.custom_fields["test1"]).to be_blank
               expect(user.custom_fields["test2"]).to be_blank
+              expect(user.custom_fields["test3"]).to be_blank
 
               put "/u/#{user.username}.json", params: { custom_fields: ["arrayitem1", "arrayitem2"] }
               expect(response.status).to eq(200)
+            end
+
+            it "allows staff to edit staff-editable fields" do
+              sign_in(Fabricate(:admin))
+              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2, test3: :hello3 } }
+
+              expect(response.status).to eq(200)
+              expect(user.custom_fields["test1"]).to be_blank
+              expect(user.custom_fields["test2"]).to eq("hello2")
+              expect(user.custom_fields["test3"]).to eq("hello3")
             end
 
           end
