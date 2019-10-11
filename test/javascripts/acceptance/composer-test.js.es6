@@ -249,7 +249,7 @@ QUnit.test("Create a Reply", async assert => {
   await click("#reply-control button.create");
   assert.equal(
     find(".cooked:last p").text(),
-    "this is the content of my reply"
+    "If you use gettext format you could leverage Launchpad 13 translations and the community behind it."
   );
 });
 
@@ -266,7 +266,7 @@ QUnit.test("Posting on a different topic", async assert => {
   await click(".btn-reply-here");
   assert.equal(
     find(".cooked:last p").text(),
-    "this is the content for a different topic"
+    "If you use gettext format you could leverage Launchpad 13 translations and the community behind it."
   );
 });
 
