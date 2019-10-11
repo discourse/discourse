@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 describe Compression::Engine do
+  let(:available_size) { SiteSetting.decompressed_theme_max_file_size_mb }
+
   before do
     @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/#{SecureRandom.hex}"
     @folder_name = 'test'
@@ -36,7 +38,7 @@ describe Compression::Engine do
       it 'decompress the folder and inspect files correctly' do
         engine = described_class.engine_for(@compressed_path)
 
-        engine.decompress(@temp_folder, "#{@temp_folder}/#{@folder_name}.zip")
+        engine.decompress(@temp_folder, "#{@temp_folder}/#{@folder_name}.zip", available_size)
 
         expect(read_file("test/hello.txt")).to eq("hello world")
         expect(read_file("test/a/inner")).to eq("hello world inner")
@@ -49,7 +51,7 @@ describe Compression::Engine do
       it 'decompress the folder and inspect files correctly' do
         engine = described_class.engine_for(@compressed_path)
 
-        engine.decompress(@temp_folder, "#{@temp_folder}/#{@folder_name}.tar.gz")
+        engine.decompress(@temp_folder, "#{@temp_folder}/#{@folder_name}.tar.gz", available_size)
 
         expect(read_file("test/hello.txt")).to eq("hello world")
         expect(read_file("test/a/inner")).to eq("hello world inner")
@@ -62,7 +64,7 @@ describe Compression::Engine do
       it 'decompress the folder and inspect files correctly' do
         engine = described_class.engine_for(@compressed_path)
 
-        engine.decompress(@temp_folder, "#{@temp_folder}/#{@folder_name}.tar")
+        engine.decompress(@temp_folder, "#{@temp_folder}/#{@folder_name}.tar", available_size)
 
         expect(read_file("test/hello.txt")).to eq("hello world")
         expect(read_file("test/a/inner")).to eq("hello world inner")
