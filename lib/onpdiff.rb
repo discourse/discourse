@@ -25,6 +25,10 @@ class ONPDiff
     @short_diff ||= build_short_edit_script(compose)
   end
 
+  def paragraph_diff
+    @paragraph_diff ||= build_paragraph_edit_script(diff)
+  end
+
   private
 
   def compose
@@ -154,6 +158,73 @@ class ONPDiff
       i -= 1
     end
     ses
+  end
+
+  def build_paragraph_edit_script(ses)
+    paragraph_ses = []
+    i = 0
+    while i < ses.size
+      if ses[i][1] == :common
+        paragraph_ses << ses[i]
+      else
+        if ses[i][1] == :add
+          op_code = :add
+          opposite_op_code = :delete
+        else
+          op_code = :delete
+          opposite_op_code = :add
+        end
+        j = i + 1
+
+        while j < ses.size && ses[j][1] == op_code
+          j += 1
+        end
+
+        if j >= ses.size
+          paragraph_ses = paragraph_ses.concat(ses[i..j])
+          i = j
+        else
+          k = j
+          j -= 1
+
+          while k < ses.size && ses[k][1] == opposite_op_code
+            k += 1
+          end
+          k -= 1
+
+          num_before = j - i + 1
+          num_after = k - j
+          if num_after > 1
+            if num_before > num_after
+              i2 = i + num_before - num_after
+              paragraph_ses = paragraph_ses.concat(ses[i..i2 - 1])
+              i = i2
+            elsif num_after > num_before
+              k -= num_after - num_before
+            end
+            paragraph_ses = paragraph_ses.concat(pair_paragraphs(ses, i, j))
+          else
+            paragraph_ses = paragraph_ses.concat(ses[i..k])
+          end
+          i = k
+        end
+      end
+      i += 1
+    end
+
+    paragraph_ses
+  end
+
+  def pair_paragraphs(ses, i, j)
+    pairs = []
+    num_pairs = j - i + 1
+    num_pairs.times do
+      pairs << ses[i]
+      pairs << ses[i + num_pairs]
+      i += 1
+    end
+
+    pairs
   end
 
 end
