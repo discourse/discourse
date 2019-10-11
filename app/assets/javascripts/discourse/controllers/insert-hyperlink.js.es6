@@ -1,10 +1,10 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { searchForTerm } from "discourse/lib/search";
-import { observes } from "ember-addons/ember-computed-decorators";
-
-let searchTopics;
 
 export default Ember.Controller.extend(ModalFunctionality, {
+  _debounced: null,
+  _activeSearch: null,
+
   onShow() {
     this.setProperties({
       linkUrl: "",
@@ -45,6 +45,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         }
         break;
       case 27:
+        // override Esc too
         if (this.searchResults.length) {
           this.set("searchResults", []);
           e.preventDefault();
@@ -91,30 +92,37 @@ export default Ember.Controller.extend(ModalFunctionality, {
     });
   },
 
-  @observes("linkUrl")
   triggerSearch() {
-    if (
-      this.linkUrl &&
-      this.linkUrl.length > 3 &&
-      this.linkUrl.indexOf("http") === -1
-    ) {
-      searchTopics = () => {
-        this.set("searchLoading", true);
-        searchForTerm(this.linkUrl, { typeFilter: "topic" }).then(results => {
+    if (this.linkUrl.length > 3 && this.linkUrl.indexOf("http") === -1) {
+      this.set("searchLoading", true);
+      this._activeSearch = searchForTerm(this.linkUrl, {
+        typeFilter: "topic"
+      });
+      this._activeSearch
+        .then(results => {
           if (results && results.topics && results.topics.length > 0) {
             this.set("searchResults", results.topics);
           } else {
             this.set("searchResults", []);
           }
-
+        })
+        .finally(() => {
           this.set("searchLoading", false);
+          this._activeSearch = null;
         });
-      };
-
-      Ember.run.debounce(this, searchTopics, 400);
     } else {
-      this.set("searchResults", []);
+      this.abortSearch();
     }
+  },
+
+  abortSearch() {
+    if (this._activeSearch) {
+      this._activeSearch.abort();
+    }
+    this.setProperties({
+      searchResults: [],
+      searchLoading: false
+    });
   },
 
   onClose() {
@@ -124,7 +132,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       .closest(".modal-inner-container")
       .removeEventListener("mousedown", this.mouseDown);
 
-    Ember.run.cancel(searchTopics);
+    Ember.run.cancel(this._debounced);
   },
 
   actions: {
@@ -157,6 +165,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
     select(index) {
       this.setUpdated(index);
+    },
+    search(value) {
+      this._debounced = Ember.run.debounce(this, this.triggerSearch, 400);
     }
   }
 });
