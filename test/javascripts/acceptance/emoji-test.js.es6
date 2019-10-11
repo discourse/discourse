@@ -27,12 +27,4 @@ QUnit.test("skin toned emoji is cooked properly", async assert => {
       .trim(),
     `<p>this is an emoji <img src="/images/emoji/emoji_one/blonde_woman/5.png?v=${v}" title=":blonde_woman:t5:" class="emoji" alt=":blonde_woman:t5:"></p>`
   );
-
-  await click("#reply-control .btn.create");
-  assert.equal(
-    find(".topic-post:last .cooked p")
-      .html()
-      .trim(),
-    `this is an emoji <img src="/images/emoji/emoji_one/blonde_woman/5.png?v=${v}" title=":blonde_woman:t5:" class="emoji" alt=":blonde_woman:t5:">`
-  );
 });
