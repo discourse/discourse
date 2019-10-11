@@ -12,7 +12,11 @@
       {{#if searchResults}}
         <div class="internal-link-results">
           {{#each searchResults as |r index|}}
-            <a class="search-link" href="#" {{action "select" index}}>
+            <a
+              class="search-link"
+              href="{{r.url}}"
+              onclick={{action "linkClick"}}
+              data-title="{{r.title}}">
               {{replace-emoji r.fancy_title}}
             </a>
           {{/each}}

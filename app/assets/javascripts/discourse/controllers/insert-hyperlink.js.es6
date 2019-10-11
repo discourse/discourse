@@ -30,22 +30,24 @@ export default Ember.Controller.extend(ModalFunctionality, {
   keyDown(e) {
     switch (e.which) {
       case 40:
-        this.selectRow(e, "down");
+        this.highlightRow(e, "down");
         break;
       case 38:
-        this.selectRow(e, "up");
+        this.highlightRow(e, "up");
         break;
       case 13:
         // override Enter behaviour when a row is selected
         if (this.selectedRow > -1) {
-          this.setUpdated(this.selectedRow);
-          document.querySelector("input.link-text").focus();
+          const selected = document.querySelectorAll(
+            ".internal-link-results .search-link"
+          )[this.selectedRow];
+          this.selectLink(selected);
           e.preventDefault();
           e.stopPropagation();
         }
         break;
       case 27:
-        // override Esc too
+        // Esc should cancel dropdown first
         if (this.searchResults.length) {
           this.set("searchResults", []);
           e.preventDefault();
@@ -61,7 +63,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  selectRow(e, direction) {
+  highlightRow(e, direction) {
     const index =
       direction === "down" ? this.selectedRow + 1 : this.selectedRow - 1;
 
@@ -72,24 +74,24 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set("selectedRow", index);
     } else {
       this.set("selectedRow", -1);
-      document.querySelector("input.link-text").focus();
+      document.querySelector("input.link-url").focus();
     }
 
     e.preventDefault();
   },
 
-  setUpdated(index) {
-    const topic = this.searchResults[index];
-    if (topic) {
-      this.set("linkUrl", Discourse.BaseUrl + topic.url);
-      if (!this.linkText) {
-        this.set("linkText", topic.title);
-      }
-    }
+  selectLink(el) {
     this.setProperties({
+      linkUrl: el.href,
       searchResults: [],
       selectedRow: -1
     });
+
+    if (!this.linkText && el.dataset.title) {
+      this.set("linkText", el.dataset.title);
+    }
+
+    document.querySelector("input.link-text").focus();
   },
 
   triggerSearch() {
@@ -163,8 +165,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
     cancel() {
       this.send("closeModal");
     },
-    select(index) {
-      this.setUpdated(index);
+    linkClick(e) {
+      if (!e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.selectLink(e.target);
+      }
     },
     search(value) {
       this._debounced = Ember.run.debounce(this, this.triggerSearch, 400);
