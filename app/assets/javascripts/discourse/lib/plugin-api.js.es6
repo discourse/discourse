@@ -857,7 +857,7 @@ class PluginApi {
    *
    */
   serializeToDraft(fieldName, property) {
-    Composer.serialzeToDraft(fieldName, property);
+    Composer.serializeToDraft(fieldName, property);
   }
 
   /**
