@@ -172,7 +172,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         this.selectLink(e.target);
       }
     },
-    search(value) {
+    search() {
       this._debounced = Ember.run.debounce(this, this.triggerSearch, 400);
     }
   }
