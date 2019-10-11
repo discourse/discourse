@@ -1,6 +1,27 @@
 {{#d-modal-body title="composer.link_dialog_title" class="insert-link"}}
     <div class="inputs">
-      {{text-field value=linkUrl placeholderKey="composer.link_url_placeholder" class="link-url"}}
+      {{text-field
+        value=linkUrl
+        placeholderKey="composer.link_url_placeholder"
+        class="link-url"
+        key-up=(action "search")
+      }}
+      {{#if searchLoading}}
+        {{loading-spinner}}
+      {{/if}}
+      {{#if searchResults}}
+        <div class="internal-link-results">
+          {{#each searchResults as |r index|}}
+            <a
+              class="search-link"
+              href="{{r.url}}"
+              onclick={{action "linkClick"}}
+              data-title="{{r.title}}">
+              {{replace-emoji r.fancy_title}}
+            </a>
+          {{/each}}
+        </div>
+      {{/if}}
     </div>
     <div class="inputs">
       {{text-field value=linkText placeholderKey="composer.link_optional_text" class="link-text"}}
