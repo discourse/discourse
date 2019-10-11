@@ -412,6 +412,9 @@ pre.onebox code {
 
   .branches {
     font-size: $font-down-1;
+    code {
+      word-break: break-all;
+    }
   }
 
   .github-info {
@@ -445,6 +448,7 @@ pre.onebox code {
     border-radius: 2px;
     float: none;
     margin: 0;
+    padding: 0;
     vertical-align: middle;
     max-width: none;
   }
