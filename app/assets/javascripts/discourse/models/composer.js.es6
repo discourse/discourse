@@ -744,15 +744,22 @@ const Composer = RestModel.extend({
     return false;
   },
 
-  save(opts) {
-    if (!this.cantSubmitPost) {
-      // change category may result in some effect for topic featured link
-      if (!this.canEditTopicFeaturedLink) {
-        this.set("featuredLink", null);
-      }
+  // Overwrite to implement custom logic
+  beforeSave() {
+    return Ember.RSVP.Promise.resolve();
+  },
 
-      return this.editingPost ? this.editPost(opts) : this.createPost(opts);
-    }
+  save(opts) {
+    return this.beforeSave().then(() => {
+      if (!this.cantSubmitPost) {
+        // change category may result in some effect for topic featured link
+        if (!this.canEditTopicFeaturedLink) {
+          this.set("featuredLink", null);
+        }
+
+        return this.editingPost ? this.editPost(opts) : this.createPost(opts);
+      }
+    });
   },
 
   clearState() {
