@@ -721,7 +721,9 @@ export default Ember.Controller.extend({
       })
       .catch(error => {
         composer.set("disableDrafts", false);
-        this.appEvents.one("composer:will-open", () => bootbox.alert(error));
+        if (error) {
+          this.appEvents.one("composer:will-open", () => bootbox.alert(error));
+        }
       });
 
     if (
