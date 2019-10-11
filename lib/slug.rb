@@ -50,7 +50,9 @@ module Slug
       .gsub(/\s+/, '-')
       .gsub(CHAR_FILTER_REGEXP, '')
 
-    downcase ? string.downcase : string
+    string = string.downcase if downcase
+
+    CGI.escape(string)
   end
 
   def self.none_generator(string)
