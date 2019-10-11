@@ -45,12 +45,16 @@ class ReviewableScore < ActiveRecord::Base
     take_action_bonus > 0
   end
 
+  def self.calculate_score(user, type_bonus, take_action_bonus)
+    score = user_flag_score(user) + type_bonus + take_action_bonus
+    score > 0 ? score : 0
+  end
+
   # A user's flag score is:
   #   1.0 + trust_level + user_accuracy_bonus
   #   (trust_level is 5 for staff)
   def self.user_flag_score(user)
-    score = 1.0 + (user.staff? ? 5.0 : user.trust_level.to_f) + user_accuracy_bonus(user)
-    score >= 0 ? score : 0
+    1.0 + (user.staff? ? 5.0 : user.trust_level.to_f) + user_accuracy_bonus(user)
   end
 
   # A user's accuracy bonus is:

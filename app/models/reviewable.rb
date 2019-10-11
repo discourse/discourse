@@ -158,8 +158,8 @@ class Reviewable < ActiveRecord::Base
 
     type_bonus = PostActionType.where(id: reviewable_score_type).pluck(:score_bonus)[0] || 0
     take_action_bonus = take_action ? 5.0 : 0.0
-    sub_total = (ReviewableScore.user_flag_score(user) + type_bonus + take_action_bonus)
     user_accuracy_bonus = ReviewableScore.user_accuracy_bonus(user)
+    sub_total = ReviewableScore.calculate_score(user, type_bonus, take_action_bonus)
 
     # We can force a reviewable to hit the threshold, for example with queued posts
     if force_review && sub_total < Reviewable.min_score_for_priority
