@@ -201,8 +201,41 @@
     }
 
     &.insert-link {
+      overflow-y: visible;
       input {
         min-width: 300px;
+      }
+
+      .inputs {
+        position: relative;
+        .spinner {
+          position: absolute;
+          right: 8px;
+          top: -15px;
+          width: 10px;
+          height: 10px;
+        }
+        .internal-link-results {
+          position: absolute;
+          top: 70%;
+          padding: 5px 10px;
+          box-shadow: shadow("card");
+          z-index: 5;
+          background-color: $secondary;
+          max-height: 150px;
+          width: 90%;
+          overflow-y: auto;
+          > a {
+            padding: 6px;
+            border-bottom: 1px solid $primary-low;
+            cursor: pointer;
+            display: block;
+            &:hover,
+            &:focus {
+              background-color: $highlight-medium;
+            }
+          }
+        }
       }
     }
     textarea {

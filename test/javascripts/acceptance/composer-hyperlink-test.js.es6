@@ -9,18 +9,13 @@ QUnit.test("add a hyperlink to a reply", async assert => {
   await click(".topic-post:first-child button.reply");
   await fillIn(".d-editor-input", "This is a link to ");
 
-  assert.equal(
-    find(".insert-link.modal-body").length,
-    0,
+  assert.ok(
+    !exists(".insert-link.modal-body"),
     "no hyperlink modal by default"
   );
 
   await click(".d-editor button.link");
-  assert.equal(
-    find(".insert-link.modal-body").length,
-    1,
-    "hyperlink modal visible"
-  );
+  assert.ok(exists(".insert-link.modal-body"), "hyperlink modal visible");
 
   await fillIn(".modal-body .link-url", "google.com");
   await fillIn(".modal-body .link-text", "Google");
@@ -32,9 +27,8 @@ QUnit.test("add a hyperlink to a reply", async assert => {
     "adds link with url and text, prepends 'http://'"
   );
 
-  assert.equal(
-    find(".insert-link.modal-body").length,
-    0,
+  assert.ok(
+    !exists(".insert-link.modal-body"),
     "modal dismissed after submitting link"
   );
 
@@ -51,9 +45,8 @@ QUnit.test("add a hyperlink to a reply", async assert => {
     "adds link with url and text, prepends 'http://'"
   );
 
-  assert.equal(
-    find(".insert-link.modal-body").length,
-    0,
+  assert.ok(
+    !exists(".insert-link.modal-body"),
     "modal dismissed after cancelling"
   );
 
@@ -69,5 +62,37 @@ QUnit.test("add a hyperlink to a reply", async assert => {
     find(".d-editor-input").val(),
     "[Reset](http://somelink.com) textarea contents.",
     "adds link to a selected text"
+  );
+
+  await fillIn(".d-editor-input", "");
+
+  await click(".d-editor button.link");
+  await fillIn(".modal-body .link-url", "http://google.com");
+  await keyEvent(".modal-body .link-url", "keyup", 32);
+  assert.ok(
+    !exists(".internal-link-results"),
+    "does not show internal links search dropdown when inputting a url"
+  );
+
+  await fillIn(".modal-body .link-url", "local");
+  await keyEvent(".modal-body .link-url", "keyup", 32);
+  assert.ok(
+    exists(".internal-link-results"),
+    "shows internal links search dropdown when entering keywords"
+  );
+
+  await keyEvent(".insert-link", "keydown", 40);
+  await keyEvent(".insert-link", "keydown", 13);
+
+  assert.ok(
+    !exists(".internal-link-results"),
+    "search dropdown dismissed after selecting an internal link"
+  );
+
+  assert.ok(
+    find(".link-url")
+      .val()
+      .includes("http"),
+    "replaces link url field with internal link"
   );
 });

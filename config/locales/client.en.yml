@@ -1685,7 +1685,7 @@ en:
       link_description: "enter link description here"
       link_dialog_title: "Insert Hyperlink"
       link_optional_text: "optional title"
-      link_url_placeholder: "https://example.com"
+      link_url_placeholder: "Paste a URL or type to search topics"
       quote_title: "Blockquote"
       quote_text: "Blockquote"
       code_title: "Preformatted text"
