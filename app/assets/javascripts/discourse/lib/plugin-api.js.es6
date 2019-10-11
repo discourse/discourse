@@ -46,7 +46,7 @@ import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.32";
+const PLUGIN_API_VERSION = "0.8.33";
 
 class PluginApi {
   constructor(version, container) {
