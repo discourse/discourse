@@ -51,6 +51,14 @@ class StaticController < ApplicationController
       return
     end
 
+    unless @title.present?
+      @title = if SiteSetting.short_site_description.present?
+        "#{SiteSetting.title} - #{SiteSetting.short_site_description}"
+      else
+        SiteSetting.title
+      end
+    end
+
     if I18n.exists?("static.#{@page}")
       render html: I18n.t("static.#{@page}"), layout: !request.xhr?, formats: [:html]
       return
