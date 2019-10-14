@@ -104,12 +104,12 @@ class Admin::SiteTextsController < Admin::AdminController
   protected
 
   def record_for(key, value = nil)
-    value = TranslationOverride
-              .where(translation_key: key, locale: I18n.locale)
-              .pluck(:value)
-              &.first
+    if key.ends_with?("_MF")
+      override = TranslationOverride.where(translation_key: key, locale: I18n.locale).pluck(:value)
+      value = override&.first
+    end
 
-    value ||= I18n.t(key, default: '')
+    value ||= I18n.t(key)
     { id: key, value: value }
   end
 
