@@ -612,7 +612,8 @@ class Category < ActiveRecord::Base
   end
 
   def self.query_category(slug_or_id, parent_category_id)
-    self.where(slug: slug_or_id, parent_category_id: parent_category_id).first ||
+    encoded_slug_or_id = CGI.escape(slug_or_id) if SiteSetting.slug_generation_method == 'encoded'
+    self.where(slug: (encoded_slug_or_id || slug_or_id), parent_category_id: parent_category_id).first ||
     self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).first
   end
 
@@ -708,6 +709,12 @@ class Category < ActiveRecord::Base
   end
 
   def self.find_by_slug(category_slug, parent_category_slug = nil)
+
+    if SiteSetting.slug_generation_method == "encoded"
+      parent_category_slug = CGI.escape(parent_category_slug) unless parent_category_slug.nil?
+      category_slug = CGI.escape(category_slug)
+    end
+
     if parent_category_slug
       parent_category_id = self.where(slug: parent_category_slug, parent_category_id: nil).select(:id)
 

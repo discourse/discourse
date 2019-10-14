@@ -18,7 +18,7 @@ class CategoriesController < ApplicationController
 
     @description = SiteSetting.site_description
 
-    parent_category = Category.find_by(slug: params[:parent_category_id]) || Category.find_by(id: params[:parent_category_id].to_i)
+    parent_category = Category.find_by_slug(params[:parent_category_id]) || Category.find_by(id: params[:parent_category_id].to_i)
 
     category_options = {
       is_homepage: current_homepage == "categories".freeze,
