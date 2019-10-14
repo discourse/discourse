@@ -862,6 +862,18 @@ describe UserNotifications do
       let(:user) { post.user }
       let(:mail_template) { "user_notifications.user_#{notification_type}_pm" }
 
+      it "should include message link & unsubscribe link in footer" do
+        mail = UserNotifications.user_invited_to_private_message(
+          user,
+          post: post,
+          notification_type: notification_type,
+          notification_data_hash: notification.data_hash
+        )
+        mail_html = mail.html_part.body.to_s
+        expect(mail_html.scan(/Visit Message/).count).to eq(1)
+        expect(mail_html.scan(/To unsubscribe/).count).to eq(1)
+      end
+
       include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"
@@ -894,6 +906,21 @@ describe UserNotifications do
   describe "user invited to a topic" do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_topic }
+      let(:post) { Fabricate(:post) }
+      let(:user) { post.user }
+
+      it "should include topic link & unsubscribe link in footer" do
+        mail = UserNotifications.user_invited_to_private_message(
+          user,
+          post: post,
+          notification_type: notification_type,
+          notification_data_hash: notification.data_hash
+        )
+        mail_html = mail.html_part.body.to_s
+        expect(mail_html.scan(/Visit Topic/).count).to eq(1)
+        expect(mail_html.scan(/To unsubscribe/).count).to eq(1)
+      end
+
       include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"

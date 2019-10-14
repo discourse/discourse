@@ -569,7 +569,15 @@ class UserNotifications < ActionMailer::Base
         site_description: SiteSetting.site_description
       )
 
-      html = PrettyText.cook(message, sanitize: false).html_safe
+      unless translation_override_exists
+        html = UserNotificationRenderer.render(
+          template: 'email/invite',
+          format: :html,
+          locals: { message: PrettyText.cook(message, sanitize: false).html_safe,
+                    classes: Rtl.new(user).css_class
+          }
+        )
+      end
     else
       reached_limit = SiteSetting.max_emails_per_day_per_user > 0
       reached_limit &&= (EmailLog.where(user_id: user.id)
