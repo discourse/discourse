@@ -870,10 +870,12 @@ describe Category do
     fab!(:group2) { Fabricate(:group) }
     fab!(:parent_category) { Fabricate(:category_with_definition, name: "parent") }
     fab!(:subcategory) { Fabricate(:category_with_definition, name: "child1", parent_category_id: parent_category.id) }
-    fab!(:subcategory2) { Fabricate(:category_with_definition, name: "child2", parent_category_id: parent_category.id) }
 
     context "when changing subcategory permissions" do
       it "it is not valid if permissions are less restrictive" do
+        subcategory.set_permissions(group => :readonly)
+        subcategory.save!
+
         parent_category.set_permissions(group => :readonly)
         parent_category.save!
 
@@ -884,6 +886,9 @@ describe Category do
       end
 
       it "is valid if permissions are same or more restrictive" do
+        subcategory.set_permissions(group => :full, group2 => :create_post)
+        subcategory.save!
+
         parent_category.set_permissions(group => :full, group2 => :create_post)
         parent_category.save!
 
@@ -903,7 +908,9 @@ describe Category do
     end
 
     context "when changing parent category permissions" do
-      it "it is not valid if subcategory permissions are less restrictive" do
+      fab!(:subcategory2) { Fabricate(:category_with_definition, name: "child2", parent_category_id: parent_category.id) }
+
+      it "is not valid if subcategory permissions are less restrictive" do
         subcategory.set_permissions(group => :create_post)
         subcategory.save!
         subcategory2.set_permissions(group => :create_post, group2 => :create_post)
@@ -913,6 +920,12 @@ describe Category do
 
         expect(parent_category.valid?).to eq(false)
         expect(parent_category.errors.full_messages).to contain_exactly(I18n.t("category.errors.permission_conflict", group_names: group2.name))
+      end
+
+      it "is not valid if the subcategory has no category groups, but the parent does" do
+        parent_category.set_permissions(group => :readonly)
+
+        expect(parent_category).not_to be_valid
       end
 
       it "is valid if subcategory permissions are same or more restrictive" do
