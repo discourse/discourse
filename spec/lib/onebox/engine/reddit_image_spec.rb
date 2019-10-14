@@ -11,7 +11,7 @@ describe Onebox::Engine::RedditImageOnebox do
   end
 
   it "includes title" do
-    expect(html).to include('<a href="https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition/" target="_blank" rel="nofollow noopener">reddit</a>')
+    expect(html).to include('<a href="https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition/" target="_blank" rel="nofollow ugc noopener">reddit</a>')
   end
 
   it "includes image" do

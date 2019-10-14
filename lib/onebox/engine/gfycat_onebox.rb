@@ -19,12 +19,12 @@ module Onebox
           <aside class="onebox gfycat">
             <header class="source">
               <img src="https://gfycat.com/static/favicons/favicon-96x96.png" class="site-icon" width="64" height="64">
-              <a href="#{data[:url]}" target="_blank" rel="nofollow noopener">Gfycat.com</a>
+              <a href="#{data[:url]}" target="_blank" rel="nofollow ugc noopener">Gfycat.com</a>
             </header>
             <article class="onebox-body">
               <h4>
                 #{data[:title]} by
-                <a href="https://gfycat.com/@#{data[:author]}" target="_blank" rel="nofollow noopener">
+                <a href="https://gfycat.com/@#{data[:author]}" target="_blank" rel="nofollow ugc noopener">
                   <span>#{data[:author]}</span>
                 </a>
               </h4>
