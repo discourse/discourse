@@ -6,6 +6,7 @@ class UploadsController < ApplicationController
   requires_login except: [:show, :show_short]
 
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short]
+  protect_from_forgery except: :show
 
   def create
     # capture current user for block later on
