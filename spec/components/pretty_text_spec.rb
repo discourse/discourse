@@ -1378,21 +1378,23 @@ HTML
       [some attachment|random](#{upload.short_url})
       RAW
 
+      cdn_url = Discourse.store.cdn_url(upload.url)
+
       cooked = <<~HTML
-        <p><img src="#{upload.url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
-        <p><img src="#{upload.url}" alt="upload" title="some title to test" data-base62-sha1="#{upload.base62_sha1}"></p>
+        <p><img src="#{cdn_url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
+        <p><img src="#{cdn_url}" alt="upload" title="some title to test" data-base62-sha1="#{upload.base62_sha1}"></p>
         <ul>
         <li>
-        <p><img src="#{upload.url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
+        <p><img src="#{cdn_url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
         </li>
         <li>
         <p>test</p>
         <ul>
-        <li><img src="#{upload.url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></li>
+        <li><img src="#{cdn_url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></li>
         </ul>
         </li>
         </ul>
-        <p><img src="#{upload.url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
+        <p><img src="#{cdn_url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
         <p><a href="#{upload.short_path}">some attachment</a></p>
         <p><a class="attachment" href="#{upload.short_path}">some attachment</a></p>
         <p><a href="#{upload.short_path}">some attachment|random</a></p>
