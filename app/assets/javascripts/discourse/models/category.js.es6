@@ -5,6 +5,8 @@ import { on } from "ember-addons/ember-computed-decorators";
 import PermissionType from "discourse/models/permission-type";
 
 const Category = RestModel.extend({
+  permissions: null,
+
   @on("init")
   setupGroupsAndPermissions() {
     const availableGroups = this.available_groups;
@@ -159,15 +161,6 @@ const Category = RestModel.extend({
   removePermission(permission) {
     this.permissions.removeObject(permission);
     this.availableGroups.addObject(permission.group_name);
-  },
-
-  @computed
-  permissions() {
-    return Ember.A([
-      { group_name: "everyone", permission: PermissionType.create({ id: 1 }) },
-      { group_name: "admins", permission: PermissionType.create({ id: 2 }) },
-      { group_name: "crap", permission: PermissionType.create({ id: 3 }) }
-    ]);
   },
 
   @computed("topics")
