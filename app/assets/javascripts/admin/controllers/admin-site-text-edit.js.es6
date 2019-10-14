@@ -32,7 +32,6 @@ export default Ember.Controller.extend(bufferedProperty("siteText"), {
               const buffered = this.buffered;
               buffered.setProperties(props);
               this.commitBuffer();
-              this.buffered.value = props.value
             })
             .catch(popupAjaxError);
         }
