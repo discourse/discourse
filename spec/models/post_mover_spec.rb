@@ -388,6 +388,13 @@ describe PostMover do
                 notification_level: :tracking
               )
               create_topic_user(
+                user2,
+                last_read_post_number: 2,
+                highest_seen_post_number: 2,
+                last_emailed_post_number: 2,
+                notification_level: :tracking
+              )
+              create_topic_user(
                 user3,
                 last_read_post_number: 1,
                 highest_seen_post_number: 2,
@@ -395,9 +402,10 @@ describe PostMover do
                 notification_level: :watching
               )
 
+              p2.update!(user_id: user2.id)
               new_topic = topic.move_posts(user, [p1.id, p2.id], title: "new testing topic name")
 
-              expect(TopicUser.where(topic_id: topic.id).count).to eq(3)
+              expect(TopicUser.where(topic_id: topic.id).count).to eq(4)
               expect(TopicUser.find_by(topic: topic, user: user))
                 .to have_attributes(
                       last_read_post_number: 4,
@@ -412,6 +420,13 @@ describe PostMover do
                       last_emailed_post_number: 3,
                       notification_level: TopicUser.notification_levels[:tracking]
                     )
+              expect(TopicUser.find_by(topic: topic, user: user2))
+                .to have_attributes(
+                      last_read_post_number: 2,
+                      highest_seen_post_number: 2,
+                      last_emailed_post_number: 2,
+                      notification_level: TopicUser.notification_levels[:tracking]
+                    )
               expect(TopicUser.find_by(topic: topic, user: user3))
                 .to have_attributes(
                       last_read_post_number: 1,
@@ -420,7 +435,7 @@ describe PostMover do
                       notification_level: TopicUser.notification_levels[:watching]
                     )
 
-              expect(TopicUser.where(topic_id: new_topic.id).count).to eq(3)
+              expect(TopicUser.where(topic_id: new_topic.id).count).to eq(4)
               expect(TopicUser.find_by(topic: new_topic, user: user))
                 .to have_attributes(
                       last_read_post_number: 1,
@@ -434,15 +449,23 @@ describe PostMover do
                       last_read_post_number: 2,
                       highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
-                      notification_level: TopicUser.notification_levels[:tracking],
+                      notification_level: TopicUser.notification_levels[:regular],
                       posted: false
+                    )
+              expect(TopicUser.find_by(topic: new_topic, user: user2))
+                .to have_attributes(
+                      last_read_post_number: 2,
+                      highest_seen_post_number: 2,
+                      last_emailed_post_number: 2,
+                      notification_level: TopicUser.notification_levels[:tracking],
+                      posted: true
                     )
               expect(TopicUser.find_by(topic: new_topic, user: user3))
                 .to have_attributes(
                       last_read_post_number: 1,
                       highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
-                      notification_level: TopicUser.notification_levels[:watching],
+                      notification_level: TopicUser.notification_levels[:regular],
                       posted: false
                     )
             end
