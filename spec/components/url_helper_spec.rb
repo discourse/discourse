@@ -119,4 +119,15 @@ describe UrlHelper do
     end
   end
 
+  describe "#local_cdn_url" do
+    let(:url) { "/uploads/default/1X/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png" }
+    let(:asset_host) { "//my.awesome.cdn" }
+
+    it "should return correct cdn url for local relative urls" do
+      Discourse.stubs(:asset_host).returns(asset_host)
+      cdn_url = UrlHelper.local_cdn_url(url)
+      expect(cdn_url).to eq("#{asset_host}#{url}")
+    end
+  end
+
 end

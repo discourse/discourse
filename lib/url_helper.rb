@@ -71,7 +71,11 @@ class UrlHelper
 
   def self.local_cdn_url(url)
     return url if Discourse.asset_host.blank?
-    url.sub(Discourse.base_url_no_prefix, Discourse.asset_host)
+    if url.start_with?("/#{Discourse.store.upload_path}/")
+      "#{Discourse.asset_host}#{url}"
+    else
+      url.sub(Discourse.base_url_no_prefix, Discourse.asset_host)
+    end
   end
 
 end
