@@ -802,10 +802,27 @@ class Category < ActiveRecord::Base
   end
 
   def subcategories_permissions
-    CategoryGroup.joins(:category)
-      .where(['categories.parent_category_id = ?', self.id])
-      .pluck(:group_id, :permission_type)
-      .uniq
+    everyone = Group[:everyone].id
+    full = CategoryGroup.permission_types[:full]
+
+    result =
+      DB.query(<<-SQL, id: id, everyone: everyone, full: full)
+        SELECT category_groups.group_id, category_groups.permission_type
+        FROM categories, category_groups
+        WHERE categories.parent_category_id = :id
+        AND categories.id = category_groups.category_id
+        UNION
+        SELECT :everyone, :full
+        FROM categories
+        WHERE categories.parent_category_id = :id
+        AND (
+          SELECT DISTINCT 1
+          FROM category_groups
+          WHERE category_groups.category_id = categories.id
+        ) IS NULL
+      SQL
+
+    result.map { |row| [row.group_id, row.permission_type] }
   end
 end
 
