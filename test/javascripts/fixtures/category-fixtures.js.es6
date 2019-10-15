@@ -35,7 +35,8 @@ export default {
       position: 25,
       cannot_delete_reason:
         "Can't delete this category because it has 2030 topics. Oldest topic is <a href=\"https://localhost:3000/t/when-a-new-post-appears-in-a-topic-the-bookmark-isn-t-updated/39\">When a new post appears in a topic, the bookmark isn't updated</a>.",
-      allow_badges: true
+      allow_badges: true,
+      custom_fields: {}
     }
   }
 };
