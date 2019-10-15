@@ -96,4 +96,33 @@ describe TranslationOverride do
       include_examples "resets site text"
     end
   end
+
+  describe '#transform_pluralized_key' do
+    let(:translation_override) { TranslationOverride.new }
+    it "transforms key that end with a pluralization to end with 'one'" do
+      transformed_key = 'js.new_topics.one'
+      key = translation_override.send(:transform_pluralized_key, "js.new_topics.few")
+      expect(key).to eq(transformed_key)
+
+      key = translation_override.send(:transform_pluralized_key, "js.new_topics.zero")
+      expect(key).to eq(transformed_key)
+
+      key = translation_override.send(:transform_pluralized_key, "js.new_topics.many")
+      expect(key).to eq(transformed_key)
+
+      key = translation_override.send(:transform_pluralized_key, "js.new_topics.two")
+      expect(key).to eq(transformed_key)
+    end
+
+    it 'does not transform keys that do not end in a pluralization' do
+      key = translation_override.send(:transform_pluralized_key, "js.new_topics.one")
+      expect(key).to eq('js.new_topics.one')
+
+      key = translation_override.send(:transform_pluralized_key, "js.new_topics.other")
+      expect(key).to eq('js.new_topics.other')
+
+      key = translation_override.send(:transform_pluralized_key, "js.new_topics.something_else")
+      expect(key).to eq('js.new_topics.something_else')
+    end
+  end
 end

@@ -1996,11 +1996,9 @@ en:
       unread: "unread"
       new_topics:
         one: "%{count} new topic"
-        few: "%{count} new topics"
         other: "{{count}} new topics"
       unread_topics:
         one: "%{count} unread topic"
-        few: "%{count} unread topics"
         other: "{{count}} unread topics"
       title: "Topic"
       invalid_access:
@@ -2015,19 +2013,15 @@ en:
         description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
       total_unread_posts:
         one: "you have %{count} unread post in this topic"
-        few: "you have %{count} unread posts in this topic"
         other: "you have {{count}} unread posts in this topic"
       unread_posts:
         one: "you have %{count} unread old post in this topic"
-        few: "you have %{count} unread old posts in this topic"
         other: "you have {{count}} unread old posts in this topic"
       new_posts:
         one: "there is %{count} new post in this topic since you last read it"
-        few: "there are %{count} new posts in this topic since you last read it"
         other: "there are {{count}} new posts in this topic since you last read it"
       likes:
         one: "there is %{count} like in this topic"
-        few: "there are %{count} likes in this topic"
         other: "there are {{count}} likes in this topic"
       back_to_list: "Back to Topic List"
       options: "Topic Options"
