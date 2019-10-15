@@ -206,6 +206,9 @@ class CategoriesController < ApplicationController
   def find_by_slug
     params.require(:category_slug)
     @category = Category.find_by_slug(params[:category_slug], params[:parent_category_slug])
+
+    raise Discourse::NotFound unless @category.present?
+
     if !guardian.can_see?(@category)
       if SiteSetting.detailed_404 && group = @category.access_category_via_group
         raise Discourse::InvalidAccess.new(
