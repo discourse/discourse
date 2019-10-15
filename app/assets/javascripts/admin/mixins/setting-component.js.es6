@@ -102,7 +102,7 @@ export default Ember.Mixin.create({
     $(this.element).off("keydown.setting-enter");
   }.on("willDestroyElement"),
 
-  _save(callback) {
+  _save(_) {
     Ember.warn("You should define a `_save` method", {
       id: "discourse.setting-component.missing-save"
     });
