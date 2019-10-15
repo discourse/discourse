@@ -20,7 +20,42 @@ class Admin::SiteSettingsController < Admin::AdminController
       value = Upload.find_by(url: value) || ''
     end
 
+    update_existing_users = params[:updateExistingUsers].present?
+    previous_category_ids = (SiteSetting.send(id) || "").split("|") if update_existing_users
+
     SiteSetting.set_and_log(id, value, current_user)
+
+    if update_existing_users
+      new_category_ids = (value || "").split("|")
+
+      case id
+      when "default_categories_watching"
+        notification_level = NotificationLevels.all[:watching]
+      when "default_categories_tracking"
+        notification_level = NotificationLevels.all[:tracking]
+      when "default_categories_muted"
+        notification_level = NotificationLevels.all[:muted]
+      when "default_categories_watching_first_post"
+        notification_level = NotificationLevels.all[:watching_first_post]
+      end
+
+      (previous_category_ids - new_category_ids).each do |category_id|
+        CategoryUser.where(category_id: category_id, notification_level: notification_level).delete_all
+      end
+
+      (new_category_ids - previous_category_ids).each do |category_id|
+        skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
+
+        User.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
+          category_users = []
+          users.each { |user| category_users << { category_id: category_id, user_id: user.id, notification_level: notification_level } }
+          CategoryUser.insert_all!(category_users)
+        end
+
+        CategoryUser.where(category_id: category_id, notification_level: notification_level).first_or_create!(notification_level: notification_level)
+      end
+    end
+
     render body: nil
   end
 
