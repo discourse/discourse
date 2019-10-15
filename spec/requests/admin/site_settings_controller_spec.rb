@@ -53,6 +53,44 @@ describe Admin::SiteSettingsController do
         expect(SiteSetting.test_setting).to eq('')
       end
 
+      describe 'default categories' do
+        let(:user1) { Fabricate(:user) }
+        let(:user2) { Fabricate(:user) }
+        let(:watching) { NotificationLevels.all[:watching] }
+        let(:tracking) { NotificationLevels.all[:tracking] }
+
+        let(:category_ids) { 3.times.collect { Fabricate(:category).id } }
+
+        before do
+          SiteSetting.setting(:default_categories_watching, category_ids.first(2).join("|"))
+          CategoryUser.create!(category_id: category_ids.last, notification_level: tracking, user: user2)
+        end
+
+        after do
+          SiteSetting.setting(:default_categories_watching, "")
+        end
+
+        it 'should update existing users user preference' do
+          put "/admin/site_settings/default_categories_watching.json", params: {
+            default_categories_watching: category_ids.last(2).join("|"),
+            updateExistingUsers: true
+          }
+
+          expect(CategoryUser.where(category_id: category_ids.first, notification_level: watching).count).to eq(0)
+          expect(CategoryUser.where(category_id: category_ids.last, notification_level: watching).count).to eq(User.count - 1)
+        end
+
+        it 'should not update existing users user preference' do
+          expect {
+            put "/admin/site_settings/default_categories_watching.json", params: {
+              default_categories_watching: category_ids.last(2).join("|")
+            }
+          }.to change { CategoryUser.where(category_id: category_ids.first, notification_level: watching).count }.by(0)
+
+          expect(CategoryUser.where(category_id: category_ids.last, notification_level: watching).count).to eq(0)
+        end
+      end
+
       describe 'upload site settings' do
         it 'can remove the site setting' do
           SiteSetting.test_upload = Fabricate(:upload)
