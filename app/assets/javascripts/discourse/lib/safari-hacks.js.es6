@@ -117,6 +117,7 @@ function positioningWorkaround($fixedElement) {
     if (
       lastTouchedElement &&
       ($(lastTouchedElement).hasClass("select-kit-header") ||
+        $(lastTouchedElement).closest(".autocomplete") ||
         ["span", "svg", "button"].includes(
           lastTouchedElement.nodeName.toLowerCase()
         ))
