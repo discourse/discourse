@@ -143,7 +143,6 @@ GEM
     hashdiff (0.3.9)
     hashie (3.6.0)
     highline (1.7.10)
-    hiredis (0.6.3)
     hkdf (0.3.0)
     htmlentities (4.3.4)
     http_accept_language (2.0.5)
@@ -467,7 +466,6 @@ DEPENDENCIES
   flamegraph
   gc_tracer
   highline (~> 1.7.0)
-  hiredis
   htmlentities
   http_accept_language (~> 2.0.5)
   listen
