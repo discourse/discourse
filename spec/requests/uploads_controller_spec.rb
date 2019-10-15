@@ -266,7 +266,6 @@ describe UploadsController do
     end
 
     it 'returns 200 when js file' do
-      ActionDispatch::FileHandler.any_instance.stubs(:match?).returns(false)
       upload = upload_file("test.js", "themes")
       get upload.url
       expect(response.status).to eq(200)

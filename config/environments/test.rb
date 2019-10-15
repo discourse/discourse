@@ -10,7 +10,7 @@ Discourse::Application.configure do
   config.cache_classes = true
 
   # Configure static asset server for tests with Cache-Control for performance
-  config.public_file_server.enabled = true
+  config.public_file_server.enabled = false
 
   # don't consider reqs local so we can properly handle exceptions like we do in prd
   config.consider_all_requests_local       = false
