@@ -709,7 +709,8 @@ class Category < ActiveRecord::Base
 
   def self.find_by_slug(category_slug, parent_category_slug = nil)
     if parent_category_slug
-      parent_category_id = self.where(slug: parent_category_slug, parent_category_id: nil).pluck(:id).first
+      parent_category_id = self.where(slug: parent_category_slug, parent_category_id: nil).select(:id)
+
       self.where(slug: category_slug, parent_category_id: parent_category_id).first
     else
       self.where(slug: category_slug, parent_category_id: nil).first

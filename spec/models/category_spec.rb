@@ -742,12 +742,36 @@ describe Category do
   end
 
   describe "find_by_slug" do
-    it "finds with category and sub category" do
-      category = Fabricate(:category_with_definition, slug: 'awesome-category')
-      sub_category = Fabricate(:category_with_definition, parent_category_id: category.id, slug: 'awesome-sub-category')
+    fab!(:category) do
+      Fabricate(:category_with_definition, slug: 'awesome-category')
+    end
 
+    fab!(:subcategory) do
+      Fabricate(
+        :category_with_definition,
+        parent_category_id: category.id,
+        slug: 'awesome-sub-category'
+      )
+    end
+
+    it "finds a category that exists" do
       expect(Category.find_by_slug('awesome-category')).to eq(category)
-      expect(Category.find_by_slug('awesome-sub-category', 'awesome-category')).to eq(sub_category)
+    end
+
+    it "finds a subcategory that exists" do
+      expect(Category.find_by_slug('awesome-sub-category', 'awesome-category')).to eq(subcategory)
+    end
+
+    it "produces nil if the parent doesn't exist" do
+      expect(Category.find_by_slug('awesome-sub-category', 'no-such-category')).to eq(nil)
+    end
+
+    it "produces nil if the parent doesn't exist and the requested category is a root category" do
+      expect(Category.find_by_slug('awesome-category', 'no-such-category')).to eq(nil)
+    end
+
+    it "produces nil if the subcategory doesn't exist" do
+      expect(Category.find_by_slug('no-such-category', 'awesome-category')).to eq(nil)
     end
   end
 
