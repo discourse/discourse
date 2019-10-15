@@ -13,23 +13,16 @@ export default {
         small_action: 3,
         whisper: 4
       },
-      group_names: [
-        "admins",
-        "discourse",
-        "everyone",
-        "mcneel",
-        "moderators",
-        "newrelic",
-        "plugin_authors",
-        "sitepoint",
-        "staff",
-        "translators",
-        "trust_level_0",
-        "trust_level_1",
-        "trust_level_2",
-        "trust_level_3",
-        "trust_level_4",
-        "ubuntu"
+      groups: [
+        { id: 1, name: "admins" },
+        { id: 2, name: "moderators" },
+        { id: 3, name: "staff" },
+        { id: 4, name: "custom_group" },
+        { id: 10, name: "trust_level_0" },
+        { id: 11, name: "trust_level_1" },
+        { id: 12, name: "trust_level_2" },
+        { id: 13, name: "trust_level_3" },
+        { id: 14, name: "trust_level_4" }
       ],
       filters: [
         "latest",
