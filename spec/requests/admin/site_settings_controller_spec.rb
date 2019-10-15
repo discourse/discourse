@@ -63,9 +63,11 @@ describe Admin::SiteSettingsController do
 
         before do
           SiteSetting.setting(:default_categories_watching, category_ids.first(2).join("|"))
-          SiteSetting.refresh!
-          user1
           CategoryUser.create!(category_id: category_ids.last, notification_level: tracking, user: user2)
+        end
+
+        after do
+          SiteSetting.setting(:default_categories_watching, "")
         end
 
         it 'should update existing users user preference' do
