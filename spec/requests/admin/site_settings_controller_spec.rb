@@ -59,32 +59,33 @@ describe Admin::SiteSettingsController do
         let(:watching) { NotificationLevels.all[:watching] }
         let(:tracking) { NotificationLevels.all[:tracking] }
 
+        let(:category_ids) { 3.times.collect { Fabricate(:category).id } }
+
         before do
-          3.times { |i| Fabricate(:category, id: (i + 2)) }
-          SiteSetting.setting(:default_categories_watching, "3|1|4")
+          SiteSetting.setting(:default_categories_watching, category_ids.first(2).join("|"))
           SiteSetting.refresh!
           user1
-          CategoryUser.create!(category_id: 2, notification_level: tracking, user: user2)
+          CategoryUser.create!(category_id: category_ids.last, notification_level: tracking, user: user2)
         end
 
         it 'should update existing users user preference' do
           put "/admin/site_settings/default_categories_watching.json", params: {
-            default_categories_watching: "3|2|4",
+            default_categories_watching: category_ids.last(2).join("|"),
             updateExistingUsers: true
           }
 
-          expect(CategoryUser.where(category_id: 1, notification_level: watching).count).to eq(0)
-          expect(CategoryUser.where(category_id: 2, notification_level: watching).count).to eq(User.count - 1)
+          expect(CategoryUser.where(category_id: category_ids.first, notification_level: watching).count).to eq(0)
+          expect(CategoryUser.where(category_id: category_ids.last, notification_level: watching).count).to eq(User.count - 1)
         end
 
         it 'should not update existing users user preference' do
           expect {
             put "/admin/site_settings/default_categories_watching.json", params: {
-              default_categories_watching: "3|2|4"
+              default_categories_watching: category_ids.last(2).join("|")
             }
-          }.to change { CategoryUser.where(category_id: 1, notification_level: watching).count }.by(0)
+          }.to change { CategoryUser.where(category_id: category_ids.first, notification_level: watching).count }.by(0)
 
-          expect(CategoryUser.where(category_id: 2, notification_level: watching).count).to eq(0)
+          expect(CategoryUser.where(category_id: category_ids.last, notification_level: watching).count).to eq(0)
         end
       end
 
