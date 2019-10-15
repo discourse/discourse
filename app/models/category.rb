@@ -710,6 +710,8 @@ class Category < ActiveRecord::Base
 
   def self.find_by_slug(category_slug, parent_category_slug = nil)
 
+    return nil if category_slug.nil?
+
     if SiteSetting.slug_generation_method == "encoded"
       parent_category_slug = CGI.escape(parent_category_slug) unless parent_category_slug.nil?
       category_slug = CGI.escape(category_slug)
