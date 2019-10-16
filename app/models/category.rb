@@ -630,6 +630,12 @@ class Category < ActiveRecord::Base
     id == SiteSetting.uncategorized_category_id
   end
 
+  # By default we seed Uncategorized, Site Feedback, Staff and Lounge
+  # so categories with id > 4 are user created
+  def seeded?
+    id < 5
+  end
+
   @@url_cache = DistributedCache.new('category_url')
 
   def clear_url_cache
