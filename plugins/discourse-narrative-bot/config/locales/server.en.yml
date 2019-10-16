@@ -293,7 +293,7 @@ en:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Did you notice you’re now back at the beginning? Feed this poor hungry capybara by **replying with the `:herb:` emoji** and you’ll be automatically taken to the end.
+          Did you notice you’re now back at the beginning? Feed this poor hungry capybara by **replying with the `%{search_answer}` emoji** and you’ll be automatically taken to the end.
         reply: |-
           Yay you found it :tada:
 
