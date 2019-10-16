@@ -9,15 +9,21 @@
     </label>
 
     {{#if imageUrl}}
-      <button {{action "trash"}} class="btn btn-danger pad-left no-text">{{d-icon "far-trash-alt"}}</button>
-    {{/if}}
+      {{d-button
+        action=(action "trash")
+        class="btn-danger pad-left no-text"
+        icon="far-trash-alt"
+        type="button"
+      }}
 
-    {{#if imageUrl}}
-      {{d-button icon="discourse-expand"
-          title='expand'
-          class="btn image-uploader-lightbox-btn no-text"
-          action=(action "toggleLightbox")
-          disabled=loadingLightbox}}
+      {{d-button
+        icon="discourse-expand"
+        title="expand"
+        type="button"
+        class="image-uploader-lightbox-btn no-text"
+        action=(action "toggleLightbox")
+        disabled=loadingLightbox
+      }}
     {{/if}}
 
     <span class="btn {{unless uploading 'hidden'}}">{{i18n 'upload_selector.uploading'}} {{uploadProgress}}%</span>
