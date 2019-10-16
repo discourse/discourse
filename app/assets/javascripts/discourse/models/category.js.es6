@@ -243,7 +243,11 @@ Category.reopenClass({
   },
 
   findSingleBySlug(slug) {
-    return Category.list().find(c => Category.slugFor(c) === slug);
+    if (Discourse.SiteSettings.slug_generation_method !== "encoded") {
+      return Category.list().find(c => Category.slugFor(c) === slug);
+    } else {
+      return Category.list().find(c => Category.slugFor(c) === encodeURI(slug));
+    }
   },
 
   findById(id) {

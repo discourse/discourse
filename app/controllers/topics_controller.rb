@@ -36,7 +36,7 @@ class TopicsController < ApplicationController
   skip_before_action :check_xhr, only: [:show, :feed]
 
   def id_for_slug
-    topic = Topic.find_by(slug: params[:slug].downcase)
+    topic = Topic.find_by_slug(params[:slug])
     guardian.ensure_can_see!(topic)
     raise Discourse::NotFound unless topic
     render json: { slug: topic.slug, topic_id: topic.id, url: topic.url }
@@ -64,7 +64,7 @@ class TopicsController < ApplicationController
     # Special case: a slug with a number in front should look by slug first before looking
     # up that particular number
     if params[:id] && params[:id] =~ /^\d+[^\d\\]+$/
-      topic = Topic.find_by(slug: params[:id].downcase)
+      topic = Topic.find_by_slug(params[:id])
       return redirect_to_correct_topic(topic, opts[:post_number]) if topic
     end
 
@@ -81,7 +81,7 @@ class TopicsController < ApplicationController
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
     rescue Discourse::NotFound => ex
       if params[:id]
-        topic = Topic.find_by(slug: params[:id].downcase)
+        topic = Topic.find_by_slug(params[:id])
         return redirect_to_correct_topic(topic, opts[:post_number]) if topic
       end
 
