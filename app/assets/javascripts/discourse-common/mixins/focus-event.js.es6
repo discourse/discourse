@@ -1,8 +1,6 @@
 import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Mixin.create({
-  appEvents: Ember.inject.service(),
-
   ready() {
     this._super(...arguments);
 
