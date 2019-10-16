@@ -65,16 +65,27 @@ module DiscourseTagging
         end
 
         # add missing mandatory parent tags
-        parent_tags = TagGroup.includes(:parent_tag).where("tag_groups.id IN (
-          SELECT tg.id
+        tag_ids = tags.map(&:id)
+
+        parent_tags_map = DB.query("
+          SELECT tgm.tag_id, tg.parent_tag_id
             FROM tag_groups tg
       INNER JOIN tag_group_memberships tgm
               ON tgm.tag_group_id = tg.id
            WHERE tg.parent_tag_id IS NOT NULL
-             AND tgm.tag_id IN (?))", tags.map(&:id)).map(&:parent_tag)
+             AND tgm.tag_id IN (?)
+        ", tag_ids).inject({}) do |h, v|
+          h[v.tag_id] ||= []
+          h[v.tag_id] << v.parent_tag_id
+          h
+        end
 
-        parent_tags.reject { |t| tag_names.include?(t.name) }.each do |tag|
-          tags << tag
+        missing_parent_tag_ids = parent_tags_map.map do |_, parent_tag_ids|
+          (tag_ids & parent_tag_ids).size == 0 ? parent_tag_ids.first : nil
+        end.compact.uniq
+
+        unless missing_parent_tag_ids.empty?
+          tags = tags + Tag.where(id: missing_parent_tag_ids).all
         end
 
         # validate minimum required tags for a category
@@ -187,8 +198,18 @@ module DiscourseTagging
         exclude_group_ids = one_per_topic_group_ids(selected_tag_ids)
 
         if exclude_group_ids.empty?
-          sql = "tags.id NOT IN (#{TAG_GROUP_TAG_IDS_SQL} WHERE tg.parent_tag_id NOT IN (?))"
-          query = query.where(sql, selected_tag_ids)
+          # tags that don't belong to groups that require a parent tag,
+          # and tags that belong to groups with parent tag selected
+          query = query.where(<<~SQL, selected_tag_ids, selected_tag_ids)
+            tags.id NOT IN (
+              #{TAG_GROUP_TAG_IDS_SQL}
+              WHERE tg.parent_tag_id NOT IN (?)
+            )
+            OR tags.id IN (
+              #{TAG_GROUP_TAG_IDS_SQL}
+              WHERE tg.parent_tag_id IN (?)
+            )
+          SQL
         else
           # It's possible that the selected tags violate some one-tag-per-group restrictions,
           # so filter them out by picking one from each group.
