@@ -25,6 +25,7 @@ export default Ember.Controller.extend(
 
     complete: false,
     accountChallenge: 0,
+    accountHoneypot: 0,
     formSubmitted: false,
     rejectedEmails: Ember.A([]),
     prefilledUsername: null,
@@ -198,28 +199,8 @@ export default Ember.Controller.extend(
           this._challengeExpiry = 30;
         }
 
-        const confirmation = document.getElementById(
-          "new-account-confirmation"
-        );
-        if (confirmation) {
-          confirmation.value = json.value;
-        }
-
-        // Chrome autocomplete is buggy per:
-        // https://bugs.chromium.org/p/chromium/issues/detail?id=987293
-        // work around issue while leaving a semi useable honeypot for
-        // bots that are running full Chrome
-        if (confirmation && navigator.userAgent.indexOf("Chrome") > 0) {
-          const newConfirmation = document.createElement("input");
-
-          newConfirmation.type = "text";
-          newConfirmation.id = "new-account-confirmation";
-          newConfirmation.value = json.value;
-
-          confirmation.parentNode.replaceChild(newConfirmation, confirmation);
-        }
-
         this.setProperties({
+          accountHoneypot: json.value,
           accountChallenge: json.challenge
             .split("")
             .reverse()
@@ -237,9 +218,7 @@ export default Ember.Controller.extend(
         "accountChallenge"
       );
 
-      attrs["accountPasswordConfirm"] = document.getElementById(
-        "new-account-confirmation"
-      ).value;
+      attrs["accountPasswordConfirm"] = this.accountHoneypot;
 
       const userFields = this.userFields;
       const destinationUrl = this.get("authOptions.destination_url");
