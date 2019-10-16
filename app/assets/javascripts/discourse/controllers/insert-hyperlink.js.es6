@@ -169,7 +169,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       if (!e.metaKey && !e.ctrlKey) {
         e.preventDefault();
         e.stopPropagation();
-        this.selectLink(e.target);
+        this.selectLink(e.target.closest(".search-link"));
       }
     },
     search() {
