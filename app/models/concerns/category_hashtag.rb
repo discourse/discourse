@@ -12,7 +12,7 @@ module CategoryHashtag
       category = Category.where(slug: parent_slug, parent_category_id: nil)
 
       if child_slug
-        Category.where(slug: child_slug, parent_category_id: category.pluck(:id).first).first
+        Category.where(slug: child_slug, parent_category_id: category.select(:id)).first
       else
         category.first
       end
