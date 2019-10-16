@@ -217,7 +217,7 @@
 
 <% if @popular_posts.present? %>
 
-<center style="color:#0a0a0a;background:#f3f3f3;font-size:22px;font-weight:400;padding: 20px 0;font-family:Helvetica,Arial,sans-serif;">
+<center class="header-popular-posts" style="color:#0a0a0a;background:#f3f3f3;font-size:22px;font-weight:400;padding: 20px 0;font-family:Helvetica,Arial,sans-serif;">
   <%=t 'user_notifications.digest.popular_posts' %>
 </center>
 
@@ -229,7 +229,7 @@
 <% @popular_posts.each do |post| %>
 
 <!--   Beginning of Popular Post   -->
-<table dir="<%= rtl? ? 'rtl' : 'ltr' %>" style="width:100%;background:#fefefe;border-spacing:0;padding:0;text-align:<%= rtl? ? 'right' : 'left' %>;vertical-align:top;">
+<table class="popular-post-excerpt" dir="<%= rtl? ? 'rtl' : 'ltr' %>" style="width:100%;background:#fefefe;border-spacing:0;padding:0;text-align:<%= rtl? ? 'right' : 'left' %>;vertical-align:top;">
   <tbody>
     <tr>
       <td class="post-excerpt" style="color:#0a0a0a;font-size:14px;font-weight:normal;padding:16px;text-align:<%= rtl? ? 'right' : 'left' %>;width:100%;">
@@ -239,7 +239,7 @@
   </tbody>
 </table>
 
-<table dir="<%= rtl? ? 'rtl' : 'ltr' %>" style="border-spacing:0;background-color:#f3f3f3;padding:0;text-align:<%= rtl? ? 'right' : 'left' %>;vertical-align:top;width:100%">
+<table class="popular-post-spacer" dir="<%= rtl? ? 'rtl' : 'ltr' %>" style="border-spacing:0;background-color:#f3f3f3;padding:0;text-align:<%= rtl? ? 'right' : 'left' %>;vertical-align:top;width:100%">
   <tbody>
     <tr>
       <td style="border-spacing:0;padding:0;color:#0a0a0a;line-height:1.3;padding:<%= rtl? ? '0 65px 0 0' : '0 0 0 65px' %>;text-align:<%= rtl? ? 'right' : 'left' %>;">
@@ -249,7 +249,7 @@
   </tbody>
 </table>
 
-<table dir="<%= rtl? ? 'rtl' : 'ltr' %>" style="background-color:#f3f3f3;padding:0;position:relative;text-align:<%= rtl? ? 'right' : 'left' %>;vertical-align:top;width:100%">
+<table class="popular-post-meta" dir="<%= rtl? ? 'rtl' : 'ltr' %>" style="background-color:#f3f3f3;padding:0;position:relative;text-align:<%= rtl? ? 'right' : 'left' %>;vertical-align:top;width:100%">
   <tbody>
     <tr>
       <td style="padding:0 8px 8px 8px;text-align:<%= rtl? ? 'right' : 'left' %>;width:50px;vertical-align:top;">
