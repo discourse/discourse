@@ -401,12 +401,16 @@
 
 <%= digest_custom_html("above_footer") %>
 
-<div dir="<%= rtl? ? 'rtl' : 'ltr' %>" class='summary-footer'>
+<table dir="<%= rtl? ? 'rtl' : 'ltr' %>" class='summary-footer' style="width: 100%">
+  <tr>
+    <td align="center">
   <%=raw(t 'user_notifications.digest.unsubscribe',
            site_link: html_site_link(@anchor_color),
            email_preferences_link: link_to(t('user_notifications.digest.your_email_settings'), Discourse.base_url + '/my/preferences/emails'),
            unsubscribe_link: link_to(t('user_notifications.digest.click_here'), "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}", {:style=>"color: ##{@anchor_color}"}))  %>
-</div>
+    </td>
+  </tr>
+</table>
 
 <%= digest_custom_html("below_footer") %>
 
