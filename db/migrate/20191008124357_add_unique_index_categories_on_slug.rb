@@ -5,8 +5,7 @@ class AddUniqueIndexCategoriesOnSlug < ActiveRecord::Migration[6.0]
     add_index(
       :categories,
       'COALESCE(parent_category_id, -1), slug',
-      name: 'unique_index_categories_on_slug',
-      unique: true
+      name: 'unique_index_categories_on_slug'
     )
   end
 end
