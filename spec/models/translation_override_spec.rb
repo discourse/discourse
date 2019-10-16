@@ -7,6 +7,7 @@ describe TranslationOverride do
     describe '#value' do
       before do
         I18n.backend.store_translations(I18n.locale, some_key: '%{first} %{second}')
+        I18n.backend.store_translations(:en, something: { one: '%{first} %{second}', other: '%{first} %{second}'})
       end
 
       describe 'when interpolation keys are missing' do
@@ -32,6 +33,40 @@ describe TranslationOverride do
             expect(translation_override.errors.full_messages).to include(I18n.t(
               'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
               keys: 'something'
+            ))
+          end
+        end
+      end
+
+      describe 'pluralized keys' do
+        describe 'valid keys' do
+          it 'converts zero to one' do
+            translation_override = TranslationOverride.upsert!(I18n.locale, 'something.zero', '%{first} %{second} hello')
+            expect(translation_override.errors.full_messages).to eq([])
+          end
+
+          it 'converts two to one' do
+            translation_override = TranslationOverride.upsert!(I18n.locale, 'something.two', '%{first} %{second} hello')
+            expect(translation_override.errors.full_messages).to eq([])
+          end
+
+          it 'converts few to one' do
+            translation_override = TranslationOverride.upsert!(I18n.locale, 'something.few', '%{first} %{second} hello')
+            expect(translation_override.errors.full_messages).to eq([])
+          end
+
+          it 'converts many to one' do
+            translation_override = TranslationOverride.upsert!(I18n.locale, 'something.many', '%{first} %{second} hello')
+            expect(translation_override.errors.full_messages).to eq([])
+          end
+        end
+
+        describe 'invalid keys' do
+          it "does not transform 'tonz'" do
+            translation_override = TranslationOverride.upsert!(I18n.locale, 'something.tonz', '%{first} %{second} hello')
+            expect(translation_override.errors.full_messages).to include(I18n.t(
+              'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
+              keys: 'first, second'
             ))
           end
         end
@@ -94,35 +129,6 @@ describe TranslationOverride do
       let(:translation_key) { 'topic_flag_types.spam.description' }
 
       include_examples "resets site text"
-    end
-  end
-
-  describe '#transform_pluralized_key' do
-    let(:translation_override) { TranslationOverride.new }
-    it "transforms key that end with a pluralization to end with 'one'" do
-      transformed_key = 'js.new_topics.one'
-      key = translation_override.send(:transform_pluralized_key, "js.new_topics.few")
-      expect(key).to eq(transformed_key)
-
-      key = translation_override.send(:transform_pluralized_key, "js.new_topics.zero")
-      expect(key).to eq(transformed_key)
-
-      key = translation_override.send(:transform_pluralized_key, "js.new_topics.many")
-      expect(key).to eq(transformed_key)
-
-      key = translation_override.send(:transform_pluralized_key, "js.new_topics.two")
-      expect(key).to eq(transformed_key)
-    end
-
-    it 'does not transform keys that do not end in a pluralization' do
-      key = translation_override.send(:transform_pluralized_key, "js.new_topics.one")
-      expect(key).to eq('js.new_topics.one')
-
-      key = translation_override.send(:transform_pluralized_key, "js.new_topics.other")
-      expect(key).to eq('js.new_topics.other')
-
-      key = translation_override.send(:transform_pluralized_key, "js.new_topics.something_else")
-      expect(key).to eq('js.new_topics.something_else')
     end
   end
 end
