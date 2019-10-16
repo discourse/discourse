@@ -7,7 +7,7 @@ describe TranslationOverride do
     describe '#value' do
       before do
         I18n.backend.store_translations(I18n.locale, some_key: '%{first} %{second}')
-        I18n.backend.store_translations(:en, something: { one: '%{first} %{second}', other: '%{first} %{second}'})
+        I18n.backend.store_translations(:en, something: { one: '%{first} %{second}', other: '%{first} %{second}' })
       end
 
       describe 'when interpolation keys are missing' do
