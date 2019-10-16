@@ -1,6 +1,8 @@
 import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Mixin.create({
+  appEvents: Ember.inject.service(),
+
   ready() {
     this._super(...arguments);
 
@@ -26,7 +28,7 @@ export default Ember.Mixin.create({
 
   _onChange() {
     const container = getOwner(this);
-    const appEvents = container.lookup("app-events:main");
+    const appEvents = container.lookup("service:app-events");
 
     if (document.visibilityState === "hidden") {
       if (Discourse.hasFocus) {
