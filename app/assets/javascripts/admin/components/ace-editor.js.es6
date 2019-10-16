@@ -48,7 +48,7 @@ export default Ember.Component.extend({
     }
   },
 
-  _destroyEditor: function() {
+  _destroyEditor: Ember.on("willDestroyElement", function() {
     if (this._editor) {
       this._editor.destroy();
       this._editor = null;
@@ -59,7 +59,7 @@ export default Ember.Component.extend({
     }
 
     $(window).off("ace:resize");
-  }.on("willDestroyElement"),
+  }),
 
   resize() {
     if (this._editor) {

@@ -202,7 +202,7 @@ export const ListItemDefaults = {
     $topic.on("animationend", () => $topic.removeClass("highlighted"));
   },
 
-  _highlightIfNeeded: function() {
+  _highlightIfNeeded: Ember.on("didInsertElement", function() {
     // highlight the last topic viewed
     if (this.session.get("lastTopicIdViewed") === this.get("topic.id")) {
       this.session.set("lastTopicIdViewed", null);
@@ -212,7 +212,7 @@ export const ListItemDefaults = {
       this.set("topic.highlight", false);
       this.highlight();
     }
-  }.on("didInsertElement")
+  })
 };
 
 export default Ember.Component.extend(
