@@ -2593,7 +2593,7 @@ en:
         The community flagged this post and now it is hidden. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
-    
+
     flags_disagreed:
       title: "Flagged post restored by staff"
       subject_template: "Flagged post restored by staff"
@@ -2609,7 +2609,7 @@ en:
         %{flagged_post_raw_content}
         ```
         [/details]
-  
+
     flags_agreed_and_post_deleted:
       title: "Flagged post removed by staff"
       subject_template: "Flagged post removed by staff"
@@ -3089,7 +3089,7 @@ en:
         We have some new advice and recommendations for you based on your current site settings.
 
         [Visit your site dashboard](%{base_url}/admin) to see it.
-        
+
         If nothing is visible on your dashboard, another staff member may have already acted on this advice. A list of staff actions can be found in your [Staff Action Logs](%{base_url}/admin/logs/staff_action_logs).
 
     new_user_of_the_month:
@@ -3152,35 +3152,47 @@ en:
     invited_group_to_private_message_body: |
       %{username} invited @%{group_name} to a message
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
       at
 
       > %{site_title} -- %{site_description}
+
+      To join the message, click the link below:
+
+      %{topic_url}
 
     invited_to_private_message_body: |
       %{username} invited you to a message
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
       at
 
       > %{site_title} -- %{site_description}
+
+      To join the message, click the link below:
+
+      %{topic_url}
 
     invited_to_topic_body: |
       %{username} invited you to a discussion
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
       at
 
       > %{site_title} -- %{site_description}
+
+      To join the discussion, click the link below:
+
+      %{topic_url}
 
     user_invited_to_private_message_pm_group:
       title: "User Invited Group to PM"

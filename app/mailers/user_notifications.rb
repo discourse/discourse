@@ -566,7 +566,8 @@ class UserNotifications < ActionMailer::Base
         topic_title: gsub_emoji_to_unicode(title),
         topic_excerpt: topic_excerpt,
         site_title: SiteSetting.title,
-        site_description: SiteSetting.site_description
+        site_description: SiteSetting.site_description,
+        topic_url: post.topic.url
       )
 
       html = PrettyText.cook(message, sanitize: false).html_safe
