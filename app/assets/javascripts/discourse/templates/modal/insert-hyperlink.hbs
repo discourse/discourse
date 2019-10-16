@@ -11,13 +11,21 @@
       {{/if}}
       {{#if searchResults}}
         <div class="internal-link-results">
-          {{#each searchResults as |r index|}}
+          {{#each searchResults as |result|}}
             <a
               class="search-link"
-              href="{{r.url}}"
+              href="{{result.url}}"
               onclick={{action "linkClick"}}
-              data-title="{{r.title}}">
-              {{replace-emoji r.fancy_title}}
+              data-title="{{result.title}}">
+              {{topic-status topic=result disableActions=true}}
+              {{replace-emoji result.fancy_title}}
+              <div class="search-category">
+                {{#if result.category.parentCategory}}
+                  {{category-link result.category.parentCategory}}
+                {{/if}}
+                {{category-link result.category hideParent=true}}
+                {{discourse-tags result}}
+              </div>
             </a>
           {{/each}}
         </div>

@@ -225,7 +225,7 @@
           max-height: 150px;
           width: 90%;
           overflow-y: auto;
-          > a {
+          > .search-link {
             padding: 6px;
             border-bottom: 1px solid $primary-low;
             cursor: pointer;
@@ -233,6 +233,14 @@
             &:hover,
             &:focus {
               background-color: $highlight-medium;
+            }
+            .search-category {
+              display: flex;
+              align-items: center;
+            }
+            .discourse-tags {
+              display: inline-block;
+              font-size: $font-down-1;
             }
           }
         }
