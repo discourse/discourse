@@ -1604,7 +1604,7 @@ sv:
     missing: "Tyvärr, vi kunde inte hitta någon avatar associerad med den e-postadressen. Kan du försöka ladda upp den igen?"
   flag_reason:
     sockpuppet: "En ny användare skapade ett ämne, och en annan ny användare på samma IP-adress (%{ip_address}) svarade. Granska webbplatsinställningen <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Den här nya användaren försökte skapa flera inlägg med länkar till samma domän (%{domain}). Granska webbplatsinställningen <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    spam_hosts: "Den här nya användaren försökte skapa flera inlägg med länkar till samma domän. Granska webbplatsinställningen <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "Översteg max_emails_per_day_per_user"
     exceeded_bounces_limit: "Översteg bounce_score_threshold"

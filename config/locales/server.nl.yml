@@ -2387,7 +2387,7 @@ nl:
     missing: "Sorry, we kunnen geen avatar vinden die met dat e-mailadres is gekoppeld. Kunt u proberen deze opnieuw te uploaden?"
   flag_reason:
     sockpuppet: "Een nieuwe gebruiker heeft een topic aangemaakt, en een andere nieuwe gebruiker op hetzelfde IP-adres (%{ip_address}) heeft geantwoord. Bekijk de website-instelling <a href='%{base_path}/admin/site_settings/category/spam'>'flag_sockpuppets'</a>."
-    spam_hosts: "Deze nieuwe gebruiker heeft geprobeerd meerdere berichten met koppelingen naar hetzelfde domein (%{domain}) aan te maken. Bekijk de website-instelling <a href='%{base_path}/admin/site_settings/category/spam'>newuser_spam_host_threshold</a>."
+    spam_hosts: "Deze nieuwe gebruiker heeft geprobeerd meerdere berichten met koppelingen naar hetzelfde domein aan te maken. Bekijk de website-instelling <a href='%{base_path}/admin/site_settings/category/spam'>newuser_spam_host_threshold</a>."
   skipped_email_log:
     exceeded_emails_limit: "max_emails_per_day_per_user overschreden"
     exceeded_bounces_limit: "bounce_score_threshold overschreden"

@@ -2781,7 +2781,7 @@ ca:
     missing: "No podem trobar cap avatar associat amb aquesta adreça de correu. Proveu de pujar-lo de nou."
   flag_reason:
     sockpuppet: "Un usuari nou ha creat un tema, i un altre usuari nou amb la mateixa adreça IP (%{ip_address}) hi ha respost. Mireu el paràmetre <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> de la configuració del lloc web."
-    spam_hosts: "Aquest usuari nou ha creat moltes publicacions amb enllaços al mateix domini (%{domain}). Vegeu el paràmetre <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> de la configuració del lloc web."
+    spam_hosts: "Aquest usuari nou ha creat moltes publicacions amb enllaços al mateix domini. Vegeu el paràmetre <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> de la configuració del lloc web."
   skipped_email_log:
     exceeded_emails_limit: "S'ha excedit max_emails_per_day_per_user"
     exceeded_bounces_limit: "S'ha superat bounce_score_threshold"

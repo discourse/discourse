@@ -2991,7 +2991,7 @@ it:
     missing: "Spiacenti, non troviamo nessun avatar associato a questo indirizzo email. Puoi provare a caricarlo nuovamente?"
   flag_reason:
     sockpuppet: "Un nuovo utente ha creato un argomento, e un altro nuovo utente ha risposto dallo stesso indirizzo IP (%{ip_address}). Vedi l'impostazione del sito <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Questo nuovo utente ha provato a creare più messaggi con collegamenti allo stesso dominio (%{domain}). Vedi l'impostazione del sito <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    spam_hosts: "Questo nuovo utente ha provato a creare più messaggi con collegamenti allo stesso dominio. Vedi l'impostazione del sito <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "Ha superato max_emails_per_day_per_user"
     exceeded_bounces_limit: "Ha superato bounce_score_threshold"
