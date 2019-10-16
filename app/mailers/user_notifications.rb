@@ -558,7 +558,12 @@ class UserNotifications < ActionMailer::Base
         end
 
       topic_excerpt = post.excerpt.tr("\n", " ") if post.is_first_post? && post.excerpt
-      topic_excerpt = "" if SiteSetting.private_email?
+      topic_url = post.topic&.url
+
+      if SiteSetting.private_email?
+        topic_excerpt = ""
+        topic_url = ""
+      end
 
       message = I18n.t(invite_template,
         username: username,
@@ -567,7 +572,7 @@ class UserNotifications < ActionMailer::Base
         topic_excerpt: topic_excerpt,
         site_title: SiteSetting.title,
         site_description: SiteSetting.site_description,
-        topic_url: post.topic.url
+        topic_url: topic_url
       )
 
       html = PrettyText.cook(message, sanitize: false).html_safe
