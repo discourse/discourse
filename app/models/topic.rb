@@ -988,6 +988,15 @@ class Topic < ActiveRecord::Base
     slug
   end
 
+  def self.find_by_slug(slug)
+    if SiteSetting.slug_generation_method != "encoded"
+      Topic.find_by(slug: slug.downcase)
+    else
+      encoded_slug = CGI.escape(slug)
+      Topic.find_by(slug: encoded_slug)
+    end
+  end
+
   def title=(t)
     slug = Slug.for(t.to_s)
     write_attribute(:slug, slug)

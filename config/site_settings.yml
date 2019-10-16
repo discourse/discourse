@@ -1730,6 +1730,7 @@ uncategorized:
   slug_generation_method:
     default: "ascii"
     enum: "SlugSetting"
+    client: true
     locale_default:
       ja: "none"
       zh_CN: "none"
