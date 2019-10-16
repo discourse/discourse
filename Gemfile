@@ -36,13 +36,6 @@ gem 'mail', require: false
 gem 'mini_mime'
 gem 'mini_suffix'
 
-# holding off redis upgrade temporarily as it is having issues with our current
-# freedom patch, we will follow this up.
-#
-# FrozenError: can't modify frozen Hash
-# /var/www/discourse/vendor/bundle/ruby/2.5.0/gems/redis-4.1.0/lib/redis/client.rb:93:in `delete'
-# /var/www/discourse/vendor/bundle/ruby/2.5.0/gems/redis-4.1.0/lib/redis/client.rb:93:in `initialize'
-# /var/www/discourse/lib/freedom_patches/redis.rb:7:in `initialize'
 gem 'redis', '4.1.3'
 gem 'redis-namespace'
 
