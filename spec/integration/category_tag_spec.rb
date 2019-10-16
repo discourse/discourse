@@ -212,6 +212,23 @@ describe "category tag restrictions" do
       expect(filter_allowed_tags(for_topic: true, selected_tags: [tag1.name, tag3.name])).to contain_exactly(tag1, tag2, tag3, tag4)
     end
 
+    it "filter_allowed_tags returns tags common to more than one tag group with parent tag" do
+      common = Fabricate(:tag, name: 'common')
+      tag_group = Fabricate(:tag_group, parent_tag_id: tag1.id)
+      tag_group.tags = [tag2, common]
+      tag_group = Fabricate(:tag_group, parent_tag_id: tag3.id)
+
+      tag_group.tags = [tag4]
+      expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag1, tag3)
+      expect(filter_allowed_tags(for_input: true, selected_tags: [tag1.name])).to contain_exactly(tag2, tag3, common)
+      expect(filter_allowed_tags(for_input: true, selected_tags: [tag3.name])).to contain_exactly(tag4, tag1)
+
+      tag_group.tags = [tag4, common]
+      expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag1, tag3)
+      expect(filter_allowed_tags(for_input: true, selected_tags: [tag1.name])).to contain_exactly(tag2, tag3, common)
+      expect(filter_allowed_tags(for_input: true, selected_tags: [tag3.name])).to contain_exactly(tag4, tag1, common)
+    end
+
     context "and category restrictions" do
       fab!(:car_category)    { Fabricate(:category) }
       fab!(:other_category)  { Fabricate(:category) }

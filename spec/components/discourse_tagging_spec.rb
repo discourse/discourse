@@ -194,9 +194,9 @@ describe DiscourseTagging do
     context 'tag group with parent tag' do
       let(:topic) { Fabricate(:topic, user: user) }
       let(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1) }
+      let(:tag_group) { Fabricate(:tag_group, parent_tag_id: tag1.id) }
 
       before do
-        tag_group = Fabricate(:tag_group, parent_tag_id: tag1.id)
         tag_group.tags = [tag3]
       end
 
@@ -221,6 +221,19 @@ describe DiscourseTagging do
         expect(topic.reload.tags.map(&:name)).to contain_exactly(
           *[tag1, tag2, tag3, parent_tag].map(&:name)
         )
+      end
+
+      it "adds only the necessary parent tags" do
+        common = Fabricate(:tag, name: 'common')
+        tag_group.tags = [tag3, common]
+
+        parent_tag = Fabricate(:tag, name: 'parent')
+        tag_group2 = Fabricate(:tag_group, parent_tag_id: parent_tag.id)
+        tag_group2.tags = [tag2, common]
+
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [parent_tag.name, common.name])
+        expect(valid).to eq(true)
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(*[parent_tag, common].map(&:name))
       end
     end
   end
