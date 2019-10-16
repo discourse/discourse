@@ -5,6 +5,41 @@ require 'rails_helper'
 describe UsersController do
   let(:user) { Fabricate(:user) }
 
+  describe "#full account registration flow" do
+    it "will correctly handle honeypot and challenge" do
+
+      get '/u/hp.json'
+      expect(response.status).to eq(200)
+
+      json = JSON.parse(response.body)
+
+      params = {
+        email: 'jane@jane.com',
+        name: 'jane',
+        username: 'jane',
+        password_confirmation: json['value'],
+        challenge: json['challenge'].reverse,
+        password: SecureRandom.hex
+      }
+
+      secure_session = SecureSession.new(session["secure_session_id"])
+
+      expect(secure_session[UsersController::HONEYPOT_KEY]).to eq(json["value"])
+      expect(secure_session[UsersController::CHALLENGE_KEY]).to eq(json["challenge"])
+
+      post '/u.json', params: params
+
+      expect(response.status).to eq(200)
+
+      jane = User.find_by(username: 'jane')
+
+      expect(jane.email).to eq('jane@jane.com')
+
+      expect(secure_session[UsersController::HONEYPOT_KEY]).to eq(nil)
+      expect(secure_session[UsersController::CHALLENGE_KEY]).to eq(nil)
+    end
+  end
+
   describe '#perform_account_activation' do
     let(:token) do
       return @token if @token.present?
@@ -1020,22 +1055,15 @@ describe UsersController do
 
     shared_examples 'honeypot fails' do
       it 'should not create a new user' do
+        User.any_instance.expects(:enqueue_welcome_message).never
+
         expect {
           post "/u.json", params: create_params
         }.to_not change { User.count }
-        expect(response.status).to eq(200)
-      end
 
-      it 'should not send an email' do
-        User.any_instance.expects(:enqueue_welcome_message).never
-        post "/u.json", params: create_params
         expect(response.status).to eq(200)
-      end
 
-      it 'should say it was successful' do
-        post "/u.json", params: create_params
         json = JSON::parse(response.body)
-        expect(response.status).to eq(200)
         expect(json["success"]).to eq(true)
 
         # should not change the session
@@ -3361,7 +3389,6 @@ describe UsersController do
         end
 
         it 'succeeds on correct password' do
-          session = {}
           ApplicationController.any_instance.stubs(:secure_session).returns("confirmed-password-#{user.id}" => "true")
           post "/users/create_second_factor_totp.json"
 
