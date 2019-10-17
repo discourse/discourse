@@ -34,7 +34,7 @@ export default Ember.Component.extend(UploadMixin, {
     };
   },
 
-  _init: function() {
+  _init: Ember.on("didInsertElement", function() {
     const $upload = $(this.element);
 
     $upload.on("fileuploadadd", (e, data) => {
@@ -47,5 +47,5 @@ export default Ember.Component.extend(UploadMixin, {
         })
         .catch(popupAjaxError);
     });
-  }.on("didInsertElement")
+  })
 });

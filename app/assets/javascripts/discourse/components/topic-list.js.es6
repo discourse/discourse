@@ -12,12 +12,12 @@ export default Ember.Component.extend({
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: Ember.computed.alias("topics"),
 
-  _init: function() {
+  _init: Ember.on("init", function() {
     this.addObserver("hideCategory", this.rerender);
     this.addObserver("order", this.rerender);
     this.addObserver("ascending", this.rerender);
     this.refreshLastVisited();
-  }.on("init"),
+  }),
 
   @computed("bulkSelectEnabled")
   toggleInTitle(bulkSelectEnabled) {
