@@ -23,7 +23,7 @@ module Jobs
       Email::Processor.process!(popmail.pop)
     end
 
-    POLL_MAILBOX_TIMEOUT_ERROR_KEY = "poll_mailbox_timeout_error_key".freeze
+    POLL_MAILBOX_TIMEOUT_ERROR_KEY ||= "poll_mailbox_timeout_error_key".freeze
 
     def poll_pop3
       pop3 = Net::POP3.new(SiteSetting.pop3_polling_host, SiteSetting.pop3_polling_port)
