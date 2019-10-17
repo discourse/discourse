@@ -283,13 +283,11 @@ Category.reopenClass({
           return (
             item &&
             item.get("parentCategory") === parentCategory &&
-            (
-              Discourse.SiteSettings.slug_generation_method !== "encoded" &&
-              Category.slugFor(item) === parentSlug + "/" + slug
-              ||
-              Discourse.SiteSettings.slug_generation_method === "encoded" &&
-              Category.slugFor(item) === encodeURI(parentSlug) + "/" + encodeURI(slug)
-            )
+            ((Discourse.SiteSettings.slug_generation_method !== "encoded" &&
+              Category.slugFor(item) === parentSlug + "/" + slug) ||
+              (Discourse.SiteSettings.slug_generation_method === "encoded" &&
+                Category.slugFor(item) ===
+                  encodeURI(parentSlug) + "/" + encodeURI(slug)))
           );
         });
       }
