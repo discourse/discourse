@@ -2093,6 +2093,7 @@ tags:
     default: false
     refresh: true
   max_tags_in_filter_list:
+    client: true
     default: 30
     min: 1
     refresh: true
