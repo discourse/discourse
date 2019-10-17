@@ -2,8 +2,9 @@ import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
+import LoadMore from "discourse/mixins/load-more";
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(LoadMore, {
   tagName: "table",
   classNames: ["topic-list"],
   showTopicPostBadges: true,
@@ -53,6 +54,33 @@ export default Ember.Component.extend({
   lastVisitedTopicChanged() {
     this.refreshLastVisited();
   },
+
+  scrolled() {
+    this._super(...arguments);
+    var onScroll = this.get('onScroll')
+    if (!onScroll) return;
+
+    onScroll.call(this);
+  },
+
+  scrollToLastPosition: function() {
+    var key = this.get('scrollPositionKey')
+    if (!key) return;
+
+    var scrollTo = this.session.get(key)
+
+    if (scrollTo && scrollTo >= 0) {
+      Ember.run.schedule("afterRender", () =>
+        $(window).scrollTop(scrollTo + 1)
+      );
+    }
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+    this.scrollToLastPosition();
+  },
+
 
   _updateLastVisitedTopic(topics, order, ascending, top) {
     this.set("lastVisitedTopic", null);
