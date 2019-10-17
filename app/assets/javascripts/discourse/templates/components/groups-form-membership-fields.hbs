@@ -17,6 +17,20 @@
 
       {{i18n 'admin.groups.manage.membership.automatic_membership_retroactive'}}
     </label>
+  </div>
+
+  {{plugin-outlet name="groups-form-membership-below-automatic"
+                  args=(hash model=model)}}
+
+  <div class="control-group">
+    <label class="control-label">{{i18n "admin.groups.manage.membership.effects"}}</label>
+    <label for="grant_trust_level">{{i18n 'admin.groups.manage.membership.trust_levels_title'}}</label>
+
+    {{combo-box name="grant_trust_level"
+        valueAttribute="value"
+        value=model.grant_trust_level
+        content=trustLevelOptions
+        class="groups-form-grant-trust-level"}}
 
     <label>
       {{input type="checkbox"
@@ -25,20 +39,7 @@
 
       {{i18n 'admin.groups.manage.membership.primary_group'}}
     </label>
-  </div>
 
-  {{plugin-outlet name="groups-form-membership-below-automatic"
-                  args=(hash model=model)}}
-
-  <div class="control-group">
-    <label class="control-label">{{i18n "admin.groups.manage.membership.trust_level"}}</label>
-    <label for="grant_trust_level">{{i18n 'admin.groups.manage.membership.trust_levels_title'}}</label>
-
-    {{combo-box name="grant_trust_level"
-        valueAttribute="value"
-        value=model.grant_trust_level
-        content=trustLevelOptions
-        class="groups-form-grant-trust-level"}}
   </div>
 {{/if}}
 
