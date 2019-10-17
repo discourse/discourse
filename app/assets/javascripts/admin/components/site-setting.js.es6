@@ -5,14 +5,6 @@ import showModal from "discourse/lib/show-modal";
 import AboutRoute from "discourse/routes/about";
 
 export default Ember.Component.extend(BufferedContent, SettingComponent, {
-  update(key, value, updateExistingUsers = false) {
-    if (updateExistingUsers) {
-      return SiteSetting.update(key, value, { updateExistingUsers: true });
-    } else {
-      return SiteSetting.update(key, value);
-    }
-  },
-
   _save(callback) {
     const defaultCategoriesSettings = [
       "default_categories_watching",
@@ -36,19 +28,16 @@ export default Ember.Component.extend(BufferedContent, SettingComponent, {
             admin: true
           });
 
-          controller.setProperties({
-            onClose: () => {
-              const updateExistingUsers = controller.get("updateExistingUsers");
-              if (updateExistingUsers === true) {
-                callback(this.update(key, value, true));
-              } else if (updateExistingUsers === false) {
-                callback(this.update(key, value));
-              }
-            }
+          controller.set("onClose", () => {
+            callback(
+              SiteSetting.update(key, value, {
+                updateExistingUsers: controller.updateExistingUsers
+              })
+            );
           });
         });
     } else {
-      callback(this.update(key, value));
+      callback(SiteSetting.update(key, value));
     }
   }
 });

@@ -116,7 +116,7 @@ export default Ember.Mixin.create({
           .then(() => {
             this.set("validationMessage", null);
             this.commitBuffer();
-            if (AUTO_REFRESH_ON_SAVE.includes(this.get("setting.setting"))) {
+            if (AUTO_REFRESH_ON_SAVE.includes(this.setting.setting)) {
               this.afterSave();
             }
           })
