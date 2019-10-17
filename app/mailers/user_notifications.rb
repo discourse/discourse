@@ -366,11 +366,6 @@ class UserNotifications < ActionMailer::Base
     raw
   end
 
-  class UserNotificationRenderer < ActionView::Base
-    include UserNotificationsHelper
-    include EmailHelper
-  end
-
   def self.get_context_posts(post, topic_user, user)
     if (user.user_option.email_previous_replies == UserOption.previous_replies_type[:never]) ||
        SiteSetting.private_email?
