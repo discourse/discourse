@@ -100,7 +100,7 @@ class TranslationOverride < ActiveRecord::Base
 
   def transform_pluralized_key(key)
     match = key.match(/(.*)\.(zero|two|few|many)$/)
-    match ? match.to_a.second + '.one' : key
+    match ? match.to_a.second + '.other' : key
   end
 end
 
