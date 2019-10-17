@@ -1858,6 +1858,10 @@ uncategorized:
   delete_drafts_older_than_n_days:
     default: 180
 
+  backup_drafts_to_pm_length:
+    default: 0
+    hidden: true
+
   tos_topic_id:
     default: -1
     hidden: true
