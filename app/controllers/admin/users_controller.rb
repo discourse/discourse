@@ -137,7 +137,6 @@ class Admin::UsersController < Admin::AdminController
 
     render_json_dump(
       suspension: {
-        suspended: true,
         suspend_reason: params[:reason],
         full_suspend_reason: user_history.try(:details),
         suspended_till: @user.suspended_till,
@@ -157,7 +156,8 @@ class Admin::UsersController < Admin::AdminController
 
     render_json_dump(
       suspension: {
-        suspended: false
+        suspended_till: nil,
+        suspended_at: nil
       }
     )
   end
