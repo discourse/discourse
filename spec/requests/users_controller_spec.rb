@@ -1819,6 +1819,33 @@ describe UsersController do
               expect(user.user_fields[user_field.id.to_s]).to eq('happy')
             end
 
+            it "works alongside a user field during creation" do
+              api_key = Fabricate(:api_key, user: Fabricate(:admin))
+              user_field = Fabricate(:user_field, editable: true)
+              post "/u.json", params: {
+                name: "Test User",
+                username: "testuser",
+                email: "user@mail.com",
+                password: 'supersecure',
+                active: true,
+                custom_fields: {
+                  test2: 'custom field value'
+                },
+                user_fields: {
+                  user_field.id.to_s => 'user field value'
+                },
+                api_key: api_key.key
+              }
+              expect(response.status).to eq(200)
+              u = User.find_by_email('user@mail.com')
+
+              val = u.custom_fields["user_field_#{user_field.id}"]
+              expect(val).to eq('user field value')
+
+              val = u.custom_fields["test2"]
+              expect(val).to eq('custom field value')
+            end
+
             it "is secure when there are no registered editable fields" do
               User.plugin_editable_user_custom_fields.clear
               User.plugin_staff_editable_user_custom_fields.clear
