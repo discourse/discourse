@@ -14,15 +14,7 @@ export default Ember.Component.extend({
 
   @computed("selectableUserBadges", "selectedUserBadgeId")
   selectedUserBadge(selectableUserBadges, selectedUserBadgeId) {
-    selectedUserBadgeId = parseInt(selectedUserBadgeId);
-    let selectedUserBadge = null;
-
-    selectableUserBadges.forEach(function(userBadge) {
-      if (userBadge.get("id") === selectedUserBadgeId) {
-        selectedUserBadge = userBadge;
-      }
-    });
-    return selectedUserBadge;
+    return selectableUserBadges.findBy("id", parseInt(selectedUserBadgeId));
   },
 
   actions: {

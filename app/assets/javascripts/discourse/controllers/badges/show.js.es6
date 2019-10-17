@@ -19,15 +19,12 @@ export default Ember.Controller.extend({
 
   @computed("filteredList")
   selectableUserBadges(filteredList) {
-    filteredList = _.uniq(filteredList, false, e => {
-      return e.get("badge.name");
-    });
-    filteredList.unshiftObject(
+    return [
       Ember.Object.create({
         badge: Badge.create({ name: I18n.t("badges.none") })
-      })
-    );
-    return filteredList;
+      }),
+      ...filteredList.uniqBy("badge.name")
+    ];
   },
 
   @computed("username")
