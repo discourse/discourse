@@ -53,6 +53,12 @@ after_initialize do
     custom_fields[DiscourseLocalDates::POST_CUSTOM_FIELD] || []
   end
 
+  on(:reduce_excerpt) do |fragment, post|
+    fragment.css('.discourse-local-date').each do |container|
+      container.content = "#{container.content} (UTC)"
+    end
+  end
+
   on(:reduce_cooked) do |fragment|
     fragment.css('.discourse-local-date').each do |container|
       if container.attributes['data-email-preview']
