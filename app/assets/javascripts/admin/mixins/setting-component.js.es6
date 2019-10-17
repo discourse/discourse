@@ -89,18 +89,18 @@ export default Ember.Mixin.create({
     return settingDefault !== bufferedValue;
   },
 
-  _watchEnterKey: function() {
+  _watchEnterKey: Ember.on("didInsertElement", function() {
     $(this.element).on("keydown.setting-enter", ".input-setting-string", e => {
       if (e.keyCode === 13) {
         // enter key
         this.send("save");
       }
     });
-  }.on("didInsertElement"),
+  }),
 
-  _removeBindings: function() {
+  _removeBindings: Ember.on("willDestroyElement", function() {
     $(this.element).off("keydown.setting-enter");
-  }.on("willDestroyElement"),
+  }),
 
   _save() {
     Ember.warn("You should define a `_save` method", {

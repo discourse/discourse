@@ -7,7 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Component.extend(LoadMore, {
-  _initialize: function() {
+  _initialize: Ember.on("init", function() {
     const filter = this.get("stream.filter");
     if (filter) {
       this.set("classNames", [
@@ -15,7 +15,7 @@ export default Ember.Component.extend(LoadMore, {
         "filter-" + filter.toString().replace(",", "-")
       ]);
     }
-  }.on("init"),
+  }),
 
   loading: false,
   eyelineSelector: ".user-stream .item",
@@ -25,7 +25,7 @@ export default Ember.Component.extend(LoadMore, {
     Ember.run.schedule("afterRender", () => $(document).scrollTop(0));
   }.observes("stream.user.id"),
 
-  _inserted: function() {
+  _inserted: Ember.on("didInsertElement", function() {
     this.bindScrolling({ name: "user-stream-view" });
 
     $(window).on("resize.discourse-on-scroll", () => this.scrolled());
@@ -38,17 +38,17 @@ export default Ember.Component.extend(LoadMore, {
     $(this.element).on("click.discourse-redirect", ".excerpt a", function(e) {
       return ClickTrack.trackClick(e);
     });
-  }.on("didInsertElement"),
+  }),
 
   // This view is being removed. Shut down operations
-  _destroyed: function() {
+  _destroyed: Ember.on("willDestroyElement", function() {
     this.unbindScrolling("user-stream-view");
     $(window).unbind("resize.discourse-on-scroll");
     $(this.element).off("click.details-disabled", "details.disabled");
 
     // Unbind link tracking
     $(this.element).off("click.discourse-redirect", ".excerpt a");
-  }.on("willDestroyElement"),
+  }),
 
   actions: {
     removeBookmark(userAction) {
