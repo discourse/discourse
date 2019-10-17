@@ -71,6 +71,8 @@ class PostTiming < ActiveRecord::Base
         last_read_post_number: last_read
       )
 
+      topic.posts.find_by(post_number: post_number).decrement!(:reads)
+
       if !topic.private_message?
         set_minimum_first_unread!(user_id: user.id, date: topic.updated_at)
       end
@@ -86,6 +88,8 @@ class PostTiming < ActiveRecord::Base
       TopicUser
         .where('user_id = ? and topic_id in (?)', user_id, topic_ids)
         .delete_all
+
+      Post.where(topic_id: topic_ids).update_all('reads = reads - 1')
 
       date = Topic.listable_topics.where(id: topic_ids).minimum(:updated_at)
 

@@ -185,10 +185,6 @@ module ApplicationHelper
     @guardian ||= Guardian.new(current_user)
   end
 
-  def mini_profiler_enabled?
-    defined?(Rack::MiniProfiler) && admin?
-  end
-
   def admin?
     current_user.try(:admin?)
   end

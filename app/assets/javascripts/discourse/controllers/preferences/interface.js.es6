@@ -10,7 +10,11 @@ import {
   setLocalTheme
 } from "discourse/lib/theme-selector";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { safariHacksDisabled, isiPad } from "discourse/lib/utilities";
+import {
+  safariHacksDisabled,
+  isiPad,
+  iOSWithVisualViewport
+} from "discourse/lib/utilities";
 
 const USER_HOMES = {
   1: "latest",
@@ -51,7 +55,9 @@ export default Ember.Controller.extend(PreferencesTabController, {
 
   @computed()
   isiPad() {
-    return isiPad();
+    // TODO: remove this preference checkbox when iOS adoption > 90%
+    // (currently only applies to iOS 12 and below)
+    return isiPad() && !iOSWithVisualViewport();
   },
 
   @computed()

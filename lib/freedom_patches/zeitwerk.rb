@@ -18,8 +18,8 @@ module ActiveSupport::Dependencies::ZeitwerkIntegration::Inflector
   }
 
   def self.camelize(basename, abspath)
-    return basename.camelize if abspath =~ /onceoff\.rb$/
-    return 'Jobs' if abspath =~ /jobs\/base\.rb$/
+    return basename.camelize if abspath.ends_with?("onceoff.rb")
+    return 'Jobs' if abspath.ends_with?("jobs/base.rb")
     CUSTOM_PATHS.fetch(basename, basename.camelize)
   end
 end

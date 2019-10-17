@@ -5,6 +5,41 @@ require 'rails_helper'
 describe UsersController do
   let(:user) { Fabricate(:user) }
 
+  describe "#full account registration flow" do
+    it "will correctly handle honeypot and challenge" do
+
+      get '/u/hp.json'
+      expect(response.status).to eq(200)
+
+      json = JSON.parse(response.body)
+
+      params = {
+        email: 'jane@jane.com',
+        name: 'jane',
+        username: 'jane',
+        password_confirmation: json['value'],
+        challenge: json['challenge'].reverse,
+        password: SecureRandom.hex
+      }
+
+      secure_session = SecureSession.new(session["secure_session_id"])
+
+      expect(secure_session[UsersController::HONEYPOT_KEY]).to eq(json["value"])
+      expect(secure_session[UsersController::CHALLENGE_KEY]).to eq(json["challenge"])
+
+      post '/u.json', params: params
+
+      expect(response.status).to eq(200)
+
+      jane = User.find_by(username: 'jane')
+
+      expect(jane.email).to eq('jane@jane.com')
+
+      expect(secure_session[UsersController::HONEYPOT_KEY]).to eq(nil)
+      expect(secure_session[UsersController::CHALLENGE_KEY]).to eq(nil)
+    end
+  end
+
   describe '#perform_account_activation' do
     let(:token) do
       return @token if @token.present?
@@ -1020,22 +1055,15 @@ describe UsersController do
 
     shared_examples 'honeypot fails' do
       it 'should not create a new user' do
+        User.any_instance.expects(:enqueue_welcome_message).never
+
         expect {
           post "/u.json", params: create_params
         }.to_not change { User.count }
-        expect(response.status).to eq(200)
-      end
 
-      it 'should not send an email' do
-        User.any_instance.expects(:enqueue_welcome_message).never
-        post "/u.json", params: create_params
         expect(response.status).to eq(200)
-      end
 
-      it 'should say it was successful' do
-        post "/u.json", params: create_params
         json = JSON::parse(response.body)
-        expect(response.status).to eq(200)
         expect(json["success"]).to eq(true)
 
         # should not change the session
@@ -1764,38 +1792,81 @@ describe UsersController do
             before do
               plugin = Plugin::Instance.new
               plugin.register_editable_user_custom_field :test2
+              plugin.register_editable_user_custom_field :test3, staff_only: true
             end
 
             after do
               User.plugin_editable_user_custom_fields.clear
+              User.plugin_staff_editable_user_custom_fields.clear
             end
 
             it "only updates allowed user fields" do
-              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2 } }
+              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2, test3: :hello3 } }
 
               expect(response.status).to eq(200)
               expect(user.custom_fields["test1"]).to be_blank
               expect(user.custom_fields["test2"]).to eq("hello2")
+              expect(user.custom_fields["test3"]).to be_blank
             end
 
             it "works alongside a user field" do
               user_field = Fabricate(:user_field, editable: true)
-              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2 }, user_fields: { user_field.id.to_s => 'happy' } }
+              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2, test3: :hello3 }, user_fields: { user_field.id.to_s => 'happy' } }
               expect(response.status).to eq(200)
               expect(user.custom_fields["test1"]).to be_blank
               expect(user.custom_fields["test2"]).to eq("hello2")
+              expect(user.custom_fields["test3"]).to eq(nil)
               expect(user.user_fields[user_field.id.to_s]).to eq('happy')
+            end
+
+            it "works alongside a user field during creation" do
+              api_key = Fabricate(:api_key, user: Fabricate(:admin))
+              user_field = Fabricate(:user_field, editable: true)
+              post "/u.json", params: {
+                name: "Test User",
+                username: "testuser",
+                email: "user@mail.com",
+                password: 'supersecure',
+                active: true,
+                custom_fields: {
+                  test2: 'custom field value'
+                },
+                user_fields: {
+                  user_field.id.to_s => 'user field value'
+                },
+                api_key: api_key.key
+              }
+              expect(response.status).to eq(200)
+              u = User.find_by_email('user@mail.com')
+
+              val = u.custom_fields["user_field_#{user_field.id}"]
+              expect(val).to eq('user field value')
+
+              val = u.custom_fields["test2"]
+              expect(val).to eq('custom field value')
             end
 
             it "is secure when there are no registered editable fields" do
               User.plugin_editable_user_custom_fields.clear
-              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2 } }
+              User.plugin_staff_editable_user_custom_fields.clear
+              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2, test3: :hello3 } }
               expect(response.status).to eq(200)
               expect(user.custom_fields["test1"]).to be_blank
               expect(user.custom_fields["test2"]).to be_blank
+              expect(user.custom_fields["test3"]).to be_blank
 
               put "/u/#{user.username}.json", params: { custom_fields: ["arrayitem1", "arrayitem2"] }
               expect(response.status).to eq(200)
+            end
+
+            it "allows staff to edit staff-editable fields" do
+              sign_in(Fabricate(:admin))
+              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2, test3: :hello3 } }
+
+              expect(response.status).to eq(200)
+              expect(user.custom_fields["test1"]).to be_blank
+              expect(user.custom_fields["test2"]).to eq("hello2")
+              expect(user.custom_fields["test3"]).to eq("hello3")
             end
 
           end
@@ -3345,7 +3416,6 @@ describe UsersController do
         end
 
         it 'succeeds on correct password' do
-          session = {}
           ApplicationController.any_instance.stubs(:secure_session).returns("confirmed-password-#{user.id}" => "true")
           post "/users/create_second_factor_totp.json"
 

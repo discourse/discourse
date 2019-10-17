@@ -1,12 +1,15 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+ENV['RAILS_ENV'] ||= 'test'
+
 require './lib/turbo_tests'
 require 'optparse'
 
 requires = []
 formatters = []
 verbose = false
+fail_fast = nil
 
 OptionParser.new do |opts|
   opts.on("-r", "--require PATH", "Require a file.") do |filename|
@@ -33,6 +36,12 @@ OptionParser.new do |opts|
   opts.on("-v", "--verbose", "More output") do
     verbose = true
   end
+
+  opts.on("--fail-fast=[N]") do |n|
+    n = Integer(n) rescue nil
+    fail_fast = (n.nil? || n < 1) ? 1 : n
+  end
+
 end.parse!(ARGV)
 
 requires.each { |f| require(f) }
@@ -54,7 +63,8 @@ success =
   TurboTests::Runner.run(
     formatters: formatters,
     files: ARGV.empty? ? ["spec"] : ARGV,
-    verbose: verbose
+    verbose: verbose,
+    fail_fast: fail_fast
   )
 
 if success

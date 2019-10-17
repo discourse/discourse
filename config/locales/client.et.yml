@@ -678,10 +678,14 @@ et:
         copied_to_clipboard: "Kopeeritud lõikelauale"
       second_factor:
         confirm_password_description: "Palun kinnita jätkamiseks oma parooli"
+        name: "Nimi"
         label: "Kood"
         rate_limit: "Palun oota enne kui proovid mõnda teist autentimise koodi."
         show_key_description: "Sisesta käsitsi"
         edit: "Muuda"
+        security_key:
+          register: "Registreeru"
+          delete: 'Kustuta'
       change_about:
         title: "Muuda minu andmeid"
         error: "Välja muutmisel tekkis viga."
@@ -1058,23 +1062,18 @@ et:
       google_oauth2:
         name: "Google"
         title: "Google abil"
-        message: "Autentimine Google abil (veendu, et hüpikaknad oleks lubatud)"
       twitter:
         name: "Twitter"
         title: "Twitteri abil"
-        message: "Autentimine Twitteri abil (veendu, et hüpikaknad oleks lubatud)"
       instagram:
         name: "Instagram"
         title: "Instagram'iga"
-        message: "Autentimine Instagram'i kaudu (vaata, et hüpikaknad ei oleks keelatud)"
       facebook:
         name: "Facebook"
         title: "Facebooki abil"
-        message: "Autentimine Facebooki abil (veendu, et hüpikaknad oleks lubatud)"
       github:
         name: "GitHub"
         title: "GitHub abil"
-        message: "Autentimine GitHub abil (veendu, et hüpikaknad oleks lubatud)"
     invites:
       accept_title: "Kutse"
       welcome_to: "Teretulemast saidile %{site_name}!"
@@ -1092,7 +1091,6 @@ et:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google klassikaline"
       facebook_messenger: "Facebook Messenger"
@@ -2396,6 +2394,7 @@ et:
         user: "Kasutaja"
         title: "API"
         key: "API võti"
+        created: Loodud
         generate: "Genereeri"
         regenerate: "Genereeri uus"
         revoke: "Tühista "

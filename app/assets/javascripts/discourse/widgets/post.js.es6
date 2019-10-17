@@ -692,9 +692,10 @@ export default createWidget("post", {
     const likeAction = post.get("likeAction");
 
     if (likeAction && likeAction.get("canToggle")) {
-      return likeAction
-        .togglePromise(post)
-        .then(result => this._warnIfClose(result));
+      return likeAction.togglePromise(post).then(result => {
+        this.appEvents.trigger("page:like-toggled", post, likeAction);
+        return this._warnIfClose(result);
+      });
     }
   },
 

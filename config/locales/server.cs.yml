@@ -132,6 +132,8 @@ cs:
   invalid_access: "Nemáte oprávnění na zobrazení požadovaného zdroje."
   invalid_api_credentials: "Nemáte oprávnění na zobrazení požadovaného zdroje. Uživatelské jméno nebo klíč k API je nevalidní."
   read_only_mode_enabled: "Tato stránka je v režimu jen pro čtení. Interakce jsou zakázány."
+  not_in_group:
+    join_group: "Přidat se ke skupině"
   reading_time: "Čas čtení"
   likes: "Líbí se"
   too_many_replies:

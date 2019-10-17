@@ -1,0 +1,42 @@
+{{#d-modal-body title="composer.link_dialog_title" class="insert-link"}}
+    <div class="inputs">
+      {{text-field
+        value=linkUrl
+        placeholderKey="composer.link_url_placeholder"
+        class="link-url"
+        key-up=(action "search")
+      }}
+      {{#if searchLoading}}
+        {{loading-spinner}}
+      {{/if}}
+      {{#if searchResults}}
+        <div class="internal-link-results">
+          {{#each searchResults as |result|}}
+            <a
+              class="search-link"
+              href="{{result.url}}"
+              onclick={{action "linkClick"}}
+              data-title="{{result.title}}">
+              {{topic-status topic=result disableActions=true}}
+              {{replace-emoji result.fancy_title}}
+              <div class="search-category">
+                {{#if result.category.parentCategory}}
+                  {{category-link result.category.parentCategory}}
+                {{/if}}
+                {{category-link result.category hideParent=true}}
+                {{discourse-tags result}}
+              </div>
+            </a>
+          {{/each}}
+        </div>
+      {{/if}}
+    </div>
+    <div class="inputs">
+      {{text-field value=linkText placeholderKey="composer.link_optional_text" class="link-text"}}
+    </div>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button class="btn-primary" label="composer.modal_ok" action=(action "ok")}}
+  {{d-button class="btn-danger" label="composer.modal_cancel" action=(action "cancel")}}
+</div>

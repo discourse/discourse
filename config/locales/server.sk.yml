@@ -130,6 +130,8 @@ sk:
   not_found: "Požadovaná URL alebo zdroj sa nenašiel"
   invalid_access: "Nemáte oprávnenie na zobrazenie požadovaných údajov!"
   read_only_mode_enabled: "Táto stránka je v móde na čítanie. Zapisovanie je vypnuté"
+  not_in_group:
+    join_group: "Pridať sa do skupiny"
   reading_time: "Doba čítania"
   likes: "Páči sa mi"
   too_many_replies:

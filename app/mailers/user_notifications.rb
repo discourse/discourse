@@ -558,7 +558,12 @@ class UserNotifications < ActionMailer::Base
         end
 
       topic_excerpt = post.excerpt.tr("\n", " ") if post.is_first_post? && post.excerpt
-      topic_excerpt = "" if SiteSetting.private_email?
+      topic_url = post.topic&.url
+
+      if SiteSetting.private_email?
+        topic_excerpt = ""
+        topic_url = ""
+      end
 
       message = I18n.t(invite_template,
         username: username,
@@ -566,7 +571,8 @@ class UserNotifications < ActionMailer::Base
         topic_title: gsub_emoji_to_unicode(title),
         topic_excerpt: topic_excerpt,
         site_title: SiteSetting.title,
-        site_description: SiteSetting.site_description
+        site_description: SiteSetting.site_description,
+        topic_url: topic_url
       )
 
       html = PrettyText.cook(message, sanitize: false).html_safe
@@ -589,7 +595,7 @@ class UserNotifications < ActionMailer::Base
       end
 
       unless translation_override_exists
-        html = UserNotificationRenderer.instance.render(
+        html = UserNotificationRenderer.render(
           template: 'email/notification',
           format: :html,
           locals: { context_posts: context_posts,

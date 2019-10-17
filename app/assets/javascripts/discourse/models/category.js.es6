@@ -5,6 +5,8 @@ import { on } from "ember-addons/ember-computed-decorators";
 import PermissionType from "discourse/models/permission-type";
 
 const Category = RestModel.extend({
+  permissions: null,
+
   @on("init")
   setupGroupsAndPermissions() {
     const availableGroups = this.available_groups;
@@ -161,15 +163,6 @@ const Category = RestModel.extend({
     this.availableGroups.addObject(permission.group_name);
   },
 
-  @computed
-  permissions() {
-    return Ember.A([
-      { group_name: "everyone", permission: PermissionType.create({ id: 1 }) },
-      { group_name: "admins", permission: PermissionType.create({ id: 2 }) },
-      { group_name: "crap", permission: PermissionType.create({ id: 3 }) }
-    ]);
-  },
-
   @computed("topics")
   latestTopic(topics) {
     if (topics && topics.length) {
@@ -250,7 +243,11 @@ Category.reopenClass({
   },
 
   findSingleBySlug(slug) {
-    return Category.list().find(c => Category.slugFor(c) === slug);
+    if (Discourse.SiteSettings.slug_generation_method !== "encoded") {
+      return Category.list().find(c => Category.slugFor(c) === slug);
+    } else {
+      return Category.list().find(c => Category.slugFor(c) === encodeURI(slug));
+    }
   },
 
   findById(id) {

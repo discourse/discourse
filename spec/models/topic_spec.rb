@@ -158,7 +158,7 @@ describe Topic do
 
         it "returns encoded Slug for a title" do
           expect(topic.title).to eq(title)
-          expect(topic.slug).to eq(title)
+          expect(topic.slug).to eq('%E7%86%B1%E5%B8%B6%E9%A2%A8%E6%9A%B4%E7%95%AB%E7%9C%89')
         end
       end
 

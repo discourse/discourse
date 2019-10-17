@@ -85,7 +85,7 @@ export default Ember.Component.extend({
     if (!this.site.mobileView) {
       $this.css({ left: "" + x + "px" });
     }
-    this.set("link", encodeURI(url));
+    this.set("link", url);
     this.set("visible", true);
 
     Ember.run.scheduleOnce("afterRender", this, this._focusUrl);

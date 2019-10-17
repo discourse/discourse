@@ -5,9 +5,15 @@ class UserNotificationRenderer < ActionView::Base
   include UserNotificationsHelper
   include EmailHelper
 
-  def self.instance
-    @instance ||= UserNotificationRenderer.with_view_paths(
-      Rails.configuration.paths["app/views"]
-    )
+  LOCK = Mutex.new
+
+  def self.render(*args)
+    LOCK.synchronize do
+      @instance ||= UserNotificationRenderer.with_view_paths(
+        Rails.configuration.paths["app/views"]
+      )
+      @instance.render(*args)
+    end
   end
+
 end

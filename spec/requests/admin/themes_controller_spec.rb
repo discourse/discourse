@@ -74,7 +74,7 @@ describe Admin::ThemesController do
     end
 
     let(:theme_archive) do
-      Rack::Test::UploadedFile.new(file_from_fixtures("discourse-test-theme.tar.gz", "themes"), "application/x-gzip")
+      Rack::Test::UploadedFile.new(file_from_fixtures("discourse-test-theme.zip", "themes"), "application/zip")
     end
 
     let(:image) do

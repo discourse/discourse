@@ -621,7 +621,11 @@ sv:
         disable: "Inaktivera"
         enable: "Aktivera"
       second_factor:
+        name: "Namn"
         edit: "Redigera"
+        security_key:
+          register: "Registrera"
+          delete: 'Radera'
       change_about:
         title: "Ändra Om Mig"
         error: "Ett fel inträffade vid ändringen av det här värdet."
@@ -968,20 +972,15 @@ sv:
       google_oauth2:
         name: "Google"
         title: "med Google"
-        message: "Autentiserar med Google (kolla så att pop up-blockare inte är aktiverade)"
       twitter:
         name: "Twitter"
         title: "med Twitter"
-        message: "Autentiserar med Twitter (kolla så att pop up-blockare inte är aktiverade)"
       instagram:
         title: "med Instagram"
-        message: "Autentisering med Instagram (se till att popup-blockeringar inte är aktiverade)"
       facebook:
         title: "med Facebook"
-        message: "Autentiserar med Facebook (kolla så att pop up-blockare inte är aktiverade)"
       github:
         title: "med GitHub"
-        message: "Autentiserar med GitHub (kolla så att pop up-blockare inte är aktiverade)"
     invites:
       accept_title: "Inbjudan"
       welcome_to: "Välkommen till %{site_name}!"
@@ -998,7 +997,6 @@ sv:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
     category_page_style:
       categories_only: "Endast kategorier"
@@ -2181,6 +2179,7 @@ sv:
         user: "Användare"
         title: "API"
         key: "API-nyckel"
+        created: Skapad
         generate: "Generera"
         regenerate: "Regenerera"
         revoke: "Återkalla"

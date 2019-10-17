@@ -132,7 +132,7 @@ module SiteSettingExtension
         hidden_settings << name
       end
 
-      if opts[:shadowed_by_global] && GlobalSetting.respond_to?(name)
+      if GlobalSetting.respond_to?(name)
         val = GlobalSetting.public_send(name)
 
         unless val.nil? || (val == ''.freeze)

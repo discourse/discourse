@@ -16,6 +16,13 @@ export default Ember.Component.extend({
     this.set("actions", connectorClass.actions);
   },
 
+  willDestroyElement() {
+    this._super(...arguments);
+
+    const connectorClass = this.get("connector.connectorClass");
+    connectorClass.teardownComponent.call(this, this);
+  },
+
   @observes("args")
   _argsChanged() {
     const args = this.args || {};

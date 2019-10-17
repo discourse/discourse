@@ -12,7 +12,7 @@ class DiscourseDiff
     before_markdown = tokenize_line(CGI::escapeHTML(@before))
     after_markdown = tokenize_line(CGI::escapeHTML(@after))
 
-    @block_by_block_diff = ONPDiff.new(before_html, after_html).diff
+    @block_by_block_diff = ONPDiff.new(before_html, after_html).paragraph_diff
     @line_by_line_diff = ONPDiff.new(before_markdown, after_markdown).short_diff
   end
 

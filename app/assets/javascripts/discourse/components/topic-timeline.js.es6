@@ -3,7 +3,14 @@ import Docking from "discourse/mixins/docking";
 import { observes } from "ember-addons/ember-computed-decorators";
 import optionalService from "discourse/lib/optional-service";
 
-const headerPadding = () => parseInt($("#main-outlet").css("padding-top")) + 3;
+const headerPadding = () => {
+  let topPadding = parseInt($("#main-outlet").css("padding-top")) + 3;
+  const iPadNavHeight = $(".footer-nav-ipad .footer-nav").height();
+  if (iPadNavHeight) {
+    topPadding += iPadNavHeight;
+  }
+  return topPadding;
+};
 
 export default MountWidget.extend(Docking, {
   adminTools: optionalService(),
@@ -51,7 +58,8 @@ export default MountWidget.extend(Docking, {
     const mainOffset = $("#main").offset();
     const offsetTop = mainOffset ? mainOffset.top : 0;
     const topicTop = $(".container.posts").offset().top - offsetTop;
-    const topicBottom = $("#topic-bottom").offset().top;
+    const topicBottom =
+      $("#topic-bottom").offset().top - $("#main-outlet").offset().top;
     const timeline = this.element.querySelector(".timeline-container");
     const timelineHeight = (timeline && timeline.offsetHeight) || 400;
     const footerHeight = $(".timeline-footer-controls").outerHeight(true) || 0;

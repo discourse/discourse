@@ -19,7 +19,15 @@ class Stylesheet::Manager
   end
 
   def self.clear_theme_cache!
-    cache.hash.keys.select { |k| k =~ /theme/ }.each { |k|cache.delete(k) }
+    cache.hash.keys.select { |k| k =~ /theme/ }.each { |k| cache.delete(k) }
+  end
+
+  def self.clear_core_cache!(targets)
+    cache.hash.keys.select { |k| k =~ /#{targets.join('|')}/ }.each { |k| cache.delete(k) }
+  end
+
+  def self.clear_plugin_cache!(plugin)
+    cache.hash.keys.select { |k| k =~ /#{plugin}/ }.each { |k| cache.delete(k) }
   end
 
   def self.stylesheet_data(target = :desktop, theme_ids = :missing)

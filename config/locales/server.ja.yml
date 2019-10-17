@@ -146,6 +146,8 @@ ja:
   not_found: "リクエストされたURL、リソースは見つかりませんでした"
   invalid_access: "リクエストしたリソースの閲覧が許可されていません"
   read_only_mode_enabled: "このサイトは閲覧専用状態です。変更などの操作は無効になっています。"
+  not_in_group:
+    join_group: "グループに参加"
   reading_time: "閲覧時間"
   likes: "いいね！"
   too_many_replies:
@@ -1082,7 +1084,6 @@ ja:
     username:
       short: "少なくとも%{min}文字は必要です"
       long: "%{max}文字以下である必要があります"
-      characters: "英数字、ハイフン、アンダーバーのみ利用可能です"
       unique: "はユニークである必要があります"
       blank: "は空であってはなりません"
       must_begin_with_alphanumeric_or_underscore: "最初は英数字で始まる必要があります"

@@ -157,6 +157,10 @@ class Post < ActiveRecord::Base
     includes(:post_details).find_by(post_details: { key: key, value: value })
   end
 
+  def self.excerpt_size
+    220
+  end
+
   def whisper?
     post_type == Post.types[:whisper]
   end
@@ -463,7 +467,7 @@ class Post < ActiveRecord::Base
   end
 
   def excerpt_for_topic
-    Post.excerpt(cooked, 220, strip_links: true, strip_images: true, post: self)
+    Post.excerpt(cooked, Post.excerpt_size, strip_links: true, strip_images: true, post: self)
   end
 
   def is_first_post?

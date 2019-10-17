@@ -141,9 +141,9 @@ class Plugin::Instance
     end
   end
 
-  def register_editable_user_custom_field(field)
+  def register_editable_user_custom_field(field, staff_only: false)
     reloadable_patch do |plugin|
-      ::User.register_plugin_editable_user_custom_field(field, plugin) # plugin.enabled? is checked at runtime
+      ::User.register_plugin_editable_user_custom_field(field, plugin, staff_only: staff_only) # plugin.enabled? is checked at runtime
     end
   end
 

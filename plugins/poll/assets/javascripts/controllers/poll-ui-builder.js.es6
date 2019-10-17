@@ -228,7 +228,7 @@ export default Ember.Controller.extend({
       });
     }
 
-    output += "[/poll]";
+    output += "[/poll]\n";
     return output;
   },
 

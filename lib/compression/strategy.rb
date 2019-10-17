@@ -9,11 +9,11 @@ module Compression
       file_name.include?(extension)
     end
 
-    def decompress(dest_path, compressed_file_path, allow_non_root_folder: false)
+    def decompress(dest_path, compressed_file_path, max_size, allow_non_root_folder: false)
       sanitized_compressed_file_path = sanitize_path(compressed_file_path)
 
       get_compressed_file_stream(sanitized_compressed_file_path) do |compressed_file|
-        available_size = calculate_available_size
+        available_size = calculate_available_size(max_size)
 
         entries_of(compressed_file).each do |entry|
           entry_path = build_entry_path(
@@ -30,6 +30,15 @@ module Compression
           end
         end
       end
+    end
+
+    def strip_directory(from, to, relative: false)
+      sanitized_from = sanitize_path(from) rescue nil
+      sanitized_to = sanitize_path(to) rescue nil
+      return unless sanitized_from && sanitized_to
+
+      glob_path = relative ? "#{sanitized_from}/*/*" : "#{sanitized_from}/**"
+      FileUtils.mv(Dir.glob(glob_path), sanitized_to) if File.directory?(sanitized_from)
     end
 
     private
@@ -50,8 +59,8 @@ module Compression
       end
     end
 
-    def calculate_available_size
-      1024**2 * (SiteSetting.decompressed_file_max_size_mb / 1.049) # Mb to Mib
+    def calculate_available_size(max_size)
+      1024**2 * (max_size / 1.049) # Mb to Mib
     end
 
     def entries_of(compressed_file)

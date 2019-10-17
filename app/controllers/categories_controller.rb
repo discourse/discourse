@@ -18,7 +18,7 @@ class CategoriesController < ApplicationController
 
     @description = SiteSetting.site_description
 
-    parent_category = Category.find_by(slug: params[:parent_category_id]) || Category.find_by(id: params[:parent_category_id].to_i)
+    parent_category = Category.find_by_slug(params[:parent_category_id]) || Category.find_by(id: params[:parent_category_id].to_i)
 
     category_options = {
       is_homepage: current_homepage == "categories".freeze,
@@ -206,7 +206,21 @@ class CategoriesController < ApplicationController
   def find_by_slug
     params.require(:category_slug)
     @category = Category.find_by_slug(params[:category_slug], params[:parent_category_slug])
-    guardian.ensure_can_see!(@category)
+
+    raise Discourse::NotFound unless @category.present?
+
+    if !guardian.can_see?(@category)
+      if SiteSetting.detailed_404 && group = @category.access_category_via_group
+        raise Discourse::InvalidAccess.new(
+          'not in group',
+          @category,
+          custom_message: 'not_in_group.title_category',
+          group: group
+        )
+      else
+        raise Discourse::NotFound
+      end
+    end
 
     @category.permission = CategoryGroup.permission_types[:full] if Category.topic_create_allowed(guardian).where(id: @category.id).exists?
     render_serialized(@category, CategorySerializer)

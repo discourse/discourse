@@ -1,5 +1,8 @@
 import debounce from "discourse/lib/debounce";
-import { safariHacksDisabled } from "discourse/lib/utilities";
+import {
+  safariHacksDisabled,
+  iOSWithVisualViewport
+} from "discourse/lib/utilities";
 
 // TODO: remove calcHeight once iOS 13 adoption > 90%
 // In iOS 13 and up we use visualViewport API to calculate height
@@ -82,20 +85,14 @@ function positioningWorkaround($fixedElement) {
   const fixedElement = $fixedElement[0];
   const oldHeight = fixedElement.style.height;
 
-  var done = false;
   var originalScrollTop = 0;
+  let lastTouchedElement = null;
 
   positioningWorkaround.blur = function(evt) {
     if (workaroundActive) {
-      done = true;
+      $("body").removeClass("ios-safari-composer-hacks");
 
-      $("#main-outlet").show();
-      $("header").show();
-
-      fixedElement.style.position = "";
-      fixedElement.style.top = "";
-
-      if (window.visualViewport === undefined) {
+      if (!iOSWithVisualViewport()) {
         fixedElement.style.height = oldHeight;
         Ember.run.later(
           () => $(fixedElement).removeClass("no-transition"),
@@ -113,15 +110,18 @@ function positioningWorkaround($fixedElement) {
   };
 
   var blurredNow = function(evt) {
+    // we cannot use evt.relatedTarget to get the last focused element in safari iOS
+    // document.activeElement is also unreliable (iOS does not mark buttons as focused)
+    // so instead, we store the last touched element and check against it
+
     if (
-      !done &&
-      evt.srcElement !== document.activeElement &&
-      $(document.activeElement)
-        .parents()
-        .toArray()
-        .indexOf(fixedElement) > -1
+      lastTouchedElement &&
+      ($(lastTouchedElement).hasClass("select-kit-header") ||
+        $(lastTouchedElement).closest(".autocomplete") ||
+        ["span", "svg", "button"].includes(
+          lastTouchedElement.nodeName.toLowerCase()
+        ))
     ) {
-      // something in focus so skip
       return;
     }
 
@@ -131,60 +131,79 @@ function positioningWorkaround($fixedElement) {
   var blurred = debounce(blurredNow, 250);
 
   var positioningHack = function(evt) {
-    done = false;
-
     // we need this, otherwise changing focus means we never clear
     this.addEventListener("blur", blurred);
 
-    if (fixedElement.style.top === "0px") {
-      if (this !== document.activeElement) {
-        evt.preventDefault();
+    // resets focus out of select-kit elements
+    // might become redundant after select-kit refactoring
+    $fixedElement.find(".select-kit.is-expanded > button").trigger("click");
+    $fixedElement
+      .find(".select-kit > button.is-focused")
+      .removeClass("is-focused");
 
-        // this tricks safari into assuming current input is at top of the viewport
-        // via https://stackoverflow.com/questions/38017771/mobile-safari-prevent-scroll-page-when-focus-on-input
-        this.style.transform = "translateY(-200px)";
-        this.focus();
-        let _this = this;
-        setTimeout(function() {
-          _this.style.transform = "none";
-        }, 50);
+    if ($(window).scrollTop() > 0) {
+      originalScrollTop = $(window).scrollTop();
+    }
+
+    setTimeout(function() {
+      if (iOSWithVisualViewport()) {
+        // disable hacks when using a hardware keyboard
+        // by default, a hardware keyboard will show the keyboard accessory bar
+        // whose height is currently 55px (using 75 for a bit of a buffer)
+        let heightDiff = window.innerHeight - window.visualViewport.height;
+        if (heightDiff < 75) {
+          return;
+        }
       }
-      return;
-    }
 
-    // don't trigger keyboard on disabled element (happens when a category is required)
-    if (this.disabled) {
-      return;
-    }
+      if (fixedElement.style.top === "0px") {
+        if (this !== document.activeElement) {
+          evt.preventDefault();
 
-    originalScrollTop = $(window).scrollTop();
+          // this tricks safari into assuming current input is at top of the viewport
+          // via https://stackoverflow.com/questions/38017771/mobile-safari-prevent-scroll-page-when-focus-on-input
+          this.style.transform = "translateY(-200px)";
+          this.focus();
+          let _this = this;
+          setTimeout(function() {
+            _this.style.transform = "none";
+          }, 30);
+        }
+        return;
+      }
 
-    // take care of body
+      // don't trigger keyboard on disabled element (happens when a category is required)
+      if (this.disabled) {
+        return;
+      }
 
-    $("#main-outlet").hide();
-    $("header").hide();
-
-    $(window).scrollTop(0);
-
-    let i = 20;
-    let interval = setInterval(() => {
+      $("body").addClass("ios-safari-composer-hacks");
       $(window).scrollTop(0);
-      if (i-- === 0) {
-        clearInterval(interval);
+
+      let i = 20;
+      let interval = setInterval(() => {
+        $(window).scrollTop(0);
+        if (i-- === 0) {
+          clearInterval(interval);
+        }
+      }, 10);
+
+      if (!iOSWithVisualViewport()) {
+        const height = calcHeight();
+        fixedElement.style.height = height + "px";
+        $(fixedElement).addClass("no-transition");
       }
-    }, 10);
 
-    fixedElement.style.top = "0px";
+      evt.preventDefault();
+      this.focus();
+      workaroundActive = true;
+    }, 350);
+  };
 
-    if (window.visualViewport === undefined) {
-      const height = calcHeight();
-      fixedElement.style.height = height + "px";
-      $(fixedElement).addClass("no-transition");
+  var lastTouched = function(evt) {
+    if (evt && evt.target) {
+      lastTouchedElement = evt.target;
     }
-
-    evt.preventDefault();
-    this.focus();
-    workaroundActive = true;
   };
 
   function attachTouchStart(elem, fn) {
@@ -195,30 +214,8 @@ function positioningWorkaround($fixedElement) {
   }
 
   const checkForInputs = debounce(function() {
-    $fixedElement
-      .find(
-        "button:not(.hide-preview),a:not(.mobile-file-upload):not(.toggle-toolbar)"
-      )
-      .each(function(idx, elem) {
-        if ($(elem).parents(".emoji-picker").length > 0) {
-          return;
-        }
+    attachTouchStart(fixedElement, lastTouched);
 
-        if ($(elem).parents(".autocomplete").length > 0) {
-          return;
-        }
-
-        if ($(elem).parents(".d-editor-button-bar").length > 0) {
-          return;
-        }
-
-        attachTouchStart(this, function(evt) {
-          done = true;
-          $(document.activeElement).blur();
-          evt.preventDefault();
-          $(this).click();
-        });
-      });
     $fixedElement.find("input[type=text],textarea").each(function() {
       attachTouchStart(this, positioningHack);
     });

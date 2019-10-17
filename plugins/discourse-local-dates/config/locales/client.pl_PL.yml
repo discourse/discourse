@@ -12,6 +12,8 @@ pl_PL:
         today: Dziś %{time}
         tomorrow: Jutro %{time}
         yesterday: Wczoraj %{time}
+        countdown:
+          passed: data minęła
       title: Wprowadź datę / czas
       create:
         form:

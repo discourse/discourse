@@ -200,62 +200,6 @@ testCase(`italic with a multiline selection`, async function(assert, textarea) {
   assert.equal(textarea.selectionEnd, 12);
 });
 
-testCase("link modal (cancel)", async function(assert) {
-  assert.equal(find(".insert-link.hidden").length, 1);
-
-  await click("button.link");
-  assert.equal(find(".insert-link.hidden").length, 0);
-
-  await click(".insert-link button.btn-danger");
-  assert.equal(find(".insert-link.hidden").length, 1);
-  assert.equal(this.value, "hello world.");
-});
-
-testCase("link modal (simple link)", async function(assert, textarea) {
-  await click("button.link");
-
-  const url = "http://eviltrout.com";
-
-  await fillIn(".insert-link input.link-url", url);
-  await click(".insert-link button.btn-primary");
-  assert.equal(find(".insert-link.hidden").length, 1);
-  assert.equal(this.value, `hello world.[${url}](${url})`);
-  assert.equal(textarea.selectionStart, 13);
-  assert.equal(textarea.selectionEnd, 13 + url.length);
-});
-
-testCase("link modal auto http addition", async function(assert) {
-  await click("button.link");
-  await fillIn(".insert-link input.link-url", "sam.com");
-  await click(".insert-link button.btn-primary");
-  assert.equal(this.value, `hello world.[sam.com](http://sam.com)`);
-});
-
-testCase("link modal (simple link) with selected text", async function(
-  assert,
-  textarea
-) {
-  textarea.selectionStart = 0;
-  textarea.selectionEnd = 12;
-
-  await click("button.link");
-  assert.equal(find("input.link-text")[0].value, "hello world.");
-
-  await fillIn(".insert-link input.link-url", "http://eviltrout.com");
-  await click(".insert-link button.btn-primary");
-  assert.equal(find(".insert-link.hidden").length, 1);
-  assert.equal(this.value, "[hello world.](http://eviltrout.com)");
-});
-
-testCase("link modal (link with description)", async function(assert) {
-  await click("button.link");
-  await fillIn(".insert-link input.link-url", "http://eviltrout.com");
-  await fillIn(".insert-link input.link-text", "evil trout");
-  await click(".insert-link button.btn-primary");
-  assert.equal(find(".insert-link.hidden").length, 1);
-  assert.equal(this.value, "hello world.[evil trout](http://eviltrout.com)");
-});
-
 componentTest("advanced code", {
   template: "{{d-editor value=value}}",
   beforeEach() {

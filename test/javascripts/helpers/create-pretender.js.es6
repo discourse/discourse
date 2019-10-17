@@ -37,7 +37,7 @@ export default function() {
   const server = new Pretender(function() {
     // Autoload any `*-pretender` files
     Object.keys(requirejs.entries).forEach(e => {
-      let m = e.match(/^helpers\/([a-z]+)\-pretender$/);
+      let m = e.match(/^.*helpers\/([a-z-]+)\-pretender$/);
       if (m && m[1] !== "create") {
         let result = requirejs(e).default.call(this, helpers);
         if (m[1] === "fixture") {
@@ -199,7 +199,9 @@ export default function() {
 
     this.get("/t/280.json", () => response(fixturesByUrl["/t/280/1.json"]));
     this.get("/t/34.json", () => response(fixturesByUrl["/t/34/1.json"]));
-    this.get("/t/280/20.json", () => response(fixturesByUrl["/t/280/1.json"]));
+    this.get("/t/280/:post_number.json", () =>
+      response(fixturesByUrl["/t/280/1.json"])
+    );
     this.get("/t/28830.json", () => response(fixturesByUrl["/t/28830/1.json"]));
     this.get("/t/9.json", () => response(fixturesByUrl["/t/9/1.json"]));
     this.get("/t/12.json", () => response(fixturesByUrl["/t/12/1.json"]));

@@ -114,7 +114,7 @@ describe TopicConverter do
 
     context 'success' do
       it "converts regular topic to private message" do
-        private_message = topic.convert_to_private_message(admin)
+        private_message = topic.convert_to_private_message(post.user)
         expect(private_message).to be_valid
         expect(topic.archetype).to eq("private_message")
         expect(topic.category_id).to eq(nil)

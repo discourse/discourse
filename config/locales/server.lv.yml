@@ -36,6 +36,8 @@ lv:
   activemodel:
     errors:
       <<: *errors
+  not_in_group:
+    join_group: "Pievienoties grupai"
   likes: "Patīk"
   embed:
     start_discussion: "Sākt Diskusiju"

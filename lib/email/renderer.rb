@@ -18,7 +18,7 @@ module Email
       style = if @message.html_part
         Email::Styles.new(@message.html_part.body.to_s, @opts)
       else
-        unstyled = UserNotificationRenderer.instance.render(
+        unstyled = UserNotificationRenderer.render(
           template: 'layouts/email_template',
           format: :html,
           locals: { html_body: PrettyText.cook(text).html_safe }

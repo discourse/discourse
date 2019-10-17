@@ -120,6 +120,8 @@ sv:
   not_found: "Den efterfrågade URL:en eller resursen kan inte hittas."
   invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
   read_only_mode_enabled: "Webbplatsen är i skrivskyddat läge. Interaktioner är inaktiverade."
+  not_in_group:
+    join_group: "Gå med i grupp"
   reading_time: "Lästid"
   likes: "Gillningar"
   too_many_replies:

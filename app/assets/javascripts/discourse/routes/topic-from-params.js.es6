@@ -52,6 +52,7 @@ export default Discourse.Route.extend({
           enteredAt: new Date().getTime().toString()
         });
 
+        this.appEvents.trigger("page:topic-loaded", topic);
         topicController.subscribe();
 
         // Highlight our post after the next render
