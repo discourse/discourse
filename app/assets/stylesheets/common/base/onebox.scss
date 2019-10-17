@@ -417,10 +417,15 @@ pre.onebox code {
     }
   }
 
+  .github-info-container {
+    width: 100%;
+  }
+
   .github-info {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    width: 100%;
 
     > div {
       margin: 2.5px 0;
