@@ -25,6 +25,14 @@ export default Discourse.Route.extend({
     });
   },
 
+  activate() {
+    this.messageBus.subscribe("/reviewable_counts", () => this.refresh());
+  },
+
+  deactivate() {
+    this.messageBus.unsubscribe("/reviewable_counts");
+  },
+
   actions: {
     refreshRoute() {
       this.refresh();
