@@ -19,13 +19,17 @@ describe Draft do
 
       Draft.set(user, "new_private_message", 0, draft.to_json)
       draft["reply"] = "test" * 100
+
+      half_grace = (SiteSetting.editing_grace_period / 2 + 1).seconds
+
+      freeze_time half_grace.from_now
       Draft.set(user, "new_private_message", 77, draft.to_json)
 
       draft_post = BackupDraftPost.find_by(user_id: user.id, key: "new_private_message").post
 
       expect(draft_post.revisions.count).to eq(0)
 
-      freeze_time 10.minutes.from_now
+      freeze_time half_grace.from_now
 
       # this should trigger a post revision as 10 minutes have passed
       draft["reply"] = "hello"

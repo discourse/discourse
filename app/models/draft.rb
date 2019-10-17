@@ -137,7 +137,7 @@ class Draft < ActiveRecord::Base
         ).create
         BackupDraftPost.create!(user_id: user.id, key: key, post_id: post.id)
       end
-    elsif post.updated_at > 5.minutes.ago
+    elsif post.last_version_at > 5.minutes.ago
       # bypass all validations here to maximize speed
       post.update_columns(
         raw: draft_body,
