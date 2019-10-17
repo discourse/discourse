@@ -62,10 +62,6 @@
   {{/d-modal-body}}
 
   <div class="modal-footer">
-    {{#if authenticate}}
-      {{i18n "login.authenticating"}}
-    {{/if}}
-
     {{#if canLoginLocal}}
       {{#unless showSecurityKey }}
         {{d-button action=(action "login")
@@ -82,6 +78,6 @@
       {{/if}}
     {{/if}}
   </div>
-  <div class="auth-message">{{authMessage}}</div>
+
   <div id='login-alert' class={{alertClass}}>{{alert}}</div>
 {{/login-modal}}

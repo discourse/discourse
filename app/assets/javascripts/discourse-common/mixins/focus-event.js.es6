@@ -26,7 +26,7 @@ export default Ember.Mixin.create({
 
   _onChange() {
     const container = getOwner(this);
-    const appEvents = container.lookup("app-events:main");
+    const appEvents = container.lookup("service:app-events");
 
     if (document.visibilityState === "hidden") {
       if (Discourse.hasFocus) {

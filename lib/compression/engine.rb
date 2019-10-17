@@ -22,12 +22,6 @@ module Compression
       @strategy = strategy
     end
 
-    def decompress(dest_path, compressed_file_path, allow_non_root_folder: false)
-      @strategy.decompress(dest_path, compressed_file_path, allow_non_root_folder: false)
-    end
-
-    def compress(path, target_name)
-      @strategy.compress(path, target_name)
-    end
+    delegate :extension, :decompress, :compress, :strip_directory, to: :@strategy
   end
 end

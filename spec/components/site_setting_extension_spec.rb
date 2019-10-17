@@ -633,7 +633,7 @@ describe SiteSettingExtension do
     end
   end
 
-  describe "shadowed_by_global" do
+  describe "global override" do
 
     context "default_locale" do
       it "supports adding a default locale via a global" do
@@ -645,7 +645,7 @@ describe SiteSettingExtension do
 
     context "without global setting" do
       before do
-        settings.setting(:trout_api_key, 'evil', shadowed_by_global: true)
+        settings.setting(:trout_api_key, 'evil')
         settings.refresh!
       end
 
@@ -667,7 +667,7 @@ describe SiteSettingExtension do
     context "with blank global setting" do
       before do
         GlobalSetting.stubs(:nada).returns('')
-        settings.setting(:nada, 'nothing', shadowed_by_global: true)
+        settings.setting(:nada, 'nothing')
         settings.refresh!
       end
 
@@ -680,7 +680,7 @@ describe SiteSettingExtension do
     context "with a false override" do
       before do
         GlobalSetting.stubs(:bool).returns(false)
-        settings.setting(:bool, true, shadowed_by_global: true)
+        settings.setting(:bool, true)
         settings.refresh!
       end
 
@@ -700,7 +700,7 @@ describe SiteSettingExtension do
     context "with global setting" do
       before do
         GlobalSetting.stubs(:trout_api_key).returns('purringcat')
-        settings.setting(:trout_api_key, 'evil', shadowed_by_global: true)
+        settings.setting(:trout_api_key, 'evil')
         settings.refresh!
       end
 
@@ -718,7 +718,7 @@ describe SiteSettingExtension do
 
         ['', nil].each_with_index do |setting, index|
           GlobalSetting.stubs(:"trout_api_key_#{index}").returns(setting)
-          settings.setting(:"trout_api_key_#{index}", 'evil', shadowed_by_global: true)
+          settings.setting(:"trout_api_key_#{index}", 'evil')
           settings.refresh!
           expect(settings.hidden_settings.include?(:"trout_api_key_#{index}")).to eq(false)
         end

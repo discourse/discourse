@@ -72,7 +72,7 @@ module PrettyText
 
             short_urls.each do |short_url|
               result[short_url] = {
-                url: secure_media ? secure_media_url(url) : url,
+                url: secure_media ? secure_media_url(url) : Discourse.store.cdn_url(url),
                 short_path: Upload.short_path(sha1: sha1, extension: extension),
                 base62_sha1: Upload.base62_sha1(sha1)
               }

@@ -16,9 +16,12 @@ export default Ember.Controller.extend(PasswordValidation, {
     "model.second_factor_required",
     "model.security_key_required"
   ),
-  secondFactorMethod: Ember.computed.alias("model.security_key_required")
-    ? SECOND_FACTOR_METHODS.SECURITY_KEY
-    : SECOND_FACTOR_METHODS.TOTP,
+  @computed("model.security_key_required")
+  secondFactorMethod(security_key_required) {
+    return security_key_required
+      ? SECOND_FACTOR_METHODS.SECURITY_KEY
+      : SECOND_FACTOR_METHODS.TOTP;
+  },
   passwordRequired: true,
   errorMessage: null,
   successMessage: null,

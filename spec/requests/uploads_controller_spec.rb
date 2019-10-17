@@ -265,6 +265,13 @@ describe UploadsController do
         .to eq(%Q|attachment; filename="logo.png"; filename*=UTF-8''logo.png|)
     end
 
+    it 'returns 200 when js file' do
+      ActionDispatch::FileHandler.any_instance.stubs(:match?).returns(false)
+      upload = upload_file("test.js", "themes")
+      get upload.url
+      expect(response.status).to eq(200)
+    end
+
     it "handles image without extension" do
       SiteSetting.authorized_extensions = "*"
       upload = upload_file("image_no_extension")

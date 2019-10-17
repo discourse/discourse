@@ -732,9 +732,13 @@ lt:
       second_factor:
         title: "Dviejų veiksmų autentifikavimas"
         confirm_password_description: "Patvirtinkite slaptažodį norėdami tęsti"
+        name: "Vardas"
         label: "Kodas"
         show_key_description: "Įveskite rankiniu būdu"
         edit: "Redaguoti"
+        security_key:
+          register: "Registruokis"
+          delete: 'Pašalinti'
       change_about:
         title: "Keisti Apie Mane"
         error: "Rasta klaida bandant pakeisti reikšmę. Prašom patikslinti veiksmus."
@@ -1052,7 +1056,6 @@ lt:
       username: "Vartotojas"
       password: "Slaptažodis"
       second_factor_title: "Dviejų veiksmų autentifikavimas"
-      second_factor_backup: "<a href>Prisijunti naudojant atsarginį kodą</a>"
       email_placeholder: "el. paštas arba slaptažodis"
       caps_lock_warning: "Įjungtas didžiųjų raidžių rašymas"
       error: "Nežinoma klaida"
@@ -1077,23 +1080,18 @@ lt:
       google_oauth2:
         name: "Google"
         title: "per Google"
-        message: "Prisijungiama per Google (įsitikinkite, kad neblokuojate iššokamų langų)"
       twitter:
         name: "Twitter"
         title: "per Twitter"
-        message: "Prisijungiama per Twitter (įsitikinkite, kad neblokuojate iššokamų langų)"
       instagram:
         name: "Instagram"
         title: "su Instagram"
-        message: "Prisijungiama per Instagram (įsitikinkite, kad neblokuojate iššokamų langų)"
       facebook:
         name: "Facebook"
         title: "per Facebook"
-        message: "Prisijungiama per Facebook (įsitikinkite, kad neblokuojate iššokamų langų)"
       github:
         name: "GitHub"
         title: "per GitHub"
-        message: "Prisijungiama per GitHub (įsitikinkite, kad neblokuojate iššokamų langų)"
     invites:
       welcome_to: "Sveiki atvykę į %{site_name}!"
       invited_by: "Jus pakvietė:"
@@ -1107,7 +1105,6 @@ lt:
       apple_international: "Apple"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Žinutės"
@@ -2426,6 +2423,7 @@ lt:
         user: "Vartotojas"
         title: "API"
         key: "API raktas"
+        created: Sukurta
         generate: "Generuoti"
         regenerate: "Pergeneruoti"
         revoke: "Pašalinti"

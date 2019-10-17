@@ -34,6 +34,7 @@ class PostCreator
   #                             dequeue before the commit finishes. If you do this, be sure to
   #                             call `enqueue_jobs` after the transaction is comitted.
   #   hidden_reason_id        - Reason for hiding the post (optional)
+  #   skip_validations        - Do not validate any of the content in the post
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to

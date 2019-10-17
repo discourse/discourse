@@ -712,7 +712,11 @@ ro:
         copied_to_clipboard: "Copiat în clipboard"
         copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"
       second_factor:
+        name: "Nume"
         edit: "Editează"
+        security_key:
+          register: "Înregistrare"
+          delete: 'Șterge'
       change_about:
         title: "Schimbare date personale"
         error: "A apărut o eroare la schimbarea acestei valori."
@@ -1088,20 +1092,15 @@ ro:
       google_oauth2:
         name: "Google"
         title: "Google"
-        message: "Autentificare cu Google (Verifică browserul să nu blocheze ferestrele pop-up)"
       twitter:
         name: "Twitter"
         title: "Twitter"
-        message: "Autentificare cu Twitter (Verifică browserul să nu blocheze ferestrele pop-up)"
       instagram:
         title: "Instagram"
-        message: "Autentificare cu Instagram (Verifică browserul să nu blocheze ferestrele pop-up)"
       facebook:
         title: "Facebook"
-        message: "Autentificare cu Facebook (Verifică browserul să nu blocheze ferestrele pop-up)"
       github:
         title: "GitHub"
-        message: "Autentificare cu GitHub (Verifică browserul să nu blocheze ferestrele pop-up)"
     invites:
       accept_title: "Initație"
       welcome_to: "Bine ai venit la %{site_name}!"
@@ -1119,7 +1118,6 @@ ro:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google clasic"
       facebook_messenger: "Facebook Messenger"
@@ -2479,6 +2477,7 @@ ro:
         user: "Utilizator"
         title: "API"
         key: "Cheie API"
+        created: Creat
         generate: "Generare"
         regenerate: "Regenerare"
         revoke: "Revocă"

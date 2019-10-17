@@ -971,6 +971,7 @@ en:
         enable: "Manage Two Factor Authentication"
         forgot_password: "Forgot password?"
         confirm_password_description: "Please confirm your password to continue"
+        name: "Name"
         label: "Code"
         rate_limit: "Please wait before trying another authentication code."
         enable_description: |
@@ -1496,27 +1497,21 @@ en:
       google_oauth2:
         name: "Google"
         title: "with Google"
-        message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       twitter:
         name: "Twitter"
         title: "with Twitter"
-        message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
       instagram:
         name: "Instagram"
         title: "with Instagram"
-        message: "Authenticating with Instagram (make sure pop up blockers are not enabled)"
       facebook:
         name: "Facebook"
         title: "with Facebook"
-        message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
       github:
         name: "GitHub"
         title: "with GitHub"
-        message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
       discord:
         name: "Discord"
         title: "with Discord"
-        message: "Authenticating with Discord"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
@@ -1690,7 +1685,7 @@ en:
       link_description: "enter link description here"
       link_dialog_title: "Insert Hyperlink"
       link_optional_text: "optional title"
-      link_url_placeholder: "https://example.com"
+      link_url_placeholder: "Paste a URL or type to search topics"
       quote_title: "Blockquote"
       quote_text: "Blockquote"
       code_title: "Preformatted text"
@@ -3307,6 +3302,9 @@ en:
         user: "User"
         title: "API"
         key: "API Key"
+        created: Created
+        last_used: Last Used
+        never_used: (never)
         generate: "Generate"
         regenerate: "Regenerate"
         revoke: "Revoke"
@@ -4306,6 +4304,10 @@ en:
           dashboard: "Dashboard"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
+        default_categories:
+          modal_description: "Would you like to apply this change historically? This will change preferences for %{count} existing users."
+          modal_yes: "Yes"
+          modal_no: "No, only apply change going forward"
 
       badges:
         title: Badges

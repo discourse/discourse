@@ -254,6 +254,12 @@ en:
   invalid_grant_badge_reason_link: "External or invalid discourse link is not allowed in badge reason"
   email_template_cant_be_modified: "This email template can't be modified"
   invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
+  not_in_group:
+    title_topic: "You must be in a group to see this topic."
+    title_category: "You must be in a group to see this category."
+    request_membership: "Request Membership"
+    join_group: "Join Group"
+  deleted_topic: "Oops! This topic has been deleted and is no longer available."
 
   reading_time: "Reading time"
   likes: "Likes"
@@ -868,6 +874,9 @@ en:
       short_description: "Like this post"
       long_form: "liked this"
 
+  draft_backup:
+    pm_title: "Backup Drafts from ongoing topics"
+    pm_body: "Topic containing backup drafts"
   user_activity:
     no_default:
       self: "You have no activity yet."
@@ -1381,7 +1390,7 @@ en:
     editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 2 and up)"
     staff_edit_locks_post: "Posts will be locked from editing if they are edited by staff members"
     post_edit_time_limit: "A tl0 or tl1 author can edit their post for (n) minutes after posting. Set to 0 for forever."
-    tl2_post_edit_time_limit: "A tl2 author can edit their post for (n) minutes after posting. Set to 0 for forever."
+    tl2_post_edit_time_limit: "A tl2+ author can edit their post for (n) minutes after posting. Set to 0 for forever."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     max_image_width: "Maximum thumbnail width of images in a post"
@@ -1415,6 +1424,7 @@ en:
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
     enforce_second_factor: "Forces users to enable second factor authentication. Select 'all' to enforce it to all users. Select 'staff' to enforce it to staff users only."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
     same_site_cookies: "Use same site cookies, they eliminate all vectors Cross Site Request Forgery on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use SSO."
@@ -1989,7 +1999,7 @@ en:
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
-    delete_drafts_older_than_n_days: Delete drafts older than (n) days.
+    delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
 
     bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable)"
 
@@ -2589,7 +2599,7 @@ en:
         The community flagged this post and now it is hidden. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
-    
+
     flags_disagreed:
       title: "Flagged post restored by staff"
       subject_template: "Flagged post restored by staff"
@@ -2605,7 +2615,7 @@ en:
         %{flagged_post_raw_content}
         ```
         [/details]
-  
+
     flags_agreed_and_post_deleted:
       title: "Flagged post removed by staff"
       subject_template: "Flagged post removed by staff"
@@ -3085,7 +3095,7 @@ en:
         We have some new advice and recommendations for you based on your current site settings.
 
         [Visit your site dashboard](%{base_url}/admin) to see it.
-        
+
         If nothing is visible on your dashboard, another staff member may have already acted on this advice. A list of staff actions can be found in your [Staff Action Logs](%{base_url}/admin/logs/staff_action_logs).
 
     new_user_of_the_month:
@@ -3148,35 +3158,47 @@ en:
     invited_group_to_private_message_body: |
       %{username} invited @%{group_name} to a message
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
       at
 
       > %{site_title} -- %{site_description}
+
+      To join the message, click the link below:
+
+      %{topic_url}
 
     invited_to_private_message_body: |
       %{username} invited you to a message
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
       at
 
       > %{site_title} -- %{site_description}
+
+      To join the message, click the link below:
+
+      %{topic_url}
 
     invited_to_topic_body: |
       %{username} invited you to a discussion
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
       at
 
       > %{site_title} -- %{site_description}
+
+      To join the discussion, click the link below:
+
+      %{topic_url}
 
     user_invited_to_private_message_pm_group:
       title: "User Invited Group to PM"

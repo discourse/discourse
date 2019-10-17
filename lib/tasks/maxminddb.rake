@@ -2,6 +2,8 @@
 
 desc "downloads MaxMind's GeoLite2-City database"
 task "maxminddb:get" do
+  require 'discourse_ip_info'
+
   puts "Downloading MaxMindDb's GeoLite2-City..."
   DiscourseIpInfo.mmdb_download('GeoLite2-City')
 

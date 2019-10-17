@@ -24,7 +24,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
   forgotPassword: Ember.inject.controller(),
   application: Ember.inject.controller(),
 
-  authenticate: null,
   loggingIn: false,
   loggedIn: false,
   processingEmailLink: false,
@@ -39,7 +38,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   resetForm() {
     this.setProperties({
-      authenticate: null,
       loggingIn: false,
       loggedIn: false,
       secondFactorRequired: false,
@@ -85,12 +83,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   loginDisabled: Ember.computed.or("loggingIn", "loggedIn"),
 
-  @computed("loggingIn", "authenticate", "application.canSignUp")
-  showSignupLink(loggingIn, authenticate, canSignUp) {
-    return canSignUp && !loggingIn && Ember.isEmpty(authenticate);
+  @computed("loggingIn", "application.canSignUp")
+  showSignupLink(loggingIn, canSignUp) {
+    return canSignUp && !loggingIn;
   },
 
-  showSpinner: Ember.computed.or("loggingIn", "authenticate"),
+  showSpinner: Ember.computed.readOnly("loggingIn"),
 
   @computed("canLoginLocalWithEmail", "processingEmailLink")
   showLoginWithEmailLink(canLoginLocalWithEmail, processingEmailLink) {
@@ -233,20 +231,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return false;
     },
 
-    externalLogin(loginMethod, { fullScreenLogin = false } = {}) {
-      const capabilities = this.capabilities;
-      // On Mobile, Android or iOS always go with full screen
-      if (
-        this.isMobileDevice ||
-        (capabilities &&
-          (capabilities.isIOS ||
-            capabilities.isAndroid ||
-            capabilities.isSafari))
-      ) {
-        fullScreenLogin = true;
+    externalLogin(loginMethod) {
+      if (this.loginDisabled) {
+        return;
       }
 
-      loginMethod.doLogin({ fullScreenLogin });
+      this.set("loggingIn", true);
+      loginMethod.doLogin().catch(() => this.set("loggingIn", false));
     },
 
     createAccount() {
@@ -324,16 +315,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("authenticate")
-  authMessage(authenticate) {
-    if (Ember.isEmpty(authenticate)) return "";
-
-    const method = findAll().findBy("name", authenticate);
-    if (method) {
-      return method.message;
-    }
-  },
-
   authenticationComplete(options) {
     const loginError = (errorMsg, className, callback) => {
       showModal("login");
@@ -341,7 +322,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
       Ember.run.next(() => {
         if (callback) callback();
         this.flash(errorMsg, className || "success");
-        this.set("authenticate", null);
       });
     };
 

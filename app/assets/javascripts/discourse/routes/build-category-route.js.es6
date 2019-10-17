@@ -198,6 +198,18 @@ export default (filterArg, params) => {
     },
 
     actions: {
+      error(err) {
+        const json = err.jqXHR.responseJSON;
+        if (json && json.extras && json.extras.html) {
+          this.controllerFor("discovery").set(
+            "errorHtml",
+            err.jqXHR.responseJSON.extras.html
+          );
+        } else {
+          this.replaceWith("exception");
+        }
+      },
+
       setNotification(notification_level) {
         this.currentModel.setNotification(notification_level);
       },

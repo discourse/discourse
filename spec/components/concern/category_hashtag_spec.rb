@@ -25,6 +25,10 @@ describe CategoryHashtag do
       expect(Category.query_from_hashtag_slug("random-slug#{CategoryHashtag::SEPARATOR}random-slug")).to eq(nil)
     end
 
+    it "should return nil for a non-existent root and a parent subcategory" do
+      expect(Category.query_from_hashtag_slug("non-existent#{CategoryHashtag::SEPARATOR}#{parent_category.slug}")).to eq(nil)
+    end
+
     it "should be case sensitive" do
       parent_category.update!(slug: "ApPlE")
       child_category.update!(slug: "OraNGE")

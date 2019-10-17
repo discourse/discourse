@@ -43,7 +43,8 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     _collectTitleTokens(tokens) {
       tokens.push(this.siteTitle);
       if (
-        window.location.pathname === Discourse.getURL("/") &&
+        (window.location.pathname === Discourse.getURL("/") ||
+          window.location.pathname === Discourse.getURL("/login")) &&
         this.shortSiteDescription !== ""
       ) {
         tokens.push(this.shortSiteDescription);
@@ -265,9 +266,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     const methods = findAll();
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
-      this.controllerFor("login").send("externalLogin", methods[0], {
-        fullScreenLogin: true
-      });
+      this.controllerFor("login").send("externalLogin", methods[0]);
     } else {
       showModal(modal);
       this.controllerFor("modal").set("modalClass", modalClass);

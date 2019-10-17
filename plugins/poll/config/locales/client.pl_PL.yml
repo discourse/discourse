@@ -26,6 +26,8 @@ pl_PL:
           title: "Wyniki pojawią się po <strong>zagłosowaniu</strong>."
         closed:
           title: "Wyniki pojawią się po <strong>zamknięciu</strong> ankiety."
+        staff:
+          title: "Wyniki pokazywane są wyłącznie członkom <strong>zespołu</strong>."
       multiple:
         help:
           at_least_min_options:
@@ -84,6 +86,7 @@ pl_PL:
           always: Zawsze widoczna
           vote: Po zagłosowaniu
           closed: Po zamknięciu
+          staff: Wyłącznie dla zespołu
         poll_config:
           max: Max
           min: Min

@@ -414,6 +414,9 @@ class UsersController < ApplicationController
       authentication.finish
       activation.finish
 
+      secure_session[HONEYPOT_KEY] = nil
+      secure_session[CHALLENGE_KEY] = nil
+
       # save user email in session, to show on account-created page
       session["user_created_message"] = activation.message
       session[SessionController::ACTIVATE_USER_KEY] = user.id
@@ -467,7 +470,14 @@ class UsersController < ApplicationController
   end
 
   def get_honeypot_value
-    render json: { value: honeypot_value, challenge: challenge_value }
+    secure_session.set(HONEYPOT_KEY, honeypot_value, expires: 1.hour)
+    secure_session.set(CHALLENGE_KEY, challenge_value, expires: 1.hour)
+
+    render json: {
+      value: honeypot_value,
+      challenge: challenge_value,
+      expires_in: SecureSession.expiry
+    }
   end
 
   def password_reset
@@ -606,8 +616,6 @@ class UsersController < ApplicationController
         end
       end
     end
-  rescue RateLimiter::LimitExceeded => e
-    render_rate_limit_error(e)
   rescue ::Webauthn::SecurityKeyError => err
     render json: {
       message: err.message,
@@ -662,7 +670,6 @@ class UsersController < ApplicationController
         security_keys_enabled = email_token_user&.security_keys_enabled?
         second_factor_token = params[:second_factor_token]
         second_factor_method = params[:second_factor_method].to_i
-        security_key_credential = params[:security_key_credential]
         confirm_email = false
         @security_key_required = security_keys_enabled
 
@@ -1370,21 +1377,20 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
-  private
+  HONEYPOT_KEY ||= 'HONEYPOT_KEY'
+  CHALLENGE_KEY ||= 'CHALLENGE_KEY'
+
+  protected
 
   def honeypot_value
-    Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{GlobalSetting.safe_secret_key_base}")[0, 15]
+    secure_session[HONEYPOT_KEY] ||= SecureRandom.hex
   end
 
   def challenge_value
-    challenge = $redis.get('SECRET_CHALLENGE')
-    unless challenge && challenge.length == 16 * 2
-      challenge = SecureRandom.hex(16)
-      $redis.set('SECRET_CHALLENGE', challenge)
-    end
-
-    challenge
+    secure_session[CHALLENGE_KEY] ||= SecureRandom.hex
   end
+
+  private
 
   def respond_to_suspicious_request
     if suspicious?(params)
@@ -1427,7 +1433,8 @@ class UsersController < ApplicationController
       :card_background_upload_url
     ]
 
-    permitted << { custom_fields: User.editable_user_custom_fields } unless User.editable_user_custom_fields.blank?
+    editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
+    permitted << { custom_fields: editable_custom_fields } unless editable_custom_fields.blank?
     permitted.concat UserUpdater::OPTION_ATTR
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys

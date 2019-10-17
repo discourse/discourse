@@ -260,15 +260,29 @@ class User < ActiveRecord::Base
     @plugin_editable_user_custom_fields ||= {}
   end
 
-  def self.register_plugin_editable_user_custom_field(custom_field_name, plugin)
-    plugin_editable_user_custom_fields[custom_field_name] = plugin
+  def self.plugin_staff_editable_user_custom_fields
+    @plugin_staff_editable_user_custom_fields ||= {}
   end
 
-  def self.editable_user_custom_fields
+  def self.register_plugin_editable_user_custom_field(custom_field_name, plugin, staff_only: false)
+    if staff_only
+      plugin_staff_editable_user_custom_fields[custom_field_name] = plugin
+    else
+      plugin_editable_user_custom_fields[custom_field_name] = plugin
+    end
+  end
+
+  def self.editable_user_custom_fields(by_staff: false)
     fields = []
 
     plugin_editable_user_custom_fields.each do |k, v|
       fields << k if v.enabled?
+    end
+
+    if by_staff
+      plugin_staff_editable_user_custom_fields.each do |k, v|
+        fields << k if v.enabled?
+      end
     end
 
     fields.uniq
@@ -1549,6 +1563,7 @@ end
 #  silenced_till             :datetime
 #  group_locked_trust_level  :integer
 #  manual_locked_trust_level :integer
+#  secure_identifier         :string
 #
 # Indexes
 #
@@ -1556,6 +1571,7 @@ end
 #  idx_users_moderator                (id) WHERE moderator
 #  index_users_on_last_posted_at      (last_posted_at)
 #  index_users_on_last_seen_at        (last_seen_at)
+#  index_users_on_secure_identifier   (secure_identifier) UNIQUE
 #  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)
 #  index_users_on_username            (username) UNIQUE
 #  index_users_on_username_lower      (username_lower) UNIQUE

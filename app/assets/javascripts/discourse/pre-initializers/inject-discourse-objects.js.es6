@@ -1,8 +1,6 @@
 import Session from "discourse/models/session";
 import KeyValueStore from "discourse/lib/key-value-store";
-import AppEvents from "discourse/lib/app-events";
 import Store from "discourse/models/store";
-import DiscourseURL from "discourse/lib/url";
 import DiscourseLocation from "discourse/lib/discourse-location";
 import SearchService from "discourse/services/search";
 import {
@@ -17,10 +15,7 @@ export default {
   name: "inject-discourse-objects",
 
   initialize(container, app) {
-    const appEvents = AppEvents.create();
-    app.register("app-events:main", appEvents, { instantiate: false });
-    ALL_TARGETS.forEach(t => app.inject(t, "appEvents", "app-events:main"));
-    DiscourseURL.appEvents = appEvents;
+    ALL_TARGETS.forEach(t => app.inject(t, "appEvents", "service:app-events"));
 
     // backwards compatibility: remove when plugins have updated
     app.register("store:main", Store);

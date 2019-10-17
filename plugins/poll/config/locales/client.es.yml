@@ -84,6 +84,6 @@ es:
         poll_public:
           label: Mostrar quién votó
         poll_options:
-          label: Introducir una opción de la encuesta por línea
+          label: Ingresa una opción de la encuesta por línea
         automatic_close:
           label: Cerrar encuesta automáticamente

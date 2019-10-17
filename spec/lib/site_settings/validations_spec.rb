@@ -22,6 +22,14 @@ describe SiteSettings::Validations do
         subject.validate_default_categories_watching("#{category.id}|12312323")
       }.to raise_error(Discourse::InvalidParameters)
     end
+
+    it "prevents using the same category in more than one default group" do
+      SiteSetting.default_categories_watching = "#{category.id}"
+
+      expect {
+        SiteSetting.default_categories_tracking = "#{category.id}"
+      }.to raise_error(Discourse::InvalidParameters)
+    end
   end
 
   context "s3 buckets reusage" do

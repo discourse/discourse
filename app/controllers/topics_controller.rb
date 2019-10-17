@@ -36,7 +36,7 @@ class TopicsController < ApplicationController
   skip_before_action :check_xhr, only: [:show, :feed]
 
   def id_for_slug
-    topic = Topic.find_by(slug: params[:slug].downcase)
+    topic = Topic.find_by_slug(params[:slug])
     guardian.ensure_can_see!(topic)
     raise Discourse::NotFound unless topic
     render json: { slug: topic.slug, topic_id: topic.id, url: topic.url }
@@ -64,7 +64,7 @@ class TopicsController < ApplicationController
     # Special case: a slug with a number in front should look by slug first before looking
     # up that particular number
     if params[:id] && params[:id] =~ /^\d+[^\d\\]+$/
-      topic = Topic.find_by(slug: params[:id].downcase)
+      topic = Topic.find_by_slug(params[:id])
       return redirect_to_correct_topic(topic, opts[:post_number]) if topic
     end
 
@@ -79,12 +79,54 @@ class TopicsController < ApplicationController
 
     begin
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
-    rescue Discourse::NotFound
+    rescue Discourse::NotFound => ex
       if params[:id]
-        topic = Topic.find_by(slug: params[:id].downcase)
+        topic = Topic.find_by_slug(params[:id])
         return redirect_to_correct_topic(topic, opts[:post_number]) if topic
       end
-      raise Discourse::NotFound
+
+      raise ex
+    rescue Discourse::NotLoggedIn => ex
+      if !SiteSetting.detailed_404
+        raise Discourse::NotFound
+      else
+        raise ex
+      end
+    rescue Discourse::InvalidAccess => ex
+      # If the user can't see the topic, clean up notifications for it.
+      Notification.remove_for(current_user.id, params[:topic_id]) if current_user
+
+      deleted = guardian.can_see_topic?(ex.obj, false) ||
+                (!guardian.can_see_topic?(ex.obj) &&
+                 ex.obj&.access_topic_via_group &&
+                 ex.obj.deleted_at)
+
+      if SiteSetting.detailed_404
+        if deleted
+          raise Discourse::NotFound.new(
+            'deleted topic',
+            custom_message: 'deleted_topic',
+            status: 410,
+            check_permalinks: true,
+            original_path: ex.obj.relative_url
+          )
+        elsif !guardian.can_see_topic?(ex.obj) && group = ex.obj&.access_topic_via_group
+          raise Discourse::InvalidAccess.new(
+            'not in group',
+            ex.obj,
+            custom_message: 'not_in_group.title_topic',
+            group: group
+          )
+        end
+
+        raise ex
+      else
+        raise Discourse::NotFound.new(
+          nil,
+          check_permalinks: deleted,
+          original_path: ex.obj.relative_url
+        )
+      end
     end
 
     page = params[:page]
@@ -120,27 +162,6 @@ class TopicsController < ApplicationController
     end
 
     perform_show_response
-
-  rescue Discourse::InvalidAccess => ex
-    if !guardian.can_see_topic?(ex.obj) && guardian.can_get_access_to_topic?(ex.obj)
-      return perform_hidden_topic_show_response(ex.obj)
-    end
-
-    if current_user
-      # If the user can't see the topic, clean up notifications for it.
-      Notification.remove_for(current_user.id, params[:topic_id])
-    end
-
-    if ex.obj && Topic === ex.obj && guardian.can_see_topic_if_not_deleted?(ex.obj)
-      raise Discourse::NotFound.new(
-        "topic was deleted",
-        status: 410,
-        check_permalinks: true,
-        original_path: ex.obj.relative_url
-      )
-    end
-
-    raise ex
   end
 
   def publish
@@ -879,7 +900,11 @@ class TopicsController < ApplicationController
   end
 
   def slugs_do_not_match
-    params[:slug] && @topic_view.topic.slug != params[:slug]
+    if SiteSetting.slug_generation_method != "encoded"
+      params[:slug] && @topic_view.topic.slug != params[:slug]
+    else
+      params[:slug] && CGI.unescape(@topic_view.topic.slug) != params[:slug]
+    end
   end
 
   def redirect_to_correct_topic(topic, post_number = nil)
@@ -956,19 +981,6 @@ class TopicsController < ApplicationController
 
       format.json do
         render_json_dump(topic_view_serializer)
-      end
-    end
-  end
-
-  def perform_hidden_topic_show_response(topic)
-    respond_to do |format|
-      format.html do
-        @topic_view = nil
-        render :show
-      end
-
-      format.json do
-        render_serialized(topic, HiddenTopicViewSerializer, root: false)
       end
     end
   end

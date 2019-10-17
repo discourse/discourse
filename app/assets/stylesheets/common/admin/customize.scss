@@ -99,9 +99,9 @@
     margin-top: 20px;
   }
   .color-schemes li {
-    .fa {
-      margin-right: 6px;
-      color: dark-light-choose($primary-medium, $secondary-medium);
+    .d-icon {
+      margin-right: 0.25em;
+      color: $primary-medium;
     }
   }
   .show-current-style {
@@ -492,8 +492,14 @@
     .hex {
       text-align: center;
     }
+    h3 {
+      margin: 0;
+    }
     .description {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      margin: 0.15em 0 0;
+      color: $primary-high;
+      font-size: $font-down-1;
+      line-height: $line-height-medium;
     }
 
     .invalid .hex input {
@@ -594,7 +600,7 @@
 
 .permalink-search {
   text-align: left;
-  @media screen and (min-width: map-get($breakpoints, tablet)) {
+  @include breakpoint(tablet, min-width) {
     text-align: right;
   }
 }
@@ -604,7 +610,7 @@
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  @media screen and (min-width: map-get($breakpoints, tablet)) {
+  @include breakpoint(tablet, min-width) {
     align-items: center;
     flex-direction: row;
   }
@@ -614,7 +620,7 @@
   }
   input {
     margin: 5px 0;
-    @media screen and (min-width: map-get($breakpoints, tablet)) {
+    @include breakpoint(tablet, min-width) {
       margin: 0 5px;
     }
   }
@@ -625,7 +631,7 @@
 }
 
 .permalink-description {
-  color: dark-light-choose($primary-medium, $secondary-medium);
+  color: $primary-medium;
 }
 
 // embedding
@@ -705,7 +711,7 @@
     margin: 0.75em 0;
   }
   p.description {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-medium;
     margin-bottom: 1em;
     max-width: 700px;
   }

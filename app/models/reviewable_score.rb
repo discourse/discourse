@@ -45,6 +45,11 @@ class ReviewableScore < ActiveRecord::Base
     take_action_bonus > 0
   end
 
+  def self.calculate_score(user, type_bonus, take_action_bonus)
+    score = user_flag_score(user) + type_bonus + take_action_bonus
+    score > 0 ? score : 0
+  end
+
   # A user's flag score is:
   #   1.0 + trust_level + user_accuracy_bonus
   #   (trust_level is 5 for staff)
@@ -68,8 +73,23 @@ class ReviewableScore < ActiveRecord::Base
 
     total = (agreed + disagreed).to_f
     return 0.0 if total <= 5
+    accuracy_axis = 0.7
 
-    (agreed / total) * 5.0
+    percent_correct = agreed / total
+    positive_accuracy = percent_correct >= accuracy_axis
+
+    bottom = positive_accuracy ? accuracy_axis : 0.0
+    top = positive_accuracy ? 1.0 : accuracy_axis
+
+    absolute_distance = positive_accuracy ?
+                        percent_correct - bottom :
+                        top - percent_correct
+
+    axis_distance_multiplier = 1.0 / (top - bottom)
+    positivity_multiplier = positive_accuracy ? 1.0 : -1.0
+
+    (absolute_distance * axis_distance_multiplier * positivity_multiplier * (Math.log(total, 4) * 5.0))
+      .round(2)
   end
 
   def reviewable_conversation
@@ -96,6 +116,7 @@ end
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  reason                :string
+#  user_accuracy_bonus   :float            default(0.0), not null
 #
 # Indexes
 #

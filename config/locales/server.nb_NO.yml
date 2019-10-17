@@ -173,6 +173,8 @@ nb_NO:
   provider_not_enabled: "Du har ikke tillatelse til å lese denne ressursen. Autentiseringsmetoden er ikke aktivert. "
   provider_not_found: "Du har ikke tillatelse til å lese denne ressursen. Autentiseringsmetoden eksisterer ikke."
   read_only_mode_enabled: "Siden er i skrivebeskyttet modus. Alle interaksjoner er utilgjengelige."
+  not_in_group:
+    join_group: "Bli medlem av gruppe"
   reading_time: "Lesetid"
   likes: "Likes"
   too_many_replies:

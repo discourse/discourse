@@ -123,6 +123,8 @@ ro:
   not_found: "Adresa URL sau resursa necesară nu poate fi găsită."
   invalid_access: "Nu ai permisiunea să vezi această resursă."
   read_only_mode_enabled: "Site-ul este în modul exclusiv-citire. Interacțiunile sunt dezactivate."
+  not_in_group:
+    join_group: "Alătură-te grupului"
   reading_time: "Durata citirii"
   likes: "Aprecieri"
   too_many_replies:

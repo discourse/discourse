@@ -24,8 +24,8 @@ export default Ember.Controller.extend(
     login: Ember.inject.controller(),
 
     complete: false,
-    accountPasswordConfirm: 0,
     accountChallenge: 0,
+    accountHoneypot: 0,
     formSubmitted: false,
     rejectedEmails: Ember.A([]),
     prefilledUsername: null,
@@ -191,8 +191,16 @@ export default Ember.Controller.extend(
     @on("init")
     fetchConfirmationValue() {
       return ajax(userPath("hp.json")).then(json => {
+        this._challengeDate = new Date();
+        // remove 30 seconds for jitter, make sure this works for at least
+        // 30 seconds so we don't have hard loops
+        this._challengeExpiry = parseInt(json.expires_in, 10) - 30;
+        if (this._challengeExpiry < 30) {
+          this._challengeExpiry = 30;
+        }
+
         this.setProperties({
-          accountPasswordConfirm: json.value,
+          accountHoneypot: json.value,
           accountChallenge: json.challenge
             .split("")
             .reverse()
@@ -201,85 +209,100 @@ export default Ember.Controller.extend(
       });
     },
 
+    performAccountCreation() {
+      const attrs = this.getProperties(
+        "accountName",
+        "accountEmail",
+        "accountPassword",
+        "accountUsername",
+        "accountChallenge"
+      );
+
+      attrs["accountPasswordConfirm"] = this.accountHoneypot;
+
+      const userFields = this.userFields;
+      const destinationUrl = this.get("authOptions.destination_url");
+
+      if (!Ember.isEmpty(destinationUrl)) {
+        $.cookie("destination_url", destinationUrl, { path: "/" });
+      }
+
+      // Add the userfields to the data
+      if (!Ember.isEmpty(userFields)) {
+        attrs.userFields = {};
+        userFields.forEach(
+          f => (attrs.userFields[f.get("field.id")] = f.get("value"))
+        );
+      }
+
+      this.set("formSubmitted", true);
+      return Discourse.User.createAccount(attrs).then(
+        result => {
+          this.set("isDeveloper", false);
+          if (result.success) {
+            // invalidate honeypot
+            this._challengeExpiry = 1;
+
+            // Trigger the browser's password manager using the hidden static login form:
+            const $hidden_login_form = $("#hidden-login-form");
+            $hidden_login_form
+              .find("input[name=username]")
+              .val(attrs.accountUsername);
+            $hidden_login_form
+              .find("input[name=password]")
+              .val(attrs.accountPassword);
+            $hidden_login_form
+              .find("input[name=redirect]")
+              .val(userPath("account-created"));
+            $hidden_login_form.submit();
+          } else {
+            this.flash(
+              result.message || I18n.t("create_account.failed"),
+              "error"
+            );
+            if (result.is_developer) {
+              this.set("isDeveloper", true);
+            }
+            if (
+              result.errors &&
+              result.errors.email &&
+              result.errors.email.length > 0 &&
+              result.values
+            ) {
+              this.rejectedEmails.pushObject(result.values.email);
+            }
+            if (
+              result.errors &&
+              result.errors.password &&
+              result.errors.password.length > 0
+            ) {
+              this.rejectedPasswords.pushObject(attrs.accountPassword);
+            }
+            this.set("formSubmitted", false);
+            $.removeCookie("destination_url");
+          }
+        },
+        () => {
+          this.set("formSubmitted", false);
+          $.removeCookie("destination_url");
+          return this.flash(I18n.t("create_account.failed"), "error");
+        }
+      );
+    },
+
     actions: {
       externalLogin(provider) {
         this.login.send("externalLogin", provider);
       },
 
       createAccount() {
-        const attrs = this.getProperties(
-          "accountName",
-          "accountEmail",
-          "accountPassword",
-          "accountUsername",
-          "accountPasswordConfirm",
-          "accountChallenge"
-        );
-        const userFields = this.userFields;
-        const destinationUrl = this.get("authOptions.destination_url");
-
-        if (!Ember.isEmpty(destinationUrl)) {
-          $.cookie("destination_url", destinationUrl, { path: "/" });
-        }
-
-        // Add the userfields to the data
-        if (!Ember.isEmpty(userFields)) {
-          attrs.userFields = {};
-          userFields.forEach(
-            f => (attrs.userFields[f.get("field.id")] = f.get("value"))
+        if (new Date() - this._challengeDate > 1000 * this._challengeExpiry) {
+          this.fetchConfirmationValue().then(() =>
+            this.performAccountCreation()
           );
+        } else {
+          this.performAccountCreation();
         }
-
-        this.set("formSubmitted", true);
-        return Discourse.User.createAccount(attrs).then(
-          result => {
-            this.set("isDeveloper", false);
-            if (result.success) {
-              // Trigger the browser's password manager using the hidden static login form:
-              const $hidden_login_form = $("#hidden-login-form");
-              $hidden_login_form
-                .find("input[name=username]")
-                .val(attrs.accountUsername);
-              $hidden_login_form
-                .find("input[name=password]")
-                .val(attrs.accountPassword);
-              $hidden_login_form
-                .find("input[name=redirect]")
-                .val(userPath("account-created"));
-              $hidden_login_form.submit();
-            } else {
-              this.flash(
-                result.message || I18n.t("create_account.failed"),
-                "error"
-              );
-              if (result.is_developer) {
-                this.set("isDeveloper", true);
-              }
-              if (
-                result.errors &&
-                result.errors.email &&
-                result.errors.email.length > 0 &&
-                result.values
-              ) {
-                this.rejectedEmails.pushObject(result.values.email);
-              }
-              if (
-                result.errors &&
-                result.errors.password &&
-                result.errors.password.length > 0
-              ) {
-                this.rejectedPasswords.pushObject(attrs.accountPassword);
-              }
-              this.set("formSubmitted", false);
-              $.removeCookie("destination_url");
-            }
-          },
-          () => {
-            this.set("formSubmitted", false);
-            $.removeCookie("destination_url");
-            return this.flash(I18n.t("create_account.failed"), "error");
-          }
-        );
       }
     }
   }

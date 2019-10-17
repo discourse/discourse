@@ -17,7 +17,7 @@ export default {
     router.on("routeWillChange", viewTrackingRequired);
     router.on("routeDidChange", cleanDOM);
 
-    let appEvents = container.lookup("app-events:main");
+    let appEvents = container.lookup("service:app-events");
 
     startPageTracking(router, appEvents);
 

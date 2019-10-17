@@ -21,7 +21,7 @@ export function extractLinkMeta(topic) {
     target: target,
     href,
     domain: topic.get("featured_link_root_domain"),
-    rel: "nofollow"
+    rel: "nofollow ugc"
   };
 
   if (_decorators.length) {
