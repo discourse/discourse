@@ -19,7 +19,7 @@ export default Ember.Controller.extend({
 
   @computed("filteredList")
   selectableUserBadges(filteredList) {
-    filteredList = _.uniq(filteredList, false, function(e) {
+    filteredList = _.uniq(filteredList, false, e => {
       return e.get("badge.name");
     });
     filteredList.unshiftObject(
