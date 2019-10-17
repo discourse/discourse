@@ -58,6 +58,9 @@ module Email
     def format_basic
       uri = URI(Discourse.base_url)
 
+      # Remove SVGs
+      @fragment.css('svg, img[src$=".svg"]').remove
+
       # images
       @fragment.css('img').each do |img|
         next if img['class'] == 'site-logo'
@@ -120,10 +123,13 @@ module Email
       style('aside.onebox header img.site-icon', "width: 16px; height: 16px; margin-right: 3px;")
       style('aside.onebox header a[href]', "color: #222222; text-decoration: none;")
       style('aside.onebox .onebox-body', "clear: both")
-      style('aside.onebox .onebox-body img', "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;")
+      style('aside.onebox .onebox-body img:not(.onebox-avatar-inline)', "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;")
       style('aside.onebox .onebox-body img.thumbnail', "width: 60px;")
       style('aside.onebox .onebox-body h3, aside.onebox .onebox-body h4', "font-size: 1.17em; margin: 10px 0;")
       style('.onebox-metadata', "color: #919191")
+      style('.github-info', "margin-top: 10px;")
+      style('.github-info div', "display: inline; margin-right: 10px;")
+      style('.onebox-avatar-inline', "float: none; vertical-align: middle;")
 
       @fragment.css('aside.quote blockquote > p').each do |p|
         p['style'] = 'padding: 0;'
