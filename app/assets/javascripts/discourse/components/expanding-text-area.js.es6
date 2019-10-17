@@ -12,6 +12,7 @@ export default Ember.TextArea.extend({
 
   @observes("value")
   _updateAutosize() {
+    this.element.value = this.value;
     const evt = document.createEvent("Event");
     evt.initEvent("autosize:update", true, false);
     this.element.dispatchEvent(evt);
