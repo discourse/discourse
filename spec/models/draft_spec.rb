@@ -3,37 +3,70 @@
 require 'rails_helper'
 
 describe Draft do
-  before do
-    @user = Fabricate(:user)
+
+  fab!(:user) do
+    Fabricate(:user)
   end
+
+  context 'backup_drafts_to_pm_length' do
+    it "correctly backs up drafts to a personal message" do
+      SiteSetting.backup_drafts_to_pm_length = 1
+
+      draft = {
+        reply: "this is a reply",
+        random_key: "random"
+      }
+
+      Draft.set(user, "new_private_message", 0, draft.to_json)
+      draft["reply"] = "test" * 100
+      Draft.set(user, "new_private_message", 77, draft.to_json)
+
+      draft_post = BackupDraftPost.find_by(user_id: user.id, key: "new_private_message").post
+
+      expect(draft_post.revisions.count).to eq(0)
+
+      freeze_time 10.minutes.from_now
+
+      # this should trigger a post revision as 10 minutes have passed
+      draft["reply"] = "hello"
+      Draft.set(user, "new_private_message", 77, draft.to_json)
+
+      draft_topic = BackupDraftTopic.find_by(user_id: user.id)
+      expect(draft_topic.topic.posts_count).to eq(2)
+
+      draft_post.reload
+      expect(draft_post.revisions.count).to eq(1)
+    end
+  end
+
   it "can get a draft by user" do
-    Draft.set(@user, "test", 0, "data")
-    expect(Draft.get(@user, "test", 0)).to eq "data"
+    Draft.set(user, "test", 0, "data")
+    expect(Draft.get(user, "test", 0)).to eq "data"
   end
 
   it "uses the user id and key correctly" do
-    Draft.set(@user, "test", 0, "data")
+    Draft.set(user, "test", 0, "data")
     expect(Draft.get(Fabricate.build(:coding_horror), "test", 0)).to eq nil
   end
 
   it "should overwrite draft data correctly" do
-    Draft.set(@user, "test", 0, "data")
-    Draft.set(@user, "test", 0, "new data")
-    expect(Draft.get(@user, "test", 0)).to eq "new data"
+    Draft.set(user, "test", 0, "data")
+    Draft.set(user, "test", 0, "new data")
+    expect(Draft.get(user, "test", 0)).to eq "new data"
   end
 
   it "should clear drafts on request" do
-    Draft.set(@user, "test", 0, "data")
-    Draft.clear(@user, "test", 0)
-    expect(Draft.get(@user, "test", 0)).to eq nil
+    Draft.set(user, "test", 0, "data")
+    Draft.clear(user, "test", 0)
+    expect(Draft.get(user, "test", 0)).to eq nil
   end
 
   it "should disregard old draft if sequence decreases" do
-    Draft.set(@user, "test", 0, "data")
-    Draft.set(@user, "test", 1, "hello")
-    Draft.set(@user, "test", 0, "foo")
-    expect(Draft.get(@user, "test", 0)).to eq nil
-    expect(Draft.get(@user, "test", 1)).to eq "hello"
+    Draft.set(user, "test", 0, "data")
+    Draft.set(user, "test", 1, "hello")
+    Draft.set(user, "test", 0, "foo")
+    expect(Draft.get(user, "test", 0)).to eq nil
+    expect(Draft.get(user, "test", 1)).to eq "hello"
   end
 
   it 'can cleanup old drafts' do
@@ -71,25 +104,25 @@ describe Draft do
     let(:public_topic) { public_post.topic }
 
     let(:stream) do
-      Draft.stream(user: @user)
+      Draft.stream(user: user)
     end
 
     it "should include the correct number of drafts in the stream" do
-      Draft.set(@user, "test", 0, '{"reply":"hey.","action":"createTopic","title":"Hey"}')
-      Draft.set(@user, "test2", 0, '{"reply":"howdy"}')
+      Draft.set(user, "test", 0, '{"reply":"hey.","action":"createTopic","title":"Hey"}')
+      Draft.set(user, "test2", 0, '{"reply":"howdy"}')
       expect(stream.count).to eq(2)
     end
 
     it "should include the right topic id in a draft reply in the stream" do
-      Draft.set(@user, "topic_#{public_topic.id}", 0, '{"reply":"hi"}')
+      Draft.set(user, "topic_#{public_topic.id}", 0, '{"reply":"hi"}')
       draft_row = stream.first
       expect(draft_row.topic_id).to eq(public_topic.id)
     end
 
     it "should include the right draft username in the stream" do
-      Draft.set(@user, "topic_#{public_topic.id}", 0, '{"reply":"hey"}')
+      Draft.set(user, "topic_#{public_topic.id}", 0, '{"reply":"hey"}')
       draft_row = stream.first
-      expect(draft_row.draft_username).to eq(@user.username)
+      expect(draft_row.draft_username).to eq(user.username)
     end
 
   end

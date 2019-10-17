@@ -6,6 +6,10 @@ class Draft < ActiveRecord::Base
   EXISTING_TOPIC ||= 'topic_'
 
   def self.set(user, key, sequence, data)
+    if SiteSetting.backup_drafts_to_pm_length > 0 && SiteSetting.backup_drafts_to_pm_length < data.length
+      backup_draft(user, key, sequence, data)
+    end
+
     if d = find_draft(user, key)
       return if d.sequence > sequence
 
@@ -94,6 +98,92 @@ class Draft < ActiveRecord::Base
     # remove old drafts
     delete_drafts_older_than_n_days = SiteSetting.delete_drafts_older_than_n_days.days.ago
     Draft.where("updated_at < ?", delete_drafts_older_than_n_days).destroy_all
+  end
+
+  def self.backup_draft(user, key, sequence, data)
+    reply = JSON.parse(data)["reply"] || ""
+    return if reply.length < SiteSetting.backup_drafts_to_pm_length
+
+    post_id = BackupDraftPost.where(user_id: user.id, key: key).pluck(:post_id).first
+    post = Post.where(id: post_id).first if post_id
+
+    if post_id && !post
+      BackupDraftPost.where(user_id: user.id, key: key).delete_all
+    end
+
+    indented_reply = reply.split("\n").map! do |l|
+      "    #{l}"
+    end
+    draft_body = <<~MD
+      #{indented_reply.join("\n")}
+
+      ```text
+      seq: #{sequence}
+      key: #{key}
+      ```
+    MD
+
+    return if post && post.raw == draft_body
+
+    if !post
+      topic = ensure_draft_topic!(user)
+      Post.transaction do
+        post = PostCreator.new(
+          user,
+          raw: draft_body,
+          skip_jobs: true,
+          skip_validations: true,
+          topic_id: topic.id,
+        ).create
+        BackupDraftPost.create!(user_id: user.id, key: key, post_id: post.id)
+      end
+    elsif post.updated_at > 5.minutes.ago
+      # bypass all validations here to maximize speed
+      post.update_columns(
+        raw: draft_body,
+        cooked: PrettyText.cook(draft_body),
+        updated_at: Time.zone.now
+      )
+    else
+      revisor = PostRevisor.new(post, post.topic)
+      revisor.revise!(user, { raw: draft_body },
+        bypass_bump: true,
+        skip_validations: true,
+        skip_staff_log: true,
+        bypass_rate_limiter: true
+      )
+    end
+
+  rescue => e
+    Discourse.warn_exception(e, message: "Failed to backup draft")
+  end
+
+  def self.ensure_draft_topic!(user)
+    topic_id = BackupDraftTopic.where(user_id: user.id).pluck(:topic_id).first
+    topic = Topic.find_by(id: topic_id) if topic_id
+
+    if topic_id && !topic
+      BackupDraftTopic.where(user_id: user.id).delete_all
+    end
+
+    if !topic
+      Topic.transaction do
+        creator = PostCreator.new(
+          user,
+          title: I18n.t("draft_backup.pm_title"),
+          archetype: Archetype.private_message,
+          raw: I18n.t("draft_backup.pm_body"),
+          skip_jobs: true,
+          skip_validations: true,
+          target_usernames: user.username
+        )
+        topic = creator.create.topic
+        BackupDraftTopic.create!(topic_id: topic.id, user_id: user.id)
+      end
+    end
+
+    topic
+
   end
 
 end

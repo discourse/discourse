@@ -871,6 +871,9 @@ en:
       short_description: "Like this post"
       long_form: "liked this"
 
+  draft_backup:
+    pm_title: "Backup Drafts from ongoing topics"
+    pm_body: "Topic containing backup drafts"
   user_activity:
     no_default:
       self: "You have no activity yet."
@@ -1993,7 +1996,7 @@ en:
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
-    delete_drafts_older_than_n_days: Delete drafts older than (n) days.
+    delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
 
     bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable)"
 
