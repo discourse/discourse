@@ -1006,7 +1006,6 @@ class User < ActiveRecord::Base
 
       message = I18n.t(
         'flag_reason.spam_hosts',
-        domain: tl.domain,
         base_path: Discourse.base_path,
         locale: SiteSetting.default_locale
       )

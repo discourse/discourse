@@ -1505,7 +1505,7 @@ ar:
     missing: "نأسف، لم نعثر على أيّ صورة رمزيّة مرتبطة بعنوان البريد هذا. هلّا أعدت رفعها ثانيةً؟"
   flag_reason:
     sockpuppet: "عضو جديد نشر موضوع جديد ثم قام عضو جديد اخر له نفس الIP (%{ip_address}) بالرد علية. انظر إعدادات<a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "عضو جديد حاول إنشاء عدة منشورات تحتوي علي روابط لنفس العنوان (%{domain}). انظر إعدادات <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    spam_hosts: "عضو جديد حاول إنشاء عدة منشورات تحتوي علي روابط لنفس العنوان. انظر إعدادات <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     user_email_no_user: "تعذّر العثور على مستخدم معرّفه %{user_id}"
     user_email_post_not_found: "تعذر إيجاد المشاركة ذات المعرف %{post_id}"

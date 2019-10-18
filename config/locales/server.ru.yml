@@ -2292,7 +2292,7 @@ ru:
     missing: "К сожалению, нам не удалось найти ни одного аватара, связанного с этим электронным адресом. Попытаетесь загрузить аватар снова?"
   flag_reason:
     sockpuppet: "Новый пользователь создал тему, а другой новый пользователь ответил с этого же IP адреса (%{ip_address}). Смотрите параметр <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> сайта."
-    spam_hosts: "Этот новый пользователь пытался создать множество сообщений с ссылками на один и тот же домен (%{domain}). Смотрите параметр <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> сайта."
+    spam_hosts: "Этот новый пользователь пытался создать множество сообщений с ссылками на один и тот же домен. Смотрите параметр <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> сайта."
   skipped_email_log:
     exceeded_emails_limit: "Превышен max_emails_per_day_per_user"
     exceeded_bounces_limit: "Превышен bounce_score_threshold"
