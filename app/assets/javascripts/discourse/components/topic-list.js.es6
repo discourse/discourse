@@ -57,16 +57,16 @@ export default Ember.Component.extend(LoadMore, {
 
   scrolled() {
     this._super(...arguments);
-    var onScroll = this.get("onScroll");
+    let onScroll = this.onScroll;
     if (!onScroll) return;
 
     onScroll.call(this);
   },
 
-  scrollToLastPosition: function() {
+  scrollToLastPosition() {
     if (!this.scrollOnLoad) return;
 
-    var scrollTo = this.session.get("topicListScrollPosition");
+    let scrollTo = this.session.get("topicListScrollPosition");
     if (scrollTo && scrollTo >= 0) {
       Ember.run.schedule("afterRender", () =>
         $(window).scrollTop(scrollTo + 1)
