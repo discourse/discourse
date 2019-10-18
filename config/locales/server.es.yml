@@ -3213,7 +3213,7 @@ es:
     missing: "Lo sentimos, no pudimos encontrar un avatar asociado a esa dirección de correo electrónico. ¿Puedes intentar subirlo de nuevo?"
   flag_reason:
     sockpuppet: "Un usuario nuevo creó un tema y otro usuario nuevo le ha respondido desde la misma dirección IP (%{ip_address}). Revisa la opción <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> en la configuración del sitio."
-    spam_hosts: "Este usuario nuevo intentó crear varios temas con enlaces al mismo dominio (%{domain}). Revisa la opción <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> en la configuración del sitio."
+    spam_hosts: "Este usuario nuevo intentó crear varios temas con enlaces al mismo dominio. Revisa la opción <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> en la configuración del sitio."
   skipped_email_log:
     exceeded_emails_limit: "max_emails_per_day_per_user excedido"
     exceeded_bounces_limit: "bounce_score_threshold excedido"

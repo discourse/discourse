@@ -3170,7 +3170,7 @@ de:
     missing: "Hoppla, wir können kein Profilbild für diese E-Mail-Adresse finden. Kannst du versuchen es erneut hochzuladen?"
   flag_reason:
     sockpuppet: "Ein neuer Benutzer hat ein Thema erstellt und ein anderer neuer Benutzer mit der selben IP-Adresse (%{ip_address}) hat darauf geantwortet. Beachte die <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> Einstellung."
-    spam_hosts: "Dieser Benutzer hat versucht, mehrere Antworten mit Links zur gleichen Domain (%{domain}) zu schreiben. Beachte die <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>-Einstellung."
+    spam_hosts: "Dieser Benutzer hat versucht, mehrere Antworten mit Links zur gleichen Domain zu schreiben. Beachte die <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>-Einstellung."
   skipped_email_log:
     exceeded_emails_limit: "max_emails_per_day_per_user überschritten"
     exceeded_bounces_limit: "bounce_score_threshold wurde überschritten"

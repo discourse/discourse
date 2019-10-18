@@ -3638,7 +3638,7 @@ en:
 
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address (%{ip_address}) replied. See the <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> site setting."
-    spam_hosts: "This new user tried to create multiple posts with links to the same domain (%{domain}). See the <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> site setting."
+    spam_hosts: "This new user tried to create multiple posts with links to the same domain. All posts from this user that include links should be reviewed. See the <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> site setting."
 
   skipped_email_log:
     exceeded_emails_limit: "Exceeded max_emails_per_day_per_user"

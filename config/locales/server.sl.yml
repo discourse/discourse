@@ -1782,7 +1782,7 @@ sl:
     edit_reason: "prenos slik v lokalno kopijo"
   flag_reason:
     sockpuppet: "Nov uporabnik je ustvaril temo in drugi novi uporabnik z enakim IP naslovom (%{ip_address}) je odgovoril. Preverite <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> nastavitev strani."
-    spam_hosts: "Ta novi uporabnik je poskusil ustvariti več prispevkov z povezavami na enako domeno (%{domain}). Preverite <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> nastavitev strani."
+    spam_hosts: "Ta novi uporabnik je poskusil ustvariti več prispevkov z povezavami na enako domeno. Preverite <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> nastavitev strani."
   edit_this_page: "Uredi to stran"
   csv_export:
     boolean_yes: "Da"
