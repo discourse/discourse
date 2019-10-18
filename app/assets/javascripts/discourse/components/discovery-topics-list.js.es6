@@ -33,7 +33,7 @@ const DiscoveryTopicsListComponent = Ember.Component.extend(
       Discourse.updateContextCount(this.incomingCount);
     },
 
-    saveScrollPosition() {
+    saveScrollPosition: function() {
       this.session.set(this.scrollPositionKey, $(window).scrollTop());
     },
 
