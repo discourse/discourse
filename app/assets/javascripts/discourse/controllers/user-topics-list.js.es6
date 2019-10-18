@@ -9,7 +9,6 @@ export default Ember.Controller.extend({
   incomingCount: 0,
   channel: null,
   tagsForUser: null,
-  scrollPositionKey: "topicListScrollPosition",
 
   init() {
     this._super(...arguments);
@@ -18,7 +17,7 @@ export default Ember.Controller.extend({
   },
 
   saveScrollPosition: function() {
-    this.session.set(this.scrollPositionKey, $(window).scrollTop());
+    this.session.set("topicListScrollPosition", $(window).scrollTop());
   },
 
   _showFooter: function() {

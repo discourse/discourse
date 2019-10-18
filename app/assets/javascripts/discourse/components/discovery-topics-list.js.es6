@@ -8,12 +8,11 @@ const DiscoveryTopicsListComponent = Ember.Component.extend(
   {
     classNames: ["contents"],
     eyelineSelector: ".topic-list-item",
-    scrollPositionKey: "topicListScrollPosition",
 
     @on("didInsertElement")
     @observes("model")
     _readjustScrollPosition() {
-      const scrollTo = this.session.get(this.scrollPositionKey);
+      const scrollTo = this.session.get("topicListScrollPosition");
       if (scrollTo && scrollTo >= 0) {
         Ember.run.schedule("afterRender", () =>
           $(window).scrollTop(scrollTo + 1)
@@ -34,7 +33,7 @@ const DiscoveryTopicsListComponent = Ember.Component.extend(
     },
 
     saveScrollPosition: function() {
-      this.session.set(this.scrollPositionKey, $(window).scrollTop());
+      this.session.set("topicListScrollPosition", $(window).scrollTop());
     },
 
     actions: {
