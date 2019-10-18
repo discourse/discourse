@@ -18,10 +18,19 @@ export default (viewName, path, channel) => {
     },
 
     model() {
-      return this.store.findFiltered("topicList", {
-        filter:
-          "topics/" + path + "/" + this.modelFor("user").get("username_lower")
-      });
+      const session = Discourse.Session.current();
+      let filter =
+        "topics/" + path + "/" + this.modelFor("user").get("username_lower");
+      let lastTopicList = session.get("topicList");
+      if (lastTopicList && lastTopicList.filter === filter) {
+        return lastTopicList;
+      } else {
+        session.setProperties({
+          topicList: null,
+          topicListScrollPosition: null
+        });
+        return this.store.findFiltered("topicList", { filter });
+      }
     },
 
     setupController() {

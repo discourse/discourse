@@ -16,6 +16,10 @@ export default Ember.Controller.extend({
     this.newIncoming = [];
   },
 
+  saveScrollPosition: function() {
+    this.session.set("topicListScrollPosition", $(window).scrollTop());
+  },
+
   _showFooter: function() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   }.observes("model.canLoadMore"),
