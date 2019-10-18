@@ -26,7 +26,7 @@
 
 {{bulk-select-button selected=selected action=(action "refresh") category=category}}
 
-{{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount}}
+{{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount as |discoveryTopicList|}}
   {{#if top}}
     <div class='top-lists'>
       {{period-chooser period=period action=(action "changePeriod")}}
@@ -61,7 +61,8 @@
       expandAllPinned=expandAllPinned
       category=category
       topics=model.topics
-      discoveryList=true}}
+      discoveryList=true
+      onScroll=discoveryTopicList.saveScrollPosition}}
   {{/if}}
 {{/discovery-topics-list}}
 

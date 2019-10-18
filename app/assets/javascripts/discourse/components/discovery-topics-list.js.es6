@@ -36,11 +36,6 @@ const DiscoveryTopicsListComponent = Ember.Component.extend(
       this.session.set("topicListScrollPosition", $(window).scrollTop());
     },
 
-    scrolled() {
-      this._super(...arguments);
-      this.saveScrollPosition();
-    },
-
     actions: {
       loadMore() {
         Discourse.updateContextCount(0);
