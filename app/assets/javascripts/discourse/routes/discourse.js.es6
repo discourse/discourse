@@ -1,7 +1,8 @@
 import Composer from "discourse/models/composer";
 import { getOwner } from "discourse-common/lib/get-owner";
+import Route from "@ember/routing/route";
 
-const DiscourseRoute = Ember.Route.extend({
+const DiscourseRoute = Route.extend({
   showFooter: false,
 
   // Set to true to refresh a model without a transition if a query param

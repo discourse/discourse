@@ -1,6 +1,15 @@
 var define, requirejs;
 
 (function() {
+  // In future versions of ember we don't need this
+  var EMBER_MODULES = {};
+  if (typeof Ember !== "undefined") {
+    EMBER_MODULES = {
+      "@ember/component": { default: Ember.Component },
+      "@ember/routing/route": { default: Ember.Route }
+    };
+  }
+
   var _isArray;
   if (!Array.isArray) {
     _isArray = function(x) {
@@ -111,7 +120,7 @@ var define, requirejs;
   }
 
   function requireFrom(name, origin) {
-    var mod = registry[name];
+    var mod = EMBER_MODULES[name] || registry[name];
     if (!mod) {
       throw new Error(
         "Could not find module `" + name + "` imported from `" + origin + "`"
@@ -125,6 +134,10 @@ var define, requirejs;
   }
 
   requirejs = require = function(name) {
+    if (EMBER_MODULES[name]) {
+      return EMBER_MODULES[name];
+    }
+
     var mod = registry[name];
 
     if (mod && mod.callback instanceof Alias) {
