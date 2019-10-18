@@ -19,13 +19,16 @@ export default (viewName, path, channel) => {
 
     model() {
       const session = Discourse.Session.current();
-      var filter = "topics/" + path + "/" + this.modelFor("user").get("username_lower")
-      var lastTopicList = session.get('topicList')
+      var filter =
+        "topics/" + path + "/" + this.modelFor("user").get("username_lower");
+      var lastTopicList = session.get("topicList");
       if (lastTopicList && lastTopicList.filter == filter) {
-        return lastTopicList
-      }
-      else {
-        session.setProperties({ topicList: null, topicListScrollPosition: null });
+        return lastTopicList;
+      } else {
+        session.setProperties({
+          topicList: null,
+          topicListScrollPosition: null
+        });
         return this.store.findFiltered("topicList", { filter: filter });
       }
     },

@@ -9,7 +9,7 @@ export default Ember.Controller.extend({
   incomingCount: 0,
   channel: null,
   tagsForUser: null,
-  scrollPositionKey: 'topicListScrollPosition',
+  scrollPositionKey: "topicListScrollPosition",
 
   init() {
     this._super(...arguments);
@@ -64,6 +64,6 @@ export default Ember.Controller.extend({
       this.model.loadBefore(this.newIncoming);
       this._resetTracking();
       return false;
-    },
+    }
   }
 });

@@ -8,7 +8,7 @@ const DiscoveryTopicsListComponent = Ember.Component.extend(
   {
     classNames: ["contents"],
     eyelineSelector: ".topic-list-item",
-    scrollPositionKey: 'topicListScrollPosition',
+    scrollPositionKey: "topicListScrollPosition",
 
     @on("didInsertElement")
     @observes("model")

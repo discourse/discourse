@@ -57,17 +57,17 @@ export default Ember.Component.extend(LoadMore, {
 
   scrolled() {
     this._super(...arguments);
-    var onScroll = this.get('onScroll')
+    var onScroll = this.get("onScroll");
     if (!onScroll) return;
 
     onScroll.call(this);
   },
 
   scrollToLastPosition: function() {
-    var key = this.get('scrollPositionKey')
+    var key = this.get("scrollPositionKey");
     if (!key) return;
 
-    var scrollTo = this.session.get(key)
+    var scrollTo = this.session.get(key);
 
     if (scrollTo && scrollTo >= 0) {
       Ember.run.schedule("afterRender", () =>
@@ -80,7 +80,6 @@ export default Ember.Component.extend(LoadMore, {
     this._super(...arguments);
     this.scrollToLastPosition();
   },
-
 
   _updateLastVisitedTopic(topics, order, ascending, top) {
     this.set("lastVisitedTopic", null);
