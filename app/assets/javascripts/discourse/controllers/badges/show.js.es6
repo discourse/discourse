@@ -1,11 +1,11 @@
+import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
-import BadgeSelectController from "discourse/mixins/badge-select-controller";
 
-export default Ember.Controller.extend(BadgeSelectController, {
+export default Ember.Controller.extend({
   queryParams: ["username"],
   noMoreBadges: false,
   userBadges: null,
@@ -15,6 +15,16 @@ export default Ember.Controller.extend(BadgeSelectController, {
   @computed("userBadgesAll")
   filteredList(userBadgesAll) {
     return userBadgesAll.filterBy("badge.allow_title", true);
+  },
+
+  @computed("filteredList")
+  selectableUserBadges(filteredList) {
+    return [
+      Ember.Object.create({
+        badge: Badge.create({ name: I18n.t("badges.none") })
+      }),
+      ...filteredList.uniqBy("badge.name")
+    ];
   },
 
   @computed("username")
