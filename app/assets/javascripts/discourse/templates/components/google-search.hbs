@@ -2,6 +2,8 @@
   <form action='//google.com/search' id='google-search'>
     <input type="text" name="q" value="{{searchTerm}}">
     <input type='hidden' name="as_sitesearch" value="{{siteUrl}}">
-    <button class="btn btn-primary">{{i18n 'search.search_google_button'}}</button>
+    {{d-button
+      class="btn-primary"
+      label="search.search_google_button"}}
   </form>
 </div>
