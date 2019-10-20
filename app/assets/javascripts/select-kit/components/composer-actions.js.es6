@@ -5,8 +5,7 @@ import {
   CREATE_TOPIC,
   CREATE_SHARED_DRAFT,
   REPLY,
-  EDIT,
-  NEW_PRIVATE_MESSAGE_KEY
+  EDIT
 } from "discourse/models/composer";
 
 // Component can get destroyed and lose state
@@ -209,7 +208,6 @@ export default DropdownSelectBoxComponent.extend({
 
   _replyFromExisting(options, post, topic) {
     this.closeComposer();
-
     this.openComposer(options, post, topic);
   },
 
@@ -244,6 +242,7 @@ export default DropdownSelectBoxComponent.extend({
     options.action = CREATE_TOPIC;
     options.categoryId = this.get("composerModel.topic.category.id");
     options.disableScopedCategory = true;
+    options.skipDraftCheck = true;
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   },
 
@@ -269,7 +268,7 @@ export default DropdownSelectBoxComponent.extend({
     options.action = PRIVATE_MESSAGE;
     options.usernames = usernames;
     options.archetypeId = "private_message";
-    options.draftKey = NEW_PRIVATE_MESSAGE_KEY;
+    options.skipDraftCheck = true;
 
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   },

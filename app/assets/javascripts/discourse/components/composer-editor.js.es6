@@ -590,12 +590,7 @@ export default Ember.Component.extend({
   _warnCannotSeeMention($preview) {
     const composerDraftKey = this.get("composer.draftKey");
 
-    if (
-      composerDraftKey === Composer.CREATE_TOPIC ||
-      composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY ||
-      composerDraftKey === Composer.REPLY_AS_NEW_TOPIC_KEY ||
-      composerDraftKey === Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY
-    ) {
+    if (composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
       return;
     }
 

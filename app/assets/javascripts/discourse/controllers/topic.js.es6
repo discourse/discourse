@@ -965,13 +965,13 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
         options = {
           action: Composer.PRIVATE_MESSAGE,
           archetypeId: "private_message",
-          draftKey: Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY,
+          draftKey: post.topic.draft_key,
           usernames: usernames
         };
       } else {
         options = {
           action: Composer.CREATE_TOPIC,
-          draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
+          draftKey: post.topic.draft_key,
           categoryId: this.get("model.category.id")
         };
       }

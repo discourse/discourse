@@ -78,14 +78,6 @@ export default Ember.Controller.extend({
   topicController: Ember.inject.controller("topic"),
   router: Ember.inject.service(),
 
-  replyAsNewTopicDraft: Ember.computed.equal(
-    "model.draftKey",
-    Composer.REPLY_AS_NEW_TOPIC_KEY
-  ),
-  replyAsNewPrivateMessageDraft: Ember.computed.equal(
-    "model.draftKey",
-    Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY
-  ),
   checkedMessages: false,
   messageCount: null,
   showEditReason: false,
@@ -677,47 +669,54 @@ export default Ember.Controller.extend({
             }
           }
 
-          this.destroyDraft();
-          this.close();
-          this.appEvents.trigger("post-stream:refresh");
-          return result;
+          return this.destroyDraft().then(() => {
+            this.close();
+            this.appEvents.trigger("post-stream:refresh");
+            return result;
+          });
         }
 
         // If user "created a new topic/post" or "replied as a new topic" successfully, remove the draft.
-        if (
-          result.responseJson.action === "create_post" ||
-          this.replyAsNewTopicDraft ||
-          this.replyAsNewPrivateMessageDraft
-        ) {
-          this.destroyDraft();
-        }
-        if (this.get("model.editingPost")) {
-          this.appEvents.trigger("post-stream:refresh", {
-            id: parseInt(result.responseJson.id)
-          });
-          if (result.responseJson.post.post_number === 1) {
-            this.appEvents.trigger("header:update-topic", composer.topic);
-          }
-        } else {
-          this.appEvents.trigger("post-stream:refresh");
-        }
+        let destroyDraftPromise;
 
         if (result.responseJson.action === "create_post") {
-          this.appEvents.trigger("post:highlight", result.payload.post_number);
-        }
-        this.close();
-
-        const currentUser = this.currentUser;
-        if (composer.creatingTopic) {
-          currentUser.set("topic_count", currentUser.topic_count + 1);
+          destroyDraftPromise = this.destroyDraft();
         } else {
-          currentUser.set("reply_count", currentUser.reply_count + 1);
+          destroyDraftPromise = Ember.RSVP.Promise.resolve();
         }
 
-        const post = result.target;
-        if (post && !staged) {
-          DiscourseURL.routeTo(post.url);
-        }
+        return destroyDraftPromise.then(() => {
+          if (this.get("model.editingPost")) {
+            this.appEvents.trigger("post-stream:refresh", {
+              id: parseInt(result.responseJson.id)
+            });
+            if (result.responseJson.post.post_number === 1) {
+              this.appEvents.trigger("header:update-topic", composer.topic);
+            }
+          } else {
+            this.appEvents.trigger("post-stream:refresh");
+          }
+
+          if (result.responseJson.action === "create_post") {
+            this.appEvents.trigger(
+              "post:highlight",
+              result.payload.post_number
+            );
+          }
+          this.close();
+
+          const currentUser = this.currentUser;
+          if (composer.creatingTopic) {
+            currentUser.set("topic_count", currentUser.topic_count + 1);
+          } else {
+            currentUser.set("reply_count", currentUser.reply_count + 1);
+          }
+
+          const post = result.target;
+          if (post && !staged) {
+            DiscourseURL.routeTo(post.url);
+          }
+        });
       })
       .catch(error => {
         composer.set("disableDrafts", false);
@@ -783,11 +782,7 @@ export default Ember.Controller.extend({
     });
 
     // Scope the categories drop down to the category we opened the composer with.
-    if (
-      opts.categoryId &&
-      opts.draftKey !== "reply_as_new_topic" &&
-      !opts.disableScopedCategory
-    ) {
+    if (opts.categoryId && !opts.disableScopedCategory) {
       const category = this.site.categories.findBy("id", opts.categoryId);
       if (category) {
         this.set("scopedCategoryId", opts.categoryId);
@@ -847,7 +842,6 @@ export default Ember.Controller.extend({
               data.draft = undefined;
               return data;
             }
-
             return this.confirmDraftAbandon(data);
           })
           .then(data => {
@@ -862,7 +856,9 @@ export default Ember.Controller.extend({
       // otherwise, do the draft check async
       else if (!opts.draft && !opts.skipDraftCheck) {
         Draft.get(opts.draftKey)
-          .then(data => this.confirmDraftAbandon(data))
+          .then(data => {
+            return this.confirmDraftAbandon(data);
+          })
           .then(data => {
             if (data.draft) {
               opts.draft = data.draft;
@@ -943,9 +939,11 @@ export default Ember.Controller.extend({
         this.send("clearTopicDraft");
       }
 
-      Draft.clear(key, this.get("model.draftSequence")).then(() =>
+      return Draft.clear(key, this.get("model.draftSequence")).then(() =>
         this.appEvents.trigger("draft:destroyed", key)
       );
+    } else {
+      return Ember.RSVP.Promise.resolve();
     }
   },
 
@@ -985,13 +983,16 @@ export default Ember.Controller.extend({
   },
 
   cancelComposer(differentDraft = false) {
+    const keyPrefix =
+      this.model.action === "edit" ? "post.abandon_edit" : "post.abandon";
+
     return new Ember.RSVP.Promise(resolve => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        bootbox.dialog(I18n.t("post.abandon.confirm"), [
+        bootbox.dialog(I18n.t(keyPrefix + ".confirm"), [
           {
             label: differentDraft
-              ? I18n.t("post.abandon.no_save_draft")
-              : I18n.t("post.abandon.no_value"),
+              ? I18n.t(keyPrefix + ".no_save_draft")
+              : I18n.t(keyPrefix + ".no_value"),
             callback: () => {
               // cancel composer without destroying draft on new draft context
               if (differentDraft) {
@@ -1002,24 +1003,26 @@ export default Ember.Controller.extend({
             }
           },
           {
-            label: I18n.t("post.abandon.yes_value"),
+            label: I18n.t(keyPrefix + ".yes_value"),
             class: "btn-danger",
             callback: result => {
               if (result) {
-                this.destroyDraft();
-                this.model.clearState();
-                this.close();
-                resolve();
+                this.destroyDraft().then(() => {
+                  this.model.clearState();
+                  this.close();
+                  resolve();
+                });
               }
             }
           }
         ]);
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
-        this.destroyDraft();
-        this.model.clearState();
-        this.close();
-        resolve();
+        this.destroyDraft().then(() => {
+          this.model.clearState();
+          this.close();
+          resolve();
+        });
       }
     });
   },
