@@ -17,12 +17,10 @@ export const CREATE_TOPIC = "createTopic",
   CREATE_SHARED_DRAFT = "createSharedDraft",
   EDIT_SHARED_DRAFT = "editSharedDraft",
   PRIVATE_MESSAGE = "privateMessage",
-  NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
-  NEW_TOPIC_KEY = "new_topic",
   REPLY = "reply",
   EDIT = "edit",
-  REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic",
-  REPLY_AS_NEW_PRIVATE_MESSAGE_KEY = "reply_as_new_private_message";
+  NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
+  NEW_TOPIC_KEY = "new_topic";
 
 function isEdit(action) {
   return action === EDIT || action === EDIT_SHARED_DRAFT;
@@ -1151,8 +1149,7 @@ Composer.reopenClass({
 
   // Draft key
   NEW_PRIVATE_MESSAGE_KEY,
-  REPLY_AS_NEW_TOPIC_KEY,
-  REPLY_AS_NEW_PRIVATE_MESSAGE_KEY
+  NEW_TOPIC_KEY
 });
 
 export default Composer;

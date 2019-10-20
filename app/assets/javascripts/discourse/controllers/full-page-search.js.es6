@@ -285,7 +285,7 @@ export default Ember.Controller.extend({
       }
       this.composer.open({
         action: Composer.CREATE_TOPIC,
-        draftKey: Composer.CREATE_TOPIC,
+        draftKey: Composer.NEW_TOPIC_KEY,
         topicCategory
       });
     },
