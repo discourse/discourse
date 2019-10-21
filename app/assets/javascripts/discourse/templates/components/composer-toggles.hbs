@@ -1,22 +1,25 @@
 <div class="composer-controls">
   {{#if site.mobileView}}
-    {{flat-button
-      class="toggle-toolbar"
+    {{d-button
+      class="btn-default toggle-toolbar"
       icon="bars"
-      action=toggleToolbar}}
+      action=toggleToolbar
+    }}
   {{/if}}
 
-  {{flat-button
-    class="toggler"
+  {{d-button
+    class="btn-default toggler"
     icon=toggleIcon
     action=toggleComposer
-    title=toggleTitle}}
+    title=toggleTitle
+  }}
 
   {{#unless site.mobileView}}
-    {{flat-button
-      class="toggle-fullscreen"
+    {{d-button
+      class="btn-default toggle-fullscreen"
       icon=fullscreenIcon
       action=toggleFullscreen
-      title=fullscreenTitle}}
+      title=fullscreenTitle
+    }}
   {{/unless}}
 </div>

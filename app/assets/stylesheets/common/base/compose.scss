@@ -160,6 +160,12 @@
         &.toggler {
           order: 2;
         }
+
+        &.toggler,
+        &.toggle-fullscreen,
+        &.toggle-toolbar {
+          background: none;
+        }
       }
     }
   }
