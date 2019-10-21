@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import StaticPage from "discourse/models/static-page";
 import { default as DiscourseURL, jumpToElement } from "discourse/lib/url";
 
