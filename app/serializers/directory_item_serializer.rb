@@ -9,7 +9,19 @@ class DirectoryItemSerializer < ApplicationSerializer
   attributes :id,
              :time_read
 
-  has_one :user, embed: :objects, serializer: UserSerializer
+  serialize_all_user_attributes = SiteSetting.respond_to?(:user_directory_includes_profile) && SiteSetting.user_directory_includes_profile
+
+  if serialize_all_user_attributes
+  class ::UserSerializer
+    include UserPrimaryGroupMixin
+  end
+
+  serializer = ::UserSerializer
+  else
+  serializer = UserSerializer
+  end
+
+  has_one :user, embed: :objects, serializer: serializer
   attributes *DirectoryItem.headings
 
   def id

@@ -541,6 +541,10 @@ users:
   enable_user_directory:
     client: true
     default: true
+  user_directory_includes_profile:
+    client: true
+    default: false
+    hidden: true
   allow_anonymous_posting:
     default: false
     client: true
