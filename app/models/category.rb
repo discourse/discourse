@@ -284,8 +284,9 @@ class Category < ActiveRecord::Base
     self.name.strip!
 
     if slug.present?
-      # santized custom slug
+      # if we don't unescape it first we strip the % from the encoded version
       slug = SiteSetting.slug_generation_method == 'encoded' ? CGI.unescape(self.slug) : self.slug
+      # sanitize the custom slug
       self.slug = Slug.sanitize(slug)
       errors.add(:slug, 'is already in use') if duplicate_slug?
     else
