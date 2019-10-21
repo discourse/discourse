@@ -157,8 +157,12 @@ class Post < ActiveRecord::Base
     includes(:post_details).find_by(post_details: { key: key, value: value })
   end
 
+  def self.excerpt_size=(sz)
+    @excerpt_size = sz
+  end
+
   def self.excerpt_size
-    220
+    @excerpt_size || 220
   end
 
   def whisper?
