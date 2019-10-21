@@ -25,7 +25,7 @@ module Jobs
       process_invites(invites)
 
       if @total_invites > Invite::BULK_INVITE_EMAIL_LIMIT
-        Jobs.enqueue(:process_bulk_invite_emails)
+        ::Jobs.enqueue(:process_bulk_invite_emails)
       end
     ensure
       notify_user
