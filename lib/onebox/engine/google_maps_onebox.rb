@@ -169,8 +169,9 @@ module Onebox
           http = Net::HTTP.start(uri.host, uri.port,
             use_ssl: uri.scheme == 'https', open_timeout: timeout, read_timeout: timeout)
           response = http.head(uri.path)
-          raise "unexpected response code #{response.code}" unless %w(301 302).include?(response.code)
-          @url = response["Location"]
+
+          raise "unexpected response code #{response.code}" unless %w(200 301 302).include?(response.code)
+          @url = response.code == "200" ? uri.to_s : response["Location"]
         ensure
           http.finish rescue nil
         end
