@@ -15,10 +15,14 @@ Benchmark.ips do |b|
   end
 
   b.report("pluck with first") do
-    User.pluck_first(:name)
+    User.pluck(:name).first
   end
 
   b.report("pluck with limit") do
+    User.limit(1).pluck(:name).first
+  end
+
+  b.report("pluck with pluck_first") do
     User.pluck_first(:name)
   end
 
