@@ -190,6 +190,12 @@ describe PostRevisor do
         expect(post.public_version).to eq(1)
         expect(post.revisions.size).to eq(0)
       end
+
+      it "should bump the topic" do
+        expect {
+          subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
+        }.to change { post.topic.bumped_at }
+      end
     end
 
     describe 'revision much later' do
@@ -781,6 +787,13 @@ describe PostRevisor do
                 result = subject.revise!(Fabricate(:admin), raw: post.raw, tags: [""])
                 expect(result).to eq(true)
               }.to_not change { topic.reload.bumped_at }
+            end
+
+            it "should bump topic if non staff-only tags are added" do
+              expect {
+                result = subject.revise!(Fabricate(:admin), raw: post.raw, tags: topic.tags.map(&:name) + [Fabricate(:tag).name])
+                expect(result).to eq(true)
+              }.to change { topic.reload.bumped_at }
             end
 
             it "creates a hidden revision" do
