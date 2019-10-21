@@ -7,6 +7,8 @@ export default Ember.Component.extend({
 
   form: null,
 
+  type: "button",
+
   tagName: "button",
   classNameBindings: [":btn", "noText", "btnType"],
   attributeBindings: [
