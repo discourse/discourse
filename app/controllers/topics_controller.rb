@@ -711,7 +711,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_move_posts!(topic)
 
     # when creating a new topic, ensure the 1st post is a regular post
-    if params[:title].present? && Post.where(topic: topic, id: post_ids).order(:post_number).pluck(:post_type).first != Post.types[:regular]
+    if params[:title].present? && Post.where(topic: topic, id: post_ids).order(:post_number).pluck_first(:post_type) != Post.types[:regular]
       return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
     end
 

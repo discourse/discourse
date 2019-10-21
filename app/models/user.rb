@@ -199,7 +199,7 @@ class User < ActiveRecord::Base
   scope :filter_by_username_or_email, ->(filter) do
     if filter =~ /.+@.+/
       # probably an email so try the bypass
-      if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck(:user_id).first
+      if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck_first(:user_id)
         return where('users.id = ?', user_id)
       end
     end
@@ -1219,11 +1219,11 @@ class User < ActiveRecord::Base
     group_titles_query = group_titles_query.order("groups.id = #{primary_group_id} DESC") if primary_group_id
     group_titles_query = group_titles_query.order("groups.primary_group DESC").limit(1)
 
-    if next_best_group_title = group_titles_query.pluck(:title).first
+    if next_best_group_title = group_titles_query.pluck_first(:title)
       return next_best_group_title
     end
 
-    next_best_badge_title = badges.where(allow_title: true).limit(1).pluck(:name).first
+    next_best_badge_title = badges.where(allow_title: true).pluck_first(:name)
     next_best_badge_title ? Badge.display_name(next_best_badge_title) : nil
   end
 
@@ -1444,7 +1444,7 @@ class User < ActiveRecord::Base
   def match_title_to_primary_group_changes
     return unless primary_group_id_changed?
 
-    if title == Group.where(id: primary_group_id_was).pluck(:title).first
+    if title == Group.where(id: primary_group_id_was).pluck_first(:title)
       self.title = primary_group&.title
     end
   end

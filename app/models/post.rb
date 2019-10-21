@@ -983,7 +983,7 @@ class Post < ActiveRecord::Base
             end
 
             upload_id = nil
-            upload_id = Upload.where(sha1: sha1).pluck(:id).first if sha1.present?
+            upload_id = Upload.where(sha1: sha1).pluck_first(:id) if sha1.present?
             upload_id ||= yield(post, src, path, sha1)
 
             if upload_id.blank?

@@ -104,7 +104,7 @@ class Draft < ActiveRecord::Base
     reply = JSON.parse(data)["reply"] || ""
     return if reply.length < SiteSetting.backup_drafts_to_pm_length
 
-    post_id = BackupDraftPost.where(user_id: user.id, key: key).pluck(:post_id).first
+    post_id = BackupDraftPost.where(user_id: user.id, key: key).pluck_first(:post_id)
     post = Post.where(id: post_id).first if post_id
 
     if post_id && !post
@@ -159,7 +159,7 @@ class Draft < ActiveRecord::Base
   end
 
   def self.ensure_draft_topic!(user)
-    topic_id = BackupDraftTopic.where(user_id: user.id).pluck(:topic_id).first
+    topic_id = BackupDraftTopic.where(user_id: user.id).pluck_first(:topic_id)
     topic = Topic.find_by(id: topic_id) if topic_id
 
     if topic_id && !topic

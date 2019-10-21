@@ -127,7 +127,7 @@ module ApplicationHelper
 
     if current_user.present? &&
         current_user.primary_group_id &&
-        primary_group_name = Group.where(id: current_user.primary_group_id).pluck(:name).first
+        primary_group_name = Group.where(id: current_user.primary_group_id).pluck_first(:name)
       result << "primary-group-#{primary_group_name.downcase}"
     end
 
