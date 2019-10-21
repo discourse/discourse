@@ -171,9 +171,9 @@ module Oneboxer
 
   def self.local_upload_html(url)
     case File.extname(URI(url).path || "")
-    when /^\.(mov|mp4|webm|ogv)$/i
+    when /^\.(mov|mp4|m4v|webm|ogv|3gp)$/i
       "<video width='100%' height='100%' controls><source src='#{url}'><a href='#{url}'>#{url}</a></video>"
-    when /^\.(mp3|ogg|wav|m4a)$/i
+    when /^\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)$/i
       "<audio controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
     end
   end
