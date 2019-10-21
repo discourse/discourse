@@ -1,18 +1,6 @@
 var define, requirejs;
 
 (function() {
-  var MOVED_MODULES = {
-    "discourse/views/list/post-count-or-badges":
-      "discourse/raw-views/list/post-count-or-badges",
-    "discourse/views/list/posts-count-column":
-      "discourse/raw-views/list/posts-count-column",
-    "discourse/views/list/visited-line":
-      "discourse/raw-views/list/visited-line",
-    "discourse/views/topic-list-header-column":
-      "discourse/raw-views/topic-list-header-column",
-    "discourse/views/topic-status": "discourse/raw-views/topic-status"
-  };
-
   var _isArray;
   if (!Array.isArray) {
     _isArray = function(x) {
@@ -125,15 +113,6 @@ var define, requirejs;
   function requireFrom(name, origin) {
     var mod = registry[name];
     if (!mod) {
-      var moved = MOVED_MODULES[name];
-      if (moved) {
-        var msg = "DEPRECATION: `" + name + "` was moved to `" + moved + "`";
-        console.warn(msg); // eslint-disable-line no-console
-      }
-      mod = registry[moved];
-    }
-
-    if (!mod) {
       throw new Error(
         "Could not find module `" + name + "` imported from `" + origin + "`"
       );
@@ -146,10 +125,6 @@ var define, requirejs;
   }
 
   requirejs = require = function(name) {
-    if (MOVED_MODULES[name]) {
-      name = MOVED_MODULES[name];
-    }
-
     var mod = registry[name];
 
     if (mod && mod.callback instanceof Alias) {
