@@ -360,7 +360,7 @@ class ListController < ApplicationController
     @category = Category.query_category(slug_or_id, parent_category_id)
 
     # Redirect if we have `/c/:parent_category/:category/:id`
-    if id
+    if params.include?(:id)
       category = Category.find_by_id(id)
       (redirect_to category.url, status: 301) && return if category
     end
