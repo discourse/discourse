@@ -1,4 +1,5 @@
 import userSearch from "discourse/lib/user-search";
+import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 
 QUnit.module("lib:user-search", {
   beforeEach() {
@@ -12,6 +13,9 @@ QUnit.module("lib:user-search", {
       // special responder for per category search
       const categoryMatch = request.url.match(/category_id=([0-9]+)/);
       if (categoryMatch) {
+        if(categoryMatch[1] === "3"){
+          return response({});
+        }
         return response({
           users: [
             {
@@ -91,6 +95,32 @@ QUnit.test("it flushes cache when switching categories", async assert => {
   assert.equal(results[0].username, "category_2");
   assert.equal(results.length, 1);
 });
+
+QUnit.test(
+  "it returns cancel when eager completing with no results",
+  async assert => {
+    // Do everything twice, to check the cache works correctly
+
+    for (let i = 0; i < 2; i++) {
+      // No topic or category, will always cancel
+      let result = await userSearch({ term: "" });
+      assert.equal(result, CANCELLED_STATUS);
+    }
+
+    for (let i = 0; i < 2; i++) {
+      // Unsecured category, so has no recommendations
+      let result = await userSearch({ term: "", categoryId: 3 });
+      assert.equal(result, CANCELLED_STATUS);
+    }
+
+    for (let i = 0; i < 2; i++) {
+      // Secured category, will have 1 recommendation
+      let results = await userSearch({ term: "", categoryId: 1 });
+      assert.equal(results[0].username, "category_1");
+      assert.equal(results.length, 1);
+    }
+  }
+);
 
 QUnit.test("it places groups unconditionally for exact match", async assert => {
   let results = await userSearch({ term: "Team" });

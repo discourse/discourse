@@ -26,11 +26,13 @@ function performSearch(
     return;
   }
 
-  // I am not strongly against unconditionally returning
-  // however this allows us to return a list of probable
-  // users we want to mention, early on a topic
-  if (term === "" && !topicId && !categoryId) {
-    return [];
+  const eagerComplete = term === "" && !!(topicId || categoryId);
+
+  if (term === "" && !eagerComplete) {
+    // The server returns no results in this case, so no point checking
+    // do not return empty list, because autocomplete will get terminated
+    resultsFn(CANCELLED_STATUS);
+    return;
   }
 
   // need to be able to cancel this
@@ -51,6 +53,18 @@ function performSearch(
 
   oldSearch
     .then(function(r) {
+      const hasResults = !!(
+        r.users.length ||
+        r.groups.length ||
+        r.emails.length
+      );
+
+      if (eagerComplete && !hasResults) {
+        // we are trying to eager load, but received no results
+        // do not return empty list, because autocomplete will get terminated
+        r = CANCELLED_STATUS;
+      }
+
       cache[term] = r;
       cacheTime = new Date();
       // If there is a newer search term, return null
