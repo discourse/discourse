@@ -29,7 +29,7 @@ class PluginGenerator < Rails::Generators::NamedBase
   end
 
   def controller_file
-    template 'plugin_controller.rb.erb', File.join('plugins', dasherized_name, "app/controllers/#{dasherized_name}/#{underscored_name}_controller.rb")
+    template 'plugin_controller.rb.erb', File.join('plugins', dasherized_name, "app/controllers/#{underscored_name}/#{underscored_name}_controller.rb")
     template 'controller.rb.erb', File.join('plugins', dasherized_name, "app/controllers/#{underscored_name}/actions_controller.rb")
     template 'controller_spec.rb.erb', File.join('plugins', dasherized_name, "spec/requests/actions_controller_spec.rb")
   end
