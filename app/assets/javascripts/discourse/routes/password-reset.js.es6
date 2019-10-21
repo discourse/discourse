@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import PreloadStore from "preload-store";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";

@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import SiteSetting from "admin/models/site-setting";
 
 export default DiscourseRoute.extend({

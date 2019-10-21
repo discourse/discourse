@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import Draft from "discourse/models/draft";
 import Composer from "discourse/models/composer";
 

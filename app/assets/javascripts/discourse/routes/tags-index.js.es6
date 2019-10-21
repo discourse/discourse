@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import Tag from "discourse/models/tag";
 
 export default DiscourseRoute.extend({

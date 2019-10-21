@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import logout from "discourse/lib/logout";

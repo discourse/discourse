@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import { scrollTop } from "discourse/mixins/scroll-top";
 
 export default DiscourseRoute.extend({

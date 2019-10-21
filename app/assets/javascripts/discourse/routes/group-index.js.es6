@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import showModal from "discourse/lib/show-modal";
 
 export default DiscourseRoute.extend({

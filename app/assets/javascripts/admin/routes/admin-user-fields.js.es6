@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import UserField from "admin/models/user-field";
 
 export default DiscourseRoute.extend({

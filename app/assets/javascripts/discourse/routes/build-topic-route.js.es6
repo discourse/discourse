@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import { defaultHomepage } from "discourse/lib/utilities";
 

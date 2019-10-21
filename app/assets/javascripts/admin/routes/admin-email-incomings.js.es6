@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import IncomingEmail from "admin/models/incoming-email";
 
 export default DiscourseRoute.extend({

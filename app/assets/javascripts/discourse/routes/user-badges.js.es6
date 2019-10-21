@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import ViewingActionType from "discourse/mixins/viewing-action-type";
 import UserBadge from "discourse/models/user-badge";
 

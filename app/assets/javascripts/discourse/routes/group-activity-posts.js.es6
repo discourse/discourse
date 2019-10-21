@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 
 export function buildGroupPage(type) {
   return DiscourseRoute.extend({

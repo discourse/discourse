@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import Category from "discourse/models/category";
 
 export default DiscourseRoute.extend({

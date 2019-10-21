@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
 

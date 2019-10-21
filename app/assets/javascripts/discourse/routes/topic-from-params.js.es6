@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 

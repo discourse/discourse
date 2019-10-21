@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import showModal from "discourse/lib/show-modal";
 import OpenComposer from "discourse/mixins/open-composer";
 import CategoryList from "discourse/models/category-list";

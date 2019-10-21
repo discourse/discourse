@@ -2,7 +2,7 @@
   The parent route for all discovery routes.
   Handles the logic for showing the loading spinners.
 **/
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import OpenComposer from "discourse/mixins/open-composer";
 import { scrollTop } from "discourse/mixins/scroll-top";
 

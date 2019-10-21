@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import PreloadStore from "preload-store";
 
 export default DiscourseRoute.extend({

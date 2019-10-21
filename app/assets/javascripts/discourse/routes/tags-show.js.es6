@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import Composer from "discourse/models/composer";
 import showModal from "discourse/lib/show-modal";
 import {

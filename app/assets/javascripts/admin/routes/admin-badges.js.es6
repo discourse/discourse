@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import BadgeGrouping from "discourse/models/badge-grouping";

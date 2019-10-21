@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import { emojiUnescape } from "discourse/lib/text";
 
 export default function(filter) {

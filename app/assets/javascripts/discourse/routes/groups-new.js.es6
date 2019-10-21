@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import Group from "discourse/models/group";
 
 export default DiscourseRoute.extend({

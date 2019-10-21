@@ -1,4 +1,4 @@
-import DiscourseRoute from 'discourse/routes/discourse';
+import DiscourseRoute from "discourse/routes/discourse";
 import UserBadge from "discourse/models/user-badge";
 import Badge from "discourse/models/badge";
 
