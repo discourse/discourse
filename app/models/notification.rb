@@ -218,7 +218,8 @@ class Notification < ActiveRecord::Base
 
   def refresh_notification_count
     begin
-      user.reload.publish_notifications_state
+      user.notifications.reset
+      user.publish_notifications_state
     rescue ActiveRecord::RecordNotFound
       # happens when we delete a user
     end

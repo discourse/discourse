@@ -1821,7 +1821,7 @@ describe User do
     let!(:staged_user) { Fabricate(:staged, email: 'staged@account.com', active: true, username: 'staged1', name: 'Stage Name') }
     let(:params) { { email: 'staged@account.com', active: true, username: 'unstaged1', name: 'Foo Bar' } }
 
-    it "correctyl unstages a user" do
+    it "correctly unstages a user" do
       user = User.unstage(params)
 
       expect(user.id).to eq(staged_user.id)
@@ -1829,6 +1829,7 @@ describe User do
       expect(user.name).to eq('Foo Bar')
       expect(user.active).to eq(false)
       expect(user.email).to eq('staged@account.com')
+      expect(user.staged).to eq(false)
     end
 
     it "returns nil when the user cannot be unstaged" do
@@ -1838,13 +1839,14 @@ describe User do
     end
 
     it "removes all previous notifications during unstaging" do
-      Fabricate(:notification, user: user)
-      Fabricate(:private_message_notification, user: user)
-      user.reload
+      Fabricate(:notification, user: staged_user)
+      Fabricate(:private_message_notification, user: staged_user)
+      staged_user.reload
 
-      expect(user.total_unread_notifications).to eq(2)
+      expect(staged_user.total_unread_notifications).to eq(2)
       user = User.unstage(params)
       expect(user.total_unread_notifications).to eq(0)
+      expect(user.staged).to eq(false)
     end
 
     it "triggers an event" do
