@@ -410,7 +410,7 @@ class ListController < ApplicationController
   end
 
   def self.best_period_for(previous_visit_at, category_id = nil)
-    default_period = ((category_id && Category.where(id: category_id).pluck(:default_top_period).first) ||
+    default_period = ((category_id && Category.where(id: category_id).pluck_first(:default_top_period)) ||
           SiteSetting.top_page_default_timeframe).to_sym
 
     best_period_with_topics_for(previous_visit_at, category_id, default_period) || default_period

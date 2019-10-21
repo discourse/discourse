@@ -63,7 +63,7 @@ class ApplicationRequest < ActiveRecord::Base
     req_type_id = req_types[req_type]
 
     # a poor man's upsert
-    id = where(date: date, req_type: req_type_id).pluck(:id).first
+    id = where(date: date, req_type: req_type_id).pluck_first(:id)
     id ||= create!(date: date, req_type: req_type_id, count: 0).id
 
   rescue # primary key violation

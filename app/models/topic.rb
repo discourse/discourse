@@ -607,7 +607,7 @@ class Topic < ActiveRecord::Base
 
   # If a post is deleted we have to update our highest post counters
   def self.reset_highest(topic_id)
-    archetype = Topic.where(id: topic_id).pluck(:archetype).first
+    archetype = Topic.where(id: topic_id).pluck_first(:archetype)
 
     # ignore small_action replies for private messages
     post_type = archetype == Archetype.private_message ? " AND post_type <> #{Post.types[:small_action]}" : ''

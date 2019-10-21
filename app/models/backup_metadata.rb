@@ -2,7 +2,7 @@
 
 class BackupMetadata < ActiveRecord::Base
   def self.value_for(name)
-    where(name: name).pluck(:value).first.presence
+    where(name: name).pluck_first(:value).presence
   end
 end
 

@@ -350,7 +350,7 @@ class TopicQuery
 
   def list_private_messages_group_archive(user)
     list = private_messages_for(user, :group)
-    group_id = Group.where('name ilike ?', @options[:group_name]).pluck(:id).first
+    group_id = Group.where('name ilike ?', @options[:group_name]).pluck_first(:id)
     list = list.joins("JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
                       gm.group_id = #{group_id.to_i}")
     create_list(:private_messages, {}, list)
@@ -642,7 +642,7 @@ class TopicQuery
   def get_category_id(category_id_or_slug)
     return nil unless category_id_or_slug
     category_id = category_id_or_slug.to_i
-    category_id = Category.where(slug: category_id_or_slug).pluck(:id).first if category_id == 0
+    category_id = Category.where(slug: category_id_or_slug).pluck_first(:id) if category_id == 0
     category_id
   end
 
@@ -685,7 +685,7 @@ class TopicQuery
 
       if !@options[:order]
         # category default sort order
-        sort_order, sort_ascending = Category.where(id: category_id).pluck(:sort_order, :sort_ascending).first
+        sort_order, sort_ascending = Category.where(id: category_id).pluck_first(:sort_order, :sort_ascending)
         if sort_order
           options[:order] = sort_order
           options[:ascending] = !!sort_ascending ? 'true' : 'false'

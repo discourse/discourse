@@ -208,7 +208,7 @@ class TopicEmbed < ActiveRecord::Base
 
   def self.topic_id_for_embed(embed_url)
     embed_url = normalize_url(embed_url).sub(/^https?\:\/\//, '')
-    TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").pluck(:topic_id).first
+    TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").pluck_first(:topic_id)
   end
 
   def self.first_paragraph_from(html)
@@ -229,7 +229,7 @@ class TopicEmbed < ActiveRecord::Base
 
   def self.expanded_for(post)
     Rails.cache.fetch("embed-topic:#{post.topic_id}", expires_in: 10.minutes) do
-      url = TopicEmbed.where(topic_id: post.topic_id).pluck(:embed_url).first
+      url = TopicEmbed.where(topic_id: post.topic_id).pluck_first(:embed_url)
       response = TopicEmbed.find_remote(url)
 
       body = response.body
