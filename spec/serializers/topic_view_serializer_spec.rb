@@ -45,6 +45,30 @@ describe TopicViewSerializer do
     end
   end
 
+  describe '#image_url' do
+    let(:image_url) { 'http://meta.discourse.org/images/welcome/discourse-edit-post-animated.gif' }
+
+    describe 'when a topic has an image' do
+      it 'should return the image url' do
+        topic.update!(image_url: image_url)
+
+        json = serialize_topic(topic, user)
+
+        expect(json[:image_url]).to eq(image_url)
+      end
+    end
+
+    describe 'when a topic does not contain an image' do
+      it 'should return a nil image url' do
+
+        json = serialize_topic(topic, user)
+
+        expect(json.has_key? :image_url).to eq(true)
+        expect(json[:image_url]).to eq(nil)
+      end
+    end
+  end
+
   describe '#suggested_topics' do
     let(:topic2) { Fabricate(:topic) }
 
