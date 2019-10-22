@@ -199,7 +199,7 @@ GEM
     mocha (1.8.0)
       metaclass (~> 0.0.1)
     mock_redis (0.19.0)
-    moneta (1.1.1)
+    moneta (1.2.0)
     msgpack (1.2.10)
     multi_json (1.13.1)
     multi_xml (0.6.0)
@@ -244,7 +244,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.9.19)
+    onebox (1.9.20)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -499,7 +499,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.9.19)
+  onebox (= 1.9.20)
   openid-redis-store
   parallel_tests
   pg
