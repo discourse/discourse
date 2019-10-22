@@ -1,6 +1,7 @@
 import { on } from "ember-addons/ember-computed-decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [
     ":modal",
     ":d-modal",
