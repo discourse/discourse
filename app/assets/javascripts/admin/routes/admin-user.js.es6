@@ -1,6 +1,7 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import AdminUser from "admin/models/admin-user";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   serialize(model) {
     return {
       user_id: model.get("id"),

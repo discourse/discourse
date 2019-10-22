@@ -1,6 +1,7 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import showModal from "discourse/lib/show-modal";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   // TODO: make this automatic using an `{{outlet}}`
   renderTemplate: function() {
     this.render("admin/templates/logs/staff-action-logs", {

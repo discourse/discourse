@@ -1,6 +1,7 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import ViewingActionType from "discourse/mixins/viewing-action-type";
 
-export default Discourse.Route.extend(ViewingActionType, {
+export default DiscourseRoute.extend(ViewingActionType, {
   renderTemplate() {
     this.render("user-topics-list");
   },

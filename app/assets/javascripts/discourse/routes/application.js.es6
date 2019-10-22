@@ -1,3 +1,4 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import logout from "discourse/lib/logout";
@@ -20,7 +21,7 @@ function unlessReadOnly(method, message) {
   };
 }
 
-const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
+const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   siteTitle: setting("title"),
   shortSiteDescription: setting("short_site_description"),
 

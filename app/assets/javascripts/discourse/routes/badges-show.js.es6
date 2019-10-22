@@ -1,8 +1,9 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import UserBadge from "discourse/models/user-badge";
 import Badge from "discourse/models/badge";
 import PreloadStore from "preload-store";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   queryParams: {
     username: {
       refreshModel: true

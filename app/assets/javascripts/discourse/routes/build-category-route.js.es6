@@ -1,3 +1,4 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import {
   filterQueryParams,
   findTopicList
@@ -10,7 +11,7 @@ import Category from "discourse/models/category";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
-  return Discourse.Route.extend({
+  return DiscourseRoute.extend({
     queryParams,
 
     model(modelParams) {

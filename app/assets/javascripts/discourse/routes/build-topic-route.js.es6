@@ -1,3 +1,4 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import { defaultHomepage } from "discourse/lib/utilities";
 
@@ -70,7 +71,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
 
 export default function(filter, extras) {
   extras = extras || {};
-  return Discourse.Route.extend(
+  return DiscourseRoute.extend(
     {
       queryParams,
 

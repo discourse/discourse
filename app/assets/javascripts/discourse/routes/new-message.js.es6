@@ -1,7 +1,8 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import User from "discourse/models/user";
 import Group from "discourse/models/group";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   beforeModel(transition) {
     const params = transition.to.queryParams;
 

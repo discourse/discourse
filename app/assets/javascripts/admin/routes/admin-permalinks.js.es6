@@ -1,6 +1,7 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import Permalink from "admin/models/permalink";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   model() {
     return Permalink.findAll();
   },

@@ -1,8 +1,9 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   beforeModel() {
     const params = this.paramsFor("associate-account");
     this.replaceWith(`preferences.account`, this.currentUser).then(() =>

@@ -1,6 +1,7 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import Tag from "discourse/models/tag";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   model() {
     return this.store.findAll("tag").then(result => {
       if (result.extras) {
