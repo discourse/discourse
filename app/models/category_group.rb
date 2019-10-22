@@ -23,3 +23,7 @@ end
 #  updated_at      :datetime         not null
 #  permission_type :integer          default(1)
 #
+# Indexes
+#
+#  index_category_groups_on_group_id  (group_id)
+#
