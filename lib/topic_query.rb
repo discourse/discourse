@@ -868,8 +868,9 @@ class TopicQuery
         NOT EXISTS (
           SELECT 1
             FROM category_users cu
+            LEFT JOIN categories ON categories.id = topics.category_id
            WHERE cu.user_id = :user_id
-             AND cu.category_id = topics.category_id
+             AND (cu.category_id = categories.id OR cu.category_id = categories.parent_category_id)
              AND cu.notification_level = :muted
              AND cu.category_id <> :category_id
              AND (tu.notification_level IS NULL OR tu.notification_level < :tracking)
@@ -878,7 +879,6 @@ class TopicQuery
             tracking: TopicUser.notification_levels[:tracking],
             category_id: category_id || -1)
     end
-
     list
   end
 

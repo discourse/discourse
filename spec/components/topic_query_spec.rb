@@ -238,6 +238,18 @@ describe TopicQuery do
       expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
       expect(topic_query.list_latest.topics.map(&:id)).not_to include(topic.id)
     end
+
+    it 'subcategory is removed from new and latest lists' do
+      category = Fabricate(:category_with_definition)
+      subcategory = Fabricate(:category, parent_category_id: category.id)
+
+      topic = Fabricate(:topic, category: subcategory)
+      CategoryUser.create!(user_id: user.id,
+                           category_id: category.id,
+                           notification_level: CategoryUser.notification_levels[:muted])
+      expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
+      expect(topic_query.list_latest.topics.map(&:id)).not_to include(topic.id)
+    end
   end
 
   context 'muted tags' do
