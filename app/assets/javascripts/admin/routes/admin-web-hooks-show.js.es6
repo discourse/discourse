@@ -1,4 +1,6 @@
-export default Discourse.Route.extend({
+import DiscourseRoute from "discourse/routes/discourse";
+
+export default DiscourseRoute.extend({
   serialize(model) {
     return { web_hook_id: model.get("id") || "new" };
   },

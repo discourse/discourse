@@ -1,8 +1,9 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { fillMissingDates } from "discourse/lib/utilities";
 import { translateResults } from "discourse/lib/search";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   queryParams: {
     term: { refreshModel: true },
     period: { refreshModel: true },

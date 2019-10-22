@@ -1,3 +1,4 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
 
@@ -9,7 +10,7 @@ const SCROLL_DELAY = 500;
 
 import showModal from "discourse/lib/show-modal";
 
-const TopicRoute = Discourse.Route.extend({
+const TopicRoute = DiscourseRoute.extend({
   redirect() {
     return this.redirectIfLoginRequired();
   },

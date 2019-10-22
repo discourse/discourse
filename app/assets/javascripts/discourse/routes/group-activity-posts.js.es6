@@ -1,5 +1,7 @@
+import DiscourseRoute from "discourse/routes/discourse";
+
 export function buildGroupPage(type) {
-  return Discourse.Route.extend({
+  return DiscourseRoute.extend({
     type,
 
     titleToken() {

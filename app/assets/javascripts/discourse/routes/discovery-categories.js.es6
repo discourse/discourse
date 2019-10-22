@@ -1,3 +1,4 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import showModal from "discourse/lib/show-modal";
 import OpenComposer from "discourse/mixins/open-composer";
 import CategoryList from "discourse/models/category-list";
@@ -7,7 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "preload-store";
 import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
 
-const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
+const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   renderTemplate() {
     this.render("navigation/categories", { outlet: "navigation-bar" });
     this.render("discovery/categories", { outlet: "list-container" });

@@ -1,4 +1,6 @@
-export default Discourse.Route.extend({
+import DiscourseRoute from "discourse/routes/discourse";
+
+export default DiscourseRoute.extend({
   model(params) {
     // The model depends on user input, so let the controller do the work:
     this.controllerFor("adminSiteSettingsCategory").set(
