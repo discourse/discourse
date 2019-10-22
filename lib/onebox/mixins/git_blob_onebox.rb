@@ -174,9 +174,9 @@ module Onebox
 
               cr = calc_range(m, contents_lines_size)    #calculate the range of lines for output
               selected_one_liner = cr[:selected_one_liner] #if url is a one-liner calc_range will return it
-              from           = cr[:from]
-              to             = cr[:to]
-              @truncated     = cr[:truncated]
+              from = cr[:from]
+              to = cr[:to]
+              @truncated = cr[:truncated]
               range_provided = cr[:range_provided]
               @cr_results = cr
 
