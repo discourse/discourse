@@ -38,7 +38,7 @@
     "workbox-sw": "^4.3.1"
   },
   "devDependencies": {
-    "@arkweid/lefthook": "^0.5.6",
+    "@arkweid/lefthook": "^0.6.3",
     "babel-eslint": "^8.2",
     "chrome-launcher": "^0.10",
     "chrome-remote-interface": "^0.25",
