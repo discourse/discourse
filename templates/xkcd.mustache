@@ -1,5 +1,7 @@
 <h3><a href='{{link}}' target='_blank'>{{title}}</a></h3>
 
-<img src="{{image}}" />
+{{#image}}
+  <div class="xkcd-image"><img src="{{image}}"/></div>
+{{/image}}
 
 <p>{{description}}</p>
