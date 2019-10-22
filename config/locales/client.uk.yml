@@ -2525,7 +2525,6 @@ uk:
         embed_by_username: "Ім'я користувача для створення теми"
         embed_post_limit: "Максимальна кількість дописів для вставки"
         embed_classname_whitelist: "Дозволені імена класів CSS"
-        feed_polling_enabled: "Імпортувати дописи через RSS/ATOM"
       permalink:
         title: "Постійні посилання"
         url: "Посилання"
