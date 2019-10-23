@@ -4,6 +4,11 @@ import computed from "ember-addons/ember-computed-decorators";
 export default Component.extend({
   editorId: Ember.computed.reads("fieldName"),
 
+  @computed("fieldName")
+  currentEditorMode(fieldName) {
+    return fieldName === "css" ? "scss" : fieldName;
+  },
+
   @computed("fieldName", "styles.html", "styles.css")
   resetDisabled(fieldName) {
     return (

@@ -1044,6 +1044,9 @@ email:
   email_custom_css:
     default: ""
     hidden: true
+  email_custom_css_compiled:
+    default: ""
+    hidden: true
   email_total_attachment_size_limit_kb:
     default: 0
     max: 51200

@@ -6,6 +6,7 @@ describe EmailStyle do
   before do
     SiteSetting.email_custom_template = "<body><h1>FOR YOU</h1><div>%{email_content}</div></body>"
     SiteSetting.email_custom_css = 'h1 { color: red; } div.body { color: #FAB; }'
+    SiteSetting.email_custom_css_compiled = SiteSetting.email_custom_css
   end
 
   after do
@@ -93,6 +94,7 @@ describe EmailStyle do
     context 'with some bad css' do
       before do
         SiteSetting.email_custom_css = '@import "nope.css"; h1 {{{ size: really big; '
+        SiteSetting.email_custom_css_compiled = SiteSetting.email_custom_css
       end
 
       it "can render the html" do
