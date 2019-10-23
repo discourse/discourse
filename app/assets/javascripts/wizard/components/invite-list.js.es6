@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+
 export default Component.extend({
   classNames: ["invite-list"],
   users: null,
