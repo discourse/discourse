@@ -141,6 +141,7 @@ const Composer = RestModel.extend({
   creatingPrivateMessage: Ember.computed.equal("action", PRIVATE_MESSAGE),
   notCreatingPrivateMessage: Ember.computed.not("creatingPrivateMessage"),
   notPrivateMessage: Ember.computed.not("privateMessage"),
+  disableTitleInput: Ember.computed.not("topic.details.can_edit"),
 
   @computed("privateMessage", "archetype.hasOptions")
   showCategoryChooser(isPrivateMessage, hasOptions) {
@@ -784,31 +785,31 @@ const Composer = RestModel.extend({
     let promise = Ember.RSVP.resolve();
 
     // Update the topic if we're editing the first post
-    if (
-      this.title &&
-      post.post_number === 1 &&
-      this.get("topic.details.can_edit")
-    ) {
-      const topicProps = this.getProperties(
-        Object.keys(_edit_topic_serializer)
-      );
-      // frontend should have featuredLink but backend needs featured_link
-      if (topicProps.featuredLink) {
-        topicProps.featured_link = topicProps.featuredLink;
-        delete topicProps.featuredLink;
-      }
-
+    if (this.title && post.post_number === 1) {
       const topic = this.topic;
 
-      // If we're editing a shared draft, keep the original category
-      if (this.action === EDIT_SHARED_DRAFT) {
-        const destinationCategoryId = topicProps.categoryId;
-        promise = promise.then(() =>
-          topic.updateDestinationCategory(destinationCategoryId)
+      if (topic.details.can_edit) {
+        const topicProps = this.getProperties(
+          Object.keys(_edit_topic_serializer)
         );
-        topicProps.categoryId = topic.get("category.id");
+        // frontend should have featuredLink but backend needs featured_link
+        if (topicProps.featuredLink) {
+          topicProps.featured_link = topicProps.featuredLink;
+          delete topicProps.featuredLink;
+        }
+
+        // If we're editing a shared draft, keep the original category
+        if (this.action === EDIT_SHARED_DRAFT) {
+          const destinationCategoryId = topicProps.categoryId;
+          promise = promise.then(() =>
+            topic.updateDestinationCategory(destinationCategoryId)
+          );
+          topicProps.categoryId = topic.get("category.id");
+        }
+        promise = promise.then(() => Topic.update(topic, topicProps));
+      } else if (topic.details.can_edit_tags) {
+        promise = promise.then(() => topic.updateTags(this.tags));
       }
-      promise = promise.then(() => Topic.update(topic, topicProps));
     }
 
     const props = {
