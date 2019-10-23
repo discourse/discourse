@@ -1,4 +1,5 @@
-export default Ember.Component.extend({
+import Component from "@ember/component";
+export default Component.extend({
   tagName: "",
 
   multiple: Ember.computed.gt("bundle.actions.length", 1),

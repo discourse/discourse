@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import {
   default as computed,
   observes
@@ -6,7 +7,7 @@ import Group from "discourse/models/group";
 import InputValidation from "discourse/models/input-validation";
 import debounce from "discourse/lib/debounce";
 
-export default Ember.Component.extend({
+export default Component.extend({
   disableSave: null,
   nameInput: null,
 

@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { findAll } from "discourse/models/login-method";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   elementId: "login-buttons",
   classNameBindings: ["hidden"],
 

@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 
-export default Ember.Component.extend({
+export default Component.extend({
   elementId: "topic-footer-buttons",
 
   // Allow us to extend it

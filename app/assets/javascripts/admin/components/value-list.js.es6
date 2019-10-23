@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [":value-list"],
 
   inputInvalid: Ember.computed.empty("newValue"),

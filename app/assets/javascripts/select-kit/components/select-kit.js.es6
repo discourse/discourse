@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 const { get, isNone, run, isEmpty, makeArray } = Ember;
 import computed from "ember-addons/ember-computed-decorators";
 import UtilsMixin from "select-kit/mixins/utils";
@@ -10,7 +11,7 @@ import {
   applyCollectionHeaderCallbacks
 } from "select-kit/mixins/plugin-api";
 
-export default Ember.Component.extend(
+export default Component.extend(
   UtilsMixin,
   PluginApiMixin,
   DomHelpersMixin,

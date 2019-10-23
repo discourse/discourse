@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import {
   default as computed,
   observes
@@ -5,7 +6,7 @@ import {
 import DiscourseURL from "discourse/lib/url";
 import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "ul",
   classNameBindings: [":nav", ":nav-pills"],
   elementId: "navigation-bar",

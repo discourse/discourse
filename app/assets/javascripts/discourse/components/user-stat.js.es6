@@ -1,4 +1,5 @@
-export default Ember.Component.extend({
+import Component from "@ember/component";
+export default Component.extend({
   classNames: ["user-stat"],
   type: "number",
   isNumber: Ember.computed.equal("type", "number"),

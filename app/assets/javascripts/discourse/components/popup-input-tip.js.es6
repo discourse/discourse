@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import {
   default as computed,
@@ -5,7 +6,7 @@ import {
 } from "ember-addons/ember-computed-decorators";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     classNameBindings: [":popup-tip", "good", "bad", "lastShownAt::hide"],
     animateAttribute: null,

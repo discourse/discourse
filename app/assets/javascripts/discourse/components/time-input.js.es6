@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import { isNumeric } from "discourse/lib/utilities";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["d-time-input"],
   hours: null,
   minutes: null,

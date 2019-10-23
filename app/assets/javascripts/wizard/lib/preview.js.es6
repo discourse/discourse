@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 /*eslint no-bitwise:0 */
 import getUrl from "discourse-common/lib/get-url";
 
@@ -31,7 +32,7 @@ function canvasFor(image, w, h) {
 
 export function createPreviewComponent(width, height, obj) {
   const scale = window.devicePixelRatio;
-  return Ember.Component.extend(
+  return Component.extend(
     {
       layoutName: "components/theme-preview",
       width,

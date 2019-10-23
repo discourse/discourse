@@ -1,4 +1,5 @@
-const EditCategoryPanel = Ember.Component.extend({});
+import Component from "@ember/component";
+const EditCategoryPanel = Component.extend({});
 
 export default EditCategoryPanel;
 

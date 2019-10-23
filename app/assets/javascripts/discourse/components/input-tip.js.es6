@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     classNameBindings: [":tip", "good", "bad"],
     rerenderTriggers: ["validation"],

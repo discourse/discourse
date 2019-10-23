@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import computed from "ember-addons/ember-computed-decorators";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
@@ -215,7 +216,7 @@ export const ListItemDefaults = {
   })
 };
 
-export default Ember.Component.extend(
+export default Component.extend(
   ListItemDefaults,
   bufferedRender({
     rerenderTriggers: ["bulkSelectEnabled", "topic.pinned"],

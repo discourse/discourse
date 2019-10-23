@@ -1,9 +1,10 @@
+import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
 
-export default Ember.Component.extend(UploadMixin, {
+export default Component.extend(UploadMixin, {
   tagName: "span",
 
   @computed("uploading", "uploadProgress")

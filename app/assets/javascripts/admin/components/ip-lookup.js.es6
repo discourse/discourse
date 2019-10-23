@@ -1,9 +1,10 @@
+import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
 import copyText from "discourse/lib/copy-text";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["ip-lookup"],
 
   @computed("other_accounts.length", "totalOthersWithSameIP")

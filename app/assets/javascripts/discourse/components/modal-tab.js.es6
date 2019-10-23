@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import { propertyEqual } from "discourse/lib/computed";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "li",
   classNames: ["modal-tab"],
   panel: null,

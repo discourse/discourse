@@ -1,10 +1,11 @@
+import Component from "@ember/component";
 import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
 import LoadMore from "discourse/mixins/load-more";
 
-export default Ember.Component.extend(LoadMore, {
+export default Component.extend(LoadMore, {
   tagName: "table",
   classNames: ["topic-list"],
   showTopicPostBadges: true,

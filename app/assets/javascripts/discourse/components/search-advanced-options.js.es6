@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import { observes } from "ember-addons/ember-computed-decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
@@ -28,7 +29,7 @@ const REGEXP_POST_TIME_WHEN = /^(before|after)/gi;
 
 const IN_OPTIONS_MAPPING = { images: "with" };
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["search-advanced-options"],
 
   init() {

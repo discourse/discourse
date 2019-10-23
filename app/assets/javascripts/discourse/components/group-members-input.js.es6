@@ -1,8 +1,9 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyEqual } from "discourse/lib/computed";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["group-members-input"],
   addButton: true,
 

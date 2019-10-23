@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
 import {
@@ -5,7 +6,7 @@ import {
   on
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["d-date-input"],
   date: null,
   _picker: null,

@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { longDateNoYear } from "discourse/lib/formatter";
 import {
@@ -7,7 +8,7 @@ import {
 import Sharing from "discourse/lib/sharing";
 import { nativeShare } from "discourse/lib/pwa-utils";
 
-export default Ember.Component.extend({
+export default Component.extend({
   elementId: "share-link",
   classNameBindings: ["visible"],
   link: null,

@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { propertyEqual } from "discourse/lib/computed";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "li",
   classNameBindings: ["active", "tabClassName"],
 

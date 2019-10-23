@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import {
   default as computed,
   observes,
@@ -13,7 +14,7 @@ import {
   BUMP_TYPE
 } from "discourse/controllers/edit-topic-timer";
 
-export default Ember.Component.extend({
+export default Component.extend({
   selection: Ember.computed.alias("topicTimer.status_type"),
   autoOpen: Ember.computed.equal("selection", OPEN_STATUS_TYPE),
   autoClose: Ember.computed.equal("selection", CLOSE_STATUS_TYPE),

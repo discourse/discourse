@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import DiscourseURL from "discourse/lib/url";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "section",
   classNameBindings: [
     ":category-boxes",

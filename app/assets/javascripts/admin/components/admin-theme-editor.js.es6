@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { fmt } from "discourse/lib/computed";
 
-export default Ember.Component.extend({
+export default Component.extend({
   @computed("theme.targets", "onlyOverridden", "showAdvanced")
   visibleTargets(targets, onlyOverridden, showAdvanced) {
     return targets.filter(target => {

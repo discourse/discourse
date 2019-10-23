@@ -1,9 +1,10 @@
+import Component from "@ember/component";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import computed from "ember-addons/ember-computed-decorators";
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Component.extend(bufferedProperty("host"), {
+export default Component.extend(bufferedProperty("host"), {
   editToggled: false,
   tagName: "tr",
   categoryId: null,

@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
 //  A breadcrumb including category drop downs
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ["hidden:hidden", ":category-breadcrumb"],
   tagName: "ol",
 

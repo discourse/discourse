@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 /* global Pikaday:true */
 import { propertyNotEqual } from "discourse/lib/computed";
 import loadScript from "discourse/lib/load-script";
@@ -5,7 +6,7 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 import { cookAsync } from "discourse/lib/text";
 import debounce from "discourse/lib/debounce";
 
-export default Ember.Component.extend({
+export default Component.extend({
   timeFormat: "HH:mm:ss",
   dateFormat: "YYYY-MM-DD",
   dateTimeFormat: "YYYY-MM-DD HH:mm:ss",

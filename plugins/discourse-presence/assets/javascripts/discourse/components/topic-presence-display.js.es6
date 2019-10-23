@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import {
   default as computed,
   on
@@ -9,7 +10,7 @@ import {
 
 const MB_GET_LAST_MESSAGE = -2;
 
-export default Ember.Component.extend({
+export default Component.extend({
   topicId: null,
   presenceUsers: null,
 

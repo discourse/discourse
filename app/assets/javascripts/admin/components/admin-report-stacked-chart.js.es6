@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { number } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["admin-report-chart", "admin-report-stacked-chart"],
 
   init() {

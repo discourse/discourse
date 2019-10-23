@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 import {
   default as computed,
@@ -8,7 +9,7 @@ import {
 export const keepAliveDuration = 10000;
 export const bufferTime = 3000;
 
-export default Ember.Component.extend({
+export default Component.extend({
   // Passed in variables
   action: null,
   post: null,

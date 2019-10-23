@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import { observes } from "ember-addons/ember-computed-decorators";
 import showModal from "discourse/lib/show-modal";
 import PanEvents, {
@@ -6,7 +7,7 @@ import PanEvents, {
   SWIPE_VELOCITY_THRESHOLD
 } from "discourse/mixins/pan-events";
 
-export default Ember.Component.extend(PanEvents, {
+export default Component.extend(PanEvents, {
   composerOpen: null,
   info: null,
   isPanning: false,

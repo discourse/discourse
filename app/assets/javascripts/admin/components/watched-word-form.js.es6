@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import WatchedWord from "admin/models/watched-word";
 import {
   default as computed,
@@ -5,7 +6,7 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["watched-word-form"],
   formSubmitted: false,
   actionKey: null,

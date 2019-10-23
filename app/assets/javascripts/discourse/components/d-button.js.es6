@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import DiscourseURL from "discourse/lib/url";
 
-export default Ember.Component.extend({
+export default Component.extend({
   // subclasses need this
   layoutName: "components/d-button",
 

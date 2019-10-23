@@ -1,8 +1,9 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
 const PAGES_LIMIT = 8;
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ["sortable", "twoColumns"],
   classNames: ["admin-report-table"],
   sortable: false,

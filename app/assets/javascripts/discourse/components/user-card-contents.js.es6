@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import {
   default as computed,
   observes
@@ -10,7 +11,7 @@ import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 
-export default Ember.Component.extend(
+export default Component.extend(
   CardContentsBase,
   CanCheckEmails,
   CleansUp,

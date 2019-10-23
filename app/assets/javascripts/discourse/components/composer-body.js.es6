@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import {
   default as computed,
   observes
@@ -20,7 +21,7 @@ function mouseYPos(e) {
   return e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY);
 }
 
-export default Ember.Component.extend(KeyEnterEscape, {
+export default Component.extend(KeyEnterEscape, {
   elementId: "reply-control",
 
   classNameBindings: [

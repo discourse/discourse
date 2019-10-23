@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import { diff, patch } from "virtual-dom";
 import { WidgetClickHook } from "discourse/widgets/hooks";
 import { queryRegistry } from "discourse/widgets/widget";
@@ -14,7 +15,7 @@ export function resetWidgetCleanCallbacks() {
   _cleanCallbacks = {};
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   _tree: null,
   _rootNode: null,
   _timeout: null,

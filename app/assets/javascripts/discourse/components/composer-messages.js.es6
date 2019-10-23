@@ -1,8 +1,9 @@
+import Component from "@ember/component";
 import LinkLookup from "discourse/lib/link-lookup";
 
 let _messagesCache = {};
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [":composer-popup-container", "hidden"],
   checkedMessages: false,
   messages: null,
