@@ -264,7 +264,7 @@ class DiscourseCLI < Thor
   end
 
   def load_import_export
-    require File.expand_path(File.dirname(__FILE__) + "/../lib/import_export/import_export")
+    require File.expand_path(File.dirname(__FILE__) + "/../lib/import_export")
   end
 
   def do_remap(from, to, regex = false)
