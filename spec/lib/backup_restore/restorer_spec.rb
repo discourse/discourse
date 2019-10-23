@@ -21,7 +21,7 @@ describe BackupRestore::Restorer do
   end
 
   describe 'Decompressing a backup' do
-    fab!(:admin) { Fabricate(:admin) }
+    let!(:admin) { Fabricate(:admin) }
 
     before do
       SiteSetting.allow_restore = true
@@ -102,12 +102,15 @@ describe BackupRestore::Restorer do
   end
 
   context 'Database connection' do
-    fab!(:admin) { Fabricate(:admin) }
+    let!(:admin) { Fabricate(:admin) }
     before do
       SiteSetting.allow_restore = true
       @restore_path = File.join(Rails.root, 'public', 'backups', RailsMultisite::ConnectionManagement.current_db)
       described_class.any_instance.stubs(ensure_we_have_a_filename: true)
       described_class.any_instance.stubs(initialize_state: true)
+    end
+    after do
+      conn.establish_connection(db: 'default')
     end
     let(:conn) { RailsMultisite::ConnectionManagement }
     let(:restorer) { described_class.new(admin.id) }
