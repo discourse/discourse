@@ -1,4 +1,5 @@
 import createPMRoute from "discourse/routes/build-private-messages-route";
+import TopicList from "discourse/models/topic-list";
 
 export default createPMRoute("groups", "private-messages-groups").extend({
   groupName: null,
@@ -16,19 +17,10 @@ export default createPMRoute("groups", "private-messages-groups").extend({
 
   model(params) {
     const username = this.modelFor("user").get("username_lower");
-    const session = Discourse.Session.current();
     const filter =
       `topics/private-messages-group/${username}/${params.name}/archive`;
-    const lastTopicList = session.get("topicList");
-    if (lastTopicList && lastTopicList.filter === filter) {
-      return lastTopicList;
-    } else {
-      session.setProperties({
-        topicList: null,
-        topicListScrollPosition: null
-      });
-      return this.store.findFiltered("topicList", { filter });
-    }
+    const lastTopicList = TopicList.findOrResetCachedBy(filter);
+    return lastTopicList ? lastTopicList : this.store.findFiltered("topicList", { filter });
   },
 
   afterModel(model) {

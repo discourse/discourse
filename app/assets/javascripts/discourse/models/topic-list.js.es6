@@ -189,6 +189,20 @@ TopicList.reopenClass({
   // hide the category when it has no children
   hideUniformCategory(list, category) {
     list.set("hideCategory", !displayCategoryInList(list.site, category));
+  },
+
+  findOrResetCachedBy(filter) {
+    const session = Discourse.Session.current();
+    const lastTopicList = session.get("topicList");
+    if (lastTopicList && lastTopicList.filter === filter) {
+      return lastTopicList;
+    } else {
+      session.setProperties({
+        topicList: null,
+        topicListScrollPosition: null
+      });
+      return false;
+    }
   }
 });
 
