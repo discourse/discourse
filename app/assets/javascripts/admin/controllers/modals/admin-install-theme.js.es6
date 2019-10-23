@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -10,7 +11,7 @@ import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
 
 const MIN_NAME_LENGTH = 4;
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   popular: Ember.computed.equal("selection", "popular"),
   local: Ember.computed.equal("selection", "local"),
   remote: Ember.computed.equal("selection", "remote"),

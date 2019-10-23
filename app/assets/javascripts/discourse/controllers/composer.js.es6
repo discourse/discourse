@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import Quote from "discourse/lib/quote";
 import Draft from "discourse/models/draft";
@@ -74,7 +75,7 @@ export function addPopupMenuOptionsCallback(callback) {
   _popupMenuOptionsCallbacks.push(callback);
 }
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   topicController: Ember.inject.controller("topic"),
   router: Ember.inject.service(),
 

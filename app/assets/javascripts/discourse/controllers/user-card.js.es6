@@ -1,10 +1,11 @@
+import Controller from "@ember/controller";
 import {
   default as DiscourseURL,
   userPath,
   groupPath
 } from "discourse/lib/url";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   topic: Ember.inject.controller(),
   router: Ember.inject.service(),
 

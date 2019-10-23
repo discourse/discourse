@@ -1,10 +1,11 @@
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import WatchedWord from "admin/models/watched-word";
 import { ajax } from "discourse/lib/ajax";
 import { fmt } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   actionNameKey: null,
   adminWatchedWords: Ember.inject.controller(),
   showWordsList: Ember.computed.or(

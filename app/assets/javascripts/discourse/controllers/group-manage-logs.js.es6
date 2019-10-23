@@ -1,9 +1,10 @@
+import Controller from "@ember/controller";
 import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   group: Ember.inject.controller(),
   loading: false,
   offset: 0,

@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import computed from "ember-addons/ember-computed-decorators";
@@ -20,7 +21,7 @@ function customTagArray(fieldName) {
 }
 
 // This controller handles displaying of history
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   loading: true,
   viewMode: "side_by_side",
 

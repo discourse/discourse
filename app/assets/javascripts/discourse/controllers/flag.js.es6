@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import ActionSummary from "discourse/models/action-summary";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
@@ -5,7 +6,7 @@ import computed from "ember-addons/ember-computed-decorators";
 import optionalService from "discourse/lib/optional-service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   adminTools: optionalService(),
   userDetails: null,
   selected: null,

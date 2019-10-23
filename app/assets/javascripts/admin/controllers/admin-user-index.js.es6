@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
@@ -6,7 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { fmt } from "discourse/lib/computed";
 
-export default Ember.Controller.extend(CanCheckEmails, {
+export default Controller.extend(CanCheckEmails, {
   adminTools: Ember.inject.service(),
   originalPrimaryGroupId: null,
   customGroupIdsBuffer: null,

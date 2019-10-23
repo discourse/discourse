@@ -1,8 +1,9 @@
+import Controller from "@ember/controller";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend(PreferencesTabController, {
+export default Controller.extend(PreferencesTabController, {
   init() {
     this._super(...arguments);
 

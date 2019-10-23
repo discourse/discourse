@@ -1,8 +1,9 @@
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import { topicLevels } from "discourse/lib/notification-levels";
 
 // Support for changing the notification level of various topics
-export default Ember.Controller.extend({
+export default Controller.extend({
   topicBulkActions: Ember.inject.controller(),
   notificationLevelId: null,
 

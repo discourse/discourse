@@ -1,10 +1,11 @@
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import { durationTiny } from "discourse/lib/formatter";
 
 // should be kept in sync with 'UserSummary::MAX_BADGES'
 const MAX_BADGES = 6;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   userController: Ember.inject.controller("user"),
   user: Ember.computed.alias("userController.model"),
 

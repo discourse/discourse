@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import {
@@ -27,7 +28,7 @@ const USER_HOMES = {
 const TEXT_SIZES = ["smaller", "normal", "larger", "largest"];
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
-export default Ember.Controller.extend(PreferencesTabController, {
+export default Controller.extend(PreferencesTabController, {
   @computed("makeThemeDefault")
   saveAttrNames(makeDefault) {
     let attrs = [

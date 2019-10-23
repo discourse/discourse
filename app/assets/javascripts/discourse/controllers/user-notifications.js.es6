@@ -1,10 +1,11 @@
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   application: Ember.inject.controller(),
 
   @observes("model.canLoadMore")

@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
 import Permalink from "admin/models/permalink";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   loading: false,
   filter: null,
 

@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import DiscourseURL from "discourse/lib/url";
 import { extractError } from "discourse/lib/ajax-error";
@@ -7,7 +8,7 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   selectedTab: null,
   saving: false,
   deleting: false,

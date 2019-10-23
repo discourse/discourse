@@ -1,10 +1,11 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import IncomingEmail from "admin/models/incoming-email";
 import computed from "ember-addons/ember-computed-decorators";
 import { longDate } from "discourse/lib/formatter";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   @computed("model.date")
   date(d) {
     return longDate(d);

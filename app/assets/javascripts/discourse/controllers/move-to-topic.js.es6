@@ -1,10 +1,11 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { movePosts, mergeTopic } from "discourse/models/topic";
 import DiscourseURL from "discourse/lib/url";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { extractError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   topicName: null,
   saving: false,
   categoryId: null,

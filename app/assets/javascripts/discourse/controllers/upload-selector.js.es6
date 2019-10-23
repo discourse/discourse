@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import {
   default as computed,
@@ -17,7 +18,7 @@ function uploadTranslate(key) {
   return `upload_selector.${key}`;
 }
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   showMore: false,
   imageUrl: null,
   imageLink: null,

@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import Invite from "discourse/models/invite";
 import debounce from "discourse/lib/debounce";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -6,7 +7,7 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   user: null,
   model: null,
   filter: null,

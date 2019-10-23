@@ -1,6 +1,7 @@
+import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   filter: null,
   filtered: false,
   showWords: false,

@@ -1,8 +1,9 @@
+import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   loading: false,
   errorMessage: null,
   successMessage: null,

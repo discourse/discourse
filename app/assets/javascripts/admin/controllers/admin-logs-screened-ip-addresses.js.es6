@@ -1,9 +1,10 @@
+import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
 import { outputExportResult } from "discourse/lib/export-result";
 import { exportEntity } from "discourse/lib/export-csv";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   loading: false,
   filter: null,
   savedIpAddress: null,

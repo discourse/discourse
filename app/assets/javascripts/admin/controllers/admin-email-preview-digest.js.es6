@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import EmailPreview from "admin/models/email-preview";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   username: null,
   lastSeen: null,
 

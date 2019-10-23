@@ -1,5 +1,6 @@
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
-export default Ember.Controller.extend({
+export default Controller.extend({
   sortedEmojis: Ember.computed.sort("model", "emojiSorting"),
 
   init() {

@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
@@ -6,7 +7,7 @@ import { userPath } from "discourse/lib/url";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 
-export default Ember.Controller.extend(PasswordValidation, {
+export default Controller.extend(PasswordValidation, {
   isDeveloper: Ember.computed.alias("model.is_developer"),
   admin: Ember.computed.alias("model.admin"),
   secondFactorRequired: Ember.computed.alias("model.second_factor_required"),

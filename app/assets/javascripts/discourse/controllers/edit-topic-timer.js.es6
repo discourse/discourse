@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import TopicTimer from "discourse/models/topic-timer";
@@ -10,7 +11,7 @@ export const DELETE_STATUS_TYPE = "delete";
 export const REMINDER_TYPE = "reminder";
 export const BUMP_TYPE = "bump";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   loading: false,
   isPublic: "true",
 

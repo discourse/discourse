@@ -1,10 +1,11 @@
+import Controller from "@ember/controller";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import computed from "ember-addons/ember-computed-decorators";
 import User from "discourse/models/user";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 
-export default Ember.Controller.extend(CanCheckEmails, {
+export default Controller.extend(CanCheckEmails, {
   indexStream: false,
   router: Ember.inject.service(),
   userNotifications: Ember.inject.controller("user-notifications"),

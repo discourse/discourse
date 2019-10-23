@@ -1,9 +1,10 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import Post from "discourse/models/post";
 import IncomingEmail from "admin/models/incoming-email";
 
 // This controller handles displaying of raw email
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   rawEmail: "",
   textPart: "",
   htmlPart: "",

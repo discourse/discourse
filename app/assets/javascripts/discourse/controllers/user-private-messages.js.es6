@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import Topic from "discourse/models/topic";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   router: Ember.inject.service(),
   userTopicsList: Ember.inject.controller("user-topics-list"),
   user: Ember.inject.controller(),

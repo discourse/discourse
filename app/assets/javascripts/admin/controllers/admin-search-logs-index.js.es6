@@ -1,6 +1,7 @@
+import Controller from "@ember/controller";
 export const DEFAULT_PERIOD = "yearly";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   loading: false,
   period: DEFAULT_PERIOD,
   searchType: "all",

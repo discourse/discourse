@@ -1,6 +1,7 @@
+import Controller from "@ember/controller";
 let lastSearch;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   searching: false,
   siteTexts: null,
   preferred: false,

@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import getUrl from "discourse-common/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
@@ -8,7 +9,7 @@ import NameValidation from "discourse/mixins/name-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
 
-export default Ember.Controller.extend(
+export default Controller.extend(
   PasswordValidation,
   UsernameValidation,
   NameValidation,

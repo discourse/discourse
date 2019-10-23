@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   sample: Ember.computed.alias("model.sample"),
   errors: Ember.computed.alias("model.errors"),
   count: Ember.computed.alias("model.grant_count"),

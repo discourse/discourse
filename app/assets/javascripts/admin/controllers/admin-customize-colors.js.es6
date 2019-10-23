@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import showModal from "discourse/lib/show-modal";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   @computed("model.@each.id")
   baseColorScheme() {
     return this.model.findBy("is_base", true);

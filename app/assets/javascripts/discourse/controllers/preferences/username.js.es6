@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import {
   default as computed,
   observes
@@ -7,7 +8,7 @@ import DiscourseURL from "discourse/lib/url";
 import { userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   taken: false,
   saving: false,
   errorMessage: null,

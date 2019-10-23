@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { default as DiscourseURL, userPath } from "discourse/lib/url";
@@ -6,7 +7,7 @@ import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import showModal from "discourse/lib/show-modal";
 
-export default Ember.Controller.extend(CanCheckEmails, {
+export default Controller.extend(CanCheckEmails, {
   loading: false,
   dirty: false,
   resetPasswordLoading: false,

@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import PenaltyController from "admin/mixins/penalty-controller";
 
-export default Ember.Controller.extend(PenaltyController, {
+export default Controller.extend(PenaltyController, {
   suspendUntil: null,
   suspending: false,
 
