@@ -217,15 +217,8 @@ class Notification < ActiveRecord::Base
   protected
 
   def refresh_notification_count
-    begin
-      if user.has_attribute?(:seen_notification_id)
-        user.notifications.reset
-        user.publish_notifications_state
-      else
-        User.find_by(id: user.id).publish_notifications_state
-      end
-    rescue ActiveRecord::RecordNotFound
-      # happens when we delete a user
+    if user_id
+      User.find_by(id: user_id)&.publish_notifications_state
     end
   end
 
