@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import { observes } from "ember-addons/ember-computed-decorators";
 import { fmt } from "discourse/lib/computed";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   group: Ember.inject.controller(),
   groupActivity: Ember.inject.controller(),
   application: Ember.inject.controller(),

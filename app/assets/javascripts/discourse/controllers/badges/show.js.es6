@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import {
@@ -5,7 +6,7 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   queryParams: ["username"],
   noMoreBadges: false,
   userBadges: null,

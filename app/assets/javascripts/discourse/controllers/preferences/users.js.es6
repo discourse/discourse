@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend(PreferencesTabController, {
+export default Controller.extend(PreferencesTabController, {
   ignoredUsernames: Ember.computed.alias("model.ignored_usernames"),
   userIsMemberOrAbove: Ember.computed.gte("model.trust_level", 2),
   ignoredEnabled: Ember.computed.or("userIsMemberOrAbove", "model.staff"),

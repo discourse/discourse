@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 const _buttons = [];
@@ -67,7 +68,7 @@ addBulkButton("deleteTopics", "delete", {
 });
 
 // Modal for performing bulk actions on topics
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   tags: null,
 
   emptyTags: Ember.computed.empty("tags"),

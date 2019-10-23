@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 
 // Lists of topics on a user's page.
-export default Ember.Controller.extend({
+export default Controller.extend({
   application: Ember.inject.controller(),
 
   hideCategory: false,

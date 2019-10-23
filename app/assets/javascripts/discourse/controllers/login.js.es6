@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import showModal from "discourse/lib/show-modal";
@@ -19,7 +20,7 @@ const AuthErrors = [
   "not_allowed_from_ip_address"
 ];
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   createAccount: Ember.inject.controller(),
   forgotPassword: Ember.inject.controller(),
   application: Ember.inject.controller(),

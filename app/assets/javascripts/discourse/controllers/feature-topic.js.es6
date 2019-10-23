@@ -1,10 +1,11 @@
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import computed from "ember-addons/ember-computed-decorators";
 import InputValidation from "discourse/models/input-validation";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   topicController: Ember.inject.controller("topic"),
 
   loading: true,

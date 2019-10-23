@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import { setting } from "discourse/lib/computed";
 import computed from "ember-addons/ember-computed-decorators";
 import AdminDashboard from "admin/models/admin-dashboard";
@@ -5,7 +6,7 @@ import VersionCheck from "admin/models/version-check";
 
 const PROBLEMS_CHECK_MINUTES = 1;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   isLoading: false,
   dashboardFetchedAt: null,
   exceptionController: Ember.inject.controller("exception"),

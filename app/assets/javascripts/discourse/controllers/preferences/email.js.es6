@@ -1,9 +1,10 @@
+import Controller from "@ember/controller";
 import { propertyEqual } from "discourse/lib/computed";
 import InputValidation from "discourse/models/input-validation";
 import { emailValid } from "discourse/lib/utilities";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   taken: false,
   saving: false,
   error: false,

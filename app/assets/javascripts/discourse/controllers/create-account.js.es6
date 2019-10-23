@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { setting } from "discourse/lib/computed";
@@ -14,7 +15,7 @@ import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { userPath } from "discourse/lib/url";
 import { findAll } from "discourse/models/login-method";
 
-export default Ember.Controller.extend(
+export default Controller.extend(
   ModalFunctionality,
   PasswordValidation,
   UsernameValidation,

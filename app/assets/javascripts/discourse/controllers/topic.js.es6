@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
@@ -33,7 +34,7 @@ export function registerCustomPostMessageCallback(type, callback) {
   customPostMessageCallbacks[type] = callback;
 }
 
-export default Ember.Controller.extend(bufferedProperty("model"), {
+export default Controller.extend(bufferedProperty("model"), {
   composer: Ember.inject.controller(),
   application: Ember.inject.controller(),
   multiSelect: false,

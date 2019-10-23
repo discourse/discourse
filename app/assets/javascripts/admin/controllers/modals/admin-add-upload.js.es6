@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -52,7 +53,7 @@ const SCSS_VARIABLE_NAMES = [
   "love-low"
 ];
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   adminCustomizeThemesShow: Ember.inject.controller(),
 
   uploadUrl: "/admin/themes/upload_asset",

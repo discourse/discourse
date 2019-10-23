@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 const { get } = Ember;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   filter: null,
 
   @computed("model.[]", "filter")

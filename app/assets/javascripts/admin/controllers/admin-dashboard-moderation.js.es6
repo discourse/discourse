@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import PeriodComputationMixin from "admin/mixins/period-computation";
 
-export default Ember.Controller.extend(PeriodComputationMixin, {
+export default Controller.extend(PeriodComputationMixin, {
   @computed
   flagsStatusOptions() {
     return {

@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import {
   on,
   default as computed
@@ -26,7 +27,7 @@ const ButtonBackBright = {
   };
 
 // The controller for the nice error page
-export default Ember.Controller.extend({
+export default Controller.extend({
   thrown: null,
   lastTransition: null,
 

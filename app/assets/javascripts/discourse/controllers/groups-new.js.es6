@@ -1,6 +1,7 @@
+import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   saving: null,
 
   actions: {

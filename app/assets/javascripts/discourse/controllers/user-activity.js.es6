@@ -1,6 +1,7 @@
+import Controller from "@ember/controller";
 import { exportUserArchive } from "discourse/lib/export-csv";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   application: Ember.inject.controller(),
   router: Ember.inject.service(),
   user: Ember.inject.controller(),

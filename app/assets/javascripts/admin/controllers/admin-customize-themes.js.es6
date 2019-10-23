@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { THEMES } from "admin/models/theme";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   currentTab: THEMES,
 
   @computed("model", "model.@each.component")

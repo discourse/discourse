@@ -1,6 +1,7 @@
+import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   application: Ember.inject.controller(),
   queryParams: ["period", "order", "asc", "name", "group", "exclude_usernames"],
   period: "weekly",

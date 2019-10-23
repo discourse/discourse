@@ -1,6 +1,7 @@
+import Controller from "@ember/controller";
 import TagGroup from "discourse/models/tag-group";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   actions: {
     selectTagGroup(tagGroup) {
       if (this.selectedItem) {

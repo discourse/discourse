@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import DiscourseNavigation from "discourse/components/d-navigation";
 
 // Just add query params here to have them automatically passed to topic list filters.
@@ -25,7 +26,7 @@ controllerOpts.queryParams.forEach(
   p => (controllerOpts[p] = Ember.computed.alias(`discoveryTopics.${p}`))
 );
 
-const Controller = Ember.Controller.extend(controllerOpts);
+const Controller = Controller.extend(controllerOpts);
 
 export const addDiscoveryQueryParam = function(p, opts) {
   queryParams[p] = opts;

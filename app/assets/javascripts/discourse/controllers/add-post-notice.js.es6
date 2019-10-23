@@ -1,8 +1,9 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import computed from "ember-addons/ember-computed-decorators";
 import { cookAsync } from "discourse/lib/text";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   post: null,
   resolve: null,
   reject: null,

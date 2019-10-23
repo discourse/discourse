@@ -1,6 +1,7 @@
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   faqOverriden: Ember.computed.gt("siteSettings.faq_url.length", 0),
 
   @computed

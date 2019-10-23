@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import {
   default as computed,
   observes
@@ -48,7 +49,7 @@ if (customNavItemHref) {
   });
 }
 
-export default Ember.Controller.extend(BulkTopicSelection, {
+export default Controller.extend(BulkTopicSelection, {
   application: Ember.inject.controller(),
 
   tag: null,

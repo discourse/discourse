@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import { isAppWebview, isiOSPWA } from "discourse/lib/utilities";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   showTop: true,
   showFooter: false,
   router: Ember.inject.service(),

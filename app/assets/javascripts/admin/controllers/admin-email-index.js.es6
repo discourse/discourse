@@ -1,5 +1,6 @@
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
-export default Ember.Controller.extend({
+export default Controller.extend({
   /**
     Is the "send test email" button disabled?
 

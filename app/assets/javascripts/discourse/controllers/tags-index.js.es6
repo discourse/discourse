@@ -1,9 +1,10 @@
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import showModal from "discourse/lib/show-modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   sortedByCount: true,
   sortedByName: false,
 

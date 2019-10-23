@@ -1,4 +1,5 @@
-export default Ember.Controller.extend({
+import Controller from "@ember/controller";
+export default Controller.extend({
   noOperationIsRunning: Ember.computed.not("model.isOperationRunning"),
   rollbackEnabled: Ember.computed.and(
     "model.canRollback",

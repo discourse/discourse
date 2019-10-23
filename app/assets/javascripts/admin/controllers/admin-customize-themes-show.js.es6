@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { url } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -7,7 +8,7 @@ import { THEMES, COMPONENTS } from "admin/models/theme";
 
 const THEME_UPLOAD_VAR = 2;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   downloadUrl: url("model.id", "/admin/customize/themes/%@/export"),
   previewUrl: url("model.id", "/admin/themes/%@/preview"),
   addButtonDisabled: Ember.computed.empty("selectedChildThemeId"),

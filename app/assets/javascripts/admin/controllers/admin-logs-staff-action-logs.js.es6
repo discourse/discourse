@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import {
@@ -5,7 +6,7 @@ import {
   on
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   model: null,
   filters: null,
   filtersExists: Ember.computed.gt("filterCount", 0),

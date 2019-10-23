@@ -1,8 +1,9 @@
+import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const MAX_FIELDS = 20;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   fieldTypes: null,
   createDisabled: Ember.computed.gte("model.length", MAX_FIELDS),
   sortedFields: Ember.computed.sort("model", "fieldSortOrder"),

@@ -1,8 +1,9 @@
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import computed from "ember-addons/ember-computed-decorators";
 import { userPath } from "discourse/lib/url";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   application: Ember.inject.controller(),
 
   showLoginButton: Ember.computed.equal("model.path", "login"),
