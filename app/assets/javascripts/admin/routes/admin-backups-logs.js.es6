@@ -1,6 +1,7 @@
+import Route from "@ember/routing/route";
 import PreloadStore from "preload-store";
 
-export default Ember.Route.extend({
+export default Route.extend({
   // since the logs are pushed via the message bus
   // we only want to preload them (hence the beforeModel hook)
   beforeModel() {
