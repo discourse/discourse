@@ -1,4 +1,5 @@
-export default Ember.Route.extend({
+import Route from "@ember/routing/route";
+export default Route.extend({
   model(params) {
     const allSteps = this.modelFor("application").steps;
     const step = allSteps.findBy("id", params.step_id);

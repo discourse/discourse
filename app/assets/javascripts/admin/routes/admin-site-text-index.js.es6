@@ -1,6 +1,7 @@
+import Route from "@ember/routing/route";
 import showModal from "discourse/lib/show-modal";
 
-export default Ember.Route.extend({
+export default Route.extend({
   queryParams: {
     q: { replace: true },
     overridden: { replace: true }

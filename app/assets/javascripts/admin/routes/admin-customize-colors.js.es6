@@ -1,6 +1,7 @@
+import Route from "@ember/routing/route";
 import ColorScheme from "admin/models/color-scheme";
 
-export default Ember.Route.extend({
+export default Route.extend({
   model() {
     return ColorScheme.findAll();
   },

@@ -1,4 +1,5 @@
-export default Ember.Route.extend({
+import Route from "@ember/routing/route";
+export default Route.extend({
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
     const model = all.findBy("id", parseInt(params.theme_id));

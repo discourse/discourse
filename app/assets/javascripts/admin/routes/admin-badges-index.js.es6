@@ -1,3 +1,4 @@
+import Route from "@ember/routing/route";
 import { emojiUrlFor } from "discourse/lib/text";
 
 const badgeIntroLinks = [
@@ -13,7 +14,7 @@ const badgeIntroLinks = [
   }
 ];
 
-export default Ember.Route.extend({
+export default Route.extend({
   setupController(controller) {
     controller.setProperties({
       badgeIntroLinks,
