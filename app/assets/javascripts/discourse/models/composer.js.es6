@@ -141,7 +141,11 @@ const Composer = RestModel.extend({
   creatingPrivateMessage: Ember.computed.equal("action", PRIVATE_MESSAGE),
   notCreatingPrivateMessage: Ember.computed.not("creatingPrivateMessage"),
   notPrivateMessage: Ember.computed.not("privateMessage"),
-  disableTitleInput: Ember.computed.not("topic.details.can_edit"),
+
+  @computed("editingPost", "topic.details.can_edit")
+  disableTitleInput(editingPost, canEditTopic) {
+    return editingPost && !canEditTopic;
+  },
 
   @computed("privateMessage", "archetype.hasOptions")
   showCategoryChooser(isPrivateMessage, hasOptions) {
