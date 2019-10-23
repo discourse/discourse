@@ -187,8 +187,15 @@ export default Controller.extend({
     );
   },
 
-  disableCategoryChooser: Ember.computed.not("model.topic.details.can_edit"),
-  disableTagsChooser: Ember.computed.not("model.topic.canEditTags"),
+  @computed("model.editingPost", "model.topic.details.can_edit")
+  disableCategoryChooser(editingPost, canEditTopic) {
+    return editingPost && !canEditTopic;
+  },
+
+  @computed("model.editingPost", "model.topic.canEditTags")
+  disableTagsChooser(editingPost, canEditTags) {
+    return editingPost && !canEditTags;
+  },
 
   isStaffUser: Ember.computed.reads("currentUser.staff"),
 
