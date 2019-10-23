@@ -1,7 +1,8 @@
 import ApiKey from "admin/models/api-key";
 import { default as computed } from "ember-addons/ember-computed-decorators";
+import Controller from "@ember/controller";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   @computed("model.[]")
   hasMasterKey(model) {
     return !!model.findBy("user", null);

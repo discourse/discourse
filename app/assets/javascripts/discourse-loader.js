@@ -6,6 +6,8 @@ var define, requirejs;
   if (typeof Ember !== "undefined") {
     EMBER_MODULES = {
       "@ember/component": { default: Ember.Component },
+      "@ember/controller": { default: Ember.Controller },
+      "@ember/object": { default: Ember.Object },
       "@ember/routing/route": { default: Ember.Route }
     };
   }
