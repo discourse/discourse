@@ -25,6 +25,12 @@ describe EmailStyle do
       expect(mail_html).to match("#{Discourse.base_url}/invites/#{invite.invite_key}")
     end
 
+    it 'applies customizations if compiled is missing' do
+      SiteSetting.remove_override!(:email_custom_css_compiled)
+      expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
+      expect(mail_html).to match("#{Discourse.base_url}/invites/#{invite.invite_key}")
+    end
+
     it 'can apply RTL attrs' do
       SiteSetting.default_locale = 'he'
       body_attrs = mail_html.match(/<body ([^>])+/)
