@@ -107,10 +107,13 @@ export default Ember.Component.extend({
       let left = markerOffset.left + Math.max(0, parentScrollLeft);
 
       if (showAtEnd) {
-        top = top + 20;
+        const nearRightEdgeOfScreen =
+          $(window).width() - $quoteButton.outerWidth() < left + 10;
+
+        top = nearRightEdgeOfScreen ? top + 50 : top + 20;
         left = Math.min(
           left + 10,
-          $(window).width() - $quoteButton.outerWidth()
+          $(window).width() - $quoteButton.outerWidth() - 10
         );
       } else {
         top = top - $quoteButton.outerHeight() - 5;
