@@ -26,14 +26,14 @@ controllerOpts.queryParams.forEach(
   p => (controllerOpts[p] = Ember.computed.alias(`discoveryTopics.${p}`))
 );
 
-const Controller = Controller.extend(controllerOpts);
+const SortableController = Controller.extend(controllerOpts);
 
 export const addDiscoveryQueryParam = function(p, opts) {
   queryParams[p] = opts;
   const cOpts = {};
   cOpts[p] = Ember.computed.alias(`discoveryTopics.${p}`);
   cOpts["queryParams"] = Object.keys(queryParams);
-  Controller.reopen(cOpts);
+  SortableController.reopen(cOpts);
 
   if (opts && opts.persisted) {
     DiscourseNavigation.reopen({
@@ -42,4 +42,4 @@ export const addDiscoveryQueryParam = function(p, opts) {
   }
 };
 
-export default Controller;
+export default SortableController;
