@@ -48,7 +48,7 @@
     "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
     "pretender": "^1.6",
     "prettier": "^1.18.2",
-    "puppeteer": "1.16",
+    "puppeteer": "1.20",
     "qunit": "2.8.0",
     "route-recognizer": "^0.3.3",
     "sinon": "^7.2.5"
