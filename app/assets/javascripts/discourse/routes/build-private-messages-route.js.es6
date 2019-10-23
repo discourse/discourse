@@ -1,5 +1,5 @@
 import UserTopicListRoute from "discourse/routes/user-topic-list";
-import TopicList from "discourse/models/topic-list";
+import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 
 // A helper to build a user topic list route
 export default (viewName, path, channel) => {
@@ -21,7 +21,7 @@ export default (viewName, path, channel) => {
     model() {
       const filter =
         "topics/" + path + "/" + this.modelFor("user").get("username_lower");
-      const lastTopicList = TopicList.findOrResetCachedBy(filter);
+      const lastTopicList = findOrResetCachedTopicList(this.session,filter);
       return lastTopicList ? lastTopicList : this.store.findFiltered("topicList", { filter });
     },
 
