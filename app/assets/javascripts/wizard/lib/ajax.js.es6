@@ -1,4 +1,5 @@
 import getUrl from "discourse-common/lib/get-url";
+import jQuery from "jquery";
 
 let token;
 
@@ -16,6 +17,6 @@ export function ajax(args) {
     args.success = data => Ember.run(null, resolve, data);
     args.error = xhr => Ember.run(null, reject, xhr);
     args.url = getUrl(args.url);
-    Ember.$.ajax(args);
+    jQuery.ajax(args);
   });
 }
