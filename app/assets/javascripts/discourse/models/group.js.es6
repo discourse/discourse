@@ -42,7 +42,7 @@ const Group = RestModel.extend({
   },
 
   findMembers(params) {
-    if (Ember.isEmpty(this.name)) {
+    if (Ember.isEmpty(this.name) || !this.can_see_members) {
       return;
     }
 
