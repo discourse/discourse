@@ -187,6 +187,9 @@ export default Controller.extend({
     );
   },
 
+  disableCategoryChooser: Ember.computed.not("model.topic.details.can_edit"),
+  disableTagsChooser: Ember.computed.not("model.topic.canEditTags"),
+
   isStaffUser: Ember.computed.reads("currentUser.staff"),
 
   canUnlistTopic: Ember.computed.and("model.creatingTopic", "isStaffUser"),

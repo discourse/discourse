@@ -374,6 +374,16 @@ class TopicsController < ApplicationController
     success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
   end
 
+  def update_tags
+    params.require(:tags)
+    topic = Topic.find_by(id: params[:topic_id])
+    guardian.ensure_can_edit_tags!(topic)
+
+    success = PostRevisor.new(topic.first_post, topic).revise!(current_user, { tags: params[:tags] }, validate_post: false)
+
+    success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
+  end
+
   def feature_stats
     params.require(:category_id)
     category_id = params[:category_id].to_i

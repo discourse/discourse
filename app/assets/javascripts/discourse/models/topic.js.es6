@@ -546,6 +546,7 @@ const Topic = RestModel.extend({
 
   readLastPost: propertyEqual("last_read_post_number", "highest_post_number"),
   canClearPin: Ember.computed.and("pinned", "readLastPost"),
+  canEditTags: Ember.computed.or("details.can_edit", "details.can_edit_tags"),
 
   archiveMessage() {
     this.set("archiving", true);
@@ -610,6 +611,17 @@ const Topic = RestModel.extend({
     return ajax(`/t/${this.id}/reset-bump-date`, { type: "PUT" }).catch(
       popupAjaxError
     );
+  },
+
+  updateTags(tags) {
+    if (!tags || tags.length === 0) {
+      tags = [""];
+    }
+
+    return ajax(`/t/${this.id}/tags`, {
+      type: "PUT",
+      data: { tags: tags }
+    });
   }
 });
 
