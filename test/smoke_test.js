@@ -80,10 +80,9 @@ const path = require("path");
 
   if (process.env.AUTH_USER && process.env.AUTH_PASSWORD) {
     await exec("basic authentication", () => {
-      return page.setExtraHTTPHeaders({
-        Authorization: `Basic ${new Buffer(
-          `${process.env.AUTH_USER}:${process.env.AUTH_PASSWORD}`
-        ).toString("base64")}`
+      return page.authenticate({
+        username: process.env.AUTH_USER,
+        password: process.env.AUTH_PASSWORD
       });
     });
   }
