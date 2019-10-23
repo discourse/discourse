@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import {
   on,
   observes,
@@ -5,7 +6,7 @@ import {
 } from "ember-addons/ember-computed-decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 
-export default Ember.Component.extend({
+export default Component.extend({
   @computed("placeholderKey")
   placeholder(placeholderKey) {
     return placeholderKey ? I18n.t(placeholderKey) : "";

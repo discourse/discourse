@@ -1,10 +1,11 @@
+import Component from "@ember/component";
 import { emailValid } from "discourse/lib/utilities";
 import computed from "ember-addons/ember-computed-decorators";
 import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
 import { i18n } from "discourse/lib/computed";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: null,
 
   inviteModel: Ember.computed.alias("panel.model.inviteModel"),

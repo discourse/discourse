@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import { on, observes } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   @on("init")
   _init() {
     if (!this.get("site.mobileView")) {

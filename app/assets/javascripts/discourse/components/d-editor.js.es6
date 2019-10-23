@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 /*global Mousetrap:true */
 import {
   default as computed,
@@ -211,7 +212,7 @@ export function onToolbarCreate(func) {
   addToolbarCallback(func);
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["d-editor"],
   ready: false,
   lastSel: null,

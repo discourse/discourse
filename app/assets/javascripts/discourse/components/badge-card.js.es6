@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { sanitize, emojiUnescape } from "discourse/lib/text";
 
-export default Ember.Component.extend({
+export default Component.extend({
   size: "medium",
   classNameBindings: [":badge-card", "size", "badge.slug"],
 

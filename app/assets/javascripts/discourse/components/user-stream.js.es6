@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 import ClickTrack from "discourse/lib/click-track";
 import Post from "discourse/models/post";
@@ -6,7 +7,7 @@ import Draft from "discourse/models/draft";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getOwner } from "discourse-common/lib/get-owner";
 
-export default Ember.Component.extend(LoadMore, {
+export default Component.extend(LoadMore, {
   _initialize: Ember.on("init", function() {
     const filter = this.get("stream.filter");
     if (filter) {

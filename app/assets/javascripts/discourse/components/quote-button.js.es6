@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import debounce from "discourse/lib/debounce";
 import { selectedText } from "discourse/lib/utilities";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["quote-button"],
   classNameBindings: ["visible"],
   visible: false,

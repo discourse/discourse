@@ -1,10 +1,11 @@
+import Component from "@ember/component";
 import BufferedContent from "discourse/mixins/buffered-content";
 import SiteSetting from "admin/models/site-setting";
 import SettingComponent from "admin/mixins/setting-component";
 import showModal from "discourse/lib/show-modal";
 import AboutRoute from "discourse/routes/about";
 
-export default Ember.Component.extend(BufferedContent, SettingComponent, {
+export default Component.extend(BufferedContent, SettingComponent, {
   _save(callback) {
     const defaultCategoriesSettings = [
       "default_categories_watching",

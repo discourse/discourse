@@ -1,8 +1,9 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
 const ACTIONS = ["delete", "delete_replies", "edit", "none"];
 
-export default Ember.Component.extend({
+export default Component.extend({
   postId: null,
   postAction: null,
   postEdit: null,

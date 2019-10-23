@@ -1,8 +1,9 @@
+import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { fmt } from "discourse/lib/computed";
 import Permalink from "admin/models/permalink";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["permalink-form"],
   formSubmitted: false,
   permalinkType: "topic_id",

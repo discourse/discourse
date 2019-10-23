@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import KeyValueStore from "discourse/lib/key-value-store";
 import {
@@ -14,7 +15,7 @@ import {
 
 const keyValueStore = new KeyValueStore(context);
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["controls"],
 
   @computed("isNotSupported")

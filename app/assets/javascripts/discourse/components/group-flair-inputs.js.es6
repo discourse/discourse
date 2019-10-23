@@ -1,10 +1,11 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { observes } from "ember-addons/ember-computed-decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import { convertIconClass } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["group-flair-inputs"],
 
   @computed

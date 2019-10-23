@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import getUrl from "discourse-common/lib/get-url";
 import {
   default as computed,
@@ -22,7 +23,7 @@ jQuery.fn.wiggle = function(times, duration) {
 
 const alreadyWarned = {};
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["wizard-step"],
   saving: null,
 

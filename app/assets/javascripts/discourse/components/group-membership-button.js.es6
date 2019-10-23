@@ -1,8 +1,9 @@
+import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["group-membership-button"],
 
   @computed("model.public_admission", "userIsGroupUser")

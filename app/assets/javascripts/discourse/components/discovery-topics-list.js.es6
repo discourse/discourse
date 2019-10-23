@@ -1,8 +1,9 @@
+import Component from "@ember/component";
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import LoadMore from "discourse/mixins/load-more";
 import UrlRefresh from "discourse/mixins/url-refresh";
 
-const DiscoveryTopicsListComponent = Ember.Component.extend(
+const DiscoveryTopicsListComponent = Component.extend(
   UrlRefresh,
   LoadMore,
   {

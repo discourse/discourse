@@ -1,8 +1,9 @@
+import Component from "@ember/component";
 import debounce from "discourse/lib/debounce";
 import { searchForTerm } from "discourse/lib/search";
 import { observes } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   loading: null,
   noResults: null,
   messages: null,

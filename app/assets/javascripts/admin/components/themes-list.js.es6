@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { THEMES, COMPONENTS } from "admin/models/theme";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   THEMES: THEMES,
   COMPONENTS: COMPONENTS,
 

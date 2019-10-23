@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import {
   default as computed,
   observes
@@ -7,7 +8,7 @@ import { load, lookupCache } from "pretty-text/oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import afterTransition from "discourse/lib/after-transition";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["title-input"],
   watchForLink: Ember.computed.alias("composer.canEditTopicFeaturedLink"),
 

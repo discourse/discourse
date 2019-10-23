@@ -1,10 +1,11 @@
+import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import Category from "discourse/models/category";
 import computed from "ember-addons/ember-computed-decorators";
 import { REMINDER_TYPE } from "discourse/controllers/edit-topic-timer";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     classNames: ["topic-status-info"],
     _delayedRerender: null,

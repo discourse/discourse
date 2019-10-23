@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import AddArchetypeClass from "discourse/mixins/add-archetype-class";
 import ClickTrack from "discourse/lib/click-track";
@@ -14,7 +15,7 @@ function highlight(postNumber) {
   $contents.on("animationend", () => $contents.removeClass("highlighted"));
 }
 
-export default Ember.Component.extend(
+export default Component.extend(
   AddArchetypeClass,
   Scrolling,
   MobileScrollDirection,

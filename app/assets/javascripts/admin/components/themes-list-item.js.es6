@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import {
   default as computed,
   observes
@@ -7,7 +8,7 @@ import { escape } from "pretty-text/sanitizer";
 
 const MAX_COMPONENTS = 4;
 
-export default Ember.Component.extend({
+export default Component.extend({
   childrenExpanded: false,
   classNames: ["themes-list-item"],
   classNameBindings: ["theme.selected:selected"],

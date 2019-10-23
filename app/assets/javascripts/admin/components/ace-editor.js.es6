@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import loadScript from "discourse/lib/load-script";
 import { observes } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   mode: "css",
   classNames: ["ace-wrapper"],
   _editor: null,

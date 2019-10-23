@@ -1,9 +1,10 @@
+import Component from "@ember/component";
 import { on } from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import LogsNotice from "discourse/services/logs-notice";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     rerenderTriggers: ["site.isReadOnly", "siteSettings.disable_emails"],
 

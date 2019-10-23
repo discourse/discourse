@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import { setting } from "discourse/lib/computed";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import CardContentsBase from "discourse/mixins/card-contents-base";
@@ -6,7 +7,7 @@ import { groupPath } from "discourse/lib/url";
 
 const maxMembersToDisplay = 10;
 
-export default Ember.Component.extend(CardContentsBase, CleansUp, {
+export default Component.extend(CardContentsBase, CleansUp, {
   elementId: "group-card",
   triggeringLinkClass: "mention-group",
   classNames: ["no-bg"],

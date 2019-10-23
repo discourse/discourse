@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import { observes, on } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "label",
 
   click(e) {

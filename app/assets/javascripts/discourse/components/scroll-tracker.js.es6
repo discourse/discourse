@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import Scrolling from "discourse/mixins/scrolling";
 
-export default Ember.Component.extend(Scrolling, {
+export default Component.extend(Scrolling, {
   didReceiveAttrs() {
     this._super(...arguments);
 

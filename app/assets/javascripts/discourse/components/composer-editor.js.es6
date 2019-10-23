@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import userSearch from "discourse/lib/user-search";
 import {
   default as computed,
@@ -53,7 +54,7 @@ export function addComposerUploadHandler(extensions, method) {
   });
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
 
   uploadProgress: 0,

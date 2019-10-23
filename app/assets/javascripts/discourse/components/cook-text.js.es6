@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { cookAsync } from "discourse/lib/text";
 import { ajax } from "discourse/lib/ajax";
 
-const CookText = Ember.Component.extend({
+const CookText = Component.extend({
   tagName: "",
   cooked: null,
 

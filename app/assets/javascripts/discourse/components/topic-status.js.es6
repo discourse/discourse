@@ -1,10 +1,11 @@
+import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { escapeExpression } from "discourse/lib/utilities";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     classNames: ["topic-statuses"],
 

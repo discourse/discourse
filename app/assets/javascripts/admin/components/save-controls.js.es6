@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["controls"],
 
   buttonDisabled: Ember.computed.or("model.isSaving", "saveDisabled"),

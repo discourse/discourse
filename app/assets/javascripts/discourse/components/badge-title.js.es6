@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["badge-title"],
 
   saved: false,

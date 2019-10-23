@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
@@ -12,7 +13,7 @@ function b64EncodeUnicode(str) {
   );
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["backup-codes"],
   backupCodes: null,
 

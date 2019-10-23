@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 const { isEmpty, makeArray } = Ember;
 
-export default Ember.Component.extend({
+export default Component.extend({
   layoutName: "select-kit/templates/components/select-kit/select-kit-header",
   classNames: ["select-kit-header"],
   classNameBindings: ["isFocused", "isNone"],

@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { userPath } from "discourse/lib/url";
 
@@ -5,7 +6,7 @@ export function normalize(name) {
   return name.replace(/[\-\_ \.]/g, "").toLowerCase();
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [":user-info", "size"],
   attributeBindings: ["data-username"],
   size: "small",

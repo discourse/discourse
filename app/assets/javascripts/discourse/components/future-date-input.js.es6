@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import {
   default as computed,
   observes
@@ -5,7 +6,7 @@ import {
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 
-export default Ember.Component.extend({
+export default Component.extend({
   selection: null,
   date: null,
   time: null,

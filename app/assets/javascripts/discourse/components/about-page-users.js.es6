@@ -1,9 +1,10 @@
+import Component from "@ember/component";
 import { userPath } from "discourse/lib/url";
 import { formatUsername, escapeExpression } from "discourse/lib/utilities";
 import { normalize } from "discourse/components/user-info";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 
-export default Ember.Component.extend({
+export default Component.extend({
   usersTemplates: Ember.computed("users.[]", function() {
     return (this.users || []).map(user => {
       let name = "";

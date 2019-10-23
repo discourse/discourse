@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import { on } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["site-text"],
   classNameBindings: ["siteText.overridden"],
 

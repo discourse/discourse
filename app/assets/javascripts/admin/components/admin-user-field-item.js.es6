@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import UserField from "admin/models/user-field";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -9,7 +10,7 @@ import {
   on
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend(bufferedProperty("userField"), {
+export default Component.extend(bufferedProperty("userField"), {
   editing: Ember.computed.empty("userField.id"),
   classNameBindings: [":user-field"],
 

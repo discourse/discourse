@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import ReportLoader from "discourse/lib/reports-loader";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
@@ -34,7 +35,7 @@ function collapseWeekly(data, average) {
   return aggregate;
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ["isEnabled", "isLoading", "dasherizedDataSourceName"],
   classNames: ["admin-report"],
   isEnabled: true,

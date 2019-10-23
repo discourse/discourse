@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import {
   on,
   observes,
@@ -6,7 +7,7 @@ import {
 import { findRawTemplate } from "discourse/lib/raw-templates";
 const { makeArray } = Ember;
 
-export default Ember.Component.extend({
+export default Component.extend({
   @computed("placeholderKey")
   placeholder(placeholderKey) {
     return placeholderKey ? I18n.t(placeholderKey) : "";
