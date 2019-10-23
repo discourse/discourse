@@ -19,8 +19,7 @@ class DirectoryItemSerializer < ApplicationSerializer
   attributes :id,
              :time_read
 
-    has_one :user, embed: :objects, serializer: UserSerializer
-
+  has_one :user, embed: :objects, serializer: UserSerializer
   attributes *DirectoryItem.headings
 
   def id
