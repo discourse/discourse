@@ -76,12 +76,13 @@
                         fullWidthOnMobile=true
                         value=model.categoryId
                         scopedCategoryId=scopedCategoryId
+                        isDisabled=disableCategoryChooser
                         tabindex="3"}}
                       {{popup-input-tip validation=categoryValidation}}
                     </div>
                   {{/if}}
                   {{#if canEditTags}}
-                    {{mini-tag-chooser tags=model.tags tabindex="4" categoryId=model.categoryId minimum=model.minimumRequiredTags}}
+                    {{mini-tag-chooser tags=model.tags tabindex="4" categoryId=model.categoryId minimum=model.minimumRequiredTags isDisabled=disableTagsChooser}}
                     {{popup-input-tip validation=tagValidation}}
                   {{/if}}
                 </div>

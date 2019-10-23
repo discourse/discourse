@@ -257,6 +257,26 @@ describe TopicViewSerializer do
       expect(details[:allowed_users].find { |au| au[:id] == pm.user_id }).to be_present
       expect(details[:allowed_groups].find { |ag| ag[:id] == group.id }).to be_present
     end
+
+    context "can_edit_tags" do
+      before do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.min_trust_to_edit_wiki_post = 2
+      end
+
+      it "returns true when user can edit a wiki topic" do
+        post = Fabricate(:post, wiki: true)
+        topic = Fabricate(:topic, first_post: post)
+
+        json = serialize_topic(topic, user)
+        expect(json[:details][:can_edit_tags]).to be_nil
+
+        user.update!(trust_level: 2)
+
+        json = serialize_topic(topic, user)
+        expect(json[:details][:can_edit_tags]).to eq(true)
+      end
+    end
   end
 
 end

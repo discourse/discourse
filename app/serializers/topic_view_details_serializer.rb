@@ -14,7 +14,8 @@ class TopicViewDetailsSerializer < ApplicationSerializer
      :can_reply_as_new_topic,
      :can_flag_topic,
      :can_convert_topic,
-     :can_review_topic]
+     :can_review_topic,
+     :can_edit_tags]
   end
 
   attributes(
@@ -126,6 +127,10 @@ class TopicViewDetailsSerializer < ApplicationSerializer
 
   def include_can_convert_topic?
     scope.can_convert_topic?(object.topic)
+  end
+
+  def include_can_edit_tags?
+    !scope.can_edit?(object.topic) && scope.can_edit_tags?(object.topic)
   end
 
   def allowed_users
