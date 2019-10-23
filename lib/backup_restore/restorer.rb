@@ -404,6 +404,7 @@ module BackupRestore
 
     def reconnect_database
       log "Reconnecting to the database..."
+      RailsMultisite::ConnectionManagement::reload
       RailsMultisite::ConnectionManagement::establish_connection(db: @current_db)
     end
 
