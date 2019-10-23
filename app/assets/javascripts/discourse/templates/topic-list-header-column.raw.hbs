@@ -5,12 +5,8 @@
     {{/if ~}}
     {{~#if bulkSelectEnabled}}
       <span class='bulk-select-topics'>
-        {{d-button
-          class="btn-default bulk-select-all"
-          label="topics.bulk.select_all"}}
-        {{d-button
-          class="btn-default bulk-clear-all"
-          label="topics.bulk.clear_all"}}
+        <button class='btn btn-default bulk-select-all'>{{i18n "topics.bulk.select_all"}}</button>
+        <button class='btn btn-default bulk-clear-all'>{{i18n "topics.bulk.clear_all"}}</button>
       </span>
     {{/if ~}}
   {{/if ~}}

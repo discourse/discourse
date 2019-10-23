@@ -14,9 +14,7 @@
 
   {{combo-box allowInitialValueMutation=true value=inviteRole content=roles nameProperty="label"}}
 
-  {{d-button
-    class="wizard-btn small add-user"
-    action=(action "addUser")
-    icon="plus"
-    label="wizard.invites.add_user"}}
+  <button class="wizard-btn small add-user" {{action "addUser"}}>
+    {{d-icon "plus"}}{{i18n "wizard.invites.add_user"}}
+  </button>
 </div>

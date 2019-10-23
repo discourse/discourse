@@ -138,8 +138,10 @@
 
       <div class="control-group">
         <div class="controls">
-          {{d-button action=(action "confirmPassword")
+          {{d-button
             class="btn-primary"
+            type="submit"
+            action=(action "confirmPassword")
             disabled=loading
             label="continue"}}
 
