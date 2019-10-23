@@ -19,9 +19,9 @@ export default (viewName, path, channel) => {
 
     model() {
       const session = Discourse.Session.current();
-      let filter =
+      const filter =
         "topics/" + path + "/" + this.modelFor("user").get("username_lower");
-      let lastTopicList = session.get("topicList");
+      const lastTopicList = session.get("topicList");
       if (lastTopicList && lastTopicList.filter === filter) {
         return lastTopicList;
       } else {
