@@ -4,14 +4,22 @@ class DirectoryItemSerializer < ApplicationSerializer
 
   class UserSerializer < UserNameSerializer
     include UserPrimaryGroupMixin
+
+    def attributes(*args)
+      attrs = super
+
+      if SiteSetting.respond_to?(:user_directory_includes_profile) && SiteSetting.user_directory_includes_profile
+        ::UserSerializer.new(object, scope: scope).attributes.reverse_merge! attrs
+      else
+        attrs
+      end
+    end
   end
 
   attributes :id,
              :time_read
 
-    has_one :user, embed: :objects, serializer: ( SiteSetting.respond_to?(:user_directory_includes_profile) && SiteSetting.user_directory_includes_profile ) ?
-                                                  ::UserSerializer.class_eval {include UserPrimaryGroupMixin}
-                                                  : DirectoryItemSerializer::UserSerializer
+    has_one :user, embed: :objects, serializer: UserSerializer
 
   attributes *DirectoryItem.headings
 
