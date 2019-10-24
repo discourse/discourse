@@ -252,6 +252,10 @@ const path = require("path");
       );
     });
 
+    await exec("wait a little bit", () => {
+      return page.waitFor(5000);
+    });
+
     await exec("submit the reply", () => {
       let promise = page.click("#reply-control .create");
 
