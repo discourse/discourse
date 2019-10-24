@@ -2,9 +2,9 @@
 
 module DiscourseNarrativeBot
   class CertificateGenerator
-    def initialize(user, date, avatar_url)
+    def initialize(user, date, avatar_data)
       @user = user
-      @avatar_url = avatar_url
+      @avatar_data = avatar_data
 
       date =
         begin
@@ -46,7 +46,7 @@ module DiscourseNarrativeBot
         width: width,
         discobot_user: @discobot_user,
         date: @date,
-        avatar_url: base64_image_link(@avatar_url),
+        avatar_url: base64_image_data(@avatar_data),
         logo_group: logo_group,
         name: name
       }
@@ -79,9 +79,13 @@ module DiscourseNarrativeBot
       end
     end
 
+    def base64_image_data(data)
+      "xlink:href=\"data:image/png;base64,#{Base64.strict_encode64(data)}\""
+    end
+
     def base64_image_link(url)
       if image = fetch_image(url)
-        "xlink:href=\"data:image/png;base64,#{Base64.strict_encode64(image)}\""
+        base64_image_data(image)
       else
         ""
       end
