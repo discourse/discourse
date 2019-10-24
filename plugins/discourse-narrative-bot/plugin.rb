@@ -108,7 +108,7 @@ after_initialize do
 
       def fetch_avatar_url(user)
         avatar_url = UrlHelper.absolute(Discourse.base_uri + user.avatar_template.gsub('{size}', '250'))
-        URI(avatar_url).open('rb', redirect: false).read
+        URI(avatar_url).open('rb', redirect: true, allow_redirections: :all).read
       rescue OpenURI::HTTPError
         # Ignore if fetching image returns a non 200 response
       end
