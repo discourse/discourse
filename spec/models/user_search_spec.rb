@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe UserSearch do
 
-  fab!(:indexer) { SearchIndexer.enable } # Enable before fab! topics/users
+  before_all { SearchIndexer.enable } # Enable for prefabrication
   before { SearchIndexer.enable } # Enable for each test
 
   fab!(:topic)     { Fabricate :topic }
