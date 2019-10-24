@@ -12,10 +12,11 @@ export default createPMRoute("groups", "private-messages-groups").extend({
 
   model(params) {
     const username = this.modelFor("user").get("username_lower");
-    const filter =
-      `topics/private-messages-group/${username}/${params.name}`;
+    const filter = `topics/private-messages-group/${username}/${params.name}`;
     const lastTopicList = findOrResetCachedTopicList(this.session, filter);
-    return lastTopicList ? lastTopicList : this.store.findFiltered("topicList", { filter });
+    return lastTopicList
+      ? lastTopicList
+      : this.store.findFiltered("topicList", { filter });
   },
 
   afterModel(model) {
