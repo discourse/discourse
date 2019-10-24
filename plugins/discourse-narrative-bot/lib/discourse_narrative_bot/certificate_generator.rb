@@ -80,6 +80,7 @@ module DiscourseNarrativeBot
     end
 
     def base64_image_data(data)
+      return "" if data.blank?
       "xlink:href=\"data:image/png;base64,#{Base64.strict_encode64(data)}\""
     end
 
