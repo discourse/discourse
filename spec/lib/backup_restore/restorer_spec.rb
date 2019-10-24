@@ -127,7 +127,7 @@ describe BackupRestore::Restorer do
 
     it 'it is not erroring for non multisite' do
       RailsMultisite::ConnectionManagement::clear_settings!
-      expect{ restorer.send(:reconnect_database) }.not_to raise_error
+      expect { restorer.send(:reconnect_database) }.not_to raise_error
     end
   end
 end
