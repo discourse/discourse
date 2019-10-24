@@ -128,7 +128,7 @@ en:
         from_reply_by_address_error: "Happens when the From header matches the reply by email address."
         inactive_user_error: "Happens when the sender is not active."
         silenced_user_error: "Happens when the sender has been silenced."
-        bad_destination_address: "Happens when none of the email addresses in To/Cc/Bcc fields matched a configured incoming email address."
+        bad_destination_address: "Happens when none of the email addresses in To/Cc fields matched a configured incoming email address."
         strangers_not_allowed_error: "Happens when a user tried to create a new topic in a category they're not a member of."
         insufficient_trust_level_error: "Happens when a user tried to create a new topic in a category they don't have the required trust level for."
         reply_user_not_matching_error: "Happens when a reply came in from a different email address the notification was sent to."
