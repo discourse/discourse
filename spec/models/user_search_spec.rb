@@ -26,36 +26,57 @@ describe UserSearch do
     UserSearch.new(*args).search
   end
 
-  it 'finds users in secure category' do
-    group = Fabricate(:group)
-    user = Fabricate(:user)
-    group.add(user)
-    group.save
+  context 'with a secure category' do
+    fab!(:group) { Fabricate :group }
+    fab!(:user) { Fabricate :user }
+    fab!(:searching_user) { Fabricate :user }
+    before_all do
+      group.add(user)
+      group.add(searching_user)
+      group.save
+    end
+    fab!(:category) { Fabricate(:category,
+                        read_restricted: true,
+                        user: user)
+    }
+    before_all { Fabricate(:category_group, category: category, group: group) }
 
-    category =
-      Fabricate(
-        :category,
-        read_restricted: true,
-        user: user
+    it 'autocompletes with people in the category' do
+      results = search_for("", searching_user: searching_user, category_id: category.id)
+
+      expect(user.username).to eq(results[0].username)
+      expect(results.length).to eq(1)
+    end
+
+    it 'will lookup the category from the topic id' do
+      topic = Fabricate(:topic, category: category)
+      _post = Fabricate(:post, user: topic.user, topic: topic)
+
+      results = search_for("", searching_user: searching_user, topic_id: topic.id)
+
+      expect(results.length).to eq(2)
+
+      expect(results.map(&:username)).to contain_exactly(
+        user.username, topic.user.username
       )
+    end
 
-    Fabricate(:category_group, category: category, group: group)
+    it 'will raise an error if the user cannot see the category' do
+      expect do
+        search_for("", searching_user: Fabricate(:user), category_id: category.id)
+      end.to raise_error(Discourse::InvalidAccess)
+    end
 
-    results = search_for("", category_id: category.id)
+    it 'will respect the group member visibility setting' do
+      group.update(members_visibility_level: Group.visibility_levels[:owners])
+      results = search_for("", searching_user: searching_user, category_id: category.id)
+      expect(results.length).to eq(0)
 
-    expect(user.username).to eq(results[0].username)
-    expect(results.length).to eq(1)
+      group.add_owner(searching_user)
+      results = search_for("", searching_user: searching_user, category_id: category.id)
+      expect(results.length).to eq(1)
+    end
 
-    topic = Fabricate(:topic, category: category)
-    _post = Fabricate(:post, user: topic.user, topic: topic)
-
-    results = search_for("", topic_id: topic.id)
-
-    expect(results.length).to eq(2)
-
-    expect(results.map(&:username)).to contain_exactly(
-      user.username, topic.user.username
-    )
   end
 
   it 'allows for correct underscore searching' do
@@ -154,6 +175,25 @@ describe UserSearch do
 
       results = search_for(user1.username, topic_id: topic3.id)
       expect(results[1]).to eq(user5)
+    end
+
+    it "only reveals topic participants to people with permission" do
+      pm_topic = Fabricate(:private_message_post).topic
+
+      # Anonymous, does not have access
+      expect do
+        search_for("", topic_id: pm_topic.id)
+      end.to raise_error(Discourse::InvalidAccess)
+
+      # Random user, does not have access
+      expect do
+        search_for("", topic_id: pm_topic.id, searching_user: user1)
+      end.to raise_error(Discourse::InvalidAccess)
+
+      pm_topic.invite(pm_topic.user, user1.username)
+      results = search_for("", topic_id: pm_topic.id, searching_user: user1)
+      expect(results.length).to eq(1)
+      expect(results[0]).to eq(pm_topic.user)
     end
 
     it "only searches by name when enabled" do
