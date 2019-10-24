@@ -155,6 +155,13 @@ export default Controller.extend(ModalFunctionality, {
         params = $.extend(params, opts);
       }
 
+      this.appEvents.trigger(
+        this.flagTopic ? "topic:flag-created" : "post:flag-created",
+        this.model,
+        postAction,
+        params
+      );
+
       this.send("hideModal");
 
       postAction
