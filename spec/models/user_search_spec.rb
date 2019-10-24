@@ -4,24 +4,23 @@ require 'rails_helper'
 
 describe UserSearch do
 
-  let(:topic)     { Fabricate :topic }
-  let(:topic2)    { Fabricate :topic }
-  let(:topic3)    { Fabricate :topic }
-  let(:topic4)    { Fabricate :topic }
-  let(:user1)     { Fabricate :user, username: "mrb", name: "Michael Madsen", last_seen_at: 10.days.ago }
-  let(:user2)     { Fabricate :user, username: "mrblue",   name: "Eddie Code", last_seen_at: 9.days.ago }
-  let(:user3)     { Fabricate :user, username: "mrorange", name: "Tim Roth", last_seen_at: 8.days.ago }
-  let(:user4)     { Fabricate :user, username: "mrpink",   name: "Steve Buscemi",  last_seen_at: 7.days.ago }
-  let(:user5)     { Fabricate :user, username: "mrbrown",  name: "Quentin Tarantino", last_seen_at: 6.days.ago }
-  let(:user6)     { Fabricate :user, username: "mrwhite",  name: "Harvey Keitel",  last_seen_at: 5.days.ago }
-  let!(:inactive) { Fabricate :user, username: "Ghost", active: false }
-  let(:admin)     { Fabricate :admin, username: "theadmin" }
-  let(:moderator) { Fabricate :moderator, username: "themod" }
-  let(:staged)    { Fabricate :staged }
+  fab!(:indexer) { SearchIndexer.enable } # Enable before fab! topics/users
+  before { SearchIndexer.enable } # Enable for each test
 
-  before do
-    SearchIndexer.enable
-  end
+  fab!(:topic)     { Fabricate :topic }
+  fab!(:topic2)    { Fabricate :topic }
+  fab!(:topic3)    { Fabricate :topic }
+  fab!(:topic4)    { Fabricate :topic }
+  fab!(:user1)     { Fabricate :user, username: "mrb", name: "Michael Madsen", last_seen_at: 10.days.ago }
+  fab!(:user2)     { Fabricate :user, username: "mrblue",   name: "Eddie Code", last_seen_at: 9.days.ago }
+  fab!(:user3)     { Fabricate :user, username: "mrorange", name: "Tim Roth", last_seen_at: 8.days.ago }
+  fab!(:user4)     { Fabricate :user, username: "mrpink",   name: "Steve Buscemi",  last_seen_at: 7.days.ago }
+  fab!(:user5)     { Fabricate :user, username: "mrbrown",  name: "Quentin Tarantino", last_seen_at: 6.days.ago }
+  fab!(:user6)     { Fabricate :user, username: "mrwhite",  name: "Harvey Keitel",  last_seen_at: 5.days.ago }
+  fab!(:inactive) { Fabricate :user, username: "Ghost", active: false }
+  fab!(:admin)     { Fabricate :admin, username: "theadmin" }
+  fab!(:moderator) { Fabricate :moderator, username: "themod" }
+  fab!(:staged)    { Fabricate :staged }
 
   def search_for(*args)
     UserSearch.new(*args).search
@@ -90,23 +89,17 @@ describe UserSearch do
   end
 
   context "with seed data" do
+    fab!(:post1) { Fabricate :post, user: user1, topic: topic }
+    fab!(:post2) { Fabricate :post, user: user2, topic: topic2 }
+    fab!(:post3) { Fabricate :post, user: user3, topic: topic }
+    fab!(:post4) { Fabricate :post, user: user4, topic: topic }
+    fab!(:post5) { Fabricate :post, user: user5, topic: topic3 }
+    fab!(:post6) { Fabricate :post, user: user6, topic: topic }
+    fab!(:post7) { Fabricate :post, user: staged, topic: topic4 }
 
-    before do
+    before { user6.update(suspended_at: 1.day.ago, suspended_till: 1.year.from_now) }
 
-      Fabricate :post, user: user1, topic: topic
-      Fabricate :post, user: user2, topic: topic2
-      Fabricate :post, user: user3, topic: topic
-      Fabricate :post, user: user4, topic: topic
-      Fabricate :post, user: user5, topic: topic3
-      Fabricate :post, user: user6, topic: topic
-      Fabricate :post, user: staged, topic: topic4
-
-      user6.update(suspended_at: 1.day.ago, suspended_till: 1.year.from_now)
-    end
-
-    # this is a seriously expensive integration test,
-    # re-creating this entire test db is too expensive reuse
-    it "operates correctly" do
+    it "can search by name and username" do
       # normal search
       results = search_for(user1.name.split(" ").first)
       expect(results.size).to eq(1)
@@ -126,7 +119,9 @@ describe UserSearch do
       results = search_for(user4.username.upcase)
       expect(results.size).to eq(1)
       expect(results.first).to eq(user4)
+    end
 
+    it "handles substring search correctly" do
       # substrings
       # only staff members see suspended users in results
       results = search_for("mr")
@@ -147,7 +142,9 @@ describe UserSearch do
 
       results = search_for("MRB", searching_user: admin, limit: 2)
       expect(results.size).to eq(2)
+    end
 
+    it "prioritises topic participants" do
       # topic priority
       results = search_for(user1.username, topic_id: topic.id)
       expect(results.first).to eq(user1)
@@ -157,7 +154,9 @@ describe UserSearch do
 
       results = search_for(user1.username, topic_id: topic3.id)
       expect(results[1]).to eq(user5)
+    end
 
+    it "only searches by name when enabled" do
       # When searching by name is enabled, it returns the record
       SiteSetting.enable_names = true
       results = search_for("Tarantino")
@@ -173,11 +172,15 @@ describe UserSearch do
       SiteSetting.enable_names = false
       results = search_for("Tarantino")
       expect(results.size).to eq(0)
+    end
 
+    it "prioritises exact matches" do
       # find an exact match first
       results = search_for("mrB")
       expect(results.first.username).to eq(user1.username)
+    end
 
+    it "does not include self, staged or inactive" do
       # don't return inactive users
       results = search_for(inactive.username)
       expect(results).to be_blank
