@@ -3,6 +3,7 @@ import RestModel from "discourse/models/rest";
 import computed from "ember-addons/ember-computed-decorators";
 import { on } from "ember-addons/ember-computed-decorators";
 import PermissionType from "discourse/models/permission-type";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 const Category = RestModel.extend({
   permissions: null,
@@ -42,6 +43,11 @@ const Category = RestModel.extend({
   @computed("id")
   searchContext(id) {
     return { type: "category", id, category: this };
+  },
+
+  @computed("notification_level")
+  isMuted(notificationLevel) {
+    return notificationLevel === NotificationLevels.MUTED;
   },
 
   @computed("name")
