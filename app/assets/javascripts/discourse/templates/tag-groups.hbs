@@ -5,7 +5,7 @@
     <ul>
       {{#each model as |tagGroup|}}
         <li>
-          {{#link-to "tagGroups.show" tagGroup}}
+          {{#link-to "tagGroups.edit" tagGroup}}
             {{tagGroup.name}}
           {{/link-to}}
         </li>
