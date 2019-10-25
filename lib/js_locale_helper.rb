@@ -6,10 +6,12 @@ module JsLocaleHelper
     Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"]
   end
 
-  def self.reloadable_plugins(locale, ctx)
+  def self.reloadable_plugins(locale_sym, ctx)
     return unless Rails.env.development?
-    plugin_client_files(locale.to_s).each do |file|
-      ctx.depend_on(file)
+    I18n.fallbacks[locale_sym].each do |locale|
+      plugin_client_files(locale.to_s).each do |file|
+        ctx.depend_on(file)
+      end
     end
   end
 
