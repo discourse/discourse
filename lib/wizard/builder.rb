@@ -146,12 +146,10 @@ class Wizard
         default_theme = Theme.find_by(id: SiteSetting.default_theme_id)
         default_theme_override = SiteSetting.exists?(name: "default_theme_id")
 
-        scheme_id =
-          if default_theme_override
-            default_theme&.color_scheme&.base_scheme_id
-          else
-            ColorScheme::LIGHT_THEME_ID
-          end
+        base_scheme = default_theme&.color_scheme&.base_scheme_id
+        color_scheme_name = default_theme&.color_scheme&.name
+
+        scheme_id = default_theme_override ? (base_scheme || color_scheme_name) : ColorScheme::LIGHT_THEME_ID
 
         themes = step.add_field(
           id: 'theme_previews',
@@ -159,6 +157,14 @@ class Wizard
           required: !default_theme_override,
           value: scheme_id
         )
+
+        # fix for the case when base_scheme is nil
+        if scheme_id && default_theme_override && base_scheme.nil?
+          scheme = default_theme.color_scheme
+          default_colors = scheme.colors.select(:name, :hex)
+          choice_hash = default_colors.reduce({}) { |choice, color| choice[color.name] = "##{color.hex}"; choice }
+          themes.add_choice(scheme_id, data: { colors: choice_hash })
+        end
 
         ColorScheme.base_color_scheme_colors.each do |t|
           with_hash = t[:colors].dup
@@ -172,7 +178,7 @@ class Wizard
             ColorScheme::LIGHT_THEME_ID
           )
 
-          next unless scheme_name.present?
+          next unless scheme_name.present? && ColorScheme.is_base?(scheme_name)
 
           name = I18n.t("color_schemes.#{scheme_name.downcase.gsub(' ', '_')}_theme_name")
 
