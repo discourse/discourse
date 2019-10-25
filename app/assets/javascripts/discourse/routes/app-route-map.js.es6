@@ -156,7 +156,6 @@ export default function() {
         this.route("email");
         this.route("second-factor");
         this.route("second-factor-backup");
-        this.route("about", { path: "/about-me" });
       });
 
       this.route(
