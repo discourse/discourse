@@ -21,5 +21,5 @@ end
 # Indexes
 #
 #  index_oauth2_user_infos_on_uid_and_provider      (uid,provider) UNIQUE
-#  index_oauth2_user_infos_on_user_id_and_provider  (user_id,provider) UNIQUE
+#  index_oauth2_user_infos_on_user_id_and_provider  (user_id,provider)
 #
