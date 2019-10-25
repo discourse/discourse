@@ -6,6 +6,7 @@
 # => COMMIT_HASH      used by the discourse_test docker image to load a specific commit of discourse
 #                     this can also be set to a branch, e.g. "origin/tests-passed"
 # => RUN_SMOKE_TESTS  executes the smoke tests instead of the regular tests from docker.rake
+# => WARMUP_TMP_FOLDER runs a single spec to warmup the tmp folder and obtain accurate results when profiling specs.
 # See lib/tasks/docker.rake and lib/tasks/smoke_test.rake for more information
 
 puts "travis_fold:end:starting_docker_container" if ENV["TRAVIS"]
@@ -37,6 +38,10 @@ unless ENV['NO_UPDATE']
   run_or_fail("bundle")
 
   puts "travis_fold:end:bundle" if ENV["TRAVIS"]
+end
+
+if ENV['WARMPUP_TMP_FOLDER']
+  run_or_fail('bundle exec rspec ./spec/requests/users_controller_spec.rb:222')
 end
 
 log("Running tests")
