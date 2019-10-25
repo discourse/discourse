@@ -15,6 +15,6 @@ export default DiscourseRoute.extend({
       name: I18n.t("tagging.groups.new_name")
     });
 
-    this.controllerFor('tag-groups').send("selectTagGroup", newTagGroup);
+    this.transitionToRoute("tagGroups.show", newTagGroup);
   }
 });
