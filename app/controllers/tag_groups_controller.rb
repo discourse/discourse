@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class TagGroupsController < ApplicationController
-
   requires_login
   before_action :ensure_staff
 
-  skip_before_action :check_xhr, only: [:index, :show]
+  skip_before_action :check_xhr, only: [:index, :show, :new]
   before_action :fetch_tag_group, only: [:show, :update, :destroy]
 
   def index
@@ -29,6 +28,13 @@ class TagGroupsController < ApplicationController
       end
       format.json { render_json_dump(serializer) }
     end
+  end
+
+  def new
+    tag_groups = TagGroup.order('name ASC').includes(:parent_tag).preload(:tags).all
+    serializer = ActiveModel::ArraySerializer.new(tag_groups, each_serializer: TagGroupSerializer, root: 'tag_groups')
+    store_preloaded "tagGroup", MultiJson.dump(serializer)
+    render "default/empty"
   end
 
   def create
