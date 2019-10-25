@@ -149,18 +149,16 @@
   </div>
 {{/if}}
 
-{{#if siteSettings.user_selected_primary_groups}}
-  {{#if canSelectPrimaryGroup}}
-    <div class="control-group pref-primary-group">
-      <label class="control-label">{{i18n 'user.primary_group.title'}}</label>
-      <div class="controls">
-        {{combo-box
-          value=newPrimaryGroupInput
-          content=model.filteredGroups
-          none="user.primary_group.none"}}
-      </div>
+{{#if canSelectPrimaryGroup}}
+  <div class="control-group pref-primary-group">
+    <label class="control-label">{{i18n 'user.primary_group.title'}}</label>
+    <div class="controls">
+      {{combo-box
+        value=newPrimaryGroupInput
+        content=model.filteredGroups
+        none="user.primary_group.none"}}
     </div>
-  {{/if}}
+  </div>
 {{/if}}
 
 

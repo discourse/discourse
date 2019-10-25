@@ -316,7 +316,7 @@ class Guardian
     user.groups.where(title: title).exists?
   end
 
-  def can_have_primary_group?(user, group_id=nil)
+  def can_use_primary_group?(user, group_id = nil)
     return false if !user || !group_id
     group = Group.find_by(id: group_id.to_i)
 

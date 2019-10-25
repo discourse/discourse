@@ -55,7 +55,14 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
   },
 
   canSelectTitle: Ember.computed.gt("model.availableTitles.length", 0),
-  canSelectPrimaryGroup: Ember.computed.gt("model.filteredGroups.length", 0),
+
+  @computed("model.filteredGroups")
+  canSelectPrimaryGroup(primaryGroupOptions) {
+    return (
+      primaryGroupOptions.length > 0 &&
+      this.siteSettings.user_selected_primary_groups
+    );
+  },
 
   @computed("model.is_anonymous")
   canChangePassword(isAnonymous) {
