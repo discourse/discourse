@@ -266,7 +266,8 @@ const User = RestModel.extend({
       "tracked_tags",
       "watched_tags",
       "watching_first_post_tags",
-      "date_of_birth"
+      "date_of_birth",
+      "primary_group_id"
     ];
 
     const data = this.getProperties(

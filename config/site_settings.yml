@@ -575,6 +575,9 @@ users:
     default: 730
     min: 0
     max: 3650
+  user_selected_primary_groups:
+    default: false
+    client: true
 
 groups:
   enable_group_directory:

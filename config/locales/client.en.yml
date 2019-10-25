@@ -1300,6 +1300,9 @@ en:
       title:
         title: "Title"
         none: "(none)"
+      primary_group:
+        title: "Primary Group"
+        none: "(none)"
 
       filters:
         all: "All"

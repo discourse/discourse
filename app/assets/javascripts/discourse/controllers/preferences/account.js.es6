@@ -17,7 +17,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
   init() {
     this._super(...arguments);
 
-    this.saveAttrNames = ["name", "title"];
+    this.saveAttrNames = ["name", "title", "primary_group_id"];
     this.set("revoking", {});
   },
 
@@ -26,6 +26,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
 
   newNameInput: null,
   newTitleInput: null,
+  newPrimaryGroupInput: null,
 
   passwordProgress: null,
 
@@ -54,6 +55,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
   },
 
   canSelectTitle: Ember.computed.gt("model.availableTitles.length", 0),
+  canSelectPrimaryGroup: Ember.computed.gt("model.filteredGroups.length", 0),
 
   @computed("model.is_anonymous")
   canChangePassword(isAnonymous) {
@@ -131,7 +133,8 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
 
       this.model.setProperties({
         name: this.newNameInput,
-        title: this.newTitleInput
+        title: this.newTitleInput,
+        primary_group_id: this.newPrimaryGroupInput
       });
 
       return this.model
