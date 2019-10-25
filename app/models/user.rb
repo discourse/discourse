@@ -415,6 +415,11 @@ class User < ActiveRecord::Base
     Jobs.enqueue(:send_system_message, user_id: id, message_type: "welcome_tl1_user")
   end
 
+  def enqueue_welcome_moderator_message
+    return unless moderator
+    Jobs.enqueue(:send_system_message, user_id: id, message_type: 'welcome_moderator')
+  end
+
   def change_username(new_username, actor = nil)
     UsernameChanger.change(self, new_username, actor)
   end
