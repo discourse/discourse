@@ -5,6 +5,11 @@ export default DiscourseRoute.extend({
   showFooter: true,
 
   beforeModel() {
+    if (!this.siteSettings.tagging_enabled) {
+      this.transitionTo("tagGroups");
+      return;
+    }
+
     let newTagGroup = TagGroup.create({
       id: "new",
       name: I18n.t("tagging.groups.new_name")
