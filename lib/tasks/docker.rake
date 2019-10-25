@@ -16,6 +16,7 @@
 # => RSPEC_SEED                set to seed to use for rspec tests (applies to core rspec tests only)
 # => PAUSE_ON_TERMINATE        set to 1 to pause prior to terminating redis and pg
 # => JS_TIMEOUT                set timeout for qunit tests in ms
+# => WARMUP_TMP_FOLDER runs a single spec to warmup the tmp folder and obtain accurate results when profiling specs.
 #
 # Other useful environment variables (not specific to this rake task)
 # => COMMIT_HASH    used by the discourse_test docker image to load a specific commit of discourse
@@ -143,6 +144,11 @@ task 'docker:test' do
 
       unless ENV["JS_ONLY"]
         puts "travis_fold:start:ruby_tests" if ENV["TRAVIS"]
+
+        if ENV['WARMUP_TMP_FOLDER']
+          run_or_fail('bundle exec rspec ./spec/requests/users_controller_spec.rb:222')
+        end
+
         unless ENV["SKIP_CORE"]
           params = []
 
