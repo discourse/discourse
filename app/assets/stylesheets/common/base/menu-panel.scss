@@ -51,7 +51,7 @@
     touch-action: pan-y pinch-zoom;
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 100vh;
+    max-height: calc(100vh - 100px);
   }
 
   .badge-notification {
