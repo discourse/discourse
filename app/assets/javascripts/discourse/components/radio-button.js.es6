@@ -14,10 +14,15 @@ export default Component.extend({
 
   click() {
     const value = $(this.element).val();
-    if (this.selection === value) {
-      this.set("selection", undefined);
+
+    if (this.onChange) {
+      this.onChange(value);
+    } else {
+      if (this.selection === value) {
+        this.set("selection", undefined);
+      }
+      this.set("selection", value);
     }
-    this.set("selection", value);
   },
 
   @computed("value", "selection")

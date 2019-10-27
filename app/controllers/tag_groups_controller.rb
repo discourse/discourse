@@ -79,6 +79,9 @@ class TagGroupsController < ApplicationController
   end
 
   def tag_groups_params
+    tag_group = params.delete(:tag_group)
+    params.merge!(tag_group.permit!) if tag_group
+
     if permissions = params[:permissions]
       permissions.each do |k, v|
         permissions[k] = v.to_i
@@ -93,9 +96,11 @@ class TagGroupsController < ApplicationController
       parent_tag_name: [],
       permissions: permissions&.keys,
     )
+
     result[:tag_names] ||= []
     result[:parent_tag_name] ||= []
-    result[:one_per_topic] = (params[:one_per_topic] == "true")
+    result[:one_per_topic] = params[:one_per_topic].in?([true, "true"])
+
     result
   end
 end

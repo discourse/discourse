@@ -1,5 +1,4 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import TagGroup from "discourse/models/tag-group";
 
 export default DiscourseRoute.extend({
   showFooter: true,
@@ -7,14 +6,12 @@ export default DiscourseRoute.extend({
   beforeModel() {
     if (!this.siteSettings.tagging_enabled) {
       this.transitionTo("tagGroups");
-      return;
     }
+  },
 
-    let newTagGroup = TagGroup.create({
-      id: "new",
+  model() {
+    return this.store.createRecord("tagGroup", {
       name: I18n.t("tagging.groups.new_name")
     });
-
-    this.transitionToRoute("tagGroups.show", newTagGroup);
   }
 });
