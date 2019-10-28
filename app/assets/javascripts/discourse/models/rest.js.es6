@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 
 const RestModel = EmberObject.extend({
   isNew: Ember.computed.equal("__state", "new"),

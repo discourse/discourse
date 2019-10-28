@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import { observes } from "ember-addons/ember-computed-decorators";
 import showModal from "discourse/lib/show-modal";

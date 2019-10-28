@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 

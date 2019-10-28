@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import Singleton from "discourse/mixins/singleton";
 
 QUnit.module("mixin:singleton");

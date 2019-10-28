@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 
 /* global BufferedProxy: true */
 export function bufferedProperty(property) {

@@ -9,7 +9,7 @@ import Category from "discourse/models/category";
 import User from "discourse/models/user";
 import Topic from "discourse/models/topic";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 
 const Group = RestModel.extend({
   limit: 50,

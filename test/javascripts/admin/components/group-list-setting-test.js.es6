@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
 

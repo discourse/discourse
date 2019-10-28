@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import LinkLookup from "discourse/lib/link-lookup";
 

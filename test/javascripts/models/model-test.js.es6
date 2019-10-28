@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import Model from "discourse/models/model";
 
 QUnit.module("model:discourse");

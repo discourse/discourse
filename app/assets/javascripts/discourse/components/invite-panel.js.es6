@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import { emailValid } from "discourse/lib/utilities";
 import computed from "ember-addons/ember-computed-decorators";

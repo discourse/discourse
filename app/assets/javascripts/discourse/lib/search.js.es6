@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import Category from "discourse/models/category";

@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import { currentUser } from "helpers/qunit-helpers";
 import AppEvents from "discourse/services/app-events";
 import Composer from "discourse/models/composer";

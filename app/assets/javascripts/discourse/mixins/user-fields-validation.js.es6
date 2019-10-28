@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import InputValidation from "discourse/models/input-validation";
 import {
   on,

@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import { defaultHomepage } from "discourse/lib/utilities";
 let popstateFired = false;
 const supportsHistoryState = window.history && "state" in window.history;

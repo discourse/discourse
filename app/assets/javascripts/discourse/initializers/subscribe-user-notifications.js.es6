@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 // Subscribes to user events on the message bus
 import {
   init as initDesktopNotifications,

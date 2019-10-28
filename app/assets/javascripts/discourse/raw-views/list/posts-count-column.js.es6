@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import computed from "ember-addons/ember-computed-decorators";
 import { fmt } from "discourse/lib/computed";
 

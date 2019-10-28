@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import { mapRoutes } from "discourse/mapping-router";
 import createStore from "helpers/create-store";
 

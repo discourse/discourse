@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 const StaticPage = EmberObject.extend();
 

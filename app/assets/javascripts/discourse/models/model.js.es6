@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 const Model = EmberObject.extend();
 
 Model.reopenClass({

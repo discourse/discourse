@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 moduleFor("controller:preferences/account");
 
 QUnit.test("updating of associated accounts", function(assert) {

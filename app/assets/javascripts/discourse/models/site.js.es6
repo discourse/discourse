@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import computed from "ember-addons/ember-computed-decorators";
 import Archetype from "discourse/models/archetype";
 import PostActionType from "discourse/models/post-action-type";
@@ -205,9 +205,7 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.user_fields) {
-      result.user_fields = result.user_fields.map(uf =>
-        EmberObject.create(uf)
-      );
+      result.user_fields = result.user_fields.map(uf => EmberObject.create(uf));
     }
 
     return result;
