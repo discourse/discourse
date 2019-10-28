@@ -640,9 +640,16 @@ class TopicQuery
   end
 
   def get_category_id(category_id_or_slug)
-    return nil unless category_id_or_slug
+    return nil unless category_id_or_slug.present?
     category_id = category_id_or_slug.to_i
-    category_id = Category.where(slug: category_id_or_slug).pluck_first(:id) if category_id == 0
+
+    if category_id == 0
+      category_id =
+        Category
+          .where(slug: category_id_or_slug, parent_category_id: nil)
+          .pluck_first(:id)
+    end
+
     category_id
   end
 
