@@ -1,10 +1,10 @@
-import EmberObject from "@ember/object";
+import EmberObjectProxy from "@ember/object/proxy";
 
 /* global BufferedProxy: true */
 export function bufferedProperty(property) {
   const mixin = {
     buffered: Ember.computed(property, function() {
-      return EmberObject.proxy.extend(BufferedProxy).create({
+      return EmberObjectProxy.extend(BufferedProxy).create({
         content: this.get(property)
       });
     }),

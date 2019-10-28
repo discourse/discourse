@@ -1,4 +1,5 @@
 import EmberObject from "@ember/object";
+import EmberObjectProxy from "@ember/object/proxy";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -24,7 +25,7 @@ export default Controller.extend(ModalFunctionality, Ember.Evented, {
 
   @computed("site.categories")
   categoriesBuffered(categories) {
-    const bufProxy = EmberObject.proxy.extend(BufferedProxy);
+    const bufProxy = EmberObjectProxy.extend(BufferedProxy);
     return categories.map(c => bufProxy.create({ content: c }));
   },
 

@@ -10,7 +10,7 @@ const popstateCallbacks = [];
 
   @class DiscourseLocation
   @namespace Discourse
-  @extends EmberObject
+  @extends @ember/object
 */
 const DiscourseLocation = EmberObject.extend({
   init() {
