@@ -435,7 +435,6 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/preferences/interface" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/apps" => "users#preferences", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/email" => "users_email#update", constraints: { username: RouteFormat.username }
-    get "#{root_path}/:username/preferences/about-me" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/badge_title" => "users#preferences", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/badge_title" => "users#badge_title", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/username" => "users#preferences", constraints: { username: RouteFormat.username }
