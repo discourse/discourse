@@ -8,10 +8,39 @@ describe Jobs::CleanUpUploads do
     Fabricate(:upload, { created_at: 2.hours.ago }.merge(attributes))
   end
 
+  fab! :expired_upload do
+    fabricate_upload
+  end
+
   before do
     SiteSetting.clean_up_uploads = true
     SiteSetting.clean_orphan_uploads_grace_period_hours = 1
-    @upload = fabricate_upload
+
+    # pre-fabrication resets created_at, so re-expire the upload
+    expired_upload
+    freeze_time 2.hours.from_now
+
+    Jobs::CleanUpUploads.new.reset_last_cleanup!
+  end
+
+  it "only runs upload cleanup every grace period / 2 time" do
+
+    SiteSetting.clean_orphan_uploads_grace_period_hours = 48
+    expired = fabricate_upload(created_at: 49.hours.ago)
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.exists?(id: expired.id)).to eq(false)
+
+    upload = fabricate_upload(created_at: 72.hours.ago)
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.exists?(id: upload.id)).to eq(true)
+
+    freeze_time 25.hours.from_now
+
+    Jobs::CleanUpUploads.new.execute(nil)
+    expect(Upload.exists?(id: upload.id)).to eq(false)
+
   end
 
   it "deletes orphan uploads" do
@@ -19,7 +48,7 @@ describe Jobs::CleanUpUploads do
       Jobs::CleanUpUploads.new.execute(nil)
     end.to change { Upload.count }.by(-1)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
   end
 
   describe 'when clean_up_uploads is disabled' do
@@ -37,7 +66,7 @@ describe Jobs::CleanUpUploads do
         Jobs::CleanUpUploads.new.execute(nil)
       end.to change { Upload.count }.by(-1)
 
-      expect(Upload.exists?(id: @upload.id)).to eq(true)
+      expect(Upload.exists?(id: expired_upload.id)).to eq(true)
       expect(Upload.exists?(id: upload2.id)).to eq(false)
     end
   end
@@ -126,7 +155,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: logo_upload.id)).to eq(true)
     expect(Upload.exists?(id: logo_small_upload.id)).to eq(true)
     expect(Upload.exists?(id: digest_logo_upload.id)).to eq(true)
@@ -148,7 +177,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: logo_small_upload.id)).to eq(true)
   end
 
@@ -158,7 +187,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: profile_background_upload.id)).to eq(true)
   end
 
@@ -168,7 +197,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: card_background_upload.id)).to eq(true)
   end
 
@@ -178,7 +207,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: category_logo_upload.id)).to eq(true)
   end
 
@@ -188,7 +217,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: category_logo_upload.id)).to eq(true)
   end
 
@@ -198,7 +227,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: upload.id)).to eq(true)
   end
 
@@ -208,7 +237,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: upload.id)).to eq(true)
   end
 
@@ -218,7 +247,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: upload.id)).to eq(true)
   end
 
@@ -228,7 +257,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: upload.id)).to eq(true)
   end
 
@@ -250,7 +279,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: upload.id)).to eq(true)
     expect(Upload.exists?(id: upload2.id)).to eq(true)
     expect(Upload.exists?(id: upload3.id)).to eq(false)
@@ -264,7 +293,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: upload.id)).to eq(true)
     expect(Upload.exists?(id: upload2.id)).to eq(true)
   end
@@ -275,7 +304,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: upload.id)).to eq(true)
   end
 
@@ -285,7 +314,7 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: csv_file.id)).to eq(true)
   end
 end
