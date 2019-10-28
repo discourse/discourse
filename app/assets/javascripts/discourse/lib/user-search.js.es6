@@ -54,9 +54,9 @@ function performSearch(
   oldSearch
     .then(function(r) {
       const hasResults = !!(
-        r.users.length ||
-        r.groups.length ||
-        r.emails.length
+        (r.users && r.users.length) ||
+        (r.groups && r.groups.length) ||
+        (r.emails && r.emails.length)
       );
 
       if (eagerComplete && !hasResults) {
