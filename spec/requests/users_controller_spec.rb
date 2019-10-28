@@ -3103,6 +3103,15 @@ describe UsersController do
       expect(json["users"].map { |u| u["username"] }).to include(privileged_user.username)
     end
 
+    it "interprets blank category id correctly" do
+      pm_topic = Fabricate(:private_message_post).topic
+      sign_in(pm_topic.user)
+      get "/u/search/users.json", params: {
+        term: "", topic_id: pm_topic.id, category_id: ""
+      }
+      expect(response.status).to eq(200)
+    end
+
     context "when `enable_names` is true" do
       before do
         SiteSetting.enable_names = true
