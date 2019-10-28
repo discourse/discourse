@@ -2659,6 +2659,13 @@ en:
 
         We’re really glad you’re spending time with us and we’d love to know more about you. Take a moment to [fill out your profile](%{base_url}/my/preferences/profile), or feel free to [start a new topic](%{base_url}/categories).
 
+    welcome_moderator:
+      title: "Welcome Moderator"
+      subject_template: "Congratulations on becoming a moderator!"
+      text_body_template: |
+        You are now a moderator. -- congratulations!
+
+        You now have access to the <a href='%{base_url}/admin' target='_blank'>admin interface</a>
     welcome_invite:
       title: "Welcome Invite"
       subject_template: "Welcome to %{site_name}!"
