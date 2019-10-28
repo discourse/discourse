@@ -1,4 +1,5 @@
 import { inject } from '@ember/controller';
+import EmberObject from '@ember/object';
 import Controller from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
@@ -1058,7 +1059,7 @@ export default Controller.extend(bufferedProperty("model"), {
         statusType,
         null
       )
-        .then(() => this.set(`model.${topicTimer}`, Ember.Object.create({})))
+        .then(() => this.set(`model.${topicTimer}`, EmberObject.create({})))
         .catch(error => popupAjaxError(error));
     }
   },

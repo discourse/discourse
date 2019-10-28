@@ -1,4 +1,5 @@
 import { inject } from '@ember/controller';
+import EmberObject from '@ember/object';
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -378,7 +379,7 @@ export default Controller.extend(ModalFunctionality, {
       accountEmail: options.email,
       accountUsername: options.username,
       accountName: options.name,
-      authOptions: Ember.Object.create(options)
+      authOptions: EmberObject.create(options)
     });
 
     showModal("createAccount");

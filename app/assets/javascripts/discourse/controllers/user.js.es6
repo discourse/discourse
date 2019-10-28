@@ -1,4 +1,5 @@
 import { inject } from '@ember/controller';
+import EmberObject from '@ember/object';
 import Controller from "@ember/controller";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import computed from "ember-addons/ember-computed-decorators";
@@ -123,7 +124,7 @@ export default Controller.extend(CanCheckEmails, {
             : null;
           return Ember.isEmpty(value)
             ? null
-            : Ember.Object.create({ value, field });
+            : EmberObject.create({ value, field });
         })
         .compact();
     }
