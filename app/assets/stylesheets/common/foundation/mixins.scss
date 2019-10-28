@@ -47,9 +47,11 @@ $breakpoints: (
 // Visibility
 // --------------------------------------------------
 
+// Only shows hover on non-touch devices
 @mixin hover {
   .discourse-no-touch & {
-    &:hover {
+    &:hover,
+    &.btn-hover {
       @content;
     }
   }

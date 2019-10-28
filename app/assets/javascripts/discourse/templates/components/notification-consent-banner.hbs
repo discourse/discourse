@@ -1,9 +1,7 @@
 {{#if showNotificationPromptBanner}}
   <div class="row">
     <div class="consent_banner alert alert-info">
-      <div class="close" {{action "dismiss"}}>
-        {{d-icon 'times'}}
-      </div>
+      {{d-button icon="times" action="dismiss" class="btn btn-flat close" title="banner.close"}}
       {{i18n 'user.desktop_notifications.consent_prompt'}} <a {{action "turnon"}}>{{i18n 'user.desktop_notifications.enable'}}</a>.
     </div>
   </div>
