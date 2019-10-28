@@ -1053,7 +1053,7 @@ email:
   post_excerpts_in_emails: false
   raw_email_max_length: 220000
   raw_rejected_email_max_length: 4000
-  delete_rejected_email_after_days: 180
+  delete_rejected_email_after_days: 90
 
 files:
   max_image_size_kb:

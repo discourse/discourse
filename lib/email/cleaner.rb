@@ -16,6 +16,10 @@ module Email
       remove_null_byte(@mail.to_s)
     end
 
+    def self.delete_rejected!
+      IncomingEmail.delete_by('rejection_message IS NOT NULL AND created_at < ?', SiteSetting.delete_rejected_email_after_days.days.ago)
+    end
+
     private
 
     def truncate!
@@ -31,7 +35,8 @@ module Email
     end
 
     def remove_null_byte(message)
-      message.gsub("\x00", "")
+      message.gsub!("\x00", "")
+      message
     end
   end
 end
