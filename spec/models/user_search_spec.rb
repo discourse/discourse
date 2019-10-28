@@ -158,4 +158,23 @@ describe UserSearch do
     expect(results.map(&:username)).to eq(["mrpink", "mrorange"])
   end
 
+  it "only reveals topic participants to people with permission" do
+    pm_topic = Fabricate(:private_message_post).topic
+
+    # Anonymous, does not have access
+    expect do
+      search_for("", topic_id: pm_topic.id)
+    end.to raise_error(Discourse::InvalidAccess)
+
+    # Random user, does not have access
+    expect do
+      search_for("", topic_id: pm_topic.id, searching_user: user1)
+    end.to raise_error(Discourse::InvalidAccess)
+
+    pm_topic.invite(pm_topic.user, user1.username)
+    results = search_for("", topic_id: pm_topic.id, searching_user: user1)
+    expect(results.length).to eq(1)
+    expect(results[0]).to eq(pm_topic.user)
+  end
+
 end

@@ -16,6 +16,7 @@ class UserSearch
     @groups = opts[:groups]
     @guardian = Guardian.new(@searching_user)
     @guardian.ensure_can_see_groups!(@groups) if @groups
+    @guardian.ensure_can_see_topic! Topic.find(@topic_id) if @topic_id
   end
 
   def scoped_users
