@@ -59,15 +59,11 @@
     color: $primary;
     min-height: unset; // ovverides button defaults
   }
-  .discourse-no-touch & {
-    // only allow hover on no-touch devices
-    &:hover,
-    &.btn-hover {
-      background: $primary-medium;
-      color: $secondary;
-      .d-icon {
-        color: $secondary-very-high;
-      }
+  @include hover {
+    background: $primary-medium;
+    color: $secondary;
+    .d-icon {
+      color: $secondary-very-high;
     }
   }
   &[disabled],
@@ -104,17 +100,13 @@
   &[href] {
     color: $secondary;
   }
-  .discourse-no-touch & {
-    // only allow hover on no-touch devices
-    &:hover,
-    &.btn-hover {
-      background: dark-light-choose(
-        scale-color($tertiary, $lightness: -20%),
-        scale-color($tertiary, $lightness: 20%)
-      );
-      .d-icon {
-        color: currentColor;
-      }
+  @include hover {
+    background: dark-light-choose(
+      scale-color($tertiary, $lightness: -20%),
+      scale-color($tertiary, $lightness: 20%)
+    );
+    .d-icon {
+      color: currentColor;
     }
   }
   &:active,
@@ -146,17 +138,13 @@
   &[href] {
     color: $secondary;
   }
-  .discourse-no-touch & {
-    // only allow hover on no-touch devices
-    &:hover,
-    &.btn-hover {
-      background: dark-light-choose(
-        scale-color($danger, $lightness: -20%),
-        scale-color($danger, $lightness: 20%)
-      );
-      .d-icon {
-        color: $danger-low;
-      }
+  @include hover {
+    background: dark-light-choose(
+      scale-color($danger, $lightness: -20%),
+      scale-color($danger, $lightness: 20%)
+    );
+    .d-icon {
+      color: $danger-low;
     }
   }
   &:active,
@@ -266,8 +254,21 @@
   .d-icon {
     color: $primary-low-mid;
   }
-  .discourse-no-touch & {
-    &:hover {
+  @include hover {
+    .d-icon {
+      color: $primary;
+    }
+  }
+  &.close {
+    padding: 0;
+    min-height: unset;
+    background: transparent;
+    font-size: $font-up-3;
+    .d-icon {
+      color: $primary-high;
+    }
+    @include hover {
+      background: transparent;
       .d-icon {
         color: $primary;
       }
