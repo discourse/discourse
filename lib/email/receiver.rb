@@ -301,6 +301,8 @@ module Email
         @mail[:x_spam_flag].to_s[/YES/i]
       when 'X-Spam-Status'
         @mail[:x_spam_status].to_s[/^Yes, /i]
+      when 'X-SES-Spam-Verdict'
+        @mail[:x_ses_spam_verdict].to_s[/FAIL/i]
       else
         false
       end
