@@ -3079,8 +3079,10 @@ describe UsersController do
     end
 
     it "searches only for users who have access to private topic" do
+      searching_user = Fabricate(:user)
       privileged_user = Fabricate(:user, trust_level: 4, username: "joecabit", name: "Lawrence Tierney")
       privileged_group = Fabricate(:group)
+      privileged_group.add(searching_user)
       privileged_group.add(privileged_user)
       privileged_group.save
 
@@ -3090,6 +3092,7 @@ describe UsersController do
 
       private_topic = Fabricate(:topic, category: category)
 
+      sign_in(searching_user)
       get "/u/search/users.json", params: {
         term: user.name.split(" ").last, topic_id: private_topic.id, topic_allowed_users: "true"
       }
