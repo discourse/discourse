@@ -27,6 +27,10 @@ QUnit.module("lib:user-search", {
           ]});
       }
 
+      if(request.url.match(/no-results/)){
+        return response({users: []});
+      }
+
       return response({
         users: [
           {
@@ -167,4 +171,10 @@ QUnit.test("it skips a search depending on punctuations", async assert => {
 
   results = await userSearch({ term: "sam@sam.com" });
   assert.equal(results.length, 0);
+
+  results = await userSearch({
+    term: "no-results@example.com",
+    allowEmails: true
+  });
+  assert.equal(results.length, 1);
 });
