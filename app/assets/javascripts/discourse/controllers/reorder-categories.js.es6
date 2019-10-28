@@ -1,4 +1,3 @@
-import EmberObject from "@ember/object";
 import EmberObjectProxy from "@ember/object/proxy";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
