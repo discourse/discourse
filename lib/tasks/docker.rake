@@ -146,7 +146,7 @@ task 'docker:test' do
         puts "travis_fold:start:ruby_tests" if ENV["TRAVIS"]
 
         if ENV['WARMUP_TMP_FOLDER']
-          run_or_fail('bundle exec rspec ./spec/requests/users_controller_spec.rb:222')
+          run_or_fail('bundle exec rspec ./spec/requests/clicks_controller_spec.rb')
         end
 
         unless ENV["SKIP_CORE"]
