@@ -275,3 +275,14 @@
     }
   }
 }
+
+.btn-link {
+  background: transparent;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  color: $tertiary;
+  &:focus {
+    outline: 1px currentColor dotted;
+  }
+}
