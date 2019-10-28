@@ -921,8 +921,7 @@ class UsersController < ApplicationController
     topic_id = params[:topic_id]
     topic_id = topic_id.to_i if topic_id
 
-    category_id = params[:category_id]
-    category_id = category_id.to_i if category_id
+    category_id = params[:category_id].to_i if category_id.present?
 
     topic_allowed_users = params[:topic_allowed_users] || false
 
