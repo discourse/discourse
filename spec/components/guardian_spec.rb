@@ -2378,6 +2378,39 @@ describe Guardian do
     end
   end
 
+  describe 'can_use_primary_group?' do
+    fab!(:group) { Fabricate(:group, title: 'Groupie') }
+
+    it 'is false without a logged in user' do
+      expect(Guardian.new(nil).can_use_primary_group?(user)).to be_falsey
+    end
+
+    it 'is false with no group_id' do
+      user.update(groups: [group])
+      expect(Guardian.new(user).can_use_primary_group?(user, nil)).to be_falsey
+    end
+
+    it 'is false if the group does not exist' do
+      user.update(groups: [group])
+      expect(Guardian.new(user).can_use_primary_group?(user, Group.last.id + 1)).to be_falsey
+    end
+
+    it 'is false if the user is not a part of the group' do
+      user.update(groups: [])
+      expect(Guardian.new(user).can_use_primary_group?(user, group.id)).to be_falsey
+    end
+
+    it 'is false if the group is automatic' do
+      user.update(groups: [Group.new(name: 'autooo', automatic: true)])
+      expect(Guardian.new(user).can_use_primary_group?(user, group.id)).to be_falsey
+    end
+
+    it 'is true if the user is a part of the group, and the group is custom' do
+      user.update(groups: [group])
+      expect(Guardian.new(user).can_use_primary_group?(user, group.id)).to be_truthy
+    end
+  end
+
   describe 'can_change_trust_level?' do
 
     it 'is false without a logged in user' do

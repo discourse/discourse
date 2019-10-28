@@ -316,6 +316,14 @@ class Guardian
     user.groups.where(title: title).exists?
   end
 
+  def can_use_primary_group?(user, group_id = nil)
+    return false if !user || !group_id
+    group = Group.find_by(id: group_id.to_i)
+
+    user.group_ids.include?(group_id.to_i) &&
+    (group ? !group.automatic : false)
+  end
+
   def can_change_primary_group?(user)
     user && is_staff?
   end
