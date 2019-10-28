@@ -327,7 +327,7 @@ class CategoriesController < ApplicationController
   end
 
   def fetch_category
-    @category = Category.find_by(slug: params[:id]) || Category.find_by(id: params[:id].to_i)
+    @category = Category.find_by_slug(params[:id]) || Category.find_by(id: params[:id].to_i)
   end
 
   def initialize_staff_action_logger
