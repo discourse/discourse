@@ -32,7 +32,7 @@ export default Component.extend({
   setUp() {
     $("html").on("keydown.discourse-modal", e => {
       if (e.which === 27 && this.dismissable) {
-        Ember.run.next(() => $(".modal-header a.close").click());
+        Ember.run.next(() => $(".modal-header button.modal-close").click());
       }
 
       if (e.which === 13 && this.triggerClickOnEnter(e)) {
@@ -73,7 +73,7 @@ export default Component.extend({
       // Delegate click to modal close if clicked outside.
       // We do this because some CSS of ours seems to cover
       // the backdrop and makes it unclickable.
-      $(".modal-header a.close").click();
+      $(".modal-header button.modal-close").click();
     }
   },
 
