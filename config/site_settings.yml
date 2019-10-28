@@ -969,6 +969,7 @@ email:
       - none
       - X-Spam-Flag
       - X-Spam-Status
+      - X-SES-Spam-Verdict
   email_prefix: ""
   email_site_title: ""
   disable_emails:
