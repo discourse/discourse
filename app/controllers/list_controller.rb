@@ -140,11 +140,7 @@ class ListController < ApplicationController
     view_method = @category.default_view
     view_method = 'latest' unless %w(latest top).include?(view_method)
 
-    if view_method == 'top'
-      top(category: @category.id)
-    else
-      self.public_send(view_method)
-    end
+    self.public_send(view_method, category: @category.id)
   end
 
   def topics_by
