@@ -1429,7 +1429,8 @@ class UsersController < ApplicationController
       :website,
       :dismissed_banner_key,
       :profile_background_upload_url,
-      :card_background_upload_url
+      :card_background_upload_url,
+      :primary_group_id
     ]
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
