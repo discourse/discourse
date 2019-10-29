@@ -111,23 +111,24 @@ export default Ember.Mixin.create({
 
   actions: {
     save() {
-      this._save(result => {
-        result
-          .then(() => {
+      this._save(
+        new Promise(
+          () => {
             this.set("validationMessage", null);
             this.commitBuffer();
             if (AUTO_REFRESH_ON_SAVE.includes(this.setting.setting)) {
               this.afterSave();
             }
-          })
-          .catch(e => {
+          },
+          e => {
             if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
               this.set("validationMessage", e.jqXHR.responseJSON.errors[0]);
             } else {
               this.set("validationMessage", I18n.t("generic_error"));
             }
-          });
-      });
+          }
+        )
+      );
     },
 
     cancel() {
