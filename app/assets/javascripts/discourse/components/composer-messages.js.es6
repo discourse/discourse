@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import LinkLookup from "discourse/lib/link-lookup";
 
@@ -122,7 +123,7 @@ export default Component.extend({
 
   _create(info) {
     this.reset();
-    this.send("popup", Ember.Object.create(info));
+    this.send("popup", EmberObject.create(info));
   },
 
   _findSimilar() {

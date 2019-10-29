@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import { emailValid } from "discourse/lib/utilities";
 import computed from "ember-addons/ember-computed-decorators";
@@ -324,7 +325,7 @@ export default Component.extend({
           .then(data => {
             model.setProperties({ saving: false, finished: true });
             this.get("inviteModel.details.allowed_groups").pushObject(
-              Ember.Object.create(data.group)
+              EmberObject.create(data.group)
             );
             this.appEvents.trigger("post-stream:refresh");
           })
@@ -350,7 +351,7 @@ export default Component.extend({
               });
             } else if (this.isPM && result && result.user) {
               this.get("inviteModel.details.allowed_users").pushObject(
-                Ember.Object.create(result.user)
+                EmberObject.create(result.user)
               );
               this.appEvents.trigger("post-stream:refresh");
             } else if (

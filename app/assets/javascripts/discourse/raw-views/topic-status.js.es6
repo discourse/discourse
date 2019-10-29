@@ -1,6 +1,7 @@
+import EmberObject from "@ember/object";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Object.extend({
+export default EmberObject.extend({
   showDefault: null,
 
   @computed("defaultIcon")

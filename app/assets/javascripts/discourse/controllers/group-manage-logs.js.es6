@@ -1,4 +1,5 @@
 import { inject } from "@ember/controller";
+import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import {
   default as computed,
@@ -13,7 +14,7 @@ export default Controller.extend({
 
   init() {
     this._super(...arguments);
-    this.set("filters", Ember.Object.create());
+    this.set("filters", EmberObject.create());
   },
 
   @computed(
@@ -53,7 +54,7 @@ export default Controller.extend({
   reset() {
     this.setProperties({
       offset: 0,
-      filters: Ember.Object.create()
+      filters: EmberObject.create()
     });
   },
 

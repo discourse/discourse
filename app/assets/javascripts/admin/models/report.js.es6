@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { escapeExpression } from "discourse/lib/utilities";
 import { ajax } from "discourse/lib/ajax";
 import round from "discourse/lib/round";
@@ -323,7 +324,7 @@ const Report = Discourse.Model.extend({
     const formatedValue = () => {
       const userId = row[properties.id];
 
-      const user = Ember.Object.create({
+      const user = EmberObject.create({
         username,
         name: formatUsername(username),
         avatar_template: row[properties.avatar]

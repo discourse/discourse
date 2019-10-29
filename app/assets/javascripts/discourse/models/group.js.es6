@@ -9,6 +9,7 @@ import Category from "discourse/models/category";
 import User from "discourse/models/user";
 import Topic from "discourse/models/topic";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import EmberObject from "@ember/object";
 
 const Group = RestModel.extend({
   limit: 50,
@@ -216,7 +217,7 @@ const Group = RestModel.extend({
     return ajax(`/groups/${this.name}/logs.json`, {
       data: { offset, filters }
     }).then(results => {
-      return Ember.Object.create({
+      return EmberObject.create({
         logs: results["logs"].map(log => GroupHistory.create(log)),
         all_loaded: results["all_loaded"]
       });
@@ -241,7 +242,7 @@ const Group = RestModel.extend({
         p.user = User.create(p.user);
         p.topic = Topic.create(p.topic);
         p.category = Category.findById(p.category_id);
-        return Ember.Object.create(p);
+        return EmberObject.create(p);
       });
     });
   },

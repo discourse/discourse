@@ -1,7 +1,8 @@
+import EmberObject from "@ember/object";
 import computed from "ember-addons/ember-computed-decorators";
 import { updateCsrfToken } from "discourse/lib/ajax";
 
-const LoginMethod = Ember.Object.extend({
+const LoginMethod = EmberObject.extend({
   @computed
   title() {
     return this.title_override || I18n.t(`login.${this.name}.title`);

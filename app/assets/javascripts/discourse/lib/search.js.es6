@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import Category from "discourse/models/category";
@@ -75,7 +76,7 @@ export function translateResults(results, opts) {
   results.tags = results.tags
     .map(function(tag) {
       const tagName = Handlebars.Utils.escapeExpression(tag.name);
-      return Ember.Object.create({
+      return EmberObject.create({
         id: tagName,
         url: Discourse.getURL("/tags/" + tagName)
       });
@@ -127,7 +128,7 @@ export function translateResults(results, opts) {
     !results.categories.length
   );
 
-  return noResults ? null : Ember.Object.create(results);
+  return noResults ? null : EmberObject.create(results);
 }
 
 export function searchForTerm(term, opts) {

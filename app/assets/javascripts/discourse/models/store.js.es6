@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
@@ -44,7 +45,7 @@ function findAndRemoveMap(type, id) {
 
 flushMap();
 
-export default Ember.Object.extend({
+export default EmberObject.extend({
   _plurals: {
     "post-reply": "post-replies",
     "post-reply-history": "post_reply_histories",

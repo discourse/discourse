@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
@@ -20,14 +21,14 @@ export default Controller.extend({
   @on("init")
   resetFilters() {
     this.setProperties({
-      model: Ember.Object.create({ loadingMore: true }),
-      filters: Ember.Object.create()
+      model: EmberObject.create({ loadingMore: true }),
+      filters: EmberObject.create()
     });
     this.scheduleRefresh();
   },
 
   _changeFilters(props) {
-    this.set("model", Ember.Object.create({ loadingMore: true }));
+    this.set("model", EmberObject.create({ loadingMore: true }));
     this.filters.setProperties(props);
     this.scheduleRefresh();
   },

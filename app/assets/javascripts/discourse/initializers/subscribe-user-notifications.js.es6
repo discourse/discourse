@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 // Subscribes to user events on the message bus
 import {
   init as initDesktopNotifications,
@@ -82,7 +83,7 @@ export default {
               }
               oldNotifications.insertAt(
                 insertPosition,
-                Ember.Object.create(lastNotification)
+                EmberObject.create(lastNotification)
               );
             }
 

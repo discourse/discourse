@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Route from "@ember/routing/route";
 import PreloadStore from "preload-store";
 
@@ -16,7 +17,7 @@ export default Route.extend({
             return log.message.length === 0 || log.message[0] === "[";
           })
           .map(function(log) {
-            return Ember.Object.create(log);
+            return EmberObject.create(log);
           })
           .value();
         logs.pushObjects(newLogs);

@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -87,7 +88,7 @@ export default Controller.extend(ModalFunctionality, {
         } else {
           const topicTimer =
             this.isPublic === "true" ? "topic_timer" : "private_topic_timer";
-          this.set(`model.${topicTimer}`, Ember.Object.create({}));
+          this.set(`model.${topicTimer}`, EmberObject.create({}));
 
           this.setProperties({
             selection: null

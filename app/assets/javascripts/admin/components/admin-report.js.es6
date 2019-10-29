@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import ReportLoader from "discourse/lib/reports-loader";
 import { exportEntity } from "discourse/lib/export-csv";
@@ -368,12 +369,12 @@ export default Component.extend({
   _buildOptions(mode) {
     if (mode === "table") {
       const tableOptions = JSON.parse(JSON.stringify(TABLE_OPTIONS));
-      return Ember.Object.create(
+      return EmberObject.create(
         Object.assign(tableOptions, this.get("reportOptions.table") || {})
       );
     } else {
       const chartOptions = JSON.parse(JSON.stringify(CHART_OPTIONS));
-      return Ember.Object.create(
+      return EmberObject.create(
         Object.assign(chartOptions, this.get("reportOptions.chart") || {})
       );
     }

@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
@@ -33,7 +34,7 @@ export default buildCategoryPanel("images").extend({
   _deleteUpload(path) {
     this.set(
       path,
-      Ember.Object.create({
+      EmberObject.create({
         id: null,
         url: null
       })
@@ -43,7 +44,7 @@ export default buildCategoryPanel("images").extend({
   _setFromUpload(path, upload) {
     this.set(
       path,
-      Ember.Object.create({
+      EmberObject.create({
         url: upload.url,
         id: upload.id
       })

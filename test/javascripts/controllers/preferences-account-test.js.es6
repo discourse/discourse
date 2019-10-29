@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 moduleFor("controller:preferences/account");
 
 QUnit.test("updating of associated accounts", function(assert) {
@@ -5,11 +6,11 @@ QUnit.test("updating of associated accounts", function(assert) {
     siteSettings: {
       enable_google_oauth2_logins: true
     },
-    model: Ember.Object.create({
+    model: EmberObject.create({
       second_factor_enabled: true,
       is_anonymous: true
     }),
-    site: Ember.Object.create({
+    site: EmberObject.create({
       isMobileDevice: false
     })
   });

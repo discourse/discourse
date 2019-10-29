@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import showModal from "discourse/lib/show-modal";
 import { default as computed } from "ember-addons/ember-computed-decorators";
@@ -15,7 +16,7 @@ export default Controller.extend({
 
   @computed("baseColorScheme")
   baseColors(baseColorScheme) {
-    const baseColorsHash = Ember.Object.create({});
+    const baseColorsHash = EmberObject.create({});
     baseColorScheme.get("colors").forEach(color => {
       baseColorsHash.set(color.get("name"), color);
     });

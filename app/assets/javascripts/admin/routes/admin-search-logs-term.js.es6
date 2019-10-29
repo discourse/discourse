@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { fillMissingDates } from "discourse/lib/utilities";
@@ -33,7 +34,7 @@ export default DiscourseRoute.extend({
         json.term.search_result = translateResults(json.term.search_result);
       }
 
-      const model = Ember.Object.create({ type: "search_log_term" });
+      const model = EmberObject.create({ type: "search_log_term" });
       model.setProperties(json.term);
       return model;
     });

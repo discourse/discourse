@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import computed from "ember-addons/ember-computed-decorators";
 
@@ -23,7 +24,7 @@ const TopicDetails = RestModel.extend({
     if (details.participants) {
       details.participants = details.participants.map(function(p) {
         p.topic = topic;
-        return Ember.Object.create(p);
+        return EmberObject.create(p);
       });
     }
 

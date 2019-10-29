@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import createStore from "helpers/create-store";
 import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
@@ -15,7 +16,7 @@ export default function(name, opts) {
     this.registry.register("site-settings:main", Discourse.SiteSettings, {
       instantiate: false
     });
-    this.registry.register("capabilities:main", Ember.Object);
+    this.registry.register("capabilities:main", EmberObject);
     this.registry.register("site:main", this.site, { instantiate: false });
     this.registry.injection("component", "siteSettings", "site-settings:main");
     this.registry.injection("component", "appEvents", "service:app-events");

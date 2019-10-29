@@ -1,5 +1,6 @@
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-const StaticPage = Ember.Object.extend();
+const StaticPage = EmberObject.extend();
 
 StaticPage.reopenClass({
   find(path) {

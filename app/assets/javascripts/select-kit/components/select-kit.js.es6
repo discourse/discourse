@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Component from "@ember/component";
 const { get, isNone, run, isEmpty, makeArray } = Ember;
 import computed from "ember-addons/ember-computed-decorators";
@@ -87,11 +88,11 @@ export default Component.extend(
       this.noneValue = "__none__";
       this.set(
         "headerComponentOptions",
-        Ember.Object.create({ forceEscape: this.forceEscape })
+        EmberObject.create({ forceEscape: this.forceEscape })
       );
       this.set(
         "rowComponentOptions",
-        Ember.Object.create({
+        EmberObject.create({
           forceEscape: this.forceEscape
         })
       );

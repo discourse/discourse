@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Model from "discourse/models/model";
 
 QUnit.module("model:discourse");
@@ -8,10 +9,10 @@ QUnit.test(
     var firstObject = { id: "id_1", foo: "foo_1" };
     var secondObject = { id: "id_2", foo: "foo_2" };
 
-    var actual = Model.extractByKey([firstObject, secondObject], Ember.Object);
+    var actual = Model.extractByKey([firstObject, secondObject], EmberObject);
     var expected = {
-      id_1: Ember.Object.create(firstObject),
-      id_2: Ember.Object.create(secondObject)
+      id_1: EmberObject.create(firstObject),
+      id_2: EmberObject.create(secondObject)
     };
 
     assert.ok(_.isEqual(actual, expected));

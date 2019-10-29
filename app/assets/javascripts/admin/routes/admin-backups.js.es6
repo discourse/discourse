@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
@@ -42,7 +43,7 @@ export default DiscourseRoute.extend({
       } else {
         this.controllerFor("adminBackupsLogs")
           .get("logs")
-          .pushObject(Ember.Object.create(log));
+          .pushObject(EmberObject.create(log));
       }
     });
   },

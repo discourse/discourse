@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
@@ -116,7 +117,7 @@ const User = RestModel.extend({
     const keys = this.user_api_keys;
     if (keys) {
       return keys.map(raw => {
-        let obj = Ember.Object.create(raw);
+        let obj = EmberObject.create(raw);
 
         obj.revoke = () => {
           this.revokeApiKey(obj);

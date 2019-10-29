@@ -1,10 +1,11 @@
+import EmberObject from "@ember/object";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
 export function Placeholder(viewName) {
   this.viewName = viewName;
 }
 
-export default Ember.Object.extend(Ember.Array, {
+export default EmberObject.extend(Ember.Array, {
   posts: null,
   _appendingIds: null,
 

@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
@@ -9,7 +10,7 @@ export default DiscourseRoute.extend({
     let filteredContent = this.controllerFor("adminWatchedWordsAction").get(
       "filteredContent"
     );
-    return Ember.Object.create({
+    return EmberObject.create({
       nameKey: params.action_id,
       name: I18n.t("admin.watched_words.actions." + params.action_id),
       words: filteredContent
