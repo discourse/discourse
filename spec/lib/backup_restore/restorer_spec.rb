@@ -110,6 +110,7 @@ describe BackupRestore::Restorer do
       described_class.any_instance.stubs(initialize_state: true)
     end
     after do
+      RailsMultisite::ConnectionManagement.clear_settings!
       conn.establish_connection(db: 'default')
     end
     let(:conn) { RailsMultisite::ConnectionManagement }
