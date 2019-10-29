@@ -30,15 +30,13 @@ export default Component.extend(BufferedContent, SettingComponent, {
           });
 
           controller.set("onClose", () => {
-            callback(
-              SiteSetting.update(key, value, {
-                updateExistingUsers: controller.updateExistingUsers
-              })
-            );
+            SiteSetting.update(key, value, {
+              updateExistingUsers: controller.updateExistingUsers
+            }).then(callback);
           });
         });
     } else {
-      callback(SiteSetting.update(key, value));
+      SiteSetting.update(key, value).then(callback);
     }
   }
 });
