@@ -1,3 +1,4 @@
+import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import {
   default as computed,
@@ -33,7 +34,7 @@ export default Component.extend({
   },
 
   scheduleAnimation() {
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       this.animate(true);
     });
   },

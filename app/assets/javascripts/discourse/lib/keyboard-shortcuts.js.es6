@@ -1,3 +1,5 @@
+import { run } from "@ember/runloop";
+import { later } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { minimumOffset } from "discourse/lib/offset-calculator";
@@ -140,7 +142,7 @@ export default {
   quoteReply() {
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
-    Ember.run.later(() => $(".d-editor .quote").click(), 500);
+    later(() => $(".d-editor .quote").click(), 500);
 
     return false;
   },
@@ -210,7 +212,7 @@ export default {
   },
 
   showPageSearch(event) {
-    Ember.run(() => {
+    run(() => {
       this.appEvents.trigger("header:keyboard-trigger", {
         type: "page-search",
         event
@@ -219,7 +221,7 @@ export default {
   },
 
   printTopic(event) {
-    Ember.run(() => {
+    run(() => {
       if ($(".container.posts").length) {
         event.preventDefault(); // We need to stop printing the current page in Firefox
         this.container.lookup("controller:topic").print();

@@ -1,3 +1,5 @@
+import { throttle } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { on } from "ember-addons/ember-computed-decorators";
 
 const { bind } = Ember.run;
@@ -138,7 +140,7 @@ export default Ember.Mixin.create({
       this.set("renderedFilterOnce", true);
     }
 
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       this.$filterInput()
         .focus()
         .val(this.$filterInput().val() + String.fromCharCode(keyCode));
@@ -267,7 +269,7 @@ export default Ember.Mixin.create({
 
     const direction = keyCode === 38 ? -1 : 1;
 
-    Ember.run.throttle(this, this._moveHighlight, direction, $rows, 32);
+    throttle(this, this._moveHighlight, direction, $rows, 32);
   },
 
   didPressBackspaceFromFilter(event) {
@@ -428,7 +430,7 @@ export default Ember.Mixin.create({
   },
 
   _highlightRow($row) {
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       $row.trigger("mouseover").focus();
       this.focus();
     });

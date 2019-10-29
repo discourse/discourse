@@ -1,3 +1,4 @@
+import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import CleansUp from "discourse/mixins/cleans-up";
@@ -77,7 +78,7 @@ export default Component.extend(CleansUp, {
 
     this.setProperties({ topic: data.topic, visible: true });
 
-    Ember.run.scheduleOnce("afterRender", this, this._setCSS);
+    scheduleOnce("afterRender", this, this._setCSS);
 
     $("html")
       .off("mousedown.topic-entrance")

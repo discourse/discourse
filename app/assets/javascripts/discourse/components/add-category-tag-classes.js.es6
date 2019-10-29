@@ -1,3 +1,4 @@
+import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { observes } from "ember-addons/ember-computed-decorators";
 
@@ -26,7 +27,7 @@ export default Component.extend({
 
   @observes("category.fullSlug", "tags")
   refreshClass() {
-    Ember.run.scheduleOnce("afterRender", this, this._updateClass);
+    scheduleOnce("afterRender", this, this._updateClass);
   },
 
   _removeClass() {

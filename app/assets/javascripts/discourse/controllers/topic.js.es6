@@ -1,4 +1,6 @@
 import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
@@ -133,7 +135,7 @@ export default Controller.extend(bufferedProperty("model"), {
       return;
     }
 
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       this.send("showHistory", post, revision);
     });
   },
@@ -1426,7 +1428,7 @@ export default Controller.extend(bufferedProperty("model"), {
         // automatically unpin topics when the user reaches the bottom
         const max = _.max(postNumbers);
         if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
-          Ember.run.next(() => topic.clearPin());
+          next(() => topic.clearPin());
         }
       }
     }

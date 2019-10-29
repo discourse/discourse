@@ -1,3 +1,6 @@
+import { next } from "@ember/runloop";
+import { debounce } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import MountWidget from "discourse/components/mount-widget";
 import { cloak, uncloak } from "discourse/widgets/post-stream";
@@ -204,7 +207,7 @@ export default MountWidget.extend({
               // will cause the browser to scroll to the top of the document
               // in Chrome. This makes sure the scroll works correctly if that
               // happens.
-              Ember.run.next(() => $("html, body").scrollTop(whereY));
+              next(() => $("html, body").scrollTop(whereY));
             }
           });
         };
@@ -270,7 +273,7 @@ export default MountWidget.extend({
   },
 
   _scrollTriggered() {
-    Ember.run.scheduleOnce("afterRender", this, this.scrolled);
+    scheduleOnce("afterRender", this, this.scrolled);
   },
 
   _posted(staged) {
@@ -306,13 +309,13 @@ export default MountWidget.extend({
   },
 
   _debouncedScroll() {
-    Ember.run.debounce(this, this._scrollTriggered, 10);
+    debounce(this, this._scrollTriggered, 10);
   },
 
   didInsertElement() {
     this._super(...arguments);
     const debouncedScroll = () =>
-      Ember.run.debounce(this, this._scrollTriggered, 10);
+      debounce(this, this._scrollTriggered, 10);
 
     this._previouslyNearby = {};
 

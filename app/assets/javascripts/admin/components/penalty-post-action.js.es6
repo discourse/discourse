@@ -1,3 +1,4 @@
+import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
@@ -23,7 +24,7 @@ export default Component.extend({
 
       // If we switch to edit mode, jump to the edit textarea
       if (postAction === "edit") {
-        Ember.run.scheduleOnce("afterRender", () => {
+        scheduleOnce("afterRender", () => {
           let elem = this.element;
           let body = elem.closest(".modal-body");
           body.scrollTop(body.height());

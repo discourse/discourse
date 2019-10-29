@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 
@@ -41,7 +42,7 @@ export default Controller.extend({
         );
       }
 
-      Ember.run.later(() => {
+      later(() => {
         this.set("model.savingStatus", null);
       }, 2000);
 

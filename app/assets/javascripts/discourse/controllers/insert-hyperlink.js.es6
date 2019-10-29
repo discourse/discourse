@@ -1,3 +1,6 @@
+import { debounce } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { searchForTerm } from "discourse/lib/search";
@@ -15,7 +18,7 @@ export default Controller.extend(ModalFunctionality, {
       selectedRow: -1
     });
 
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       const element = document.querySelector(".insert-link");
 
       element.addEventListener("keydown", e => this.keyDown(e));
@@ -135,7 +138,7 @@ export default Controller.extend(ModalFunctionality, {
       .closest(".modal-inner-container")
       .removeEventListener("mousedown", this.mouseDown);
 
-    Ember.run.cancel(this._debounced);
+    cancel(this._debounced);
   },
 
   actions: {
@@ -174,7 +177,7 @@ export default Controller.extend(ModalFunctionality, {
       }
     },
     search() {
-      this._debounced = Ember.run.debounce(this, this.triggerSearch, 400);
+      this._debounced = debounce(this, this.triggerSearch, 400);
     }
   }
 });

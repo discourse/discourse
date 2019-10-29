@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { formatUsername } from "discourse/lib/utilities";
@@ -79,7 +80,7 @@ function confirmNotification() {
   const clickEventHandler = () => notification.close();
 
   notification.addEventListener("click", clickEventHandler);
-  Ember.run.later(() => {
+  later(() => {
     notification.close();
     notification.removeEventListener("click", clickEventHandler);
   }, 10 * 1000);
@@ -177,7 +178,7 @@ function onNotification(data) {
     }
 
     notification.addEventListener("click", clickEventHandler);
-    Ember.run.later(() => {
+    later(() => {
       notification.close();
       notification.removeEventListener("click", clickEventHandler);
     }, 10 * 1000);

@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import { observes } from "ember-addons/ember-computed-decorators";
 
@@ -16,6 +17,6 @@ export default Component.extend({
 
   @observes("nameKey")
   selectedChanged() {
-    Ember.run.next(this, this._selectRadio);
+    next(this, this._selectRadio);
   }
 });

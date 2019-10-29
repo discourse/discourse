@@ -14,6 +14,18 @@ var define, requirejs;
       "@ember/object": { default: Ember.Object },
       "@ember/object/proxy": { default: Ember.ObjectProxy },
       "@ember/routing/route": { default: Ember.Route },
+      "@ember/runloop": {
+        bind: Ember.run.bind,
+        cancel: Ember.run.cancel,
+        debounce: Ember.run.debounce,
+        later: Ember.run.later,
+        next: Ember.run.next,
+        once: Ember.run.once,
+        run: Ember.run,
+        schedule: Ember.run.schedule,
+        scheduleOnce: Ember.run.scheduleOnce,
+        throttle: Ember.run.throttle
+      },
       "@ember/service": {
         default: Ember.Service,
         inject: Ember.inject.service

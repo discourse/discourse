@@ -1,4 +1,5 @@
 import EmberObject from "@ember/object";
+import { scheduleOnce } from "@ember/runloop";
 import Controller from "@ember/controller";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
@@ -68,7 +69,7 @@ export default Controller.extend({
   },
 
   scheduleRefresh() {
-    Ember.run.scheduleOnce("afterRender", this, this._refresh);
+    scheduleOnce("afterRender", this, this._refresh);
   },
 
   actions: {

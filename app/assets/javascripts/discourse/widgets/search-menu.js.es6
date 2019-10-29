@@ -1,3 +1,5 @@
+import { debounce } from "@ember/runloop";
+import { later } from "@ember/runloop";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { searchForTerm, isValidSearchTerm } from "discourse/lib/search";
 import { createWidget } from "discourse/widgets/widget";
@@ -30,7 +32,7 @@ const SearchHelper = {
     }
 
     this._cancelSearch = true;
-    Ember.run.later(() => (this._cancelSearch = false), 400);
+    later(() => (this._cancelSearch = false), 400);
   },
 
   perform(widget) {
@@ -285,7 +287,7 @@ export default createWidget("search-menu", {
     searchData.noResults = false;
     this.searchService().set("highlightTerm", searchData.term);
     searchData.loading = true;
-    Ember.run.debounce(SearchHelper, SearchHelper.perform, this, 400);
+    debounce(SearchHelper, SearchHelper.perform, this, 400);
   },
 
   moreOfType(type) {

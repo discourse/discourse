@@ -1,4 +1,6 @@
 import EmberObject from "@ember/object";
+import { scheduleOnce } from "@ember/runloop";
+import { later } from "@ember/runloop";
 import Component from "@ember/component";
 import { observes } from "ember-addons/ember-computed-decorators";
 import showModal from "discourse/lib/show-modal";
@@ -52,7 +54,7 @@ export default Component.extend(PanEvents, {
   },
 
   _checkSize() {
-    Ember.run.scheduleOnce("afterRender", this, this._performCheckSize);
+    scheduleOnce("afterRender", this, this._performCheckSize);
   },
 
   // we need to store this so topic progress has something to init with
@@ -88,7 +90,7 @@ export default Component.extend(PanEvents, {
   composerOpened() {
     this.set("composerOpen", true);
     // we need to do the check after animation is done
-    Ember.run.later(() => this._checkSize(), 500);
+    later(() => this._checkSize(), 500);
   },
 
   composerClosed() {
@@ -99,7 +101,7 @@ export default Component.extend(PanEvents, {
   _collapseFullscreen() {
     if (this.get("info.topicProgressExpanded")) {
       $(".timeline-fullscreen").removeClass("show");
-      Ember.run.later(() => {
+      later(() => {
         if (!this.element || this.isDestroying || this.isDestroyed) {
           return;
         }
@@ -137,7 +139,7 @@ export default Component.extend(PanEvents, {
     } else if (offset <= 0) {
       $timelineContainer.css("bottom", "");
     } else {
-      Ember.run.later(() => this._handlePanDone(offset, event), 20);
+      later(() => this._handlePanDone(offset, event), 20);
     }
   },
 
