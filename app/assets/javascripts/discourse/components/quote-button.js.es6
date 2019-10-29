@@ -1,4 +1,3 @@
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import debounce from "discourse/lib/debounce";
 import { selectedText } from "discourse/lib/utilities";
@@ -104,7 +103,7 @@ export default Component.extend({
     }
 
     // change the position of the button
-    scheduleOnce("afterRender", () => {
+    Ember.run.scheduleOnce("afterRender", () => {
       let top = markerOffset.top;
       let left = markerOffset.left + Math.max(0, parentScrollLeft);
 

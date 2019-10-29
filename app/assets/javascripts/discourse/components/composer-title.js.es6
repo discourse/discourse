@@ -1,6 +1,3 @@
-import { next } from "@ember/runloop";
-import { debounce } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import {
   default as computed,
@@ -27,7 +24,7 @@ export default Component.extend({
     }
 
     if (this.get("composer.titleLength") > 0) {
-      debounce(this, this._titleChanged, 10);
+      Ember.run.debounce(this, this._titleChanged, 10);
     }
   },
 
@@ -82,13 +79,13 @@ export default Component.extend({
     }
 
     if (Ember.testing) {
-      next(() =>
+      Ember.run.next(() =>
         // not ideal but we don't want to run this in current
         // runloop to avoid an error in console
         this._checkForUrl()
       );
     } else {
-      debounce(this, this._checkForUrl, 500);
+      Ember.run.debounce(this, this._checkForUrl, 500);
     }
   },
 
@@ -137,14 +134,14 @@ export default Component.extend({
           })
           .finally(() => {
             this.set("composer.loading", false);
-            schedule("afterRender", () => {
+            Ember.run.schedule("afterRender", () => {
               $(this.element.querySelector("input")).putCursorAtEnd();
             });
           });
       } else {
         this._updatePost(loadOnebox);
         this.set("composer.loading", false);
-        schedule("afterRender", () => {
+        Ember.run.schedule("afterRender", () => {
           $(this.element.querySelector("input")).putCursorAtEnd();
         });
       }

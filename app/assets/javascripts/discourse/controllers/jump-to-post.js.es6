@@ -1,4 +1,3 @@
-import { next } from "@ember/runloop";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
@@ -11,7 +10,7 @@ export default Controller.extend(ModalFunctionality, {
   ),
 
   onShow() {
-    next(() => $("#post-jump").focus());
+    Ember.run.next(() => $("#post-jump").focus());
   },
 
   actions: {

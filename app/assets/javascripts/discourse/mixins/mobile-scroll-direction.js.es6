@@ -1,4 +1,3 @@
-import { debounce } from "@ember/runloop";
 // Small buffer so that very tiny scrolls don't trigger mobile header switch
 const MOBILE_SCROLL_TOLERANCE = 5;
 
@@ -43,7 +42,7 @@ export default Ember.Mixin.create({
     // If the user reaches the very bottom of the topic, we only want to reset
     // this scroll direction after a second scrolldown. This is a nicer event
     // similar to what Safari and Chrome do.
-    debounce(() => {
+    Ember.run.debounce(() => {
       this._bottomHit = 1;
     }, 1000);
 

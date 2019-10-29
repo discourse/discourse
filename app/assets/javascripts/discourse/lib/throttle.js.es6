@@ -1,4 +1,3 @@
-import { throttle } from "@ember/runloop";
 /**
   Throttle a Javascript function. This means if it's called many times in a time limit it
   should only be executed one time at most during this time limit
@@ -14,6 +13,6 @@ export default function(func, spacing, immediate) {
     self = this;
     args = arguments;
 
-    throttle(null, later, spacing, immediate);
+    Ember.run.throttle(null, later, spacing, immediate);
   };
 }

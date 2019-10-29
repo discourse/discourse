@@ -1,5 +1,3 @@
-import { debounce } from "@ember/runloop";
-import { cancel } from "@ember/runloop";
 import Component from "@ember/component";
 import {
   default as computed,
@@ -28,7 +26,7 @@ export default Component.extend({
       this.channel,
       message => {
         if (!this.isDestroyed) this.set("presenceUsers", message.users);
-        this._clearTimer = debounce(
+        this._clearTimer = Ember.run.debounce(
           this,
           "clear",
           keepAliveDuration + bufferTime
@@ -40,7 +38,7 @@ export default Component.extend({
 
   @on("willDestroyElement")
   _destroyed() {
-    cancel(this._clearTimer);
+    Ember.run.cancel(this._clearTimer);
     this.messageBus.unsubscribe(this.channel);
   },
 

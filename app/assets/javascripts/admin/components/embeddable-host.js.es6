@@ -1,4 +1,3 @@
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import computed from "ember-addons/ember-computed-decorators";
@@ -15,7 +14,7 @@ export default Component.extend(bufferedProperty("host"), {
   @on("didInsertElement")
   @observes("editing")
   _focusOnInput() {
-    schedule("afterRender", () => {
+    Ember.run.schedule("afterRender", () => {
       this.element.querySelector(".host-name").focus();
     });
   },

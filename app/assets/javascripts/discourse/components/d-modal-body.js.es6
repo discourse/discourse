@@ -1,4 +1,3 @@
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 export default Component.extend({
   classNames: ["modal-body"],
@@ -15,7 +14,7 @@ export default Component.extend({
       fixedParent.modal("show");
     }
 
-    scheduleOnce("afterRender", this, this._afterFirstRender);
+    Ember.run.scheduleOnce("afterRender", this, this._afterFirstRender);
     this.appEvents.on("modal-body:flash", this, "_flash");
     this.appEvents.on("modal-body:clearFlash", this, "_clearFlash");
   },

@@ -1,4 +1,3 @@
-import { next } from "@ember/runloop";
 import componentTest from "helpers/component-test";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import formatTextWithSelection from "helpers/d-editor-helper";
@@ -748,7 +747,7 @@ composerTestCase("replace-text event for composer", async function(assert) {
         .lookup("service:app-events")
         .trigger("composer:replace-text", "green", "yellow", { forceFocus: true });
 
-      next(() => {
+      Ember.run.next(() => {
         let expect = formatTextWithSelection(AFTER, CASE.after);
         let actual = formatTextWithSelection(
           this.value,

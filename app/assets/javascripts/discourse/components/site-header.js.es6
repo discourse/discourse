@@ -1,6 +1,3 @@
-import { cancel } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
-import { later } from "@ember/runloop";
 import MountWidget from "discourse/components/mount-widget";
 import { observes } from "ember-addons/ember-computed-decorators";
 import Docking from "discourse/mixins/docking";
@@ -41,7 +38,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   _animateClosing($panel, menuOrigin, windowWidth) {
     $panel.css(menuOrigin, -windowWidth);
     this._animate = true;
-    schedule("afterRender", () => {
+    Ember.run.schedule("afterRender", () => {
       this.eventDispatched("dom:clean", "header");
       this._panMenuOffset = 0;
     });
@@ -225,7 +222,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     this.appEvents.off("header:hide-topic", this, "setTopic");
     this.appEvents.off("dom:clean", this, "_cleanDom");
 
-    cancel(this._scheduledRemoveAnimate);
+    Ember.run.cancel(this._scheduledRemoveAnimate);
     window.cancelAnimationFrame(this._scheduledMovingAnimation);
   },
 
@@ -349,7 +346,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       if (this._animate) {
         $panel.addClass("animate");
         $headerCloak.addClass("animate");
-        this._scheduledRemoveAnimate = later(() => {
+        this._scheduledRemoveAnimate = Ember.run.later(() => {
           $panel.removeClass("animate");
           $headerCloak.removeClass("animate");
         }, 200);

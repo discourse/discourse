@@ -1,5 +1,3 @@
-import { cancel } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
 import { diff, patch } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
 import DirtyKeys from "discourse/lib/dirty-keys";
@@ -27,11 +25,11 @@ export default class WidgetGlue {
   }
 
   queueRerender() {
-    this._timeout = scheduleOnce("render", this, this.rerenderWidget);
+    this._timeout = Ember.run.scheduleOnce("render", this, this.rerenderWidget);
   }
 
   rerenderWidget() {
-    cancel(this._timeout);
+    Ember.run.cancel(this._timeout);
 
     // in test mode return early if store cannot be found
     if (Ember.testing) {
@@ -53,6 +51,6 @@ export default class WidgetGlue {
   }
 
   cleanUp() {
-    cancel(this._timeout);
+    Ember.run.cancel(this._timeout);
   }
 }

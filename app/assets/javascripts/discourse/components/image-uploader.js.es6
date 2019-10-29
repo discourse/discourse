@@ -1,4 +1,3 @@
-import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
@@ -78,13 +77,13 @@ export default Component.extend(UploadMixin, {
   },
 
   _openLightbox() {
-    next(() =>
+    Ember.run.next(() =>
       $(this.element.querySelector("a.lightbox")).magnificPopup("open")
     );
   },
 
   _applyLightbox() {
-    if (this.imageUrl) next(() => lightbox($(this.element)));
+    if (this.imageUrl) Ember.run.next(() => lightbox($(this.element)));
   },
 
   actions: {

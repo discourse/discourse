@@ -1,4 +1,3 @@
-import { once } from "@ember/runloop";
 import Composer from "discourse/models/composer";
 import { getOwner } from "discourse-common/lib/get-owner";
 import Route from "@ember/routing/route";
@@ -56,7 +55,7 @@ const DiscourseRoute = Route.extend({
     },
 
     refreshTitle() {
-      once(this, this._refreshTitleOnce);
+      Ember.run.once(this, this._refreshTitleOnce);
     },
 
     clearTopicDraft() {

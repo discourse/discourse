@@ -1,4 +1,3 @@
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { escapeExpression } from "discourse/lib/utilities";
 import { default as computed } from "ember-addons/ember-computed-decorators";
@@ -48,7 +47,7 @@ export default Component.extend({
       this.element.querySelector(".topic-share-url-for-touch a")
     );
 
-    schedule("afterRender", () => {
+    Ember.run.schedule("afterRender", () => {
       if (!this.capabilities.touch) {
         $linkForTouch.parent().remove();
 

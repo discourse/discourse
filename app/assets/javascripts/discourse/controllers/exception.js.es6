@@ -1,4 +1,3 @@
-import { schedule } from "@ember/runloop";
 import Controller from "@ember/controller";
 import {
   on,
@@ -114,7 +113,7 @@ export default Controller.extend({
     tryLoading() {
       this.set("loading", true);
 
-      schedule("afterRender", () => {
+      Ember.run.schedule("afterRender", () => {
         this.lastTransition.retry();
         this.set("loading", false);
       });

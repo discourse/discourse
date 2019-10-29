@@ -1,4 +1,3 @@
-import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { formatUsername } from "discourse/lib/utilities";
@@ -228,7 +227,7 @@ export default createWidget("user-menu", {
       const $headerCloak = $(".header-cloak");
       $headerCloak.addClass("animate");
       $headerCloak.css("opacity", 0);
-      later(() => this.sendWidgetAction("toggleUserMenu"), 200);
+      Ember.run.later(() => this.sendWidgetAction("toggleUserMenu"), 200);
     }
   },
 

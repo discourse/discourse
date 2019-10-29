@@ -1,4 +1,3 @@
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import getUrl from "discourse-common/lib/get-url";
 import {
@@ -93,7 +92,7 @@ export default Component.extend({
   },
 
   autoFocus() {
-    scheduleOnce("afterRender", () => {
+    Ember.run.scheduleOnce("afterRender", () => {
       const $invalid = $(".wizard-field.invalid:eq(0) .wizard-focusable");
 
       if ($invalid.length) {
@@ -105,7 +104,7 @@ export default Component.extend({
   },
 
   animateInvalidFields() {
-    scheduleOnce("afterRender", () =>
+    Ember.run.scheduleOnce("afterRender", () =>
       $(".invalid input[type=text], .invalid textarea").wiggle(2, 100)
     );
   },

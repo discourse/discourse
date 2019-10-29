@@ -1,4 +1,3 @@
-import { scheduleOnce } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import { deprecated } from "discourse/mixins/scroll-top";
 
@@ -15,7 +14,7 @@ function scrollTop() {
   if (DiscourseURL.isJumpScheduled()) {
     return;
   }
-  scheduleOnce("afterRender", context, context._scrollTop);
+  Ember.run.scheduleOnce("afterRender", context, context._scrollTop);
 }
 
 export default Ember.Mixin.create({

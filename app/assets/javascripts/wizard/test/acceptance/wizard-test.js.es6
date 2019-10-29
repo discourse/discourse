@@ -1,4 +1,3 @@
-import { run } from "@ember/runloop";
 import startApp from "wizard/test/helpers/start-app";
 
 var wizard;
@@ -8,7 +7,7 @@ QUnit.module("Acceptance: wizard", {
   },
 
   afterEach() {
-    run(wizard, "destroy");
+    Ember.run(wizard, "destroy");
   }
 });
 

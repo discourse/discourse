@@ -1,4 +1,3 @@
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 /*eslint no-bitwise:0 */
 import getUrl from "discourse-common/lib/get-url";
@@ -73,7 +72,7 @@ export function createPreviewComponent(width, height, obj) {
       },
 
       triggerRepaint() {
-        scheduleOnce("afterRender", this, "repaint");
+        Ember.run.scheduleOnce("afterRender", this, "repaint");
       },
 
       repaint() {

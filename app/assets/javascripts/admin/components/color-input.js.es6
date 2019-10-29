@@ -1,4 +1,3 @@
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { default as loadScript, loadCSS } from "discourse/lib/load-script";
 
@@ -38,7 +37,7 @@ export default Component.extend({
   didInsertElement() {
     loadScript("/javascripts/spectrum.js").then(() => {
       loadCSS("/javascripts/spectrum.css").then(() => {
-        schedule("afterRender", () => {
+        Ember.run.schedule("afterRender", () => {
           $(this.element.querySelector(".picker"))
             .spectrum({ color: "#" + this.hexValue })
             .on("change.spectrum", (me, color) => {
@@ -48,7 +47,7 @@ export default Component.extend({
         });
       });
     });
-    schedule("afterRender", () => {
+    Ember.run.schedule("afterRender", () => {
       this.hexValueChanged();
     });
   }

@@ -1,5 +1,4 @@
 import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import ReportLoader from "discourse/lib/reports-loader";
 import { exportEntity } from "discourse/lib/export-csv";
@@ -314,7 +313,7 @@ export default Component.extend({
 
     this.setProperties({ isLoading: true, rateLimitationString: null });
 
-    next(() => {
+    Ember.run.next(() => {
       let payload = this._buildPayload(["prev_period"]);
 
       const callback = response => {

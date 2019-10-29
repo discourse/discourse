@@ -1,4 +1,3 @@
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 export default Component.extend({
   showInput: false,
@@ -6,7 +5,7 @@ export default Component.extend({
   click() {
     this.onClick();
 
-    schedule("afterRender", () => {
+    Ember.run.schedule("afterRender", () => {
       $(this.element)
         .find("input")
         .focus();

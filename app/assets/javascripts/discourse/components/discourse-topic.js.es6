@@ -1,7 +1,3 @@
-import { throttle } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
-import { later } from "@ember/runloop";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import AddArchetypeClass from "discourse/mixins/add-archetype-class";
@@ -54,13 +50,13 @@ export default Component.extend(
       const enteredAt = this.enteredAt;
       if (enteredAt && this.lastEnteredAt !== enteredAt) {
         this._lastShowTopic = null;
-        schedule("afterRender", () => this.scrolled());
+        Ember.run.schedule("afterRender", () => this.scrolled());
         this.set("lastEnteredAt", enteredAt);
       }
     },
 
     _highlightPost(postNumber) {
-      scheduleOnce("afterRender", null, highlight, postNumber);
+      Ember.run.scheduleOnce("afterRender", null, highlight, postNumber);
     },
 
     _hideTopicInHeader() {
@@ -82,7 +78,7 @@ export default Component.extend(
           this.pauseHeaderTopicUpdate = true;
           this._lastShowTopic = true;
 
-          later(() => {
+          Ember.run.later(() => {
             this._lastShowTopic = false;
             this.pauseHeaderTopicUpdate = false;
           }, debounceDuration);
@@ -196,7 +192,7 @@ export default Component.extend(
       // at the start of the scroll. This feels a lot more snappy compared to waiting
       // for the scroll to end if we debounce.
       if (this.site.mobileView && this.hasScrolled) {
-        throttle(
+        Ember.run.throttle(
           this,
           this.calculateDirection,
           offset,

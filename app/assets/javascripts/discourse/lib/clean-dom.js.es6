@@ -1,4 +1,3 @@
-import { scheduleOnce } from "@ember/runloop";
 function _clean() {
   if (window.MiniProfiler) {
     window.MiniProfiler.pageTransition();
@@ -36,5 +35,5 @@ function _clean() {
 }
 
 export function cleanDOM() {
-  scheduleOnce("afterRender", _clean);
+  Ember.run.scheduleOnce("afterRender", _clean);
 }

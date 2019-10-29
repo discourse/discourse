@@ -1,4 +1,3 @@
-import { later } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseURL from "discourse/lib/url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -135,7 +134,7 @@ export default {
           $link.attr("href", null);
           $link.data("auto-route", true);
 
-          later(() => {
+          Ember.run.later(() => {
             $link.removeClass("no-href");
             $link.attr("href", $link.data("href"));
             $link.data("href", null);

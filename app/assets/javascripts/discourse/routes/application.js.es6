@@ -1,5 +1,3 @@
-import { once } from "@ember/runloop";
-import { next } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
@@ -58,7 +56,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     // Ember doesn't provider a router `willTransition` event so let's make one
     willTransition() {
       var router = getOwner(this).lookup("router:main");
-      once(router, router.trigger, "willTransition");
+      Ember.run.once(router, router.trigger, "willTransition");
       return this._super(...arguments);
     },
 
@@ -228,7 +226,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
   activate() {
     this._super(...arguments);
-    next(function() {
+    Ember.run.next(function() {
       // Support for callbacks once the application has activated
       ApplicationRoute.trigger("activate");
     });

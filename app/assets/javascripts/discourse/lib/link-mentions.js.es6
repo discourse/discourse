@@ -1,4 +1,3 @@
-import { scheduleOnce } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import { formatUsername } from "discourse/lib/utilities";
@@ -40,7 +39,7 @@ const checked = {};
 const cannotSee = [];
 
 function updateFound($mentions, usernames) {
-  scheduleOnce("afterRender", function() {
+  Ember.run.scheduleOnce("afterRender", function() {
     $mentions.each((i, e) => {
       const $e = $(e);
       const username = usernames[i];

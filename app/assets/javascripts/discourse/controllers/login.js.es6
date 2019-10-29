@@ -1,6 +1,4 @@
 import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
@@ -152,7 +150,7 @@ export default Controller.extend(ModalFunctionality, {
 
               // only need to focus the 2FA input for TOTP
               if (!this.showSecurityKey) {
-                scheduleOnce("afterRender", () =>
+                Ember.run.scheduleOnce("afterRender", () =>
                   document
                     .getElementById("second-factor")
                     .querySelector("input")
@@ -324,7 +322,7 @@ export default Controller.extend(ModalFunctionality, {
     const loginError = (errorMsg, className, callback) => {
       showModal("login");
 
-      next(() => {
+      Ember.run.next(() => {
         if (callback) callback();
         this.flash(errorMsg, className || "success");
       });

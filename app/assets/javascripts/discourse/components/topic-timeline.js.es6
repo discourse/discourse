@@ -1,4 +1,3 @@
-import { next } from "@ember/runloop";
 import MountWidget from "discourse/components/mount-widget";
 import Docking from "discourse/mixins/docking";
 import { observes } from "ember-addons/ember-computed-decorators";
@@ -95,7 +94,7 @@ export default MountWidget.extend(Docking, {
     this._super(...arguments);
 
     if (this.fullscreen && !this.addShowClass) {
-      next(() => {
+      Ember.run.next(() => {
         this.set("addShowClass", true);
         this.queueRerender();
       });

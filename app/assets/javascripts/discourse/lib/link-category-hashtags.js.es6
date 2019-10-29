@@ -1,4 +1,3 @@
-import { schedule } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { replaceSpan } from "discourse/lib/category-hashtags";
 
@@ -8,7 +7,7 @@ const testedKey = "tested";
 const testedClass = `hashtag-${testedKey}`;
 
 function updateFound($hashtags, categorySlugs) {
-  schedule("afterRender", () => {
+  Ember.run.schedule("afterRender", () => {
     $hashtags.each((index, hashtag) => {
       const categorySlug = categorySlugs[index];
       const link = validCategoryHashtags[categorySlug];
