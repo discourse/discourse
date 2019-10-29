@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
@@ -18,7 +19,7 @@ export default Controller.extend({
   showActions: false,
   filter: null,
   filterInput: null,
-  application: Ember.inject.controller(),
+  application: inject(),
 
   @observes("filterInput")
   _setFilter: debounce(function() {

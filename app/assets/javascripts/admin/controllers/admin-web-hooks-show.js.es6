@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { extractDomainFromUrl } from "discourse/lib/utilities";
@@ -5,7 +6,7 @@ import computed from "ember-addons/ember-computed-decorators";
 import InputValidation from "discourse/models/input-validation";
 
 export default Controller.extend({
-  adminWebHooks: Ember.inject.controller(),
+  adminWebHooks: inject(),
   eventTypes: Ember.computed.alias("adminWebHooks.eventTypes"),
   defaultEventTypes: Ember.computed.alias("adminWebHooks.defaultEventTypes"),
   contentTypes: Ember.computed.alias("adminWebHooks.contentTypes"),

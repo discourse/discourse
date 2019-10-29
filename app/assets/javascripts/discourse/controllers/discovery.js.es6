@@ -1,10 +1,11 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 
 export default Controller.extend({
-  discoveryTopics: Ember.inject.controller("discovery/topics"),
-  navigationCategory: Ember.inject.controller("navigation/category"),
-  application: Ember.inject.controller(),
+  discoveryTopics: inject("discovery/topics"),
+  navigationCategory: inject("navigation/category"),
+  application: inject(),
 
   loading: false,
 

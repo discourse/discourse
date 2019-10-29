@@ -1,10 +1,11 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import computed from "ember-addons/ember-computed-decorators";
 import { userPath } from "discourse/lib/url";
 
 export default Controller.extend({
-  application: Ember.inject.controller(),
+  application: inject(),
 
   showLoginButton: Ember.computed.equal("model.path", "login"),
 

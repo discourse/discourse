@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { setDefaultHomepage } from "discourse/lib/utilities";
@@ -52,7 +53,7 @@ export default Controller.extend(PreferencesTabController, {
     return attrs;
   },
 
-  preferencesController: Ember.inject.controller("preferences"),
+  preferencesController: inject("preferences"),
 
   @computed()
   isiPad() {

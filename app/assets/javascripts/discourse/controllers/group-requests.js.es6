@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -17,7 +18,7 @@ export default Controller.extend({
   offset: null,
   filter: null,
   filterInput: null,
-  application: Ember.inject.controller(),
+  application: inject(),
 
   @observes("filterInput")
   _setFilter: debounce(function() {

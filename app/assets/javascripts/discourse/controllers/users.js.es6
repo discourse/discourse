@@ -1,8 +1,9 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
 
 export default Controller.extend({
-  application: Ember.inject.controller(),
+  application: inject(),
   queryParams: ["period", "order", "asc", "name", "group", "exclude_usernames"],
   period: "weekly",
   order: "likes_received",

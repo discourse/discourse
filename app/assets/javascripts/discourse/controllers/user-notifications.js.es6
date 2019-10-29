@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -6,7 +7,7 @@ import {
 } from "ember-addons/ember-computed-decorators";
 
 export default Controller.extend({
-  application: Ember.inject.controller(),
+  application: inject(),
 
   @observes("model.canLoadMore")
   _showFooter() {

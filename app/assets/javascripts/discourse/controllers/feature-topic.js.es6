@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -6,7 +7,7 @@ import computed from "ember-addons/ember-computed-decorators";
 import InputValidation from "discourse/models/input-validation";
 
 export default Controller.extend(ModalFunctionality, {
-  topicController: Ember.inject.controller("topic"),
+  topicController: inject("topic"),
 
   loading: true,
   pinnedInCategoryCount: 0,

@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import {
   default as computed,
@@ -5,10 +6,10 @@ import {
 } from "ember-addons/ember-computed-decorators";
 
 export default Controller.extend({
-  group: Ember.inject.controller(),
+  group: inject(),
   loading: false,
   offset: 0,
-  application: Ember.inject.controller(),
+  application: inject(),
 
   init() {
     this._super(...arguments);

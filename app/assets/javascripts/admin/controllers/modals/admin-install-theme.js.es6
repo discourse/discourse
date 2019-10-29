@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
@@ -17,7 +18,7 @@ export default Controller.extend(ModalFunctionality, {
   remote: Ember.computed.equal("selection", "remote"),
   create: Ember.computed.equal("selection", "create"),
   selection: "popular",
-  adminCustomizeThemes: Ember.inject.controller(),
+  adminCustomizeThemes: inject(),
   loading: false,
   keyGenUrl: "/admin/themes/generate_key_pair",
   importUrl: "/admin/themes/import",
@@ -27,7 +28,7 @@ export default Controller.extend(ModalFunctionality, {
   uploadUrl: null,
   urlPlaceholder: "https://github.com/discourse/sample_theme",
   advancedVisible: false,
-  themesController: Ember.inject.controller("adminCustomizeThemes"),
+  themesController: inject("adminCustomizeThemes"),
   selectedType: Ember.computed.alias("themesController.currentTab"),
   component: Ember.computed.equal("selectedType", COMPONENTS),
 

@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import WatchedWord from "admin/models/watched-word";
@@ -7,7 +8,7 @@ import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend({
   actionNameKey: null,
-  adminWatchedWords: Ember.inject.controller(),
+  adminWatchedWords: inject(),
   showWordsList: Ember.computed.or(
     "adminWatchedWords.filtered",
     "adminWatchedWords.showWords"

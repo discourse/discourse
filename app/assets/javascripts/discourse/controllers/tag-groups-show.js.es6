@@ -1,6 +1,7 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 export default Controller.extend({
-  tagGroups: Ember.inject.controller(),
+  tagGroups: inject(),
 
   actions: {
     save() {

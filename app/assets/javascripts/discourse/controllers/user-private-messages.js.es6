@@ -1,11 +1,12 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import Topic from "discourse/models/topic";
 
 export default Controller.extend({
   router: Ember.inject.service(),
-  userTopicsList: Ember.inject.controller("user-topics-list"),
-  user: Ember.inject.controller(),
+  userTopicsList: inject("user-topics-list"),
+  user: inject(),
 
   pmView: false,
   viewingSelf: Ember.computed.alias("user.viewingSelf"),

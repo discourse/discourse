@@ -1,6 +1,7 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 export default Controller.extend({
-  user: Ember.inject.controller(),
+  user: inject(),
   username: Ember.computed.alias("user.model.username_lower"),
   sortedBadges: Ember.computed.sort("model", "badgeSortOrder"),
 

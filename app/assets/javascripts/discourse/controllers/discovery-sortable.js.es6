@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import DiscourseNavigation from "discourse/components/d-navigation";
 
@@ -17,7 +18,7 @@ export const queryParams = {
 
 // Basic controller options
 const controllerOpts = {
-  discoveryTopics: Ember.inject.controller("discovery/topics"),
+  discoveryTopics: inject("discovery/topics"),
   queryParams: Object.keys(queryParams)
 };
 
