@@ -734,7 +734,7 @@ class ApplicationController < ActionController::Base
     check_totp = current_user &&
       !request.format.json? &&
       !is_api? &&
-      !(SiteSetting.allow_anonymous_posting && current_user.anonymous?) &&
+      !current_user.anonymous? &&
       ((SiteSetting.enforce_second_factor == 'staff' && current_user.staff?) ||
         SiteSetting.enforce_second_factor == 'all') &&
       !current_user.totp_enabled?
