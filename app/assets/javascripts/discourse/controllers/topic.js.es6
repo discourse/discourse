@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
@@ -35,8 +36,8 @@ export function registerCustomPostMessageCallback(type, callback) {
 }
 
 export default Controller.extend(bufferedProperty("model"), {
-  composer: Ember.inject.controller(),
-  application: Ember.inject.controller(),
+  composer: inject(),
+  application: inject(),
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,

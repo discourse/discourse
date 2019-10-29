@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { setting } from "discourse/lib/computed";
 import computed from "ember-addons/ember-computed-decorators";
@@ -9,7 +10,7 @@ const PROBLEMS_CHECK_MINUTES = 1;
 export default Controller.extend({
   isLoading: false,
   dashboardFetchedAt: null,
-  exceptionController: Ember.inject.controller("exception"),
+  exceptionController: inject("exception"),
   showVersionChecks: setting("version_checks"),
 
   @computed("problems.length")

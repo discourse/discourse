@@ -1,10 +1,11 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { exportUserArchive } from "discourse/lib/export-csv";
 
 export default Controller.extend({
-  application: Ember.inject.controller(),
+  application: inject(),
   router: Ember.inject.service(),
-  user: Ember.inject.controller(),
+  user: inject(),
   userActionType: null,
 
   canDownloadPosts: Ember.computed.alias("user.viewingSelf"),

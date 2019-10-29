@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import computed from "ember-addons/ember-computed-decorators";
@@ -6,7 +7,7 @@ import Topic from "discourse/models/topic";
 
 // Modal related to changing the timestamp of posts
 export default Controller.extend(ModalFunctionality, {
-  topicController: Ember.inject.controller("topic"),
+  topicController: inject("topic"),
   saving: false,
   date: "",
   time: "",

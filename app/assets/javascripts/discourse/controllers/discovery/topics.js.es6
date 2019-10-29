@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import DiscoveryController from "discourse/controllers/discovery";
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
@@ -8,8 +9,8 @@ import TopicList from "discourse/models/topic-list";
 import computed from "ember-addons/ember-computed-decorators";
 
 const controllerOpts = {
-  discovery: Ember.inject.controller(),
-  discoveryTopics: Ember.inject.controller("discovery/topics"),
+  discovery: inject(),
+  discoveryTopics: inject("discovery/topics"),
 
   period: null,
 

@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -26,8 +27,8 @@ const SortOrders = [
 const PAGE_LIMIT = 10;
 
 export default Controller.extend({
-  application: Ember.inject.controller(),
-  composer: Ember.inject.controller(),
+  application: inject(),
+  composer: inject(),
   bulkSelectEnabled: null,
 
   loading: false,

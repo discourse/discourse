@@ -1,10 +1,11 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { setting, i18n } from "discourse/lib/computed";
 
 export default Controller.extend({
-  adminBackups: Ember.inject.controller(),
+  adminBackups: inject(),
   status: Ember.computed.alias("adminBackups.model"),
   uploadLabel: i18n("admin.backups.upload.label"),
   backupLocation: setting("backup_location"),

@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
 import {
@@ -6,7 +7,7 @@ import {
 } from "ember-addons/ember-computed-decorators";
 
 export default Controller.extend({
-  application: Ember.inject.controller(),
+  application: inject(),
   queryParams: ["order", "asc", "filter", "type"],
   order: null,
   asc: null,

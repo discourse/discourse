@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
@@ -5,7 +6,7 @@ import { propertyNotEqual } from "discourse/lib/computed";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Controller.extend(bufferedProperty("model"), {
-  adminBadges: Ember.inject.controller(),
+  adminBadges: inject(),
   saving: false,
   savingStatus: "",
 

@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
@@ -10,7 +11,7 @@ export default Controller.extend({
   queryParams: ["username"],
   noMoreBadges: false,
   userBadges: null,
-  application: Ember.inject.controller(),
+  application: inject(),
   hiddenSetTitle: true,
 
   @computed("userBadgesAll")

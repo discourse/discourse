@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import { extractError } from "discourse/lib/ajax-error";
@@ -7,7 +8,7 @@ import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 
 export default Controller.extend(ModalFunctionality, GrantBadgeController, {
-  topicController: Ember.inject.controller("topic"),
+  topicController: inject("topic"),
   loading: true,
   saving: false,
   selectedBadgeId: null,

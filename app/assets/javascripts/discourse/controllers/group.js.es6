@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
@@ -11,7 +12,7 @@ const Tab = Ember.Object.extend({
 });
 
 export default Controller.extend({
-  application: Ember.inject.controller(),
+  application: inject(),
   counts: null,
   showing: "members",
   destroying: null,

@@ -1,10 +1,11 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Controller.extend(GrantBadgeController, {
-  adminUser: Ember.inject.controller(),
+  adminUser: inject(),
   user: Ember.computed.alias("adminUser.model"),
   userBadges: Ember.computed.alias("model"),
   allBadges: Ember.computed.alias("badges"),

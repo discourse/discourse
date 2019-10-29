@@ -1,6 +1,7 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 export default Controller.extend({
-  adminBackups: Ember.inject.controller(),
+  adminBackups: inject(),
   status: Ember.computed.alias("adminBackups.model"),
 
   init() {

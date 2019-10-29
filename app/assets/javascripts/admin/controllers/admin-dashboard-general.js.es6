@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { setting } from "discourse/lib/computed";
 import computed from "ember-addons/ember-computed-decorators";
@@ -16,7 +17,7 @@ function staticReport(reportType) {
 export default Controller.extend(PeriodComputationMixin, {
   isLoading: false,
   dashboardFetchedAt: null,
-  exceptionController: Ember.inject.controller("exception"),
+  exceptionController: inject("exception"),
   logSearchQueriesEnabled: setting("log_search_queries"),
   basePath: Discourse.BaseUri,
 

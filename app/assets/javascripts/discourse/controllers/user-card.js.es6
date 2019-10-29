@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import {
   default as DiscourseURL,
@@ -6,7 +7,7 @@ import {
 } from "discourse/lib/url";
 
 export default Controller.extend({
-  topic: Ember.inject.controller(),
+  topic: inject(),
   router: Ember.inject.service(),
 
   actions: {

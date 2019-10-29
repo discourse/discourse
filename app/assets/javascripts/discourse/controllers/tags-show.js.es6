@@ -1,3 +1,4 @@
+import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import {
   default as computed,
@@ -50,7 +51,7 @@ if (customNavItemHref) {
 }
 
 export default Controller.extend(BulkTopicSelection, {
-  application: Ember.inject.controller(),
+  application: inject(),
 
   tag: null,
   additionalTags: null,
