@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import Component from "@ember/component";
 const { get, isNone, run, isEmpty, makeArray } = Ember;
 import computed from "ember-addons/ember-computed-decorators";

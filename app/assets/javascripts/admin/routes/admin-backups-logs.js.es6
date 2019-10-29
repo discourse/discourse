@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import Route from "@ember/routing/route";
 import PreloadStore from "preload-store";
 

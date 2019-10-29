@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
 

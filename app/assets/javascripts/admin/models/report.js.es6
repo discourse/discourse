@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import { escapeExpression } from "discourse/lib/utilities";
 import { ajax } from "discourse/lib/ajax";
 import round from "discourse/lib/round";

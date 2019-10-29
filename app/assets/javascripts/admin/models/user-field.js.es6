@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import RestModel from "discourse/models/rest";
 import { i18n } from "discourse/lib/computed";
 

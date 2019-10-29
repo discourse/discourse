@@ -2,7 +2,7 @@
 // and the admin application. Use this if you need front end code to access admin
 // modules. Inject it optionally, and if it exists go to town!
 
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import AdminUser from "admin/models/admin-user";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";

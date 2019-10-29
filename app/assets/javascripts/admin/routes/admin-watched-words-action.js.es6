@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
