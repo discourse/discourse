@@ -202,14 +202,6 @@ export default Component.extend({
       );
     }
 
-    if (!this.site.mobileView) {
-      $preview
-        .off("touchstart mouseenter", "img")
-        .on("touchstart mouseenter", "img", () => {
-          this._placeImageScaleButtons($preview);
-        });
-    }
-
     // Focus on the body unless we have a title
     if (
       !this.get("composer.canEditTitle") &&
@@ -928,8 +920,6 @@ export default Component.extend({
   },
 
   showPreview() {
-    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
-    this._placeImageScaleButtons($preview);
     this.send("togglePreview");
   },
 
@@ -1078,9 +1068,7 @@ export default Component.extend({
         );
       }
 
-      if (this.site.mobileView && $preview.is(":visible")) {
-        this._placeImageScaleButtons($preview);
-      }
+      this._placeImageScaleButtons($preview);
 
       this.trigger("previewRefreshed", $preview);
       this.afterRefresh($preview);
