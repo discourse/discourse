@@ -1,5 +1,5 @@
-import { inject } from '@ember/controller';
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
+import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";

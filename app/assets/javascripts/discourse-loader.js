@@ -13,7 +13,11 @@ var define, requirejs;
       },
       "@ember/object": { default: Ember.Object },
       "@ember/object/proxy": { default: Ember.ObjectProxy },
-      "@ember/routing/route": { default: Ember.Route }
+      "@ember/routing/route": { default: Ember.Route },
+      "@ember/service": {
+        default: Ember.Service,
+        inject: Ember.inject.service
+      }
     };
   }
 

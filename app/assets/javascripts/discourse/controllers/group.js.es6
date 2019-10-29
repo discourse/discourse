@@ -1,5 +1,5 @@
-import { inject } from '@ember/controller';
-import EmberObject from '@ember/object';
+import EmberObject from "@ember/object";
+import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 

@@ -1,5 +1,5 @@
-import { inject } from '@ember/controller';
-import EmberObject from '@ember/object';
+import { inject } from "@ember/controller";
+import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import {
   default as computed,

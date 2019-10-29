@@ -1,5 +1,5 @@
-import { inject } from '@ember/controller';
-import EmberObject from '@ember/object';
+import { inject } from "@ember/controller";
+import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
