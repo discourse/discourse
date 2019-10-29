@@ -1,4 +1,6 @@
-export default Ember.Service.extend({
+import Service from "@ember/service";
+
+export default Service.extend({
   settings: null,
 
   init() {

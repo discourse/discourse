@@ -1,3 +1,4 @@
+import { inject as service } from '@ember/service';
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
@@ -8,7 +9,7 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 import { fmt } from "discourse/lib/computed";
 
 export default Controller.extend(CanCheckEmails, {
-  adminTools: Ember.inject.service(),
+  adminTools: service(),
   originalPrimaryGroupId: null,
   customGroupIdsBuffer: null,
   availableGroups: null,

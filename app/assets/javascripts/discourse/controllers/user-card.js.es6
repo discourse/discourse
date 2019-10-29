@@ -1,4 +1,5 @@
-import { inject } from '@ember/controller';
+import { inject as service } from "@ember/service";
+import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import {
   default as DiscourseURL,
@@ -8,7 +9,7 @@ import {
 
 export default Controller.extend({
   topic: inject(),
-  router: Ember.inject.service(),
+  router: service(),
 
   actions: {
     togglePosts(user) {

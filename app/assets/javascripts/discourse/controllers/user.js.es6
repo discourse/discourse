@@ -1,3 +1,4 @@
+import { inject as service } from '@ember/service';
 import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
@@ -8,7 +9,7 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 
 export default Controller.extend(CanCheckEmails, {
   indexStream: false,
-  router: Ember.inject.service(),
+  router: service(),
   userNotifications: inject("user-notifications"),
   currentPath: Ember.computed.alias("router._router.currentPath"),
   adminTools: optionalService(),

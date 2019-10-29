@@ -1,10 +1,11 @@
+import { inject as service } from '@ember/service';
 import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import Topic from "discourse/models/topic";
 
 export default Controller.extend({
-  router: Ember.inject.service(),
+  router: service(),
   userTopicsList: inject("user-topics-list"),
   user: inject(),
 

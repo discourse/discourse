@@ -12,7 +12,11 @@ var define, requirejs;
         inject: Ember.inject.controller
       },
       "@ember/object": { default: Ember.Object },
-      "@ember/routing/route": { default: Ember.Route }
+      "@ember/routing/route": { default: Ember.Route },
+      "@ember/service": {
+        default: Ember.Service,
+        inject: Ember.inject.service
+      }
     };
   }
 
