@@ -2,8 +2,7 @@
 
 require 'rails_helper'
 
-# This causes flakiness
-xdescribe BackupRestore::Restorer do
+describe BackupRestore::Restorer do
   it 'detects which pg_dump output is restorable to different schemas' do
     {
       "9.6.7" => true,
