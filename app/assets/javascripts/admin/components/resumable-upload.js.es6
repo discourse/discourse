@@ -1,5 +1,3 @@
-import { schedule } from "@ember/runloop";
-import { later } from "@ember/runloop";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
@@ -47,16 +45,18 @@ export default Component.extend(
         this.resumable.upload();
 
         // mark as uploading
-        later(() => this.set("isUploading", true));
+        Ember.run.later(() => this.set("isUploading", true));
       });
 
       this.resumable.on("fileProgress", file => {
         // update progress
-        later(() => this.set("progress", parseInt(file.progress() * 100, 10)));
+        Ember.run.later(() =>
+          this.set("progress", parseInt(file.progress() * 100, 10))
+        );
       });
 
       this.resumable.on("fileSuccess", file => {
-        later(() => {
+        Ember.run.later(() => {
           // mark as not uploading anymore
           this._reset();
 
@@ -66,7 +66,7 @@ export default Component.extend(
       });
 
       this.resumable.on("fileError", (file, message) => {
-        later(() => {
+        Ember.run.later(() => {
           // mark as not uploading anymore
           this._reset();
 
@@ -78,7 +78,7 @@ export default Component.extend(
 
     @on("didInsertElement")
     _assignBrowse() {
-      schedule("afterRender", () =>
+      Ember.run.schedule("afterRender", () =>
         this.resumable.assignBrowse($(this.element))
       );
     },
@@ -117,7 +117,7 @@ export default Component.extend(
     click() {
       if (this.isUploading) {
         this.resumable.cancel();
-        later(() => this._reset());
+        Ember.run.later(() => this._reset());
         return false;
       } else {
         return true;

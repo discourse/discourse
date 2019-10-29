@@ -1,4 +1,3 @@
-import { next } from "@ember/runloop";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -93,7 +92,7 @@ export default Controller.extend(ModalFunctionality, {
       );
     } else if (!this.canSplitTopic) {
       this.set("selection", "existing_topic");
-      next(() => $("#choose-topic-title").focus());
+      Ember.run.next(() => $("#choose-topic-title").focus());
     }
   },
 

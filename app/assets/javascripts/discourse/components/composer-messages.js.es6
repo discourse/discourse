@@ -1,5 +1,4 @@
 import EmberObject from "@ember/object";
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import LinkLookup from "discourse/lib/link-lookup";
 
@@ -25,7 +24,7 @@ export default Component.extend({
     this.appEvents.on("composer:find-similar", this, this._findSimilar);
     this.appEvents.on("composer-messages:close", this, this._closeTop);
     this.appEvents.on("composer-messages:create", this, this._create);
-    scheduleOnce("afterRender", this, this.reset);
+    Ember.run.scheduleOnce("afterRender", this, this.reset);
   },
 
   willDestroyElement() {

@@ -1,5 +1,3 @@
-import { run } from "@ember/runloop";
-import { next } from "@ember/runloop";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { avatarAtts } from "discourse/widgets/actions-summary";
 import { h } from "virtual-dom";
@@ -9,7 +7,7 @@ const LIKE_ACTION = 2;
 
 function animateHeart($elem, start, end, complete) {
   if (Ember.testing) {
-    return run(this, complete);
+    return Ember.run(this, complete);
   }
 
   $elem
@@ -413,7 +411,7 @@ export default createWidget("post-menu", {
       const likedPostId = keyValueStore.getInt("likedPostId");
       if (likedPostId === attrs.id) {
         keyValueStore.remove("likedPostId");
-        next(() => this.sendWidgetAction("toggleLike"));
+        Ember.run.next(() => this.sendWidgetAction("toggleLike"));
       }
     }
 

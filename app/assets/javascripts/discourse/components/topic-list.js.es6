@@ -1,4 +1,3 @@
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import {
   default as computed,
@@ -70,7 +69,9 @@ export default Component.extend(LoadMore, {
 
     let scrollTo = this.session.get("topicListScrollPosition");
     if (scrollTo && scrollTo >= 0) {
-      schedule("afterRender", () => $(window).scrollTop(scrollTo + 1));
+      Ember.run.schedule("afterRender", () =>
+        $(window).scrollTop(scrollTo + 1)
+      );
     }
   },
 

@@ -1,4 +1,3 @@
-import { debounce } from "@ember/runloop";
 /**
   Debounce a Javascript function. This means if it's called many times in a time limit it
   should only be executed once (at the end of the limit counted from the last call made).
@@ -14,6 +13,6 @@ export default function(func, wait) {
     self = this;
     args = arguments;
 
-    debounce(null, later, wait);
+    Ember.run.debounce(null, later, wait);
   };
 }

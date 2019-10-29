@@ -1,5 +1,4 @@
 import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import showModal from "discourse/lib/show-modal";
 import OpenComposer from "discourse/mixins/open-composer";
@@ -135,7 +134,9 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     didTransition() {
-      next(() => this.controllerFor("application").set("showFooter", true));
+      Ember.run.next(() =>
+        this.controllerFor("application").set("showFooter", true)
+      );
       return true;
     }
   }

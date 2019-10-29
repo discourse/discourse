@@ -1,4 +1,3 @@
-import { later } from "@ember/runloop";
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
@@ -103,7 +102,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   _hideCopyMessage() {
-    later(
+    Ember.run.later(
       () => this.setProperties({ successMessage: null, errorMessage: null }),
       2000
     );

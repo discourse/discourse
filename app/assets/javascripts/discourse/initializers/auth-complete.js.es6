@@ -1,4 +1,3 @@
-import { next } from "@ember/runloop";
 export default {
   name: "auth-complete",
   after: "inject-objects",
@@ -14,7 +13,7 @@ export default {
     if (lastAuthResult) {
       const router = container.lookup("router:main");
       router.one("didTransition", () => {
-        next(() =>
+        Ember.run.next(() =>
           Discourse.authenticationComplete(JSON.parse(lastAuthResult))
         );
       });

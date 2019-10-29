@@ -1,4 +1,3 @@
-import { debounce } from "@ember/runloop";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { observes } from "ember-addons/ember-computed-decorators";
@@ -26,7 +25,7 @@ export default Component.extend({
 
   @observes("model.flair_url")
   _loadSVGIcon() {
-    debounce(this, this._loadIcon, 1000);
+    Ember.run.debounce(this, this._loadIcon, 1000);
   },
 
   _loadIcon() {

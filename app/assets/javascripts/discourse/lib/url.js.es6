@@ -1,6 +1,4 @@
 import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import LockOn from "discourse/lib/lock-on";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -68,7 +66,7 @@ export function jumpToElement(elementId) {
 
   const selector = `#${elementId}, a[name=${elementId}]`;
   _jumpScheduled = true;
-  schedule("afterRender", function() {
+  Ember.run.schedule("afterRender", function() {
     const lockon = new LockOn(selector, {
       finished() {
         _jumpScheduled = false;
@@ -92,7 +90,7 @@ const DiscourseURL = EmberObject.extend({
 
     _transitioning = postNumber > 1;
 
-    schedule("afterRender", () => {
+    Ember.run.schedule("afterRender", () => {
       let elementId;
       let holder;
 
@@ -158,7 +156,7 @@ const DiscourseURL = EmberObject.extend({
       // Always use replaceState in the next runloop to prevent weird routes changing
       // while URLs are loading. For example, while a topic loads it sets `currentPost`
       // which triggers a replaceState even though the topic hasn't fully loaded yet!
-      next(() => {
+      Ember.run.next(() => {
         const location = DiscourseURL.get("router.location");
         if (location && location.replaceURL) {
           location.replaceURL(path);
@@ -252,7 +250,7 @@ const DiscourseURL = EmberObject.extend({
     path = rewritePath(path);
 
     if (typeof opts.afterRouteComplete === "function") {
-      schedule("afterRender", opts.afterRouteComplete);
+      Ember.run.schedule("afterRender", opts.afterRouteComplete);
     }
 
     if (this.navigatedToPost(oldPath, path, opts)) {

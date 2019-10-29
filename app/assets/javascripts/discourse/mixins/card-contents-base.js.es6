@@ -1,6 +1,3 @@
-import { throttle } from "@ember/runloop";
-import { next } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import afterTransition from "discourse/lib/after-transition";
 import DiscourseURL from "discourse/lib/url";
@@ -145,7 +142,7 @@ export default Ember.Mixin.create({
   _bindMobileScroll() {
     const mobileScrollEvent = this.mobileScrollEvent;
     const onScroll = () => {
-      throttle(this, this._close, 1000);
+      Ember.run.throttle(this, this._close, 1000);
     };
 
     $(window).on(mobileScrollEvent, onScroll);
@@ -174,7 +171,7 @@ export default Ember.Mixin.create({
 
     let verticalAdjustments = 0;
 
-    schedule("afterRender", () => {
+    Ember.run.schedule("afterRender", () => {
       if (target) {
         if (!this.site.mobileView) {
           let position = target.offset();
@@ -248,7 +245,7 @@ export default Ember.Mixin.create({
         // note: we DO NOT use afterRender here cause _positionCard may
         // run afterwards, if we allowed this to happen the usercard
         // may be offscreen and we may scroll all the way to it on focus
-        next(null, () => {
+        Ember.run.next(null, () => {
           const firstLink = this.element.querySelector("a");
           firstLink && firstLink.focus();
         });

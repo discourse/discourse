@@ -1,4 +1,3 @@
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { isNumeric } from "discourse/lib/utilities";
 
@@ -37,7 +36,7 @@ export default Component.extend({
           this._processMinutesChange(value);
         }
 
-        schedule("afterRender", () => (event.target.value = value));
+        Ember.run.schedule("afterRender", () => (event.target.value = value));
       }
     },
 

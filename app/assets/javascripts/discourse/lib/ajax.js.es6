@@ -1,4 +1,3 @@
-import { run } from "@ember/runloop";
 import pageVisible from "discourse/lib/page-visible";
 import logout from "discourse/lib/logout";
 
@@ -97,7 +96,7 @@ export function ajax() {
       handleRedirect(data);
       handleLogoff(xhr);
 
-      run(() => {
+      Ember.run(() => {
         Discourse.Site.currentProp(
           "isReadOnly",
           !!xhr.getResponseHeader("Discourse-Readonly")
@@ -108,7 +107,7 @@ export function ajax() {
         data = { result: data, xhr: xhr };
       }
 
-      run(null, resolve, data);
+      Ember.run(null, resolve, data);
     };
 
     args.error = (xhr, textStatus, errorThrown) => {
@@ -129,7 +128,7 @@ export function ajax() {
       xhr.jqTextStatus = textStatus;
       xhr.requestedUrl = url;
 
-      run(null, reject, {
+      Ember.run(null, reject, {
         jqXHR: xhr,
         textStatus: textStatus,
         errorThrown: errorThrown

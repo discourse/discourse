@@ -1,4 +1,3 @@
-import { next } from "@ember/runloop";
 import deprecated from "discourse-common/lib/deprecated";
 
 export default class Connector {
@@ -12,7 +11,7 @@ export default class Connector {
     const elem = $elem[0];
 
     const { opts, widget } = this;
-    next(() => {
+    Ember.run.next(() => {
       const mounted = widget._findView();
 
       if (opts.templateName) {

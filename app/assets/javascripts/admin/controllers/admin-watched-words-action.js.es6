@@ -1,4 +1,3 @@
-import { schedule } from "@ember/runloop";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
@@ -52,7 +51,7 @@ export default Controller.extend({
       if (a) {
         a.words.unshiftObject(arg);
         a.incrementProperty("count");
-        schedule("afterRender", () => {
+        Ember.run.schedule("afterRender", () => {
           // remove from other actions lists
           let match = null;
           this.get("adminWatchedWords.model").forEach(action => {

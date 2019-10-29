@@ -1,4 +1,3 @@
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 
 export default Component.extend({
@@ -61,7 +60,7 @@ export default Component.extend({
       this.updateField();
 
       this.set("inviteEmail", "");
-      scheduleOnce("afterRender", () =>
+      Ember.run.scheduleOnce("afterRender", () =>
         this.element.querySelector(".invite-email").focus()
       );
     },

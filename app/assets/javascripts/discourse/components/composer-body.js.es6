@@ -1,8 +1,3 @@
-import { throttle } from "@ember/runloop";
-import { run } from "@ember/runloop";
-import { cancel } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
-import { later } from "@ember/runloop";
 import Component from "@ember/component";
 import {
   default as computed,
@@ -65,7 +60,7 @@ export default Component.extend(KeyEnterEscape, {
     "composer.canEditTopicFeaturedLink"
   )
   resize() {
-    scheduleOnce("afterRender", () => {
+    Ember.run.scheduleOnce("afterRender", () => {
       if (!this.element || this.isDestroying || this.isDestroyed) {
         return;
       }
@@ -83,8 +78,8 @@ export default Component.extend(KeyEnterEscape, {
 
     // One second from now, check to see if the last key was hit when
     // we recorded it. If it was, the user paused typing.
-    cancel(this._lastKeyTimeout);
-    this._lastKeyTimeout = later(() => {
+    Ember.run.cancel(this._lastKeyTimeout);
+    this._lastKeyTimeout = Ember.run.later(() => {
       if (lastKeyUp !== this._lastKeyUp) {
         return;
       }
@@ -121,7 +116,7 @@ export default Component.extend(KeyEnterEscape, {
 
     const throttledPerformDrag = (event => {
       event.preventDefault();
-      throttle(this, performDrag, event, THROTTLE_RATE);
+      Ember.run.throttle(this, performDrag, event, THROTTLE_RATE);
     }).bind(this);
 
     const endDrag = () => {
@@ -158,7 +153,7 @@ export default Component.extend(KeyEnterEscape, {
     this._super(...arguments);
     this.setupComposerResizeEvents();
 
-    const resize = () => run(() => this.resize());
+    const resize = () => Ember.run(() => this.resize());
     const triggerOpen = () => {
       if (this.get("composer.composeState") === Composer.OPEN) {
         this.appEvents.trigger("composer:opened");

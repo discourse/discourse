@@ -1,4 +1,3 @@
-import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import {
   default as computed,
@@ -70,7 +69,7 @@ export default Component.extend({
       if (this.expanded) {
         DiscourseURL.appEvents.on("dom:clean", this, this.ensureDropClosed);
 
-        next(() => {
+        Ember.run.next(() => {
           if (!this.expanded) {
             return;
           }
@@ -78,7 +77,7 @@ export default Component.extend({
           $(this.element.querySelector(".drop a")).on("click", () => {
             this.element.querySelector(".drop").style.display = "none";
 
-            next(() => {
+            Ember.run.next(() => {
               if (!this.element || this.isDestroying || this.isDestroyed) {
                 return;
               }

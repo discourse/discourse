@@ -1,4 +1,3 @@
-import { bind } from "@ember/runloop";
 import Component from "@ember/component";
 import { on } from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
@@ -89,10 +88,13 @@ export default Component.extend(
 
     @on("didInsertElement")
     _setupLogsNotice() {
-      this._boundRerenderBuffer = bind(this, this.rerenderBuffer);
+      this._boundRerenderBuffer = Ember.run.bind(this, this.rerenderBuffer);
       LogsNotice.current().addObserver("hidden", this._boundRerenderBuffer);
 
-      this._boundResetCurrentProp = bind(this, this._resetCurrentProp);
+      this._boundResetCurrentProp = Ember.run.bind(
+        this,
+        this._resetCurrentProp
+      );
       $(this.element).on(
         "click.global-notice",
         ".alert-logs-notice .close",

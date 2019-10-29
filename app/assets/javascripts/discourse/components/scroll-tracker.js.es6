@@ -1,4 +1,3 @@
-import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import Scrolling from "discourse/mixins/scrolling";
 
@@ -20,7 +19,7 @@ export default Component.extend(Scrolling, {
 
     const data = this.session.get(this.trackerName);
     if (data && data.position >= 0 && data.tag === this.tag) {
-      next(() => $(window).scrollTop(data.position + 1));
+      Ember.run.next(() => $(window).scrollTop(data.position + 1));
     }
   },
 

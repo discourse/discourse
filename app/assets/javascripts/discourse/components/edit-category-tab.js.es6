@@ -1,4 +1,3 @@
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { propertyEqual } from "discourse/lib/computed";
 import computed from "ember-addons/ember-computed-decorators";
@@ -21,7 +20,7 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    scheduleOnce("afterRender", this, this._addToCollection);
+    Ember.run.scheduleOnce("afterRender", this, this._addToCollection);
   },
 
   _addToCollection: function() {

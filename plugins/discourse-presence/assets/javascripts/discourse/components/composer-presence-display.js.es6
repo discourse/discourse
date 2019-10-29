@@ -1,6 +1,3 @@
-import { once } from "@ember/runloop";
-import { debounce } from "@ember/runloop";
-import { cancel } from "@ember/runloop";
 import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -29,12 +26,12 @@ export default Component.extend({
   @on("didInsertElement")
   composerOpened() {
     this._lastPublish = new Date();
-    once(this, "updateState");
+    Ember.run.once(this, "updateState");
   },
 
   @observes("action", "post.id", "topic.id")
   composerStateChanged() {
-    once(this, "updateState");
+    Ember.run.once(this, "updateState");
   },
 
   @observes("reply", "title")
@@ -47,8 +44,8 @@ export default Component.extend({
   @on("willDestroyElement")
   composerClosing() {
     this.publish({ previous: this.currentState });
-    cancel(this._pingTimer);
-    cancel(this._clearTimer);
+    Ember.run.cancel(this._pingTimer);
+    Ember.run.cancel(this._clearTimer);
   },
 
   updateState() {
@@ -97,7 +94,7 @@ export default Component.extend({
         r.messagebus_channel,
         message => {
           if (!this.isDestroyed) this.set("presenceUsers", message.users);
-          this._clearTimer = debounce(
+          this._clearTimer = Ember.run.debounce(
             this,
             "clear",
             keepAliveDuration + bufferTime

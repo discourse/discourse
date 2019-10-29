@@ -1,4 +1,3 @@
-import { debounce } from "@ember/runloop";
 const helper = {
   offset() {
     const mainOffset = $("#main").offset();
@@ -13,7 +12,7 @@ export default Ember.Mixin.create({
   init() {
     this._super(...arguments);
     this.queueDockCheck = () => {
-      debounce(this, this.safeDockCheck, 5);
+      Ember.run.debounce(this, this.safeDockCheck, 5);
     };
   },
 

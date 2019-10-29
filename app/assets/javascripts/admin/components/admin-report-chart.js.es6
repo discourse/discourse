@@ -1,5 +1,3 @@
-import { debounce } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { number } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
@@ -13,7 +11,7 @@ export default Component.extend({
     this._super(...arguments);
 
     this.resizeHandler = () =>
-      debounce(this, this._scheduleChartRendering, 500);
+      Ember.run.debounce(this, this._scheduleChartRendering, 500);
   },
 
   didInsertElement() {
@@ -33,11 +31,11 @@ export default Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
-    debounce(this, this._scheduleChartRendering, 100);
+    Ember.run.debounce(this, this._scheduleChartRendering, 100);
   },
 
   _scheduleChartRendering() {
-    schedule("afterRender", () => {
+    Ember.run.schedule("afterRender", () => {
       this._renderChart(
         this.model,
         this.element && this.element.querySelector(".chart-canvas")

@@ -1,5 +1,3 @@
-import { cancel } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { diff, patch } from "virtual-dom";
 import { WidgetClickHook } from "discourse/widgets/hooks";
@@ -52,7 +50,7 @@ export default Component.extend({
 
     this._rootNode = document.createElement("div");
     this.element.appendChild(this._rootNode);
-    this._timeout = scheduleOnce("render", this, this.rerenderWidget);
+    this._timeout = Ember.run.scheduleOnce("render", this, this.rerenderWidget);
   },
 
   willClearRender() {
@@ -70,7 +68,7 @@ export default Component.extend({
       const [eventName, caller] = evt;
       this.appEvents.off(eventName, this, caller);
     });
-    cancel(this._timeout);
+    Ember.run.cancel(this._timeout);
   },
 
   afterRender() {},
@@ -99,13 +97,13 @@ export default Component.extend({
       this._renderCallback = callback;
     }
 
-    scheduleOnce("render", this, this.rerenderWidget);
+    Ember.run.scheduleOnce("render", this, this.rerenderWidget);
   },
 
   buildArgs() {},
 
   rerenderWidget() {
-    cancel(this._timeout);
+    Ember.run.cancel(this._timeout);
 
     if (this._rootNode) {
       if (!this._widgetClass) {

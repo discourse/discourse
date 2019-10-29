@@ -1,4 +1,3 @@
-import { bind } from "@ember/runloop";
 import Component from "@ember/component";
 import {
   default as computed,
@@ -19,7 +18,10 @@ export default Component.extend({
 
   @on("didInsertElement")
   _registerListener() {
-    this._promptEventHandler = bind(this, this._handleInstallPromptEvent);
+    this._promptEventHandler = Ember.run.bind(
+      this,
+      this._handleInstallPromptEvent
+    );
     window.addEventListener("beforeinstallprompt", this._promptEventHandler);
   },
 

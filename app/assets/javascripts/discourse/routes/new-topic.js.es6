@@ -1,4 +1,3 @@
-import { next } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import Category from "discourse/models/category";
 
@@ -64,7 +63,7 @@ export default DiscourseRoute.extend({
   },
 
   _sendTransition(event, transition, categoryId) {
-    next(() => {
+    Ember.run.next(() => {
       event.send(
         "createNewTopicViaParams",
         transition.to.queryParams.title,

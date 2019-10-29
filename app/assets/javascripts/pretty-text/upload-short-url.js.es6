@@ -1,4 +1,3 @@
-import { debounce } from "@ember/runloop";
 let _cache = {};
 
 export function lookupCachedUploadUrl(shortUrl) {
@@ -101,7 +100,7 @@ export function resolveAllShortUrls(ajax) {
     $shortUploadUrls = $(attributes);
     if ($shortUploadUrls.length > 0) {
       // this is carefully batched so we can do a leading debounce (trigger right away)
-      return debounce(
+      return Ember.run.debounce(
         null,
         () => _loadShortUrls($shortUploadUrls, ajax),
         450,

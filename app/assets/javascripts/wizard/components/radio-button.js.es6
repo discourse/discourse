@@ -1,4 +1,3 @@
-import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import { observes, on } from "ember-addons/ember-computed-decorators";
 
@@ -14,7 +13,7 @@ export default Component.extend({
   @on("init")
   updateVal() {
     const checked = this.value === this.radioValue;
-    next(
+    Ember.run.next(
       () => (this.element.querySelector("input[type=radio]").checked = checked)
     );
   }

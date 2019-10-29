@@ -1,4 +1,3 @@
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 /* global Pikaday:true */
 import { propertyNotEqual } from "discourse/lib/computed";
@@ -56,7 +55,7 @@ export default Component.extend({
     if (markup) {
       cookAsync(markup).then(result => {
         this.set("currentPreview", result);
-        schedule("afterRender", () =>
+        Ember.run.schedule("afterRender", () =>
           this.$(".preview .discourse-local-date").applyLocalDates()
         );
       });
@@ -410,7 +409,7 @@ export default Component.extend({
       date = null;
     }
 
-    schedule("afterRender", () => {
+    Ember.run.schedule("afterRender", () => {
       this._picker.setMinDate(moment(date, this.dateFormat).toDate());
     });
   },
@@ -420,7 +419,7 @@ export default Component.extend({
       date = null;
     }
 
-    schedule("afterRender", () => {
+    Ember.run.schedule("afterRender", () => {
       this._picker.setDate(moment.utc(date), true);
     });
   },

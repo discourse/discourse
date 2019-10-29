@@ -1,4 +1,3 @@
-import { run } from "@ember/runloop";
 import { acceptance, controllerFor } from "helpers/qunit-helpers";
 import showModal from "discourse/lib/show-modal";
 
@@ -38,7 +37,7 @@ QUnit.test("modal", async function(assert) {
     '{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}'
   );
 
-  run(() => showModal("not-dismissable", {}));
+  Ember.run(() => showModal("not-dismissable", {}));
 
   assert.ok(find(".d-modal:visible").length === 1, "modal should appear");
 

@@ -1,5 +1,3 @@
-import { run } from "@ember/runloop";
-import { later } from "@ember/runloop";
 /* global QUnit, resetSite */
 
 import sessionFixtures from "fixtures/session-fixtures";
@@ -157,7 +155,7 @@ export function controllerFor(controller, model) {
 export function asyncTestDiscourse(text, func) {
   QUnit.test(text, function(assert) {
     const done = assert.async();
-    run(() => {
+    Ember.run(() => {
       func.call(this, assert);
       done();
     });
@@ -208,7 +206,7 @@ export function waitFor(assert, callback, timeout) {
   timeout = timeout || 500;
 
   const done = assert.async();
-  later(() => {
+  Ember.run.later(() => {
     callback();
     done();
   }, timeout);
