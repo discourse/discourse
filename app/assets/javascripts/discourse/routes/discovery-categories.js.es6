@@ -135,9 +135,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     didTransition() {
-      next(() =>
-        this.controllerFor("application").set("showFooter", true)
-      );
+      next(() => this.controllerFor("application").set("showFooter", true));
       return true;
     }
   }

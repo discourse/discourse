@@ -444,10 +444,7 @@ export default Component.extend({
             if (filterInput) {
               filterInput.value = v.term;
 
-              later(
-                () => filterInput.dispatchEvent(new Event("input")),
-                50
-              );
+              later(() => filterInput.dispatchEvent(new Event("input")), 50);
             }
           });
 

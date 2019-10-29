@@ -19,10 +19,7 @@ export default Component.extend({
 
   @on("didInsertElement")
   _registerListener() {
-    this._promptEventHandler = bind(
-      this,
-      this._handleInstallPromptEvent
-    );
+    this._promptEventHandler = bind(this, this._handleInstallPromptEvent);
     window.addEventListener("beforeinstallprompt", this._promptEventHandler);
   },
 

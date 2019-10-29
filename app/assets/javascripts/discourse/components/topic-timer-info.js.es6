@@ -87,11 +87,7 @@ export default Component.extend(
 
         // TODO Sam: concerned this can cause a heavy rerender loop
         if (!Ember.testing) {
-          this._delayedRerender = later(
-            this,
-            this.rerender,
-            rerenderDelay
-          );
+          this._delayedRerender = later(this, this.rerender, rerenderDelay);
         }
       }
     },

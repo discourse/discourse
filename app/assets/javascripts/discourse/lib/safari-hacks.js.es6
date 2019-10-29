@@ -95,10 +95,7 @@ function positioningWorkaround($fixedElement) {
 
       if (!iOSWithVisualViewport()) {
         fixedElement.style.height = oldHeight;
-        later(
-          () => $(fixedElement).removeClass("no-transition"),
-          500
-        );
+        later(() => $(fixedElement).removeClass("no-transition"), 500);
       }
 
       $(window).scrollTop(originalScrollTop);

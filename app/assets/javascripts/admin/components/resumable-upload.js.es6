@@ -52,9 +52,7 @@ export default Component.extend(
 
       this.resumable.on("fileProgress", file => {
         // update progress
-        later(() =>
-          this.set("progress", parseInt(file.progress() * 100, 10))
-        );
+        later(() => this.set("progress", parseInt(file.progress() * 100, 10)));
       });
 
       this.resumable.on("fileSuccess", file => {
