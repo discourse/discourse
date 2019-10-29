@@ -305,26 +305,23 @@ class TagsController < ::ApplicationController
   end
 
   # TODO: this is duplication of ListController
-  def page_params(opts = nil)
-    opts ||= {}
+  def page_params
     route_params = { format: 'json' }
     route_params[:category]        = @filter_on_category.slug_for_url                 if @filter_on_category
     route_params[:parent_category] = @filter_on_category.parent_category.slug_for_url if @filter_on_category && @filter_on_category.parent_category
-    route_params[:order]           = opts[:order]      if opts[:order].present?
-    route_params[:ascending]       = opts[:ascending]  if opts[:ascending].present?
     route_params
   end
 
-  def next_page_params(opts = nil)
-    page_params(opts).merge(page: params[:page].to_i + 1)
+  def next_page_params
+    page_params.merge(page: params[:page].to_i + 1)
   end
 
-  def prev_page_params(opts = nil)
+  def prev_page_params
     pg = params[:page].to_i
     if pg > 1
-      page_params(opts).merge(page: pg - 1)
+      page_params.merge(page: pg - 1)
     else
-      page_params(opts).merge(page: nil)
+      page_params.merge(page: nil)
     end
   end
 
@@ -343,9 +340,9 @@ class TagsController < ::ApplicationController
 
     begin
       url = if action == :prev
-        public_send(method, opts.merge(prev_page_params(opts)))
+        public_send(method, opts.merge(prev_page_params))
       else # :next
-        public_send(method, opts.merge(next_page_params(opts)))
+        public_send(method, opts.merge(next_page_params))
       end
     rescue ActionController::UrlGenerationError
       raise Discourse::NotFound
