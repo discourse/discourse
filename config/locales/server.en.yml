@@ -2663,11 +2663,13 @@ en:
 
     welcome_moderator:
       title: "Welcome Moderator"
-      subject_template: "Congratulations on becoming a moderator!"
+      subject_template: "Congratulations, you’re now a moderator!"
       text_body_template: |
-        You are now a moderator. -- congratulations!
+        You’ve been granted moderator status by a fellow staff member.
 
-        You now have access to the <a href='%{base_url}/admin' target='_blank'>admin interface</a>
+        As a moderator, you now have access to the <a href='%{base_url}/admin' target='_blank'>admin interface</a>.
+
+        With great power comes great responsibility. If you’re new to moderating, please refer to the [Moderation Guide](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Welcome Invite"
       subject_template: "Welcome to %{site_name}!"
