@@ -111,8 +111,10 @@ xdescribe BackupRestore::Restorer do
       described_class.any_instance.stubs(initialize_state: true)
     end
     after do
+      ActiveRecord::Base.clear_all_connections!
+      Rails.configuration.multisite = false
       RailsMultisite::ConnectionManagement.clear_settings!
-      conn.establish_connection(db: 'default')
+      ActiveRecord::Base.establish_connection
     end
     let(:conn) { RailsMultisite::ConnectionManagement }
     let(:restorer) { described_class.new(admin.id) }
