@@ -1,4 +1,4 @@
-import { inject } from '@ember/controller';
+import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { setting } from "discourse/lib/computed";
 import computed from "ember-addons/ember-computed-decorators";

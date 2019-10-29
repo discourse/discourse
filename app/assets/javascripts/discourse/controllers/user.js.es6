@@ -1,5 +1,5 @@
-import { inject as service } from '@ember/service';
-import { inject } from '@ember/controller';
+import { inject as service } from "@ember/service";
+import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import computed from "ember-addons/ember-computed-decorators";

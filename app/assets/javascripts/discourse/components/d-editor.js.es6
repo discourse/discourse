@@ -1,4 +1,4 @@
-import { inject as service } from '@ember/service';
+import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 /*global Mousetrap:true */
 import {

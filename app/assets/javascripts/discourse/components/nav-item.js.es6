@@ -1,4 +1,4 @@
-import { inject as service } from '@ember/service';
+import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 /* You might be looking for navigation-item. */
 import { iconHTML } from "discourse-common/lib/icon-library";

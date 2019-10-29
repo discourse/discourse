@@ -1,4 +1,4 @@
-import { inject as service } from '@ember/service';
+import { inject as service } from "@ember/service";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import CanCheckEmails from "discourse/mixins/can-check-emails";

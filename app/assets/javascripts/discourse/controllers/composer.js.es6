@@ -1,5 +1,5 @@
-import { inject as service } from '@ember/service';
-import { inject } from '@ember/controller';
+import { inject as service } from "@ember/service";
+import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import Quote from "discourse/lib/quote";

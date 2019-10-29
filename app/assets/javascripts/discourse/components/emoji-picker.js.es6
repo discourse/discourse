@@ -1,4 +1,4 @@
-import { inject as service } from '@ember/service';
+import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";

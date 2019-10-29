@@ -1,4 +1,4 @@
-import { inject } from '@ember/controller';
+import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
