@@ -17,7 +17,7 @@ var define, requirejs;
       "@ember/runloop": {
         bind: Ember.run.bind,
         cancel: Ember.run.cancel,
-        debounce: Ember.run.debounce,
+        debounce: Ember.testing ? Ember.run : Ember.run.debounce,
         later: Ember.run.later,
         next: Ember.run.next,
         once: Ember.run.once,
