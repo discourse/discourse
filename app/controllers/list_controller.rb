@@ -147,8 +147,8 @@ class ListController < ApplicationController
     list_opts = build_topic_list_options
     target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts) }, [:user_stat, :user_option])
     list = generate_list_for("topics_by", target_user, list_opts)
-    list.more_topics_url = url_for(construct_url_with(:next, list_opts))
-    list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))
+    list.more_topics_url = construct_url_with(:next, list_opts)
+    list.prev_topics_url = construct_url_with(:prev, list_opts)
     respond_with_list(list)
   end
 
@@ -160,8 +160,8 @@ class ListController < ApplicationController
 
     list_opts = build_topic_list_options
     list = generate_list_for("group_topics", group, list_opts)
-    list.more_topics_url = url_for(construct_url_with(:next, list_opts))
-    list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))
+    list.more_topics_url = construct_url_with(:next, list_opts)
+    list.prev_topics_url = construct_url_with(:prev, list_opts)
     respond_with_list(list)
   end
 
@@ -172,8 +172,8 @@ class ListController < ApplicationController
       guardian.ensure_can_see_private_messages!(target_user.id)
       list = generate_list_for(action.to_s, target_user, list_opts)
       url_prefix = "topics"
-      list.more_topics_url = url_for(construct_url_with(:next, list_opts, url_prefix))
-      list.prev_topics_url = url_for(construct_url_with(:prev, list_opts, url_prefix))
+      list.more_topics_url = construct_url_with(:next, list_opts, url_prefix)
+      list.prev_topics_url = construct_url_with(:prev, list_opts, url_prefix)
       respond_with_list(list)
     end
   end
