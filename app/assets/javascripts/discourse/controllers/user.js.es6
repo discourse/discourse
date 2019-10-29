@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -124,7 +125,7 @@ export default Controller.extend(CanCheckEmails, {
             : null;
           return Ember.isEmpty(value)
             ? null
-            : Ember.Object.create({ value, field });
+            : EmberObject.create({ value, field });
         })
         .compact();
     }

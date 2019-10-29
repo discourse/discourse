@@ -8,7 +8,7 @@
   ```javascript
 
     // Define your class and apply the Mixin
-    User = Ember.Object.extend({});
+    User = EmberObject.extend({});
     User.reopenClass(Singleton);
 
     // Retrieve the current instance:
@@ -34,7 +34,7 @@
   ```javascript
 
     // Define your class and apply the Mixin
-    Foot = Ember.Object.extend({});
+    Foot = EmberObject.extend({});
     Foot.reopenClass(Singleton, {
       createCurrent: function() {
         return Foot.create({toes: 5});

@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
@@ -34,7 +35,7 @@ export default Controller.extend(PreferencesTabController, {
         const value = userFields
           ? userFields[field.get("id").toString()]
           : null;
-        return Ember.Object.create({ value, field });
+        return EmberObject.create({ value, field });
       });
     }
   },

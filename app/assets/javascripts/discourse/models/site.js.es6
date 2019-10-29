@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import computed from "ember-addons/ember-computed-decorators";
 import Archetype from "discourse/models/archetype";
 import PostActionType from "discourse/models/post-action-type";
@@ -179,7 +180,7 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.post_action_types) {
-      result.postActionByIdLookup = Ember.Object.create();
+      result.postActionByIdLookup = EmberObject.create();
       result.post_action_types = result.post_action_types.map(p => {
         const actionType = PostActionType.create(p);
         result.postActionByIdLookup.set("action" + p.id, actionType);
@@ -188,7 +189,7 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.topic_flag_types) {
-      result.topicFlagByIdLookup = Ember.Object.create();
+      result.topicFlagByIdLookup = EmberObject.create();
       result.topic_flag_types = result.topic_flag_types.map(p => {
         const actionType = PostActionType.create(p);
         result.topicFlagByIdLookup.set("action" + p.id, actionType);
@@ -204,9 +205,7 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.user_fields) {
-      result.user_fields = result.user_fields.map(uf =>
-        Ember.Object.create(uf)
-      );
+      result.user_fields = result.user_fields.map(uf => EmberObject.create(uf));
     }
 
     return result;

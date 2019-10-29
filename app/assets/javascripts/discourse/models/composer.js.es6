@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import { throwAjaxError } from "discourse/lib/ajax-error";
@@ -215,7 +216,7 @@ const Composer = RestModel.extend({
 
   @observes("archetype")
   archetypeChanged() {
-    return this.set("metaData", Ember.Object.create());
+    return this.set("metaData", EmberObject.create());
   },
 
   // view detected user is typing
@@ -677,7 +678,7 @@ const Composer = RestModel.extend({
 
     this.setProperties({
       archetypeId: opts.archetypeId || this.site.default_archetype,
-      metaData: opts.metaData ? Ember.Object.create(opts.metaData) : null,
+      metaData: opts.metaData ? EmberObject.create(opts.metaData) : null,
       reply: opts.reply || this.reply || ""
     });
 

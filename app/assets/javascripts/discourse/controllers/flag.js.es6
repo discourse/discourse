@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import ActionSummary from "discourse/models/action-summary";
@@ -58,7 +59,7 @@ export default Controller.extend(ModalFunctionality, {
       return flagsAvailable;
     } else {
       // flagging topic
-      let lookup = Ember.Object.create();
+      let lookup = EmberObject.create();
       let model = this.model;
       model.get("actions_summary").forEach(a => {
         a.flagTopic = model;

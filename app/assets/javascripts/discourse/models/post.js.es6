@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -346,7 +347,7 @@ const Post = RestModel.extend({
 Post.reopenClass({
   munge(json) {
     if (json.actions_summary) {
-      const lookup = Ember.Object.create();
+      const lookup = EmberObject.create();
 
       // this area should be optimized, it is creating way too many objects per post
       json.actions_summary = json.actions_summary.map(a => {
@@ -394,7 +395,7 @@ Post.reopenClass({
 
   loadRevision(postId, version) {
     return ajax(`/posts/${postId}/revisions/${version}.json`).then(result =>
-      Ember.Object.create(result)
+      EmberObject.create(result)
     );
   },
 

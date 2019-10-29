@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import LockOn from "discourse/lib/lock-on";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -77,7 +78,7 @@ export function jumpToElement(elementId) {
 
 let _transitioning = false;
 
-const DiscourseURL = Ember.Object.extend({
+const DiscourseURL = EmberObject.extend({
   isJumpScheduled() {
     return _transitioning || _jumpScheduled;
   },

@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import DiscourseRoute from "discourse/routes/discourse";
 import showModal from "discourse/lib/show-modal";
 import OpenComposer from "discourse/mixins/open-composer";
@@ -51,7 +52,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
         wrappedCategoriesList && wrappedCategoriesList.category_list;
 
       if (categoriesList && topicsList) {
-        return Ember.Object.create({
+        return EmberObject.create({
           categories: CategoryList.categoriesFrom(
             this.store,
             wrappedCategoriesList
@@ -66,7 +67,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
       }
       // Otherwise, return the ajax result
       return ajax(`/categories_and_${filter}`).then(result => {
-        return Ember.Object.create({
+        return EmberObject.create({
           categories: CategoryList.categoriesFrom(this.store, result),
           topics: TopicList.topicsFrom(this.store, result),
           can_create_category: result.category_list.can_create_category,

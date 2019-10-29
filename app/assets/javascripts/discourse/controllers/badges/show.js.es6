@@ -1,4 +1,5 @@
 import { inject } from "@ember/controller";
+import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
@@ -22,7 +23,7 @@ export default Controller.extend({
   @computed("filteredList")
   selectableUserBadges(filteredList) {
     return [
-      Ember.Object.create({
+      EmberObject.create({
         badge: Badge.create({ name: I18n.t("badges.none") })
       }),
       ...filteredList.uniqBy("badge.name")

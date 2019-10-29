@@ -1,8 +1,9 @@
+import EmberObject from "@ember/object";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
-const Tab = Ember.Object.extend({
+const Tab = EmberObject.extend({
   init() {
     this._super(...arguments);
     let name = this.name;

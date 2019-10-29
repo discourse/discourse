@@ -2,8 +2,9 @@ import Step from "wizard/models/step";
 import WizardField from "wizard/models/wizard-field";
 import { ajax } from "wizard/lib/ajax";
 import computed from "ember-addons/ember-computed-decorators";
+import EmberObject from "@ember/object";
 
-const Wizard = Ember.Object.extend({
+const Wizard = EmberObject.extend({
   @computed("steps.length")
   totalSteps: length => length,
 

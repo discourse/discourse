@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import {
   default as computed,
   on,
@@ -7,7 +8,7 @@ import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 
 const LOGS_NOTICE_KEY = "logs-notice-text";
 
-const LogsNotice = Ember.Object.extend({
+const LogsNotice = EmberObject.extend({
   text: "",
 
   @on("init")

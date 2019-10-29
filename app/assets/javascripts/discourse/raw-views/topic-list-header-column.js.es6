@@ -1,6 +1,7 @@
+import EmberObject from "@ember/object";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Object.extend({
+export default EmberObject.extend({
   @computed
   localizedName() {
     if (this.forceName) {

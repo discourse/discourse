@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import BadgeGrouping from "discourse/models/badge-grouping";
 import RestModel from "discourse/models/rest";
@@ -66,7 +67,7 @@ Badge.reopenClass({
     if ("badge_types" in json) {
       json.badge_types.forEach(
         badgeTypeJson =>
-          (badgeTypes[badgeTypeJson.id] = Ember.Object.create(badgeTypeJson))
+          (badgeTypes[badgeTypeJson.id] = EmberObject.create(badgeTypeJson))
       );
     }
 

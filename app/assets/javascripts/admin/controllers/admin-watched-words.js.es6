@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
 
@@ -28,7 +29,7 @@ export default Controller.extend({
         return wordRecord.word.indexOf(filter) > -1;
       });
       matchesByAction.pushObject(
-        Ember.Object.create({
+        EmberObject.create({
           nameKey: wordsForAction.nameKey,
           name: wordsForAction.name,
           words: wordRecords,

@@ -2,6 +2,7 @@
 // and the admin application. Use this if you need front end code to access admin
 // modules. Inject it optionally, and if it exists go to town!
 
+import EmberObject from "@ember/object";
 import AdminUser from "admin/models/admin-user";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
@@ -22,7 +23,7 @@ export default Service.extend({
       "controller:adminLogs.staffActionLogs"
     );
     target.transitionToRoute("adminLogs.staffActionLogs").then(() => {
-      controller.set("filters", Ember.Object.create());
+      controller.set("filters", EmberObject.create());
       controller._changeFilters(filters);
     });
   },

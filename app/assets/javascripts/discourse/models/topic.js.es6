@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { flushMap } from "discourse/models/store";
 import RestModel from "discourse/models/rest";
@@ -635,7 +636,7 @@ Topic.reopenClass({
 
   createActionSummary(result) {
     if (result.actions_summary) {
-      const lookup = Ember.Object.create();
+      const lookup = EmberObject.create();
       result.actions_summary = result.actions_summary.map(a => {
         a.post = result;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);

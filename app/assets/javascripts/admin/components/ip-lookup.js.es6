@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { ajax } from "discourse/lib/ajax";
@@ -21,7 +22,7 @@ export default Component.extend({
 
       if (!this.location) {
         ajax("/admin/users/ip-info", { data: { ip: this.ip } }).then(location =>
-          this.set("location", Ember.Object.create(location))
+          this.set("location", EmberObject.create(location))
         );
       }
 

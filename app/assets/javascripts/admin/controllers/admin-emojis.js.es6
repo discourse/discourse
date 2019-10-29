@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 export default Controller.extend({
@@ -12,7 +13,7 @@ export default Controller.extend({
   actions: {
     emojiUploaded(emoji) {
       emoji.url += "?t=" + new Date().getTime();
-      this.model.pushObject(Ember.Object.create(emoji));
+      this.model.pushObject(EmberObject.create(emoji));
     },
 
     destroy(emoji) {

@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import {
   default as computed,
@@ -84,7 +85,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
           const value = userFields ? userFields[field.get("id")] : null;
           return Ember.isEmpty(value)
             ? null
-            : Ember.Object.create({ value, field });
+            : EmberObject.create({ value, field });
         })
         .compact();
     }
