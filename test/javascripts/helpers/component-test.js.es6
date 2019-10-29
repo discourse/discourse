@@ -33,6 +33,7 @@ export default function(name, opts) {
       this.registry.register("current-user:main", this.currentUser, {
         instantiate: false
       });
+      this.registry.injection("component", "currentUser", "current-user:main");
       this.registry.register(
         "topic-tracking-state:main",
         TopicTrackingState.create({ currentUser }),
