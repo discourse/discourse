@@ -7,8 +7,9 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
 import { getOwner } from "discourse-common/lib/get-owner";
+import Service from "@ember/service";
 
-export default Ember.Service.extend({
+export default Service.extend({
   init() {
     this._super(...arguments);
 

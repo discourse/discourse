@@ -1,10 +1,11 @@
+import { inject as service } from '@ember/service';
 import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import { exportUserArchive } from "discourse/lib/export-csv";
 
 export default Controller.extend({
   application: inject(),
-  router: Ember.inject.service(),
+  router: service(),
   user: inject(),
   userActionType: null,
 

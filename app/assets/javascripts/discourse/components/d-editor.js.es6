@@ -1,3 +1,4 @@
+import { inject as service } from '@ember/service';
 import Component from "@ember/component";
 /*global Mousetrap:true */
 import {
@@ -219,7 +220,7 @@ export default Component.extend({
   _mouseTrap: null,
   showLink: true,
   emojiPickerIsActive: false,
-  emojiStore: Ember.inject.service("emoji-store"),
+  emojiStore: service("emoji-store"),
 
   @computed("placeholder")
   placeholderTranslated(placeholder) {

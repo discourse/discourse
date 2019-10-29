@@ -1,3 +1,4 @@
+import { inject as service } from '@ember/service';
 import { inject } from '@ember/controller';
 import Controller from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
@@ -78,7 +79,7 @@ export function addPopupMenuOptionsCallback(callback) {
 
 export default Controller.extend({
   topicController: inject("topic"),
-  router: Ember.inject.service(),
+  router: service(),
 
   checkedMessages: false,
   messageCount: null,

@@ -1,3 +1,4 @@
+import { inject as service } from '@ember/service';
 import Component from "@ember/component";
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
@@ -18,7 +19,7 @@ const customEmojis = _.keys(extendedEmojiList()).map(code => {
 
 export default Component.extend({
   automaticPositioning: true,
-  emojiStore: Ember.inject.service("emoji-store"),
+  emojiStore: service("emoji-store"),
 
   close() {
     this._unbindEvents();
