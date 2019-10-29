@@ -687,47 +687,33 @@ export default Controller.extend({
           });
         }
 
-        // If user "created a new topic/post" or "replied as a new topic" successfully, remove the draft.
-        let destroyDraftPromise;
-
-        if (result.responseJson.action === "create_post") {
-          destroyDraftPromise = this.destroyDraft();
+        if (this.get("model.editingPost")) {
+          this.appEvents.trigger("post-stream:refresh", {
+            id: parseInt(result.responseJson.id)
+          });
+          if (result.responseJson.post.post_number === 1) {
+            this.appEvents.trigger("header:update-topic", composer.topic);
+          }
         } else {
-          destroyDraftPromise = Ember.RSVP.Promise.resolve();
+          this.appEvents.trigger("post-stream:refresh");
         }
 
-        return destroyDraftPromise.then(() => {
-          if (this.get("model.editingPost")) {
-            this.appEvents.trigger("post-stream:refresh", {
-              id: parseInt(result.responseJson.id)
-            });
-            if (result.responseJson.post.post_number === 1) {
-              this.appEvents.trigger("header:update-topic", composer.topic);
-            }
-          } else {
-            this.appEvents.trigger("post-stream:refresh");
-          }
+        if (result.responseJson.action === "create_post") {
+          this.appEvents.trigger("post:highlight", result.payload.post_number);
+        }
+        this.close();
 
-          if (result.responseJson.action === "create_post") {
-            this.appEvents.trigger(
-              "post:highlight",
-              result.payload.post_number
-            );
-          }
-          this.close();
+        const currentUser = this.currentUser;
+        if (composer.creatingTopic) {
+          currentUser.set("topic_count", currentUser.topic_count + 1);
+        } else {
+          currentUser.set("reply_count", currentUser.reply_count + 1);
+        }
 
-          const currentUser = this.currentUser;
-          if (composer.creatingTopic) {
-            currentUser.set("topic_count", currentUser.topic_count + 1);
-          } else {
-            currentUser.set("reply_count", currentUser.reply_count + 1);
-          }
-
-          const post = result.target;
-          if (post && !staged) {
-            DiscourseURL.routeTo(post.url);
-          }
-        });
+        const post = result.target;
+        if (post && !staged) {
+          DiscourseURL.routeTo(post.url);
+        }
       })
       .catch(error => {
         composer.set("disableDrafts", false);
