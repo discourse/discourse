@@ -101,12 +101,7 @@ export default Component.extend({
 
     const prevEvent = this.prevEvent;
     if (prevEvent) {
-      scheduleOnce(
-        "afterRender",
-        this,
-        this._topicScrolled,
-        prevEvent
-      );
+      scheduleOnce("afterRender", this, this._topicScrolled, prevEvent);
     } else {
       scheduleOnce("afterRender", this, this._updateProgressBar);
     }

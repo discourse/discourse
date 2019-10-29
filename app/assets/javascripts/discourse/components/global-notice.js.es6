@@ -92,10 +92,7 @@ export default Component.extend(
       this._boundRerenderBuffer = bind(this, this.rerenderBuffer);
       LogsNotice.current().addObserver("hidden", this._boundRerenderBuffer);
 
-      this._boundResetCurrentProp = bind(
-        this,
-        this._resetCurrentProp
-      );
+      this._boundResetCurrentProp = bind(this, this._resetCurrentProp);
       $(this.element).on(
         "click.global-notice",
         ".alert-logs-notice .close",

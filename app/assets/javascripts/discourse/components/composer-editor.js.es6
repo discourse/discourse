@@ -197,13 +197,7 @@ export default Component.extend({
       this._initInputPreviewSync($input, $preview);
     } else {
       $input.on("scroll", () =>
-        throttle(
-          this,
-          this._syncEditorAndPreviewScroll,
-          $input,
-          $preview,
-          20
-        )
+        throttle(this, this._syncEditorAndPreviewScroll, $input, $preview, 20)
       );
     }
 

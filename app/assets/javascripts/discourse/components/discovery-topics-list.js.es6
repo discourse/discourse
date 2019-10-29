@@ -14,9 +14,7 @@ const DiscoveryTopicsListComponent = Component.extend(UrlRefresh, LoadMore, {
   _readjustScrollPosition() {
     const scrollTo = this.session.get("topicListScrollPosition");
     if (scrollTo && scrollTo >= 0) {
-      schedule("afterRender", () =>
-        $(window).scrollTop(scrollTo + 1)
-      );
+      schedule("afterRender", () => $(window).scrollTop(scrollTo + 1));
     } else {
       scheduleOnce("afterRender", this, this.loadMoreUnlessFull);
     }

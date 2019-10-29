@@ -58,9 +58,7 @@ export default Component.extend({
     chooseMessage(message) {
       const messageId = Ember.get(message, "id");
       this.set("selectedTopicId", messageId);
-      next(() =>
-        $(`#choose-message-${messageId}`).prop("checked", "true")
-      );
+      next(() => $(`#choose-message-${messageId}`).prop("checked", "true"));
       return false;
     }
   }

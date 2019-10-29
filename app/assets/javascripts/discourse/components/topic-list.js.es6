@@ -70,9 +70,7 @@ export default Component.extend(LoadMore, {
 
     let scrollTo = this.session.get("topicListScrollPosition");
     if (scrollTo && scrollTo >= 0) {
-      schedule("afterRender", () =>
-        $(window).scrollTop(scrollTo + 1)
-      );
+      schedule("afterRender", () => $(window).scrollTop(scrollTo + 1));
     }
   },
 

@@ -314,8 +314,7 @@ export default MountWidget.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    const debouncedScroll = () =>
-      debounce(this, this._scrollTriggered, 10);
+    const debouncedScroll = () => debounce(this, this._scrollTriggered, 10);
 
     this._previouslyNearby = {};
 
