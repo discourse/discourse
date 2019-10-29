@@ -1,4 +1,4 @@
-import { inject } from '@ember/controller';
+import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";

@@ -1,4 +1,4 @@
-import { inject } from '@ember/controller';
+import { inject } from "@ember/controller";
 import NavigationDefaultController from "discourse/controllers/navigation/default";
 import computed from "ember-addons/ember-computed-decorators";
 

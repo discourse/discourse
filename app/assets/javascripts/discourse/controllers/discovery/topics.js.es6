@@ -1,4 +1,4 @@
-import { inject } from '@ember/controller';
+import { inject } from "@ember/controller";
 import DiscoveryController from "discourse/controllers/discovery";
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";

@@ -1,4 +1,4 @@
-import { inject } from '@ember/controller';
+import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import {
   default as computed,

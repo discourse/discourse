@@ -1,4 +1,4 @@
-import { inject as service } from '@ember/service';
+import { inject as service } from "@ember/service";
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 

@@ -1,4 +1,4 @@
-import { inject } from '@ember/controller';
+import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
