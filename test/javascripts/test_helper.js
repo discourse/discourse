@@ -73,8 +73,7 @@ if (window.Logster) {
   window.Logster = { enabled: false };
 }
 
-var origDebounce = Ember.run.debounce,
-  pretender = require("helpers/create-pretender", null, null, false),
+var pretender = require("helpers/create-pretender", null, null, false),
   fixtures = require("fixtures/site-fixtures", null, null, false).default,
   flushMap = require("discourse/models/store", null, null, false).flushMap,
   ScrollingDOMMethods = require("discourse/mixins/scrolling", null, null, false)
@@ -137,15 +136,9 @@ QUnit.testStart(function(ctx) {
 
   // Unless we ever need to test this, let's leave it off.
   $.fn.autocomplete = function() {};
-
-  // Don't debounce in test unless we're testing debouncing
-  if (ctx.module.indexOf("debounce") === -1) {
-    Ember.run.debounce = Ember.run;
-  }
 });
 
 QUnit.testDone(function() {
-  Ember.run.debounce = origDebounce;
   window.sandbox.restore();
 
   // Destroy any modals
