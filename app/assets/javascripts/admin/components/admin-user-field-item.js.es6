@@ -1,3 +1,4 @@
+import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import UserField from "admin/models/user-field";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
@@ -28,7 +29,7 @@ export default Component.extend(bufferedProperty("userField"), {
   @observes("editing")
   _focusOnEdit() {
     if (this.editing) {
-      Ember.run.scheduleOnce("afterRender", this, "_focusName");
+      scheduleOnce("afterRender", this, "_focusName");
     }
   },
 

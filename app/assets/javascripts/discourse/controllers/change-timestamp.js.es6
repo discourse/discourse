@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -47,7 +48,7 @@ export default Controller.extend(ModalFunctionality, {
         .then(() => {
           this.send("closeModal");
           this.setProperties({ date: "", time: "", saving: false });
-          Ember.run.next(() => DiscourseURL.routeTo(topic.url));
+          next(() => DiscourseURL.routeTo(topic.url));
         })
         .catch(() =>
           this.flash(I18n.t("topic.change_timestamp.error"), "alert-error")

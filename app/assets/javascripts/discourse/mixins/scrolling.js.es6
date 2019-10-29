@@ -1,3 +1,4 @@
+import { scheduleOnce } from "@ember/runloop";
 import debounce from "discourse/lib/debounce";
 
 /**
@@ -37,7 +38,7 @@ const Scrolling = Ember.Mixin.create({
       if (router.activeTransition) {
         return;
       }
-      return Ember.run.scheduleOnce("afterRender", this, "scrolled");
+      return scheduleOnce("afterRender", this, "scrolled");
     };
 
     if (opts.debounce) {

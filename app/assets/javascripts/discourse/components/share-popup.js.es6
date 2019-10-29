@@ -1,3 +1,5 @@
+import { bind } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { longDateNoYear } from "discourse/lib/formatter";
@@ -89,7 +91,7 @@ export default Component.extend({
     this.set("link", url);
     this.set("visible", true);
 
-    Ember.run.scheduleOnce("afterRender", this, this._focusUrl);
+    scheduleOnce("afterRender", this, this._focusUrl);
   },
 
   _mouseDownHandler(event) {
@@ -154,9 +156,9 @@ export default Component.extend({
 
   @on("init")
   _setupHandlers() {
-    this._boundMouseDownHandler = Ember.run.bind(this, this._mouseDownHandler);
-    this._boundClickHandler = Ember.run.bind(this, this._clickHandler);
-    this._boundKeydownHandler = Ember.run.bind(this, this._keydownHandler);
+    this._boundMouseDownHandler = bind(this, this._mouseDownHandler);
+    this._boundClickHandler = bind(this, this._clickHandler);
+    this._boundKeydownHandler = bind(this, this._keydownHandler);
   },
 
   didInsertElement() {

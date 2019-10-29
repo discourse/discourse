@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import debounce from "discourse/lib/debounce";
 import { searchForTerm } from "discourse/lib/search";
@@ -57,7 +58,7 @@ export default Component.extend({
     chooseMessage(message) {
       const messageId = Ember.get(message, "id");
       this.set("selectedTopicId", messageId);
-      Ember.run.next(() =>
+      next(() =>
         $(`#choose-message-${messageId}`).prop("checked", "true")
       );
       return false;

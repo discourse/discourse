@@ -1,10 +1,11 @@
+import { bind } from "@ember/runloop";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Mixin.create({
   ready() {
     this._super(...arguments);
 
-    this._onChangeHandler = Ember.run.bind(this, this._onChange);
+    this._onChangeHandler = bind(this, this._onChange);
 
     // Default to true
     Discourse.set("hasFocus", true);

@@ -1,4 +1,5 @@
 import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
 import Topic from "discourse/models/topic";
 import PostStream from "discourse/models/post-stream";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
@@ -545,7 +546,7 @@ QUnit.test(
     const done = assert.async();
     controller.send("deletePost", post);
 
-    Ember.run.next(() => {
+    next(() => {
       assert.ok(destroyed, "post was destroyed");
       done();
     });

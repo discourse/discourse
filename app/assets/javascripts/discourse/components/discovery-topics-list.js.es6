@@ -1,3 +1,5 @@
+import { schedule } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import LoadMore from "discourse/mixins/load-more";
@@ -12,11 +14,11 @@ const DiscoveryTopicsListComponent = Component.extend(UrlRefresh, LoadMore, {
   _readjustScrollPosition() {
     const scrollTo = this.session.get("topicListScrollPosition");
     if (scrollTo && scrollTo >= 0) {
-      Ember.run.schedule("afterRender", () =>
+      schedule("afterRender", () =>
         $(window).scrollTop(scrollTo + 1)
       );
     } else {
-      Ember.run.scheduleOnce("afterRender", this, this.loadMoreUnlessFull);
+      scheduleOnce("afterRender", this, this.loadMoreUnlessFull);
     }
   },
 
@@ -38,7 +40,7 @@ const DiscoveryTopicsListComponent = Component.extend(UrlRefresh, LoadMore, {
     loadMore() {
       Discourse.updateContextCount(0);
       this.model.loadMore().then(hasMoreResults => {
-        Ember.run.schedule("afterRender", () => this.saveScrollPosition());
+        schedule("afterRender", () => this.saveScrollPosition());
         if (!hasMoreResults) {
           this.eyeline.flushRest();
         } else if ($(window).height() >= $(document).height()) {

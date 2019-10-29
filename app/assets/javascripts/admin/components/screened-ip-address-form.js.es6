@@ -1,3 +1,4 @@
+import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 /**
   A form to create an IP address that will be blocked or whitelisted.
@@ -62,7 +63,7 @@ export default Component.extend({
           .then(result => {
             this.setProperties({ ip_address: "", formSubmitted: false });
             this.action(ScreenedIpAddress.create(result.screened_ip_address));
-            Ember.run.schedule("afterRender", () =>
+            schedule("afterRender", () =>
               this.element.querySelector(".ip-address-input").focus()
             );
           })
@@ -84,7 +85,7 @@ export default Component.extend({
 
   @on("didInsertElement")
   _init() {
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       $(this.element.querySelector(".ip-address-input")).keydown(e => {
         if (e.keyCode === 13) {
           this.send("submit");

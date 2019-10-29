@@ -1,3 +1,5 @@
+import { debounce } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { observes } from "ember-addons/ember-computed-decorators";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -72,13 +74,13 @@ export default Component.extend({
 
     this._init();
 
-    Ember.run.scheduleOnce("afterRender", () => this._update());
+    scheduleOnce("afterRender", () => this._update());
   },
 
   @observes("searchTerm")
   _updateOptions() {
     this._update();
-    Ember.run.debounce(this, this._update, 250);
+    debounce(this, this._update, 250);
   },
 
   _init() {

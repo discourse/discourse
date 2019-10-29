@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import { on } from "ember-addons/ember-computed-decorators";
 import Component from "@ember/component";
 
@@ -32,11 +33,11 @@ export default Component.extend({
   setUp() {
     $("html").on("keydown.discourse-modal", e => {
       if (e.which === 27 && this.dismissable) {
-        Ember.run.next(() => $(".modal-header button.modal-close").click());
+        next(() => $(".modal-header button.modal-close").click());
       }
 
       if (e.which === 13 && this.triggerClickOnEnter(e)) {
-        Ember.run.next(() => $(".modal-footer .btn-primary").click());
+        next(() => $(".modal-footer .btn-primary").click());
       }
     });
 

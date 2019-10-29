@@ -1,3 +1,4 @@
+import { schedule } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { replaceSpan } from "discourse/lib/category-hashtags";
 import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
@@ -7,7 +8,7 @@ const checkedTagHashtags = [];
 const testedClass = "tag-hashtag-tested";
 
 function updateFound($hashtags, tagValues) {
-  Ember.run.schedule("afterRender", () => {
+  schedule("afterRender", () => {
     $hashtags.each((index, hashtag) => {
       const tagValue = tagValues[index];
       const link = validTagHashtags[tagValue];

@@ -1,4 +1,7 @@
 import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import { later } from "@ember/runloop";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import { throwAjaxError } from "discourse/lib/ajax-error";
@@ -994,7 +997,7 @@ const Composer = RestModel.extend({
               post.set("reply_count", post.reply_count - 1);
             }
           }
-          Ember.run.next(() => composer.set("composeState", OPEN));
+          next(() => composer.set("composeState", OPEN));
         })
       );
   },
@@ -1045,7 +1048,7 @@ const Composer = RestModel.extend({
     });
 
     if (this._clearingStatus) {
-      Ember.run.cancel(this._clearingStatus);
+      cancel(this._clearingStatus);
       this._clearingStatus = null;
     }
 
@@ -1085,7 +1088,7 @@ const Composer = RestModel.extend({
     const draftStatus = this.draftStatus;
 
     if (draftStatus && !this._clearingStatus) {
-      this._clearingStatus = Ember.run.later(
+      this._clearingStatus = later(
         this,
         () => {
           this.setProperties({ draftStatus: null, draftConflictUser: null });
