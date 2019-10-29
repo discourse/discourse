@@ -8,9 +8,10 @@ export default Component.extend(BufferedContent, SettingComponent, {
   type: "string",
   settingName: Ember.computed.alias("translation.key"),
 
-  _save(callback) {
-    return this.model
-      .saveTranslation(this.get("translation.key"), this.get("buffered.value"))
-      .then(callback);
+  _save() {
+    return this.model.saveTranslation(
+      this.get("translation.key"),
+      this.get("buffered.value")
+    );
   }
 });

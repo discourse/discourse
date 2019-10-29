@@ -6,7 +6,7 @@ import showModal from "discourse/lib/show-modal";
 import AboutRoute from "discourse/routes/about";
 
 export default Component.extend(BufferedContent, SettingComponent, {
-  _save(callback) {
+  _save() {
     const defaultCategoriesSettings = [
       "default_categories_watching",
       "default_categories_tracking",
@@ -30,13 +30,13 @@ export default Component.extend(BufferedContent, SettingComponent, {
           });
 
           controller.set("onClose", () => {
-            SiteSetting.update(key, value, {
+            return SiteSetting.update(key, value, {
               updateExistingUsers: controller.updateExistingUsers
-            }).then(callback);
+            });
           });
         });
     } else {
-      SiteSetting.update(key, value).then(callback);
+      return SiteSetting.update(key, value);
     }
   }
 });
