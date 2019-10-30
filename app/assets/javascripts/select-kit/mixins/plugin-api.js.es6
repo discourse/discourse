@@ -1,4 +1,4 @@
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 
 let _appendContentCallbacks = {};
 function appendContent(pluginApiIdentifiers, contentFunction) {

@@ -1,5 +1,5 @@
 import { debounce } from "@ember/runloop";
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 // Small buffer so that very tiny scrolls don't trigger mobile header switch
 const MOBILE_SCROLL_TOLERANCE = 5;
 

@@ -45,7 +45,7 @@
 
   ```
 **/
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 
 const Singleton = Mixin.create({
   current() {

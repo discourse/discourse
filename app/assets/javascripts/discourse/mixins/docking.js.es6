@@ -1,4 +1,4 @@
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 import { debounce } from "@ember/runloop";
 
 const helper = {

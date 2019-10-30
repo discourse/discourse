@@ -1,4 +1,4 @@
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 /**
    Pan events is a mixin that allows components to detect and respond to swipe gestures
    It fires callbacks for panStart, panEnd, panMove with the pan state, and the original event.

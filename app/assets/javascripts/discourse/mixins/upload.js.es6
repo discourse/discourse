@@ -4,7 +4,7 @@ import {
 } from "discourse/lib/utilities";
 
 import getUrl from "discourse-common/lib/get-url";
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
   uploading: false,
