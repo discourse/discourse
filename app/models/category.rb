@@ -294,10 +294,11 @@ class Category < ActiveRecord::Base
       self.slug = Slug.for(name, '')
       self.slug = '' if duplicate_slug?
     end
-    # only allow to use category itself id. new_record doesn't have a id.
-    unless new_record?
-      match_id = /^(\d+)-category/.match(self.slug)
-      errors.add(:slug, :invalid) if match_id && match_id[1] && match_id[1] != self.id.to_s
+
+    # only allow to use category itself id.
+    match_id = /^(\d+)-/.match(self.slug)
+    if match_id.present?
+      errors.add(:slug, :invalid) if new_record? || (match_id[1] != self.id.to_s)
     end
   end
 
