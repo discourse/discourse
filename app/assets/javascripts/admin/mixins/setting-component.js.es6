@@ -1,5 +1,6 @@
 import computed from "ember-addons/ember-computed-decorators";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
+import Mixin from '@ember/object/mixin';
 
 const CUSTOM_TYPES = [
   "bool",
@@ -19,7 +20,7 @@ const CUSTOM_TYPES = [
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   content: Ember.computed.alias("setting"),
   validationMessage: null,

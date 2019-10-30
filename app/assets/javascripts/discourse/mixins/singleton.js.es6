@@ -45,7 +45,9 @@
 
   ```
 **/
-const Singleton = Ember.Mixin.create({
+import Mixin from '@ember/object/mixin';
+
+const Singleton = Mixin.create({
   current() {
     if (!this._current) {
       this._current = this.createCurrent();

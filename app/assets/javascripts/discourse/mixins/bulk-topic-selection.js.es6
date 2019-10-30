@@ -1,7 +1,8 @@
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { on } from "ember-addons/ember-computed-decorators";
+import Mixin from '@ember/object/mixin';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   bulkSelectEnabled: false,
   selected: null,
 

@@ -1,4 +1,6 @@
+import Mixin from '@ember/object/mixin';
 import { debounce } from "@ember/runloop";
+
 const helper = {
   offset() {
     const mainOffset = $("#main").offset();
@@ -7,7 +9,7 @@ const helper = {
   }
 };
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   queueDockCheck: null,
 
   init() {

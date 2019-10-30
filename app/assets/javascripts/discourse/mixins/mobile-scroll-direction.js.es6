@@ -1,8 +1,9 @@
 import { debounce } from "@ember/runloop";
+import Mixin from '@ember/object/mixin';
 // Small buffer so that very tiny scrolls don't trigger mobile header switch
 const MOBILE_SCROLL_TOLERANCE = 5;
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   _lastScroll: null,
   _bottomHit: 0,
 

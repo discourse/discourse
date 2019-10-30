@@ -1,6 +1,7 @@
 import { scheduleOnce } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import { deprecated } from "discourse/mixins/scroll-top";
+import Mixin from '@ember/object/mixin';
 
 const context = {
   _scrollTop() {
@@ -18,7 +19,7 @@ function scrollTop() {
   scheduleOnce("afterRender", context, context._scrollTop);
 }
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   didInsertElement() {
     deprecated(
       "The `ScrollTop` mixin is deprecated. Replace it with a `{{d-section}}` component"
