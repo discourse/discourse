@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import { throttle } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
 import { scheduleOnce } from "@ember/runloop";
@@ -24,7 +25,7 @@ export default Component.extend(
   Scrolling,
   MobileScrollDirection,
   {
-    userFilters: Ember.computed.alias("topic.userFilters"),
+    userFilters: alias("topic.userFilters"),
     classNameBindings: [
       "multiSelect",
       "topic.archetype",
@@ -37,8 +38,8 @@ export default Component.extend(
     menuVisible: true,
     SHORT_POST: 1200,
 
-    postStream: Ember.computed.alias("topic.postStream"),
-    archetype: Ember.computed.alias("topic.archetype"),
+    postStream: alias("topic.postStream"),
+    archetype: alias("topic.archetype"),
     dockAt: 0,
 
     _lastShowTopic: null,

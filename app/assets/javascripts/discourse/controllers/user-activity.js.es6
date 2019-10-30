@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -9,7 +10,7 @@ export default Controller.extend({
   user: inject(),
   userActionType: null,
 
-  canDownloadPosts: Ember.computed.alias("user.viewingSelf"),
+  canDownloadPosts: alias("user.viewingSelf"),
 
   _showFooter: function() {
     var showFooter;

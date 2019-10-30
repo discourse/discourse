@@ -1,9 +1,10 @@
+import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   classNames: ["hook-event"],
-  typeName: Ember.computed.alias("type.name"),
+  typeName: alias("type.name"),
 
   @computed("typeName")
   name(typeName) {

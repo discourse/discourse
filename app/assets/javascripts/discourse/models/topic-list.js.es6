@@ -1,3 +1,4 @@
+import { notEmpty } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
@@ -23,7 +24,7 @@ function displayCategoryInList(site, category) {
 }
 
 const TopicList = RestModel.extend({
-  canLoadMore: Ember.computed.notEmpty("more_topics_url"),
+  canLoadMore: notEmpty("more_topics_url"),
 
   forEachNew(topics, callback) {
     const topicIds = [];

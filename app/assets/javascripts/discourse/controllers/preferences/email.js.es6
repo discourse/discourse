@@ -1,3 +1,4 @@
+import { empty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { propertyEqual } from "discourse/lib/computed";
 import InputValidation from "discourse/models/input-validation";
@@ -11,9 +12,9 @@ export default Controller.extend({
   success: false,
   newEmail: null,
 
-  newEmailEmpty: Ember.computed.empty("newEmail"),
+  newEmailEmpty: empty("newEmail"),
 
-  saveDisabled: Ember.computed.or(
+  saveDisabled: or(
     "saving",
     "newEmailEmpty",
     "taken",

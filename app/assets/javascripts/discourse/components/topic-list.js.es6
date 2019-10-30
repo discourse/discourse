@@ -1,3 +1,4 @@
+import { alias, reads } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import {
@@ -13,7 +14,7 @@ export default Component.extend(LoadMore, {
   listTitle: "topic.title",
 
   // Overwrite this to perform client side filtering of topics, if desired
-  filteredTopics: Ember.computed.alias("topics"),
+  filteredTopics: alias("topics"),
 
   _init: Ember.on("init", function() {
     this.addObserver("hideCategory", this.rerender);
@@ -32,7 +33,7 @@ export default Component.extend(LoadMore, {
     return !!this.changeSort;
   },
 
-  skipHeader: Ember.computed.reads("site.mobileView"),
+  skipHeader: reads("site.mobileView"),
 
   @computed("order")
   showLikes(order) {

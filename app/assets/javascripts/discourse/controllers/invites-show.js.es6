@@ -1,3 +1,4 @@
+import { alias, notEmpty } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import getUrl from "discourse-common/lib/get-url";
@@ -15,10 +16,10 @@ export default Controller.extend(
   NameValidation,
   UserFieldsValidation,
   {
-    invitedBy: Ember.computed.alias("model.invited_by"),
-    email: Ember.computed.alias("model.email"),
-    accountUsername: Ember.computed.alias("model.username"),
-    passwordRequired: Ember.computed.notEmpty("accountPassword"),
+    invitedBy: alias("model.invited_by"),
+    email: alias("model.email"),
+    accountUsername: alias("model.username"),
+    passwordRequired: notEmpty("accountPassword"),
     successMessage: null,
     errorMessage: null,
     userFields: null,

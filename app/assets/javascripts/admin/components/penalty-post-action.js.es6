@@ -1,3 +1,4 @@
+import { equal } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
@@ -16,7 +17,7 @@ export default Component.extend({
     });
   },
 
-  editing: Ember.computed.equal("postAction", "edit"),
+  editing: equal("postAction", "edit"),
 
   actions: {
     penaltyChanged() {

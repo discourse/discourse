@@ -1,3 +1,4 @@
+import { alias, or, readOnly } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import { scheduleOnce } from "@ember/runloop";
@@ -38,7 +39,7 @@ export default Controller.extend(ModalFunctionality, {
 
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
-  loginRequired: Ember.computed.alias("application.loginRequired"),
+  loginRequired: alias("application.loginRequired"),
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
   resetForm() {
@@ -86,14 +87,14 @@ export default Controller.extend(ModalFunctionality, {
     return loggingIn ? "login.logging_in" : "login.title";
   },
 
-  loginDisabled: Ember.computed.or("loggingIn", "loggedIn"),
+  loginDisabled: or("loggingIn", "loggedIn"),
 
   @computed("loggingIn", "application.canSignUp")
   showSignupLink(loggingIn, canSignUp) {
     return canSignUp && !loggingIn;
   },
 
-  showSpinner: Ember.computed.readOnly("loggingIn"),
+  showSpinner: readOnly("loggingIn"),
 
   @computed("canLoginLocalWithEmail", "processingEmailLink")
   showLoginWithEmailLink(canLoginLocalWithEmail, processingEmailLink) {

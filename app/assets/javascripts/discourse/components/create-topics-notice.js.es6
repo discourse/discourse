@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { observes } from "ember-addons/ember-computed-decorators";
@@ -12,7 +13,7 @@ export default Component.extend({
   publicPostCount: null,
 
   requiredTopics: 5,
-  requiredPosts: Ember.computed.alias("siteSettings.tl1_requires_read_posts"),
+  requiredPosts: alias("siteSettings.tl1_requires_read_posts"),
 
   init() {
     this._super(...arguments);

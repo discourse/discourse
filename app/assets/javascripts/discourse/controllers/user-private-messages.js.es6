@@ -1,3 +1,4 @@
+import { alias, equal, and } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -10,16 +11,16 @@ export default Controller.extend({
   user: inject(),
 
   pmView: false,
-  viewingSelf: Ember.computed.alias("user.viewingSelf"),
-  isGroup: Ember.computed.equal("pmView", "groups"),
-  currentPath: Ember.computed.alias("router._router.currentPath"),
-  selected: Ember.computed.alias("userTopicsList.selected"),
-  bulkSelectEnabled: Ember.computed.alias("userTopicsList.bulkSelectEnabled"),
+  viewingSelf: alias("user.viewingSelf"),
+  isGroup: equal("pmView", "groups"),
+  currentPath: alias("router._router.currentPath"),
+  selected: alias("userTopicsList.selected"),
+  bulkSelectEnabled: alias("userTopicsList.bulkSelectEnabled"),
   showToggleBulkSelect: true,
-  pmTaggingEnabled: Ember.computed.alias("site.can_tag_pms"),
+  pmTaggingEnabled: alias("site.can_tag_pms"),
   tagId: null,
 
-  showNewPM: Ember.computed.and(
+  showNewPM: and(
     "user.viewingSelf",
     "currentUser.can_send_private_messages"
   ),

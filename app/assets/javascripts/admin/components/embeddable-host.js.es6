@@ -1,3 +1,4 @@
+import { or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
@@ -10,7 +11,7 @@ export default Component.extend(bufferedProperty("host"), {
   tagName: "tr",
   categoryId: null,
 
-  editing: Ember.computed.or("host.isNew", "editToggled"),
+  editing: or("host.isNew", "editToggled"),
 
   @on("didInsertElement")
   @observes("editing")

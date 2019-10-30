@@ -1,3 +1,4 @@
+import { lte } from "@ember/object/computed";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -29,7 +30,7 @@ export default Component.extend({
     return !usernames || !(usernames.length > 0);
   },
 
-  showingFirst: Ember.computed.lte("currentPage", 1),
+  showingFirst: lte("currentPage", 1),
   showingLast: propertyEqual("currentPage", "totalPages"),
 
   actions: {

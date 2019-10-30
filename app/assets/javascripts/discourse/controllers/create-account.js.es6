@@ -1,3 +1,4 @@
+import { notEmpty, or, not } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
@@ -34,9 +35,9 @@ export default Controller.extend(
     userFields: null,
     isDeveloper: false,
 
-    hasAuthOptions: Ember.computed.notEmpty("authOptions"),
+    hasAuthOptions: notEmpty("authOptions"),
     canCreateLocal: setting("enable_local_logins"),
-    showCreateForm: Ember.computed.or("hasAuthOptions", "canCreateLocal"),
+    showCreateForm: or("hasAuthOptions", "canCreateLocal"),
 
     resetForm() {
       // We wrap the fields in a structure so we can assign a value
@@ -78,7 +79,7 @@ export default Controller.extend(
       return false;
     },
 
-    usernameRequired: Ember.computed.not("authOptions.omit_username"),
+    usernameRequired: not("authOptions.omit_username"),
 
     @computed
     fullnameRequired() {

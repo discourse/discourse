@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { on } from "ember-addons/ember-computed-decorators";
 import Mixin from "@ember/object/mixin";
@@ -6,7 +7,7 @@ export default Mixin.create({
   bulkSelectEnabled: false,
   selected: null,
 
-  canBulkSelect: Ember.computed.alias("currentUser.staff"),
+  canBulkSelect: alias("currentUser.staff"),
 
   @on("init")
   resetSelected() {

@@ -1,3 +1,4 @@
+import { or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -35,7 +36,7 @@ export default Controller.extend(PreferencesTabController, {
     return this.siteSettings.remove_muted_tags_from_latest !== "never";
   },
 
-  canSave: Ember.computed.or("canSee", "currentUser.admin"),
+  canSave: or("canSee", "currentUser.admin"),
 
   actions: {
     save() {

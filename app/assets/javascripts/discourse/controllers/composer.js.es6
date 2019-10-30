@@ -1,3 +1,4 @@
+import { and, or, alias, reads } from "@ember/object/computed";
 import { debounce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
@@ -94,9 +95,9 @@ export default Controller.extend({
   topic: null,
   linkLookup: null,
   showPreview: true,
-  forcePreview: Ember.computed.and("site.mobileView", "showPreview"),
-  whisperOrUnlistTopic: Ember.computed.or("isWhispering", "model.unlistTopic"),
-  categories: Ember.computed.alias("site.categoriesList"),
+  forcePreview: and("site.mobileView", "showPreview"),
+  whisperOrUnlistTopic: or("isWhispering", "model.unlistTopic"),
+  categories: alias("site.categoriesList"),
 
   @on("init")
   _setupPreview() {
@@ -178,7 +179,7 @@ export default Controller.extend({
     }
   }),
 
-  topicModel: Ember.computed.alias("topicController.model"),
+  topicModel: alias("topicController.model"),
 
   @computed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
@@ -200,9 +201,9 @@ export default Controller.extend({
     return editingPost && !canEditTags;
   },
 
-  isStaffUser: Ember.computed.reads("currentUser.staff"),
+  isStaffUser: reads("currentUser.staff"),
 
-  canUnlistTopic: Ember.computed.and("model.creatingTopic", "isStaffUser"),
+  canUnlistTopic: and("model.creatingTopic", "isStaffUser"),
 
   @computed("canWhisper", "replyingToWhisper")
   showWhisperToggle(canWhisper, replyingToWhisper) {
@@ -216,7 +217,7 @@ export default Controller.extend({
     );
   },
 
-  isWhispering: Ember.computed.or("replyingToWhisper", "model.whisper"),
+  isWhispering: or("replyingToWhisper", "model.whisper"),
 
   @computed("model.action", "isWhispering")
   saveIcon(action, isWhispering) {
@@ -590,7 +591,7 @@ export default Controller.extend({
     }
   },
 
-  disableSubmit: Ember.computed.or("model.loading", "isUploading"),
+  disableSubmit: or("model.loading", "isUploading"),
 
   save(force) {
     if (this.disableSubmit) return;

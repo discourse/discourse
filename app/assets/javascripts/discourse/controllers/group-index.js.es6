@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -15,7 +16,7 @@ export default Controller.extend({
   loading: false,
   limit: null,
   offset: null,
-  isOwner: Ember.computed.alias("model.is_group_owner"),
+  isOwner: alias("model.is_group_owner"),
   showActions: false,
   filter: null,
   filterInput: null,

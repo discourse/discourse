@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import computed from "ember-addons/ember-computed-decorators";
@@ -34,7 +35,7 @@ export const ListItemDefaults = {
   tagName: "tr",
   classNameBindings: [":topic-list-item", "unboundClassNames", "topic.visited"],
   attributeBindings: ["data-topic-id"],
-  "data-topic-id": Ember.computed.alias("topic.id"),
+  "data-topic-id": alias("topic.id"),
 
   didInsertElement() {
     this._super(...arguments);

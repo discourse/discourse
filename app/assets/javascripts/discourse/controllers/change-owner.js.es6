@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -11,10 +12,10 @@ export default Controller.extend(ModalFunctionality, {
   saving: false,
   new_user: null,
 
-  selectedPostsCount: Ember.computed.alias(
+  selectedPostsCount: alias(
     "topicController.selectedPostsCount"
   ),
-  selectedPostsUsername: Ember.computed.alias(
+  selectedPostsUsername: alias(
     "topicController.selectedPostsUsername"
   ),
 

@@ -1,3 +1,4 @@
+import { equal, alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import { propertyEqual } from "discourse/lib/computed";
 
@@ -8,8 +9,8 @@ export default Component.extend({
   selectedPanel: null,
   panelsLength: null,
   classNameBindings: ["isActive", "singleTab", "panel.id"],
-  singleTab: Ember.computed.equal("panelsLength", 1),
-  title: Ember.computed.alias("panel.title"),
+  singleTab: equal("panelsLength", 1),
+  title: alias("panel.title"),
   isActive: propertyEqual("panel.id", "selectedPanel.id"),
 
   click() {

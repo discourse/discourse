@@ -1,3 +1,4 @@
+import { alias, equal } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -12,13 +13,13 @@ export default Controller.extend(ModalFunctionality, {
   saving: false,
   categoryId: null,
   tags: null,
-  canAddTags: Ember.computed.alias("site.can_create_tag"),
-  canTagMessages: Ember.computed.alias("site.can_tag_pms"),
+  canAddTags: alias("site.can_create_tag"),
+  canTagMessages: alias("site.can_tag_pms"),
   selectedTopicId: null,
-  newTopic: Ember.computed.equal("selection", "new_topic"),
-  existingTopic: Ember.computed.equal("selection", "existing_topic"),
-  newMessage: Ember.computed.equal("selection", "new_message"),
-  existingMessage: Ember.computed.equal("selection", "existing_message"),
+  newTopic: equal("selection", "new_topic"),
+  existingTopic: equal("selection", "existing_topic"),
+  newMessage: equal("selection", "new_message"),
+  existingMessage: equal("selection", "existing_message"),
   participants: null,
 
   init() {
@@ -40,11 +41,11 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   topicController: inject("topic"),
-  selectedPostsCount: Ember.computed.alias(
+  selectedPostsCount: alias(
     "topicController.selectedPostsCount"
   ),
-  selectedAllPosts: Ember.computed.alias("topicController.selectedAllPosts"),
-  selectedPosts: Ember.computed.alias("topicController.selectedPosts"),
+  selectedAllPosts: alias("topicController.selectedAllPosts"),
+  selectedPosts: alias("topicController.selectedPosts"),
 
   @computed("saving", "selectedTopicId", "topicName")
   buttonDisabled(saving, selectedTopicId, topicName) {

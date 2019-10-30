@@ -1,3 +1,4 @@
+import { empty, alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
@@ -71,8 +72,8 @@ addBulkButton("deleteTopics", "delete", {
 export default Controller.extend(ModalFunctionality, {
   tags: null,
 
-  emptyTags: Ember.computed.empty("tags"),
-  categoryId: Ember.computed.alias("model.category.id"),
+  emptyTags: empty("tags"),
+  categoryId: alias("model.category.id"),
 
   onShow() {
     const topics = this.get("model.topics");
