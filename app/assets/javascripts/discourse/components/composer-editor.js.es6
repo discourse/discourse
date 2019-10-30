@@ -1,3 +1,8 @@
+import { throttle } from "@ember/runloop";
+import { next } from "@ember/runloop";
+import { debounce } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
+import { later } from "@ember/runloop";
 import Component from "@ember/component";
 import userSearch from "discourse/lib/user-search";
 import {
@@ -183,7 +188,7 @@ export default Component.extend({
         transformComplete: v => v.username || v.name,
         afterComplete() {
           // ensures textarea scroll position is correct
-          Ember.run.scheduleOnce("afterRender", () => $input.blur().focus());
+          scheduleOnce("afterRender", () => $input.blur().focus());
         }
       });
     }
@@ -192,13 +197,7 @@ export default Component.extend({
       this._initInputPreviewSync($input, $preview);
     } else {
       $input.on("scroll", () =>
-        Ember.run.throttle(
-          this,
-          this._syncEditorAndPreviewScroll,
-          $input,
-          $preview,
-          20
-        )
+        throttle(this, this._syncEditorAndPreviewScroll, $input, $preview, 20)
       );
     }
 
@@ -316,7 +315,7 @@ export default Component.extend({
       this.appEvents.on(event, this, this._resetShouldBuildScrollMap);
     });
 
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       $input.on("touchstart mouseenter", () => {
         if (!$preview.is(":visible")) return;
         $preview.off("scroll");
@@ -342,7 +341,7 @@ export default Component.extend({
       this.set("shouldBuildScrollMap", false);
     }
 
-    Ember.run.throttle(this, $callback, $input, $preview, this.scrollMap, 20);
+    throttle(this, $callback, $input, $preview, this.scrollMap, 20);
   },
 
   _teardownInputPreviewSync() {
@@ -559,7 +558,7 @@ export default Component.extend({
   },
 
   _warnMentionedGroups($preview) {
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       var found = this.warnedGroupMentions || [];
       $preview.find(".mention-group.notify").each((idx, e) => {
         const $e = $(e);
@@ -587,7 +586,7 @@ export default Component.extend({
       return;
     }
 
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       let found = this.warnedCannotSeeMentions || [];
 
       $preview.find(".mention.cannot-see").each((idx, e) => {
@@ -597,7 +596,7 @@ export default Component.extend({
         if (found.indexOf(name) === -1) {
           // add a delay to allow for typing, so you don't open the warning right away
           // previously we would warn after @bob even if you were about to mention @bob2
-          Ember.run.later(
+          later(
             this,
             () => {
               if (
@@ -618,7 +617,7 @@ export default Component.extend({
   },
 
   _resetUpload(removePlaceholder) {
-    Ember.run.next(() => {
+    next(() => {
       if (this._validUploads > 0) {
         this._validUploads--;
       }
@@ -897,9 +896,9 @@ export default Component.extend({
   @on("willDestroyElement")
   _composerClosed() {
     this.appEvents.trigger("composer:will-close");
-    Ember.run.next(() => {
+    next(() => {
       // need to wait a bit for the "slide down" transition of the composer
-      Ember.run.later(
+      later(
         () => this.appEvents.trigger("composer:closed"),
         Ember.testing ? 0 : 400
       );
@@ -970,7 +969,7 @@ export default Component.extend({
       // Paint mentions
       const unseenMentions = linkSeenMentions($preview, this.siteSettings);
       if (unseenMentions.length) {
-        Ember.run.debounce(
+        debounce(
           this,
           this._renderUnseenMentions,
           $preview,
@@ -985,7 +984,7 @@ export default Component.extend({
       // Paint category hashtags
       const unseenCategoryHashtags = linkSeenCategoryHashtags($preview);
       if (unseenCategoryHashtags.length) {
-        Ember.run.debounce(
+        debounce(
           this,
           this._renderUnseenCategoryHashtags,
           $preview,
@@ -998,7 +997,7 @@ export default Component.extend({
       if (this.siteSettings.tagging_enabled) {
         const unseenTagHashtags = linkSeenTagHashtags($preview);
         if (unseenTagHashtags.length) {
-          Ember.run.debounce(
+          debounce(
             this,
             this._renderUnseenTagHashtags,
             $preview,
@@ -1009,7 +1008,7 @@ export default Component.extend({
       }
 
       // Paint oneboxes
-      Ember.run.debounce(
+      debounce(
         this,
         () => {
           const oneboxes = {};

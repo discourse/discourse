@@ -1,3 +1,4 @@
+import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import debounce from "discourse/lib/debounce";
 import { renderSpinner } from "discourse/helpers/loading-spinner";
@@ -53,7 +54,7 @@ export default Component.extend(
       // force rerender
       this.rerenderBuffer();
 
-      Ember.run.scheduleOnce("afterRender", this, this._scrollDown);
+      scheduleOnce("afterRender", this, this._scrollDown);
     }, 150),
 
     buildBuffer(buffer) {

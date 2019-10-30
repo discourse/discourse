@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
@@ -71,7 +72,7 @@ export default Controller.extend(GrantBadgeController, {
       ).then(
         () => {
           this.set("badgeReason", "");
-          Ember.run.next(() => {
+          next(() => {
             // Update the selected badge ID after the combobox has re-rendered.
             const newSelectedBadge = this.grantableBadges[0];
             if (newSelectedBadge) {

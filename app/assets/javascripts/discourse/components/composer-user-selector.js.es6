@@ -1,3 +1,4 @@
+import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import {
   default as computed,
@@ -76,7 +77,7 @@ export default Component.extend({
     toggleSelector() {
       this.set("showSelector", true);
 
-      Ember.run.schedule("afterRender", () => {
+      schedule("afterRender", () => {
         $(this.element)
           .find("input")
           .focus();

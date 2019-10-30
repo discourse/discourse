@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import User from "discourse/models/user";
 import Group from "discourse/models/group";
@@ -15,7 +16,7 @@ export default DiscourseRoute.extend({
           User.findByUsername(encodeURIComponent(params.username))
             .then(user => {
               if (user.can_send_private_message_to_user) {
-                Ember.run.next(() =>
+                next(() =>
                   e.send(
                     "createNewMessageViaParams",
                     user.username,
@@ -35,7 +36,7 @@ export default DiscourseRoute.extend({
           Group.messageable(groupName)
             .then(result => {
               if (result.messageable) {
-                Ember.run.next(() =>
+                next(() =>
                   e.send(
                     "createNewMessageViaParams",
                     groupName,

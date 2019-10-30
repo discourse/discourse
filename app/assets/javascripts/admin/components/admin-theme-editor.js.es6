@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { fmt } from "discourse/lib/computed";
@@ -83,7 +84,7 @@ export default Component.extend({
 
     toggleMaximize: function() {
       this.toggleProperty("maximized");
-      Ember.run.next(() => this.appEvents.trigger("ace:resize"));
+      next(() => this.appEvents.trigger("ace:resize"));
     },
 
     onlyOverriddenChanged(value) {

@@ -1,3 +1,4 @@
+import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { fmt } from "discourse/lib/computed";
@@ -20,7 +21,7 @@ export default Component.extend({
   },
 
   focusPermalink() {
-    Ember.run.schedule("afterRender", () =>
+    schedule("afterRender", () =>
       this.element.querySelector(".permalink-url").focus()
     );
   },
@@ -69,7 +70,7 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       $(this.element.querySelector(".external-url")).keydown(e => {
         // enter key
         if (e.keyCode === 13) {

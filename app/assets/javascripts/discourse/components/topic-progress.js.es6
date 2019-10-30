@@ -1,3 +1,4 @@
+import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import {
   default as computed,
@@ -73,7 +74,7 @@ export default Component.extend({
 
   @observes("postStream.stream.[]")
   _updateBar() {
-    Ember.run.scheduleOnce("afterRender", this, this._updateProgressBar);
+    scheduleOnce("afterRender", this, this._updateProgressBar);
   },
 
   _topicScrolled(event) {
@@ -100,16 +101,11 @@ export default Component.extend({
 
     const prevEvent = this.prevEvent;
     if (prevEvent) {
-      Ember.run.scheduleOnce(
-        "afterRender",
-        this,
-        this._topicScrolled,
-        prevEvent
-      );
+      scheduleOnce("afterRender", this, this._topicScrolled, prevEvent);
     } else {
-      Ember.run.scheduleOnce("afterRender", this, this._updateProgressBar);
+      scheduleOnce("afterRender", this, this._updateProgressBar);
     }
-    Ember.run.scheduleOnce("afterRender", this, this._dock);
+    scheduleOnce("afterRender", this, this._dock);
   },
 
   willDestroyElement() {

@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
@@ -24,7 +25,7 @@ export default Controller.extend(ModalFunctionality, {
     highlightSecure() {
       this.send("closeModal");
 
-      Ember.run.next(() => {
+      next(() => {
         const $prefPasswordDiv = $(".pref-password");
 
         $prefPasswordDiv.addClass("highlighted");

@@ -1,3 +1,4 @@
+import { scheduleOnce } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
@@ -57,7 +58,7 @@ export default DiscourseRoute.extend({
         topicController.subscribe();
 
         // Highlight our post after the next render
-        Ember.run.scheduleOnce("afterRender", () =>
+        scheduleOnce("afterRender", () =>
           this.appEvents.trigger("post:highlight", closest)
         );
 

@@ -1,3 +1,4 @@
+import { run } from "@ember/runloop";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
@@ -84,7 +85,7 @@ QUnit.test("Tests the Composer controls", async assert => {
   event[mac ? "metaKey" : "ctrlKey"] = true;
   event.keyCode = 66;
 
-  Ember.run(() => textarea.dispatchEvent(event));
+  run(() => textarea.dispatchEvent(event));
 
   const example = I18n.t(`composer.bold_text`);
   assert.equal(

@@ -1,3 +1,4 @@
+import { scheduleOnce } from "@ember/runloop";
 // Ember 2.0 removes buffered rendering, but we can still implement it ourselves.
 // In the long term we'll want to remove this.
 
@@ -13,7 +14,7 @@ const Mixin = {
   },
 
   rerenderBuffer() {
-    Ember.run.scheduleOnce("render", this, this._customRender);
+    scheduleOnce("render", this, this._customRender);
   }
 };
 
