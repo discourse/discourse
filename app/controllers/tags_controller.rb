@@ -193,8 +193,6 @@ class TagsController < ::ApplicationController
   end
 
   def search
-    params.require(:q)
-
     clean_name = DiscourseTagging.clean_tag(params[:q])
     category = params[:categoryId] ? Category.find_by_id(params[:categoryId]) : nil
 
