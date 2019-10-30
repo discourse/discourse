@@ -384,12 +384,13 @@ end
 def update_users
   log "Updating users..."
 
-  DB.exec <<-SQL
+  DB.exec(<<~SQL, Archetype.private_message)
     WITH X AS (
-        SELECT user_id
-             , MIN(created_at) min_created_at
-             , MAX(created_at) max_created_at
-          FROM posts
+        SELECT p.user_id
+             , MIN(p.created_at) min_created_at
+             , MAX(p.created_at) max_created_at
+          FROM posts p
+          JOIN topics t ON t.id = p.topic_id AND t.archetype <> ?
          WHERE deleted_at IS NULL
       GROUP BY user_id
     )
