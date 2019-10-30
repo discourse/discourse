@@ -1,3 +1,5 @@
+import Mixin from '@ember/object/mixin';
+
 let _appendContentCallbacks = {};
 function appendContent(pluginApiIdentifiers, contentFunction) {
   if (Ember.isNone(_appendContentCallbacks[pluginApiIdentifiers])) {
@@ -167,7 +169,7 @@ export function clearCallbacks() {
 }
 
 const EMPTY_ARRAY = Object.freeze([]);
-export default Ember.Mixin.create({
+export default Mixin.create({
   concatenatedProperties: ["pluginApiIdentifiers"],
   pluginApiIdentifiers: EMPTY_ARRAY
 });

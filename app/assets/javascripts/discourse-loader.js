@@ -12,6 +12,7 @@ var define, requirejs;
         inject: Ember.inject.controller
       },
       "@ember/object": { default: Ember.Object },
+      "@ember/object/mixin": { default: Ember.Mixin },
       "@ember/object/proxy": { default: Ember.ObjectProxy },
       "@ember/routing/route": { default: Ember.Route },
       "@ember/runloop": {

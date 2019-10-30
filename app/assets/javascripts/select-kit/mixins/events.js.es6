@@ -1,10 +1,11 @@
 import { throttle } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
 import { on } from "ember-addons/ember-computed-decorators";
+import Mixin from '@ember/object/mixin';
 
 const { bind } = Ember.run;
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   @on("init")
   _initKeys() {
     this.keys = {

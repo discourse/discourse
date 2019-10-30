@@ -1,7 +1,8 @@
 // This mixin allows a route to open the composer
 import Composer from "discourse/models/composer";
+import Mixin from '@ember/object/mixin';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   openComposer(controller) {
     let categoryId = controller.get("category.id");
     if (
