@@ -93,7 +93,7 @@ module Jobs
       topic = get_topic(invite[:topic_id])
 
       begin
-        if user = User.find_by_email(email)
+        if user = Invite.find_user_by_email(email)
           if groups.present?
             Group.transaction do
               groups.each do |group|
