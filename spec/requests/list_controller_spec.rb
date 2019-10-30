@@ -380,19 +380,15 @@ RSpec.describe ListController do
         let(:child_category) { Fabricate(:category_with_definition, parent_category: category) }
 
         context "with valid slug" do
-          it "redirects to the child category" do
-            get "/c/#{category.slug}/#{child_category.slug}/l/latest", params: {
-              id: child_category.id
-            }
-            expect(response).to redirect_to(child_category.url)
+          it "succeeds" do
+            get "/c/#{category.slug}/#{child_category.slug}/#{child_category.id}/l/latest"
+            expect(response.status).to eq(200)
           end
         end
 
         context "with invalid slug" do
-          it "redirects to child category" do
-            get "/c/random_slug/another_random_slug/l/latest", params: {
-              id: child_category.id
-            }
+          xit "redirects" do
+            get "/c/random_slug/another_random_slug/#{child_category.id}/l/latest"
             expect(response).to redirect_to(child_category.url)
           end
         end

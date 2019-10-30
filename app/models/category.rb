@@ -808,6 +808,16 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def slug_path
+    if self.parent_category_id.present?
+      slug_path = self.parent_category.slug_path
+      slug_path.push(self.slug_for_url)
+      slug_path
+    else
+      [self.slug_for_url]
+    end
+  end
+
   private
 
   def check_permissions_compatibility(parent_permissions, child_permissions)
