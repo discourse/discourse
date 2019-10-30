@@ -2,7 +2,7 @@ import InputValidation from "discourse/models/input-validation";
 import debounce from "discourse/lib/debounce";
 import { setting } from "discourse/lib/computed";
 import { default as computed } from "ember-addons/ember-computed-decorators";
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
   uniqueUsernameValidation: null,

@@ -1,6 +1,6 @@
 import { scheduleOnce } from "@ember/runloop";
 import debounce from "discourse/lib/debounce";
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 
 /**
   This object provides the DOM methods we need for our Mixin to bind to scrolling

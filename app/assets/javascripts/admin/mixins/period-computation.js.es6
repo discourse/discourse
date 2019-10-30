@@ -1,6 +1,6 @@
 import DiscourseURL from "discourse/lib/url";
 import computed from "ember-addons/ember-computed-decorators";
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
   queryParams: ["period"],

@@ -1,6 +1,6 @@
 import InputValidation from "discourse/models/input-validation";
 import { default as computed } from "ember-addons/ember-computed-decorators";
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
   rejectedPasswords: null,

@@ -1,4 +1,4 @@
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 const { get, isNone, guidFor } = Ember;
 
 export default Mixin.create({
