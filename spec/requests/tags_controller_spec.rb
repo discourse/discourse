@@ -428,6 +428,16 @@ describe TagsController do
         json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }).to eq(['тема-в-разработке'])
       end
+
+      context 'when tag query parameter is not provided' do
+        it 'does not cause a 500 error, returns a param required message' do
+          get "/tags/filter/search.json", params: {}
+          expect(response.status).not_to eq(500)
+          expect(response.status).to eq(400)
+          json = ::JSON.parse(response.body)
+          expect(json['errors'].first).to eq('param is missing or the value is empty: q')
+        end
+      end
     end
   end
 
