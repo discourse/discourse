@@ -1,7 +1,7 @@
 import { scheduleOnce } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import { deprecated } from "discourse/mixins/scroll-top";
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 
 const context = {
   _scrollTop() {

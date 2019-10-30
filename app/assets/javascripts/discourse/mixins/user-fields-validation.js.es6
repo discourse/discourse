@@ -4,7 +4,7 @@ import {
   on,
   default as computed
 } from "ember-addons/ember-computed-decorators";
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
   @on("init")

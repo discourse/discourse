@@ -4,7 +4,7 @@ import { schedule } from "@ember/runloop";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import afterTransition from "discourse/lib/after-transition";
 import DiscourseURL from "discourse/lib/url";
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
   elementId: null, //click detection added for data-{elementId}

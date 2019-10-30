@@ -1,4 +1,4 @@
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 // Include this mixin if you want to be notified when the dom should be
 // cleaned (usually on route change.)
 export default Mixin.create({

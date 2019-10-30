@@ -1,7 +1,7 @@
 import Eyeline from "discourse/lib/eyeline";
 import Scrolling from "discourse/mixins/scrolling";
 import { on } from "ember-addons/ember-computed-decorators";
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 
 // Provides the ability to load more items for a view which is scrolled to the bottom.
 export default Mixin.create(Scrolling, {

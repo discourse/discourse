@@ -1,6 +1,6 @@
 // This mixin allows a route to open the composer
 import Composer from "discourse/models/composer";
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
   openComposer(controller) {

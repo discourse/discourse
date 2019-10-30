@@ -1,6 +1,6 @@
 import computed from "ember-addons/ember-computed-decorators";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
-import Mixin from '@ember/object/mixin';
+import Mixin from "@ember/object/mixin";
 
 const CUSTOM_TYPES = [
   "bool",
