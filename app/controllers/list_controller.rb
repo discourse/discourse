@@ -11,16 +11,12 @@ class ListController < ApplicationController
     # filtered topics lists
     Discourse.filters.map { |f| :"category_#{f}" },
     Discourse.filters.map { |f| :"category_none_#{f}" },
-    Discourse.filters.map { |f| :"parent_category_category_#{f}" },
-    Discourse.filters.map { |f| :"parent_category_category_none_#{f}" },
     # top summaries
     :category_top,
     :category_none_top,
-    :parent_category_category_top,
     # top pages (ie. with a period)
     TopTopic.periods.map { |p| :"category_top_#{p}" },
     TopTopic.periods.map { |p| :"category_none_top_#{p}" },
-    TopTopic.periods.map { |p| :"parent_category_category_top_#{p}" },
     # category feeds
     :category_feed,
   ].flatten
@@ -34,8 +30,6 @@ class ListController < ApplicationController
     :category_default,
     Discourse.anonymous_filters.map { |f| :"category_#{f}" },
     Discourse.anonymous_filters.map { |f| :"category_none_#{f}" },
-    Discourse.anonymous_filters.map { |f| :"parent_category_category_#{f}" },
-    Discourse.anonymous_filters.map { |f| :"parent_category_category_none_#{f}" },
     # category feeds
     :category_feed,
     # user topics feed
@@ -44,13 +38,11 @@ class ListController < ApplicationController
     :top,
     :category_top,
     :category_none_top,
-    :parent_category_category_top,
     # top pages (ie. with a period)
     TopTopic.periods.map { |p| :"top_#{p}" },
     TopTopic.periods.map { |p| :"top_#{p}_feed" },
     TopTopic.periods.map { |p| :"category_top_#{p}" },
     TopTopic.periods.map { |p| :"category_none_top_#{p}" },
-    TopTopic.periods.map { |p| :"parent_category_category_top_#{p}" },
     :group_topics
   ].flatten
 
@@ -123,15 +115,6 @@ class ListController < ApplicationController
 
     define_method("category_none_#{filter}") do
       self.public_send(filter, category: @category.id, no_subcategories: true)
-    end
-
-    define_method("parent_category_category_#{filter}") do
-      canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
-      self.public_send(filter, category: @category.id)
-    end
-
-    define_method("parent_category_category_none_#{filter}") do
-      self.public_send(filter, category: @category.id)
     end
   end
 
@@ -257,10 +240,6 @@ class ListController < ApplicationController
     top(category: @category.id, no_subcategories: true)
   end
 
-  def parent_category_category_top
-    top(category: @category.id)
-  end
-
   TopTopic.periods.each do |period|
     define_method("top_#{period}") do |options = nil|
       top_options = build_topic_list_options
@@ -296,10 +275,6 @@ class ListController < ApplicationController
       )
     end
 
-    define_method("parent_category_category_top_#{period}") do
-      self.public_send("top_#{period}", category: @category.id)
-    end
-
     # rss feed
     define_method("top_#{period}_feed") do |options = nil|
       discourse_expires_in 1.minute
@@ -333,32 +308,42 @@ class ListController < ApplicationController
 
   def page_params
     route_params = { format: 'json' }
-    route_params[:category]        = @category.slug_for_url                  if @category
-    route_params[:parent_category] = @category.parent_category.slug_for_url  if @category && @category.parent_category
-    route_params[:username]        = UrlHelper.escape_uri(params[:username]) if params[:username].present?
+
+    if @category.present?
+      slug_path = @category.slug_path
+
+      route_params[:category_slug_path_with_id] =
+        (slug_path + [@category.id.to_s]).join("/")
+    end
+
+    route_params[:username] = UrlHelper.escape_uri(params[:username]) if params[:username].present?
     route_params
   end
 
   def set_category
-    slug_or_id = params.fetch(:category)
-    parent_slug_or_id = params[:parent_category]
-    id = params[:id].to_i
+    parts = params.require(:category_slug_path_with_id).split('/')
 
-    parent_category_id = nil
-    if parent_slug_or_id.present?
-      parent_category_id = Category.query_parent_category(parent_slug_or_id)
-      raise Discourse::NotFound.new("category not found", check_permalinks: true) if parent_category_id.blank? && !id
+    if !parts.empty? && parts.last =~ /\A\d+\Z/
+      id = parts.pop.to_i
+    end
+    slug_path = parts unless parts.empty?
+
+    if id.present?
+      @category = Category.find_by_id(id)
+    elsif slug_path.present?
+      if (1..2).include?(slug_path.size)
+        @category = Category.find_by_slug(*slug_path.reverse)
+      end
+
+      # Legacy paths
+      if @category.nil? && parts.last =~ /\A\d+-/
+        @category = Category.find_by_id(parts.last.to_i)
+      end
     end
 
-    @category = Category.query_category(slug_or_id, parent_category_id)
+    raise Discourse::NotFound.new("category not found", check_permalinks: true) if @category.nil?
 
-    # Redirect if we have `/c/:parent_category/:category/:id`
-    if params.include?(:id)
-      category = Category.find_by_id(id)
-      (redirect_to category.url, status: 301) && return if category
-    end
-
-    raise Discourse::NotFound.new("category not found", check_permalinks: true) if !@category
+    params[:category] = @category.id.to_s
 
     @description_meta = @category.description_text
     if !guardian.can_see?(@category)
@@ -388,12 +373,21 @@ class ListController < ApplicationController
 
   def construct_url_with(action, opts, url_prefix = nil)
     method = url_prefix.blank? ? "#{action_name}_path" : "#{url_prefix}_#{action_name}_path"
-    url = if action == :prev
-      public_send(method, opts.merge(prev_page_params))
-    else # :next
-      public_send(method, opts.merge(next_page_params))
-    end
-    url.sub('.json?', '?')
+
+    page_params =
+      case action
+      when :prev
+        prev_page_params
+      when :next
+        next_page_params
+      else
+        raise "unreachable"
+      end
+
+    opts = opts.dup
+    opts.delete(:category) if page_params.include?(:category_slug_path_with_id)
+
+    public_send(method, opts.merge(page_params)).sub('.json?', '?')
   end
 
   def get_excluded_category_ids(current_category = nil)
