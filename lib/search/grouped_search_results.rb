@@ -76,6 +76,14 @@ class Search
       blurb = nil
       cooked = SearchIndexer.scrub_html_for_search(cooked)
 
+      urls = Set.new
+      cooked.scan(URI.regexp(%w{http https})) { urls << $& }
+
+      urls.each do |url|
+        cooked.gsub!(url, I18n.t("search.video")) if url.match(/.(mov|mp4|webm|ogv)/)
+        cooked.gsub!(url, I18n.t("search.audio")) if url.match(/.(mp3|ogg|wav|m4a)/)
+      end
+
       if term
         terms = term.split(/\s+/)
         phrase = terms.first

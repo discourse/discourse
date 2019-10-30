@@ -15,4 +15,32 @@ describe Search do
     end
   end
 
+  context "#GroupedSearchResults.blurb_for" do
+    it "strips audio and video URLs from search blurb" do
+      cooked = <<~RAW
+        link to an external page: https://google.com/?u=bar
+
+        link to an audio file: https://somesite.com/content/file123.m4a
+
+        link to a video file: https://somesite.com/content/somethingelse.mov
+      RAW
+      result = Search::GroupedSearchResults.blurb_for(cooked)
+      expect(result).to eq("link to an external page: https://google.com/?u=bar link to an audio file: #{I18n.t("search.audio")} link to a video file: #{I18n.t("search.video")}")
+    end
+
+    it "strips URLs correctly when blurb is" do
+      cooked = <<~RAW
+        Here goes a test cooked with enough characters to hit the blurb limit.
+
+        Something is very interesting about this audio file.
+
+        http://localhost/uploads/default/original/1X/90adc0092b30c04b761541bc0322d0dce3d896e7.m4a
+      RAW
+
+      result = Search::GroupedSearchResults.blurb_for(cooked)
+      expect(result).to eq("Here goes a test cooked with enough characters to hit the blurb limit. Something is very interesting about this audio file. #{I18n.t("search.audio")}")
+    end
+
+  end
+
 end

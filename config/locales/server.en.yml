@@ -2165,6 +2165,8 @@ en:
       topic: "Results"
       user: "Users"
     results_page: "Search results for '%{term}'"
+    audio: "[audio]"
+    video: "[video]"
 
   sso:
     login_error: "Login Error"
