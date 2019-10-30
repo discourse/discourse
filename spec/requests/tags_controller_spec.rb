@@ -395,6 +395,14 @@ describe TagsController do
             category_names: category.name
           ))
         end
+
+        it "can filter on category without q param" do
+          nope = Fabricate(:tag, name: 'nope')
+          get "/tags/filter/search.json", params: { categoryId: category.id }
+          expect(response.status).to eq(200)
+          json = ::JSON.parse(response.body)
+          expect(json["results"].map { |j| j["id"] }.sort).to eq([yup.name])
+        end
       end
 
       it "matches tags after sanitizing input" do
@@ -427,15 +435,6 @@ describe TagsController do
         expect(response.status).to eq(200)
         json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }).to eq(['тема-в-разработке'])
-      end
-
-      context 'when tag query parameter is not provided' do
-        it 'does not cause a 500 error, returns a param required message' do
-          get "/tags/filter/search.json", params: {}
-          expect(response.status).to eq(400)
-          json = ::JSON.parse(response.body)
-          expect(json['errors']).to include('param is missing or the value is empty: q')
-        end
       end
     end
   end
