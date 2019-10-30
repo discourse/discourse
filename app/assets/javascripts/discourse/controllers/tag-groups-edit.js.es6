@@ -6,7 +6,7 @@ export default Controller.extend({
 
   actions: {
     onDestroy() {
-      let tagGroups = this.tagGroups.model;
+      const tagGroups = this.tagGroups.model;
       tagGroups.removeObject(this.model);
 
       this.transitionToRoute("tagGroups.index");
