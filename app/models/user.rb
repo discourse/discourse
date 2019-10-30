@@ -595,11 +595,6 @@ class User < ActiveRecord::Base
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
 
-  # A selection of people to autocomplete on @mention
-  def self.mentionable_usernames
-    User.select(:username).order('last_posted_at desc').limit(20)
-  end
-
   def password=(password)
     # special case for passwordless accounts
     unless password.blank?
