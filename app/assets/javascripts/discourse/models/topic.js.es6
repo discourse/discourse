@@ -497,10 +497,7 @@ const Topic = RestModel.extend({
     );
   },
 
-  isPinnedUncategorized: and(
-    "pinned",
-    "category.isUncategorizedCategory"
-  ),
+  isPinnedUncategorized: and("pinned", "category.isUncategorizedCategory"),
 
   clearPin() {
     // Clear the pin optimistically from the object

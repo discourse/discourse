@@ -44,12 +44,7 @@ export default RestModel.extend({
     });
   },
 
-  loading: or(
-    "loadingAbove",
-    "loadingBelow",
-    "loadingFilter",
-    "stagingPost"
-  ),
+  loading: or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost"),
   notLoading: not("loading"),
 
   @computed("isMegaTopic", "stream.length", "topic.highest_post_number")
@@ -67,16 +62,8 @@ export default RestModel.extend({
     return hasPosts && filteredPostsCount > 0;
   },
 
-  canAppendMore: and(
-    "notLoading",
-    "hasPosts",
-    "lastPostNotLoaded"
-  ),
-  canPrependMore: and(
-    "notLoading",
-    "hasPosts",
-    "firstPostNotLoaded"
-  ),
+  canAppendMore: and("notLoading", "hasPosts", "lastPostNotLoaded"),
+  canPrependMore: and("notLoading", "hasPosts", "firstPostNotLoaded"),
 
   @computed("hasLoadedData", "firstPostId", "posts.[]")
   firstPostPresent(hasLoadedData, firstPostId) {

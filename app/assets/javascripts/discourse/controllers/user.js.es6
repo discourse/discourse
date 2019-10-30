@@ -39,10 +39,7 @@ export default Controller.extend(CanCheckEmails, {
     }
     return (!indexStream || viewingSelf) && !forceExpand;
   },
-  canMuteOrIgnoreUser: or(
-    "model.can_ignore_user",
-    "model.can_mute_user"
-  ),
+  canMuteOrIgnoreUser: or("model.can_ignore_user", "model.can_mute_user"),
   hasGivenFlags: gt("model.number_of_flags_given", 0),
   hasFlaggedPosts: gt("model.number_of_flagged_posts", 0),
   hasDeletedPosts: gt("model.number_of_deleted_posts", 0),
@@ -106,10 +103,7 @@ export default Controller.extend(CanCheckEmails, {
     return User.currentProp("can_invite_to_forum");
   },
 
-  canDeleteUser: and(
-    "model.can_be_deleted",
-    "model.can_delete_all_posts"
-  ),
+  canDeleteUser: and("model.can_be_deleted", "model.can_delete_all_posts"),
 
   @computed("model.user_fields.@each.value")
   publicUserFields() {

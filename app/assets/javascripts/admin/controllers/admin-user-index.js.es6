@@ -17,9 +17,7 @@ export default Controller.extend(CanCheckEmails, {
   userTitleValue: null,
 
   showBadges: setting("enable_badges"),
-  hasLockedTrustLevel: notEmpty(
-    "model.manual_locked_trust_level"
-  ),
+  hasLockedTrustLevel: notEmpty("model.manual_locked_trust_level"),
 
   primaryGroupDirty: propertyNotEqual(
     "originalPrimaryGroupId",

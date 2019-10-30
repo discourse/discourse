@@ -36,11 +36,7 @@ export default Component.extend({
 
   canDefer: alias("currentUser.enable_defer"),
 
-  inviteDisabled: or(
-    "topic.archived",
-    "topic.closed",
-    "topic.deleted"
-  ),
+  inviteDisabled: or("topic.archived", "topic.closed", "topic.deleted"),
 
   @computed
   showAdminButton() {
@@ -51,10 +47,7 @@ export default Component.extend({
     );
   },
 
-  showEditOnFooter: and(
-    "topic.isPrivateMessage",
-    "site.can_tag_pms"
-  ),
+  showEditOnFooter: and("topic.isPrivateMessage", "site.can_tag_pms"),
 
   @computed("topic.message_archived")
   archiveIcon: archived => (archived ? "envelope" : "folder"),

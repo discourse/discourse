@@ -7,9 +7,7 @@ export default Controller.extend(ModalFunctionality, {
   model: null,
   postNumber: null,
   postDate: null,
-  filteredPostsCount: alias(
-    "topic.postStream.filteredPostsCount"
-  ),
+  filteredPostsCount: alias("topic.postStream.filteredPostsCount"),
 
   onShow() {
     next(() => $("#post-jump").focus());

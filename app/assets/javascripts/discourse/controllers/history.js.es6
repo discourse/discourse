@@ -33,12 +33,8 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  previousFeaturedLink: alias(
-    "model.featured_link_changes.previous"
-  ),
-  currentFeaturedLink: alias(
-    "model.featured_link_changes.current"
-  ),
+  previousFeaturedLink: alias("model.featured_link_changes.previous"),
+  currentFeaturedLink: alias("model.featured_link_changes.current"),
 
   previousTagChanges: customTagArray("model.tags_changes.previous"),
   currentTagChanges: customTagArray("model.tags_changes.current"),
@@ -174,10 +170,7 @@ export default Controller.extend(ModalFunctionality, {
     return this.currentUser && this.currentUser.get("staff");
   },
 
-  isEitherRevisionHidden: or(
-    "model.previous_hidden",
-    "model.current_hidden"
-  ),
+  isEitherRevisionHidden: or("model.previous_hidden", "model.current_hidden"),
 
   @computed("model.previous_hidden", "model.current_hidden", "displayingInline")
   hiddenClasses(prevHidden, currentHidden, displayingInline) {
@@ -197,10 +190,7 @@ export default Controller.extend(ModalFunctionality, {
 
   displayingInline: equal("viewMode", "inline"),
   displayingSideBySide: equal("viewMode", "side_by_side"),
-  displayingSideBySideMarkdown: equal(
-    "viewMode",
-    "side_by_side_markdown"
-  ),
+  displayingSideBySideMarkdown: equal("viewMode", "side_by_side_markdown"),
 
   @computed("displayingInline")
   inlineClass(displayingInline) {

@@ -109,14 +109,8 @@ const UserAction = RestModel.extend({
   postType: equal("action_type", UserActionTypes.posts),
   topicType: equal("action_type", UserActionTypes.topics),
   bookmarkType: equal("action_type", UserActionTypes.bookmarks),
-  messageSentType: equal(
-    "action_type",
-    UserActionTypes.messages_sent
-  ),
-  messageReceivedType: equal(
-    "action_type",
-    UserActionTypes.messages_received
-  ),
+  messageSentType: equal("action_type", UserActionTypes.messages_sent),
+  messageReceivedType: equal("action_type", UserActionTypes.messages_received),
   mentionType: equal("action_type", UserActionTypes.mentions),
   isPM: or("messageSentType", "messageReceivedType"),
   postReplyType: or("postType", "replyType"),

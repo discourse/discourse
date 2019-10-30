@@ -20,10 +20,7 @@ export default Controller.extend({
   pmTaggingEnabled: alias("site.can_tag_pms"),
   tagId: null,
 
-  showNewPM: and(
-    "user.viewingSelf",
-    "currentUser.can_send_private_messages"
-  ),
+  showNewPM: and("user.viewingSelf", "currentUser.can_send_private_messages"),
 
   @computed("selected.[]", "bulkSelectEnabled")
   hasSelection(selected, bulkSelectEnabled) {

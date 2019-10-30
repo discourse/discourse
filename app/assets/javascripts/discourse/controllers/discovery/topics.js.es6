@@ -17,9 +17,7 @@ const controllerOpts = {
 
   canStar: alias("currentUser.id"),
   showTopicPostBadges: not("discoveryTopics.new"),
-  redirectedReason: alias(
-    "currentUser.redirected_to_top.reason"
-  ),
+  redirectedReason: alias("currentUser.redirected_to_top.reason"),
 
   order: "default",
   ascending: false,

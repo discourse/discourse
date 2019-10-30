@@ -11,9 +11,7 @@ export default buildCategoryPanel("general", {
     this.foregroundColors = ["FFFFFF", "000000"];
   },
 
-  canSelectParentCategory: not(
-    "category.isUncategorizedCategory"
-  ),
+  canSelectParentCategory: not("category.isUncategorizedCategory"),
   uncategorizedSiteSettingLink: Discourse.getURL(
     "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
   ),

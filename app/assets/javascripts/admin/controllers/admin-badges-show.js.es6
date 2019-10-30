@@ -14,9 +14,7 @@ export default Controller.extend(bufferedProperty("model"), {
   badgeTypes: alias("adminBadges.badgeTypes"),
   badgeGroupings: alias("adminBadges.badgeGroupings"),
   badgeTriggers: alias("adminBadges.badgeTriggers"),
-  protectedSystemFields: alias(
-    "adminBadges.protectedSystemFields"
-  ),
+  protectedSystemFields: alias("adminBadges.protectedSystemFields"),
 
   readOnly: alias("buffered.system"),
   showDisplayName: propertyNotEqual("name", "displayName"),
