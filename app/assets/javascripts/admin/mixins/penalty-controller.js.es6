@@ -1,7 +1,8 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Mixin from '@ember/object/mixin';
 
-export default Ember.Mixin.create(ModalFunctionality, {
+export default Mixin.create(ModalFunctionality, {
   reason: null,
   message: null,
   postEdit: null,

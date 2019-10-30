@@ -2,8 +2,9 @@ import { empty } from "@ember/object/computed";
 import computed from "ember-addons/ember-computed-decorators";
 import UserBadge from "discourse/models/user-badge";
 import { convertIconClass } from "discourse-common/lib/icon-library";
+import Mixin from '@ember/object/mixin';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   @computed("allBadges.[]", "userBadges.[]")
   grantableBadges(allBadges, userBadges) {
     const granted = userBadges.reduce((map, badge) => {

@@ -1,6 +1,7 @@
 import showModal from "discourse/lib/show-modal";
+import Mixin from '@ember/object/mixin';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   flash(text, messageClass) {
     this.appEvents.trigger("modal-body:flash", { text, messageClass });
   },

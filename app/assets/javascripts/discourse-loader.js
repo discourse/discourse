@@ -47,6 +47,7 @@ var define, requirejs;
         uniq: Ember.computed.uniq,
         uniqBy: Ember.computed.uniqBy
       },
+      "@ember/object/mixin": { default: Ember.Mixin },
       "@ember/object/proxy": { default: Ember.ObjectProxy },
       "@ember/routing/route": { default: Ember.Route },
       "@ember/runloop": {

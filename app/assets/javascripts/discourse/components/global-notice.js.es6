@@ -67,7 +67,7 @@ export default Component.extend(
         notices.push([
           LogsNotice.currentProp("message"),
           "alert-logs-notice",
-          `<div class='close'>${iconHTML("times")}</div>`
+          `<button class='btn btn-flat close'>${iconHTML("times")}</button>`
         ]);
       }
 

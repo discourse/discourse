@@ -1,8 +1,9 @@
 const { run, get } = Ember;
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Mixin from '@ember/object/mixin';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   willDestroyElement() {
     this._super(...arguments);
 
