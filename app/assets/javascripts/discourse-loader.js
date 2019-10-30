@@ -14,11 +14,29 @@ var define, requirejs;
       "@ember/object": { default: Ember.Object },
       "@ember/object/proxy": { default: Ember.ObjectProxy },
       "@ember/routing/route": { default: Ember.Route },
+      "@ember/runloop": {
+        bind: Ember.run.bind,
+        cancel: Ember.run.cancel,
+        debounce: Ember.testing ? Ember.run : Ember.run.debounce,
+        later: Ember.run.later,
+        next: Ember.run.next,
+        once: Ember.run.once,
+        run: Ember.run,
+        schedule: Ember.run.schedule,
+        scheduleOnce: Ember.run.scheduleOnce,
+        throttle: Ember.run.throttle
+      },
       "@ember/service": {
         default: Ember.Service,
         inject: Ember.inject.service
       }
     };
+  } else if (typeof __PRETTY_TEXT !== "undefined") {
+    // This is a hack because our server side code includes the pretty_text bundle
+    // which relies on ember now that we're using modules properly.
+    // The proper fix would be to move the upload urls code out of the pretty text
+    // bundle and remove this code. It should never be called;
+    EMBER_MODULES["@ember/runloop"] = {};
   }
 
   var _isArray;

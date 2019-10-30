@@ -1,3 +1,4 @@
+import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 import ClickTrack from "discourse/lib/click-track";
@@ -23,7 +24,7 @@ export default Component.extend(LoadMore, {
   classNames: ["user-stream"],
 
   _scrollTopOnModelChange: function() {
-    Ember.run.schedule("afterRender", () => $(document).scrollTop(0));
+    schedule("afterRender", () => $(document).scrollTop(0));
   }.observes("stream.user.id"),
 
   _inserted: Ember.on("didInsertElement", function() {

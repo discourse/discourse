@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import Component from "@ember/component";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
@@ -30,7 +31,7 @@ export default Component.extend({
 
   _loadPikadayPicker(container) {
     loadScript("/javascripts/pikaday.js").then(() => {
-      Ember.run.next(() => {
+      next(() => {
         const options = {
           field: this.element.querySelector(".date-picker"),
           container: container || null,

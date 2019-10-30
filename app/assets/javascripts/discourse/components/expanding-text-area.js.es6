@@ -1,10 +1,11 @@
+import { scheduleOnce } from "@ember/runloop";
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import autosize from "discourse/lib/autosize";
 
 export default Ember.TextArea.extend({
   @on("didInsertElement")
   _startWatching() {
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       $(this.element).focus();
       autosize(this.element);
     });

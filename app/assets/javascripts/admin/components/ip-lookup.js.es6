@@ -1,4 +1,5 @@
 import EmberObject from "@ember/object";
+import { later } from "@ember/runloop";
 import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { ajax } from "discourse/lib/ajax";
@@ -78,7 +79,7 @@ export default Component.extend({
       $(document.body).append($copyRange);
       if (copyText(text, $copyRange[0])) {
         this.set("copied", true);
-        Ember.run.later(() => this.set("copied", false), 2000);
+        later(() => this.set("copied", false), 2000);
       }
       $copyRange.remove();
     },

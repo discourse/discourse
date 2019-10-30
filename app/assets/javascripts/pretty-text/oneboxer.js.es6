@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 let timeout;
 const loadingQueue = [];
 let localCache = {};
@@ -82,7 +83,7 @@ function loadNext(ajax) {
       }
     )
     .finally(() => {
-      timeout = Ember.run.later(() => loadNext(ajax), timeoutMs);
+      timeout = later(() => loadNext(ajax), timeoutMs);
       if (removeLoading) {
         $elem.removeClass(LOADING_ONEBOX_CSS_CLASS);
         $elem.data("onebox-loaded");
@@ -129,7 +130,7 @@ export function load({
   if (synchronous) {
     return loadNext(ajax);
   } else {
-    timeout = timeout || Ember.run.later(() => loadNext(ajax), 150);
+    timeout = timeout || later(() => loadNext(ajax), 150);
   }
 }
 

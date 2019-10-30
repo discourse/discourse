@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 import Component from "@ember/component";
 export default Component.extend({
   action: "showCreateAccount",
@@ -10,10 +11,7 @@ export default Component.extend({
     hideForSession() {
       this.session.set("hideSignupCta", true);
       this.keyValueStore.setItem("anon-cta-hidden", new Date().getTime());
-      Ember.run.later(
-        () => this.session.set("showSignupCta", false),
-        20 * 1000
-      );
+      later(() => this.session.set("showSignupCta", false), 20 * 1000);
     }
   },
 

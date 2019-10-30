@@ -1,3 +1,4 @@
+import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import {
   default as computed,
@@ -73,7 +74,7 @@ export default Component.extend({
   @observes("selection")
   _updateBasedOnLastPost() {
     if (!this.autoClose) {
-      Ember.run.schedule("afterRender", () => {
+      schedule("afterRender", () => {
         this.set("topicTimer.based_on_last_post", false);
       });
     }

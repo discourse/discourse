@@ -1,3 +1,4 @@
+import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 export default Component.extend({
   didInsertElement() {
@@ -14,7 +15,7 @@ export default Component.extend({
       this.set("loginName", $.cookie("email"));
     }
 
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       $(
         "#login-account-password, #login-account-name, #login-second-factor"
       ).keydown(e => {

@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import ComponentConnector from "discourse/widgets/component-connector";
 import { h } from "virtual-dom";
@@ -400,7 +401,7 @@ export default createWidget("topic-timeline", {
     const stream = this.attrs.topic.get("postStream");
 
     // a little debounce to avoid flashing
-    Ember.run.later(() => {
+    later(() => {
       if (!this.state.position === scrollPosition) {
         return;
       }

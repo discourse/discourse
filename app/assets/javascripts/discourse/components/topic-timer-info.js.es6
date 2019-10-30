@@ -1,3 +1,5 @@
+import { cancel } from "@ember/runloop";
+import { later } from "@ember/runloop";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
@@ -85,11 +87,7 @@ export default Component.extend(
 
         // TODO Sam: concerned this can cause a heavy rerender loop
         if (!Ember.testing) {
-          this._delayedRerender = Ember.run.later(
-            this,
-            this.rerender,
-            rerenderDelay
-          );
+          this._delayedRerender = later(this, this.rerender, rerenderDelay);
         }
       }
     },
@@ -110,7 +108,7 @@ export default Component.extend(
       $(this.element).off("click.topic-timer-remove", this.removeTopicTimer);
 
       if (this._delayedRerender) {
-        Ember.run.cancel(this._delayedRerender);
+        cancel(this._delayedRerender);
       }
     },
 

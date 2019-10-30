@@ -1,3 +1,4 @@
+import { run } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 const _loaded = {};
 const _loading = {};
@@ -22,7 +23,7 @@ function loadWithTag(path, cb) {
     ) {
       s = s.onload = s.onreadystatechange = null;
       if (!abort) {
-        Ember.run(null, cb);
+        run(null, cb);
       }
     }
   };

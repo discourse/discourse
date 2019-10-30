@@ -1,3 +1,4 @@
+import { debounce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -1046,7 +1047,7 @@ export default Controller.extend({
 
   @observes("model.reply", "model.title")
   _shouldSaveDraft() {
-    Ember.run.debounce(this, this._saveDraft, 2000);
+    debounce(this, this._saveDraft, 2000);
   },
 
   @computed("model.categoryId", "lastValidatedAt")
