@@ -3095,6 +3095,7 @@ en:
         parent_tag_description: "Tags from this group can't be used unless the parent tag is present."
         one_per_topic_label: "Limit one tag per topic from this group"
         new_name: "New Tag Group"
+        name_placeholder: "Tag Group Name"
         save: "Save"
         delete: "Delete"
         confirm_delete: "Are you sure you want to delete this tag group?"
