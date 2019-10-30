@@ -106,7 +106,7 @@ module Email
     def create_incoming_email
       IncomingEmail.create(
         message_id: @message_id,
-        raw: @raw_email,
+        raw: Email::Cleaner.new(@raw_email).execute,
         subject: subject,
         from_address: @from_email,
         to_addresses: @mail.to&.map(&:downcase)&.join(";"),
@@ -1237,5 +1237,4 @@ module Email
       end
     end
   end
-
 end
