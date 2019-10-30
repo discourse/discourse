@@ -13,6 +13,7 @@ var define, requirejs;
       },
       "@ember/object": { default: Ember.Object },
       "@ember/object/computed": {
+        default: Ember.computed,
         alias: Ember.computed.alias,
         and: Ember.computed.and,
         bool: Ember.computed.bool,
