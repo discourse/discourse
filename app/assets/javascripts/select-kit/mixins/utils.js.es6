@@ -1,6 +1,7 @@
+import Mixin from '@ember/object/mixin';
 const { get, isNone, guidFor } = Ember;
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   valueForContentItem(content) {
     switch (typeof content) {
       case "string":
