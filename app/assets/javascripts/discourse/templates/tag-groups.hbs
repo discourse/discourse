@@ -4,10 +4,17 @@
   <div class='content-list'>
     <ul>
       {{#each model as |tagGroup|}}
-        <li><a {{action "selectTagGroup" tagGroup}} class="{{if tagGroup.selected 'active'}}">{{tagGroup.name}}</a></li>
+        <li>
+          {{#link-to "tagGroups.edit" tagGroup}}
+            {{tagGroup.name}}
+          {{/link-to}}
+        </li>
       {{/each}}
     </ul>
-    <button {{action "newTagGroup"}} class='btn btn-default'>{{d-icon "plus"}}{{i18n 'tagging.groups.new'}}</button>
+
+    {{#if this.siteSettings.tagging_enabled}}
+      <button {{action "newTagGroup"}} class='btn btn-default'>{{d-icon "plus"}}{{i18n 'tagging.groups.new'}}</button>
+    {{/if}}
   </div>
 
   {{outlet}}
