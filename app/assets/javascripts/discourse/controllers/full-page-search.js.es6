@@ -16,6 +16,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { setTransient } from "discourse/lib/page-tracker";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import Composer from "discourse/models/composer";
+import { scrollTop } from "discourse/mixins/scroll-top";
 
 const SortOrders = [
   { name: I18n.t("search.relevance"), id: 0 },
@@ -226,6 +227,7 @@ export default Controller.extend({
       this.set("bulkSelectEnabled", false);
       this.selected.clear();
       this.set("searching", true);
+      scrollTop();
     } else {
       this.set("loading", true);
     }
