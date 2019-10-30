@@ -117,7 +117,7 @@ QUnit.test("custom api name", async assert => {
   });
 
   // The pretenders only respond to requests for `widget`
-  // If these basic tests, the name override worked correctly
+  // If these basic tests pass, the name override worked correctly
 
   //Create
   const widget = store.createRecord("my-widget");
