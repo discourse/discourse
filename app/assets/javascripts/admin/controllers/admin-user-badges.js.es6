@@ -1,3 +1,4 @@
+import { alias, sort } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -7,10 +8,10 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default Controller.extend(GrantBadgeController, {
   adminUser: inject(),
-  user: Ember.computed.alias("adminUser.model"),
-  userBadges: Ember.computed.alias("model"),
-  allBadges: Ember.computed.alias("badges"),
-  sortedBadges: Ember.computed.sort("model", "badgeSortOrder"),
+  user: alias("adminUser.model"),
+  userBadges: alias("model"),
+  allBadges: alias("badges"),
+  sortedBadges: sort("model", "badgeSortOrder"),
 
   init() {
     this._super(...arguments);

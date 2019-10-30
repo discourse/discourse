@@ -1,3 +1,4 @@
+import { sort } from "@ember/object/computed";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
@@ -5,7 +6,7 @@ export default Component.extend({
   classNameBindings: [":tag-list", "categoryClass", "tagGroupNameClass"],
 
   isPrivateMessage: false,
-  sortedTags: Ember.computed.sort("tags", "sortProperties"),
+  sortedTags: sort("tags", "sortProperties"),
 
   @computed("titleKey")
   title(titleKey) {

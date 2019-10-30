@@ -1,3 +1,4 @@
+import { alias, not, gt, empty, notEmpty, equal } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import DiscoveryController from "discourse/controllers/discovery";
 import { queryParams } from "discourse/controllers/discovery-sortable";
@@ -14,9 +15,9 @@ const controllerOpts = {
 
   period: null,
 
-  canStar: Ember.computed.alias("currentUser.id"),
-  showTopicPostBadges: Ember.computed.not("discoveryTopics.new"),
-  redirectedReason: Ember.computed.alias(
+  canStar: alias("currentUser.id"),
+  showTopicPostBadges: not("discoveryTopics.new"),
+  redirectedReason: alias(
     "currentUser.redirected_to_top.reason"
   ),
 
@@ -118,16 +119,16 @@ const controllerOpts = {
     );
   },
 
-  hasTopics: Ember.computed.gt("model.topics.length", 0),
-  allLoaded: Ember.computed.empty("model.more_topics_url"),
+  hasTopics: gt("model.topics.length", 0),
+  allLoaded: empty("model.more_topics_url"),
   latest: endWith("model.filter", "latest"),
   new: endWith("model.filter", "new"),
-  top: Ember.computed.notEmpty("period"),
-  yearly: Ember.computed.equal("period", "yearly"),
-  quarterly: Ember.computed.equal("period", "quarterly"),
-  monthly: Ember.computed.equal("period", "monthly"),
-  weekly: Ember.computed.equal("period", "weekly"),
-  daily: Ember.computed.equal("period", "daily"),
+  top: notEmpty("period"),
+  yearly: equal("period", "yearly"),
+  quarterly: equal("period", "quarterly"),
+  monthly: equal("period", "monthly"),
+  weekly: equal("period", "weekly"),
+  daily: equal("period", "daily"),
 
   @computed("allLoaded", "model.topics.length")
   footerMessage(allLoaded, topicsLength) {

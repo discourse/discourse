@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
@@ -6,7 +7,7 @@ export default Component.extend(UploadMixin, {
   type: "txt",
   classNames: "watched-words-uploader",
   uploadUrl: "/admin/logs/watched_words/upload",
-  addDisabled: Ember.computed.alias("uploading"),
+  addDisabled: alias("uploading"),
 
   validateUploadedFilesOptions() {
     return { skipValidation: true };

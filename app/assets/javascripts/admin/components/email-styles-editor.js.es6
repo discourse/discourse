@@ -1,8 +1,9 @@
+import { reads } from "@ember/object/computed";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
-  editorId: Ember.computed.reads("fieldName"),
+  editorId: reads("fieldName"),
 
   @computed("fieldName")
   currentEditorMode(fieldName) {

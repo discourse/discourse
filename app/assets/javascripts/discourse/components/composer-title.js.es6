@@ -1,3 +1,4 @@
+import { alias, or } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { debounce } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
@@ -13,8 +14,8 @@ import afterTransition from "discourse/lib/after-transition";
 
 export default Component.extend({
   classNames: ["title-input"],
-  watchForLink: Ember.computed.alias("composer.canEditTopicFeaturedLink"),
-  disabled: Ember.computed.or("composer.loading", "composer.disableTitleInput"),
+  watchForLink: alias("composer.canEditTopicFeaturedLink"),
+  disabled: or("composer.loading", "composer.disableTitleInput"),
 
   didInsertElement() {
     this._super(...arguments);

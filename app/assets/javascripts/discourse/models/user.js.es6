@@ -1,3 +1,4 @@
+import { gt, equal, or } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
@@ -31,9 +32,9 @@ export const SECOND_FACTOR_METHODS = {
 const isForever = dt => moment().diff(dt, "years") < -500;
 
 const User = RestModel.extend({
-  hasPMs: Ember.computed.gt("private_messages_stats.all", 0),
-  hasStartedPMs: Ember.computed.gt("private_messages_stats.mine", 0),
-  hasUnreadPMs: Ember.computed.gt("private_messages_stats.unread", 0),
+  hasPMs: gt("private_messages_stats.all", 0),
+  hasStartedPMs: gt("private_messages_stats.mine", 0),
+  hasUnreadPMs: gt("private_messages_stats.unread", 0),
 
   redirected_to_top: {
     reason: null
@@ -204,10 +205,10 @@ const User = RestModel.extend({
     );
   },
 
-  isBasic: Ember.computed.equal("trust_level", 0),
-  isLeader: Ember.computed.equal("trust_level", 3),
-  isElder: Ember.computed.equal("trust_level", 4),
-  canManageTopic: Ember.computed.or("staff", "isElder"),
+  isBasic: equal("trust_level", 0),
+  isLeader: equal("trust_level", 3),
+  isElder: equal("trust_level", 4),
+  canManageTopic: or("staff", "isElder"),
 
   @computed("previous_visit_at")
   previousVisitAt(previous_visit_at) {

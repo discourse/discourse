@@ -1,3 +1,4 @@
+import { empty } from "@ember/object/computed";
 import computed from "ember-addons/ember-computed-decorators";
 import UserBadge from "discourse/models/user-badge";
 import { convertIconClass } from "discourse-common/lib/icon-library";
@@ -28,7 +29,7 @@ export default Mixin.create({
       .sort((a, b) => a.get("name").localeCompare(b.get("name")));
   },
 
-  noGrantableBadges: Ember.computed.empty("grantableBadges"),
+  noGrantableBadges: empty("grantableBadges"),
 
   @computed("selectedBadgeId", "grantableBadges")
   selectedBadgeGrantable(selectedBadgeId, grantableBadges) {

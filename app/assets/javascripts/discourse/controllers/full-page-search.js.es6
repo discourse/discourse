@@ -1,3 +1,4 @@
+import { or } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
@@ -207,7 +208,7 @@ export default Controller.extend({
     return page === PAGE_LIMIT;
   },
 
-  searchButtonDisabled: Ember.computed.or("searching", "loading"),
+  searchButtonDisabled: or("searching", "loading"),
 
   _search() {
     if (this.searching) {

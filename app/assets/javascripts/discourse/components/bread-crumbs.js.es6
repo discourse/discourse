@@ -1,3 +1,4 @@
+import { alias, filter, or } from "@ember/object/computed";
 import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
@@ -6,9 +7,9 @@ export default Component.extend({
   classNameBindings: ["hidden:hidden", ":category-breadcrumb"],
   tagName: "ol",
 
-  parentCategory: Ember.computed.alias("category.parentCategory"),
+  parentCategory: alias("category.parentCategory"),
 
-  parentCategories: Ember.computed.filter("categories", function(c) {
+  parentCategories: filter("categories", function(c) {
     if (
       c.id === this.site.get("uncategorized_category_id") &&
       !this.siteSettings.allow_uncategorized_topics
@@ -34,7 +35,7 @@ export default Component.extend({
     return this.site.mobileView && !category;
   },
 
-  firstCategory: Ember.computed.or("{parentCategory,category}"),
+  firstCategory: or("{parentCategory,category}"),
 
   @computed("category", "parentCategory")
   secondCategory(category, parentCategory) {

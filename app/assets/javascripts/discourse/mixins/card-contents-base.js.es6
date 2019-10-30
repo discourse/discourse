@@ -1,3 +1,4 @@
+import { alias, match } from "@ember/object/computed";
 import { throttle } from "@ember/runloop";
 import { next } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
@@ -11,8 +12,8 @@ export default Mixin.create({
   triggeringLinkClass: null, //the <a> classname where this card should appear
   _showCallback: null, //username, $target - load up data for when show is called, should call this._positionCard($target) when it's done.
 
-  postStream: Ember.computed.alias("topic.postStream"),
-  viewingTopic: Ember.computed.match("currentPath", /^topic\./),
+  postStream: alias("topic.postStream"),
+  viewingTopic: match("currentPath", /^topic\./),
 
   visible: false,
   username: null,

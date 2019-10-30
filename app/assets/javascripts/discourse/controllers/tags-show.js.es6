@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import {
@@ -56,7 +57,7 @@ export default Controller.extend(BulkTopicSelection, {
   tag: null,
   additionalTags: null,
   list: null,
-  canAdminTag: Ember.computed.alias("currentUser.staff"),
+  canAdminTag: alias("currentUser.staff"),
   filterMode: null,
   navMode: "latest",
   loading: false,
@@ -69,7 +70,7 @@ export default Controller.extend(BulkTopicSelection, {
   max_posts: null,
   q: null,
 
-  categories: Ember.computed.alias("site.categoriesList"),
+  categories: alias("site.categoriesList"),
 
   @computed("list", "list.draft")
   createTopicLabel(list, listDraft) {

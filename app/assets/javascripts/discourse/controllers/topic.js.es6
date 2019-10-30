@@ -1,3 +1,4 @@
+import { or, and, not, alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import { scheduleOnce } from "@ember/runloop";
@@ -45,7 +46,7 @@ export default Controller.extend(bufferedProperty("model"), {
   selectedPostIds: null,
   editingTopic: false,
   queryParams: ["filter", "username_filters"],
-  loadedAllPosts: Ember.computed.or(
+  loadedAllPosts: or(
     "model.postStream.loadedAllPosts",
     "model.postStream.loadingLastPost"
   ),
@@ -59,7 +60,7 @@ export default Controller.extend(bufferedProperty("model"), {
   filter: null,
   quoteState: null,
 
-  canRemoveTopicFeaturedLink: Ember.computed.and(
+  canRemoveTopicFeaturedLink: and(
     "canEditTopicFeaturedLink",
     "buffered.featured_link"
   ),
@@ -140,7 +141,7 @@ export default Controller.extend(bufferedProperty("model"), {
     });
   },
 
-  showCategoryChooser: Ember.computed.not("model.isPrivateMessage"),
+  showCategoryChooser: not("model.isPrivateMessage"),
 
   gotoInbox(name) {
     let url = userPath(this.get("currentUser.username_lower") + "/messages");
@@ -1147,12 +1148,12 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  hasError: Ember.computed.or("model.errorHtml", "model.errorMessage"),
-  noErrorYet: Ember.computed.not("hasError"),
+  hasError: or("model.errorHtml", "model.errorMessage"),
+  noErrorYet: not("hasError"),
 
-  categories: Ember.computed.alias("site.categoriesList"),
+  categories: alias("site.categoriesList"),
 
-  selectedPostsCount: Ember.computed.alias("selectedPostIds.length"),
+  selectedPostsCount: alias("selectedPostIds.length"),
 
   @computed(
     "selectedPostIds",
@@ -1201,7 +1202,7 @@ export default Controller.extend(bufferedProperty("model"), {
     return isMegaTopic ? false : !selectedAllPosts;
   },
 
-  canDeselectAll: Ember.computed.alias("selectedAllPosts"),
+  canDeselectAll: alias("selectedAllPosts"),
 
   @computed(
     "currentUser.staff",

@@ -1,3 +1,4 @@
+import { empty } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 export default Controller.extend({
@@ -6,7 +7,7 @@ export default Controller.extend({
 
     @property sendTestEmailDisabled
   **/
-  sendTestEmailDisabled: Ember.computed.empty("testEmailAddress"),
+  sendTestEmailDisabled: empty("testEmailAddress"),
 
   /**
     Clears the 'sentTestEmail' property on successful send.

@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import {
@@ -10,7 +11,7 @@ export default Component.extend({
   classNameBindings: ["docked"],
   docked: false,
   progressPosition: null,
-  postStream: Ember.computed.alias("topic.postStream"),
+  postStream: alias("topic.postStream"),
   _streamPercentage: null,
 
   @computed("progressPosition")

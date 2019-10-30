@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import { setting } from "discourse/lib/computed";
 import computed from "ember-addons/ember-computed-decorators";
@@ -6,8 +7,8 @@ export default Component.extend({
   classNames: ["admin-report-storage-stats"],
 
   backupLocation: setting("backup_location"),
-  backupStats: Ember.computed.alias("model.data.backups"),
-  uploadStats: Ember.computed.alias("model.data.uploads"),
+  backupStats: alias("model.data.backups"),
+  uploadStats: alias("model.data.uploads"),
 
   @computed("backupStats")
   showBackupStats(stats) {

@@ -1,3 +1,4 @@
+import { empty, notEmpty, match } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { url } from "discourse/lib/computed";
@@ -11,7 +12,7 @@ const THEME_UPLOAD_VAR = 2;
 export default Controller.extend({
   downloadUrl: url("model.id", "/admin/customize/themes/%@/export"),
   previewUrl: url("model.id", "/admin/themes/%@/preview"),
-  addButtonDisabled: Ember.computed.empty("selectedChildThemeId"),
+  addButtonDisabled: empty("selectedChildThemeId"),
   editRouteName: "adminCustomizeThemes.edit",
 
   @computed("model.editedFields")
@@ -80,14 +81,14 @@ export default Controller.extend({
     return settings.map(setting => ThemeSettings.create(setting));
   },
 
-  hasSettings: Ember.computed.notEmpty("settings"),
+  hasSettings: notEmpty("settings"),
 
   @computed("model.translations")
   translations(translations) {
     return translations.map(setting => ThemeSettings.create(setting));
   },
 
-  hasTranslations: Ember.computed.notEmpty("translations"),
+  hasTranslations: notEmpty("translations"),
 
   @computed("model.remoteError", "updatingRemote")
   showRemoteError(errorMessage, updating) {
@@ -148,7 +149,7 @@ export default Controller.extend({
       "scss"
     );
   },
-  sourceIsHttp: Ember.computed.match(
+  sourceIsHttp: match(
     "model.remote_theme.remote_url",
     /^http(s)?:\/\//
   ),

@@ -1,3 +1,4 @@
+import { empty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import {
   default as computed,
@@ -16,8 +17,8 @@ export default Controller.extend({
 
   maxLength: setting("max_username_length"),
   minLength: setting("min_username_length"),
-  newUsernameEmpty: Ember.computed.empty("newUsername"),
-  saveDisabled: Ember.computed.or(
+  newUsernameEmpty: empty("newUsername"),
+  saveDisabled: or(
     "saving",
     "newUsernameEmpty",
     "taken",

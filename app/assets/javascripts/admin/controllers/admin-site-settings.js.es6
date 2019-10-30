@@ -1,9 +1,10 @@
+import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
 
 export default Controller.extend({
   filter: null,
-  allSiteSettings: Ember.computed.alias("model"),
+  allSiteSettings: alias("model"),
   visibleSiteSettings: null,
   onlyOverridden: false,
 

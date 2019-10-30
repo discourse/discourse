@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -7,9 +8,9 @@ import Sharing from "discourse/lib/sharing";
 export default Component.extend({
   tagName: null,
 
-  type: Ember.computed.alias("panel.model.type"),
+  type: alias("panel.model.type"),
 
-  topic: Ember.computed.alias("panel.model.topic"),
+  topic: alias("panel.model.topic"),
 
   @computed
   sources() {

@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -7,9 +8,9 @@ import InputValidation from "discourse/models/input-validation";
 
 export default Controller.extend({
   adminWebHooks: inject(),
-  eventTypes: Ember.computed.alias("adminWebHooks.eventTypes"),
-  defaultEventTypes: Ember.computed.alias("adminWebHooks.defaultEventTypes"),
-  contentTypes: Ember.computed.alias("adminWebHooks.contentTypes"),
+  eventTypes: alias("adminWebHooks.eventTypes"),
+  defaultEventTypes: alias("adminWebHooks.defaultEventTypes"),
+  contentTypes: alias("adminWebHooks.contentTypes"),
 
   @computed
   showTagsFilter() {

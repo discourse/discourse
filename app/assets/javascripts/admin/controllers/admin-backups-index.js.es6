@@ -1,3 +1,4 @@
+import { alias, equal } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
@@ -6,10 +7,10 @@ import { setting, i18n } from "discourse/lib/computed";
 
 export default Controller.extend({
   adminBackups: inject(),
-  status: Ember.computed.alias("adminBackups.model"),
+  status: alias("adminBackups.model"),
   uploadLabel: i18n("admin.backups.upload.label"),
   backupLocation: setting("backup_location"),
-  localBackupStorage: Ember.computed.equal("backupLocation", "local"),
+  localBackupStorage: equal("backupLocation", "local"),
 
   @computed("status.allowRestore", "status.isOperationRunning")
   restoreTitle(allowRestore, isOperationRunning) {

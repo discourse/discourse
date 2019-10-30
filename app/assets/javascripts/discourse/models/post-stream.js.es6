@@ -1,3 +1,4 @@
+import { or, not, and } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseURL from "discourse/lib/url";
 import RestModel from "discourse/models/rest";
@@ -43,13 +44,13 @@ export default RestModel.extend({
     });
   },
 
-  loading: Ember.computed.or(
+  loading: or(
     "loadingAbove",
     "loadingBelow",
     "loadingFilter",
     "stagingPost"
   ),
-  notLoading: Ember.computed.not("loading"),
+  notLoading: not("loading"),
 
   @computed("isMegaTopic", "stream.length", "topic.highest_post_number")
   filteredPostsCount(isMegaTopic, streamLength, topicHighestPostNumber) {
@@ -66,12 +67,12 @@ export default RestModel.extend({
     return hasPosts && filteredPostsCount > 0;
   },
 
-  canAppendMore: Ember.computed.and(
+  canAppendMore: and(
     "notLoading",
     "hasPosts",
     "lastPostNotLoaded"
   ),
-  canPrependMore: Ember.computed.and(
+  canPrependMore: and(
     "notLoading",
     "hasPosts",
     "firstPostNotLoaded"
@@ -85,7 +86,7 @@ export default RestModel.extend({
     return !!this.posts.findBy("id", firstPostId);
   },
 
-  firstPostNotLoaded: Ember.computed.not("firstPostPresent"),
+  firstPostNotLoaded: not("firstPostPresent"),
 
   firstId: null,
   lastId: null,
@@ -112,7 +113,7 @@ export default RestModel.extend({
     return !!this.posts.findBy("id", lastPostId);
   },
 
-  lastPostNotLoaded: Ember.computed.not("loadedAllPosts"),
+  lastPostNotLoaded: not("loadedAllPosts"),
 
   /**
     Returns a JS Object of current stream filter options. It should match the query
