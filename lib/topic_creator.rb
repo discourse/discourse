@@ -147,10 +147,10 @@ class TopicCreator
   def setup_tags(topic)
     if @opts[:tags].blank?
       unless @guardian.is_staff? || !guardian.can_tag?(topic)
-        # Validate minimum required tags for a category
         category = find_category
-        if category.present? && category.minimum_required_tags > 0
-          topic.errors.add(:base, I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
+
+        if !DiscourseTagging.validate_min_required_tags_for_category(@guardian, topic, category) ||
+            !DiscourseTagging.validate_required_tags_from_group(@guardian, topic, category)
           rollback_from_errors!(topic)
         end
       end

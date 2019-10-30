@@ -31,6 +31,13 @@ const Category = RestModel.extend({
     }
   },
 
+  @on("init")
+  setupRequiredTagGroups() {
+    if (this.required_tag_group_name) {
+      this.set("required_tag_groups", [this.required_tag_group_name]);
+    }
+  },
+
   @computed
   availablePermissions() {
     return [
@@ -127,6 +134,10 @@ const Category = RestModel.extend({
         allowed_tags: this.allowed_tags,
         allowed_tag_groups: this.allowed_tag_groups,
         allow_global_tags: this.allow_global_tags,
+        required_tag_group_name: this.required_tag_groups
+          ? this.required_tag_groups[0]
+          : null,
+        min_tags_from_required_group: this.min_tags_from_required_group,
         sort_order: this.sort_order,
         sort_ascending: this.sort_ascending,
         topic_featured_link_allowed: this.topic_featured_link_allowed,

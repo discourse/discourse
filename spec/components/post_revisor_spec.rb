@@ -810,6 +810,37 @@ describe PostRevisor do
             end
           end
 
+          context "required tag group" do
+            fab!(:tag1) { Fabricate(:tag) }
+            fab!(:tag2) { Fabricate(:tag) }
+            fab!(:tag3) { Fabricate(:tag) }
+            fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
+            fab!(:category) { Fabricate(:category, name: "beta", required_tag_group: tag_group, min_tags_from_required_group: 1) }
+
+            before do
+              post.topic.update(category: category)
+            end
+
+            it "doesn't allow removing all tags from the group" do
+              post.topic.tags = [tag1, tag2]
+              result = subject.revise!(user, raw: "lets totally update the body", tags: [])
+              expect(result).to eq(false)
+            end
+
+            it "allows removing some tags" do
+              post.topic.tags = [tag1, tag2, tag3]
+              result = subject.revise!(user, raw: "lets totally update the body", tags: [tag1.name])
+              expect(result).to eq(true)
+              expect(post.reload.topic.tags.map(&:name)).to eq([tag1.name])
+            end
+
+            it "allows admins to remove the tags" do
+              post.topic.tags = [tag1, tag2, tag3]
+              result = subject.revise!(admin, raw: "lets totally update the body", tags: [])
+              expect(result).to eq(true)
+              expect(post.reload.topic.tags.size).to eq(0)
+            end
+          end
         end
 
         context "cannot create tags" do

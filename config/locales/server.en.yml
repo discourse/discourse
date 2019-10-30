@@ -4344,6 +4344,9 @@ en:
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
+    required_tags_from_group:
+      one: "You must include at least %{count} %{tag_group_name} tag."
+      other: "You must include at least %{count} %{tag_group_name} tags."
   rss_by_tag: "Topics tagged %{tag}"
 
   finish_installation:
