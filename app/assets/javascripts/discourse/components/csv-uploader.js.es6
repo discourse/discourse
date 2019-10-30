@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
+import { on } from "@ember/object/evented";
 
 export default Component.extend(UploadMixin, {
   type: "csv",
@@ -32,7 +33,7 @@ export default Component.extend(UploadMixin, {
     return { autoUpload: false };
   },
 
-  _init: Ember.on("didInsertElement", function() {
+  _init: on("didInsertElement", function() {
     const $upload = $(this.element);
 
     $upload.on("fileuploadadd", (e, data) => {
