@@ -1,4 +1,5 @@
 import { debounce } from "@ember/runloop";
+import { ATTACHMENT_CSS_CLASS } from "./engines/discourse-markdown-it";
 let _cache = {};
 
 export function lookupCachedUploadUrl(shortUrl) {
@@ -37,8 +38,6 @@ export function cacheShortUploadUrl(shortUrl, value) {
 export function resetCache() {
   _cache = {};
 }
-
-export const ATTACHMENT_CSS_CLASS = "attachment";
 
 function _loadCachedShortUrls($uploads) {
   $uploads.each((idx, upload) => {
