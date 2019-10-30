@@ -30,7 +30,7 @@ export default Component.extend(bufferedProperty("model"), {
     },
 
     save() {
-      let attrs = this.buffered.getProperties(
+      const attrs = this.buffered.getProperties(
         "name",
         "tag_names",
         "parent_tag_name",
