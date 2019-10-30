@@ -82,11 +82,13 @@ function loadNext(ajax) {
       }
     )
     .finally(() => {
-      timeout = setTimeout(() => loadNext(ajax), timeoutMs);
-      if (removeLoading) {
-        $elem.removeClass(LOADING_ONEBOX_CSS_CLASS);
-        $elem.data("onebox-loaded");
-      }
+      timeout = setTimeout(() => {
+        loadNext(ajax);
+        if (removeLoading) {
+          $elem.removeClass(LOADING_ONEBOX_CSS_CLASS);
+          $elem.data("onebox-loaded");
+        }
+      }, timeoutMs);
     });
 }
 
