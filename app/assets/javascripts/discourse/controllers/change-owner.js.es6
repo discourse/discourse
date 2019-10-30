@@ -12,12 +12,8 @@ export default Controller.extend(ModalFunctionality, {
   saving: false,
   new_user: null,
 
-  selectedPostsCount: alias(
-    "topicController.selectedPostsCount"
-  ),
-  selectedPostsUsername: alias(
-    "topicController.selectedPostsUsername"
-  ),
+  selectedPostsCount: alias("topicController.selectedPostsCount"),
+  selectedPostsUsername: alias("topicController.selectedPostsUsername"),
 
   @computed("saving", "new_user")
   buttonDisabled(saving, newUser) {

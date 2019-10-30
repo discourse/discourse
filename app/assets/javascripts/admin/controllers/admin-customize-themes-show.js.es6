@@ -149,10 +149,7 @@ export default Controller.extend({
       "scss"
     );
   },
-  sourceIsHttp: match(
-    "model.remote_theme.remote_url",
-    /^http(s)?:\/\//
-  ),
+  sourceIsHttp: match("model.remote_theme.remote_url", /^http(s)?:\/\//),
   actions: {
     updateToLatest() {
       this.set("updatingRemote", true);

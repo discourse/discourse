@@ -29,10 +29,7 @@ export default Controller.extend(ModalFunctionality, Ember.Evented, {
     return categories.map(c => bufProxy.create({ content: c }));
   },
 
-  categoriesOrdered: sort(
-    "categoriesBuffered",
-    "categoriesSorting"
-  ),
+  categoriesOrdered: sort("categoriesBuffered", "categoriesSorting"),
 
   @computed("categoriesBuffered.@each.hasBufferedChanges")
   showApplyAll() {

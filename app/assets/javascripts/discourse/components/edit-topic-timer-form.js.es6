@@ -22,17 +22,9 @@ export default Component.extend({
   autoClose: equal("selection", CLOSE_STATUS_TYPE),
   autoDelete: equal("selection", DELETE_STATUS_TYPE),
   autoBump: equal("selection", BUMP_TYPE),
-  publishToCategory: equal(
-    "selection",
-    PUBLISH_TO_CATEGORY_STATUS_TYPE
-  ),
+  publishToCategory: equal("selection", PUBLISH_TO_CATEGORY_STATUS_TYPE),
   reminder: equal("selection", REMINDER_TYPE),
-  showTimeOnly: or(
-    "autoOpen",
-    "autoDelete",
-    "reminder",
-    "autoBump"
-  ),
+  showTimeOnly: or("autoOpen", "autoDelete", "reminder", "autoBump"),
 
   @computed(
     "topicTimer.updateTime",

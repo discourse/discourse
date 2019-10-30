@@ -12,14 +12,8 @@ const wrapAdmin = user => (user ? AdminUser.create(user) : null);
 
 const AdminUser = Discourse.User.extend({
   adminUserView: true,
-  customGroups: filter(
-    "groups",
-    g => !g.automatic && Group.create(g)
-  ),
-  automaticGroups: filter(
-    "groups",
-    g => g.automatic && Group.create(g)
-  ),
+  customGroups: filter("groups", g => !g.automatic && Group.create(g)),
+  automaticGroups: filter("groups", g => g.automatic && Group.create(g)),
 
   canViewProfile: or("active", "staged"),
 

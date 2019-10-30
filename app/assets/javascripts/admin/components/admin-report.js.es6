@@ -59,10 +59,7 @@ export default Component.extend({
   showTitle: true,
   showFilteringUI: false,
   showDatesOptions: alias("model.dates_filtering"),
-  showRefresh: or(
-    "showDatesOptions",
-    "model.available_filters.length"
-  ),
+  showRefresh: or("showDatesOptions", "model.available_filters.length"),
   shouldDisplayTrend: and("showTrend", "model.prev_period"),
 
   init() {
@@ -84,11 +81,7 @@ export default Component.extend({
     }
   },
 
-  showError: or(
-    "showTimeoutError",
-    "showExceptionError",
-    "showNotFoundError"
-  ),
+  showError: or("showTimeoutError", "showExceptionError", "showNotFoundError"),
   showNotFoundError: equal("model.error", "not_found"),
   showTimeoutError: equal("model.error", "timeout"),
   showExceptionError: equal("model.error", "exception"),

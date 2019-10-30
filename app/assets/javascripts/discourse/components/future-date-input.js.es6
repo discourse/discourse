@@ -13,10 +13,7 @@ export default Component.extend({
   time: null,
   includeDateTime: true,
   isCustom: equal("selection", "pick_date_and_time"),
-  isBasedOnLastPost: equal(
-    "selection",
-    "set_based_on_last_post"
-  ),
+  isBasedOnLastPost: equal("selection", "set_based_on_last_post"),
   displayDateAndTimePicker: and("includeDateTime", "isCustom"),
   displayLabel: null,
 

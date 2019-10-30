@@ -36,11 +36,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
   revoking: null,
 
   cannotDeleteAccount: not("currentUser.can_delete_account"),
-  deleteDisabled: or(
-    "model.isSaving",
-    "deleting",
-    "cannotDeleteAccount"
-  ),
+  deleteDisabled: or("model.isSaving", "deleting", "cannotDeleteAccount"),
 
   reset() {
     this.set("passwordProgress", null);

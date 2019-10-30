@@ -41,9 +41,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   topicController: inject("topic"),
-  selectedPostsCount: alias(
-    "topicController.selectedPostsCount"
-  ),
+  selectedPostsCount: alias("topicController.selectedPostsCount"),
   selectedAllPosts: alias("topicController.selectedAllPosts"),
   selectedPosts: alias("topicController.selectedPosts"),
 

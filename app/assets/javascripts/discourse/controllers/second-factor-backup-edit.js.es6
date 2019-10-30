@@ -10,9 +10,7 @@ export default Controller.extend(ModalFunctionality, {
   errorMessage: null,
   successMessage: null,
   backupEnabled: alias("model.second_factor_backup_enabled"),
-  remainingCodes: alias(
-    "model.second_factor_remaining_backup_codes"
-  ),
+  remainingCodes: alias("model.second_factor_remaining_backup_codes"),
   backupCodes: null,
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
