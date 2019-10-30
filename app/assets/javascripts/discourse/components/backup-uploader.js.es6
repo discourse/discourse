@@ -3,6 +3,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
+import { on } from "@ember/object/evented";
 
 export default Component.extend(UploadMixin, {
   tagName: "span",
@@ -35,7 +36,7 @@ export default Component.extend(UploadMixin, {
     };
   },
 
-  _init: Ember.on("didInsertElement", function() {
+  _init: on("didInsertElement", function() {
     const $upload = $(this.element);
 
     $upload.on("fileuploadadd", (e, data) => {

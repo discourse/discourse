@@ -1,5 +1,7 @@
 import { later } from "@ember/runloop";
 import Component from "@ember/component";
+import { on } from "@ember/object/evented";
+
 export default Component.extend({
   action: "showCreateAccount",
 
@@ -15,7 +17,7 @@ export default Component.extend({
     }
   },
 
-  _turnOffIfHidden: Ember.on("willDestroyElement", function() {
+  _turnOffIfHidden: on("willDestroyElement", function() {
     if (this.session.get("hideSignupCta")) {
       this.session.set("showSignupCta", false);
     }

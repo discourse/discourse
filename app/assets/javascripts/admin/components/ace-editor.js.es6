@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import loadScript from "discourse/lib/load-script";
 import { observes } from "ember-addons/ember-computed-decorators";
+import { on } from "@ember/object/evented";
 
 export default Component.extend({
   mode: "css",
@@ -49,7 +50,7 @@ export default Component.extend({
     }
   },
 
-  _destroyEditor: Ember.on("willDestroyElement", function() {
+  _destroyEditor: on("willDestroyElement", function() {
     if (this._editor) {
       this._editor.destroy();
       this._editor = null;

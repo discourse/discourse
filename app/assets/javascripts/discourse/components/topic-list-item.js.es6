@@ -5,6 +5,7 @@ import computed from "ember-addons/ember-computed-decorators";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { on } from "@ember/object/evented";
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -204,7 +205,7 @@ export const ListItemDefaults = {
     $topic.on("animationend", () => $topic.removeClass("highlighted"));
   },
 
-  _highlightIfNeeded: Ember.on("didInsertElement", function() {
+  _highlightIfNeeded: on("didInsertElement", function() {
     // highlight the last topic viewed
     if (this.session.get("lastTopicIdViewed") === this.get("topic.id")) {
       this.session.set("lastTopicIdViewed", null);
