@@ -1,3 +1,4 @@
+import { or, equal, and } from "@ember/object/computed";
 import RestModel from "discourse/models/rest";
 import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
@@ -75,9 +76,9 @@ const UserAction = RestModel.extend({
     return targetUsername === Discourse.User.currentProp("username");
   },
 
-  presentName: Ember.computed.or("name", "username"),
-  targetDisplayName: Ember.computed.or("target_name", "target_username"),
-  actingDisplayName: Ember.computed.or("acting_name", "acting_username"),
+  presentName: or("name", "username"),
+  targetDisplayName: or("target_name", "target_username"),
+  actingDisplayName: or("acting_name", "acting_username"),
 
   @computed("target_username")
   targetUserUrl(username) {
@@ -104,22 +105,22 @@ const UserAction = RestModel.extend({
     return postUrl(this.slug, this.topic_id, this.reply_to_post_number);
   },
 
-  replyType: Ember.computed.equal("action_type", UserActionTypes.replies),
-  postType: Ember.computed.equal("action_type", UserActionTypes.posts),
-  topicType: Ember.computed.equal("action_type", UserActionTypes.topics),
-  bookmarkType: Ember.computed.equal("action_type", UserActionTypes.bookmarks),
-  messageSentType: Ember.computed.equal(
+  replyType: equal("action_type", UserActionTypes.replies),
+  postType: equal("action_type", UserActionTypes.posts),
+  topicType: equal("action_type", UserActionTypes.topics),
+  bookmarkType: equal("action_type", UserActionTypes.bookmarks),
+  messageSentType: equal(
     "action_type",
     UserActionTypes.messages_sent
   ),
-  messageReceivedType: Ember.computed.equal(
+  messageReceivedType: equal(
     "action_type",
     UserActionTypes.messages_received
   ),
-  mentionType: Ember.computed.equal("action_type", UserActionTypes.mentions),
-  isPM: Ember.computed.or("messageSentType", "messageReceivedType"),
-  postReplyType: Ember.computed.or("postType", "replyType"),
-  removableBookmark: Ember.computed.and("bookmarkType", "sameUser"),
+  mentionType: equal("action_type", UserActionTypes.mentions),
+  isPM: or("messageSentType", "messageReceivedType"),
+  postReplyType: or("postType", "replyType"),
+  removableBookmark: and("bookmarkType", "sameUser"),
 
   addChild(action) {
     let groups = this.childGroups;

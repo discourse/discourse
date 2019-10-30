@@ -1,3 +1,4 @@
+import { or } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
@@ -16,6 +17,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { setTransient } from "discourse/lib/page-tracker";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import Composer from "discourse/models/composer";
+import { scrollTop } from "discourse/mixins/scroll-top";
 
 const SortOrders = [
   { name: I18n.t("search.relevance"), id: 0 },
@@ -206,7 +208,7 @@ export default Controller.extend({
     return page === PAGE_LIMIT;
   },
 
-  searchButtonDisabled: Ember.computed.or("searching", "loading"),
+  searchButtonDisabled: or("searching", "loading"),
 
   _search() {
     if (this.searching) {
@@ -226,6 +228,7 @@ export default Controller.extend({
       this.set("bulkSelectEnabled", false);
       this.selected.clear();
       this.set("searching", true);
+      scrollTop();
     } else {
       this.set("loading", true);
     }

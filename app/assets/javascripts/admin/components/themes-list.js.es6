@@ -1,3 +1,4 @@
+import { gt, equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import { THEMES, COMPONENTS } from "admin/models/theme";
 import { default as computed } from "ember-addons/ember-computed-decorators";
@@ -8,12 +9,12 @@ export default Component.extend({
 
   classNames: ["themes-list"],
 
-  hasThemes: Ember.computed.gt("themesList.length", 0),
-  hasActiveThemes: Ember.computed.gt("activeThemes.length", 0),
-  hasInactiveThemes: Ember.computed.gt("inactiveThemes.length", 0),
+  hasThemes: gt("themesList.length", 0),
+  hasActiveThemes: gt("activeThemes.length", 0),
+  hasInactiveThemes: gt("inactiveThemes.length", 0),
 
-  themesTabActive: Ember.computed.equal("currentTab", THEMES),
-  componentsTabActive: Ember.computed.equal("currentTab", COMPONENTS),
+  themesTabActive: equal("currentTab", THEMES),
+  componentsTabActive: equal("currentTab", COMPONENTS),
 
   @computed("themes", "components", "currentTab")
   themesList(themes, components) {

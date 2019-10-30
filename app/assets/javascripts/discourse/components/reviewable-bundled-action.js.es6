@@ -1,9 +1,10 @@
+import { gt, alias } from "@ember/object/computed";
 import Component from "@ember/component";
 export default Component.extend({
   tagName: "",
 
-  multiple: Ember.computed.gt("bundle.actions.length", 1),
-  first: Ember.computed.alias("bundle.actions.firstObject"),
+  multiple: gt("bundle.actions.length", 1),
+  first: alias("bundle.actions.firstObject"),
 
   actions: {
     performById(id) {

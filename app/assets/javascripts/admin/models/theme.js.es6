@@ -1,3 +1,4 @@
+import { or, gt } from "@ember/object/computed";
 import RestModel from "discourse/models/rest";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -13,9 +14,9 @@ export const COMPONENTS = "components";
 const SETTINGS_TYPE_ID = 5;
 
 const Theme = RestModel.extend({
-  isActive: Ember.computed.or("default", "user_selectable"),
-  isPendingUpdates: Ember.computed.gt("remote_theme.commits_behind", 0),
-  hasEditedFields: Ember.computed.gt("editedFields.length", 0),
+  isActive: or("default", "user_selectable"),
+  isPendingUpdates: gt("remote_theme.commits_behind", 0),
+  hasEditedFields: gt("editedFields.length", 0),
 
   @computed("theme_fields.[]")
   targets() {

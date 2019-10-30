@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
@@ -8,7 +9,7 @@ export default Component.extend({
   classNames: ["admin-report-table"],
   sortable: false,
   sortDirection: 1,
-  perPage: Ember.computed.alias("options.perPage"),
+  perPage: alias("options.perPage"),
   page: 0,
 
   @computed("model.computedLabels.length")

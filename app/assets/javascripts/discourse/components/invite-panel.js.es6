@@ -1,3 +1,4 @@
+import { alias, and, equal } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import { emailValid } from "discourse/lib/utilities";
@@ -9,8 +10,8 @@ import { i18n } from "discourse/lib/computed";
 export default Component.extend({
   tagName: null,
 
-  inviteModel: Ember.computed.alias("panel.model.inviteModel"),
-  userInvitedShow: Ember.computed.alias("panel.model.userInvitedShow"),
+  inviteModel: alias("panel.model.inviteModel"),
+  userInvitedShow: alias("panel.model.userInvitedShow"),
 
   // If this isn't defined, it will proxy to the user topic on the preferences
   // page which is wrong.
@@ -20,7 +21,7 @@ export default Component.extend({
   inviteIcon: "envelope",
   invitingExistingUserToTopic: false,
 
-  isAdmin: Ember.computed.alias("currentUser.admin"),
+  isAdmin: alias("currentUser.admin"),
 
   willDestroyElement() {
     this._super(...arguments);
@@ -137,18 +138,18 @@ export default Component.extend({
     return canInviteViaEmail && !isPM;
   },
 
-  topicId: Ember.computed.alias("inviteModel.id"),
+  topicId: alias("inviteModel.id"),
 
   // eg: visible only to specific group members
-  isPrivateTopic: Ember.computed.and(
+  isPrivateTopic: and(
     "invitingToTopic",
     "inviteModel.category.read_restricted"
   ),
 
-  isPM: Ember.computed.equal("inviteModel.archetype", "private_message"),
+  isPM: equal("inviteModel.archetype", "private_message"),
 
   // scope to allowed usernames
-  allowExistingMembers: Ember.computed.alias("invitingToTopic"),
+  allowExistingMembers: alias("invitingToTopic"),
 
   @computed("isAdmin", "inviteModel.group_users")
   isGroupOwnerOrAdmin(isAdmin, groupUsers) {

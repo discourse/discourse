@@ -1,3 +1,4 @@
+import { notEmpty, and } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
@@ -16,7 +17,7 @@ export default Controller.extend(CanCheckEmails, {
   userTitleValue: null,
 
   showBadges: setting("enable_badges"),
-  hasLockedTrustLevel: Ember.computed.notEmpty(
+  hasLockedTrustLevel: notEmpty(
     "model.manual_locked_trust_level"
   ),
 
@@ -25,7 +26,7 @@ export default Controller.extend(CanCheckEmails, {
     "model.primary_group_id"
   ),
 
-  canDisableSecondFactor: Ember.computed.and(
+  canDisableSecondFactor: and(
     "model.second_factor_enabled",
     "model.can_disable_second_factor"
   ),

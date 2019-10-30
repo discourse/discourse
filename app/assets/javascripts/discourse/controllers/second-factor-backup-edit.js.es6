@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import { later } from "@ember/runloop";
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
@@ -8,8 +9,8 @@ export default Controller.extend(ModalFunctionality, {
   loading: false,
   errorMessage: null,
   successMessage: null,
-  backupEnabled: Ember.computed.alias("model.second_factor_backup_enabled"),
-  remainingCodes: Ember.computed.alias(
+  backupEnabled: alias("model.second_factor_backup_enabled"),
+  remainingCodes: alias(
     "model.second_factor_remaining_backup_codes"
   ),
   backupCodes: null,

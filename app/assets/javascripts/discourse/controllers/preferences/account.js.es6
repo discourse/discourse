@@ -1,3 +1,4 @@
+import { not, or, gt } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
@@ -34,8 +35,8 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
 
   revoking: null,
 
-  cannotDeleteAccount: Ember.computed.not("currentUser.can_delete_account"),
-  deleteDisabled: Ember.computed.or(
+  cannotDeleteAccount: not("currentUser.can_delete_account"),
+  deleteDisabled: or(
     "model.isSaving",
     "deleting",
     "cannotDeleteAccount"
@@ -54,7 +55,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
     );
   },
 
-  canSelectTitle: Ember.computed.gt("model.availableTitles.length", 0),
+  canSelectTitle: gt("model.availableTitles.length", 0),
 
   @computed("model.filteredGroups")
   canSelectPrimaryGroup(primaryGroupOptions) {
@@ -129,7 +130,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
       : tokens.slice(0, DEFAULT_AUTH_TOKENS_COUNT);
   },
 
-  canShowAllAuthTokens: Ember.computed.gt(
+  canShowAllAuthTokens: gt(
     "model.user_auth_tokens.length",
     DEFAULT_AUTH_TOKENS_COUNT
   ),

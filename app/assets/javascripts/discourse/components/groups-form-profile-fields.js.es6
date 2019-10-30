@@ -1,3 +1,4 @@
+import { not } from "@ember/object/computed";
 import Component from "@ember/component";
 import {
   default as computed,
@@ -22,7 +23,7 @@ export default Component.extend({
     }
   },
 
-  canEdit: Ember.computed.not("model.automatic"),
+  canEdit: not("model.automatic"),
 
   @computed("basicNameValidation", "uniqueNameValidation")
   nameValidation(basicNameValidation, uniqueNameValidation) {

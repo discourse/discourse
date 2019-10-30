@@ -1,3 +1,4 @@
+import { not } from "@ember/object/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Category from "discourse/models/category";
@@ -10,7 +11,7 @@ export default buildCategoryPanel("general", {
     this.foregroundColors = ["FFFFFF", "000000"];
   },
 
-  canSelectParentCategory: Ember.computed.not(
+  canSelectParentCategory: not(
     "category.isUncategorizedCategory"
   ),
   uncategorizedSiteSettingLink: Discourse.getURL(

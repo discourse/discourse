@@ -1,3 +1,4 @@
+import { equal, gte, none, alias } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Controller from "@ember/controller";
 import {
@@ -43,10 +44,10 @@ export default Controller.extend({
     return false;
   },
 
-  isNotFound: Ember.computed.equal("thrown.status", 404),
-  isForbidden: Ember.computed.equal("thrown.status", 403),
-  isServer: Ember.computed.gte("thrown.status", 500),
-  isUnknown: Ember.computed.none("isNetwork", "isServer"),
+  isNotFound: equal("thrown.status", 404),
+  isForbidden: equal("thrown.status", 403),
+  isServer: gte("thrown.status", 500),
+  isUnknown: none("isNetwork", "isServer"),
 
   // TODO
   // make ajax requests to /srv/status with exponential backoff
@@ -75,7 +76,7 @@ export default Controller.extend({
     }
   },
 
-  requestUrl: Ember.computed.alias("thrown.requestedUrl"),
+  requestUrl: alias("thrown.requestedUrl"),
 
   @computed("networkFixed", "isNetwork", "isServer", "isUnknown")
   desc() {

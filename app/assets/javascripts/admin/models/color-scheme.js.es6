@@ -1,3 +1,4 @@
+import { not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import ColorSchemeColor from "admin/models/color-scheme-color";
 import computed from "ember-addons/ember-computed-decorators";
@@ -59,7 +60,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
     return !changed || this.saving || this.colors.any(c => !c.get("valid"));
   },
 
-  newRecord: Ember.computed.not("id"),
+  newRecord: not("id"),
 
   save(opts) {
     if (this.is_base || this.disableSave) return;

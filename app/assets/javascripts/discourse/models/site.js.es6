@@ -1,3 +1,4 @@
+import { alias, sort } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import computed from "ember-addons/ember-computed-decorators";
 import Archetype from "discourse/models/archetype";
@@ -7,7 +8,7 @@ import RestModel from "discourse/models/rest";
 import PreloadStore from "preload-store";
 
 const Site = RestModel.extend({
-  isReadOnly: Ember.computed.alias("is_readonly"),
+  isReadOnly: alias("is_readonly"),
 
   init() {
     this._super(...arguments);
@@ -31,7 +32,7 @@ const Site = RestModel.extend({
     return postActionTypes.filterBy("is_flag", true);
   },
 
-  categoriesByCount: Ember.computed.sort("categories", "topicCountDesc"),
+  categoriesByCount: sort("categories", "topicCountDesc"),
 
   collectUserFields(fields) {
     fields = fields || {};

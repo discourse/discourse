@@ -1,10 +1,11 @@
+import { not, and } from "@ember/object/computed";
 import Controller from "@ember/controller";
 export default Controller.extend({
-  noOperationIsRunning: Ember.computed.not("model.isOperationRunning"),
-  rollbackEnabled: Ember.computed.and(
+  noOperationIsRunning: not("model.isOperationRunning"),
+  rollbackEnabled: and(
     "model.canRollback",
     "model.restoreEnabled",
     "noOperationIsRunning"
   ),
-  rollbackDisabled: Ember.computed.not("rollbackEnabled")
+  rollbackDisabled: not("rollbackEnabled")
 });

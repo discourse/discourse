@@ -1,9 +1,10 @@
+import { alias, not } from "@ember/object/computed";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
-  loadingMore: Ember.computed.alias("topicList.loadingMore"),
-  loading: Ember.computed.not("loaded"),
+  loadingMore: alias("topicList.loadingMore"),
+  loading: not("loaded"),
 
   @computed("topicList.loaded")
   loaded() {

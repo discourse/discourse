@@ -1,3 +1,4 @@
+import { empty } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
@@ -19,7 +20,7 @@ export default Controller.extend({
     });
   },
 
-  disabled: Ember.computed.empty("notificationLevelId"),
+  disabled: empty("notificationLevelId"),
 
   actions: {
     changeNotificationLevel() {

@@ -1,3 +1,4 @@
+import { or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -10,7 +11,7 @@ import showModal from "discourse/lib/show-modal";
 export default Controller.extend({
   actionNameKey: null,
   adminWatchedWords: inject(),
-  showWordsList: Ember.computed.or(
+  showWordsList: or(
     "adminWatchedWords.filtered",
     "adminWatchedWords.showWords"
   ),

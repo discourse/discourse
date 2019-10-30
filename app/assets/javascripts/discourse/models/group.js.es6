@@ -1,3 +1,4 @@
+import { notEmpty, equal } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import {
   default as computed,
@@ -22,7 +23,7 @@ const Group = RestModel.extend({
     this.set("owners", []);
   },
 
-  hasOwners: Ember.computed.notEmpty("owners"),
+  hasOwners: notEmpty("owners"),
 
   @computed("automatic_membership_email_domains")
   emailDomains(value) {
@@ -136,7 +137,7 @@ const Group = RestModel.extend({
       : null;
   },
 
-  canEveryoneMention: Ember.computed.equal("mentionable_level", 99),
+  canEveryoneMention: equal("mentionable_level", 99),
 
   @computed("visibility_level")
   isPrivate(visibilityLevel) {

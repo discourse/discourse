@@ -1,17 +1,19 @@
+import { alias, match } from "@ember/object/computed";
 import { throttle } from "@ember/runloop";
 import { next } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import afterTransition from "discourse/lib/after-transition";
 import DiscourseURL from "discourse/lib/url";
+import Mixin from "@ember/object/mixin";
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   elementId: null, //click detection added for data-{elementId}
   triggeringLinkClass: null, //the <a> classname where this card should appear
   _showCallback: null, //username, $target - load up data for when show is called, should call this._positionCard($target) when it's done.
 
-  postStream: Ember.computed.alias("topic.postStream"),
-  viewingTopic: Ember.computed.match("currentPath", /^topic\./),
+  postStream: alias("topic.postStream"),
+  viewingTopic: match("currentPath", /^topic\./),
 
   visible: false,
   username: null,

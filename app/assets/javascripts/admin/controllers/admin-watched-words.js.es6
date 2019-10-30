@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
@@ -6,7 +7,7 @@ export default Controller.extend({
   filter: null,
   filtered: false,
   showWords: false,
-  disableShowWords: Ember.computed.alias("filtered"),
+  disableShowWords: alias("filtered"),
   regularExpressions: null,
 
   filterContentNow() {

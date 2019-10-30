@@ -1,3 +1,4 @@
+import { reads } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import DiscoveryController from "discourse/controllers/discovery";
@@ -15,7 +16,7 @@ export default DiscoveryController.extend({
   // this makes sure the composer isn't scoping to a specific category
   category: null,
 
-  canEdit: Ember.computed.reads("currentUser.staff"),
+  canEdit: reads("currentUser.staff"),
 
   @computed("model.categories.[].featuredTopics.length")
   latestTopicOnly() {

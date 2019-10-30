@@ -1,3 +1,4 @@
+import { alias, equal, or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import {
@@ -16,17 +17,17 @@ import {
 } from "discourse/controllers/edit-topic-timer";
 
 export default Component.extend({
-  selection: Ember.computed.alias("topicTimer.status_type"),
-  autoOpen: Ember.computed.equal("selection", OPEN_STATUS_TYPE),
-  autoClose: Ember.computed.equal("selection", CLOSE_STATUS_TYPE),
-  autoDelete: Ember.computed.equal("selection", DELETE_STATUS_TYPE),
-  autoBump: Ember.computed.equal("selection", BUMP_TYPE),
-  publishToCategory: Ember.computed.equal(
+  selection: alias("topicTimer.status_type"),
+  autoOpen: equal("selection", OPEN_STATUS_TYPE),
+  autoClose: equal("selection", CLOSE_STATUS_TYPE),
+  autoDelete: equal("selection", DELETE_STATUS_TYPE),
+  autoBump: equal("selection", BUMP_TYPE),
+  publishToCategory: equal(
     "selection",
     PUBLISH_TO_CATEGORY_STATUS_TYPE
   ),
-  reminder: Ember.computed.equal("selection", REMINDER_TYPE),
-  showTimeOnly: Ember.computed.or(
+  reminder: equal("selection", REMINDER_TYPE),
+  showTimeOnly: or(
     "autoOpen",
     "autoDelete",
     "reminder",

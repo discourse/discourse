@@ -1,3 +1,4 @@
+import { empty, or, notEmpty } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import EmailPreview from "admin/models/email-preview";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -6,10 +7,10 @@ export default Controller.extend({
   username: null,
   lastSeen: null,
 
-  emailEmpty: Ember.computed.empty("email"),
-  sendEmailDisabled: Ember.computed.or("emailEmpty", "sendingEmail"),
-  showSendEmailForm: Ember.computed.notEmpty("model.html_content"),
-  htmlEmpty: Ember.computed.empty("model.html_content"),
+  emailEmpty: empty("email"),
+  sendEmailDisabled: or("emailEmpty", "sendingEmail"),
+  showSendEmailForm: notEmpty("model.html_content"),
+  htmlEmpty: empty("model.html_content"),
 
   actions: {
     refresh() {

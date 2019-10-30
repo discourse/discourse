@@ -1,3 +1,4 @@
+import { and, not, equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import computed from "ember-addons/ember-computed-decorators";
@@ -24,9 +25,9 @@ export default Component.extend({
     return flag === selectedFlag;
   },
 
-  showMessageInput: Ember.computed.and("flag.is_custom_flag", "selected"),
-  showDescription: Ember.computed.not("showMessageInput"),
-  isNotifyUser: Ember.computed.equal("flag.name_key", "notify_user"),
+  showMessageInput: and("flag.is_custom_flag", "selected"),
+  showDescription: not("showMessageInput"),
+  isNotifyUser: equal("flag.name_key", "notify_user"),
 
   @computed("flag.description", "flag.short_description")
   description(long_description, short_description) {

@@ -1,3 +1,4 @@
+import { alias, or, and, reads, equal, notEmpty } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
@@ -57,12 +58,12 @@ export default Component.extend({
   showHeader: true,
   showTitle: true,
   showFilteringUI: false,
-  showDatesOptions: Ember.computed.alias("model.dates_filtering"),
-  showRefresh: Ember.computed.or(
+  showDatesOptions: alias("model.dates_filtering"),
+  showRefresh: or(
     "showDatesOptions",
     "model.available_filters.length"
   ),
-  shouldDisplayTrend: Ember.computed.and("showTrend", "model.prev_period"),
+  shouldDisplayTrend: and("showTrend", "model.prev_period"),
 
   init() {
     this._super(...arguments);
@@ -70,8 +71,8 @@ export default Component.extend({
     this._reports = [];
   },
 
-  startDate: Ember.computed.reads("filters.startDate"),
-  endDate: Ember.computed.reads("filters.endDate"),
+  startDate: reads("filters.startDate"),
+  endDate: reads("filters.endDate"),
 
   didReceiveAttrs() {
     this._super(...arguments);
@@ -83,16 +84,16 @@ export default Component.extend({
     }
   },
 
-  showError: Ember.computed.or(
+  showError: or(
     "showTimeoutError",
     "showExceptionError",
     "showNotFoundError"
   ),
-  showNotFoundError: Ember.computed.equal("model.error", "not_found"),
-  showTimeoutError: Ember.computed.equal("model.error", "timeout"),
-  showExceptionError: Ember.computed.equal("model.error", "exception"),
+  showNotFoundError: equal("model.error", "not_found"),
+  showTimeoutError: equal("model.error", "timeout"),
+  showExceptionError: equal("model.error", "exception"),
 
-  hasData: Ember.computed.notEmpty("model.data"),
+  hasData: notEmpty("model.data"),
 
   @computed("dataSourceName", "model.type")
   dasherizedDataSourceName(dataSourceName, type) {
