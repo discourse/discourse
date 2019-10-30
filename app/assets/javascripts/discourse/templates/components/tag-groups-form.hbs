@@ -1,0 +1,77 @@
+<div class="tag-group-content">
+  <h1>{{text-field value=buffered.name}}</h1>
+  <br/>
+
+  <section class="group-tags-list">
+    <label>{{i18n 'tagging.groups.tags_label'}}</label><br/>
+    {{tag-chooser
+      tags=buffered.tag_names
+      everyTag=true
+      allowCreate=true
+      filterPlaceholder="tagging.groups.tags_placeholder"
+      unlimitedTagCount=true}}
+  </section>
+
+  <section class="parent-tag-section">
+    <label>{{i18n 'tagging.groups.parent_tag_label'}}</label>
+    {{tag-chooser
+      tags=buffered.parent_tag_name
+      everyTag=true
+      maximum=1
+      allowCreate=true
+      filterPlaceholder="tagging.groups.parent_tag_placeholder"}}
+    <span class="description">{{i18n 'tagging.groups.parent_tag_description'}}</span>
+  </section>
+
+  <section class="group-one-per-topic">
+    <label>
+      {{input type="checkbox" checked=buffered.one_per_topic name="onepertopic"}}
+      {{i18n 'tagging.groups.one_per_topic_label'}}
+    </label>
+  </section>
+
+  <section class="group-visibility">
+    <div>
+      {{radio-button
+        class="tag-permissions-choice"
+        name="tag-permissions-choice"
+        value="public"
+        id="public-permission"
+        selection=buffered.permissionName
+        onChange=(action "setPermissions")}}
+
+      <label class="radio" for="public-permission">
+        {{i18n 'tagging.groups.everyone_can_use'}}
+      </label>
+    </div>
+    <div>
+      {{radio-button
+        class="tag-permissions-choice"
+        name="tag-permissions-choice"
+        value="visible"
+        id="visible-permission"
+        selection=buffered.permissionName
+        onChange=(action "setPermissions")}}
+
+      <label class="radio" for="visible-permission">
+        {{i18n 'tagging.groups.usable_only_by_staff'}}
+      </label>
+    </div>
+    <div>
+      {{radio-button
+        class="tag-permissions-choice"
+        name="tag-permissions-choice"
+        value="private"
+        id="private-permission"
+        selection=buffered.permissionName
+        onChange=(action "setPermissions")}}
+
+      <label class="radio" for="private-permission">
+        {{i18n 'tagging.groups.visible_only_to_staff'}}
+      </label>
+    </div>
+  </section>
+
+  <button {{action "save"}} disabled={{savingDisabled}} class='btn btn-default'>{{i18n 'tagging.groups.save'}}</button>
+  <button {{action "destroy"}} disabled={{buffered.isNew}} class='btn btn-danger'>{{d-icon "far-trash-alt"}} {{i18n 'tagging.groups.delete'}}</button>
+</div>

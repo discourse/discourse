@@ -223,7 +223,8 @@ export default function() {
     "tagGroups",
     { path: "/tag_groups", resetNamespace: true },
     function() {
-      this.route("show", { path: "/:id" });
+      this.route("edit", { path: "/:id" });
+      this.route("new");
     }
   );
 
