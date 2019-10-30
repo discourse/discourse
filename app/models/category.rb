@@ -661,8 +661,8 @@ class Category < ActiveRecord::Base
     url = @@url_cache[self.id]
     unless url
       url = +"#{Discourse.base_uri}/c"
-      url << "/#{parent_category.slug}" if parent_category_id
-      url << "/#{slug}"
+      url << "/#{parent_category.slug_for_url}" if parent_category_id
+      url << "/#{slug_for_url}"
       @@url_cache[self.id] = -url
     end
 
