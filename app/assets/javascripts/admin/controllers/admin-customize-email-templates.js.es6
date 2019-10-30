@@ -1,7 +1,8 @@
+import { sort } from "@ember/object/computed";
 import Controller from "@ember/controller";
 export default Controller.extend({
   emailTemplates: null,
-  sortedTemplates: Ember.computed.sort("emailTemplates", "titleSorting"),
+  sortedTemplates: sort("emailTemplates", "titleSorting"),
 
   init() {
     this._super(...arguments);

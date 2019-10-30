@@ -1,3 +1,4 @@
+import { empty } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import UserField from "admin/models/user-field";
@@ -12,7 +13,7 @@ import {
 } from "ember-addons/ember-computed-decorators";
 
 export default Component.extend(bufferedProperty("userField"), {
-  editing: Ember.computed.empty("userField.id"),
+  editing: empty("userField.id"),
   classNameBindings: [":user-field"],
 
   cantMoveUp: propertyEqual("userField", "firstField"),

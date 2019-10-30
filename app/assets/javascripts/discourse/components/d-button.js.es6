@@ -1,3 +1,4 @@
+import { notEmpty, empty } from "@ember/object/computed";
 import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import DiscourseURL from "discourse/lib/url";
@@ -21,7 +22,7 @@ export default Component.extend({
     "type"
   ],
 
-  btnIcon: Ember.computed.notEmpty("icon"),
+  btnIcon: notEmpty("icon"),
 
   @computed("icon", "translatedLabel")
   btnType(icon, translatedLabel) {
@@ -32,7 +33,7 @@ export default Component.extend({
     }
   },
 
-  noText: Ember.computed.empty("translatedLabel"),
+  noText: empty("translatedLabel"),
 
   @computed("title")
   translatedTitle: {

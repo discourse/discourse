@@ -1,3 +1,4 @@
+import { alias, and } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
@@ -15,11 +16,11 @@ export default Controller.extend(CanCheckEmails, {
   password: null,
   errorMessage: null,
   newUsername: null,
-  backupEnabled: Ember.computed.alias("model.second_factor_backup_enabled"),
+  backupEnabled: alias("model.second_factor_backup_enabled"),
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
   totps: null,
 
-  loaded: Ember.computed.and("secondFactorImage", "secondFactorKey"),
+  loaded: and("secondFactorImage", "secondFactorKey"),
 
   init() {
     this._super(...arguments);

@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
@@ -8,7 +9,7 @@ const MAX_BADGES = 6;
 
 export default Controller.extend({
   userController: inject("user"),
-  user: Ember.computed.alias("userController.model"),
+  user: alias("userController.model"),
 
   @computed("model.badges.length")
   moreBadges(badgesLength) {

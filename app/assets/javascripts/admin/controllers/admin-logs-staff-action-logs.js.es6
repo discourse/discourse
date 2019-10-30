@@ -1,3 +1,4 @@
+import { gt } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import Controller from "@ember/controller";
@@ -11,7 +12,7 @@ import {
 export default Controller.extend({
   model: null,
   filters: null,
-  filtersExists: Ember.computed.gt("filterCount", 0),
+  filtersExists: gt("filterCount", 0),
   userHistoryActions: null,
 
   @computed("filters.action_name")

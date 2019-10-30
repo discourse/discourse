@@ -1,3 +1,4 @@
+import { sort } from "@ember/object/computed";
 import EmberObjectProxy from "@ember/object/proxy";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
@@ -28,7 +29,7 @@ export default Controller.extend(ModalFunctionality, Ember.Evented, {
     return categories.map(c => bufProxy.create({ content: c }));
   },
 
-  categoriesOrdered: Ember.computed.sort(
+  categoriesOrdered: sort(
     "categoriesBuffered",
     "categoriesSorting"
   ),

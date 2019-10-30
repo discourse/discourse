@@ -1,3 +1,4 @@
+import { equal, and, or, not } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
@@ -36,13 +37,13 @@ const Post = RestModel.extend({
     }
   },
 
-  new_user: Ember.computed.equal("trust_level", 0),
-  firstPost: Ember.computed.equal("post_number", 1),
+  new_user: equal("trust_level", 0),
+  firstPost: equal("post_number", 1),
 
   // Posts can show up as deleted if the topic is deleted
-  deletedViaTopic: Ember.computed.and("firstPost", "topic.deleted_at"),
-  deleted: Ember.computed.or("deleted_at", "deletedViaTopic"),
-  notDeleted: Ember.computed.not("deleted"),
+  deletedViaTopic: and("firstPost", "topic.deleted_at"),
+  deleted: or("deleted_at", "deletedViaTopic"),
+  notDeleted: not("deleted"),
 
   @computed("name", "username")
   showName(name, username) {

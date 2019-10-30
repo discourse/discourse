@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -5,7 +6,7 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default Controller.extend({
   pingDisabled: false,
-  incomingCount: Ember.computed.alias("incomingEventIds.length"),
+  incomingCount: alias("incomingEventIds.length"),
 
   init() {
     this._super(...arguments);

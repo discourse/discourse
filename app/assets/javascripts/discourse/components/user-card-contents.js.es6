@@ -1,3 +1,4 @@
+import { alias, gte, and, gt, not, or } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import {
@@ -25,28 +26,28 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   allowBackgrounds: setting("allow_profile_backgrounds"),
   showBadges: setting("enable_badges"),
 
-  postStream: Ember.computed.alias("topic.postStream"),
-  enoughPostsForFiltering: Ember.computed.gte("topicPostCount", 2),
-  showFilter: Ember.computed.and(
+  postStream: alias("topic.postStream"),
+  enoughPostsForFiltering: gte("topicPostCount", 2),
+  showFilter: and(
     "viewingTopic",
     "postStream.hasNoFilters",
     "enoughPostsForFiltering"
   ),
   showName: propertyNotEqual("user.name", "user.username"),
-  hasUserFilters: Ember.computed.gt("postStream.userFilters.length", 0),
-  showMoreBadges: Ember.computed.gt("moreBadgesCount", 0),
-  showDelete: Ember.computed.and(
+  hasUserFilters: gt("postStream.userFilters.length", 0),
+  showMoreBadges: gt("moreBadgesCount", 0),
+  showDelete: and(
     "viewingAdmin",
     "showName",
     "user.canBeDeleted"
   ),
-  linkWebsite: Ember.computed.not("user.isBasic"),
-  hasLocationOrWebsite: Ember.computed.or("user.location", "user.website_name"),
-  isSuspendedOrHasBio: Ember.computed.or(
+  linkWebsite: not("user.isBasic"),
+  hasLocationOrWebsite: or("user.location", "user.website_name"),
+  isSuspendedOrHasBio: or(
     "user.suspend_reason",
     "user.bio_cooked"
   ),
-  showCheckEmail: Ember.computed.and("user.staged", "canCheckEmails"),
+  showCheckEmail: and("user.staged", "canCheckEmails"),
 
   user: null,
 

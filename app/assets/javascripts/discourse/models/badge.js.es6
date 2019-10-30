@@ -1,3 +1,4 @@
+import { none } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import BadgeGrouping from "discourse/models/badge-grouping";
@@ -5,7 +6,7 @@ import RestModel from "discourse/models/rest";
 import computed from "ember-addons/ember-computed-decorators";
 
 const Badge = RestModel.extend({
-  newBadge: Ember.computed.none("id"),
+  newBadge: none("id"),
 
   @computed
   url() {

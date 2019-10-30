@@ -1,3 +1,4 @@
+import { equal } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
@@ -12,7 +13,7 @@ export default Controller.extend({
   group: null,
   exclude_usernames: null,
 
-  showTimeRead: Ember.computed.equal("period", "all"),
+  showTimeRead: equal("period", "all"),
 
   _setName: debounce(function() {
     this.set("name", this.nameInput);

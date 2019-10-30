@@ -1,3 +1,4 @@
+import { alias, or, and } from "@ember/object/computed";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
@@ -31,11 +32,11 @@ export default Component.extend({
     return !isPM || this.siteSettings.enable_personal_messages;
   },
 
-  canInviteTo: Ember.computed.alias("topic.details.can_invite_to"),
+  canInviteTo: alias("topic.details.can_invite_to"),
 
-  canDefer: Ember.computed.alias("currentUser.enable_defer"),
+  canDefer: alias("currentUser.enable_defer"),
 
-  inviteDisabled: Ember.computed.or(
+  inviteDisabled: or(
     "topic.archived",
     "topic.closed",
     "topic.deleted"
@@ -50,7 +51,7 @@ export default Component.extend({
     );
   },
 
-  showEditOnFooter: Ember.computed.and(
+  showEditOnFooter: and(
     "topic.isPrivateMessage",
     "site.can_tag_pms"
   ),

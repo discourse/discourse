@@ -1,3 +1,4 @@
+import { equal, and, empty } from "@ember/object/computed";
 import Component from "@ember/component";
 import {
   default as computed,
@@ -11,12 +12,12 @@ export default Component.extend({
   date: null,
   time: null,
   includeDateTime: true,
-  isCustom: Ember.computed.equal("selection", "pick_date_and_time"),
-  isBasedOnLastPost: Ember.computed.equal(
+  isCustom: equal("selection", "pick_date_and_time"),
+  isBasedOnLastPost: equal(
     "selection",
     "set_based_on_last_post"
   ),
-  displayDateAndTimePicker: Ember.computed.and("includeDateTime", "isCustom"),
+  displayDateAndTimePicker: and("includeDateTime", "isCustom"),
   displayLabel: null,
 
   init() {
@@ -37,7 +38,7 @@ export default Component.extend({
     }
   },
 
-  timeInputDisabled: Ember.computed.empty("date"),
+  timeInputDisabled: empty("date"),
 
   @observes("date", "time")
   _updateInput() {

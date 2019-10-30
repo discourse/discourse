@@ -1,3 +1,4 @@
+import { filter, or, gt, lt, not } from "@ember/object/computed";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
 import computed from "ember-addons/ember-computed-decorators";
@@ -11,16 +12,16 @@ const wrapAdmin = user => (user ? AdminUser.create(user) : null);
 
 const AdminUser = Discourse.User.extend({
   adminUserView: true,
-  customGroups: Ember.computed.filter(
+  customGroups: filter(
     "groups",
     g => !g.automatic && Group.create(g)
   ),
-  automaticGroups: Ember.computed.filter(
+  automaticGroups: filter(
     "groups",
     g => g.automatic && Group.create(g)
   ),
 
-  canViewProfile: Ember.computed.or("active", "staged"),
+  canViewProfile: or("active", "staged"),
 
   @computed("bounce_score", "reset_bounce_score_after")
   bounceScore(bounce_score, reset_bounce_score_after) {
@@ -49,7 +50,7 @@ const AdminUser = Discourse.User.extend({
     return Discourse.getURL("/admin/email/bounced");
   },
 
-  canResetBounceScore: Ember.computed.gt("bounce_score", 0),
+  canResetBounceScore: gt("bounce_score", 0),
 
   resetBounceScore() {
     return ajax(`/admin/users/${this.id}/reset_bounce_score`, {
@@ -289,9 +290,9 @@ const AdminUser = Discourse.User.extend({
       });
   },
 
-  canLockTrustLevel: Ember.computed.lt("trust_level", 4),
+  canLockTrustLevel: lt("trust_level", 4),
 
-  canSuspend: Ember.computed.not("staff"),
+  canSuspend: not("staff"),
 
   @computed("suspended_till", "suspended_at")
   suspendDuration(suspendedTill, suspendedAt) {
@@ -557,9 +558,9 @@ AdminUser.reopenClass({
     });
   },
 
-  findAll(query, filter) {
+  findAll(query, userFilter) {
     return ajax(`/admin/users/list/${query}.json`, {
-      data: filter
+      data: userFilter
     }).then(users => users.map(u => AdminUser.create(u)));
   }
 });

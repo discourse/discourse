@@ -1,3 +1,4 @@
+import { not } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
@@ -16,7 +17,7 @@ export default Component.extend({
   _yourselfConfirm: null,
   similarTopics: null,
 
-  hidden: Ember.computed.not("composer.viewOpenOrFullscreen"),
+  hidden: not("composer.viewOpenOrFullscreen"),
 
   didInsertElement() {
     this._super(...arguments);

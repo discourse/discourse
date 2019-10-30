@@ -1,3 +1,4 @@
+import { not } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -99,7 +100,7 @@ export default Controller.extend(ModalFunctionality, {
     return true;
   },
 
-  submitDisabled: Ember.computed.not("submitEnabled"),
+  submitDisabled: not("submitEnabled"),
 
   // Staff accounts can "take action"
   @computed("flagTopic", "selected.is_custom_flag")

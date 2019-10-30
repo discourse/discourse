@@ -1,3 +1,4 @@
+import { reads, equal, not, or, and } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import { cancel } from "@ember/runloop";
@@ -100,9 +101,9 @@ const Composer = RestModel.extend({
   draftSaving: false,
   draftSaved: false,
 
-  archetypes: Ember.computed.reads("site.archetypes"),
+  archetypes: reads("site.archetypes"),
 
-  sharedDraft: Ember.computed.equal("action", CREATE_SHARED_DRAFT),
+  sharedDraft: equal("action", CREATE_SHARED_DRAFT),
 
   @computed
   categoryId: {
@@ -140,11 +141,11 @@ const Composer = RestModel.extend({
       : null;
   },
 
-  creatingTopic: Ember.computed.equal("action", CREATE_TOPIC),
-  creatingSharedDraft: Ember.computed.equal("action", CREATE_SHARED_DRAFT),
-  creatingPrivateMessage: Ember.computed.equal("action", PRIVATE_MESSAGE),
-  notCreatingPrivateMessage: Ember.computed.not("creatingPrivateMessage"),
-  notPrivateMessage: Ember.computed.not("privateMessage"),
+  creatingTopic: equal("action", CREATE_TOPIC),
+  creatingSharedDraft: equal("action", CREATE_SHARED_DRAFT),
+  creatingPrivateMessage: equal("action", PRIVATE_MESSAGE),
+  notCreatingPrivateMessage: not("creatingPrivateMessage"),
+  notPrivateMessage: not("privateMessage"),
 
   @computed("editingPost", "topic.details.can_edit")
   disableTitleInput(editingPost, canEditTopic) {
@@ -164,17 +165,17 @@ const Composer = RestModel.extend({
     );
   },
 
-  topicFirstPost: Ember.computed.or("creatingTopic", "editingFirstPost"),
+  topicFirstPost: or("creatingTopic", "editingFirstPost"),
 
   @computed("action")
   editingPost: isEdit,
 
-  replyingToTopic: Ember.computed.equal("action", REPLY),
+  replyingToTopic: equal("action", REPLY),
 
-  viewOpen: Ember.computed.equal("composeState", OPEN),
-  viewDraft: Ember.computed.equal("composeState", DRAFT),
-  viewFullscreen: Ember.computed.equal("composeState", FULLSCREEN),
-  viewOpenOrFullscreen: Ember.computed.or("viewOpen", "viewFullscreen"),
+  viewOpen: equal("composeState", OPEN),
+  viewDraft: equal("composeState", DRAFT),
+  viewFullscreen: equal("composeState", FULLSCREEN),
+  viewOpenOrFullscreen: or("viewOpen", "viewFullscreen"),
 
   @observes("composeState")
   composeStateChanged() {
@@ -232,16 +233,16 @@ const Composer = RestModel.extend({
     false
   ),
 
-  editingFirstPost: Ember.computed.and("editingPost", "post.firstPost"),
+  editingFirstPost: and("editingPost", "post.firstPost"),
 
-  canEditTitle: Ember.computed.or(
+  canEditTitle: or(
     "creatingTopic",
     "creatingPrivateMessage",
     "editingFirstPost",
     "creatingSharedDraft"
   ),
 
-  canCategorize: Ember.computed.and(
+  canCategorize: and(
     "canEditTitle",
     "notCreatingPrivateMessage",
     "notPrivateMessage"
