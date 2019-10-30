@@ -5,7 +5,7 @@ export default Controller.extend({
 
   actions: {
     onSave() {
-      let tagGroups = this.tagGroups.model;
+      const tagGroups = this.tagGroups.model;
       tagGroups.pushObject(this.model);
 
       this.transitionToRoute("tagGroups.edit", this.model);
