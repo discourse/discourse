@@ -88,11 +88,8 @@ module DiscourseTagging
           tags = tags + Tag.where(id: missing_parent_tag_ids).all
         end
 
-        # validate minimum required tags for a category
-        if !guardian.is_staff? && category && category.minimum_required_tags > 0 && tags.length < category.minimum_required_tags
-          topic.errors.add(:base, I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
-          return false
-        end
+        return false unless validate_min_required_tags_for_category(guardian, topic, category, tags)
+        return false unless validate_required_tags_from_group(guardian, topic, category, tags)
 
         if tags.size == 0
           topic.errors.add(:base, I18n.t("tags.forbidden.invalid", count: new_tag_names.size))
@@ -101,17 +98,47 @@ module DiscourseTagging
 
         topic.tags = tags
       else
-        # validate minimum required tags for a category
-        if !guardian.is_staff? && category && category.minimum_required_tags > 0
-          topic.errors.add(:base, I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
-          return false
-        end
+        return false unless validate_min_required_tags_for_category(guardian, topic, category)
+        return false unless validate_required_tags_from_group(guardian, topic, category)
 
         topic.tags = []
       end
       topic.tags_changed = true
     end
     true
+  end
+
+  def self.validate_min_required_tags_for_category(guardian, topic, category, tags = [])
+    if !guardian.is_staff? &&
+        category &&
+        category.minimum_required_tags > 0 &&
+        tags.length < category.minimum_required_tags
+
+      topic.errors.add(:base, I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
+      false
+    else
+      true
+    end
+  end
+
+  def self.validate_required_tags_from_group(guardian, topic, category, tags = [])
+    if !guardian.is_staff? &&
+        category &&
+        category.required_tag_group &&
+        (tags.length < category.min_tags_from_required_group ||
+          category.required_tag_group.tags.where("tags.id in (?)", tags.map(&:id)).count < category.min_tags_from_required_group)
+
+      topic.errors.add(:base,
+        I18n.t(
+          "tags.required_tags_from_group",
+          count: category.min_tags_from_required_group,
+          tag_group_name: category.required_tag_group.name
+        )
+      )
+      false
+    else
+      true
+    end
   end
 
   # Options:
