@@ -1,6 +1,7 @@
 import handleDescriptor from "./utils/handle-descriptor";
 import isDescriptor from "./utils/is-descriptor";
 import extractValue from "./utils/extract-value";
+import { on } from "@ember/object/evented";
 
 export default function computedDecorator(...params) {
   // determine if user called as @computed('blah', 'blah') or @computed
@@ -27,7 +28,7 @@ export function readOnly(target, name, desc) {
 
 import decoratorAlias from "./decorator-alias";
 
-export var on = decoratorAlias(Ember.on, "Can not `on` without event names");
+export var on = decoratorAlias(on, "Can not `on` without event names");
 export var observes = decoratorAlias(
   Ember.observer,
   "Can not `observe` without property names"

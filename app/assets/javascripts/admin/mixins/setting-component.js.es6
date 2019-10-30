@@ -1,5 +1,6 @@
 import computed from "ember-addons/ember-computed-decorators";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
+import { on } from "@ember/object/evented";
 
 const CUSTOM_TYPES = [
   "bool",
@@ -89,7 +90,7 @@ export default Ember.Mixin.create({
     return settingDefault !== bufferedValue;
   },
 
-  _watchEnterKey: Ember.on("didInsertElement", function() {
+  _watchEnterKey: on("didInsertElement", function() {
     $(this.element).on("keydown.setting-enter", ".input-setting-string", e => {
       if (e.keyCode === 13) {
         // enter key
@@ -98,7 +99,7 @@ export default Ember.Mixin.create({
     });
   }),
 
-  _removeBindings: Ember.on("willDestroyElement", function() {
+  _removeBindings: on("willDestroyElement", function() {
     $(this.element).off("keydown.setting-enter");
   }),
 

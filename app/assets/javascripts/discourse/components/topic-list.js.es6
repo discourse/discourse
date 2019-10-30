@@ -5,6 +5,7 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 import LoadMore from "discourse/mixins/load-more";
+import { on } from "@ember/object/evented";
 
 export default Component.extend(LoadMore, {
   tagName: "table",
@@ -15,7 +16,7 @@ export default Component.extend(LoadMore, {
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: Ember.computed.alias("topics"),
 
-  _init: Ember.on("init", function() {
+  _init: on("init", function() {
     this.addObserver("hideCategory", this.rerender);
     this.addObserver("order", this.rerender);
     this.addObserver("ascending", this.rerender);

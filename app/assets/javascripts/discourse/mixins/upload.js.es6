@@ -3,6 +3,7 @@ import {
   validateUploadedFiles
 } from "discourse/lib/utilities";
 import getUrl from "discourse-common/lib/get-url";
+import { on } from "@ember/object/evented";
 
 export default Ember.Mixin.create({
   uploading: false,
@@ -33,7 +34,7 @@ export default Ember.Mixin.create({
     return {};
   },
 
-  _initialize: Ember.on("didInsertElement", function() {
+  _initialize: on("didInsertElement", function() {
     const $upload = $(this.element);
     const reset = () =>
       this.setProperties({ uploading: false, uploadProgress: 0 });
@@ -103,7 +104,7 @@ export default Ember.Mixin.create({
     });
   }),
 
-  _destroy: Ember.on("willDestroyElement", function() {
+  _destroy: on("willDestroyElement", function() {
     this.messageBus && this.messageBus.unsubscribe("/uploads/" + this.type);
 
     const $upload = $(this.element);
