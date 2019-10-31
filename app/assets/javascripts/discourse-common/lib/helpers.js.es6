@@ -1,4 +1,4 @@
-import { get } from "discourse-common/lib/raw-handlebars";
+import { rawGet } from "discourse-common/lib/raw-handlebars";
 
 export function htmlHelper(fn) {
   return Ember.Helper.helper(function(...args) {
@@ -39,7 +39,7 @@ function resolveParams(ctx, options) {
         ) {
           params[k] = hash[k];
         } else if (type === "ID" || type === "PathExpression") {
-          params[k] = get(ctx, hash[k], options);
+          params[k] = rawGet(ctx, hash[k], options);
         }
       });
     } else {
@@ -59,7 +59,7 @@ export function registerUnbound(name, fn) {
         options.types &&
         (options.types[i] === "ID" || options.types[i] === "PathExpression")
       ) {
-        properties[i] = get(this, properties[i], options);
+        properties[i] = rawGet(this, properties[i], options);
       }
     }
 

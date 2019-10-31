@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { alias, sort } from "@ember/object/computed";
 import EmberObject from "@ember/object";
@@ -110,7 +111,7 @@ const Site = RestModel.extend({
 
   updateCategory(newCategory) {
     const categories = this.categories;
-    const categoryId = Ember.get(newCategory, "id");
+    const categoryId = get(newCategory, "id");
     const existingCategory = categories.findBy("id", categoryId);
 
     // Don't update null permissions

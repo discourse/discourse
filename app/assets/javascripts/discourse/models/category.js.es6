@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import computed from "ember-addons/ember-computed-decorators";
@@ -232,15 +233,15 @@ Category.reopenClass({
   slugFor(category, separator = "/") {
     if (!category) return "";
 
-    const parentCategory = Ember.get(category, "parentCategory");
+    const parentCategory = get(category, "parentCategory");
     let result = "";
 
     if (parentCategory) {
       result = Category.slugFor(parentCategory) + separator;
     }
 
-    const id = Ember.get(category, "id"),
-      slug = Ember.get(category, "slug");
+    const id = get(category, "id"),
+      slug = get(category, "slug");
 
     return !slug || slug.trim().length === 0
       ? `${result}${id}-category`

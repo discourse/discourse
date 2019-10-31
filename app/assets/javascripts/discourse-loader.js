@@ -11,7 +11,10 @@ var define, requirejs;
         default: Ember.Controller,
         inject: Ember.inject.controller
       },
-      "@ember/object": { default: Ember.Object },
+      "@ember/object": {
+        default: Ember.Object,
+        get: Ember.get
+      },
       "@ember/object/computed": {
         default: Ember.computed,
         alias: Ember.computed.alias,

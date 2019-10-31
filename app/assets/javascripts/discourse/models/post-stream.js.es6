@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { or, not, and } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
@@ -882,12 +883,12 @@ export default RestModel.extend({
     than you supplied if the post has already been loaded.
   **/
   storePost(post) {
-    // Calling `Ember.get(undefined)` raises an error
+    // Calling `get(undefined)` raises an error
     if (!post) {
       return;
     }
 
-    const postId = Ember.get(post, "id");
+    const postId = get(post, "id");
     if (postId) {
       const existing = this._identityMap[post.get("id")];
 
@@ -931,7 +932,7 @@ export default RestModel.extend({
         this.set("topic.suggested_topics", result.suggested_topics);
       }
 
-      const posts = Ember.get(result, "post_stream.posts");
+      const posts = get(result, "post_stream.posts");
 
       if (posts) {
         posts.forEach(p => {
@@ -971,7 +972,7 @@ export default RestModel.extend({
         this.set("topic.suggested_topics", result.suggested_topics);
       }
 
-      const posts = Ember.get(result, "post_stream.posts");
+      const posts = get(result, "post_stream.posts");
 
       if (posts) {
         posts.forEach(p => this.storePost(store.createRecord("post", p)));

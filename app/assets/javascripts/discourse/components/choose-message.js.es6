@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
@@ -57,7 +58,7 @@ export default Component.extend({
 
   actions: {
     chooseMessage(message) {
-      const messageId = Ember.get(message, "id");
+      const messageId = get(message, "id");
       this.set("selectedTopicId", messageId);
       next(() => $(`#choose-message-${messageId}`).prop("checked", "true"));
       return false;

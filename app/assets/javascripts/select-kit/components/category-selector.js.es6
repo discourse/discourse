@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { makeArray } from "discourse/lib/utilities";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import Category from "discourse/models/category";
@@ -39,7 +40,7 @@ export default MultiSelectComponent.extend({
   filterComputedContent(computedContent, computedValues, filter) {
     const regex = new RegExp(filter, "i");
     return computedContent.filter(category =>
-      this._normalize(Ember.get(category, "name")).match(regex)
+      this._normalize(get(category, "name")).match(regex)
     );
   },
 
