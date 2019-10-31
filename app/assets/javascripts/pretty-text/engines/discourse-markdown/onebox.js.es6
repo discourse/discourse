@@ -1,4 +1,4 @@
-import { lookupCache } from "pretty-text/oneboxer";
+import { lookupCache } from "pretty-text/oneboxer-cache";
 import { cachedInlineOnebox } from "pretty-text/inline-oneboxer";
 
 import {
