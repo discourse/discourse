@@ -97,12 +97,11 @@ class Search
         end
 
         blurb = TextHelper.excerpt(cooked, phrase,
-          radius: blurb_length / 2,
-          seperator: " "
+          radius: blurb_length / 2
         )
       end
 
-      blurb = TextHelper.truncate(cooked, length: blurb_length, seperator: " ") if blurb.blank?
+      blurb = TextHelper.truncate(cooked, length: blurb_length) if blurb.blank?
       Sanitize.clean(blurb)
     end
   end
