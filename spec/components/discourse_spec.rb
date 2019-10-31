@@ -65,6 +65,33 @@ describe Discourse do
     end
   end
 
+  context 'plugins' do
+    let(:plugin_class) do
+      Class.new(Plugin::Instance) do
+        attr_accessor :enabled
+        def enabled?
+          @enabled
+        end
+      end
+    end
+
+    let(:plugin1) { plugin_class.new.tap { |p| p.enabled = true } }
+    let(:plugin2) { plugin_class.new.tap { |p| p.enabled = false } }
+
+    before { Discourse.plugins.append(plugin1, plugin2) }
+    after { Discourse.plugins.clear }
+
+    it 'can find plugins correctly' do
+      expect(Discourse.plugins).to contain_exactly(plugin1, plugin2)
+
+      # Exclude disabled plugins by default
+      expect(Discourse.find_plugins({})).to contain_exactly(plugin1)
+
+      # Include disabled plugins when requested
+      expect(Discourse.find_plugins(include_disabled: true)).to contain_exactly(plugin1, plugin2)
+    end
+  end
+
   context 'authenticators' do
     it 'returns inbuilt authenticators' do
       expect(Discourse.authenticators).to match_array(Discourse::BUILTIN_AUTH.map(&:authenticator))
