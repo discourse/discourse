@@ -418,7 +418,11 @@ class Plugin::Instance
   end
 
   def register_html_builder(name, &block)
-    DiscoursePluginRegistry.register_html_builder(name, &block)
+    reloadable_patch do |plugin|
+      if plugin.enabled?
+        DiscoursePluginRegistry.register_html_builder(name, &block)
+      end
+    end
   end
 
   def register_asset(file, opts = nil)
