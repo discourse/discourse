@@ -17,15 +17,35 @@ export default Component.extend(BufferedContent, SettingComponent, {
 
   actions: {
     update() {
-      const defaultCategoriesSettings = [
+      const defaultUserPreferences = [
+        "default_email_digest_frequency",
+        "default_include_tl0_in_digests",
+        "default_email_level",
+        "default_email_messages_level",
+        "default_email_mailing_list_mode",
+        "default_email_mailing_list_mode_frequency",
+        "disable_mailing_list_mode",
+        "default_email_previous_replies",
+        "default_email_in_reply_to",
+        "default_other_new_topic_duration_minutes",
+        "default_other_auto_track_topics_after_msecs",
+        "default_other_notification_level_when_replying",
+        "default_other_external_links_in_new_tab",
+        "default_other_enable_quoting",
+        "default_other_enable_defer",
+        "default_other_dynamic_favicon",
+        "default_other_like_notification_frequency",
+        "default_topics_automatic_unpin",
         "default_categories_watching",
         "default_categories_tracking",
         "default_categories_muted",
-        "default_categories_watching_first_post"
+        "default_categories_watching_first_post",
+        "default_text_size",
+        "default_title_count_mode"
       ];
       const key = this.buffered.get("setting");
 
-      if (defaultCategoriesSettings.includes(key)) {
+      if (defaultUserPreferences.includes(key)) {
         AboutRoute.create()
           .model()
           .then(result => {

@@ -53,6 +53,40 @@ describe Admin::SiteSettingsController do
         expect(SiteSetting.test_setting).to eq('')
       end
 
+      describe 'default user options' do
+        let!(:user1) { Fabricate(:user) }
+        let!(:user2) { Fabricate(:user) }
+
+        it 'should update all existing user options' do
+          user2.user_option.email_in_reply_to = false
+          user2.user_option.save!
+
+          expect {
+            put "/admin/site_settings/default_email_in_reply_to.json", params: {
+              default_email_in_reply_to: false,
+              updateExistingUsers: true
+            }
+          }.to change { UserOption.where(email_in_reply_to: false).count }.by(User.count - 1)
+        end
+
+        it 'should not update existing user options' do
+          expect {
+            put "/admin/site_settings/default_email_in_reply_to.json", params: {
+              default_email_in_reply_to: false
+            }
+          }.to change { UserOption.where(email_in_reply_to: false).count }.by(0)
+        end
+
+        it 'should disable email digests in existing user options' do
+          expect {
+            put "/admin/site_settings/default_email_digest_frequency.json", params: {
+              default_email_digest_frequency: 0,
+              updateExistingUsers: true
+            }
+          }.to change { UserOption.where(email_digests: false).count }.by(User.count)
+        end
+      end
+
       describe 'default categories' do
         let(:user1) { Fabricate(:user) }
         let(:user2) { Fabricate(:user) }
