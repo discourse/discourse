@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import { CLOSE_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 import DatetimeMixin from "select-kit/components/future-date-input-selector/mixin";
@@ -239,7 +240,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
       let input = null;
       const { time } = this._updateAt(value);
 
-      if (time && !Ember.isEmpty(value)) {
+      if (time && !isEmpty(value)) {
         input = time.locale("en").format(FORMAT);
       }
 

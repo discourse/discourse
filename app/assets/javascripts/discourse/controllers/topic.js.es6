@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { or, and, not, alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
@@ -72,7 +73,7 @@ export default Controller.extend(bufferedProperty("model"), {
   @observes("model.title", "category")
   _titleChanged() {
     const title = this.get("model.title");
-    if (!Ember.isEmpty(title)) {
+    if (!isEmpty(title)) {
       // force update lazily loaded titles
       this.send("refreshTitle");
     }
@@ -985,7 +986,7 @@ export default Controller.extend(bufferedProperty("model"), {
       composerController
         .open(options)
         .then(() => {
-          return Ember.isEmpty(quotedText) ? "" : quotedText;
+          return isEmpty(quotedText) ? "" : quotedText;
         })
         .then(q => {
           const postUrl = `${location.protocol}//${location.host}${post.get(

@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { empty } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
@@ -96,7 +97,7 @@ export default Component.extend(bufferedProperty("userField"), {
 
     cancel() {
       const id = this.get("userField.id");
-      if (Ember.isEmpty(id)) {
+      if (isEmpty(id)) {
         this.destroyAction(this.userField);
       } else {
         this.rollbackBuffer();

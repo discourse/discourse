@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import Component from "@ember/component";
 import {
   on,
@@ -27,7 +28,7 @@ export default Component.extend({
       allowAny: false,
       items: _.isArray(groupNames)
         ? groupNames
-        : Ember.isEmpty(groupNames)
+        : isEmpty(groupNames)
         ? []
         : [groupNames],
       single: this.single,

@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { lte } from "@ember/object/computed";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
@@ -62,7 +63,7 @@ export default Component.extend({
     },
 
     addMembers() {
-      if (Ember.isEmpty(this.get("model.usernames"))) {
+      if (isEmpty(this.get("model.usernames"))) {
         return;
       }
       this.model.addMembers(this.get("model.usernames")).catch(popupAjaxError);

@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 /* global Pikaday:true */
@@ -358,7 +359,7 @@ export default Component.extend({
   },
 
   _setTimeIfValid(time, key) {
-    if (Ember.isEmpty(time)) {
+    if (isEmpty(time)) {
       this.set(key, null);
       return;
     }

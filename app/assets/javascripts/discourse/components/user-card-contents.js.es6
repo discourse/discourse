@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias, gte, and, gt, not, or } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import Component from "@ember/component";
@@ -69,7 +70,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   @computed("user.user_fields.@each.value")
   publicUserFields() {
     const siteUserFields = this.site.get("user_fields");
-    if (!Ember.isEmpty(siteUserFields)) {
+    if (!isEmpty(siteUserFields)) {
       const userFields = this.get("user.user_fields");
       return siteUserFields
         .filterBy("show_on_user_card", true)
@@ -77,7 +78,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
         .map(field => {
           Ember.set(field, "dasherized_name", field.get("name").dasherize());
           const value = userFields ? userFields[field.get("id")] : null;
-          return Ember.isEmpty(value)
+          return isEmpty(value)
             ? null
             : EmberObject.create({ value, field });
         })
@@ -129,7 +130,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     }
 
     const url = this.get("user.card_background_upload_url");
-    const bg = Ember.isEmpty(url) ? "" : `url(${Discourse.getURLWithCDN(url)})`;
+    const bg = isEmpty(url) ? "" : `url(${Discourse.getURLWithCDN(url)})`;
     thisElem.style.backgroundImage = bg;
   },
 

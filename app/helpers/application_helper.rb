@@ -442,6 +442,7 @@ module ApplicationHelper
       ids = theme_ids
     end
 
+    Rails.logger.info "0 >>>>>> #{name}"
     Stylesheet::Manager.stylesheet_link_tag(name, 'all', ids)
   end
 

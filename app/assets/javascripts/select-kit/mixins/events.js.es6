@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { throttle } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
 import { on } from "ember-addons/ember-computed-decorators";
@@ -114,14 +115,14 @@ export default Mixin.create({
       this.unfocus(event);
     }
     if (keyCode === this.keys.TAB && !event.shiftKey) this.tabFromHeader(event);
-    if (Ember.isEmpty(this.filter) && keyCode === this.keys.BACKSPACE)
+    if (isEmpty(this.filter) && keyCode === this.keys.BACKSPACE)
       this.backspaceFromHeader(event);
     if (keyCode === this.keys.ESC) this.escapeFromHeader(event);
     if (keyCode === this.keys.ENTER) this.enterFromHeader(event);
     if ([this.keys.UP, this.keys.DOWN].includes(keyCode))
       this.upAndDownFromHeader(event);
     if (
-      Ember.isEmpty(this.filter) &&
+      isEmpty(this.filter) &&
       [this.keys.LEFT, this.keys.RIGHT].includes(keyCode)
     ) {
       this.leftAndRightFromHeader(event);
@@ -154,7 +155,7 @@ export default Mixin.create({
     const keyCode = event.keyCode || event.which;
 
     if (
-      Ember.isEmpty(this.filter) &&
+      isEmpty(this.filter) &&
       keyCode === this.keys.BACKSPACE &&
       typeof this.didPressBackspaceFromFilter === "function"
     ) {
@@ -171,7 +172,7 @@ export default Mixin.create({
       this.upAndDownFromFilter(event);
 
     if (
-      Ember.isEmpty(this.filter) &&
+      isEmpty(this.filter) &&
       [this.keys.LEFT, this.keys.RIGHT].includes(keyCode)
     ) {
       this.leftAndRightFromFilter(event);
@@ -197,7 +198,7 @@ export default Mixin.create({
       return true;
     }
 
-    if (Ember.isEmpty(this.filter)) {
+    if (isEmpty(this.filter)) {
       this.close(event);
       return true;
     }
@@ -285,7 +286,7 @@ export default Mixin.create({
 
     if (!this.selection || !this.selection.length) return;
 
-    if (!Ember.isEmpty(this.filter)) {
+    if (!isEmpty(this.filter)) {
       this.clearHighlightSelection();
       return;
     }
@@ -336,7 +337,7 @@ export default Mixin.create({
       return;
     }
 
-    if (Ember.isEmpty(this.selection)) return;
+    if (isEmpty(this.selection)) return;
 
     const keyCode = event.keyCode || event.which;
 

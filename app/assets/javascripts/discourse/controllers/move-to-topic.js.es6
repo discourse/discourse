@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias, equal } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { inject } from "@ember/controller";
@@ -48,7 +49,7 @@ export default Controller.extend(ModalFunctionality, {
   @computed("saving", "selectedTopicId", "topicName")
   buttonDisabled(saving, selectedTopicId, topicName) {
     return (
-      saving || (Ember.isEmpty(selectedTopicId) && Ember.isEmpty(topicName))
+      saving || (isEmpty(selectedTopicId) && isEmpty(topicName))
     );
   },
 

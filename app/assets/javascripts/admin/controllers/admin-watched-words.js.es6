@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
@@ -11,7 +12,7 @@ export default Controller.extend({
   regularExpressions: null,
 
   filterContentNow() {
-    if (!!Ember.isEmpty(this.allWatchedWords)) return;
+    if (!!isEmpty(this.allWatchedWords)) return;
 
     let filter;
     if (this.filter) {
@@ -44,7 +45,7 @@ export default Controller.extend({
 
   filterContent: debounce(function() {
     this.filterContentNow();
-    this.set("filtered", !Ember.isEmpty(this.filter));
+    this.set("filtered", !isEmpty(this.filter));
   }, 250).observes("filter"),
 
   actions: {

@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
@@ -8,7 +9,7 @@ export default Component.extend(bufferedProperty("model"), {
 
   @computed("buffered.isSaving", "buffered.name", "buffered.tag_names")
   savingDisabled(isSaving, name, tagNames) {
-    return isSaving || Ember.isEmpty(name) || Ember.isEmpty(tagNames);
+    return isSaving || isEmpty(name) || isEmpty(tagNames);
   },
 
   actions: {

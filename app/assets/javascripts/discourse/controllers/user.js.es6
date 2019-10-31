@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias, or, gt, not, and } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { inject as service } from "@ember/service";
@@ -29,7 +30,7 @@ export default Controller.extend(CanCheckEmails, {
 
   @computed("model.profileBackgroundUrl")
   hasProfileBackgroundUrl(background) {
-    return !Ember.isEmpty(background.toString());
+    return !isEmpty(background.toString());
   },
 
   @computed("model.profile_hidden", "indexStream", "viewingSelf", "forceExpand")
@@ -108,7 +109,7 @@ export default Controller.extend(CanCheckEmails, {
   @computed("model.user_fields.@each.value")
   publicUserFields() {
     const siteUserFields = this.site.get("user_fields");
-    if (!Ember.isEmpty(siteUserFields)) {
+    if (!isEmpty(siteUserFields)) {
       const userFields = this.get("model.user_fields");
       return siteUserFields
         .filterBy("show_on_profile", true)
@@ -118,7 +119,7 @@ export default Controller.extend(CanCheckEmails, {
           const value = userFields
             ? userFields[field.get("id").toString()]
             : null;
-          return Ember.isEmpty(value)
+          return isEmpty(value)
             ? null
             : EmberObject.create({ value, field });
         })

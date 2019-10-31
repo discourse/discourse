@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { and, or, alias, reads } from "@ember/object/computed";
 import { debounce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
@@ -302,7 +303,7 @@ export default Controller.extend({
 
     // We need exactly one user to issue a warning
     if (
-      Ember.isEmpty(usernames) ||
+      isEmpty(usernames) ||
       usernames.split(",").length !== 1 ||
       hasTargetGroups
     ) {
@@ -441,8 +442,8 @@ export default Controller.extend({
       this.closeAutocomplete();
 
       if (
-        Ember.isEmpty(this.get("model.reply")) &&
-        Ember.isEmpty(this.get("model.title"))
+        isEmpty(this.get("model.reply")) &&
+        isEmpty(this.get("model.title"))
       ) {
         this.close();
       } else {
@@ -744,7 +745,7 @@ export default Controller.extend({
   // Notify the composer messages controller that a reply has been typed. Some
   // messages only appear after typing.
   checkReplyLength() {
-    if (!Ember.isEmpty("model.reply")) {
+    if (!isEmpty("model.reply")) {
       this.appEvents.trigger("composer:typed-reply");
     }
   },

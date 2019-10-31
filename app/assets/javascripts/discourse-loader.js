@@ -66,6 +66,9 @@ var define, requirejs;
       "@ember/service": {
         default: Ember.Service,
         inject: Ember.inject.service
+      },
+      "@ember/utils": {
+        isEmpty: Ember.isEmpty
       }
     };
   }

@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { run } from "@ember/runloop";
 import { later } from "@ember/runloop";
 /* global QUnit, resetSite */
@@ -182,7 +183,7 @@ QUnit.assert.not = function(actual, message) {
 
 QUnit.assert.blank = function(actual, message) {
   this.pushResult({
-    result: Ember.isEmpty(actual),
+    result: isEmpty(actual),
     actual,
     message
   });
@@ -190,7 +191,7 @@ QUnit.assert.blank = function(actual, message) {
 
 QUnit.assert.present = function(actual, message) {
   this.pushResult({
-    result: !Ember.isEmpty(actual),
+    result: !isEmpty(actual),
     actual,
     message
   });

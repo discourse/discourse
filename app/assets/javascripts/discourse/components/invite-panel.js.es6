@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias, and, equal } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import Component from "@ember/component";
@@ -48,7 +49,7 @@ export default Component.extend({
     can_invite_to
   ) {
     if (saving) return true;
-    if (Ember.isEmpty(emailOrUsername)) return true;
+    if (isEmpty(emailOrUsername)) return true;
 
     const emailTrimmed = emailOrUsername.trim();
 
@@ -65,7 +66,7 @@ export default Component.extend({
     // when inviting to private topic via email, group name must be specified
     if (
       isPrivateTopic &&
-      Ember.isEmpty(groupNames) &&
+      isEmpty(groupNames) &&
       emailValid(emailTrimmed)
     ) {
       return true;
@@ -94,7 +95,7 @@ export default Component.extend({
   ) {
     if (hasCustomMessage) return true;
     if (saving) return true;
-    if (Ember.isEmpty(emailOrUsername)) return true;
+    if (isEmpty(emailOrUsername)) return true;
 
     const email = emailOrUsername.trim();
 
@@ -109,7 +110,7 @@ export default Component.extend({
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && Ember.isEmpty(groupNames) && emailValid(email)) {
+    if (isPrivateTopic && isEmpty(groupNames) && emailValid(email)) {
       return true;
     }
 
@@ -218,7 +219,7 @@ export default Component.extend({
         return I18n.t("topic.invite_reply.to_username");
       } else {
         // when inviting to a topic, display instructions based on provided entity
-        if (Ember.isEmpty(emailOrUsername)) {
+        if (isEmpty(emailOrUsername)) {
           return I18n.t("topic.invite_reply.to_topic_blank");
         } else if (emailValid(emailOrUsername)) {
           this.set("inviteIcon", "envelope");

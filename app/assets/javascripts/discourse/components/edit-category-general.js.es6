@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { not } from "@ember/object/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -84,7 +85,7 @@ export default buildCategoryPanel("general", {
   // We can change the parent if there are no children
   @computed("category.id")
   subCategories(categoryId) {
-    if (Ember.isEmpty(categoryId)) {
+    if (isEmpty(categoryId)) {
       return null;
     }
     return Category.list().filterBy("parent_category_id", categoryId);

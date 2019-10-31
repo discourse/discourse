@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { gt, equal, or } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
@@ -86,7 +87,7 @@ const User = RestModel.extend({
 
   @computed("username", "name")
   displayName(username, name) {
-    if (Discourse.SiteSettings.enable_names && !Ember.isEmpty(name)) {
+    if (Discourse.SiteSettings.enable_names && !isEmpty(name)) {
       return name;
     }
     return username;
@@ -95,7 +96,7 @@ const User = RestModel.extend({
   @computed("profile_background_upload_url")
   profileBackgroundUrl(bgUrl) {
     if (
-      Ember.isEmpty(bgUrl) ||
+      isEmpty(bgUrl) ||
       !Discourse.SiteSettings.allow_profile_backgrounds
     ) {
       return "".htmlSafe();
@@ -515,7 +516,7 @@ const User = RestModel.extend({
   // The user's stat count, excluding PMs.
   @computed("statsExcludingPms.@each.count")
   statsCountNonPM() {
-    if (Ember.isEmpty(this.statsExcludingPms)) return 0;
+    if (isEmpty(this.statsExcludingPms)) return 0;
     let count = 0;
     this.statsExcludingPms.forEach(val => {
       if (this.inAllStream(val)) {
@@ -528,7 +529,7 @@ const User = RestModel.extend({
   // The user's stats, excluding PMs.
   @computed("stats.@each.isPM")
   statsExcludingPms() {
-    if (Ember.isEmpty(this.stats)) return [];
+    if (isEmpty(this.stats)) return [];
     return this.stats.rejectBy("isPM");
   },
 
@@ -538,7 +539,7 @@ const User = RestModel.extend({
     return PreloadStore.getAndRemove(`user_${user.get("username")}`, () => {
       return ajax(userPath(`${user.get("username")}.json`), { data: options });
     }).then(json => {
-      if (!Ember.isEmpty(json.user.stats)) {
+      if (!isEmpty(json.user.stats)) {
         json.user.stats = Discourse.User.groupStats(
           json.user.stats.map(s => {
             if (s.count) s.count = parseInt(s.count, 10);
@@ -547,7 +548,7 @@ const User = RestModel.extend({
         );
       }
 
-      if (!Ember.isEmpty(json.user.groups)) {
+      if (!isEmpty(json.user.groups)) {
         const groups = [];
 
         for (let i = 0; i < json.user.groups.length; i++) {
@@ -563,7 +564,7 @@ const User = RestModel.extend({
         json.user.invited_by = Discourse.User.create(json.user.invited_by);
       }
 
-      if (!Ember.isEmpty(json.user.featured_user_badge_ids)) {
+      if (!isEmpty(json.user.featured_user_badge_ids)) {
         const userBadgesMap = {};
         UserBadge.createFromJson(json).forEach(userBadge => {
           userBadgesMap[userBadge.get("id")] = userBadge;

@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -54,7 +55,7 @@ export default Controller.extend({
 
   @computed("q")
   hasAutofocus(q) {
-    return Ember.isEmpty(q);
+    return isEmpty(q);
   },
 
   @computed("q")
