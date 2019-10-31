@@ -12,17 +12,21 @@ hide_plugin if self.respond_to?(:hide_plugin)
 register_asset 'stylesheets/ie.scss'
 
 after_initialize do
-  # patching discourse_stylesheet_link_tag so we can still use scss
-  ApplicationHelper.module_eval do
-    alias_method :previous_discourse_stylesheet_link_tag, :discourse_stylesheet_link_tag
-    def discourse_stylesheet_link_tag(name, opts = {})
-      if name === 'discourse-internet-explorer'
-        unless request.env['HTTP_USER_AGENT'] =~ /MSIE|Trident/
-          return
+  reloadable_patch do |plugin|
+    if plugin.enabled?
+      # patching discourse_stylesheet_link_tag so we can still use scss
+      ApplicationHelper.module_eval do
+        alias_method :previous_discourse_stylesheet_link_tag, :discourse_stylesheet_link_tag
+        def discourse_stylesheet_link_tag(name, opts = {})
+          if name === 'discourse-internet-explorer'
+            unless request.env['HTTP_USER_AGENT'] =~ /MSIE|Trident/
+              return
+            end
+          end
+
+          previous_discourse_stylesheet_link_tag(name, opts)
         end
       end
-
-      previous_discourse_stylesheet_link_tag(name, opts)
     end
   end
 
