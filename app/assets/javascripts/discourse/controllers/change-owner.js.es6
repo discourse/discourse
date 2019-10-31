@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { inject } from "@ember/controller";
@@ -17,7 +18,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @computed("saving", "new_user")
   buttonDisabled(saving, newUser) {
-    return saving || Ember.isEmpty(newUser);
+    return saving || isEmpty(newUser);
   },
 
   @computed("saving")

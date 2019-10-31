@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
@@ -30,7 +31,7 @@ export default Component.extend(UploadMixin, {
 
   @computed("placeholderUrl")
   placeholderStyle(url) {
-    if (Ember.isEmpty(url)) {
+    if (isEmpty(url)) {
       return "".htmlSafe();
     }
     return `background-image: url(${url})`.htmlSafe();
@@ -38,7 +39,7 @@ export default Component.extend(UploadMixin, {
 
   @computed("imageUrl")
   imageCDNURL(url) {
-    if (Ember.isEmpty(url)) {
+    if (isEmpty(url)) {
       return "".htmlSafe();
     }
 
@@ -52,7 +53,7 @@ export default Component.extend(UploadMixin, {
 
   @computed("imageUrl")
   imageBaseName(imageUrl) {
-    if (Ember.isEmpty(imageUrl)) return;
+    if (isEmpty(imageUrl)) return;
     return imageUrl.split("/").slice(-1)[0];
   },
 

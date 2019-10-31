@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import {
   default as computed,
@@ -215,7 +216,7 @@ const TopicTrackingState = Discourse.Model.extend({
 
   // If we have a cached topic list, we can update it from our tracking information.
   updateTopics(topics) {
-    if (Ember.isEmpty(topics)) {
+    if (isEmpty(topics)) {
       return;
     }
 

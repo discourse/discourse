@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { createWidgetFrom } from "discourse/widgets/widget";
 import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -25,7 +26,7 @@ createWidgetFrom(
         }
       );
 
-      return Ember.isEmpty(description) ? "" : escapeExpression(description);
+      return isEmpty(description) ? "" : escapeExpression(description);
     }
   }
 );

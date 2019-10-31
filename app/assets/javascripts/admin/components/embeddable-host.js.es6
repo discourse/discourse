@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
@@ -23,7 +24,7 @@ export default Component.extend(bufferedProperty("host"), {
 
   @computed("buffered.host", "host.isSaving")
   cantSave(host, isSaving) {
-    return isSaving || Ember.isEmpty(host);
+    return isSaving || isEmpty(host);
   },
 
   actions: {

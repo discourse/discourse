@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { reads, equal, not, or, and } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
@@ -116,7 +117,7 @@ const Composer = RestModel.extend({
     set(categoryId) {
       const oldCategoryId = this._categoryId;
 
-      if (Ember.isEmpty(categoryId)) {
+      if (isEmpty(categoryId)) {
         categoryId = null;
       }
       this._categoryId = categoryId;
@@ -420,7 +421,7 @@ const Composer = RestModel.extend({
 
   @computed("metaData")
   hasMetaData(metaData) {
-    return metaData ? Ember.isEmpty(Ember.keys(metaData)) : false;
+    return metaData ? isEmpty(Ember.keys(metaData)) : false;
   },
 
   replyDirty: propertyNotEqual("reply", "originalText"),
@@ -610,7 +611,7 @@ const Composer = RestModel.extend({
       }
     }
 
-    if (!Ember.isEmpty(reply)) {
+    if (!isEmpty(reply)) {
       return;
     }
 
@@ -633,7 +634,7 @@ const Composer = RestModel.extend({
     if (!opts) opts = {};
     this.set("loading", false);
 
-    const replyBlank = Ember.isEmpty(this.reply);
+    const replyBlank = isEmpty(this.reply);
 
     const composer = this;
     if (
@@ -1055,7 +1056,7 @@ const Composer = RestModel.extend({
 
     let data = this.serialize(_draft_serializer);
 
-    if (data.postId && !Ember.isEmpty(this.originalText)) {
+    if (data.postId && !isEmpty(this.originalText)) {
       data.originalText = this.originalText;
     }
 

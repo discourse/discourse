@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { equal, and, or, not } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
@@ -93,7 +94,7 @@ const Post = RestModel.extend({
 
   @computed("link_counts.@each.internal")
   internalLinks() {
-    if (Ember.isEmpty(this.link_counts)) return null;
+    if (isEmpty(this.link_counts)) return null;
 
     return this.link_counts.filterBy("internal").filterBy("title");
   },

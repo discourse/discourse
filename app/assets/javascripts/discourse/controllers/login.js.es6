@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias, or, readOnly } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
@@ -107,7 +108,7 @@ export default Controller.extend(ModalFunctionality, {
         return;
       }
 
-      if (Ember.isEmpty(this.loginName) || Ember.isEmpty(this.loginPassword)) {
+      if (isEmpty(this.loginName) || isEmpty(this.loginPassword)) {
         this.flash(I18n.t("login.blank_username_or_password"), "error");
         return;
       }
@@ -273,7 +274,7 @@ export default Controller.extend(ModalFunctionality, {
         return;
       }
 
-      if (Ember.isEmpty(this.loginName)) {
+      if (isEmpty(this.loginName)) {
         this.flash(I18n.t("login.blank_username"), "error");
         return;
       }

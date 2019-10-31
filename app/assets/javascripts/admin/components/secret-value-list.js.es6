@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import Component from "@ember/component";
 import { on } from "ember-addons/ember-computed-decorators";
 
@@ -43,7 +44,7 @@ export default Component.extend({
   _checkInvalidInput(inputs) {
     this.set("validationMessage", null);
     for (let input of inputs) {
-      if (Ember.isEmpty(input) || input.includes("|")) {
+      if (isEmpty(input) || input.includes("|")) {
         this.set(
           "validationMessage",
           I18n.t("admin.site_settings.secret_list.invalid_input")

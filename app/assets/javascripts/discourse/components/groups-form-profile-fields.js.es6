@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { not } from "@ember/object/computed";
 import Component from "@ember/component";
 import {
@@ -65,7 +66,7 @@ export default Component.extend({
 
   checkGroupName: debounce(function() {
     name = this.nameInput;
-    if (Ember.isEmpty(name)) return;
+    if (isEmpty(name)) return;
 
     Group.checkName(name).then(response => {
       const validationName = "uniqueNameValidation";

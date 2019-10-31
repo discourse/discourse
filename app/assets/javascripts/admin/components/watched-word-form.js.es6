@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import WatchedWord from "admin/models/watched-word";
@@ -23,7 +24,7 @@ export default Component.extend({
 
   @observes("word")
   removeMessage() {
-    if (this.showMessage && !Ember.isEmpty(this.word)) {
+    if (this.showMessage && !isEmpty(this.word)) {
       this.set("showMessage", false);
     }
   },

@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import PenaltyController from "admin/mixins/penalty-controller";
@@ -14,7 +15,7 @@ export default Controller.extend(PenaltyController, {
   @computed("suspendUntil", "reason", "suspending")
   submitDisabled(suspendUntil, reason, suspending) {
     return (
-      suspending || Ember.isEmpty(suspendUntil) || !reason || reason.length < 1
+      suspending || isEmpty(suspendUntil) || !reason || reason.length < 1
     );
   },
 

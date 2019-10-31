@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { notEmpty, or, not } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -91,7 +92,7 @@ export default Controller.extend(
 
     @computed("authOptions.auth_provider")
     passwordRequired(authProvider) {
-      return Ember.isEmpty(authProvider);
+      return isEmpty(authProvider);
     },
 
     @computed
@@ -108,7 +109,7 @@ export default Controller.extend(
     @computed("accountEmail", "rejectedEmails.[]")
     emailValidation(email, rejectedEmails) {
       // If blank, fail without a reason
-      if (Ember.isEmpty(email)) {
+      if (isEmpty(email)) {
         return InputValidation.create({
           failed: true
         });
@@ -176,7 +177,7 @@ export default Controller.extend(
       }
       if (
         this.get("emailValidation.ok") &&
-        (Ember.isEmpty(this.accountUsername) || this.get("authOptions.email"))
+        (isEmpty(this.accountUsername) || this.get("authOptions.email"))
       ) {
         // If email is valid and username has not been entered yet,
         // or email and username were filled automatically by 3rd parth auth,
@@ -226,12 +227,12 @@ export default Controller.extend(
       const userFields = this.userFields;
       const destinationUrl = this.get("authOptions.destination_url");
 
-      if (!Ember.isEmpty(destinationUrl)) {
+      if (!isEmpty(destinationUrl)) {
         $.cookie("destination_url", destinationUrl, { path: "/" });
       }
 
       // Add the userfields to the data
-      if (!Ember.isEmpty(userFields)) {
+      if (!isEmpty(userFields)) {
         attrs.userFields = {};
         userFields.forEach(
           f => (attrs.userFields[f.get("field.id")] = f.get("value"))

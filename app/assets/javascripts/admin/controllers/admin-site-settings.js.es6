@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
@@ -10,7 +11,7 @@ export default Controller.extend({
 
   filterContentNow(category) {
     // If we have no content, don't bother filtering anything
-    if (!!Ember.isEmpty(this.allSiteSettings)) return;
+    if (!!isEmpty(this.allSiteSettings)) return;
 
     let filter;
     if (this.filter) {
