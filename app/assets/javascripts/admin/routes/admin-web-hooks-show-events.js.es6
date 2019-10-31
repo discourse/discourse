@@ -1,10 +1,11 @@
+import { get } from "@ember/object";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
   model(params) {
     return this.store.findAll(
       "web-hook-event",
-      Ember.get(params, "web_hook_id")
+      get(params, "web_hook_id")
     );
   },
 

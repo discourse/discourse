@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { not, notEmpty, equal, and, or } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
@@ -378,7 +379,7 @@ const Topic = RestModel.extend({
     this.set("bookmarking", true);
 
     const stream = this.postStream;
-    const posts = Ember.get(stream, "posts");
+    const posts = get(stream, "posts");
     const firstPost =
       posts && posts[0] && posts[0].get("post_number") === 1 && posts[0];
     const bookmark = !this.bookmarked;

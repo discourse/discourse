@@ -1,10 +1,9 @@
+import { get } from "@ember/object";
 import { registerUnbound } from "discourse-common/lib/helpers";
 import { isRTL } from "discourse/lib/text-direction";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
-var get = Ember.get,
-  escapeExpression = Handlebars.Utils.escapeExpression;
-
+let escapeExpression = Handlebars.Utils.escapeExpression;
 let _renderer = defaultCategoryLinkRenderer;
 
 export function replaceCategoryLinkRenderer(fn) {
@@ -32,7 +31,7 @@ export function categoryBadgeHTML(category, opts) {
   if (
     !category ||
     (!opts.allowUncategorized &&
-      Ember.get(category, "id") ===
+      get(category, "id") ===
         Discourse.Site.currentProp("uncategorized_category_id") &&
       Discourse.SiteSettings.suppress_uncategorized_badge)
   )

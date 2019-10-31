@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { equal, and, or, not } from "@ember/object/computed";
 import EmberObject from "@ember/object";
@@ -282,7 +283,7 @@ const Post = RestModel.extend({
         if (key === "reply_to_user" && value && oldValue) {
           skip =
             value.username === oldValue.username ||
-            Ember.get(value, "username") === Ember.get(oldValue, "username");
+            get(value, "username") === get(oldValue, "username");
         }
 
         if (!skip) {

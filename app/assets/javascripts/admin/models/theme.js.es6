@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { or, gt } from "@ember/object/computed";
 import RestModel from "discourse/models/rest";
@@ -243,7 +244,7 @@ const Theme = RestModel.extend({
   @computed("childThemes.[]")
   child_theme_ids(childThemes) {
     if (childThemes) {
-      return childThemes.map(theme => Ember.get(theme, "id"));
+      return childThemes.map(theme => get(theme, "id"));
     }
   },
 
