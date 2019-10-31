@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class AdminBadgesSerializer < ApplicationSerializer
+  root 'admin_badges'
   attributes :protected_system_fields, :triggers
   has_many :badges, serializer: AdminBadgeSerializer
   has_many :badge_groupings

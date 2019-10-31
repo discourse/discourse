@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class AdminUserSerializer < AdminUserListSerializer
+  root 'admin_user'
 
   attributes :name,
              :associated_accounts,

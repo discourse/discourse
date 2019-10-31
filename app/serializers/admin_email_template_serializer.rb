@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class AdminEmailTemplateSerializer < ApplicationSerializer
+  root 'admin_email_template'
   attributes :id, :title, :subject, :body, :can_revert?
 
   def id

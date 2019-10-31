@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TopicViewWordpressSerializer < ApplicationSerializer
+  root 'topic_view_wordpress'
 
   # These attributes will be delegated to the topic
   attributes :id,

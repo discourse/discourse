@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TopicPostCountSerializer < BasicUserSerializer
+  root 'topic_post_count'
 
   attributes :post_count, :primary_group_name,
              :primary_group_flair_url, :primary_group_flair_color, :primary_group_flair_bg_color

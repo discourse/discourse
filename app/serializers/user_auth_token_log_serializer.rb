@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UserAuthTokenLogSerializer < ApplicationSerializer
+  root 'user_auth_token_log'
   include UserAuthTokensMixin
 
   attributes :action

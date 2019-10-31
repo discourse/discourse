@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BadgeIndexSerializer < BadgeSerializer
+  root 'badge_index'
+
   attributes :has_badge
   has_one :badge_grouping
 

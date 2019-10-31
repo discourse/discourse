@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GroupShowSerializer < BasicGroupSerializer
+  root :group_show
+
   attributes :is_group_user, :is_group_owner, :is_group_owner_display, :mentionable, :messageable
 
   def include_is_group_user?

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class WebHookCategorySerializer < CategorySerializer
+  root 'web_hook_category'
 
   %i{
     can_edit

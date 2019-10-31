@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class AdminUserListSerializer < BasicUserSerializer
+  root 'admin_user_list'
 
   attributes :email,
              :secondary_emails,

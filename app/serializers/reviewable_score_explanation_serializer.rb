@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableScoreExplanationSerializer < ApplicationSerializer
+  root 'reviewable_score_explanation'
+
   attributes(
     :user_id,
     :type_bonus,

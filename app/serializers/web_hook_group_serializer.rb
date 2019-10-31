@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class WebHookGroupSerializer < BasicGroupSerializer
+  root 'web_hook_group'
 
   %i{
     is_group_user

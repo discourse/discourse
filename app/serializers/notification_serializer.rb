@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class NotificationSerializer < ApplicationSerializer
+  root :notification
 
   attributes :id,
              :user_id,

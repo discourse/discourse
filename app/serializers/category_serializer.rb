@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CategorySerializer < SiteCategorySerializer
+  root 'category'
 
   attributes :read_restricted,
              :available_groups,

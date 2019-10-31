@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class EmailLogSerializer < ApplicationSerializer
+  root 'email_log'
+
   include EmailLogsMixin
 
   attributes :reply_key,

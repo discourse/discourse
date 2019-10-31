@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TagGroupSerializer < ApplicationSerializer
+  root 'tag_group'
+
   attributes :id, :name, :tag_names, :parent_tag_name, :one_per_topic, :permissions
 
   def tag_names

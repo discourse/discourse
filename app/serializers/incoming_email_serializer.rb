@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class IncomingEmailSerializer < ApplicationSerializer
+  root 'incoming_email'
 
   attributes :id,
              :created_at,

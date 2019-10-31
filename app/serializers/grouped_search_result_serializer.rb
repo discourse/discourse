@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GroupedSearchResultSerializer < ApplicationSerializer
+  root 'grouped_search_result'
+
   has_many :posts, serializer: SearchPostSerializer
   has_many :users, serializer: SearchResultUserSerializer
   has_many :categories, serializer: BasicCategorySerializer

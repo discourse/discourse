@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ReviewableQueuedPostSerializer < ReviewableSerializer
+  root 'reviewable_queued_post'
 
   attributes :reply_to_post_number
 

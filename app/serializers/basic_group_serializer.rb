@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BasicGroupSerializer < ApplicationSerializer
+  root 'basic_group'
+
   attributes :id,
              :automatic,
              :name,

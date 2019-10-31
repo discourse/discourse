@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AdminWebHookEventSerializer < ApplicationSerializer
+  root 'admin_web_hook_event'
+
   attributes :id,
              :web_hook_id,
              :request_url,

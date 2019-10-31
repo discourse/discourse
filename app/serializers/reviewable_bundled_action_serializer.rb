@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableBundledActionSerializer < ApplicationSerializer
+  root 'reviewable_bundled_action'
+
   attributes :id, :icon, :label
   has_many :actions, serializer: ReviewableActionSerializer, root: 'actions'
 

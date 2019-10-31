@@ -3,6 +3,8 @@
 require_relative 'post_item_excerpt'
 
 class DraftSerializer < ApplicationSerializer
+  root 'draft'
+
   include PostItemExcerpt
 
   attributes :created_at,

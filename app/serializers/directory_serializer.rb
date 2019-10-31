@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DirectorySerializer < ApplicationSerializer
+  root 'directory'
+
   attributes :id
   has_many :directory_items, serializer: DirectoryItemSerializer, embed: :objects
 

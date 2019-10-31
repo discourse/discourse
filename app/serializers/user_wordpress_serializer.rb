@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UserWordpressSerializer < BasicUserSerializer
+  root 'user_wordpress'
 
   def avatar_template
     if Hash === object

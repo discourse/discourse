@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ScreenedEmailSerializer < ApplicationSerializer
+  root 'screened_email'
+
   attributes :email,
              :action,
              :match_count,

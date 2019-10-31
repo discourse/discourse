@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class WebHookTopicViewSerializer < TopicViewSerializer
+  root 'web_hook_topic_view'
+
   attributes :created_by,
              :last_poster
 

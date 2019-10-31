@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class IncomingEmailDetailsSerializer < ApplicationSerializer
+  root 'incoming_email_details'
 
   attributes :error,
              :error_description,

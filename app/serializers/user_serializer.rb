@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UserSerializer < BasicUserSerializer
+  root 'user'
 
   attr_accessor :omit_stats,
                 :topic_post_count

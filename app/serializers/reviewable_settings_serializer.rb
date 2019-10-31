@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableSettingsSerializer < ApplicationSerializer
+  root 'reviewable_settings'
+
   attributes :id, :reviewable_priorities
 
   has_many :reviewable_score_types, serializer: ReviewableScoreTypeSerializer

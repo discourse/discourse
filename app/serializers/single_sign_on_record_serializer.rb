@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SingleSignOnRecordSerializer < ApplicationSerializer
+  root 'single_sign_on_record'
+
   attributes :user_id, :external_id,
              :last_payload, :created_at,
              :updated_at, :external_username,

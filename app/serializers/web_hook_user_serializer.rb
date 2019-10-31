@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class WebHookUserSerializer < UserSerializer
+  root 'web_hook_user'
   attributes :external_id
 
   def omit_stats

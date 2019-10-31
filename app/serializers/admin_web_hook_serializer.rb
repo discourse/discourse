@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AdminWebHookSerializer < ApplicationSerializer
+  root 'admin_web_hook'
+
   attributes :id,
              :payload_url,
              :content_type,

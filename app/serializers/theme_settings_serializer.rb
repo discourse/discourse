@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ThemeSettingsSerializer < ApplicationSerializer
+  root 'theme_settings'
+
   attributes :setting, :type, :default, :value, :description, :valid_values,
              :list_type, :textarea
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UserSummarySerializer < ApplicationSerializer
+  root 'user_summary'
 
   class TopicSerializer < ListableTopicSerializer
     attributes :category_id, :like_count

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class DirectoryItemSerializer < ApplicationSerializer
+  root 'directory_item'
 
   class UserSerializer < UserNameSerializer
+    root 'user_serializer'
     include UserPrimaryGroupMixin
   end
 

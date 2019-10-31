@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SimilarTopicSerializer < ApplicationSerializer
+  root 'similar_topic'
 
   has_one :topic, serializer: TopicListItemSerializer, embed: :ids
   attributes :id, :blurb, :created_at, :url

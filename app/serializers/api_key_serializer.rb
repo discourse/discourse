@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ApiKeySerializer < ApplicationSerializer
+  root 'api_key'
 
   attributes :id,
              :key,

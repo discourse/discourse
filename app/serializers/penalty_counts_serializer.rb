@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PenaltyCountsSerializer < ApplicationSerializer
+  root 'penalty_counts'
+
   attributes :silenced, :suspended, :total
 
   def total

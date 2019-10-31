@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class WizardSerializer < ApplicationSerializer
+  root 'wizard'
+
   attributes :start, :completed
 
   has_many :steps, serializer: WizardStepSerializer, embed: :objects

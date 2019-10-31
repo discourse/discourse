@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ScreenedUrlSerializer < ApplicationSerializer
+  root 'screened_url'
   attributes :url,
              :domain,
              :action,

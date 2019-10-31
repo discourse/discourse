@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ReviewableScoreSerializer < ApplicationSerializer
+  root 'reviewable_score'
 
   attributes :id, :score, :agree_stats, :status, :reason, :created_at, :reviewed_at
   has_one :user, serializer: BasicUserSerializer, root: 'users'

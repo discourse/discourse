@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserFieldSerializer < ApplicationSerializer
+  root 'user_field'
+
   attributes :id,
              :name,
              :description,

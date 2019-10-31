@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class WizardStepSerializer < ApplicationSerializer
+  root 'wizard_step'
 
   attributes :id, :next, :previous, :description, :title, :index, :banner
   has_many :fields, serializer: WizardFieldSerializer, embed: :objects

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GroupUserSerializer < BasicUserSerializer
+  root 'group_user'
+
   include UserPrimaryGroupMixin
 
   attributes :name,

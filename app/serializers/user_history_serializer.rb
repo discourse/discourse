@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserHistorySerializer < ApplicationSerializer
+  root 'user_history'
+
   attributes :action_name,
              :details,
              :context,

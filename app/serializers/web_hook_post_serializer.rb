@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class WebHookPostSerializer < PostSerializer
+  root 'web_hook_post'
 
   attributes :topic_posts_count,
              :topic_archetype,

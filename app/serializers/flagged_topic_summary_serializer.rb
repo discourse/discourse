@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class FlaggedTopicSummarySerializer < ActiveModel::Serializer
+  root 'flagged_topic_summary'
 
   attributes(
     :id,
