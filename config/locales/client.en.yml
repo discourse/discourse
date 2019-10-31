@@ -998,14 +998,14 @@ en:
           default_name: "My Authenticator"
         security_key:
           register: "Register"
-          title: 'Security Keys'
+          title: "Security Keys"
           add: "Register Security Key"
           default_name: "Main Security Key"
           not_allowed_error: "The security key registration process either timed out or was cancelled."
           already_added_error: "You have already registered this security key. You don’t have to register it again."
-          edit: 'Edit Security Key'
-          edit_description: 'Security Key Name'
-          delete: 'Delete'
+          edit: "Edit Security Key"
+          edit_description: "Security Key Name"
+          delete: "Delete"
 
       change_about:
         title: "Change About Me"
@@ -1037,8 +1037,8 @@ en:
         image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
 
       change_profile_background:
-        title: "Profile Background"
-        instructions: "Profile backgrounds will be centered and have a default width of 850px."
+        title: "Profile Header"
+        instructions: "Profile headers will be centered and have a default width of 1110px."
 
       change_card_background:
         title: "User Card Background"
