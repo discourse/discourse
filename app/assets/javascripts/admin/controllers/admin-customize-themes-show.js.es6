@@ -1,3 +1,4 @@
+import { makeArray } from "discourse/lib/utilities";
 import { empty, notEmpty, match } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
@@ -126,8 +127,8 @@ export default Controller.extend({
         });
 
         this.get("parentController.model.content").forEach(theme => {
-          const children = Ember.makeArray(theme.get("childThemes"));
-          const rawChildren = Ember.makeArray(theme.get("child_themes"));
+          const children = makeArray(theme.get("childThemes"));
+          const rawChildren = makeArray(theme.get("child_themes"));
           const index = children ? children.indexOf(model) : -1;
           if (index > -1) {
             children.splice(index, 1);

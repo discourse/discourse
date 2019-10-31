@@ -1,3 +1,4 @@
+import { makeArray } from "discourse/lib/utilities";
 import { alias, or, and, reads, equal, notEmpty } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
@@ -108,7 +109,7 @@ export default Component.extend({
   displayedModes(currentMode, reportModes, forcedModes) {
     const modes = forcedModes ? forcedModes.split(",") : reportModes;
 
-    return Ember.makeArray(modes).map(mode => {
+    return makeArray(modes).map(mode => {
       const base = `btn-default mode-btn ${mode}`;
       const cssClass = currentMode === mode ? `${base} is-current` : base;
 

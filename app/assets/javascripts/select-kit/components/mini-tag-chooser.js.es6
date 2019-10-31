@@ -1,3 +1,4 @@
+import { makeArray } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import ComboBox from "select-kit/components/combo-box";
 import TagsMixin from "select-kit/mixins/tags";
@@ -5,7 +6,7 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 import renderTag from "discourse/lib/render-tag";
 import { escapeExpression } from "discourse/lib/utilities";
 import { iconHTML } from "discourse-common/lib/icon-library";
-const { get, isEmpty, run, makeArray } = Ember;
+const { get, isEmpty, run } = Ember;
 
 export default ComboBox.extend(TagsMixin, {
   allowContentReplacement: true,
@@ -226,7 +227,7 @@ export default ComboBox.extend(TagsMixin, {
   },
 
   destroyTags(tags) {
-    tags = Ember.makeArray(tags).map(c => get(c, "value"));
+    tags = makeArray(tags).map(c => get(c, "value"));
 
     // work around usage with buffered proxy
     // it does not listen on array changes, similar hack already on select

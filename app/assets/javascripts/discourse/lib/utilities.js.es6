@@ -3,6 +3,13 @@ import toMarkdown from "discourse/lib/to-markdown";
 
 const homepageSelector = "meta[name=discourse_current_homepage]";
 
+export function makeArray(obj) {
+  if (obj === null || obj === undefined) {
+    return [];
+  }
+  return Array.isArray(obj) ? obj : [obj];
+}
+
 export function translateSize(size) {
   switch (size) {
     case "tiny":

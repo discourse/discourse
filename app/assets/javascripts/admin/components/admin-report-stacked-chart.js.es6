@@ -1,3 +1,4 @@
+import { makeArray } from "discourse/lib/utilities";
 import { debounce } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
@@ -52,7 +53,7 @@ export default Component.extend({
 
     const context = chartCanvas.getContext("2d");
 
-    const chartData = Ember.makeArray(
+    const chartData = makeArray(
       model.get("chartData") || model.get("data")
     );
 
