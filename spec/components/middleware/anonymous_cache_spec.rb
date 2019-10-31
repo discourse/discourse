@@ -169,6 +169,16 @@ describe Middleware::AnonymousCache::Helper do
       crawler.cache([200, { "HELLO" => "WORLD" }, ["hello ", "world"]])
       expect(crawler.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello world"]])
     end
+
+    it "includes ie in cache key" do
+      helper = new_helper
+      helper.is_ie = false
+      expect(helper.cache_key).to include("ie=false")
+
+      helper = new_helper
+      helper.is_ie = true
+      expect(helper.cache_key).to include("ie=true")
+    end
   end
 
   context "crawler blocking" do

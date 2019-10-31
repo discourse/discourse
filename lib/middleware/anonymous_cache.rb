@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_dependency "mobile_detection"
+require_dependency "browser_detection"
 require_dependency "crawler_detection"
 require_dependency "guardian"
 
@@ -30,6 +31,23 @@ module Middleware
         @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
         @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
         CrawlerDetection.is_blocked_crawler?(@env[USER_AGENT])
+      end
+
+      def is_ie=(val)
+        @is_ie = val ? :true : :false
+      end
+
+      def is_ie?
+        @is_ie ||= begin
+          session = @env[RACK_SESSION]
+          # don't initialize params until later
+          # otherwise you get a broken params on the request
+          params = {}
+
+          BrowserDetection.browser(@env[USER_AGENT]) === :ie ? :true : :false
+        end
+
+        @is_ie == :true
       end
 
       def is_mobile=(val)
@@ -73,7 +91,7 @@ module Middleware
       end
 
       def cache_key
-        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_ids.join(",")}#{GlobalSetting.compress_anon_cache}"
+        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|ie=#{is_ie?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_ids.join(",")}#{GlobalSetting.compress_anon_cache}"
       end
 
       def theme_ids
