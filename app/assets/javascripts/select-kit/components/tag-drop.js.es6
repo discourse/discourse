@@ -1,3 +1,4 @@
+import { makeArray } from "discourse/lib/utilities";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
 import TagsMixin from "select-kit/mixins/tags";
@@ -123,7 +124,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
     if (this.siteSettings.tags_sort_alphabetically && topTags) {
       return shortcuts.concat(topTags.sort());
     } else {
-      return shortcuts.concat(Ember.makeArray(topTags));
+      return shortcuts.concat(makeArray(topTags));
     }
   },
 

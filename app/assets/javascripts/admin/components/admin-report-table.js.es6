@@ -1,3 +1,4 @@
+import { makeArray } from "discourse/lib/utilities";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
@@ -91,7 +92,7 @@ export default Component.extend({
 
   @computed("sortLabel", "sortDirection", "model.data.[]")
   sortedData(sortLabel, sortDirection, data) {
-    data = Ember.makeArray(data);
+    data = makeArray(data);
 
     if (sortLabel) {
       const compare = (label, direction) => {
