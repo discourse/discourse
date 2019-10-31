@@ -536,7 +536,9 @@ module Discourse
   SYSTEM_USER_ID ||= -1
 
   def self.system_user
-    @system_user ||= User.find_by(id: SYSTEM_USER_ID)
+    @system_users ||= {}
+    current_db = RailsMultisite::ConnectionManagement.current_db
+    @system_users[current_db] ||= User.find_by(id: SYSTEM_USER_ID)
   end
 
   def self.store

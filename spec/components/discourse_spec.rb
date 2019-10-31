@@ -130,6 +130,12 @@ describe Discourse do
 
   end
 
+  context '#system_user' do
+    it 'returns the system user' do
+      expect(Discourse.system_user.id).to eq(-1)
+    end
+  end
+
   context "#store" do
 
     it "returns LocalStore by default" do
