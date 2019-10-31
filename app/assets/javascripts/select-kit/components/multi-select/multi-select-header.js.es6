@@ -1,3 +1,4 @@
+import { makeArray } from "discourse/lib/utilities";
 import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
@@ -39,14 +40,14 @@ export default SelectKitHeaderComponent.extend({
 
   @computed("computedContent.selection.[]")
   names(selection) {
-    return Ember.makeArray(selection)
+    return makeArray(selection)
       .map(s => s.name)
       .join(",");
   },
 
   @computed("computedContent.selection.[]")
   values(selection) {
-    return Ember.makeArray(selection)
+    return makeArray(selection)
       .map(s => s.value)
       .join(",");
   }

@@ -1,3 +1,4 @@
+import { makeArray } from "discourse/lib/utilities";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import Category from "discourse/models/category";
 
@@ -28,7 +29,7 @@ export default MultiSelectComponent.extend({
   },
 
   computeValues() {
-    return Ember.makeArray(this.categories).map(c => c.id);
+    return makeArray(this.categories).map(c => c.id);
   },
 
   mutateValues(values) {
@@ -43,7 +44,7 @@ export default MultiSelectComponent.extend({
   },
 
   computeContent() {
-    const blacklist = Ember.makeArray(this.blacklist);
+    const blacklist = makeArray(this.blacklist);
     return Category.list().filter(category => {
       return (
         this.categories.includes(category) || !blacklist.includes(category)

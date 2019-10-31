@@ -1,3 +1,4 @@
+import { makeArray } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
 import { throttle } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
@@ -293,7 +294,7 @@ export default Mixin.create({
 
     if (!this.highlightedSelection.length) {
       // try to highlight the last non locked item from the current selection
-      Ember.makeArray(this.selection)
+      makeArray(this.selection)
         .slice()
         .reverse()
         .some(selection => {
@@ -311,7 +312,7 @@ export default Mixin.create({
   },
 
   didPressSelectAll() {
-    this.highlightSelection(Ember.makeArray(this.selection));
+    this.highlightSelection(makeArray(this.selection));
   },
 
   didClickOutside(event) {

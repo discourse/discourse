@@ -1,3 +1,4 @@
+import { makeArray } from "discourse/lib/utilities";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { setting } from "discourse/lib/computed";
@@ -8,7 +9,7 @@ import PeriodComputationMixin from "admin/mixins/period-computation";
 
 function staticReport(reportType) {
   return Ember.computed("reports.[]", function() {
-    return Ember.makeArray(this.reports).find(
+    return makeArray(this.reports).find(
       report => report.type === reportType
     );
   });
@@ -95,7 +96,7 @@ export default Controller.extend(PeriodComputationMixin, {
           this.setProperties({
             dashboardFetchedAt: new Date(),
             model: adminDashboardModel,
-            reports: Ember.makeArray(adminDashboardModel.reports).map(x =>
+            reports: makeArray(adminDashboardModel.reports).map(x =>
               Report.create(x)
             )
           });
