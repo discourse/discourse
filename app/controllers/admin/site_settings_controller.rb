@@ -21,38 +21,80 @@ class Admin::SiteSettingsController < Admin::AdminController
     end
 
     update_existing_users = params[:updateExistingUsers].present?
-    previous_category_ids = (SiteSetting.send(id) || "").split("|") if update_existing_users
+    previous_value = SiteSetting.send(id) || "" if update_existing_users
 
     SiteSetting.set_and_log(id, value, current_user)
 
     if update_existing_users
-      new_category_ids = (value || "").split("|")
+      user_options = {
+        default_email_mailing_list_mode: "mailing_list_mode",
+        default_email_mailing_list_mode_frequency: "mailing_list_mode_frequency",
+        default_email_level: "email_level",
+        default_email_messages_level: "email_messages_level",
+        default_topics_automatic_unpin: "automatically_unpin_topics",
+        default_email_previous_replies: "email_previous_replies",
+        default_email_in_reply_to: "email_in_reply_to",
+        default_other_enable_quoting: "enable_quoting",
+        default_other_enable_defer: "enable_defer",
+        default_other_external_links_in_new_tab: "external_links_in_new_tab",
+        default_other_dynamic_favicon: "dynamic_favicon",
+        default_other_new_topic_duration_minutes: "new_topic_duration_minutes",
+        default_other_auto_track_topics_after_msecs: "auto_track_topics_after_msecs",
+        default_other_notification_level_when_replying: "notification_level_when_replying",
+        default_other_like_notification_frequency: "like_notification_frequency",
+        default_email_digest_frequency: "digest_after_minutes",
+        default_include_tl0_in_digests: "include_tl0_in_digests",
+        default_text_size: "text_size_key",
+        default_title_count_mode: "title_count_mode_key"
+      }
 
-      case id
-      when "default_categories_watching"
-        notification_level = NotificationLevels.all[:watching]
-      when "default_categories_tracking"
-        notification_level = NotificationLevels.all[:tracking]
-      when "default_categories_muted"
-        notification_level = NotificationLevels.all[:muted]
-      when "default_categories_watching_first_post"
-        notification_level = NotificationLevels.all[:watching_first_post]
-      end
+      new_value = value || ""
 
-      (previous_category_ids - new_category_ids).each do |category_id|
-        CategoryUser.where(category_id: category_id, notification_level: notification_level).delete_all
-      end
-
-      (new_category_ids - previous_category_ids).each do |category_id|
-        skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
-
-        User.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
-          category_users = []
-          users.each { |user| category_users << { category_id: category_id, user_id: user.id, notification_level: notification_level } }
-          CategoryUser.insert_all!(category_users)
+      if (user_option = user_options[id.to_sym]).present?
+        if user_option == "text_size_key"
+          previous_value = UserOption.text_sizes[previous_value.to_sym]
+          new_value = UserOption.text_sizes[new_value.to_sym]
+        elsif user_option == "title_count_mode_key"
+          previous_value = UserOption.title_count_modes[previous_value.to_sym]
+          new_value = UserOption.title_count_modes[new_value.to_sym]
         end
 
-        CategoryUser.where(category_id: category_id, notification_level: notification_level).first_or_create!(notification_level: notification_level)
+        UserOption.where(user_option => previous_value).update_all(user_option => new_value)
+
+        if id == "default_email_digest_frequency"
+          disable_digests = new_value == 0
+          UserOption.where(user_option => 0, email_digests: !disable_digests).update_all(email_digests: disable_digests)
+        end
+      elsif id.start_with?("default_categories_")
+        previous_category_ids = previous_value.split("|")
+        new_category_ids = new_value.split("|")
+
+        case id
+        when "default_categories_watching"
+          notification_level = NotificationLevels.all[:watching]
+        when "default_categories_tracking"
+          notification_level = NotificationLevels.all[:tracking]
+        when "default_categories_muted"
+          notification_level = NotificationLevels.all[:muted]
+        when "default_categories_watching_first_post"
+          notification_level = NotificationLevels.all[:watching_first_post]
+        end
+
+        (previous_category_ids - new_category_ids).each do |category_id|
+          CategoryUser.where(category_id: category_id, notification_level: notification_level).delete_all
+        end
+
+        (new_category_ids - previous_category_ids).each do |category_id|
+          skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
+
+          User.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
+            category_users = []
+            users.each { |user| category_users << { category_id: category_id, user_id: user.id, notification_level: notification_level } }
+            CategoryUser.insert_all!(category_users)
+          end
+
+          CategoryUser.where(category_id: category_id, notification_level: notification_level).first_or_create!(notification_level: notification_level)
+        end
       end
     end
 
