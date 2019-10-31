@@ -80,8 +80,12 @@ class Search
       cooked.scan(URI.regexp(%w{http https})) { urls << $& }
 
       urls.each do |url|
-        cooked.gsub!(url, I18n.t("search.video")) if url.match(/.(mov|mp4|webm|ogv)/)
-        cooked.gsub!(url, I18n.t("search.audio")) if url.match(/.(mp3|ogg|wav|m4a)/)
+        case File.extname(URI(url).path || "")
+        when Oneboxer::VIDEO_REGEX
+          cooked.gsub!(url, I18n.t("search.video"))
+        when Oneboxer::AUDIO_REGEX
+          cooked.gsub!(url, I18n.t("search.audio"))
+        end
       end
 
       if term
