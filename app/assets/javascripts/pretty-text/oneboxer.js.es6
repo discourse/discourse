@@ -1,8 +1,13 @@
 import { later } from "@ember/runloop";
-import { localCache, failedCache, normalize } from "pretty-text/oneboxer-cache";
-// let oneboxerCache = require("pretty-text/oneboxer-cache");
-// let localCache = oneboxerCache.localCache;
-// let failedCache = oneboxerCache.failedCache;
+import {
+  localCache,
+  failedCache,
+  setLocalCache,
+  setFailedCache,
+  resetLocalCache,
+  resetFailedCache,
+  normalize
+} from "pretty-text/oneboxer-cache";
 
 let timeout;
 const loadingQueue = [];
@@ -11,8 +16,8 @@ export const LOADING_ONEBOX_CSS_CLASS = "loading-onebox";
 
 export function resetCache() {
   loadingQueue.clear();
-  localCache = {};
-  failedCache = {};
+  resetLocalCache();
+  resetFailedCache();
 }
 
 function resolveSize(img) {
@@ -71,7 +76,7 @@ function loadNext(ajax) {
     .then(
       html => {
         let $html = $(html);
-        localCache[normalize(url)] = $html;
+        setLocalCache(normalize(url), $html);
         $elem.replaceWith($html);
         applySquareGenericOnebox($html, normalize(url));
       },
@@ -81,7 +86,7 @@ function loadNext(ajax) {
           removeLoading = false;
           loadingQueue.unshift({ url, refresh, $elem, categoryId, topicId });
         } else {
-          failedCache[normalize(url)] = true;
+          setFailedCache[normalize(url)] = true;
         }
       }
     )
