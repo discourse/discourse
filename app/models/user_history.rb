@@ -97,7 +97,8 @@ class UserHistory < ActiveRecord::Base
       web_hook_deactivate: 76,
       change_theme_setting: 77,
       disable_theme_component: 78,
-      enable_theme_component: 79
+      enable_theme_component: 79,
+      revoke_title: 80
     )
   end
 
@@ -171,7 +172,8 @@ class UserHistory < ActiveRecord::Base
       :embeddable_host_destroy,
       :change_theme_setting,
       :disable_theme_component,
-      :enable_theme_component
+      :enable_theme_component,
+      :revoke_title
     ]
   end
 

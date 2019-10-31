@@ -169,8 +169,11 @@ class Badge < ActiveRecord::Base
   end
 
   def self.display_name(name)
-    key = "badges.#{i18n_name(name)}.name"
-    I18n.t(key, default: name)
+    I18n.t(i18n_key(name), default: name)
+  end
+
+  def self.i18n_key(name)
+    "badges.#{i18n_name(name)}.name"
   end
 
   def awarded_for_trust_level?
@@ -206,6 +209,10 @@ class Badge < ActiveRecord::Base
 
   def display_name
     self.class.display_name(name)
+  end
+
+  def translation_key
+    self.class.i18n_key(name)
   end
 
   def long_description
