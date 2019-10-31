@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class EmbeddingSerializer < ApplicationSerializer
-  root 'embedding'
-
   attributes :id, :fields, :base_url
   attributes *Embedding.settings
 

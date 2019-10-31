@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class InvitedUserSerializer < BasicUserSerializer
-  root 'invited_user'
 
   attributes :topics_entered,
              :posts_read_count,

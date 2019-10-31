@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewableUserSerializer < ReviewableSerializer
-  root 'reviewable_user'
 
   attributes :link_admin, :user_fields
 

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class UploadSerializer < ApplicationSerializer
-  root 'upload'
-
   attributes :id,
              :url,
              :original_filename,

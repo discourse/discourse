@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class CategoryDetailedSerializer < BasicCategorySerializer
-  root 'category_detailed'
 
   attributes :topic_count,
              :post_count,

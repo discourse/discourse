@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class TopicListItemSerializer < ListableTopicSerializer
-  root 'topic_list_item'
-
   include TopicTagsMixin
 
   attributes :views,

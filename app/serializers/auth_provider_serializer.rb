@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AuthProviderSerializer < ApplicationSerializer
-  root 'auth_provider'
 
   attributes :name, :custom_url, :pretty_name_override, :title_override, :message_override,
              :frame_width, :frame_height, :can_connect, :can_revoke,

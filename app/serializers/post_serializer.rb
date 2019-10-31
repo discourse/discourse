@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class PostSerializer < BasicPostSerializer
-  root 'post'
 
   # To pass in additional information we might need
   INSTANCE_VARS ||= [

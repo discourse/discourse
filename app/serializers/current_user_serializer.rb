@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class CurrentUserSerializer < BasicUserSerializer
-  root 'current_user'
 
   attributes :name,
              :unread_notifications,

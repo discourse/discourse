@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewableScoreTypeSerializer < ApplicationSerializer
-  root 'reviewable_score_type'
-
   attributes :id, :title, :reviewable_priority, :icon
 
   # Allow us to share post action type translations for backwards compatibility

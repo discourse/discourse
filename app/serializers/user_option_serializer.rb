@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class UserOptionSerializer < ApplicationSerializer
-  root 'user_options'
-
   attributes :user_id,
              :mailing_list_mode,
              :mailing_list_mode_frequency,

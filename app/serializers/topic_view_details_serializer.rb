@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TopicViewDetailsSerializer < ApplicationSerializer
-  root 'topic_view_details'
 
   def self.can_attributes
     [:can_move_posts,

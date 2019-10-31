@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class TopicViewSerializer < ApplicationSerializer
-  root 'topic_view'
-
   include PostStreamSerializerMixin
   include SuggestedTopicsMixin
   include TopicTagsMixin

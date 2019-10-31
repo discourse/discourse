@@ -2,8 +2,6 @@
 
 # The most basic attributes of a topic that we need to create a link for it.
 class PostWordpressSerializer < BasicPostSerializer
-  root 'post_wordpress'
-
   attributes :post_number
 
   def avatar_template

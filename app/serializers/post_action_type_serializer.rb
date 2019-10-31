@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class PostActionTypeSerializer < ApplicationSerializer
-  root 'post_action_type'
 
   attributes(
     :id,

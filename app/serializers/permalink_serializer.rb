@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class PermalinkSerializer < ApplicationSerializer
-  root 'permalink'
-
   attributes :id, :url, :topic_id, :topic_title, :topic_url,
              :post_id, :post_url, :post_number, :post_topic_title,
              :category_id, :category_name, :category_url, :external_url

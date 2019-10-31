@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class SiteTextSerializer < ApplicationSerializer
-  root 'site_text'
-
   attributes :id, :value, :overridden?, :can_revert?
 
   def id

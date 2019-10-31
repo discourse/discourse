@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class TopicEmbedSerializer < ApplicationSerializer
-  root 'topic_embed'
-
   attributes \
     :topic_id,
     :post_id,

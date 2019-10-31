@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TopicLinkSerializer < ApplicationSerializer
-  root 'topic_link'
 
   attributes :url,
              :title,

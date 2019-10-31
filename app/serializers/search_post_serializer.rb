@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class SearchPostSerializer < BasicPostSerializer
-  root 'search_post'
-
   has_one :topic, serializer: SearchTopicListItemSerializer
 
   attributes :like_count, :blurb, :post_number

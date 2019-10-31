@@ -3,12 +3,10 @@
 class AboutSerializer < ApplicationSerializer
 
   class UserAboutSerializer < BasicUserSerializer
-    root 'user_about'
     attributes :title, :last_seen_at
   end
 
   class AboutCategoryModsSerializer < ApplicationSerializer
-    root 'about_category_mods'
     attributes :category_id
 
     has_many :moderators, serializer: UserAboutSerializer, embed: :objects

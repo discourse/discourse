@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewableSerializer < ApplicationSerializer
-  root 'reviewable'
 
   class_attribute :_payload_for_serialization
 

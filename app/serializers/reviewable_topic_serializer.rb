@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewableTopicSerializer < ApplicationSerializer
-  root 'reviewable_topic'
-
   attributes(
     :id,
     :title,

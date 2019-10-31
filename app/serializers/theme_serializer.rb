@@ -3,8 +3,6 @@
 require 'base64'
 
 class ThemeFieldSerializer < ApplicationSerializer
-  root 'theme_field'
-
   attributes :name, :target, :value, :error, :type_id, :upload_id, :url, :filename
 
   def include_url?
@@ -65,7 +63,6 @@ class RemoteThemeSerializer < ApplicationSerializer
 end
 
 class ThemeSerializer < BasicThemeSerializer
-  root :theme
   attributes :color_scheme, :color_scheme_id, :user_selectable, :remote_theme_id,
              :settings, :errors, :supported?, :description, :enabled?, :disabled_at
 

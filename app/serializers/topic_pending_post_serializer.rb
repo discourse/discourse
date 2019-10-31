@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TopicPendingPostSerializer < ApplicationSerializer
-  root 'topic_pending_post'
   attributes :id, :raw, :created_at
 
   def raw

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TopListSerializer < ApplicationSerializer
-  root 'top_list'
 
   attributes :can_create_topic,
              :draft,

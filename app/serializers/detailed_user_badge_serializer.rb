@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class DetailedUserBadgeSerializer < BasicUserBadgeSerializer
-  root 'detailed_user_badge'
-
   has_one :granted_by, serializer: UserBadgeSerializer::UserSerializer
 
   attributes :post_number, :topic_id, :topic_title

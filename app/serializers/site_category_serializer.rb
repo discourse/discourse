@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class SiteCategorySerializer < BasicCategorySerializer
-  root 'site_category'
 
   attributes :allowed_tags,
              :allowed_tag_groups,

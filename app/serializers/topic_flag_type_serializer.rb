@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TopicFlagTypeSerializer < PostActionTypeSerializer
-  root 'topic_flag_type'
 
   protected
 

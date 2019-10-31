@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AdminDetailedUserSerializer < AdminUserSerializer
-  root 'admin_detailed_user'
 
   attributes :moderator,
              :can_grant_admin,

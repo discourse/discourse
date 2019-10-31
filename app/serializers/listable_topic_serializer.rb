@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ListableTopicSerializer < BasicTopicSerializer
-  root 'listable_topic'
 
   attributes :reply_count,
              :highest_post_number,

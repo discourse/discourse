@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewableActionSerializer < ApplicationSerializer
-  root 'reviewable_action'
-
   attributes :id, :icon, :button_class, :label, :confirm_message, :description, :client_action
 
   def label

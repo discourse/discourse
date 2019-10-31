@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class SuggestedTopicSerializer < ListableTopicSerializer
-  root 'suggested_topic'
-
   include TopicTagsMixin
 
   # need to embed so we have users

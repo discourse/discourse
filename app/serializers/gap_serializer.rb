@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class GapSerializer < ApplicationSerializer
-  root 'gap'
-
   attributes :before, :after
 
   def before

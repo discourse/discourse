@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class PostRevisionSerializer < ApplicationSerializer
-  root 'post_revision'
 
   attributes :created_at,
              :post_id,

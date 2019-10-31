@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class WatchedWordListSerializer < ApplicationSerializer
-  root 'watched_word_list'
-
   attributes :actions, :words, :regular_expressions, :compiled_regular_expressions
 
   def actions

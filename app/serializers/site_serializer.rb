@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class SiteSerializer < ApplicationSerializer
-  root 'site'
 
   attributes(
     :default_archetype,

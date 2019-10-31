@@ -2,7 +2,6 @@
 
 # Deprecated, should be removed once users have sufficient opportunity to do so
 class QueuedPostSerializer < ApplicationSerializer
-  root 'queued_post'
 
   attributes(
     :id,

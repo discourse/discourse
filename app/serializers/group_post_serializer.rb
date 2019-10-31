@@ -3,8 +3,6 @@
 require_relative 'post_item_excerpt'
 
 class GroupPostSerializer < ApplicationSerializer
-  root 'group_post'
-
   include PostItemExcerpt
 
   attributes :id,

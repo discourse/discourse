@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewablePerformResultSerializer < ApplicationSerializer
-  root 'reviewable_perform_result'
 
   attributes(
     :success,

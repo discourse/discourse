@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class CategoryListSerializer < ApplicationSerializer
-  root 'category_list'
 
   attributes :can_create_category,
              :can_create_topic,

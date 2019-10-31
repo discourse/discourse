@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class FlaggedUserSerializer < BasicUserSerializer
-  root 'flagged_user'
-
   attributes :can_delete_all_posts,
              :can_be_deleted,
              :post_count,

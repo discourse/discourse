@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class EmbeddableHostSerializer < ApplicationSerializer
-  root 'embeddable_host'
 
   TO_SERIALIZE = [:id, :host, :path_whitelist, :class_name, :category_id]
 

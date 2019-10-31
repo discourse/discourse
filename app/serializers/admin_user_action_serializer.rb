@@ -3,7 +3,6 @@
 require_relative 'post_item_excerpt'
 
 class AdminUserActionSerializer < ApplicationSerializer
-  root 'admin_user_action'
   include PostItemExcerpt
 
   attributes(

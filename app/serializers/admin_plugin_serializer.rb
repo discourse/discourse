@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AdminPluginSerializer < ApplicationSerializer
-  root 'admin_plugin'
   attributes :id,
              :name,
              :version,

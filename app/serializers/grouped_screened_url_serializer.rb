@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class GroupedScreenedUrlSerializer < ApplicationSerializer
-  root 'grouped_screened_url'
-
   attributes :domain,
              :action,
              :match_count,

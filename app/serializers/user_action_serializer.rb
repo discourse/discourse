@@ -3,8 +3,6 @@
 require_relative 'post_item_excerpt'
 
 class UserActionSerializer < ApplicationSerializer
-  root 'user_action'
-
   include PostItemExcerpt
 
   attributes :action_type,

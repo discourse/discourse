@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class BasicCategorySerializer < ApplicationSerializer
-  root 'category'
 
   attributes :id,
              :name,

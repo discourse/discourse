@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class UserAuthTokenSerializer < ApplicationSerializer
-  root 'user_auth_token'
-
   include UserAuthTokensMixin
 
   attributes :seen_at

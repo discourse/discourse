@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ColorSchemeColorSerializer < ApplicationSerializer
-  root 'color_scheme_color'
-
   attributes :name, :hex, :default_hex, :is_advanced
 
   def hex

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class CategoryAndTopicListsSerializer < ApplicationSerializer
-  root 'category_and_topic_lists'
-
   has_one :category_list, serializer: CategoryListSerializer, embed: :objects
   has_one :topic_list, serializer: TopicListSerializer, embed: :objects
   has_many :users, serializer: BasicUserSerializer, embed: :objects

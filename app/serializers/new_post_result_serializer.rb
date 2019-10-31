@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class NewPostResultSerializer < ApplicationSerializer
-  root 'new_post_result'
-
   attributes :action,
              :post,
              :errors,

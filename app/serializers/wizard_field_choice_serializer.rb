@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class WizardFieldChoiceSerializer < ApplicationSerializer
-  root 'wizard_field_choice'
-
   attributes :id, :label, :extra_label, :description, :icon, :data
 
   def id

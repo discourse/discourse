@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class BasicGroupHistorySerializer < ApplicationSerializer
-  root 'basic_group_history'
-
   attributes :action,
              :subject,
              :prev_value,

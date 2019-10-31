@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class InviteSerializer < ApplicationSerializer
-  root 'invite'
 
   attributes :email, :created_at, :redeemed_at, :expired, :user
 
