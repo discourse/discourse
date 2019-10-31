@@ -1059,8 +1059,16 @@ const Composer = RestModel.extend({
       data.originalText = this.originalText;
     }
 
-    return Draft.save(this.draftKey, this.draftSequence, data)
+    return Draft.save(
+      this.draftKey,
+      this.draftSequence,
+      data,
+      this.messageBus.clientId
+    )
       .then(result => {
+        if (result.draft_sequence) {
+          this.draftSequence = result.draft_sequence;
+        }
         if (result.conflict_user) {
           this.setProperties({
             draftSaving: false,
@@ -1075,10 +1083,27 @@ const Composer = RestModel.extend({
           });
         }
       })
-      .catch(() => {
+      .catch(e => {
+        let draftStatus;
+        const xhr = e && e.jqXHR;
+
+        if (
+          xhr &&
+          xhr.status === 409 &&
+          xhr.responseJSON &&
+          xhr.responseJSON.errors &&
+          xhr.responseJSON.errors.length
+        ) {
+          const json = e.jqXHR.responseJSON;
+          draftStatus = json.errors[0];
+          if (json.extras && json.extras.description) {
+            bootbox.alert(json.extras.description);
+          }
+        }
+
         this.setProperties({
           draftSaving: false,
-          draftStatus: I18n.t("composer.drafts_offline"),
+          draftStatus: draftStatus || I18n.t("composer.drafts_offline"),
           draftConflictUser: null
         });
       });
