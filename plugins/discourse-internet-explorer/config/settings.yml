@@ -1,0 +1,3 @@
+plugins:
+  discourse_internet_explorer_enabled:
+    default: true
