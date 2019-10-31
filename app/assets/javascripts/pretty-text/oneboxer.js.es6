@@ -11,6 +11,8 @@ export const LOADING_ONEBOX_CSS_CLASS = "loading-onebox";
 
 export function resetCache() {
   loadingQueue.clear();
+  localCache = {};
+  failedCache = {};
 }
 
 function resolveSize(img) {
