@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import InputValidation from "discourse/models/input-validation";
 import debounce from "discourse/lib/debounce";
 import { setting } from "discourse/lib/computed";
@@ -15,7 +16,7 @@ export default Mixin.create({
     Discourse.User.checkUsername(null, this.accountEmail).then(result => {
       if (
         result.suggestion &&
-        (Ember.isEmpty(this.accountUsername) ||
+        (isEmpty(this.accountUsername) ||
           this.accountUsername === this.get("authOptions.username"))
       ) {
         this.setProperties({
@@ -38,7 +39,7 @@ export default Mixin.create({
     }
 
     // If blank, fail without a reason
-    if (Ember.isEmpty(accountUsername)) {
+    if (isEmpty(accountUsername)) {
       return InputValidation.create({ failed: true });
     }
 
@@ -68,7 +69,7 @@ export default Mixin.create({
 
   shouldCheckUsernameAvailability() {
     return (
-      !Ember.isEmpty(this.accountUsername) &&
+      !isEmpty(this.accountUsername) &&
       this.accountUsername.length >= this.minUsernameLength
     );
   },

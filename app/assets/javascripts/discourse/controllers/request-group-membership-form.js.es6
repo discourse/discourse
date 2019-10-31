@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
@@ -16,7 +17,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @computed("loading", "reason")
   disableSubmit(loading, reason) {
-    return loading || Ember.isEmpty(reason);
+    return loading || isEmpty(reason);
   },
 
   actions: {

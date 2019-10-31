@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias, notEmpty } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
@@ -68,7 +69,7 @@ export default Controller.extend(
       submit() {
         const userFields = this.userFields;
         let userCustomFields = {};
-        if (!Ember.isEmpty(userFields)) {
+        if (!isEmpty(userFields)) {
           userFields.forEach(function(f) {
             userCustomFields[f.get("field.id")] = f.get("value");
           });

@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias, equal, or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
@@ -34,7 +35,7 @@ export default Component.extend({
   )
   saveDisabled(updateTime, loading, publishToCategory, topicTimerCategoryId) {
     return (
-      Ember.isEmpty(updateTime) ||
+      isEmpty(updateTime) ||
       loading ||
       (publishToCategory && !topicTimerCategoryId)
     );

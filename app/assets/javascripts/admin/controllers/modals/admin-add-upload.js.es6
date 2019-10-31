@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { and, not } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -107,7 +108,7 @@ export default Controller.extend(ModalFunctionality, {
   actions: {
     updateName() {
       let name = this.name;
-      if (Ember.isEmpty(name)) {
+      if (isEmpty(name)) {
         name = $("#file-input")[0].files[0].name;
         this.set("name", name.split(".")[0]);
       }

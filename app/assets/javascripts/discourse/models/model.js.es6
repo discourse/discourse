@@ -1,10 +1,11 @@
+import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
 const Model = EmberObject.extend();
 
 Model.reopenClass({
   extractByKey(collection, klass) {
     const retval = {};
-    if (Ember.isEmpty(collection)) {
+    if (isEmpty(collection)) {
       return retval;
     }
 

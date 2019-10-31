@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
 import {
   default as computed,
@@ -48,7 +49,7 @@ const LogsNotice = EmberObject.extend({
 
   @computed("text")
   isEmpty(text) {
-    return Ember.isEmpty(text);
+    return isEmpty(text);
   },
 
   @computed("text")
@@ -62,8 +63,8 @@ const LogsNotice = EmberObject.extend({
   },
 
   @computed("isEmpty", "isAdmin")
-  hidden(isEmpty, isAdmin) {
-    return !isAdmin || isEmpty;
+  hidden(thisIsEmpty, isAdmin) {
+    return !isAdmin || thisIsEmpty;
   },
 
   @observes("text")

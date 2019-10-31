@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import { extractError } from "discourse/lib/ajax-error";
@@ -9,7 +10,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @computed("input", "loading", "result")
   disableAddButton(input, loading, result) {
-    return loading || Ember.isEmpty(input) || input.length <= 0 || result;
+    return loading || isEmpty(input) || input.length <= 0 || result;
   },
 
   actions: {

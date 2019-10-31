@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { or, not, and } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseURL from "discourse/lib/url";
@@ -114,7 +115,7 @@ export default RestModel.extend({
     }
 
     const userFilters = this.userFilters;
-    if (!Ember.isEmpty(userFilters)) {
+    if (!isEmpty(userFilters)) {
       result.username_filters = userFilters.join(",");
     }
 
@@ -361,7 +362,7 @@ export default RestModel.extend({
       });
     } else {
       const postIds = this.nextWindow;
-      if (Ember.isEmpty(postIds)) return Ember.RSVP.resolve();
+      if (isEmpty(postIds)) return Ember.RSVP.resolve();
       this.set("loadingBelow", true);
       postsWithPlaceholders.appending(postIds);
 
@@ -402,7 +403,7 @@ export default RestModel.extend({
       });
     } else {
       const postIds = this.previousWindow;
-      if (Ember.isEmpty(postIds)) return Ember.RSVP.resolve();
+      if (isEmpty(postIds)) return Ember.RSVP.resolve();
       this.set("loadingAbove", true);
 
       return this.findPostsByIds(postIds.reverse())
@@ -520,7 +521,7 @@ export default RestModel.extend({
   },
 
   removePosts(posts) {
-    if (Ember.isEmpty(posts)) {
+    if (isEmpty(posts)) {
       return;
     }
 
@@ -955,7 +956,7 @@ export default RestModel.extend({
   },
 
   loadIntoIdentityMap(postIds) {
-    if (Ember.isEmpty(postIds)) {
+    if (isEmpty(postIds)) {
       return Ember.RSVP.resolve([]);
     }
 

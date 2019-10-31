@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -31,7 +32,7 @@ export default Controller.extend(ModalFunctionality, {
   @computed("saving", "date", "validTimestamp")
   buttonDisabled(saving, date, validTimestamp) {
     if (saving || validTimestamp) return true;
-    return Ember.isEmpty(date);
+    return isEmpty(date);
   },
 
   onShow() {

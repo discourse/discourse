@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { empty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import {
@@ -37,7 +38,7 @@ export default Controller.extend({
       this.set("taken", false);
       this.set("errorMessage", null);
 
-      if (Ember.isEmpty(this.newUsername)) return;
+      if (isEmpty(this.newUsername)) return;
       if (this.unchanged) return;
 
       Discourse.User.checkUsername(

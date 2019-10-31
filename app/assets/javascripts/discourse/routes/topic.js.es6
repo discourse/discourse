@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { cancel } from "@ember/runloop";
 import { scheduleOnce } from "@ember/runloop";
 import { later } from "@ember/runloop";
@@ -220,7 +221,7 @@ const TopicRoute = DiscourseRoute.extend({
       userFilters = postStream.get("userFilters");
 
     userFilters.clear();
-    if (!Ember.isEmpty(usernames) && usernames !== "undefined") {
+    if (!isEmpty(usernames) && usernames !== "undefined") {
       userFilters.addObjects(usernames.split(","));
     }
 

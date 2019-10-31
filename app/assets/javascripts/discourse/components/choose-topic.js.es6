@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import debounce from "discourse/lib/debounce";
@@ -39,7 +40,7 @@ export default Component.extend({
 
     const currentTopicId = this.currentTopicId;
 
-    if (Ember.isEmpty(title)) {
+    if (isEmpty(title)) {
       this.setProperties({ topics: null, loading: false });
       return;
     }

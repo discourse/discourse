@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
@@ -15,7 +16,7 @@ export default DiscourseRoute.extend({
   setupController(controller, model) {
     if (
       model.get("isNew") ||
-      Ember.isEmpty(model.get("web_hook_event_types"))
+      isEmpty(model.get("web_hook_event_types"))
     ) {
       model.set("web_hook_event_types", controller.get("defaultEventTypes"));
     }

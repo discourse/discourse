@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import DiscourseURL from "discourse/lib/url";
@@ -31,7 +32,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @observes("model.description")
   changeSize() {
-    if (!Ember.isEmpty(this.get("model.description"))) {
+    if (!isEmpty(this.get("model.description"))) {
       this.set("modal.modalClass", "edit-category-modal full");
     } else {
       this.set("modal.modalClass", "edit-category-modal small");

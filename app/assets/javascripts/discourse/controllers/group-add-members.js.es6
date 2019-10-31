@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import { extractError } from "discourse/lib/ajax-error";
@@ -18,7 +19,7 @@ export default Controller.extend(ModalFunctionality, {
 
       const model = this.model;
       const usernames = model.get("usernames");
-      if (Ember.isEmpty(usernames)) {
+      if (isEmpty(usernames)) {
         return;
       }
       let promise;

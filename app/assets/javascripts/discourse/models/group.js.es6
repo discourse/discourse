@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { notEmpty, equal } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -27,7 +28,7 @@ const Group = RestModel.extend({
 
   @computed("automatic_membership_email_domains")
   emailDomains(value) {
-    return Ember.isEmpty(value) ? "" : value;
+    return isEmpty(value) ? "" : value;
   },
 
   @computed("automatic")
@@ -44,7 +45,7 @@ const Group = RestModel.extend({
   },
 
   findMembers(params) {
-    if (Ember.isEmpty(this.name) || !this.can_see_members) {
+    if (isEmpty(this.name) || !this.can_see_members) {
       return;
     }
 

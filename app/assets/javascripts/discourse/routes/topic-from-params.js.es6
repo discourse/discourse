@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { scheduleOnce } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
@@ -68,7 +69,7 @@ export default DiscourseRoute.extend({
         }
         DiscourseURL.jumpToPost(closest, opts);
 
-        if (!Ember.isEmpty(topic.draft)) {
+        if (!isEmpty(topic.draft)) {
           composerController.open({
             draft: Draft.getLocal(topic.draft_key, topic.draft),
             draftKey: topic.draft_key,

@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { findRawTemplate } from "discourse/lib/raw-templates";
@@ -53,7 +54,7 @@ export function translateResults(results, opts) {
       const fullName = Handlebars.Utils.escapeExpression(
         group.full_name || group.display_name
       );
-      const flairUrl = Ember.isEmpty(group.flair_url)
+      const flairUrl = isEmpty(group.flair_url)
         ? null
         : Handlebars.Utils.escapeExpression(group.flair_url);
       const flairColor = Handlebars.Utils.escapeExpression(group.flair_color);
