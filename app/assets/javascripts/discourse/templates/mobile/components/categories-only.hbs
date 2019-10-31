@@ -28,7 +28,9 @@
               <td>
                 <div class='subcategories'>
                   {{#each c.subcategories as |subcategory|}}
-                    {{category-link subcategory}}
+                    {{#unless subcategory.isMuted}}
+                      {{category-link subcategory}}
+                    {{/unless}}
                   {{/each}}
                 </div>
               </td>
