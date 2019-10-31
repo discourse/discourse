@@ -395,6 +395,14 @@ describe TagsController do
             category_names: category.name
           ))
         end
+
+        it "can filter on category without q param" do
+          nope = Fabricate(:tag, name: 'nope')
+          get "/tags/filter/search.json", params: { categoryId: category.id }
+          expect(response.status).to eq(200)
+          json = ::JSON.parse(response.body)
+          expect(json["results"].map { |j| j["id"] }.sort).to eq([yup.name])
+        end
       end
 
       it "matches tags after sanitizing input" do
