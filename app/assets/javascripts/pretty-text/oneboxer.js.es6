@@ -1,14 +1,16 @@
+import { later } from "@ember/runloop";
+import { localCache, failedCache, normalize } from "pretty-text/oneboxer-cache";
+// let oneboxerCache = require("pretty-text/oneboxer-cache");
+// let localCache = oneboxerCache.localCache;
+// let failedCache = oneboxerCache.failedCache;
+
 let timeout;
 const loadingQueue = [];
-let localCache = {};
-let failedCache = {};
 
 export const LOADING_ONEBOX_CSS_CLASS = "loading-onebox";
 
 export function resetCache() {
   loadingQueue.clear();
-  localCache = {};
-  failedCache = {};
 }
 
 function resolveSize(img) {
@@ -82,13 +84,11 @@ function loadNext(ajax) {
       }
     )
     .finally(() => {
-      timeout = setTimeout(() => {
-        loadNext(ajax);
-        if (removeLoading) {
-          $elem.removeClass(LOADING_ONEBOX_CSS_CLASS);
-          $elem.data("onebox-loaded");
-        }
-      }, timeoutMs);
+      timeout = later(() => loadNext(ajax), timeoutMs);
+      if (removeLoading) {
+        $elem.removeClass(LOADING_ONEBOX_CSS_CLASS);
+        $elem.data("onebox-loaded");
+      }
     });
 }
 
@@ -131,17 +131,6 @@ export function load({
   if (synchronous) {
     return loadNext(ajax);
   } else {
-    timeout = timeout || setTimeout(() => loadNext(ajax), 150);
+    timeout = timeout || later(() => loadNext(ajax), 150);
   }
-}
-
-// Sometimes jQuery will return URLs with trailing slashes when the
-// `href` didn't have them.
-function normalize(url) {
-  return url.replace(/\/$/, "");
-}
-
-export function lookupCache(url) {
-  const cached = localCache[normalize(url)];
-  return cached && cached.prop("outerHTML");
 }
