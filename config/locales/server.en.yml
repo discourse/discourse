@@ -871,6 +871,10 @@ en:
       short_description: "Like this post"
       long_form: "liked this"
 
+  draft:
+    sequence_conflict_error:
+      title: "draft error"
+      description: "Draft is being edited in another window. Please reload this page."
   draft_backup:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"

@@ -21,11 +21,11 @@ Draft.reopenClass({
     return current;
   },
 
-  save(key, sequence, data) {
+  save(key, sequence, data, clientId) {
     data = typeof data === "string" ? data : JSON.stringify(data);
     return ajax("/draft.json", {
       type: "POST",
-      data: { draft_key: key, sequence, data }
+      data: { draft_key: key, sequence, data, owner: clientId }
     });
   }
 });
