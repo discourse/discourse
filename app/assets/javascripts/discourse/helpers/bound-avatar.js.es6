@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { htmlHelper } from "discourse-common/lib/helpers";
 import { avatarImg } from "discourse/lib/utilities";
@@ -8,6 +9,6 @@ export default htmlHelper((user, size) => {
     return "<div class='avatar-placeholder'></div>";
   }
 
-  const avatarTemplate = Ember.get(user, "avatar_template");
+  const avatarTemplate = get(user, "avatar_template");
   return avatarImg(addExtraUserClasses(user, { size, avatarTemplate }));
 });

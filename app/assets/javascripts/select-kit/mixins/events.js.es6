@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { makeArray } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
 import { throttle } from "@ember/runloop";
@@ -298,7 +299,7 @@ export default Mixin.create({
         .slice()
         .reverse()
         .some(selection => {
-          if (!Ember.get(selection, "locked")) {
+          if (!get(selection, "locked")) {
             this.highlightSelection(selection);
             return true;
           }

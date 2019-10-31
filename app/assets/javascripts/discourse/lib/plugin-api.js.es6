@@ -463,7 +463,7 @@ class PluginApi {
 
    ```javascript
    api.customUserAvatarClasses(user => {
-      if (Ember.get(user, 'primary_group_name') === 'managers') {
+      if (get(user, 'primary_group_name') === 'managers') {
         return ['managers'];
       }
     });

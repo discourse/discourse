@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { searchContextDescription } from "discourse/lib/search";
 import { h } from "virtual-dom";
 import { createWidget } from "discourse/widgets/widget";
@@ -52,8 +53,8 @@ createWidget("search-context", {
     const result = [];
     if (ctx) {
       const description = searchContextDescription(
-        Ember.get(ctx, "type"),
-        Ember.get(ctx, "user.username") || Ember.get(ctx, "category.name")
+        get(ctx, "type"),
+        get(ctx, "user.username") || get(ctx, "category.name")
       );
       result.push(
         h("label", [

@@ -1,3 +1,5 @@
+import { get } from "@ember/object";
+
 // This is a mechanism for quickly rendering templates which is Ember aware
 // templates are highly compatible with Ember so you don't need to worry about calling "get"
 // and computed properties function, additionally it uses stringParams like Ember does
@@ -24,7 +26,7 @@ RawHandlebars.helpers["get"] = function(context, options) {
     context = context.slice(context.indexOf(".") + 1);
   }
 
-  return val === undefined ? Ember.get(firstContext, context) : val;
+  return val === undefined ? get(firstContext, context) : val;
 };
 
 // adds compatability so this works with stringParams
@@ -45,7 +47,7 @@ RawHandlebars.registerHelper("each", function(
   contextName,
   options
 ) {
-  var list = Ember.get(this, contextName);
+  var list = get(this, contextName);
   var output = [];
   var innerContext = objectCreate(this);
   for (var i = 0; i < list.length; i++) {
@@ -178,7 +180,7 @@ RawHandlebars.get = function(ctx, property, options) {
       ? view.getStream(property).value()
       : view.getAttr(property);
   } else {
-    return Ember.get(ctx, property);
+    return get(ctx, property);
   }
 };
 
@@ -194,7 +196,7 @@ export function compile() {
   return RawHandlebars.compile.apply(this, arguments);
 }
 
-export function get() {
+export function rawGet() {
   return RawHandlebars.get.apply(this, arguments);
 }
 

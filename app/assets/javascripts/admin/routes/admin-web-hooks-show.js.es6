@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import DiscourseRoute from "discourse/routes/discourse";
 
@@ -10,7 +11,7 @@ export default DiscourseRoute.extend({
     if (params.web_hook_id === "new") {
       return this.store.createRecord("web-hook");
     }
-    return this.store.find("web-hook", Ember.get(params, "web_hook_id"));
+    return this.store.find("web-hook", get(params, "web_hook_id"));
   },
 
   setupController(controller, model) {

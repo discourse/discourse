@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import {
@@ -390,8 +391,8 @@ const TopicTrackingState = Discourse.Model.extend({
       );
     }
 
-    let categoryId = category ? Ember.get(category, "id") : null;
-    let categoryName = category ? Ember.get(category, "name") : null;
+    let categoryId = category ? get(category, "id") : null;
+    let categoryName = category ? get(category, "name") : null;
 
     if (name === "new") {
       return this.countNew(categoryId);
