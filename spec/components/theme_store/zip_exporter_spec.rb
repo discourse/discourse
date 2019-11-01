@@ -3,8 +3,7 @@
 require 'rails_helper'
 require 'theme_store/zip_exporter'
 
-# This test is flaky
-xdescribe ThemeStore::ZipExporter do
+describe ThemeStore::ZipExporter do
   let!(:theme) do
     Fabricate(:theme, name: "Header Icons").tap do |theme|
       theme.set_field(target: :common, name: :body_tag, value: "<b>testtheme1</b>")
