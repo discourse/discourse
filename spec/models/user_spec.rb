@@ -159,6 +159,16 @@ describe User do
     end
   end
 
+  context '.set_default_tags_preferences' do
+    let(:tag) { Fabricate(:tag) }
+
+    it "should set default tag preferences when new user created" do
+      SiteSetting.default_tags_watching = tag.name
+      user = Fabricate(:user)
+      expect(TagUser.exists?(tag_id: tag.id, user_id: user.id, notification_level: TagUser.notification_levels[:watching])).to be_truthy
+    end
+  end
+
   describe 'reviewable' do
     let(:user) { Fabricate(:user, active: false) }
     fab!(:admin) { Fabricate(:admin) }

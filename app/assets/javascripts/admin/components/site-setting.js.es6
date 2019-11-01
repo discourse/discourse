@@ -40,6 +40,10 @@ export default Component.extend(BufferedContent, SettingComponent, {
         "default_categories_tracking",
         "default_categories_muted",
         "default_categories_watching_first_post",
+        "default_tags_watching",
+        "default_tags_tracking",
+        "default_tags_muted",
+        "default_tags_watching_first_post",
         "default_text_size",
         "default_title_count_mode"
       ];
