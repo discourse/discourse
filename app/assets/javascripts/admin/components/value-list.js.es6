@@ -1,4 +1,4 @@
-import { makeArray } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import { empty, alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import { on } from "ember-addons/ember-computed-decorators";

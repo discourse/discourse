@@ -2,7 +2,7 @@ import MultiSelectComponent from "select-kit/components/multi-select";
 import TagsMixin from "select-kit/mixins/tags";
 import renderTag from "discourse/lib/render-tag";
 import computed from "ember-addons/ember-computed-decorators";
-import { makeArray } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 const { get, run } = Ember;
 
 export default MultiSelectComponent.extend(TagsMixin, {

@@ -1,4 +1,4 @@
-import { makeArray } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import { debounce } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
