@@ -1465,10 +1465,14 @@ class User < ActiveRecord::Base
 
   def check_if_title_is_badged_granted
     if title_changed? && !new_record? && user_profile
-      user_has_badge_like_title = title.present? && badges.find do |badge|
+      badge_matching_title = title.present? && badges.find do |badge|
         badge.allow_title? && (badge.display_name == title || badge.name == title)
-      end.present?
-      user_profile.update_column(:badge_granted_title, user_has_badge_like_title)
+      end
+      user_has_badge_like_title = badge_matching_title.present?
+      user_profile.update(
+        badge_granted_title: user_has_badge_like_title,
+        granted_title_badge_id: user_has_badge_like_title ? badge_matching_title.id : nil
+      )
     end
   end
 

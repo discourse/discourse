@@ -2000,6 +2000,7 @@ describe User do
       user.badges.reload
       user.update!(title: badge.name)
       expect(user.user_profile.reload.badge_granted_title).to eq(true)
+      expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
 
       user.update!(title: nil)
       expect(user.user_profile.reload.badge_granted_title).to eq(false)
@@ -2018,6 +2019,7 @@ describe User do
         badge.update!(allow_title: true)
         user.update!(title: customized_badge_name)
         expect(user.user_profile.reload.badge_granted_title).to eq(true)
+        expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
       end
 
       after do

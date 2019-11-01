@@ -209,7 +209,7 @@ describe BadgeGranter do
         StaffActionLogger.any_instance.expects(:log_badge_revoke).with(user_badge)
         StaffActionLogger.any_instance.expects(:log_title_revoke).with(
           user,
-          revoke_reason: 'User title was same as badge name or custom badge name',
+          revoke_reason: 'user title was same as revoked badge name or custom badge name',
           previous_value: user_badge.user.title
         )
         BadgeGranter.revoke(user_badge, revoked_by: admin)

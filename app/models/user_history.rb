@@ -98,7 +98,8 @@ class UserHistory < ActiveRecord::Base
       change_theme_setting: 77,
       disable_theme_component: 78,
       enable_theme_component: 79,
-      revoke_title: 80
+      revoke_title: 80,
+      change_title: 81
     )
   end
 
@@ -173,7 +174,8 @@ class UserHistory < ActiveRecord::Base
       :change_theme_setting,
       :disable_theme_component,
       :enable_theme_component,
-      :revoke_title
+      :revoke_title,
+      :change_title
     ]
   end
 

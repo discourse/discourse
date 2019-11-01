@@ -81,7 +81,7 @@ class BadgeGranter
         if options[:revoked_by]
           StaffActionLogger.new(options[:revoked_by]).log_title_revoke(
             user_badge.user,
-            revoke_reason: 'User title was same as badge name or custom badge name',
+            revoke_reason: 'user title was same as revoked badge name or custom badge name',
             previous_value: user_badge.user.title
           )
         end
