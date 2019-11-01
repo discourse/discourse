@@ -3,6 +3,7 @@
 @import "./common/foundation/variables";
 @import "./common/foundation/colors";
 @import "./common/foundation/mixins";
+@import "./common/components/buttons";
 
 article.post {
   border-bottom: 1px solid #ddd;
@@ -177,17 +178,30 @@ div.lightbox-wrapper {
 }
 
 .new-topic-btn {
-  display: block;
-  width: 100%;
-  line-height: 34px;
-  border: none;
-  border-bottom: 1px solid $primary-low;
-  color: $primary;
-  background: transparent;
-}
+  margin-left: 0.5rem;
+  margin-top: 0.5rem;
 
-.new-topic-btn.complete {
-  line-height: 60px;
+  &:hover {
+    background: #006da3;
+  }
+
+  span {
+    display: inline-block;
+    vertical-align: middle;
+    padding-bottom: 2px;
+  }
+
+  .new-topic-btn__icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 2px;
+    background-image: svg-uri(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 448 512" fill="white"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg>'
+        );
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: top center;
+  }
 }
 
 .topics-list {
