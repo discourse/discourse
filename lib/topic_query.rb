@@ -663,7 +663,7 @@ class TopicQuery
     options[:visible] = false if @user && @user.id == options[:filtered_to_user]
 
     # Start with a list of all topics
-    result = Topic.unscoped
+    result = Topic.unscoped.includes(:category)
 
     if @user
       result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
@@ -683,7 +683,7 @@ class TopicQuery
               SELECT :category_id
             ) AND
             topics.id NOT IN (
-              SELECT c3.topic_id FROM categories c3 WHERE c3.parent_category_id = :category_id
+              SELECT c3.topic_id FROM categories c3 WHERE c3.parent_category_id = :category_id AND c3.topic_id IS NOT NULL
             )
           SQL
         result = result.where(sql, category_id: category_id)
@@ -753,7 +753,7 @@ class TopicQuery
     end
 
     result = apply_ordering(result, options)
-    result = result.listable_topics.includes(:category)
+    result = result.listable_topics
 
     if options[:exclude_category_ids] && options[:exclude_category_ids].is_a?(Array) && options[:exclude_category_ids].size > 0
       result = result.where("categories.id NOT IN (?)", options[:exclude_category_ids].map(&:to_i)).references(:categories)
