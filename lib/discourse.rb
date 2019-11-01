@@ -216,7 +216,7 @@ module Discourse
     plugins.select do |plugin|
       next if args[:include_official] == false && plugin.metadata.official?
       next if args[:include_unofficial] == false && !plugin.metadata.official?
-      next if args[:include_disabled] == false && !plugin.enabled?
+      next if !args[:include_disabled] && !plugin.enabled?
 
       true
     end
