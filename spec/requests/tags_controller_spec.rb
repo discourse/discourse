@@ -3,6 +3,14 @@
 require 'rails_helper'
 
 describe TagsController do
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:regular_user) { Fabricate(:trust_level_4) }
+  fab!(:moderator) { Fabricate(:moderator) }
+
+  fab!(:category)  { Fabricate(:category) }
+  fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
+
   before do
     SiteSetting.tagging_enabled = true
   end
@@ -39,7 +47,7 @@ describe TagsController do
     context "when user can admin tags" do
 
       it "succesfully retrieve all tags" do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
 
         get "/tags.json"
 
@@ -53,9 +61,7 @@ describe TagsController do
   end
 
   describe '#show' do
-    before do
-      Fabricate(:tag, name: 'test')
-    end
+    fab!(:tag) { Fabricate(:tag, name: 'test') }
 
     it "should return the right response" do
       get "/tags/test"
@@ -73,7 +79,7 @@ describe TagsController do
       get "/tags/test"
       expect(response.status).to eq(404)
 
-      sign_in(Fabricate(:admin))
+      sign_in(admin)
 
       get "/tags/test"
       expect(response.status).to eq(200)
@@ -81,21 +87,20 @@ describe TagsController do
   end
 
   describe '#check_hashtag' do
-    fab!(:tag) { Fabricate(:tag, name: 'test') }
+    fab!(:tag) { Fabricate(:tag) }
 
     it "should return the right response" do
       get "/tags/check.json", params: { tag_values: [tag.name] }
 
       expect(response.status).to eq(200)
 
-      tag = JSON.parse(response.body)["valid"].first
-      expect(tag["value"]).to eq('test')
+      response_tag = JSON.parse(response.body)["valid"].first
+      expect(response_tag["value"]).to eq(tag.name)
     end
   end
 
   describe "#update" do
     fab!(:tag) { Fabricate(:tag) }
-    fab!(:admin) { Fabricate(:admin) }
 
     before do
       tag
@@ -117,10 +122,7 @@ describe TagsController do
   end
 
   describe '#personal_messages' do
-    fab!(:regular_user) { Fabricate(:trust_level_4) }
-    fab!(:moderator) { Fabricate(:moderator) }
-    fab!(:admin) { Fabricate(:admin) }
-    let(:personal_message) do
+    fab!(:personal_message) do
       Fabricate(:private_message_topic, user: regular_user, topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: regular_user),
         Fabricate.build(:topic_allowed_user, user: moderator),
@@ -128,9 +130,10 @@ describe TagsController do
       ])
     end
 
+    fab!(:tag) { Fabricate(:tag, topics: [personal_message], name: 'test') }
+
     before do
       SiteSetting.allow_staff_to_tag_pms = true
-      Fabricate(:tag, topics: [personal_message], name: 'test')
     end
 
     context "as a regular user" do
@@ -191,12 +194,10 @@ describe TagsController do
     fab!(:tag)       { Fabricate(:tag) }
     fab!(:other_tag) { Fabricate(:tag) }
     fab!(:third_tag) { Fabricate(:tag) }
-    fab!(:category)  { Fabricate(:category) }
-    fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
 
     fab!(:single_tag_topic) { Fabricate(:topic, tags: [tag]) }
-    let(:multi_tag_topic)  { Fabricate(:topic, tags: [tag, other_tag]) }
-    let(:all_tag_topic)    { Fabricate(:topic, tags: [tag, other_tag, third_tag]) }
+    fab!(:multi_tag_topic)  { Fabricate(:topic, tags: [tag, other_tag]) }
+    fab!(:all_tag_topic)    { Fabricate(:topic, tags: [tag, other_tag, third_tag]) }
 
     context 'tagging disabled' do
       it "returns 404" do
@@ -292,7 +293,6 @@ describe TagsController do
       end
 
       context "when logged in" do
-        fab!(:user) { Fabricate(:user) }
 
         before do
           sign_in(user)
@@ -442,7 +442,7 @@ describe TagsController do
   describe '#destroy' do
     context 'tagging enabled' do
       before do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
       end
 
       context 'with an existent tag name' do
@@ -467,7 +467,7 @@ describe TagsController do
 
   describe '#unused' do
     it "fails if you can't manage tags" do
-      sign_in(Fabricate(:user))
+      sign_in(user)
       get "/tags/unused.json"
       expect(response.status).to eq(403)
       delete "/tags/unused.json"
@@ -476,7 +476,7 @@ describe TagsController do
 
     context 'logged in' do
       before do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
       end
 
       context 'with some tags' do
@@ -525,13 +525,13 @@ describe TagsController do
       let(:filename) { 'tags.csv' }
 
       it "fails if you can't manage tags" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         post "/tags/upload.json", params: { file: file, name: filename }
         expect(response.status).to eq(403)
       end
 
       it "allows staff to bulk upload tags" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         post "/tags/upload.json", params: { file: file, name: filename }
         expect(response.status).to eq(200)
         expect(Tag.pluck(:name)).to contain_exactly("tag1", "capitaltag2", "spaced-tag", "tag3", "tag4")
@@ -540,7 +540,7 @@ describe TagsController do
       end
 
       it "fails gracefully with invalid input" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
 
         expect do
           post "/tags/upload.json", params: { file: invalid_file, name: filename }
