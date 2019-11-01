@@ -296,6 +296,7 @@ en:
       other: "%{count} likes"
     last_reply: "Last reply"
     created: "Created"
+    new_topic: "Create new topic"
 
   no_mentions_allowed: "Sorry, you can't mention other users."
   too_many_mentions:
