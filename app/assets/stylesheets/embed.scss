@@ -176,6 +176,20 @@ div.lightbox-wrapper {
   margin-bottom: 20px;
 }
 
+.new-topic-btn {
+  display: block;
+  width: 100%;
+  line-height: 34px;
+  border: none;
+  border-bottom: 1px solid $primary-low;
+  color: $primary;
+  background: transparent;
+}
+
+.new-topic-btn.complete {
+  line-height: 60px;
+}
+
 .topics-list {
   width: 100%;
 

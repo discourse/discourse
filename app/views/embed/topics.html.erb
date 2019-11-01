@@ -1,10 +1,10 @@
 <%- if @list && @list.topics.present? %>
   <%- if @allow_create %>
     <%= link_to @create_url, target: "_blank" do |link| %>
-      <button class="new-topic-btn">
-        <span class="new-topic-btn__icon"></span>
-        <span class="new-topic-btn__text">Create New Topic!</span>
-    </button>
+      <button class=<%="new-topic-btn" + (@template == "complete" ? " complete" : "") %>>
+        <span class=<%="new-topic-btn__text" if @template == "complete" %>></span>
+        <span class=<%="new-topic-btn__icon" if @template == "complete" %>>Create New Topic!</span>
+      </button>
     <%- end %>
   <%- end %>
   <div class='topics-list' data-embed-state='loaded' <%- if @embed_id %>data-embed-id="<%= @embed_id %>"<%- end %>>
