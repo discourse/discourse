@@ -60,7 +60,7 @@ class ThemeField < ActiveRecord::Base
   validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
-  BASE_COMPILER_VERSION = 13
+  BASE_COMPILER_VERSION = 14
   DEPENDENT_CONSTANTS = [BASE_COMPILER_VERSION,
                         GlobalSetting.cdn_url]
   COMPILER_VERSION = Digest::SHA1.hexdigest(DEPENDENT_CONSTANTS.join)
@@ -181,19 +181,24 @@ class ThemeField < ActiveRecord::Base
       data = translation_data
 
       js = <<~JS
-        /* Translation data for theme #{self.theme_id} (#{self.name})*/
-        const data = #{data.to_json};
+        export default {
+          name: "theme-#{theme_id}-translations",
+          initialize() {
+            /* Translation data for theme #{self.theme_id} (#{self.name})*/
+            const data = #{data.to_json};
 
-        for (let lang in data){
-          let cursor = I18n.translations;
-          for (let key of [lang, "js", "theme_translations"]){
-            cursor = cursor[key] = cursor[key] || {};
+            for (let lang in data){
+              let cursor = I18n.translations;
+              for (let key of [lang, "js", "theme_translations"]){
+                cursor = cursor[key] = cursor[key] || {};
+              }
+              cursor[#{self.theme_id}] = data[lang];
+            }
           }
-          cursor[#{self.theme_id}] = data[lang];
-        }
+        };
       JS
 
-      js_compiler.append_plugin_script(js, 0)
+      js_compiler.append_module(js, "discourse/pre-initializers/theme-#{theme_id}-translations", include_variables: false)
     rescue ThemeTranslationParser::InvalidYaml => e
       errors << e.message
     end
