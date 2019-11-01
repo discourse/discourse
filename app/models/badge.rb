@@ -176,6 +176,12 @@ class Badge < ActiveRecord::Base
     "badges.#{i18n_name(name)}.name"
   end
 
+  def self.find_system_badge_id_from_translation_key(translation_key)
+    return unless translation_key.starts_with?('badges.')
+    badge_name_klass = translation_key.split('.').second.camelize
+    "Badge::#{badge_name_klass}".constantize
+  end
+
   def awarded_for_trust_level?
     id <= 4
   end

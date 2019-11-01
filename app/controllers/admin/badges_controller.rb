@@ -125,6 +125,8 @@ class Admin::BadgesController < Admin::AdminController
       badge.save!
     end
 
+    BulkUserTitleUpdater.update_titles_for_granted_badge(badge.name, badge.id) if opts[:new].blank?
+
     errors
   rescue ActiveRecord::RecordInvalid
     errors.push(*badge.errors.full_messages)
