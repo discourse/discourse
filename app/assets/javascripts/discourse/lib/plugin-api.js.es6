@@ -46,7 +46,7 @@ import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.34";
+const PLUGIN_API_VERSION = "0.8.35";
 
 class PluginApi {
   constructor(version, container) {
@@ -736,7 +736,9 @@ class PluginApi {
    *   displayName: "bugs"
    *   href: "/c/bugs",
    *   customFilter: (category, args, router) => { category && category.name !== 'bug' }
-   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') "/a-feature"; }
+   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') "/a-feature"; },
+   *   before: "top",
+   *   forceActive(category, args, router) => router.currentURL === "/a/b/c/d";
    * })
    */
   addNavigationBarItem(item) {
@@ -760,6 +762,14 @@ class PluginApi {
         const router = this.container.lookup("service:router");
         item.customFilter = function(category, args) {
           return customFilter(category, args, router);
+        };
+      }
+
+      const forceActive = item.forceActive;
+      if (forceActive) {
+        const router = this.container.lookup("service:router");
+        item.forceActive = function(category, args) {
+          return forceActive(category, args, router);
         };
       }
 

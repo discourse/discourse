@@ -15,8 +15,11 @@ export default Component.extend(
     hidden: false,
     rerenderTriggers: ["content.count"],
 
-    @computed("content.filterMode", "filterMode")
-    active(contentFilterMode, filterMode) {
+    @computed("content.filterMode", "filterMode", "content.active")
+    active(contentFilterMode, filterMode, active) {
+      if (active !== undefined) {
+        return active;
+      }
       return (
         contentFilterMode === filterMode ||
         filterMode.indexOf(contentFilterMode) === 0
