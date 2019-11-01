@@ -16,10 +16,7 @@ export default Mixin.create({
   // Validate the name.
   @computed("accountName")
   nameValidation() {
-    if (
-      this.siteSettings.full_name_required &&
-      isEmpty(this.accountName)
-    ) {
+    if (this.siteSettings.full_name_required && isEmpty(this.accountName)) {
       return InputValidation.create({ failed: true });
     }
 

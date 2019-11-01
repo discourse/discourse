@@ -64,11 +64,7 @@ export default Component.extend({
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (
-      isPrivateTopic &&
-      isEmpty(groupNames) &&
-      emailValid(emailTrimmed)
-    ) {
+    if (isPrivateTopic && isEmpty(groupNames) && emailValid(emailTrimmed)) {
       return true;
     }
 

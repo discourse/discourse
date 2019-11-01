@@ -78,9 +78,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
         .map(field => {
           Ember.set(field, "dasherized_name", field.get("name").dasherize());
           const value = userFields ? userFields[field.get("id")] : null;
-          return isEmpty(value)
-            ? null
-            : EmberObject.create({ value, field });
+          return isEmpty(value) ? null : EmberObject.create({ value, field });
         })
         .compact();
     }

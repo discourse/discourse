@@ -95,10 +95,7 @@ const User = RestModel.extend({
 
   @computed("profile_background_upload_url")
   profileBackgroundUrl(bgUrl) {
-    if (
-      isEmpty(bgUrl) ||
-      !Discourse.SiteSettings.allow_profile_backgrounds
-    ) {
+    if (isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) {
       return "".htmlSafe();
     }
     return (
