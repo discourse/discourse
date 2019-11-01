@@ -1,9 +1,9 @@
 import { findHelper } from "discourse-common/lib/helpers";
+import { get } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 
 /* global requirejs, require */
 var classify = Ember.String.classify;
-var get = Ember.get;
 
 const _options = {};
 
