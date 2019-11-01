@@ -136,7 +136,7 @@ class Toolbar {
       shortcut: "Shift+7",
       title: "composer.olist_title",
       perform: e =>
-        e.applyList(i => (!i ? "1. " : `${parseInt(i) + 1}. `), "list_item")
+        e.applyList(i => (!i ? "1. " : `${parseInt(i, 10) + 1}. `), "list_item")
     });
 
     if (siteSettings.support_mixed_text_direction) {

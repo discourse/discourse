@@ -255,7 +255,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     $menuPanels.each((idx, panel) => {
       const $panel = $(panel);
       const $headerCloak = $(".header-cloak");
-      let width = parseInt($panel.attr("data-max-width") || 300);
+      let width = parseInt($panel.attr("data-max-width"), 10) || 300;
       if (windowWidth - width < 50) {
         width = windowWidth - 50;
       }

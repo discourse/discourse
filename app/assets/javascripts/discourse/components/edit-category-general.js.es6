@@ -76,7 +76,7 @@ export default buildCategoryPanel("general", {
       name,
       color,
       text_color: textColor,
-      parent_category_id: parseInt(parentCategoryId),
+      parent_category_id: parseInt(parentCategoryId, 10),
       read_restricted: category.get("read_restricted")
     });
     return categoryBadgeHTML(c, { link: false });

@@ -19,13 +19,13 @@ export default Component.extend({
 
   @computed("model.visibility_level", "model.public_admission")
   disableMembershipRequestSetting(visibility_level, publicAdmission) {
-    visibility_level = parseInt(visibility_level);
+    visibility_level = parseInt(visibility_level, 10);
     return publicAdmission || visibility_level > 1;
   },
 
   @computed("model.visibility_level", "model.allow_membership_requests")
   disablePublicSetting(visibility_level, allowMembershipRequests) {
-    visibility_level = parseInt(visibility_level);
+    visibility_level = parseInt(visibility_level, 10);
     return allowMembershipRequests || visibility_level > 1;
   }
 });

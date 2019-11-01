@@ -15,7 +15,7 @@ export default Component.extend({
 
   @computed("selectableUserBadges", "selectedUserBadgeId")
   selectedUserBadge(selectableUserBadges, selectedUserBadgeId) {
-    return selectableUserBadges.findBy("id", parseInt(selectedUserBadgeId));
+    return selectableUserBadges.findBy("id", parseInt(selectedUserBadgeId, 10));
   },
 
   actions: {

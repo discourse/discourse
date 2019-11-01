@@ -63,8 +63,8 @@ export default Component.extend(CleansUp, {
     const $self = $(this.element);
     const width = $self.width();
     const height = $self.height();
-    pos.left = parseInt(pos.left) - width / 2;
-    pos.top = parseInt(pos.top) - height / 2;
+    pos.left = parseInt(pos.left, 10) - width / 2;
+    pos.top = parseInt(pos.top, 10) - height / 2;
 
     const windowWidth = $(window).width();
     if (pos.left + width > windowWidth) {

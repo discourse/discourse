@@ -79,7 +79,7 @@ export default createWidget("link", {
 
     const currentUser = this.currentUser;
     if (currentUser && attrs.badgeCount) {
-      const val = parseInt(currentUser.get(attrs.badgeCount));
+      const val = parseInt(currentUser.get(attrs.badgeCount), 10);
       if (val > 0) {
         const title = attrs.badgeTitle ? I18n.t(attrs.badgeTitle) : "";
         result.push(" ");

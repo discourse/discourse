@@ -273,7 +273,7 @@ export default Component.extend({
       const lastMatch = matchingPlaceholder[matchingPlaceholder.length - 1];
       const regex = new RegExp(regexString);
       const orderNr = regex.exec(lastMatch)[1]
-        ? parseInt(regex.exec(lastMatch)[1]) + 1
+        ? parseInt(regex.exec(lastMatch)[1], 10) + 1
         : 1;
       data.orderNr = orderNr;
       const filenameWithOrderNr = `${filename}(${orderNr})`;
@@ -823,7 +823,7 @@ export default Component.extend({
         $(e.target)
           .parent()
           .attr("data-image-index")
-      );
+      , 10);
 
       const scale = e.target.attributes["data-scale"].value;
       const matchingPlaceholder = this.get("composer.reply").match(

@@ -140,7 +140,7 @@ export default Controller.extend({
   )
   pollMaxOptions(isRegular, isMultiple, isNumber, count, pollMin, pollStep) {
     if (isRegular) return;
-    const pollMinInt = parseInt(pollMin) || 1;
+    const pollMinInt = parseInt(pollMin, 10) || 1;
 
     if (isMultiple) {
       return this._comboboxOptions(pollMinInt + 1, count + 1);
@@ -159,7 +159,7 @@ export default Controller.extend({
   @computed("isNumber", "pollMax")
   pollStepOptions(isNumber, pollMax) {
     if (!isNumber) return;
-    return this._comboboxOptions(1, (parseInt(pollMax) || 1) + 1);
+    return this._comboboxOptions(1, (parseInt(pollMax, 10) || 1) + 1);
   },
 
   @computed(

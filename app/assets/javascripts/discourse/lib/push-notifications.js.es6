@@ -22,7 +22,7 @@ function userAgentVersionChecker(agent, version, mobileView) {
     new RegExp(`${agent}\/(\\d+)\\.\\d`)
   );
   if (uaMatch && mobileView) return false;
-  if (!uaMatch || parseInt(uaMatch[1]) < version) return false;
+  if (!uaMatch || parseInt(uaMatch[1], 10) < version) return false;
   return true;
 }
 
