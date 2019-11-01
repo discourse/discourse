@@ -2,8 +2,8 @@
   <%- if @allow_create %>
     <%= link_to @create_url, target: "_blank" do |link| %>
       <button class=<%="new-topic-btn" + (@template == "complete" ? " complete" : "") %>>
-        <span class=<%="new-topic-btn__text" if @template == "complete" %>></span>
-        <span class=<%="new-topic-btn__icon" if @template == "complete" %>>Create New Topic!</span>
+        <span class=<%="new-topic-btn__icon" if @template == "complete" %>></span>
+        <span class=<%="new-topic-btn__text" if @template == "complete" %>>Create New Topic!</span>
       </button>
     <%- end %>
   <%- end %>
