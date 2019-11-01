@@ -278,6 +278,7 @@ end
 #  updated_at :datetime         not null
 #  sequence   :integer          default(0), not null
 #  revisions  :integer          default(1), not null
+#  owner      :string
 #
 # Indexes
 #
