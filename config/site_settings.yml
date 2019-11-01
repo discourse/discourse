@@ -2023,6 +2023,19 @@ user_preferences:
     type: category_list
     default: ""
 
+  default_tags_watching:
+    type: tag_list
+    default: ""
+  default_tags_tracking:
+    type: tag_list
+    default: ""
+  default_tags_muted:
+    type: tag_list
+    default: ""
+  default_tags_watching_first_post:
+    type: tag_list
+    default: ""
+
   default_text_size:
     type: enum
     default: normal

@@ -117,6 +117,7 @@ class User < ActiveRecord::Base
   after_create :set_random_avatar
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
+  after_create :set_default_tags_preferences
 
   after_update :trigger_user_updated_event, if: :saved_change_to_uploaded_avatar_id?
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
@@ -1417,6 +1418,23 @@ class User < ActiveRecord::Base
     if values.present?
       DB.exec("INSERT INTO category_users (user_id, category_id, notification_level) VALUES #{values.join(",")}")
     end
+  end
+
+  def set_default_tags_preferences
+    return if self.staged?
+
+    values = []
+
+    %w{watching watching_first_post tracking muted}.each do |s|
+      tag_names = SiteSetting.get("default_tags_#{s}").split("|")
+      now = Time.zone.now
+
+      Tag.where(name: tag_names).pluck(:id).each do |tag_id|
+        values << { user_id: self.id, tag_id: tag_id, notification_level: TagUser.notification_levels[s.to_sym], created_at: now, updated_at: now }
+      end
+    end
+
+    TagUser.insert_all!(values) if values.present?
   end
 
   def self.purge_unactivated

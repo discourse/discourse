@@ -125,6 +125,44 @@ describe Admin::SiteSettingsController do
         end
       end
 
+      describe 'default tags' do
+        let(:user1) { Fabricate(:user) }
+        let(:user2) { Fabricate(:user) }
+        let(:watching) { NotificationLevels.all[:watching] }
+        let(:tracking) { NotificationLevels.all[:tracking] }
+
+        let(:tags) { 3.times.collect { Fabricate(:tag) } }
+
+        before do
+          SiteSetting.setting(:default_tags_watching, tags.first(2).pluck(:name).join("|"))
+          TagUser.create!(tag_id: tags.last.id, notification_level: tracking, user: user2)
+        end
+
+        after do
+          SiteSetting.setting(:default_tags_watching, "")
+        end
+
+        it 'should update existing users user preference' do
+          put "/admin/site_settings/default_tags_watching.json", params: {
+            default_tags_watching: tags.last(2).pluck(:name).join("|"),
+            updateExistingUsers: true
+          }
+
+          expect(TagUser.where(tag_id: tags.first.id, notification_level: watching).count).to eq(0)
+          expect(TagUser.where(tag_id: tags.last.id, notification_level: watching).count).to eq(User.count - 1)
+        end
+
+        it 'should not update existing users user preference' do
+          expect {
+            put "/admin/site_settings/default_tags_watching.json", params: {
+              default_tags_watching: tags.last(2).pluck(:name).join("|")
+            }
+          }.to change { TagUser.where(tag_id: tags.first.id, notification_level: watching).count }.by(0)
+
+          expect(TagUser.where(tag_id: tags.last.id, notification_level: watching).count).to eq(0)
+        end
+      end
+
       describe 'upload site settings' do
         it 'can remove the site setting' do
           SiteSetting.test_upload = Fabricate(:upload)

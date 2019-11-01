@@ -17,7 +17,8 @@ const CUSTOM_TYPES = [
   "compact_list",
   "secret_list",
   "upload",
-  "group_list"
+  "group_list",
+  "tag_list"
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
