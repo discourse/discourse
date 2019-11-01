@@ -111,7 +111,6 @@ Discourse::Application.routes.draw do
       put "revoke_admin", constraints: AdminConstraint.new
       put "grant_admin", constraints: AdminConstraint.new
       post "generate_api_key", constraints: AdminConstraint.new
-      delete "revoke_api_key", constraints: AdminConstraint.new
       put "revoke_moderation", constraints: AdminConstraint.new
       put "grant_moderation", constraints: AdminConstraint.new
       put "approve"
@@ -257,10 +256,12 @@ Discourse::Application.routes.draw do
 
     resources :api, only: [:index], constraints: AdminConstraint.new do
       collection do
-        get "keys" => "api#index"
-        post "key" => "api#create_master_key"
-        put "key" => "api#regenerate_key"
-        delete "key" => "api#revoke_key"
+        resources :keys, controller: 'api', only: [:index, :show, :update, :create, :destroy] do
+          member do
+            post "revoke" => "api#revoke_key"
+            post "undo-revoke" => "api#undo_revoke_key"
+          end
+        end
 
         resources :web_hooks
         get 'web_hook_events/:id' => 'web_hooks#list_events', as: :web_hook_events

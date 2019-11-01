@@ -29,10 +29,10 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :reset_bounce_score_after,
              :can_view_action_logs,
              :second_factor_enabled,
-             :can_disable_second_factor
+             :can_disable_second_factor,
+             :api_key_count
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
-  has_one :api_key, serializer: ApiKeySerializer, embed: :objects
   has_one :suspended_by, serializer: BasicUserSerializer, embed: :objects
   has_one :silenced_by, serializer: BasicUserSerializer, embed: :objects
   has_one :tl3_requirements, serializer: TrustLevel3RequirementsSerializer, embed: :objects
@@ -118,4 +118,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     object.posts.count
   end
 
+  def api_key_count
+    object.api_keys.active.count
+  end
 end
