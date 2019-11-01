@@ -1,13 +1,13 @@
-import { isEmpty } from "@ember/utils";
-import { get } from "@ember/object";
-import { makeArray } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import ComboBox from "select-kit/components/combo-box";
 import TagsMixin from "select-kit/mixins/tags";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import renderTag from "discourse/lib/render-tag";
-import { escapeExpression } from "discourse/lib/utilities";
+import { escapeExpression, makeArray } from "discourse/lib/utilities";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { debounce } from "@ember/runloop";
 
 export default ComboBox.extend(TagsMixin, {
   allowContentReplacement: true,
@@ -169,7 +169,9 @@ export default ComboBox.extend(TagsMixin, {
   computeHeaderContent() {
     let content = this._super(...arguments);
 
-    const joinedTags = this.selection.map(s => get(s, "value")).join(", ");
+    const joinedTags = this.selection
+      .map(s => Ember.get(s, "value"))
+      .join(", ");
 
     if (isEmpty(this.selection)) {
       content.label = I18n.t("tagging.choose_for_topic");
@@ -197,7 +199,7 @@ export default ComboBox.extend(TagsMixin, {
 
     if (this.selection) {
       data.selected_tags = this.selection
-        .map(s => get(s, "value"))
+        .map(s => Ember.get(s, "value"))
         .slice(0, 100);
     }
 
@@ -237,7 +239,7 @@ export default ComboBox.extend(TagsMixin, {
 
     this.set(
       "searchDebounce",
-      run.debounce(this, this._prepareSearch, this.filter, 350)
+      debounce(this, this._prepareSearch, this.filter, 350)
     );
   },
 
@@ -270,7 +272,7 @@ export default ComboBox.extend(TagsMixin, {
       if (isEmpty(this.collectionComputedContent)) {
         this.set(
           "searchDebounce",
-          run.debounce(this, this._prepareSearch, this.filter, 350)
+          debounce(this, this._prepareSearch, this.filter, 350)
         );
       }
     },
@@ -282,7 +284,7 @@ export default ComboBox.extend(TagsMixin, {
       filter = isEmpty(filter) ? null : filter;
       this.set(
         "searchDebounce",
-        run.debounce(this, this._prepareSearch, filter, 350)
+        debounce(this, this._prepareSearch, filter, 350)
       );
     }
   }
