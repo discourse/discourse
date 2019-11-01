@@ -1,5 +1,5 @@
 import { get } from "@ember/object";
-import { makeArray } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import Category from "discourse/models/category";
 

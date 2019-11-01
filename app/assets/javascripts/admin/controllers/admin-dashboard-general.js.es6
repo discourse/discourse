@@ -1,4 +1,4 @@
-import { makeArray } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { setting } from "discourse/lib/computed";

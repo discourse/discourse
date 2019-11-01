@@ -1,4 +1,4 @@
-import { makeArray } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import { alias, or, and, reads, equal, notEmpty } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";

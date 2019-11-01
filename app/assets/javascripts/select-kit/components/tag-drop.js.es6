@@ -1,4 +1,4 @@
-import { makeArray } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
 import TagsMixin from "select-kit/mixins/tags";

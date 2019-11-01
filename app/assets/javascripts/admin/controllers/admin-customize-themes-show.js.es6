@@ -1,4 +1,4 @@
-import { makeArray } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import { empty, notEmpty, match } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
