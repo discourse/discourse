@@ -1,4 +1,4 @@
-import { makeArray } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { avatarFor, avatarImg } from "discourse/widgets/post";

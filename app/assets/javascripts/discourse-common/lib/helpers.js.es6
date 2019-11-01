@@ -1,5 +1,12 @@
 import { get } from "@ember/object";
 
+export function makeArray(obj) {
+  if (obj === null || obj === undefined) {
+    return [];
+  }
+  return Array.isArray(obj) ? obj : [obj];
+}
+
 export function htmlHelper(fn) {
   return Ember.Helper.helper(function(...args) {
     args =

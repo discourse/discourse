@@ -1,4 +1,4 @@
-import { makeArray } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
 import { escapeExpression } from "discourse/lib/utilities";

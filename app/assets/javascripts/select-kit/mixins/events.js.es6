@@ -1,5 +1,5 @@
 import { get } from "@ember/object";
-import { makeArray } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import { isEmpty } from "@ember/utils";
 import { throttle } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
