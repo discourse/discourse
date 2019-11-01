@@ -53,9 +53,7 @@ export default Component.extend({
 
     const context = chartCanvas.getContext("2d");
 
-    const chartData = makeArray(
-      model.get("chartData") || model.get("data")
-    );
+    const chartData = makeArray(model.get("chartData") || model.get("data"));
 
     const data = {
       labels: chartData[0].data.map(cd => cd.x),

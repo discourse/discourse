@@ -48,9 +48,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @computed("saving", "selectedTopicId", "topicName")
   buttonDisabled(saving, selectedTopicId, topicName) {
-    return (
-      saving || (isEmpty(selectedTopicId) && isEmpty(topicName))
-    );
+    return saving || (isEmpty(selectedTopicId) && isEmpty(topicName));
   },
 
   @computed(

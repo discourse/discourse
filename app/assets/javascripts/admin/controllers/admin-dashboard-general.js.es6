@@ -9,9 +9,7 @@ import PeriodComputationMixin from "admin/mixins/period-computation";
 
 function staticReport(reportType) {
   return Ember.computed("reports.[]", function() {
-    return makeArray(this.reports).find(
-      report => report.type === reportType
-    );
+    return makeArray(this.reports).find(report => report.type === reportType);
   });
 }
 

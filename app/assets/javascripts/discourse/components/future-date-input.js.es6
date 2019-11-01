@@ -107,10 +107,7 @@ export default Component.extend({
   ) {
     if (!statusType || willCloseImmediately) return false;
 
-    if (
-      statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE &&
-      isEmpty(categoryId)
-    ) {
+    if (statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE && isEmpty(categoryId)) {
       return false;
     }
 

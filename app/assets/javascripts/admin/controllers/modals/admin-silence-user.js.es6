@@ -14,9 +14,7 @@ export default Controller.extend(PenaltyController, {
 
   @computed("silenceUntil", "reason", "silencing")
   submitDisabled(silenceUntil, reason, silencing) {
-    return (
-      silencing || isEmpty(silenceUntil) || !reason || reason.length < 1
-    );
+    return silencing || isEmpty(silenceUntil) || !reason || reason.length < 1;
   },
 
   actions: {

@@ -119,9 +119,7 @@ export default Controller.extend(CanCheckEmails, {
           const value = userFields
             ? userFields[field.get("id").toString()]
             : null;
-          return isEmpty(value)
-            ? null
-            : EmberObject.create({ value, field });
+          return isEmpty(value) ? null : EmberObject.create({ value, field });
         })
         .compact();
     }

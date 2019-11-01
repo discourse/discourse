@@ -50,9 +50,7 @@ export default Component.extend({
     if (!chartCanvas) return;
 
     const context = chartCanvas.getContext("2d");
-    const chartData = makeArray(
-      model.get("chartData") || model.get("data")
-    );
+    const chartData = makeArray(model.get("chartData") || model.get("data"));
     const prevChartData = makeArray(
       model.get("prevChartData") || model.get("prev_data")
     );
