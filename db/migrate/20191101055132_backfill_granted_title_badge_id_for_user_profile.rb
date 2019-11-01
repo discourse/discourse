@@ -9,7 +9,6 @@ class BackfillGrantedTitleBadgeIdForUserProfile < ActiveRecord::Migration[6.0]
       FROM users
       INNER JOIN badges b ON users.title = b.name
       WHERE users.title = b.name
-        AND user_profiles.badge_granted_title = true
         AND user_profiles.granted_title_badge_id IS NULL
         AND users.id = user_profiles.user_id
         AND users.title IS NOT NULL AND users.title != ''
@@ -25,7 +24,6 @@ class BackfillGrantedTitleBadgeIdForUserProfile < ActiveRecord::Migration[6.0]
       JOIN badges ON ('badges.' || LOWER(REPLACE(badges.name, ' ', '_')) || '.name') = translation_overrides.translation_key
       JOIN user_badges ON user_badges.user_id = users.id AND user_badges.badge_id = badges.id
       WHERE users.title = translation_overrides.value
-        AND user_profiles.badge_granted_title = true
         AND user_profiles.granted_title_badge_id IS NULL
         AND users.id = user_profiles.user_id
         AND users.title IS NOT NULL AND users.title != ''
