@@ -1659,7 +1659,7 @@ ro:
     missing: "Ne pare rău, dar nu putem găsi avatarul asociat cu această adresă de email. Ai putea să îl încarci din nou?"
   flag_reason:
     sockpuppet: "Un utilizator nou a creat un subiect, și un alt utilizator nou de la aceeași adresă de IP (%{ip_address}) a răspuns. Vezi <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> la setările site-ului."
-    spam_hosts: "Acest nou utilizator a încrecat să creeze postări multiple cu link-uri către acelasi domeniu (%{domain}). Vezi <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> la setările site-ului."
+    spam_hosts: "Acest nou utilizator a încrecat să creeze postări multiple cu link-uri către acelasi domeniu. Vezi <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> la setările site-ului."
   skipped_email_log:
     exceeded_emails_limit: "Depășit max_emails_per_day_per_user"
     exceeded_bounces_limit: "Depășit bounce_score_threshold"

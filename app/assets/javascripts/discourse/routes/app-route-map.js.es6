@@ -156,7 +156,6 @@ export default function() {
         this.route("email");
         this.route("second-factor");
         this.route("second-factor-backup");
-        this.route("about", { path: "/about-me" });
       });
 
       this.route(
@@ -224,7 +223,8 @@ export default function() {
     "tagGroups",
     { path: "/tag_groups", resetNamespace: true },
     function() {
-      this.route("show", { path: "/:id" });
+      this.route("edit", { path: "/:id" });
+      this.route("new");
     }
   );
 

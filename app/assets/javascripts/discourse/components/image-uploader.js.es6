@@ -1,10 +1,12 @@
+import { next } from "@ember/runloop";
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
 import lightbox from "discourse/lib/lightbox";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Component.extend(UploadMixin, {
+export default Component.extend(UploadMixin, {
   classNames: ["image-uploader"],
   loadingLightbox: false,
 
@@ -76,13 +78,13 @@ export default Ember.Component.extend(UploadMixin, {
   },
 
   _openLightbox() {
-    Ember.run.next(() =>
+    next(() =>
       $(this.element.querySelector("a.lightbox")).magnificPopup("open")
     );
   },
 
   _applyLightbox() {
-    if (this.imageUrl) Ember.run.next(() => lightbox($(this.element)));
+    if (this.imageUrl) next(() => lightbox($(this.element)));
   },
 
   actions: {

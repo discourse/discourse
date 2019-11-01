@@ -1,8 +1,9 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     classes: ["text-muted", "text-danger", "text-successful", "text-muted"],
     icons: ["far-circle", "times-circle", "circle", "circle"],

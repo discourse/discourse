@@ -1,3 +1,5 @@
+import { not, notEmpty, equal, and, or } from "@ember/object/computed";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { flushMap } from "discourse/models/store";
 import RestModel from "discourse/models/rest";
@@ -194,8 +196,8 @@ const Topic = RestModel.extend({
     });
   },
 
-  invisible: Ember.computed.not("visible"),
-  deleted: Ember.computed.notEmpty("deleted_at"),
+  invisible: not("visible"),
+  deleted: notEmpty("deleted_at"),
 
   @computed("id")
   searchContext(id) {
@@ -335,8 +337,8 @@ const Topic = RestModel.extend({
     return Discourse.Site.currentProp("archetypes").findBy("id", archetype);
   },
 
-  isPrivateMessage: Ember.computed.equal("archetype", "private_message"),
-  isBanner: Ember.computed.equal("archetype", "banner"),
+  isPrivateMessage: equal("archetype", "private_message"),
+  isBanner: equal("archetype", "banner"),
 
   toggleStatus(property) {
     this.toggleProperty(property);
@@ -495,10 +497,7 @@ const Topic = RestModel.extend({
     );
   },
 
-  isPinnedUncategorized: Ember.computed.and(
-    "pinned",
-    "category.isUncategorizedCategory"
-  ),
+  isPinnedUncategorized: and("pinned", "category.isUncategorizedCategory"),
 
   clearPin() {
     // Clear the pin optimistically from the object
@@ -537,7 +536,7 @@ const Topic = RestModel.extend({
     return emojiUnescape(excerpt);
   },
 
-  hasExcerpt: Ember.computed.notEmpty("excerpt"),
+  hasExcerpt: notEmpty("excerpt"),
 
   @computed("excerpt")
   excerptTruncated(excerpt) {
@@ -545,7 +544,8 @@ const Topic = RestModel.extend({
   },
 
   readLastPost: propertyEqual("last_read_post_number", "highest_post_number"),
-  canClearPin: Ember.computed.and("pinned", "readLastPost"),
+  canClearPin: and("pinned", "readLastPost"),
+  canEditTags: or("details.can_edit", "details.can_edit_tags"),
 
   archiveMessage() {
     this.set("archiving", true);
@@ -610,6 +610,17 @@ const Topic = RestModel.extend({
     return ajax(`/t/${this.id}/reset-bump-date`, { type: "PUT" }).catch(
       popupAjaxError
     );
+  },
+
+  updateTags(tags) {
+    if (!tags || tags.length === 0) {
+      tags = [""];
+    }
+
+    return ajax(`/t/${this.id}/tags`, {
+      type: "PUT",
+      data: { tags: tags }
+    });
   }
 });
 
@@ -623,7 +634,7 @@ Topic.reopenClass({
 
   createActionSummary(result) {
     if (result.actions_summary) {
-      const lookup = Ember.Object.create();
+      const lookup = EmberObject.create();
       result.actions_summary = result.actions_summary.map(a => {
         a.post = result;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);

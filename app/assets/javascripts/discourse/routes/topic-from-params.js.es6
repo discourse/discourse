@@ -1,8 +1,10 @@
+import { scheduleOnce } from "@ember/runloop";
+import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 
 // This route is used for retrieving a topic based on params
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   // Avoid default model hook
   model(params) {
     return params;
@@ -56,7 +58,7 @@ export default Discourse.Route.extend({
         topicController.subscribe();
 
         // Highlight our post after the next render
-        Ember.run.scheduleOnce("afterRender", () =>
+        scheduleOnce("afterRender", () =>
           this.appEvents.trigger("post:highlight", closest)
         );
 

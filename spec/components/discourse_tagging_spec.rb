@@ -236,6 +236,52 @@ describe DiscourseTagging do
         expect(topic.reload.tags.map(&:name)).to contain_exactly(*[parent_tag, common].map(&:name))
       end
     end
+
+    context "enforces required tags from a tag group" do
+      fab!(:category) { Fabricate(:category) }
+      fab!(:tag_group) { Fabricate(:tag_group) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+
+      before do
+        tag_group.tags = [tag1, tag2]
+        category.update(
+          required_tag_group: tag_group,
+          min_tags_from_required_group: 1
+        )
+      end
+
+      it "when no tags are present" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [])
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t("tags.required_tags_from_group", count: 1, tag_group_name: tag_group.name)
+        )
+      end
+
+      it "when tags are not part of the tag group" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag3.name])
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t("tags.required_tags_from_group", count: 1, tag_group_name: tag_group.name)
+        )
+      end
+
+      it "when requirement is met" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name])
+        expect(valid).to eq(true)
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, tag2.name])
+        expect(valid).to eq(true)
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag2.name, tag3.name])
+        expect(valid).to eq(true)
+      end
+
+      it "lets staff ignore the restriction" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [])
+        expect(valid).to eq(true)
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag3.name])
+        expect(valid).to eq(true)
+      end
+    end
   end
 
   describe '#tags_for_saving' do

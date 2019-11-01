@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 /**
    A plugin outlet is an extension point for templates where other templates can
    be inserted by plugins.
@@ -31,7 +32,7 @@
 **/
 import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "span",
   connectors: null,
 

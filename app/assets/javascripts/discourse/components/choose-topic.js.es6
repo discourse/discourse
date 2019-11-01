@@ -1,8 +1,10 @@
+import { next } from "@ember/runloop";
+import Component from "@ember/component";
 import debounce from "discourse/lib/debounce";
 import { searchForTerm } from "discourse/lib/search";
 import { observes } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   loading: null,
   noResults: null,
   topics: null,
@@ -61,7 +63,7 @@ export default Ember.Component.extend({
   actions: {
     chooseTopic(topic) {
       this.set("selectedTopicId", topic.id);
-      Ember.run.next(() => {
+      next(() => {
         document.getElementById(`choose-topic-${topic.id}`).checked = true;
       });
       return false;

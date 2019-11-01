@@ -1,14 +1,19 @@
+import { alias, or, gt, not, and } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import { inject as service } from "@ember/service";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import computed from "ember-addons/ember-computed-decorators";
 import User from "discourse/models/user";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 
-export default Ember.Controller.extend(CanCheckEmails, {
+export default Controller.extend(CanCheckEmails, {
   indexStream: false,
-  router: Ember.inject.service(),
-  userNotifications: Ember.inject.controller("user-notifications"),
-  currentPath: Ember.computed.alias("router._router.currentPath"),
+  router: service(),
+  userNotifications: inject("user-notifications"),
+  currentPath: alias("router._router.currentPath"),
   adminTools: optionalService(),
 
   @computed("model.username")
@@ -34,17 +39,14 @@ export default Ember.Controller.extend(CanCheckEmails, {
     }
     return (!indexStream || viewingSelf) && !forceExpand;
   },
-  canMuteOrIgnoreUser: Ember.computed.or(
-    "model.can_ignore_user",
-    "model.can_mute_user"
-  ),
-  hasGivenFlags: Ember.computed.gt("model.number_of_flags_given", 0),
-  hasFlaggedPosts: Ember.computed.gt("model.number_of_flagged_posts", 0),
-  hasDeletedPosts: Ember.computed.gt("model.number_of_deleted_posts", 0),
-  hasBeenSuspended: Ember.computed.gt("model.number_of_suspensions", 0),
-  hasReceivedWarnings: Ember.computed.gt("model.warnings_received_count", 0),
+  canMuteOrIgnoreUser: or("model.can_ignore_user", "model.can_mute_user"),
+  hasGivenFlags: gt("model.number_of_flags_given", 0),
+  hasFlaggedPosts: gt("model.number_of_flagged_posts", 0),
+  hasDeletedPosts: gt("model.number_of_deleted_posts", 0),
+  hasBeenSuspended: gt("model.number_of_suspensions", 0),
+  hasReceivedWarnings: gt("model.warnings_received_count", 0),
 
-  showStaffCounters: Ember.computed.or(
+  showStaffCounters: or(
     "hasGivenFlags",
     "hasFlaggedPosts",
     "hasDeletedPosts",
@@ -57,7 +59,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return !suspended || isStaff;
   },
 
-  linkWebsite: Ember.computed.not("model.isBasic"),
+  linkWebsite: not("model.isBasic"),
 
   @computed("model.trust_level")
   removeNoFollow(trustLevel) {
@@ -101,10 +103,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return User.currentProp("can_invite_to_forum");
   },
 
-  canDeleteUser: Ember.computed.and(
-    "model.can_be_deleted",
-    "model.can_delete_all_posts"
-  ),
+  canDeleteUser: and("model.can_be_deleted", "model.can_delete_all_posts"),
 
   @computed("model.user_fields.@each.value")
   publicUserFields() {
@@ -121,7 +120,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
             : null;
           return Ember.isEmpty(value)
             ? null
-            : Ember.Object.create({ value, field });
+            : EmberObject.create({ value, field });
         })
         .compact();
     }

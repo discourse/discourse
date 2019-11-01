@@ -216,7 +216,7 @@ module Discourse
     plugins.select do |plugin|
       next if args[:include_official] == false && plugin.metadata.official?
       next if args[:include_unofficial] == false && !plugin.metadata.official?
-      next if args[:include_disabled] == false && !plugin.enabled?
+      next if !args[:include_disabled] && !plugin.enabled?
 
       true
     end
@@ -536,7 +536,9 @@ module Discourse
   SYSTEM_USER_ID ||= -1
 
   def self.system_user
-    @system_user ||= User.find_by(id: SYSTEM_USER_ID)
+    @system_users ||= {}
+    current_db = RailsMultisite::ConnectionManagement.current_db
+    @system_users[current_db] ||= User.find_by(id: SYSTEM_USER_ID)
   end
 
   def self.store

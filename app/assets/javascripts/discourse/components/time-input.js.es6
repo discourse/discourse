@@ -1,14 +1,17 @@
+import { oneWay, or } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import { isNumeric } from "discourse/lib/utilities";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["d-time-input"],
   hours: null,
   minutes: null,
-  _hours: Ember.computed.oneWay("hours"),
-  _minutes: Ember.computed.oneWay("minutes"),
-  isSafari: Ember.computed.oneWay("capabilities.isSafari"),
-  isMobile: Ember.computed.oneWay("site.mobileView"),
-  nativePicker: Ember.computed.or("isSafari", "isMobile"),
+  _hours: oneWay("hours"),
+  _minutes: oneWay("minutes"),
+  isSafari: oneWay("capabilities.isSafari"),
+  isMobile: oneWay("site.mobileView"),
+  nativePicker: or("isSafari", "isMobile"),
 
   actions: {
     onInput(options, event) {
@@ -35,7 +38,7 @@ export default Ember.Component.extend({
           this._processMinutesChange(value);
         }
 
-        Ember.run.schedule("afterRender", () => (event.target.value = value));
+        schedule("afterRender", () => (event.target.value = value));
       }
     },
 

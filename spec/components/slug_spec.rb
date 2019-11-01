@@ -81,6 +81,11 @@ describe Slug do
       it "kills the trailing dash" do
         expect(Slug.for("2- -this!~-_|,we-#-=^-")).to eq('2-this-we')
       end
+
+      it "returns a slug that can be used in a valid URL" do
+        slug = Slug.for("Γνωμη για αγορα μπουζουκιου μεσω ιντερνετ και εκτίμηση")
+        expect { URI.parse("http://example.com/#{slug}") }.not_to raise_error
+      end
     end
 
     context 'none generator' do

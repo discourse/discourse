@@ -1,8 +1,10 @@
+import { alias } from "@ember/object/computed";
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { observes } from "ember-addons/ember-computed-decorators";
 import LivePostCounts from "discourse/models/live-post-counts";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ["hidden:hidden", ":create-topics-notice"],
 
   enabled: false,
@@ -11,7 +13,7 @@ export default Ember.Component.extend({
   publicPostCount: null,
 
   requiredTopics: 5,
-  requiredPosts: Ember.computed.alias("siteSettings.tl1_requires_read_posts"),
+  requiredPosts: alias("siteSettings.tl1_requires_read_posts"),
 
   init() {
     this._super(...arguments);

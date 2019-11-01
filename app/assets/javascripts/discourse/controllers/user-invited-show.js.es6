@@ -1,3 +1,5 @@
+import { equal, reads, gte } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import Invite from "discourse/models/invite";
 import debounce from "discourse/lib/debounce";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -6,7 +8,7 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   user: null,
   model: null,
   filter: null,
@@ -31,7 +33,7 @@ export default Ember.Controller.extend({
     );
   }, 250),
 
-  inviteRedeemed: Ember.computed.equal("filter", "redeemed"),
+  inviteRedeemed: equal("filter", "redeemed"),
 
   @computed("filter")
   showBulkActionButtons(filter) {
@@ -42,11 +44,11 @@ export default Ember.Controller.extend({
     );
   },
 
-  canInviteToForum: Ember.computed.reads("currentUser.can_invite_to_forum"),
+  canInviteToForum: reads("currentUser.can_invite_to_forum"),
 
-  canBulkInvite: Ember.computed.reads("currentUser.admin"),
+  canBulkInvite: reads("currentUser.admin"),
 
-  showSearch: Ember.computed.gte("totalInvites", 10),
+  showSearch: gte("totalInvites", 10),
 
   @computed("invitesCount.total", "invitesCount.pending")
   pendingLabel(invitesCountTotal, invitesCountPending) {

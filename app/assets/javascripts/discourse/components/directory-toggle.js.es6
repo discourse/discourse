@@ -1,8 +1,9 @@
+import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     tagName: "th",
     classNames: ["sortable"],

@@ -1,6 +1,9 @@
-const RestModel = Ember.Object.extend({
-  isNew: Ember.computed.equal("__state", "new"),
-  isCreated: Ember.computed.equal("__state", "created"),
+import { equal } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+
+const RestModel = EmberObject.extend({
+  isNew: equal("__state", "new"),
+  isCreated: equal("__state", "created"),
   isSaving: false,
 
   beforeCreate() {},

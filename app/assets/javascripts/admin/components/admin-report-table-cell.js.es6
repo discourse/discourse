@@ -1,6 +1,8 @@
+import { alias } from "@ember/object/computed";
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "td",
   classNames: ["admin-report-table-cell"],
   classNameBindings: ["type", "property"],
@@ -11,8 +13,8 @@ export default Ember.Component.extend({
     return label.compute(data, options || {});
   },
 
-  type: Ember.computed.alias("label.type"),
-  property: Ember.computed.alias("label.mainProperty"),
-  formatedValue: Ember.computed.alias("computedLabel.formatedValue"),
-  value: Ember.computed.alias("computedLabel.value")
+  type: alias("label.type"),
+  property: alias("label.mainProperty"),
+  formatedValue: alias("computedLabel.formatedValue"),
+  value: alias("computedLabel.value")
 });

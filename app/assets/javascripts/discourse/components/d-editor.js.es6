@@ -1,3 +1,10 @@
+import { next } from "@ember/runloop";
+import { debounce } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
+import { later } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import Component from "@ember/component";
 /*global Mousetrap:true */
 import {
   default as computed,
@@ -211,14 +218,14 @@ export function onToolbarCreate(func) {
   addToolbarCallback(func);
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["d-editor"],
   ready: false,
   lastSel: null,
   _mouseTrap: null,
   showLink: true,
   emojiPickerIsActive: false,
-  emojiStore: Ember.inject.service("emoji-store"),
+  emojiStore: service("emoji-store"),
 
   @computed("placeholder")
   placeholderTranslated(placeholder) {
@@ -247,7 +254,7 @@ export default Ember.Component.extend({
     this._applyEmojiAutocomplete($editorInput);
     this._applyCategoryHashtagAutocomplete($editorInput);
 
-    Ember.run.scheduleOnce("afterRender", this, this._readyNow);
+    scheduleOnce("afterRender", this, this._readyNow);
 
     const mouseTrap = Mousetrap(this.element.querySelector(".d-editor-input"));
     const shortcuts = this.get("toolbar.shortcuts");
@@ -346,7 +353,7 @@ export default Ember.Component.extend({
         return;
       }
       this.set("preview", cooked);
-      Ember.run.scheduleOnce("afterRender", () => {
+      scheduleOnce("afterRender", () => {
         if (this._state !== "inDOM") {
           return;
         }
@@ -370,7 +377,7 @@ export default Ember.Component.extend({
     if (Ember.testing) {
       this._updatePreview();
     } else {
-      Ember.run.debounce(this, this._updatePreview, 30);
+      debounce(this, this._updatePreview, 30);
     }
   },
 
@@ -430,17 +437,14 @@ export default Ember.Component.extend({
             emojiPickerIsActive: true
           });
 
-          Ember.run.schedule("afterRender", () => {
+          schedule("afterRender", () => {
             const filterInput = document.querySelector(
               ".emoji-picker input[name='filter']"
             );
             if (filterInput) {
               filterInput.value = v.term;
 
-              Ember.run.later(
-                () => filterInput.dispatchEvent(new Event("input")),
-                50
-              );
+              later(() => filterInput.dispatchEvent(new Event("input")), 50);
             }
           });
 
@@ -545,7 +549,7 @@ export default Ember.Component.extend({
   },
 
   _selectText(from, length) {
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       const textarea = this.element.querySelector("textarea.d-editor-input");
       const $textarea = $(textarea);
       const oldScrollPos = $textarea.scrollTop();
@@ -554,7 +558,7 @@ export default Ember.Component.extend({
       }
       textarea.selectionStart = from;
       textarea.selectionEnd = from + length;
-      Ember.run.next(() => $textarea.trigger("change"));
+      next(() => $textarea.trigger("change"));
       $textarea.scrollTop(oldScrollPos);
     });
   },
@@ -783,7 +787,7 @@ export default Ember.Component.extend({
     $textarea.val(value);
     $textarea.prop("selectionStart", insert.length);
     $textarea.prop("selectionEnd", insert.length);
-    Ember.run.next(() => $textarea.trigger("change"));
+    next(() => $textarea.trigger("change"));
     this._focusTextArea();
   },
 
@@ -884,7 +888,7 @@ export default Ember.Component.extend({
   // ensures textarea scroll position is correct
   _focusTextArea() {
     const textarea = this.element.querySelector("textarea.d-editor-input");
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       textarea.blur();
       textarea.focus();
     });

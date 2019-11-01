@@ -1,3 +1,4 @@
+import { run } from "@ember/runloop";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
@@ -84,7 +85,7 @@ QUnit.test("Tests the Composer controls", async assert => {
   event[mac ? "metaKey" : "ctrlKey"] = true;
   event.keyCode = 66;
 
-  Ember.run(() => textarea.dispatchEvent(event));
+  run(() => textarea.dispatchEvent(event));
 
   const example = I18n.t(`composer.bold_text`);
   assert.equal(
@@ -735,13 +736,6 @@ QUnit.test("Image resizing buttons", async assert => {
   await fillIn(".d-editor-input", uploads.join("\n"));
 
   assert.ok(
-    find(".button-wrapper").length === 0,
-    "it does not append scaling buttons before hovering images"
-  );
-
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
-
-  assert.ok(
     find(".button-wrapper").length === 6,
     "it adds correct amount of scaling button groups"
   );
@@ -750,33 +744,23 @@ QUnit.test("Image resizing buttons", async assert => {
   await click(find(".button-wrapper .scale-btn[data-scale='50']")[0]);
   assertImageResized(assert, uploads);
 
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
-
   uploads[2] = "![anotherOne|690x463,75%](upload://anotherOne.jpeg)";
   await click(find(".button-wrapper .scale-btn[data-scale='75']")[1]);
   assertImageResized(assert, uploads);
-
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
 
   uploads[7] =
     "![onTheSameLine1|200x200,50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)";
   await click(find(".button-wrapper .scale-btn[data-scale='50']")[2]);
   assertImageResized(assert, uploads);
 
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
-
   uploads[7] =
     "![onTheSameLine1|200x200,50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250,75%](upload://onTheSameLine2.jpeg)";
   await click(find(".button-wrapper .scale-btn[data-scale='75']")[3]);
   assertImageResized(assert, uploads);
 
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
-
   uploads[8] = "![identicalImage|300x300,50%](upload://identicalImage.png)";
   await click(find(".button-wrapper .scale-btn[data-scale='50']")[4]);
   assertImageResized(assert, uploads);
-
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
 
   uploads[9] = "![identicalImage|300x300,75%](upload://identicalImage.png)";
   await click(find(".button-wrapper .scale-btn[data-scale='75']")[5]);
@@ -790,8 +774,6 @@ QUnit.test("Image resizing buttons", async assert => {
 \`<script>alert("xss")</script>\`
     `
   );
-
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
 
   assert.ok(
     find("script").length === 0,

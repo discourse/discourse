@@ -1,11 +1,13 @@
+import { alias } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   loading: false,
-  reason: Ember.computed.alias("model.membership_request_template"),
+  reason: alias("model.membership_request_template"),
 
   @computed("model.name")
   title(groupName) {

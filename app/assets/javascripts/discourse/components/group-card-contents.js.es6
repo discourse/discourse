@@ -1,3 +1,5 @@
+import { alias, match, gt, or } from "@ember/object/computed";
+import Component from "@ember/component";
 import { setting } from "discourse/lib/computed";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import CardContentsBase from "discourse/mixins/card-contents-base";
@@ -6,7 +8,7 @@ import { groupPath } from "discourse/lib/url";
 
 const maxMembersToDisplay = 10;
 
-export default Ember.Component.extend(CardContentsBase, CleansUp, {
+export default Component.extend(CardContentsBase, CleansUp, {
   elementId: "group-card",
   triggeringLinkClass: "mention-group",
   classNames: ["no-bg"],
@@ -20,11 +22,11 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
   allowBackgrounds: setting("allow_profile_backgrounds"),
   showBadges: setting("enable_badges"),
 
-  postStream: Ember.computed.alias("topic.postStream"),
-  viewingTopic: Ember.computed.match("currentPath", /^topic\./),
+  postStream: alias("topic.postStream"),
+  viewingTopic: match("currentPath", /^topic\./),
 
-  showMoreMembers: Ember.computed.gt("moreMembersCount", 0),
-  hasMembersOrIsMember: Ember.computed.or(
+  showMoreMembers: gt("moreMembersCount", 0),
+  hasMembersOrIsMember: or(
     "group.members",
     "group.is_group_owner_display",
     "group.is_group_user"

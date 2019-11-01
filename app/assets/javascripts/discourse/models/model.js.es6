@@ -1,4 +1,5 @@
-const Model = Ember.Object.extend();
+import EmberObject from "@ember/object";
+const Model = EmberObject.extend();
 
 Model.reopenClass({
   extractByKey(collection, klass) {

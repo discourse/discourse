@@ -1,3 +1,5 @@
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
 import Topic from "discourse/models/topic";
 import PostStream from "discourse/models/post-stream";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
@@ -191,7 +193,7 @@ QUnit.test("selectedPostsUsername", function(assert) {
 });
 
 QUnit.test("showSelectedPostsAtBottom", function(assert) {
-  const site = Ember.Object.create({ mobileView: false });
+  const site = EmberObject.create({ mobileView: false });
   const model = Topic.create({ posts_count: 3 });
   const controller = this.subject({ model, site });
 
@@ -467,7 +469,7 @@ QUnit.test("togglePostSelection", function(assert) {
 // });
 
 QUnit.test("selectBelow", function(assert) {
-  const site = Ember.Object.create({
+  const site = EmberObject.create({
     post_types: { small_action: 3, whisper: 4 }
   });
 
@@ -521,7 +523,7 @@ QUnit.test(
     });
 
     let destroyed;
-    const post = Ember.Object.create({
+    const post = EmberObject.create({
       id: 2,
       post_number: 2,
       can_delete: true,
@@ -532,19 +534,19 @@ QUnit.test(
       }
     });
 
-    const postStream = Ember.Object.create({
+    const postStream = EmberObject.create({
       stream: [2, 3, 4],
       posts: [post, { id: 3 }, { id: 4 }]
     });
 
-    const currentUser = Ember.Object.create({ moderator: true });
+    const currentUser = EmberObject.create({ moderator: true });
     const model = Topic.create({ postStream });
     const controller = this.subject({ model, currentUser });
 
     const done = assert.async();
     controller.send("deletePost", post);
 
-    Ember.run.next(() => {
+    next(() => {
       assert.ok(destroyed, "post was destroyed");
       done();
     });

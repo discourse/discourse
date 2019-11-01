@@ -1,10 +1,13 @@
+import { alias } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   filter: null,
   filtered: false,
   showWords: false,
-  disableShowWords: Ember.computed.alias("filtered"),
+  disableShowWords: alias("filtered"),
   regularExpressions: null,
 
   filterContentNow() {
@@ -27,7 +30,7 @@ export default Ember.Controller.extend({
         return wordRecord.word.indexOf(filter) > -1;
       });
       matchesByAction.pushObject(
-        Ember.Object.create({
+        EmberObject.create({
           nameKey: wordsForAction.nameKey,
           name: wordsForAction.name,
           words: wordRecords,

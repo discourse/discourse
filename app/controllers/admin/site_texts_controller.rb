@@ -109,7 +109,7 @@ class Admin::SiteTextsController < Admin::AdminController
       value = override&.first
     end
 
-    value ||= I18n.t(key, default: '')
+    value ||= I18n.t(key)
     { id: key, value: value }
   end
 

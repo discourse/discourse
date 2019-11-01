@@ -3071,7 +3071,7 @@ pt_BR:
     missing: "Desculpe! Não conseguimos achar nenhum avatar associado a esse endereço de email. Você pode tentar novamente?"
   flag_reason:
     sockpuppet: "Um novo usuário criou um tópico, e um outro novo usuário no mesmo endereço IP (%{ip_address}) respondeu. Veja a configuração <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> do site."
-    spam_hosts: "Esse novo usuário tentou criar múltiplas publicações com links para o mesmo domínio (%{domain}). Veja a configuração <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> do site."
+    spam_hosts: "Esse novo usuário tentou criar múltiplas publicações com links para o mesmo domínio. Veja a configuração <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> do site."
   skipped_email_log:
     exceeded_emails_limit: "Excedido max_emails_per_day_per_user"
     exceeded_bounces_limit: "Excedido bounce_score_threshold"

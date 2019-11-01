@@ -1,3 +1,5 @@
+import { bind } from "@ember/runloop";
+import Component from "@ember/component";
 import {
   default as computed,
   on
@@ -5,7 +7,7 @@ import {
 
 const USER_DISMISSED_PROMPT_KEY = "dismissed-pwa-install-banner";
 
-export default Ember.Component.extend({
+export default Component.extend({
   deferredInstallPromptEvent: null,
 
   _handleInstallPromptEvent(event) {
@@ -17,10 +19,7 @@ export default Ember.Component.extend({
 
   @on("didInsertElement")
   _registerListener() {
-    this._promptEventHandler = Ember.run.bind(
-      this,
-      this._handleInstallPromptEvent
-    );
+    this._promptEventHandler = bind(this, this._handleInstallPromptEvent);
     window.addEventListener("beforeinstallprompt", this._promptEventHandler);
   },
 

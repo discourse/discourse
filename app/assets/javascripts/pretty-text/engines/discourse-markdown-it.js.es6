@@ -1,7 +1,8 @@
 import { default as WhiteLister } from "pretty-text/white-lister";
 import { sanitize } from "pretty-text/sanitizer";
 import guid from "pretty-text/guid";
-import { ATTACHMENT_CSS_CLASS } from "pretty-text/upload-short-url";
+
+export const ATTACHMENT_CSS_CLASS = "attachment";
 
 function deprecate(feature, name) {
   return function() {

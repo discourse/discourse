@@ -1,15 +1,22 @@
+import { alias, or } from "@ember/object/computed";
+import { next } from "@ember/runloop";
+import { debounce } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
 import InputValidation from "discourse/models/input-validation";
-import { load, lookupCache } from "pretty-text/oneboxer";
+import { load } from "pretty-text/oneboxer";
+import { lookupCache } from "pretty-text/oneboxer-cache";
 import { ajax } from "discourse/lib/ajax";
 import afterTransition from "discourse/lib/after-transition";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["title-input"],
-  watchForLink: Ember.computed.alias("composer.canEditTopicFeaturedLink"),
+  watchForLink: alias("composer.canEditTopicFeaturedLink"),
+  disabled: or("composer.loading", "composer.disableTitleInput"),
 
   didInsertElement() {
     this._super(...arguments);
@@ -22,7 +29,7 @@ export default Ember.Component.extend({
     }
 
     if (this.get("composer.titleLength") > 0) {
-      Ember.run.debounce(this, this._titleChanged, 10);
+      debounce(this, this._titleChanged, 10);
     }
   },
 
@@ -77,13 +84,13 @@ export default Ember.Component.extend({
     }
 
     if (Ember.testing) {
-      Ember.run.next(() =>
+      next(() =>
         // not ideal but we don't want to run this in current
         // runloop to avoid an error in console
         this._checkForUrl()
       );
     } else {
-      Ember.run.debounce(this, this._checkForUrl, 500);
+      debounce(this, this._checkForUrl, 500);
     }
   },
 
@@ -132,14 +139,14 @@ export default Ember.Component.extend({
           })
           .finally(() => {
             this.set("composer.loading", false);
-            Ember.run.schedule("afterRender", () => {
+            schedule("afterRender", () => {
               $(this.element.querySelector("input")).putCursorAtEnd();
             });
           });
       } else {
         this._updatePost(loadOnebox);
         this.set("composer.loading", false);
-        Ember.run.schedule("afterRender", () => {
+        schedule("afterRender", () => {
           $(this.element.querySelector("input")).putCursorAtEnd();
         });
       }

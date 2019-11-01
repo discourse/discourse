@@ -1,3 +1,5 @@
+import { gt, equal, or } from "@ember/object/computed";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
@@ -30,9 +32,9 @@ export const SECOND_FACTOR_METHODS = {
 const isForever = dt => moment().diff(dt, "years") < -500;
 
 const User = RestModel.extend({
-  hasPMs: Ember.computed.gt("private_messages_stats.all", 0),
-  hasStartedPMs: Ember.computed.gt("private_messages_stats.mine", 0),
-  hasUnreadPMs: Ember.computed.gt("private_messages_stats.unread", 0),
+  hasPMs: gt("private_messages_stats.all", 0),
+  hasStartedPMs: gt("private_messages_stats.mine", 0),
+  hasUnreadPMs: gt("private_messages_stats.unread", 0),
 
   redirected_to_top: {
     reason: null
@@ -116,7 +118,7 @@ const User = RestModel.extend({
     const keys = this.user_api_keys;
     if (keys) {
       return keys.map(raw => {
-        let obj = Ember.Object.create(raw);
+        let obj = EmberObject.create(raw);
 
         obj.revoke = () => {
           this.revokeApiKey(obj);
@@ -203,10 +205,10 @@ const User = RestModel.extend({
     );
   },
 
-  isBasic: Ember.computed.equal("trust_level", 0),
-  isLeader: Ember.computed.equal("trust_level", 3),
-  isElder: Ember.computed.equal("trust_level", 4),
-  canManageTopic: Ember.computed.or("staff", "isElder"),
+  isBasic: equal("trust_level", 0),
+  isLeader: equal("trust_level", 3),
+  isElder: equal("trust_level", 4),
+  canManageTopic: or("staff", "isElder"),
 
   @computed("previous_visit_at")
   previousVisitAt(previous_visit_at) {
@@ -266,7 +268,8 @@ const User = RestModel.extend({
       "tracked_tags",
       "watched_tags",
       "watching_first_post_tags",
-      "date_of_birth"
+      "date_of_birth",
+      "primary_group_id"
     ];
 
     const data = this.getProperties(

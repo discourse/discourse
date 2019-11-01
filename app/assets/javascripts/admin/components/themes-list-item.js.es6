@@ -1,3 +1,6 @@
+import { gt, and } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import {
   default as computed,
   observes
@@ -7,13 +10,13 @@ import { escape } from "pretty-text/sanitizer";
 
 const MAX_COMPONENTS = 4;
 
-export default Ember.Component.extend({
+export default Component.extend({
   childrenExpanded: false,
   classNames: ["themes-list-item"],
   classNameBindings: ["theme.selected:selected"],
-  hasComponents: Ember.computed.gt("children.length", 0),
-  displayComponents: Ember.computed.and("hasComponents", "theme.isActive"),
-  displayHasMore: Ember.computed.gt("theme.childThemes.length", MAX_COMPONENTS),
+  hasComponents: gt("children.length", 0),
+  displayComponents: and("hasComponents", "theme.isActive"),
+  displayHasMore: gt("theme.childThemes.length", MAX_COMPONENTS),
 
   click(e) {
     if (!$(e.target).hasClass("others-count")) {
@@ -32,7 +35,7 @@ export default Ember.Component.extend({
   },
 
   scheduleAnimation() {
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       this.animate(true);
     });
   },

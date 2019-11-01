@@ -1006,6 +1006,21 @@ describe Email::Receiver do
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
     end
 
+    it "creates hidden topic for X-SES-Spam-Verdict" do
+      SiteSetting.email_in_spam_header = 'X-SES-Spam-Verdict'
+
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_ses_spam_verdict) }.to change { Topic.count }.by(1) # Topic created
+
+      topic = Topic.last
+      expect(topic.visible).to eq(false)
+
+      post = Post.last
+      expect(post.hidden).to eq(true)
+      expect(post.hidden_at).not_to eq(nil)
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+    end
+
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
 

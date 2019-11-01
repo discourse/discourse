@@ -1,3 +1,9 @@
+import { or, and, not, alias } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
@@ -33,14 +39,14 @@ export function registerCustomPostMessageCallback(type, callback) {
   customPostMessageCallbacks[type] = callback;
 }
 
-export default Ember.Controller.extend(bufferedProperty("model"), {
-  composer: Ember.inject.controller(),
-  application: Ember.inject.controller(),
+export default Controller.extend(bufferedProperty("model"), {
+  composer: inject(),
+  application: inject(),
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,
   queryParams: ["filter", "username_filters"],
-  loadedAllPosts: Ember.computed.or(
+  loadedAllPosts: or(
     "model.postStream.loadedAllPosts",
     "model.postStream.loadingLastPost"
   ),
@@ -54,7 +60,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   filter: null,
   quoteState: null,
 
-  canRemoveTopicFeaturedLink: Ember.computed.and(
+  canRemoveTopicFeaturedLink: and(
     "canEditTopicFeaturedLink",
     "buffered.featured_link"
   ),
@@ -130,12 +136,12 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       return;
     }
 
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       this.send("showHistory", post, revision);
     });
   },
 
-  showCategoryChooser: Ember.computed.not("model.isPrivateMessage"),
+  showCategoryChooser: not("model.isPrivateMessage"),
 
   gotoInbox(name) {
     let url = userPath(this.get("currentUser.username_lower") + "/messages");
@@ -965,13 +971,13 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
         options = {
           action: Composer.PRIVATE_MESSAGE,
           archetypeId: "private_message",
-          draftKey: Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY,
+          draftKey: post.topic.draft_key,
           usernames: usernames
         };
       } else {
         options = {
           action: Composer.CREATE_TOPIC,
-          draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
+          draftKey: post.topic.draft_key,
           categoryId: this.get("model.category.id")
         };
       }
@@ -1056,7 +1062,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
         statusType,
         null
       )
-        .then(() => this.set(`model.${topicTimer}`, Ember.Object.create({})))
+        .then(() => this.set(`model.${topicTimer}`, EmberObject.create({})))
         .catch(error => popupAjaxError(error));
     }
   },
@@ -1142,12 +1148,12 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  hasError: Ember.computed.or("model.errorHtml", "model.errorMessage"),
-  noErrorYet: Ember.computed.not("hasError"),
+  hasError: or("model.errorHtml", "model.errorMessage"),
+  noErrorYet: not("hasError"),
 
-  categories: Ember.computed.alias("site.categoriesList"),
+  categories: alias("site.categoriesList"),
 
-  selectedPostsCount: Ember.computed.alias("selectedPostIds.length"),
+  selectedPostsCount: alias("selectedPostIds.length"),
 
   @computed(
     "selectedPostIds",
@@ -1196,7 +1202,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     return isMegaTopic ? false : !selectedAllPosts;
   },
 
-  canDeselectAll: Ember.computed.alias("selectedAllPosts"),
+  canDeselectAll: alias("selectedAllPosts"),
 
   @computed(
     "currentUser.staff",
@@ -1423,7 +1429,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
         // automatically unpin topics when the user reaches the bottom
         const max = _.max(postNumbers);
         if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
-          Ember.run.next(() => topic.clearPin());
+          next(() => topic.clearPin());
         }
       }
     }

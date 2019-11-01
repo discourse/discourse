@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["topic-notice"],
 
   @computed("model.group.{full_name,name,allow_membership_requests}")

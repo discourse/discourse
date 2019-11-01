@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
-export default Ember.Component.extend({
+export default Component.extend({
   elementId: "related-messages",
   classNames: ["suggested-topics"],
 

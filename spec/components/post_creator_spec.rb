@@ -139,11 +139,10 @@ describe PostCreator do
         cat.save
 
         created_post = nil
-        reply = nil
 
         messages = MessageBus.track_publish do
           created_post = PostCreator.new(admin, basic_topic_params.merge(category: cat.id)).create
-          reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
+          _reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
         end
 
         # 2 for topic, one to notify of new topic another for tracking state
@@ -446,8 +445,8 @@ describe PostCreator do
             end
 
             it "creates missing tags if some exist" do
-              existing_tag1 = Fabricate(:tag, name: tag_names[0])
-              existing_tag1 = Fabricate(:tag, name: tag_names[1])
+              _existing_tag1 = Fabricate(:tag, name: tag_names[0])
+              _existing_tag1 = Fabricate(:tag, name: tag_names[1])
               expect { @post = creator_with_tags.create }.to change { Tag.count }.by(tag_names.size - 2)
               expect(@post.topic.tags.map(&:name).sort).to eq(tag_names.sort)
             end
@@ -483,9 +482,16 @@ describe PostCreator do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     it 'whispers do not mess up the public view' do
-      first = PostCreator.new(user,
+
+      freeze_time
+
+      first = PostCreator.new(
+        user,
         topic_id: topic.id,
-        raw: 'this is the first post').create
+        raw: 'this is the first post'
+      ).create
+
+      freeze_time 1.year.from_now
 
       user_stat = user.user_stat
 
@@ -511,6 +517,9 @@ describe PostCreator do
       expect(whisper_reply.post_type).to eq(Post.types[:whisper])
 
       expect(user_stat.reload.post_count).to eq(0)
+
+      user.reload
+      expect(user.last_posted_at).to eq_time(1.year.ago)
 
       # date is not precise enough in db
       whisper_reply.reload
@@ -742,6 +751,10 @@ describe PostCreator do
     end
 
     it 'acts correctly' do
+      freeze_time
+
+      user.update_columns(last_posted_at: 1.year.ago)
+
       # It's not a warning
       expect(post.topic.user_warning).to be_blank
 
@@ -759,6 +772,9 @@ describe PostCreator do
       # PMs do not increase post count or topic count
       expect(post.user.user_stat.post_count).to eq(0)
       expect(post.user.user_stat.topic_count).to eq(0)
+
+      user.reload
+      expect(user.last_posted_at).to eq_time(1.year.ago)
 
       # archive this message and ensure archive is cleared for all users on reply
       UserArchivedMessage.create(user_id: target_user2.id, topic_id: post.topic_id)

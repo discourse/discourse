@@ -1,3 +1,6 @@
+import { once } from "@ember/runloop";
+import { next } from "@ember/runloop";
+import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import logout from "discourse/lib/logout";
@@ -20,7 +23,7 @@ function unlessReadOnly(method, message) {
   };
 }
 
-const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
+const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   siteTitle: setting("title"),
   shortSiteDescription: setting("short_site_description"),
 
@@ -55,7 +58,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     // Ember doesn't provider a router `willTransition` event so let's make one
     willTransition() {
       var router = getOwner(this).lookup("router:main");
-      Ember.run.once(router, router.trigger, "willTransition");
+      once(router, router.trigger, "willTransition");
       return this._super(...arguments);
     },
 
@@ -82,7 +85,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
         action: Composer.PRIVATE_MESSAGE,
         usernames: recipient,
         archetypeId: "private_message",
-        draftKey: "new_private_message",
+        draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
         reply,
         title
       });
@@ -225,7 +228,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
   activate() {
     this._super(...arguments);
-    Ember.run.next(function() {
+    next(function() {
       // Support for callbacks once the application has activated
       ApplicationRoute.trigger("activate");
     });

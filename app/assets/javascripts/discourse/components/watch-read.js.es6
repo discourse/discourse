@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 
-export default Ember.Component.extend({
+export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     const currentUser = this.currentUser;

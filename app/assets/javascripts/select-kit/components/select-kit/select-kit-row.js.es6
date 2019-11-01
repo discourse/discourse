@@ -1,9 +1,10 @@
+import Component from "@ember/component";
 import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 const { run, isPresent, makeArray, isEmpty } = Ember;
 import UtilsMixin from "select-kit/mixins/utils";
 
-export default Ember.Component.extend(UtilsMixin, {
+export default Component.extend(UtilsMixin, {
   layoutName: "select-kit/templates/components/select-kit/select-kit-row",
   classNames: ["select-kit-row"],
   tagName: "li",

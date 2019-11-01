@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { hashString } from "discourse/lib/hash";
 
@@ -24,7 +25,7 @@ function rethrow(error) {
   throw error;
 }
 
-export default Ember.Object.extend({
+export default EmberObject.extend({
   storageKey(type, findArgs, options) {
     if (options && options.cacheKey) {
       return options.cacheKey;
@@ -65,8 +66,12 @@ export default Ember.Object.extend({
   pathFor(store, type, findArgs) {
     let path =
       this.basePath(store, type, findArgs) +
-      Ember.String.underscore(store.pluralize(type));
+      Ember.String.underscore(store.pluralize(this.apiNameFor(type)));
     return this.appendQueryParams(path, findArgs);
+  },
+
+  apiNameFor(type) {
+    return type;
   },
 
   findAll(store, type, findArgs) {
@@ -103,7 +108,7 @@ export default Ember.Object.extend({
 
   update(store, type, id, attrs) {
     const data = {};
-    const typeField = Ember.String.underscore(type);
+    const typeField = Ember.String.underscore(this.apiNameFor(type));
     data[typeField] = attrs;
 
     return ajax(
@@ -116,7 +121,7 @@ export default Ember.Object.extend({
 
   createRecord(store, type, attrs) {
     const data = {};
-    const typeField = Ember.String.underscore(type);
+    const typeField = Ember.String.underscore(this.apiNameFor(type));
     data[typeField] = attrs;
     return ajax(this.pathFor(store, type), this.getPayload("POST", data)).then(
       function(json) {

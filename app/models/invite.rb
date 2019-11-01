@@ -165,7 +165,7 @@ class Invite < ActiveRecord::Base
   end
 
   def self.find_user_by_email(email)
-    User.with_email(email).where(staged: false).first
+    User.with_email(Email.downcase(email)).where(staged: false).first
   end
 
   def self.get_group_ids(group_names)

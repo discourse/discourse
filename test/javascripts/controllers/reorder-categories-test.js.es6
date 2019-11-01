@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { mapRoutes } from "discourse/mapping-router";
 import createStore from "helpers/create-store";
 
@@ -16,7 +17,7 @@ QUnit.test("fixIndices set unique position number", function(assert) {
     categories.push(store.createRecord("category", { id: i, position: 0 }));
   }
 
-  const site = Ember.Object.create({ categories: categories });
+  const site = EmberObject.create({ categories: categories });
   const reorderCategoriesController = this.subject({ site });
 
   reorderCategoriesController.fixIndices();
@@ -59,7 +60,7 @@ QUnit.test(
     const categories = [child2, parent, other, child1];
     const expectedOrderSlugs = ["parent", "child2", "child1", "other"];
 
-    const site = Ember.Object.create({ categories: categories });
+    const site = EmberObject.create({ categories: categories });
     const reorderCategoriesController = this.subject({ site });
 
     reorderCategoriesController.fixIndices();
@@ -95,7 +96,7 @@ QUnit.test(
     });
 
     const categories = [elem1, elem2, elem3];
-    const site = Ember.Object.create({ categories: categories });
+    const site = EmberObject.create({ categories: categories });
     const reorderCategoriesController = this.subject({ site });
 
     reorderCategoriesController.actions.change.call(
@@ -142,7 +143,7 @@ QUnit.test(
     });
 
     const categories = [elem1, child1, elem2, elem3];
-    const site = Ember.Object.create({ categories: categories });
+    const site = EmberObject.create({ categories: categories });
     const reorderCategoriesController = this.subject({ site });
 
     reorderCategoriesController.actions.change.call(
@@ -189,7 +190,7 @@ QUnit.test(
     });
 
     const categories = [elem1, child1, elem2, elem3];
-    const site = Ember.Object.create({ categories: categories });
+    const site = EmberObject.create({ categories: categories });
     const reorderCategoriesController = this.subject({ site });
 
     reorderCategoriesController.fixIndices();

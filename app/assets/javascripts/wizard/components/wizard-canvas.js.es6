@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 const MAX_PARTICLES = 150;
 
 const SIZE = 144;
@@ -52,7 +53,7 @@ class Particle {
   }
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["wizard-canvas"],
   tagName: "canvas",
   ctx: null,

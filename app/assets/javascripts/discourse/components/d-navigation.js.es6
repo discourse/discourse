@@ -1,7 +1,9 @@
+import { inject as service } from "@ember/service";
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
-  router: Ember.inject.service(),
+export default Component.extend({
+  router: service(),
   persistedQueryParams: null,
 
   tagName: "",

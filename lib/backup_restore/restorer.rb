@@ -404,6 +404,7 @@ module BackupRestore
 
     def reconnect_database
       log "Reconnecting to the database..."
+      RailsMultisite::ConnectionManagement::reload if RailsMultisite::ConnectionManagement::instance
       RailsMultisite::ConnectionManagement::establish_connection(db: @current_db)
     end
 
@@ -435,6 +436,7 @@ module BackupRestore
         FileUtils.mkdir_p("uploads")
 
         tmp_uploads_path = Dir.glob(File.join(@tmp_directory, "uploads", "*")).first
+        return if tmp_uploads_path.blank?
         previous_db_name = BackupMetadata.value_for("db_name") || File.basename(tmp_uploads_path)
         current_db_name = RailsMultisite::ConnectionManagement.current_db
         optimized_images_exist = File.exist?(File.join(tmp_uploads_path, 'optimized'))

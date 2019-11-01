@@ -7,7 +7,7 @@ class MinUsernameLengthValidator
 
   def valid_value?(value)
     return false if value > SiteSetting.max_username_length
-    @username = User.where('length(username) < ?', value).pluck(:username).first
+    @username = User.where('length(username) < ?', value).pluck_first(:username)
     @username.blank?
   end
 

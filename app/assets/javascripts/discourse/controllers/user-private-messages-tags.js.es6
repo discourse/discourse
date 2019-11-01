@@ -1,4 +1,5 @@
-export default Ember.Controller.extend({
+import Controller from "@ember/controller";
+export default Controller.extend({
   sortProperties: ["count:desc", "id"],
   tagsForUser: null,
   sortedByCount: true,

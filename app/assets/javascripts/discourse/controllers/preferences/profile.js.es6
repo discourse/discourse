@@ -1,9 +1,11 @@
+import EmberObject from "@ember/object";
+import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cookAsync } from "discourse/lib/text";
 
-export default Ember.Controller.extend(PreferencesTabController, {
+export default Controller.extend(PreferencesTabController, {
   init() {
     this._super(...arguments);
 
@@ -33,7 +35,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
         const value = userFields
           ? userFields[field.get("id").toString()]
           : null;
-        return Ember.Object.create({ value, field });
+        return EmberObject.create({ value, field });
       });
     }
   },

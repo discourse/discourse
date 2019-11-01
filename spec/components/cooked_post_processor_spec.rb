@@ -199,6 +199,12 @@ describe CookedPostProcessor do
           RAW
         end
 
+        let(:staff_post) do
+          Fabricate(:post, user: Fabricate(:admin), raw: <<~RAW)
+          This is a #{url_with_path} topic
+          RAW
+        end
+
         before do
           urls.each do |url|
             stub_request(:get, url).to_return(
@@ -247,6 +253,14 @@ describe CookedPostProcessor do
             text: title,
             count: 1
           )
+
+          expect(html).to have_tag("a[rel='nofollow noopener']")
+        end
+
+        it 'removes nofollow if user is staff/tl3' do
+          cpp = CookedPostProcessor.new(staff_post, invalidate_oneboxes: true)
+          cpp.post_process
+          expect(cpp.html).to_not have_tag("a[rel='nofollow noopener']")
         end
       end
     end
@@ -287,7 +301,7 @@ describe CookedPostProcessor do
           )
 
           # Fake a loading image
-          optimized_image = OptimizedImage.create!(
+          _optimized_image = OptimizedImage.create!(
             url: '/uploads/default/10x10.png',
             width: CookedPostProcessor::LOADING_SIZE,
             height: CookedPostProcessor::LOADING_SIZE,
@@ -615,8 +629,7 @@ describe CookedPostProcessor do
       end
 
       context "topic image" do
-        let(:topic) { build(:topic, id: 1) }
-        let(:post) { Fabricate(:post_with_uploaded_image, topic: topic) }
+        let(:post) { Fabricate(:post_with_uploaded_image) }
         let(:cpp) { CookedPostProcessor.new(post) }
 
         it "adds a topic image if there's one in the first post" do
@@ -864,6 +877,27 @@ describe CookedPostProcessor do
 
     before do
       SiteSetting.add_rel_nofollow_to_user_content = false
+      Oneboxer.expects(:onebox)
+        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
+        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow noopener">GANGNAM STYLE</a></aside>')
+      cpp.post_process_oneboxes
+    end
+
+    it "removes nofollow noopener from links" do
+      expect(cpp).to be_dirty
+      expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0">GANGNAM STYLE</a></aside>'
+    end
+  end
+
+  context "#post_process_oneboxes removes nofollow if user is tl3" do
+    let(:post) { build(:post_with_youtube, id: 123) }
+    let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
+
+    before do
+      post.user.trust_level = TrustLevel[3]
+      post.user.save!
+      SiteSetting.add_rel_nofollow_to_user_content = true
+      SiteSetting.tl3_links_no_follow = false
       Oneboxer.expects(:onebox)
         .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
         .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow noopener">GANGNAM STYLE</a></aside>')

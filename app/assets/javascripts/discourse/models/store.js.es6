@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
@@ -44,7 +45,7 @@ function findAndRemoveMap(type, id) {
 
 flushMap();
 
-export default Ember.Object.extend({
+export default EmberObject.extend({
   _plurals: {
     "post-reply": "post-replies",
     "post-reply-history": "post_reply_histories",
@@ -92,7 +93,12 @@ export default Ember.Object.extend({
     if (typeof findArgs === "object") {
       return this._resultSet(type, result, findArgs);
     } else {
-      return this._hydrate(type, result[Ember.String.underscore(type)], result);
+      const apiName = this.adapterFor(type).apiNameFor(type);
+      return this._hydrate(
+        type,
+        result[Ember.String.underscore(apiName)],
+        result
+      );
     }
   },
 
@@ -146,8 +152,11 @@ export default Ember.Object.extend({
   },
 
   refreshResults(resultSet, type, url) {
+    const adapter = this.adapterFor(type);
     return ajax(url).then(result => {
-      const typeName = Ember.String.underscore(this.pluralize(type));
+      const typeName = Ember.String.underscore(
+        this.pluralize(adapter.apiNameFor(type))
+      );
       const content = result[typeName].map(obj =>
         this._hydrate(type, obj, result)
       );
@@ -156,8 +165,11 @@ export default Ember.Object.extend({
   },
 
   appendResults(resultSet, type, url) {
+    const adapter = this.adapterFor(type);
     return ajax(url).then(result => {
-      let typeName = Ember.String.underscore(this.pluralize(type));
+      const typeName = Ember.String.underscore(
+        this.pluralize(adapter.apiNameFor(type))
+      );
 
       let pageTarget = result.meta || result;
       let totalRows =
@@ -210,7 +222,10 @@ export default Ember.Object.extend({
   },
 
   _resultSet(type, result, findArgs) {
-    const typeName = Ember.String.underscore(this.pluralize(type));
+    const adapter = this.adapterFor(type);
+    const typeName = Ember.String.underscore(
+      this.pluralize(adapter.apiNameFor(type))
+    );
     const content = result[typeName].map(obj =>
       this._hydrate(type, obj, result)
     );

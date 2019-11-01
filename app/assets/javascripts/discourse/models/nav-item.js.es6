@@ -193,12 +193,42 @@ NavItem.reopenClass({
       return item.customFilter.call(this, category, args);
     });
 
+    let forceActive = false;
+
     extraItems.forEach(item => {
+      const before = item.before;
+      if (before) {
+        let i = 0;
+        for (i = 0; i < items.length; i++) {
+          if (items[i].name === before) {
+            break;
+          }
+        }
+        items.splice(i, 0, item);
+      } else {
+        items.push(item);
+      }
+
       if (!item.customHref) return;
+
       item.set("href", item.customHref.call(this, category, args));
+
+      if (item.forceActive && item.forceActive.call(this, category, args)) {
+        item.active = true;
+        forceActive = true;
+      } else {
+        item.active = undefined;
+      }
     });
 
-    return items.concat(extraItems);
+    if (forceActive) {
+      items.forEach(i => {
+        if (i.active === undefined) {
+          i.active = false;
+        }
+      });
+    }
+    return items;
   }
 });
 

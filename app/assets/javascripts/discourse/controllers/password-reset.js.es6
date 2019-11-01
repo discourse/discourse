@@ -1,3 +1,5 @@
+import { alias, or } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
@@ -6,13 +8,13 @@ import { userPath } from "discourse/lib/url";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 
-export default Ember.Controller.extend(PasswordValidation, {
-  isDeveloper: Ember.computed.alias("model.is_developer"),
-  admin: Ember.computed.alias("model.admin"),
-  secondFactorRequired: Ember.computed.alias("model.second_factor_required"),
-  securityKeyRequired: Ember.computed.alias("model.security_key_required"),
-  backupEnabled: Ember.computed.alias("model.backup_enabled"),
-  securityKeyOrSecondFactorRequired: Ember.computed.or(
+export default Controller.extend(PasswordValidation, {
+  isDeveloper: alias("model.is_developer"),
+  admin: alias("model.admin"),
+  secondFactorRequired: alias("model.second_factor_required"),
+  securityKeyRequired: alias("model.security_key_required"),
+  backupEnabled: alias("model.backup_enabled"),
+  securityKeyOrSecondFactorRequired: or(
     "model.second_factor_required",
     "model.security_key_required"
   ),

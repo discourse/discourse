@@ -1,8 +1,9 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
-export default Ember.Component.extend({
+export default Component.extend({
   elementId: "suggested-topics",
   classNames: ["suggested-topics"],
 

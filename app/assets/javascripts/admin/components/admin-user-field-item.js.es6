@@ -1,3 +1,6 @@
+import { empty } from "@ember/object/computed";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
 import UserField from "admin/models/user-field";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -9,8 +12,8 @@ import {
   on
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend(bufferedProperty("userField"), {
-  editing: Ember.computed.empty("userField.id"),
+export default Component.extend(bufferedProperty("userField"), {
+  editing: empty("userField.id"),
   classNameBindings: [":user-field"],
 
   cantMoveUp: propertyEqual("userField", "firstField"),
@@ -27,7 +30,7 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
   @observes("editing")
   _focusOnEdit() {
     if (this.editing) {
-      Ember.run.scheduleOnce("afterRender", this, "_focusName");
+      scheduleOnce("afterRender", this, "_focusName");
     }
   },
 

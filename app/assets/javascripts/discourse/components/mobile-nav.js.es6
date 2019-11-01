@@ -1,6 +1,8 @@
+import { next } from "@ember/runloop";
+import Component from "@ember/component";
 import { on, observes } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   @on("init")
   _init() {
     if (!this.get("site.mobileView")) {
@@ -20,7 +22,7 @@ export default Ember.Component.extend({
   @observes("currentPath")
   currentPathChanged() {
     this.set("expanded", false);
-    Ember.run.next(() => this._updateSelectedHtml());
+    next(() => this._updateSelectedHtml());
   },
 
   _updateSelectedHtml() {
@@ -40,7 +42,7 @@ export default Ember.Component.extend({
     toggleExpanded() {
       this.toggleProperty("expanded");
 
-      Ember.run.next(() => {
+      next(() => {
         if (this.expanded) {
           $(window)
             .off("click.mobile-nav")

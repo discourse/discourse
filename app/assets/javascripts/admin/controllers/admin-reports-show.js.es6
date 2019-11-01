@@ -1,6 +1,7 @@
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   queryParams: ["start_date", "end_date", "filters"],
   start_date: null,
   end_date: null,

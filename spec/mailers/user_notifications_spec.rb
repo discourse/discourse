@@ -107,6 +107,10 @@ describe UserNotifications do
 
     subject { UserNotifications.digest(user) }
 
+    after do
+      $redis.keys('summary-new-users:*').each { |key| $redis.del(key) }
+    end
+
     context "without new topics" do
 
       it "doesn't send the email" do
@@ -138,6 +142,19 @@ describe UserNotifications do
         expect(subject.html_part.body.to_s).to be_present
         expect(subject.text_part.body.to_s).to be_present
         expect(subject.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
+        expect(subject.html_part.body.to_s).to include('New Users')
+      end
+
+      it "doesn't include new user count if digest_after_minutes is low" do
+        user.user_option.digest_after_minutes = 60
+        expect(subject.html_part.body.to_s).to_not include('New Users')
+      end
+
+      it "works with min_date string" do
+        digest = UserNotifications.digest(user, since: 1.month.ago.to_date.to_s)
+        expect(digest.html_part.body.to_s).to be_present
+        expect(digest.text_part.body.to_s).to be_present
+        expect(digest.html_part.body.to_s).to include('New Users')
       end
 
       it "includes email_prefix in email subject instead of site title" do

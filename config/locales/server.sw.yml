@@ -1846,7 +1846,7 @@ sw:
     missing: "Samahani, tumeshindwa kuona picha inayoendana na barua pepe hiyo. Unaweza kuipakia tena?"
   flag_reason:
     sockpuppet: "Mtumiaji mpya ametengeneza mada, na mtumiaji mpya mwenye anwani ya mtandao hiyo hiyo (%{ip_address}) amejibu. Angalia mpangilio wa tovuti <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Mtumiaji mpya amejaribu kutengeneza machapisho mengi yenye viungo kwenda kwa kikoa (%{domain}). Tembelea <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> mpangilio wa tovuti."
+    spam_hosts: "Mtumiaji mpya amejaribu kutengeneza machapisho mengi yenye viungo kwenda kwa kikoa. Tembelea <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> mpangilio wa tovuti."
   skipped_email_log:
     exceeded_emails_limit: "Kiwango kimepita max_emails_per_day_per_user"
     exceeded_bounces_limit: "Kiwango kimepita bounce_score_threshold"

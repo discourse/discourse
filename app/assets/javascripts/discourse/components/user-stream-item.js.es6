@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { propertyEqual } from "discourse/lib/computed";
 import { actionDescription } from "discourse/widgets/post-small-action";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [
     ":user-stream-item",
     ":item", // DEPRECATED: 'item' class

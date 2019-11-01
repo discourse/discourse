@@ -1,7 +1,9 @@
+import { debounce } from "@ember/runloop";
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 const { get } = Ember;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   filter: null,
 
   @computed("model.[]", "filter")
@@ -20,7 +22,7 @@ export default Ember.Controller.extend({
 
   actions: {
     filterReports(filter) {
-      Ember.run.debounce(this, this._performFiltering, filter, 250);
+      debounce(this, this._performFiltering, filter, 250);
     }
   },
 

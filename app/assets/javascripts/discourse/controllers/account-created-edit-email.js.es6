@@ -1,8 +1,9 @@
+import Controller from "@ember/controller";
 import { changeEmail } from "discourse/lib/user-activation";
 import computed from "ember-addons/ember-computed-decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   accountCreated: null,
   newEmail: null,
 

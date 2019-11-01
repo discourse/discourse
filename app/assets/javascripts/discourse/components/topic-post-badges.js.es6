@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 
 // Creates a link
@@ -12,7 +13,7 @@ function link(buffer, prop, url, cssClass, i18nKey, text) {
   );
 }
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     tagName: "span",
     classNameBindings: [":topic-post-badges"],

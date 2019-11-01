@@ -117,6 +117,7 @@ class User < ActiveRecord::Base
   after_create :set_random_avatar
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
+  after_create :set_default_tags_preferences
 
   after_update :trigger_user_updated_event, if: :saved_change_to_uploaded_avatar_id?
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
@@ -199,7 +200,7 @@ class User < ActiveRecord::Base
   scope :filter_by_username_or_email, ->(filter) do
     if filter =~ /.+@.+/
       # probably an email so try the bypass
-      if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck(:user_id).first
+      if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck_first(:user_id)
         return where('users.id = ?', user_id)
       end
     end
@@ -415,6 +416,11 @@ class User < ActiveRecord::Base
     Jobs.enqueue(:send_system_message, user_id: id, message_type: "welcome_tl1_user")
   end
 
+  def enqueue_welcome_moderator_message
+    return unless moderator
+    Jobs.enqueue(:send_system_message, user_id: id, message_type: 'welcome_moderator')
+  end
+
   def change_username(new_username, actor = nil)
     UsernameChanger.change(self, new_username, actor)
   end
@@ -588,11 +594,6 @@ class User < ActiveRecord::Base
     }
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
-  end
-
-  # A selection of people to autocomplete on @mention
-  def self.mentionable_usernames
-    User.select(:username).order('last_posted_at desc').limit(20)
   end
 
   def password=(password)
@@ -1006,7 +1007,6 @@ class User < ActiveRecord::Base
 
       message = I18n.t(
         'flag_reason.spam_hosts',
-        domain: tl.domain,
         base_path: Discourse.base_path,
         locale: SiteSetting.default_locale
       )
@@ -1220,11 +1220,11 @@ class User < ActiveRecord::Base
     group_titles_query = group_titles_query.order("groups.id = #{primary_group_id} DESC") if primary_group_id
     group_titles_query = group_titles_query.order("groups.primary_group DESC").limit(1)
 
-    if next_best_group_title = group_titles_query.pluck(:title).first
+    if next_best_group_title = group_titles_query.pluck_first(:title)
       return next_best_group_title
     end
 
-    next_best_badge_title = badges.where(allow_title: true).limit(1).pluck(:name).first
+    next_best_badge_title = badges.where(allow_title: true).pluck_first(:name)
     next_best_badge_title ? Badge.display_name(next_best_badge_title) : nil
   end
 
@@ -1420,6 +1420,23 @@ class User < ActiveRecord::Base
     end
   end
 
+  def set_default_tags_preferences
+    return if self.staged?
+
+    values = []
+
+    %w{watching watching_first_post tracking muted}.each do |s|
+      tag_names = SiteSetting.get("default_tags_#{s}").split("|")
+      now = Time.zone.now
+
+      Tag.where(name: tag_names).pluck(:id).each do |tag_id|
+        values << { user_id: self.id, tag_id: tag_id, notification_level: TagUser.notification_levels[s.to_sym], created_at: now, updated_at: now }
+      end
+    end
+
+    TagUser.insert_all!(values) if values.present?
+  end
+
   def self.purge_unactivated
     return [] if SiteSetting.purge_unactivated_users_grace_period_days <= 0
 
@@ -1445,7 +1462,7 @@ class User < ActiveRecord::Base
   def match_title_to_primary_group_changes
     return unless primary_group_id_changed?
 
-    if title == Group.where(id: primary_group_id_was).pluck(:title).first
+    if title == Group.where(id: primary_group_id_was).pluck_first(:title)
       self.title = primary_group&.title
     end
   end

@@ -1,8 +1,9 @@
+import Controller from "@ember/controller";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import ScreenedUrl from "admin/models/screened-url";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   loading: false,
 
   show() {

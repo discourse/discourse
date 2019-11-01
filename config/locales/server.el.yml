@@ -2213,7 +2213,7 @@ el:
     missing: "Λυπούμαστε, αλλά δεν μπορέσαμε να βρούμε κάποιο άβαταρ που να αντιστοιχίζεται με τη συγκεκριμένη διεύθυνση email. Μπορείτε να δοκιμάσετε να το ανεβάσετε ξανά;"
   flag_reason:
     sockpuppet: "Ένας νέος χρήστης δημιούργησε ένα νήμα και ένας άλλος νέος χρήσης με την ίδια διεύθυνση IP (%{ip_address}) απάντησε. Δες τις ρυθμίσεις ιστοτόπου <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Αυτός ο νέος χρήστης προσπάθησε να δημιουργήσει πολλαπλές αναρτήσεις με συνδέσμους προς το ίδιο domain (%{domain}). Δες τις ρυθμίσεις ιστοτόπου <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    spam_hosts: "Αυτός ο νέος χρήστης προσπάθησε να δημιουργήσει πολλαπλές αναρτήσεις με συνδέσμους προς το ίδιο domain. Δες τις ρυθμίσεις ιστοτόπου <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "Υπέρβαση max_emails_per_day_per_user"
     exceeded_bounces_limit: "Υπέρβαση bounce_score_threshold"

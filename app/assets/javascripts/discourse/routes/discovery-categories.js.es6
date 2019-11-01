@@ -1,3 +1,6 @@
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
+import DiscourseRoute from "discourse/routes/discourse";
 import showModal from "discourse/lib/show-modal";
 import OpenComposer from "discourse/mixins/open-composer";
 import CategoryList from "discourse/models/category-list";
@@ -7,7 +10,7 @@ import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "preload-store";
 import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
 
-const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
+const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   renderTemplate() {
     this.render("navigation/categories", { outlet: "navigation-bar" });
     this.render("discovery/categories", { outlet: "list-container" });
@@ -50,7 +53,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
         wrappedCategoriesList && wrappedCategoriesList.category_list;
 
       if (categoriesList && topicsList) {
-        return Ember.Object.create({
+        return EmberObject.create({
           categories: CategoryList.categoriesFrom(
             this.store,
             wrappedCategoriesList
@@ -65,7 +68,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
       }
       // Otherwise, return the ajax result
       return ajax(`/categories_and_${filter}`).then(result => {
-        return Ember.Object.create({
+        return EmberObject.create({
           categories: CategoryList.categoriesFrom(this.store, result),
           topics: TopicList.topicsFrom(this.store, result),
           can_create_category: result.category_list.can_create_category,
@@ -132,9 +135,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     didTransition() {
-      Ember.run.next(() =>
-        this.controllerFor("application").set("showFooter", true)
-      );
+      next(() => this.controllerFor("application").set("showFooter", true));
       return true;
     }
   }

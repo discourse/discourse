@@ -1,8 +1,9 @@
+import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend(bufferedProperty("siteText"), {
+export default Controller.extend(bufferedProperty("siteText"), {
   saved: false,
 
   @computed("buffered.value")

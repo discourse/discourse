@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 export default class ComponentConnector {
   constructor(widget, componentName, opts, trackedProperties) {
     this.widget = widget;
@@ -13,7 +14,7 @@ export default class ComponentConnector {
     const elem = $elem[0];
     const { opts, widget, componentName } = this;
 
-    Ember.run.next(() => {
+    next(() => {
       const mounted = widget._findView();
 
       const view = widget.register

@@ -157,8 +157,12 @@ class Post < ActiveRecord::Base
     includes(:post_details).find_by(post_details: { key: key, value: value })
   end
 
+  def self.excerpt_size=(sz)
+    @excerpt_size = sz
+  end
+
   def self.excerpt_size
-    220
+    @excerpt_size || 220
   end
 
   def whisper?
@@ -1011,7 +1015,7 @@ class Post < ActiveRecord::Base
             end
 
             upload_id = nil
-            upload_id = Upload.where(sha1: sha1).pluck(:id).first if sha1.present?
+            upload_id = Upload.where(sha1: sha1).pluck_first(:id) if sha1.present?
             upload_id ||= yield(post, src, path, sha1)
 
             if upload_id.blank?

@@ -1,12 +1,14 @@
+import EmberObject from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   model() {
     const username = this.modelFor("user").get("username_lower");
     return ajax(`/tags/personal_messages/${username}`)
       .then(result => {
-        return result.tags.map(tag => Ember.Object.create(tag));
+        return result.tags.map(tag => EmberObject.create(tag));
       })
       .catch(popupAjaxError);
   },

@@ -1,17 +1,19 @@
+import { empty, alias } from "@ember/object/computed";
+import Component from "@ember/component";
 import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [":value-list"],
 
-  inputInvalid: Ember.computed.empty("newValue"),
+  inputInvalid: empty("newValue"),
 
   inputDelimiter: null,
   inputType: null,
   newValue: "",
   collection: null,
   values: null,
-  noneKey: Ember.computed.alias("addKey"),
+  noneKey: alias("addKey"),
 
   @on("didReceiveAttrs")
   _setupCollection() {

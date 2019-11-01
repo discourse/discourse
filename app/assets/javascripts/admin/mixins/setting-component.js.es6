@@ -1,5 +1,8 @@
+import { alias, oneWay } from "@ember/object/computed";
 import computed from "ember-addons/ember-computed-decorators";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
+import { on } from "@ember/object/evented";
+import Mixin from "@ember/object/mixin";
 
 const CUSTOM_TYPES = [
   "bool",
@@ -14,16 +17,17 @@ const CUSTOM_TYPES = [
   "compact_list",
   "secret_list",
   "upload",
-  "group_list"
+  "group_list",
+  "tag_list"
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
-  content: Ember.computed.alias("setting"),
+  content: alias("setting"),
   validationMessage: null,
-  isSecret: Ember.computed.oneWay("setting.secret"),
+  isSecret: oneWay("setting.secret"),
 
   @computed("buffered.value", "setting.value")
   dirty(bufferVal, settingVal) {
@@ -89,18 +93,18 @@ export default Ember.Mixin.create({
     return settingDefault !== bufferedValue;
   },
 
-  _watchEnterKey: function() {
+  _watchEnterKey: on("didInsertElement", function() {
     $(this.element).on("keydown.setting-enter", ".input-setting-string", e => {
       if (e.keyCode === 13) {
         // enter key
         this.send("save");
       }
     });
-  }.on("didInsertElement"),
+  }),
 
-  _removeBindings: function() {
+  _removeBindings: on("willDestroyElement", function() {
     $(this.element).off("keydown.setting-enter");
-  }.on("willDestroyElement"),
+  }),
 
   _save() {
     Ember.warn("You should define a `_save` method", {
@@ -111,23 +115,21 @@ export default Ember.Mixin.create({
 
   actions: {
     save() {
-      this._save(result => {
-        result
-          .then(() => {
-            this.set("validationMessage", null);
-            this.commitBuffer();
-            if (AUTO_REFRESH_ON_SAVE.includes(this.get("setting.setting"))) {
-              this.afterSave();
-            }
-          })
-          .catch(e => {
-            if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-              this.set("validationMessage", e.jqXHR.responseJSON.errors[0]);
-            } else {
-              this.set("validationMessage", I18n.t("generic_error"));
-            }
-          });
-      });
+      this._save()
+        .then(() => {
+          this.set("validationMessage", null);
+          this.commitBuffer();
+          if (AUTO_REFRESH_ON_SAVE.includes(this.setting.setting)) {
+            this.afterSave();
+          }
+        })
+        .catch(e => {
+          if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+            this.set("validationMessage", e.jqXHR.responseJSON.errors[0]);
+          } else {
+            this.set("validationMessage", I18n.t("generic_error"));
+          }
+        });
     },
 
     cancel() {

@@ -1,3 +1,6 @@
+import { alias } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import {
   default as computed,
   observes
@@ -48,13 +51,13 @@ if (customNavItemHref) {
   });
 }
 
-export default Ember.Controller.extend(BulkTopicSelection, {
-  application: Ember.inject.controller(),
+export default Controller.extend(BulkTopicSelection, {
+  application: inject(),
 
   tag: null,
   additionalTags: null,
   list: null,
-  canAdminTag: Ember.computed.alias("currentUser.staff"),
+  canAdminTag: alias("currentUser.staff"),
   filterMode: null,
   navMode: "latest",
   loading: false,
@@ -67,7 +70,7 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   max_posts: null,
   q: null,
 
-  categories: Ember.computed.alias("site.categoriesList"),
+  categories: alias("site.categoriesList"),
 
   @computed("list", "list.draft")
   createTopicLabel(list, listDraft) {

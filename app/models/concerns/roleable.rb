@@ -20,6 +20,7 @@ module Roleable
 
   def grant_moderation!
     set_permission('moderator', true)
+    enqueue_welcome_moderator_message
   end
 
   def revoke_moderation!

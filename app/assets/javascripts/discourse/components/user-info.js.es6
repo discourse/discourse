@@ -1,3 +1,5 @@
+import { alias } from "@ember/object/computed";
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { userPath } from "discourse/lib/url";
 
@@ -5,7 +7,7 @@ export function normalize(name) {
   return name.replace(/[\-\_ \.]/g, "").toLowerCase();
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [":user-info", "size"],
   attributeBindings: ["data-username"],
   size: "small",
@@ -15,10 +17,10 @@ export default Ember.Component.extend({
     return userPath(username);
   },
 
-  "data-username": Ember.computed.alias("user.username"),
+  "data-username": alias("user.username"),
 
   // TODO: In later ember releases `hasBlock` works without this
-  hasBlock: Ember.computed.alias("template"),
+  hasBlock: alias("template"),
 
   @computed("user.name", "user.username")
   name(name, username) {

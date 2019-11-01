@@ -1,18 +1,78 @@
 var define, requirejs;
 
 (function() {
-
-  var MOVED_MODULES = {
-    "discourse/views/list/post-count-or-badges": "discourse/raw-views/list/post-count-or-badges",
-    "discourse/views/list/posts-count-column" : "discourse/raw-views/list/posts-count-column",
-    "discourse/views/list/visited-line" : "discourse/raw-views/list/visited-line",
-    "discourse/views/topic-list-header-column" : "discourse/raw-views/topic-list-header-column",
-    "discourse/views/topic-status" : "discourse/raw-views/topic-status"
-  };
+  // In future versions of ember we don't need this
+  var EMBER_MODULES = {};
+  if (typeof Ember !== "undefined") {
+    EMBER_MODULES = {
+      jquery: { default: $ },
+      "@ember/component": { default: Ember.Component },
+      "@ember/controller": {
+        default: Ember.Controller,
+        inject: Ember.inject.controller
+      },
+      "@ember/object": { default: Ember.Object },
+      "@ember/object/computed": {
+        default: Ember.computed,
+        alias: Ember.computed.alias,
+        and: Ember.computed.and,
+        bool: Ember.computed.bool,
+        collect: Ember.computed.collect,
+        deprecatingAlias: Ember.computed.deprecatingAlias,
+        empty: Ember.computed.empty,
+        equal: Ember.computed.equal,
+        filter: Ember.computed.filter,
+        filterBy: Ember.computed.filterBy,
+        gt: Ember.computed.gt,
+        gte: Ember.computed.gte,
+        intersect: Ember.computed.intersect,
+        lt: Ember.computed.lt,
+        lte: Ember.computed.lte,
+        map: Ember.computed.map,
+        mapBy: Ember.computed.mapBy,
+        match: Ember.computed.match,
+        max: Ember.computed.max,
+        min: Ember.computed.min,
+        none: Ember.computed.none,
+        not: Ember.computed.not,
+        notEmpty: Ember.computed.notEmpty,
+        oneWay: Ember.computed.oneWay,
+        or: Ember.computed.or,
+        readOnly: Ember.computed.readOnly,
+        reads: Ember.computed.reads,
+        setDiff: Ember.computed.setDiff,
+        sort: Ember.computed.sort,
+        sum: Ember.computed.sum,
+        union: Ember.computed.union,
+        uniq: Ember.computed.uniq,
+        uniqBy: Ember.computed.uniqBy
+      },
+      "@ember/object/mixin": { default: Ember.Mixin },
+      "@ember/object/proxy": { default: Ember.ObjectProxy },
+      "@ember/object/evented": { on: Ember.on },
+      "@ember/routing/route": { default: Ember.Route },
+      "@ember/runloop": {
+        bind: Ember.run.bind,
+        cancel: Ember.run.cancel,
+        debounce: Ember.testing ? Ember.run : Ember.run.debounce,
+        later: Ember.run.later,
+        next: Ember.run.next,
+        once: Ember.run.once,
+        run: Ember.run,
+        schedule: Ember.run.schedule,
+        scheduleOnce: Ember.run.scheduleOnce,
+        throttle: Ember.run.throttle
+      },
+      "@ember/service": {
+        default: Ember.Service,
+        inject: Ember.inject.service
+      }
+    };
+  }
 
   var _isArray;
   if (!Array.isArray) {
-    _isArray = function (x) {
+    _isArray = function(x) {
       return Object.prototype.toString.call(x) === "[object Array]";
     };
   } else {
@@ -34,28 +94,34 @@ var define, requirejs;
   }
 
   function unsupportedModule(length) {
-    throw new Error("an unsupported module was defined, expected `define(name, deps, module)` instead got: `" + length + "` arguments to define`");
+    throw new Error(
+      "an unsupported module was defined, expected `define(name, deps, module)` instead got: `" +
+        length +
+        "` arguments to define`"
+    );
   }
 
-  var defaultDeps = ['require', 'exports', 'module'];
+  var defaultDeps = ["require", "exports", "module"];
 
   function Module(name, deps, callback, exports) {
-    this.id       = uuid++;
-    this.name     = name;
-    this.deps     = !deps.length && callback.length ? defaultDeps : deps;
-    this.exports  = exports || { };
+    this.id = uuid++;
+    this.name = name;
+    this.deps = !deps.length && callback.length ? defaultDeps : deps;
+    this.exports = exports || {};
     this.callback = callback;
-    this.state    = undefined;
-    this._require  = undefined;
+    this.state = undefined;
+    this._require = undefined;
   }
-
 
   Module.prototype.makeRequire = function() {
     var name = this.name;
 
-    return this._require || (this._require = function(dep) {
-      return requirejs(resolve(dep, name));
-    });
+    return (
+      this._require ||
+      (this._require = function(dep) {
+        return requirejs(resolve(dep, name));
+      })
+    );
   };
 
   define = function(name, deps, callback) {
@@ -65,7 +131,7 @@ var define, requirejs;
 
     if (!_isArray(deps)) {
       callback = deps;
-      deps     =  [];
+      deps = [];
     }
 
     registry[name] = new Module(name, deps, callback);
@@ -74,7 +140,7 @@ var define, requirejs;
   // we don't support all of AMD
   // define.amd = {};
   // we will support petals...
-  define.petal = { };
+  define.petal = {};
 
   function Alias(path) {
     this.name = path;
@@ -91,15 +157,15 @@ var define, requirejs;
     var dep;
     // TODO: new Module
     // TODO: seen refactor
-    var module = { };
+    var module = {};
 
     for (var i = 0, l = length; i < l; i++) {
       dep = deps[i];
-      if (dep === 'exports') {
+      if (dep === "exports") {
         module.exports = reified[i] = rseen;
-      } else if (dep === 'require') {
+      } else if (dep === "require") {
         reified[i] = mod.makeRequire();
-      } else if (dep === 'module') {
+      } else if (dep === "module") {
         mod.exports = rseen;
         module = reified[i] = mod;
       } else {
@@ -114,30 +180,22 @@ var define, requirejs;
   }
 
   function requireFrom(name, origin) {
-
-    var mod = registry[name];
+    var mod = EMBER_MODULES[name] || registry[name];
     if (!mod) {
-      var moved = MOVED_MODULES[name];
-      if (moved) {
-        console.warn("DEPRECATION: `" + name + "` was moved to `" + moved + "`"); // eslint-disable-line no-console
-      }
-      mod = registry[moved];
-    }
-
-    if (!mod) {
-      throw new Error('Could not find module `' + name + '` imported from `' + origin + '`');
+      throw new Error(
+        "Could not find module `" + name + "` imported from `" + origin + "`"
+      );
     }
     return requirejs(name);
   }
 
   function missingModule(name) {
-    throw new Error('Could not find module ' + name);
+    throw new Error("Could not find module " + name);
   }
 
   requirejs = require = function(name) {
-
-    if (MOVED_MODULES[name]) {
-      name = MOVED_MODULES[name];
+    if (EMBER_MODULES[name]) {
+      return EMBER_MODULES[name];
     }
 
     var mod = registry[name];
@@ -146,10 +204,11 @@ var define, requirejs;
       mod = registry[mod.callback.name];
     }
 
-    if (!mod) { missingModule(name); }
+    if (!mod) {
+      missingModule(name);
+    }
 
-    if (mod.state !== FAILED &&
-        seen.hasOwnProperty(name)) {
+    if (mod.state !== FAILED && seen.hasOwnProperty(name)) {
       return seen[name];
     }
 
@@ -157,17 +216,20 @@ var define, requirejs;
     var module;
     var loaded = false;
 
-    seen[name] = { }; // placeholder for run-time cycles
+    seen[name] = {}; // placeholder for run-time cycles
 
-    tryFinally(function() {
-      reified = reify(mod, name, seen[name]);
-      module = mod.callback.apply(this, reified.deps);
-      loaded = true;
-    }, function() {
-      if (!loaded) {
-        mod.state = FAILED;
+    tryFinally(
+      function() {
+        reified = reify(mod, name, seen[name]);
+        module = mod.callback.apply(this, reified.deps);
+        loaded = true;
+      },
+      function() {
+        if (!loaded) {
+          mod.state = FAILED;
+        }
       }
-    });
+    );
 
     var obj;
     if (module === undefined && reified.module.exports) {
@@ -176,10 +238,12 @@ var define, requirejs;
       obj = seen[name] = module;
     }
 
-    if (obj !== null &&
-        (typeof obj === 'object' || typeof obj === 'function') &&
-          obj['default'] === undefined) {
-      obj['default'] = obj;
+    if (
+      obj !== null &&
+      (typeof obj === "object" || typeof obj === "function") &&
+      obj["default"] === undefined
+    ) {
+      obj["default"] = obj;
     }
 
     return (seen[name] = obj);
@@ -187,26 +251,30 @@ var define, requirejs;
   window.requireModule = requirejs;
 
   function resolve(child, name) {
-    if (child.charAt(0) !== '.') { return child; }
+    if (child.charAt(0) !== ".") {
+      return child;
+    }
 
-    var parts = child.split('/');
-    var nameParts = name.split('/');
+    var parts = child.split("/");
+    var nameParts = name.split("/");
     var parentBase = nameParts.slice(0, -1);
 
     for (var i = 0, l = parts.length; i < l; i++) {
       var part = parts[i];
 
-      if (part === '..') {
+      if (part === "..") {
         if (parentBase.length === 0) {
-          throw new Error('Cannot access parent module of root');
+          throw new Error("Cannot access parent module of root");
         }
         parentBase.pop();
-      } else if (part === '.') {
+      } else if (part === ".") {
         continue;
-      } else { parentBase.push(part); }
+      } else {
+        parentBase.push(part);
+      }
     }
 
-    return parentBase.join('/');
+    return parentBase.join("/");
   }
 
   requirejs.entries = requirejs._eak_seen = registry;

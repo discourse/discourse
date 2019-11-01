@@ -2,10 +2,10 @@
 
 //= require env
 //= require jquery.debug
+//= require ember.debug
 //= require discourse-loader
 //= require jquery.debug
 //= require handlebars
-//= require ember.debug
 //= require ember-template-compiler
 //= require qunit/qunit/qunit
 //= require ember-qunit

@@ -82,6 +82,14 @@ class UserUpdater
       user.title = attributes[:title]
     end
 
+    if SiteSetting.user_selected_primary_groups &&
+      attributes[:primary_group_id] &&
+      attributes[:primary_group_id] != user.primary_group_id &&
+      guardian.can_use_primary_group?(user, attributes[:primary_group_id])
+
+      user.primary_group_id = attributes[:primary_group_id]
+    end
+
     CATEGORY_IDS.each do |attribute, level|
       if ids = attributes[attribute]
         CategoryUser.batch_set(user, level, ids)

@@ -299,7 +299,7 @@ class PostCreator
       sequence = DraftSequence.current(@user, draft_key)
       revisions = Draft.where(sequence: sequence,
                               user_id: @user.id,
-                              draft_key: draft_key).pluck(:revisions).first || 0
+                              draft_key: draft_key).pluck_first(:revisions) || 0
 
       @post.build_post_stat(
         drafts_saved: revisions,
@@ -535,7 +535,9 @@ class PostCreator
 
     @user.user_stat.save!
 
-    @user.update(last_posted_at: @post.created_at)
+    if !@topic.private_message? && @post.post_type != Post.types[:whisper]
+      @user.update(last_posted_at: @post.created_at)
+    end
   end
 
   def create_post_notice

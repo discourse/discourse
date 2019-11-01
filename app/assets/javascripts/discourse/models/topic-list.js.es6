@@ -1,3 +1,5 @@
+import { notEmpty } from "@ember/object/computed";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import Model from "discourse/models/model";
@@ -22,7 +24,7 @@ function displayCategoryInList(site, category) {
 }
 
 const TopicList = RestModel.extend({
-  canLoadMore: Ember.computed.notEmpty("more_topics_url"),
+  canLoadMore: notEmpty("more_topics_url"),
 
   forEachNew(topics, callback) {
     const topicIds = [];
@@ -135,7 +137,7 @@ TopicList.reopenClass({
 
     const categories = Discourse.Category.list(),
       users = Model.extractByKey(result.users, Discourse.User),
-      groups = Model.extractByKey(result.primary_groups, Ember.Object);
+      groups = Model.extractByKey(result.primary_groups, EmberObject);
 
     return result.topic_list[listKey].map(t => {
       t.category = categories.findBy("id", t.category_id);

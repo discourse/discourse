@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 import debounce from "discourse/lib/debounce";
 import {
   safariHacksDisabled,
@@ -94,10 +95,7 @@ function positioningWorkaround($fixedElement) {
 
       if (!iOSWithVisualViewport()) {
         fixedElement.style.height = oldHeight;
-        Ember.run.later(
-          () => $(fixedElement).removeClass("no-transition"),
-          500
-        );
+        later(() => $(fixedElement).removeClass("no-transition"), 500);
       }
 
       $(window).scrollTop(originalScrollTop);
@@ -117,7 +115,7 @@ function positioningWorkaround($fixedElement) {
     if (
       lastTouchedElement &&
       ($(lastTouchedElement).hasClass("select-kit-header") ||
-        $(lastTouchedElement).closest(".autocomplete") ||
+        $(lastTouchedElement).closest(".autocomplete").length ||
         ["span", "svg", "button"].includes(
           lastTouchedElement.nodeName.toLowerCase()
         ))

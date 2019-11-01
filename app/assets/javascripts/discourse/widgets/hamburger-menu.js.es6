@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import DiscourseURL from "discourse/lib/url";
@@ -342,7 +343,7 @@ export default createWidget("hamburger-menu", {
       const $headerCloak = $(".header-cloak");
       $headerCloak.addClass("animate");
       $headerCloak.css("opacity", 0);
-      Ember.run.later(() => this.sendWidgetAction("toggleHamburger"), 200);
+      later(() => this.sendWidgetAction("toggleHamburger"), 200);
     }
   },
 

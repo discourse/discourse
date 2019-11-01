@@ -374,6 +374,16 @@ class TopicsController < ApplicationController
     success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
   end
 
+  def update_tags
+    params.require(:tags)
+    topic = Topic.find_by(id: params[:topic_id])
+    guardian.ensure_can_edit_tags!(topic)
+
+    success = PostRevisor.new(topic.first_post, topic).revise!(current_user, { tags: params[:tags] }, validate_post: false)
+
+    success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
+  end
+
   def feature_stats
     params.require(:category_id)
     category_id = params[:category_id].to_i
@@ -711,7 +721,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_move_posts!(topic)
 
     # when creating a new topic, ensure the 1st post is a regular post
-    if params[:title].present? && Post.where(topic: topic, id: post_ids).order(:post_number).pluck(:post_type).first != Post.types[:regular]
+    if params[:title].present? && Post.where(topic: topic, id: post_ids).order(:post_number).pluck_first(:post_type) != Post.types[:regular]
       return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
     end
 

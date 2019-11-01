@@ -1,8 +1,10 @@
+import { or, and } from "@ember/object/computed";
+import EmberObject from "@ember/object";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Object.extend({
-  postCountsPresent: Ember.computed.or("topic.unread", "topic.displayNewPosts"),
-  showBadges: Ember.computed.and("postBadgesEnabled", "postCountsPresent"),
+export default EmberObject.extend({
+  postCountsPresent: or("topic.unread", "topic.displayNewPosts"),
+  showBadges: and("postBadgesEnabled", "postCountsPresent"),
 
   @computed
   newDotText() {

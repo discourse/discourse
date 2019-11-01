@@ -1,3 +1,7 @@
+import { gt } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import { scheduleOnce } from "@ember/runloop";
+import Controller from "@ember/controller";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import {
@@ -5,10 +9,10 @@ import {
   on
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   model: null,
   filters: null,
-  filtersExists: Ember.computed.gt("filterCount", 0),
+  filtersExists: gt("filterCount", 0),
   userHistoryActions: null,
 
   @computed("filters.action_name")
@@ -19,14 +23,14 @@ export default Ember.Controller.extend({
   @on("init")
   resetFilters() {
     this.setProperties({
-      model: Ember.Object.create({ loadingMore: true }),
-      filters: Ember.Object.create()
+      model: EmberObject.create({ loadingMore: true }),
+      filters: EmberObject.create()
     });
     this.scheduleRefresh();
   },
 
   _changeFilters(props) {
-    this.set("model", Ember.Object.create({ loadingMore: true }));
+    this.set("model", EmberObject.create({ loadingMore: true }));
     this.filters.setProperties(props);
     this.scheduleRefresh();
   },
@@ -66,7 +70,7 @@ export default Ember.Controller.extend({
   },
 
   scheduleRefresh() {
-    Ember.run.scheduleOnce("afterRender", this, this._refresh);
+    scheduleOnce("afterRender", this, this._refresh);
   },
 
   actions: {

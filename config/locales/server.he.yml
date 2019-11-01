@@ -3341,7 +3341,7 @@ he:
     missing: "מצטערים, אנחנו לא יכולים למצוא אף דמות שמקושרת לכתובת מייל זו. תוכלו להעלות זאת שוב?"
   flag_reason:
     sockpuppet: "משתמש חדש יצר נושא, ומשתמש חדש אחר מאותה כתובת IP (%{ip_address}) ענו להם. ראו את הגדרת האתר <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "משתמש חדש זה ניסה ליצור מספר פוסטים עם קישורים לאותה הכתובת (%{domain}). ראו את הגדרת האתר <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    spam_hosts: "משתמש חדש זה ניסה ליצור מספר פוסטים עם קישורים לאותה הכתובת. ראו את הגדרת האתר <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "נחצה max_emails_per_day_per_user"
     exceeded_bounces_limit: "נחצה bounce_score_threshold"

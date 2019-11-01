@@ -1,11 +1,10 @@
+import Controller from "@ember/controller";
 import GrantBadgeControllerMixin from "discourse/mixins/grant-badge-controller";
 import Badge from "discourse/models/badge";
 
 QUnit.module("mixin:grant-badge-controller", {
   before: function() {
-    this.GrantBadgeController = Ember.Controller.extend(
-      GrantBadgeControllerMixin
-    );
+    this.GrantBadgeController = Controller.extend(GrantBadgeControllerMixin);
 
     this.badgeFirst = Badge.create({
       id: 3,

@@ -1,3 +1,5 @@
+import { next } from "@ember/runloop";
+import Component from "@ember/component";
 import {
   default as computed,
   observes
@@ -5,7 +7,7 @@ import {
 import DiscourseURL from "discourse/lib/url";
 import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "ul",
   classNameBindings: [":nav", ":nav-pills"],
   elementId: "navigation-bar",
@@ -68,7 +70,7 @@ export default Ember.Component.extend({
       if (this.expanded) {
         DiscourseURL.appEvents.on("dom:clean", this, this.ensureDropClosed);
 
-        Ember.run.next(() => {
+        next(() => {
           if (!this.expanded) {
             return;
           }
@@ -76,7 +78,7 @@ export default Ember.Component.extend({
           $(this.element.querySelector(".drop a")).on("click", () => {
             this.element.querySelector(".drop").style.display = "none";
 
-            Ember.run.next(() => {
+            next(() => {
               if (!this.element || this.isDestroying || this.isDestroyed) {
                 return;
               }

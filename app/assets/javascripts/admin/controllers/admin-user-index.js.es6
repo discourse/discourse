@@ -1,3 +1,6 @@
+import { notEmpty, and } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
@@ -6,24 +9,22 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { fmt } from "discourse/lib/computed";
 
-export default Ember.Controller.extend(CanCheckEmails, {
-  adminTools: Ember.inject.service(),
+export default Controller.extend(CanCheckEmails, {
+  adminTools: service(),
   originalPrimaryGroupId: null,
   customGroupIdsBuffer: null,
   availableGroups: null,
   userTitleValue: null,
 
   showBadges: setting("enable_badges"),
-  hasLockedTrustLevel: Ember.computed.notEmpty(
-    "model.manual_locked_trust_level"
-  ),
+  hasLockedTrustLevel: notEmpty("model.manual_locked_trust_level"),
 
   primaryGroupDirty: propertyNotEqual(
     "originalPrimaryGroupId",
     "model.primary_group_id"
   ),
 
-  canDisableSecondFactor: Ember.computed.and(
+  canDisableSecondFactor: and(
     "model.second_factor_enabled",
     "model.can_disable_second_factor"
   ),

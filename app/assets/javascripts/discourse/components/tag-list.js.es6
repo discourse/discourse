@@ -1,10 +1,12 @@
+import { sort } from "@ember/object/computed";
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
-  classNameBindings: [":tag-list", "categoryClass"],
+export default Component.extend({
+  classNameBindings: [":tag-list", "categoryClass", "tagGroupNameClass"],
 
   isPrivateMessage: false,
-  sortedTags: Ember.computed.sort("tags", "sortProperties"),
+  sortedTags: sort("tags", "sortProperties"),
 
   @computed("titleKey")
   title(titleKey) {
@@ -19,5 +21,16 @@ export default Ember.Component.extend({
   @computed("category.fullSlug")
   categoryClass(slug) {
     return slug && `tag-list-${slug}`;
+  },
+
+  @computed("tagGroupName")
+  tagGroupNameClass(groupName) {
+    if (groupName) {
+      groupName = groupName
+        .replace(/\s+/g, "-")
+        .replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, "")
+        .toLowerCase();
+      return groupName && `tag-group-${groupName}`;
+    }
   }
 });

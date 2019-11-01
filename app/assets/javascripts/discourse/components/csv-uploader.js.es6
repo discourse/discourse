@@ -1,7 +1,9 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
+import { on } from "@ember/object/evented";
 
-export default Ember.Component.extend(UploadMixin, {
+export default Component.extend(UploadMixin, {
   type: "csv",
   tagName: "span",
   uploadUrl: "/invites/upload_csv",
@@ -31,7 +33,7 @@ export default Ember.Component.extend(UploadMixin, {
     return { autoUpload: false };
   },
 
-  _init: function() {
+  _init: on("didInsertElement", function() {
     const $upload = $(this.element);
 
     $upload.on("fileuploadadd", (e, data) => {
@@ -42,5 +44,5 @@ export default Ember.Component.extend(UploadMixin, {
         result => (result ? data.submit() : data.abort())
       );
     });
-  }.on("didInsertElement")
+  })
 });

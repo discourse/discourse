@@ -1,3 +1,6 @@
+import { notEmpty, or, not } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { setting } from "discourse/lib/computed";
@@ -14,14 +17,14 @@ import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { userPath } from "discourse/lib/url";
 import { findAll } from "discourse/models/login-method";
 
-export default Ember.Controller.extend(
+export default Controller.extend(
   ModalFunctionality,
   PasswordValidation,
   UsernameValidation,
   NameValidation,
   UserFieldsValidation,
   {
-    login: Ember.inject.controller(),
+    login: inject(),
 
     complete: false,
     accountChallenge: 0,
@@ -32,9 +35,9 @@ export default Ember.Controller.extend(
     userFields: null,
     isDeveloper: false,
 
-    hasAuthOptions: Ember.computed.notEmpty("authOptions"),
+    hasAuthOptions: notEmpty("authOptions"),
     canCreateLocal: setting("enable_local_logins"),
-    showCreateForm: Ember.computed.or("hasAuthOptions", "canCreateLocal"),
+    showCreateForm: or("hasAuthOptions", "canCreateLocal"),
 
     resetForm() {
       // We wrap the fields in a structure so we can assign a value
@@ -76,7 +79,7 @@ export default Ember.Controller.extend(
       return false;
     },
 
-    usernameRequired: Ember.computed.not("authOptions.omit_username"),
+    usernameRequired: not("authOptions.omit_username"),
 
     @computed
     fullnameRequired() {

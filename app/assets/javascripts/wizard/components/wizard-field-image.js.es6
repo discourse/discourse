@@ -1,9 +1,10 @@
+import Component from "@ember/component";
 import getUrl from "discourse-common/lib/get-url";
 import computed from "ember-addons/ember-computed-decorators";
 import { getToken } from "wizard/lib/ajax";
 import { getOwner } from "discourse-common/lib/get-owner";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["wizard-image-row"],
   uploading: false,
 

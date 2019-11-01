@@ -1,3 +1,4 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import Composer from "discourse/models/composer";
 import showModal from "discourse/lib/show-modal";
 import {
@@ -7,7 +8,7 @@ import {
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import PermissionType from "discourse/models/permission-type";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   navMode: "latest",
 
   queryParams,

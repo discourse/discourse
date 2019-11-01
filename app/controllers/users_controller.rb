@@ -921,8 +921,7 @@ class UsersController < ApplicationController
     topic_id = params[:topic_id]
     topic_id = topic_id.to_i if topic_id
 
-    category_id = params[:category_id]
-    category_id = category_id.to_i if category_id
+    category_id = params[:category_id].to_i if category_id.present?
 
     topic_allowed_users = params[:topic_allowed_users] || false
 
@@ -1430,7 +1429,8 @@ class UsersController < ApplicationController
       :website,
       :dismissed_banner_key,
       :profile_background_upload_url,
-      :card_background_upload_url
+      :card_background_upload_url,
+      :primary_group_id
     ]
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))

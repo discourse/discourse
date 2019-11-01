@@ -1,3 +1,5 @@
+import { or } from "@ember/object/computed";
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import KeyValueStore from "discourse/lib/key-value-store";
 import {
@@ -14,7 +16,7 @@ import {
 
 const keyValueStore = new KeyValueStore(context);
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["controls"],
 
   @computed("isNotSupported")
@@ -78,7 +80,7 @@ export default Ember.Component.extend({
     }
   },
 
-  isEnabled: Ember.computed.or("isEnabledDesktop", "isEnabledPush"),
+  isEnabled: or("isEnabledDesktop", "isEnabledPush"),
 
   isPushNotificationsPreferred() {
     if (!this.site.mobileView) {

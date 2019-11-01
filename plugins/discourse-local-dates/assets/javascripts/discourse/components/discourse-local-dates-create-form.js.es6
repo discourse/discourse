@@ -1,3 +1,5 @@
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 /* global Pikaday:true */
 import { propertyNotEqual } from "discourse/lib/computed";
 import loadScript from "discourse/lib/load-script";
@@ -5,7 +7,7 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 import { cookAsync } from "discourse/lib/text";
 import debounce from "discourse/lib/debounce";
 
-export default Ember.Component.extend({
+export default Component.extend({
   timeFormat: "HH:mm:ss",
   dateFormat: "YYYY-MM-DD",
   dateTimeFormat: "YYYY-MM-DD HH:mm:ss",
@@ -54,7 +56,7 @@ export default Ember.Component.extend({
     if (markup) {
       cookAsync(markup).then(result => {
         this.set("currentPreview", result);
-        Ember.run.schedule("afterRender", () =>
+        schedule("afterRender", () =>
           this.$(".preview .discourse-local-date").applyLocalDates()
         );
       });
@@ -408,7 +410,7 @@ export default Ember.Component.extend({
       date = null;
     }
 
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       this._picker.setMinDate(moment(date, this.dateFormat).toDate());
     });
   },
@@ -418,7 +420,7 @@ export default Ember.Component.extend({
       date = null;
     }
 
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       this._picker.setDate(moment.utc(date), true);
     });
   },

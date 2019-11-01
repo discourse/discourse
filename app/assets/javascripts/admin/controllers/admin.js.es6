@@ -1,7 +1,9 @@
+import { inject as service } from "@ember/service";
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
-  router: Ember.inject.service(),
+export default Controller.extend({
+  router: service(),
 
   @computed("siteSettings.enable_group_directory")
   showGroups(enableGroupDirectory) {

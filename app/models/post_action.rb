@@ -215,7 +215,7 @@ class PostAction < ActiveRecord::Base
       end
     end
 
-    topic_id = Post.with_deleted.where(id: post_id).pluck(:topic_id).first
+    topic_id = Post.with_deleted.where(id: post_id).pluck_first(:topic_id)
 
     # topic_user
     if [:like, :bookmark].include? post_action_type_key

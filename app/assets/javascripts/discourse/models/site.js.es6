@@ -1,3 +1,5 @@
+import { alias, sort } from "@ember/object/computed";
+import EmberObject from "@ember/object";
 import computed from "ember-addons/ember-computed-decorators";
 import Archetype from "discourse/models/archetype";
 import PostActionType from "discourse/models/post-action-type";
@@ -6,7 +8,7 @@ import RestModel from "discourse/models/rest";
 import PreloadStore from "preload-store";
 
 const Site = RestModel.extend({
-  isReadOnly: Ember.computed.alias("is_readonly"),
+  isReadOnly: alias("is_readonly"),
 
   init() {
     this._super(...arguments);
@@ -30,7 +32,7 @@ const Site = RestModel.extend({
     return postActionTypes.filterBy("is_flag", true);
   },
 
-  categoriesByCount: Ember.computed.sort("categories", "topicCountDesc"),
+  categoriesByCount: sort("categories", "topicCountDesc"),
 
   collectUserFields(fields) {
     fields = fields || {};
@@ -179,7 +181,7 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.post_action_types) {
-      result.postActionByIdLookup = Ember.Object.create();
+      result.postActionByIdLookup = EmberObject.create();
       result.post_action_types = result.post_action_types.map(p => {
         const actionType = PostActionType.create(p);
         result.postActionByIdLookup.set("action" + p.id, actionType);
@@ -188,7 +190,7 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.topic_flag_types) {
-      result.topicFlagByIdLookup = Ember.Object.create();
+      result.topicFlagByIdLookup = EmberObject.create();
       result.topic_flag_types = result.topic_flag_types.map(p => {
         const actionType = PostActionType.create(p);
         result.topicFlagByIdLookup.set("action" + p.id, actionType);
@@ -204,9 +206,7 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.user_fields) {
-      result.user_fields = result.user_fields.map(uf =>
-        Ember.Object.create(uf)
-      );
+      result.user_fields = result.user_fields.map(uf => EmberObject.create(uf));
     }
 
     return result;

@@ -10,6 +10,7 @@
 //= require ./pretty-text/white-lister
 //= require ./pretty-text/sanitizer
 //= require ./pretty-text/oneboxer
+//= require ./pretty-text/oneboxer-cache
 //= require ./pretty-text/context/inline-onebox-css-classes
 //= require ./pretty-text/inline-oneboxer
 //= require ./pretty-text/upload-short-url

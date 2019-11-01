@@ -998,14 +998,14 @@ en:
           default_name: "My Authenticator"
         security_key:
           register: "Register"
-          title: 'Security Keys'
+          title: "Security Keys"
           add: "Register Security Key"
           default_name: "Main Security Key"
           not_allowed_error: "The security key registration process either timed out or was cancelled."
           already_added_error: "You have already registered this security key. You don’t have to register it again."
-          edit: 'Edit Security Key'
-          edit_description: 'Security Key Name'
-          delete: 'Delete'
+          edit: "Edit Security Key"
+          edit_description: "Security Key Name"
+          delete: "Delete"
 
       change_about:
         title: "Change About Me"
@@ -1037,8 +1037,8 @@ en:
         image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
 
       change_profile_background:
-        title: "Profile Background"
-        instructions: "Profile backgrounds will be centered and have a default width of 850px."
+        title: "Profile Header"
+        instructions: "Profile headers will be centered and have a default width of 1110px."
 
       change_card_background:
         title: "User Card Background"
@@ -1299,6 +1299,9 @@ en:
         header_title: "profile, messages, bookmarks and preferences"
       title:
         title: "Title"
+        none: "(none)"
+      primary_group:
+        title: "Primary Group"
         none: "(none)"
 
       filters:
@@ -2444,6 +2447,12 @@ en:
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
 
+      abandon_edit:
+        confirm: "Are you sure you want to discard your changes?"
+        no_value: "No, keep"
+        no_save_draft: "No, save draft"
+        yes_value: "Yes, discard edit"
+
       abandon:
         confirm: "Are you sure you want to abandon your post?"
         no_value: "No, keep"
@@ -2597,10 +2606,14 @@ en:
       tags_allowed_tags: "Restrict these tags to this category:"
       tags_allowed_tag_groups: "Restrict these tag groups to this category:"
       tags_placeholder: "(Optional) list of allowed tags"
-      tags_tab_description: "Tags and tag groups specified here will only be available in this category and other categories that also specify them. They won't be available for use in other categories."
+      tags_tab_description: "Tags and tag groups specified above will only be available in this category and other categories that also specify them. They won't be available for use in other categories."
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
       manage_tag_groups_link: "Manage tag groups here."
       allow_global_tags_label: "Also allow other tags"
+      tag_group_selector_placeholder: "(Optional) Tag group"
+      required_tag_group_description: "Require new topics to have tags from a tag group:"
+      min_tags_from_required_group_label: 'Num Tags:'
+      required_tag_group_label: "Tag group:"
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete Category"
       create: "New Category"
@@ -3086,6 +3099,7 @@ en:
         parent_tag_description: "Tags from this group can't be used unless the parent tag is present."
         one_per_topic_label: "Limit one tag per topic from this group"
         new_name: "New Tag Group"
+        name_placeholder: "Tag Group Name"
         save: "Save"
         delete: "Delete"
         confirm_delete: "Are you sure you want to delete this tag group?"
@@ -3268,8 +3282,8 @@ en:
 
           membership:
             automatic: Automatic
-            trust_level: Trust Level
             trust_levels_title: "Trust level automatically granted to members when they're added:"
+            effects: Effects
             trust_levels_none: "None"
             automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
             automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"

@@ -1819,6 +1819,33 @@ describe UsersController do
               expect(user.user_fields[user_field.id.to_s]).to eq('happy')
             end
 
+            it "works alongside a user field during creation" do
+              api_key = Fabricate(:api_key, user: Fabricate(:admin))
+              user_field = Fabricate(:user_field, editable: true)
+              post "/u.json", params: {
+                name: "Test User",
+                username: "testuser",
+                email: "user@mail.com",
+                password: 'supersecure',
+                active: true,
+                custom_fields: {
+                  test2: 'custom field value'
+                },
+                user_fields: {
+                  user_field.id.to_s => 'user field value'
+                },
+                api_key: api_key.key
+              }
+              expect(response.status).to eq(200)
+              u = User.find_by_email('user@mail.com')
+
+              val = u.custom_fields["user_field_#{user_field.id}"]
+              expect(val).to eq('user field value')
+
+              val = u.custom_fields["test2"]
+              expect(val).to eq('custom field value')
+            end
+
             it "is secure when there are no registered editable fields" do
               User.plugin_editable_user_custom_fields.clear
               User.plugin_staff_editable_user_custom_fields.clear
@@ -3052,8 +3079,10 @@ describe UsersController do
     end
 
     it "searches only for users who have access to private topic" do
+      searching_user = Fabricate(:user)
       privileged_user = Fabricate(:user, trust_level: 4, username: "joecabit", name: "Lawrence Tierney")
       privileged_group = Fabricate(:group)
+      privileged_group.add(searching_user)
       privileged_group.add(privileged_user)
       privileged_group.save
 
@@ -3063,6 +3092,7 @@ describe UsersController do
 
       private_topic = Fabricate(:topic, category: category)
 
+      sign_in(searching_user)
       get "/u/search/users.json", params: {
         term: user.name.split(" ").last, topic_id: private_topic.id, topic_allowed_users: "true"
       }
@@ -3071,6 +3101,15 @@ describe UsersController do
       json = JSON.parse(response.body)
       expect(json["users"].map { |u| u["username"] }).to_not include(user.username)
       expect(json["users"].map { |u| u["username"] }).to include(privileged_user.username)
+    end
+
+    it "interprets blank category id correctly" do
+      pm_topic = Fabricate(:private_message_post).topic
+      sign_in(pm_topic.user)
+      get "/u/search/users.json", params: {
+        term: "", topic_id: pm_topic.id, category_id: ""
+      }
+      expect(response.status).to eq(200)
     end
 
     context "when `enable_names` is true" do
