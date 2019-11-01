@@ -1,4 +1,4 @@
-import { rawGet } from "discourse-common/lib/raw-handlebars";
+import { get } from "@ember/object";
 
 export function htmlHelper(fn) {
   return Ember.Helper.helper(function(...args) {
@@ -9,6 +9,17 @@ export function htmlHelper(fn) {
 }
 
 const _helpers = {};
+
+function rawGet(ctx, property, options) {
+  if (options.types && options.data.view) {
+    var view = options.data.view;
+    return view.getStream
+      ? view.getStream(property).value()
+      : view.getAttr(property);
+  } else {
+    return get(ctx, property);
+  }
+}
 
 export function registerHelper(name, fn) {
   _helpers[name] = Ember.Helper.helper(fn);
