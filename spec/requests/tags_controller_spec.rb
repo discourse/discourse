@@ -3,6 +3,12 @@
 require 'rails_helper'
 
 describe TagsController do
+  define_method(:get_json_body) do
+    ::JSON.parse(response.body)
+  end
+
+  let(:json) { get_json_body }
+
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:regular_user) { Fabricate(:trust_level_4) }
@@ -28,7 +34,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tags = JSON.parse(response.body)["tags"]
+        tags = json["tags"]
         expect(tags.length).to eq(1)
         expect(tags[0]['text']).to eq("topic-test")
       end
@@ -53,7 +59,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tags = JSON.parse(response.body)["tags"]
+        tags = json["tags"]
         expect(tags.length).to eq(2)
       end
 
@@ -94,7 +100,7 @@ describe TagsController do
 
       expect(response.status).to eq(200)
 
-      response_tag = JSON.parse(response.body)["valid"].first
+      response_tag = json["valid"].first
       expect(response_tag["value"]).to eq(tag.name)
     end
   end
@@ -160,7 +166,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tag = JSON.parse(response.body)['tags']
+        tag = json['tags']
         expect(tag[0]["id"]).to eq('test')
       end
     end
@@ -175,7 +181,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tag = JSON.parse(response.body)['tags']
+        tag = json['tags']
         expect(tag[0]["id"]).to eq('test')
       end
 
@@ -184,7 +190,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tag = JSON.parse(response.body)['tags']
+        tag = json['tags']
         expect(tag[0]["id"]).to eq('test')
       end
     end
@@ -209,7 +215,7 @@ describe TagsController do
 
     context 'tagging enabled' do
       def parse_topic_ids
-        JSON.parse(response.body)["topic_list"]["topics"]
+        get_json_body["topic_list"]["topics"]
           .map { |topic| topic["id"] }
       end
 
@@ -353,7 +359,6 @@ describe TagsController do
         tag_names.each { |name| Fabricate(:tag, name: name) }
         get "/tags/filter/search.json", params: { q: 'stu' }
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }.sort).to eq(['stuff', 'stumped'])
       end
 
@@ -364,7 +369,6 @@ describe TagsController do
 
         get '/tags/filter/search.json', params: { q: 'tag', limit: 2 }
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
         expect(json['results'].map { |j| j['id'] }).to eq(['tag', 'tag2'])
       end
 
@@ -376,7 +380,6 @@ describe TagsController do
           nope = Fabricate(:tag, name: 'nope')
           get "/tags/filter/search.json", params: { q: nope.name, categoryId: category.id }
           expect(response.status).to eq(200)
-          json = ::JSON.parse(response.body)
           expect(json["results"].map { |j| j["id"] }.sort).to eq([])
           expect(json["forbidden"]).to be_present
           expect(json["forbidden_message"]).to eq(I18n.t("tags.forbidden.in_this_category", tag_name: nope.name))
@@ -385,7 +388,6 @@ describe TagsController do
         it "can say if given tag is restricted to different category" do
           category
           get "/tags/filter/search.json", params: { q: yup.name, categoryId: Fabricate(:category).id }
-          json = ::JSON.parse(response.body)
           expect(json["results"].map { |j| j["id"] }.sort).to eq([])
           expect(json["forbidden"]).to be_present
           expect(json["forbidden_message"]).to eq(I18n.t(
@@ -400,7 +402,6 @@ describe TagsController do
           nope = Fabricate(:tag, name: 'nope')
           get "/tags/filter/search.json", params: { categoryId: category.id }
           expect(response.status).to eq(200)
-          json = ::JSON.parse(response.body)
           expect(json["results"].map { |j| j["id"] }.sort).to eq([yup.name])
         end
       end
@@ -409,7 +410,6 @@ describe TagsController do
         yup, nope = Fabricate(:tag, name: 'yup'), Fabricate(:tag, name: 'nope')
         get "/tags/filter/search.json", params: { q: 'N/ope' }
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }.sort).to eq(["nope"])
       end
 
@@ -418,7 +418,6 @@ describe TagsController do
         Fabricate(:topic, category: c, tags: [Fabricate(:tag, name: "cooltag")])
         get "/tags/filter/search.json", params: { q: "cool" }
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }).to eq(['cooltag'])
       end
 
@@ -428,12 +427,12 @@ describe TagsController do
 
         get "/tags/filter/search.json", params: { q: '房' }
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
+        json = get_json_body
         expect(json["results"].map { |j| j["id"] }).to eq(['房地产'])
 
         get "/tags/filter/search.json", params: { q: 'тема' }
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
+        json = get_json_body
         expect(json["results"].map { |j| j["id"] }).to eq(['тема-в-разработке'])
       end
     end
@@ -458,7 +457,6 @@ describe TagsController do
         it 'returns a tag not found message' do
           delete "/tags/doesntexists.json"
           expect(response).not_to be_successful
-          json = ::JSON.parse(response.body)
           expect(json['error_type']).to eq('not_found')
         end
       end
@@ -491,7 +489,6 @@ describe TagsController do
         it 'returns the correct unused tags' do
           get "/tags/unused.json"
           expect(response.status).to eq(200)
-          json = ::JSON.parse(response.body)
           expect(json["tags"]).to contain_exactly("unused1", "unused2")
         end
 
