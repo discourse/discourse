@@ -301,7 +301,7 @@ describe CookedPostProcessor do
           )
 
           # Fake a loading image
-          optimized_image = OptimizedImage.create!(
+          _optimized_image = OptimizedImage.create!(
             url: '/uploads/default/10x10.png',
             width: CookedPostProcessor::LOADING_SIZE,
             height: CookedPostProcessor::LOADING_SIZE,
@@ -629,8 +629,7 @@ describe CookedPostProcessor do
       end
 
       context "topic image" do
-        let(:topic) { build(:topic, id: 1) }
-        let(:post) { Fabricate(:post_with_uploaded_image, topic: topic) }
+        let(:post) { Fabricate(:post_with_uploaded_image) }
         let(:cpp) { CookedPostProcessor.new(post) }
 
         it "adds a topic image if there's one in the first post" do
