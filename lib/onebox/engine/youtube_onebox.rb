@@ -45,7 +45,7 @@ module Onebox
           HTML
         else
           # for channel pages
-          html = Onebox::Engine::WhitelistedGenericOnebox.new(@url, @cache, @timeout).to_html
+          html = Onebox::Engine::WhitelistedGenericOnebox.new(@url, @timeout).to_html
           return if Onebox::Helpers.blank?(html)
           html.gsub!(/['"]\/\//, "https://")
           html

@@ -38,7 +38,7 @@ module Onebox
       # Matches URLs for the old Google Maps domain which we occasionally get redirected to
       matches_regexp :canonical,  %r"^(?:https?:)?//maps\.google(?:\.(?:\w{2,}))+/maps\?"
 
-      def initialize(url, cache = nil, timeout = nil)
+      def initialize(url, timeout = nil)
         super
         resolve_url!
       rescue Net::HTTPServerException, Timeout::Error, Net::HTTPError, Errno::ECONNREFUSED, RuntimeError => err

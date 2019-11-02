@@ -3,9 +3,8 @@
 require "spec_helper"
 
 describe Onebox::Layout do
-  let(:cache) { Moneta.new(:Memory, expires: true, serializer: :json) }
   let(:record) { {} }
-  let(:onebox) { described_class.new("amazon", record, cache) }
+  let(:onebox) { described_class.new("amazon", record) }
   let(:html) { onebox.to_html }
 
   describe ".template_path" do
@@ -48,33 +47,19 @@ describe Onebox::Layout do
   end
 
   describe "#to_html" do
-    class OneboxEngineLayout
-      include Onebox::Engine
-
-      def data
-        "new content"
-      end
-    end
-
-    it "reads from cache if rendered template is cached" do
-      described_class.new("amazon", record, cache).to_html
-      expect(cache).to receive(:fetch)
-      described_class.new("amazon", record, cache).to_html
-    end
-
     it "contains layout template" do
       expect(html).to include(%|class="onebox|)
     end
 
     it "contains the view" do
       record = { link: "foo" }
-      html = described_class.new("amazon", record, cache).to_html
+      html = described_class.new("amazon", record).to_html
       expect(html).to include(%|"foo"|)
     end
 
     it "rewrites relative image path" do
       record = { image: "/image.png", link: "https://discourse.org" }
-      klass = described_class.new("whitelistedgeneric", record, cache)
+      klass = described_class.new("whitelistedgeneric", record)
       expect(klass.view.record[:image]).to include("https://discourse.org")
     end
   end

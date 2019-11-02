@@ -13,7 +13,6 @@ module Onebox
     end
 
     attr_reader :url, :uri
-    attr_reader :cache
     attr_reader :timeout
 
     DEFAULT = {}
@@ -28,10 +27,12 @@ module Onebox
       @options
     end
 
-    def initialize(link, cache = nil, timeout = nil)
+    def initialize(link, timeout = nil)
       @options = DEFAULT
       class_name = self.class.name.split("::").last.to_s
-      self.options = Onebox.options[class_name] || {} #Set the engine options extracted from global options.
+
+      # Set the engine options extracted from global options.
+      self.options = Onebox.options[class_name] || {}
 
       @url = link
       @uri = URI(link)
@@ -39,7 +40,6 @@ module Onebox
         @uri.scheme = 'https'
         @url = @uri.to_s
       end
-      @cache = cache || Onebox.options.cache
       @timeout = timeout || Onebox.options.timeout
     end
 
@@ -62,13 +62,6 @@ module Onebox
     end
 
     private
-
-    def record
-      url_result = url
-      result = cache.fetch(url_result) { data }
-      cache[url_result] = result if cache.respond_to?(:key?)
-      result
-    end
 
     # raises error if not defined in onebox engine
     # in each onebox, uses either Nokogiri or StandardEmbed to get raw HTML from url

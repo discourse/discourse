@@ -7,7 +7,6 @@ describe Onebox::Engine::JSON do
     @link = "http://stackoverflow.com"
     fake(@link, response("stackexchange-question"))
   end
-  before(:each) { Onebox.options.cache.clear }
 
   describe "#raw" do
     class OneboxEngineJSON

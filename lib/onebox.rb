@@ -6,7 +6,6 @@ require "multi_json"
 require "nokogiri"
 require "mustache"
 require "ostruct"
-require "moneta"
 require "cgi"
 require "net/http"
 require "digest"
@@ -15,7 +14,6 @@ require_relative "onebox/sanitize_config"
 
 module Onebox
   DEFAULTS = {
-    cache: Moneta.new(:Memory, expires: true, serializer: :json),
     connect_timeout: 5,
     timeout: 10,
     max_download_kb: (10 * 1024), # 10MB
@@ -29,6 +27,11 @@ module Onebox
   @@options = DEFAULTS
 
   def self.preview(url, options = Onebox.options)
+    # onebox does not have native caching
+    unless Onebox::Helpers.blank?(options[:cache])
+      warn "Onebox no longer has inbuilt caching so `cache` option will be ignored."
+    end
+
     Preview.new(url, options)
   end
 

@@ -2,7 +2,6 @@
 
 module Onebox
   class Preview
-    attr_reader :cache
 
     # see https://bugs.ruby-lang.org/issues/14688
     client_exception = defined?(Net::HTTPClientException) ? Net::HTTPClientException : Net::HTTPServerException
@@ -11,7 +10,6 @@ module Onebox
     def initialize(link, parameters = Onebox.options)
       @url = link
       @options = parameters
-      @cache = options.cache
       @engine_class = Matcher.new(@url).oneboxed
     end
 
@@ -72,7 +70,7 @@ module Onebox
       return nil unless @engine_class
       return @engine if @engine
 
-      @engine = @engine_class.new(@url, cache)
+      @engine = @engine_class.new(@url)
       @engine.options = @options
       @engine
     end

@@ -28,28 +28,6 @@ describe Onebox::Engine do
     end
   end
 
-  describe "#record" do
-    class OneboxEngineRecord
-      include Onebox::Engine
-
-      def data
-        "new content"
-      end
-    end
-
-    it "returns cached value for given url if its url is already in cache" do
-      cache = { "http://example.com" => "old content" }
-      result = OneboxEngineRecord.new("http://example.com", cache).send(:record)
-      expect(result).to eq("old content")
-    end
-
-    it "stores cache value for given url if cache key doesn't exist" do
-      cache = { "http://example.com1" => "old content" }
-      result = OneboxEngineRecord.new("http://example.com", cache).send(:record)
-      expect(result).to eq("new content")
-    end
-  end
-
   describe '.placeholder_html' do
     let(:onebox) { OneboxEngineExample.new('http://eviltrout.com') }
     it "returns `to_html` by default" do

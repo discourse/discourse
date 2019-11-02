@@ -46,30 +46,6 @@ preview = Onebox.preview(url)
 "#{preview}" == preview.to_s #=> true
 ```
 
-Onebox has its own caching system but you can also provide (or turn off) your own system:
-
-``` ruby
-require "onebox"
-
-url = "http://www.amazon.com/gp/product/B005T3GRNW/ref=s9_simh_gw_p147_d0_i2"
-preview = Onebox.preview(url, cache: Rails.cache)
-"#{preview}" == preview.to_s #=> true
-```
-
-In addition you can set your own options with this handy interface:
-
-``` ruby
-require "onebox"
-
-Onebox.options = {
-  cache: Rails.cache
-}
-
-url = "http://www.amazon.com/gp/product/B005T3GRNW/ref=s9_simh_gw_p147_d0_i2"
-preview = Onebox.preview(url)
-"#{preview}" == preview.to_s #=> true
-```
-
 Ruby Support
 ------------
 

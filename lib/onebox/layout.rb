@@ -8,12 +8,10 @@ module Onebox
 
     VERSION = "1.0.0"
 
-    attr_reader :cache
     attr_reader :record
     attr_reader :view
 
-    def initialize(name, record, cache)
-      @cache = cache
+    def initialize(name, record)
       @record = Onebox::Helpers.symbolize_keys(record)
 
       # Fix any relative paths
@@ -28,9 +26,7 @@ module Onebox
     end
 
     def to_html
-      result = cache.fetch(checksum) { render(details) }
-      cache[checksum] = result if cache.respond_to?(:key?)
-      result
+      render(details)
     end
 
     private

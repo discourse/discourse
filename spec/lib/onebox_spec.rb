@@ -16,25 +16,6 @@ describe Onebox do
       uri.scheme = 'https'
       uri.to_s
     end
-
-    it "creates a cache that responds as expected" do
-      preview = Onebox.preview(url)
-      cache = preview.cache
-      expect(cache).to respond_to(:key?, :store, :fetch)
-    end
-
-    it "stores the value in cache if it doesn't exist" do
-      preview = Onebox.preview(url)
-      preview.to_s
-      cache = preview.cache
-      expect(cache.key?(https_url)).to eq(true)
-    end
-
-    it "replaces the cache if the cache is expired" do
-      preview = Onebox.preview(url, cache: Moneta.new(:Memory, expires: 100_000, serializer: :json))
-      cache = preview.cache
-      expect(cache.fetch(https_url)).to be(nil)
-    end
   end
 
   describe "templates" do

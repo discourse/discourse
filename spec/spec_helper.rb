@@ -30,7 +30,6 @@ shared_context "engines" do
     @html = @onebox.to_html
     @data = Onebox::Helpers.symbolize_keys(@onebox.send(:data))
   end
-  before(:each) { Onebox.options.cache.clear }
 
   let(:onebox) { @onebox }
   let(:html) { @html }
@@ -41,10 +40,6 @@ end
 shared_examples_for "an engine" do
   it "responds to data" do
     expect(described_class.private_instance_methods).to include(:data)
-  end
-
-  it "responds to record" do
-    expect(described_class.private_instance_methods).to include(:record)
   end
 
   it "correctly matches the url" do

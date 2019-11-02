@@ -8,7 +8,7 @@ module Onebox
     end
 
     def layout
-      @layout ||= Layout.new(self.class.onebox_name, record, @cache)
+      @layout ||= Layout.new(self.class.onebox_name, data)
     end
 
     def to_html
