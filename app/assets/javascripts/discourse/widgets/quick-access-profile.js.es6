@@ -29,7 +29,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
   },
 
   _getDefaultItems() {
-    return [
+    let defaultItems = [
       {
         icon: "user",
         href: `${this.attrs.path}/summary`,
@@ -39,12 +39,16 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
         icon: "stream",
         href: `${this.attrs.path}/activity`,
         content: I18n.t("user.activity_stream")
-      },
-      {
+      }
+    ];
+    if (this.siteSettings.enable_personal_messages) {
+      defaultItems.push({
         icon: "envelope",
         href: `${this.attrs.path}/messages`,
         content: I18n.t("user.private_messages")
-      },
+      });
+    }
+    defaultItems.push(
       {
         icon: "pencil",
         href: `${this.attrs.path}/activity/drafts`,
@@ -55,7 +59,8 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
         href: `${this.attrs.path}/preferences`,
         content: I18n.t("user.preferences")
       }
-    ];
+    );
+    return defaultItems;
   },
 
   _toggleAnonymousButton() {
