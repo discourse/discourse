@@ -13,7 +13,6 @@ class ThemeJavascriptCompiler
 
       // Helper to replace old themeSetting syntax
       function generateHelper(settingParts) {
-console.log(settingParts)
         const settingName = settingParts.join('.');
         return {
             "path": {
