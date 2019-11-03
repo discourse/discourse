@@ -426,7 +426,7 @@ class CookedPostProcessor
     informations = +"#{original_width}×#{original_height}"
     informations << " #{upload.human_filesize}" if upload
 
-    a["title"] = CGI.escapeHTML(img["title"] || filename)
+    a["title"] = CGI.escapeHTML(img["title"] || img["alt"] || filename)
 
     meta.add_child create_icon_node("far-image")
     meta.add_child create_span_node("filename", a["title"])
