@@ -839,6 +839,7 @@ Discourse::Application.routes.draw do
       get '/:tag_id.rss' => 'tags#tag_feed'
       get '/:tag_id' => 'tags#show', as: 'tag_show'
       get '/c/:category/:tag_id' => 'tags#show', as: 'tag_category_show'
+      get '/c/:category/none/:tag_id' => 'tags#show', as: 'tag_category_none_show', defaults: { no_subcategories: true }
       get '/c/:parent_category/:category/:tag_id' => 'tags#show', as: 'tag_parent_category_category_show'
       get '/intersection/:tag_id/*additional_tag_ids' => 'tags#show', as: 'tag_intersection'
       get '/:tag_id/notifications' => 'tags#notifications'
@@ -849,6 +850,7 @@ Discourse::Application.routes.draw do
       Discourse.filters.each do |filter|
         get "/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_show_#{filter}"
         get "/c/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_show_#{filter}"
+        get "/c/:category/none/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_none_show_#{filter}", defaults: { no_subcategories: true }
         get "/c/:parent_category/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_parent_category_category_show_#{filter}"
       end
     end
