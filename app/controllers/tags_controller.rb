@@ -293,29 +293,52 @@ class TagsController < ::ApplicationController
   end
 
   def set_category_from_params
-    slug_or_id = params[:category]
-    return true if slug_or_id.nil?
+    if request.path_parameters.include?(:category_slug_path_with_id)
+      parts = params[:category_slug_path_with_id].split('/')
 
-    parent_slug_or_id = params[:parent_category]
+      if !parts.empty? && parts.last =~ /\A\d+\Z/
+        id = parts.pop.to_i
+      end
+      slug_path = parts unless parts.empty?
 
-    parent_category_id = nil
-    if parent_slug_or_id.present?
-      parent_category_id = Category.query_parent_category(parent_slug_or_id)
-      category_redirect_or_not_found && (return) if parent_category_id.blank?
+      if id.present?
+        @filter_on_category = Category.find_by_id(id)
+      elsif slug_path.present?
+        if (1..2).include?(slug_path.size)
+          @filter_on_category = Category.find_by_slug(*slug_path.reverse)
+        end
+
+        # Legacy paths
+        if @filter_on_category.nil? && parts.last =~ /\A\d+-/
+          @filter_on_category = Category.find_by_id(parts.last.to_i)
+        end
+      end
+    else
+      slug_or_id = params[:category]
+      return true if slug_or_id.nil?
+
+      @filter_on_category = Category.query_category(slug_or_id, nil)
     end
-
-    @filter_on_category = Category.query_category(slug_or_id, parent_category_id)
 
     category_redirect_or_not_found && (return) if !@filter_on_category
 
     guardian.ensure_can_see!(@filter_on_category)
   end
 
-  # TODO: this is duplication of ListController
   def page_params
     route_params = { format: 'json' }
-    route_params[:category]        = @filter_on_category.slug_for_url                 if @filter_on_category
-    route_params[:parent_category] = @filter_on_category.parent_category.slug_for_url if @filter_on_category && @filter_on_category.parent_category
+
+    if @filter_on_category
+      if request.path_parameters.include?(:category_slug_path_with_id)
+        slug_path = @filter_on_category.slug_path
+
+        route_params[:category_slug_path_with_id] =
+          (slug_path + [@filter_on_category.id.to_s]).join("/")
+      else
+        route_params[:category] = @filter_on_category.slug_for_url
+      end
+    end
+
     route_params
   end
 
@@ -345,15 +368,27 @@ class TagsController < ::ApplicationController
   def construct_url_with(action, opts)
     method = url_method(opts)
 
-    begin
-      url = if action == :prev
-        public_send(method, opts.merge(prev_page_params))
-      else # :next
-        public_send(method, opts.merge(next_page_params))
+    page_params =
+      case action
+      when :prev
+        prev_page_params
+      when :next
+        next_page_params
+      else
+        raise "unreachable"
       end
+
+    if page_params.include?(:category_slug_path_with_id)
+      opts = opts.dup
+      opts.delete(:category)
+    end
+
+    begin
+      url = public_send(method, opts.merge(page_params))
     rescue ActionController::UrlGenerationError
       raise Discourse::NotFound
     end
+
     url.sub('.json?', '?')
   end
 
