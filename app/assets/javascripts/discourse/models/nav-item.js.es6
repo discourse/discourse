@@ -118,6 +118,8 @@ const ExtraNavItem = NavItem.extend({
     }
   }),
 
+  count: 0,
+
   customFilter: null
 });
 
@@ -196,6 +198,10 @@ NavItem.reopenClass({
     let forceActive = false;
 
     extraItems.forEach(item => {
+      if (item.init) {
+        item.init.call(this, item, category, args);
+      }
+
       const before = item.before;
       if (before) {
         let i = 0;
@@ -243,5 +249,7 @@ export function customNavItemHref(cb) {
 }
 
 export function addNavItem(item) {
-  NavItem.extraNavItems.push(ExtraNavItem.create(item));
+  const navItem = ExtraNavItem.create(item);
+  NavItem.extraNavItems.push(navItem);
+  return navItem;
 }

@@ -46,7 +46,7 @@ import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.35";
+const PLUGIN_API_VERSION = "0.8.36";
 
 class PluginApi {
   constructor(version, container) {
@@ -716,7 +716,7 @@ class PluginApi {
 
   /**
    *
-   * Adds a new item in the navigation bar.
+   * Adds a new item in the navigation bar. Returns the NavItem object created.
    *
    * Example:
    *
@@ -729,12 +729,16 @@ class PluginApi {
    * An optional `customFilter` callback can be included to not display the
    * nav item on certain routes
    *
+   * An optional `init` callback can be included to run custom code on menu
+   * init
+   *
    * Example:
    *
    * addNavigationBarItem({
    *   name: "link-to-bugs-category",
    *   displayName: "bugs"
    *   href: "/c/bugs",
+   *   init: (navItem, category) => { if (category) { navItem.set("category", category)  } }
    *   customFilter: (category, args, router) => { category && category.name !== 'bug' }
    *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') "/a-feature"; },
    *   before: "top",
@@ -773,7 +777,15 @@ class PluginApi {
         };
       }
 
-      addNavItem(item);
+      const init = item.init;
+      if (init) {
+        const router = this.container.lookup("service:router");
+        item.init = function(navItem, category, args) {
+          init(navItem, category, args, router);
+        };
+      }
+
+      return addNavItem(item);
     }
   }
 
