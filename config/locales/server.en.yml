@@ -822,7 +822,7 @@ en:
     activated: "Sorry, this account has already been activated."
     admin_confirm:
       title: "Confirm Admin Account"
-      description: "Are you sure you want <b>%{target_username}</b> to be an administrator?"
+      description: "Are you sure you want <b>%{target_username} (%{target_email})</b> to be an administrator?"
       grant: "Grant Admin Access"
       complete: "<b>%{target_username}</b> is now an administrator."
       back_to: "Return to %{title}"
@@ -2477,7 +2477,7 @@ en:
     title: "Admin Confirmation"
     subject_template: "[%{email_prefix}] Confirm new Admin Account"
     text_body_template: |
-      Please confirm that you'd like to add **%{target_username}** as an administrator for your forum.
+      Please confirm that you'd like to add **%{target_username} (%{target_email})** as an administrator for your forum.
 
       [Confirm Administrator Account](%{admin_confirm_url})
 

@@ -3,7 +3,7 @@
   <br/>
 
   <%- unless @confirmed %>
-    <%=raw (t('activation.admin_confirm.description', target_username: @confirmation.target_user.username)) %>
+    <%=raw (t('activation.admin_confirm.description', target_email: @confirmation.target_user.email, target_username: @confirmation.target_user.username)) %>
     <br/>
     <br/>
 
