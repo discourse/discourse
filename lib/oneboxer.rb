@@ -275,7 +275,6 @@ module Oneboxer
       return blank_onebox if uri.blank? || blacklisted_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
 
       options = {
-        cache: {},
         max_width: 695,
         sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX
       }
