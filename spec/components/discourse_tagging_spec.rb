@@ -57,6 +57,50 @@ describe DiscourseTagging do
           expect(tags.size).to eq(3)
         end
       end
+
+      context 'with required tags from tag group' do
+        fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
+        fab!(:category) { Fabricate(:category, required_tag_group: tag_group, min_tags_from_required_group: 1) }
+
+        it "returns the required tags if none have been selected" do
+          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user),
+            for_input: true,
+            category: category,
+            term: 'fun'
+          ).to_a
+          expect(tags).to contain_exactly(tag1, tag2)
+        end
+
+        it "returns all allowed tags if a required tag is selected" do
+          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user),
+            for_input: true,
+            category: category,
+            selected_tags: [tag1.name],
+            term: 'fun'
+          ).to_a
+          expect(tags).to contain_exactly(tag2, tag3)
+        end
+
+        it "returns required tags if not enough are selected" do
+          category.update!(min_tags_from_required_group: 2)
+          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user),
+            for_input: true,
+            category: category,
+            selected_tags: [tag1.name],
+            term: 'fun'
+          ).to_a
+          expect(tags).to contain_exactly(tag2)
+        end
+
+        it "let's staff ignore the requirement" do
+          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(admin),
+            for_input: true,
+            category: category,
+            term: 'fun'
+          ).to_a
+          expect(tags).to contain_exactly(tag1, tag2, tag3)
+        end
+      end
     end
   end
 
