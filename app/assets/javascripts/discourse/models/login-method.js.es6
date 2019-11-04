@@ -21,12 +21,12 @@ const LoginMethod = EmberObject.extend({
   doLogin({ reconnect = false } = {}) {
     if (this.customLogin) {
       this.customLogin();
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     if (this.custom_url) {
       window.location = this.custom_url;
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     let authUrl = Discourse.getURL(`/auth/${this.name}`);

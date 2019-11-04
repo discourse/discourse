@@ -96,7 +96,7 @@ export default {
       }
     }
 
-    let trackPromise = Ember.RSVP.resolve();
+    let trackPromise = Promise.resolve();
     if (tracking) {
       if (!Ember.testing && navigator.sendBeacon) {
         const data = new FormData();

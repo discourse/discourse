@@ -56,13 +56,13 @@ export function createPreviewComponent(width, height, obj) {
       loadImages() {
         const images = this.images();
         if (images) {
-          return Ember.RSVP.Promise.all(
+          return Promise.all(
             Object.keys(images).map(id => {
               return loadImage(images[id]).then(img => (this[id] = img));
             })
           );
         }
-        return Ember.RSVP.Promise.resolve();
+        return Promise.resolve();
       },
 
       reload() {
@@ -270,12 +270,12 @@ export function createPreviewComponent(width, height, obj) {
 
 function loadImage(src) {
   if (!src) {
-    return Ember.RSVP.Promise.resolve();
+    return Promise.resolve();
   }
 
   const img = new Image();
   img.src = getUrl(src);
-  return new Ember.RSVP.Promise(resolve => (img.onload = () => resolve(img)));
+  return new Promise(resolve => (img.onload = () => resolve(img)));
 }
 
 export function parseColor(color) {

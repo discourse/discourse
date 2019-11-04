@@ -801,7 +801,7 @@ export default Controller.extend({
       composerModel = null;
     }
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       if (composerModel && composerModel.replyDirty) {
         // If we're already open, we don't have to do anything
         if (
@@ -945,7 +945,7 @@ export default Controller.extend({
         this.appEvents.trigger("draft:destroyed", key)
       );
     } else {
-      return Ember.RSVP.Promise.resolve();
+      return Promise.resolve();
     }
   },
 
@@ -962,7 +962,7 @@ export default Controller.extend({
     }
 
     if (_checkDraftPopup) {
-      return new Ember.RSVP.Promise(resolve => {
+      return new Promise(resolve => {
         bootbox.dialog(I18n.t("drafts.abandon.confirm"), [
           {
             label: I18n.t("drafts.abandon.no_value"),
@@ -988,7 +988,7 @@ export default Controller.extend({
     const keyPrefix =
       this.model.action === "edit" ? "post.abandon_edit" : "post.abandon";
 
-    return new Ember.RSVP.Promise(resolve => {
+    return new Promise(resolve => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
         bootbox.dialog(I18n.t(keyPrefix + ".confirm"), [
           {

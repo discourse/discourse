@@ -32,7 +32,7 @@ Invite.reopenClass({
   },
 
   findInvitedBy(user, filter, search, offset) {
-    if (!user) Ember.RSVP.resolve();
+    if (!user) Promise.resolve();
 
     const data = {};
     if (!Ember.isNone(filter)) data.filter = filter;
@@ -48,7 +48,7 @@ Invite.reopenClass({
   },
 
   findInvitedCount(user) {
-    if (!user) Ember.RSVP.resolve();
+    if (!user) Promise.resolve();
 
     return ajax(userPath(`${user.username_lower}/invited_count.json`)).then(
       result => EmberObject.create(result.counts)

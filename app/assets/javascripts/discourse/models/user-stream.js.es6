@@ -92,11 +92,11 @@ export default RestModel.extend({
     // Don't load the same stream twice. We're probably at the end.
     const lastLoadedUrl = this.lastLoadedUrl;
     if (lastLoadedUrl === findUrl) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     if (this.loading) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     this.set("loading", true);

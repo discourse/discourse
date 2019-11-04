@@ -72,6 +72,9 @@ var define, requirejs;
       },
       "@ember/utils": {
         isEmpty: Ember.isEmpty
+      },
+      "rsvp": {
+        hash: Ember.RSVP.hash
       }
     };
   }

@@ -55,11 +55,11 @@ export default RestModel.extend({
 
     const lastLoadedUrl = this.lastLoadedUrl;
     if (lastLoadedUrl === findUrl) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     if (this.loading) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     this.set("loading", true);

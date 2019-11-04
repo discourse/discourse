@@ -230,7 +230,7 @@ const Post = RestModel.extend({
       });
     }
 
-    return promise || Ember.RSVP.Promise.resolve();
+    return promise || Promise.resolve();
   },
 
   /**

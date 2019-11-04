@@ -50,7 +50,7 @@ export default (filterArg, params) => {
       }
 
       this._setupNavigation(model.category);
-      return Ember.RSVP.all([
+      return Promise.all([
         this._createSubcategoryList(model.category),
         this._retrieveTopicList(model.category, transition)
       ]);
@@ -87,7 +87,7 @@ export default (filterArg, params) => {
       }
 
       // If we're not loading a subcategory list just resolve
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     },
 
     _retrieveTopicList(category, transition) {

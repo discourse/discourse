@@ -112,7 +112,7 @@ export default Mixin.create({
     Ember.warn("You should define a `_save` method", {
       id: "discourse.setting-component.missing-save"
     });
-    return Ember.RSVP.resolve();
+    return Promise.resolve();
   },
 
   actions: {

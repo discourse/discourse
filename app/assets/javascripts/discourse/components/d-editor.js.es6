@@ -453,7 +453,7 @@ export default Component.extend({
       },
 
       dataSource: term => {
-        return new Ember.RSVP.Promise(resolve => {
+        return new Promise(resolve => {
           const full = `:${term}`;
           term = term.toLowerCase();
 

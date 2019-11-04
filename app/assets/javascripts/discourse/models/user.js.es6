@@ -582,7 +582,7 @@ const User = RestModel.extend({
 
   findStaffInfo() {
     if (!Discourse.User.currentProp("staff")) {
-      return Ember.RSVP.resolve(null);
+      return Promise.resolve(null);
     }
     return ajax(userPath(`${this.username_lower}/staff-info.json`)).then(
       info => {
@@ -671,7 +671,7 @@ const User = RestModel.extend({
         data: { context: window.location.pathname }
       });
     } else {
-      return Ember.RSVP.reject(I18n.t("user.delete_yourself_not_allowed"));
+      return Promise.reject(I18n.t("user.delete_yourself_not_allowed"));
     }
   },
 

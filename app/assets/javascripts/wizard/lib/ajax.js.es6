@@ -13,7 +13,7 @@ export function getToken() {
 }
 
 export function ajax(args) {
-  return new Ember.RSVP.Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     args.headers = { "X-CSRF-Token": getToken() };
     args.success = data => run(null, resolve, data);
     args.error = xhr => run(null, reject, xhr);

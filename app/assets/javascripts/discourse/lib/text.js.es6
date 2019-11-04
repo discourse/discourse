@@ -51,7 +51,7 @@ function loadMarkdownIt() {
       console.error(e);
     });
   } else {
-    return Ember.RSVP.Promise.resolve();
+    return Promise.resolve();
   }
 }
 

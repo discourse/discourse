@@ -265,12 +265,12 @@ export default class Widget {
 
       if (typeof method === "string") {
         view[method](param);
-        promise = Ember.RSVP.resolve();
+        promise = Promise.resolve();
       } else {
         const target = view.get("target") || view;
         promise = method.call(target, param);
         if (!promise || !promise.then) {
-          promise = Ember.RSVP.resolve(promise);
+          promise = Promise.resolve(promise);
         }
       }
     }

@@ -514,7 +514,7 @@ const AdminUser = Discourse.User.extend({
 
   loadDetails() {
     if (this.loadedDetails) {
-      return Ember.RSVP.resolve(this);
+      return Promise.resolve(this);
     }
 
     return AdminUser.find(this.id).then(result => {

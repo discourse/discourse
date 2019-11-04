@@ -96,7 +96,7 @@ UserBadge.reopenClass({
   **/
   findByUsername: function(username, options) {
     if (!username) {
-      return Ember.RSVP.resolve([]);
+      return Promise.resolve([]);
     }
     var url = "/user-badges/" + username + ".json";
     if (options && options.grouped) {

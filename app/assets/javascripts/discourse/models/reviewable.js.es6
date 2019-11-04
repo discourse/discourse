@@ -25,7 +25,7 @@ export default RestModel.extend({
   update(updates) {
     // If no changes, do nothing
     if (Object.keys(updates).length === 0) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     let adapter = this.store.adapterFor("reviewable");

@@ -755,7 +755,7 @@ const Composer = RestModel.extend({
 
   // Overwrite to implement custom logic
   beforeSave() {
-    return Ember.RSVP.Promise.resolve();
+    return Promise.resolve();
   },
 
   save(opts) {
@@ -792,7 +792,7 @@ const Composer = RestModel.extend({
   editPost(opts) {
     const post = this.post;
     const oldCooked = post.cooked;
-    let promise = Ember.RSVP.resolve();
+    let promise = Promise.resolve();
 
     // Update the topic if we're editing the first post
     if (this.title && post.post_number === 1) {

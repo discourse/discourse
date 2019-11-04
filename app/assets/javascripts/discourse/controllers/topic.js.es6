@@ -268,7 +268,7 @@ export default Controller.extend(bufferedProperty("model"), {
     selectText(postId, buffer) {
       const loadedPost = this.get("model.postStream").findLoadedPost(postId);
       const promise = loadedPost
-        ? Ember.RSVP.resolve(loadedPost)
+        ? Promise.resolve(loadedPost)
         : this.get("model.postStream").loadPost(postId);
 
       return promise.then(post => {
@@ -826,7 +826,7 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     addNotice(post) {
-      return new Ember.RSVP.Promise(function(resolve, reject) {
+      return new Promise(function(resolve, reject) {
         const controller = showModal("add-post-notice");
         controller.setProperties({ post, resolve, reject });
       });

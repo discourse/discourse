@@ -26,7 +26,7 @@ export default Mixin.create(ModalFunctionality, {
 
   penalize(cb) {
     let before = this.before;
-    let promise = before ? before() : Ember.RSVP.resolve();
+    let promise = before ? before() : Promise.resolve();
 
     return promise
       .then(() => cb())

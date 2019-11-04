@@ -42,7 +42,7 @@ export default Controller.extend(ModalFunctionality, GrantBadgeController, {
   onShow() {
     this.set("loading", true);
 
-    Ember.RSVP.all([
+    Promise.all([
       Badge.findAll(),
       UserBadge.findByUsername(this.get("post.username"))
     ]).then(([allBadges, userBadges]) => {

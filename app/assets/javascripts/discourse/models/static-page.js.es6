@@ -4,7 +4,7 @@ const StaticPage = EmberObject.extend();
 
 StaticPage.reopenClass({
   find(path) {
-    return new Ember.RSVP.Promise(resolve => {
+    return new Promise(resolve => {
       // Models shouldn't really be doing Ajax request, but this is a huge speed boost if we
       // preload content.
       const $preloaded = $('noscript[data-path="/' + path + '"]');

@@ -166,7 +166,7 @@ export default function userSearch(options) {
 
   currentTerm = term;
 
-  return new Ember.RSVP.Promise(function(resolve) {
+  return new Promise(function(resolve) {
     const newCacheKey = `${topicId}-${categoryId}`;
 
     if (new Date() - cacheTime > 30000 || cacheKey !== newCacheKey) {

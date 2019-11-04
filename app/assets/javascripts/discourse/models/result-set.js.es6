@@ -34,7 +34,7 @@ export default Ember.ArrayProxy.extend({
         .finally(() => this.set("loadingMore", false));
     }
 
-    return Ember.RSVP.resolve();
+    return Promise.resolve();
   },
 
   refresh() {

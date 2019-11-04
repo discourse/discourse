@@ -15,7 +15,7 @@ function updateCache(term, results) {
 }
 
 function searchTags(term, categories, limit) {
-  return new Ember.RSVP.Promise(resolve => {
+  return new Promise(resolve => {
     const clearPromise = setTimeout(() => {
       resolve(CANCELLED_STATUS);
     }, 5000);

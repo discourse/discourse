@@ -54,7 +54,7 @@ const TopicList = RestModel.extend({
 
   loadMore() {
     if (this.loadingMore) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     let moreUrl = this.more_topics_url;
@@ -97,7 +97,7 @@ const TopicList = RestModel.extend({
       });
     } else {
       // Return a promise indicating no more results
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
   },
 

@@ -163,13 +163,13 @@ export function ajax() {
     url !== Discourse.getURL("/clicks/track") &&
     !Discourse.Session.currentProp("csrfToken")
   ) {
-    promise = new Ember.RSVP.Promise((resolve, reject) => {
+    promise = new Promise((resolve, reject) => {
       ajaxObj = updateCsrfToken().then(() => {
         performAjax(resolve, reject);
       });
     });
   } else {
-    promise = new Ember.RSVP.Promise(performAjax);
+    promise = new Promise(performAjax);
   }
 
   promise.abort = () => {
