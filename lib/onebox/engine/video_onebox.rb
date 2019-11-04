@@ -12,6 +12,11 @@ module Onebox
       end
 
       def to_html
+        # Fix Dropbox image links
+        if @url[/^https:\/\/www.dropbox.com\/s\//]
+          @url.sub!("https://www.dropbox.com", "https://dl.dropboxusercontent.com")
+        end
+
         escaped_url = ::Onebox::Helpers.normalize_url_for_output(@url)
         <<-HTML
           <div class="onebox video-onebox">
