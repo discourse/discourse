@@ -8,11 +8,6 @@ export default Component.extend({
   saved: false,
   saving: false,
 
-  @computed("saving")
-  savingStatus(saving) {
-    return saving ? I18n.t("saving") : I18n.t("save");
-  },
-
   @computed("selectableUserBadges", "selectedUserBadgeId")
   selectedUserBadge(selectableUserBadges, selectedUserBadgeId) {
     return selectableUserBadges.findBy("id", parseInt(selectedUserBadgeId));

@@ -13,7 +13,11 @@
     </ul>
 
     {{#if this.siteSettings.tagging_enabled}}
-      <button {{action "newTagGroup"}} class='btn btn-default'>{{d-icon "plus"}}{{i18n 'tagging.groups.new'}}</button>
+      {{d-button
+        class="btn-default"
+        action=(action "newTagGroup")
+        icon="plus"
+        label="tagging.groups.new"}}
     {{/if}}
   </div>
 

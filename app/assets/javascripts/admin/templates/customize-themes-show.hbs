@@ -171,7 +171,10 @@
       </div>
     {{/if}}
 
-    {{#d-button action=(action "editTheme") class="btn btn-default edit"}}{{i18n 'admin.customize.theme.edit_css_html'}}{{/d-button}}
+    {{d-button
+      class="btn-default edit"
+      action=(action "editTheme")
+      label="admin.customize.theme.edit_css_html"}}
   </div>
 
   <div class="control-unit">

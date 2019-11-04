@@ -16,7 +16,6 @@ import {
 import Category from "discourse/models/category";
 import { escapeExpression } from "discourse/lib/utilities";
 import { setTransient } from "discourse/lib/page-tracker";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import Composer from "discourse/models/composer";
 import { scrollTop } from "discourse/mixins/scroll-top";
 
@@ -197,11 +196,6 @@ export default Controller.extend({
   @computed("model.grouped_search_result.can_create_topic")
   canCreateTopic(userCanCreateTopic) {
     return this.currentUser && userCanCreateTopic;
-  },
-
-  @computed("expanded")
-  searchAdvancedIcon(expanded) {
-    return iconHTML(expanded ? "caret-down" : "caret-right");
   },
 
   @computed("page")

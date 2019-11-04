@@ -21,11 +21,6 @@ export default Controller.extend(ModalFunctionality, {
     return saving || isEmpty(newUser);
   },
 
-  @computed("saving")
-  buttonTitle(saving) {
-    return saving ? I18n.t("saving") : I18n.t("topic.change_owner.action");
-  },
-
   onShow() {
     this.setProperties({
       saving: false,
