@@ -23,6 +23,7 @@ import PreloadStore from "preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
+import { getProperties } from "@ember/object";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -350,7 +351,7 @@ const User = RestModel.extend({
     })
       .then(result => {
         this.set("bio_excerpt", result.user.bio_excerpt);
-        const userProps = Ember.getProperties(
+        const userProps = getProperties(
           this.user_option,
           "enable_quoting",
           "enable_defer",
