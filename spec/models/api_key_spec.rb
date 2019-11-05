@@ -48,8 +48,8 @@ describe ApiKey do
     ApiKey.revoke_unused_keys!
 
     [never_used, used_previously, used_recently].each(&:reload)
-    expect(never_used.revoked_at).to eq(now)
-    expect(used_previously.revoked_at).to eq(now)
+    expect(never_used.revoked_at).to_not eq(nil)
+    expect(used_previously.revoked_at).to_not eq(nil)
     expect(used_recently.revoked_at).to eq(nil)
 
     # Restore them
