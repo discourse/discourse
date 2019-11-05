@@ -27,14 +27,6 @@ describe CategoryList do
       expect(CategoryList.new(Guardian.new nil).categories.count).to eq(1)
     end
 
-    it "removes the category by default when `mute_all_categories_by_default` is enabled" do
-      category = Fabricate(:category)
-      guardian = Guardian.new
-      expect(CategoryList.new(guardian).categories).to include(category)
-      SiteSetting.mute_all_categories_by_default = true
-      expect(CategoryList.new(guardian).categories).not_to include(category)
-    end
-
     it "doesn't show topics that you can't view" do
       public_cat = Fabricate(:category_with_definition) # public category
       Fabricate(:topic, category: public_cat)
@@ -70,6 +62,35 @@ describe CategoryList do
       # uncategorized + cat_muted for admin
       expect(CategoryList.new(Guardian.new admin).categories.count).to eq(2)
       expect(CategoryList.new(Guardian.new user).categories.count).to eq(1)
+    end
+  end
+
+  context "when mute_all_categories_by_default enabled" do
+    fab!(:category) { Fabricate(:category) }
+
+    before do
+      SiteSetting.mute_all_categories_by_default = true
+    end
+
+    it "removes the category by default" do
+      expect(category_list.categories).not_to include(category)
+    end
+
+    it "returns correct notification level for user tracking category" do
+      CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:tracking], category.id)
+      notification_level = category_list.categories.find { |c| c.id == category.id }.notification_level
+      expect(notification_level).to eq(CategoryUser.notification_levels[:tracking])
+    end
+
+    it "returns correct notification level in default categories for anonymous" do
+      SiteSetting.default_categories_watching = category.id.to_s
+      notification_level = CategoryList.new(Guardian.new).categories.find { |c| c.id == category.id }.notification_level
+      expect(notification_level).to eq(CategoryUser.notification_levels[:regular])
+    end
+
+    it "removes the default muted categories for anonymous" do
+      SiteSetting.default_categories_muted = category.id.to_s
+      expect(CategoryList.new(Guardian.new).categories).not_to include(category)
     end
   end
 
@@ -126,7 +147,7 @@ describe CategoryList do
         category_list = CategoryList.new(Guardian.new(nil))
         category = category_list.categories.find { |c| c.id == topic_category.id }
 
-        expect(category.notification_level).to eq(1)
+        expect(category.notification_level).to eq(NotificationLevels.all[:regular])
       end
     end
 
