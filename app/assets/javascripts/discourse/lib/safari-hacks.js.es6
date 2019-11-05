@@ -112,9 +112,15 @@ function positioningWorkaround($fixedElement) {
     // document.activeElement is also unreliable (iOS does not mark buttons as focused)
     // so instead, we store the last touched element and check against it
 
+    // cancel blur event if user is:
+    // - switching to another iOS app
+    // - invoking a select-kit dropdown
+    // - invoking mentions
+    // - invoking a toolbar button
     if (
       lastTouchedElement &&
-      ($(lastTouchedElement).hasClass("select-kit-header") ||
+      (document.visibilityState === "hidden" ||
+        $(lastTouchedElement).hasClass("select-kit-header") ||
         $(lastTouchedElement).closest(".autocomplete").length ||
         ["span", "svg", "button"].includes(
           lastTouchedElement.nodeName.toLowerCase()
@@ -227,6 +233,11 @@ function positioningWorkaround($fixedElement) {
   };
   const observer = new MutationObserver(checkForInputs);
   observer.observe(fixedElement, config);
+
+  // document.addEventListener("visibilitychange", () => {
+  //   console.log(document.visibilityState);
+  //   console.log(lastTouchedElement);
+  // });
 }
 
 export default positioningWorkaround;
