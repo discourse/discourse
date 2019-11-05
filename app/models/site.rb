@@ -60,10 +60,10 @@ class Site
         category_user = Hash[*CategoryUser.where(user: @guardian.user).pluck(:category_id, :notification_level).flatten]
       end
 
-      regular = CategoryUser.notification_levels[:regular]
+      default_notification_level = SiteSetting.mute_all_categories_by_default ? CategoryUser.notification_levels[:muted] : CategoryUser.notification_levels[:regular]
 
       categories.each do |category|
-        category.notification_level = category_user[category.id] || regular
+        category.notification_level = category_user[category.id] || default_notification_level
         category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create&.include?(category.id) || @guardian.is_admin?
         category.has_children = with_children.include?(category.id)
         by_id[category.id] = category

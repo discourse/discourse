@@ -93,11 +93,8 @@ class CategoryList
     @categories = @categories.to_a
 
     category_user = {}
-    default_notification_level = nil
-    unless @guardian.anonymous?
-      category_user = Hash[*CategoryUser.where(user: @guardian.user).pluck(:category_id, :notification_level).flatten]
-      default_notification_level = CategoryUser.notification_levels[:regular]
-    end
+    category_user = Hash[*CategoryUser.where(user: @guardian.user).pluck(:category_id, :notification_level).flatten] unless @guardian.anonymous?
+    default_notification_level = SiteSetting.mute_all_categories_by_default ? CategoryUser.notification_levels[:muted] : CategoryUser.notification_levels[:regular]
 
     allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
     @categories.each do |category|

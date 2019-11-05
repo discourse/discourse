@@ -41,6 +41,14 @@ describe Site do
 
   end
 
+  it "sets correct default notification level for categories" do
+    Fabricate(:category)
+    guardian = Guardian.new
+    expect(Site.new(guardian).categories.last.notification_level).to eq(1)
+    SiteSetting.mute_all_categories_by_default = true
+    expect(Site.new(guardian).categories.last.notification_level).to eq(0)
+  end
+
   it "omits categories users can not write to from the category list" do
     category = Fabricate(:category)
     user = Fabricate(:user)

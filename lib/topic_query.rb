@@ -869,7 +869,34 @@ class TopicQuery
   def remove_muted_categories(list, user, opts = nil)
     category_id = get_category_id(opts[:exclude]) if opts
 
-    if user
+    if SiteSetting.mute_all_categories_by_default
+      if user
+        list = list.references("cu")
+          .where("
+          NOT EXISTS (
+            SELECT 1
+              FROM categories c
+              LEFT OUTER JOIN category_users cu
+              ON c.id = cu.category_id AND cu.user_id = :user_id
+            WHERE c.id = topics.category_id
+              AND c.id <> :category_id
+              AND (cu.notification_level IS NULL OR cu.notification_level = :muted)
+              AND (tu.notification_level IS NULL OR tu.notification_level < :tracking)
+          )", user_id: user.id,
+              muted: CategoryUser.notification_levels[:muted],
+              tracking: TopicUser.notification_levels[:tracking],
+              category_id: category_id || -1)
+      else
+        category_ids = [
+          SiteSetting.default_categories_watching.split("|"),
+          SiteSetting.default_categories_tracking.split("|"),
+          SiteSetting.default_categories_watching_first_post.split("|")
+        ].flatten.map(&:to_i)
+        category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
+
+        list = list.where("topics.category_id IN (?)", category_ids) if category_ids.present?
+      end
+    elsif user
       list = list.references("cu")
         .where("
         NOT EXISTS (
