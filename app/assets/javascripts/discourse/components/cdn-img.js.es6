@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   tagName: "",
@@ -12,7 +13,7 @@ export default Component.extend({
   @computed("width", "height")
   style(width, height) {
     if (width && height) {
-      return Ember.String.htmlSafe(`--aspect-ratio: ${width / height};`);
+      return htmlSafe(`--aspect-ratio: ${width / height};`);
     }
   }
 });

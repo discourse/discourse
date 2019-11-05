@@ -13,6 +13,7 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { set } from "@ember/object";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: "user-card",
@@ -76,7 +77,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
         .filterBy("show_on_user_card", true)
         .sortBy("position")
         .map(field => {
-          Ember.set(field, "dasherized_name", field.get("name").dasherize());
+          set(field, "dasherized_name", field.get("name").dasherize());
           const value = userFields ? userFields[field.get("id")] : null;
           return isEmpty(value) ? null : EmberObject.create({ value, field });
         })

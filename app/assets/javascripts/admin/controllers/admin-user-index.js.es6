@@ -8,6 +8,7 @@ import { userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { fmt } from "discourse/lib/computed";
+import { htmlSafe } from "@ember/template";
 
 export default Controller.extend(CanCheckEmails, {
   adminTools: service(),
@@ -47,7 +48,7 @@ export default Controller.extend(CanCheckEmails, {
   automaticGroups(automaticGroups) {
     return automaticGroups
       .map(group => {
-        const name = Ember.String.htmlSafe(group.name);
+        const name = htmlSafe(group.name);
         return `<a href="/g/${name}">${name}</a>`;
       })
       .join(", ");

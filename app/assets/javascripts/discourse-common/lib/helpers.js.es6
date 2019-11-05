@@ -1,4 +1,5 @@
 import { get } from "@ember/object";
+import Helper from "@ember/component/helper";
 
 export function makeArray(obj) {
   if (obj === null || obj === undefined) {
@@ -8,7 +9,7 @@ export function makeArray(obj) {
 }
 
 export function htmlHelper(fn) {
-  return Ember.Helper.helper(function(...args) {
+  return Helper.helper(function(...args) {
     args =
       args.length > 1 ? args[0].concat({ hash: args[args.length - 1] }) : args;
     return new Handlebars.SafeString(fn.apply(this, args) || "");
@@ -29,7 +30,7 @@ function rawGet(ctx, property, options) {
 }
 
 export function registerHelper(name, fn) {
-  _helpers[name] = Ember.Helper.helper(fn);
+  _helpers[name] = Helper.helper(fn);
 }
 
 export function findHelper(name) {
@@ -84,7 +85,7 @@ export function registerUnbound(name, fn) {
     return fn.call(this, ...properties, resolveParams(this, options));
   };
 
-  _helpers[name] = Ember.Helper.extend({
+  _helpers[name] = Helper.extend({
     compute: (params, args) => fn(...params, args)
   });
   Handlebars.registerHelper(name, func);
