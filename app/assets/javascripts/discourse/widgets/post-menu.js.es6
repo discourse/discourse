@@ -4,6 +4,7 @@ import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { avatarAtts } from "discourse/widgets/actions-summary";
 import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
+import { Promise } from "rsvp";
 
 const LIKE_ACTION = 2;
 
@@ -575,7 +576,7 @@ export default createWidget("post-menu", {
     this.state.collapsed = false;
     const likesPromise = !this.state.likedUsers.length
       ? this.getWhoLiked()
-      : Ember.RSVP.resolve();
+      : Promise.resolve();
 
     return likesPromise.then(() => {
       if (!this.state.readers.length && this.attrs.showReadIndicator) {
@@ -601,7 +602,7 @@ export default createWidget("post-menu", {
     $heart.closest("button").addClass("has-like");
 
     const scale = [1.0, 1.5];
-    return new Ember.RSVP.Promise(resolve => {
+    return new Promise(resolve => {
       animateHeart($heart, scale[0], scale[1], () => {
         animateHeart($heart, scale[1], scale[0], () => {
           this.sendWidgetAction("toggleLike").then(() => resolve());

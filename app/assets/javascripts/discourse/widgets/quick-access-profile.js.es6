@@ -10,7 +10,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
   },
 
   findNewItems() {
-    return Ember.RSVP.Promise.resolve(this._getItems());
+    return Promise.resolve(this._getItems());
   },
 
   itemHtml(item) {

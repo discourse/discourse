@@ -1,6 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import computed from "ember-addons/ember-computed-decorators";
+import { Promise } from "rsvp";
 
 const UserBadge = Discourse.Model.extend({
   @computed
@@ -96,7 +97,7 @@ UserBadge.reopenClass({
   **/
   findByUsername: function(username, options) {
     if (!username) {
-      return Ember.RSVP.resolve([]);
+      return Promise.resolve([]);
     }
     var url = "/user-badges/" + username + ".json";
     if (options && options.grouped) {

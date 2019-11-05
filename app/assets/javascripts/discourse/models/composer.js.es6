@@ -17,6 +17,7 @@ import {
 import { escapeExpression, tinyAvatar } from "discourse/lib/utilities";
 import { propertyNotEqual } from "discourse/lib/computed";
 import throttle from "discourse/lib/throttle";
+import { Promise } from "rsvp";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
@@ -755,7 +756,7 @@ const Composer = RestModel.extend({
 
   // Overwrite to implement custom logic
   beforeSave() {
-    return Ember.RSVP.Promise.resolve();
+    return Promise.resolve();
   },
 
   save(opts) {
@@ -792,7 +793,7 @@ const Composer = RestModel.extend({
   editPost(opts) {
     const post = this.post;
     const oldCooked = post.cooked;
-    let promise = Ember.RSVP.resolve();
+    let promise = Promise.resolve();
 
     // Update the topic if we're editing the first post
     if (this.title && post.post_number === 1) {

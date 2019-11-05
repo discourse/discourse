@@ -23,6 +23,7 @@ import PreloadStore from "preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
+import { Promise } from "rsvp";
 import { getProperties } from "@ember/object";
 
 export const SECOND_FACTOR_METHODS = {
@@ -583,7 +584,7 @@ const User = RestModel.extend({
 
   findStaffInfo() {
     if (!Discourse.User.currentProp("staff")) {
-      return Ember.RSVP.resolve(null);
+      return Promise.resolve(null);
     }
     return ajax(userPath(`${this.username_lower}/staff-info.json`)).then(
       info => {
@@ -672,7 +673,7 @@ const User = RestModel.extend({
         data: { context: window.location.pathname }
       });
     } else {
-      return Ember.RSVP.reject(I18n.t("user.delete_yourself_not_allowed"));
+      return Promise.reject(I18n.t("user.delete_yourself_not_allowed"));
     }
   },
 

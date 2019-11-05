@@ -18,7 +18,7 @@ function filterQueryParams(params, defaultParams) {
 
 function findTopicList(store, tracking, filter, filterParams, extras) {
   extras = extras || {};
-  return new Ember.RSVP.Promise(function(resolve) {
+  return new Promise(function(resolve) {
     const session = Discourse.Session.current();
 
     if (extras.cached) {

@@ -6,6 +6,7 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
+import { all } from "rsvp";
 
 export default Controller.extend(ModalFunctionality, GrantBadgeController, {
   topicController: inject("topic"),
@@ -42,7 +43,7 @@ export default Controller.extend(ModalFunctionality, GrantBadgeController, {
   onShow() {
     this.set("loading", true);
 
-    Ember.RSVP.all([
+    all([
       Badge.findAll(),
       UserBadge.findByUsername(this.get("post.username"))
     ]).then(([allBadges, userBadges]) => {

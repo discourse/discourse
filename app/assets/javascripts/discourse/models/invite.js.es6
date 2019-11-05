@@ -2,6 +2,7 @@ import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { userPath } from "discourse/lib/url";
+import { Promise } from "rsvp";
 
 const Invite = Discourse.Model.extend({
   rescind() {
@@ -32,7 +33,7 @@ Invite.reopenClass({
   },
 
   findInvitedBy(user, filter, search, offset) {
-    if (!user) Ember.RSVP.resolve();
+    if (!user) Promise.resolve();
 
     const data = {};
     if (!Ember.isNone(filter)) data.filter = filter;
@@ -48,7 +49,7 @@ Invite.reopenClass({
   },
 
   findInvitedCount(user) {
-    if (!user) Ember.RSVP.resolve();
+    if (!user) Promise.resolve();
 
     return ajax(userPath(`${user.username_lower}/invited_count.json`)).then(
       result => EmberObject.create(result.counts)
