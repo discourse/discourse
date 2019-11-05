@@ -20,7 +20,7 @@ module Roleable
 
   def grant_moderation!
     set_permission('moderator', true)
-    enqueue_staff_welcome_message('moderator')
+    enqueue_staff_welcome_message(:moderator)
   end
 
   def revoke_moderation!
@@ -29,7 +29,7 @@ module Roleable
 
   def grant_admin!
     set_permission('admin', true)
-    enqueue_staff_welcome_message('admin')
+    enqueue_staff_welcome_message(:admin)
   end
 
   def revoke_admin!
