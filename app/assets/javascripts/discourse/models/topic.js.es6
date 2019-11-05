@@ -374,7 +374,7 @@ const Topic = RestModel.extend({
 
   toggleBookmark() {
     if (this.bookmarking) {
-      return Ember.RSVP.Promise.resolve();
+      return Promise.resolve();
     }
     this.set("bookmarking", true);
 
@@ -417,7 +417,7 @@ const Topic = RestModel.extend({
       );
     }
 
-    return new Ember.RSVP.Promise(resolve => {
+    return new Promise(resolve => {
       if (unbookmarkedPosts.length > 1) {
         bootbox.confirm(
           I18n.t("bookmarks.confirm_clear"),

@@ -5,6 +5,7 @@ import { on } from "@ember/object/evented";
 import Mixin from "@ember/object/mixin";
 import showModal from "discourse/lib/show-modal";
 import AboutRoute from "discourse/routes/about";
+import { Promise } from "rsvp";
 
 const CUSTOM_TYPES = [
   "bool",
@@ -112,7 +113,7 @@ export default Mixin.create({
     Ember.warn("You should define a `_save` method", {
       id: "discourse.setting-component.missing-save"
     });
-    return Ember.RSVP.resolve();
+    return Promise.resolve();
   },
 
   actions: {

@@ -2,6 +2,7 @@ import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import computed from "ember-addons/ember-computed-decorators";
 import Category from "discourse/models/category";
+import { Promise } from "rsvp";
 
 export const PENDING = 0;
 export const APPROVED = 1;
@@ -25,7 +26,7 @@ export default RestModel.extend({
   update(updates) {
     // If no changes, do nothing
     if (Object.keys(updates).length === 0) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     let adapter = this.store.adapterFor("reviewable");

@@ -4,6 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import BadgeGrouping from "discourse/models/badge-grouping";
 import RestModel from "discourse/models/rest";
 import computed from "ember-addons/ember-computed-decorators";
+import { Promise } from "rsvp";
 
 const Badge = RestModel.extend({
   newBadge: none("id"),
@@ -53,7 +54,7 @@ const Badge = RestModel.extend({
   },
 
   destroy() {
-    if (this.newBadge) return Ember.RSVP.resolve();
+    if (this.newBadge) return Promise.resolve();
 
     return ajax(`/admin/badges/${this.id}`, {
       type: "DELETE"

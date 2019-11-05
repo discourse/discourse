@@ -7,6 +7,7 @@ import RestModel from "discourse/models/rest";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { loadTopicView } from "discourse/models/topic";
+import { Promise } from "rsvp";
 
 export default RestModel.extend({
   _identityMap: null,
@@ -255,7 +256,7 @@ export default RestModel.extend({
     } else {
       const postWeWant = this.posts.findBy("post_number", opts.nearPost);
       if (postWeWant) {
-        return Ember.RSVP.resolve();
+        return Promise.resolve();
       }
     }
 
@@ -317,7 +318,7 @@ export default RestModel.extend({
         });
       }
     }
-    return Ember.RSVP.resolve();
+    return Promise.resolve();
   },
 
   // Fill in a gap of posts after a particular post
@@ -333,14 +334,14 @@ export default RestModel.extend({
         this.stream.arrayContentDidChange();
       });
     }
-    return Ember.RSVP.resolve();
+    return Promise.resolve();
   },
 
   // Appends the next window of posts to the stream. Call it when scrolling downwards.
   appendMore() {
     // Make sure we can append more posts
     if (!this.canAppendMore) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     const postsWithPlaceholders = this.postsWithPlaceholders;
@@ -363,7 +364,7 @@ export default RestModel.extend({
       });
     } else {
       const postIds = this.nextWindow;
-      if (isEmpty(postIds)) return Ember.RSVP.resolve();
+      if (isEmpty(postIds)) return Promise.resolve();
       this.set("loadingBelow", true);
       postsWithPlaceholders.appending(postIds);
 
@@ -383,7 +384,7 @@ export default RestModel.extend({
   prependMore() {
     // Make sure we can append more posts
     if (!this.canPrependMore) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     if (this.isMegaTopic) {
@@ -404,7 +405,7 @@ export default RestModel.extend({
       });
     } else {
       const postIds = this.previousWindow;
-      if (isEmpty(postIds)) return Ember.RSVP.resolve();
+      if (isEmpty(postIds)) return Promise.resolve();
       this.set("loadingAbove", true);
 
       return this.findPostsByIds(postIds.reverse())
@@ -580,7 +581,7 @@ export default RestModel.extend({
     have no filters.
   **/
   triggerNewPostInStream(postId) {
-    const resolved = Ember.RSVP.Promise.resolve();
+    const resolved = Promise.resolve();
 
     if (!postId) {
       return resolved;
@@ -680,13 +681,13 @@ export default RestModel.extend({
           this.removePosts([existing]);
         });
     }
-    return Ember.RSVP.Promise.resolve();
+    return Promise.resolve();
   },
 
   triggerChangedPost(postId, updatedAt, opts) {
     opts = opts || {};
 
-    const resolved = Ember.RSVP.Promise.resolve();
+    const resolved = Promise.resolve();
     if (!postId) {
       return resolved;
     }
@@ -707,7 +708,7 @@ export default RestModel.extend({
   },
 
   triggerReadPost(postId, readersCount) {
-    const resolved = Ember.RSVP.Promise.resolve();
+    const resolved = Promise.resolve();
     resolved.then(() => {
       const post = this.findLoadedPost(postId);
       if (post && readersCount > post.readers_count) {
@@ -958,7 +959,7 @@ export default RestModel.extend({
 
   loadIntoIdentityMap(postIds) {
     if (isEmpty(postIds)) {
-      return Ember.RSVP.resolve([]);
+      return Promise.resolve([]);
     }
 
     let includeSuggested = !this.get("topic.suggested_topics");
@@ -1029,12 +1030,12 @@ export default RestModel.extend({
 
   excerpt(streamPosition) {
     if (this.isMegaTopic) {
-      return new Ember.RSVP.Promise(resolve => resolve(""));
+      return new Promise(resolve => resolve(""));
     }
 
     const stream = this.stream;
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let excerpt = this._excerpts && this._excerpts[stream[streamPosition]];
 
       if (excerpt) {

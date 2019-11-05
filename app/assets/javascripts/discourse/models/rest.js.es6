@@ -1,5 +1,6 @@
 import { equal } from "@ember/object/computed";
 import EmberObject from "@ember/object";
+import { Promise } from "rsvp";
 
 const RestModel = EmberObject.extend({
   isNew: equal("__state", "new"),
@@ -11,7 +12,7 @@ const RestModel = EmberObject.extend({
 
   update(props) {
     if (this.isSaving) {
-      return Ember.RSVP.reject();
+      return Promise.reject();
     }
 
     props = props || this.updateProperties();
@@ -39,7 +40,7 @@ const RestModel = EmberObject.extend({
 
   _saveNew(props) {
     if (this.isSaving) {
-      return Ember.RSVP.reject();
+      return Promise.reject();
     }
 
     props = props || this.createProperties();

@@ -8,6 +8,7 @@ import TopicList from "discourse/models/topic-list";
 import PermissionType from "discourse/models/permission-type";
 import CategoryList from "discourse/models/category-list";
 import Category from "discourse/models/category";
+import { Promise, all } from "rsvp";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
@@ -50,7 +51,7 @@ export default (filterArg, params) => {
       }
 
       this._setupNavigation(model.category);
-      return Ember.RSVP.all([
+      return all([
         this._createSubcategoryList(model.category),
         this._retrieveTopicList(model.category, transition)
       ]);
@@ -87,7 +88,7 @@ export default (filterArg, params) => {
       }
 
       // If we're not loading a subcategory list just resolve
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     },
 
     _retrieveTopicList(category, transition) {

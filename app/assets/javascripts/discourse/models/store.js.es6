@@ -210,7 +210,7 @@ export default EmberObject.extend({
     // If the record is new, don't perform an Ajax call
     if (record.get("isNew")) {
       removeMap(type, record.get("id"));
-      return Ember.RSVP.Promise.resolve(true);
+      return Promise.resolve(true);
     }
 
     return this.adapterFor(type)

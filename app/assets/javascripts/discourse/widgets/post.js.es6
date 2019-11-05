@@ -588,7 +588,7 @@ createWidget("post-article", {
       if (topicUrl) {
         DiscourseURL.routeTo(`${topicUrl}/${replyPostNumber}`);
       }
-      return Ember.RSVP.Promise.resolve();
+      return Promise.resolve();
     }
 
     if (this.state.repliesAbove.length) {
@@ -598,7 +598,7 @@ createWidget("post-article", {
           `${this.attrs.topicUrl}/${this.attrs.post_number}`
         );
       }
-      return Ember.RSVP.Promise.resolve();
+      return Promise.resolve();
     } else {
       const topicUrl = this._getTopicUrl();
       return this.store
