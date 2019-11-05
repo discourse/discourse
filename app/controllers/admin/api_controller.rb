@@ -60,7 +60,7 @@ class Admin::ApiController < Admin::AdminController
 
     ApiKey.transaction do
       api_key.update(revoked_at: nil)
-      log_api_key(api_key, UserHistory.actions[:api_key_update], changes: api_key.saved_changes)
+      log_api_key_restore(api_key)
     end
     render_serialized(api_key, ApiKeySerializer)
   end
@@ -71,7 +71,7 @@ class Admin::ApiController < Admin::AdminController
 
     ApiKey.transaction do
       api_key.update(revoked_at: Time.zone.now)
-      log_api_key(api_key, UserHistory.actions[:api_key_update], changes: api_key.saved_changes)
+      log_api_key_revoke(api_key)
     end
     render_serialized(api_key, ApiKeySerializer)
   end
@@ -86,6 +86,14 @@ class Admin::ApiController < Admin::AdminController
   end
 
   def log_api_key(*args)
+    StaffActionLogger.new(current_user).log_api_key(*args)
+  end
+
+  def log_api_key_revoke(*args)
+    StaffActionLogger.new(current_user).log_api_key(*args)
+  end
+
+  def log_api_key_restore(*args)
     StaffActionLogger.new(current_user).log_api_key(*args)
   end
 

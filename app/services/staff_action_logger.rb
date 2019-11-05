@@ -671,19 +671,29 @@ class StaffActionLogger
       subject: api_key.truncated_key
     )
 
-    if opts[:changes]&.keys == ["revoked_at", "updated_at"]
-      if opts[:changes]["revoked_at"][1]
-        history_params[:details] = I18n.t("staff_action_logs.api_key.revoked")
-      else
-        history_params[:details] = I18n.t("staff_action_logs.api_key.restored")
-      end
-    elsif opts[:changes]
+    if opts[:changes]
       old_values, new_values = get_changes(opts[:changes])
       history_params[:previous_value] = old_values&.join(", ") unless opts[:changes].keys.include?("id")
       history_params[:new_value] = new_values&.join(", ")
     end
 
     UserHistory.create!(history_params)
+  end
+
+  def log_api_key_revoke(api_key)
+    UserHistory.create!(params.merge(
+      subject: api_key.truncated_key,
+      action: UserHistory.actions[:api_key_update],
+      details: I18n.t("staff_action_logs.api_key.revoked")
+    ))
+  end
+
+  def log_api_key_restore(api_key)
+    UserHistory.create!(params.merge(
+      subject: api_key.truncated_key,
+      action: UserHistory.actions[:api_key_update],
+      details: I18n.t("staff_action_logs.api_key.restored")
+    ))
   end
 
   private
