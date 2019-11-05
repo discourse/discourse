@@ -916,7 +916,7 @@ sl:
         enforced_notice: "Obvezno morate vklopiti preverjanje v dveh korakih za dostop to tega spletnega mesta."
         edit: "Uredi"
         security_key:
-          delete: 'Izbriši'
+          delete: "Izbriši"
       change_about:
         title: "Spremeni O meni"
         error: "Prišlo je do napake pri spreminjanju te vrednosti"
@@ -942,9 +942,6 @@ sl:
         uploaded_avatar_empty: "Dodaj sliko po meri"
         upload_title: "Prenesi svojo sliko"
         image_is_not_a_square: "Opozorilo: obrezali smo vašo sliko; širina in višina nista bili enaki."
-      change_profile_background:
-        title: "Ozadje profila"
-        instructions: "Ozadje profila bo centrirano in imelo širino 850px."
       change_card_background:
         title: "Ozadje kartice uporabnika"
         instructions: "Ozadje kartice bo centrirano in imelo širino 590px."
@@ -1205,6 +1202,9 @@ sl:
         header_title: "profil, zasebna sporočila, zaznamki in nastavitve"
       title:
         title: "Naziv"
+        none: "(brez)"
+      primary_group:
+        title: "Primarna skupina"
         none: "(brez)"
       filters:
         all: "Vse"
@@ -1540,7 +1540,6 @@ sl:
       link_description: "vnesite opis povezave tukaj"
       link_dialog_title: "Vstavi povezavo"
       link_optional_text: "neobvezen naslov"
-      link_url_placeholder: "https://example.com"
       quote_title: "Citiraj"
       quote_text: "Citirano"
       code_title: "Preformatirano besedilo"
@@ -2290,6 +2289,9 @@ sl:
         image_upload_not_allowed_for_new_user: "Oprostite, novi uporabniki ne morejo nalagati datotek."
         attachment_upload_not_allowed_for_new_user: "Oprostite, novi uporabniki ne morejo nalagati priponk."
         attachment_download_requires_login: "Oprostite, morate biti prijavljeni da lahko prenesete priponke."
+      abandon_edit:
+        no_value: "Ne, obdrži"
+        no_save_draft: "Ne, shranite osnutek"
       abandon:
         confirm: "Ali ste prepričani, da hočete zavreči vaš prispevek?"
         no_value: "Ne, ohrani"
@@ -2444,7 +2446,6 @@ sl:
       tags_allowed_tags: "Omeji te oznake na to kategorijo:"
       tags_allowed_tag_groups: "Omeji te skupine oznak na to kategorijo:"
       tags_placeholder: "(neobvezno) seznam dovoljenih oznak"
-      tags_tab_description: "Oznake in skupine oznak navedene tukaj bodo na voljo samo v tej kategoriji in drugih kategorijah, ki jih bodo imele navedene. Ne bodo na voljo v ostalih kategorijah."
       tag_groups_placeholder: "(neobvezno) seznam dovoljenih oznak skupin"
       manage_tag_groups_link: "Upravljaj skupine oznak tukaj."
       allow_global_tags_label: "Dovoli tudi druge oznake"
@@ -3109,7 +3110,6 @@ sl:
               staff: "Skrbniki skupine in osebje foruma"
           membership:
             automatic: Samodejno
-            trust_level: Nivo zaupanja
             trust_levels_title: "Stopnja zaupanja, ki je samodejno dodeljena članom, ko so dodani:"
             trust_levels_none: "Brez"
             automatic_membership_email_domains: "Uporabniki, ki se prijavijo z e-naslovom, ki se točno ujema s to domeno, bodo samodejno dodani v to skupino:"
@@ -3204,6 +3204,7 @@ sl:
             label: "Varnostna kopija"
             title: "Ustvari varnostno kopijo"
             confirm: "Želite ustvariti varnostno kopijo?"
+            without_uploads: "Da (brez naloženih datotek)"
           download:
             label: "Naloži"
         location:
@@ -3723,6 +3724,8 @@ sl:
           search: "Išči"
           groups: "Skupine"
           dashboard: "Nadzorna plošča"
+        default_categories:
+          modal_yes: "Da"
       badges:
         title: Značke
         new_badge: Nova značka

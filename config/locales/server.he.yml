@@ -92,7 +92,7 @@ he:
         from_reply_by_address_error: "מתרחש כאשר הכותרת ‚מאת’ תואמת לתגובה לפי כתובת דוא״ל."
         inactive_user_error: "מתרחש כאשר השולח אינו פעיל."
         silenced_user_error: "מתרחש כאשר השולח הושתק."
-        bad_destination_address: "מתרחש כאשר אף אחת מהכתובות בשדות אל, עותק או עותק מוסתר אינה תואמת לאף כתובת דוא״ל נכנסת מוגדרת."
+        bad_destination_address: "מתרחש כאשר אף אחת מהכתובות בשדות אל או עותק אינה תואמת לאף כתובת דוא״ל נכנסת מוגדרת."
         strangers_not_allowed_error: "מתרחש כאשר משתמשים מנסים ליצור נושא חדש בקטגוריה בה הם אינם חברים."
         insufficient_trust_level_error: "מתרחש כאשר משתמשים מנסים ליצור נושא חדש בקטגוריה בה אין להם את רמת האמון/הרשאה הנדרשת."
         reply_user_not_matching_error: "מתרחש כאשר תגובה מגיעה מכתובת דוא״ל שונה מזו שאליה נשלחה ההתראה."
@@ -171,6 +171,7 @@ he:
         many: "ציינת את הבחירות השגויות %{name}"
         other: "ציינת את הבחירות השגויות %{name}"
       default_categories_already_selected: "לא ניתן לבחור קטגוריה שנעשה בה שימוש ברשימה אחרת."
+      default_tags_already_selected: "לא ניתן לבחור תגית שנעשה בה שימוש ברשימה אחרת"
       s3_upload_bucket_is_required: "לא ניתן להפעיל העלאות ל־S3 ללא ‚s3_upload_bucket’."
       enable_s3_uploads_is_required: "אי אפשר להגדיר מאגר ל־S3 אלמלא הפעלת העלאות ל־S3."
       s3_backup_requires_s3_settings: "לא ניתן להשתמש ב־S3 כמיקום לגיבוי אלמלא סיפקת את ‚%{setting_name}’."
@@ -267,6 +268,7 @@ he:
       other: "%{count} לייקים"
     last_reply: "תגובה אחרונה"
     created: "נוצר"
+    new_topic: "יצירת נושא חדש"
   no_mentions_allowed: "אין לך אפשרות לאזכר משתמשים אחרים, עמך הסליחה."
   too_many_mentions:
     one: "מצטערים, ניתן לאזכר משתמש אחד בלבד בפוסט"
@@ -802,7 +804,7 @@ he:
     activated: "מצטערים, חשבון זה כבר הופעל."
     admin_confirm:
       title: "אישור חשבון ניהול"
-      description: "לצרף את <b>%{target_username}</b> לסגל הניהול?"
+      description: "להעניק למשתמש <b>%{target_username} (%{target_email})</b> הרשאות ניהול?"
       grant: "הענקת גישת ניהול"
       complete: "למשתמש <b>%{target_username}</b> יש כעת תפקיד ניהולי."
       back_to: "חזרה אל %{title}"
@@ -851,6 +853,13 @@ he:
       description: "תנו לייק לפוסט זה"
       short_description: "אהבו פוסט זה"
       long_form: "נתתי לזה לייק"
+  draft:
+    sequence_conflict_error:
+      title: "שגיאת טיוטה"
+      description: "הטיוטה נערכת בחלון אחר. נא לרענן את העמוד הזה."
+  draft_backup:
+    pm_title: "טיוטות גיבוי מנושאים שמתנהלים כרגע"
+    pm_body: "נושא שמכיל טיוטות גיבוי"
   user_activity:
     no_default:
       self: "עדיין אין לך פעילות."
@@ -868,18 +877,18 @@ he:
       self: "אין לך טיוטות, ניתן להתחיל לכתוב תגובה בכל נושא שהוא והוא יישמר אוטומטית כטיוטה חדשה."
   webauthn:
     validation:
-      invalid_type_error: 'סוג ה־webauthn שסופק שגוי. הסוגים התקינים הם webauthn.get ו־webauthn.create.'
-      challenge_mismatch_error: 'האתגר שסופק לא תואם לאתגר שנוצר על ידי שרת האימות.'
-      invalid_origin_error: 'מקור בקשת האימות לא תואמת למקור השרת.'
-      malformed_attestation_error: 'איך שגיאה בעת פענוח נתוני העדות.'
-      invalid_relying_party_id_error: 'ה־Relying Party ID של בקשת האימות לא תואמת ל־Relying Party ID של השרת.'
-      user_verification_error: 'נדרש אימות משתמש.'
-      unsupported_public_key_algorithm_error: 'אלגוריתם המפתח הציבורי שסופק לא נתמך על ידי השרת.'
-      unsupported_attestation_format_error: 'תצורת העדות לא נתמכת על ידי השרת.'
-      credential_id_in_use_error: 'מזהה פרטי הגישה כבר בשימוש.'
-      public_key_error: 'אימות המפתח הציבורי עבור פרטי הגישה נכשל.'
-      ownership_error: 'מפתח האבטחה אינו בבעלות המשתמש.'
-      not_found_error: 'לא ניתן למצוא מפתח אבטחה עם מזהה פרטי הגישה שסופק.'
+      invalid_type_error: "סוג ה־webauthn שסופק שגוי. הסוגים התקינים הם webauthn.get ו־webauthn.create."
+      challenge_mismatch_error: "האתגר שסופק לא תואם לאתגר שנוצר על ידי שרת האימות."
+      invalid_origin_error: "מקור בקשת האימות לא תואמת למקור השרת."
+      malformed_attestation_error: "איך שגיאה בעת פענוח נתוני העדות."
+      invalid_relying_party_id_error: "ה־Relying Party ID של בקשת האימות לא תואמת ל־Relying Party ID של השרת."
+      user_verification_error: "נדרש אימות משתמש."
+      unsupported_public_key_algorithm_error: "אלגוריתם המפתח הציבורי שסופק לא נתמך על ידי השרת."
+      unsupported_attestation_format_error: "תצורת העדות לא נתמכת על ידי השרת."
+      credential_id_in_use_error: "מזהה פרטי הגישה כבר בשימוש."
+      public_key_error: "אימות המפתח הציבורי עבור פרטי הגישה נכשל."
+      ownership_error: "מפתח האבטחה אינו בבעלות המשתמש."
+      not_found_error: "לא ניתן למצוא מפתח אבטחה עם מזהה פרטי הגישה שסופק."
   topic_flag_types:
     spam:
       title: "ספאם"
@@ -1355,7 +1364,7 @@ he:
     editing_grace_period_max_diff_high_trust: "מספר תווים מרבי שמותר לשנות בטווח עריכת חסד, אם נערכו למעלה מהכמות הזאת יש ליצור מהדורה חדשה לפוסט (דרגות אמון 2 ומעלה)"
     staff_edit_locks_post: "פוסטים יינעלו מפני עריכה אם נערכו על ידי הסגל."
     post_edit_time_limit: "יוצרי פוסטים בדרגת אמון 1 או 0 יכולים לערוך את הפוסטים שלהם עד (n) דקות לאחר הפרסום. 0 כדי לאפשר לערוך לעד.<br data-mce-bogus=\"1\">"
-    tl2_post_edit_time_limit: "יוצרי פוסטים בדרגת אמון 2 יכולים לערוך את הפוסטים שלהם עד (n) דקות לאחר הפרסום. 0 כדי לאפשר לערוך לעד."
+    tl2_post_edit_time_limit: "מחברים בדרגת אמון 2 ומעלה יכולים לערוך את הפוסטים שלהם (n) דקות לאחר פרסומם. 0 ישבית את ההגבלה הזאת."
     edit_history_visible_to_public: "אפשרו לכולם לראות גרסאות קודמות של פוסט ערוך. כאשר אפשרות זו מנוטרלת, רק חברי צוות יכולים לצפות בהן."
     delete_removed_posts_after: "פוסטים שהוסרו על ידי מחבריהם ימחקו באופן אוטומטי לאחר (n) שעות. אם הגדרה זו מכוונת ל-0, פוסטים ימחקו מיידית."
     max_image_width: "הרוחב המקסימלי של תצוגת תמונה מוקטנת בפוסט"
@@ -1525,9 +1534,9 @@ he:
     enable_github_logins: "הפעלת אימות עם GitHub, דורש github_client_id ו־github_client_secret. יש לעיין ב<a href='https://meta.discourse.org/t/13745' target='_blank'>הגדרת כניסה עם GitHub ל־Discourse</a>."
     github_client_id: "מזהה לקוח לאימות מול Github, ניתן להירשם ב־<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "סוד לקוח לאימות מול Github, ניתן להירשם ב־<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    enable_discord_logins: 'לאפשר למשתמשים לעבור אימות דרך Discord?'
+    enable_discord_logins: "לאפשר למשתמשים לעבור אימות דרך Discord?"
     discord_client_id: 'מזהה לקוח Discord (אין לך כזה? יש לבקר ב<a href="https://discordapp.com/developers/applications/me">פורטל המפתחים של Discord</a>)'
-    discord_secret: 'מפתח סודי של Discord'
+    discord_secret: "מפתח סודי של Discord"
     discord_trusted_guilds: 'לאפשר רק למשתמש מגילדות ה־Discord האלה להיכנס באמצעות Discord. עליך להשתמש במזהה המספרי של הגילדה. למידע נוסף, יש לעיין בהנחיות ש<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">כאן</a>. שדה ריק משמעו כל גילדה שהיא.'
     readonly_mode_during_backup: "הפעלת מצב קריאה בלבד בזמן גיבוי"
     enable_backups: "לאפשר למנהלים ליצור גיבויים של הפורום"
@@ -1738,6 +1747,9 @@ he:
     private_email: "לא כלול תוכן מפוסטים או נושאים בכותרת או בגוף הודעת הדוא״ל. לתשומת לבך: גם הודעות התמצית תבוטלנה."
     email_total_attachment_size_limit_kb: "הגודל הכולל המרבי של קבצים שמצורפים להודעות דוא״ל יוצאות. 0 כדי לנטרל שליחת צרופות."
     post_excerpts_in_emails: "בהודעות ההתראה, תמיד לשלוח מקטעים קצרים במקום את כל הפוסט"
+    raw_email_max_length: "כמה תווים יאוחסנו מדוא״ל שנכנס."
+    raw_rejected_email_max_length: "כמה תווים יאוחסנו מדוא״ל שנדחה."
+    delete_rejected_email_after_days: "מחיקת הודעות שנדחו לפני למעלה מ־(n) ימים"
     manual_polling_enabled: "דחיפת מיילים באמצעות ה API לתגובות מייל."
     pop3_polling_enabled: "משיכה דרך POP3 לתגובות דוא\"ל."
     pop3_polling_ssl: "שימוש ב-SSL בעת חיבור לשרת POP3. (מומלץ)"
@@ -1796,6 +1808,7 @@ he:
     ignored_users_count_message_threshold: "להודיע למפקחים במקרה שמשתמש מסוים זכה לחסימות מצד משתמשים רבים אחרים."
     ignored_users_message_gap_days: "כמה זמן להמתין בטרם שליחת הודעה נוספת למפקחים בנוגע למשתמש שזכה לחסימות מצד משתמשים רבים."
     clean_up_inactive_users_after_days: "מספר הימים בטרם הסרת משתמש בלתי פעיל (דרגת אמון 0 ללא פוסטים). כדי להשבית את הפינוי יש להגדיר ל־0."
+    user_selected_primary_groups: "לאפשר למשתמשים להגדיר את הקבוצה העיקרית של עצמם"
     user_website_domains_whitelist: "אתרי משתמשים יאומתו עם מתחמים אלו. רשימה מופרדת על ידי קווים-אנכיים."
     allow_profile_backgrounds: "אפשרו למשתמשים להעלות רקעים לפרופיל."
     sequential_replies_threshold: "מספר הפוסטים שעל משתמש לפרסם אחד-לאחר-השני בנושא לפני שמזכירים לו שהוא משאיר יותר מידי תגובות ברצף."
@@ -1840,7 +1853,7 @@ he:
     embed_username_required: "נדרש שם משתמש ליצירת הנושא."
     notify_about_flags_after: "אם יש דגלים שלא טופלו לאחר כמות זו של שעות, יש לשלוח הודעה אישית אל המפקחים. 0 לנטרול."
     show_create_topics_notice: "אם לאתר פחות מ-5 נושאים פומביים, הציגו מודעה המבקשת מן המנהלים ליצור עוד נושאים."
-    delete_drafts_older_than_n_days: מחקו טיוטות בנות יותר מ (n) ימים.
+    delete_drafts_older_than_n_days: "מחקו טיוטות בנות יותר מ (n) ימים."
     bootstrap_mode_min_users: "מספר משתמשים מינימלי שנדרש כדי לנטרל מצב איתחול (קבעו ל 0 כדי לנטרל)"
     prevent_anons_from_downloading_files: "מונע ממשתמשים אנונימיים להוריד צרופות (attachments). אזהרה: דבר זה ימנע מכל משאב שאינו תמונה ופורסם כצרופה לעבוד."
     slug_generation_method: "בחרו צורת ייצור slug. צורה של 'encoded' תגרום למחרוזות עם קידוד אחוזים. 'none' ינטרל slug לחלוטין."
@@ -1885,6 +1898,10 @@ he:
     default_categories_tracking: "רשימת קטגוריות שנעקבת כברירת מחדל."
     default_categories_muted: "רשימת קטגוריות שמושתקות כברירת מחדל."
     default_categories_watching_first_post: "רשימת קטגוריות שבה הפוסט הראשון בכל נושא ייצפה אוטומטית."
+    default_tags_watching: "רשימת תגיות שבצפייה כבררת מחדל."
+    default_tags_tracking: "רשימת תגיות שבמעקב כבררת מחדל"
+    default_tags_muted: "רשימת תגיות שמושתקות כבררת מחדל."
+    default_tags_watching_first_post: "רשימת תגיות שעבורן פוסט ראשון בכל נושא חדש יצטרף לצפייה כבררת מחדל."
     default_text_size: "גודל הטקסט שנבחר כבררת מחדל"
     default_title_count_mode: "מצב בררת מחדל למונה כותרות עמודים"
     retain_web_hook_events_period_days: "מספר הימים לשמירת רשומות אירועי התלייה."
@@ -1977,6 +1994,8 @@ he:
       topic: "תוצאות"
       user: "משתמשים"
     results_page: "תוצאות לחיפוש אחר ‚%{term}’"
+    audio: "[שמע]"
+    video: "[וידאו]"
   sso:
     login_error: "תקלת התחברות"
     not_found: "לא מצאנו את החשבון שלכם. אנא צרו קשר עם מנהל האתר."
@@ -2295,9 +2314,9 @@ he:
     title: "אישור אדמיניסטרטור"
     subject_template: "[%{email_prefix}] אישור חשבון חדש"
     text_body_template: |
-      בבקשה אשרו שהייתם מעוניינים להוסיף את **%{target_username}** כאדמיניסטרטור של הפורום שלכם.
+      נא לאשר שברצונך להוסיף את **%{target_username} (%{target_email})** לסגל הניהולי של הפורום שלך.
 
-      [Confirm Administrator Account](%{admin_confirm_url})
+      [אישור משתמש ניהולי](%{admin_confirm_url})
   test_mailer:
     title: "שולח-מיילים לבדיקה"
     subject_template: "[%{email_prefix}] מייל בדיקת שליחתיות"
@@ -2490,6 +2509,15 @@ he:
       text_body_template: |
         אהלן. שמנו לב שקריאת הפורום מעסיקה אותך רבות, שזה נהדר, לכן קידמנו את  [דרגת האמון](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) בך!
         אנו מאוד שמחים לראות שנעים לך לקחת חלק בפעילות הקהילתית ונשמח לדעת עוד עליך. ממליצים לך להשקיע רגע קט כדי [למלא את הפרופיל שלך](%{base_url}/my/preferences/profile), או סתם [לפתוח דיון חדש](%{base_url}/categories).
+    welcome_moderator:
+      title: "ברוך בואך לצוות הפיקוח"
+      subject_template: "ברכותינו, הרשאותיך מעתה מאפשרות לך לפקח!"
+      text_body_template: |
+        הוענק לך מצב פיקוח על ידי מישהו מבין חברי הסגל.
+
+        הרשאות פיקוח מעניקות לך גישה אל <a href='%{base_url}/admin' target='_blank'>מנשק הניהול</a>.
+
+        כוח רב טומן בחובו אחריות רבה. אם תחום הפיקוח זר לך, ניתן לפנות אל [המדריך למפקחים](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "הזמנת ברוכים הבאים"
       subject_template: "ברוכים הבאים ל %{site_name}!"
@@ -2934,36 +2962,35 @@ he:
     visit_link_to_respond_pm: "יש [לבקר בהודעה](%{base_url}%{url}) כדי להגיב אל %{participants}."
     posted_by: "פורסם על ידי %{username} ב %{post_date}"
     pm_participants: "משתתפים: %{participants}"
-    invited_group_to_private_message_body: |
-      הקבוצה @%{group_name} הוזמנה על ידי %{username} להודעה
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      תחת
-
-      > %{site_title} -- %{site_description}
+    invited_group_to_private_message_body: "הקבוצה  @%{group_name} הוזמנה להתכתבות על ידי %{username} \n\n> **[%{topic_title}](%{topic_url})**\n>\n> %{topic_excerpt}\n\nבאתר\n\n> %{site_title} -- %{site_description}\n\nכדי להצטרף להודעה יש ללחוץ על הקישור שלהלן:\n\n%{topic_url}\n"
     invited_to_private_message_body: |
-      קיבלת הזמנה להודעה מאת %{username}
+      הוזמנת להתכתב על ידי%{username}
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
       באתר
 
       > %{site_title} -- %{site_description}
+
+      כדי להצטרף להודעה יש ללחוץ על הקישור שלהלן:
+
+      %{topic_url}
     invited_to_topic_body: |
-      קיבלת הזמנה לדיון מאת %{username}
+      הוזמנת לדיון על ידי %{username}
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
       באתר
 
       > %{site_title} -- %{site_description}
+
+      כדי להצטרף לדיון יש ללחוץ על הקישור שלהלן:
+
+      %{topic_url}
     user_invited_to_private_message_pm_group:
       title: "משתמש הזמין קבוצה להודעה פרטית"
       subject_template: "[%{email_prefix}] ‎@%{group_name}‎ הוזמנה להודעה ‚%{topic_title}’ על ידי %{username}"
@@ -3341,7 +3368,7 @@ he:
     missing: "מצטערים, אנחנו לא יכולים למצוא אף דמות שמקושרת לכתובת מייל זו. תוכלו להעלות זאת שוב?"
   flag_reason:
     sockpuppet: "משתמש חדש יצר נושא, ומשתמש חדש אחר מאותה כתובת IP (%{ip_address}) ענו להם. ראו את הגדרת האתר <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "משתמש חדש זה ניסה ליצור מספר פוסטים עם קישורים לאותה הכתובת. ראו את הגדרת האתר <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    spam_hosts: "משתמש חדש זה ניסה ליצור מספר פוסטים עם קישורים לאותו שם המתחם. כל הפוסטים מאת המשתמש הזה שכוללים קישורים דורשים סקירה. יש לעיין בהגדרת האתר <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> (סף ספאם מארח למשתמש חדש)."
   skipped_email_log:
     exceeded_emails_limit: "נחצה max_emails_per_day_per_user"
     exceeded_bounces_limit: "נחצה bounce_score_threshold"
@@ -3859,6 +3886,11 @@ he:
         two: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
         many: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
         other: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
+    required_tags_from_group:
+      one: "עליך לכלול תגית %{tag_group_name} %{count} לפחות"
+      two: "עליך לכלול %{count} תגיות %{tag_group_name} לפחות"
+      many: "עליך לכלול %{count} תגיות %{tag_group_name} לפחות"
+      other: "עליך לכלול %{count} תגיות %{tag_group_name} לפחות"
   rss_by_tag: "נושאים מתוייגים %{tag}"
   finish_installation:
     congratulations: "ברכותינו, התקנת את Discourse!"
@@ -4136,4 +4168,4 @@ he:
   email_style:
     html_missing_placeholder: "תבנית ה־html חייבת לכלול %{placeholder}"
   discord:
-    not_in_allowed_guild: 'האימות נכשל. הגילדה ב־Discord אליה הצטרפת אינה מורשית לגשת.'
+    not_in_allowed_guild: "האימות נכשל. הגילדה ב־Discord אליה הצטרפת אינה מורשית לגשת."

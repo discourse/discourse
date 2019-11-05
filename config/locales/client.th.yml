@@ -544,7 +544,7 @@ th:
         name: "ชื่อ"
         edit: "แก้ไข"
         security_key:
-          delete: 'ลบ'
+          delete: "ลบ"
       change_about:
         title: "เปลี่ยนข้อมูลเกี่ยวกับฉัน"
         error: "เกิดความผิดพลาดในการแก้ไขค่านี้"
@@ -567,9 +567,6 @@ th:
         uploaded_avatar_empty: "เพิ่มรูปกำหนดเอง"
         upload_title: "อัปโหลดรูปภาพของคุณ"
         image_is_not_a_square: "ระวัง: เราได้ตัวรูปภาพบางส่วนของคุณ; ความยาวและความสูงจะไม่เท่ากัน"
-      change_profile_background:
-        title: "พื้นหลังโปรไฟล์"
-        instructions: "พื้นหลังโปรไฟล์จะถูกจัดให้อยู่กึ่งกลางและมีค่าปริยายของความกว้างเท่ากับ 850 พิกเซล"
       change_card_background:
         title: "พื้นหลังผู้ใช้"
         instructions: "รูปพื้นหลังจะถูกจัดกลางและมีความกว้างมาตราฐานที่ 590px"
@@ -743,6 +740,9 @@ th:
         header_title: "ข้อมูลส่วนตัว,ข้อความ,บุ๊คมาร์คและการตั้งค่า"
       title:
         title: "ชื่อเรื่อง"
+        none: "(ไม่มี)"
+      primary_group:
+        title: "กลุ่มหลัก"
         none: "(ไม่มี)"
       filters:
         all: "ทั้งหมด"
@@ -1233,6 +1233,8 @@ th:
         image_upload_not_allowed_for_new_user: "ขออภัย, ผู้ใช้ใหม่ไม่สามารถอัพโหลดรูปภาพได้"
         attachment_upload_not_allowed_for_new_user: "ขออภัย, ผู้ใช้ใหม่ไม่สามารถอัพโหลดไฟล์แนบได้"
         attachment_download_requires_login: "ขออภัย, คุณต้องเข้าสู่ระบบเพื่อดาวห์โหลดไฟล์แนบ"
+      abandon_edit:
+        no_value: "ไม่ เก็บไว้"
       abandon:
         confirm: "คุณต้องการทิ้งโพสของคุณจริงๆเหรอ?"
         no_value: "ไม่ เก็บไว้"
@@ -1570,7 +1572,6 @@ th:
               public: "ทุกคน"
               staff: "เจ้าของกลุ่ม และผู้ดูแล"
           membership:
-            trust_level: ระดับความไว้ใจ
             trust_levels_title: "ระดับความไว้ใจจะถูกให้ไปยังผู้ใช้โดยอัตโนมัติเมื่อพวกเขาเพิ่ม:"
             trust_levels_none: "ไม่มี"
         name_placeholder: "ชื่อกลุ่ม, ไม่มีเว้นวรรค, ใช้กฎเดียวกับชื่อผู้ใช้"
@@ -1899,6 +1900,8 @@ th:
           search: "ค้นหา"
           groups: "กลุ่ม"
           dashboard: "แดชบอร์ด"
+        default_categories:
+          modal_yes: "ใช่"
       badges:
         new: ใหม่
         name: ชื่อ

@@ -864,7 +864,7 @@ hu:
         edit: "Szerkesztés"
         security_key:
           register: "Regisztráció"
-          delete: 'Törlés'
+          delete: "Törlés"
       change_about:
         title: "Rólam megváltoztatása"
         error: "Hiba történt az adat módosításakor."
@@ -889,9 +889,6 @@ hu:
         uploaded_avatar_empty: "Egyéni kép hozzáadása"
         upload_title: "Saját kép feltöltése"
         image_is_not_a_square: "Figyelmeztetés: átméreteztük a képét; szélesség és hosszúság nem volt egyforma"
-      change_profile_background:
-        title: "Profil háttérképe"
-        instructions: "A profil háttérképek középre lesznek helyezve, egy alapértelmezett 850px-es szélességgel."
       change_card_background:
         title: "Felhasználói kártya háttérképe"
         instructions: "A háttérképek középre lesznek helyezve, egy alapértelmezett 590px-es szélességgel."
@@ -1107,6 +1104,9 @@ hu:
       title:
         title: "Cím"
         none: "(egyik sem)"
+      primary_group:
+        title: "Elsődleges csoport"
+        none: "(semmi)"
       filters:
         all: "Mind"
       stream:
@@ -1385,7 +1385,6 @@ hu:
       link_description: "itt add meg a link leírását"
       link_dialog_title: "Hiperhivatkozás beszúrása"
       link_optional_text: "alternatív cím"
-      link_url_placeholder: "https://pelda.hu"
       quote_title: "Idézet"
       quote_text: "Idézet"
       code_title: "Előformázott szöveg"
@@ -1869,6 +1868,8 @@ hu:
         image_upload_not_allowed_for_new_user: "Sajnáljuk, de az új felhasználók nem tölthetnek fel képeket!"
         attachment_upload_not_allowed_for_new_user: "Sajnáljuk, de az új felhasználók nem tölthetnek fel csatolmányokat!"
         attachment_download_requires_login: "Sajnáljuk, de be kell jelentkezned, hogy letölthess csatolmányokat!"
+      abandon_edit:
+        no_value: "Nem, megtartás"
       abandon:
         confirm: "Biztosan visszavonod a bejegyzésedet? "
         no_value: "Nem, tartsd meg"
@@ -1953,7 +1954,6 @@ hu:
       settings: "Beállítások"
       topic_template: "Téma sablonja"
       tags: "Címkék"
-      tags_tab_description: "Az itt megadott címkék és címkecsoportok csak ebben a kategóriában és olyan más kategóriákban lesznek elérhetők, amelyek szintén megnevezikazokat. Nem lesznek elérhetők más kategóriákban."
       delete: "Kategória törlése"
       create: "Új kategória"
       save: "Kategória mentése"
@@ -2439,7 +2439,6 @@ hu:
               staff: "Csoport tulajdonosok és a stáb tagjai"
           membership:
             automatic: Autómatikus
-            trust_level: Bizalmi szint
             trust_levels_title: "Új tagok hozzáadásakor automatikusan kapott Bizalmi szint: "
             trust_levels_none: "Egyik sem"
         name_placeholder: "Csoport neve szóközök nélkül, a felhasználónév szabályaival"
@@ -3103,6 +3102,8 @@ hu:
           search: "Keresés"
           groups: "Csoportok"
           dashboard: "Vezérlőpult"
+        default_categories:
+          modal_yes: "Igen"
       badges:
         title: Jelvények
         new_badge: Új jelvény

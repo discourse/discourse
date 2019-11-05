@@ -294,15 +294,24 @@ zh_CN:
       order_by: "排序依据"
       in_reply_to: "回复给"
       explain:
+        why: "解释为什么该项目最终进入队列"
         title: "需审核评分"
         formula: "公式"
         subtotal: "小计"
         total: "总请求数"
         min_score_visibility: "可见时的最低分数"
         score_to_hide: "隐藏帖子的分数"
+        take_action_bonus:
+          name: "立即执行"
+          title: "当工作人员选择采取行动时，会给标记加分。"
+        user_accuracy_bonus:
+          name: "用户准确性"
+          title: "历史上已同意其标记的用户将获得奖励。"
         trust_level_bonus:
           name: "信任等级"
           title: "待审阅项目由较高信任级别且具有较高分数的用户创建的。"
+        type_bonus:
+          name: "奖励类型"
       claim_help:
         optional: "你可以认领此条目以防止他人审核。"
         required: "在你审核之前你必须认领此条目。"
@@ -863,7 +872,7 @@ zh_CN:
           default_name: "我的身份验证器"
         security_key:
           register: "注册"
-          delete: '删除'
+          delete: "删除"
       change_about:
         title: "更改个人信息"
         error: "提交修改时出错了"
@@ -890,8 +899,7 @@ zh_CN:
         upload_title: "上传图片"
         image_is_not_a_square: "注意：图片不是正方形的，我们裁剪了部分图像。"
       change_profile_background:
-        title: "个人档背景"
-        instructions: "显示在个人资料页面中，上传的图片将被居中且默认宽度为 850px。"
+        title: "个人档头部"
       change_card_background:
         title: "用户卡背景"
         instructions: "显示在用户卡片中，上传的图片将被居中且默认宽度为 590px。"
@@ -1123,6 +1131,9 @@ zh_CN:
       title:
         title: "头衔"
         none: "（无）"
+      primary_group:
+        title: "主要群组"
+        none: "（无）"
       filters:
         all: "全部"
       stream:
@@ -1158,6 +1169,7 @@ zh_CN:
       enabled: "站点正处于只读模式。你可以继续浏览，但是回复、赞和其他操作暂时被禁用。"
       login_disabled: "只读模式下不允许登录。"
       logout_disabled: "站点在只读模式下无法登出。"
+    too_few_topics_notice: "让我们<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论</a>吧！现在有<strong>%{currentTopics}</strong>个主题。 用户需要进行更多阅读与回复 – 我们推荐至少<strong>%{requiredTopics}</strong> 个主题。 此消息仅管理员可见。"
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a>达到了站点设置中的限制{limit, plural, one {# error/hour} other {# errors/hour}}。"
       reached_minute_MF: "<b>{relativeAge}</b>1 – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a>已经达到站点设置限制 {limit, plural, one {# error/minute} other {# errors/minute}}。"
@@ -1254,6 +1266,10 @@ zh_CN:
       second_factor_description: "请输入来自 app 的验证码："
       second_factor_backup_title: "两步验证备份"
       second_factor_backup_description: "请输入你的备份码："
+      security_key_alternative: "找不到您的安全密钥，是否要使用其他方法？"
+      security_key_authenticate: "使用安全密钥进行身份验证"
+      security_key_not_allowed_error: "安全密钥验证超时或被取消。"
+      security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
       email_placeholder: "电子邮件或者用户名"
       caps_lock_warning: "大写锁定开启"
       error: "未知错误"
@@ -1320,6 +1336,7 @@ zh_CN:
       apple_international: "Apple/国际化"
       google: "Google"
       twitter: "Twitter"
+      emoji_one: "JoyPixels （曾用名EmojiOne）"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1452,7 +1469,7 @@ zh_CN:
       link_description: "输入链接描述"
       link_dialog_title: "插入链接"
       link_optional_text: "可选标题"
-      link_url_placeholder: "https://example.com"
+      link_url_placeholder: "粘贴URL或键入以搜索主题"
       quote_title: "引用"
       quote_text: "引用"
       code_title: "预格式化文本"
@@ -2113,6 +2130,9 @@ zh_CN:
         image_upload_not_allowed_for_new_user: "抱歉，新用户无法上传图片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新用户无法上传附件。"
         attachment_download_requires_login: "抱歉，你需要登录后才能下载附件。"
+      abandon_edit:
+        no_value: "不，保持"
+        no_save_draft: "不，保存草稿"
       abandon:
         confirm: "确定要放弃编辑帖子吗？"
         no_value: "否"
@@ -2249,7 +2269,6 @@ zh_CN:
       tags_allowed_tags: "限制这些标签只能用在此分类"
       tags_allowed_tag_groups: "限制这些标签组只能用在此分类"
       tags_placeholder: "（可选）允许使用的标签列表"
-      tags_tab_description: "这里的标签和标签组只在这个分类以及其他手动添加了这些标签的分类下面可见。这些标签对剩余的分类是不可见的。"
       tag_groups_placeholder: "（可选）允许使用的标签组列表"
       manage_tag_groups_link: "管理这里的标签组。"
       allow_global_tags_label: "总是允许其它标题"
@@ -2862,7 +2881,6 @@ zh_CN:
               description: "管理员可以查看所有群组的成员。"
           membership:
             automatic: 自动
-            trust_level: 信任等级
             trust_levels_title: "这些用户加入时，将自动赋予信任等级："
             trust_levels_none: "无"
             automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
@@ -3866,6 +3884,8 @@ zh_CN:
           dashboard: "仪表盘"
         secret_list:
           invalid_input: "输入字段不能为空或包含竖线字符。"
+        default_categories:
+          modal_yes: "是"
       badges:
         title: 徽章
         new_badge: 新徽章

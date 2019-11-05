@@ -764,7 +764,7 @@ pt:
         edit: "Editar"
         security_key:
           register: "Registar"
-          delete: 'Eliminar'
+          delete: "Eliminar"
       change_about:
         title: "Modificar Sobre Mim"
         error: "Ocorreu um erro ao modificar este valor."
@@ -790,9 +790,6 @@ pt:
         uploaded_avatar_empty: "Adicionar foto personalizada"
         upload_title: "Carregar a sua foto"
         image_is_not_a_square: "Alerta: cortámos a sua imagem; o comprimento e a altura não eram iguais."
-      change_profile_background:
-        title: "Fundo de Perfil"
-        instructions: "O fundo do perfil será centrado e terá por defeito uma largura de 850px."
       change_card_background:
         title: "Fundo do cartão de utilizador"
         instructions: "As imagens de fundo serão centradas e terão por defeito uma largura de 590px."
@@ -1023,6 +1020,9 @@ pt:
         header_title: "perfil, mensagens, marcadores e preferências"
       title:
         title: "Título"
+        none: "(nenhum)"
+      primary_group:
+        title: "Grupo Primário"
         none: "(nenhum)"
       filters:
         all: "Todos"
@@ -1334,7 +1334,6 @@ pt:
       link_description: "insira aqui a descrição da hiperligação"
       link_dialog_title: "Inserir Hiperligação"
       link_optional_text: "título opcional"
-      link_url_placeholder: "https://exemplo.com"
       quote_title: "Bloco de Citação"
       quote_text: "Bloco de Citação"
       code_title: "Texto pré-formatado"
@@ -1960,6 +1959,8 @@ pt:
         image_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar imagens."
         attachment_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar anexos."
         attachment_download_requires_login: "Desculpe, precisa de iniciar a sessão para transferir anexos."
+      abandon_edit:
+        no_value: "Não, manter"
       abandon:
         confirm: "Tem a certeza que deseja abandonar a sua publicação?"
         no_value: "Não, manter"
@@ -2556,7 +2557,6 @@ pt:
               staff: "Donos do grupo e equipa"
           membership:
             automatic: Automático
-            trust_level: Nível de Confiança
             trust_levels_title: "Nível de confiança concedido automaticamente a membros quando são adicionados:"
             trust_levels_none: "Nenhum"
             automatic_membership_email_domains: "Utilizadores que registem um domínio de email que corresponde exactamente a algum desta lista irão ser automaticamente adicionados a este grupo:"
@@ -3247,6 +3247,8 @@ pt:
           search: "Pesquisar"
           groups: "Grupos"
           dashboard: "Painel de Administração"
+        default_categories:
+          modal_yes: "Sim"
       badges:
         title: Crachás
         new_badge: Novo Crachá

@@ -522,7 +522,7 @@ sr:
         name: "Ime foruma"
         edit: "Izmeni"
         security_key:
-          delete: 'Obriši'
+          delete: "Obriši"
       change_about:
         title: "Promijeni O meni"
       change_username:
@@ -542,9 +542,6 @@ sr:
         uploaded_avatar: "Vaša slika"
         uploaded_avatar_empty: "Dodajte vašu sliku"
         upload_title: "Učitajte vašu sliku"
-      change_profile_background:
-        title: "Pozadina Profila"
-        instructions: "Profilne pozadine će biti centrirane i imati standardnu širinu 850px "
       change_card_background:
         title: "Pozadina Korisničke Kartice"
         instructions: "Pozadinske slike će biti centrirane i imati standardu širinu od 590px."
@@ -721,6 +718,8 @@ sr:
         title: "Profilna Slika"
       title:
         title: "Naslov"
+      primary_group:
+        title: "Primarna Grupa"
       filters:
         all: "Sve"
       stream:
@@ -1220,6 +1219,8 @@ sr:
         image_upload_not_allowed_for_new_user: "Žao nam je, novi korisnici ne mogu učitavati slike."
         attachment_upload_not_allowed_for_new_user: "Žao nam je, novi korisnici ne mogu učitavati priloge."
         attachment_download_requires_login: "Žao nam je, morate biti prijavljeni da biste preuzimali priloge."
+      abandon_edit:
+        no_value: "Ne, zadrži"
       abandon:
         confirm: "Jeste li sigurni da želite odustati od vaše poruke?"
         no_value: "Ne, zadrži"
@@ -1631,7 +1632,6 @@ sr:
               public: "Svi"
           membership:
             automatic: Automatska
-            trust_level: Nivo poverenja
             trust_levels_none: "Ništa"
             automatic_membership_email_domains: "Korisnici koji se registruju sa email domenom koja tačno odgovora jednoj na ovoj listi biće automatski dodani u ovu grupu:"
             automatic_membership_retroactive: "Primeni isto pravilo o email domeni za dodavanje postojećih registrovanih korisnika"
@@ -2146,6 +2146,8 @@ sr:
           plugins: "Dodatci"
           groups: "Grupe"
           dashboard: "Komandna Tabla"
+        default_categories:
+          modal_yes: "Da"
       badges:
         title: Značke
         new_badge: Nova Značka

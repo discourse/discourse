@@ -820,7 +820,7 @@ zh_TW:
         edit: "編輯"
         security_key:
           register: "註冊"
-          delete: '刪除'
+          delete: "刪除"
       change_about:
         title: "修改關於我"
         error: "修改設定值時發生錯誤"
@@ -846,9 +846,6 @@ zh_TW:
         uploaded_avatar_empty: "新增一張自訂圖片"
         upload_title: "上傳你的圖片"
         image_is_not_a_square: "警告：我們裁切了你的圖片，因為該圖片不是正方形的。"
-      change_profile_background:
-        title: "基本資料背景圖案"
-        instructions: "個人資料背景會被置中，且默認寬度為850px。"
       change_card_background:
         title: "使用者卡背景"
         instructions: "背景會被置中，且默認寬度為850px。"
@@ -1075,6 +1072,9 @@ zh_TW:
         header_title: "個人頁面、訊息、書籤和設置"
       title:
         title: "頭銜"
+        none: "(無)"
+      primary_group:
+        title: "主要群組"
         none: "(無)"
       filters:
         all: "全部"
@@ -1388,7 +1388,6 @@ zh_TW:
       link_description: "在此輸入超連結的描述"
       link_dialog_title: "插入超連結"
       link_optional_text: "標題 (可選填)"
-      link_url_placeholder: "https://example.com"
       quote_title: "引用"
       quote_text: "引用"
       code_title: "預先格式化文字"
@@ -2024,6 +2023,8 @@ zh_TW:
         image_upload_not_allowed_for_new_user: "抱歉，新使用者不可上傳圖片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新使用者不可上傳附件。"
         attachment_download_requires_login: "抱歉，您必須登入以下載附件。"
+      abandon_edit:
+        no_value: "不，我要保留。"
       abandon:
         confirm: "你確定要捨棄你的貼文嗎?"
         no_value: "否"
@@ -2156,7 +2157,6 @@ zh_TW:
       tags_allowed_tags: "將這些標籤（Tags）限制為此分類做使用："
       tags_allowed_tag_groups: "將這些標籤群組限制在此類別使用："
       tags_placeholder: "（可選）允許使用的標籤列表"
-      tags_tab_description: "此處指定的標記和標記群組僅在此類別以及也指定它們的其他類別中可用。它們不可用於其他類別。"
       tag_groups_placeholder: "（可選）允許使用的標籤組列表"
       manage_tag_groups_link: "在此處管理標籤群組。"
       allow_global_tags_label: "也允許其他標籤（Tags）"
@@ -2745,7 +2745,6 @@ zh_TW:
               staff: "群組管理人及管理人員"
           membership:
             automatic: 自動
-            trust_level: 信任等級
             trust_levels_title: "當這些成員加入時，自動提升信任等級："
             trust_levels_none: "無"
             automatic_membership_email_domains: "當註冊使用者的電子郵件所屬網域，完全符合列表裡某項時，將會自動加進這個群組裡："
@@ -3715,6 +3714,8 @@ zh_TW:
           dashboard: "控制面板"
         secret_list:
           invalid_input: "輸入欄位不能為空或包含垂直字元"
+        default_categories:
+          modal_yes: "是"
       badges:
         title: 徽章
         new_badge: 新徽章

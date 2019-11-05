@@ -49,6 +49,7 @@ pl_PL:
       about_json_values: "Plik about.json zawiera niepoprawne wartości: %{errors}"
       git: "Podczas klonowania repozytorium git wystąpił błąd: dostęp jest zabroniony albo repozytorium nie istnieje"
       unpack_failed: "Błąd przy rozpakowywaniu pliku"
+      file_too_big: "Nieskompresowany plik jest zbyt duży."
       unknown_file_type: "Przesłany plik nie spełnia wymagań poprawnego motywu Discourse."
     errors:
       component_no_user_selectable: "Komponenty motywu nie mogą być dobieralne przez użytkowników"
@@ -85,10 +86,10 @@ pl_PL:
         empty_email_error: "Zdarza się kiedy mail jaki dostaliśmy jest pusty."
         no_message_id_error: "Zdarza się kiedy email nie posiada nagłówka 'Message-Id'."
         auto_generated_email_error: "Zdarza się, gdy \"pierwszeństwo\" nagłówka jest ustawione na: listę, śmieci, luzem lub auto odpowiedź lub gdy inny nagłówek zawiera: auto-składane, auto-odpowiadanie lub auto-generowane."
-        no_body_detected_error: "Zdarza się kiedy nie może rozpakować całości wiadomości, a zawarte są w niej załączniki."
+        no_body_detected_error: "Zdarza się, kiedy nie można rozpakować całości wiadomości, a zawarte są w niej załączniki."
+        no_sender_detected_error: "Zdarza się, kiedy nie można znaleźć prawidłowego adresu e‐mail w nagłówku Od."
         inactive_user_error: "Zdarza się kiedy nadawca jest nie aktywny."
         silenced_user_error: "Dzieje się, gdy wysyłający został uciszony."
-        bad_destination_address: "Zdarza się gdy żaden adres email nie pasuje do pól To/Cc/Bcc skonfigurowanych jako przychodzący adres email."
         strangers_not_allowed_error: "Zdarza się, gdy użytkownik próbuje stworzyć temat w kategorii, której nie jest członkiem."
         insufficient_trust_level_error: "Zdarza się, gdy użytkownik próbuje stworzyć temat w kategorii, której nie ma odpowiedniego poziomu zaufania.."
         reply_user_not_matching_error: "Zdarza się kiedy pojawia się odpowiedź z innego adresu email niż ten na który powiadomienie zostało wysłane."
@@ -96,6 +97,7 @@ pl_PL:
         topic_closed_error: "Zdarza się kiedy pojawia się odpowiedź, ale powiązany temat został zamknięty."
         bounced_email_error: "Email jest cofniętym raportem emaila."
         screened_email_error: "Zdarza się kiedy adres email nadawcy został zasłonięty. "
+        unsubscribe_not_allowed: "Zdarza się, kiedy anulowanie subskrypcji przez e‐mail nie jest dozwolone dla tego użytkownika."
       unrecognized_error: "Niezidentyfikowany błąd"
   errors: &errors
     format: "%{attribute} %{message}"
@@ -158,6 +160,11 @@ pl_PL:
       load_from_remote: "Wystąpił błąd podczas wczytywania tego wpisu."
     site_settings:
       invalid_category_id: "Podana kategoria nie istnieje"
+      invalid_choice:
+        one: "Podano nieprawidłowy wybór %{name}"
+        few: "Podano nieprawidłowe opcje %{name}"
+        many: "Podano nieprawidłowe opcje %{name}"
+        other: "Podano nieprawidłowe opcje %{name}"
       default_categories_already_selected: "Nie możesz wybrać kategorii użytej w innej liście."
       s3_upload_bucket_is_required: "Nie możesz wysyłać na S3 jeżeli nie podasz 's3_upload_bucket'."
       s3_backup_requires_s3_settings: "Nie możesz używać S3 do tworzenia kopii zapasowych bez podania \"%{setting_name}\"."
@@ -198,6 +205,8 @@ pl_PL:
   read_only_mode_enabled: "Strona jest w trybie tylko do odczytu. Możliwość interakcji jest wyłączona."
   email_template_cant_be_modified: "Ten szablon e-mail nie może być zmodyfikowany"
   not_in_group:
+    title_topic: "Musisz być w grupie, aby zobaczyć ten temat."
+    request_membership: "Poproś o członkostwo"
     join_group: "Dołącz do grupy"
   reading_time: "Czas odczytu"
   likes: "Lajki"
@@ -750,7 +759,6 @@ pl_PL:
     activated: "Przepraszamy, to konto zostało już aktywowane."
     admin_confirm:
       title: "Potwierdź konto administratora"
-      description: "Czy jesteś pewny, że chcesz nadać użytkownikowi <b>%{target_username}</b> uprawnienia administratora?"
       grant: "Przynaj prawa Admina"
       complete: "<b>%{target_username}</b> jest teraz administratorem."
       back_to: "Wróć do %{title}"
@@ -1531,7 +1539,7 @@ pl_PL:
     embed_post_limit: "Maksymalna liczba postów do osadzenia."
     embed_username_required: "W celu stworzenia tematu potrzebna jest nazwa użytkownika."
     show_create_topics_notice: "Jeśli na stronie jest mniej niż 5 publicznych tematów, pokaż powiadomienie proszące adminów, aby stworzyli nowe wątki."
-    delete_drafts_older_than_n_days: Usuń projekty starsze niż (n) dni.
+    delete_drafts_older_than_n_days: "Usuń projekty starsze niż (n) dni."
     bootstrap_mode_min_users: "Minimalna liczba użytkowników potrzebnych do wyłączenia trybu rozruchowego (ustaw 0, aby wyłączyć)"
     prevent_anons_from_downloading_files: "Zapobiegaj pobieraniu załączników przez anonimowych użytkowników. Ostrzeżenie: wszystkie dodane załączniku nie będące obrazkami nie będą działały."
     slug_generation_method: "Wybierz metodę tworzenia ślimaka. 'Zakodowane\" stworzy procentowy ciąg kodujący, \"żadne\" wyłączy tą metodę."
@@ -1579,8 +1587,11 @@ pl_PL:
     tag_style: "Styl etykiet tagów"
     min_trust_level_to_tag_topics: "Minimalny poziom zaufania wymagany do tagowania tematów"
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
+    company_name: "Nazwa firmy"
+    governing_law: "Obowiązujące prawo"
+    city_for_disputes: "Miasto dyskusji"
     errors:
-      invalid_email: "Nieprawidłowy adres email."
+      invalid_email: "Nieprawidłowy adres e-mail."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
       invalid_integer_min_max: "Wartość musi być między %{min} i %{max}."
       invalid_integer_min: "Wartość musi wynosić %{min} albo więcej."
@@ -1681,6 +1692,9 @@ pl_PL:
     autoclosed_disabled_lastpost: "Temat został otwarty. Pisanie odpowiedzi jest możliwe."
     auto_deleted_by_timer: "Automatycznie usunięte przez regulator czasowy."
   login:
+    security_key_alternative: "Nie możesz znaleźć swojego klucza bezpieczeństwa lub chcesz użyć innej metody?"
+    security_key_authenticate: "Uwierzytelnij się za pomocą klucza bezpieczeństwa"
+    security_key_not_allowed_error: "Upłynął limit czasu procesu uwierzytelniania klucza bezpieczeństwa lub został on anulowany."
     not_approved: "Twoje konto nie zostało jeszcze aktywowane. Zostaniesz powiadomiony emailem gdy będziesz mógł się zalogować."
     incorrect_username_email_or_password: "Niepoprawna nazwa użytkownika, email lub hasło"
     wait_approval: "Dziękujemy za rejestrację. Powiadomimy Cię gdy Twoje konto zostanie aktywowane."
@@ -1702,10 +1716,15 @@ pl_PL:
     email_too_long: "Podałeś zbyt długi adres email. Nazwa skrzynki pocztowej nie może być dłuższa niż 254 znaki, a nazwa domeny nie może zawierać więcej niż 253 znaki."
     reserved_username: "Niedozwolona nazwa użytkownika."
     missing_user_field: "Nie wypełniłeś wszystkich pól użytkownika"
+    auth_complete: "Uwierzytelnianie zostało zakończone."
     click_to_continue: "Kliknij tutaj aby kontynuować."
     already_logged_in: "Próbujesz zaakceptować zaproszenie przeznaczone dla innego użytkownika. Jeśli %{current_user} to nie ty, wyloguj się i zaloguj ponownie."
     second_factor_title: "Dwuskładnikowe uwierzytelnianie"
     second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
+    second_factor_backup_title: "Kod zapasowy weryfikacji dwuskładnikowej"
+    second_factor_toggle:
+      totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
+      backup_code: "Zamiast tego użyj kodu zapasowego"
   admin:
     email:
       sent_test: "wysłany!"
@@ -1749,8 +1768,10 @@ pl_PL:
     title: "Niestandardowe zaproszenie mailera"
   invite_forum_mailer:
     title: "Zaproś forum mailera"
+    subject_template: "%{inviter_name}zaprosił cię do dołączenia do%{site_domain_name}"
   custom_invite_forum_mailer:
     title: "Niestandardowe zaproszenie forum mailera"
+    subject_template: "%{inviter_name}zaprosił cię do dołączenia do%{site_domain_name}"
   invite_password_instructions:
     title: "Zaproś hasło instrukcje"
     subject_template: "Ustaw hasło dla swojego konta na %{site_name}"
@@ -1776,10 +1797,6 @@ pl_PL:
   admin_confirmation_mailer:
     title: "Potwierdzenie admina"
     subject_template: "[%{email_prefix}] Potwierdź nowe konto admina"
-    text_body_template: |
-      Proszę potwierdzić dodanie **%{target_username}** jako administratora do twojego forum.
-
-      [Potwierdź Konto Administratora](%{admin_confirm_url})
   test_mailer:
     title: "Test Powiadomień"
     subject_template: "[%{site_name}] Test dostarczania poczty"
@@ -2043,6 +2060,11 @@ pl_PL:
       subject_template: "Jesteś nowym użytkownikiem miesiąca!"
     queued_posts_reminder:
       title: "Przypomnienie o postach w kolejce"
+      subject_template:
+        one: "%{count}wpis czeka na przejrzenie"
+        few: "%{count}wpisy czekają na przejrzenie"
+        many: "%{count}wpisów czeka na przejrzenie;"
+        other: "%{count}wpisów czeka na przejrzenie"
   unsubscribe_link: |
     Aby zrezygnować z otrzymywania tych wiadomości e-mail, [Kliknij tutaj](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2053,6 +2075,7 @@ pl_PL:
     Aby zrezygnować z tych maili, [naciśnij tutaj](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PW] "
+  email_from: "%{user_name}z%{site_name}"
   user_notifications:
     previous_discussion: "Poprzednie odpowiedzi"
     in_reply_to: "W odpowiedzi do"
@@ -2061,27 +2084,10 @@ pl_PL:
       description: "Nie chcesz otrzymywać tych emaili? Nie ma problemu! Kliknij poniżej by wypisać się natychmiast:"
     reply_by_email: "[Zobacz Temat](%{base_url}%{url}) lub odpowiedz na ten email aby odpowiedzieć"
     only_reply_by_email: "Powtórz ten email dla odpowiedzi."
+    only_reply_by_email_pm: "Odpowiedz na tego e‐maila, by odpowiedzieć %{participants}."
     visit_link_to_respond: "[Zobacz Temat](%{base_url}%{url}) aby odpowiedzieć."
     posted_by: "Dodany przez %{username} w dniu %{post_date}"
-    invited_to_private_message_body: |
-      %{username} zaprosił cię do wiadomści
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      w
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} zaprosił cię do dyskusji
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      w
-
-      > %{site_title} -- %{site_description}
+    pm_participants: "Uczestnicy: %{participants}"
     user_invited_to_private_message_pm_group:
       title: "Użytkownik zaproszony grupy do PM"
       subject_template: "[%{email_prefix}]%{username} zaprosił @%{group_name} do wiadomości '%{topic_title}'"
@@ -2174,6 +2180,7 @@ pl_PL:
 
         %{respond_instructions}
     user_mentioned_pm:
+      title: "Użytkownik wspomniał PW"
       subject_template: "[%{site_name}] [PW] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2233,6 +2240,15 @@ pl_PL:
       text_body_template: |2
 
         %{message}
+    account_suspended:
+      title: "Konto zawieszone"
+    account_silenced:
+      title: "Konto uciszone"
+    account_exists:
+      title: "Konto już istnieje"
+      subject_template: "[%{email_prefix}] Konto już istnieje"
+    account_second_factor_disabled:
+      title: "Logowanie dwuskładnikowe wyłączone"
     digest:
       why: "Krótkie podsumowanie aktywności na %{site_link} od twojej ostatniej wizyty w dniu %{last_seen_at}."
       since_last_visit: "Od twojej ostatniej wizyty"
@@ -2247,6 +2263,7 @@ pl_PL:
       popular_posts: "Popularne wpisy"
       more_new: "Nowe dla ciebie"
       subject_template: "[%{email_prefix}] Podsumowanie"
+      your_email_settings: "twoje ustawienia e‐mail"
       click_here: "kliknij tutaj"
       from: "%{site_name} podsumowanie"
       preheader: "Podsumowanie aktywności od Twojej ostatniej wizyty w dniu %{last_seen_at}"
@@ -2260,6 +2277,8 @@ pl_PL:
 
         Kliknij na poniższy link by wybrać nowe hasło:
         %{base_url}/users/password-reset/%{email_token}
+    email_login:
+      title: "Zaloguj za pomocą linku"
     set_password:
       title: "Ustaw hasło"
       subject_template: "[%{site_name}] Ustaw hasło"
@@ -2326,6 +2345,8 @@ pl_PL:
         %{base_url}/u/activate-account/%{email_token}
 
         Jeśli powyższy link nie działa, spróbuj skopiować i wkleić go do pasku adresu Twojej przeglądarki.
+    activation_reminder:
+      title: "Przypomnienie o aktywacji"
   page_not_found:
     title: "Ups! Ta strona nie istnieje lub jest prywatna."
     popular_topics: "Popularne"
@@ -2333,6 +2354,8 @@ pl_PL:
     see_more: "Więcej"
     search_title: "Szukaj w serwisie"
     search_button: "Wyszukaj"
+  offline:
+    title: "Nie można załadować aplikacji"
   login_required:
     welcome_message: |
       #[Witamy na %{title}](#welcome)
@@ -2356,7 +2379,6 @@ pl_PL:
     missing: "Przepraszamy, nie możemy odnaleźć żadnego avatara przypisanego do tego konta email. Spróbuj załadować go ponownie"
   flag_reason:
     sockpuppet: "Nowy użytkownik stworzył temat, a inny nowy użytkownik z tym samym adresem IP (%{ip_address}) odpowiedział. <a href='%{base_path}/admin/site_settings/category/spam'>'flag_sockpuppets'</a> ustawienia strony."
-    spam_hosts: "Ten nowy użytkownik próbował stworzyć wiele postów z linkami do tej samej domeny. Zobacz <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold</a> ustawienia strony."
   skipped_email_log:
     exceeded_emails_limit: "Przekroczono maksymalną, dzienną liczbę emaili dla użytkownika"
     exceeded_bounces_limit: "Przekroczono bounce_score_threshold "
@@ -2376,13 +2398,17 @@ pl_PL:
     sender_message_to_blank: "wiadomość.do jest pusta"
     sender_text_part_body_blank: "text_part.body jest pusta"
     sender_body_blank: "Wiadomość jest pusta"
+    sender_post_deleted: "wpis został usunięty"
+    sender_message_to_invalid: "odbiorca ma nieprawidłowy adres e‐mail"
   color_schemes:
     base_theme_name: "Podstawa"
     light: "Jasny"
     dark: "Ciemny"
+    neutral: "Neutralne"
     default_theme_name: "Jasny"
     light_theme_name: "Jasny"
     dark_theme_name: "Ciemny"
+    neutral_theme_name: "Neutralne"
   edit_this_page: "Edytuj tę stronę"
   csv_export:
     boolean_yes: "Tak"
@@ -2788,6 +2814,7 @@ pl_PL:
     only_official: "Wyłącz nieoficjalne wtyczki"
     no_plugins: "Wyłącz wszystkie wtyczki"
     enter: "Włącz Tryb Bezpieczny"
+    must_select: "Musisz wybrać przynajmniej jedną opcję, by wejść do trybu bezpiecznego."
   wizard:
     title: "Instalacja Discourse"
     step:
@@ -2806,6 +2833,9 @@ pl_PL:
           site_description:
             label: "Opisz swoja społeczność w jednym krótkim zdaniu."
             placeholder: "Miejsce dla Jane i jej przyjaciół na dyskusje o fajnych sprawach."
+          short_site_description:
+            label: "Opisz swoją społeczność w paru słowach"
+            placeholder: "Najlepsza społeczność kiedykolwiek"
       introduction:
         title: "Wprowadzenie"
         fields:
@@ -2820,8 +2850,19 @@ pl_PL:
             choices:
               open:
                 label: "Publiczne"
+                description: "Wszyscy mają dostęp do społeczności"
               restricted:
                 label: "Prywatne"
+                description: "Tylko zalogowani użytkownicy mają dostęp do społeczności"
+          privacy_options:
+            description: "W jaki sposób użytkownicy rejestrują swoje konta?"
+            choices:
+              open:
+                label: "Użytkownicy mogą rejestrować się samodzielnie."
+              invite_only:
+                label: "Użytkownicy mogą rejestrować się samodzielnie, ale muszą zostać zaakceptowani przez zespół."
+              must_approve:
+                label: "Użytkownicy muszą zostać zaproszeni przez zaufanych użytkowników lub członków zespołu, zanim będą mogli się zarejestrować."
       contact:
         title: "Dane kontaktowe"
         fields:
@@ -2831,12 +2872,23 @@ pl_PL:
             description: "Adres email osoby lub grupy odpowiedzialnej za tą społeczność. Używany dla krytycznych powiadomień jak na przykład nieobsłużone oflagowania, aktualizację bezpieczeństwa i na <a href='%{base_path}/about' target='_blank'>stronie o Tobie</a> dla szybkiego kontaktu."
           contact_url:
             label: "Strona kontaktowa"
+            placeholder: "https://www.example.com/contact-us"
             description: "Ogólna strona kontaktowa do ciebie i twojej organizacja. Będzie wyświetlane na <a href='%{base_path}/about' target='_blank'>twojej stronie </a>."
           site_contact:
             label: "Automatyczne wiadomości"
             description: "Wszystkie automatyczne wiadomości prywatne Discourse będą wysyłane z tego użytkownika, jak na przykład ostrzeżenia o flagach i powiadomienia ukończenia backupu."
       corporate:
         title: "Organizacja"
+        fields:
+          company_name:
+            label: "Nazwa firmy"
+            placeholder: "Przykładowa organizacja"
+          governing_law:
+            label: "Obowiązujące prawo"
+            placeholder: "Prawo kalifornijskie"
+          city_for_disputes:
+            label: "Miasto dyskusji"
+            placeholder: "Kalifornia, San Francisco"
       colors:
         title: "Motyw"
       themes_further_reading:
@@ -2846,6 +2898,8 @@ pl_PL:
         fields:
           logo:
             label: "Podstawowe logo"
+          logo_small:
+            label: "Kwadratowe logo"
       icons:
         title: "Ikony"
         fields:
@@ -2876,13 +2930,23 @@ pl_PL:
       finished:
         title: "Twój Discourse jest Gotowy!"
   joined: "Dołączył"
+  discourse_push_notifications:
+    popup:
+      confirm_title: "Powiadomienia włączone - %{site_title}"
+      confirm_body: "Powodzenie! Powiadomienia zostały włączone."
   reviewables:
     priorities:
+      low: "Niski"
       medium: "Średni"
       high: "Wysoki"
     sensitivity:
+      disabled: "Wyłączony"
+      low: "Niski"
       medium: "Średni"
       high: "Wysoki"
+    must_claim: "Musisz przejąć tę pozycję, zanim zaczniesz na niej działać."
+    user_claimed: "Inny użytkownik już przejął tę pozycję."
+    missing_version: "Musisz wprowadzić parametr wersji"
     actions:
       agree_and_keep:
         title: "Zachowaj wpis"

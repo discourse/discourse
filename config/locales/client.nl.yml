@@ -917,14 +917,14 @@ nl:
           default_name: "Mijn authenticator"
         security_key:
           register: "Registreren"
-          title: 'Beveiligingssleutels'
+          title: "Beveiligingssleutels"
           add: "Beveiligingssleutel registreren"
           default_name: "Hoofdbeveiligingssleutel"
           not_allowed_error: "Het registratieproces van de beveiligingssleutel had een time-out of is geannuleerd."
           already_added_error: "U hebt deze beveiligingssleutel al geregistreerd. U hoeft deze niet opnieuw te registreren."
-          edit: 'Beveiligingssleutel bewerken'
-          edit_description: 'Naam van beveiligingssleutel'
-          delete: 'Verwijderen'
+          edit: "Beveiligingssleutel bewerken"
+          edit_description: "Naam van beveiligingssleutel"
+          delete: "Verwijderen"
       change_about:
         title: "Over mij wijzigen"
         error: "Er is een fout opgetreden bij het wijzigen van deze waarde."
@@ -951,8 +951,8 @@ nl:
         upload_title: "Uw afbeelding uploaden"
         image_is_not_a_square: "Waarschuwing: we hebben uw afbeelding bijgesneden; breedte en hoogte waren niet gelijk."
       change_profile_background:
-        title: "Profielachtergrond"
-        instructions: "Profielachtergronden worden gecentreerd en hebben een standaardbreedte van 850px."
+        title: "Profielkoptekst"
+        instructions: "Profielkopteksten worden gecentreerd en hebben een standaardbreedte van 1110px."
       change_card_background:
         title: "Achtergrond van gebruikersprofiel"
         instructions: "Achtergrondafbeeldingen worden gecentreerd en hebben een standaardbreedte van 590px."
@@ -1193,6 +1193,9 @@ nl:
         header_title: "profiel, berichten, bladwijzers en voorkeuren"
       title:
         title: "Titel"
+        none: "(geen)"
+      primary_group:
+        title: "Primaire groep"
         none: "(geen)"
       filters:
         all: "Alle"
@@ -1540,7 +1543,7 @@ nl:
       link_description: "voer hier een omschrijving in"
       link_dialog_title: "Hyperlink invoegen"
       link_optional_text: "optionele titel"
-      link_url_placeholder: "https://example.com"
+      link_url_placeholder: "Plak een URL of typ om topics te zoeken"
       quote_title: "Citaat"
       quote_text: "Citaat"
       code_title: "Vooraf opgemaakte tekst"
@@ -2231,6 +2234,11 @@ nl:
         image_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen afbeeldingen uploaden."
         attachment_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen bijlagen uploaden."
         attachment_download_requires_login: "Sorry, u dient aangemeld te zijn om bijlagen te downloaden."
+      abandon_edit:
+        confirm: "Weet u zeker dat u uw wijzigingen wilt negeren?"
+        no_value: "Nee, behouden"
+        no_save_draft: "Nee, concept opslaan"
+        yes_value: "Ja, bewerking negeren"
       abandon:
         confirm: "Weet u zeker dat u uw bericht wilt afbreken?"
         no_value: "Nee, behouden"
@@ -2373,10 +2381,14 @@ nl:
       tags_allowed_tags: "Deze tags tot deze categorie beperken:"
       tags_allowed_tag_groups: "Deze tag-groepen tot deze categorie beperken:"
       tags_placeholder: "(Optioneel) lijst van toegestane tags"
-      tags_tab_description: "Hier opgegeven tags en tag-groepen zijn alleen beschikbaar in deze categorie en andere categorieën die ze ook opgeven. Ze zijn niet beschikbaar voor gebruik in andere categorieën."
+      tags_tab_description: "Hierboven opgegeven tags en tag-groepen zijn alleen beschikbaar in deze categorie en andere categorieën die ze ook opgeven. Ze zijn niet beschikbaar voor gebruik in andere categorieën."
       tag_groups_placeholder: "(Optioneel) lijst van toegestane tag-groepen"
       manage_tag_groups_link: "Beheer hier tag-groepen."
       allow_global_tags_label: "Ook andere tags toestaan"
+      tag_group_selector_placeholder: "(Optioneel) Tag-groep"
+      required_tag_group_description: "Nieuwe topics moeten tags hebben uit een tag-groep:"
+      min_tags_from_required_group_label: 'Aantal tags:'
+      required_tag_group_label: "Tag-groep:"
       topic_featured_link_allowed: "Aanbevolen koppelingen in deze categorie toestaan"
       delete: "Categorie verwijderen"
       create: "Nieuwe categorie"
@@ -2842,6 +2854,7 @@ nl:
         parent_tag_description: "Tags uit deze groep kunnen niet worden gebruikt, tenzij de bovenliggende tag actief is."
         one_per_topic_label: "Beperken tot 1 tag per topic uit deze groep"
         new_name: "Nieuwe tag-groep"
+        name_placeholder: "Naam van tag-groep"
         save: "Opslaan"
         delete: "Verwijderen"
         confirm_delete: "Weet u zeker dat u deze tag-groep wilt verwijderen?"
@@ -3010,8 +3023,8 @@ nl:
             publish_read_state: "Bij groepsberichten leesstatus van groep publiceren"
           membership:
             automatic: Automatisch
-            trust_level: Vertrouwensniveau
             trust_levels_title: "Vertrouwensniveau dat automatisch aan nieuwe gebruikers wordt toegekend:"
+            effects: Effecten
             trust_levels_none: "Geen"
             automatic_membership_email_domains: "Gebruikers die zich met een e-maildomein registeren dat precies overeenkomt met een domein in deze lijst worden automatisch aan deze groep toegevoegd:"
             automatic_membership_retroactive: "Dezelfde e-maildomeinregel toepassen voor het toevoegen van bestaande geregistreerde gebruikers"
@@ -4025,6 +4038,10 @@ nl:
           dashboard: "Dashboard"
         secret_list:
           invalid_input: "Invoervelden mogen niet leeg zijn of verticale-streeptekens bevatten."
+        default_categories:
+          modal_description: "Wilt u deze wijziging op het verleden toepassen? Hierdoor worden voor %{count} bestaande gebruikers voorkeuren gewijzigd."
+          modal_yes: "Ja"
+          modal_no: "Nee, wijziging alleen vanaf nu toepassen"
       badges:
         title: Badges
         new_badge: Nieuwe badge

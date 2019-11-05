@@ -92,7 +92,7 @@ es:
         from_reply_by_address_error: "Ocurre cuando el encabezado remitente coincide con la respuesta por dirección de correo electrónico."
         inactive_user_error: "Sucede cuando el remitente no está activo."
         silenced_user_error: "Ocurre cuando el remitente ha sido silenciado."
-        bad_destination_address: "Sucede cuando ninguna de las direcciones de correo electrónico en los campos Para/Cc/Bcc coincide con un correo electrónico configurado como dirección de correo entrante."
+        bad_destination_address: "Sucede cuando ninguna de las direcciones de correo electrónico en los campos Para/Cc coincide con un correo electrónico configurado como dirección de correo entrante."
         strangers_not_allowed_error: "Sucede cuando un usuario intenta crear un nuevo tema en una categoría de la que no forma parte."
         insufficient_trust_level_error: "Sucede cuando un usuario intenta crear un nuevo tema en una categoría para la cual no tiene el nivel de confianza requerido."
         reply_user_not_matching_error: "Sucede cuando una respuesta viene de una dirección de correo electrónico diferente a la que se le envió la notificación."
@@ -161,6 +161,7 @@ es:
         one: "Has especificado la opción inválida %{name}"
         other: "Especificaste las opciones inválidas %{name}"
       default_categories_already_selected: "No se puede seleccionar una categoría ya utilizada en otra lista."
+      default_tags_already_selected: "No puedes seleccionar una etiqueta utilizada en otra lista."
       s3_upload_bucket_is_required: "No se pueden activar las subidas a S3 a menos que se haya proporcionado un valor a «s3_upload_bucket»."
       enable_s3_uploads_is_required: "No puedes activar el inventario en S3 a menos que se haya habilitado las subidas en S3."
       s3_backup_requires_s3_settings: "No puedes usar S3 como método de respaldo salvo que hayas rellenado «%{setting_name}»."
@@ -206,11 +207,15 @@ es:
   provider_not_enabled: "No tienes permitido visualizar el recurso solicitado. El proveedor de autenticación no está habilitado."
   provider_not_found: "No tienes permitido visualizar el recurso solicitado. El proveedor de autenticación no existe."
   read_only_mode_enabled: "El sitio está en modo solo lectura. Las interacciones están deshabilitadas."
-  invalid_grant_badge_reason_link: "El enlace externo o inválido de discourse no está permitido como motivo de la insignia."
+  invalid_grant_badge_reason_link: "El enlace externo o inválido de discourse no está permitido como motivo de la medalla."
   email_template_cant_be_modified: "Esta plantilla de correo electrónico no se puede modificar"
   invalid_whisper_access: "O los susurros no están habilitados o no tienes permitido crear susurros"
   not_in_group:
+    title_topic: "Debes estar en grupo para ver este tema."
+    title_category: "Debes estar en grupo para ver esta categoría."
+    request_membership: "Solicitar membresía"
     join_group: "Unirse al grupo"
+  deleted_topic: "¡Ups! Este tema se ha eliminado y ya no está disponible."
   reading_time: "Tiempo de lectura"
   likes: "Me gusta"
   too_many_replies:
@@ -229,8 +234,8 @@ es:
     no_hosts: "No se han definido hosts para el insertado"
     configure: "Configurar insertado"
     more_replies:
-      one: "otra respuesta"
-      other: "otras %{count} respuestas"
+      one: "%{count} respuesta más"
+      other: "%{count} respuestas más"
     loading: "Cargando discusión..."
     permalink: "Enlace permanente"
     imported_from: "Este es un tema de discusión derivado de la entrada %{link}"
@@ -305,7 +310,7 @@ es:
     user_posts: "Publicaciones recientes de @%{username}"
     user_topics: "Temas recientes de @%{username}"
     tag: "Temas etiquetados"
-    badge: "%{display_name} insignia en %{site_title}"
+    badge: "%{display_name} medalla en %{site_title}"
   too_late_to_edit: "Esa publicación se publicó hace demasiado tiempo. No se puede editar ni eliminar."
   edit_conflict: "La publicación ha sido editada por otro usuario y tus cambios no se pueden guardar."
   revert_version_same: "La versión actual es la misma que la versión a la que intentas volver."
@@ -362,9 +367,9 @@ es:
 
       - Sé amable con tus compañeros, miembros de la comunidad.
 
-      - Las críticas constructivas son bienvenidas, pero recuerda criticar las *ideas*, no las personas.
+      - Las críticas constructivas son bienvenidas, pero recuerda criticar las *ideas*, no a las personas.
 
-      Para más consejos, [visita las directrices de la comunidad](%{base_path}/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text}.
+      Para más consejos, [visita las directrices de la comunidad](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text}.
     avatar: |
       ### ¿Que tal si agregas una imagen para tu cuenta?
 
@@ -730,7 +735,6 @@ es:
     activated: "Disculpa, esta cuenta ya fue activada."
     admin_confirm:
       title: "Confirmar cuenta de administrador"
-      description: "¿Estás seguro de que quieres que <b>%{target_username}</b> sea un administrador?"
       grant: "Conceder acceso de administrador"
       complete: "<b>%{target_username}</b> ahora es un administrador."
       back_to: "Volver al %{title}"
@@ -779,6 +783,13 @@ es:
       description: "Me gusta esta publicación"
       short_description: "Me gusta esta publicación"
       long_form: "Me gusta esto"
+  draft:
+    sequence_conflict_error:
+      title: "error de borrador"
+      description: "El borrador está siendo editado en otra ventana. Por favor refresca esta página."
+  draft_backup:
+    pm_title: "Borradores de respaldo de temas en curso"
+    pm_body: "Tema que contiene borradores de respaldo"
   user_activity:
     no_default:
       self: "No tienes actividad aún."
@@ -796,18 +807,18 @@ es:
       self: "No tienes ningún borrador; empieza a escribir una respuesta en cualquier tema y se guardará automáticamente como nuevo borrador."
   webauthn:
     validation:
-      invalid_type_error: 'El proveedor tipo webauthn provisto es inválido. Los tipos válidos son webauthn.get y webauthn.create.'
-      challenge_mismatch_error: 'El desafío provisto no coincide con el desafío generado por el servidor de autenticación.'
-      invalid_origin_error: 'El origen de la solicitud de autenticación no coincide con el origen del servidor.'
-      malformed_attestation_error: 'Se produjo un error al decodificar los datos de certificación.'
-      invalid_relying_party_id_error: 'La ID de la parte confiante de la solicitud de autenticación no coincide con la ID de la parte confiante del servidor.'
-      user_verification_error: 'Se requiere la verificación del usuario.'
-      unsupported_public_key_algorithm_error: 'El servidor no soporta el algoritmo de clave pública provisto.'
-      unsupported_attestation_format_error: 'El servidor no soporta el formato de certificación.'
-      credential_id_in_use_error: 'La ID de la credencial provista ya está siendo utilizada.'
-      public_key_error: 'La verificación de la clave pública para la credencial falló.'
-      ownership_error: 'La clave de seguridad no le pertenece al usuario.'
-      not_found_error: 'No se encontró ninguna clave de seguridad con la ID de la credencial provista.'
+      invalid_type_error: "El proveedor tipo webauthn provisto es inválido. Los tipos válidos son webauthn.get y webauthn.create."
+      challenge_mismatch_error: "El desafío provisto no coincide con el desafío generado por el servidor de autenticación."
+      invalid_origin_error: "El origen de la solicitud de autenticación no coincide con el origen del servidor."
+      malformed_attestation_error: "Se produjo un error al decodificar los datos de certificación."
+      invalid_relying_party_id_error: "La ID de la parte confiante de la solicitud de autenticación no coincide con la ID de la parte confiante del servidor."
+      user_verification_error: "Se requiere la verificación del usuario."
+      unsupported_public_key_algorithm_error: "El servidor no soporta el algoritmo de clave pública provisto."
+      unsupported_attestation_format_error: "El servidor no soporta el formato de certificación."
+      credential_id_in_use_error: "La ID de la credencial provista ya está siendo utilizada."
+      public_key_error: "La verificación de la clave pública para la credencial falló."
+      ownership_error: "La clave de seguridad no le pertenece al usuario."
+      not_found_error: "No se encontró ninguna clave de seguridad con la ID de la credencial provista."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -841,7 +852,7 @@ es:
         remove: "Este tema ya no funciona como encabezado. Ya no aparecerá en la parte superior de cada página."
   unsubscribed:
     title: "¡Preferencias de correo electrónico actualizadas!"
-    description: "las preferencias de correo electrónico para <b>%{email}</b> han sido actualizadas. Para cambiar tus configuraciones de correo electrónico, <a href='%{url}'>ve a tus preferencias de usuario</a>."
+    description: "las preferencias de correo electrónico para <b>%{email}</b> han sido actualizadas. Para cambiar tus configuraciones de correo electrónico, <a href='%{url}'>visita tus preferencias de usuario</a>."
     topic_description: "Para volver a suscribirte a %{link}, cambia los ajustes de notificación en la parte inferior o en la parte derecha del tema."
     private_topic_description: "Para volver a suscribirte, cambia los ajustes de notificación en la parte inferior o en la parte derecha del tema."
   unsubscribe:
@@ -1035,7 +1046,7 @@ es:
         term: Término
         searches: Búsquedas
         click_through: CTR
-      description: "Términos de búsqueda más populares con sus porcentajes de clic"
+      description: "Términos de búsqueda más populares con sus porcentajes de clic."
     emails:
       title: "Correos electrónicos enviados"
       xaxis: "Día"
@@ -1080,7 +1091,7 @@ es:
         user: "Usuario"
         num_clicks: "Clics"
         num_topics: "Temas"
-      description: "Usuarios listados por número de clics en enlaces que han compartido"
+      description: "Usuarios listados por número de clics en enlaces que han compartido."
     top_traffic_sources:
       title: "Mayores fuentes de tráfico"
       xaxis: "Dominio"
@@ -1190,7 +1201,7 @@ es:
         user: Usuario
         location: Ubicación
         login_at: Inicio de sesión a las
-      description: "Lista de inicios de sesión de administradores con su ubicación"
+      description: "Lista de inicios de sesión de administradores con su ubicación."
     top_uploads:
       title: "Top archivos subidos"
       labels:
@@ -1281,7 +1292,7 @@ es:
     editing_grace_period_max_diff_high_trust: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacenar otra revisión de publicación (nivel de confianza 2 y superiores)"
     staff_edit_locks_post: "Se bloqueará la posibilidad de editar publicaciones si estas son editadas por un miembro del staff."
     post_edit_time_limit: "Un autor con nivel de confianza 0 o 1 puede editar sus publicaciones hasta (n) minutos después de su creación. Poner a 0 para permitir ediciones siempre."
-    tl2_post_edit_time_limit: "Un autor con nivel de confianza 2 o más puede editar sus publicaciones hasta (n) minutos después de su creación. Poner a 0 para permitir ediciones siempre."
+    tl2_post_edit_time_limit: "Un autor con NC2 puede editar su publicación durante (n) minutos luego de publicarla. Establece el valor en 0 para que siempre pueda hacerlo."
     edit_history_visible_to_public: "Permitir a todos ver las versiones previas de una publicación editada. Si se deshabilita, solo los miembros del staff podrán verlas."
     delete_removed_posts_after: "Las publicaciones eliminadas por su autor se eliminarán automáticamente después de (n) horas. Si se establece este valor a 0, las publicaciones se eliminarán inmediatamente."
     max_image_width: "Anchura máxima de las miniaturas de las imágenes en una publicación"
@@ -1312,6 +1323,7 @@ es:
     notification_email: "La dirección de correo electrónico remitente utilizada al enviar todos los correos electrónicos esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los correos electrónicos se reciban correctamente."
     email_custom_headers: "Lista de correos electrónicos separados por barras"
     email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Revisa <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    detailed_404: "Proporciona más detalles a los usuarios acerca de por qué no pueden acceder a un tema en particular. Nota: esto es menos seguro dado que los usuarios sabrán si una URL enlaza a un tema válido."
     enforce_second_factor: "Obliga a usar la autenticación en dos pasos. Selecciona «all» para obligar a todos los usuarios. Selecciona «staff» para obligar solo a los miembros del staff."
     force_https: "Forzar al sitio a utilizar solo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión a través de redes sociales y cualquier logo externo / dependencia son compatibles con HTTPS?"
     same_site_cookies: "Usar las mismas cookies del sitio, ellos eliminan todos los vectores CSRF (falsificación de petición en sitios cruzados) de los navegadores soportados (Lax o Strict). Advertencia: Strict solo funcionará en sitios que forcen el inicio de sesión y usen SSO. "
@@ -1392,7 +1404,7 @@ es:
     prioritize_username_in_ux: "Mostrar el nombre de usuario primero en la página de usuario, tarjeta de usuario y publicaciones (cuando está desactivado, el nombre se muestra primero)"
     enable_rich_text_paste: "Habilitar conversión automática de HTML a Markdown al pegar texto en el compositor. (Experimental)"
     email_token_valid_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas."
-    enable_badges: "Activar el sistema de insignias"
+    enable_badges: "Activar el sistema de medallas"
     enable_whispers: "Permitir que los miembros del staff se comuniquen entre ellos en privado dentro de los temas."
     allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sea indexado por los motores de búsqueda en Internet. En casos excepcionales, puedes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a> permanentemente."
     email_domains_blacklist: "Una lista de dominios de correo electrónico que los usuarios no pueden utilizar para registrarse. Ejemplo: mailinator.com|trashmail.net"
@@ -1450,9 +1462,9 @@ es:
     enable_github_logins: "Activar autenticación mediante Github, requiere una github_client_id y un github_client_secret. Ver <a href='https://meta.discourse.org/t/13745' target='_blank'>configuración del inicio de sesión mediante GitHub para Discourse</a>."
     github_client_id: "ID del cliente para la autenticación mediante Github, registrado en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Clave secreta del cliente para la autenticación mediante Github, registrado en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    enable_discord_logins: '¿Permitir a los usuarios la autenticación mediante Discord?'
+    enable_discord_logins: "¿Permitir a los usuarios la autenticación mediante Discord?"
     discord_client_id: 'ID de cliente de Discord (¿necesitas una? visita <a href="https://discordapp.com/developers/applications/me">el portal del desarrollador</a>)'
-    discord_secret: 'Clave secreta de Discord'
+    discord_secret: "Clave secreta de Discord"
     discord_trusted_guilds: 'Solo permitir a los miembros de estos clanes de Discord conectarse mediante Discord. Utiliza la ID numérica del clan. Para más información, revisa las instrucciones <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aquí</a>. Dejar en blanco para permitir todos los clanes.'
     readonly_mode_during_backup: "Habilitar el modo de solo lectura mientras se crea un respaldo"
     enable_backups: "Permitir a los administradores crear respaldos del foro"
@@ -1663,6 +1675,9 @@ es:
     private_email: "No incluir contenido de publicaciones o temas en el título o el cuerpo del correo electrónico. NOTA: también desactiva los boletines por correo electrónico."
     email_total_attachment_size_limit_kb: "Tamaño máximo total de archivos adjuntos a correos electrónicos salientes. Establece el valor en 0 para desactivar el envío de archivos adjuntos."
     post_excerpts_in_emails: "En los correos electrónicos de notificación, siempre incluye extractos en lugar de publicaciones enteras."
+    raw_email_max_length: "Cuántos caracteres deben almacenarse para el correo electrónico entrante."
+    raw_rejected_email_max_length: "Cuántos caracteres deben almacenarse para el correo electrónico entrante rechazado."
+    delete_rejected_email_after_days: "Eliminar correos rechazados anteriores a (n) días."
     manual_polling_enabled: "Lanza correos electrónicos usando la API para las respuestas por correo electrónico."
     pop3_polling_enabled: "Poll vía POP3 para respuestas por correo electrónico."
     pop3_polling_ssl: "Usar SSL mientras se conecta al servidor POP3. (Recomendado)"
@@ -1721,6 +1736,7 @@ es:
     ignored_users_count_message_threshold: "Notificar a los moderadores si un usuario en particular es ignorado este número de veces por otros usuarios."
     ignored_users_message_gap_days: "Tiempo que se espera antes de notificar a los moderadores de nuevo sobre un usuario que ha sido ignorado por muchos otros."
     clean_up_inactive_users_after_days: "Número de días antes de que se elimine un usuario inactivo (nivel de confianza 0 sin publicaciones). Para desactivar la limpieza, configure en 0."
+    user_selected_primary_groups: "Permitir a los usuarios establecer su propio grupo primario"
     user_website_domains_whitelist: "El sitio web del usuario será verificado con estos dominios. Lista delimitada por barras."
     allow_profile_backgrounds: "Permitir a los usuarios subir fondos de perfil."
     sequential_replies_threshold: "Número de mensajes seguidos que un usuario tiene que publicar antes de que se le recuerde que son demasiadas respuestas consecutivas."
@@ -1750,7 +1766,7 @@ es:
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y correos electrónicos. Desactiva esta opción para ocultar el nombre completo en todas partes."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus publicaciones, además de su @usuario."
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
-    short_progress_text_threshold: "Después de que el número de publicaciones en un tema alcance esta cifra, la barra de progreso solo mostrará el número de publicaciones actual. Si cambias el ancho de la barra de progreso, deberías revisar este valor."
+    short_progress_text_threshold: "Después de que el número de publicaciones en un tema alcance esta cifra, la barra de progreso solo mostrará el número de publicaciones actual. Si cambias la anchura de la barra de progreso, deberías revisar este valor."
     default_code_lang: "Lenguaje de programación por defecto para aplicar el resaltado de la sintaxis en los bloques de código de GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace más tiempo que este número de días, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Establece el valor en 0 para deshabilitar."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
@@ -1765,7 +1781,7 @@ es:
     embed_username_required: "Se requiere el nombre de usuario para la creación de temas."
     notify_about_flags_after: "Si hay reportes que no han sido revisados después de este número de horas, enviar un mensaje personal a los moderadores. Establece el valor en 0 para deshabilitar."
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
-    delete_drafts_older_than_n_days: Eliminar borradores de más de (n) días de antigüedad.
+    delete_drafts_older_than_n_days: "Eliminar borradores de más de (n) días de antigüedad."
     bootstrap_mode_min_users: "Número mínimo de usuarios requerido para desactivar el modo bootstrap (establece en 0 para desactivar esta opción)"
     prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto que no sea una imagen."
     slug_generation_method: "Elegir un método de generación de slug. «encoded» generará cadenas con código porcentual. «none» deshabilitará completamente el slug."
@@ -1810,6 +1826,10 @@ es:
     default_categories_tracking: "Lista de categorías que están seguidas por defecto"
     default_categories_muted: "Lista de categorías que están silenciadas por defecto."
     default_categories_watching_first_post: "Lista de categorías en las que el primer mensaje de cada tema nuevo se vigilará por defecto."
+    default_tags_watching: "Lista de etiquetas vigiladas por defecto."
+    default_tags_tracking: "Lista de etiquetas seguidas por defecto."
+    default_tags_muted: "Lista de etiquetas silenciadas por defecto."
+    default_tags_watching_first_post: "Lista de etiquetas cuya primera publicación de cada tema nuevo estará vigilada por defecto."
     default_text_size: "Tamaño de texto seleccionado por defecto"
     default_title_count_mode: "Modo por defecto para el contador del título"
     retain_web_hook_events_period_days: "Número de días para retener registros de eventos de web hook."
@@ -1841,7 +1861,7 @@ es:
     city_for_disputes: "Ciudad de disputas"
     shared_drafts_category: "Habilite la característica de borradores compartidos designando una categoría para borradores de temas. Los temas de esta categoría se eliminarán de las listas de temas para los miembros del staff."
     push_notifications_prompt: "Mostrar aviso del consentimiento del usuario."
-    push_notifications_icon: "El icono de la insignia que aparece en la esquina de notificación. El tamaño requerido es de 96 × 96."
+    push_notifications_icon: "El icono de la medalla que aparece en la esquina de notificación. El tamaño requerido es de 96 × 96."
     short_title: "El título corto se utilizará en la pantalla de inicio del usuario, el iniciador u otros lugares donde el espacio puede ser limitado. Debe limitarse a 12 caracteres."
     dashboard_general_tab_activity_metrics: "Selecciona los reportes que se muestran como medidas de actividad en la pestaña general."
     errors:
@@ -1902,6 +1922,8 @@ es:
       topic: "Resultados"
       user: "Usuarios"
     results_page: "Resultados de búsqueda para «%{term}»"
+    audio: "[audio]"
+    video: "[video]"
   sso:
     login_error: "Error al iniciar sesión"
     not_found: "No se pudo encontrar tu cuenta. Por favor, contacta al administrador del sitio."
@@ -2178,10 +2200,6 @@ es:
   admin_confirmation_mailer:
     title: "Confirmación de administrador"
     subject_template: "[%{email_prefix}] Confirma nueva cuenta de administrador"
-    text_body_template: |
-      Por favor, confirma que quieres agregar a **%{target_username}** como administrador de tu foro.
-
-      [Confirmar cuenta de administrador](%{admin_confirm_url})
   test_mailer:
     title: "Correo electrónico de prueba"
     subject_template: "[%{email_prefix}] Prueba de envío de correo electrónico"
@@ -2364,6 +2382,15 @@ es:
         Hola. Hemos visto que has estado leyendo, lo cual nos parece fantástico, ¡por lo que te hemos subido tu [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
         Nos alegramos de ver que estés pasando tiempo con nosotros, y nos gustaría saber más sobre ti. Cuando puedas, [rellena tu perfil](%{base_url}/my/preferences/profile) o [crea un nuevo tema](%{base_url}/categories).
+    welcome_moderator:
+      title: "Bienvenido Moderador"
+      subject_template: "¡Felicidades, ahora eres un moderador!"
+      text_body_template: |
+        Has sido promovido con el status de moderador por un miembro del staff.
+
+        Como moderador, ahora tienes acceso a la <a href='%{base_url}/admin' target='_blank'>interfaz de administración</a>.
+
+        Con un gran poder viene una gran responsabilidad. Si eres nuevo en tareas de moderación, por favor sigue la [Guía de Moderación](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Bienvenida al invitado"
       subject_template: "¡Bienvenido a %{site_name}!"
@@ -2638,7 +2665,7 @@ es:
 
         Tu cuenta no tiene los permisos para responder al tema. Si crees que esto es un error, [contacta a un miembro del staff](%{base_url}/about).
     email_error_notification:
-      title: "Email. Error de notificación"
+      title: "Error de notificación de correo electrónico"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Error de autenticación POP"
       text_body_template: |
         Hubo un error de autenticación mientras se ejecutaba el polling de los correos electrónicos desde el servidor POP.
@@ -2647,7 +2674,7 @@ es:
 
         Si dispones de una interfaz de usuario web para la cuenta de correo POP, es posible que debas iniciar sesión allí y comprobar tu configuración.
     email_revoked:
-      title: "Email revocado"
+      title: "Correo electrónico revocado"
       subject_template: "¿Tu correo electrónico es correcto?"
       text_body_template: |
         Lo sentimos, estamos teniendo problemas para contactarte por correo electrónico. Nuestros últimos mensajes se han devuelto como imposibles de entregar.
@@ -2764,7 +2791,7 @@ es:
       text_body_template: |
         ¡Felicitaciones! Ganaste el **premio de usuario nuevo del mes de%{month_year}**. :trophy:
 
-        Este premio solo lo ganan dos de los nuevos miembros de cada mes y será visible permanentemente en [la página de insignias](%{url}).
+        Este premio solo lo ganan dos de los nuevos miembros de cada mes y será visible permanentemente en [la página de medallas](%{url}).
 
         Te has convertido rápidamente en un miembro de gran valor para nuestra comunidad. Gracias por unirte ¡y continúa con el gran trabajo!
     queued_posts_reminder:
@@ -2786,7 +2813,7 @@ es:
     Para cancelar estos correos, [haz clic aquí](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
-  email_from: "%{user_name} via %{site_name}"
+  email_from: "%{user_name} vía %{site_name}"
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:
@@ -2797,7 +2824,7 @@ es:
       title: "Darse de baja"
       description: "¿No estás interesado en recibir estos correos? ¡No hay problema! Haz clic abajo para darte de baja de inmediatamente:"
     reply_by_email: "[Visita el tema](%{base_url}%{url}) o responde a este correo para publicar."
-    reply_by_email_pm: "[Visitar Mensaje](%{base_url}%{url}) o responde a este correo para contestar a %{participants}."
+    reply_by_email_pm: "[Visita el mensaje](%{base_url}%{url}) o responde a este correo electrónico para contestar a %{participants}."
     only_reply_by_email: "Responde a este correo electrónico para comentar."
     only_reply_by_email_pm: "Responde a este correo electrónico para contestar a %{participants}."
     visit_link_to_respond: "[Visita el tema](%{base_url}%{url}) para responder."
@@ -2805,35 +2832,47 @@ es:
     posted_by: "Publicado por %{username} el %{post_date}"
     pm_participants: "Participantes: %{participants}"
     invited_group_to_private_message_body: |
-      %{username} te invitó en @%{group_name} al mensaje
+      %{username} invitó a @%{group_name} a un mensaje
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
       en
 
       > %{site_title} -- %{site_description}
+
+      Para unirte al mensaje, haz clic en el siguiente enlace:
+
+      %{topic_url}
     invited_to_private_message_body: |
       %{username} te invitó a un mensaje
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
       en
 
-      > %{site_title} -- %{site_description}
+      > %{site_title}  -- %{site_description}
+
+      Para unirte al mensaje, haz clic en el siguiente enlace:
+
+      %{topic_url}
     invited_to_topic_body: |
       %{username} te invitó a una discusión
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
       en
 
       > %{site_title} -- %{site_description}
+
+      Para unirte a la discusión, haz clic en el siguiente enlace:
+
+      %{topic_url}
     user_invited_to_private_message_pm_group:
       title: "Usuario invitado a MP grupal"
       subject_template: "[%{email_prefix}] %{username} invitó a @%{group_name} al mensaje «%{topic_title}»"
@@ -3032,10 +3071,10 @@ es:
       unread_notifications: "Notificaciones no leídas"
       liked_received: "Me gusta recibidos"
       new_users: "Usuarios nuevos"
-      popular_topics: "Temas populares"
+      popular_topics: "Temas destacados"
       follow_topic: "Seguir este tema"
       join_the_discussion: "Leer más"
-      popular_posts: "Temas populares"
+      popular_posts: "Temas destacados"
       more_new: "Nuevo para ti"
       subject_template: "[%{email_prefix}] Resumen"
       unsubscribe: "Este resumen se envía desde %{site_link} cuando no te hemos visto durante cierto tiempo. Cambia %{email_preferences_link} o %{unsubscribe_link} para cancelar tu suscripción."
@@ -3213,7 +3252,7 @@ es:
     missing: "Lo sentimos, no pudimos encontrar un avatar asociado a esa dirección de correo electrónico. ¿Puedes intentar subirlo de nuevo?"
   flag_reason:
     sockpuppet: "Un usuario nuevo creó un tema y otro usuario nuevo le ha respondido desde la misma dirección IP (%{ip_address}). Revisa la opción <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> en la configuración del sitio."
-    spam_hosts: "Este usuario nuevo intentó crear varios temas con enlaces al mismo dominio. Revisa la opción <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> en la configuración del sitio."
+    spam_hosts: "Este usuario nuevo intentó crear múltiples publicaciones con enlaces al mismo dominio. Se deben revisar todas las publicaciones de este usuario que incluyen enlaces. Revisa la configuración del sitio <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "max_emails_per_day_per_user excedido"
     exceeded_bounces_limit: "bounce_score_threshold excedido"
@@ -3301,7 +3340,7 @@ es:
 
       Las conversaciones que tenemos son el ejemplo para los recién llegados. Ayúdanos a influir en el futuro de esta comunidad al decidir participar en discusiones que hagan de este foro un lugar interesante en el cual estar &mdash; y al evitar aquellas que hagan lo contrario.
 
-      Este foro ofrece herramientas que permiten a la comunidad identificar de forma colectiva las mejores (y peores) contribuciones: me gusta, marcadores, reportes, insignias, respuestas, ediciones y demás. Usa todo esto para mejorar tu experiencia y la de los demás.
+      Este foro ofrece herramientas que permiten a la comunidad identificar de forma colectiva las mejores (y peores) contribuciones: me gusta, marcadores, reportes, medallas, respuestas, ediciones y demás. Usa todo esto para mejorar tu experiencia y la de los demás.
 
       Intentemos dejar esto mejor de lo que lo encontramos.
 
@@ -3624,242 +3663,242 @@ es:
       name: Editor
       description: Primera edición de una publicación
       long_description: |
-        Esta insignia se concede la primera vez que editas una de tus publicaciones. Aunque no siempre podrás editar tus publicaciones, editar es una buena idea — te permite mejorar tus publicaciones, corregir pequeños errores o añadir algo que se te había pasado. ¡Edita para hacer mejores a tus publicaciones!
+        Esta medalla se concede la primera vez que editas una de tus publicaciones. Aunque no siempre podrás editar tus publicaciones, editar es una buena idea — te permite mejorar tus publicaciones, corregir pequeños errores o añadir algo que se te había pasado. ¡Edita para hacer mejores a tus publicaciones!
     wiki_editor:
       name: Editor de wiki
       description: Primera edición de un tema wiki
       long_description: |
-        Esta insignia se concede la primera vez que editas un tema de tipo wiki.
+        Esta medalla se concede la primera vez que editas un tema de tipo wiki.
     basic_user:
       name: Básico
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Acceso</a> a todas las funciones esenciales de la comunidad"
       long_description: |
-        Esta insignia se concede cuando alcanzas el nivel de confianza 1. Gracias por quedarte y leer unos cuantos temas para aprender acerca de qué es esta comunidad. Las restricciones de usuario nuevo se han eliminado; podrás usar las funcionalidades esenciales como enviar mensajes privados a otras personas, reportar publicaciones, editar publicaciones wiki y publicar con múltiples imágenes y enlaces.
+        Esta medalla se concede cuando alcanzas el nivel de confianza 1. Gracias por quedarte y leer unos cuantos temas para aprender acerca de qué es esta comunidad. Las restricciones de usuario nuevo se han eliminado; podrás usar las funcionalidades esenciales como enviar mensajes privados a otras personas, reportar publicaciones, editar publicaciones wiki y publicar con múltiples imágenes y enlaces.
     member:
       name: Miembro
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Acceso</a> a invitaciones, mensajes grupales y más me gusta"
       long_description: |
-        Esta insignia se concede al llegar a nivel de confianza 2. Gracias por participar durante estas semanas y unirte de verdad a nuestra comunidad. Ahora puedes enviar invitaciones desde tu página de usuario o desde los temas, crear mensajes personales grupales y dar más me gusta por día.
+        Esta medalla se concede al llegar a nivel de confianza 2. Gracias por participar durante estas semanas y unirte de verdad a nuestra comunidad. Ahora puedes enviar invitaciones desde tu página de usuario o desde los temas, crear mensajes personales grupales y dar más me gusta por día.
     regular:
       name: Habitual
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Acceso</a> a las funciones: recategorizar, renombrar, publicar enlaces sin el tag no-follow y dar más me gusta"
       long_description: |
-        Esta insignia se concede al llegar a nivel de confianza 3. Gracias por ser una parte constante de nuestra comunidad durante estos meses. Ahora eres uno de nuestros lectores más activos y una fuente de confianza que hace nuestra comunidad mejor. Ahora puedes recategorizar y renombrar temas, tus reportes tienen más peso y tienes acceso a una categoría especial privada, además de poder dar muchos más me gusta al día.
+        Esta medalla se concede al llegar a nivel de confianza 3. Gracias por ser una parte constante de nuestra comunidad durante estos meses. Ahora eres uno de nuestros lectores más activos y una fuente de confianza que hace nuestra comunidad mejor. Ahora puedes recategorizar y renombrar temas, tus reportes tienen más peso y tienes acceso a una categoría especial privada, además de poder dar muchos más me gusta al día.
     leader:
       name: Líder
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Acceso</a> a las funciones: editar, destacar, cerrar, archivar, dividir y combinar temas globalmente"
       long_description: |
-        Esta insignia se concede cuando alcanzas el nivel de confianza 4. Eres un líder de la comunidad elegido por los administradores, constituyes un ejemplo positivo para los demás mediante tus hechos y palabras. Ahora puedes editar todas las publicaciones y realizar acciones de moderador como destacar temas, cerrarlos, archivarlos, hacerlos invisibles, dividirlos o fusionarlos.
+        Esta medalla se concede cuando alcanzas el nivel de confianza 4. Eres un líder de la comunidad elegido por los administradores, constituyes un ejemplo positivo para los demás mediante tus hechos y palabras. Ahora puedes editar todas las publicaciones y realizar acciones de moderador como destacar temas, cerrarlos, archivarlos, hacerlos invisibles, dividirlos o fusionarlos.
     welcome:
       name: ¡Bienvenido/a!
       description: Recibió un me gusta
       long_description: |
-        Esta insignia se concede al recibir tu primer me gusta en una publicación. ¡Felicitaciones! Publicaste algo que los demás miembros de la comunidad han considerado útil, interesante o entretenido
+        Esta medalla se concede al recibir tu primer me gusta en una publicación. ¡Felicitaciones! Publicaste algo que los demás miembros de la comunidad han considerado útil, interesante o entretenido.
     autobiographer:
       name: Autobiógrafo
       description: "Detalló información en su <a href=\"%{base_uri}/my/preferences/profile\">perfil</a> de usuario"
       long_description: |
-        Esta insignia se concede por rellenar <a href="%{base_uri}/my/preferences/profile">tu perfil de usuario</a> y seleccionar una foto de perfil. Al contar más sobre ti y lo que te interesa, la comunidad es más cercana y está más conectada. ¡Anímate!
+        Esta medalla se concede por rellenar <a href="%{base_uri}/my/preferences/profile">tu perfil de usuario</a> y seleccionar una foto de perfil. Al contar más sobre ti y lo que te interesa, la comunidad es más cercana y está más conectada. ¡Anímate!
     anniversary:
       name: Aniversario
       description: Miembro activo desde hace un año y que ha publicado al menos una vez
       long_description: |
-        Esta insignia se concede cuando has sido miembro durante un año y has publicado al menos una vez durante este tiempo. Gracias por seguir con nosotros y contribuir con nuestra comunidad. ¡No sería lo mismo sin ti!
+        Esta medalla se concede cuando has sido miembro durante un año y has publicado al menos una vez durante este tiempo. Gracias por seguir con nosotros y contribuir con nuestra comunidad. ¡No sería lo mismo sin ti!
     nice_post:
       name: Buena respuesta
       description: Recibió 10 me gusta en una respuesta
-      long_description: "Esta insignia se concede cuando una de tus respuestas consigue 10 me gusta. Tus respuestas han gustado a la comunidad y han ayudado a mantener viva la conversación. \n"
+      long_description: "Esta medalla se concede cuando una de tus respuestas consigue 10 me gusta. Tus respuestas han gustado a la comunidad y han ayudado a mantener viva la conversación. \n"
     good_post:
       name: Muy buena respuesta
       description: Recibió 25 me gusta en una respuesta
       long_description: |
-        Esta insignia se concede cuando una de tus respuestas consigue 25 me gusta. Tu respuesta ha sido excepcional y ha conseguido hacer la conversación mucho más interesante.
+        Esta medalla se concede cuando una de tus respuestas consigue 25 me gusta. Tu respuesta ha sido excepcional y ha conseguido hacer la conversación mucho más interesante.
     great_post:
       name: Excelente respuesta
       description: Recibió 50 me gusta en una respuesta
       long_description: |
-        Esta insignia se concede cuando una de tus respuestas consigue 50 me gusta. ¡Wow! ¡Tu respuesta ha sido fascinante, inspiradora muy graciosa o muy bien pensada y le ha encantado a la comunidad!
+        Esta medalla se concede cuando una de tus respuestas consigue 50 me gusta. ¡Wow! ¡Tu respuesta ha sido fascinante, inspiradora muy graciosa o muy bien pensada y le ha encantado a la comunidad!
     nice_topic:
       name: Buen tema
       description: Recibió 10 me gusta en un tema
       long_description: |
-        Esta insignia se concede cuando un tema tuyo recibe 10 me gusta. Iniciaste una conversación interesante que le ha gustado a la comunidad.
+        Esta medalla se concede cuando un tema tuyo recibe 10 me gusta. Iniciaste una conversación interesante que le ha gustado a la comunidad.
     good_topic:
       name: Muy buen tema
       description: Recibió 25 me gusta en un tema
       long_description: |
-        Esta insignia se concede cuando un tema tuyo consigue 25 me gusta. Iniciaste una conversación que la comunidad ha disfrutado mucho.
+        Esta medalla se concede cuando un tema tuyo consigue 25 me gusta. Iniciaste una conversación que la comunidad ha disfrutado mucho.
     great_topic:
       name: Excelente tema
       description: Recibió 50 me gusta en un tema
       long_description: |
-        Esta insignia se concede cuando un tema tuyo consigue 50 me gusta. ¡Comenzaste un tema fascinante cuya discusión le ha encantado a la comunidad!
+        Esta medalla se concede cuando un tema tuyo consigue 50 me gusta. ¡Comenzaste un tema fascinante cuya discusión le ha encantado a la comunidad!
     nice_share:
       name: Buena contribución
       description: Compartió una publicación con 25 visitantes únicos
       long_description: |
-        Esta insignia se concede por compartir un enlace que fue visitado por 25 visitantes externos. Gracias por difundir las palabras sobre nuestras discusiones y esta comunidad.
+        Esta medalla se concede por compartir un enlace que fue visitado por 25 visitantes externos. Gracias por difundir las palabras sobre nuestras discusiones y esta comunidad.
     good_share:
       name: Muy buena contribución
       description: Compartió una publicación con 300 visitantes únicos
       long_description: |
-        Esta insignia se concede cuando compartes un enlace y 300 visitantes externos hacen clic. ¡Buen trabajo! Has enseñado una conversación excelente a unas cuantas personas nuevas y has ayudado a crecer la comunidad.
+        Esta medalla se concede cuando compartes un enlace y 300 visitantes externos hacen clic. ¡Buen trabajo! Has enseñado una conversación excelente a unas cuantas personas nuevas y has ayudado a crecer la comunidad.
     great_share:
       name: Excelente contribución
       description: Compartió una publicación con 1000 visitantes únicos
       long_description: |
-        Esta insignia se concede cuando compartes un enlace y 1000 visitantes externos hacen clic en él. ¡Increíble! Has promocionado una conversación muy interesante a una gran audiencia y has ayudado a crecer la comunidad.
+        Esta medalla se concede cuando compartes un enlace y 1000 visitantes externos hacen clic en él. ¡Increíble! Has promocionado una conversación muy interesante a una gran audiencia y has ayudado a crecer la comunidad.
     first_like:
       name: Primer me gusta
       description: Le dio a me gusta a una publicación
       long_description: |
-        Esta insignia se otorga la primera vez que le das me gusta a una publicación usando el botón :heart:. Darle me gusta a publicaciones es una manera estupenda de hacer saber al resto de los miembros de la comunidad que lo que han publicado te ha parecido interesante, útil, entretenido o divertido. ¡Comparte el amor!
+        Esta medalla se otorga la primera vez que le das me gusta a una publicación usando el botón :heart:. Darle me gusta a publicaciones es una manera estupenda de hacer saber al resto de los miembros de la comunidad que lo que han publicado te ha parecido interesante, útil, entretenido o divertido. ¡Comparte el amor!
     first_flag:
       name: Primer reporte
       description: Reportó una publicación
       long_description: |
-        Esta insignia se concede la primera vez que reportas algo. Reportar es la manera en la que mantenemos el foro en buen estado. Si ves algo que deba ser revisado por un moderador por cualquier motivo, no dudes en reportarlo. Si ves un problema... ¡:flag_black: repórtalo!
+        Esta medalla se concede la primera vez que reportas algo. Reportar es la manera en la que mantenemos el foro en buen estado. Si ves algo que deba ser revisado por un moderador por cualquier motivo, no dudes en reportarlo. Si ves un problema... ¡:flag_black: repórtalo!
     promoter:
       name: Promotor
       description: Invitó a un usuario
       long_description: |
-        Esta insignia se concede cuando invitas a alguien a unirse a la comunidad a través del botón de invitación en tu página del perfil o al final de un tema. Invitar a amigos que puedan estar interesados en debates específicos es una excelente manera para integrar personas nuevas a la comunidad, ¡gracias!
+        Esta medalla se concede cuando invitas a alguien a unirse a la comunidad a través del botón de invitación en tu página del perfil o al final de un tema. Invitar a amigos que puedan estar interesados en debates específicos es una excelente manera para integrar personas nuevas a la comunidad, ¡gracias!
     campaigner:
       name: Activista
       description: Invitó a 3 usuarios
       long_description: |
-        Esta insignia se concede cuando has invitado a 3 personas que han pasado tiempo en el sitio y se han convertido en usuarios básicos. Una comunidad vibrante necesita de un flujo constante de nuevas voces que participen en las conversaciones.
+        Esta medalla se concede cuando has invitado a 3 personas que han pasado tiempo en el sitio y se han convertido en usuarios básicos. Una comunidad vibrante necesita de un flujo constante de nuevas voces que participen en las conversaciones.
     champion:
       name: Campeón
       description: Invitó a 5 miembros
       long_description: |
-        Esta insignia se concede cuando has invitado a 5 personas que han pasado el suficiente tiempo en el sitio como para convertirse en miembros de pleno derecho. ¡Bravo! ¡Gracias por enriquecer la diversidad de la comunidad con nuevos miembros!
+        Esta medalla se concede cuando has invitado a 5 personas que han pasado el suficiente tiempo en el sitio como para convertirse en miembros de pleno derecho. ¡Bravo! ¡Gracias por enriquecer la diversidad de la comunidad con nuevos miembros!
     first_share:
       name: Primera vez que comparte
       description: Compartió una publicación
       long_description: |
-        Esta insignia se otorga la primera vez que compartes un enlace a una respuesta o tema usando el botón de compartir. Compartir enlaces es una excelente manera de mostrar discusiones interesantes con el resto del mundo y hacer crecer la comunidad.
+        Esta medalla se otorga la primera vez que compartes un enlace a una respuesta o tema usando el botón de compartir. Compartir enlaces es una excelente manera de mostrar discusiones interesantes con el resto del mundo y hacer crecer la comunidad.
     first_link:
       name: Primer enlace
       description: Añadió un enlace a otro tema
       long_description: |
-        Esta insignia se otorga la primera vez que incluyes un enlace a otro tema. Enlazar temas ayuda al resto de lectores a encontrar conversaciones interesantes. ¡Enlaza libremente!
+        Esta medalla se otorga la primera vez que incluyes un enlace a otro tema. Enlazar temas ayuda al resto de lectores a encontrar conversaciones interesantes. ¡Enlaza libremente!
     first_quote:
       name: Primera cita
       description: Citó una publicación
       long_description: |
-        Esta insignia se concede la primera vez que citas algo en una respuesta. Citar las partes relevantes de mensajes anteriores ayuda a mantener la conversación conectada y sin salirse del tema. La manera más fácil de citar es seleccionando una parte de un mensaje y luego pulsar el botón de responder. ¡Cita abundantemente!
+        Esta medalla se concede la primera vez que citas algo en una respuesta. Citar las partes relevantes de mensajes anteriores ayuda a mantener la conversación conectada y sin salirse del tema. La manera más fácil de citar es seleccionando una parte de un mensaje y luego pulsar el botón de responder. ¡Cita abundantemente!
     read_guidelines:
       name: Preguntas frecuentes leídas
       description: "Leyó las <a href=\"%{base_uri}/guidelines\">directrices de la comunidad</a>"
       long_description: |
-        Esta insignia se concede por <a href="%{base_uri}/guidelines">leer las directrices de la comunidad</a>. Con seguir y compartir estas simples pautas, nos ayudarás a construir un foro más seguro, divertido y sostenible. Acuérdate de que detrás de cada usuario hay un ser humano muy parecido a ti. ¡Sé amable!
+        Esta medalla se concede por <a href="%{base_uri}/guidelines">leer las directrices de la comunidad</a>. Con seguir y compartir estas simples pautas, nos ayudarás a construir un foro más seguro, divertido y sostenible. Acuérdate de que detrás de cada usuario hay un ser humano muy parecido a ti. ¡Sé amable!
     reader:
       name: Lector
       description: Leyó todas las respuestas en un tema con más de 100 respuestas
       long_description: |
-        Esta insignia se concede la primera vez que lees un tema largo, uno con más de 100 respuestas. Leer una conversación con atención te ayuda a seguir el debate, entender los diferentes puntos de vista y llevar a conversaciones más interesantes. Cuanto más lees, mejor es la conversación. Como nos gusta decir: ¡la lectura es fundamental! :slight_smile:
+        Esta medalla se concede la primera vez que lees un tema largo, uno con más de 100 respuestas. Leer una conversación con atención te ayuda a seguir el debate, entender los diferentes puntos de vista y llevar a conversaciones más interesantes. Cuanto más lees, mejor es la conversación. Como nos gusta decir: ¡la lectura es fundamental! :slight_smile:
     popular_link:
       name: Enlace popular
       description: Publicó un enlace externo con al menos 50 clics
       long_description: |
-        Esta insignia se concede cuando el enlace que has compartido alcanza los 50 clics. ¡Gracias por publicar un enlace útil que añade un contexto interesante a la conversación!
+        Esta medalla se concede cuando el enlace que has compartido alcanza los 50 clics. ¡Gracias por publicar un enlace útil que añade un contexto interesante a la conversación!
     hot_link:
       name: Enlace muy popular
       description: Publicó un enlace externo con al menos 300 clics
       long_description: |
-        Esta insignia se concede cuando el enlace que has compartido alcanza los 300 clics. ¡Gracias por publicar un enlace que impulsó la conversación e ilustró el debate!
+        Esta medalla se concede cuando el enlace que has compartido alcanza los 300 clics. ¡Gracias por publicar un enlace que impulsó la conversación e ilustró el debate!
     famous_link:
       name: Enlace famoso
       description: Publicó un enlace externo con al menos 1000 clics
       long_description: |
-        Esta insignia se concede cuando un enlace que compartiste llega a 1000 clics. ¡Vaya! Publicaste un enlace que mejoró significativamente la conversación al añadir un detalle esencial, contextual e informativo. ¡Gran trabajo!
+        Esta medalla se concede cuando un enlace que compartiste llega a 1000 clics. ¡Vaya! Publicaste un enlace que mejoró significativamente la conversación al añadir un detalle esencial, contextual e informativo. ¡Gran trabajo!
     appreciated:
       name: Apreciado
       description: Recibió 1 me gusta en 20 publicaciones
       long_description: |
-        Esta insignia se concede cuando recibes al menos un me gusta en 20 publicaciones distintas. ¡La comunidad está disfrutando tus contribuciones a las conversaciones!
+        Esta medalla se concede cuando recibes al menos un me gusta en 20 publicaciones distintas. ¡La comunidad está disfrutando tus contribuciones a las conversaciones!
     respected:
       name: Respetado
       description: Recibió 2 me gusta en 100 publicaciones
       long_description: |
-        Esta insignia se concede cuando recibes al menos 2 me gusta en 100 publicaciones distintas. ¡La comunidad está apreciando tus numerosas aportaciones a las conversación!
+        Esta medalla se concede cuando recibes al menos 2 me gusta en 100 publicaciones distintas. ¡La comunidad está apreciando tus numerosas aportaciones a las conversación!
     admired:
       name: Admirado
       description: Recibió 5 me gusta en 300 publicaciones
       long_description: |
-        Esta insignia se concede cuando recibes al menos 5 me gusta en 300 publicaciones distintas. ¡Bravo! ¡La comunidad admira tus aportes frecuentes y de gran calidad!
+        Esta medalla se concede cuando recibes al menos 5 me gusta en 300 publicaciones distintas. ¡Bravo! ¡La comunidad admira tus aportes frecuentes y de gran calidad!
     out_of_love:
       name: Dadivoso
       description: Utilizó 50 me gusta en un día
       long_description: |
-        Esta insignia se concede cuando das los 50 me gusta que puedes utilizar al día. Recuerda tomar un momento y dar me gusta a las publicaciones que disfrutas, así incentivas a los demás miembros a crear aún mejores debates en el futuro.
+        Esta medalla se concede cuando das los 50 me gusta que puedes utilizar al día. Recuerda tomar un momento y dar me gusta a las publicaciones que disfrutas, así incentivas a los demás miembros a crear aún mejores debates en el futuro.
     higher_love:
       name: Generoso
       description: Utilizó 50 me gusta 5 veces
       long_description: |
-        Esta insignia se concede cuando das los 50 me gusta diarios 5 veces. ¡Gracias por tomarte tiempo en incentivar y premiar las mejores conversaciones cada día!
+        Esta medalla se concede cuando das los 50 me gusta diarios 5 veces. ¡Gracias por tomarte tiempo en incentivar y premiar las mejores conversaciones cada día!
     crazy_in_love:
       name: Magnánimo
       description: Utilizó 50 me gusta en un día 20 veces
       long_description: |
-        Esta insignia se concede cuando usas los 50 me gusta diarios 20 veces. ¡Genial! Eres un modelo a seguir por animar a los demás miembros de la comunidad.
+        Esta medalla se concede cuando usas los 50 me gusta diarios 20 veces. ¡Genial! Eres un modelo a seguir por animar a los demás miembros de la comunidad.
     thank_you:
       name: Agradecido/a
       description: Ha recibido me gusta en 20 publicaciones y dado 10 me gusta
       long_description: |
-        Esta insignia se concede cuando has recibido 20 me gusta en tus publicaciones y has dado 10 o más de vuelta. Cuando a alguien le gustan tus publicaciones, también encuentras el tiempo para agradecer las publicaciones de otras personas.
+        Esta medalla se concede cuando has recibido 20 me gusta en tus publicaciones y has dado 10 o más de vuelta. Cuando a alguien le gustan tus publicaciones, también encuentras el tiempo para agradecer las publicaciones de otras personas.
     gives_back:
       name: Cómplice
       description: Ha recibido me gusta en 100 publicaciones y dado 100 me gusta
       long_description: |
-        Esta insignia se concede cuando has recibido 100 me gusta en tus publicaciones y has dado 100 o más de vuelta. ¡Gracias por dar tanto y agradecer de vuelta!
+        Esta medalla se concede cuando has recibido 100 me gusta en tus publicaciones y has dado 100 o más de vuelta. ¡Gracias por dar tanto y agradecer de vuelta!
     empathetic:
       name: Empático
       description: Ha recibido me gusta en 500 publicaciones y dado 1000 me gusta
       long_description: |
-        Esta insignia se concede cuando has recibido 500 me gusta y le has dado me gusta a otros 1000 mensajes. Eres un modelo de generosidad y apreciación mutua. :two_hearts:.
+        Esta medalla se concede cuando has recibido 500 me gusta y le has dado me gusta a otros 1000 mensajes. Eres un modelo de generosidad y apreciación mutua :two_hearts:.
     first_emoji:
       name: Primer emoji
       description: Utilizó un emoji en una publicación
       long_description: |
-        Esta insignia se concede la primera vez que añades un emoji a tu publicación :thumbsup:. Los emoji te permiten añadir emociones a tu publicación, desde felicidad :smiley: a tristeza :anguished: pasando por enfado :angry: o cualquier otra expresión :sunglasses:. Comienza escribiendo : (dos puntos) o haz clic en el botón emoji de la barra del editor para seleccionar entre cientos de opciones. :ok_hand:
+        Esta medalla se concede la primera vez que añades un emoji a tu publicación :thumbsup:. Los emoji te permiten añadir emociones a tu publicación, desde felicidad :smiley: a tristeza :anguished: pasando por enfado :angry: o cualquier otra expresión :sunglasses:. Comienza escribiendo : (dos puntos) o haz clic en el botón emoji de la barra del editor para seleccionar entre cientos de opciones. :ok_hand:
     first_mention:
       name: Primera mención
       description: Mencionó a un usuario en una publicación
       long_description: |
-        Esta insignia se concede la primera vez que mencionas a un @usuario en una publicación. Las menciones generan notificaciones a la persona mencionada para que sepan que les estás mencionando. Simplemente empieza escribiendo @ (arroba) para mencionar a alguien o, si está permitido, a un grupo – es una forma conveniente de captar la atención de alguien.
+        Esta medalla se concede la primera vez que mencionas a un @usuario en una publicación. Las menciones generan notificaciones a la persona mencionada para que sepan que les estás mencionando. Simplemente empieza escribiendo @ (arroba) para mencionar a alguien o, si está permitido, a un grupo – es una forma conveniente de captar la atención de alguien.
     first_onebox:
       name: Primer onebox
       description: Publicó un enlace expandido vía onebox
       long_description: |
-        Esta insignia se concede la primera vez que publicas un enlace solo en una línea, que se expande automáticamente en un onebox con un resumen, título y (cuando esté disponible) imagen.
+        Esta medalla se concede la primera vez que publicas un enlace solo en una línea, que se expande automáticamente en un onebox con un resumen, título y (cuando esté disponible) imagen.
     first_reply_by_email:
       name: Primera respuesta por correo electrónico
       description: Respondió a una publicación por correo electrónico
       long_description: |
-        Esta insignia se concede la primera vez que respondes a una publicación por correo electrónico :e-mail:.
+        Esta medalla se concede la primera vez que respondes a una publicación por correo electrónico :e-mail:.
     new_user_of_the_month:
       name: "Usuario nuevo del mes"
       description: Contribuciones excepcionales en su primer mes
       long_description: |
-        Esta insignia se otorga para felicitar a dos nuevos usuarios cada mes por sus excelentes colaboraciones de acuerdo a la frecuencia con las que sus publicaciones reciben me gusta y quiénes se lo dan.
+        Esta medalla se otorga para felicitar a dos nuevos usuarios cada mes por sus excelentes colaboraciones de acuerdo a la frecuencia con las que sus publicaciones reciben me gusta y quiénes se lo dan.
     enthusiast:
       name: Entusiasta
       description: Visitó el sitio 10 días consecutivos
       long_description: |
-        Esta insignia se concede por visitarnos durante 10 días consecutivos. ¡Gracias por quedarte con nosotros más de una semana!
+        Esta medalla se concede por visitarnos durante 10 días consecutivos. ¡Gracias por quedarte con nosotros más de una semana!
     aficionado:
       name: Aficionado
       description: Visitó 100 días consecutivos
       long_description: |
-        Esta insignia se concede por visitarnos durante 100 días consecutivos. ¡Eso es más de tres meses!
+        Esta medalla se concede por visitarnos durante 100 días consecutivos. ¡Eso es más de tres meses!
     devotee:
       name: Devoto
       description: Visitó 365 días consecutivos
       long_description: |
-        Esta insignia se concede por visitarnos durante 365 días consecutivos. ¡Wow, un año entero!
-    badge_title_metadata: "insignia %{display_name} en %{site_title}"
+        Esta medalla se concede por visitarnos durante 365 días consecutivos. ¡Wow, un año entero!
+    badge_title_metadata: "%{display_name} medalla en %{site_title}"
   admin_login:
     success: "Correo electrónico enviado"
     errors:
@@ -3886,6 +3925,9 @@ es:
       restricted_to:
         one: '"%{tag_name}" está restringida a la categoría "%{category_names}"'
         other: '«%{tag_name}» está restringida a las siguientes categorías: %{category_names}'
+    required_tags_from_group:
+      one: "Debes incluir al menos %{count} etiqueta %{tag_group_name}."
+      other: "Debes incluir al menos %{count} etiquetas %{tag_group_name}."
   rss_by_tag: "Temas con la etiqueta %{tag}"
   finish_installation:
     congratulations: "¡Felicitaciones, has instalado Discourse!"
@@ -4163,4 +4205,4 @@ es:
   email_style:
     html_missing_placeholder: "La plantilla html debe incluir %{placeholder}"
   discord:
-    not_in_allowed_guild: 'La autenticación falló. No eres miembro de ningún clan de Discord permitido.'
+    not_in_allowed_guild: "La autenticación falló. No eres miembro de ningún clan de Discord permitido."

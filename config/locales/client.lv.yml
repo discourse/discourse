@@ -649,7 +649,7 @@ lv:
         name: "Vārds"
         edit: "Labot"
         security_key:
-          delete: 'Dzēst'
+          delete: "Dzēst"
       change_about:
         title: "Mainīt aprakstu par mani"
         error: "Mainot šo vērtību, notika kļūda."
@@ -672,9 +672,6 @@ lv:
         uploaded_avatar_empty: "Pievienot savu attēlu"
         upload_title: "Augšupielādēt savu attēlu"
         image_is_not_a_square: "Uzmanību: mēs apgriezām jūsu attēlu; platums un augstums nebija vienādi."
-      change_profile_background:
-        title: "Profila fons"
-        instructions: "Profila fons būs centrēts un ar noklusējuma platumu 850px."
       change_card_background:
         title: "Lietotāja kartiņas fons"
         instructions: "Fona attēli būs centrēti un ar noklusējuma platumu 590px."
@@ -869,6 +866,9 @@ lv:
         header_title: "profils, ziņas, grāmatzīmes un iestatījumi"
       title:
         title: "Virsraksts"
+        none: "(neviens)"
+      primary_group:
+        title: "Galvenā grupa"
         none: "(neviens)"
       filters:
         all: "Visi"
@@ -1642,6 +1642,8 @@ lv:
         image_upload_not_allowed_for_new_user: "Atvainojiet, jaunie lietotāji nevar augšuplādēt attēlus."
         attachment_upload_not_allowed_for_new_user: "Atvainojiet, jaunie lietotāji nevar augšuplādēt pielikumus."
         attachment_download_requires_login: "Atvainojiet, jums jābūt ienākušam forumā, lai varētu lejuplādēt pielikumus."
+      abandon_edit:
+        no_value: "Nē, paturēt"
       abandon:
         confirm: "Vai esat drošs, ka vēlaties atteikties no sava ieraksta?"
         no_value: "Nē, paturēt"
@@ -2253,7 +2255,6 @@ lv:
               staff: "Grupu īpašnieki un personāls"
           membership:
             automatic: Automātiski
-            trust_level: Uzticības līmenis
             trust_levels_title: "Uzticamības līmenis, ko automātiski piešķir visiem dalībniekiem pievienošanas brīdī:"
             trust_levels_none: "Nav"
             automatic_membership_email_domains: "Lietotāji, kas reģistrējas ar e-pasta domēnu, kas precīzi sakrīt ar kādu no šī saraksta, tiks automātiski pievienoti šai grupai:"
@@ -2929,6 +2930,8 @@ lv:
           search: "Meklēt"
           groups: "Grupas"
           dashboard: "Administrācijas panelis"
+        default_categories:
+          modal_yes: "Jā"
       badges:
         title: Žetoni
         new_badge: Jauns Žetons

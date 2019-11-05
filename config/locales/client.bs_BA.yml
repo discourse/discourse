@@ -929,7 +929,7 @@ bs_BA:
           add: "Novi Authenticator"
           default_name: "Moj Authenticator"
         security_key:
-          delete: 'Izbriši'
+          delete: "Izbriši"
       change_about:
         title: "Promjeni O meni"
         error: "Desila se greška prilikom promjene."
@@ -955,9 +955,6 @@ bs_BA:
         uploaded_avatar_empty: "Dodajte vašu sliku"
         upload_title: "Učitajte vašu sliku sa uređaja"
         image_is_not_a_square: "Upozorenje: morali smo izrezat vašu sliku; nije bila kvadratnog oblika."
-      change_profile_background:
-        title: "Pozadina profila"
-        instructions: "Pozadinske slike profila će biti centrirane i imati širinu od 850px."
       change_card_background:
         title: "Pozadina Korisničke kartice"
         instructions: "Pozadinske slike će biti centrirane i imati standard širinu od 590 pixela."
@@ -1207,6 +1204,9 @@ bs_BA:
         header_title: "profil, poruke, zabilješke i preference."
       title:
         title: "Naslov"
+        none: "(ništa)"
+      primary_group:
+        title: "Primary Group"
         none: "(ništa)"
       filters:
         all: "Sve"
@@ -1535,7 +1535,6 @@ bs_BA:
       link_description: "ubaci opis linka"
       link_dialog_title: "Unesi Link"
       link_optional_text: "naslov neobavezan"
-      link_url_placeholder: "https://example.com"
       quote_title: "Blok Citat"
       quote_text: "Citat u bloku"
       code_title: "Formatiran Tekst"
@@ -2253,6 +2252,9 @@ bs_BA:
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
+      abandon_edit:
+        no_value: "Ne, sačuvaj"
+        no_save_draft: "Ne,spasi skicu"
       abandon:
         confirm: "Da li ste sigurni da želite otkazati vaš post?"
         no_value: "Ne, sačuvaj"
@@ -2399,7 +2401,6 @@ bs_BA:
       tags_allowed_tags: "Ograničite ove oznake na ovu kategoriju:"
       tags_allowed_tag_groups: "Ograničite ove grupe oznaka na ovu kategoriju:"
       tags_placeholder: "(Opcionalno) lista dozvoljenih oznaka"
-      tags_tab_description: "Oznake i grupe oznaka koje su ovdje navedene bit će dostupne samo u ovoj kategoriji i drugim kategorijama koje ih također navode. Oni neće biti dostupni za upotrebu u drugim kategorijama."
       tag_groups_placeholder: "(Opcionalno) lista dozvoljenih grupa oznaka"
       manage_tag_groups_link: "Upravljajte grupama oznaka ovdje."
       allow_global_tags_label: "Takođe dozvolite druge oznake"
@@ -3025,7 +3026,6 @@ bs_BA:
               public: "Svatko"
           membership:
             automatic: Automatsko
-            trust_level: Nivo povjerenja
             trust_levels_title: "Razina povjerenja je automatski dodijeljena članovima kada su postavljeni: "
             trust_levels_none: "Ništa"
         name_placeholder: "Ime grupe, bez razmaka, ista pravila kao za korisničko ime"
@@ -4013,6 +4013,8 @@ bs_BA:
           dashboard: "Dashboard"
         secret_list:
           invalid_input: "Polja za unos ne mogu biti prazna ili sadrže znak vertikalne trake."
+        default_categories:
+          modal_yes: "Da"
       badges:
         title: Bedž
         new_badge: Novi Bedž

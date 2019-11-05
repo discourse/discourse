@@ -9,8 +9,8 @@ ja:
   js:
     number:
       format:
-        separator: "。"
-        delimiter: "、"
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: "%n %u"
@@ -78,6 +78,10 @@ ja:
           other: "%{count}時間前"
         x_days:
           other: "%{count}日前"
+        x_months:
+          other: "%{count}ヶ月前"
+        x_years:
+          other: "%{count}年前"
       later:
         x_days:
           other: "%{count}日後"
@@ -201,6 +205,7 @@ ja:
       other: "{{count}}文字"
     related_messages:
       title: "関連メッセージ"
+      see_all: '@%{username}からの<a href="%{path}">全てのメッセージ</a>を見る'
     suggested_topics:
       title: "関連トピック"
       pm_title: "他のメッセージ"
@@ -271,6 +276,8 @@ ja:
     banner:
       close: "バナーを閉じる。"
       edit: "このバナーを編集 >>"
+    pwa:
+      install_banner: "<a href>このデバイスに%{title}をインストール</a>しますか？"
     choose_topic:
       none_found: "トピックが見つかりませんでした。"
       title:
@@ -285,11 +292,15 @@ ja:
       order_by: "順"
       in_reply_to: "こちらへの回答"
       explain:
+        subtotal: "小計"
         total: "合計"
+        trust_level_bonus:
+          name: "トラストレベル"
       claim:
         title: "トピックを要請する"
       unclaim:
         help: "この要請を削除する"
+      awaiting_approval: "承認待ち"
       delete: "削除する"
       settings:
         saved: "保存しました"
@@ -322,6 +333,7 @@ ja:
           other: "{{count}}%無投票"
       topics:
         topic: "トピック"
+        reported_by: "報告者："
         deleted: "[デリートされたトピック]"
         original: "(もとのトピック)"
         details: "詳細"
@@ -770,7 +782,7 @@ ja:
         enforced_notice: "このサイトにアクセスするには2段階認証を有効にする必要があります。"
         edit: "編集"
         security_key:
-          delete: '削除する'
+          delete: "削除する"
       change_about:
         title: "プロフィールを変更"
         error: "変更中にエラーが発生しました。"
@@ -795,9 +807,6 @@ ja:
         uploaded_avatar_empty: "カスタム画像を追加"
         upload_title: "画像をアップロード"
         image_is_not_a_square: "警告: アップロードされた画像は高さと幅が違うため切り落されました。"
-      change_profile_background:
-        title: "プロフィールの背景画像"
-        instructions: "プロフィールの背景画像は、幅850pxで中央揃えになります"
       change_card_background:
         title: "ユーザーカードの背景画像"
         instructions: "背景画像は、幅590pxで中央揃えになります"
@@ -1011,6 +1020,9 @@ ja:
       title:
         title: "肩書き"
         none: "（なし）"
+      primary_group:
+        title: "プライマリーグループ"
+        none: "（なし）"
       filters:
         all: "すべて"
       stream:
@@ -1203,6 +1215,12 @@ ja:
       default_header_text: 選択...
       no_content: 一致する項目が見つかりませんでした
       filter_placeholder: 検索...
+      filter_placeholder_with_any: 検索 または 新規作成
+      create: "作成:'{{content}}'"
+      max_content_reached:
+        other: "{{count}}アイテムまで選択できます。"
+      min_content_not_reached:
+        other: "少なくとも{{count}}アイテムを選択してください。"
     date_time_picker:
       from: 発信元
       to: 宛先
@@ -1835,6 +1853,8 @@ ja:
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
         attachment_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザはファイルの添付ができません。"
         attachment_download_requires_login: "ファイルをダウンロードするには、ログインする必要があります"
+      abandon_edit:
+        no_value: "いいえ、保持します"
       abandon:
         confirm: "編集中の投稿は失われてしまいます。本当によろしいですか？"
         no_value: "いいえ"
@@ -2345,6 +2365,7 @@ ja:
         private_messages_short: "メッセージ"
         private_messages_title: "メッセージ"
         mobile_title: "モバイル"
+        uploads: "アップロード"
         backups: "バックアップ"
         traffic_short: "トラフィック"
         traffic: "Application web requests"
@@ -2396,7 +2417,6 @@ ja:
               staff: "グループオーナーとスタッフ"
           membership:
             automatic: 自動
-            trust_level: トラストレベル
             trust_levels_title: "メンバーが追加されたときにメンバーに自動で付与されるトラストレベル："
             trust_levels_none: "なし"
             automatic_membership_email_domains: "このリストにあるものと完全に一致するメー​​ルドメインで登録したユーザーは、自動的にこのグループに追加されます。"
@@ -2487,7 +2507,9 @@ ja:
           label: "アップロード"
           title: "このインスタンスにバックアップをアップロード"
           uploading: "アップロード中..."
-          error: "ファイル '{{filename}}'アップロードエラー: {{message}}"
+          uploading_progress: "アップロード中... {{progress}}%"
+          success: "'{{filename}}'のアップロードに成功しました。このファイルは現在処理中で、リストに表示されるまでに最大数分程度かかることがあります。"
+          error: "ファイル '{{filename}}'のアップロード中にエラーが発生しました: {{message}}"
         operations:
           is_running: "バックアップ作業を実行中..."
           failed: "{{operation}}失敗しました。ログをチェックください。"
@@ -2499,6 +2521,7 @@ ja:
             label: "バックアップ"
             title: "バックアップを行います"
             confirm: "新しくバックアップを行ってもよろしいですか？"
+            without_uploads: "はい（アップロードデータを含めない）"
           download:
             label: "ダウンロード"
             title: "ダウンロードリンクをメールで送る"
@@ -2560,6 +2583,7 @@ ja:
           settings: "設定"
           preview: "プレビュー"
           collapse: 折りたたむ
+          uploads: "アップロード"
           upload: "アップロード"
           installed: "インストール済み"
           install_popular: "人気"
@@ -3052,6 +3076,8 @@ ja:
           search: "検索"
           groups: "グループ"
           dashboard: "ダッシュボード"
+        default_categories:
+          modal_yes: "はい"
       badges:
         title: バッジ
         new_badge: 新しいバッジ

@@ -47,7 +47,7 @@ es:
           other: "< %{count} s"
         x_seconds:
           one: "%{count}s"
-          other: "%{count} s"
+          other: "%{count}s"
         less_than_x_minutes:
           one: "< %{count}m"
           other: "< %{count} min"
@@ -96,11 +96,11 @@ es:
           one: "hace %{count} día"
           other: "hace %{count} días"
         x_months:
-          one: "Hace %{count} meses"
-          other: "Hace %{count} meses"
+          one: "hace %{count} mes"
+          other: "hace %{count} meses"
         x_years:
-          one: "Hace %{count} años"
-          other: "Hace %{count} años"
+          one: "hace %{count} año"
+          other: "hace %{count} años"
       later:
         x_days:
           one: "%{count} día después"
@@ -330,7 +330,7 @@ es:
         score_to_hide: "Puntuación mínima para ocultar publicación"
         take_action_bonus:
           name: "acción tomada"
-          title: "cuando un miembro del staff decide tomar acciones, se le otorga un bono al reporte"
+          title: "Cuando un miembro del staff decide tomar acciones, se le otorga un bono al reporte."
         user_accuracy_bonus:
           name: "precisión del usuario"
           title: "Los usuarios con los que se ha coincidido en reportes anteriores reciben puntos extra."
@@ -706,7 +706,7 @@ es:
       trust_level: "NC"
       read_time: "tiempo de lectura"
       topics_entered: "temas ingresados"
-      post_count: "# publicaciones"
+      post_count: "# posts"
       confirm_delete_other_accounts: "¿Estás seguro de que quieres eliminar estas cuentas?"
       powered_by: "usando <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiado"
@@ -917,14 +917,14 @@ es:
           default_name: "Mi autenticador"
         security_key:
           register: "Registrar"
-          title: 'Claves de seguridad'
+          title: "Claves de seguridad"
           add: "Clave de seguridad de registro"
           default_name: "Clave de seguridad principal"
           not_allowed_error: "El proceso de registro de clave de seguridad fue cancelado o se agotó el tiempo."
           already_added_error: "Ya registraste esta clave de seguridad. No tienes que registrarla de nuevo."
-          edit: 'Editar clave de seguridad'
-          edit_description: 'Nombre de la clave de seguridad'
-          delete: 'Eliminar'
+          edit: "Editar clave de seguridad"
+          edit_description: "Nombre de la clave de seguridad"
+          delete: "Eliminar"
       change_about:
         title: "Cambiar «Acerca de mí»"
         error: "Ha ocurrido un error al cambiar este valor."
@@ -951,8 +951,8 @@ es:
         upload_title: "Sube tu foto"
         image_is_not_a_square: "Advertencia: hemos recortado tu imagen porque la anchura y la altura no eran iguales."
       change_profile_background:
-        title: "Fondo de perfil"
-        instructions: "Los fondos de perfil estarán centrados y tendrán una anchura predeterminada de 850 px."
+        title: "Encabezado del perfil"
+        instructions: "Por defecto, los encabezados de perfil estarán centrados y tendrán una anchura de 1110px."
       change_card_background:
         title: "Fondo de tarjeta de usuario"
         instructions: "Las imágenes de fonodo estarán centradas y tendrán una anchura predeterminada de 590 px."
@@ -1040,7 +1040,7 @@ es:
         contextual: "Contenido nuevo en la página"
       like_notification_frequency:
         title: "Notificar cuando me dan me gusta"
-        always: "Cada vez que mi publicación reciba un me gusta"
+        always: "Siempre"
         first_time_and_daily: "Cuando mi publicación reciba el primer me gusta y luego diariamente si recibe más"
         first_time: "Cuando mi publicación reciba el primer me gusta"
         never: "Nunca"
@@ -1091,7 +1091,7 @@ es:
         search: "escribe para buscar invitaciones..."
         title: "Invitaciones"
         user: "Usuario invitado"
-        sent: "Enviadas"
+        sent: "Enviada"
         none: "Sin invitaciones para mostrar."
         truncated:
           one: "Mostrando la primera invitación."
@@ -1119,7 +1119,7 @@ es:
         time_read: "Tiempo de lectura"
         days_visited: "Días visitados"
         account_age_days: "Antigüedad de la cuenta en días"
-        create: "Enviar una Invitación"
+        create: "Enviar una invitación"
         generate_link: "Copiar enlace de invitación"
         link_generated: "¡Enlace de invitación generado satisfactoriamente!"
         valid_for: "El enlace de invitación solo es válido para esta dirección de correo electrónico: %{email}"
@@ -1172,9 +1172,9 @@ es:
         top_topics: "Temas destacados"
         no_topics: "No hay temas aún."
         more_topics: "Más temas"
-        top_badges: "Insignias destacadas"
-        no_badges: "Todavía no hay insignias."
-        more_badges: "Más insignias"
+        top_badges: "Medallas destacadas"
+        no_badges: "Todavía no hay medallas."
+        more_badges: "Más medallas"
         top_links: "Enlaces destacados"
         no_links: "No hay enlaces aún."
         most_liked_by: "Recibió mas me gusta de"
@@ -1193,6 +1193,9 @@ es:
         header_title: "perfil, mensajes, marcadores y preferencias"
       title:
         title: "Título"
+        none: "(ninguno)"
+      primary_group:
+        title: "Grupo principal"
         none: "(ninguno)"
       filters:
         all: "Todos"
@@ -1265,7 +1268,7 @@ es:
       hide_forever: "no, gracias"
       hidden_for_session: "Vale, te preguntaremos mañana. Recuerda que también puedes usar el botón «Iniciar sesión» para crear una cuenta en cualquier momento."
       intro: "¡Hola! Parece que estás disfrutando la discusión, pero no has creado una cuenta todavía."
-      value_prop: "Cuando cras una cuenta, recordamos exactamente lo que has leído de modo que puedas retomar lo que leías justo donde lo dejaste. También recibes notificaciones, por aquí y por correo electrónico, cuando alguien responde a tus mensajes. ¡También puedes darle «me gusta» a los mensajes para compartir amor! :heartpulse:"
+      value_prop: "Cuando creas una cuenta, recordamos exactamente lo que has leído de modo que puedas retomar lo que leías justo donde lo dejaste. También recibes notificaciones, por aquí y por correo electrónico, cuando alguien responde a tus mensajes. ¡También puedes darle «me gusta» a los mensajes para compartir amor! :heartpulse:"
     summary:
       enabled_description: "Estás viendo un resumen de este tema: las publicaciones más interesantes de acuerdo a la comunidad."
       description: "Hay <b>{{replyCount}}</b> respuestas."
@@ -1298,10 +1301,10 @@ es:
     forgot_password:
       title: "Restablecer contraseña"
       action: "Olvidé mi contraseña"
-      invite: "Ingresa tu nombre de usuario o tu dirección de correo electrónico, y te enviaremos un correo para reestablecer tu contraseña."
+      invite: "Ingresa tu nombre de usuario o tu dirección de correo electrónico, y te enviaremos un correo electrónico para restablecer tu contraseña."
       reset: "Restablecer contraseña"
-      complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con las instrucciones para reestablecer tu contraseña."
-      complete_email: "Si una cuenta coincide con <b>%{email}</b>, en breve deberías recibir un correo electrónico con las instrucciones para reestablecer tu contraseña."
+      complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con las instrucciones para restablecer tu contraseña."
+      complete_email: "Si una cuenta coincide con <b>%{email}</b>, en breve deberías recibir un correo electrónico con las instrucciones para restablecer tu contraseña."
       complete_username_found: "Encontramos una cuenta que coincide con el usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con instrucciones para restablecer tu contraseña."
       complete_email_found: "Encontramos una cuenta que coincide con <b>%{email}</b>, deberías recibir en breve un correo electrónico con instrucciones para restablecer tu contraseña."
       complete_username_not_found: "No hay ninguna cuenta que coincida con el nombre de usuario <b>%{username}</b>"
@@ -1358,7 +1361,7 @@ es:
       omniauth_disallow_totp: "Tu cuenta tiene activada la autenticación en dos pasos. Por favor, ingresa usando tu contraseña."
       resend_title: "Volver a enviar el correo electrónico de activación"
       change_email: "Cambiar dirección de correo electrónico"
-      provide_new_email: "Ingresa una dirección de correo electrónico nueva y te reenviaremos el correo de confirmación."
+      provide_new_email: "Ingresa una dirección de correo electrónico nueva y te reenviaremos el correo electrónico de confirmación."
       submit_new_email: "Actualizar dirección de correo electrónico"
       sent_activation_email_again: "Te hemos enviado otro correo electrónico de activación a <b>{{currentEmail}}</b>. Podría tardar algunos minutos en llegar; asegúrate de revisar la carpeta de correo no deseado."
       sent_activation_email_again_generic: "Te hemos enviado otro correo  electrónico de activación. Podría tardar algunos minutos en llegar. Asegúrate de revisar la carpeta de correo no deseado."
@@ -1540,7 +1543,7 @@ es:
       link_description: "Ingresa la descripción del enlace aquí"
       link_dialog_title: "Insertar hipervínculo"
       link_optional_text: "título opcional"
-      link_url_placeholder: "https://ejemplo.com"
+      link_url_placeholder: "Copia una URL o escribe para buscar temas"
       quote_title: "Cita"
       quote_text: "Cita"
       code_title: "Texto preformateado"
@@ -1657,7 +1660,7 @@ es:
         posted: "nueva publicación"
         moved_post: "publicación movida"
         linked: "enlazado"
-        granted_badge: "insignia concedida"
+        granted_badge: "medalla concedida"
         invited_to_topic: "invitado al tema"
         group_mentioned: "grupo mencionado"
         group_message_summary: "nuevos mensajes grupales"
@@ -1721,7 +1724,7 @@ es:
         in_group:
           label: En el grupo
         with_badge:
-          label: Con la insignia
+          label: Con la medalla
         with_tags:
           label: Etiquetado
         filters:
@@ -1752,7 +1755,7 @@ es:
           count:
             label: Número mínimo de publicaciones
           time:
-            label: Publicado
+            label: Publicó
             before: antes de
             after: después de
     hamburger_menu: "ir a otra lista de temas o categoría"
@@ -2093,7 +2096,7 @@ es:
         to_topic_username: "Ingresaste un nombre de usuario. Le enviaremos una notificación con un enlace de invitación a este tema."
         to_username: "Ingresa el nombre de usuario de la persona a la que quieres invitar. Le enviaremos una notificación con un enlace de invitación a este tema."
         email_placeholder: "nombre@ejemplo.com"
-        success_email: "Hemos enviado una invitación por correo electrónico a <b>{{emailOrUsername}}</b>. Te notificaremos cuando cuando esta invitación sea aceptada. Puedes consultar el estado de tus invitaciones en las pestaña invitaciones en tu perfil de usuario."
+        success_email: "Hemos enviado una invitación por correo electrónico a <b>{{emailOrUsername}}</b>. Te notificaremos cuando esta invitación sea aceptada. Puedes consultar el estado de tus invitaciones en las pestaña «Invitaciones» en tu perfil de usuario."
         success_username: " Hemos invitado a ese usuario a participar en este tema."
         error: "Lo sentimos, no pudimos invitar a esa persona. ¿Tal vez ya fue invitada antes? (El número de invitaciones es limitado)"
         success_existing_email: "Ya existe un usuario con el correo <b>{{emailOrUsername}}</b>. Invitamos a ese usuario a participar en este tema."
@@ -2231,6 +2234,11 @@ es:
         image_upload_not_allowed_for_new_user: "Lo sentimos, los usuarios nuevos no pueden subir imágenes."
         attachment_upload_not_allowed_for_new_user: "Lo sentimos, los usuarios nuevos no pueden subir archivos adjuntos."
         attachment_download_requires_login: "Lo sentimos, necesitas haber iniciado sesión para descargar archivos adjuntos."
+      abandon_edit:
+        confirm: "¿Estás seguro de que quieres descartar tus cambios?"
+        no_value: "No, permanecer"
+        no_save_draft: "No, guardar borrador"
+        yes_value: "Sí, descartar edición"
       abandon:
         confirm: "¿Estás seguro de que deseas abandonar tu publicación?"
         no_value: "No, permanecer"
@@ -2275,7 +2283,7 @@ es:
         rebake: "Reconstruir HTML"
         unhide: "Deshacer ocultar"
         change_owner: "Cambiar dueño"
-        grant_badge: "Conceder insignia"
+        grant_badge: "Conceder medalla"
         lock_post: "Bloquear publicación"
         lock_post_description: "impedir que el usuario que realizó esta publicación la edite"
         unlock_post: "Desbloquear publicación"
@@ -2373,10 +2381,14 @@ es:
       tags_allowed_tags: "Restringir estas etiquetas a esta categoría:"
       tags_allowed_tag_groups: "Restringir estos grupos de etiquetas a esta categoría:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
-      tags_tab_description: "Las etiquetas y grupos de etiquetas que se especifican aquí solo se podrán usar en esta categoría y otras categorías que también las tengan especificadas. No estarán disponibles en otras categorías."
+      tags_tab_description: "Las etiquetas y grupos de etiquetas arriba especificadas solo estarán disponibles en esta categoría y en las otras categorías que igualmente lo especifiquen. No se permitirá su uso en otras categorías."
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       manage_tag_groups_link: "Gestiona los grupos de etiquetas aquí."
       allow_global_tags_label: "Permitir también otras etiquetas"
+      tag_group_selector_placeholder: "(Opcional) Grupo de etiquetas"
+      required_tag_group_description: "Requiere temas nuevos para tener etiquetas de un grupo de etiquetas:"
+      min_tags_from_required_group_label: 'Número de etiquetas:'
+      required_tag_group_label: "Grupo de etiquetas:"
       topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"
       delete: "Eliminar categoría"
       create: "Crear categoría"
@@ -2391,7 +2403,7 @@ es:
       topic: "tema de la categoría"
       logo: "Imagen (logo) para la categoría"
       background_image: "Imagen de fondo de la categoría"
-      badge_colors: "Colores de las insignias"
+      badge_colors: "Colores de las medallas"
       background_color: "Color de fondo"
       foreground_color: "Colores de primer plano"
       name_placeholder: "Una o dos palabras máximo"
@@ -2422,7 +2434,7 @@ es:
       sort_order: "Ordenar lista de temas:"
       default_view: "Orden por defecto:"
       default_top_period: "Período por defecto para estar en la parte superior:"
-      allow_badges_label: "Permitir que se concedan insignias en esta categoría"
+      allow_badges_label: "Permitir que se concedan medallas en esta categoría"
       edit_permissions: "Editar permisos"
       reviewable_by_group: "Además del staff, las publicaciones y los reportes en esta categoría también pueden ser revisados por:"
       review_group_name: "nombre del grupo"
@@ -2565,10 +2577,10 @@ es:
         high {con una proporción de me gusta por publicación elevadísima}
         other {}}
     original_post: "Publicación original"
-    views: "Visitas"
+    views: "Vistas"
     views_lowercase:
       one: "visita"
-      other: "visitas"
+      other: "vistas"
     replies: "Respuestas"
     views_long:
       one: "este tema se ha visto %{count} vez"
@@ -2638,7 +2650,7 @@ es:
           other: "{{categoryName}} ({{count}})"
         help: "temas recientes en la categoría {{categoryName}}"
       top:
-        title: "Destacado"
+        title: "Destacados"
         help: "los temas con más actividad en el último año, mes, semana o día"
         all:
           title: "Siempre"
@@ -2739,22 +2751,22 @@ es:
     badges:
       earned_n_times:
         one: "Ganó esta medalla %{count} vez"
-        other: "Insignia ganada %{count} veces"
-      granted_on: "Concedido el %{date}"
-      others_count: "Otras personas con esta insignia (%{count})"
-      title: Insignias
-      allow_title: "Puedes usar esta insignia como título"
-      multiple_grant: "Puedes ganar esta insignia varias veces"
+        other: "Medalla ganada %{count} veces"
+      granted_on: "Concedido hace %{date}"
+      others_count: "Otras personas con esta medalla (%{count})"
+      title: Medallas
+      allow_title: "Puedes usar esta medalla como título"
+      multiple_grant: "Puedes ganar esta medalla varias veces"
       badge_count:
         one: "%{count} medalla"
-        other: "%{count} insignias"
+        other: "%{count} medallas"
       more_badges:
         one: "+%{count} Más"
         other: "+%{count} Más"
       granted:
         one: "%{count} concedido"
         other: "%{count} concedidas"
-      select_badge_for_title: Seleccionar una insignia para utilizar como tu título
+      select_badge_for_title: Selecciona una medalla para utilizar como tu título
       none: "(ninguna)"
       successfully_granted: "%{badge} concedida exitosamente a %{username}"
       badge_grouping:
@@ -2842,6 +2854,7 @@ es:
         parent_tag_description: "Las etiquetas de este grupo no se pueden utilizar a menos que la etiqueta primaria esté presente. "
         one_per_topic_label: "Limitar las etiquetas de este grupo a utilizarse solo una vez por tema"
         new_name: "Nuevo grupo de etiquetas"
+        name_placeholder: "Nombre del grupo de etiquetas:"
         save: "Guardar"
         delete: "Eliminar"
         confirm_delete: "¿Estás seguro de que quieres eliminar este grupo de etiquetas?"
@@ -3000,7 +3013,7 @@ es:
               title: "¿Quién puede ver este grupo?"
               public: "Todos"
               logged_on_users: "Usuarios que hayan iniciado sesión"
-              members: "Propietarios y miembros del grupo"
+              members: "Propietarios de grupos, miembros"
               staff: "Propietarios del grupo y staff"
               owners: "Propietarios del grupo"
               description: "Los administradores pueden ver todos los grupos."
@@ -3010,8 +3023,8 @@ es:
             publish_read_state: "Publicar confirmaciones de lectura en los mensajes grupales"
           membership:
             automatic: Automático
-            trust_level: Nivel de confianza
             trust_levels_title: "Nivel de confianza concedido automáticamente a miembros cuando son añadidos:"
+            effects: Efectos
             trust_levels_none: "Ninguno"
             automatic_membership_email_domains: "Los usuarios que se registren con un dominio de correo electrónico que esté en esta lista se añadirán automáticamente a este grupo:"
             automatic_membership_retroactive: "Aplicar la misma regla de dominio de correo electrónico a los usuarios registrados existentes"
@@ -3044,6 +3057,8 @@ es:
         title: "API"
         key: "Clave de API"
         created: Creado
+        last_used: Usada por última vez
+        never_used: (nunca)
         generate: "Generar clave de API"
         regenerate: "Regenerar"
         revoke: "Revocar"
@@ -3334,7 +3349,7 @@ es:
           public_key: "Conceda la siguiente clave pública de acceso al repositorio:"
           install: "Instalar"
           installed: "Instalado"
-          install_popular: "Popular"
+          install_popular: "Destacados"
           install_upload: "Desde tu dispositivo"
           install_git_repo: "Desde un repositorio git"
           install_create: "Crear nuevo"
@@ -3445,8 +3460,8 @@ es:
           heading: "Personalizar estilo de correo electrónico"
           html: "Plantilla HTML"
           css: "CSS"
-          reset: "Reestablecer ajustes predeterminados"
-          reset_confirm: "¿Estás seguro de que deseas reestablecer los ajustes predeterminados de %{fieldName} y perder todos los cambios?"
+          reset: "Restablecer ajustes predeterminados"
+          reset_confirm: "¿Estás seguro de que deseas restablecer los ajustes predeterminados de %{fieldName} y perder todos los cambios?"
           save_error_with_reason: "Sus cambios no se guardaron. %{error}"
           instructions: "Personalizar la plantilla en la que se crean todos los correos html y el estilo utilizando CSS."
       email:
@@ -3552,7 +3567,7 @@ es:
           staff_user: "Usuario"
           target_user: "Usuario destino"
           subject: "Sujeto"
-          when: "Cuando"
+          when: "Cuándo"
           context: "Contexto"
           details: "Detalles"
           previous_value: "Anterior"
@@ -3574,8 +3589,8 @@ es:
             unsuspend_user: "desbloquear usuario"
             removed_suspend_user: "suspender usuario (eliminado)"
             removed_unsuspend_user: "desbloquear usuario (eliminado)"
-            grant_badge: "conceder insignia"
-            revoke_badge: "retirar insignia"
+            grant_badge: "conceder medalla"
+            revoke_badge: "retirar medalla"
             check_email: "comprobar correo electrónico"
             delete_topic: "eliminar tema"
             recover_topic: "recuperar tema"
@@ -3616,9 +3631,9 @@ es:
             topic_published: "tema publicado"
             post_approved: "publicación aprobada"
             post_rejected: "publicación rechazada"
-            create_badge: "crear insignia"
-            change_badge: "cambiar insignia"
-            delete_badge: "eliminar insignia"
+            create_badge: "crear medalla"
+            change_badge: "cambiar medalla"
+            delete_badge: "eliminar medalla"
             merge_user: "fusionar usuario"
             entity_export: "entidad exportadora"
             change_name: "cambiar nombre"
@@ -3646,7 +3661,7 @@ es:
           url: "URL"
           domain: "Dominio"
         screened_ips:
-          title: "direcciones IP bloqueadas"
+          title: "Direcciones IP bloqueadas"
           description: 'Direcciones IP que están siendo vigiladas. Usa «permitir» para añadir direcciones IP a lista blanca.'
           delete_confirm: "¿Estás seguro de que quieres quitar el bloqueo para %{ip_address}?"
           roll_up_confirm: "¿Estás seguro de que quieres agrupar las direcciones IP bloqueadas vistas con frecuencia en subredes?"
@@ -3684,7 +3699,7 @@ es:
         show_words: "mostrar palabras"
         one_word_per_line: "Una palabra por línea"
         download: Descargar
-        clear_all: Eliminar todo
+        clear_all: Limpiar todo
         clear_all_confirm_block: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «bloquear»?"
         clear_all_confirm_censor: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «censurar»?"
         clear_all_confirm_flag: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «reportar»?"
@@ -3713,7 +3728,7 @@ es:
           upload_successful: "Subida completada. Las palabras se han agregado."
         test:
           button_label: "Prueba"
-          modal_title: "Prueba «%{action}» Palabras vigiladas"
+          modal_title: "Prueba '%{action}' Palabras Vigiladas"
           description: "Escribe el texto más abajo para buscar coincidencias con las palabras vigiladas"
           found_matches: "Coincidencias encontradas:"
           no_matches: "No se encontraron coincidencias"
@@ -3978,7 +3993,7 @@ es:
         none: "ninguno"
       site_settings:
         title: "Ajustes del sitio"
-        no_results: ".No se encontró ningún resultado"
+        no_results: "No se encontró ningún resultado."
         more_than_30_results: "Hay más de 30 resultados. Por favor, refina tu búsqueda o selecciona una categoría."
         clear_filter: "Quitar filtros"
         add_url: "añadir URL"
@@ -4023,48 +4038,52 @@ es:
           dashboard: "Dashboard"
         secret_list:
           invalid_input: "Los campos no pueden estar vacíos o contener el carácter de barra vertical."
+        default_categories:
+          modal_description: "¿Quieres aplicar este cambio retroactivamente? Esto cambiará las preferencias de %{count} usuarios existentes."
+          modal_yes: "Sí"
+          modal_no: "No, solo aplicar el cambio a partir de ahora"
       badges:
-        title: Insignias
-        new_badge: Nueva insignia
+        title: Medallas
+        new_badge: Nueva medalla
         new: Nuevo
         name: Nombre
-        badge: Insignia
+        badge: Medalla
         display_name: Nombre que se muestra
         description: Descripción
         long_description: Descripción completa
-        badge_type: Tipo de insignia
+        badge_type: Tipo de medalla
         badge_grouping: Grupo
         badge_groupings:
-          modal_title: Grupos de insignias
+          modal_title: Grupos de medallas
         granted_by: Concedido por
         granted_at: Concedido en
         reason_help: (Enlace a una publicación o tema)
         save: Guardar
         delete: Eliminar
-        delete_confirm: "¿Estás seguro de que quieres eliminar esta insignia?"
+        delete_confirm: "¿Estás seguro de que quieres eliminar esta medalla?"
         revoke: Revocar
         reason: Motivo
         expand: Expandir &hellip;
-        revoke_confirm: "¿Estás seguro de que quieres revocar esta insignia?"
-        edit_badges: Editar insignias
-        grant_badge: Condecer insignia
-        granted_badges: Insignias concedidas
+        revoke_confirm: "¿Estás seguro de que quieres revocar esta medalla?"
+        edit_badges: Editar medallas
+        grant_badge: Conceder medalla
+        granted_badges: Medallas concedidas
         grant: Conceder
-        no_user_badges: "%{name} no ha recibido ninguna insignia."
-        no_badges: No hay insignias que puedan ser concedidas.
-        none_selected: "Selecciona una insignia para empezar"
-        allow_title: Permitir que se use la insignia como título
+        no_user_badges: "%{name} no ha recibido ninguna medalla."
+        no_badges: No hay medallas que puedan ser concedidas.
+        none_selected: "Selecciona una medalla para empezar"
+        allow_title: Permitir que se use la medalla como título
         multiple_grant: Puede ser concedida varias veces
-        listable: Mostrar insignia en la página pública de insignias
-        enabled: Activar insignia
+        listable: Mostrar medalla en la página pública de medallas
+        enabled: Activar medalla
         icon: Icono
         image: Imagen
         icon_help: "ingresa un nombre de icono de Font Awesome (usa el prefijo 'far-' para iconos regulares y 'fab-' para iconos de marca)"
         image_help: "Ingresa la URL de la imagen (sobrescribe el campo del icono si ambos están configurados)"
-        query: Consulta de insignia (SQL)
+        query: Consulta de medalla (SQL)
         target_posts: Publicaciones destino de la consulta
         auto_revoke: Ejecutar diariamente la consulta de revocación
-        show_posts: Mostrar la publicación por la cual se concedió la insignia en la página de insignias
+        show_posts: Mostrar la publicación por la cual se concedió la medalla en la página de medallas
         trigger: Disparador
         trigger_type:
           none: "Actualizar diariamente"
@@ -4074,18 +4093,18 @@ es:
           user_change: "Cuando se edita o se crea un usuario"
           post_processed: "Después de procesar una publicación"
         preview:
-          link_text: "Vista previa de las insignias concedidas"
+          link_text: "Vista previa de las medallas concedidas"
           plan_text: "Vista previa con el plan de ejecución de tu consulta"
-          modal_title: "Vista previa de la consulta para la insignias"
+          modal_title: "Vista previa de la consulta para la medalla"
           sql_error_header: "Ocurrió un error con la consulta."
-          error_help: "Mira los siguientes enlaces para ayudarte con las solicitudes de las insignias"
+          error_help: "Mira los siguientes enlaces para ayudarte con las solicitudes de las medallas"
           bad_count_warning:
             header: "¡ADVERTENCIA!"
-            text: "Faltan algunas muestras muestras de concesiones. Esto ocurre cuando la solicitud de la insignia devuelve ID de usuarios o de publicaciones que no existen. Esto podría causar resultados inesperados más tarde - por favor, revisa de nuevo tu solicitud."
-          no_grant_count: "No hay insignias para asignar."
+            text: "Faltan algunas muestras muestras de concesiones. Esto ocurre cuando la solicitud de la medalla devuelve ID de usuarios o de publicaciones que no existen. Esto podría causar resultados inesperados más tarde - por favor, revisa de nuevo tu solicitud."
+          no_grant_count: "No hay medallas para asignar."
           grant_count:
             one: "<b>%{count}</b> medalla para conceder."
-            other: "<b>%{count}</b> insignias para conceder."
+            other: "<b>%{count}</b> medalla para conceder."
           sample: "Muestra:"
           grant:
             with: "<span class=\"username\">%{username}</span>"
@@ -4093,9 +4112,9 @@ es:
             with_post_time: "<span class=\"username\">%{username}</span> por la publicación en %{link} a las <span class=\"time\">%{time}</span>"
             with_time: "<span class=\"username\">%{username}</span> a las <span class=\"time\">%{time}</span>"
         badge_intro:
-          title: "Selecciona una insignia existente o crea una para empezar"
-          what_are_badges_title: "¿Qué son las insignias?"
-          badge_query_examples_title: "Ejemplos de consultas de insignias"
+          title: "Selecciona una medalla existente o crea una para empezar"
+          what_are_badges_title: "¿Qué son las medallas?"
+          badge_query_examples_title: "Ejemplos de consultas de medallas"
       emoji:
         title: "Emoji"
         help: "Añade emojis nuevos que estarán disponibles para todos. (CONSEJO: arrasta varios archivos a la vez)"

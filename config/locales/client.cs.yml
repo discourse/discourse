@@ -775,7 +775,7 @@ cs:
         oauth_enabled_warning: "Upozorňujeme, že možnost přihlásit se pomocí účtu ze sociální sítě bude vypnuta, jakmila bude na vašem účtu povolena dvoufaktorová autentizace."
         edit: "Upravit"
         security_key:
-          delete: 'Smazat'
+          delete: "Smazat"
       change_about:
         title: "Změna o mně"
         error: "Došlo k chybě při pokusu změnit tuto hodnotu."
@@ -801,9 +801,6 @@ cs:
         uploaded_avatar_empty: "Přidat vlastní obrázek"
         upload_title: "Nahrát obrázek"
         image_is_not_a_square: "Varování: Ořízli jsme váš obrázek; šířka a délka nebyla stejná."
-      change_profile_background:
-        title: "Pozadí profilu"
-        instructions: "Pozadí profilu je zarovnáno doprostřed a má výchozí šířku 850px."
       change_card_background:
         title: "Pozadí uživatelské karty"
         instructions: "Obrázky pozadí jsou zarovnány a mají výchozí šířku 590px. "
@@ -1039,6 +1036,9 @@ cs:
         header_title: "profil, zprávy, záložky a nastavení"
       title:
         title: "Titul"
+        none: "(žádný)"
+      primary_group:
+        title: "Hlavní skupina"
         none: "(žádný)"
       filters:
         all: "Všechno"
@@ -1350,7 +1350,6 @@ cs:
       link_description: "sem vložte popis odkazu"
       link_dialog_title: "Vložit odkaz"
       link_optional_text: "volitelný popis"
-      link_url_placeholder: "https://example.com"
       quote_title: "Bloková citace"
       quote_text: "Bloková citace"
       code_title: "Ukázka kódu"
@@ -2018,6 +2017,8 @@ cs:
         image_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."
         attachment_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat přílohy."
         attachment_download_requires_login: "Omlouváme se, ale pro stáhnutí přílohy musíte být přihlášen."
+      abandon_edit:
+        no_value: "Nezahazovat"
       abandon:
         confirm: "Opravdu chcete svůj příspěvek zahodit?"
         no_value: "Nezahazovat"
@@ -2751,7 +2752,6 @@ cs:
               staff: "Vlastníci a redaktoři skupiny"
           membership:
             automatic: Automatické
-            trust_level: Věrohodnost
             trust_levels_title: "Automaticky přidělená věrohodnost členům když jsou přidáni: "
             trust_levels_none: "Žádná"
             automatic_membership_email_domains: "Uživatelé zaregistrovaní s emailem jehož doména se přesně shoduje s jednou z tohoto seznamu budou automaticky přidáni to této skupiny:"
@@ -3600,6 +3600,8 @@ cs:
           search: "Vyhledávání"
           groups: "Skupiny"
           dashboard: "Rozcestník"
+        default_categories:
+          modal_yes: "Ano"
       badges:
         title: Odznaky
         new_badge: Nový odznak

@@ -737,7 +737,7 @@ ko:
         edit: "수정"
         security_key:
           register: "등록하기"
-          delete: '삭제'
+          delete: "삭제"
       change_about:
         title: "내 소개 변경"
         error: "값을 바꾸는 중 에러가 발생했습니다."
@@ -762,9 +762,6 @@ ko:
         uploaded_avatar_empty: "커스텀 사진 추가"
         upload_title: "프로필 사진 업로드"
         image_is_not_a_square: "경고: 정사각형 이미지가 아니기 때문에 사진을 수정하였습니다."
-      change_profile_background:
-        title: "프로필 배경"
-        instructions: "프로필 배경은 가운데를 기준으로 표시되며 850px이 기본 가로 사이즈 입니다."
       change_card_background:
         title: "사용자 카드 배경"
         instructions: "배경 이미지는 가운데를 기준으로 표시되며 590px이 기본 가로 사이즈 입니다."
@@ -965,6 +962,9 @@ ko:
         header_title: "프로필, 메시지, 북마크 그리고 설정"
       title:
         title: "호칭"
+        none: "(없음)"
+      primary_group:
+        title: "주 그룹"
         none: "(없음)"
       filters:
         all: "전체"
@@ -1224,7 +1224,6 @@ ko:
       link_description: "링크 설명을 입력"
       link_dialog_title: "하이퍼링크 삽입"
       link_optional_text: "옵션 제목"
-      link_url_placeholder: "https://example.com"
       quote_title: "인용구"
       quote_text: "인용구"
       code_title: "코드 샘플"
@@ -1770,6 +1769,8 @@ ko:
         image_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 이미지를 업로드 하실 수 없습니다."
         attachment_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 파일 첨부를 업로드 하실 수 없습니다."
         attachment_download_requires_login: "죄송합니다. 첨부 파일을 받으려면 로그인이 필요합니다."
+      abandon_edit:
+        no_value: "아니요, 버리지 않습니다."
       abandon:
         confirm: "글 작성을 취소 하시겠습니까?"
         no_value: "아니오"
@@ -2405,7 +2406,6 @@ ko:
               staff: "그룹 소유자와 운영진"
           membership:
             automatic: 자동
-            trust_level: 신뢰도
             trust_levels_title: "멤버들이 추가되면 회원등급이 자동으로 부여됩니다:"
             trust_levels_none: "없음"
             automatic_membership_email_domains: "이 목록의 있는 항목과 사용자들이 등록한 이메일 도메인이 일치할때 이 그룹에 포함"
@@ -3237,6 +3237,8 @@ ko:
           dashboard: "대시보드"
         secret_list:
           invalid_input: "입력 필드는 비어 있거나 수직 막대 문자를 포함 할 수 없습니다."
+        default_categories:
+          modal_yes: "네"
       badges:
         title: 배지
         new_badge: 새 배지

@@ -716,7 +716,7 @@ ro:
         edit: "Editează"
         security_key:
           register: "Înregistrare"
-          delete: 'Șterge'
+          delete: "Șterge"
       change_about:
         title: "Schimbare date personale"
         error: "A apărut o eroare la schimbarea acestei valori."
@@ -741,9 +741,6 @@ ro:
         uploaded_avatar_empty: "Adaugă poza preferată"
         upload_title: "Încarcă poza preferată"
         image_is_not_a_square: "Atenţie: poza este decupată, înălțimea și lățimea nu erau egale."
-      change_profile_background:
-        title: "Fundal pentru pagina de profil"
-        instructions: "Fundalul profilului va fi centrat şi va avea o dimensiune standard de 850px."
       change_card_background:
         title: "Fundal pentru pagina cu date personale"
         instructions: "Fundalul va fi centrat şi va avea o dimensiune standard de 590px."
@@ -951,6 +948,9 @@ ro:
         header_title: "profil, mesaje, semne de carte și preferințe"
       title:
         title: "Titlu"
+        none: "(nimic)"
+      primary_group:
+        title: "Grup primar"
         none: "(nimic)"
       filters:
         all: "Toate"
@@ -1792,6 +1792,8 @@ ro:
         image_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca imagini."
         attachment_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca atașamente."
         attachment_download_requires_login: "Ne pare rău, dar trebuie să fii autentificat pentru a descărca ataşamente."
+      abandon_edit:
+        no_value: "Nu, păstrează."
       abandon:
         confirm: "Ești sigur că dorești să abandonezi postarea?"
         no_value: "Nu, păstrează"
@@ -2446,7 +2448,6 @@ ro:
               staff: "Proprietarii grupului și echipa"
           membership:
             automatic: Automat
-            trust_level: Nivel de încredere
             trust_levels_title: "Nivel de încredere acordat automat membrilor atunci când sunt adăugați:"
             trust_levels_none: "Nimeni"
             automatic_membership_email_domains: "Utilizatorii care se înregistrează cu un domeniu de email identic cu unul din lista asta vor fi adăugați automat în acest grup:"
@@ -3213,6 +3214,8 @@ ro:
           search: "Căutare"
           groups: "Grupuri"
           dashboard: "Panou de control"
+        default_categories:
+          modal_yes: "Da"
       badges:
         title: Ecusoane
         new_badge: Ecuson nou

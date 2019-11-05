@@ -901,13 +901,13 @@ fa_IR:
           default_name: "تایید‌کننده من"
         security_key:
           register: "ثبت‌نام"
-          title: 'کلیدهای امنیتی'
+          title: "کلیدهای امنیتی"
           add: "کلید امنیتی را ثبت کنید"
           default_name: "کلید امنیتی اصلی"
           not_allowed_error: "روند ثبت کلید امنیتی به پایان رسیده است یا لغو شده است."
-          edit: 'کلید امنیتی را ویرایش کنید'
-          edit_description: 'نام کلید امنیتی'
-          delete: 'حذف'
+          edit: "کلید امنیتی را ویرایش کنید"
+          edit_description: "نام کلید امنیتی"
+          delete: "حذف"
       change_about:
         title: "تغییر «درباره‌ی من»"
         error: "در فرآیند تغییر این مقدار خطایی روی داد."
@@ -933,9 +933,6 @@ fa_IR:
         uploaded_avatar_empty: "افزودن تصویر سفارشی"
         upload_title: "تصویرتان را بارگذاری کنید"
         image_is_not_a_square: "اخطار: ما تصویر شما را بریدیم; طول و عرض برابر نبود."
-      change_profile_background:
-        title: "پس‌زمینه نمایه"
-        instructions: "تصاویر پس‌زمینه نمایه‌ها در مرکز قرار میگیرند و به صورت پیش‌فرض عرض 850 پیکسل دارند."
       change_card_background:
         title: "پس زمینه کارت کابر"
         instructions: "تصاویر پس زمینه در مرکز قرار خواهند گرفت و عرض پیشفرض آن 590 پیکسل است"
@@ -1176,6 +1173,9 @@ fa_IR:
         header_title: "نمایه، پیام‌ها، نشانک‌ها و تنظیمات شخصی"
       title:
         title: "عنوان"
+        none: "(هیچی)"
+      primary_group:
+        title: "گروه اصلی"
         none: "(هیچی)"
       filters:
         all: "همه"
@@ -1508,7 +1508,6 @@ fa_IR:
       link_description: "توضیحات لینک را اینجا وارد کنید."
       link_dialog_title: "افزودن پیوند"
       link_optional_text: "عنوان اختیاری"
-      link_url_placeholder: "https://example.com"
       quote_title: "نقل‌قول"
       quote_text: "نقل‌قول"
       code_title: "متن قالب‌بندی شده"
@@ -2175,6 +2174,9 @@ fa_IR:
         image_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند تصویر بار‌گذاری کنند."
         attachment_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند فایل پیوست بار‌گذاری کنند."
         attachment_download_requires_login: "با عرض پوزش، شما برای دانلود فایل پیوست باید وارد سایت شوید."
+      abandon_edit:
+        no_value: "خیر، نگه دار"
+        no_save_draft: "خیر، ذخیره پیش‌نویس"
       abandon:
         confirm: "آیا مطمئن هستید که میخواهید نوشته خود را رها کنید؟"
         no_value: "خیر، نگه دار"
@@ -2903,7 +2905,6 @@ fa_IR:
               description: "مدیران می توانند تمامی گروه‌ها را ببینند. "
           membership:
             automatic: خودکار
-            trust_level: سطح‌اعتماد
             trust_levels_title: "سطح اعتماد به صورت خودکار به اعضایی که اضافه می‌شوند داده می‌شود:"
             trust_levels_none: "هیچ کدام"
             automatic_membership_email_domains: " کاربرانی که با ایمیل دامنه ثبت نام کرده اند،دقیقا شبیه دامنه های لیست، بصورت خودکار به این گروه اضافه می شوند :"
@@ -3745,6 +3746,8 @@ fa_IR:
           search: "جستجو"
           groups: "گروه‌ها"
           dashboard: "پیشخوان"
+        default_categories:
+          modal_yes: "بله"
       badges:
         title: نشان‌ها
         new_badge: نشان جدید

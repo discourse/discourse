@@ -685,7 +685,7 @@ et:
         edit: "Muuda"
         security_key:
           register: "Registreeru"
-          delete: 'Kustuta'
+          delete: "Kustuta"
       change_about:
         title: "Muuda minu andmeid"
         error: "Välja muutmisel tekkis viga."
@@ -709,9 +709,6 @@ et:
         uploaded_avatar_empty: "Lisage individuaalne pilt"
         upload_title: "Lae üles oma pilt"
         image_is_not_a_square: "Hoiatus: lõikasime pilti, kuna laius ja kõrgus ei olnud võrdsed."
-      change_profile_background:
-        title: "Profiili taustpilt"
-        instructions: "Profiili taustad tsentreeritakse ja on vaikimisi 850 pikslit laiad."
       change_card_background:
         title: "Kasutajakaardi taustpilt"
         instructions: "Taustapildidd tsentreeritakse ja on vaikimisi 590 pikslit laiad."
@@ -926,6 +923,9 @@ et:
         header_title: "profiil, sõnumid, järjehoidjad ja eelistused"
       title:
         title: "Pealkiri"
+        none: "(pole)"
+      primary_group:
+        title: "Peamine grupp"
         none: "(pole)"
       filters:
         all: "Kõik"
@@ -1193,7 +1193,6 @@ et:
       link_description: "sisesta viite kirjeldus siia"
       link_dialog_title: "Lisa hüperlink"
       link_optional_text: "valikuline pealkiri"
-      link_url_placeholder: "https://example.com"
       quote_title: "Plokktsitaat"
       quote_text: "Plokktsitaat"
       code_title: "Eelvormindatud tekst"
@@ -1744,6 +1743,8 @@ et:
         image_upload_not_allowed_for_new_user: "Vabandame, uued kasutajad ei saa pilte üles laadida."
         attachment_upload_not_allowed_for_new_user: "Vabandame, uued kasutajad ei saa manuseid üles laadida."
         attachment_download_requires_login: "Vabandame, manuste allalaadimiseks pead olema sisse logitud."
+      abandon_edit:
+        no_value: "Ei, hoia alles"
       abandon:
         confirm: "Oled kindel, et soovid oma postituse hüljata?"
         no_value: "Ei, säilita"
@@ -2362,7 +2363,6 @@ et:
               staff: "Grupi omanikud ja personal"
           membership:
             automatic: Automaatne
-            trust_level: Usalduse tase
             trust_levels_title: "Liikmetele peale lisamist automaatselt omistatud usaldustase:"
             trust_levels_none: "Pole"
             automatic_membership_email_domains: "Kasutajad, kes registreeruvad meiliaadressiga, mille domeen ühtib täpselt mõnega sellest loetelust, lisatakse siia gruppi automaatselt:"
@@ -3127,6 +3127,8 @@ et:
           search: "Otsi"
           groups: "Grupid"
           dashboard: "Armatuurlaud"
+        default_categories:
+          modal_yes: "Jah"
       badges:
         title: Märgised
         new_badge: Uus märgis

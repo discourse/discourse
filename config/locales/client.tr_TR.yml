@@ -889,7 +889,7 @@ tr_TR:
           default_name: "Benim Doğrulayıcım"
         security_key:
           register: "Kayıt Ol"
-          delete: 'Sil'
+          delete: "Sil"
       change_about:
         title: "\"Hakkımda\"yı Değiştir"
         error: "Bu değeri değiştirirken bir hata oluştu."
@@ -915,9 +915,6 @@ tr_TR:
         uploaded_avatar_empty: "Kişisel bir resim ekle"
         upload_title: "Resmini yükle"
         image_is_not_a_square: "Uyarı: Genişliği ve yüksekliği eşit olmadığı için görseli kesmek durumunda kaldık."
-      change_profile_background:
-        title: "Profil Arkaplanı"
-        instructions: "Profil arkaplanları ortalanacak ve genişliği 850px olacak. "
       change_card_background:
         title: "Kullanıcı Kartı Arkaplanı"
         instructions: "Profil arkaplanları ortalanacak ve genişliği 590px olacak. "
@@ -1158,6 +1155,9 @@ tr_TR:
         header_title: "profil, mesajlar, işaretlenenler ve tercihler"
       title:
         title: "Başlık"
+        none: "(hiçbiri)"
+      primary_group:
+        title: "Ana Grup"
         none: "(hiçbiri)"
       filters:
         all: "Hepsi"
@@ -1480,7 +1480,6 @@ tr_TR:
       link_description: "buraya bağlantı açıklamasını gir"
       link_dialog_title: "Hyperlink ekle"
       link_optional_text: "isteğe bağlı başlık"
-      link_url_placeholder: "https://example.com"
       quote_title: "Blok-alıntı"
       quote_text: "Blok-alıntı"
       code_title: "Önceden biçimlendirilmiş yazı"
@@ -2137,6 +2136,9 @@ tr_TR:
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemez."
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar dosya yükleyemez."
         attachment_download_requires_login: "Üzgünüz, eklentileri indirebilmek için giriş yapman gerekiyor."
+      abandon_edit:
+        no_value: "Hayır, kalsın"
+        no_save_draft: "Hayır, taslağı kaydet"
       abandon:
         confirm: "Gönderinden vazgeçtiğine emin misin?"
         no_value: "Hayır, kalsın"
@@ -2276,7 +2278,6 @@ tr_TR:
       tags_allowed_tags: "Bu etiketleri bu kategoriyle sınırla:"
       tags_allowed_tag_groups: "Bu etiket gruplarını bu kategoriyle sınırla:"
       tags_placeholder: "(Seçmeli) izin verilen etiketlerin listesi"
-      tags_tab_description: "Burada belirtilen etiketler ve etiket grupları yalnızca bu kategoride ve bunları belirten diğer kategorilerde bulunur. Diğer kategorilerde kullanılamazlar."
       tag_groups_placeholder: "(Seçmeli) izin verilen etiket gruplarının listesi"
       manage_tag_groups_link: "Etiket gruplarını burada yönetin."
       allow_global_tags_label: "Diğer etiketlere de izin ver"
@@ -2886,7 +2887,6 @@ tr_TR:
             publish_read_state: "Grup mesajlarında grup okuma durumunu yayınla"
           membership:
             automatic: Otomatik
-            trust_level: Güven Seviyesi
             trust_levels_title: "Güven seviyesi, üyelere -eklendiklerinde- otomatik olarak verilir:"
             trust_levels_none: "Hiçbiri"
             automatic_membership_email_domains: "Listede, e-posta alan adıyla tam olarak eşleşen kayıtlı kullanıcılar, otomatik olarak bu gruba eklenir:"
@@ -3777,6 +3777,8 @@ tr_TR:
           search: "Arama"
           groups: "Gruplar"
           dashboard: "Gösterge Paneli"
+        default_categories:
+          modal_yes: "Evet"
       badges:
         title: Rozetler
         new_badge: Yeni Rozet

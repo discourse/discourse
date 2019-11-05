@@ -631,7 +631,7 @@ el:
         edit: "Επεξεργασία"
         security_key:
           register: "Εγγραφή"
-          delete: 'Σβήσιμο'
+          delete: "Σβήσιμο"
       change_about:
         title: "Άλλαξε τα «σχετικά με εμένα»"
         error: "Προέκυψε σφάλμα στην αλλαγή της αξίας."
@@ -655,9 +655,6 @@ el:
         uploaded_avatar_empty: "Πρόσθεσε μια δική σου εικόνα"
         upload_title: "Ανέβασε την εικόνα σου"
         image_is_not_a_square: "Προσοχή: Περικόψαμε την εικόνα σου γιατί το ύψος και το πλάτος δεν ήταν ίσα."
-      change_profile_background:
-        title: "Φόντο Προφίλ"
-        instructions: "Οι εικόνες που μπαίνουν στο φόντο του προφίλ σου θα κεντραρίζονται και το προκαθορισμένο πλάτος τους είναι 850px."
       change_card_background:
         title: "Φόντο Καρτέλας Χρήστη"
         instructions: "Οι εικόνες στο φόντο θα κεντραρίζονται και το προκαθορισμένο πλάτος τους είναι 590px."
@@ -855,6 +852,8 @@ el:
         header_title: "προφίλ, μηνύματα, σελιδοδείκτες και προτιμήσεις"
       title:
         title: "Τίτλος"
+      primary_group:
+        title: "Κύρια ομάδα"
       filters:
         all: "Όλα"
       stream:
@@ -1653,6 +1652,8 @@ el:
         image_upload_not_allowed_for_new_user: "Λυπούμαστε, οι νέοι χρήστες δεν μπορούν να ανεβάσουν εικόνες."
         attachment_upload_not_allowed_for_new_user: "Λυπούμαστε, οι νέοι χρήστες δεν μπορούν να επισυνάψουν αρχεία."
         attachment_download_requires_login: "Λυπούμαστε, για να κατεβάσεις συνημμένα αρχεία, πρέπει πρώτα να συνδεθείς."
+      abandon_edit:
+        no_value: "Όχι, κράτησέ τη"
       abandon:
         confirm: "Σίγουρα θέλεις να απορρίψεις την ανάρτησή σου;"
         no_value: "Όχι, κράτησέ τη"
@@ -2288,7 +2289,6 @@ el:
               staff: "Ιδιοκτήτες ομάδας και συνεργάτες"
           membership:
             automatic: Αυτόματα
-            trust_level: Επίπεδο Εμπιστοσύνης
             trust_levels_title: "Επίπεδο εμπιστοσύνης που δίνεται αυτόματα στα μέλη όταν προστίθενται:"
             trust_levels_none: "Κανένα"
             automatic_membership_email_domains: "Οι χρήστης των οποίων το email domain ταιριάζει με κάποιο από αυτά της λίστας, θα προστίθενται αυτόματα σε αυτή την ομάδα:"
@@ -3078,6 +3078,8 @@ el:
           search: "Αναζήτηση"
           groups: "Ομάδες"
           dashboard: "Πίνακας ελέγχου"
+        default_categories:
+          modal_yes: "Ναι "
       badges:
         title: Παράσημα
         new_badge: Νέο Παράσημο

@@ -997,14 +997,14 @@ he:
           default_name: "המאמת שלי"
         security_key:
           register: "הרשמה"
-          title: 'מפתחות אבטחה'
+          title: "מפתחות אבטחה"
           add: "רישום מפתח אבטחה"
           default_name: "מפתח אבטחה עיקרי"
           not_allowed_error: "זמן תהליך רישום מפתח האבטחה פג או שבוטל."
           already_added_error: "כבר רשמת את מפתח האבטחה הזה. אין צורך לרשום אותו שוב."
-          edit: 'עריכת מפתח אבטחה'
-          edit_description: 'שם מפתח אבטחה'
-          delete: 'מחיקה'
+          edit: "עריכת מפתח אבטחה"
+          edit_description: "שם מפתח אבטחה"
+          delete: "מחיקה"
       change_about:
         title: "שינוי בנוגע אליי"
         error: "ארעה שגיאה בשינוי ערך זה."
@@ -1031,8 +1031,8 @@ he:
         upload_title: "העלו את התמונה שלכם"
         image_is_not_a_square: "אזהרה: קיצצנו את התמונה שלך; האורך והרוחב לא היו שווים."
       change_profile_background:
-        title: "שינוי רקע פרופיל"
-        instructions: "רקעי הפרופיל ימורכזו ויוצגו ברוחב ברירת מחדל של 850px."
+        title: "כותרת פרופיל"
+        instructions: "כותרות הפרופילים ימורכזו ורוחבן ייקבע ל־1110 פיקסלים כבררת מחדל."
       change_card_background:
         title: "כרטיס הרקע של המשתמש/ת"
         instructions: "תמונות רקע ימורכזו ויוצגו ברוחב ברירת מחדל של 590px."
@@ -1293,6 +1293,9 @@ he:
         header_title: "פרופיל, הודעות, סימניות והעדפות"
       title:
         title: "כותרת"
+        none: "(ללא)"
+      primary_group:
+        title: "קבוצה ראשית"
         none: "(ללא)"
       filters:
         all: "הכל"
@@ -1648,7 +1651,7 @@ he:
       link_description: "הזן תיאור קישור כאן"
       link_dialog_title: "הזן קישור"
       link_optional_text: "כותרת כרשות"
-      link_url_placeholder: "http://example.com"
+      link_url_placeholder: "יש להדביק כתובת כדי לחפש נושאים"
       quote_title: "ציטוט"
       quote_text: "ציטוט"
       code_title: "טקסט מעוצב"
@@ -2401,6 +2404,11 @@ he:
         image_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות תמונות."
         attachment_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות קבצים."
         attachment_download_requires_login: "מצטערים, עליכם להיות מחוברים כדי להוריד את הקבצים המצורפים."
+      abandon_edit:
+        confirm: "להתעלם מהשינויים שלך?"
+        no_value: "לא, שמור"
+        no_save_draft: "לא, לשמור טיוטה"
+        yes_value: "כן, להתעלם מהעריכה"
       abandon:
         confirm: "האם אתם רוצים לנטוש את הפוסט שלכם?"
         no_value: "לא, שמור אותו"
@@ -2555,10 +2563,14 @@ he:
       tags_allowed_tags: "הגבלת התגיות האלו לקטגוריה הזו:"
       tags_allowed_tag_groups: "הגבלת קבוצות תגיות אלו לקטגוריה זו:"
       tags_placeholder: "(רשות) רשימת תגיות מותרות"
-      tags_tab_description: "התגיות וקבוצות התגיות שמצוינות כאן תהיינה זמינות לקטגוריה זו ולקטגוריות אחרות שמציינות אותן בלבד. הן לא תהיינה זמינות לשימוש בקטגוריות אחרות."
+      tags_tab_description: "תגיות וקבוצות תגיות שצוינו להלן תהיינה זמינות בקטגוריה זו ובקטגוריות נוספות שמציינות אותן. הן לא תהיינה זמינות בקטגוריות אחרות."
       tag_groups_placeholder: "(רשות) רשימת קבוצות תגיות"
       manage_tag_groups_link: "ניהול קבוצות תגיות מכאן."
       allow_global_tags_label: "לאפשר גם תגיות אחרות"
+      tag_group_selector_placeholder: "(רשות) קבוצת תגיות"
+      required_tag_group_description: "לדרוש שלנושאים חדשים יהיו תגיות מקבוצת תגיות:"
+      min_tags_from_required_group_label: 'מס׳ תגיות:'
+      required_tag_group_label: "קבוצת תגיות:"
       topic_featured_link_allowed: "אפשרו קישורים מומלצים בקטגוריה זו"
       delete: "מחק קטגוריה"
       create: "קטגוריה חדשה"
@@ -3068,6 +3080,7 @@ he:
         parent_tag_description: "תגיות מקבוצה זו לא ניתנות לשימוש אלא אם תגית ההורה קיימת."
         one_per_topic_label: "הגבלה של תג אחד לכל נושא מקבוצה זו"
         new_name: "קבוצת תגיות חדשה"
+        name_placeholder: "שם קבוצת תגיות"
         save: "שמירה"
         delete: "מחיקה"
         confirm_delete: "להסיר את קבוצת התגיות הזו?"
@@ -3238,8 +3251,8 @@ he:
             publish_read_state: "בהודעות קבוצתית לפרסם את מצב הקריאה של הקבוצה"
           membership:
             automatic: אוטומטי
-            trust_level: דרגת אמון
             trust_levels_title: "דרגת אמון המוענקת אוטומטית למשתמשים כאשר הם נוספים:"
+            effects: אפקטים
             trust_levels_none: "ללא"
             automatic_membership_email_domains: "משתמשים אשר נרשמים עם מארח דוא\"ל שתואם בדיוק לאחד מהרשימה, יוספו באופן אוטומטי לקבוצה זו:"
             automatic_membership_retroactive: "החלת כלל מארח דוא\"ל זהה כדי להוסיף משתמשים רשומים"
@@ -4269,6 +4282,10 @@ he:
           dashboard: "לוח בקרה"
         secret_list:
           invalid_input: "שדות הקלט לא יכולים להישאר ריקים או להכיל תווים של קווים אנכיים."
+        default_categories:
+          modal_description: "מעניין אותך להחיל את השינוי הזה רטרואקטיבית? פעולה זו תשנה את העדפותיהם של %{count} משתמשים קיימים."
+          modal_yes: "כן"
+          modal_no: "לא, להחיל את השינוי מעתה ואילך"
       badges:
         title: עיטורים
         new_badge: עיטור חדש

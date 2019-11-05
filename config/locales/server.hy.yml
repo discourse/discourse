@@ -89,7 +89,6 @@ hy:
         from_reply_by_address_error: "Պատահում է, երբ Ումից վերնագիրը համընկնում է էլ. հասցեի միջոցով պատասխանին:"
         inactive_user_error: "Պատահում է, երբ ուղարկողը ակտիվ չէ:"
         silenced_user_error: "Պատահում է, երբ ուղարկողը լռեցված է:"
-        bad_destination_address: "Պատահում է, երբ To/Cc/Bcc դաշտերի էլ. հասցեներից ոչ մեկը չի համընկնում կարգավորված մուտքային էլ. հասցեին:"
         strangers_not_allowed_error: "Պատահում է, երբ օգտատերը փորձում է ստեղծել նոր թեմա մի կատեգորիայում, որի անդամ չէ:"
         insufficient_trust_level_error: "Պատահում է, երբ օգտատերը փորձում է ստեղծել նոր թեմա այնպիսի կատեգորիայում, որի պահանջվող վստահության մակարդակը չունի:"
         reply_user_not_matching_error: "Պատահում է, երբ պատասխանը գալիս է այնպիսի էլ. հասցեից, որը տարբերվում է այն էլ. հասցեից, որին ուղարկվել է ծանուցումը:"
@@ -639,7 +638,6 @@ hy:
     activated: "Ներողություն, այս հաշիվը արդեն ակտիվացված է:"
     admin_confirm:
       title: "Հաստատել Ադմինի Հաշիվը"
-      description: "Դուք համոզվա՞ծ եք, որ ցանկանում եք, որ <b>%{target_username}</b> -ը լինի ադմինիստրատոր:"
       grant: "Շնորհել Ադմինի Հասանելիություն"
       complete: "<b>%{target_username}</b>-ը այժմ ադմինիստրատոր է:"
       back_to: "Վերադառնալ դեպի %{title}"
@@ -1958,10 +1956,6 @@ hy:
   admin_confirmation_mailer:
     title: "Ադմինի Հաստատում"
     subject_template: "[%{email_prefix}] Հաստատել նոր Ադմինի Հաշիվ "
-    text_body_template: |
-      Խնդրում ենք հաստատել, որ Դուք ցանկանում եք ավելացնել **%{target_username}**-ին՝ որպես Ձեր ֆորումի ադմինիստրատոր:
-
-      [Հաստատել Ադմինիստրատորի Հաշիվը](%{admin_confirm_url})
   test_mailer:
     title: "Փորձարկել Ուղարկողին"
     subject_template: "[%{email_prefix}] Էլ. Նամակի Հասանելիության Փորձարկում"
@@ -2457,36 +2451,6 @@ hy:
     visit_link_to_respond_pm: "[Դիտեք Հաղորդագրությունը՝](%{base_url}%{url}) %{participants} -ին պատասխանելու համար:"
     posted_by: "Հրապարակված է %{username} -ի կողմից՝ %{post_date}"
     pm_participants: "Մասնակիցներ՝ %{participants}"
-    invited_group_to_private_message_body: |
-      %{username} -ը հրավիրել է @%{group_name} -ին հաղորդագրության
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      այստեղ՝
-
-      > %{site_title} -- %{site_description}
-    invited_to_private_message_body: |
-      %{username} -ը հրավիրել է Ձեզ հաղորդագրությանը՝
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      at
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} -ը հրավիրել է Ձեզ քննարկման
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      այստեղ՝
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       title: "Օգտատերը Հրավիրել է Խմբին Անձնական Նամակագրության:"
       subject_template: "[%{email_prefix}] %{username} -ը հրավիրել է @%{group_name} -ին '%{topic_title}' հաղորդագրությանը"
@@ -2842,7 +2806,6 @@ hy:
     missing: "Ներողություն, մենք չենք կարողանում գտնել այդ էլ. հասցեի հետ կապակցված որևէ ավատար: Կարո՞ղ եք փորձել վերբեռնել այն կրկին:"
   flag_reason:
     sockpuppet: "Նոր օգտատերը ստեղծել է թեմա, և մեկ այլ օգտատեր միևնույն IP հասցով address (%{ip_address}) պատասխանել է: Այցելեք <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> կայքի կարգավորումներ:"
-    spam_hosts: "Այս նոր օգտատերը փորձել է ստեղծել բազմակի գրառումներ միևնույն դոմենի (%{domain}) հղումներով: Դիտեք See the <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> կայքի կարգավորումը:"
   skipped_email_log:
     exceeded_emails_limit: "Գերազանցում է max_emails_per_day_per_user"
     exceeded_bounces_limit: "Գերազանցում է bounce_score_threshold"

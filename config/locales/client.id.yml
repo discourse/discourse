@@ -564,7 +564,7 @@ id:
         show_key_description: "Masukkan secara manual"
         edit: "Ubah"
         security_key:
-          delete: 'Hapus'
+          delete: "Hapus"
       change_about:
         title: "Ganti Tentang Saya"
         error: "Ada kesalahan saat mengganti nilai ini"
@@ -586,9 +586,6 @@ id:
         uploaded_avatar_empty: "Tambah gambar kustom"
         upload_title: "Unggah gambar anda"
         image_is_not_a_square: "Peringatan: kami telah memotong gambar anda; lebar dan tinggi tidak sama."
-      change_profile_background:
-        title: "Latar Belakang Profil"
-        instructions: "Latar belakang profil akan ditengahkan, dan mempunyai lebar standar 850px"
       change_card_background:
         title: "Latar Belakang Kartu Penguna"
         instructions: "Gambar latar belakang akan ditengahkan dan mempunyai lebar standar 590px"
@@ -744,6 +741,8 @@ id:
         title: "Gambar Profil"
       title:
         title: "Judul"
+        none: "(kosong)"
+      primary_group:
         none: "(kosong)"
       filters:
         all: "Semua"
@@ -1142,7 +1141,6 @@ id:
               staff: "Pemilik kelompok dan staf"
           membership:
             automatic: Otomatis
-            trust_level: Level Kepercayaan
             trust_levels_title: "Tingkat kepercayaan otomatis diberikan kepada anggota ketika mereka ditambahkan:"
             trust_levels_none: "Tidak ada"
         name_placeholder: "Nama grup, tidak boleh menggunakan spasi, sama seperti aturan username"
@@ -1297,6 +1295,8 @@ id:
           email: "Email"
           uncategorized: "Lainnya"
           groups: "Grup"
+        default_categories:
+          modal_yes: "Ya"
       badges:
         new_badge: Badge Baru
         new: Baru

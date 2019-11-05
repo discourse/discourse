@@ -78,6 +78,10 @@ vi:
           other: "%{count} giờ trước"
         x_days:
           other: "%{count} ngày trước"
+        x_months:
+          other: "%{count}tháng trước"
+        x_years:
+          other: "%{count}năm trước"
       later:
         x_days:
           other: "còn %{count} ngày"
@@ -215,6 +219,8 @@ vi:
       moderators: "Điều hành viên"
       stat:
         all_time: "Từ trước tới nay"
+        last_7_days: "7 ngày gần nhất"
+        last_30_days: "30 ngày gần nhất"
       like_count: "Lượt thích"
       topic_count: "Các chủ đề"
       post_count: "Các bài viết"
@@ -778,7 +784,7 @@ vi:
         show_key_description: "Nhập thủ công"
         edit: "Sửa"
         security_key:
-          delete: 'Xóa'
+          delete: "Xóa"
       change_about:
         title: "Thay đổi thông tin về tôi"
         error: "Có lỗi xảy ra khi thay đổi giá trị này."
@@ -801,9 +807,6 @@ vi:
         uploaded_avatar_empty: "Thêm một ảnh chỉnh sửa"
         upload_title: "Upload hình ảnh của bạn"
         image_is_not_a_square: "Cảnh báo: chúng tôi đã cắt hình ảnh của bạn; chiều rộng và chiều cao không bằng nhau."
-      change_profile_background:
-        title: "Hình nền trang hồ sơ"
-        instructions: "Hình nền trang hồ sơ sẽ ở giữa và có chiều rộng mặc định là 850px."
       change_card_background:
         title: "Hình nền Card"
         instructions: "Hình nền sẽ ở giữa và có chiều rộng mặc định là 590px."
@@ -1013,6 +1016,9 @@ vi:
         header_title: "hồ sơ cá nhân, tin nhắn, đánh dấu và sở thích"
       title:
         title: "Tiêu đề"
+        none: "(không có gì)"
+      primary_group:
+        title: "Nhóm Chính"
         none: "(không có gì)"
       filters:
         all: "All"
@@ -1345,6 +1351,7 @@ vi:
         with_badge:
           label: Với huy hiệu
         filters:
+          title: Chỉ khớp với tiêu đề
           likes: Tôi đã thích
           posted: Tôi đã gửi trong
           pinned: được gim
@@ -1695,6 +1702,8 @@ vi:
         image_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên ảnh."
         attachment_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên đính kèm."
         attachment_download_requires_login: "Xin lỗi, bạn cần đăng nhập để tải về đính kèm."
+      abandon_edit:
+        no_value: "Không, giữ lại"
       abandon:
         confirm: "Bạn có chắc muốn bỏ bài viết của bạn?"
         no_value: "Không, giữ lại"
@@ -2201,6 +2210,8 @@ vi:
         reports:
           today: "Hôm nay"
           yesterday: "Hôm qua"
+          last_7_days: "7 ngày gần nhất"
+          last_30_days: "30 ngày gần nhất"
           all_time: "Từ trước tới nay"
           7_days_ago: "7 Ngày trước"
           30_days_ago: "30 Ngày trước"
@@ -2232,7 +2243,6 @@ vi:
               public: "Mọi người"
           membership:
             automatic: Tự động
-            trust_level: Bậc tin tưởng
             trust_levels_title: "Cấp độ tin tưởng tự động tăng cho thành viên khi họ thêm:"
             trust_levels_none: "Không có gì"
             automatic_membership_email_domains: "Các thành viên đã đăng ký với đuôi email khớp với một trong danh sách này sẽ được tự động thêm vào nhóm:"
@@ -2835,6 +2845,8 @@ vi:
           search: "Tìm kiếm"
           groups: "Nhóm"
           dashboard: "Bảng điều khiển"
+        default_categories:
+          modal_yes: "Đồng ý"
       badges:
         title: Huy hiệu
         new_badge: Thêm huy hiệu

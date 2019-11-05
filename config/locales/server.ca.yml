@@ -49,6 +49,7 @@ ca:
       about_json_values: "about.json conté valors no vàlids: %{errors}"
       git: "S'ha produït un error clonant el dipòsit git, s'ha denegat l'accés o no s'ha trobat el dipòsit."
       unpack_failed: "Error en desempaquetar el fitxer"
+      file_too_big: "El fitxer sense comprimir és massa gran."
       unknown_file_type: "El fitxer que heu pujat no sembla una aparença de Discourse vàlid."
     errors:
       component_no_user_selectable: "Els components de l'aparença no poden ser seleccionables per l'usuari."
@@ -91,7 +92,6 @@ ca:
         from_reply_by_address_error: "Passa quan la capçalera del remitent coincideix amb l'adreça de correu de resposta."
         inactive_user_error: "Passa quan l'emissor no és actiu."
         silenced_user_error: "Passa quan el remitent ha estat silenciat."
-        bad_destination_address: "Passa quan cap de les adreces de correu en els camps A/CC/CCO no coincideix amb una adreça entrant configurada."
         strangers_not_allowed_error: "Passa quan un usuari ha provat de crear un tema nou en una categoria de la qual no és membre."
         insufficient_trust_level_error: "Passa quan un usuari ha provat de crear un tema nou en una categoria per a la qual no té el nivell de confiança necessari."
         reply_user_not_matching_error: "Passa quan una resposta arriba des d'una adreça de correu diferent d'aquella a la qual s'ha enviat la notificació."
@@ -209,7 +209,11 @@ ca:
   email_template_cant_be_modified: "Aquesta plantilla de correu no es pot modificar."
   invalid_whisper_access: "O bé els xiuxiuejos no estan activats o bé no teniu permís per a crear-ne."
   not_in_group:
-    join_group: "Uneix-te al grup"
+    title_topic: "Per a veure aquest tema heu d’estar en grup."
+    title_category: "Per a veure aquesta categoria heu d’estar en un grup."
+    request_membership: "Sol·liciteu ser-ne membre"
+    join_group: "Uneix-me al grup"
+  deleted_topic: "Oh! Aquest tema s'ha suprimit i ja no està disponible."
   reading_time: "Temps de lectura."
   likes: "'M'agrada'"
   too_many_replies:
@@ -729,7 +733,6 @@ ca:
     activated: "Aquest compte ja ha estat activat."
     admin_confirm:
       title: "Confirma el compte d'administrador"
-      description: "Esteu segur que voleu que <b>%{target_username}</b> sigui administrador?"
       grant: "Atorga accés d'administrador"
       complete: "<b>%{target_username}</b> és ara administrador."
       back_to: "Torna a %{title}"
@@ -778,6 +781,9 @@ ca:
       description: "M'agrada aquesta publicació"
       short_description: "M'agrada aquesta publicació"
       long_form: "ha fet 'M'agrada'"
+  draft_backup:
+    pm_title: "Esborranys de còpia de seguretat de temes en curs"
+    pm_body: "Tema que conté esborranys de còpia de seguretat"
   user_activity:
     no_default:
       self: "Encara no teniu activitat."
@@ -793,6 +799,20 @@ ca:
       others: "No hi ha respostes."
     no_drafts:
       self: "No teniu cap esborrany. Comenceu a redactar una resposta en qualsevol tema i es desarà com a esborrany nou."
+  webauthn:
+    validation:
+      invalid_type_error: "El tipus de webauthn proporcionat no era vàlid. Els tipus vàlids són webauthn.get i webauthn.create."
+      challenge_mismatch_error: "El repte proporcionat no coincideix amb el repte generat pel servidor d’autenticació."
+      invalid_origin_error: "L’origen de la sol·licitud d’autenticació no coincideix amb l’origen del servidor."
+      malformed_attestation_error: "S'ha produït un error en descodificar les dades de la certificació."
+      invalid_relying_party_id_error: "L'identificador de relying party de la sol·licitud d'autenticació no coincideix amb l'identificador de relying party del servidor. "
+      user_verification_error: "La verificació de l’usuari és obligatòria."
+      unsupported_public_key_algorithm_error: "El servidor no admet l'algoritme de clau pública proporcionat."
+      unsupported_attestation_format_error: "El servidor no admet el format de certificació."
+      credential_id_in_use_error: "La identificació de credencial proporcionada ja està en ús."
+      public_key_error: "Ha fallat la verificació de la clau pública de la credencial."
+      ownership_error: "L'usuari no té la propietat de la clau de seguretat."
+      not_found_error: "No s'ha trobat una clau de seguretat amb l'identificador de credencial proporcionat."
   topic_flag_types:
     spam:
       title: "Brossa"
@@ -1266,7 +1286,7 @@ ca:
     editing_grace_period_max_diff_high_trust: "Nombre màxim de canvis de caràcter permesos en el període de gràcia d'edició. Si se'n canvien més, emmagatzema una altra revisió de publicació (nivells de confiança 2 i superiors)."
     staff_edit_locks_post: "Les publicacions seran blocades per a edició si són editades per membres de l'equip responsable."
     post_edit_time_limit: "Un autor tl0 o tl1 pot editar la seva publicació durant (n) minuts després de la publicació. Establiu el valor 0 perquè sigui per a sempre."
-    tl2_post_edit_time_limit: "Un autor de nivell de confiança 2 pot editar la seva publicació durant (n) minuts després de la publicació. Establiu el valor 0 perquè sigui per a sempre."
+    tl2_post_edit_time_limit: "Un autor de nivell de confiança 2 pot editar la seva publicació durant (n) minuts després de publicar. Establiu el valor 0 perquè sigui per a sempre."
     edit_history_visible_to_public: "Permet que qualsevol miri les versions prèvies d'una publicació editada. Si està desactivat, només seran visibles per a membres de l'equip responsable."
     delete_removed_posts_after: "Les publicacions eliminades per l'autor se suprimiran automàticament al cap de (n) hores. Si es posa 0, se suprimiran immediatament."
     max_image_width: "Amplada màxima de les miniatures d'imatges en una publicació"
@@ -1297,6 +1317,7 @@ ca:
     notification_email: "Adreça de correu en el \"de:\" emprada en enviar tots els correus essencials de sistema. El domini especificat aquí ha de tenir registres SPF, DKIM i PTR inversos, configurats correctament perquè arribi el correu."
     email_custom_headers: "Llista de capçaleres de correu personalitzades, delimitada amb barres verticals"
     email_subject: "Format d'assumpte personalitzable per a correus electrònics estàndard. Vegeu <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    detailed_404: "Proporciona més detalls als usuaris sobre per què no poden accedir a un tema concret. Nota: això és menys segur perquè els usuaris sabran si un URL enllaça amb un tema vàlid."
     enforce_second_factor: "Obliga els usuaris a habilitar l'autenticació de dos factors. Seleccioneu \"tots\" per a aplicar-ho a tots els usuaris. Seleccioneu \"equip responsable\" per a aplicar-ho sols als usuaris de l'equip responsable. "
     force_https: "Força el lloc web a fer servir només HTTPS. ATENCIÓ: NO ho activeu fins que no verifiqueu que l'HTTPS és totalment configurat i funciona a tot arreu. ¿Heu comprovat també la xarxa CDN, totes les connexions socials, i qualsevol logo o dependència externa per a assegurar-vos que tots són compatibles amb HTTPS?"
     same_site_cookies: "Utilitza les mateixes galetes del lloc web. Eliminen tots els vectors Cross Site Request Forgery (falsificació de petició entre llocs) en els navegadors compatibles (Lax o Strict). Advertència: Strict sols funcionarà en llocs que forcin l'inici de sessió i utilitzin SSO."
@@ -1435,9 +1456,9 @@ ca:
     enable_github_logins: "Activa l'autenticació GitHub. Requereix github_client_id i github_client_secret. Vegeu <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuració de l'inici de sessió de GitHub per a Discourse</a>."
     github_client_id: "Identificador del client per a l'autenticació GitHub, registrat en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Secret del client per a l'autenticació GitHub, registrat en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    enable_discord_logins: 'S''ha de permetre als usuaris autenticar-se mitjançant Discord?'
+    enable_discord_logins: "S'ha de permetre als usuaris autenticar-se mitjançant Discord?"
     discord_client_id: 'Identificador de client Discord (si us en cal un, visiteu <a href="https://discordapp.com/developers/applications/me">el portal de desenvolupadors Discord</a>)'
-    discord_secret: 'Clau secreta de Discord'
+    discord_secret: "Clau secreta de Discord"
     discord_trusted_guilds: 'Permet sols als membres d''aquests gremis Discord iniciar sessió mitjançant Discord. Utilitzeu l''identificador numèric per al gremi. Per a obtenir més informació, consulteu les instruccions <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aquí</a>. Deixeu-ho en blanc per a permetre qualsevol gremi.'
     readonly_mode_during_backup: "Activa el mode només de lectura mentre es fa la còpia de seguretat"
     enable_backups: "Permet als administradors crear còpies de seguretat del fòrum"
@@ -1750,7 +1771,7 @@ ca:
     embed_username_required: "Cal un nom d'usuari per a crear un tema."
     notify_about_flags_after: "Si hi ha banderes que no s'han gestionat després d'aquest nombre d'hores, envia un missatge personal als moderadors. 0 per desactivar."
     show_create_topics_notice: "Si el lloc web té menys de 5 temes públics, mostra un avís demanant als administradors que en creï uns quants. "
-    delete_drafts_older_than_n_days: Suprimeix esborranys amb més de (n) dies.
+    delete_drafts_older_than_n_days: "Suprimeix esborranys amb més de (n) dies."
     bootstrap_mode_min_users: "Nombre mínim d'usuaris necessaris per a desactivar el mode d'arrencada (deixeu-ho a 0 per a desactivar-lo)."
     prevent_anons_from_downloading_files: "Impedeix que els usuaris anònims puguin descarregar fitxers adjunts. ATENCIÓ: Això impedirà que funcioni cap fitxer que no sigui una imatge publicat com a adjunt."
     slug_generation_method: "Trieu un mètode de generació de slugs (adreces amigables). 'encoded' generarà una cadena amb codificacions %. 'none' anul·larà totalment l'adreça amigable."
@@ -1972,6 +1993,13 @@ ca:
     autoclosed_disabled_lastpost: "Aquest tema ara està obert. Es permeten més respostes."
     auto_deleted_by_timer: "S'ha suprimit automàticament per temporitzador."
   login:
+    security_key_description: "Quan tingueu preparada la vostra clau de seguretat física, premeu el botó Autentica amb clau de seguretat."
+    security_key_alternative: "¿No podeu trobar la vostra clau de seguretat o voleu utilitzar un altre mètode?"
+    security_key_authenticate: "Autenticació amb clau de seguretat"
+    security_key_not_allowed_error: "El procés d'autenticació de claus de seguretat ha arribat al límit de temps o s'ha cancel·lat. "
+    security_key_no_matching_credential_error: "No s'ha trobat cap credencial coincident amb la clau de seguretat proporcionada."
+    security_key_support_missing_error: "El vostre dispositiu o navegador actual no admet l'ús de claus de seguretat. Utilitzeu un mètode diferent."
+    security_key_invalid: "S'ha produït un error en validar la clau de seguretat."
     not_approved: "El vostre compte encara no ha estat aprovat. Us notificarem per correu quan podreu iniciar la sessió."
     incorrect_username_email_or_password: "Nom d'usuari, correu electrònic o contrasenya incorrectes"
     incorrect_password: "Contrasenya incorrecta"
@@ -2008,6 +2036,7 @@ ca:
     second_factor_backup_description: "Introduïu un dels vostres codis de còpia de seguretat:"
     second_factor_backup_title: "Codi de còpia de seguretat de dos factors"
     invalid_second_factor_code: "Codi d'autenticació no vàlid. Cada codi només es pot utilitzar una vegada."
+    invalid_security_key: "Clau de seguretat no vàlida."
     second_factor_toggle:
       totp: "Utilitzeu una aplicació d'autenticació en comptes d'això"
       backup_code: "Utilitzeu un codi de còpia de seguretat en comptes d'això"
@@ -2024,6 +2053,7 @@ ca:
       short: "ha de tenir almenys %{min} caràcters"
       long: "no ha de ser més llarg de %{max} caràcters"
       too_long: "és massa llarg"
+      characters: "ha d’incloure només xifres, lletres, guions, punts i guions baixos"
       unique: "ha de ser únic"
       blank: "ha de ser-hi present"
       must_begin_with_alphanumeric_or_underscore: "ha de començar amb una lletra, una xifra o un guió baix"
@@ -2091,10 +2121,6 @@ ca:
   admin_confirmation_mailer:
     title: "Confirmació d'administració"
     subject_template: "[%{email_prefix}] Confirmeu un nou compte d'administració"
-    text_body_template: |
-      Confirmeu que voleu afegir **%{target_username}** com a administrador del fòrum.
-
-      [Confirma el compte d'administrador](%{admin_confirm_url})
   test_mailer:
     title: "Test"
     subject_template: "[%{email_prefix}] Test de lliurament de correu electrònic"
@@ -2467,27 +2493,35 @@ ca:
     visit_link_to_respond_pm: "[Visita el missatge](%{base_url}%{url}) per a respondre a %{participants}."
     posted_by: "Publicat per %{username} en %{post_date}"
     pm_participants: "Participants: %{participants}"
-    invited_group_to_private_message_body: "%{username} ha convidat @%{group_name} a un missatge\n\n> **%{topic_title}**\n>\n> %{topic_excerpt} \n\nen\n\n> %{site_title} - %{site_description}\n"
+    invited_group_to_private_message_body: "%{username} ha convidat @%{group_name} a un missatge\n\n> **%{topic_title}(%{topic_url})**\n>\n> %{topic_excerpt} \n\nen\n\n> %{site_title} - %{site_description}\n\nPer a unir-vos al missatge, feu clic en l'enllaç:\n\n%{topic_url}\n"
     invited_to_private_message_body: |
       %{username} us ha convidat a un missatge
 
-      > **%{topic_title}**
+      > **%{topic_title}(%{topic_url})**
       >
       > %{topic_excerpt}
 
       en
 
       > %{site_title} -- %{site_description}
+
+      Per a unir-vos al missatge, feu clic en l'enllaç:
+
+      %{topic_url}
     invited_to_topic_body: |
       %{username} us ha convidat a una discussió
 
-      > **%{topic_title}**
+      > **%{topic_title}(%{topic_url})**
       >
       > %{topic_excerpt}
 
-      a
+      en
 
       > %{site_title} -- %{site_description}
+
+      Per a unir-vos a la discussió feu clic en l'enllaç:
+
+      %{topic_url}
     user_invited_to_private_message_pm_group:
       title: "L'usuari ha convidat el grup a MP"
       subject_template: "[%{email_prefix}] %{username} ha convidat @%{group_name} a un missatge '%{topic_title}'"
@@ -2781,7 +2815,7 @@ ca:
     missing: "No podem trobar cap avatar associat amb aquesta adreça de correu. Proveu de pujar-lo de nou."
   flag_reason:
     sockpuppet: "Un usuari nou ha creat un tema, i un altre usuari nou amb la mateixa adreça IP (%{ip_address}) hi ha respost. Mireu el paràmetre <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> de la configuració del lloc web."
-    spam_hosts: "Aquest usuari nou ha creat moltes publicacions amb enllaços al mateix domini. Vegeu el paràmetre <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> de la configuració del lloc web."
+    spam_hosts: "Aquest usuari nou ha creat moltes publicacions amb enllaços al mateix domini. Cal revisar totes les publicacions d'aquest usuari que contenen enllaços. Vegeu el paràmetre <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> de la configuració del lloc web."
   skipped_email_log:
     exceeded_emails_limit: "S'ha excedit max_emails_per_day_per_user"
     exceeded_bounces_limit: "S'ha superat bounce_score_threshold"
@@ -3380,4 +3414,4 @@ ca:
   email_style:
     html_missing_placeholder: "La plantilla HTML ha d’incloure %{placeholder}"
   discord:
-    not_in_allowed_guild: 'L''autenticació ha fallat. No sou membre d’un gremi de Discord autoritzat.'
+    not_in_allowed_guild: "L'autenticació ha fallat. No sou membre d’un gremi de Discord autoritzat."

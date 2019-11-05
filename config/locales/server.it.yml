@@ -91,7 +91,6 @@ it:
         from_reply_by_address_error: "Accade quando l'intestazione From corrisponde alla risposta per indirizzo email."
         inactive_user_error: "Succede quando il mittente non è attivo."
         silenced_user_error: "Succede quando il mittente è stato silenziato."
-        bad_destination_address: "Succede quando nessuno degli indirizzi email presenti nei campi A/Cc/Ccn corrisponde ad alcun indirizzo email entrante tra quelli configurati."
         strangers_not_allowed_error: "Succede quando un utente tenta di creare uno nuovo argomento in una categoria della quale non è membro."
         insufficient_trust_level_error: "Succede quando un utente tenta di creare un nuovo argomento in una categoria per la quale non ha il livello di esperienza richiesto."
         reply_user_not_matching_error: "Succede quando arriva una risposta da un indirizzo email diverso da quello cui la notifica era stata inviata."
@@ -712,7 +711,6 @@ it:
     activated: "Spiacenti, questo account è stato già attivato."
     admin_confirm:
       title: "Conferma Account Amministratore"
-      description: "Sei sicuro di volere rendere<b>%{target_username}</b> un amministratore?"
       grant: "Assegna Accesso Amministratore"
       complete: "<b>%{target_username}</b>è ora un amministratore."
       back_to: "Torna a %{title}"
@@ -1724,7 +1722,7 @@ it:
     embed_username_required: "E' richiesto il nome utente per la creazione di argomenti."
     notify_about_flags_after: "Se ci sono segnalazioni che non sono state gestite dopo un certo numero di ore, invia un messaggio personale ai moderatori. Impostare su 0 per disabilitare."
     show_create_topics_notice: "Se il sito ha meno di 5 argomenti pubblici, mostra un avviso chiedendo agli amministratori di creare qualche argomento."
-    delete_drafts_older_than_n_days: Elimina bozze più vecchie di (n) giorni.
+    delete_drafts_older_than_n_days: "Elimina bozze più vecchie di (n) giorni."
     bootstrap_mode_min_users: "Numero minimo di utenti richiesto per disabilitare la modalità bootstrap (imposta a 0 per disattivare)"
     prevent_anons_from_downloading_files: "Impedire agli utenti anonimi di scaricare gli allegati. ATTENZIONE: questo impedirà a qualsiasi risorsa del sito pubblicata come allegato di funzionare ad eccezione delle immagini."
     slug_generation_method: "Scegli un metodo di generazione delle abbreviazioni. 'encoded' genererà la stringa di codifica percentuale. 'none' disattiverà completamente le abbreviazioni."
@@ -2113,10 +2111,6 @@ it:
   admin_confirmation_mailer:
     title: "Conferma Amministratore"
     subject_template: "[%{email_prefix}] Conferma nuovo Account Amministratore"
-    text_body_template: |
-      Conferma che desideri aggiungere **%{target_username}** come amministratore del tuo forum.
-
-      [Conferma Account Amministratore](%{admin_confirm_url})
   test_mailer:
     title: "Test Mailer"
     subject_template: "[%{email_prefix}] Test di Consegna Email"
@@ -2614,36 +2608,6 @@ it:
     visit_link_to_respond_pm: "[Visita messaggio] (%{base_url}%{url}) per rispondere a %{participants}."
     posted_by: "Pubblicato da %{username} il %{post_date}"
     pm_participants: "Partecipanti: %{participants}"
-    invited_group_to_private_message_body: |
-      %{username} ha invitato @%{group_name} a partecipare al messaggio
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      su
-
-      > %{site_title} -- %{site_description}
-    invited_to_private_message_body: |
-      %{username} ti ha invitato a partecipare al messaggio
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      su
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} ti ha invitato alla discussione
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      su
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       title: "Gruppo Invitato da Utente ad un MP"
       subject_template: "[%{email_prefix}] %{username} ha invitato @%{group_name} a partecipare al messaggio '%{topic_title}'"
@@ -2991,7 +2955,6 @@ it:
     missing: "Spiacenti, non troviamo nessun avatar associato a questo indirizzo email. Puoi provare a caricarlo nuovamente?"
   flag_reason:
     sockpuppet: "Un nuovo utente ha creato un argomento, e un altro nuovo utente ha risposto dallo stesso indirizzo IP (%{ip_address}). Vedi l'impostazione del sito <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Questo nuovo utente ha provato a creare più messaggi con collegamenti allo stesso dominio. Vedi l'impostazione del sito <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "Ha superato max_emails_per_day_per_user"
     exceeded_bounces_limit: "Ha superato bounce_score_threshold"
