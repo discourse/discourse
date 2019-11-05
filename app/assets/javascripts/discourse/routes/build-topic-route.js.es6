@@ -4,7 +4,8 @@ import { defaultHomepage } from "discourse/lib/utilities";
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {
-  const findOpts = defaultParams || {};
+  const findOpts = Object.assign({}, defaultParams || {});
+
   if (params) {
     Object.keys(queryParams).forEach(function(opt) {
       if (params[opt]) {
