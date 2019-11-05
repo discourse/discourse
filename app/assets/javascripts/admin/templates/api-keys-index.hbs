@@ -1,7 +1,14 @@
+{{d-button
+  class="btn-primary"
+  action=(route-action "new")
+  icon="plus"
+  label="admin.api.new_key"}}
+
 {{#if model}}
   <table class="api-keys grid">
   <thead>
     <th>{{i18n "admin.api.key"}}</th>
+    <th>{{i18n "admin.api.description"}}</th>
     <th>{{i18n "admin.api.user"}}</th>
     <th>{{i18n "admin.api.created"}}</th>
     <th>{{i18n "admin.api.last_used"}}</th>
@@ -9,8 +16,14 @@
   </thead>
   <tbody>
     {{#each model as |k|}}
-      <tr>
-        <td class="key">{{k.key}}</td>
+      <tr class={{if k.revoked_at "revoked"}}>
+        <td class="key">
+          {{#if k.revoked_at}}{{d-icon 'times-circle'}}{{/if}}
+          {{k.shortKey}}
+        </td>
+        <td class="key-description">
+          {{k.shortDescription}}
+        </td>
         <td class="key-user">
           <div class="label">{{i18n 'admin.api.user'}}</div>
           {{#if k.user}}
@@ -34,17 +47,21 @@
           {{/if}}
         </td>
         <td class="key-controls">
-          {{d-button
-            class="btn-default"
-            action=(action "regenerateKey")
-            actionParam=k icon="undo"
-            label="admin.api.regenerate"}}
-          {{d-button
-            class="btn-default"
-            action=(action "revokeKey")
-            actionParam=k
-            icon="times"
-            label="admin.api.revoke"}}
+          {{d-button action=(route-action "show" k) icon="far-eye" title="admin.api.show_details"}}
+          {{#if k.revoked_at}}
+            {{d-button
+              action=(action "undoRevokeKey")
+              actionParam=k icon="undo"
+              title="admin.api.undo-revoke"}}
+          {{else}}
+            {{d-button
+              class="btn-danger"
+              action=(action "revokeKey")
+              actionParam=k
+              icon="times"
+              title="admin.api.revoke"}}
+          {{/if}}
+          
         </td>
       </tr>
     {{/each}}
@@ -53,10 +70,3 @@
 {{else}}
   <p>{{i18n "admin.api.none"}}</p>
 {{/if}}
-
-{{#unless hasMasterKey}}
-  {{d-button
-    class="btn-primary"
-    action=(action "generateMasterKey")
-    icon="key"}}
-{{/unless}}

@@ -611,8 +611,6 @@ export default function() {
       });
     });
 
-    this.post("/admin/users/:user_id/generate_api_key", success);
-    this.delete("/admin/users/:user_id/revoke_api_key", success);
     this.delete("/admin/users/:user_id.json", () =>
       response(200, { deleted: true })
     );

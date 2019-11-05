@@ -218,7 +218,7 @@ describe UserAnonymizer do
       ApiKey.create(user_id: user.id, key: "123123123")
       expect { make_anonymous }.to change { ApiKey.count }.by(-1)
       user.reload
-      expect(user.api_key).to eq(nil)
+      expect(user.api_keys).to be_empty
     end
 
     context "executes job" do

@@ -292,33 +292,14 @@
 
   {{#if currentUser.admin}}
     <div class="display-row">
-      <div class="field">{{i18n "admin.api.key"}}</div>
-      {{#if model.api_key}}
-        <div class="long-value">
-          {{model.api_key.key}}
-          {{d-button
-            class="btn-default"
-            action=(action "regenerateApiKey")
-            icon="undo"
-            label="admin.api.regenerate"}}
-          {{d-button
-            class="btn-default"
-            action=(action "revokeApiKey")
-            icon="times"
-            label="admin.api.revoke"}}
-        </div>
-      {{else}}
-        <div class="value">
-          &mdash;
-        </div>
-        <div class="controls">
-          {{d-button
-            class="btn-default"
-            action=(action "generateApiKey")
-            icon="key"
-            label="admin.api.generate"}}
-        </div>
-      {{/if}}
+      <div class="field">{{i18n "admin.api.active_keys"}}</div>
+      <div class="value">
+        {{model.api_key_count}}
+      </div>
+      <div class="controls">
+        {{d-button href="/admin/api/keys" label="admin.api.manage_keys"}}
+        
+      </div>
     </div>
   {{/if}}
 

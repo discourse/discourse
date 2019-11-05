@@ -3315,18 +3315,30 @@ en:
         none: "There are no active API keys right now."
         user: "User"
         title: "API"
-        key: "API Key"
+        key: "Key"
         created: Created
+        updated: Updated
         last_used: Last Used
         never_used: (never)
         generate: "Generate"
-        regenerate: "Regenerate"
+        undo_revoke: "Undo Revoke"
         revoke: "Revoke"
-        confirm_regen: "Are you sure you want to replace that API Key with a new one?"
-        confirm_revoke: "Are you sure you want to revoke that key?"
-        info_html: "Your API key will allow you to create and update topics using JSON calls."
         all_users: "All Users"
-        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts as any user."
+        active_keys: "Active API Keys"
+        manage_keys: Manage Keys
+        show_details: Details
+        description: Description
+        no_description: (no description)
+        all_api_keys: All API Keys
+        user_mode: User Level
+        impersonate_all_users: Impersonate any user
+        single_user: "Single User"
+        user_placeholder: Enter username
+        description_placeholder: What will this key be used for?
+        save: Save
+        new_key: New API Key
+        revoked: Revoked
+        delete: Permenantly Delete
 
       web_hooks:
         title: "Webhooks"
@@ -3918,6 +3930,9 @@ en:
             change_theme_setting: "change theme setting"
             disable_theme_component: "disable theme component"
             enable_theme_component: "enable theme component"
+            api_key_create: "api key create"
+            api_key_update: "api key update"
+            api_key_destroy: "api key destroy"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

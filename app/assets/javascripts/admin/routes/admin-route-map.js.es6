@@ -101,7 +101,14 @@ export default function() {
     );
 
     this.route("adminApi", { path: "/api", resetNamespace: true }, function() {
-      this.route("adminApiKeys", { path: "/keys", resetNamespace: true });
+      this.route(
+        "adminApiKeys",
+        { path: "/keys", resetNamespace: true },
+        function() {
+          this.route("show", { path: "/:api_key_id" });
+          this.route("new", { path: "/new" });
+        }
+      );
 
       this.route(
         "adminWebHooks",

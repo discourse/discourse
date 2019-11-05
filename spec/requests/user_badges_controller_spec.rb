@@ -111,10 +111,10 @@ describe UserBadgesController do
     end
 
     it 'does not grant badges from regular api calls' do
-      Fabricate(:api_key, user: user)
+      api_key = Fabricate(:api_key, user: user)
 
       post "/user_badges.json", params: {
-        badge_id: badge.id, username: user.username, api_key: user.api_key.key
+        badge_id: badge.id, username: user.username, api_key: api_key.key
       }
 
       expect(response.status).to eq(403)

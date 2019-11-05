@@ -1,8 +1,13 @@
 import Route from "@ember/routing/route";
-import ApiKey from "admin/models/api-key";
 
 export default Route.extend({
-  model() {
-    return ApiKey.find();
+  actions: {
+    show(apiKey) {
+      this.transitionTo("adminApiKeys.show", apiKey.id);
+    },
+
+    new() {
+      this.transitionTo("adminApiKeys.new");
+    }
   }
 });
