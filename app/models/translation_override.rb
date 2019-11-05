@@ -39,6 +39,7 @@ class TranslationOverride < ActiveRecord::Base
 
   def self.i18n_changed(keys)
     I18n.reload!
+    ExtraLocalesController.clear_cache!
     MessageBus.publish('/i18n-flush', refresh: true)
 
     keys.flatten.each do |key|

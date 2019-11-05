@@ -159,6 +159,39 @@ module JsLocaleHelper
     result
   end
 
+  def self.output_client_overrides(locale)
+    translations = (I18n.overrides_by_locale(locale) || {}).select { |k, _| k[/^(admin_js|js)\./] }
+    return "" if translations.blank?
+
+    message_formats = {}
+
+    translations.delete_if do |key, value|
+      if key.to_s.end_with?("_MF")
+        message_formats[key] = value
+      end
+    end
+
+    message_formats = message_formats.map { |k, v| "#{k.inspect}: #{v}" }.join(", ")
+
+    <<~JS
+      I18n._mfOverrides = {#{message_formats}};
+      I18n._overrides = #{translations.to_json};
+    JS
+  end
+
+  def self.output_extra_locales(bundle, locale)
+    translations = translations_for(locale)
+
+    translations.keys.each do |l|
+      translations[l].keys.each do |k|
+        bundle_translations = translations[l].delete(k)
+        translations[l].deep_merge!(bundle_translations) if k == bundle
+      end
+    end
+
+    translations.present? ? "I18n.extras = #{translations.to_json};" : ""
+  end
+
   MOMENT_LOCALE_MAPPING ||= {
     "hy" => "hy-am",
     "en" => "en-gb"

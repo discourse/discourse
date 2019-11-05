@@ -1,9 +1,9 @@
-import PreloadStore from "preload-store";
 import LocalizationInitializer from "discourse/initializers/localization";
 
 QUnit.module("initializer:localization", {
   _locale: I18n.locale,
   _translations: I18n.translations,
+  _overrides: I18n._overrides,
 
   beforeEach() {
     I18n.locale = "fr";
@@ -31,14 +31,15 @@ QUnit.module("initializer:localization", {
   afterEach() {
     I18n.locale = this._locale;
     I18n.translations = this._translations;
+    I18n._overrides = this._overrides;
   }
 });
 
 QUnit.test("translation overrides", function(assert) {
-  PreloadStore.store("translationOverrides", {
+  I18n._overrides = {
     "js.composer.reply": "WAT",
     "js.topic.reply.help": "foobar"
-  });
+  };
   LocalizationInitializer.initialize(this.registry);
 
   assert.equal(
@@ -56,10 +57,10 @@ QUnit.test("translation overrides", function(assert) {
 QUnit.test(
   "skip translation override if parent node is not an object",
   function(assert) {
-    PreloadStore.store("translationOverrides", {
+    I18n._overrides = {
       "js.composer.reply": "WAT",
       "js.composer.reply.help": "foobar"
-    });
+    };
     LocalizationInitializer.initialize(this.registry);
 
     assert.equal(I18n.t("composer.reply.help"), "[fr.composer.reply.help]");

@@ -1,5 +1,3 @@
-import PreloadStore from "preload-store";
-
 export default {
   name: "localization",
   after: "inject-objects",
@@ -21,20 +19,9 @@ export default {
     }
 
     // Merge any overrides into our object
-    const overrides = PreloadStore.get("translationOverrides") || {};
+    const overrides = I18n._overrides || {};
     Object.keys(overrides).forEach(k => {
       const v = overrides[k];
-
-      // Special case: Message format keys are functions
-      if (/_MF$/.test(k)) {
-        k = k.replace(/^[a-z_]*js\./, "");
-        I18n._compiledMFs[k] = new Function(
-          "transKey",
-          `return (${v})(transKey);`
-        );
-        return;
-      }
-
       k = k.replace("admin_js", "js");
 
       const segs = k.split(".");
@@ -50,6 +37,14 @@ export default {
       if (typeof node === "object") {
         node[segs[segs.length - 1]] = v;
       }
+    });
+
+    const mfOverrides = I18n._mfOverrides || {};
+    Object.keys(mfOverrides).forEach(k => {
+      const v = mfOverrides[k];
+
+      k = k.replace(/^[a-z_]*js\./, "");
+      I18n._compiledMFs[k] = v;
     });
 
     bootbox.addLocale(I18n.currentLocale(), {
