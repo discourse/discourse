@@ -13,8 +13,6 @@ export default Component.extend({
 
   @computed("field.type", "field.id")
   inputComponentName(type, id) {
-    return type === "component"
-      ? dasherize(id)
-      : `wizard-field-${type}`;
+    return type === "component" ? dasherize(id) : `wizard-field-${type}`;
   }
 });
