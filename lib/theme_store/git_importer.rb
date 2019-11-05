@@ -40,7 +40,7 @@ class ThemeStore::GitImporter
       Discourse::Utils.execute_command("git", "checkout", "about.json")
       # adding and diffing on staged so that we catch uploads
       Discourse::Utils.execute_command("git", "add", "-A")
-      return Discourse::Utils.execute_command("git", "diff", "--staged")
+      return Discourse::Utils.execute_command("git", "diff", "--staged", "--no-renames")
     end
   ensure
     FileUtils.rm_rf local_temp_folder if local_temp_folder
