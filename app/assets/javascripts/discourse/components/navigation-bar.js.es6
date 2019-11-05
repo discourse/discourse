@@ -22,9 +22,11 @@ export default Component.extend({
     if (filterMode.indexOf("top/") === 0) {
       filterMode = "top";
     }
-    var item = navItems.find(
-      i => i.get("filterMode").indexOf(filterMode) === 0
-    );
+    let item = navItems.find(i => i.active === true);
+
+    item =
+      item || navItems.find(i => i.get("filterMode").indexOf(filterMode) === 0);
+
     if (!item) {
       let connectors = this.connectors;
       let category = this.category;
