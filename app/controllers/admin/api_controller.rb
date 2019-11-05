@@ -90,11 +90,11 @@ class Admin::ApiController < Admin::AdminController
   end
 
   def log_api_key_revoke(*args)
-    StaffActionLogger.new(current_user).log_api_key(*args)
+    StaffActionLogger.new(current_user).log_api_key_revoke(*args)
   end
 
   def log_api_key_restore(*args)
-    StaffActionLogger.new(current_user).log_api_key(*args)
+    StaffActionLogger.new(current_user).log_api_key_restore(*args)
   end
 
 end
