@@ -1,4 +1,5 @@
 import computed from "ember-addons/ember-computed-decorators";
+import { Promise } from "rsvp";
 
 export default Ember.ArrayProxy.extend({
   loading: false,
@@ -34,7 +35,7 @@ export default Ember.ArrayProxy.extend({
         .finally(() => this.set("loadingMore", false));
     }
 
-    return Ember.RSVP.resolve();
+    return Promise.resolve();
   },
 
   refresh() {

@@ -7,6 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import ApiKey from "admin/models/api-key";
 import Group from "discourse/models/group";
 import { userPath } from "discourse/lib/url";
+import { Promise } from "rsvp";
 
 const wrapAdmin = user => (user ? AdminUser.create(user) : null);
 
@@ -514,7 +515,7 @@ const AdminUser = Discourse.User.extend({
 
   loadDetails() {
     if (this.loadedDetails) {
-      return Ember.RSVP.resolve(this);
+      return Promise.resolve(this);
     }
 
     return AdminUser.find(this.id).then(result => {

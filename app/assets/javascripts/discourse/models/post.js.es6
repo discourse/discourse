@@ -13,6 +13,7 @@ import { postUrl } from "discourse/lib/utilities";
 import { cookAsync } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
+import { Promise } from "rsvp";
 
 const Post = RestModel.extend({
   // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
@@ -230,7 +231,7 @@ const Post = RestModel.extend({
       });
     }
 
-    return promise || Ember.RSVP.Promise.resolve();
+    return promise || Promise.resolve();
   },
 
   /**

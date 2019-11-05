@@ -2,6 +2,7 @@ import debounce from "discourse/lib/debounce";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
+import { Promise } from "rsvp";
 
 var cache = {},
   cacheKey,
@@ -166,7 +167,7 @@ export default function userSearch(options) {
 
   currentTerm = term;
 
-  return new Ember.RSVP.Promise(function(resolve) {
+  return new Promise(function(resolve) {
     const newCacheKey = `${topicId}-${categoryId}`;
 
     if (new Date() - cacheTime > 30000 || cacheKey !== newCacheKey) {

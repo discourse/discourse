@@ -1,6 +1,7 @@
 import EmberObject from "@ember/object";
 import computed from "ember-addons/ember-computed-decorators";
 import { updateCsrfToken } from "discourse/lib/ajax";
+import { Promise } from "rsvp";
 
 const LoginMethod = EmberObject.extend({
   @computed
@@ -21,12 +22,12 @@ const LoginMethod = EmberObject.extend({
   doLogin({ reconnect = false } = {}) {
     if (this.customLogin) {
       this.customLogin();
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     if (this.custom_url) {
       window.location = this.custom_url;
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     let authUrl = Discourse.getURL(`/auth/${this.name}`);
