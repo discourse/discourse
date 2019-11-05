@@ -85,6 +85,8 @@ export default DiscourseRoute.extend({
       );
       if (parentCategorySlug) {
         filter = `tags/c/${parentCategorySlug}/${categorySlug}/${tagId}/l/${topicFilter}`;
+      } else if (this.noSubcategories) {
+        filter = `tags/c/${categorySlug}/none/${tagId}/l/${topicFilter}`;
       } else {
         filter = `tags/c/${categorySlug}/${tagId}/l/${topicFilter}`;
       }
@@ -162,7 +164,8 @@ export default DiscourseRoute.extend({
       category: this.category,
       filterMode: this.filterMode,
       navMode: this.navMode,
-      tagNotification: this.tagNotification
+      tagNotification: this.tagNotification,
+      noSubcategories: this.noSubcategories
     });
   },
 
