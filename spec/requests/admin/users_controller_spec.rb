@@ -426,6 +426,7 @@ RSpec.describe Admin::UsersController do
     end
 
     it 'updates the moderator flag' do
+      Jobs.expects(:enqueue).with(:send_system_message, user_id: another_user.id, message_type: 'welcome_staff', message_options: { role: :moderator })
       put "/admin/users/#{another_user.id}/grant_moderation.json"
       expect(response.status).to eq(200)
       another_user.reload

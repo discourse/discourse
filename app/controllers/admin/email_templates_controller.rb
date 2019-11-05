@@ -43,6 +43,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
       "system_messages.user_automatically_silenced",
       "system_messages.welcome_invite",
       "system_messages.welcome_user",
+      "system_messages.welcome_staff",
       "test_mailer",
       "user_notifications.account_created",
       "user_notifications.admin_login",

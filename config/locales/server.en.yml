@@ -2677,13 +2677,13 @@ en:
 
         We’re really glad you’re spending time with us and we’d love to know more about you. Take a moment to [fill out your profile](%{base_url}/my/preferences/profile), or feel free to [start a new topic](%{base_url}/categories).
 
-    welcome_moderator:
-      title: "Welcome Moderator"
-      subject_template: "Congratulations, you’re now a moderator!"
+    welcome_staff:
+      title: "Welcome Staff"
+      subject_template: "Congratulations, you’re now a %{role}!"
       text_body_template: |
-        You’ve been granted moderator status by a fellow staff member.
+        You’ve been granted %{role} status by a fellow staff member.
 
-        As a moderator, you now have access to the <a href='%{base_url}/admin' target='_blank'>admin interface</a>.
+        As a %{role}, you now have access to the <a href='%{base_url}/admin' target='_blank'>admin interface</a>.
 
         With great power comes great responsibility. If you’re new to moderating, please refer to the [Moderation Guide](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
