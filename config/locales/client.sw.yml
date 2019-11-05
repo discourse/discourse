@@ -698,7 +698,7 @@ sw:
         edit: "Hariri"
         security_key:
           register: "Jisajili"
-          delete: 'Futa'
+          delete: "Futa"
       change_about:
         title: "Badilisha Taarifa Zangu"
         error: "Hitilafu imetokea wakati wa kubadilisha namba hii."
@@ -723,9 +723,6 @@ sw:
         uploaded_avatar_empty: "Ongeza picha yako binafsi"
         upload_title: "Pakia picha yako"
         image_is_not_a_square: "Onyo: tumepogoa picha yako; upana na urefu hauko sawa."
-      change_profile_background:
-        title: "Mandharinyuma ya Umbo"
-        instructions: "Mandharinyuma ya Umbo yatakuwa katikati na upana wa 850px."
       change_card_background:
         title: "Upande wa nyuma wa Kadi ya mtumiaji"
         instructions: "Picha za nyuma zitawekwa katikati na zitakuwa na upana wa 590px."
@@ -929,6 +926,9 @@ sw:
         header_title: "maelezo mafupi, ujumbe, mialamisho na mapendekezo"
       title:
         title: "Kichwa cha Habari"
+        none: "(hakuna)"
+      primary_group:
+        title: "Kikundi Msingi"
         none: "(hakuna)"
       filters:
         all: "Zote"
@@ -1805,6 +1805,8 @@ sw:
         image_upload_not_allowed_for_new_user: "Samahani, watumiaji wapya hawawezi kupakia picha."
         attachment_upload_not_allowed_for_new_user: "Samahani, watumiaji wapya hawawezi kupakia viambatanisho."
         attachment_download_requires_login: "Samahani, inabidi uwe umeingia kupakua viambatanisho."
+      abandon_edit:
+        no_value: "Hapana, tunza"
       abandon:
         confirm: "Una uhakika unataka kuacha chapisho lako?"
         no_value: "Hapana, tunza"
@@ -2405,7 +2407,6 @@ sw:
               staff: "Wamiliki wa vikundi na wasaidizi"
           membership:
             automatic: Otomatiki
-            trust_level: Kiwango cha Uaminifu
             trust_levels_title: "Wanachama otomatikali watapata kiwango cha uaminifu wakiongezwa:"
             trust_levels_none: "Hakuna"
             automatic_membership_email_domains: "Watumiaji wanaojiunga kupitia barua pepe zenye kikoa kinacholingana na hichi kwenye orodha hii wataongezwa otomatikali kwenye kikundi hiki:"
@@ -3208,6 +3209,8 @@ sw:
           search: "Tafuta"
           groups: "Vikundi"
           dashboard: "Ubao"
+        default_categories:
+          modal_yes: "Ndiyo"
       badges:
         title: Beji
         new_badge: Beji Mpya

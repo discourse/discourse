@@ -92,7 +92,7 @@ nl:
         from_reply_by_address_error: "Gebeurt wanneer de Van-header overeenkomt met het adres voor antwoorden per e-mail."
         inactive_user_error: "Gebeurt wanneer de afzender niet actief is."
         silenced_user_error: "Gebeurt wanneer de afzender is gedempt."
-        bad_destination_address: "Gebeurt wanneer geen van de e-mailadressen in de Aan/Cc/Bcc-velden overeenkwam met een geconfigureerd adres voor inkomende e-mail."
+        bad_destination_address: "Gebeurt wanneer geen van de e-mailadressen in de Aan/Cc-velden overeenkwam met een geconfigureerd adres voor inkomende e-mail."
         strangers_not_allowed_error: "Gebeurt wanneer een gebruiker een nieuw topic probeerde aan te maken in een categorie waarvan hij/zij geen lid is."
         insufficient_trust_level_error: "Gebeurt wanneer een gebruiker een nieuw topic probeerde aan te maken in een categorie waarvoor hij/zij niet het vereiste vertrouwensniveau heeft."
         reply_user_not_matching_error: "Gebeurt wanneer een antwoord van een ander e-mailadres kwam dan waar de melding naartoe is gestuurd."
@@ -161,6 +161,7 @@ nl:
         one: "U hebt de ongeldige keuze %{name} opgegeven"
         other: "U hebt de ongeldige keuzes %{name} opgegeven"
       default_categories_already_selected: "U kunt geen categorie selecteren die in een andere lijst wordt gebruikt."
+      default_tags_already_selected: "U kunt geen tag selecteren die in een andere lijst wordt gebruikt."
       s3_upload_bucket_is_required: "U kunt geen uploads naar S3 toestaan voordat u de 's3_upload_bucket' hebt opgegeven."
       enable_s3_uploads_is_required: "U kunt geen inventory naar S3 inschakelen voordat u de S3-uploads hebt ingeschakeld."
       s3_backup_requires_s3_settings: "U kunt S3 niet als back-uplocatie gebruiken voordat u de '%{setting_name}' hebt opgegeven."
@@ -247,6 +248,7 @@ nl:
       other: "%{count} likes"
     last_reply: "Laatste antwoord"
     created: "Gemaakt"
+    new_topic: "Nieuw topic maken"
   no_mentions_allowed: "Sorry, u kunt geen andere gebruikers noemen."
   too_many_mentions:
     one: "Sorry, u kunt maar één andere gebruiker in een bericht noemen."
@@ -734,7 +736,7 @@ nl:
     activated: "Sorry, deze account is al geactiveerd."
     admin_confirm:
       title: "Beheerdersaccount bevestigen"
-      description: "Weet u zeker dat u <b>%{target_username}</b> een beheerder wilt laten worden?"
+      description: "Weet u zeker dat u <b>%{target_username} (%{target_email})</b> een beheerder wilt laten worden?"
       grant: "Beheerderstoegang verlenen"
       complete: "<b>%{target_username}</b> is nu een beheerder."
       back_to: "Terug naar %{title}"
@@ -783,6 +785,13 @@ nl:
       description: "Dit bericht liken"
       short_description: "Dit bericht liken"
       long_form: "liket dit bericht"
+  draft:
+    sequence_conflict_error:
+      title: "conceptfout"
+      description: "Concept wordt in een ander venster bewerkt. Vernieuw deze pagina."
+  draft_backup:
+    pm_title: "Back-upconcepten van actieve topics"
+    pm_body: "Topic dat back-upconcepten bevat"
   user_activity:
     no_default:
       self: "U hebt nog geen activiteit."
@@ -800,18 +809,18 @@ nl:
       self: "U hebt geen concepten; begin met het opstellen van een antwoord in een topic en het wordt automatisch als nieuw concept opgeslagen."
   webauthn:
     validation:
-      invalid_type_error: 'Het opgegeven type webauthn was ongeldig. Geldige typen zijn webauthn.get en webauthn.create.'
-      challenge_mismatch_error: 'De opgegeven vraag komt niet overeen met de door de authenticatieserver gegenereerde vraag.'
-      invalid_origin_error: 'De oorsprong van de authenticatieaanvraag komt niet overeen met de serveroorsprong.'
-      malformed_attestation_error: 'Er is een fout opgetreden bij het decoderen van de attestgegevens.'
-      invalid_relying_party_id_error: 'De Relying Party-ID van de authenticatieaanvraag komt niet overeen met de Relying Party-ID van de server.'
-      user_verification_error: 'Er is gebruikersverificatie vereist.'
-      unsupported_public_key_algorithm_error: 'Het opgegeven algoritme van de openbare sleutel wordt niet ondersteund door de server.'
-      unsupported_attestation_format_error: 'De attestation-indeling wordt niet ondersteund door de server.'
-      credential_id_in_use_error: 'De opgegeven referentie-ID is al in gebruik.'
-      public_key_error: 'De verificatie van de openbare sleutel voor de referentie is mislukt.'
-      ownership_error: 'De beveiligingssleutel behoort niet toe aan de gebruiker.'
-      not_found_error: 'Er kon geen beveiligingssleutel met de opgegeven referentie-ID worden gevonden.'
+      invalid_type_error: "Het opgegeven type webauthn was ongeldig. Geldige typen zijn webauthn.get en webauthn.create."
+      challenge_mismatch_error: "De opgegeven vraag komt niet overeen met de door de authenticatieserver gegenereerde vraag."
+      invalid_origin_error: "De oorsprong van de authenticatieaanvraag komt niet overeen met de serveroorsprong."
+      malformed_attestation_error: "Er is een fout opgetreden bij het decoderen van de attestgegevens."
+      invalid_relying_party_id_error: "De Relying Party-ID van de authenticatieaanvraag komt niet overeen met de Relying Party-ID van de server."
+      user_verification_error: "Er is gebruikersverificatie vereist."
+      unsupported_public_key_algorithm_error: "Het opgegeven algoritme van de openbare sleutel wordt niet ondersteund door de server."
+      unsupported_attestation_format_error: "De attestation-indeling wordt niet ondersteund door de server."
+      credential_id_in_use_error: "De opgegeven referentie-ID is al in gebruik."
+      public_key_error: "De verificatie van de openbare sleutel voor de referentie is mislukt."
+      ownership_error: "De beveiligingssleutel behoort niet toe aan de gebruiker."
+      not_found_error: "Er kon geen beveiligingssleutel met de opgegeven referentie-ID worden gevonden."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1285,7 +1294,7 @@ nl:
     editing_grace_period_max_diff_high_trust: "Maximale aantal toegestane tekenwijzigingen in wachtperiode voor bewerken; bij meer wijzigingen een andere berichtrevisie bewaren (vertrouwensniveau 1 en 2)"
     staff_edit_locks_post: "Berichten worden vergrendeld voor bewerking als ze door stafleden worden bewerkt"
     post_edit_time_limit: "Een TL0- of TL1-schrijver kan een eigen bericht (n) minuten na plaatsing bewerken. Stel dit in op 0 voor altijd."
-    tl2_post_edit_time_limit: "Een TL2-schrijver kan een eigen bericht (n) minuten na plaatsing bewerken. Stel dit in op 0 voor altijd."
+    tl2_post_edit_time_limit: "Een TL2+-schrijver kan een eigen bericht (n) minuten na plaatsing bewerken. Stel dit in op 0 voor altijd."
     edit_history_visible_to_public: "Toestaan dat iedereen vorige versies van een bewerkt bericht kan zien. Als dit is uitgeschakeld, kunnen alleen stafleden dat bekijken."
     delete_removed_posts_after: "Door de schrijver verwijderde berichten worden na (n) uur automatisch verwijderd. Als dit ingesteld is op 0, worden berichten direct verwijderd."
     max_image_width: "Maximale miniatuurbreedte van afbeeldingen in een bericht"
@@ -1455,9 +1464,9 @@ nl:
     enable_github_logins: "Github-authenticatie inschakelen, vereist github_client_id en github_client_secret. Zie <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
     github_client_id: "Client-ID voor Github-authenticatie, geregistreerd bij <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Client-geheim voor Github-authenticatie, geregistreerd bij <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    enable_discord_logins: 'Mogen gebruikers authenticeren via Discord?'
+    enable_discord_logins: "Mogen gebruikers authenticeren via Discord?"
     discord_client_id: 'Discord-client-ID (eentje nodig? bezoek <a href="https://discordapp.com/developers/applications/me">het Discord developer portal</a>)'
-    discord_secret: 'Geheime sleutel van Discord'
+    discord_secret: "Geheime sleutel van Discord"
     discord_trusted_guilds: 'Alleen leden van deze Discord-guilds mogen zich aanmelden via Discord. Gebruik de numerieke ID voor de guild. Bekijk de instructies <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">hier</a> voor meer informatie. Laat dit leeg om alle guilds toe te staan.'
     readonly_mode_during_backup: "Alleen-lezenmodus tijdens het maken van een back-up inschakelen"
     enable_backups: "Administrators mogen back-ups van het forum maken"
@@ -1668,6 +1677,9 @@ nl:
     private_email: "Geen inhoud van berichten of topics in titel of tekst van e-mail opnemen. OPMERKING: schakelt ook e-mailsamenvattingen uit."
     email_total_attachment_size_limit_kb: "Maximale totale grootte van aan uitgaande e-mails gekoppelde bestanden. Stel dit in op 0 om het verzenden van bijlagen uit te schakelen."
     post_excerpts_in_emails: "In meldingen per e-mail altijd fragmenten sturen in plaats van volledige berichten"
+    raw_email_max_length: "Hoeveel tekens moeten worden opgeslagen voor inkomende e-mail."
+    raw_rejected_email_max_length: "Hoeveel tekens moeten worden opgeslagen voor geweigerde inkomende e-mail."
+    delete_rejected_email_after_days: "Geweigerde e-mails ouder dan (n) dagen verwijderen."
     manual_polling_enabled: "E-mails pushen via de API voor e-mailantwoorden."
     pop3_polling_enabled: "Pollen via POP3 voor e-mailantwoorden."
     pop3_polling_ssl: "SSL gebruiken bij verbinden met de POP3-server. (Aanbevolen)"
@@ -1726,6 +1738,7 @@ nl:
     ignored_users_count_message_threshold: "Moderators inlichten als een bepaalde gebruiker door dit aantal andere gebruikers wordt genegeerd."
     ignored_users_message_gap_days: "Wachttijd voordat moderators opnieuw worden ingelicht over een gebruiker die door veel andere wordt genegeerd."
     clean_up_inactive_users_after_days: "Aantal dagen voordat een inactieve gebruiker (vertrouwensniveau 0 zonder berichten) wordt verwijderd. Stel 0 in om opschonen uit te schakelen."
+    user_selected_primary_groups: "Gebruikers mogen hun eigen primaire groep instellen"
     user_website_domains_whitelist: "Website van gebruiker wordt op deze domeinen gecontroleerd. Door pipes gescheiden lijst."
     allow_profile_backgrounds: "Gebruikers mogen profielachtergronden uploaden."
     sequential_replies_threshold: "Aantal berichten dat een gebruiker achter elkaar in één topic moet plaatsen voordat deze aan te veel opeenvolgende reacties wordt herinnerd."
@@ -1770,7 +1783,7 @@ nl:
     embed_username_required: "De gebruikersnaam voor het maken van topics is vereist."
     notify_about_flags_after: "Als er na dit aantal uren markeringen zijn die nog niet zijn afgehandeld, een privébericht naar stafleden sturen. Stel dit in op 0 om uit te schakelen."
     show_create_topics_notice: "Als de website minder dan 5 publieke topics heeft, een melding tonen waarin beheerders wordt gevraagd een aantal topics te maken."
-    delete_drafts_older_than_n_days: Concepten ouder dan (n) dagen verwijderen.
+    delete_drafts_older_than_n_days: "Concepten ouder dan (n) dagen verwijderen."
     bootstrap_mode_min_users: "Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen (stel dit in op 0 om uit te schakelen)"
     prevent_anons_from_downloading_files: "Voorkomen dat anonieme gebruikers bijlagen downloaden. WAARSCHUWING: hierdoor zullen websiteonderdelen anders dan afbeeldingen die als bijlage zijn geplaatst niet werken."
     slug_generation_method: "Kies een slug-generatiemodus. 'encoded' genereert een percentage-coderingsstring. 'none' schakelt de slug helemaal uit."
@@ -1815,6 +1828,10 @@ nl:
     default_categories_tracking: "Lijst van categorieën die standaard worden gevolgd."
     default_categories_muted: "Lijst van categorieën die standaard worden gedempt."
     default_categories_watching_first_post: "Lijst van categorieën waarin het eerste bericht in elk nieuw topic standaard in de gaten wordt gehouden."
+    default_tags_watching: "Lijst van tags die standaard in de gaten worden gehouden."
+    default_tags_tracking: "Lijst van tags die standaard worden gevolgd."
+    default_tags_muted: "Lijst van tags die standaard worden gedempt."
+    default_tags_watching_first_post: "Lijst van tags waarin het eerste bericht in elk nieuw topic standaard in de gaten wordt gehouden."
     default_text_size: "Tekstgrootte die standaard is geselecteerd"
     default_title_count_mode: "Standaardmodus voor de paginatitelteller"
     retain_web_hook_events_period_days: "Aantal dagen voor het behouden van records van webhookgebeurtenissen."
@@ -1907,6 +1924,8 @@ nl:
       topic: "Resultaten"
       user: "Gebruikers"
     results_page: "Zoekresultaten voor '%{term}'"
+    audio: "[audio]"
+    video: "[video]"
   sso:
     login_error: "Aanmeldingsfout"
     not_found: "Uw account kon niet worden gevonden. Neem contact op met de beheerder van de website."
@@ -2387,7 +2406,6 @@ nl:
     missing: "Sorry, we kunnen geen avatar vinden die met dat e-mailadres is gekoppeld. Kunt u proberen deze opnieuw te uploaden?"
   flag_reason:
     sockpuppet: "Een nieuwe gebruiker heeft een topic aangemaakt, en een andere nieuwe gebruiker op hetzelfde IP-adres (%{ip_address}) heeft geantwoord. Bekijk de website-instelling <a href='%{base_path}/admin/site_settings/category/spam'>'flag_sockpuppets'</a>."
-    spam_hosts: "Deze nieuwe gebruiker heeft geprobeerd meerdere berichten met koppelingen naar hetzelfde domein aan te maken. Bekijk de website-instelling <a href='%{base_path}/admin/site_settings/category/spam'>newuser_spam_host_threshold</a>."
   skipped_email_log:
     exceeded_emails_limit: "max_emails_per_day_per_user overschreden"
     exceeded_bounces_limit: "bounce_score_threshold overschreden"

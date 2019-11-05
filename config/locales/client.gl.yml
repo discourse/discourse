@@ -512,7 +512,7 @@ gl:
         name: "Nome"
         edit: "Editar"
         security_key:
-          delete: 'Eliminar'
+          delete: "Eliminar"
       change_about:
         title: "Cambiar «Verbo de min»"
       change_username:
@@ -534,9 +534,6 @@ gl:
         uploaded_avatar_empty: "Engadir unha imaxe personalizada"
         upload_title: "Envía a túa imaxe"
         image_is_not_a_square: "Aviso: recortamos a túa imaxe; a largura e a altura eran distintas."
-      change_profile_background:
-        title: "Fondo do perfil"
-        instructions: "Os fondos dos perfís centraranse e terán unha largura predeterminada de 850px."
       change_card_background:
         title: "Fondo das fichas dos usuarios"
         instructions: "As imaxes dos fondos centraranse e terán unha largura predeterminada de 590px."
@@ -687,6 +684,8 @@ gl:
         header_title: "perfil, mensaxes, marcadores e preferencias"
       title:
         title: "Título"
+      primary_group:
+        title: "Grupo primario"
       filters:
         all: "Todo"
       stream:
@@ -1275,6 +1274,8 @@ gl:
         image_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir imaxes."
         attachment_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir anexos."
         attachment_download_requires_login: "Sentímolo pero debes iniciar sesión para descargar anexos."
+      abandon_edit:
+        no_value: "Non, seguir"
       abandon:
         confirm: "Confirmas o abandono da túa publicación?"
         no_value: "Non, seguir"
@@ -1749,7 +1750,6 @@ gl:
               public: "Todos"
           membership:
             automatic: Automático
-            trust_level: Nivel de confianza
             trust_levels_title: "Nivel de confianza automático concedido aos membros cando son engadidos:"
             trust_levels_none: "Ningún"
             automatic_membership_email_domains: "Os usuarios que se rexistraron cun dominio de correo electrónico que coincida exactamente con algún da lista engadiranse automaticamente a este grupo:"
@@ -2336,6 +2336,8 @@ gl:
           search: "Buscar"
           groups: "Grupos"
           dashboard: "Panel"
+        default_categories:
+          modal_yes: "Si"
       badges:
         title: Insignias
         new_badge: Nova insignia

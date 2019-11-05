@@ -774,7 +774,7 @@ sk:
           Dvojfaktorové prihlásenie pridáva dodatočné zabezpečenie Vášho účtu prostredníctvom zadávania jednorázových hesiel. Heslá môžu byť generované na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> a<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> zariadeniach.
         edit: "Upraviť"
         security_key:
-          delete: 'Odstrániť'
+          delete: "Odstrániť"
       change_about:
         title: "Upraviť O mne"
         error: "Nastala chyba pri zmene tejto hodnoty."
@@ -800,9 +800,6 @@ sk:
         uploaded_avatar_empty: "Pridať vlastný obrázok"
         upload_title: "Nahrať váš obrázok"
         image_is_not_a_square: "Upozornenie: váš obrázok sme orezali; mal rozdielnu šírku a výšku"
-      change_profile_background:
-        title: "Pozadie profilu"
-        instructions: "Pozadie profilu bude vystredené a s predvolenou šírkou 850px."
       change_card_background:
         title: "Pozadie karty používateľa"
         instructions: "Obrázky pozadia budú vystredené a s predvolenou šírkou 590px."
@@ -1015,6 +1012,9 @@ sk:
         header_title: "profil, správy, záložky a nastavenia"
       title:
         title: "Názov"
+        none: "(žiadne)"
+      primary_group:
+        title: "Hlavná skupina"
         none: "(žiadne)"
       filters:
         all: "Všetky"
@@ -1761,6 +1761,8 @@ sk:
         image_upload_not_allowed_for_new_user: "Ľutujeme, noví použivatelia nemôžu nahrávať obrázky."
         attachment_upload_not_allowed_for_new_user: "Ľutujeme, noví používatelia nemôžu nahrávať prílohy."
         attachment_download_requires_login: "Ľutujeme, pre stiahnutie príloh musíte byť prihlásený."
+      abandon_edit:
+        no_value: "Nie, ponechať"
       abandon:
         confirm: "Ste si istý, že chcete zahodiť tento príspevok?"
         no_value: "Nie, ponechať."
@@ -2353,7 +2355,6 @@ sk:
               public: "Každý"
           membership:
             automatic: Automaticky
-            trust_level: Stupeň dôvery
             trust_levels_title: "Stupeň dôvery automaticky udelený členom po ich pridaní:"
             trust_levels_none: "Žiadny"
             automatic_membership_email_domains: "Užívatelia, ktorí sa zaregistrovali s emailovou doménou uvedenou v zozname budú automaticky pridaní do tejto skupiny. "
@@ -2993,6 +2994,8 @@ sk:
           search: "Hľadať"
           groups: "Skupiny"
           dashboard: "Ovládací panel"
+        default_categories:
+          modal_yes: "Áno"
       badges:
         title: Odznaky
         new_badge: Nový odznak

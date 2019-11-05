@@ -95,6 +95,12 @@ fr:
         x_days:
           one: "il y a %{count} jour"
           other: "il y a %{count} jours"
+        x_months:
+          one: "il y a %{count} mois"
+          other: "il y a %{count} mois"
+        x_years:
+          one: "il y a %{count} an"
+          other: "il y a %{count} ans"
       later:
         x_days:
           one: "%{count} jour plus tard"
@@ -316,6 +322,8 @@ fr:
       in_reply_to: "en réponse à"
       explain:
         total: "Total"
+        trust_level_bonus:
+          name: "niveau de confiance"
       claim_help:
         optional: "Vous pouvez réserver cet élément pour empêcher d'autres de le vérifier."
         required: "Vous devez réserver des éléments avant des les vérifier."
@@ -858,6 +866,7 @@ fr:
         copied_to_clipboard: "Copié dans le presse-papiers"
         copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papiers"
         remaining_codes: "Vous avez <strong>{{count}}</strong> codes de secours restants."
+        use: "Utiliser un code de secours"
         enable_prerequisites: "Vous devez activer un second facteur principal avant de générer des codes de sauvegarde."
         codes:
           title: "Codes de secours générés"
@@ -865,6 +874,7 @@ fr:
       second_factor:
         title: "Authentification à deux facteurs"
         enable: "Paramètres d'authentification à deux facteurs"
+        forgot_password: "Mot de passe oublié ?"
         confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         name: "Nom"
         label: "Code"
@@ -877,6 +887,7 @@ fr:
           Protéger votre compte avec des codes de sécurité à usage unique.
         extended_description: "L'authentification à deux facteurs ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en \nplus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href=\"https://www.google.com/search?q=authenticator+apps+for+android\" target='_blank'>Android</a> et <a href=\"https://www.google.com/search?q=authenticator+apps+for+ios\">iOS</a>.\n"
         oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux facteurs aura été activée sur votre compte."
+        use: "Utiliser l'application Authenticator"
         enforced_notice: "Vous devez activer l'authentification à deux facteurs pour accéder à ce site."
         disable: "désactiver"
         disable_title: "Désactiver le second facteur"
@@ -884,13 +895,21 @@ fr:
         edit: "Modifier"
         edit_title: "Modifier le second facteur"
         edit_description: "Nom du second facteur"
+        enable_security_key_description: "Dès que votre clé de sécurité physique est prête, appuyer sur le bouton Enregistrer ci-dessous."
         totp:
           title: "Authentificateurs à base de jetons"
           add: "Nouveau Authentificateur"
           default_name: "Mon Authentificateur"
         security_key:
-          register: "Créer"
-          delete: 'Supprimer'
+          register: "Enregistrer"
+          title: "Clés de sécurité"
+          add: "Enregistrer une clé de sécurité"
+          default_name: "Clé de sécurité principale"
+          not_allowed_error: "La procédure d'enregistrement de la clé de sécurité a expiré ou a été annulée."
+          already_added_error: "Vous avez déjà enregistré cette clé de sécurité. Vous n'avez pas besoin de le faire à nouveau."
+          edit: "Modifier la clé de sécurité"
+          edit_description: "Nom de la clé de sécurité"
+          delete: "Supprimer"
       change_about:
         title: "Modifier À propos de moi"
         error: "Il y a eu une erreur lors de la modification de cette valeur."
@@ -918,7 +937,7 @@ fr:
         image_is_not_a_square: "Attention : nous avons découpé votre image ; la largeur et la hauteur n'étaient pas égales."
       change_profile_background:
         title: "Arrière-plan du profil"
-        instructions: "Les arrière-plans du profil seront centrés avec une largeur par défaut de 850 pixels."
+        instructions: "Les arrière-plans du profil seront centrés avec une largeur par défaut de 1110 pixels."
       change_card_background:
         title: "Arrière-plan de la carte de l'utilisateur"
         instructions: "Les images d'arrière-plan seront centrées avec une largeur par défaut de 590 pixels."
@@ -1160,6 +1179,9 @@ fr:
       title:
         title: "Titre"
         none: "(aucun)"
+      primary_group:
+        title: "Groupe principal"
+        none: "(aucun)"
       filters:
         all: "Tous"
       stream:
@@ -1290,8 +1312,16 @@ fr:
       password: "Mot de passe"
       second_factor_title: "Authentification à deux facteurs"
       second_factor_description: "Veuillez saisir le code d'authentification de votre app :"
+      second_factor_backup: "Se connecter avec un code de secours"
       second_factor_backup_title: "Authentification à deux facteurs (code de secours)"
       second_factor_backup_description: "Veuillez entrer un de vos codes de secours :"
+      second_factor: "Se connecter avec une application"
+      security_key_description: "Dès que votre clé de sécurité physique est prête, appuyer sur le bouton S'authentifier avec une clé de sécurité ci-dessous."
+      security_key_alternative: "Vous ne trouvez pas votre clé de sécurité ou voulez utiliser une autre méthode ?"
+      security_key_authenticate: "S'authentifier avec une clé de sécurité"
+      security_key_not_allowed_error: "La procédure d'authentification de la clé de sécurité a expiré ou a été annulée."
+      security_key_no_matching_credential_error: "Aucun identifiant correspondant n'a pu être trouvé dans la clé de sécurité donnée."
+      security_key_support_missing_error: "Votre appareil ou navigateur actuel ne supporte pas l'utilisation de clés de sécurité. Veuillez utiliser une autre méthode."
       email_placeholder: "courriel ou pseudo"
       caps_lock_warning: "Majuscules vérrouillées"
       error: "Erreur inconnue"
@@ -1338,6 +1368,7 @@ fr:
         title: "via GitHub"
       discord:
         name: "Discord"
+        title: "avec Discord"
       second_factor_toggle:
         totp: "Utilisez plutôt une application d'authentification"
         backup_code: "Utilisez plutôt un code de secours"
@@ -1358,6 +1389,7 @@ fr:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
+      emoji_one: "JoyPixels (précédemment EmojiOne)"
       win10: "Win10"
       google_classic: "Classique Google"
       facebook_messenger: "Facebook Messenger"
@@ -1448,10 +1480,12 @@ fr:
         title_missing: "Le titre est obligatoire."
         title_too_short: "Le titre doit avoir au moins {{min}} caractères"
         title_too_long: "Le titre ne doit pas dépasser les {{max}} caractères"
+        post_missing: "Le message ne peut être vide"
         post_length: "Le message doit avoir au moins {{min}} caractères"
         try_like: "Avez-vous essayé le bouton {{heart}} ?"
         category_missing: "Vous devez choisir une catégorie"
         tags_missing: "Vous devez choisir au moins {{count}} étiquettes"
+        topic_template_not_modified: "Veuillez ajouter des détails à votre topic en modifiant le modèle de sujet."
       save_edit: "Sauvegarder"
       overwrite_edit: "Ecraser la modification"
       reply_original: "Répondre sur le sujet d'origine"
@@ -1491,7 +1525,7 @@ fr:
       link_description: "saisir ici la description du lien"
       link_dialog_title: "Insérer le lien"
       link_optional_text: "titre optionnel"
-      link_url_placeholder: "https://example.com"
+      link_url_placeholder: "Coller une URL ou tapez pour chercher des sujets"
       quote_title: "Citation"
       quote_text: "Citation"
       code_title: "Texte préformaté"
@@ -1824,6 +1858,7 @@ fr:
       group_request: "Effectuez une demande d'adhésion au groupe `{{name}}` pour afficher ce sujet."
       group_join: "Vous devez rejoindre le groupe `{{name}}` pour voir ce sujet"
       group_request_sent: "Votre demande d'adhésion au groupe a été envoyée. Vous serez averti de son acceptation."
+      unread_indicator: "Aucun membre n'a encore lu le dernier message de ce topic."
       read_more_MF: "Il y { UNREAD, plural, =0 {} one { a <a href='{basePath}/unread'>1 sujet non lu</a> } other { a <a href='{basePath}/unread'># sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='{basePath}/new'>1 nouveau sujet</a> } other { {BOTH, select, true{et } false {a } other{}} <a href='{basePath}/new'># nouveaux sujets</a> } } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Voir toutes les catégories
       view_latest_topics: voir les derniers sujets
@@ -2181,6 +2216,11 @@ fr:
         image_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer d'images."
         attachment_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer de fichier."
         attachment_download_requires_login: "Désolé, vous devez être connecté pour télécharger une pièce jointe."
+      abandon_edit:
+        confirm: "Êtes-vous sûr de vouloir annuler vos changements ?"
+        no_value: "Non, garder"
+        no_save_draft: "Non, enregistrer le brouillon"
+        yes_value: "Oui, annuler la modification"
       abandon:
         confirm: "Êtes-vous sûr de vouloir abandonner votre message ?"
         no_value: "Non, le conserver"
@@ -2323,10 +2363,13 @@ fr:
       tags_allowed_tags: "Réserver l'utilisation de ces étiquettes à cette catégorie :"
       tags_allowed_tag_groups: "Réserver l'utilisation de ces groupes d'étiquettes à cette catégorie :"
       tags_placeholder: "(Facultatif) liste des étiquettes autorisées"
-      tags_tab_description: "Les étiquettes et les groupes d'étiquettes spécifiés ici ne seront disponibles que dans cette catégorie ainsi que dans toutes les catégories qui contiennent les mêmes spécifications. Ces étiquettes ne pourront pas être utilisées dans d'autres catégories."
+      tags_tab_description: "Les étiquettes et les groupes d'étiquettes spécifiés au dessus ne seront disponibles que dans cette catégorie ainsi que dans toutes les catégories qui contiennent les mêmes spécifications. Ces étiquettes ne pourront pas être utilisées dans d'autres catégories."
       tag_groups_placeholder: "(Facultatif) liste des groupes de étiquettes autorisées"
       manage_tag_groups_link: "Gérer les groupes d'étiquettes ici."
       allow_global_tags_label: "Permettre aussi d'autres étiquettes"
+      tag_group_selector_placeholder: "(Facultatif) Groupe d'étiquettes"
+      min_tags_from_required_group_label: 'Nombre d''étiquettes :'
+      required_tag_group_label: "Groupe d'étiquettes :"
       topic_featured_link_allowed: "Autoriser les liens à la une dans cette catégorie"
       delete: "Supprimer la catégorie"
       create: "Nouvelle catégorie"
@@ -2805,6 +2848,7 @@ fr:
         parent_tag_description: "Les étiquette de ce groupe ne peuvent pas être utilisées sauf si l'étiquette parent est présente."
         one_per_topic_label: "Limiter à une étiquette de ce groupe par sujet"
         new_name: "Nouveau groupe d'étiquettes"
+        name_placeholder: "Nom du groupe d'étiquette"
         save: "Sauvegarder"
         delete: "Supprimer"
         confirm_delete: "Êtes-vous sûr de vouloir supprimer ce groupe d'étiquettes ?"
@@ -2968,10 +3012,11 @@ fr:
               owners: "Propriétaires du groupe"
               description: "Les administrateurs peuvent voir tous les groupes."
             members_visibility_levels:
+              title: "Qui peut voir les membres de ce groupe ?"
               description: "Les administrateurs peuvent voir les membres de tous les groupes."
+            publish_read_state: "Publier le statut de lecture du groupe lors des messages directs de groupe"
           membership:
             automatic: Automatique
-            trust_level: Niveau de confiance
             trust_levels_title: "Niveau de confiance automatiquement attribué lorsque les membres sont ajoutés :"
             trust_levels_none: "Aucun"
             automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine courriel qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe :"
@@ -3005,6 +3050,8 @@ fr:
         title: "API"
         key: "Clé API"
         created: Créé
+        last_used: Dernière utilisation
+        never_used: (jamais)
         generate: "Générer"
         regenerate: "Regénérer"
         revoke: "Révoquer"
@@ -3327,6 +3374,7 @@ fr:
             other: "Le thème est en retard de {{count}} commits !"
           compare_commits: "(Voir les nouveaux changements)"
           repo_unreachable: "Le dépôt Git de ce thème reste inaccessible. Message d'erreur : "
+          imported_from_archive: "Ce thème a été importé depuis un fichier .zip"
           scss:
             text: "CSS"
             title: "Entrez du CSS personnalisé, nous acceptons tous les styles CSS et SCSS valides."
@@ -3983,6 +4031,10 @@ fr:
           dashboard: "Tableau de bord"
         secret_list:
           invalid_input: "Les champs de saisi ne peuvent pas être vide ou contenir le caractère barre verticale"
+        default_categories:
+          modal_description: "Voulez-vous appliquer ce changement rétroactivement ? Cela changera les préférences de %{count} utilisateurs existants."
+          modal_yes: "Oui"
+          modal_no: "Non, appliquer ce changement à partir de maintenant"
       badges:
         title: Badges
         new_badge: Nouveau badge

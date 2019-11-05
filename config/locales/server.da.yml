@@ -89,7 +89,6 @@ da:
         from_reply_by_address_error: "Det sker, når Fra-overskriften matcher svaret via e-mail-adresse."
         inactive_user_error: "Dette sker når afsenderen ikke er aktiv."
         silenced_user_error: "Det sker, når afsenderen er silenced."
-        bad_destination_address: "Dette sker når ingen af email adresserne i To/Cc/Bcc felterne matcher en opsat indgående email adresse."
         strangers_not_allowed_error: "Dette sker når en bruger prøver at oprette et nyt emne i en kategori som de ikke er medlem af."
         insufficient_trust_level_error: "Dette sker når en bruger prøvede at oprette et nyt emne i en kategori som de ikke har den krævne \"trust level\" til."
         reply_user_not_matching_error: "Dette sker når et svar kom fra en anden email adresse end den notifikationen blev sendt til."
@@ -588,7 +587,6 @@ da:
     activated: "Desværre, denne konto er allerede aktiveret."
     admin_confirm:
       title: "Bekræft Admin Konto"
-      description: "Er du sikker på du vil gøre <b>%{target_username}</b> til administrator?"
       grant: "Tildel Admin Adgang"
       complete: "<b>%{target_username}</b> er nu administrator."
       back_to: "Gå tilbage til %{title}"
@@ -1209,10 +1207,6 @@ da:
   admin_confirmation_mailer:
     title: "Bekræftelse af admin"
     subject_template: "[%{email_prefix}] Bekræft ny admin-konto"
-    text_body_template: |
-      Bekræft, at du vil tilføje **%{target_username}** som administrator til dit forum
-
-      [Godkend administratorkonto](%{admin_confirm_url})
   new_version_mailer:
     subject_template: "[%{email_prefix}] Ny version af Discourse, opdatering tilgængelig"
   new_version_mailer_with_notes:

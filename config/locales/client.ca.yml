@@ -880,6 +880,7 @@ ca:
         copied_to_clipboard: "Copiat al porta-retalls."
         copy_to_clipboard_error: "Error copiant dades al porta-retalls"
         remaining_codes: "Us resten <strong>{{count}}</strong> codis de còpia de seguretat."
+        use: "Utilitza un codi de còpia de seguretat"
         enable_prerequisites: "Cal habilitar un segon factor primari abans de generar codis de còpia de seguretat."
         codes:
           title: "Codis de còpia de seguretat generats"
@@ -887,6 +888,7 @@ ca:
       second_factor:
         title: "Autenticació de dos factors"
         enable: "Gestiona l'autenticació de dos factors"
+        forgot_password: "Heu oblidat la contrasenya?"
         confirm_password_description: "Confirmeu la contrasenya per a continuar"
         name: "Nom"
         label: "Codi"
@@ -900,6 +902,7 @@ ca:
         extended_description: |
           L'autenticació de dos factors afegeix seguretat addicional al vostre compte exigint un testimoni únic a més de la vostra contrasenya. Es poden generar testimonis en dispositius <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Observeu que els inicis de sessió amb xarxes socials seran deshabilitats quan l'autenticació de dos factors s'hagi activat en el vostre compte. "
+        use: "Utilitza l'aplicació Authenticator"
         enforced_notice: "Cal que activeu l'autenticació de dos factors abans d'accedir a aquest lloc web."
         disable: "deshabilita"
         disable_title: "Deshabilita el segon factor"
@@ -907,13 +910,21 @@ ca:
         edit: "Edita"
         edit_title: "Edita el factor segon"
         edit_description: "Nom del factor segon"
+        enable_security_key_description: "Quan tingueu preparada la vostra clau de seguretat física, premeu el botó Registre."
         totp:
           title: "Autenticadors basats en testimonis"
           add: "Autenticador nou"
           default_name: "El meu autenticador"
         security_key:
           register: "Registre"
-          delete: 'Suprimeix'
+          title: "Claus de seguretat"
+          add: "Registra la clau de seguretat"
+          default_name: "Clau de seguretat principal"
+          not_allowed_error: "El procés de registre de claus de seguretat ha arribat al límit de temps o s'ha cancel·lat. "
+          already_added_error: "Ja heu registrat aquesta clau de seguretat. No cal que la registreu de nou."
+          edit: "Edita la clau de seguretat"
+          edit_description: "Nom de la clau de seguretat"
+          delete: "Suprimeix"
       change_about:
         title: "Canvia Quant a mi"
         error: "Hi ha hagut un error en canviar aquest valor"
@@ -939,9 +950,6 @@ ca:
         uploaded_avatar_empty: "Afegeix una foto personalitzada"
         upload_title: "Carrega la foto"
         image_is_not_a_square: "Atenció: hem retallat la vostra imatge; l'amplada i l'alçada no eren iguals."
-      change_profile_background:
-        title: "Fons del perfil"
-        instructions: "Els fons de perfil se centraran i tindran una amplada per defecte de 850px."
       change_card_background:
         title: "Fons de la targeta d'usuari"
         instructions: "Les imatges de fons se centraran i tindran una amplada per defecte de 590px."
@@ -1183,6 +1191,9 @@ ca:
       title:
         title: "Títol"
         none: "(cap)"
+      primary_group:
+        title: "Grup primari"
+        none: "(cap)"
       filters:
         all: "Tot"
       stream:
@@ -1316,8 +1327,16 @@ ca:
       password: "Contrasenya"
       second_factor_title: "Autenticació de dos factors"
       second_factor_description: "Introduïu el codi d'autenticació de la vostra aplicació:"
+      second_factor_backup: "Inici de sessió amb codi de còpia de seguretat "
       second_factor_backup_title: "Còpia de seguretat de dos factors"
       second_factor_backup_description: "Introduïu un dels vostres codis de còpia de seguretat:"
+      second_factor: "Inici de sessió amb l’aplicació Authenticator"
+      security_key_description: "Quan tingueu preparada la vostra clau de seguretat física, premeu el botó Autentica amb clau de seguretat."
+      security_key_alternative: "¿No podeu trobar la vostra clau de seguretat o voleu utilitzar un altre mètode?"
+      security_key_authenticate: "Autenticació amb clau de seguretat"
+      security_key_not_allowed_error: "El procés d'autenticació de claus de seguretat ha arribat al límit de temps o s'ha cancel·lat. "
+      security_key_no_matching_credential_error: "No s'ha trobat cap credencial coincident amb la clau de seguretat proporcionada."
+      security_key_support_missing_error: "El vostre dispositiu o navegador actual no admet l'ús de claus de seguretat. Utilitzeu un mètode diferent."
       email_placeholder: "correu electrònic o nom d'usuari"
       caps_lock_warning: "El bloqueig de majúscula és activat"
       error: "Error desconegut"
@@ -1385,6 +1404,7 @@ ca:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
+      emoji_one: "JoyPixels (abans EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1520,7 +1540,7 @@ ca:
       link_description: "introduïu una descripció de l'enllaç"
       link_dialog_title: "Insereix un enllaç"
       link_optional_text: "títol opcional"
-      link_url_placeholder: "https://example.com"
+      link_url_placeholder: "Enganxeu un URL o escriviu per a cercar temes"
       quote_title: "Bloc de citació"
       quote_text: "Bloc de citació"
       code_title: "Text preformatat"
@@ -2211,6 +2231,11 @@ ca:
         image_upload_not_allowed_for_new_user: "Els usuaris nous no poden pujar imatges."
         attachment_upload_not_allowed_for_new_user: "Els usuaris nous no poden adjuntar fitxers."
         attachment_download_requires_login: "Heu d'iniciar la sessió per a descarregar fitxers adjunts."
+      abandon_edit:
+        confirm: "Esteu segur que voleu descartar els canvis?"
+        no_value: "No, segueix"
+        no_save_draft: "No, desa l'esborrany"
+        yes_value: "Sí, descarta l'edició"
       abandon:
         confirm: "Esteu segur que voleu abandonar la vostra publicació?"
         no_value: "No, segueix"
@@ -2353,7 +2378,6 @@ ca:
       tags_allowed_tags: "Restringeix aquestes etiquetes per a aquesta categoria:"
       tags_allowed_tag_groups: "Restringeix aquests grups d'etiquetes a aquesta categoria:"
       tags_placeholder: "Llista (opcional) d'etiquetes permeses"
-      tags_tab_description: "Les etiquetes i els grups d'etiquetes especificats aquí només estaran disponibles en aquesta categoria i en altres categories que també els especifiquin. No estaran disponibles per a altres categories."
       tag_groups_placeholder: "Llista (opcional) d'etiquetes de grup permeses"
       manage_tag_groups_link: "Gestioneu els grups d'etiquetes aquí."
       allow_global_tags_label: "Permet també altres etiquetes"
@@ -2990,8 +3014,8 @@ ca:
             publish_read_state: "En els missatges de grup publica l'estat de lectura del grup"
           membership:
             automatic: Automàtic
-            trust_level: Nivell de confiança
             trust_levels_title: "Nivell de confiança atorgat automàticament a membres quan són afegits:"
+            effects: Efectes
             trust_levels_none: "Cap"
             automatic_membership_email_domains: "Els usuaris registrats amb un domini de correu que coincideix amb un de la llista s'afegiran automàticament a aquest grup:"
             automatic_membership_retroactive: "Aplica la mateixa regla de domini de correu per a afegir usuaris registrats existents."
@@ -3024,6 +3048,8 @@ ca:
         title: "API"
         key: "Clau API"
         created: Creat
+        last_used: Darrer utilitzat
+        never_used: (mai)
         generate: "Genera"
         regenerate: "Regenera"
         revoke: "Revoca"
@@ -3346,6 +3372,7 @@ ca:
             other: "L'aparença és {{count}} commits darrere!"
           compare_commits: "(Vegeu els commits nous)"
           repo_unreachable: "No s'ha pogut contactar amb el repositori git d'aquesta aparença. Missatge d'error:"
+          imported_from_archive: "Aquesta aparença s'ha importat d'un fitxer .zip"
           scss:
             text: "CSS"
             title: "Introduïu el CSS personalitzat. Acceptem tots els estils CSS i SCSS vàlids."
@@ -4002,6 +4029,10 @@ ca:
           dashboard: "Tauler de control"
         secret_list:
           invalid_input: "Els camps d'entrada no poden ser buits o contenir un caràcter de barra vertical."
+        default_categories:
+          modal_description: "Voleu aplicar històricament aquest canvi? Això canviarà les preferències per a %{count} usuaris existents."
+          modal_yes: "Sí"
+          modal_no: "No, aplica el canvi només en el futur"
       badges:
         title: Insígnies
         new_badge: Insígnia nova

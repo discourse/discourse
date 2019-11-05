@@ -49,6 +49,7 @@ fi:
       about_json_values: "about.json sisältää arvoja, jotka eivät kelpaa: %{errors}"
       git: "Virhe git-tietovarastoa kloonattaessa: ei ole pääsyoikeutta tai tietovarastoa ei löytynyt"
       unpack_failed: "Tiedoston purku epäonnistui"
+      file_too_big: "Purettu tiedosto on liian suuri."
       unknown_file_type: "Lähettämäsi tiedosto ei vaikuta olevan käypä Discourse-teema."
     errors:
       component_no_user_selectable: "Teemakomponentti ei voi olla käyttäjän valittavissa"
@@ -91,7 +92,6 @@ fi:
         from_reply_by_address_error: "Näin käy, kun lähettäjän osoite (From) on sama kuin vastausten sähköpostiosoite."
         inactive_user_error: "Näin käy, kun lähettäjä ei ole aktiivinen."
         silenced_user_error: "Näin käy, kun lähettäjä on hiljennetty."
-        bad_destination_address: "Näin käy, kun viestin vastaanottaja/kopio/piilokopio -kenttien osoitteet eivät täsmää asetettuihin saapuvan sähköpostin osoitteiden kanssa."
         strangers_not_allowed_error: "Näin käy, kun käyttäjä yrittää aloittaa ketjun alueella, jonka jäsen ei ole."
         insufficient_trust_level_error: "Näin käy, kun käyttäjä yrittää aloittaa ketjun alueella, jonka vähimmäisluottamustasovaatimusta ei täytä."
         reply_user_not_matching_error: "Näin käy, kun vastaus saapuu eri sähköpostiosoitteesta kuin mihin ilmoitus lähetettiin."
@@ -208,7 +208,11 @@ fi:
   email_template_cant_be_modified: "Tätä sähköpostipohjaa ei voi muokata"
   invalid_whisper_access: "Joko kuiskaukset eivät ole käytössä tai sinulla ei ole oikeutta kuiskata."
   not_in_group:
+    title_topic: "Täytyy kuulua ryhmään, jotta näkee tämän ketjun."
+    title_category: "Täytyy kuulua ryhmään, jotta näkee tämän alueen."
+    request_membership: "Hae jäsenyyttä"
     join_group: "Liity ryhmään"
+  deleted_topic: "Ups! Ketju on poistettu eikä ole enää saatavilla."
   reading_time: "Lukuaika"
   likes: "Tykkäykset"
   too_many_replies:
@@ -236,6 +240,10 @@ fi:
     replies:
       one: "%{count} vastaus"
       other: "%{count} vastausta"
+    likes:
+      one: "%{count} tykkäys"
+      other: "%{count} tykkäystä"
+    last_reply: "Viimeisin vastaus"
     created: "Luotu"
   no_mentions_allowed: "Pahoittelut, et voi mainita muita käyttäjiä."
   too_many_mentions:
@@ -724,7 +732,6 @@ fi:
     activated: "Pahoittelut, tämä tili on jo aktivoitu."
     admin_confirm:
       title: "Vahvista ylläpitäjätili"
-      description: "Oletko varma, että haluat käyttäjästä <b>%{target_username}</b> ylläpitäjän?"
       grant: "Myönnä ylläpitäjäoikeudet"
       complete: "<b>%{target_username}</b> on nyt ylläpitäjä."
       back_to: "Palaa %{title}"
@@ -773,6 +780,9 @@ fi:
       description: "Tykkää viestistä"
       short_description: "Tykkää viestistä"
       long_form: "tykkäsi tästä"
+  draft_backup:
+    pm_title: "Varmuuskopiot ketjuihin suunnatuista luonnoksista"
+    pm_body: "Ketju johon varmuuskopiot luonnoksista sijoitetaan"
   user_activity:
     no_default:
       self: "Et ole vielä tehnyt mitään mainittavaa."
@@ -788,6 +798,10 @@ fi:
       others: "Ei vastauksia."
     no_drafts:
       self: "Sinulla ei ole luonnoksia. Aloita kirjoittamaan viestiä mihin tahansa ketjuun niin se tallentuu automaattiseksi uudeksi luonnokseksi."
+  webauthn:
+    validation:
+      invalid_type_error: "Annettu webauthn-tyyppi ei kelpaa. Kelvollisia ovat webauthn.get ja webauthn.create."
+      challenge_mismatch_error: "Palautettu haaste ei vastaa todennuspalvelimen luomaa haastetta."
   topic_flag_types:
     spam:
       title: "Roskaposti"
@@ -1679,7 +1693,7 @@ fi:
     embed_username_required: "Käyttäjänimi vaaditaan ketjun luomiseksi."
     notify_about_flags_after: "Jos lippuja on ollut käsittelemättä näin monen tunnin ajan, lähetä yksityisviesti valvojille. Poista käytöstä asettamalla 0."
     show_create_topics_notice: "Jos palstalla on vähemmän kuin 5 julkista ketjua, kehota ylläpitäjiä aloittamaan ketjuja."
-    delete_drafts_older_than_n_days: Poista yli (n) päivää vanhat luonnokset.
+    delete_drafts_older_than_n_days: "Poista yli (n) päivää vanhat luonnokset."
     bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (aseta 0 poistaaksesi käytöstä)"
     prevent_anons_from_downloading_files: "Estä kirjautumattomia käyttäjiä lataamasta liitetiedostoja. VAROITUS: tämä estää viestin liitettyjen muiden tiedostojen, kuin kuvien käyttämisen sivustolla."
     slug_generation_method: "Valitse polkulyhenteen luomisen metodi. 'encoded' käyttää prosenttikoodausta, 'none' poistaa polkulyhenteet käytöstä."
@@ -1873,6 +1887,12 @@ fi:
     autoclosed_disabled_lastpost: "Tämä ketju on nyt avattu. Uusia vastauksia voi taas kirjoittaa."
     auto_deleted_by_timer: "Poistettiin ajastetusti."
   login:
+    security_key_description: "Kun fyysinen tunnistautumislaite on kätesi ulottuvilla, klikkaa alla olevaa \"Tunnistaudu tunnistautumislaitteella\" -painiketta."
+    security_key_alternative: "Et löydä tunnistautumislaitetta tai haluat käyttää muuta tapaa?"
+    security_key_authenticate: "Tunnistaudu tunnistautumislaitteen avulla"
+    security_key_not_allowed_error: "Tunnistaumislaitteella tunnistautumisprosessi joko vanheni tai peruutettiin."
+    security_key_no_matching_credential_error: "Tunnistautumislaitteelta ei löytynyt kelpaavia pääsytietoja."
+    security_key_support_missing_error: "Tämä laitteesi tai selaimesi ei tue tunnistaumislaitteita. Käytä muuta tapaa."
     not_approved: "Tiliäsi ei ole vielä hyväksytty. Saat ilmoituksen sähköpostilla, kun voit kirjautua sisään."
     incorrect_username_email_or_password: "Väärä käyttäjänimi, sähköposti tai salasana"
     incorrect_password: "Väärä salasana"
@@ -2039,10 +2059,6 @@ fi:
   admin_confirmation_mailer:
     title: "Ylläpitäjän vahvistaminen"
     subject_template: "[%{email_prefix}] Vahvista uusi ylläpitäjätili"
-    text_body_template: |
-      Vahvista, että haluat käyttäjästä **%{target_username}** ylläpitäjän palstallesi.
-
-      [Vahvista ylläpitäjäoikeudet](%{admin_confirm_url})
   test_mailer:
     title: "Sähköpostipalvelun testaus"
     subject_template: "[%{email_prefix}] Sähköpostin toimitettavuustesti"
@@ -2581,36 +2597,6 @@ fi:
     visit_link_to_respond_pm: "Vastaa käyttäjille %{participants} [vierailemalla keskustelussa](%{base_url}%{url})."
     posted_by: "Käyttäjältä %{username} %{post_date}"
     pm_participants: "Osanottajat: %{participants}"
-    invited_group_to_private_message_body: |
-      %{username} kutsui ryhmän @%{group_name} yksityiskeskusteluun
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      sivustolla
-
-      > %{site_title} -- %{site_description}
-    invited_to_private_message_body: |
-      %{username} kutsui sinut yksityiskeskusteluun
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      sivustolla
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} kustui sinut keskusteluun
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      sivustolla
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       title: "Ryhmä kutsuttiin yksityiskeskusteluun"
       subject_template: "[%{email_prefix}] %{username} kutsui ryhmän %{group_name} yksityiskeskusteluun '%{topic_title}'"
@@ -2921,6 +2907,8 @@ fi:
         %{base_url}/u/activate-account/%{email_token}
 
         Jos linkkiä ei voi klikata, yritä kopioida ja liittää se selaimen osoiteriville.
+    activation_reminder:
+      title: "Aktivointimuistutus"
     suspicious_login:
       title: "Varoitus uudesta kirjautumisesta"
       subject_template: "[%{site_name}] Uusi kirjautuminen paikasta %{location}"
@@ -2975,7 +2963,6 @@ fi:
     missing: "Pahoittelut, emme löydä profiilikuvaa, joka olisi yhdistetty tähän sähköpostiosoitteeseen. Voitko yrittää ladata sen uudestaan?"
   flag_reason:
     sockpuppet: "Uusi käyttäjä aloitti ketjun, johon toinen uusi käyttäjä samasta IP-osoitteesta (%{ip_address}) vastasi. Katso asetus <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Tämä uusi käyttäjä yritti luoda useita viestejä, jotka sisälsivät linkkejä samaan verkkotunnukseen. Katso asetus <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "max_emails_per_day_per_user ylitettiin"
     exceeded_bounces_limit: "bounce_score_threshold ylitettiin"

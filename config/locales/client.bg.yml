@@ -48,6 +48,9 @@ bg:
         x_seconds:
           one: "%{count}сек"
           other: "%{count}сек"
+        less_than_x_minutes:
+          one: "< %{count}м"
+          other: "< %{count}м"
         x_minutes:
           one: "%{count}мин"
           other: "%{count}мин"
@@ -57,6 +60,9 @@ bg:
         x_days:
           one: "%{count}д"
           other: "%{count}д"
+        x_months:
+          one: "%{count}месец"
+          other: "%{count}месеца"
         about_x_years:
           one: "%{count}г"
           other: "%{count}г"
@@ -89,6 +95,12 @@ bg:
         x_days:
           one: "преди %{count} ден"
           other: "преди %{count} дни"
+        x_months:
+          one: "преди %{count} месец"
+          other: "преди %{count} месеца"
+        x_years:
+          one: "преди %{count} година"
+          other: "преди %{count} години "
       later:
         x_days:
           one: "%{count} ден по-късно"
@@ -103,8 +115,12 @@ bg:
       next_month: "Следващ месец"
       placeholder: дата
     share:
+      topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "публикации #%{postNumber}"
       close: "затвори"
+      twitter: "Споделете тази връзка в Twitter"
+      facebook: "Споделете тази връзка във Facebook"
+      email: "Изпратете тази връзка с имейл"
     action_codes:
       public_topic: "направи тази тема публична на %{when}"
       private_topic: "направи тази тема персонално съобщение%{when}"
@@ -137,6 +153,7 @@ bg:
     bootstrap_mode_enabled: "За да помогнем със стартирането на вашия нов сайт по-лесно поставихме сайта в \"стартиращо режим\". Всички нови потребители ще получат ниво на доверие 1 и ще имат активирани дневни известия за активноста във форума. Този режим ще бъде автоматично спрян когато бройката регистрирани потребители стигне %{min_users} ."
     themes:
       default_description: "По подразбиране"
+      broken_theme_alert: "Вашият уебсайт може да не работи, защото в тема / компонент %{theme} има грешки. Изключете я тук %{path}."
     s3:
       regions:
         ap_northeast_1: "Азия (Токио)"
@@ -144,10 +161,19 @@ bg:
         ap_south_1: "Азия (Мумбай)"
         ap_southeast_1: "Азия (Сингапур)"
         ap_southeast_2: "Океания (Сидни)"
+        ca_central_1: "Canada (Central)"
         cn_north_1: "Китай (Пекин)"
+        cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Франкфурт)"
+        eu_north_1: "EU (Stockholm)"
         eu_west_1: "EU (Ирландия)"
+        eu_west_2: "EU (London)"
+        eu_west_3: "EU (Paris)"
+        sa_east_1: "South America (São Paulo)"
         us_east_1: "US East (Из. Вирджиния)"
+        us_east_2: "US East (Ohio)"
+        us_gov_east_1: "AWS GovCloud (US-East)"
+        us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "US West (С. Калифорния)"
         us_west_2: "US West (Орегон)"
     edit: "редактирайте заглавието и категорията на тази тема"
@@ -158,6 +184,7 @@ bg:
     submit: "Изпрати"
     generic_error: "Съжаляваме, възникна грешка."
     generic_error_with_reason: "Грешка: %{error}"
+    go_ahead: "Продължете напред"
     sign_up: "Регистрация"
     log_in: "Вход"
     age: "Години"
@@ -174,6 +201,8 @@ bg:
     privacy_policy: "Декларация за поверителност"
     privacy: "Поверителност"
     tos: "Правила за ползване"
+    rules: "Правила"
+    conduct: "Правила за поведение"
     mobile_view: "Мобилен изглед"
     desktop_view: "Десктоп изглед"
     you: "Вие"
@@ -187,11 +216,15 @@ bg:
     every_hour: "на всеки час"
     daily: "ежедневно"
     weekly: "седмично"
+    every_month: "всеки месец"
+    every_six_months: "на всеки шест месеца"
     max_of_count: "максимално от {{count}}"
     alternation: "или"
     character_count:
       one: "{{count}} символ"
       other: "{{count}} символа"
+    related_messages:
+      title: "Свързани съобщения"
     suggested_topics:
       title: "Подобни теми"
       pm_title: "Предложени съобщения"
@@ -204,6 +237,8 @@ bg:
       moderators: "Модератори"
       stat:
         all_time: "От началото"
+        last_7_days: "Последните 7"
+        last_30_days: "Последните 30"
       like_count: "Харесвания"
       topic_count: "Теми"
       post_count: "Публикации"
@@ -219,12 +254,16 @@ bg:
         unbookmark: "Щракнете тук за да изтриите всички отметки в тази тема"
     bookmarks:
       created: "Вие добавихте тази публикация в отметки"
+      not_bookmarked: "добавете тази публикация в Отметки"
       remove: "Премахнете отметката"
     drafts:
       remove: "Премахване"
       abandon:
         yes_value: "Да, напусни"
         no_value: "Не, запази"
+    topic_count_new:
+      one: "Вижте {{count}} нова тема"
+      other: "Вижте {{count}} нови теми"
     preview: "преглед"
     cancel: "прекрати"
     save: "Запазете промените"
@@ -232,7 +271,9 @@ bg:
     saved: "Запазено!"
     upload: "Качване"
     uploading: "Качва се..."
+    uploading_filename: "Качване: {{filename}}..."
     uploaded: "Качено!"
+    pasting: "Вмъкване..."
     enable: "Позволи"
     disable: "Деактивиране"
     continue: "Напред"
@@ -249,6 +290,7 @@ bg:
       title:
         placeholder: "Въведете заглавието на темата тук"
     review:
+      order_by: "Подреди по"
       explain:
         total: "Общо"
       delete: "Изтрий"
@@ -617,7 +659,7 @@ bg:
         edit: "Редактирай"
         security_key:
           register: "Регистриране"
-          delete: 'Изтрий'
+          delete: "Изтрий"
       change_about:
         title: "Смяна на За мен"
         error: "Имаше грешка при промяна на тази стойност."
@@ -641,9 +683,6 @@ bg:
         uploaded_avatar_empty: "Добавете собствено изображение"
         upload_title: "Качете изображение"
         image_is_not_a_square: "Внимание: изрязахмеИзрязахме вашата снимка,снимка защото не е с квадратна форма."
-      change_profile_background:
-        title: "Фон на профила"
-        instructions: "Фонът на профила ще бъде центриран и ще има ширина по подразбиране 850 пиксела."
       change_card_background:
         title: "Потребителски фон"
         instructions: "Фонът ще бъде центриран и ще има дължина 590 пиксела."
@@ -712,6 +751,8 @@ bg:
         every_hour: "почасово"
         daily: "дневно"
         weekly: "седмично"
+        every_month: "всеки месец"
+        every_six_months: "на всеки шест месеца"
       email_level:
         title: "Изпращайте ми имейл, когато някой ме цитира, отговаря на моите публикации, цитира моето @потребителско_име или ме кани да се присъединя към тема."
         always: "винаги"
@@ -825,6 +866,9 @@ bg:
         header_title: "профил, съобщения, отметки и предпочитания"
       title:
         title: "Заглавие"
+        none: "(никой)"
+      primary_group:
+        title: "Главна група"
         none: "(никой)"
       filters:
         all: "Всички"
@@ -1490,6 +1534,8 @@ bg:
         image_upload_not_allowed_for_new_user: "Съжаляваме, новите потребители не могат да качват снимки."
         attachment_upload_not_allowed_for_new_user: "Съжаляваме, новите потребители не могат да прикачват файлове."
         attachment_download_requires_login: "Съжаляваме, трябва да сте логнат, за да може да сваляте прикачените файлове."
+      abandon_edit:
+        no_value: "Не, запази"
       abandon:
         confirm: "Сигурни ли сте, че искате да напуснете тази публикация?"
         no_value: "Не, запази"
@@ -1996,6 +2042,8 @@ bg:
         reports:
           today: "Днес"
           yesterday: "Вчера"
+          last_7_days: "Последните 7"
+          last_30_days: "Последните 30"
           all_time: "От началото"
           7_days_ago: "Преди 7 дни"
           30_days_ago: "Преди 30 дни"
@@ -2025,7 +2073,6 @@ bg:
               public: "Всички"
           membership:
             automatic: Автоматично
-            trust_level: Ниво на Доверие
             trust_levels_title: "Нивото на доверие, което се предоставя автоматично на членовете, когато бъдат добавени:"
             trust_levels_none: "Без"
             automatic_membership_email_domains: "Потребители, които са регистрирани с имейл домейн, който съвпада с друг от този списък, автоматично ще бъдат добавени към тази група:"
@@ -2658,6 +2705,8 @@ bg:
           search: "Търсене"
           groups: "Групи"
           dashboard: "Работен плот"
+        default_categories:
+          modal_yes: "Да"
       badges:
         title: Значки
         new_badge: Нова значка
@@ -2725,6 +2774,9 @@ bg:
             with_post: "<span class=\"username\">%{username}</span> за публикации в %{link} "
             with_post_time: "<span class=\"username\">%{username}</span> за публикация %{link} в <span class=\"time\">%{time}</span> "
             with_time: "<span class=\"username\">%{username}</span> в <span class=\"time\">%{time}</span> "
+        badge_intro:
+          title: "Изберете съществуваща значка или създайте нова, за да започнете"
+          what_are_badges_title: "Какво са значките?"
       emoji:
         title: "Емотикони "
         help: "Добави нови емотикони, които ще бъдат достъпни до всички. (Съвет: Може да дръпнете и пуснете много файлове наведнъж). "

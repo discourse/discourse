@@ -49,6 +49,7 @@ zh_CN:
       about_json_values: "about.json包含无效值：%{errors}"
       git: "克隆 git 版本库时出错，访问被拒绝或找不到版本库"
       unpack_failed: "无法解压缩文件"
+      file_too_big: "未压缩的文件太大。"
       unknown_file_type: "你上传的文件似乎不是可用的 Discourse 主题。"
     errors:
       component_no_user_selectable: "主题组件不能由用户选择"
@@ -91,7 +92,7 @@ zh_CN:
         from_reply_by_address_error: "当From标头与电子邮件地址的回复匹配时发生。"
         inactive_user_error: "发送者未激活。"
         silenced_user_error: "当发件人被禁言时发生。"
-        bad_destination_address: "发至/抄送/密送栏中的所有邮件都不匹配进站邮件地址。"
+        bad_destination_address: "当“收件人/抄送”字段中的电子邮件地址与配置的传入电子邮件地址不匹配时发生。"
         strangers_not_allowed_error: "用户尝试在非成员分类中创建主题。"
         insufficient_trust_level_error: "用户尝试在用户等级不满足分类要求时发帖。"
         reply_user_not_matching_error: "回复邮箱地址与通知发送至的邮件地址不同。"
@@ -155,6 +156,7 @@ zh_CN:
       invalid_choice:
         other: "你指定了无效的选择%{name}"
       default_categories_already_selected: "不能选择一个已经用于另一个列表的分类。"
+      default_tags_already_selected: "你不能选择一个被使用在其它列表中的标签。"
       s3_upload_bucket_is_required: "你没有填写“s3_upload_bucket”，不能开启上传至 S3。"
       enable_s3_uploads_is_required: "除非已启用S3上载，否则无法将库存启用到S3。"
       s3_backup_requires_s3_settings: "除非你提供了'%{setting_name}'，否则无法将S3用作备份位置。"
@@ -204,7 +206,11 @@ zh_CN:
   email_template_cant_be_modified: "无法修改此邮件模板"
   invalid_whisper_access: "没有启用密语，或者你无权创建谜语帖子"
   not_in_group:
+    title_topic: "你必须在群组中才能看到此主题。"
+    title_category: "你必须在群组中才能看到此分类。"
+    request_membership: "申请会员"
     join_group: "加入群组"
+  deleted_topic: "糟糕！该主题已被删除且不再可用。"
   reading_time: "阅读时间"
   likes: "赞"
   too_many_replies:
@@ -232,6 +238,7 @@ zh_CN:
       other: "%{count}赞"
     last_reply: "最新回复"
     created: "创建时间"
+    new_topic: "创建新主题"
   no_mentions_allowed: "抱歉，你无法提到其他用户。"
   too_many_mentions:
     other: "抱歉，你一次仅能提到 %{count} 个用户。"
@@ -685,7 +692,7 @@ zh_CN:
     activated: "抱歉，这个账户已经被激活了。"
     admin_confirm:
       title: "确认管理员账户"
-      description: "你确定要设置<b>%{target_username}</b>为管理员吗？"
+      description: "你确定要将<b>%{target_username}（%{target_email}）</b>设为管理员吗？"
       grant: "授予管理员权限"
       complete: "<b>%{target_username}</b>现在是管理员了。"
       back_to: "返回%{title}"
@@ -734,6 +741,13 @@ zh_CN:
       description: "赞本帖"
       short_description: "赞该贴"
       long_form: "赞本帖内容"
+  draft:
+    sequence_conflict_error:
+      title: "草稿错误"
+      description: "草稿正在其它窗口中被编辑。请重新加载此页面。"
+  draft_backup:
+    pm_title: "将正在的编辑中的主题备份为草稿"
+    pm_body: "主题包含备份的草稿"
   user_activity:
     no_default:
       self: "你还没有活动。"
@@ -749,6 +763,18 @@ zh_CN:
       others: "无回复"
     no_drafts:
       self: "你没有草稿；任何主题中撰写回复，它将自动保存为新草稿。"
+  webauthn:
+    validation:
+      invalid_type_error: "提供的webauthn类型无效。有效类型为webauthn.get和webauthn.create。"
+      invalid_origin_error: "身份验证请求的来源与源服务器不匹配。"
+      malformed_attestation_error: "解码验证数据时出错。"
+      user_verification_error: "需要用户验证。"
+      unsupported_public_key_algorithm_error: "服务器不支持所提供公钥的算法。"
+      unsupported_attestation_format_error: "服务器不支持的证明格式。"
+      credential_id_in_use_error: "提供的凭据ID已在使用中。"
+      public_key_error: "凭据的公钥验证失败。"
+      ownership_error: "安全密钥不归用户所有。"
+      not_found_error: "找不到具有提供凭据ID的安全密钥。"
   topic_flag_types:
     spam:
       title: "垃圾"
@@ -1388,8 +1414,8 @@ zh_CN:
     enable_github_logins: "启用Github身份验证，需要github_client_id和github_client_secret。请参阅<a href='https://meta.discourse.org/t/13745'target='_blank'>配置GitHub登录Discourse</a>。"
     github_client_id: "Github身份验证的客户端ID，在<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>中注册"
     github_client_secret: "Github身份验证的客户端secret，在<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>上注册"
-    enable_discord_logins: '允许用户使用DIscord认证？'
-    discord_secret: 'Discord Secret Key'
+    enable_discord_logins: "允许用户使用DIscord认证？"
+    discord_secret: "Discord Secret Key"
     readonly_mode_during_backup: "备份时启用只读模式"
     enable_backups: "允许管理员创建论坛备份"
     allow_restore: "允许导入数据，这将能替换所有全站数据！除非你计划导入数据，否则请保持设置为 false"
@@ -1594,8 +1620,14 @@ zh_CN:
     reset_bounce_score_after_days: "自动在 X 天后重置累计退信分值。"
     attachment_content_type_blacklist: "基于 content type 禁止附件的黑名单列表。"
     attachment_filename_blacklist: "基于文件名禁止附件的黑名单列表。"
+    forwarded_emails_behaviour: "如何处理转发给Discourse的电子邮件"
     always_show_trimmed_content: "总是显示进站邮件中被截断的部分。警告：可能显示某些邮件地址。"
     private_email: "不要在邮件标题和主体中包含帖子或主题的内容。注意：会一并关闭摘要邮件。"
+    email_total_attachment_size_limit_kb: "出站邮件所有附件合计的最大尺寸。设置为0禁止发送附件。"
+    post_excerpts_in_emails: "在通知邮件中总是发送摘要代替帖子全文。"
+    raw_email_max_length: "应该被保存的入站邮件字符数量。"
+    raw_rejected_email_max_length: "应该被保存的被拒收的入站邮件字符数量。"
+    delete_rejected_email_after_days: "删除（n）天之前被拒收的邮件。"
     manual_polling_enabled: "用 API 推送邮件回复。"
     pop3_polling_enabled: "轮询 POP3 收取邮件回复。"
     pop3_polling_ssl: "连接至 POP3 服务器时使用 SSL。（推荐）"
@@ -1632,6 +1664,7 @@ zh_CN:
     suppress_digest_email_after_days: "停止给(n)天未登录网站的用户发送摘要邮件。"
     digest_suppress_categories: "不在摘要邮件中显示这些分类的内容。"
     disable_digest_emails: "禁用所有用户摘要邮件功能。"
+    apply_custom_styles_to_digest: "自定义邮件模板和css被应用到摘要邮件。"
     email_accent_bg_color: "HTML 邮件中用于背景的强调颜色。输入色彩名字（“red”）或十六进制值（“#0000FF”）。"
     email_accent_fg_color: "HTML 邮件中背景使用的字体颜色。输入色彩名（“white”）或十六进制值（“#FFFFFF”）。"
     email_link_color: "HTML 邮件中的链接颜色。输入色彩名字（“blue”）或十六进制值（“#0000FF”）。"
@@ -1653,6 +1686,7 @@ zh_CN:
     ignored_users_count_message_threshold: "当一个用户被很多用户忽视时通知版主。"
     ignored_users_message_gap_days: "当一个用户被很多用户忽视时再次通知版主要等待多久。"
     clean_up_inactive_users_after_days: "非活跃用户（信任等级0且没有任何帖子）被删除前等待的天数。设为0则关闭清理。"
+    user_selected_primary_groups: "允许用户设置其主要群组"
     user_website_domains_whitelist: "用户网站要属于这些域名中。用 | 分割。"
     allow_profile_backgrounds: "允许用户上传个人资料背景图片。"
     sequential_replies_threshold: "在被提醒回复了太多连续的回复前，用户在主题中可以连续回复的帖子的数量。"
@@ -1694,7 +1728,7 @@ zh_CN:
     embed_username_required: "创建主题需要用户名。"
     notify_about_flags_after: "如果在这么多小时后仍有标记未处理，请向版主发送个人信息。设置为0以禁用。"
     show_create_topics_notice: "如果站点只有少于 5 篇的公开帖子时，显示一条请管理员创建帖子的提示。"
-    delete_drafts_older_than_n_days: 删除超过 n 天得草稿。
+    delete_drafts_older_than_n_days: "删除超过 n 天得草稿。"
     bootstrap_mode_min_users: "禁用摘要模式的用户数下限（0 为禁用）。"
     prevent_anons_from_downloading_files: "禁止匿名用户下载附件。警告：这将禁止他们访问任何发表在帖子中的非图片资源。"
     slug_generation_method: "选择一个链接生成方式。“encoded”将生成以百分号编码的链接。“none”将禁用自定义链接，只生成默认链接。"
@@ -1739,6 +1773,10 @@ zh_CN:
     default_categories_tracking: "分类列表默认追踪。"
     default_categories_muted: "分类列表默认不显示。"
     default_categories_watching_first_post: "默认关注该分类中每个新主题的第一条贴子"
+    default_tags_watching: "默认监看的标签列表。"
+    default_tags_tracking: "默认追踪的标签列表。"
+    default_tags_muted: "默认静音的标签列表。"
+    default_tags_watching_first_post: "监看主题首个回复的标签列表。"
     default_text_size: "默认选择的文本大小"
     default_title_count_mode: "页面标题计算器的默认模式"
     retain_web_hook_events_period_days: "保存 web hook 事件记录的天数。"
@@ -1831,6 +1869,8 @@ zh_CN:
       topic: "结果"
       user: "用户"
     results_page: "关于“%{term}”的搜索结果"
+    audio: "[音频]"
+    video: "[视频]"
   sso:
     login_error: "登录错误"
     not_found: "无法找到你的账户。请联系站点管理人员。"
@@ -1896,6 +1936,11 @@ zh_CN:
     autoclosed_disabled_lastpost: "本主题现在开放了。可以添加新的回复。"
     auto_deleted_by_timer: "由计时器自动删除。"
   login:
+    security_key_alternative: "找不到您的安全密钥，是否要使用其他方法？"
+    security_key_authenticate: "使用安全密钥进行身份验证"
+    security_key_not_allowed_error: "安全密钥验证超时或被取消。"
+    security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
+    security_key_invalid: "验证安全密钥时出错。"
     not_approved: "你的账户尚未获得批准。一旦你的账户获得批准，你会收到一封电子邮件。"
     incorrect_username_email_or_password: "用户名、电子邮箱或密码不正确"
     incorrect_password: "密码错误"
@@ -1914,6 +1959,7 @@ zh_CN:
       generic: "抱歉，您的帐户授权时出错。请重试。"
       csrf_detected: "授权超时，或者您已切换浏览器。请重试。"
       request_error: "授权时发生错误。请重试。"
+      invalid_iat: "由于服务器时钟差异，无法验证授权令牌。请重试。"
     omniauth_error_unknown: "在处理你的登录过程中发生了错误，请重试。"
     omniauth_confirm_title: "使用%{provider}登录"
     omniauth_confirm_button: "继续"
@@ -1931,6 +1977,7 @@ zh_CN:
     second_factor_backup_description: "请输入备用码："
     second_factor_backup_title: "两步验证备用码"
     invalid_second_factor_code: "验证码无效。每个代码只能使用一次。"
+    invalid_security_key: "无效的安全密钥。"
     second_factor_toggle:
       totp: "改用身份验证APP"
       backup_code: "使用备份码"
@@ -1947,6 +1994,7 @@ zh_CN:
       short: "必须超过 %{min} 个字"
       long: "必须不超过 %{max} 个字"
       too_long: "太长"
+      characters: "必须仅包含数字、字母、破折号、点和下划线"
       unique: "已被使用"
       blank: "必须存在"
       must_begin_with_alphanumeric_or_underscore: "必须以字母、数字或下划线开头"
@@ -2076,10 +2124,6 @@ zh_CN:
   admin_confirmation_mailer:
     title: "管理员确认"
     subject_template: "[%{site_name}] 确认新管理员账户"
-    text_body_template: |
-      请确认你想要将**%{target_username}**设为你论坛的管理员。
-
-      [确认管理员账户](%{admin_confirm_url})
   test_mailer:
     title: "测试发件人"
     subject_template: "[%{email_prefix}] 邮件可达性测试"
@@ -2181,6 +2225,18 @@ zh_CN:
     flags_disagreed:
       title: "管理人员恢复了被标记的帖子"
       subject_template: "管理人员恢复了被标记的帖子"
+      text_body_template: |
+        你好，
+
+        这是来自%{site_name}的自动消息，[你的贴子](%{base_url}%{url})已被恢复。
+
+        此贴曾被社区标记过，管理人员选择将其恢复。
+
+        [详情=“点击展开被恢复的贴子”]
+        ```markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
     flags_agreed_and_post_deleted:
       title: "管理人员删除了已标记的帖子"
       subject_template: "管理人员删除了已标记的帖子"
@@ -2222,6 +2278,9 @@ zh_CN:
         嘿。我们看到你一直在忙着阅读，这太棒了，所以我们已经提升你了[信任等级！](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 
         我们很高兴你和我们共度时光，我们很想知道更多关于你的事情。花一点时间[填写你的个人资料](%{base_url}/我的/设置/个人信息)，或随时[开始一个新主题](%{base_url}/categories)。
+    welcome_moderator:
+      title: "欢迎版主"
+      subject_template: "恭喜，你现在是版主了！"
     welcome_invite:
       title: "欢迎邀请"
       subject_template: "欢迎来到 %{site_name}！"
@@ -2652,35 +2711,47 @@ zh_CN:
     posted_by: "%{username}发表于%{post_date}"
     pm_participants: "参与者：%{participants}"
     invited_group_to_private_message_body: |
-      %{username} 邀请 @%{group_name} 至私信交流：
+      %{username}邀请@%{group_name}到私信
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
-      论坛：
+      位于
 
       > %{site_title} -- %{site_description}
+
+      点击以下链接加入私信：
+
+      %{topic_url}
     invited_to_private_message_body: |
-      %{username} 邀请你至私信交流：
+      %{username}邀请你参与私信
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
-      论坛：
+      位于
 
       > %{site_title} -- %{site_description}
+
+      点击以下链接加入私信：
+
+      %{topic_url}
     invited_to_topic_body: |
-      %{username} 邀请你参与讨论：
+      %{username}邀请你参与讨论
 
-      > **%{topic_title}**
+      > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
-      论坛：
+      位于
 
       > %{site_title} -- %{site_description}
+
+      点击以下链接加入讨论：
+
+      %{topic_url}
     user_invited_to_private_message_pm_group:
       title: "用户邀请群组至私信"
       subject_template: "[%{email_prefix}] %{username}邀请 @%{group_name} 加入消息交流：“%{topic_title}”"
@@ -3057,7 +3128,7 @@ zh_CN:
     missing: "抱歉，我们没法找到与你邮件地址关联的头像。你能再上传一次试试吗？"
   flag_reason:
     sockpuppet: "新用户创建了主题，而另一个新用户以同一个 IP 在该主题回复。查看站点设置的 <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>。"
-    spam_hosts: "新用户试图在多个创建帖子中发表链接到同一个域名的内容。查看站点设置的 <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>。"
+    spam_hosts: "新用户尝试创建多个链接到相同域名的帖子。此用户所有包含链接的帖子需要审核。详见站点设置<a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>。"
   skipped_email_log:
     exceeded_emails_limit: "超过max_emails_per_day_per_user"
     exceeded_bounces_limit: "超过bounce_score_threshold"
@@ -3727,6 +3798,8 @@ zh_CN:
       in_this_category: '"%{tag_name}不能用于此类别"'
       restricted_to:
         other: '“%{tag_name}”被限制在以下分类：%{category_names}'
+    required_tags_from_group:
+      other: "你必须选择至少%{count}个%{tag_group_name}标签。"
   rss_by_tag: "主题标签 %{tag}"
   finish_installation:
     congratulations: "祝贺，你已经安装好了 Discourse！"
@@ -4004,4 +4077,4 @@ zh_CN:
   email_style:
     html_missing_placeholder: "HTML模板必须包含%{placeholder}"
   discord:
-    not_in_allowed_guild: '验证失败。您不是允许的Discord公会的成员。'
+    not_in_allowed_guild: "验证失败。您不是允许的Discord公会的成员。"

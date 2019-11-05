@@ -872,7 +872,7 @@ it:
         edit: "Modifica"
         security_key:
           register: "Registrare"
-          delete: 'Elimina'
+          delete: "Elimina"
       change_about:
         title: "Modifica i dati personali"
         error: "Si è verificato un errore durante la modifica del valore."
@@ -898,9 +898,6 @@ it:
         uploaded_avatar_empty: "Aggiungi un'immagine personalizzata"
         upload_title: "Carica la tua foto"
         image_is_not_a_square: "Attenzione: abbiamo ritagliato l'immagine; la larghezza e l'altezza non erano uguali."
-      change_profile_background:
-        title: "Sfondo Profilo"
-        instructions: "Gli sfondi del profilo saranno centrati e avranno per difetto un'ampiezza di 850px."
       change_card_background:
         title: "Sfondo Scheda Utente"
         instructions: "Le immagini di sfondo saranno centrate e per difetto avranno un'ampiezza di 590px."
@@ -1137,6 +1134,9 @@ it:
         header_title: "profilo, messaggi, segnalibri e preferenze"
       title:
         title: "Titolo"
+        none: "(nessuno)"
+      primary_group:
+        title: "Gruppo Primario"
         none: "(nessuno)"
       filters:
         all: "Tutti"
@@ -1465,7 +1465,6 @@ it:
       link_description: "inserisci qui la descrizione del collegamento"
       link_dialog_title: "Inserisci il collegamento"
       link_optional_text: "titolo opzionale"
-      link_url_placeholder: "https://example.com"
       quote_title: "Citazione"
       quote_text: "Citazione"
       code_title: "Testo preformattato"
@@ -2150,6 +2149,8 @@ it:
         image_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare immagini."
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
         attachment_download_requires_login: "Spiacenti, devi essere connesso per poter scaricare gli allegati."
+      abandon_edit:
+        no_value: "No, mantieni"
       abandon:
         confirm: "Sicuro di voler abbandonare il tuo messaggio?"
         no_value: "No, mantienilo"
@@ -2288,7 +2289,6 @@ it:
       tags_allowed_tags: "Limita queste Etichette a questa Categoria:"
       tags_allowed_tag_groups: "Limita questi gruppi di Etichette a questa Categoria:"
       tags_placeholder: "Elenco (opzionale) delle etichette permesse"
-      tags_tab_description: "Le Etichette ed i gruppi di Etichette specificati di seguito saranno disponibili solamente in questa Categoria e nelle altre Categorie che li specificano. Non saranno disponibili per l'uso in altre categorie."
       tag_groups_placeholder: "Elenco (opzionale) dei gruppi di etichette permessi"
       manage_tag_groups_link: "Gestisci qui i gruppi di Etichette."
       allow_global_tags_label: "Consenti anche ulteriori Etichette"
@@ -2904,7 +2904,6 @@ it:
               staff: "Proprietari del gruppo e staff"
           membership:
             automatic: Automatico
-            trust_level: Livello Esperienza
             trust_levels_title: "Livello Esperienza assegnato automaticamente agli utenti quando vengono aggiunti:"
             trust_levels_none: "Nessuno"
             automatic_membership_email_domains: "Gli utenti che si registrano con un dominio email che corrisponde esattamente a uno presente in questa lista, saranno aggiunti automaticamente a questo gruppo:"
@@ -3885,6 +3884,8 @@ it:
           dashboard: "Cruscotto"
         secret_list:
           invalid_input: "I campi di input non possono essere vuoti o contenere il carattere barra verticale."
+        default_categories:
+          modal_yes: "Sì"
       badges:
         title: Distintivi
         new_badge: Nuovo Distintivo

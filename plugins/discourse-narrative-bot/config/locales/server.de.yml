@@ -118,15 +118,6 @@ de:
 
           `@%{discobot_username} %{reset_trigger} {Name-des-Tutorials}`
           > Startet ein interaktives Tutorial. `{Name-des-Tutorials}` kann eins von: `%{tracks}` sein.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Wie angenehm ist es doch, freundlich zu sein! Ein gutes Wort entschlüpft wie ein wohliger Seufzer._ &mdash; Bertolt Brecht
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Darauf kannst du dich verlassen
       do_not_understand:
         first_response: |-
           Danke für die Antwort!
@@ -274,12 +265,6 @@ de:
           _Psst_… ich habe in diesem Thema eine Überraschung versteckt. Wenn du für eine Herausforderung zu haben bist, dann **wähle das Such-Symbol** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> oben rechts &#8599; aus und suche danach.
 
           Versuche, in diesem Thema nach dem Begriff „Capy&#8203;bara“ zu suchen.
-        hidden_message: |-
-          Wie konntest du das Capybara übersehen? :wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          Hast du bemerkt, dass du jetzt zurück am Anfang bist? Füttere dieses arme, hungrige Capybara, indem du **mit dem `:herb:`-Emoji antwortest** und du wirst automatisch zum Ende gebracht.
         reply: |-
           Juhu! Du hast es gefunden :tada:
 

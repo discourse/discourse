@@ -443,7 +443,7 @@ be:
         edit: "рэдагаваць"
         security_key:
           register: "рэгістрацыя"
-          delete: 'выдаліць'
+          delete: "выдаліць"
       change_about:
         title: "Змяніць інфу аба мяне"
       change_username:
@@ -462,9 +462,6 @@ be:
         uploaded_avatar: "Іншая выява"
         uploaded_avatar_empty: "Дадаць малюнак"
         upload_title: "Загрузіць свой малюнак"
-      change_profile_background:
-        title: "фон профілю"
-        instructions: "Фон профілю будзе адцэнтраваны, яго шырыня 850 кропак (па змаўчанні)."
       change_card_background:
         title: "Фон вашай візітоўкі"
       email:
@@ -960,6 +957,8 @@ be:
     post:
       errors:
         upload: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
+      abandon_edit:
+        no_value: "Не, пачакайце"
       abandon:
         no_value: "Не, пачакайце"
         yes_value: "Так, пакінуць"
@@ -1249,8 +1248,6 @@ be:
             email: электронная пошта
             visibility_levels:
               public: "Усе"
-          membership:
-            trust_level: узровень даверу
         title: "групы"
         edit: "мяняць групы"
         refresh: "абнавіць"
@@ -1704,6 +1701,8 @@ be:
           search: "пошук"
           groups: "групы"
           dashboard: "майстэрня"
+        default_categories:
+          modal_yes: "ды"
       badges:
         title: значкі
         new_badge: новы значок

@@ -91,7 +91,6 @@ pt_BR:
         from_reply_by_address_error: "Acontece quando o cabeçalho De corresponde à resposta por endereço de e-mail."
         inactive_user_error: "Ocorre quando o remetente não está ativo."
         silenced_user_error: "Acontece quando o remetente foi silenciado."
-        bad_destination_address: "Ocorre quando nenhum dos endereços de email nos campos Para/Cc/Cco era correspondente ao endereço de email recebido."
         strangers_not_allowed_error: "Ocorre quando um usuário tentou criar um novo tópico em uma categoria da qual não é membro."
         insufficient_trust_level_error: "Ocorre quando um usuário tenta criar um novo tópico em uma categoria onde não possui nível de confiança necessário."
         reply_user_not_matching_error: "Ocorre quando uma resposta chega em um endereço de email diferente ao da notificação enviada."
@@ -717,7 +716,6 @@ pt_BR:
     activated: "Desculpe, esta conta já foi ativada."
     admin_confirm:
       title: "Confirmar Conta de Administrador"
-      description: "Tem certeza de que quer <b>%{target_username}</b> ser um administrador?"
       grant: "Conceder acesso de administrador"
       complete: "<b>%{target_username}</b> é agora um administrador."
       back_to: "Retornar para %{title}"
@@ -1719,7 +1717,7 @@ pt_BR:
     embed_username_required: "Nome de usuário para criação do tópico é obrigatório."
     notify_about_flags_after: "Se houver bandeiras que não foram tratadas depois de muitas horas, envie uma mensagem pessoal para os moderadores. Defina como 0 para desativar."
     show_create_topics_notice: "Se o site tem menos de 5 tópicos públicos, mostrar um aviso pedindo para os administradores criarem alguns tópicos."
-    delete_drafts_older_than_n_days: Apagar rascunhos mais antigos do que (N) dias.
+    delete_drafts_older_than_n_days: "Apagar rascunhos mais antigos do que (N) dias."
     bootstrap_mode_min_users: "Número mínimo de usuários necessários para desativar o modo de bootstrap (definido como 0 para desativado)"
     prevent_anons_from_downloading_files: "Impedir que usuários anônimos façam download de arquivos anexados. AVISO: isso irá impedir quaisquer componentes do site que não sejam imagens, tendo sido postados como anexos, de funcionar."
     slug_generation_method: "Escolha um método para geração de slug. 'Codificado' irá gerar strings com '%'. 'Nenhum' irá desabilitar a geração de slugs."
@@ -2115,10 +2113,6 @@ pt_BR:
   admin_confirmation_mailer:
     title: "Confirmação do administrador"
     subject_template: "[%{email_prefix}] Confirmar nova conta de administrador"
-    text_body_template: |
-      Por favor, confirme se você gostaria de adicionar **%{target_username}** como um administrador para seu fórum.
-
-      [Confirmar Conta de Administrador](%{admin_confirm_url})
   test_mailer:
     title: "Teste de remetente"
     subject_template: "[%{email_prefix}] Teste de entrega de e-mail"
@@ -2675,36 +2669,6 @@ pt_BR:
     visit_link_to_respond_pm: "[Visite a Mensagem](%{base_url}%{url}) para responder a %{participants}."
     posted_by: "Postado por %{username} em %{post_date}"
     pm_participants: "Participantes: %{participants}"
-    invited_group_to_private_message_body: |
-      %{username} convidou @%{group_name} para uma mensagem
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      em
-
-      > %{site_title} -- %{site_description}
-    invited_to_private_message_body: |
-      %{username} convidou você para uma mensagem
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      em
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} te convidou para uma discussão
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      em
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       title: "Grupo Convidado do Usuário para MP"
       subject_template: "[%{email_prefix}] %{username} convidou @%{group_name} para a mensagem'%{topic_title}'"
@@ -3071,7 +3035,6 @@ pt_BR:
     missing: "Desculpe! Não conseguimos achar nenhum avatar associado a esse endereço de email. Você pode tentar novamente?"
   flag_reason:
     sockpuppet: "Um novo usuário criou um tópico, e um outro novo usuário no mesmo endereço IP (%{ip_address}) respondeu. Veja a configuração <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> do site."
-    spam_hosts: "Esse novo usuário tentou criar múltiplas publicações com links para o mesmo domínio. Veja a configuração <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> do site."
   skipped_email_log:
     exceeded_emails_limit: "Excedido max_emails_per_day_per_user"
     exceeded_bounces_limit: "Excedido bounce_score_threshold"

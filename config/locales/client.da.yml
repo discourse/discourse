@@ -319,9 +319,25 @@ da:
       order_by: "Filtrér efter"
       in_reply_to: "som svar til"
       explain:
+        why: "forklar hvorfor dette punkt endte i køen"
+        title: "Gennemgåelig Scoring"
+        formula: "Formular"
+        subtotal: "Subtotal"
         total: "Total"
+        min_score_visibility: "Minimum score for synlighed"
+        score_to_hide: "Score for 'skjul indlæg'"
+        take_action_bonus:
+          name: "tog handling"
+          title: "Når et personale medlem vælger at tage handling, får denne markering en bonus"
+        user_accuracy_bonus:
+          name: "bruger nøjagtighed"
+          title: "Brugere, hvis markeringer er historisk aftalt med, får en bonus."
         trust_level_bonus:
           name: "tillidsniveau"
+          title: "Punkter, der kan gennemgås som er oprettet af brugere af højere tillidsniveau, har en højere score."
+        type_bonus:
+          name: "type bonus"
+          title: "Visse gennemgåelige typer kan tildeles en bonus af personale medlemmer, for at gøre dem til en højere prioritet."
       claim_help:
         optional: "Du kan gøre krav på dette punkt, for at forhindre andre i at gennemgå det."
         required: "Du skal kræve punkter, før du kan gennemgå dem."
@@ -862,6 +878,7 @@ da:
         copied_to_clipboard: "Kopierede til udklipsholder"
         copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"
         remaining_codes: "Du har <strong>{{count}}</strong> backup koder tilbage."
+        use: "Brug en backup kode"
         enable_prerequisites: "Du skal aktivere en primær anden faktor, før du genererer backup koder."
         codes:
           title: "backup koder genereret"
@@ -869,6 +886,7 @@ da:
       second_factor:
         title: "To-faktor godkendelse"
         enable: "Administrer To-faktor godkendelse"
+        forgot_password: "Glemt kodeord?"
         confirm_password_description: "Bekræft dit kodeord for at fortsætte"
         name: "Navn"
         label: "Kode"
@@ -882,6 +900,7 @@ da:
         extended_description: |
           To-faktor godkendelse tilføjer ekstra sikkerhed til din konto ved at kræve en engangstoken ud over dit kodeord. Tokens kan genereres på <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> og <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS-</a> enheder.
         oauth_enabled_warning: "Bemærk, at sociale logins deaktiveres, når To-faktor godkendelse er aktiveret på din konto."
+        use: "Brug Autentificeringsapp"
         enforced_notice: "Du skal aktivere To-faktor godkendelse før du kan gå ind på denne side."
         disable: "deaktiver"
         disable_title: "Deaktiver anden faktor"
@@ -889,12 +908,13 @@ da:
         edit: "Rediger"
         edit_title: "Rediger anden faktor"
         edit_description: "Navn på anden faktor"
+        enable_security_key_description: "Når du har din fysiske sikkerhedstast klar, skal du trykke på knappen Registrer nedenfor."
         totp:
           title: "Token-baserede autentificatorer"
           add: "Ny autentifikator"
           default_name: "Min autentifikator"
         security_key:
-          delete: 'Slet'
+          delete: "Slet"
       change_about:
         title: "Skift “Om mig”"
         error: "Der opstod en fejl i ændringen af denne værdi."
@@ -920,9 +940,6 @@ da:
         uploaded_avatar_empty: "Tilføj et brugerdefineret profil billede"
         upload_title: "Upload dit profil billede"
         image_is_not_a_square: "Advarsel: vi har klippet i billedet; bredde og højde var ikke ens."
-      change_profile_background:
-        title: "Profil baggrundsbillede"
-        instructions: "Profil baggrunde vil blive centrerede og have en standard bredde på 850 pixels"
       change_card_background:
         title: "Brugerkort-Baggrund"
         instructions: "Baggrunds billeder vil blive centreret og have en standard bredde på 590px."
@@ -1163,6 +1180,9 @@ da:
         header_title: "profil, beskeder, bogmærker og indstillinger."
       title:
         title: "Titel"
+        none: "(ingen)"
+      primary_group:
+        title: "Primær gruppe"
         none: "(ingen)"
       filters:
         all: "Alle"
@@ -1494,7 +1514,6 @@ da:
       link_description: "skriv linkets beskrivelse her"
       link_dialog_title: "Indsæt link"
       link_optional_text: "evt. titel"
-      link_url_placeholder: "https://example.com"
       quote_title: "Citatblok"
       quote_text: "Citatblok"
       code_title: "Præformateret tekst"
@@ -2183,6 +2202,9 @@ da:
         image_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade billeder."
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade vedhæftede filer."
         attachment_download_requires_login: "Beklager, du skal være logget på for at downloade vedhæftede filer."
+      abandon_edit:
+        no_value: "Nej, behold"
+        no_save_draft: "Nej, gem kladde"
       abandon:
         confirm: "Er du sikker på, at du vil droppe dit indlæg?"
         no_value: "Nej"
@@ -2324,7 +2346,6 @@ da:
       tags_allowed_tags: "Begræns disse tags til denne kategori:"
       tags_allowed_tag_groups: "Begræns disse tag grupper til denne kategori:"
       tags_placeholder: "(Valgfri) liste af tiladte mærker"
-      tags_tab_description: "Tags og tag grupper, der er specificeret her, vil kun være tilgængelige i denne kategori og andre kategorier, der også specificerer dem. De er ikke tilgængelige til brug i andre kategorier."
       tag_groups_placeholder: "(Valgfri) liste af tiladte mærke grupper"
       manage_tag_groups_link: "Administrer tag grupper her."
       allow_global_tags_label: "Tillad også andre tags"
@@ -2959,7 +2980,6 @@ da:
               description: "Admins kan se medlemmer af alle grupper."
           membership:
             automatic: Automatisk
-            trust_level: Tillidsniveau
             trust_levels_title: "Tillidsniveau der automatisk tildeles medlemmer når de oprettes:"
             trust_levels_none: "Ingen"
             automatic_membership_email_domains: "Brugere der registrerer med et email domæne der præcist matcher et på denne liste, vil automatisk blive tilføjet til denne gruppe:"
@@ -3958,6 +3978,8 @@ da:
           dashboard: "Dashboard"
         secret_list:
           invalid_input: "Inputfelter kan ikke være tomme eller indeholde lodret bjælketegn."
+        default_categories:
+          modal_yes: "Ja"
       badges:
         title: Badges
         new_badge: Nyt Badge
@@ -4104,16 +4126,16 @@ da:
       upload_error: "Beklager, der opstod en fejl ved upload af filen. Prøv venligst igen."
       quit: "Måske senere"
       staff_count:
-        one: "Dit fællesskab har %{count} hjælperteam (dig)."
-        other: "Dit fællesskab har %{count} hjælperteam, inklusive dig."
+        one: "Dit fællesskab har %{count} personale medlem (dig)."
+        other: "Dit fællesskab har %{count} personale medlem, inklusive dig."
       invites:
         add_user: "tilføj"
-        none_added: "Du har ikke inviteret nogen til hjælperteamet. Er du sikker på, at du vil fortsætte?"
+        none_added: "Du har ikke inviteret nogen til dit personale. Er du sikker på, at du vil fortsætte?"
         roles:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Fast bruger"
       previews:
-        topic_title: "Duskussionsemne"
+        topic_title: "Diskussionsemne"
         share_button: "Del"
         reply_button: "Svar"

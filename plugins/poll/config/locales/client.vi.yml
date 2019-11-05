@@ -13,6 +13,8 @@ vi:
       total_votes:
         other: "tổng số bình chọn"
       average_rating: "Trung bình: <strong>%{average}</strong>."
+      public:
+        title: "Bình chọn <strong>công khai</strong>"
       multiple:
         help:
           at_least_min_options:

@@ -574,7 +574,7 @@ sq:
         name: "Emri"
         edit: "Redakto"
         security_key:
-          delete: 'Fshij'
+          delete: "Fshij"
       change_about:
         title: "Ndrysho Rreth meje"
         error: "Pati një gabim gjatë ndryshimit të kësaj të dhëne."
@@ -598,9 +598,6 @@ sq:
         uploaded_avatar_empty: "Shto një foto të personalizuar"
         upload_title: "Ngarkoni foton tuaj"
         image_is_not_a_square: "Vini re: fotoja juaj është përshtatur, pasi nuk ishte katrore."
-      change_profile_background:
-        title: "Sfondi i profilit"
-        instructions: "Sfondi i profilit do të vendoset në qendër dhe do të ketë një gjerësi prej 850px."
       change_card_background:
         title: "Sfondi për skedën e anëtarit"
         instructions: "Sfondi do të vendoset në qendër dhe do të ketë një gjerësi prej 590px."
@@ -784,6 +781,9 @@ sq:
         header_title: "profili, mesazhet, të preferuarat dhe preferencat"
       title:
         title: "Titulli"
+        none: "(asnjë)"
+      primary_group:
+        title: "Grupi Parësor"
         none: "(asnjë)"
       filters:
         all: "Të gjitha"
@@ -1437,6 +1437,8 @@ sq:
         image_upload_not_allowed_for_new_user: "Na vjen keq, anëtarët e rinj nuk mund të ngarkojnë skedarë. "
         attachment_upload_not_allowed_for_new_user: "Na vjen keq, anëtarët e rinj nuk mund të ngarkojnë skedarë. "
         attachment_download_requires_login: "Na vjen keq, duhet të identifikoheni për të shkarkuar një dokument. "
+      abandon_edit:
+        no_value: "Jo, mbaji"
       abandon:
         confirm: "A jeni të sigurtë se do të braktisni postimin?"
         no_value: "Jo, mbaji"
@@ -1999,7 +2001,6 @@ sq:
               public: "Të gjithë"
           membership:
             automatic: Automatik
-            trust_level: Niveli i besimit
             trust_levels_title: "Niveli i besimit që ju akordohet automatikisht anëtarëve të grupit:"
             trust_levels_none: "Asnjë"
             automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
@@ -2612,6 +2613,8 @@ sq:
           search: "Kërko"
           groups: "Grupet"
           dashboard: "Paneli i kontrollit"
+        default_categories:
+          modal_yes: "Po"
       badges:
         title: Stemat
         new_badge: Stemë e Re

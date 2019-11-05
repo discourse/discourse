@@ -417,7 +417,7 @@ te:
         name: "పేరు"
         edit: "సవరించు"
         security_key:
-          delete: 'తొలగించు'
+          delete: "తొలగించు"
       change_about:
         title: "నా గురించి మార్చు"
       change_username:
@@ -437,9 +437,6 @@ te:
         uploaded_avatar: "అనురూప బొమ్మ"
         uploaded_avatar_empty: "అనురూప బొమ్మను కలపండి"
         upload_title: "మీ బొమ్మను కలపండి"
-      change_profile_background:
-        title: "ప్రవర వెనుతలం"
-        instructions: "ప్రవర వెనుతలాలు కేంద్రీకరించబడతాయి మరియు అప్రమేయ వెడల్పు 850 పిక్సెలు ఉంటాయి."
       change_card_background:
         title: "సభ్య కార్డు వెనుతలం"
         instructions: "వెనుతలం బొమ్మలు కేంద్రీకరించబడతాయి మరియు అప్రమేయ వెడల్పు 590 పిక్సెలు ఉంటాయి."
@@ -550,6 +547,8 @@ te:
         title: "ప్రవర బొమ్మ"
       title:
         title: "శీర్షిక"
+      primary_group:
+        title: "ప్రాథమిక గుంపు"
       filters:
         all: "అన్నీ"
       stream:
@@ -996,6 +995,8 @@ te:
         image_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు బొమ్మలు ఎగుమతి చేయలేరు."
         attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."
         attachment_download_requires_login: "క్షమించాలి. జోడింపులు దిగుమతి చేసుకోవడానికి మీరు లాగిన్ అయి ఉండాలి."
+      abandon_edit:
+        no_value: "లేదు, ఉంచండి"
       abandon:
         confirm: "మీరు నిజంగానే మీ టపాను వదిలేద్దామనుకుంటున్నారా?"
         no_value: "లేదు, ఉంచండి"
@@ -1377,7 +1378,6 @@ te:
               public: "అందరూ"
           membership:
             automatic: స్వీయంగా
-            trust_level: నమ్మకం స్థాయి
             automatic_membership_email_domains: "వినియోగదారుడు ఏ ఈ-మెయిల్ డొమైన్ తో నమోదు చేసుకున్నాడో అది ఖచ్చితంగా ఈ జాబితాలో ఒక దానిని పోలి స్వయంసిధ్ధంగా గ్రూప్ కి కలుస్తాయి:"
             automatic_membership_retroactive: "ఇప్పటికే నమోదిత వినియోగదారులను జోడించడానికి అదే ఇమెయిల్ డొమైన్ రూల్ వర్తిస్తుంది"
         name_placeholder: "గంపు పేరు, జాగా లేకుండా, సభ్యనామం వలె"
@@ -1894,6 +1894,8 @@ te:
           search: "వెతుకు"
           groups: "గుంపులు"
           dashboard: "రంగస్థలం"
+        default_categories:
+          modal_yes: "అవును"
       badges:
         title: బ్యాడ్జీలు
         new_badge: కొత్త బ్యాడ్జీ

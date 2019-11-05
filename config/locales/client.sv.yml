@@ -625,7 +625,7 @@ sv:
         edit: "Redigera"
         security_key:
           register: "Registrera"
-          delete: 'Radera'
+          delete: "Radera"
       change_about:
         title: "Ändra Om Mig"
         error: "Ett fel inträffade vid ändringen av det här värdet."
@@ -648,9 +648,6 @@ sv:
         uploaded_avatar_empty: "Lägg till en anpassad bild"
         upload_title: "Ladda upp din bild"
         image_is_not_a_square: "Varning: vi beskar din bild; bredden och höjden var inte samma."
-      change_profile_background:
-        title: "Profilbakgrund"
-        instructions: "Bakgrunderna är centrerade och har en förinställd bredd på 850px"
       change_card_background:
         title: "Användarkortets bakgrund"
         instructions: "Bakgrundsbilder kommer att vara centrerade och ha en standardbredd på 590 px."
@@ -838,6 +835,9 @@ sv:
         header_title: "profil, meddelanden, bokmärken och inställningar"
       title:
         title: "Titel"
+        none: "(ingen)"
+      primary_group:
+        title: "Primär grupp"
         none: "(ingen)"
       filters:
         all: "Alla"
@@ -1551,6 +1551,8 @@ sv:
         image_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte ladda upp bilder."
         attachment_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte bifoga filer."
         attachment_download_requires_login: "Tyvärr, du måste vara inloggad för att kunna ladda ned bifogade filer."
+      abandon_edit:
+        no_value: "nej, behåll"
       abandon:
         confirm: "Är du säker på att du vill avbryta ditt inlägg?"
         no_value: "nej, behåll"
@@ -2148,7 +2150,6 @@ sv:
               public: "Alla"
           membership:
             automatic: Automatisk
-            trust_level: Förtroendenivå
             trust_levels_title: "Förtroendenivå som automatiskt beviljas användare när de läggs till:"
             trust_levels_none: "Inga"
             automatic_membership_email_domains: "Användare som registrerar sig med en e-post vars domän exakt matchar en domän i den här listan kommer automatiskt att bli tillagd i den här gruppen:"
@@ -2841,6 +2842,8 @@ sv:
           search: "Sök"
           groups: "Grupper"
           dashboard: "Översiktspanel"
+        default_categories:
+          modal_yes: "Ja"
       badges:
         title: Utmärkelser
         new_badge: Ny utmärkelse

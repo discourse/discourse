@@ -913,7 +913,7 @@ ur:
           default_name: "میرا تصديق کنندہ"
         security_key:
           register: "رجسٹر"
-          delete: 'حذف کریں'
+          delete: "حذف کریں"
       change_about:
         title: "\"میرے بارے میں\" تبدیل کریں"
         error: "اِس چیز کو تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔"
@@ -939,9 +939,6 @@ ur:
         uploaded_avatar_empty: "اپنی مرضی کی تصویر شامل کریں"
         upload_title: "آپنی تصویر اَپ لوڈ کریں"
         image_is_not_a_square: "انتباہ: ہم نے آپ کی تصویر کو کراپ کیا ہے؛ چوڑائی اور اونچائی برابر نہیں تھے۔"
-      change_profile_background:
-        title: "پروفائل کا پسِ منظر"
-        instructions: "پروفائل کا پسِ منظر مرکوز ہو گا اور اُس کی 850 پِکسل کی پہلے سے طے شدہ چوڑائی ہو گی۔"
       change_card_background:
         title: "صارف کارڈ کا پسِ منظر"
         instructions: "پسِ منظر کی تصاویر مرکوز ہوں گی اور اُن کی 590 پِکسل کی پہلے سے طے شدہ چوڑائی ہو گی۔"
@@ -1182,6 +1179,9 @@ ur:
         header_title: "پروفائل، پیغامات، بک مارکس اور ترجیحات"
       title:
         title: "عنوان"
+        none: "(کوئی نہیں)"
+      primary_group:
+        title: "پرائمری گروپ"
         none: "(کوئی نہیں)"
       filters:
         all: "تمام"
@@ -1515,7 +1515,6 @@ ur:
       link_description: "یہاں لِنک کی تفصیل درج کریں"
       link_dialog_title: "ہائپرلِنک ڈالیں"
       link_optional_text: "اختیاری عنوان"
-      link_url_placeholder: "https://example.com"
       quote_title: "بلاک کوٹ"
       quote_text: "بلاک کوٹ"
       code_title: "پہلے سے فارمیٹ کیا گیا ٹَیکسٹ"
@@ -2206,6 +2205,9 @@ ur:
         image_upload_not_allowed_for_new_user: "معذرت، نئے صارفین تصاویر اَپ لوڈ نہیں کر سکتے۔"
         attachment_upload_not_allowed_for_new_user: "معذرت، نئے صارفین اٹیچمنٹس اَپ لوڈ نہیں کر سکتے۔"
         attachment_download_requires_login: "معذرت، اٹیچمنٹس ڈائونلوڈ کرنے کیلیے آپ کا لاگ اِن ہونا ضروری ہے۔"
+      abandon_edit:
+        no_value: "نہیں، رکھیں"
+        no_save_draft: "نہیں، ڈرافٹ محفوظ کریں"
       abandon:
         confirm: "کیا آپ واقعی اپنی پوسٹ کو تَرک کرنا چاہتے ہیں؟"
         no_value: "نہیں، رکھیں"
@@ -2348,7 +2350,6 @@ ur:
       tags_allowed_tags: "اس زُمرہ میں اِن ٹیگز کو محدود کریں:"
       tags_allowed_tag_groups: "اس زُمرہ میں اِن ٹیگ گروپس کو محدود کریں:"
       tags_placeholder: "(اختیاری) اجازت والے ٹیگز کی فہرست"
-      tags_tab_description: "یہاں بیان کردہ ٹیگز اور ٹیگ گروپس صرف اِس زُمرہ اور دیگر زُمرہ جات بھی جو انہیں مخصوص کرتے ہیں، کیلئے دستیاب ہوں گے۔ یہ دیگر زُمرہ جات میں استعمال کیلئے دستیاب نہیں ہوں گے۔"
       tag_groups_placeholder: "(اختیاری) اجازت والے ٹیگ گروپس کی فہرست"
       manage_tag_groups_link: "ٹیگ گروپس کا انتظام یہاں کریں"
       allow_global_tags_label: "دوسرے ٹیگز کی بھی اجازت دیں"
@@ -2641,8 +2642,8 @@ ur:
       readonly: "ملاحظہ کریں"
     lightbox:
       download: "ڈاؤن لوڈ"
-      previous: "پچھلا (بائیں تیر کِی)"
-      next: "اگلا (بائیں تیر کِی)"
+      previous: "پچھلا (بائیں تیر کلید)"
+      next: "اگلا (بائیں تیر کلید)"
       counter: "%curr% of %total%"
       close: "بند (Esc)"
       content_load_error: '<a href="%url%">مواد</a> لوڈ نہیں کیا جا سکا۔'
@@ -2985,7 +2986,6 @@ ur:
             publish_read_state: "گروپ پیغامات پر گروپ رِیڈ اسٹیٹ شائع کریں۔"
           membership:
             automatic: خود کار طریقے سے
-            trust_level: ٹرسٹ لَیول
             trust_levels_title: "ممبران کو شامل کرتے وقت خود کار طریقے سے دیا جانے والا ٹرسٹ لَیول:"
             trust_levels_none: "کوئی نہیں"
             automatic_membership_email_domains: "جو صارفین ایک ایسے اِیمیل ڈومین کے ساتھ رجسٹر کرتے ہیں جو اِس فہرست میں سے کسی ایک سے پورا ملتا ہے، تو اُن کو خود کار طریقے سے اِس گروپ میں شامل کر دیا جائے گا:"
@@ -3997,6 +3997,8 @@ ur:
           dashboard: "ڈَیش بورڈ"
         secret_list:
           invalid_input: "اِن پُٹ فیلڈز خالی یا عمودی بار کے حرف پر مشتمل نہیں ہو سکتیں۔"
+        default_categories:
+          modal_yes: "جی ہاں"
       badges:
         title: بَیج
         new_badge: نیا بَیج

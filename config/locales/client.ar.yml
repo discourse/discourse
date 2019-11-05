@@ -768,7 +768,7 @@ ar:
         oauth_enabled_warning: "يرجى الملاحظة ان تسجيل الدخول عن طريق حسابات مواقع التواصل الاجتماعي سيتم تعطيلها بمجرد تفعيل خاصية التوثيق بعاملين الحساب"
         edit: "عدّل"
         security_key:
-          delete: 'أحذف'
+          delete: "أحذف"
       change_about:
         title: "تعديل عني"
         error: "حدث عطل أثناء تغيير هذه القيمة."
@@ -792,9 +792,6 @@ ar:
         uploaded_avatar_empty: "اضافة صورة مخصصة"
         upload_title: "ارفع صورتك "
         image_is_not_a_square: "تحذير: لقد قصصنا صورتك، لأن عرضها وارتفاعها غير متساويان."
-      change_profile_background:
-        title: "خلفية الملف الشخصي"
-        instructions: "سيتم وضع خلفية الملف الشخصي في المنتصف بعرض افتراضي يصل الى 850px"
       change_card_background:
         title: "خلفية بطاقة العضو"
         instructions: "سيتم وضع صورة الخلفية في المنتصف بعرض 590px"
@@ -1014,6 +1011,8 @@ ar:
         header_title: "الملف الشخصي و الرسائل و العلامات المرجعية و التفضيلات"
       title:
         title: "عنوان"
+      primary_group:
+        title: "المجموعة الأساسية"
       filters:
         all: "الكل"
       stream:
@@ -1906,6 +1905,8 @@ ar:
         image_upload_not_allowed_for_new_user: "عذرا، لا يمكن للأعضاء الجدد رفع الصور."
         attachment_upload_not_allowed_for_new_user: "عذرا، لا يمكن للأعضاء الجدد رفع المرفقات."
         attachment_download_requires_login: "عذرا، عليك تسجيل الدخول لتحميل المرفقات."
+      abandon_edit:
+        no_value: "لا, إبقاء"
       abandon:
         confirm: "أمتأكد من التخلي عن المنشور؟"
         no_value: "لا، أبقه"
@@ -2613,7 +2614,6 @@ ar:
               staff: "مالكي المجموعة و طاقم العمل"
           membership:
             automatic: تلقائي
-            trust_level: مستوى الثقة
             trust_levels_title: "مستوى الثقة الذي يُعطى للأعضاء آليا عندما يضافون:"
             trust_levels_none: "لا شيء"
             automatic_membership_email_domains: "المستخدمين الذين يمتلكون بريد الالكتروني عنوانه مطابق للعنوان الذي في القائمة سيتم تلقائيا اضافتهم للمجموعة."
@@ -3378,6 +3378,8 @@ ar:
           search: "البحث"
           groups: "المجموعات"
           dashboard: "لوحة التحكم"
+        default_categories:
+          modal_yes: "نعم"
       badges:
         title: الشارات
         new_badge: شارة جديدة

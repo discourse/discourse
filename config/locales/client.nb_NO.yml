@@ -759,7 +759,7 @@ nb_NO:
         edit: "Rediger"
         security_key:
           register: "Registrer"
-          delete: 'Slett'
+          delete: "Slett"
       change_about:
         title: "Rediger om meg"
         error: "Det oppstod en feil ved endring av denne verdien."
@@ -784,9 +784,6 @@ nb_NO:
         uploaded_avatar_empty: "Legg til egendefinert bilde"
         upload_title: "Last opp bilde"
         image_is_not_a_square: "Vi har beskåret bildet ditt, høyde og bredde er ikke lik"
-      change_profile_background:
-        title: "Profilbakgrunn"
-        instructions: "Profilbakgrunner vil bli sentrert med en forvalgt bredde på 850 piksler."
       change_card_background:
         title: "Brukerkort bakgrunn"
         instructions: "Bakgrunnsbilder vil bli sentrert og ha en forvalgt bredde på 590 piksler."
@@ -995,6 +992,9 @@ nb_NO:
         header_title: "Profil, meldinger, bokmerker og innstillinger"
       title:
         title: "Tittel"
+        none: "(ingen)"
+      primary_group:
+        title: "Primærgruppe"
         none: "(ingen)"
       filters:
         all: "Alle"
@@ -1901,6 +1901,8 @@ nb_NO:
         image_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp bilder"
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp vedlegg."
         attachment_download_requires_login: "Beklager, du må være innlogget for å laste ned vedlegg."
+      abandon_edit:
+        no_value: "Nei"
       abandon:
         confirm: "Er du sikker på at du vil forlate innlegget ditt?"
         no_value: "Nei"
@@ -2601,7 +2603,6 @@ nb_NO:
               staff: "Gruppeeiere og stab"
           membership:
             automatic: Automatisk
-            trust_level: Tillitsnivå
             trust_levels_title: "Tillitsnivå som automatisk gis til nye medlemmer når de legges til:"
             trust_levels_none: "Ingen"
             automatic_membership_email_domains: "Brukere som registreres med et e-postdomene identisk med et fra denne listen vil automatisk legges til i denne gruppen:"
@@ -3481,6 +3482,8 @@ nb_NO:
           search: "Søk"
           groups: "Grupper"
           dashboard: "Dashbord"
+        default_categories:
+          modal_yes: "Ja"
       badges:
         title: Merker
         new_badge: Nytt merke

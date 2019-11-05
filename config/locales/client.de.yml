@@ -917,14 +917,14 @@ de:
           default_name: "Mein Authentifikator"
         security_key:
           register: "Registrieren"
-          title: 'Sicherheitsschlüssel'
+          title: "Sicherheitsschlüssel"
           add: "Registriere den Sicherheitsschlüssel"
           default_name: "Hauptsicherheitsschlüssel"
           not_allowed_error: "Der Registrierungsvorgang für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
           already_added_error: "Du hast diesen Sicherheitsschlüssel bereits registriert. Du musst Ihn nicht erneut registrieren.\e"
-          edit: 'Bearbeite den Sicherheitsschlüssel'
-          edit_description: 'Name des Sicherheitsschlüssels'
-          delete: 'Löschen'
+          edit: "Bearbeite den Sicherheitsschlüssel"
+          edit_description: "Name des Sicherheitsschlüssels"
+          delete: "Löschen"
       change_about:
         title: "„Über mich“ ändern"
         error: "Beim Ändern dieses Wertes ist ein Fehler aufgetreten."
@@ -950,9 +950,6 @@ de:
         uploaded_avatar_empty: "Eigenes Bild hinzufügen"
         upload_title: "Lade dein Bild hoch"
         image_is_not_a_square: "Achtung: Wir haben dein Bild zugeschnitten, weil Höhe und Breite nicht übereingestimmt haben."
-      change_profile_background:
-        title: "Profilhintergrund"
-        instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 850px."
       change_card_background:
         title: "Benutzerkarten-Hintergrund"
         instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 590px."
@@ -1193,6 +1190,9 @@ de:
         header_title: "Profil. Nachrichten, Lesezeichen und Einstellungen"
       title:
         title: "Titel"
+        none: "(keiner)"
+      primary_group:
+        title: "Hauptgruppe"
         none: "(keiner)"
       filters:
         all: "Alle"
@@ -1540,7 +1540,6 @@ de:
       link_description: "gib hier eine Link-Beschreibung ein"
       link_dialog_title: "Link einfügen"
       link_optional_text: "Optionaler Titel"
-      link_url_placeholder: "https://example.com"
       quote_title: "Zitat"
       quote_text: "Zitat"
       code_title: "Vorformatierter Text"
@@ -2231,6 +2230,9 @@ de:
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
         attachment_download_requires_login: "Entschuldige, du musst angemeldet sein, um Dateien herunterladen zu können."
+      abandon_edit:
+        no_value: "Nein, behalten"
+        no_save_draft: "Nein, speichere den Entwurf"
       abandon:
         confirm: "Möchtest du deinen Beitrag wirklich verwerfen?"
         no_value: "Nein, beibehalten"
@@ -2373,7 +2375,6 @@ de:
       tags_allowed_tags: "Schlagwörter auf diese Kategorie einschränken:"
       tags_allowed_tag_groups: "Schlagwortgruppen auf diese Kategorie einschränken:"
       tags_placeholder: "(Optional) Liste erlaubter Schlagwörter"
-      tags_tab_description: "Hier definierte Schlagwörter und Schlagwort-Gruppen sind nur in dieser Kategorie und in Kategorien, in denen sie ebenfalls definiert sind, verfügbar. In anderen Kategorien sind sie nicht verwendbar."
       tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwort-Gruppen"
       manage_tag_groups_link: "Verwalte hier die Schlagwort-Gruppen."
       allow_global_tags_label: "Erlaube auch andere Schlagwörter."
@@ -3006,7 +3007,6 @@ de:
             publish_read_state: "Auf Gruppen-Benachrichtigungen veröffentliche Gruppen-gelesen-Status"
           membership:
             automatic: Automatisch
-            trust_level: Vertrauensstufe
             trust_levels_title: "Vertrauensstufe, die neuen Mitgliedern automatisch verliehen wird:"
             trust_levels_none: "Keine"
             automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
@@ -3272,7 +3272,7 @@ de:
           long_title: "Farben, CSS und HTML-Inhalte deiner Seite erweitern"
           edit: "Bearbeiten"
           edit_confirm: "Dies ist ein Remote-Theme, wenn du CSS/HTML bearbeitest, werden deine Änderungen zurückgesetzt, wenn du das Theme das nächste Mal aktualisierst."
-          update_confirm: "Diese lokalen Änderungen werden vom Update gelöscht. Bist du sicher, dass du fortfahren willst?"
+          update_confirm: "Folgendes wird vom Update geändert. Bist du sicher, dass du fortfahren willst?"
           update_confirm_yes: "Ja, fahrte mit dem Update fort"
           common: "Gemeinsam"
           desktop: "Desktop"
@@ -4019,6 +4019,8 @@ de:
           dashboard: "Dashboard"
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
+        default_categories:
+          modal_yes: "Ja"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen

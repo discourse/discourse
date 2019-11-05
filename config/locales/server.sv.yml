@@ -45,7 +45,6 @@ sv:
         auto_generated_email_error: "Händer när 'precedence'-rubriken är satt till: list, skräp, mass eller auto-reply, eller när någon annan rubrik innehåller: auto-submitted, auto-replied eller auto-generated."
         no_body_detected_error: "Händer när vi inte kunde extrahera någon huvuddel och det inte fanns några bilagor."
         inactive_user_error: "Händer när sändaren inte är aktiv."
-        bad_destination_address: "Händer när inga av e-postadresserna i Till/Cc/Bcc-fälten matchar en konfigurerad inkommande e-postadress."
         strangers_not_allowed_error: "Händer när en användare försöker skapa ett nytt ämne i en kategori som användare inte är en medlem av."
         insufficient_trust_level_error: "Händer när en användare försöker skapa ett nytt ämne i en kategori som användare saknar förtroendenivå för."
         reply_user_not_matching_error: "Händer när ett svar kommer in från en annan e-postadress än den notificieringen skickades till."
@@ -1050,7 +1049,7 @@ sv:
     embed_post_limit: "Högsta antal inlägg att bädda in."
     embed_username_required: "Användarnamn krävs för skapade av ämne."
     show_create_topics_notice: "Visa en notis som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
-    delete_drafts_older_than_n_days: Ta bort utkast som är äldre än (n) dagar.
+    delete_drafts_older_than_n_days: "Ta bort utkast som är äldre än (n) dagar."
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
     prevent_anons_from_downloading_files: "Förhindra anonyma användare från att ladda ned bilagor. VARNING: det kommer att förhindra alla webbplatsens tillgångar som inte är bilder och som lagts upp som bilagor från att fungera."
     slug_generation_method: "Välj en genereringsmetod för etiketter. Ange 'none' för att inaktivera generering av etiketter. "
@@ -1388,17 +1387,6 @@ sv:
     only_reply_by_email: "Besvara det här e-postmeddelandet för att ge din respons. "
     visit_link_to_respond: "[Besök ämnet](%{base_url}%{url}) för att ge din respons. "
     posted_by: "Postat av %{username} den %{post_date}"
-    invited_to_private_message_body: "%{username} bjöd in dit till ett meddelande\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nvid \n\n> %{site_title} -- %{site_description}\n"
-    invited_to_topic_body: |
-      %{username} bjöd in dig till en diskussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      vid
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       text_body_template: |
         %{header_instructions}
@@ -1604,7 +1592,6 @@ sv:
     missing: "Tyvärr, vi kunde inte hitta någon avatar associerad med den e-postadressen. Kan du försöka ladda upp den igen?"
   flag_reason:
     sockpuppet: "En ny användare skapade ett ämne, och en annan ny användare på samma IP-adress (%{ip_address}) svarade. Granska webbplatsinställningen <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Den här nya användaren försökte skapa flera inlägg med länkar till samma domän. Granska webbplatsinställningen <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "Översteg max_emails_per_day_per_user"
     exceeded_bounces_limit: "Översteg bounce_score_threshold"
