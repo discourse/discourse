@@ -880,11 +880,11 @@ class TopicQuery
               ON c.id = cu.category_id AND cu.user_id = :user_id
             WHERE c.id = topics.category_id
               AND c.id <> :category_id
-              AND (cu.notification_level IS NULL OR cu.notification_level = :muted)
-              AND (tu.notification_level IS NULL OR tu.notification_level < :tracking)
+              AND (COALESCE(cu.notification_level, :muted) = :muted)
+              AND (COALESCE(tu.notification_level, :regular) <= :regular)
           )", user_id: user.id,
               muted: CategoryUser.notification_levels[:muted],
-              tracking: TopicUser.notification_levels[:tracking],
+              regular: TopicUser.notification_levels[:regular],
               category_id: category_id || -1)
       else
         category_ids = [
