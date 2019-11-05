@@ -5,6 +5,7 @@ import { observes } from "ember-addons/ember-computed-decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import { convertIconClass } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   classNames: ["group-flair-inputs"],
@@ -77,7 +78,7 @@ export default Component.extend({
 
     if (flairHexColor) style += `color: #${flairHexColor};`;
 
-    return Ember.String.htmlSafe(style);
+    return htmlSafe(style);
   },
 
   @computed("model.flairBackgroundHexColor")

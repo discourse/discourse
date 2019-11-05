@@ -11,6 +11,7 @@ import {
   unsubscribe as unsubscribePushNotifications,
   isPushNotificationsEnabled
 } from "discourse/lib/push-notifications";
+import { set } from "@ember/object";
 
 export default {
   name: "subscribe-user-notifications",
@@ -120,7 +121,7 @@ export default {
       });
 
       bus.subscribe("/client_settings", data =>
-        Ember.set(siteSettings, data.name, data.value)
+        set(siteSettings, data.name, data.value)
       );
       bus.subscribe("/refresh_client", data =>
         Discourse.set("assetVersion", data)

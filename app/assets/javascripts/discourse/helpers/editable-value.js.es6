@@ -1,4 +1,6 @@
 import { get } from "@ember/object";
+import Helper from "@ember/component/helper";
+
 export function formatCurrency([reviewable, fieldId]) {
   // The field `category_id` corresponds to `category`
   if (fieldId === "category_id") {
@@ -15,4 +17,4 @@ export function formatCurrency([reviewable, fieldId]) {
   return value;
 }
 
-export default Ember.Helper.helper(formatCurrency);
+export default Helper.helper(formatCurrency);

@@ -14,7 +14,9 @@ var define, requirejs;
       "@ember/object": {
         default: Ember.Object,
         get: Ember.get,
-        getProperties: Ember.getProperties
+        getProperties: Ember.getProperties,
+        set: Ember.set,
+        setProperties: Ember.setProperties
       },
       "@ember/object/computed": {
         default: Ember.computed,
@@ -78,8 +80,23 @@ var define, requirejs;
         Promise: Ember.RSVP.Promise,
         hash: Ember.RSVP.hash,
         all: Ember.RSVP.all
+      },
+      "@ember/string": {
+        dasherize: Ember.String.dasherize,
+        classify: Ember.String.classify,
+        underscore: Ember.String.underscore,
+        camelize: Ember.String.camelize
+      },
+      "@ember/template": {
+        htmlSafe: Ember.String.htmlSafe
+      },
+      "@ember/application": {
+        setOwner: Ember.setOwner,
+        getOwner: Ember.getOwner
+      },
+      "@ember/component/helper": {
+        default: Ember.Helper
       }
-
     };
   }
 
