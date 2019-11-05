@@ -96,11 +96,7 @@ export default EmberObject.extend({
       return this._resultSet(type, result, findArgs);
     } else {
       const apiName = this.adapterFor(type).apiNameFor(type);
-      return this._hydrate(
-        type,
-        result[underscore(apiName)],
-        result
-      );
+      return this._hydrate(type, result[underscore(apiName)], result);
     }
   },
 
@@ -156,9 +152,7 @@ export default EmberObject.extend({
   refreshResults(resultSet, type, url) {
     const adapter = this.adapterFor(type);
     return ajax(url).then(result => {
-      const typeName = underscore(
-        this.pluralize(adapter.apiNameFor(type))
-      );
+      const typeName = underscore(this.pluralize(adapter.apiNameFor(type)));
       const content = result[typeName].map(obj =>
         this._hydrate(type, obj, result)
       );
@@ -169,9 +163,7 @@ export default EmberObject.extend({
   appendResults(resultSet, type, url) {
     const adapter = this.adapterFor(type);
     return ajax(url).then(result => {
-      const typeName = underscore(
-        this.pluralize(adapter.apiNameFor(type))
-      );
+      const typeName = underscore(this.pluralize(adapter.apiNameFor(type)));
 
       let pageTarget = result.meta || result;
       let totalRows =
@@ -225,9 +217,7 @@ export default EmberObject.extend({
 
   _resultSet(type, result, findArgs) {
     const adapter = this.adapterFor(type);
-    const typeName = underscore(
-      this.pluralize(adapter.apiNameFor(type))
-    );
+    const typeName = underscore(this.pluralize(adapter.apiNameFor(type)));
     const content = result[typeName].map(obj =>
       this._hydrate(type, obj, result)
     );

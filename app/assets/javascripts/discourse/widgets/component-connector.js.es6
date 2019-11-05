@@ -1,5 +1,5 @@
 import { next } from "@ember/runloop";
-import { setOwner, getOwner } from '@ember/application';
+import { setOwner, getOwner } from "@ember/application";
 
 export default class ComponentConnector {
   constructor(widget, componentName, opts, trackedProperties) {
