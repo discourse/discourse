@@ -199,6 +199,7 @@ export default function() {
   this.route("tags", { resetNamespace: true }, function() {
     this.route("show", { path: "/:tag_id" });
     this.route("showCategory", { path: "/c/:category/:tag_id" });
+    this.route("showCategoryNone", { path: "/c/:category/none/:tag_id" });
     this.route("showParentCategory", {
       path: "/c/:parent_category/:category/:tag_id"
     });
@@ -208,6 +209,9 @@ export default function() {
         path: "/:tag_id/l/" + filter
       });
       this.route("showCategory" + filter.capitalize(), {
+        path: "/c/:category/:tag_id/l/" + filter
+      });
+      this.route("showCategoryNone" + filter.capitalize(), {
         path: "/c/:category/:tag_id/l/" + filter
       });
       this.route("showParentCategory" + filter.capitalize(), {
