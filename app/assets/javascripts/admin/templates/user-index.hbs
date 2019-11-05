@@ -297,9 +297,8 @@
         {{model.api_key_count}}
       </div>
       <div class="controls">
-        {{#link-to "adminApiKeys" class="btn btn-default"}}
-          {{i18n "admin.api.manage_keys"}}
-        {{/link-to}}
+        {{d-button href="/admin/api/keys" label="admin.api.manage_keys"}}
+        
       </div>
     </div>
   {{/if}}

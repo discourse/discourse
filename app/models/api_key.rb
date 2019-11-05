@@ -27,7 +27,7 @@ class ApiKey < ActiveRecord::Base
     return if SiteSetting.revoke_api_keys_days == 0 # Never expire keys
     to_revoke = active.where("GREATEST(last_used_at, created_at, updated_at, :epoch) < :threshold",
                   epoch: last_used_epoch,
-                  threshold: Time.zone.now - SiteSetting.revoke_api_keys_days.days
+                  threshold: SiteSetting.revoke_api_keys_days.days.ago
                 )
 
     to_revoke.find_each do |api_key|

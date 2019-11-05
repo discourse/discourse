@@ -1,12 +1,9 @@
 import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { default as computed } from "ember-addons/ember-computed-decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { empty } from "@ember/object/computed";
 
 export default Ember.Controller.extend(bufferedProperty("model"), {
-  @computed("model.id")
-  isNew(id) {
-    return id === undefined;
-  },
+  isNew: empty("model.id"),
 
   actions: {
     saveDescription() {

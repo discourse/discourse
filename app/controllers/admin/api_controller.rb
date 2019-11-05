@@ -11,7 +11,7 @@ class Admin::ApiController < Admin::AdminController
     # Sort active keys by created_at, sort revoked keys by revoked_at
     keys = keys.order(<<~SQL)
       CASE WHEN revoked_at IS NULL THEN 0 ELSE 1 END,
-      CASE WHEN revoked_at IS NULL THEN created_at ELSE revoked_at END DESC
+      COALESCE(revoked_at, created_at) DESC
     SQL
 
     render_serialized(keys.to_a, ApiKeySerializer, root: 'keys')
