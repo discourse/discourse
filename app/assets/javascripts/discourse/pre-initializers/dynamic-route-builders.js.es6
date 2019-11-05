@@ -95,7 +95,9 @@ export default {
     });
 
     app["TagsShowCategoryRoute"] = TagsShowRoute.extend();
-    app["TagsShowCategoryNoneRoute"] = TagsShowRoute.extend({ noSubcategories: true });
+    app["TagsShowCategoryNoneRoute"] = TagsShowRoute.extend({
+      noSubcategories: true
+    });
     app["TagsShowParentCategoryRoute"] = TagsShowRoute.extend();
 
     site.get("filters").forEach(function(filter) {
