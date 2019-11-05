@@ -18,6 +18,7 @@ import { escapeExpression, tinyAvatar } from "discourse/lib/utilities";
 import { propertyNotEqual } from "discourse/lib/computed";
 import throttle from "discourse/lib/throttle";
 import { Promise } from "rsvp";
+import { set } from "@ember/object";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
@@ -859,7 +860,7 @@ const Composer = RestModel.extend({
     Object.keys(serializer).forEach(f => {
       const val = this.get(serializer[f]);
       if (typeof val !== "undefined") {
-        Ember.set(dest, f, val);
+        set(dest, f, val);
       }
     });
     return dest;

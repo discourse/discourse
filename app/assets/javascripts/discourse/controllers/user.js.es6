@@ -9,6 +9,7 @@ import computed from "ember-addons/ember-computed-decorators";
 import User from "discourse/models/user";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { set } from "@ember/object";
 
 export default Controller.extend(CanCheckEmails, {
   indexStream: false,
@@ -115,7 +116,7 @@ export default Controller.extend(CanCheckEmails, {
         .filterBy("show_on_profile", true)
         .sortBy("position")
         .map(field => {
-          Ember.set(field, "dasherized_name", field.get("name").dasherize());
+          set(field, "dasherized_name", field.get("name").dasherize());
           const value = userFields
             ? userFields[field.get("id").toString()]
             : null;

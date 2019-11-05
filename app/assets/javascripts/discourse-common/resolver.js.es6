@@ -1,9 +1,7 @@
 import { findHelper } from "discourse-common/lib/helpers";
 import { get } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
-
-/* global requirejs, require */
-var classify = Ember.String.classify;
+import { classify, dasherize } from "@ember/string";
 
 const _options = {};
 
@@ -63,7 +61,7 @@ export function buildResolver(baseName) {
         split[1] = split[1].replace(".templates", "").replace("/templates", "");
 
         // Try slashes
-        let dashed = Ember.String.dasherize(split[1].replace(/\./g, "/"));
+        let dashed = dasherize(split[1].replace(/\./g, "/"));
         if (
           requirejs.entries[appBase + dashed] ||
           requirejs.entries[adminBase + dashed]
@@ -72,7 +70,7 @@ export function buildResolver(baseName) {
         }
 
         // Try with dashes instead of slashes
-        dashed = Ember.String.dasherize(split[1].replace(/\./g, "-"));
+        dashed = dasherize(split[1].replace(/\./g, "-"));
         if (
           requirejs.entries[appBase + dashed] ||
           requirejs.entries[adminBase + dashed]
@@ -86,7 +84,7 @@ export function buildResolver(baseName) {
     customResolve(parsedName) {
       // If we end with the name we want, use it. This allows us to define components within plugins.
       const suffix = parsedName.type + "s/" + parsedName.fullNameWithoutType,
-        dashed = Ember.String.dasherize(suffix),
+        dashed = dasherize(suffix),
         moduleName = Object.keys(requirejs.entries).find(function(e) {
           return (
             e.indexOf(suffix, e.length - suffix.length) !== -1 ||

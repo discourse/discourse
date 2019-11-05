@@ -1,4 +1,6 @@
 import { next } from "@ember/runloop";
+import { setOwner, getOwner } from '@ember/application';
+
 export default class ComponentConnector {
   constructor(widget, componentName, opts, trackedProperties) {
     this.widget = widget;
@@ -27,8 +29,8 @@ export default class ComponentConnector {
         view._compute();
       }
 
-      if (Ember.setOwner) {
-        Ember.setOwner(view, Ember.getOwner(mounted));
+      if (setOwner) {
+        setOwner(view, getOwner(mounted));
       }
 
       mounted._connected.push(view);

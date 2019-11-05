@@ -1,6 +1,7 @@
 import { iconHTML } from "discourse-common/lib/icon-library";
+import Helper from "@ember/component/helper";
 
-export default Ember.Helper.extend({
+export default Helper.extend({
   compute([disposition]) {
     if (!disposition) {
       return null;

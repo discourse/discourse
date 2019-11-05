@@ -3,6 +3,8 @@ import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
 import { getRegister } from "discourse-common/lib/get-owner";
+import { underscore } from "@ember/string";
+import { set } from "@ember/object";
 
 let _identityMap;
 
@@ -96,7 +98,7 @@ export default EmberObject.extend({
       const apiName = this.adapterFor(type).apiNameFor(type);
       return this._hydrate(
         type,
-        result[Ember.String.underscore(apiName)],
+        result[underscore(apiName)],
         result
       );
     }
@@ -154,7 +156,7 @@ export default EmberObject.extend({
   refreshResults(resultSet, type, url) {
     const adapter = this.adapterFor(type);
     return ajax(url).then(result => {
-      const typeName = Ember.String.underscore(
+      const typeName = underscore(
         this.pluralize(adapter.apiNameFor(type))
       );
       const content = result[typeName].map(obj =>
@@ -167,7 +169,7 @@ export default EmberObject.extend({
   appendResults(resultSet, type, url) {
     const adapter = this.adapterFor(type);
     return ajax(url).then(result => {
-      const typeName = Ember.String.underscore(
+      const typeName = underscore(
         this.pluralize(adapter.apiNameFor(type))
       );
 
@@ -223,7 +225,7 @@ export default EmberObject.extend({
 
   _resultSet(type, result, findArgs) {
     const adapter = this.adapterFor(type);
-    const typeName = Ember.String.underscore(
+    const typeName = underscore(
       this.pluralize(adapter.apiNameFor(type))
     );
     const content = result[typeName].map(obj =>
@@ -327,7 +329,7 @@ export default EmberObject.extend({
             obj[subType] = hydrated;
             delete obj[k];
           } else {
-            Ember.set(obj, subType, null);
+            set(obj, subType, null);
           }
         }
       }

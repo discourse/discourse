@@ -1,6 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import Component from "@ember/component";
 import { on } from "ember-addons/ember-computed-decorators";
+import { set } from "@ember/object";
 
 export default Component.extend({
   classNameBindings: [":value-list", ":secret-value-list"],
@@ -67,7 +68,7 @@ export default Component.extend({
 
   _replaceValue(index, newValue, keyName) {
     let item = this.collection[index];
-    Ember.set(item, keyName, newValue);
+    set(item, keyName, newValue);
 
     this._saveValues();
   },
