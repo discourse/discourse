@@ -2078,6 +2078,7 @@ en:
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
+    revoke_api_keys_days: "Number of days before an unused API key is automatically revoked (0 for never)"
 
     allow_user_api_keys: "Allow generation of user API keys"
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
@@ -2677,13 +2678,13 @@ en:
 
         We’re really glad you’re spending time with us and we’d love to know more about you. Take a moment to [fill out your profile](%{base_url}/my/preferences/profile), or feel free to [start a new topic](%{base_url}/categories).
 
-    welcome_moderator:
-      title: "Welcome Moderator"
-      subject_template: "Congratulations, you’re now a moderator!"
+    welcome_staff:
+      title: "Welcome Staff"
+      subject_template: "Congratulations, you’re now a %{role}!"
       text_body_template: |
-        You’ve been granted moderator status by a fellow staff member.
+        You’ve been granted %{role} status by a fellow staff member.
 
-        As a moderator, you now have access to the <a href='%{base_url}/admin' target='_blank'>admin interface</a>.
+        As a %{role}, you now have access to the <a href='%{base_url}/admin' target='_blank'>admin interface</a>.
 
         With great power comes great responsibility. If you’re new to moderating, please refer to the [Moderation Guide](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
@@ -4572,6 +4573,12 @@ en:
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."
+    api_key:
+      automatic_revoked:
+        one: "Automatically revoked, last activity more than %{count} day ago"
+        other: "Automatically revoked, last activity more than %{count} days ago"
+      revoked: Revoked
+      restored: Restored
 
   reviewables:
     priorities:

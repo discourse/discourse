@@ -13,7 +13,8 @@ var define, requirejs;
       },
       "@ember/object": {
         default: Ember.Object,
-        get: Ember.get
+        get: Ember.get,
+        getProperties: Ember.getProperties
       },
       "@ember/object/computed": {
         default: Ember.computed,

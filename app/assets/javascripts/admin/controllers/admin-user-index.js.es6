@@ -258,10 +258,6 @@ export default Controller.extend(CanCheckEmails, {
         .finally(() => this.toggleProperty("editingTitle"));
     },
 
-    generateApiKey() {
-      this.model.generateApiKey();
-    },
-
     saveCustomGroups() {
       const currentIds = this.customGroupIds;
       const bufferedIds = this.customGroupIdsBuffer;
@@ -294,32 +290,6 @@ export default Controller.extend(CanCheckEmails, {
 
     resetPrimaryGroup() {
       this.set("model.primary_group_id", this.originalPrimaryGroupId);
-    },
-
-    regenerateApiKey() {
-      bootbox.confirm(
-        I18n.t("admin.api.confirm_regen"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        result => {
-          if (result) {
-            this.model.generateApiKey();
-          }
-        }
-      );
-    },
-
-    revokeApiKey() {
-      bootbox.confirm(
-        I18n.t("admin.api.confirm_revoke"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        result => {
-          if (result) {
-            this.model.revokeApiKey();
-          }
-        }
-      );
     }
   }
 });

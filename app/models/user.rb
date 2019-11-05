@@ -84,7 +84,7 @@ class User < ActiveRecord::Base
   has_many :muted_user_records, class_name: 'MutedUser'
   has_many :muted_users, through: :muted_user_records
 
-  has_one :api_key, dependent: :destroy
+  has_many :api_keys, dependent: :destroy
 
   has_many :push_subscriptions, dependent: :destroy
 
@@ -416,9 +416,17 @@ class User < ActiveRecord::Base
     Jobs.enqueue(:send_system_message, user_id: id, message_type: "welcome_tl1_user")
   end
 
-  def enqueue_welcome_moderator_message
-    return unless moderator
-    Jobs.enqueue(:send_system_message, user_id: id, message_type: 'welcome_moderator')
+  def enqueue_staff_welcome_message(role)
+    return unless staff?
+
+    Jobs.enqueue(
+      :send_system_message,
+      user_id: id,
+      message_type: 'welcome_staff',
+      message_options: {
+        role: role
+      }
+    )
   end
 
   def change_username(new_username, actor = nil)
@@ -1018,19 +1026,6 @@ class User < ActiveRecord::Base
 
   def has_uploaded_avatar
     uploaded_avatar.present?
-  end
-
-  def generate_api_key(created_by)
-    if api_key.present?
-      api_key.regenerate!(created_by)
-      api_key
-    else
-      ApiKey.create!(user: self, key: SecureRandom.hex(32), created_by: created_by)
-    end
-  end
-
-  def revoke_api_key
-    ApiKey.where(user_id: self.id).delete_all
   end
 
   def find_email

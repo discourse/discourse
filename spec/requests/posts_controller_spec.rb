@@ -524,8 +524,8 @@ describe PostsController do
     end
 
     context "api" do
-      let(:api_key) { user.generate_api_key(user) }
-      let(:master_key) { ApiKey.create_master_key }
+      let(:api_key) { Fabricate(:api_key, user: user) }
+      let(:master_key) { Fabricate(:api_key, user: nil) }
 
       # choosing an arbitrarily easy to mock trusted activity
       it 'allows users with api key to bookmark posts' do
@@ -711,7 +711,7 @@ describe PostsController do
         raw = "this is a test post 123 #{SecureRandom.hash}"
         title = "this is a title #{SecureRandom.hash}"
 
-        master_key = ApiKey.create_master_key.key
+        master_key = Fabricate(:api_key).key
 
         post "/posts.json", params: {
           api_username: user.username,
@@ -740,7 +740,7 @@ describe PostsController do
         Jobs.run_immediately!
         NotificationEmailer.enable
         post_1 = Fabricate(:post)
-        master_key = ApiKey.create_master_key.key
+        master_key = Fabricate(:api_key).key
 
         post "/posts.json", params: {
           api_username: user.username,
@@ -796,7 +796,7 @@ describe PostsController do
 
       it 'will raise an error if specified category cannot be found' do
         user = Fabricate(:admin)
-        master_key = ApiKey.create_master_key.key
+        master_key = Fabricate(:api_key).key
 
         post "/posts.json", params: {
           api_username: user.username,
