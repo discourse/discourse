@@ -2078,6 +2078,7 @@ en:
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
+    revoke_api_keys_days: "Number of days before an unused API key is automatically revoked (0 for never)"
 
     allow_user_api_keys: "Allow generation of user API keys"
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
@@ -4572,6 +4573,12 @@ en:
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."
+    api_key:
+      automatic_revoked:
+        one: "Automatically revoked, last activity more than %{count} day ago"
+        other: "Automatically revoked, last activity more than %{count} days ago"
+      revoked: Revoked
+      restored: Restored
 
   reviewables:
     priorities:

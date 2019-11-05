@@ -73,18 +73,28 @@ table.web-hooks.grid {
 
 table.api-keys {
   margin-bottom: 0.25em;
-  td.key {
-    font-size: $font-down-1;
+
+  .key-controls {
+    text-align: right;
   }
+
+  tr.revoked {
+    color: $primary-medium;
+  }
+
   @include breakpoint(tablet) {
     tr {
       grid-template-columns: 0.25fr 1fr 1fr;
     }
     td.key {
-      font-size: $font-0;
-      word-wrap: break-word;
       grid-row: 1;
       grid-column-start: 1;
+      grid-column-end: 1;
+      max-width: 100%;
+    }
+    td.key-description {
+      grid-row: 1;
+      grid-column-start: 2;
       grid-column-end: -1;
       max-width: 100%;
     }
@@ -134,6 +144,47 @@ table.api-keys {
           }
         }
       }
+    }
+  }
+}
+
+.admin-api-keys {
+  h2 {
+    margin-bottom: 10px;
+  }
+  .api-key {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid $primary-low;
+    .form-element,
+    .form-element-desc {
+      float: left;
+      padding: 0.5em 0;
+      &.input-area {
+        width: 75%;
+        .value-list,
+        .select-kit,
+        input[type="text"] {
+          width: 50%;
+          margin: 0;
+        }
+        .ac-wrap {
+          width: 50% !important;
+        }
+      }
+      &.label-area {
+        width: 25%;
+        label {
+          margin: 0.5em 1em 0 0;
+          text-align: right;
+          font-weight: bold;
+        }
+      }
+    }
+    .controls {
+      float: right;
+      text-align: left;
+      width: 50%;
     }
   }
 }

@@ -84,7 +84,7 @@ class User < ActiveRecord::Base
   has_many :muted_user_records, class_name: 'MutedUser'
   has_many :muted_users, through: :muted_user_records
 
-  has_one :api_key, dependent: :destroy
+  has_many :api_keys, dependent: :destroy
 
   has_many :push_subscriptions, dependent: :destroy
 
@@ -1026,19 +1026,6 @@ class User < ActiveRecord::Base
 
   def has_uploaded_avatar
     uploaded_avatar.present?
-  end
-
-  def generate_api_key(created_by)
-    if api_key.present?
-      api_key.regenerate!(created_by)
-      api_key
-    else
-      ApiKey.create!(user: self, key: SecureRandom.hex(32), created_by: created_by)
-    end
-  end
-
-  def revoke_api_key
-    ApiKey.where(user_id: self.id).delete_all
   end
 
   def find_email

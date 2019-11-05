@@ -123,25 +123,6 @@ RSpec.describe Admin::UsersController do
     end
   end
 
-  describe '#generate_api_key' do
-    it 'calls generate_api_key' do
-      post "/admin/users/#{user.id}/generate_api_key.json"
-      expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
-      expect(json["api_key"]["user"]["id"]).to eq(user.id)
-      expect(json["api_key"]["key"]).to be_present
-    end
-  end
-
-  describe '#revoke_api_key' do
-    it 'calls revoke_api_key' do
-      ApiKey.create!(user: user, key: SecureRandom.hex)
-      delete "/admin/users/#{user.id}/revoke_api_key.json"
-      expect(response.status).to eq(200)
-      expect(ApiKey.where(user: user).count).to eq(0)
-    end
-  end
-
   describe '#suspend' do
     fab!(:post) { Fabricate(:post) }
     let(:suspend_params) do
@@ -269,15 +250,26 @@ RSpec.describe Admin::UsersController do
       expect(log.details).to match(/long reason/)
     end
 
-    it "also revokes any api keys" do
-      Fabricate(:api_key, user: user)
-      put "/admin/users/#{user.id}/suspend.json", params: suspend_params
+    it "also prevents use of any api keys" do
+      api_key = Fabricate(:api_key, user: user)
 
+      put "/posts/#{Fabricate(:post).id}/bookmark.json", params: {
+        bookmarked: "true",
+        api_key: api_key.key
+      }
       expect(response.status).to eq(200)
-      user.reload
 
+      put "/admin/users/#{user.id}/suspend.json", params: suspend_params
+      expect(response.status).to eq(200)
+
+      user.reload
       expect(user).to be_suspended
-      expect(ApiKey.where(user_id: user.id).count).to eq(0)
+
+      put "/posts/#{Fabricate(:post).id}/bookmark.json", params: {
+        bookmarked: "true",
+        api_key: api_key.key
+      }
+      expect(response.status).to eq(403)
     end
   end
 
