@@ -233,11 +233,6 @@ function positioningWorkaround($fixedElement) {
   };
   const observer = new MutationObserver(checkForInputs);
   observer.observe(fixedElement, config);
-
-  // document.addEventListener("visibilitychange", () => {
-  //   console.log(document.visibilityState);
-  //   console.log(lastTouchedElement);
-  // });
 }
 
 export default positioningWorkaround;
