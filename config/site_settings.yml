@@ -2024,7 +2024,7 @@ user_preferences:
     default: ""
   mute_all_categories_by_default:
     default: false
-    refresh: true
+    client: true
 
   default_tags_watching:
     type: tag_list
