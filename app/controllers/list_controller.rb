@@ -385,6 +385,7 @@ class ListController < ApplicationController
       end
 
     opts = opts.dup
+    opts[:group_name] = URI.encode(opts[:group_name]) if opts[:group_name]
     opts.delete(:category) if page_params.include?(:category_slug_path_with_id)
 
     public_send(method, opts.merge(page_params)).sub('.json?', '?')
