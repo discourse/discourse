@@ -14,7 +14,7 @@ pl_PL:
     formats:
       short: "%d.%m.%Y"
       short_no_year: "%-d %B"
-      date_only: "%-d %b %Y"
+      date_only: "%-d %B %Y"
       long: "%B %-d, %Y, %l:%M%P"
       no_day: "%B %Y"
   date:
