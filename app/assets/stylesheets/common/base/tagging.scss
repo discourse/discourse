@@ -71,9 +71,7 @@ $tag-color: $primary-medium;
 .discourse-tag {
   max-width: 14em;
   display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  @include ellipsis;
   vertical-align: middle;
 }
 

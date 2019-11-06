@@ -284,7 +284,6 @@
   .reviewed-by {
     display: flex;
     align-items: center;
-    white-space: nowrap;
   }
 
   .user-flag-percentage {
@@ -309,8 +308,7 @@
       &.user a,
       &.reviewed-by a {
         max-width: 150px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
       }
     }
 
@@ -327,8 +325,7 @@
         padding: 0.5em 1em 0.5em 0;
       }
       @include breakpoint("mobile-large") {
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
         padding-right: 0.5em;
       }
     }

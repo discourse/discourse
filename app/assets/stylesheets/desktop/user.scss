@@ -124,16 +124,12 @@
           }
           h1 {
             max-width: 100%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            @include ellipsis;
           }
           .location-and-website {
             display: flex;
             max-width: 100%;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+            @include ellipsis;
             .user-profile-location {
               margin-right: 1em;
             }

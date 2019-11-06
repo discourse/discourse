@@ -71,9 +71,7 @@
       text-align: left;
       flex: 0 1 auto;
       padding: 1px 0;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
+      @include ellipsis;
       color: inherit;
     }
 

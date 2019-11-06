@@ -589,7 +589,11 @@
   .category,
   .external_url,
   .post {
-    text-overflow: ellipsis;
+    @include ellipsis;
+    max-width: 100px;
+    @include breakpoint(tablet) {
+      max-width: 100%;
+    }
   }
 
   &.grid tr.admin-list-item {

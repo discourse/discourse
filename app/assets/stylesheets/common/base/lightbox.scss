@@ -47,9 +47,7 @@ $meta-element-margin: 6px;
 
   .filename {
     margin: $meta-element-margin;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    @include ellipsis;
   }
 
   .d-icon {
