@@ -2387,7 +2387,7 @@ es:
       allow_global_tags_label: "Permitir también otras etiquetas"
       tag_group_selector_placeholder: "(Opcional) Grupo de etiquetas"
       required_tag_group_description: "Requiere temas nuevos para tener etiquetas de un grupo de etiquetas:"
-      min_tags_from_required_group_label: 'Número de etiquetas:'
+      min_tags_from_required_group_label: "Número de etiquetas:"
       required_tag_group_label: "Grupo de etiquetas:"
       topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"
       delete: "Eliminar categoría"
@@ -3055,18 +3055,16 @@ es:
         none: "No hay ninguna clave de API activa en este momento."
         user: "Usuario"
         title: "API"
-        key: "Clave de API"
         created: Creado
+        updated: Actualizado
         last_used: Usada por última vez
         never_used: (nunca)
         generate: "Generar clave de API"
-        regenerate: "Regenerar"
         revoke: "Revocar"
-        confirm_regen: "¿Estás seguro de que quieres reemplazar esta clave de API por una nueva?"
-        confirm_revoke: "¿Estás seguro de que quieres revocar esta clave?"
-        info_html: "Tu clave de API te permitirá crear y actualizar temas usando llamadas a JSON."
         all_users: "Todos los usuarios"
-        note_html: "Mantén esta clave <strong>secreta</strong> a buen recaudo, cualquier usuario que disponga de ella podría realizar publicaciones bajo el nombre de cualquier usuario."
+        show_details: Detalles
+        description: Descripción
+        save: Guardar
       web_hooks:
         title: "Webhooks"
         none: "Ahora mismo no hay webhooks."

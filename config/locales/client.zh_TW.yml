@@ -2776,16 +2776,13 @@ zh_TW:
         none: "目前沒有啟用中的 API 金鑰。"
         user: "使用者"
         title: "API"
-        key: "API 金鑰"
         created: 已建立
         generate: "產生"
-        regenerate: "重新產生"
         revoke: "撤銷"
-        confirm_regen: "你確定要以新的 API 金鑰取代取的嗎?"
-        confirm_revoke: "你確定要撤銷此金鑰嗎?"
-        info_html: "你可以使用 API 金鑰呼叫 JSON 建立與更新話題。"
         all_users: "所有使用者"
-        note_html: "請<strong>安全地</strong>保管密鑰，任何擁有該密鑰的使用者，都可以使用它以任何的使用者的名義發文。"
+        show_details: 詳細訊息
+        description: 描述
+        save: 儲存
       web_hooks:
         title: "Webhooks"
         none: "當前沒有 Webhooks。"

@@ -2477,16 +2477,13 @@ ro:
         none: "Nu sunt chei API principale active deocamdată."
         user: "Utilizator"
         title: "API"
-        key: "Cheie API"
         created: Creat
         generate: "Generare"
-        regenerate: "Regenerare"
         revoke: "Revocă"
-        confirm_regen: "Ești sigur că dorești să înlocuiești această cheie API cu una nouă?"
-        confirm_revoke: "Ești sigur că dorești să revoci această cheie?"
-        info_html: "Cheia ta API îți permite să creezi și să actualizezi subiecte folosind sintaxa JSON."
         all_users: "Toți utilizatorii"
-        note_html: "Păstrează această cheie <strong>secretă</strong>, toți utilizatorii ce o dețin pot crea postări arbitrare pe forum dându-se drept oricare alt utilizator."
+        show_details: Detalii
+        description: Descriere
+        save: Salvează
       web_hooks:
         title: "Webhooks"
         none: "Momentan nu există nici un webhook"

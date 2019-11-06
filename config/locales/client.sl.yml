@@ -3138,13 +3138,13 @@ sl:
         generate_master: "Generiraj glavni API ključ"
         user: "Uporabnik"
         title: "API"
-        key: "API ključ"
         created: Ustvarjeno
         generate: "Generiraj"
-        regenerate: "Regeneriraj"
         revoke: "Prekliči"
-        confirm_revoke: "Ali ste prepričani da hočete preklicati ta ključ?"
         all_users: "Vsi uporabniki"
+        show_details: Podrobnosti
+        description: Opis
+        save: Shrani
       web_hooks:
         create: "Ustvari"
         save: "Shrani"

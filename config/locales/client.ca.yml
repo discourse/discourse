@@ -2381,6 +2381,7 @@ ca:
       tag_groups_placeholder: "Llista (opcional) d'etiquetes de grup permeses"
       manage_tag_groups_link: "Gestioneu els grups d'etiquetes aquí."
       allow_global_tags_label: "Permet també altres etiquetes"
+      tag_group_selector_placeholder: "(Opcional) Grup d’etiquetes"
       topic_featured_link_allowed: "Permet enllaços destacats dins aquesta categoria"
       delete: "Suprimeix categoria"
       create: "Nova categoria"
@@ -3046,18 +3047,23 @@ ca:
         none: "No hi ha claus API actives ara mateix"
         user: "Usuari"
         title: "API"
-        key: "Clau API"
         created: Creat
+        updated: Actualitzat
         last_used: Darrer utilitzat
         never_used: (mai)
         generate: "Genera"
-        regenerate: "Regenera"
+        undo_revoke: "Desfés revocar"
         revoke: "Revoca"
-        confirm_regen: "Esteu segur que voleu reemplaçar aquesta clau API amb una de nova?"
-        confirm_revoke: "Esteu segur que voleu revocar aquesta clau?"
-        info_html: "La clau API us permetrà crear i actualitzar temes fent servir crides JSON."
         all_users: "Tots els usuaris"
-        note_html: "Conserveu aquesta clau <strong>secreta</strong>. Tots els usuaris que la tinguin podrien crear publicacions arbitràries en nom de qualsevol usuari."
+        show_details: Detalls
+        description: Descripció
+        no_description: (sense descripció)
+        all_api_keys: Totes les claus de l'API
+        user_mode: Nivell d’usuari
+        description_placeholder: "Per a què es farà servir aquesta clau?"
+        save: Desa
+        new_key: Nova clau d’API
+        revoked: Revocat
       web_hooks:
         title: "Webhooks"
         none: "Ara no hi ha webhooks."

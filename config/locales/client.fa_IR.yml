@@ -2936,16 +2936,13 @@ fa_IR:
         none: "هم اکنون هیچ کلید API فعالی وجود ندارد"
         user: "کاربر"
         title: "API"
-        key: "کلید API"
         created: ساخته شده
         generate: "تولید کردن"
-        regenerate: "ایجاد مجدد"
         revoke: "ابطال"
-        confirm_regen: "آیا می خواهید API موجود را با یک API جدید جایگزین کنید؟"
-        confirm_revoke: "آیا مطمئن هستید که می خواهید کلید را برگردانید؟"
-        info_html: "موضوعات تازه پس از آخرین بازدید شما"
         all_users: "همه کاربران"
-        note_html: "این کلید را <strong>امن</strong> نگه دارید، تمام کاربرانی که آن را دارند می توانند به عنوان هر کاربری نوشته‌های دلخواه ایجاد کنند."
+        show_details: جزئیات
+        description: توضیح
+        save: ذخیره
       web_hooks:
         title: "webhook ها"
         none: "در حال حاضر webhook‌ی وجود ندارد"

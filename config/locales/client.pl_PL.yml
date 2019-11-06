@@ -3054,16 +3054,13 @@ pl_PL:
         none: "Nie ma teraz aktywnych kluczy API."
         user: "Użytkownik"
         title: "API"
-        key: "Klucz API"
         created: Utworzono
         generate: "Generuj"
-        regenerate: "Odnów"
         revoke: "Unieważnij"
-        confirm_regen: "Czy na pewno chcesz zastąpić ten API Key nowym?"
-        confirm_revoke: "Czy na pewno chcesz unieważnić ten klucz?"
-        info_html: "Twoje klucze API dają dostęp do tworzenia i aktualizowania tenatów przez wywołania JSON."
         all_users: "Wszyscy użytkownicy"
-        note_html: "Zachowaj ten klucz <strong>w tajemnicy</strong>, wszyscy którzy go posiadają mogą tworzyć wpisy jako dowolny użytkownik."
+        show_details: Detale
+        description: Opis
+        save: Zapisz
       web_hooks:
         title: "Webhooks"
         none: "Brak webhooks"

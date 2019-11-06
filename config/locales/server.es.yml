@@ -2382,15 +2382,6 @@ es:
         Hola. Hemos visto que has estado leyendo, lo cual nos parece fantástico, ¡por lo que te hemos subido tu [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
         Nos alegramos de ver que estés pasando tiempo con nosotros, y nos gustaría saber más sobre ti. Cuando puedas, [rellena tu perfil](%{base_url}/my/preferences/profile) o [crea un nuevo tema](%{base_url}/categories).
-    welcome_moderator:
-      title: "Bienvenido Moderador"
-      subject_template: "¡Felicidades, ahora eres un moderador!"
-      text_body_template: |
-        Has sido promovido con el status de moderador por un miembro del staff.
-
-        Como moderador, ahora tienes acceso a la <a href='%{base_url}/admin' target='_blank'>interfaz de administración</a>.
-
-        Con un gran poder viene una gran responsabilidad. Si eres nuevo en tareas de moderación, por favor sigue la [Guía de Moderación](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Bienvenida al invitado"
       subject_template: "¡Bienvenido a %{site_name}!"

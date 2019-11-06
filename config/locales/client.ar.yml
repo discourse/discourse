@@ -2643,16 +2643,13 @@ ar:
         none: "لا مفاتيح API نشطة حاليًّا."
         user: "الاعضاء"
         title: "API"
-        key: "مفتاح API"
         created: أُنشئ في
         generate: "إنشاء"
-        regenerate: "إعادة إنشاء"
         revoke: "الغاء"
-        confirm_regen: "أمتأكّد من استبدال مفتاح API هذا بواحد جديد؟"
-        confirm_revoke: "هل أنت متأكد من رغبتك في تعطيل هذا المفتاح؟"
-        info_html: "مفتاح API الخاص بك سيسمح لك بانشاء أو تعديل مواضيع باستخدام أليات رسائل JSON."
         all_users: "جميع الاعضاء"
-        note_html: "حافظ على <strong>سرية</strong> هذا المفتاح، اي شخص يحصل عليه يستطيع انشاء مواضيع باسم اي مستخدم اخر"
+        show_details: تفاصيل
+        description: الوصف
+        save: احفظ
       web_hooks:
         title: "Webhooks"
         none: "لا يوجد Webhooks حاليا."

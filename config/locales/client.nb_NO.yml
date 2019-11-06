@@ -2634,16 +2634,13 @@ nb_NO:
         none: "Det finnes ingen aktive API-nøkler akkurat nå."
         user: "Bruker"
         title: "API"
-        key: "Nøkkel"
         created: Opprettet
         generate: "Generer API-nøkkel"
-        regenerate: "Regenerer API-nøkkel"
         revoke: "Trekk tilbake"
-        confirm_regen: "Er du sikker på at du vil erstatte den API-nøkkelen med en ny?"
-        confirm_revoke: "Er du sikker på at du vil trekke tilbake den nøkkelen?"
-        info_html: "API-nøkkelen din vil tillate deg å lage og oppdatere emner ved å bruke JSON-kall."
         all_users: "Alle brukere"
-        note_html: "Hold denne nøkkelen <strong>hemmelig</strong>, alle brukere som har den, vil kunne opprette vilkårlige innlegg som hvilken som helst bruker. "
+        show_details: Detaljer
+        description: Beskrivelse
+        save: Lagre
       web_hooks:
         title: "Webhooker"
         none: "Det finnes ingen webhooker for tiden."

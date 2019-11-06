@@ -2270,16 +2270,13 @@ vi:
         none: "Không có API keys nào kích hoạt lúc này."
         user: "Thành viên"
         title: "API"
-        key: "API Key"
         created: Tạo bởi
         generate: "Khởi tạo"
-        regenerate: "Khởi tạo lại"
         revoke: "Thu hồi"
-        confirm_regen: "Bạn muốn thay API Key hiện tại bằng cái mới?"
-        confirm_revoke: "Bạn có chắc chắn muốn hủy bỏ khóa đó?"
-        info_html: "Khóa API cho phép bạn tạo và cập nhật chủ đề sử dụng JSON."
         all_users: "Tất cả Thành viên"
-        note_html: "Giữ khóa nào <strong>bảo mật</strong>, tất cả tài khoản có thể dùng khóa này để tạo bài viết với bất kỳ tài khoản nào."
+        show_details: Chi tiết
+        description: Mô tả
+        save: Lưu
       web_hooks:
         save: "Lưu"
         destroy: "Xóa"

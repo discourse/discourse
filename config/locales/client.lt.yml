@@ -2423,16 +2423,13 @@ lt:
         none: "Šiuo metu nėra jokių aktyvių API raktų."
         user: "Vartotojas"
         title: "API"
-        key: "API raktas"
         created: Sukurta
         generate: "Generuoti"
-        regenerate: "Pergeneruoti"
         revoke: "Pašalinti"
-        confirm_regen: "Ar tikrai norite pakeisti šį API raktą nauju?"
-        confirm_revoke: "Ar tikrai norite pašalinti šį raktą?"
-        info_html: "Jūsų API raktas leis jums kurti ir atnaujinti temas naudojant JSON užklausas."
         all_users: "Visi vartotojai"
-        note_html: "Tai slapta <strong>funkcija</strong>, su ja gali kurti įrašus bet kokiu vardu."
+        show_details: Detalės
+        description: Aprašymas
+        save: Saugoti
       web_hooks:
         create: "Sukurti"
         save: "Saugoti"

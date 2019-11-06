@@ -1592,9 +1592,11 @@ th:
       api:
         user: "ผู้ใช้"
         title: "API"
-        key: "API Key"
         created: สร้างเมื่อ
         revoke: "เอาออก"
+        show_details: รายละเอียด
+        description: รายละเอียด
+        save: บันทึก
       web_hooks:
         save: "บันทึก"
         destroy: "ลบ"

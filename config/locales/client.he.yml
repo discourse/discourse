@@ -2569,7 +2569,7 @@ he:
       allow_global_tags_label: "לאפשר גם תגיות אחרות"
       tag_group_selector_placeholder: "(רשות) קבוצת תגיות"
       required_tag_group_description: "לדרוש שלנושאים חדשים יהיו תגיות מקבוצת תגיות:"
-      min_tags_from_required_group_label: 'מס׳ תגיות:'
+      min_tags_from_required_group_label: "מס׳ תגיות:"
       required_tag_group_label: "קבוצת תגיות:"
       topic_featured_link_allowed: "אפשרו קישורים מומלצים בקטגוריה זו"
       delete: "מחק קטגוריה"
@@ -3283,18 +3283,30 @@ he:
         none: "אין מפתחות API פעילים כרגע."
         user: "משתמש"
         title: "API"
-        key: "מפתח API"
+        key: "מפתח"
         created: נוצר
+        updated: עודכן
         last_used: שימוש אחרון
         never_used: (אף פעם)
         generate: "ייצר"
-        regenerate: "ייצר מחדש"
+        undo_revoke: "ביטול שלילה"
         revoke: "שלול"
-        confirm_regen: "האם ברצונך להחליף את מפתח ה-API באחד חדש?"
-        confirm_revoke: "אתם בטוחים שברצונכם לשלול את המפתח הזה?"
-        info_html: "מפתח הAPI שלך יאפשר לך ליצור ולעדכן נושאים בעזרת קריאות JSON."
         all_users: "כל המשתמשים"
-        note_html: "שמרו על מפתח זה <strong>סודי</strong>, כל משתמש שיחזיק בו יוכל לייצר פרסומים שרירותית, כאילו היה כל משתמש/ת אחרים."
+        active_keys: "מפתחות API פעילים"
+        manage_keys: ניהול מפתחות
+        show_details: פרטים
+        description: תיאור
+        no_description: (אין תיאור)
+        all_api_keys: כל מפתחות ה־API
+        user_mode: דרגת משתמש
+        impersonate_all_users: התחזות לכל משתמש שהוא
+        single_user: "משתמש בודד"
+        user_placeholder: נא להקליד שם משתמש
+        description_placeholder: "למה ישמש המפתח הזה?"
+        save: שמירה
+        new_key: מפתח API חדש
+        revoked: נשל
+        delete: למחוק לצמיתות
       web_hooks:
         title: "Webhooks"
         none: "אין כרגע webhooks."
@@ -3883,6 +3895,9 @@ he:
             change_theme_setting: "שנוי הגדרות ערכת עיצוב"
             disable_theme_component: "נטרול רכיב בערכת עיצוב"
             enable_theme_component: "הפעלת רכיב בערכת עיצוב"
+            api_key_create: "נוצר מפתח api"
+            api_key_update: "עודכן מפתח api"
+            api_key_destroy: "הושמד מפתח api"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."

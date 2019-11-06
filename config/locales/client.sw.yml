@@ -2437,14 +2437,13 @@ sw:
         none: "Hakuna funguo za API zilizo amilifu kwa sasa."
         user: "Mtumiaji"
         title: "API"
-        key: "Ufunguo wa API"
         created: Imetengenezwa
         generate: "Tengeneza"
-        regenerate: "Tengeneza Upya"
         revoke: "Futa"
-        confirm_regen: "Una uhakika unataka kufuta ufunguo wa API na kuweka mpya?"
-        confirm_revoke: "Una uhakika unataka kufuta huo ufunguo?"
         all_users: "Watumiaji Wote"
+        show_details: Taarifa
+        description: Maelezo
+        save: hifadhi
       web_hooks:
         create: "Tengeneza"
         save: "Hifadhi"

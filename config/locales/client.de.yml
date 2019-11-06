@@ -3038,16 +3038,14 @@ de:
         none: "Es gibt momentan keine aktiven API-Keys"
         user: "Benutzer"
         title: "API"
-        key: "API-Key"
         created: Erstellt
+        updated: Aktualisiert
         generate: "Erzeugen"
-        regenerate: "Erneuern"
         revoke: "Widerrufen"
-        confirm_regen: "Möchtest du wirklich den API Key mit einem neuen ersetzen?"
-        confirm_revoke: "Möchtest du wirklich den API Key widerrufen?"
-        info_html: "Dein API-Key erlaubt dir das Erstellen und Bearbeiten von Themen via JSON-Aufrufen."
         all_users: "Alle Benutzer"
-        note_html: "Halte diesen Schlüssel <strong>geheim</strong>. Alle Benutzer, die diesen Schlüssel besitzen, können beliebige Beiträge als jeder Benutzer erstellen."
+        show_details: Details
+        description: Beschreibung
+        save: Speichern
       web_hooks:
         title: "Webhooks"
         none: "Aktuell gibt es keine Webhooks."

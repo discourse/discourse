@@ -2918,16 +2918,13 @@ tr_TR:
         none: "Şu an etkin API anahtarı bulunmuyor."
         user: "Kullanıcı"
         title: "API"
-        key: "API Anahtarı"
         created: Oluşturuldu
         generate: "Oluştur"
-        regenerate: "Tekrar Oluştur"
         revoke: "İptal Et"
-        confirm_regen: "API anahtarını yenisi ile değiştirmek istediğine emin misin?"
-        confirm_revoke: "Anahtarı iptal etmek istediğine emin misin?"
-        info_html: "API anahtarın JSON çağrıları kullanarak konu oluşturup güncelleyebilmene olanak sağlayacak."
         all_users: "Tüm Kullanıcılar"
-        note_html: "Bu anahtarı <strong>gizli</strong> tut, anahtara sahip kullanıcılar herhangi bir kullanıcı adı altında istedikleri gönderiyi oluşturabilirler."
+        show_details: Detaylar
+        description: Açıklama
+        save: Kaydet
       web_hooks:
         title: "Web Kancaları"
         none: "Şu anda bir web kancası yok."

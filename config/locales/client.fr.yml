@@ -2368,7 +2368,7 @@ fr:
       manage_tag_groups_link: "Gérer les groupes d'étiquettes ici."
       allow_global_tags_label: "Permettre aussi d'autres étiquettes"
       tag_group_selector_placeholder: "(Facultatif) Groupe d'étiquettes"
-      min_tags_from_required_group_label: 'Nombre d''étiquettes :'
+      min_tags_from_required_group_label: "Nombre d'étiquettes :"
       required_tag_group_label: "Groupe d'étiquettes :"
       topic_featured_link_allowed: "Autoriser les liens à la une dans cette catégorie"
       delete: "Supprimer la catégorie"
@@ -3048,18 +3048,17 @@ fr:
         none: "Il n'y a pas de clés API actives en ce moment."
         user: "Utilisateur"
         title: "API"
-        key: "Clé API"
+        key: "Clé"
         created: Créé
+        updated: Mis à jour
         last_used: Dernière utilisation
         never_used: (jamais)
         generate: "Générer"
-        regenerate: "Regénérer"
         revoke: "Révoquer"
-        confirm_regen: "Êtes-vous sûr de vouloir remplacer cette clé API par une nouvelle ?"
-        confirm_revoke: "Êtes-vous sûr de vouloir révoquer cette clé ?"
-        info_html: "Cette clé vous permettra de créer et mettre à jour des sujets à l'aide d'appels JSON."
         all_users: "Tous les utilisateurs"
-        note_html: "Gardez cette clé <strong>secrète</strong>. Tous les utilisateurs qui la possèdent peuvent créer des messages au nom de n'importe quel utilisateur."
+        show_details: Détails
+        description: Description
+        save: Sauvegarder
       web_hooks:
         title: "Webhooks"
         none: "Il n'y a aucun Webhook actuellement."

@@ -1836,6 +1836,7 @@ nl:
     default_title_count_mode: "Standaardmodus voor de paginatitelteller"
     retain_web_hook_events_period_days: "Aantal dagen voor het behouden van records van webhookgebeurtenissen."
     retry_web_hook_events: "Mislukte webhookgebeurtenissen automatisch 4 keer opnieuw proberen. Tijdsgaten tussen de pogingen zijn 1, 5, 25 en 125 minuten."
+    revoke_api_keys_days: "Aantal dagen voordat een niet-gebruikte API-sleutel van een gebruiker automatisch wordt ingetrokken (0 voor nooit)"
     allow_user_api_keys: "Genereren van API-sleutels van gebruiker toestaan"
     allow_user_api_key_scopes: "Lijst van toegestane scopes voor API-sleutels van gebruiker"
     max_api_keys_per_user: "Maximale aantal API-aanvragen van gebruiker per gebruiker"
@@ -2659,6 +2660,8 @@ nl:
     not_found: "niet gevonden"
     unknown: "onbekend"
     user_merged: "%{username} is met deze account samengevoegd"
+    api_key:
+      revoked: Ingetrokken
   reviewables:
     priorities:
       low: "Laag"

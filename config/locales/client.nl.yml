@@ -2387,7 +2387,7 @@ nl:
       allow_global_tags_label: "Ook andere tags toestaan"
       tag_group_selector_placeholder: "(Optioneel) Tag-groep"
       required_tag_group_description: "Nieuwe topics moeten tags hebben uit een tag-groep:"
-      min_tags_from_required_group_label: 'Aantal tags:'
+      min_tags_from_required_group_label: "Aantal tags:"
       required_tag_group_label: "Tag-groep:"
       topic_featured_link_allowed: "Aanbevolen koppelingen in deze categorie toestaan"
       delete: "Categorie verwijderen"
@@ -3055,18 +3055,30 @@ nl:
         none: "Er zijn op dit moment geen actieve API-sleutels."
         user: "Gebruiker"
         title: "API"
-        key: "API-sleutel"
+        key: "Sleutel"
         created: Gemaakt
+        updated: Bijgewerkt
         last_used: Laatst gebruikt
         never_used: (nooit)
         generate: "Genereren"
-        regenerate: "Opnieuw genereren"
+        undo_revoke: "Intrekken ongedaan maken"
         revoke: "Intrekken"
-        confirm_regen: "Weet u zeker dat u die API-sleutel door een nieuwe wilt vervangen?"
-        confirm_revoke: "Weet u zeker dat u die API-sleutel wilt intrekken?"
-        info_html: "Met deze API-sleutel kunt u topics maken en bijwerken met behulp van JSON-aanroepen."
         all_users: "Alle gebruikers"
-        note_html: "Houd deze sleutel <strong>geheim</strong>; alle gebruikers die hierover beschikken, kunnen willekeurige berichten plaatsen als een andere gebruiker."
+        active_keys: "Actieve API-sleutels"
+        manage_keys: Sleutels beheren
+        show_details: Details
+        description: Omschrijving
+        no_description: (geen omschrijving)
+        all_api_keys: Alle API-sleutels
+        user_mode: Gebruikersniveau
+        impersonate_all_users: Een gebruiker imiteren
+        single_user: "Enkele gebruiker"
+        user_placeholder: Voer gebruikersnaam in
+        description_placeholder: "Waar wordt deze sleutel voor gebruikt?"
+        save: Opslaan
+        new_key: Nieuwe API-sleutel
+        revoked: Ingetrokken
+        delete: Definitief verwijderen
       web_hooks:
         title: "Webhooks"
         none: "Er zijn op dit moment geen webhooks."
@@ -3649,6 +3661,9 @@ nl:
             change_theme_setting: "thema-instelling wijzigen"
             disable_theme_component: "themaonderdeel uitschakelen"
             enable_theme_component: "themaonderdeel inschakelen"
+            api_key_create: "api-sleutel maken"
+            api_key_update: "api-sleutel bijwerken"
+            api_key_destroy: "api-sleutel verwijderen"
         screened_emails:
           title: "Gecontroleerde e-mails"
           description: "Als iemand een nieuwe account probeert aan te maken, worden de volgende e-mailadressen gecontroleerd en de registratie geblokkeerd, of een andere actie uitgevoerd."
