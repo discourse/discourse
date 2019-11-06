@@ -201,8 +201,49 @@
     }
 
     &.insert-link {
+      overflow-y: visible;
       input {
         min-width: 300px;
+      }
+
+      .inputs {
+        position: relative;
+        .spinner {
+          position: absolute;
+          right: 8px;
+          top: -15px;
+          width: 10px;
+          height: 10px;
+        }
+        .internal-link-results {
+          position: absolute;
+          top: 70%;
+          padding: 5px 10px;
+          box-shadow: shadow("card");
+          z-index: 5;
+          background-color: $secondary;
+          max-height: 150px;
+          width: 90%;
+          overflow-y: auto;
+          > .search-link {
+            padding: 6px;
+            border-bottom: 1px solid $primary-low;
+            cursor: pointer;
+            display: block;
+            &:hover,
+            &:focus {
+              background-color: $highlight-medium;
+            }
+            .search-category {
+              display: flex;
+              align-items: center;
+            }
+            .discourse-tags {
+              display: inline-block;
+              font-size: $font-down-1;
+            }
+          }
+        }
       }
     }
     textarea {
@@ -227,11 +268,14 @@
   section.field {
     padding: 0.25em 0;
     margin-bottom: 5px;
-  }
-
-  section.field .field-item {
-    display: inline-block;
-    margin-right: 10px;
+    &.with-items {
+      display: flex;
+      align-items: flex-start;
+    }
+    .field-item {
+      display: inline-block;
+      margin-right: 10px;
+    }
   }
 
   // password reset modal
@@ -404,6 +448,9 @@
         }
       }
     }
+  }
+  #category-min-tags-from-group {
+    width: 100px;
   }
 }
 

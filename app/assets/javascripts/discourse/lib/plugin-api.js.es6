@@ -43,9 +43,10 @@ import Sharing from "discourse/lib/sharing";
 import { addComposerUploadHandler } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { queryRegistry } from "discourse/widgets/widget";
+import Composer from "discourse/models/composer";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.32";
+const PLUGIN_API_VERSION = "0.8.36";
 
 class PluginApi {
   constructor(version, container) {
@@ -424,45 +425,45 @@ class PluginApi {
   }
 
   /**
-    Called whenever the "page" changes. This allows us to set up analytics
-    and other tracking.
+   Called whenever the "page" changes. This allows us to set up analytics
+   and other tracking.
 
-    To get notified when the page changes, you can install a hook like so:
+   To get notified when the page changes, you can install a hook like so:
 
-    ```javascript
-      api.onPageChange((url, title) => {
+   ```javascript
+   api.onPageChange((url, title) => {
         console.log('the page changed to: ' + url + ' and title ' + title);
       });
-    ```
-  **/
+   ```
+   **/
   onPageChange(fn) {
     this.onAppEvent("page:changed", data => fn(data.url, data.title));
   }
 
   /**
-    Listen for a triggered `AppEvent` from Discourse.
+   Listen for a triggered `AppEvent` from Discourse.
 
-    ```javascript
-      api.onAppEvent('inserted-custom-html', () => {
+   ```javascript
+   api.onAppEvent('inserted-custom-html', () => {
         console.log('a custom footer was rendered');
       });
-    ```
-  **/
+   ```
+   **/
   onAppEvent(name, fn) {
     const appEvents = this._lookupContainer("service:app-events");
     appEvents && appEvents.on(name, fn);
   }
 
   /**
-    Registers a function to generate custom avatar CSS classes
-    for a particular user.
+   Registers a function to generate custom avatar CSS classes
+   for a particular user.
 
-    Takes a function that will accept a user as a parameter
-    and return an array of CSS classes to apply.
+   Takes a function that will accept a user as a parameter
+   and return an array of CSS classes to apply.
 
-    ```javascript
-    api.customUserAvatarClasses(user => {
-      if (Ember.get(user, 'primary_group_name') === 'managers') {
+   ```javascript
+   api.customUserAvatarClasses(user => {
+      if (get(user, 'primary_group_name') === 'managers') {
         return ['managers'];
       }
     });
@@ -715,7 +716,7 @@ class PluginApi {
 
   /**
    *
-   * Adds a new item in the navigation bar.
+   * Adds a new item in the navigation bar. Returns the NavItem object created.
    *
    * Example:
    *
@@ -728,14 +729,20 @@ class PluginApi {
    * An optional `customFilter` callback can be included to not display the
    * nav item on certain routes
    *
+   * An optional `init` callback can be included to run custom code on menu
+   * init
+   *
    * Example:
    *
    * addNavigationBarItem({
    *   name: "link-to-bugs-category",
    *   displayName: "bugs"
    *   href: "/c/bugs",
+   *   init: (navItem, category) => { if (category) { navItem.set("category", category)  } }
    *   customFilter: (category, args, router) => { category && category.name !== 'bug' }
-   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') "/a-feature"; }
+   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') "/a-feature"; },
+   *   before: "top",
+   *   forceActive(category, args, router) => router.currentURL === "/a/b/c/d";
    * })
    */
   addNavigationBarItem(item) {
@@ -762,7 +769,23 @@ class PluginApi {
         };
       }
 
-      addNavItem(item);
+      const forceActive = item.forceActive;
+      if (forceActive) {
+        const router = this.container.lookup("service:router");
+        item.forceActive = function(category, args) {
+          return forceActive(category, args, router);
+        };
+      }
+
+      const init = item.init;
+      if (init) {
+        const router = this.container.lookup("service:router");
+        item.init = function(navItem, category, args) {
+          init(navItem, category, args, router);
+        };
+      }
+
+      return addNavItem(item);
     }
   }
 
@@ -790,7 +813,7 @@ class PluginApi {
    *
    * Example:
    *
-   * modifySelectKit("topic-footer-mobile-dropdown").appendContent(() => [{
+   * api.modifySelectKit("topic-footer-mobile-dropdown").appendContent(() => [{
    *   name: "discourse",
    *   id: 1
    * }])
@@ -806,7 +829,7 @@ class PluginApi {
    *
    * Example:
    *
-   * addGTMPageChangedCallback( gtmData => gtmData.locale = I18n.currentLocale() )
+   * api.addGTMPageChangedCallback( gtmData => gtmData.locale = I18n.currentLocale() )
    *
    */
   addGTMPageChangedCallback(fn) {
@@ -820,7 +843,7 @@ class PluginApi {
    * Example:
    *
    * // read /discourse/lib/sharing.js.es6 for options
-   * addSharingSource(options)
+   * api.addSharingSource(options)
    *
    */
   addSharingSource(options) {
@@ -836,12 +859,41 @@ class PluginApi {
    *
    * Example:
    *
-   * addComposerUploadHandler(["mp4", "mov"], (file, editor) => {
-   *    console.log("Handling upload for", file.name);
+   * api.addComposerUploadHandler(["mp4", "mov"], (file, editor) => {
+   *   console.log("Handling upload for", file.name);
    * })
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
+  }
+
+  /**
+   * Registers a "beforeSave" function on the composer. This allows you to
+   * implement custom logic that will happen before the user makes a post.
+   *
+   * Example:
+   *
+   * api.composerBeforeSave(() => {
+   *   console.log("Before saving, do something!");
+   * })
+   */
+  composerBeforeSave(method) {
+    Composer.reopen({ beforeSave: method });
+  }
+
+  /**
+   * Adds a field to draft serializer
+   *
+   * Example:
+   *
+   * api.serializeToDraft('key_set_in_model', 'field_name_in_payload');
+   *
+   * to keep both of them same
+   * api.serializeToDraft('field_name');
+   *
+   */
+  serializeToDraft(fieldName, property) {
+    Composer.serializeToDraft(fieldName, property);
   }
 
   /**

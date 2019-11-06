@@ -126,6 +126,35 @@ describe TopicCreator do
           expect(topic).to be_valid
         end
       end
+
+      context 'required tag group' do
+        fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1]) }
+        fab!(:category) { Fabricate(:category, name: "beta", required_tag_group: tag_group, min_tags_from_required_group: 1) }
+
+        it "when no tags are not present" do
+          expect do
+            TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: category.id))
+          end.to raise_error(ActiveRecord::Rollback)
+        end
+
+        it "when tags are not part of the tag group" do
+          expect do
+            TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: category.id, tags: ['nope']))
+          end.to raise_error(ActiveRecord::Rollback)
+        end
+
+        it "when requirement is met" do
+          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: category.id, tags: [tag1.name, tag2.name]))
+          expect(topic).to be_valid
+          expect(topic.tags.length).to eq(2)
+        end
+
+        it "lets staff ignore the restriction" do
+          topic = TopicCreator.create(user, Guardian.new(admin), valid_attrs.merge(category: category.id))
+          expect(topic).to be_valid
+          expect(topic.tags.length).to eq(0)
+        end
+      end
     end
 
     context 'personal message' do

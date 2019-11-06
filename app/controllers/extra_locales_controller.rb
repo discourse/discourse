@@ -8,57 +8,64 @@ class ExtraLocalesController < ApplicationController
     :redirect_to_login_if_required,
     :verify_authenticity_token
 
+  OVERRIDES_BUNDLE ||= 'overrides'
+
   def show
     bundle = params[:bundle]
 
-    raise Discourse::InvalidAccess.new if bundle !~ /^(admin|wizard)$/ || !current_user&.staff?
+    raise Discourse::InvalidAccess.new if !valid_bundle?(bundle)
 
     if params[:v]&.size == 32
       hash = ExtraLocalesController.bundle_js_hash(bundle)
-      immutable_for(24.hours) if hash == params[:v]
+      immutable_for(1.year) if hash == params[:v]
     end
 
     render plain: ExtraLocalesController.bundle_js(bundle), content_type: "application/javascript"
   end
 
   def self.bundle_js_hash(bundle)
-    @bundle_js_hash ||= {}
-    @bundle_js_hash["#{bundle}_#{I18n.locale}"] ||= Digest::MD5.hexdigest(bundle_js(bundle))
+    if bundle == OVERRIDES_BUNDLE
+      site = RailsMultisite::ConnectionManagement.current_db
+
+      @by_site ||= {}
+      @by_site[site] ||= {}
+      @by_site[site][I18n.locale] ||= begin
+        js = bundle_js(bundle)
+        js.present? ? Digest::MD5.hexdigest(js) : nil
+      end
+    else
+      @bundle_js_hash ||= {}
+      @bundle_js_hash["#{bundle}_#{I18n.locale}"] ||= Digest::MD5.hexdigest(bundle_js(bundle))
+    end
   end
 
   def self.url(bundle)
-    if Rails.env == "production"
-      "#{Discourse.base_uri}/extra-locales/#{bundle}?v=#{bundle_js_hash(bundle)}"
-    else
-      "#{Discourse.base_uri}/extra-locales/#{bundle}"
-    end
+    "#{Discourse.base_uri}/extra-locales/#{bundle}?v=#{bundle_js_hash(bundle)}"
+  end
+
+  def self.client_overrides_exist?
+    bundle_js_hash(OVERRIDES_BUNDLE).present?
   end
 
   def self.bundle_js(bundle)
     locale_str = I18n.locale.to_s
     bundle_str = "#{bundle}_js"
 
-    translations = JsLocaleHelper.translations_for(locale_str)
-
-    translations.keys.each do |l|
-      translations[l].keys.each do |k|
-        bundle_translations = translations[l].delete(k)
-        translations[l].deep_merge!(bundle_translations) if k == bundle_str
-      end
+    if bundle == OVERRIDES_BUNDLE
+      JsLocaleHelper.output_client_overrides(locale_str)
+    else
+      JsLocaleHelper.output_extra_locales(bundle_str, locale_str)
     end
+  end
 
-    js = ""
+  def self.clear_cache!
+    site = RailsMultisite::ConnectionManagement.current_db
+    @by_site&.delete(site)
+  end
 
-    if translations.present?
-      js = <<~JS.squish
-        (function() {
-          if (window.I18n) {
-            window.I18n.extras = #{translations.to_json};
-          }
-        })();
-      JS
-    end
+  private
 
-    js
+  def valid_bundle?(bundle)
+    bundle == OVERRIDES_BUNDLE || (bundle =~ /^(admin|wizard)$/ && current_user&.staff?)
   end
 end

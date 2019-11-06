@@ -3,11 +3,7 @@
     <div class="modal-inner-container">
       <div class="modal-header">
         {{#if dismissable}}
-          <div class='modal-close'>
-            <a class="close" href {{action closeModal}}>
-              {{d-icon "times"}}
-            </a>
-          </div>
+          {{d-button icon="times" action=(route-action "closeModal") class="btn btn-flat modal-close close" }}
         {{/if}}
 
         {{#if panels}}

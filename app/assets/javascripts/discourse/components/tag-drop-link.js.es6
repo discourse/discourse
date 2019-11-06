@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "a",
   classNameBindings: [
     ":tag-badge-wrapper",

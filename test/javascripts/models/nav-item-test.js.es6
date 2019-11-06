@@ -1,8 +1,9 @@
+import { run } from "@ember/runloop";
 import createStore from "helpers/create-store";
 
 QUnit.module("Discourse.NavItem", {
   beforeEach() {
-    Ember.run(function() {
+    run(function() {
       const asianCategory = Discourse.Category.create({
         name: "确实是这样",
         id: 343434

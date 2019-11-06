@@ -946,7 +946,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_search)
 
           expect(post.reload.topic.first_post.raw).to include(I18n.t(
-            "discourse_narrative_bot.new_user_narrative.search.hidden_message", base_uri: ''
+            "discourse_narrative_bot.new_user_narrative.search.hidden_message",
+            base_uri: '',
+            search_answer: described_class.search_answer
           ))
         end
 
@@ -963,7 +965,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
         it 'should create the right reply' do
           post.update!(
-            raw: "#{described_class::SEARCH_ANSWER} this is a capybara"
+            raw: "#{described_class.search_answer} this is a capybara"
           )
 
           expect do

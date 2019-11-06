@@ -7,4 +7,4 @@
 
 sw:
   site_settings:
-    details_enabled: "Wezesha Vipengele vya maelezo. Na kama ukibadilisha, lazima useti machapisho yote kwa kutumia: \"rake posts:rebake\"."
+    details_enabled: 'Wezesha Vipengele vya maelezo. Na kama ukibadilisha, lazima useti machapisho yote kwa kutumia: "rake posts:rebake".'

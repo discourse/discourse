@@ -199,7 +199,9 @@ export default function() {
 
     this.get("/t/280.json", () => response(fixturesByUrl["/t/280/1.json"]));
     this.get("/t/34.json", () => response(fixturesByUrl["/t/34/1.json"]));
-    this.get("/t/280/20.json", () => response(fixturesByUrl["/t/280/1.json"]));
+    this.get("/t/280/:post_number.json", () =>
+      response(fixturesByUrl["/t/280/1.json"])
+    );
     this.get("/t/28830.json", () => response(fixturesByUrl["/t/28830/1.json"]));
     this.get("/t/9.json", () => response(fixturesByUrl["/t/9/1.json"]));
     this.get("/t/12.json", () => response(fixturesByUrl["/t/12/1.json"]));
@@ -609,8 +611,6 @@ export default function() {
       });
     });
 
-    this.post("/admin/users/:user_id/generate_api_key", success);
-    this.delete("/admin/users/:user_id/revoke_api_key", success);
     this.delete("/admin/users/:user_id.json", () =>
       response(200, { deleted: true })
     );

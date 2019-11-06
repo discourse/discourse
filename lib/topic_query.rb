@@ -350,7 +350,7 @@ class TopicQuery
 
   def list_private_messages_group_archive(user)
     list = private_messages_for(user, :group)
-    group_id = Group.where('name ilike ?', @options[:group_name]).pluck(:id).first
+    group_id = Group.where('name ilike ?', @options[:group_name]).pluck_first(:id)
     list = list.joins("JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
                       gm.group_id = #{group_id.to_i}")
     create_list(:private_messages, {}, list)
@@ -640,9 +640,16 @@ class TopicQuery
   end
 
   def get_category_id(category_id_or_slug)
-    return nil unless category_id_or_slug
+    return nil unless category_id_or_slug.present?
     category_id = category_id_or_slug.to_i
-    category_id = Category.where(slug: category_id_or_slug).pluck(:id).first if category_id == 0
+
+    if category_id == 0
+      category_id =
+        Category
+          .where(slug: category_id_or_slug, parent_category_id: nil)
+          .pluck_first(:id)
+    end
+
     category_id
   end
 
@@ -656,7 +663,7 @@ class TopicQuery
     options[:visible] = false if @user && @user.id == options[:filtered_to_user]
 
     # Start with a list of all topics
-    result = Topic.unscoped
+    result = Topic.unscoped.includes(:category)
 
     if @user
       result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
@@ -676,7 +683,7 @@ class TopicQuery
               SELECT :category_id
             ) AND
             topics.id NOT IN (
-              SELECT c3.topic_id FROM categories c3 WHERE c3.parent_category_id = :category_id
+              SELECT c3.topic_id FROM categories c3 WHERE c3.parent_category_id = :category_id AND c3.topic_id IS NOT NULL
             )
           SQL
         result = result.where(sql, category_id: category_id)
@@ -685,7 +692,7 @@ class TopicQuery
 
       if !@options[:order]
         # category default sort order
-        sort_order, sort_ascending = Category.where(id: category_id).pluck(:sort_order, :sort_ascending).first
+        sort_order, sort_ascending = Category.where(id: category_id).pluck_first(:sort_order, :sort_ascending)
         if sort_order
           options[:order] = sort_order
           options[:ascending] = !!sort_ascending ? 'true' : 'false'
@@ -746,7 +753,7 @@ class TopicQuery
     end
 
     result = apply_ordering(result, options)
-    result = result.listable_topics.includes(:category)
+    result = result.listable_topics
 
     if options[:exclude_category_ids] && options[:exclude_category_ids].is_a?(Array) && options[:exclude_category_ids].size > 0
       result = result.where("categories.id NOT IN (?)", options[:exclude_category_ids].map(&:to_i)).references(:categories)

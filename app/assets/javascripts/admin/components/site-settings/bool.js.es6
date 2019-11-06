@@ -1,10 +1,12 @@
+import { isEmpty } from "@ember/utils";
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   @computed("value")
   enabled: {
     get(value) {
-      if (Ember.isEmpty(value)) {
+      if (isEmpty(value)) {
         return false;
       }
       return value.toString() === "true";

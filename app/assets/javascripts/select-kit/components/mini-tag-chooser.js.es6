@@ -4,8 +4,11 @@ import TagsMixin from "select-kit/mixins/tags";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import renderTag from "discourse/lib/render-tag";
 import { escapeExpression } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import { iconHTML } from "discourse-common/lib/icon-library";
-const { get, isEmpty, run, makeArray } = Ember;
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { debounce } from "@ember/runloop";
 
 export default ComboBox.extend(TagsMixin, {
   allowContentReplacement: true,
@@ -226,7 +229,7 @@ export default ComboBox.extend(TagsMixin, {
   },
 
   destroyTags(tags) {
-    tags = Ember.makeArray(tags).map(c => get(c, "value"));
+    tags = makeArray(tags).map(c => get(c, "value"));
 
     // work around usage with buffered proxy
     // it does not listen on array changes, similar hack already on select
@@ -237,7 +240,7 @@ export default ComboBox.extend(TagsMixin, {
 
     this.set(
       "searchDebounce",
-      run.debounce(this, this._prepareSearch, this.filter, 350)
+      debounce(this, this._prepareSearch, this.filter, 350)
     );
   },
 
@@ -270,7 +273,7 @@ export default ComboBox.extend(TagsMixin, {
       if (isEmpty(this.collectionComputedContent)) {
         this.set(
           "searchDebounce",
-          run.debounce(this, this._prepareSearch, this.filter, 350)
+          debounce(this, this._prepareSearch, this.filter, 350)
         );
       }
     },
@@ -282,7 +285,7 @@ export default ComboBox.extend(TagsMixin, {
       filter = isEmpty(filter) ? null : filter;
       this.set(
         "searchDebounce",
-        run.debounce(this, this._prepareSearch, filter, 350)
+        debounce(this, this._prepareSearch, filter, 350)
       );
     }
   }

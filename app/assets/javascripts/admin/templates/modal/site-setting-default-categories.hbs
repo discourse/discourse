@@ -1,0 +1,8 @@
+{{#d-modal-body class="incoming-emails" rawTitle=model.key}}
+{{i18n "admin.site_settings.default_categories.modal_description" count=model.count}}
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button action=(action "updateExistingUsers") class='btn-primary' label='admin.site_settings.default_categories.modal_yes'}}
+  {{d-button action=(action "cancel") label='admin.site_settings.default_categories.modal_no'}}
+</div>

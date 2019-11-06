@@ -1,6 +1,9 @@
+import { next } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { on } from "ember-addons/ember-computed-decorators";
+import Mixin from "@ember/object/mixin";
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   init() {
     this._super(...arguments);
 
@@ -92,8 +95,8 @@ export default Ember.Mixin.create({
   focusFilterOrHeader() {
     const context = this;
     // next so we are sure it finised expand/collapse
-    Ember.run.next(() => {
-      Ember.run.schedule("afterRender", () => {
+    next(() => {
+      schedule("afterRender", () => {
         if (
           !context.$filterInput() ||
           !context.$filterInput().is(":visible") ||
@@ -129,9 +132,9 @@ export default Ember.Mixin.create({
     this.focusFilterOrHeader();
     this.autoHighlight();
 
-    Ember.run.next(() => {
+    next(() => {
       this._boundaryActionHandler("onExpand", this);
-      Ember.run.schedule("afterRender", () => {
+      schedule("afterRender", () => {
         if (!this.isDestroying && !this.isDestroyed) {
           this._adjustPosition();
         }
@@ -144,9 +147,9 @@ export default Ember.Mixin.create({
 
     this.set("isExpanded", false);
 
-    Ember.run.next(() => {
+    next(() => {
       this._boundaryActionHandler("onCollapse", this);
-      Ember.run.schedule("afterRender", () => {
+      schedule("afterRender", () => {
         if (!this.isDestroying && !this.isDestroyed) {
           this._removeFixedPosition();
         }

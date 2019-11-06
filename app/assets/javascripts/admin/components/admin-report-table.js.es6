@@ -1,13 +1,16 @@
+import { makeArray } from "discourse-common/lib/helpers";
+import { alias } from "@ember/object/computed";
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
 const PAGES_LIMIT = 8;
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ["sortable", "twoColumns"],
   classNames: ["admin-report-table"],
   sortable: false,
   sortDirection: 1,
-  perPage: Ember.computed.alias("options.perPage"),
+  perPage: alias("options.perPage"),
   page: 0,
 
   @computed("model.computedLabels.length")
@@ -89,7 +92,7 @@ export default Ember.Component.extend({
 
   @computed("sortLabel", "sortDirection", "model.data.[]")
   sortedData(sortLabel, sortDirection, data) {
-    data = Ember.makeArray(data);
+    data = makeArray(data);
 
     if (sortLabel) {
       const compare = (label, direction) => {

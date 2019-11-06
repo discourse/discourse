@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
@@ -5,7 +6,7 @@ import DiscourseURL from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   lockImageUrl: Discourse.getURL("/images/lock.svg"),
 
   @computed("model")

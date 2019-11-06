@@ -607,7 +607,7 @@ class Topic < ActiveRecord::Base
 
   # If a post is deleted we have to update our highest post counters
   def self.reset_highest(topic_id)
-    archetype = Topic.where(id: topic_id).pluck(:archetype).first
+    archetype = Topic.where(id: topic_id).pluck_first(:archetype)
 
     # ignore small_action replies for private messages
     post_type = archetype == Archetype.private_message ? " AND post_type <> #{Post.types[:small_action]}" : ''
@@ -986,6 +986,15 @@ class Topic < ActiveRecord::Base
     end
 
     slug
+  end
+
+  def self.find_by_slug(slug)
+    if SiteSetting.slug_generation_method != "encoded"
+      Topic.find_by(slug: slug.downcase)
+    else
+      encoded_slug = CGI.escape(slug)
+      Topic.find_by(slug: encoded_slug)
+    end
   end
 
   def title=(t)
@@ -1535,6 +1544,7 @@ end
 #  index_topics_on_bumped_at               (bumped_at)
 #  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
+#  index_topics_on_id_filtered_banner      (id) UNIQUE WHERE (((archetype)::text = 'banner'::text) AND (deleted_at IS NULL))
 #  index_topics_on_lower_title             (lower((title)::text))
 #  index_topics_on_pinned_at               (pinned_at) WHERE (pinned_at IS NOT NULL)
 #  index_topics_on_pinned_globally         (pinned_globally) WHERE pinned_globally

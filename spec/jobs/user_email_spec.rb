@@ -30,7 +30,7 @@ describe Jobs::UserEmail do
     fab!(:popular_topic) { Fabricate(:topic, user: Fabricate(:admin), created_at: 1.hour.ago) }
 
     it "doesn't call the mailer when the user is missing" do
-      Jobs::UserEmail.new.execute(type: :digest, user_id: 1234)
+      Jobs::UserEmail.new.execute(type: :digest, user_id: User.last.id + 10000)
       expect(ActionMailer::Base.deliveries).to eq([])
     end
 

@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import { defaultHomepage } from "discourse/lib/utilities";
 import buildStaticRoute from "discourse/routes/build-static-route";
 
@@ -11,7 +12,7 @@ ForgotPasswordRoute.reopen({
     this.replaceWith(
       loginRequired ? "login" : `discovery.${defaultHomepage()}`
     ).then(e => {
-      Ember.run.next(() => e.send("showForgotPassword"));
+      next(() => e.send("showForgotPassword"));
     });
   }
 });

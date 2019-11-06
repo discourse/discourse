@@ -1,15 +1,16 @@
+import { alias } from "@ember/object/computed";
+import { next } from "@ember/runloop";
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   model: null,
   postNumber: null,
   postDate: null,
-  filteredPostsCount: Ember.computed.alias(
-    "topic.postStream.filteredPostsCount"
-  ),
+  filteredPostsCount: alias("topic.postStream.filteredPostsCount"),
 
   onShow() {
-    Ember.run.next(() => $("#post-jump").focus());
+    next(() => $("#post-jump").focus());
   },
 
   actions: {

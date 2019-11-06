@@ -1,9 +1,11 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import { defaultHomepage } from "discourse/lib/utilities";
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {
-  const findOpts = defaultParams || {};
+  const findOpts = Object.assign({}, defaultParams || {});
+
   if (params) {
     Object.keys(queryParams).forEach(function(opt) {
       if (params[opt]) {
@@ -16,7 +18,7 @@ function filterQueryParams(params, defaultParams) {
 
 function findTopicList(store, tracking, filter, filterParams, extras) {
   extras = extras || {};
-  return new Ember.RSVP.Promise(function(resolve) {
+  return new Promise(function(resolve) {
     const session = Discourse.Session.current();
 
     if (extras.cached) {
@@ -70,7 +72,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
 
 export default function(filter, extras) {
   extras = extras || {};
-  return Discourse.Route.extend(
+  return DiscourseRoute.extend(
     {
       queryParams,
 

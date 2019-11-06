@@ -1,6 +1,8 @@
+import { later } from "@ember/runloop";
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   @computed("model.colors", "onlyOverridden")
   colors(allColors, onlyOverridden) {
     if (onlyOverridden) {
@@ -40,7 +42,7 @@ export default Ember.Controller.extend({
         );
       }
 
-      Ember.run.later(() => {
+      later(() => {
         this.set("model.savingStatus", null);
       }, 2000);
 

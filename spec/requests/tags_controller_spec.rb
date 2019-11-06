@@ -3,6 +3,20 @@
 require 'rails_helper'
 
 describe TagsController do
+  define_method(:get_json_body) do
+    ::JSON.parse(response.body)
+  end
+
+  let(:json) { get_json_body }
+
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:regular_user) { Fabricate(:trust_level_4) }
+  fab!(:moderator) { Fabricate(:moderator) }
+
+  fab!(:category)  { Fabricate(:category) }
+  fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
+
   before do
     SiteSetting.tagging_enabled = true
   end
@@ -20,7 +34,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tags = JSON.parse(response.body)["tags"]
+        tags = json["tags"]
         expect(tags.length).to eq(1)
         expect(tags[0]['text']).to eq("topic-test")
       end
@@ -39,13 +53,13 @@ describe TagsController do
     context "when user can admin tags" do
 
       it "succesfully retrieve all tags" do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
 
         get "/tags.json"
 
         expect(response.status).to eq(200)
 
-        tags = JSON.parse(response.body)["tags"]
+        tags = json["tags"]
         expect(tags.length).to eq(2)
       end
 
@@ -53,9 +67,7 @@ describe TagsController do
   end
 
   describe '#show' do
-    before do
-      Fabricate(:tag, name: 'test')
-    end
+    fab!(:tag) { Fabricate(:tag, name: 'test') }
 
     it "should return the right response" do
       get "/tags/test"
@@ -73,29 +85,94 @@ describe TagsController do
       get "/tags/test"
       expect(response.status).to eq(404)
 
-      sign_in(Fabricate(:admin))
+      sign_in(admin)
 
       get "/tags/test"
       expect(response.status).to eq(200)
     end
+
+    context "with a category in the path" do
+      fab!(:topic_in_category) {
+        Fabricate(
+          :topic,
+          tags: [tag],
+          category: category
+        )
+      }
+
+      fab!(:topic_in_category_without_tag) {
+        Fabricate(
+          :topic,
+          category: category
+        )
+      }
+
+      fab!(:topic_out_of_category) {
+        Fabricate(
+          :topic,
+          tags: [tag]
+        )
+      }
+
+      it "should produce the topic inside the category and not the topic outside of it" do
+        get "/tags/c/#{category.slug}/#{tag.name}.json"
+
+        topic_ids = json['topic_list']['topics'].map { |x| x['id'] }
+        expect(topic_ids).to include(topic_in_category.id)
+        expect(topic_ids).to_not include(topic_out_of_category.id)
+        expect(topic_ids).to_not include(topic_in_category_without_tag.id)
+      end
+    end
+
+    context "with a subcategory in the path" do
+      fab!(:topic_in_subcategory) {
+        Fabricate(
+          :topic,
+          tags: [tag],
+          category: subcategory
+        )
+      }
+
+      fab!(:topic_in_subcategory_without_tag) {
+        Fabricate(
+          :topic,
+          category: subcategory
+        )
+      }
+
+      fab!(:topic_out_of_subcategory) {
+        Fabricate(
+          :topic,
+          tags: [tag]
+        )
+      }
+
+      it "should produce the topic inside the subcategory and not the topic outside of it" do
+        get "/tags/c/#{category.slug}/#{subcategory.slug}/#{tag.name}.json"
+
+        topic_ids = json['topic_list']['topics'].map { |x| x['id'] }
+        expect(topic_ids).to include(topic_in_subcategory.id)
+        expect(topic_ids).to_not include(topic_out_of_subcategory.id)
+        expect(topic_ids).to_not include(topic_in_subcategory_without_tag.id)
+      end
+    end
   end
 
   describe '#check_hashtag' do
-    fab!(:tag) { Fabricate(:tag, name: 'test') }
+    fab!(:tag) { Fabricate(:tag) }
 
     it "should return the right response" do
       get "/tags/check.json", params: { tag_values: [tag.name] }
 
       expect(response.status).to eq(200)
 
-      tag = JSON.parse(response.body)["valid"].first
-      expect(tag["value"]).to eq('test')
+      response_tag = json["valid"].first
+      expect(response_tag["value"]).to eq(tag.name)
     end
   end
 
   describe "#update" do
     fab!(:tag) { Fabricate(:tag) }
-    fab!(:admin) { Fabricate(:admin) }
 
     before do
       tag
@@ -117,10 +194,7 @@ describe TagsController do
   end
 
   describe '#personal_messages' do
-    fab!(:regular_user) { Fabricate(:trust_level_4) }
-    fab!(:moderator) { Fabricate(:moderator) }
-    fab!(:admin) { Fabricate(:admin) }
-    let(:personal_message) do
+    fab!(:personal_message) do
       Fabricate(:private_message_topic, user: regular_user, topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: regular_user),
         Fabricate.build(:topic_allowed_user, user: moderator),
@@ -128,9 +202,10 @@ describe TagsController do
       ])
     end
 
+    fab!(:tag) { Fabricate(:tag, topics: [personal_message], name: 'test') }
+
     before do
       SiteSetting.allow_staff_to_tag_pms = true
-      Fabricate(:tag, topics: [personal_message], name: 'test')
     end
 
     context "as a regular user" do
@@ -157,7 +232,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tag = JSON.parse(response.body)['tags']
+        tag = json['tags']
         expect(tag[0]["id"]).to eq('test')
       end
     end
@@ -172,7 +247,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tag = JSON.parse(response.body)['tags']
+        tag = json['tags']
         expect(tag[0]["id"]).to eq('test')
       end
 
@@ -181,7 +256,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tag = JSON.parse(response.body)['tags']
+        tag = json['tags']
         expect(tag[0]["id"]).to eq('test')
       end
     end
@@ -191,12 +266,10 @@ describe TagsController do
     fab!(:tag)       { Fabricate(:tag) }
     fab!(:other_tag) { Fabricate(:tag) }
     fab!(:third_tag) { Fabricate(:tag) }
-    fab!(:category)  { Fabricate(:category) }
-    fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
 
     fab!(:single_tag_topic) { Fabricate(:topic, tags: [tag]) }
-    let(:multi_tag_topic)  { Fabricate(:topic, tags: [tag, other_tag]) }
-    let(:all_tag_topic)    { Fabricate(:topic, tags: [tag, other_tag, third_tag]) }
+    fab!(:multi_tag_topic)  { Fabricate(:topic, tags: [tag, other_tag]) }
+    fab!(:all_tag_topic)    { Fabricate(:topic, tags: [tag, other_tag, third_tag]) }
 
     context 'tagging disabled' do
       it "returns 404" do
@@ -208,7 +281,7 @@ describe TagsController do
 
     context 'tagging enabled' do
       def parse_topic_ids
-        JSON.parse(response.body)["topic_list"]["topics"]
+        get_json_body["topic_list"]["topics"]
           .map { |topic| topic["id"] }
       end
 
@@ -292,7 +365,6 @@ describe TagsController do
       end
 
       context "when logged in" do
-        fab!(:user) { Fabricate(:user) }
 
         before do
           sign_in(user)
@@ -353,7 +425,6 @@ describe TagsController do
         tag_names.each { |name| Fabricate(:tag, name: name) }
         get "/tags/filter/search.json", params: { q: 'stu' }
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }.sort).to eq(['stuff', 'stumped'])
       end
 
@@ -364,7 +435,6 @@ describe TagsController do
 
         get '/tags/filter/search.json', params: { q: 'tag', limit: 2 }
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
         expect(json['results'].map { |j| j['id'] }).to eq(['tag', 'tag2'])
       end
 
@@ -376,7 +446,6 @@ describe TagsController do
           nope = Fabricate(:tag, name: 'nope')
           get "/tags/filter/search.json", params: { q: nope.name, categoryId: category.id }
           expect(response.status).to eq(200)
-          json = ::JSON.parse(response.body)
           expect(json["results"].map { |j| j["id"] }.sort).to eq([])
           expect(json["forbidden"]).to be_present
           expect(json["forbidden_message"]).to eq(I18n.t("tags.forbidden.in_this_category", tag_name: nope.name))
@@ -385,7 +454,6 @@ describe TagsController do
         it "can say if given tag is restricted to different category" do
           category
           get "/tags/filter/search.json", params: { q: yup.name, categoryId: Fabricate(:category).id }
-          json = ::JSON.parse(response.body)
           expect(json["results"].map { |j| j["id"] }.sort).to eq([])
           expect(json["forbidden"]).to be_present
           expect(json["forbidden_message"]).to eq(I18n.t(
@@ -395,13 +463,19 @@ describe TagsController do
             category_names: category.name
           ))
         end
+
+        it "can filter on category without q param" do
+          nope = Fabricate(:tag, name: 'nope')
+          get "/tags/filter/search.json", params: { categoryId: category.id }
+          expect(response.status).to eq(200)
+          expect(json["results"].map { |j| j["id"] }.sort).to eq([yup.name])
+        end
       end
 
       it "matches tags after sanitizing input" do
         yup, nope = Fabricate(:tag, name: 'yup'), Fabricate(:tag, name: 'nope')
         get "/tags/filter/search.json", params: { q: 'N/ope' }
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }.sort).to eq(["nope"])
       end
 
@@ -410,7 +484,6 @@ describe TagsController do
         Fabricate(:topic, category: c, tags: [Fabricate(:tag, name: "cooltag")])
         get "/tags/filter/search.json", params: { q: "cool" }
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }).to eq(['cooltag'])
       end
 
@@ -420,12 +493,12 @@ describe TagsController do
 
         get "/tags/filter/search.json", params: { q: '房' }
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
+        json = get_json_body
         expect(json["results"].map { |j| j["id"] }).to eq(['房地产'])
 
         get "/tags/filter/search.json", params: { q: 'тема' }
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
+        json = get_json_body
         expect(json["results"].map { |j| j["id"] }).to eq(['тема-в-разработке'])
       end
     end
@@ -434,7 +507,7 @@ describe TagsController do
   describe '#destroy' do
     context 'tagging enabled' do
       before do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
       end
 
       context 'with an existent tag name' do
@@ -450,7 +523,6 @@ describe TagsController do
         it 'returns a tag not found message' do
           delete "/tags/doesntexists.json"
           expect(response).not_to be_successful
-          json = ::JSON.parse(response.body)
           expect(json['error_type']).to eq('not_found')
         end
       end
@@ -459,7 +531,7 @@ describe TagsController do
 
   describe '#unused' do
     it "fails if you can't manage tags" do
-      sign_in(Fabricate(:user))
+      sign_in(user)
       get "/tags/unused.json"
       expect(response.status).to eq(403)
       delete "/tags/unused.json"
@@ -468,7 +540,7 @@ describe TagsController do
 
     context 'logged in' do
       before do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
       end
 
       context 'with some tags' do
@@ -483,7 +555,6 @@ describe TagsController do
         it 'returns the correct unused tags' do
           get "/tags/unused.json"
           expect(response.status).to eq(200)
-          json = ::JSON.parse(response.body)
           expect(json["tags"]).to contain_exactly("unused1", "unused2")
         end
 
@@ -517,13 +588,13 @@ describe TagsController do
       let(:filename) { 'tags.csv' }
 
       it "fails if you can't manage tags" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         post "/tags/upload.json", params: { file: file, name: filename }
         expect(response.status).to eq(403)
       end
 
       it "allows staff to bulk upload tags" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         post "/tags/upload.json", params: { file: file, name: filename }
         expect(response.status).to eq(200)
         expect(Tag.pluck(:name)).to contain_exactly("tag1", "capitaltag2", "spaced-tag", "tag3", "tag4")
@@ -532,7 +603,7 @@ describe TagsController do
       end
 
       it "fails gracefully with invalid input" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
 
         expect do
           post "/tags/upload.json", params: { file: invalid_file, name: filename }

@@ -184,7 +184,7 @@ module Jobs
       Post.where(
         topic_id: aside["data-topic"],
         post_number: aside["data-post"]
-      ).pluck(:user_id).first == @user_id
+      ).pluck_first(:user_id) == @user_id
     end
   end
 end

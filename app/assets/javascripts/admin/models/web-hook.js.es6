@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import RestModel from "discourse/models/rest";
 import Category from "discourse/models/category";
 import Group from "discourse/models/group";
@@ -78,13 +79,13 @@ export default RestModel.extend({
       wildcard_web_hook: this.wildcard_web_hook,
       verify_certificate: this.verify_certificate,
       active: this.active,
-      web_hook_event_type_ids: Ember.isEmpty(types)
+      web_hook_event_type_ids: isEmpty(types)
         ? [null]
         : types.map(type => type.id),
-      category_ids: Ember.isEmpty(categoryIds) ? [null] : categoryIds,
-      tag_names: Ember.isEmpty(tagNames) ? [null] : tagNames,
+      category_ids: isEmpty(categoryIds) ? [null] : categoryIds,
+      tag_names: isEmpty(tagNames) ? [null] : tagNames,
       group_ids:
-        Ember.isEmpty(groupNames) || Ember.isEmpty(groupNames[0])
+        isEmpty(groupNames) || isEmpty(groupNames[0])
           ? [null]
           : Discourse.Site.currentProp("groups").reduce((groupIds, g) => {
               if (groupNames.includes(g.name)) {

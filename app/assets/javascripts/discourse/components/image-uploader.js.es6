@@ -1,10 +1,13 @@
+import { isEmpty } from "@ember/utils";
+import { next } from "@ember/runloop";
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
 import lightbox from "discourse/lib/lightbox";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Component.extend(UploadMixin, {
+export default Component.extend(UploadMixin, {
   classNames: ["image-uploader"],
   loadingLightbox: false,
 
@@ -28,7 +31,7 @@ export default Ember.Component.extend(UploadMixin, {
 
   @computed("placeholderUrl")
   placeholderStyle(url) {
-    if (Ember.isEmpty(url)) {
+    if (isEmpty(url)) {
       return "".htmlSafe();
     }
     return `background-image: url(${url})`.htmlSafe();
@@ -36,7 +39,7 @@ export default Ember.Component.extend(UploadMixin, {
 
   @computed("imageUrl")
   imageCDNURL(url) {
-    if (Ember.isEmpty(url)) {
+    if (isEmpty(url)) {
       return "".htmlSafe();
     }
 
@@ -50,7 +53,7 @@ export default Ember.Component.extend(UploadMixin, {
 
   @computed("imageUrl")
   imageBaseName(imageUrl) {
-    if (Ember.isEmpty(imageUrl)) return;
+    if (isEmpty(imageUrl)) return;
     return imageUrl.split("/").slice(-1)[0];
   },
 
@@ -76,13 +79,13 @@ export default Ember.Component.extend(UploadMixin, {
   },
 
   _openLightbox() {
-    Ember.run.next(() =>
+    next(() =>
       $(this.element.querySelector("a.lightbox")).magnificPopup("open")
     );
   },
 
   _applyLightbox() {
-    if (this.imageUrl) Ember.run.next(() => lightbox($(this.element)));
+    if (this.imageUrl) next(() => lightbox($(this.element)));
   },
 
   actions: {

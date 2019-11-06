@@ -20,7 +20,7 @@ class TopicConverter
           Category.where(read_restricted: false)
             .where.not(id: SiteSetting.uncategorized_category_id)
             .order('id asc')
-            .pluck(:id).first
+            .pluck_first(:id)
         end
 
       PostRevisor.new(@topic.first_post, @topic).revise!(
@@ -81,6 +81,7 @@ class TopicConverter
       user.user_stat.save!
     end
     @topic.topic_allowed_users.build(user_id: @user.id) unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
+    @topic.topic_allowed_users = @topic.topic_allowed_users.uniq(&:user_id)
     # update topics count
     @topic.user.user_stat.topic_count -= 1
     @topic.user.user_stat.save!

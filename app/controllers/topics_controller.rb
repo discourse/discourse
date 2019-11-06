@@ -36,7 +36,7 @@ class TopicsController < ApplicationController
   skip_before_action :check_xhr, only: [:show, :feed]
 
   def id_for_slug
-    topic = Topic.find_by(slug: params[:slug].downcase)
+    topic = Topic.find_by_slug(params[:slug])
     guardian.ensure_can_see!(topic)
     raise Discourse::NotFound unless topic
     render json: { slug: topic.slug, topic_id: topic.id, url: topic.url }
@@ -64,7 +64,7 @@ class TopicsController < ApplicationController
     # Special case: a slug with a number in front should look by slug first before looking
     # up that particular number
     if params[:id] && params[:id] =~ /^\d+[^\d\\]+$/
-      topic = Topic.find_by(slug: params[:id].downcase)
+      topic = Topic.find_by_slug(params[:id])
       return redirect_to_correct_topic(topic, opts[:post_number]) if topic
     end
 
@@ -81,7 +81,7 @@ class TopicsController < ApplicationController
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
     rescue Discourse::NotFound => ex
       if params[:id]
-        topic = Topic.find_by(slug: params[:id].downcase)
+        topic = Topic.find_by_slug(params[:id])
         return redirect_to_correct_topic(topic, opts[:post_number]) if topic
       end
 
@@ -371,6 +371,16 @@ class TopicsController < ApplicationController
     end
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"
+    success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
+  end
+
+  def update_tags
+    params.require(:tags)
+    topic = Topic.find_by(id: params[:topic_id])
+    guardian.ensure_can_edit_tags!(topic)
+
+    success = PostRevisor.new(topic.first_post, topic).revise!(current_user, { tags: params[:tags] }, validate_post: false)
+
     success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
   end
 
@@ -711,7 +721,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_move_posts!(topic)
 
     # when creating a new topic, ensure the 1st post is a regular post
-    if params[:title].present? && Post.where(topic: topic, id: post_ids).order(:post_number).pluck(:post_type).first != Post.types[:regular]
+    if params[:title].present? && Post.where(topic: topic, id: post_ids).order(:post_number).pluck_first(:post_type) != Post.types[:regular]
       return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
     end
 
@@ -900,7 +910,11 @@ class TopicsController < ApplicationController
   end
 
   def slugs_do_not_match
-    params[:slug] && @topic_view.topic.slug != params[:slug]
+    if SiteSetting.slug_generation_method != "encoded"
+      params[:slug] && @topic_view.topic.slug != params[:slug]
+    else
+      params[:slug] && CGI.unescape(@topic_view.topic.slug) != params[:slug]
+    end
   end
 
   def redirect_to_correct_topic(topic, post_number = nil)

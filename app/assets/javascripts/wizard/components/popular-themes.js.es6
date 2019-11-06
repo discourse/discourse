@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["popular-themes"],
 
   init() {

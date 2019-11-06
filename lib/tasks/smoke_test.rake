@@ -68,7 +68,12 @@ task "smoke:test" do
 
   results = +""
 
-  IO.popen("node #{Rails.root}/test/smoke_test.js #{url}").each do |line|
+  node_arguments = []
+  node_arguments << '--inspect-brk' if ENV["DEBUG_NODE"]
+  node_arguments << "#{Rails.root}/test/smoke_test.js"
+  node_arguments << url
+
+  IO.popen("node #{node_arguments.join(' ')}").each do |line|
     puts line
     results << line
   end

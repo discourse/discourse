@@ -1,5 +1,8 @@
+import { reads } from "@ember/object/computed";
+import { inject } from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import DiscoveryController from "discourse/controllers/discovery";
+import { dasherize } from "@ember/string";
 
 const subcategoryStyleComponentNames = {
   rows: "categories_only",
@@ -9,12 +12,12 @@ const subcategoryStyleComponentNames = {
 };
 
 export default DiscoveryController.extend({
-  discovery: Ember.inject.controller(),
+  discovery: inject(),
 
   // this makes sure the composer isn't scoping to a specific category
   category: null,
 
-  canEdit: Ember.computed.reads("currentUser.staff"),
+  canEdit: reads("currentUser.staff"),
 
   @computed("model.categories.[].featuredTopics.length")
   latestTopicOnly() {
@@ -42,7 +45,7 @@ export default DiscoveryController.extend({
       parentCategory && style === "categories_and_latest_topics"
         ? "categories_only"
         : style;
-    return Ember.String.dasherize(componentName);
+    return dasherize(componentName);
   },
   actions: {
     refresh() {

@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "",
   expanded: null,
   _loading: false,

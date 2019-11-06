@@ -137,8 +137,9 @@ module I18n
 
     def overrides_by_locale(locale)
       return unless @overrides_enabled
-
       return {} if GlobalSetting.skip_db?
+
+      execute_reload if @requires_reload
 
       site = RailsMultisite::ConnectionManagement.current_db
 
@@ -168,11 +169,6 @@ module I18n
       else
         raise
       end
-    end
-
-    def client_overrides_json(locale)
-      client_json = (overrides_by_locale(locale) || {}).select { |k, _| k[/^(admin_js|js)\./] }
-      MultiJson.dump(client_json)
     end
 
     def translate(*args)

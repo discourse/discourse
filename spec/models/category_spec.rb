@@ -313,8 +313,14 @@ describe Category do
       end
 
       it "creates a slug" do
-        expect(@category.slug).to eq("测试")
-        expect(@category.slug_for_url).to eq("测试")
+        expect(@category.slug).to eq("%E6%B5%8B%E8%AF%95")
+        expect(@category.slug_for_url).to eq("%E6%B5%8B%E8%AF%95")
+      end
+
+      it "keeps the encoded slug after saving" do
+        @category.save
+        expect(@category.slug).to eq("%E6%B5%8B%E8%AF%95")
+        expect(@category.slug_for_url).to eq("%E6%B5%8B%E8%AF%95")
       end
     end
   end
@@ -742,12 +748,36 @@ describe Category do
   end
 
   describe "find_by_slug" do
-    it "finds with category and sub category" do
-      category = Fabricate(:category_with_definition, slug: 'awesome-category')
-      sub_category = Fabricate(:category_with_definition, parent_category_id: category.id, slug: 'awesome-sub-category')
+    fab!(:category) do
+      Fabricate(:category_with_definition, slug: 'awesome-category')
+    end
 
+    fab!(:subcategory) do
+      Fabricate(
+        :category_with_definition,
+        parent_category_id: category.id,
+        slug: 'awesome-sub-category'
+      )
+    end
+
+    it "finds a category that exists" do
       expect(Category.find_by_slug('awesome-category')).to eq(category)
-      expect(Category.find_by_slug('awesome-sub-category', 'awesome-category')).to eq(sub_category)
+    end
+
+    it "finds a subcategory that exists" do
+      expect(Category.find_by_slug('awesome-sub-category', 'awesome-category')).to eq(subcategory)
+    end
+
+    it "produces nil if the parent doesn't exist" do
+      expect(Category.find_by_slug('awesome-sub-category', 'no-such-category')).to eq(nil)
+    end
+
+    it "produces nil if the parent doesn't exist and the requested category is a root category" do
+      expect(Category.find_by_slug('awesome-category', 'no-such-category')).to eq(nil)
+    end
+
+    it "produces nil if the subcategory doesn't exist" do
+      expect(Category.find_by_slug('no-such-category', 'awesome-category')).to eq(nil)
     end
   end
 
@@ -870,10 +900,12 @@ describe Category do
     fab!(:group2) { Fabricate(:group) }
     fab!(:parent_category) { Fabricate(:category_with_definition, name: "parent") }
     fab!(:subcategory) { Fabricate(:category_with_definition, name: "child1", parent_category_id: parent_category.id) }
-    fab!(:subcategory2) { Fabricate(:category_with_definition, name: "child2", parent_category_id: parent_category.id) }
 
     context "when changing subcategory permissions" do
       it "it is not valid if permissions are less restrictive" do
+        subcategory.set_permissions(group => :readonly)
+        subcategory.save!
+
         parent_category.set_permissions(group => :readonly)
         parent_category.save!
 
@@ -884,6 +916,9 @@ describe Category do
       end
 
       it "is valid if permissions are same or more restrictive" do
+        subcategory.set_permissions(group => :full, group2 => :create_post)
+        subcategory.save!
+
         parent_category.set_permissions(group => :full, group2 => :create_post)
         parent_category.save!
 
@@ -903,7 +938,9 @@ describe Category do
     end
 
     context "when changing parent category permissions" do
-      it "it is not valid if subcategory permissions are less restrictive" do
+      fab!(:subcategory2) { Fabricate(:category_with_definition, name: "child2", parent_category_id: parent_category.id) }
+
+      it "is not valid if subcategory permissions are less restrictive" do
         subcategory.set_permissions(group => :create_post)
         subcategory.save!
         subcategory2.set_permissions(group => :create_post, group2 => :create_post)
@@ -913,6 +950,12 @@ describe Category do
 
         expect(parent_category.valid?).to eq(false)
         expect(parent_category.errors.full_messages).to contain_exactly(I18n.t("category.errors.permission_conflict", group_names: group2.name))
+      end
+
+      it "is not valid if the subcategory has no category groups, but the parent does" do
+        parent_category.set_permissions(group => :readonly)
+
+        expect(parent_category).not_to be_valid
       end
 
       it "is valid if subcategory permissions are same or more restrictive" do
@@ -933,6 +976,101 @@ describe Category do
         parent_category.set_permissions(everyone: :readonly)
 
         expect(parent_category.valid?).to eq(true)
+      end
+    end
+  end
+
+  describe "tree metrics" do
+    fab!(:category) do
+      Category.create!(
+        user: user,
+        name: "foo"
+      )
+    end
+
+    fab!(:subcategory) do
+      Category.create!(
+        user: user,
+        name: "bar",
+        parent_category: category
+      )
+    end
+
+    context "with a self-parent" do
+      before_all do
+        DB.exec(<<-SQL, id: category.id)
+          UPDATE categories
+          SET parent_category_id = :id
+          WHERE id = :id
+        SQL
+      end
+
+      context "#depth_of_descendants" do
+        it "should produce max_depth" do
+          expect(category.depth_of_descendants(3)).to eq(3)
+        end
+      end
+
+      context "#height_of_ancestors" do
+        it "should produce max_height" do
+          expect(category.height_of_ancestors(3)).to eq(3)
+        end
+      end
+    end
+
+    context "with a prospective self-parent" do
+      before do
+        category.parent_category_id = category.id
+      end
+
+      context "#depth_of_descendants" do
+        it "should produce max_depth" do
+          expect(category.depth_of_descendants(3)).to eq(3)
+        end
+      end
+
+      context "#height_of_ancestors" do
+        it "should produce max_height" do
+          expect(category.height_of_ancestors(3)).to eq(3)
+        end
+      end
+    end
+
+    context "with a prospective loop" do
+      before do
+        category.parent_category_id = subcategory.id
+      end
+
+      context "#depth_of_descendants" do
+        it "should produce max_depth" do
+          expect(category.depth_of_descendants(3)).to eq(3)
+        end
+      end
+
+      context "#height_of_ancestors" do
+        it "should produce max_height" do
+          expect(category.height_of_ancestors(3)).to eq(3)
+        end
+      end
+    end
+
+    context "#depth_of_descendants" do
+      it "should be 0 when the category has no descendants" do
+        expect(subcategory.depth_of_descendants).to eq(0)
+      end
+
+      it "should be 1 when the category has a descendant" do
+        expect(category.depth_of_descendants).to eq(1)
+      end
+    end
+
+    context "#height_of_ancestors" do
+      it "should be 0 when the category has no ancestors" do
+        expect(category.height_of_ancestors).to eq(0)
+      end
+
+      it "should be 1 when the category has an ancestor" do
+        expect(subcategory.height_of_ancestors).to eq(1)
       end
     end
   end

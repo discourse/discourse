@@ -1,7 +1,10 @@
+import EmberObject from "@ember/object";
+import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import TopicTimer from "discourse/models/topic-timer";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { setProperties } from "@ember/object";
 
 export const CLOSE_STATUS_TYPE = "close";
 export const OPEN_STATUS_TYPE = "open";
@@ -10,7 +13,7 @@ export const DELETE_STATUS_TYPE = "delete";
 export const REMINDER_TYPE = "reminder";
 export const BUMP_TYPE = "bump";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   loading: false,
   isPublic: "true",
 
@@ -76,7 +79,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         if (time) {
           this.send("closeModal");
 
-          Ember.setProperties(this.topicTimer, {
+          setProperties(this.topicTimer, {
             execute_at: result.execute_at,
             duration: result.duration,
             category_id: result.category_id
@@ -86,7 +89,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         } else {
           const topicTimer =
             this.isPublic === "true" ? "topic_timer" : "private_topic_timer";
-          this.set(`model.${topicTimer}`, Ember.Object.create({}));
+          this.set(`model.${topicTimer}`, EmberObject.create({}));
 
           this.setProperties({
             selection: null

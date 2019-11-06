@@ -1,8 +1,10 @@
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 
 // Lists of topics on a user's page.
-export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
+export default Controller.extend({
+  application: inject(),
 
   hideCategory: false,
   showPosters: false,
@@ -14,6 +16,10 @@ export default Ember.Controller.extend({
     this._super(...arguments);
 
     this.newIncoming = [];
+  },
+
+  saveScrollPosition: function() {
+    this.session.set("topicListScrollPosition", $(window).scrollTop());
   },
 
   _showFooter: function() {

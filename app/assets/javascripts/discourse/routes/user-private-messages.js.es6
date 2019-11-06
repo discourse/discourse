@@ -1,6 +1,8 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import Draft from "discourse/models/draft";
+import Composer from "discourse/models/composer";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   renderTemplate() {
     this.render("user/messages");
   },
@@ -17,7 +19,7 @@ export default Discourse.Route.extend({
         if (data.draft) {
           composerController.open({
             draft: data.draft,
-            draftKey: "new_private_message",
+            draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
             ignoreIfChanged: true,
             draftSequence: data.draft_sequence
           });

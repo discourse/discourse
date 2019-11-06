@@ -1,3 +1,6 @@
+import { isEmpty } from "@ember/utils";
+import { not } from "@ember/object/computed";
+import Component from "@ember/component";
 import {
   default as computed,
   observes
@@ -6,7 +9,7 @@ import Group from "discourse/models/group";
 import InputValidation from "discourse/models/input-validation";
 import debounce from "discourse/lib/debounce";
 
-export default Ember.Component.extend({
+export default Component.extend({
   disableSave: null,
   nameInput: null,
 
@@ -21,7 +24,7 @@ export default Ember.Component.extend({
     }
   },
 
-  canEdit: Ember.computed.not("model.automatic"),
+  canEdit: not("model.automatic"),
 
   @computed("basicNameValidation", "uniqueNameValidation")
   nameValidation(basicNameValidation, uniqueNameValidation) {
@@ -63,7 +66,7 @@ export default Ember.Component.extend({
 
   checkGroupName: debounce(function() {
     name = this.nameInput;
-    if (Ember.isEmpty(name)) return;
+    if (isEmpty(name)) return;
 
     Group.checkName(name).then(response => {
       const validationName = "uniqueNameValidation";

@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   @computed("user.dismissed_banner_key", "banner.key", "hide")
   visible(dismissedBannerKey, bannerKey, hide) {
     dismissedBannerKey =

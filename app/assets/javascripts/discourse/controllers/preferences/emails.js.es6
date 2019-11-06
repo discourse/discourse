@@ -1,3 +1,5 @@
+import { equal } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -8,12 +10,12 @@ const EMAIL_LEVELS = {
   NEVER: 2
 };
 
-export default Ember.Controller.extend(PreferencesTabController, {
-  emailMessagesLevelAway: Ember.computed.equal(
+export default Controller.extend(PreferencesTabController, {
+  emailMessagesLevelAway: equal(
     "model.user_option.email_messages_level",
     EMAIL_LEVELS.ONLY_WHEN_AWAY
   ),
-  emailLevelAway: Ember.computed.equal(
+  emailLevelAway: equal(
     "model.user_option.email_level",
     EMAIL_LEVELS.ONLY_WHEN_AWAY
   ),

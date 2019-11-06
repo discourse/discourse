@@ -1,8 +1,14 @@
+import { get } from "@ember/object";
+import { makeArray } from "discourse-common/lib/helpers";
+import { isEmpty } from "@ember/utils";
+import { throttle } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { on } from "ember-addons/ember-computed-decorators";
+import Mixin from "@ember/object/mixin";
 
 const { bind } = Ember.run;
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   @on("init")
   _initKeys() {
     this.keys = {
@@ -111,14 +117,14 @@ export default Ember.Mixin.create({
       this.unfocus(event);
     }
     if (keyCode === this.keys.TAB && !event.shiftKey) this.tabFromHeader(event);
-    if (Ember.isEmpty(this.filter) && keyCode === this.keys.BACKSPACE)
+    if (isEmpty(this.filter) && keyCode === this.keys.BACKSPACE)
       this.backspaceFromHeader(event);
     if (keyCode === this.keys.ESC) this.escapeFromHeader(event);
     if (keyCode === this.keys.ENTER) this.enterFromHeader(event);
     if ([this.keys.UP, this.keys.DOWN].includes(keyCode))
       this.upAndDownFromHeader(event);
     if (
-      Ember.isEmpty(this.filter) &&
+      isEmpty(this.filter) &&
       [this.keys.LEFT, this.keys.RIGHT].includes(keyCode)
     ) {
       this.leftAndRightFromHeader(event);
@@ -138,7 +144,7 @@ export default Ember.Mixin.create({
       this.set("renderedFilterOnce", true);
     }
 
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       this.$filterInput()
         .focus()
         .val(this.$filterInput().val() + String.fromCharCode(keyCode));
@@ -151,7 +157,7 @@ export default Ember.Mixin.create({
     const keyCode = event.keyCode || event.which;
 
     if (
-      Ember.isEmpty(this.filter) &&
+      isEmpty(this.filter) &&
       keyCode === this.keys.BACKSPACE &&
       typeof this.didPressBackspaceFromFilter === "function"
     ) {
@@ -168,7 +174,7 @@ export default Ember.Mixin.create({
       this.upAndDownFromFilter(event);
 
     if (
-      Ember.isEmpty(this.filter) &&
+      isEmpty(this.filter) &&
       [this.keys.LEFT, this.keys.RIGHT].includes(keyCode)
     ) {
       this.leftAndRightFromFilter(event);
@@ -194,7 +200,7 @@ export default Ember.Mixin.create({
       return true;
     }
 
-    if (Ember.isEmpty(this.filter)) {
+    if (isEmpty(this.filter)) {
       this.close(event);
       return true;
     }
@@ -267,7 +273,7 @@ export default Ember.Mixin.create({
 
     const direction = keyCode === 38 ? -1 : 1;
 
-    Ember.run.throttle(this, this._moveHighlight, direction, $rows, 32);
+    throttle(this, this._moveHighlight, direction, $rows, 32);
   },
 
   didPressBackspaceFromFilter(event) {
@@ -282,18 +288,18 @@ export default Ember.Mixin.create({
 
     if (!this.selection || !this.selection.length) return;
 
-    if (!Ember.isEmpty(this.filter)) {
+    if (!isEmpty(this.filter)) {
       this.clearHighlightSelection();
       return;
     }
 
     if (!this.highlightedSelection.length) {
       // try to highlight the last non locked item from the current selection
-      Ember.makeArray(this.selection)
+      makeArray(this.selection)
         .slice()
         .reverse()
         .some(selection => {
-          if (!Ember.get(selection, "locked")) {
+          if (!get(selection, "locked")) {
             this.highlightSelection(selection);
             return true;
           }
@@ -307,7 +313,7 @@ export default Ember.Mixin.create({
   },
 
   didPressSelectAll() {
-    this.highlightSelection(Ember.makeArray(this.selection));
+    this.highlightSelection(makeArray(this.selection));
   },
 
   didClickOutside(event) {
@@ -333,7 +339,7 @@ export default Ember.Mixin.create({
       return;
     }
 
-    if (Ember.isEmpty(this.selection)) return;
+    if (isEmpty(this.selection)) return;
 
     const keyCode = event.keyCode || event.which;
 
@@ -428,7 +434,7 @@ export default Ember.Mixin.create({
   },
 
   _highlightRow($row) {
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       $row.trigger("mouseover").focus();
       this.focus();
     });

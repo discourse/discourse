@@ -1,3 +1,6 @@
+import { sort } from "@ember/object/computed";
+import EmberObjectProxy from "@ember/object/proxy";
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 const BufferedProxy = window.BufferedProxy; // import BufferedProxy from 'ember-buffered-proxy/proxy';
@@ -8,7 +11,7 @@ import {
 } from "ember-addons/ember-computed-decorators";
 import Ember from "ember";
 
-export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
+export default Controller.extend(ModalFunctionality, Ember.Evented, {
   init() {
     this._super(...arguments);
 
@@ -22,14 +25,11 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
 
   @computed("site.categories")
   categoriesBuffered(categories) {
-    const bufProxy = Ember.ObjectProxy.extend(BufferedProxy);
+    const bufProxy = EmberObjectProxy.extend(BufferedProxy);
     return categories.map(c => bufProxy.create({ content: c }));
   },
 
-  categoriesOrdered: Ember.computed.sort(
-    "categoriesBuffered",
-    "categoriesSorting"
-  ),
+  categoriesOrdered: sort("categoriesBuffered", "categoriesSorting"),
 
   @computed("categoriesBuffered.@each.hasBufferedChanges")
   showApplyAll() {

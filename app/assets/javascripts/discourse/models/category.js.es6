@@ -1,10 +1,14 @@
+import { get } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import computed from "ember-addons/ember-computed-decorators";
 import { on } from "ember-addons/ember-computed-decorators";
 import PermissionType from "discourse/models/permission-type";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 const Category = RestModel.extend({
+  permissions: null,
+
   @on("init")
   setupGroupsAndPermissions() {
     const availableGroups = this.available_groups;
@@ -28,6 +32,13 @@ const Category = RestModel.extend({
     }
   },
 
+  @on("init")
+  setupRequiredTagGroups() {
+    if (this.required_tag_group_name) {
+      this.set("required_tag_groups", [this.required_tag_group_name]);
+    }
+  },
+
   @computed
   availablePermissions() {
     return [
@@ -40,6 +51,11 @@ const Category = RestModel.extend({
   @computed("id")
   searchContext(id) {
     return { type: "category", id, category: this };
+  },
+
+  @computed("notification_level")
+  isMuted(notificationLevel) {
+    return notificationLevel === NotificationLevels.MUTED;
   },
 
   @computed("name")
@@ -119,6 +135,10 @@ const Category = RestModel.extend({
         allowed_tags: this.allowed_tags,
         allowed_tag_groups: this.allowed_tag_groups,
         allow_global_tags: this.allow_global_tags,
+        required_tag_group_name: this.required_tag_groups
+          ? this.required_tag_groups[0]
+          : null,
+        min_tags_from_required_group: this.min_tags_from_required_group,
         sort_order: this.sort_order,
         sort_ascending: this.sort_ascending,
         topic_featured_link_allowed: this.topic_featured_link_allowed,
@@ -159,15 +179,6 @@ const Category = RestModel.extend({
   removePermission(permission) {
     this.permissions.removeObject(permission);
     this.availableGroups.addObject(permission.group_name);
-  },
-
-  @computed
-  permissions() {
-    return Ember.A([
-      { group_name: "everyone", permission: PermissionType.create({ id: 1 }) },
-      { group_name: "admins", permission: PermissionType.create({ id: 2 }) },
-      { group_name: "crap", permission: PermissionType.create({ id: 3 }) }
-    ]);
   },
 
   @computed("topics")
@@ -222,15 +233,15 @@ Category.reopenClass({
   slugFor(category, separator = "/") {
     if (!category) return "";
 
-    const parentCategory = Ember.get(category, "parentCategory");
+    const parentCategory = get(category, "parentCategory");
     let result = "";
 
     if (parentCategory) {
       result = Category.slugFor(parentCategory) + separator;
     }
 
-    const id = Ember.get(category, "id"),
-      slug = Ember.get(category, "slug");
+    const id = get(category, "id"),
+      slug = get(category, "slug");
 
     return !slug || slug.trim().length === 0
       ? `${result}${id}-category`
@@ -250,7 +261,11 @@ Category.reopenClass({
   },
 
   findSingleBySlug(slug) {
-    return Category.list().find(c => Category.slugFor(c) === slug);
+    if (Discourse.SiteSettings.slug_generation_method !== "encoded") {
+      return Category.list().find(c => Category.slugFor(c) === slug);
+    } else {
+      return Category.list().find(c => Category.slugFor(c) === encodeURI(slug));
+    }
   },
 
   findById(id) {
@@ -286,7 +301,11 @@ Category.reopenClass({
           return (
             item &&
             item.get("parentCategory") === parentCategory &&
-            Category.slugFor(item) === parentSlug + "/" + slug
+            ((Discourse.SiteSettings.slug_generation_method !== "encoded" &&
+              Category.slugFor(item) === parentSlug + "/" + slug) ||
+              (Discourse.SiteSettings.slug_generation_method === "encoded" &&
+                Category.slugFor(item) ===
+                  encodeURI(parentSlug) + "/" + encodeURI(slug)))
           );
         });
       }

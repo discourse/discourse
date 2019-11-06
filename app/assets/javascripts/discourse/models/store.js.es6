@@ -1,7 +1,10 @@
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
 import { getRegister } from "discourse-common/lib/get-owner";
+import { underscore } from "@ember/string";
+import { set } from "@ember/object";
 
 let _identityMap;
 
@@ -44,7 +47,7 @@ function findAndRemoveMap(type, id) {
 
 flushMap();
 
-export default Ember.Object.extend({
+export default EmberObject.extend({
   _plurals: {
     "post-reply": "post-replies",
     "post-reply-history": "post_reply_histories",
@@ -92,7 +95,8 @@ export default Ember.Object.extend({
     if (typeof findArgs === "object") {
       return this._resultSet(type, result, findArgs);
     } else {
-      return this._hydrate(type, result[Ember.String.underscore(type)], result);
+      const apiName = this.adapterFor(type).apiNameFor(type);
+      return this._hydrate(type, result[underscore(apiName)], result);
     }
   },
 
@@ -146,8 +150,9 @@ export default Ember.Object.extend({
   },
 
   refreshResults(resultSet, type, url) {
+    const adapter = this.adapterFor(type);
     return ajax(url).then(result => {
-      const typeName = Ember.String.underscore(this.pluralize(type));
+      const typeName = underscore(this.pluralize(adapter.apiNameFor(type)));
       const content = result[typeName].map(obj =>
         this._hydrate(type, obj, result)
       );
@@ -156,8 +161,9 @@ export default Ember.Object.extend({
   },
 
   appendResults(resultSet, type, url) {
+    const adapter = this.adapterFor(type);
     return ajax(url).then(result => {
-      let typeName = Ember.String.underscore(this.pluralize(type));
+      const typeName = underscore(this.pluralize(adapter.apiNameFor(type)));
 
       let pageTarget = result.meta || result;
       let totalRows =
@@ -198,7 +204,7 @@ export default Ember.Object.extend({
     // If the record is new, don't perform an Ajax call
     if (record.get("isNew")) {
       removeMap(type, record.get("id"));
-      return Ember.RSVP.Promise.resolve(true);
+      return Promise.resolve(true);
     }
 
     return this.adapterFor(type)
@@ -210,7 +216,8 @@ export default Ember.Object.extend({
   },
 
   _resultSet(type, result, findArgs) {
-    const typeName = Ember.String.underscore(this.pluralize(type));
+    const adapter = this.adapterFor(type);
+    const typeName = underscore(this.pluralize(adapter.apiNameFor(type)));
     const content = result[typeName].map(obj =>
       this._hydrate(type, obj, result)
     );
@@ -312,7 +319,7 @@ export default Ember.Object.extend({
             obj[subType] = hydrated;
             delete obj[k];
           } else {
-            Ember.set(obj, subType, null);
+            set(obj, subType, null);
           }
         }
       }

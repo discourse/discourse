@@ -1,6 +1,7 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import SiteSetting from "admin/models/site-setting";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   queryParams: {
     filter: { replace: true }
   },

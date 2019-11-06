@@ -1,3 +1,6 @@
+import { notEmpty, and } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
@@ -5,25 +8,24 @@ import { userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { fmt } from "discourse/lib/computed";
+import { htmlSafe } from "@ember/template";
 
-export default Ember.Controller.extend(CanCheckEmails, {
-  adminTools: Ember.inject.service(),
+export default Controller.extend(CanCheckEmails, {
+  adminTools: service(),
   originalPrimaryGroupId: null,
   customGroupIdsBuffer: null,
   availableGroups: null,
   userTitleValue: null,
 
   showBadges: setting("enable_badges"),
-  hasLockedTrustLevel: Ember.computed.notEmpty(
-    "model.manual_locked_trust_level"
-  ),
+  hasLockedTrustLevel: notEmpty("model.manual_locked_trust_level"),
 
   primaryGroupDirty: propertyNotEqual(
     "originalPrimaryGroupId",
     "model.primary_group_id"
   ),
 
-  canDisableSecondFactor: Ember.computed.and(
+  canDisableSecondFactor: and(
     "model.second_factor_enabled",
     "model.can_disable_second_factor"
   ),
@@ -46,7 +48,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
   automaticGroups(automaticGroups) {
     return automaticGroups
       .map(group => {
-        const name = Ember.String.htmlSafe(group.name);
+        const name = htmlSafe(group.name);
         return `<a href="/g/${name}">${name}</a>`;
       })
       .join(", ");
@@ -257,10 +259,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
         .finally(() => this.toggleProperty("editingTitle"));
     },
 
-    generateApiKey() {
-      this.model.generateApiKey();
-    },
-
     saveCustomGroups() {
       const currentIds = this.customGroupIds;
       const bufferedIds = this.customGroupIdsBuffer;
@@ -293,32 +291,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     resetPrimaryGroup() {
       this.set("model.primary_group_id", this.originalPrimaryGroupId);
-    },
-
-    regenerateApiKey() {
-      bootbox.confirm(
-        I18n.t("admin.api.confirm_regen"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        result => {
-          if (result) {
-            this.model.generateApiKey();
-          }
-        }
-      );
-    },
-
-    revokeApiKey() {
-      bootbox.confirm(
-        I18n.t("admin.api.confirm_revoke"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        result => {
-          if (result) {
-            this.model.revokeApiKey();
-          }
-        }
-      );
     }
   }
 });

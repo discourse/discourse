@@ -1,3 +1,10 @@
+import { isEmpty } from "@ember/utils";
+import { alias, or, readOnly } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import showModal from "discourse/lib/show-modal";
@@ -19,10 +26,10 @@ const AuthErrors = [
   "not_allowed_from_ip_address"
 ];
 
-export default Ember.Controller.extend(ModalFunctionality, {
-  createAccount: Ember.inject.controller(),
-  forgotPassword: Ember.inject.controller(),
-  application: Ember.inject.controller(),
+export default Controller.extend(ModalFunctionality, {
+  createAccount: inject(),
+  forgotPassword: inject(),
+  application: inject(),
 
   loggingIn: false,
   loggedIn: false,
@@ -33,7 +40,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
-  loginRequired: Ember.computed.alias("application.loginRequired"),
+  loginRequired: alias("application.loginRequired"),
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
   resetForm() {
@@ -81,14 +88,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return loggingIn ? "login.logging_in" : "login.title";
   },
 
-  loginDisabled: Ember.computed.or("loggingIn", "loggedIn"),
+  loginDisabled: or("loggingIn", "loggedIn"),
 
   @computed("loggingIn", "application.canSignUp")
   showSignupLink(loggingIn, canSignUp) {
     return canSignUp && !loggingIn;
   },
 
-  showSpinner: Ember.computed.readOnly("loggingIn"),
+  showSpinner: readOnly("loggingIn"),
 
   @computed("canLoginLocalWithEmail", "processingEmailLink")
   showLoginWithEmailLink(canLoginLocalWithEmail, processingEmailLink) {
@@ -101,7 +108,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         return;
       }
 
-      if (Ember.isEmpty(this.loginName) || Ember.isEmpty(this.loginPassword)) {
+      if (isEmpty(this.loginName) || isEmpty(this.loginPassword)) {
         this.flash(I18n.t("login.blank_username_or_password"), "error");
         return;
       }
@@ -147,7 +154,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
               // only need to focus the 2FA input for TOTP
               if (!this.showSecurityKey) {
-                Ember.run.scheduleOnce("afterRender", () =>
+                scheduleOnce("afterRender", () =>
                   document
                     .getElementById("second-factor")
                     .querySelector("input")
@@ -267,7 +274,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         return;
       }
 
-      if (Ember.isEmpty(this.loginName)) {
+      if (isEmpty(this.loginName)) {
         this.flash(I18n.t("login.blank_username"), "error");
         return;
       }
@@ -319,7 +326,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     const loginError = (errorMsg, className, callback) => {
       showModal("login");
 
-      Ember.run.next(() => {
+      next(() => {
         if (callback) callback();
         this.flash(errorMsg, className || "success");
       });
@@ -376,7 +383,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       accountEmail: options.email,
       accountUsername: options.username,
       accountName: options.name,
-      authOptions: Ember.Object.create(options)
+      authOptions: EmberObject.create(options)
     });
 
     showModal("createAccount");

@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     tagName: "li",
     classNameBindings: [
@@ -14,8 +15,11 @@ export default Ember.Component.extend(
     hidden: false,
     rerenderTriggers: ["content.count"],
 
-    @computed("content.filterMode", "filterMode")
-    active(contentFilterMode, filterMode) {
+    @computed("content.filterMode", "filterMode", "content.active")
+    active(contentFilterMode, filterMode, active) {
+      if (active !== undefined) {
+        return active;
+      }
       return (
         contentFilterMode === filterMode ||
         filterMode.indexOf(contentFilterMode) === 0

@@ -1,3 +1,6 @@
+import { isEmpty } from "@ember/utils";
+import { empty, or } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import {
   default as computed,
   observes
@@ -7,7 +10,7 @@ import DiscourseURL from "discourse/lib/url";
 import { userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   taken: false,
   saving: false,
   errorMessage: null,
@@ -15,8 +18,8 @@ export default Ember.Controller.extend({
 
   maxLength: setting("max_username_length"),
   minLength: setting("min_username_length"),
-  newUsernameEmpty: Ember.computed.empty("newUsername"),
-  saveDisabled: Ember.computed.or(
+  newUsernameEmpty: empty("newUsername"),
+  saveDisabled: or(
     "saving",
     "newUsernameEmpty",
     "taken",
@@ -35,7 +38,7 @@ export default Ember.Controller.extend({
       this.set("taken", false);
       this.set("errorMessage", null);
 
-      if (Ember.isEmpty(this.newUsername)) return;
+      if (isEmpty(this.newUsername)) return;
       if (this.unchanged) return;
 
       Discourse.User.checkUsername(

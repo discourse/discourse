@@ -1,7 +1,9 @@
+import { isEmpty } from "@ember/utils";
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import PenaltyController from "admin/mixins/penalty-controller";
 
-export default Ember.Controller.extend(PenaltyController, {
+export default Controller.extend(PenaltyController, {
   silenceUntil: null,
   silencing: false,
 
@@ -12,9 +14,7 @@ export default Ember.Controller.extend(PenaltyController, {
 
   @computed("silenceUntil", "reason", "silencing")
   submitDisabled(silenceUntil, reason, silencing) {
-    return (
-      silencing || Ember.isEmpty(silenceUntil) || !reason || reason.length < 1
-    );
+    return silencing || isEmpty(silenceUntil) || !reason || reason.length < 1;
   },
 
   actions: {

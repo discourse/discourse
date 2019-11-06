@@ -113,15 +113,6 @@ ru:
       random_mention:
         reply: |-
           Привет! Tтобы узнать, что я могу сделать, наберите: `@%{discobot_username} %{help_trigger}`.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Делайте добро, без ожидания награды, зная, что однажды кто-то может сделать то же самое для вас_ &mdash; Принцесса Диана
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Вы можете ответить на это
       do_not_understand:
         first_response: |-
           Спасибо за ответ!
@@ -269,12 +260,6 @@ ru:
           _Псс_ … Я спрятал сюрприз в этой теме. Если вы готовы принять вызов, **нажмите значок поиска** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> в верхнем правом углу &#8599; чтобы найти сюрприз.
 
           Попробуйте найти слово "capy&#8203;bara" в этой теме.
-        hidden_message: |-
-          Как же вы пропустили этого зверька капибара? :wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          Вы заметили, что снова вернулись в самое начало поста? Покормите бедного, голодного капибару, **отправив смайлик `:herb:` ** и тогда вы автоматически вернетесь в конец.
         reply: |-
           Ура вы его нашли :tada:
 

@@ -1,3 +1,7 @@
+import { isEmpty } from "@ember/utils";
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import LockOn from "discourse/lib/lock-on";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -59,13 +63,13 @@ export function groupPath(subPath) {
 
 let _jumpScheduled = false;
 export function jumpToElement(elementId) {
-  if (_jumpScheduled || Ember.isEmpty(elementId)) {
+  if (_jumpScheduled || isEmpty(elementId)) {
     return;
   }
 
   const selector = `#${elementId}, a[name=${elementId}]`;
   _jumpScheduled = true;
-  Ember.run.schedule("afterRender", function() {
+  schedule("afterRender", function() {
     const lockon = new LockOn(selector, {
       finished() {
         _jumpScheduled = false;
@@ -77,7 +81,7 @@ export function jumpToElement(elementId) {
 
 let _transitioning = false;
 
-const DiscourseURL = Ember.Object.extend({
+const DiscourseURL = EmberObject.extend({
   isJumpScheduled() {
     return _transitioning || _jumpScheduled;
   },
@@ -89,7 +93,7 @@ const DiscourseURL = Ember.Object.extend({
 
     _transitioning = postNumber > 1;
 
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       let elementId;
       let holder;
 
@@ -155,7 +159,7 @@ const DiscourseURL = Ember.Object.extend({
       // Always use replaceState in the next runloop to prevent weird routes changing
       // while URLs are loading. For example, while a topic loads it sets `currentPost`
       // which triggers a replaceState even though the topic hasn't fully loaded yet!
-      Ember.run.next(() => {
+      next(() => {
         const location = DiscourseURL.get("router.location");
         if (location && location.replaceURL) {
           location.replaceURL(path);
@@ -188,7 +192,7 @@ const DiscourseURL = Ember.Object.extend({
   routeTo(path, opts) {
     opts = opts || {};
 
-    if (Ember.isEmpty(path)) {
+    if (isEmpty(path)) {
       return;
     }
 
@@ -249,7 +253,7 @@ const DiscourseURL = Ember.Object.extend({
     path = rewritePath(path);
 
     if (typeof opts.afterRouteComplete === "function") {
-      Ember.run.schedule("afterRender", opts.afterRouteComplete);
+      schedule("afterRender", opts.afterRouteComplete);
     }
 
     if (this.navigatedToPost(oldPath, path, opts)) {

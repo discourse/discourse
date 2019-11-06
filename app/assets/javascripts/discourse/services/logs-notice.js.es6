@@ -1,3 +1,5 @@
+import { isEmpty } from "@ember/utils";
+import EmberObject from "@ember/object";
 import {
   default as computed,
   on,
@@ -7,7 +9,7 @@ import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 
 const LOGS_NOTICE_KEY = "logs-notice-text";
 
-const LogsNotice = Ember.Object.extend({
+const LogsNotice = EmberObject.extend({
   text: "",
 
   @on("init")
@@ -47,7 +49,7 @@ const LogsNotice = Ember.Object.extend({
 
   @computed("text")
   isEmpty(text) {
-    return Ember.isEmpty(text);
+    return isEmpty(text);
   },
 
   @computed("text")
@@ -61,8 +63,8 @@ const LogsNotice = Ember.Object.extend({
   },
 
   @computed("isEmpty", "isAdmin")
-  hidden(isEmpty, isAdmin) {
-    return !isAdmin || isEmpty;
+  hidden(thisIsEmpty, isAdmin) {
+    return !isAdmin || thisIsEmpty;
   },
 
   @observes("text")

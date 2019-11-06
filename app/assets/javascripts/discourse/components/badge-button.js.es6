@@ -1,6 +1,8 @@
+import { alias } from "@ember/object/computed";
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "span",
   classNameBindings: [
     ":user-badge",
@@ -14,5 +16,5 @@ export default Ember.Component.extend({
   },
 
   attributeBindings: ["data-badge-name", "title"],
-  "data-badge-name": Ember.computed.alias("badge.name")
+  "data-badge-name": alias("badge.name")
 });

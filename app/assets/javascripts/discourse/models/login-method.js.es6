@@ -1,7 +1,9 @@
+import EmberObject from "@ember/object";
 import computed from "ember-addons/ember-computed-decorators";
 import { updateCsrfToken } from "discourse/lib/ajax";
+import { Promise } from "rsvp";
 
-const LoginMethod = Ember.Object.extend({
+const LoginMethod = EmberObject.extend({
   @computed
   title() {
     return this.title_override || I18n.t(`login.${this.name}.title`);
@@ -20,12 +22,12 @@ const LoginMethod = Ember.Object.extend({
   doLogin({ reconnect = false } = {}) {
     if (this.customLogin) {
       this.customLogin();
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     if (this.custom_url) {
       window.location = this.custom_url;
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     let authUrl = Discourse.getURL(`/auth/${this.name}`);

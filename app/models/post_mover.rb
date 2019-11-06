@@ -318,7 +318,8 @@ class PostMover
       old_topic_id: original_topic.id,
       new_topic_id: destination_topic.id,
       old_highest_post_number: destination_topic.highest_post_number,
-      old_highest_staff_post_number: destination_topic.highest_staff_post_number
+      old_highest_staff_post_number: destination_topic.highest_staff_post_number,
+      default_notification_level: NotificationLevels.topic_levels[:regular]
     }
 
     DB.exec(<<~SQL, params)
@@ -327,38 +328,48 @@ class PostMover
                               notifications_changed_at, notifications_reason_id)
       SELECT tu.user_id,
              :new_topic_id                               AS topic_id,
-             EXISTS(
-                 SELECT 1
-                 FROM posts p
-                 WHERE p.topic_id = tu.topic_id
-                   AND p.user_id = tu.user_id
-               )                                         AS posted,
-             MAX(lr.new_post_number)                     AS last_read_post_number,
-             MAX(hs.new_post_number)                     AS highest_seen_post_number,
-             MAX(le.new_post_number)                     AS last_emailed_post_number,
+             CASE
+               WHEN p.user_id IS NULL THEN FALSE
+               ELSE TRUE END                             AS posted,
+             (
+               SELECT MAX(lr.new_post_number)
+               FROM moved_posts lr
+               WHERE lr.old_topic_id = tu.topic_id
+                 AND lr.old_post_number <= tu.last_read_post_number
+             )                                           AS last_read_post_number,
+             (
+               SELECT MAX(hs.new_post_number)
+               FROM moved_posts hs
+               WHERE hs.old_topic_id = tu.topic_id
+                 AND hs.old_post_number <= tu.highest_seen_post_number
+             )                                           AS highest_seen_post_number,
+             (
+               SELECT MAX(le.new_post_number)
+               FROM moved_posts le
+               WHERE le.old_topic_id = tu.topic_id
+                 AND le.old_post_number <= tu.last_emailed_post_number
+             )                                           AS last_emailed_post_number,
              GREATEST(tu.first_visited_at, t.created_at) AS first_visited_at,
              GREATEST(tu.last_visited_at, t.created_at)  AS last_visited_at,
-             tu.notification_level,
+             CASE
+               WHEN p.user_id IS NOT NULL THEN tu.notification_level
+               ELSE :default_notification_level END      AS notification_level,
              tu.notifications_changed_at,
              tu.notifications_reason_id
       FROM topic_users tu
-           JOIN topics t
-                ON (t.id = :new_topic_id)
-           LEFT OUTER JOIN moved_posts lr
-                           ON (lr.old_topic_id = tu.topic_id AND lr.old_post_number <= tu.last_read_post_number)
-           LEFT OUTER JOIN moved_posts hs
-                           ON (hs.old_topic_id = tu.topic_id AND hs.old_post_number <= tu.highest_seen_post_number)
-           LEFT OUTER JOIN moved_posts le
-                           ON (le.old_topic_id = tu.topic_id AND le.old_post_number <= tu.last_emailed_post_number)
+           JOIN topics t ON (t.id = :new_topic_id)
+           LEFT OUTER JOIN
+           (
+             SELECT DISTINCT user_id
+             FROM posts
+             WHERE topic_id = :new_topic_id
+           ) p ON (p.user_id = tu.user_id)
       WHERE tu.topic_id = :old_topic_id
         AND GREATEST(
                 tu.last_read_post_number,
                 tu.highest_seen_post_number,
                 tu.last_emailed_post_number
               ) >= (SELECT MIN(old_post_number) FROM moved_posts)
-      GROUP BY tu.topic_id, tu.user_id, tu.first_visited_at, tu.last_visited_at, t.created_at, tu.notification_level,
-               tu.notifications_changed_at,
-               tu.notifications_reason_id
       ON CONFLICT (topic_id, user_id) DO UPDATE
         SET posted                   = excluded.posted,
             last_read_post_number    = CASE

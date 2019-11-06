@@ -111,7 +111,6 @@ Discourse::Application.routes.draw do
       put "revoke_admin", constraints: AdminConstraint.new
       put "grant_admin", constraints: AdminConstraint.new
       post "generate_api_key", constraints: AdminConstraint.new
-      delete "revoke_api_key", constraints: AdminConstraint.new
       put "revoke_moderation", constraints: AdminConstraint.new
       put "grant_moderation", constraints: AdminConstraint.new
       put "approve"
@@ -257,10 +256,12 @@ Discourse::Application.routes.draw do
 
     resources :api, only: [:index], constraints: AdminConstraint.new do
       collection do
-        get "keys" => "api#index"
-        post "key" => "api#create_master_key"
-        put "key" => "api#regenerate_key"
-        delete "key" => "api#revoke_key"
+        resources :keys, controller: 'api', only: [:index, :show, :update, :create, :destroy] do
+          member do
+            post "revoke" => "api#revoke_key"
+            post "undo-revoke" => "api#undo_revoke_key"
+          end
+        end
 
         resources :web_hooks
         get 'web_hook_events/:id' => 'web_hooks#list_events', as: :web_hook_events
@@ -435,7 +436,6 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/preferences/interface" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/apps" => "users#preferences", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/email" => "users_email#update", constraints: { username: RouteFormat.username }
-    get "#{root_path}/:username/preferences/about-me" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/badge_title" => "users#preferences", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/badge_title" => "users#badge_title", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/username" => "users#preferences", constraints: { username: RouteFormat.username }
@@ -621,35 +621,49 @@ Discourse::Application.routes.draw do
 
   get '/c', to: redirect(relative_url_root + 'categories')
 
-  resources :categories, except: :show
-  post "category/:category_id/move" => "categories#move"
+  resources :categories, except: [:show, :new, :edit]
   post "categories/reorder" => "categories#reorder"
-  post "category/:category_id/notifications" => "categories#set_notifications"
-  put "category/:category_id/slug" => "categories#update_slug"
+
+  scope path: 'category/:category_id' do
+    post "/move" => "categories#move"
+    post "/notifications" => "categories#set_notifications"
+    put "/slug" => "categories#update_slug"
+  end
+
+  get "category/*path" => "categories#redirect"
 
   get "categories_and_latest" => "categories#categories_and_latest"
   get "categories_and_top" => "categories#categories_and_top"
 
   get "c/:id/show" => "categories#show"
+
   get "c/:category_slug/find_by_slug" => "categories#find_by_slug"
   get "c/:parent_category_slug/:category_slug/find_by_slug" => "categories#find_by_slug"
-  get "c/:category.rss" => "list#category_feed", format: :rss
-  get "c/:parent_category/:category.rss" => "list#category_feed", format: :rss
-  get "c/:category" => "list#category_default", as: "category_default"
-  get "c/:category/none" => "list#category_none_latest"
-  get "c/:parent_category/:category/(:id)" => "list#parent_category_category_latest", constraints: { id: /\d+/ }
-  get "c/:category/l/top" => "list#category_top", as: "category_top"
-  get "c/:category/none/l/top" => "list#category_none_top", as: "category_none_top"
-  get "c/:parent_category/:category/l/top" => "list#parent_category_category_top", as: "parent_category_category_top"
+
+  get "c/*category_slug_path_with_id.rss" => "list#category_feed", format: :rss
+  scope path: 'c/*category_slug_path_with_id' do
+    get "/none" => "list#category_none_latest"
+    get "/none/l/top" => "list#category_none_top", as: "category_none_top"
+    get "/l/top" => "list#category_top", as: "category_top"
+
+    TopTopic.periods.each do |period|
+      get "/none/l/top/#{period}" => "list#category_none_top_#{period}", as: "category_none_top_#{period}"
+      get "/l/top/#{period}" => "list#category_top_#{period}", as: "category_top_#{period}"
+    end
+
+    Discourse.filters.each do |filter|
+      get "/none/l/#{filter}" => "list#category_none_#{filter}", as: "category_none_#{filter}"
+      get "/l/#{filter}" => "list#category_#{filter}", as: "category_#{filter}"
+    end
+
+    get "/" => "list#category_default", as: "category_default"
+  end
 
   get "category_hashtags/check" => "category_hashtags#check"
 
   TopTopic.periods.each do |period|
     get "top/#{period}.rss" => "list#top_#{period}_feed", format: :rss
     get "top/#{period}" => "list#top_#{period}"
-    get "c/:category/l/top/#{period}" => "list#category_top_#{period}", as: "category_top_#{period}"
-    get "c/:category/none/l/top/#{period}" => "list#category_none_top_#{period}", as: "category_none_top_#{period}"
-    get "c/:parent_category/:category/l/top/#{period}" => "list#parent_category_category_top_#{period}", as: "parent_category_category_top_#{period}"
   end
 
   Discourse.anonymous_filters.each do |filter|
@@ -658,12 +672,7 @@ Discourse::Application.routes.draw do
 
   Discourse.filters.each do |filter|
     get "#{filter}" => "list##{filter}"
-    get "c/:category/l/#{filter}" => "list#category_#{filter}", as: "category_#{filter}"
-    get "c/:category/none/l/#{filter}" => "list#category_none_#{filter}", as: "category_none_#{filter}"
-    get "c/:parent_category/:category/l/#{filter}" => "list#parent_category_category_#{filter}", as: "parent_category_category_#{filter}"
   end
-
-  get "category/*path" => "categories#redirect"
 
   get "top" => "list#top"
   get "search/query" => "search#query"
@@ -754,6 +763,7 @@ Discourse::Application.routes.draw do
   delete "t/:topic_id/timings" => "topics#destroy_timings", constraints: { topic_id: /\d+/ }
   put "t/:topic_id/bookmark" => "topics#bookmark", constraints: { topic_id: /\d+/ }
   put "t/:topic_id/remove_bookmarks" => "topics#remove_bookmarks", constraints: { topic_id: /\d+/ }
+  put "t/:topic_id/tags" => "topics#update_tags", constraints: { topic_id: /\d+/ }
 
   post "t/:topic_id/notifications" => "topics#set_notifications" , constraints: { topic_id: /\d+/ }
 
@@ -827,10 +837,22 @@ Discourse::Application.routes.draw do
     get '/unused' => 'tags#list_unused'
     delete '/unused' => 'tags#destroy_unused'
     constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
+      scope path: '/c/*category_slug_path_with_id' do
+        Discourse.filters.each do |filter|
+          get "/none/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_none_show_#{filter}", defaults: { no_subcategories: true }
+        end
+
+        get '/none/:tag_id' => 'tags#show', as: 'tag_category_none_show', defaults: { no_subcategories: true }
+
+        Discourse.filters.each do |filter|
+          get "/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_show_#{filter}"
+        end
+
+        get '/:tag_id' => 'tags#show', as: 'tag_category_show'
+      end
+
       get '/:tag_id.rss' => 'tags#tag_feed'
       get '/:tag_id' => 'tags#show', as: 'tag_show'
-      get '/c/:category/:tag_id' => 'tags#show', as: 'tag_category_show'
-      get '/c/:parent_category/:category/:tag_id' => 'tags#show', as: 'tag_parent_category_category_show'
       get '/intersection/:tag_id/*additional_tag_ids' => 'tags#show', as: 'tag_intersection'
       get '/:tag_id/notifications' => 'tags#notifications'
       put '/:tag_id/notifications' => 'tags#update_notifications'
@@ -839,13 +861,11 @@ Discourse::Application.routes.draw do
 
       Discourse.filters.each do |filter|
         get "/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_show_#{filter}"
-        get "/c/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_show_#{filter}"
-        get "/c/:parent_category/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_parent_category_category_show_#{filter}"
       end
     end
   end
 
-  resources :tag_groups, constraints: StaffConstraint.new, except: [:new, :edit] do
+  resources :tag_groups, constraints: StaffConstraint.new, except: [:edit] do
     collection do
       get '/filter/search' => 'tag_groups#search'
     end

@@ -73,6 +73,7 @@ module PrettyText
       ctx.attach("console.log", proc { |l| p l })
       ctx.eval('window.console = console;')
     end
+    ctx.eval("__PRETTY_TEXT = true")
 
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
     ctx_load(ctx, "vendor/assets/javascripts/lodash.js")

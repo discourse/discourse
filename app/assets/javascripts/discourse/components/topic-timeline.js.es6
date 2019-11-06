@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import MountWidget from "discourse/components/mount-widget";
 import Docking from "discourse/mixins/docking";
 import { observes } from "ember-addons/ember-computed-decorators";
@@ -58,7 +59,8 @@ export default MountWidget.extend(Docking, {
     const mainOffset = $("#main").offset();
     const offsetTop = mainOffset ? mainOffset.top : 0;
     const topicTop = $(".container.posts").offset().top - offsetTop;
-    const topicBottom = $("#topic-bottom").offset().top;
+    const topicBottom =
+      $("#topic-bottom").offset().top - $("#main-outlet").offset().top;
     const timeline = this.element.querySelector(".timeline-container");
     const timelineHeight = (timeline && timeline.offsetHeight) || 400;
     const footerHeight = $(".timeline-footer-controls").outerHeight(true) || 0;
@@ -93,7 +95,7 @@ export default MountWidget.extend(Docking, {
     this._super(...arguments);
 
     if (this.fullscreen && !this.addShowClass) {
-      Ember.run.next(() => {
+      next(() => {
         this.set("addShowClass", true);
         this.queueRerender();
       });

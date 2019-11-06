@@ -14,6 +14,11 @@ describe DiscourseNarrativeBot::TrackSelector do
     )
   end
 
+  before do
+    stub_request(:get, "http://api.forismatic.com/api/1.0/?format=json&lang=en&method=getQuote").
+      to_return(status: 200, body: "{\"quoteText\":\"Be Like Water\",\"quoteAuthor\":\"Bruce Lee\"}")
+  end
+
   let(:help_message) do
     discobot_username = discobot_user.username
 
@@ -30,6 +35,7 @@ describe DiscourseNarrativeBot::TrackSelector do
       discobot_username: discobot_username,
       dice_trigger: described_class.dice_trigger,
       quote_trigger: described_class.quote_trigger,
+      quote_sample: DiscourseNarrativeBot::QuoteGenerator.format_quote('Be Like Water', 'Bruce Lee'),
       magic_8_ball_trigger: described_class.magic_8_ball_trigger
     )}
     RAW
@@ -577,8 +583,6 @@ describe DiscourseNarrativeBot::TrackSelector do
 
         describe 'when a quote is requested' do
           it 'should create the right reply' do
-            stub_request(:get, "http://api.forismatic.com/api/1.0/?format=json&lang=en&method=getQuote").
-              to_return(status: 200, body: "{\"quoteText\":\"Be Like Water\",\"quoteAuthor\":\"Bruce Lee\"}")
 
             post.update!(raw: "@discobot quote")
             described_class.new(:reply, user, post_id: post.id).select

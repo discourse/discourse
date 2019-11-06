@@ -49,7 +49,7 @@ describe PostAlerter do
       PostAlerter.post_created(reply2)
 
       # we get a green notification for a reply
-      expect(Notification.where(user_id: pm.user_id).pluck(:notification_type).first).to eq(Notification.types[:private_message])
+      expect(Notification.where(user_id: pm.user_id).pluck_first(:notification_type)).to eq(Notification.types[:private_message])
 
       TopicUser.change(pm.user_id, pm.id, notification_level: TopicUser.notification_levels[:tracking])
 

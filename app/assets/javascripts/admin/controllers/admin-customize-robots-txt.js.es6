@@ -1,12 +1,14 @@
+import { not } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyEqual } from "discourse/lib/computed";
 
-export default Ember.Controller.extend(bufferedProperty("model"), {
+export default Controller.extend(bufferedProperty("model"), {
   saved: false,
   isSaving: false,
   saveDisabled: propertyEqual("model.robots_txt", "buffered.robots_txt"),
-  resetDisbaled: Ember.computed.not("model.overridden"),
+  resetDisbaled: not("model.overridden"),
 
   actions: {
     save() {

@@ -1,3 +1,6 @@
+import { equal, gte, none, alias } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import Controller from "@ember/controller";
 import {
   on,
   default as computed
@@ -26,7 +29,7 @@ const ButtonBackBright = {
   };
 
 // The controller for the nice error page
-export default Ember.Controller.extend({
+export default Controller.extend({
   thrown: null,
   lastTransition: null,
 
@@ -41,10 +44,10 @@ export default Ember.Controller.extend({
     return false;
   },
 
-  isNotFound: Ember.computed.equal("thrown.status", 404),
-  isForbidden: Ember.computed.equal("thrown.status", 403),
-  isServer: Ember.computed.gte("thrown.status", 500),
-  isUnknown: Ember.computed.none("isNetwork", "isServer"),
+  isNotFound: equal("thrown.status", 404),
+  isForbidden: equal("thrown.status", 403),
+  isServer: gte("thrown.status", 500),
+  isUnknown: none("isNetwork", "isServer"),
 
   // TODO
   // make ajax requests to /srv/status with exponential backoff
@@ -73,7 +76,7 @@ export default Ember.Controller.extend({
     }
   },
 
-  requestUrl: Ember.computed.alias("thrown.requestedUrl"),
+  requestUrl: alias("thrown.requestedUrl"),
 
   @computed("networkFixed", "isNetwork", "isServer", "isUnknown")
   desc() {
@@ -112,7 +115,7 @@ export default Ember.Controller.extend({
     tryLoading() {
       this.set("loading", true);
 
-      Ember.run.schedule("afterRender", () => {
+      schedule("afterRender", () => {
         this.lastTransition.retry();
         this.set("loading", false);
       });

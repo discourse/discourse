@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
-export default Ember.Component.extend({
+export default Component.extend({
   @computed("secondFactorMethod")
   secondFactorTitle(secondFactorMethod) {
     switch (secondFactorMethod) {

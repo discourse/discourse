@@ -1,4 +1,5 @@
-export default Ember.Component.extend({
+import Component from "@ember/component";
+export default Component.extend({
   tagName: "span",
   selectionChanged: function() {
     const selected = this.selected;

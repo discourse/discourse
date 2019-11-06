@@ -3,6 +3,7 @@ import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
 import UserAction from "discourse/models/user-action";
 import { emojiUnescape } from "discourse/lib/text";
+import { Promise } from "rsvp";
 import {
   default as computed,
   on
@@ -92,11 +93,11 @@ export default RestModel.extend({
     // Don't load the same stream twice. We're probably at the end.
     const lastLoadedUrl = this.lastLoadedUrl;
     if (lastLoadedUrl === findUrl) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     if (this.loading) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     this.set("loading", true);

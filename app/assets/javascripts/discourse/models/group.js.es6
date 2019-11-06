@@ -1,3 +1,5 @@
+import { isEmpty } from "@ember/utils";
+import { notEmpty, equal } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import {
   default as computed,
@@ -9,6 +11,7 @@ import Category from "discourse/models/category";
 import User from "discourse/models/user";
 import Topic from "discourse/models/topic";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import EmberObject from "@ember/object";
 
 const Group = RestModel.extend({
   limit: 50,
@@ -21,11 +24,11 @@ const Group = RestModel.extend({
     this.set("owners", []);
   },
 
-  hasOwners: Ember.computed.notEmpty("owners"),
+  hasOwners: notEmpty("owners"),
 
   @computed("automatic_membership_email_domains")
   emailDomains(value) {
-    return Ember.isEmpty(value) ? "" : value;
+    return isEmpty(value) ? "" : value;
   },
 
   @computed("automatic")
@@ -42,7 +45,7 @@ const Group = RestModel.extend({
   },
 
   findMembers(params) {
-    if (Ember.isEmpty(this.name)) {
+    if (isEmpty(this.name) || !this.can_see_members) {
       return;
     }
 
@@ -135,7 +138,7 @@ const Group = RestModel.extend({
       : null;
   },
 
-  canEveryoneMention: Ember.computed.equal("mentionable_level", 99),
+  canEveryoneMention: equal("mentionable_level", 99),
 
   @computed("visibility_level")
   isPrivate(visibilityLevel) {
@@ -216,7 +219,7 @@ const Group = RestModel.extend({
     return ajax(`/groups/${this.name}/logs.json`, {
       data: { offset, filters }
     }).then(results => {
-      return Ember.Object.create({
+      return EmberObject.create({
         logs: results["logs"].map(log => GroupHistory.create(log)),
         all_loaded: results["all_loaded"]
       });
@@ -241,7 +244,7 @@ const Group = RestModel.extend({
         p.user = User.create(p.user);
         p.topic = Topic.create(p.topic);
         p.category = Category.findById(p.category_id);
-        return Ember.Object.create(p);
+        return EmberObject.create(p);
       });
     });
   },

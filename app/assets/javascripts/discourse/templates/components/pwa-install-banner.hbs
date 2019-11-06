@@ -1,9 +1,7 @@
 {{#if showPWAInstallBanner}}
   <div class="row">
     <div class="pwa-install-banner alert alert-info">
-      <div class="close" {{action "dismiss"}}>
-        {{d-icon 'times'}}
-      </div>
+      {{d-button icon="times" action="dismiss" class="btn btn-flat close" title="banner.close"}}
       <span>
         {{discourse-linked-text action=(action "turnOn") translatedText=(i18n "pwa.install_banner" title=siteSettings.title)}}
       </span>

@@ -1,8 +1,11 @@
+import { alias } from "@ember/object/computed";
+import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import computed from "ember-addons/ember-computed-decorators";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { on } from "@ember/object/evented";
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -33,7 +36,7 @@ export const ListItemDefaults = {
   tagName: "tr",
   classNameBindings: [":topic-list-item", "unboundClassNames", "topic.visited"],
   attributeBindings: ["data-topic-id"],
-  "data-topic-id": Ember.computed.alias("topic.id"),
+  "data-topic-id": alias("topic.id"),
 
   didInsertElement() {
     this._super(...arguments);
@@ -202,7 +205,7 @@ export const ListItemDefaults = {
     $topic.on("animationend", () => $topic.removeClass("highlighted"));
   },
 
-  _highlightIfNeeded: function() {
+  _highlightIfNeeded: on("didInsertElement", function() {
     // highlight the last topic viewed
     if (this.session.get("lastTopicIdViewed") === this.get("topic.id")) {
       this.session.set("lastTopicIdViewed", null);
@@ -212,10 +215,10 @@ export const ListItemDefaults = {
       this.set("topic.highlight", false);
       this.highlight();
     }
-  }.on("didInsertElement")
+  })
 };
 
-export default Ember.Component.extend(
+export default Component.extend(
   ListItemDefaults,
   bufferedRender({
     rerenderTriggers: ["bulkSelectEnabled", "topic.pinned"],

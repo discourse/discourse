@@ -344,7 +344,7 @@ class Search
   end
 
   advanced_filter(/^badge:(.*)$/) do |posts, match|
-    badge_id = Badge.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
+    badge_id = Badge.where('name ilike ? OR id = ?', match, match.to_i).pluck_first(:id)
     if badge_id
       posts.where('posts.user_id IN (SELECT ub.user_id FROM user_badges ub WHERE ub.badge_id = ?)', badge_id)
     else
@@ -481,7 +481,7 @@ class Search
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
-      tag_id = Tag.where_name(category_slug).pluck(:id).first
+      tag_id = Tag.where_name(category_slug).pluck_first(:id)
       if (tag_id)
         posts.where(<<~SQL, tag_id)
           topics.id IN (
@@ -517,7 +517,7 @@ class Search
   end
 
   advanced_filter(/^group:(.+)$/) do |posts, match|
-    group_id = Group.where('name ilike ? OR (id = ? AND id > 0)', match, match.to_i).pluck(:id).first
+    group_id = Group.where('name ilike ? OR (id = ? AND id > 0)', match, match.to_i).pluck_first(:id)
     if group_id
       posts.where("posts.user_id IN (select gu.user_id from group_users gu where gu.group_id = ?)", group_id)
     else
@@ -526,7 +526,7 @@ class Search
   end
 
   advanced_filter(/^user:(.+)$/) do |posts, match|
-    user_id = User.where(staged: false).where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck(:id).first
+    user_id = User.where(staged: false).where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck_first(:id)
     if user_id
       posts.where("posts.user_id = #{user_id}")
     else
@@ -535,7 +535,7 @@ class Search
   end
 
   advanced_filter(/^\@([a-zA-Z0-9_\-.]+)$/) do |posts, match|
-    user_id = User.where(staged: false).where(username_lower: match.downcase).pluck(:id).first
+    user_id = User.where(staged: false).where(username_lower: match.downcase).pluck_first(:id)
     if user_id
       posts.where("posts.user_id = #{user_id}")
     else

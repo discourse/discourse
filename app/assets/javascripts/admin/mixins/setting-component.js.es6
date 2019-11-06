@@ -1,5 +1,11 @@
+import { alias, oneWay } from "@ember/object/computed";
 import computed from "ember-addons/ember-computed-decorators";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
+import { on } from "@ember/object/evented";
+import Mixin from "@ember/object/mixin";
+import showModal from "discourse/lib/show-modal";
+import AboutRoute from "discourse/routes/about";
+import { Promise } from "rsvp";
 
 const CUSTOM_TYPES = [
   "bool",
@@ -14,16 +20,17 @@ const CUSTOM_TYPES = [
   "compact_list",
   "secret_list",
   "upload",
-  "group_list"
+  "group_list",
+  "tag_list"
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
-  content: Ember.computed.alias("setting"),
+  content: alias("setting"),
   validationMessage: null,
-  isSecret: Ember.computed.oneWay("setting.secret"),
+  isSecret: oneWay("setting.secret"),
 
   @computed("buffered.value", "setting.value")
   dirty(bufferVal, settingVal) {
@@ -89,33 +96,88 @@ export default Ember.Mixin.create({
     return settingDefault !== bufferedValue;
   },
 
-  _watchEnterKey: function() {
+  _watchEnterKey: on("didInsertElement", function() {
     $(this.element).on("keydown.setting-enter", ".input-setting-string", e => {
       if (e.keyCode === 13) {
         // enter key
         this.send("save");
       }
     });
-  }.on("didInsertElement"),
+  }),
 
-  _removeBindings: function() {
+  _removeBindings: on("willDestroyElement", function() {
     $(this.element).off("keydown.setting-enter");
-  }.on("willDestroyElement"),
+  }),
 
   _save() {
     Ember.warn("You should define a `_save` method", {
       id: "discourse.setting-component.missing-save"
     });
-    return Ember.RSVP.resolve();
+    return Promise.resolve();
   },
 
   actions: {
+    update() {
+      const defaultUserPreferences = [
+        "default_email_digest_frequency",
+        "default_include_tl0_in_digests",
+        "default_email_level",
+        "default_email_messages_level",
+        "default_email_mailing_list_mode",
+        "default_email_mailing_list_mode_frequency",
+        "disable_mailing_list_mode",
+        "default_email_previous_replies",
+        "default_email_in_reply_to",
+        "default_other_new_topic_duration_minutes",
+        "default_other_auto_track_topics_after_msecs",
+        "default_other_notification_level_when_replying",
+        "default_other_external_links_in_new_tab",
+        "default_other_enable_quoting",
+        "default_other_enable_defer",
+        "default_other_dynamic_favicon",
+        "default_other_like_notification_frequency",
+        "default_topics_automatic_unpin",
+        "default_categories_watching",
+        "default_categories_tracking",
+        "default_categories_muted",
+        "default_categories_watching_first_post",
+        "default_tags_watching",
+        "default_tags_tracking",
+        "default_tags_muted",
+        "default_tags_watching_first_post",
+        "default_text_size",
+        "default_title_count_mode"
+      ];
+      const key = this.buffered.get("setting");
+
+      if (defaultUserPreferences.includes(key)) {
+        AboutRoute.create()
+          .model()
+          .then(result => {
+            const controller = showModal("site-setting-default-categories", {
+              model: {
+                count: result.stats.user_count,
+                key: key.replace(/_/g, " ")
+              },
+              admin: true
+            });
+
+            controller.set("onClose", () => {
+              this.updateExistingUsers = controller.updateExistingUsers;
+              this.send("save");
+            });
+          });
+      } else {
+        this.send("save");
+      }
+    },
+
     save() {
       this._save()
         .then(() => {
           this.set("validationMessage", null);
           this.commitBuffer();
-          if (AUTO_REFRESH_ON_SAVE.includes(this.get("setting.setting"))) {
+          if (AUTO_REFRESH_ON_SAVE.includes(this.setting.setting)) {
             this.afterSave();
           }
         })

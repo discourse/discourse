@@ -1,13 +1,17 @@
+import { isEmpty } from "@ember/utils";
+import { alias } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { extractDomainFromUrl } from "discourse/lib/utilities";
 import computed from "ember-addons/ember-computed-decorators";
 import InputValidation from "discourse/models/input-validation";
 
-export default Ember.Controller.extend({
-  adminWebHooks: Ember.inject.controller(),
-  eventTypes: Ember.computed.alias("adminWebHooks.eventTypes"),
-  defaultEventTypes: Ember.computed.alias("adminWebHooks.defaultEventTypes"),
-  contentTypes: Ember.computed.alias("adminWebHooks.contentTypes"),
+export default Controller.extend({
+  adminWebHooks: inject(),
+  eventTypes: alias("adminWebHooks.eventTypes"),
+  defaultEventTypes: alias("adminWebHooks.defaultEventTypes"),
+  contentTypes: alias("adminWebHooks.contentTypes"),
 
   @computed
   showTagsFilter() {
@@ -35,7 +39,7 @@ export default Ember.Controller.extend({
 
   @computed("model.secret")
   secretValidation(secret) {
-    if (!Ember.isEmpty(secret)) {
+    if (!isEmpty(secret)) {
       if (secret.indexOf(" ") !== -1) {
         return InputValidation.create({
           failed: true,
@@ -54,7 +58,7 @@ export default Ember.Controller.extend({
 
   @computed("model.wildcard_web_hook", "model.web_hook_event_types.[]")
   eventTypeValidation(isWildcard, eventTypes) {
-    if (!isWildcard && Ember.isEmpty(eventTypes)) {
+    if (!isWildcard && isEmpty(eventTypes)) {
       return InputValidation.create({
         failed: true,
         reason: I18n.t("admin.web_hooks.event_type_missing")
@@ -76,7 +80,7 @@ export default Ember.Controller.extend({
   ) {
     return isSaving
       ? false
-      : secretValidation || eventTypeValidation || Ember.isEmpty(payloadUrl);
+      : secretValidation || eventTypeValidation || isEmpty(payloadUrl);
   },
 
   actions: {

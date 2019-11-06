@@ -1,8 +1,9 @@
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { observes } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   @observes("model")
   modelChanged() {
     const model = this.model;

@@ -1,3 +1,5 @@
+import { alias, gt, not, or, equal } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import computed from "ember-addons/ember-computed-decorators";
@@ -20,7 +22,7 @@ function customTagArray(fieldName) {
 }
 
 // This controller handles displaying of history
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   loading: true,
   viewMode: "side_by_side",
 
@@ -31,12 +33,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  previousFeaturedLink: Ember.computed.alias(
-    "model.featured_link_changes.previous"
-  ),
-  currentFeaturedLink: Ember.computed.alias(
-    "model.featured_link_changes.current"
-  ),
+  previousFeaturedLink: alias("model.featured_link_changes.previous"),
+  currentFeaturedLink: alias("model.featured_link_changes.current"),
 
   previousTagChanges: customTagArray("model.tags_changes.previous"),
   currentTagChanges: customTagArray("model.tags_changes.current"),
@@ -118,7 +116,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return prev && current > prev;
   },
 
-  displayRevisions: Ember.computed.gt("model.version_count", 2),
+  displayRevisions: gt("model.version_count", 2),
   displayGoToFirst: propertyGreaterThan(
     "model.current_revision",
     "model.first_revision"
@@ -132,15 +130,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
     "model.next_revision"
   ),
 
-  hideGoToFirst: Ember.computed.not("displayGoToFirst"),
-  hideGoToPrevious: Ember.computed.not("displayGoToPrevious"),
-  hideGoToNext: Ember.computed.not("displayGoToNext"),
-  hideGoToLast: Ember.computed.not("displayGoToLast"),
+  hideGoToFirst: not("displayGoToFirst"),
+  hideGoToPrevious: not("displayGoToPrevious"),
+  hideGoToNext: not("displayGoToNext"),
+  hideGoToLast: not("displayGoToLast"),
 
-  loadFirstDisabled: Ember.computed.or("loading", "hideGoToFirst"),
-  loadPreviousDisabled: Ember.computed.or("loading", "hideGoToPrevious"),
-  loadNextDisabled: Ember.computed.or("loading", "hideGoToNext"),
-  loadLastDisabled: Ember.computed.or("loading", "hideGoToLast"),
+  loadFirstDisabled: or("loading", "hideGoToFirst"),
+  loadPreviousDisabled: or("loading", "hideGoToPrevious"),
+  loadNextDisabled: or("loading", "hideGoToNext"),
+  loadLastDisabled: or("loading", "hideGoToLast"),
 
   @computed("model.previous_hidden")
   displayShow(prevHidden) {
@@ -172,10 +170,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return this.currentUser && this.currentUser.get("staff");
   },
 
-  isEitherRevisionHidden: Ember.computed.or(
-    "model.previous_hidden",
-    "model.current_hidden"
-  ),
+  isEitherRevisionHidden: or("model.previous_hidden", "model.current_hidden"),
 
   @computed("model.previous_hidden", "model.current_hidden", "displayingInline")
   hiddenClasses(prevHidden, currentHidden, displayingInline) {
@@ -193,12 +188,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  displayingInline: Ember.computed.equal("viewMode", "inline"),
-  displayingSideBySide: Ember.computed.equal("viewMode", "side_by_side"),
-  displayingSideBySideMarkdown: Ember.computed.equal(
-    "viewMode",
-    "side_by_side_markdown"
-  ),
+  displayingInline: equal("viewMode", "inline"),
+  displayingSideBySide: equal("viewMode", "side_by_side"),
+  displayingSideBySideMarkdown: equal("viewMode", "side_by_side_markdown"),
 
   @computed("displayingInline")
   inlineClass(displayingInline) {

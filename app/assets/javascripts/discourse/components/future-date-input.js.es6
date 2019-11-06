@@ -1,3 +1,6 @@
+import { isEmpty } from "@ember/utils";
+import { equal, and, empty } from "@ember/object/computed";
+import Component from "@ember/component";
 import {
   default as computed,
   observes
@@ -5,17 +8,14 @@ import {
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 
-export default Ember.Component.extend({
+export default Component.extend({
   selection: null,
   date: null,
   time: null,
   includeDateTime: true,
-  isCustom: Ember.computed.equal("selection", "pick_date_and_time"),
-  isBasedOnLastPost: Ember.computed.equal(
-    "selection",
-    "set_based_on_last_post"
-  ),
-  displayDateAndTimePicker: Ember.computed.and("includeDateTime", "isCustom"),
+  isCustom: equal("selection", "pick_date_and_time"),
+  isBasedOnLastPost: equal("selection", "set_based_on_last_post"),
+  displayDateAndTimePicker: and("includeDateTime", "isCustom"),
   displayLabel: null,
 
   init() {
@@ -36,7 +36,7 @@ export default Ember.Component.extend({
     }
   },
 
-  timeInputDisabled: Ember.computed.empty("date"),
+  timeInputDisabled: empty("date"),
 
   @observes("date", "time")
   _updateInput() {
@@ -107,10 +107,7 @@ export default Ember.Component.extend({
   ) {
     if (!statusType || willCloseImmediately) return false;
 
-    if (
-      statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE &&
-      Ember.isEmpty(categoryId)
-    ) {
+    if (statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE && isEmpty(categoryId)) {
       return false;
     }
 

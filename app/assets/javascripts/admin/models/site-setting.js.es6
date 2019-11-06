@@ -25,9 +25,14 @@ SiteSetting.reopenClass({
     });
   },
 
-  update(key, value) {
+  update(key, value, opts = {}) {
     const data = {};
     data[key] = value;
+
+    if (opts["updateExistingUsers"] === true) {
+      data["updateExistingUsers"] = true;
+    }
+
     return ajax(`/admin/site_settings/${key}`, { type: "PUT", data });
   }
 });

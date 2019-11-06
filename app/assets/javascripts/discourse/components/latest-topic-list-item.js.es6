@@ -1,9 +1,10 @@
+import Component from "@ember/component";
 import {
   showEntrance,
   navigateToTopic
 } from "discourse/components/topic-list-item";
 
-export default Ember.Component.extend({
+export default Component.extend({
   attributeBindings: ["topic.id:data-topic-id"],
   classNameBindings: [
     ":latest-topic-list-item",

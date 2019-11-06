@@ -1,47 +1,55 @@
 import AdminUser from "admin/models/admin-user";
+import RestModel from "discourse/models/rest";
 import { ajax } from "discourse/lib/ajax";
+import computed from "ember-addons/ember-computed-decorators";
 
-const KEY_ENDPOINT = "/admin/api/key";
-const KEYS_ENDPOINT = "/admin/api/keys";
+const ApiKey = RestModel.extend({
+  user: Ember.computed("_user", {
+    get() {
+      return this._user;
+    },
+    set(key, value) {
+      if (value && !(value instanceof AdminUser)) {
+        this.set("_user", AdminUser.create(value));
+      } else {
+        this.set("_user", value);
+      }
+      return this._user;
+    }
+  }),
 
-const ApiKey = Discourse.Model.extend({
-  regenerate() {
-    return ajax(KEY_ENDPOINT, {
-      type: "PUT",
-      data: { id: this.id }
-    }).then(result => {
-      this.set("key", result.api_key.key);
-      return this;
-    });
+  @computed("key")
+  shortKey(key) {
+    return `${key.substring(0, 4)}...`;
+  },
+
+  @computed("description")
+  shortDescription(description) {
+    if (!description || description.length < 40) return description;
+    return `${description.substring(0, 40)}...`;
   },
 
   revoke() {
-    return ajax(KEY_ENDPOINT, {
-      type: "DELETE",
-      data: { id: this.id }
-    });
-  }
-});
-
-ApiKey.reopenClass({
-  create() {
-    const result = this._super.apply(this, arguments);
-    if (result.user) {
-      result.user = AdminUser.create(result.user);
-    }
-    return result;
+    return ajax(`${this.basePath}/revoke`, {
+      type: "POST"
+    }).then(result => this.setProperties(result.api_key));
   },
 
-  find() {
-    return ajax(KEYS_ENDPOINT).then(keys =>
-      keys.map(key => ApiKey.create(key))
-    );
+  undoRevoke() {
+    return ajax(`${this.basePath}/undo-revoke`, {
+      type: "POST"
+    }).then(result => this.setProperties(result.api_key));
   },
 
-  generateMasterKey() {
-    return ajax(KEY_ENDPOINT, { type: "POST" }).then(result =>
-      ApiKey.create(result.api_key)
-    );
+  createProperties() {
+    return this.getProperties("description", "username");
+  },
+
+  @computed()
+  basePath() {
+    return this.store
+      .adapterFor("api-key")
+      .pathFor(this.store, "api-key", this.id);
   }
 });
 

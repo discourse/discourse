@@ -17,12 +17,10 @@ const VersionCheck = Discourse.Model.extend({
     return missingVersionsCount === 1;
   },
 
-  @computed("git_branch", "installed_sha")
-  gitLink(gitBranch, installedSHA) {
-    if (gitBranch && installedSHA) {
-      return `https://github.com/discourse/discourse/compare/${installedSHA}...${gitBranch}`;
-    } else if (installedSHA) {
-      return `https://github.com/discourse/discourse/tree/${installedSHA}`;
+  @computed("installed_sha")
+  gitLink(installedSHA) {
+    if (installedSHA) {
+      return `https://github.com/discourse/discourse/commits/${installedSHA}`;
     }
   },
 

@@ -1,14 +1,21 @@
+import { isEmpty } from "@ember/utils";
+import { alias, or, gt, not, and } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import { inject as service } from "@ember/service";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import computed from "ember-addons/ember-computed-decorators";
 import User from "discourse/models/user";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { set } from "@ember/object";
 
-export default Ember.Controller.extend(CanCheckEmails, {
+export default Controller.extend(CanCheckEmails, {
   indexStream: false,
-  router: Ember.inject.service(),
-  userNotifications: Ember.inject.controller("user-notifications"),
-  currentPath: Ember.computed.alias("router._router.currentPath"),
+  router: service(),
+  userNotifications: inject("user-notifications"),
+  currentPath: alias("router._router.currentPath"),
   adminTools: optionalService(),
 
   @computed("model.username")
@@ -24,7 +31,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   @computed("model.profileBackgroundUrl")
   hasProfileBackgroundUrl(background) {
-    return !Ember.isEmpty(background.toString());
+    return !isEmpty(background.toString());
   },
 
   @computed("model.profile_hidden", "indexStream", "viewingSelf", "forceExpand")
@@ -34,17 +41,14 @@ export default Ember.Controller.extend(CanCheckEmails, {
     }
     return (!indexStream || viewingSelf) && !forceExpand;
   },
-  canMuteOrIgnoreUser: Ember.computed.or(
-    "model.can_ignore_user",
-    "model.can_mute_user"
-  ),
-  hasGivenFlags: Ember.computed.gt("model.number_of_flags_given", 0),
-  hasFlaggedPosts: Ember.computed.gt("model.number_of_flagged_posts", 0),
-  hasDeletedPosts: Ember.computed.gt("model.number_of_deleted_posts", 0),
-  hasBeenSuspended: Ember.computed.gt("model.number_of_suspensions", 0),
-  hasReceivedWarnings: Ember.computed.gt("model.warnings_received_count", 0),
+  canMuteOrIgnoreUser: or("model.can_ignore_user", "model.can_mute_user"),
+  hasGivenFlags: gt("model.number_of_flags_given", 0),
+  hasFlaggedPosts: gt("model.number_of_flagged_posts", 0),
+  hasDeletedPosts: gt("model.number_of_deleted_posts", 0),
+  hasBeenSuspended: gt("model.number_of_suspensions", 0),
+  hasReceivedWarnings: gt("model.warnings_received_count", 0),
 
-  showStaffCounters: Ember.computed.or(
+  showStaffCounters: or(
     "hasGivenFlags",
     "hasFlaggedPosts",
     "hasDeletedPosts",
@@ -57,7 +61,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return !suspended || isStaff;
   },
 
-  linkWebsite: Ember.computed.not("model.isBasic"),
+  linkWebsite: not("model.isBasic"),
 
   @computed("model.trust_level")
   removeNoFollow(trustLevel) {
@@ -101,27 +105,22 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return User.currentProp("can_invite_to_forum");
   },
 
-  canDeleteUser: Ember.computed.and(
-    "model.can_be_deleted",
-    "model.can_delete_all_posts"
-  ),
+  canDeleteUser: and("model.can_be_deleted", "model.can_delete_all_posts"),
 
   @computed("model.user_fields.@each.value")
   publicUserFields() {
     const siteUserFields = this.site.get("user_fields");
-    if (!Ember.isEmpty(siteUserFields)) {
+    if (!isEmpty(siteUserFields)) {
       const userFields = this.get("model.user_fields");
       return siteUserFields
         .filterBy("show_on_profile", true)
         .sortBy("position")
         .map(field => {
-          Ember.set(field, "dasherized_name", field.get("name").dasherize());
+          set(field, "dasherized_name", field.get("name").dasherize());
           const value = userFields
             ? userFields[field.get("id").toString()]
             : null;
-          return Ember.isEmpty(value)
-            ? null
-            : Ember.Object.create({ value, field });
+          return isEmpty(value) ? null : EmberObject.create({ value, field });
         })
         .compact();
     }

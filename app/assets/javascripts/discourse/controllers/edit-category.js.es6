@@ -1,3 +1,5 @@
+import { isEmpty } from "@ember/utils";
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import DiscourseURL from "discourse/lib/url";
 import { extractError } from "discourse/lib/ajax-error";
@@ -7,7 +9,7 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   selectedTab: null,
   saving: false,
   deleting: false,
@@ -30,7 +32,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @observes("model.description")
   changeSize() {
-    if (!Ember.isEmpty(this.get("model.description"))) {
+    if (!isEmpty(this.get("model.description"))) {
       this.set("modal.modalClass", "edit-category-modal full");
     } else {
       this.set("modal.modalClass", "edit-category-modal small");

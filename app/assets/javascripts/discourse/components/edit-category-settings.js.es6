@@ -1,3 +1,4 @@
+import { empty, and } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import computed from "ember-addons/ember-computed-decorators";
@@ -12,12 +13,12 @@ export function addCategorySortCriteria(criteria) {
 export default buildCategoryPanel("settings", {
   emailInEnabled: setting("email_in"),
   showPositionInput: setting("fixed_category_positions"),
-  isParentCategory: Ember.computed.empty("category.parent_category_id"),
-  showSubcategoryListStyle: Ember.computed.and(
+  isParentCategory: empty("category.parent_category_id"),
+  showSubcategoryListStyle: and(
     "category.show_subcategory_list",
     "isParentCategory"
   ),
-  isDefaultSortOrder: Ember.computed.empty("category.sort_order"),
+  isDefaultSortOrder: empty("category.sort_order"),
 
   @computed
   availableSubcategoryListStyles() {

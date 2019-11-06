@@ -1,8 +1,10 @@
+import { isEmpty } from "@ember/utils";
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   loading: false,
   setAsOwner: false,
 
@@ -17,7 +19,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       const model = this.model;
       const usernames = model.get("usernames");
-      if (Ember.isEmpty(usernames)) {
+      if (isEmpty(usernames)) {
         return;
       }
       let promise;

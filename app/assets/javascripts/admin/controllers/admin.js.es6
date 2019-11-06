@@ -1,7 +1,10 @@
+import { inject as service } from "@ember/service";
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
+import { dasherize } from "@ember/string";
 
-export default Ember.Controller.extend({
-  router: Ember.inject.service(),
+export default Controller.extend({
+  router: service(),
 
   @computed("siteSettings.enable_group_directory")
   showGroups(enableGroupDirectory) {
@@ -25,7 +28,7 @@ export default Ember.Controller.extend({
           segment !== "admin"
         );
       })
-      .map(Ember.String.dasherize)
+      .map(dasherize)
       .join(" ");
 
     // this is done to avoid breaking css customizations

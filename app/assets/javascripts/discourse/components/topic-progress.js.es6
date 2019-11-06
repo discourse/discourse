@@ -1,14 +1,17 @@
+import { alias } from "@ember/object/computed";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
 import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   elementId: "topic-progress-wrapper",
   classNameBindings: ["docked"],
   docked: false,
   progressPosition: null,
-  postStream: Ember.computed.alias("topic.postStream"),
+  postStream: alias("topic.postStream"),
   _streamPercentage: null,
 
   @computed("progressPosition")
@@ -72,7 +75,7 @@ export default Ember.Component.extend({
 
   @observes("postStream.stream.[]")
   _updateBar() {
-    Ember.run.scheduleOnce("afterRender", this, this._updateProgressBar);
+    scheduleOnce("afterRender", this, this._updateProgressBar);
   },
 
   _topicScrolled(event) {
@@ -99,16 +102,11 @@ export default Ember.Component.extend({
 
     const prevEvent = this.prevEvent;
     if (prevEvent) {
-      Ember.run.scheduleOnce(
-        "afterRender",
-        this,
-        this._topicScrolled,
-        prevEvent
-      );
+      scheduleOnce("afterRender", this, this._topicScrolled, prevEvent);
     } else {
-      Ember.run.scheduleOnce("afterRender", this, this._updateProgressBar);
+      scheduleOnce("afterRender", this, this._updateProgressBar);
     }
-    Ember.run.scheduleOnce("afterRender", this, this._dock);
+    scheduleOnce("afterRender", this, this._dock);
   },
 
   willDestroyElement() {

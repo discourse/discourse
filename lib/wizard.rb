@@ -87,7 +87,7 @@ class Wizard
       .human_users
       .joins(:user_auth_tokens)
       .order('user_auth_tokens.created_at')
-      .pluck(:id).first
+      .pluck_first(:id)
 
     if @user&.id && first_admin_id == @user.id
       !Wizard::Builder.new(@user).build.completed?

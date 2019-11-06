@@ -21,7 +21,7 @@ class ThemeJavascriptsController < ApplicationController
     cache_file = "#{DISK_CACHE_PATH}/#{params[:digest]}.js"
 
     unless File.exist?(cache_file)
-      content = query.pluck(:content).first
+      content = query.pluck_first(:content)
       raise Discourse::NotFound if content.nil?
 
       FileUtils.mkdir_p(DISK_CACHE_PATH)
@@ -41,7 +41,7 @@ class ThemeJavascriptsController < ApplicationController
   end
 
   def last_modified
-    @last_modified ||= query.pluck(:updated_at).first
+    @last_modified ||= query.pluck_first(:updated_at)
   end
 
   def not_modified?

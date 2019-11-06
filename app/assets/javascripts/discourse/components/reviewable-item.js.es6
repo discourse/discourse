@@ -1,13 +1,16 @@
+import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 import Category from "discourse/models/category";
 import optionalService from "discourse/lib/optional-service";
 import showModal from "discourse/lib/show-modal";
+import { dasherize } from "@ember/string";
+import { set } from "@ember/object";
 
 let _components = {};
 
-export default Ember.Component.extend({
+export default Component.extend({
   adminTools: optionalService(),
   tagName: "",
   updating: null,
@@ -64,7 +67,7 @@ export default Ember.Component.extend({
       return _components[type];
     }
 
-    let dasherized = Ember.String.dasherize(type);
+    let dasherized = dasherize(type);
     let templatePath = `components/${dasherized}`;
     let template =
       Ember.TEMPLATES[`${templatePath}`] ||
@@ -184,7 +187,7 @@ export default Ember.Component.extend({
     },
 
     valueChanged(fieldId, event) {
-      Ember.set(this._updates, fieldId, event.target.value);
+      set(this._updates, fieldId, event.target.value);
     },
 
     perform(action) {

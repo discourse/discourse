@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
 import computed from "ember-addons/ember-computed-decorators";
 import Category from "discourse/models/category";
@@ -27,7 +28,7 @@ export default SelectKitRowComponent.extend({
 
   @computed("computedContent.value", "computedContent.name")
   category(value, name) {
-    if (Ember.isEmpty(value)) {
+    if (isEmpty(value)) {
       const uncat = Category.findUncategorized();
       if (uncat && uncat.get("name") === name) {
         return uncat;

@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { currentUser } from "helpers/qunit-helpers";
 import AppEvents from "discourse/services/app-events";
 import Composer from "discourse/models/composer";
@@ -236,7 +237,7 @@ QUnit.test("Title length for private messages", assert => {
 
 QUnit.test("Post length for private messages with non human users", assert => {
   const composer = createComposer({
-    topic: Ember.Object.create({ pm_with_non_human_user: true })
+    topic: EmberObject.create({ pm_with_non_human_user: true })
   });
 
   assert.equal(composer.get("minimumPostLength"), 1);

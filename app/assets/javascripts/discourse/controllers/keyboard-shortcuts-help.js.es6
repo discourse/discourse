@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 const KEY = "keyboard_shortcuts_help";
@@ -46,7 +47,7 @@ function buildShortcut(
   return I18n.t(`${KEY}.${key}`, context);
 }
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   onShow() {
     this.set("modal.modalClass", "keyboard-shortcuts-modal");
   },

@@ -1,3 +1,7 @@
+import { isEmpty } from "@ember/utils";
+import { or } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import {
   translateResults,
@@ -12,8 +16,8 @@ import {
 import Category from "discourse/models/category";
 import { escapeExpression } from "discourse/lib/utilities";
 import { setTransient } from "discourse/lib/page-tracker";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import Composer from "discourse/models/composer";
+import { scrollTop } from "discourse/mixins/scroll-top";
 
 const SortOrders = [
   { name: I18n.t("search.relevance"), id: 0 },
@@ -24,9 +28,9 @@ const SortOrders = [
 ];
 const PAGE_LIMIT = 10;
 
-export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
-  composer: Ember.inject.controller(),
+export default Controller.extend({
+  application: inject(),
+  composer: inject(),
   bulkSelectEnabled: null,
 
   loading: false,
@@ -50,7 +54,7 @@ export default Ember.Controller.extend({
 
   @computed("q")
   hasAutofocus(q) {
-    return Ember.isEmpty(q);
+    return isEmpty(q);
   },
 
   @computed("q")
@@ -194,17 +198,12 @@ export default Ember.Controller.extend({
     return this.currentUser && userCanCreateTopic;
   },
 
-  @computed("expanded")
-  searchAdvancedIcon(expanded) {
-    return iconHTML(expanded ? "caret-down" : "caret-right");
-  },
-
   @computed("page")
   isLastPage(page) {
     return page === PAGE_LIMIT;
   },
 
-  searchButtonDisabled: Ember.computed.or("searching", "loading"),
+  searchButtonDisabled: or("searching", "loading"),
 
   _search() {
     if (this.searching) {
@@ -224,6 +223,7 @@ export default Ember.Controller.extend({
       this.set("bulkSelectEnabled", false);
       this.selected.clear();
       this.set("searching", true);
+      scrollTop();
     } else {
       this.set("loading", true);
     }
@@ -285,7 +285,7 @@ export default Ember.Controller.extend({
       }
       this.composer.open({
         action: Composer.CREATE_TOPIC,
-        draftKey: Composer.CREATE_TOPIC,
+        draftKey: Composer.NEW_TOPIC_KEY,
         topicCategory
       });
     },

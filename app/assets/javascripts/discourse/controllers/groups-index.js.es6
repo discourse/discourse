@@ -1,11 +1,13 @@
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
 import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
+export default Controller.extend({
+  application: inject(),
   queryParams: ["order", "asc", "filter", "type"],
   order: null,
   asc: null,

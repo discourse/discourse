@@ -149,6 +149,19 @@
   </div>
 {{/if}}
 
+{{#if canSelectPrimaryGroup}}
+  <div class="control-group pref-primary-group">
+    <label class="control-label">{{i18n 'user.primary_group.title'}}</label>
+    <div class="controls">
+      {{combo-box
+        value=newPrimaryGroupInput
+        content=model.filteredGroups
+        none="user.primary_group.none"}}
+    </div>
+  </div>
+{{/if}}
+
+
 {{#if canCheckEmails}}
   <div class="control-group pref-auth-tokens">
     <label class="control-label">{{i18n 'user.auth_tokens.title'}}</label>

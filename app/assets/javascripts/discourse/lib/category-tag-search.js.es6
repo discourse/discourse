@@ -3,6 +3,7 @@ import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import Category from "discourse/models/category";
 import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import { SEPARATOR } from "discourse/lib/category-hashtags";
+import { Promise } from "rsvp";
 
 var cache = {};
 var cacheTime;
@@ -15,7 +16,7 @@ function updateCache(term, results) {
 }
 
 function searchTags(term, categories, limit) {
-  return new Ember.RSVP.Promise(resolve => {
+  return new Promise(resolve => {
     const clearPromise = setTimeout(() => {
       resolve(CANCELLED_STATUS);
     }, 5000);

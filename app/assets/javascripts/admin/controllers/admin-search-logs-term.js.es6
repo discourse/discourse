@@ -1,6 +1,7 @@
+import Controller from "@ember/controller";
 import { DEFAULT_PERIOD } from "admin/controllers/admin-search-logs-index";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   loading: false,
   term: null,
   period: DEFAULT_PERIOD,

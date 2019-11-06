@@ -1,17 +1,20 @@
+import { inject } from "@ember/controller";
+import EmberObject from "@ember/object";
+import Controller from "@ember/controller";
 import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
-  group: Ember.inject.controller(),
+export default Controller.extend({
+  group: inject(),
   loading: false,
   offset: 0,
-  application: Ember.inject.controller(),
+  application: inject(),
 
   init() {
     this._super(...arguments);
-    this.set("filters", Ember.Object.create());
+    this.set("filters", EmberObject.create());
   },
 
   @computed(
@@ -51,7 +54,7 @@ export default Ember.Controller.extend({
   reset() {
     this.setProperties({
       offset: 0,
-      filters: Ember.Object.create()
+      filters: EmberObject.create()
     });
   },
 

@@ -1,14 +1,18 @@
+import { notEmpty, empty } from "@ember/object/computed";
+import Component from "@ember/component";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import DiscourseURL from "discourse/lib/url";
 
-export default Ember.Component.extend({
+export default Component.extend({
   // subclasses need this
   layoutName: "components/d-button",
 
   form: null,
 
+  type: "button",
+
   tagName: "button",
-  classNameBindings: [":btn", "noText", "btnType"],
+  classNameBindings: ["btnLink::btn", "btnLink", "noText", "btnType"],
   attributeBindings: [
     "form",
     "disabled",
@@ -18,7 +22,9 @@ export default Ember.Component.extend({
     "type"
   ],
 
-  btnIcon: Ember.computed.notEmpty("icon"),
+  btnIcon: notEmpty("icon"),
+
+  btnLink: Ember.computed.equal("display", "link"),
 
   @computed("icon", "translatedLabel")
   btnType(icon, translatedLabel) {
@@ -29,7 +35,7 @@ export default Ember.Component.extend({
     }
   },
 
-  noText: Ember.computed.empty("translatedLabel"),
+  noText: empty("translatedLabel"),
 
   @computed("title")
   translatedTitle: {

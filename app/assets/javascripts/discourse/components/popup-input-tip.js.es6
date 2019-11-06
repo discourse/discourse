@@ -1,3 +1,5 @@
+import { alias, not } from "@ember/object/computed";
+import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import {
   default as computed,
@@ -5,7 +7,7 @@ import {
 } from "ember-addons/ember-computed-decorators";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     classNameBindings: [":popup-tip", "good", "bad", "lastShownAt::hide"],
     animateAttribute: null,
@@ -18,8 +20,8 @@ export default Ember.Component.extend(
       this.set("validation.lastShownAt", null);
     },
 
-    bad: Ember.computed.alias("validation.failed"),
-    good: Ember.computed.not("bad"),
+    bad: alias("validation.failed"),
+    good: not("bad"),
 
     @computed("shownAt", "validation.lastShownAt")
     lastShownAt(shownAt, lastShownAt) {

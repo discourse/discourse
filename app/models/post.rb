@@ -157,6 +157,14 @@ class Post < ActiveRecord::Base
     includes(:post_details).find_by(post_details: { key: key, value: value })
   end
 
+  def self.excerpt_size=(sz)
+    @excerpt_size = sz
+  end
+
+  def self.excerpt_size
+    @excerpt_size || 220
+  end
+
   def whisper?
     post_type == Post.types[:whisper]
   end
@@ -463,7 +471,7 @@ class Post < ActiveRecord::Base
   end
 
   def excerpt_for_topic
-    Post.excerpt(cooked, 220, strip_links: true, strip_images: true, post: self)
+    Post.excerpt(cooked, Post.excerpt_size, strip_links: true, strip_images: true, post: self)
   end
 
   def is_first_post?
@@ -979,7 +987,7 @@ class Post < ActiveRecord::Base
             end
 
             upload_id = nil
-            upload_id = Upload.where(sha1: sha1).pluck(:id).first if sha1.present?
+            upload_id = Upload.where(sha1: sha1).pluck_first(:id) if sha1.present?
             upload_id ||= yield(post, src, path, sha1)
 
             if upload_id.blank?

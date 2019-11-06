@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["table", "staff-actions"],
 
   willDestroyElement() {

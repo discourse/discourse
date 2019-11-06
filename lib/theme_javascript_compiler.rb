@@ -13,7 +13,6 @@ class ThemeJavascriptCompiler
 
       // Helper to replace old themeSetting syntax
       function generateHelper(settingParts) {
-console.log(settingParts)
         const settingName = settingParts.join('.');
         return {
             "path": {
@@ -209,8 +208,8 @@ console.log(settingParts)
     @content << script + "\n"
   end
 
-  def append_module(script, name)
-    script.prepend theme_variables
+  def append_module(script, name, include_variables: true)
+    script = "#{theme_variables}#{script}" if include_variables
     template = Tilt::ES6ModuleTranspilerTemplate.new {}
     @content << template.module_transpile(script, "", name)
   rescue MiniRacer::RuntimeError => ex

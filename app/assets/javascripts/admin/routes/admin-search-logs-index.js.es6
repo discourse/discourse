@@ -1,6 +1,8 @@
+import EmberObject from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   queryParams: {
     period: { refreshModel: true },
     searchType: { refreshModel: true }
@@ -11,7 +13,7 @@ export default Discourse.Route.extend({
     return ajax("/admin/logs/search_logs.json", {
       data: { period: params.period, search_type: params.searchType }
     }).then(search_logs => {
-      return search_logs.map(sl => Ember.Object.create(sl));
+      return search_logs.map(sl => EmberObject.create(sl));
     });
   },
 

@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { defaultHomepage } from "discourse/lib/utilities";
 let popstateFired = false;
 const supportsHistoryState = window.history && "state" in window.history;
@@ -9,9 +10,9 @@ const popstateCallbacks = [];
 
   @class DiscourseLocation
   @namespace Discourse
-  @extends Ember.Object
+  @extends @ember/object
 */
-const DiscourseLocation = Ember.Object.extend({
+const DiscourseLocation = EmberObject.extend({
   init() {
     this._super(...arguments);
 

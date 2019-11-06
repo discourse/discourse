@@ -1,3 +1,6 @@
+import { isEmpty } from "@ember/utils";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import WatchedWord from "admin/models/watched-word";
 import {
   default as computed,
@@ -5,7 +8,7 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["watched-word-form"],
   formSubmitted: false,
   actionKey: null,
@@ -21,7 +24,7 @@ export default Ember.Component.extend({
 
   @observes("word")
   removeMessage() {
-    if (this.showMessage && !Ember.isEmpty(this.word)) {
+    if (this.showMessage && !isEmpty(this.word)) {
       this.set("showMessage", false);
     }
   },
@@ -63,7 +66,7 @@ export default Ember.Component.extend({
               message: I18n.t("admin.watched_words.form.success")
             });
             this.action(WatchedWord.create(result));
-            Ember.run.schedule("afterRender", () =>
+            schedule("afterRender", () =>
               this.element.querySelector(".watched-word-input").focus()
             );
           })
@@ -85,7 +88,7 @@ export default Ember.Component.extend({
 
   @on("didInsertElement")
   _init() {
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       $(this.element.querySelector(".watched-word-input")).keydown(e => {
         if (e.keyCode === 13) {
           this.send("submit");

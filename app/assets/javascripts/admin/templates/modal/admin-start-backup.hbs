@@ -1,5 +1,12 @@
 {{#d-modal-body title="admin.backups.operations.backup.confirm"}}
-  <button {{action "startBackupWithUploads"}} class="btn btn-primary">{{i18n 'yes_value'}}</button>
-  <button {{action "startBackupWithoutUploads"}} class="btn">{{i18n 'admin.backups.operations.backup.without_uploads'}}</button>
-  <button {{action "cancel"}} class="btn">{{i18n 'no_value'}}</button>
+  {{d-button
+    class="btn-primary"
+    action=(action "startBackupWithUploads")
+    label="yes_value"}}
+  {{d-button
+    action=(action "startBackupWithoutUploads")
+    label="admin.backups.operations.backup.without_uploads"}}
+  {{d-button
+    action=(action "cancel")
+    label="no_value"}}
 {{/d-modal-body}}

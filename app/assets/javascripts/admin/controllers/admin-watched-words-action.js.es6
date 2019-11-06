@@ -1,13 +1,17 @@
+import { or } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 import WatchedWord from "admin/models/watched-word";
 import { ajax } from "discourse/lib/ajax";
 import { fmt } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   actionNameKey: null,
-  adminWatchedWords: Ember.inject.controller(),
-  showWordsList: Ember.computed.or(
+  adminWatchedWords: inject(),
+  showWordsList: or(
     "adminWatchedWords.filtered",
     "adminWatchedWords.showWords"
   ),
@@ -49,7 +53,7 @@ export default Ember.Controller.extend({
       if (a) {
         a.words.unshiftObject(arg);
         a.incrementProperty("count");
-        Ember.run.schedule("afterRender", () => {
+        schedule("afterRender", () => {
           // remove from other actions lists
           let match = null;
           this.get("adminWatchedWords.model").forEach(action => {

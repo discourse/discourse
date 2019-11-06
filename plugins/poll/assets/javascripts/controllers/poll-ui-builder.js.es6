@@ -1,10 +1,11 @@
+import Controller from "@ember/controller";
 import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
 import InputValidation from "discourse/models/input-validation";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   regularPollType: "regular",
   numberPollType: "number",
   multiplePollType: "multiple",
@@ -228,7 +229,7 @@ export default Ember.Controller.extend({
       });
     }
 
-    output += "[/poll]";
+    output += "[/poll]\n";
     return output;
   },
 

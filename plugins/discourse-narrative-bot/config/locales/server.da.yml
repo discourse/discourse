@@ -111,15 +111,6 @@ da:
       random_mention:
         reply: |-
           Hej! For at finde ud af, hvad jeg kan gøre, skal du sige `@ %{discobot_username} %{help_trigger}`.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Gør en tilfældig, god gerning, uden at forvente belønning, i vished om at en dag vil nogen måske gøre det samme for dig._ &mdash; Prinsesse Diana
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Det kan du stole på
       do_not_understand:
         first_response: |-
           Hej tak for svaret!

@@ -1,3 +1,7 @@
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { equal, and, or, not } from "@ember/object/computed";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -9,6 +13,7 @@ import { postUrl } from "discourse/lib/utilities";
 import { cookAsync } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
+import { Promise } from "rsvp";
 
 const Post = RestModel.extend({
   // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
@@ -35,13 +40,13 @@ const Post = RestModel.extend({
     }
   },
 
-  new_user: Ember.computed.equal("trust_level", 0),
-  firstPost: Ember.computed.equal("post_number", 1),
+  new_user: equal("trust_level", 0),
+  firstPost: equal("post_number", 1),
 
   // Posts can show up as deleted if the topic is deleted
-  deletedViaTopic: Ember.computed.and("firstPost", "topic.deleted_at"),
-  deleted: Ember.computed.or("deleted_at", "deletedViaTopic"),
-  notDeleted: Ember.computed.not("deleted"),
+  deletedViaTopic: and("firstPost", "topic.deleted_at"),
+  deleted: or("deleted_at", "deletedViaTopic"),
+  notDeleted: not("deleted"),
 
   @computed("name", "username")
   showName(name, username) {
@@ -91,7 +96,7 @@ const Post = RestModel.extend({
 
   @computed("link_counts.@each.internal")
   internalLinks() {
-    if (Ember.isEmpty(this.link_counts)) return null;
+    if (isEmpty(this.link_counts)) return null;
 
     return this.link_counts.filterBy("internal").filterBy("title");
   },
@@ -226,7 +231,7 @@ const Post = RestModel.extend({
       });
     }
 
-    return promise || Ember.RSVP.Promise.resolve();
+    return promise || Promise.resolve();
   },
 
   /**
@@ -279,7 +284,7 @@ const Post = RestModel.extend({
         if (key === "reply_to_user" && value && oldValue) {
           skip =
             value.username === oldValue.username ||
-            Ember.get(value, "username") === Ember.get(oldValue, "username");
+            get(value, "username") === get(oldValue, "username");
         }
 
         if (!skip) {
@@ -346,7 +351,7 @@ const Post = RestModel.extend({
 Post.reopenClass({
   munge(json) {
     if (json.actions_summary) {
-      const lookup = Ember.Object.create();
+      const lookup = EmberObject.create();
 
       // this area should be optimized, it is creating way too many objects per post
       json.actions_summary = json.actions_summary.map(a => {
@@ -394,7 +399,7 @@ Post.reopenClass({
 
   loadRevision(postId, version) {
     return ajax(`/posts/${postId}/revisions/${version}.json`).then(result =>
-      Ember.Object.create(result)
+      EmberObject.create(result)
     );
   },
 

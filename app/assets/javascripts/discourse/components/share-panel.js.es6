@@ -1,13 +1,17 @@
+import { isEmpty } from "@ember/utils";
+import { alias } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import { escapeExpression } from "discourse/lib/utilities";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import Sharing from "discourse/lib/sharing";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: null,
 
-  type: Ember.computed.alias("panel.model.type"),
+  type: alias("panel.model.type"),
 
-  topic: Ember.computed.alias("panel.model.topic"),
+  topic: alias("panel.model.topic"),
 
   @computed
   sources() {
@@ -24,7 +28,7 @@ export default Ember.Component.extend({
   shareUrl(forcedShareUrl, shareUrl) {
     shareUrl = forcedShareUrl || shareUrl;
 
-    if (Ember.isEmpty(shareUrl)) {
+    if (isEmpty(shareUrl)) {
       return;
     }
 
@@ -46,7 +50,7 @@ export default Ember.Component.extend({
       this.element.querySelector(".topic-share-url-for-touch a")
     );
 
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       if (!this.capabilities.touch) {
         $linkForTouch.parent().remove();
 

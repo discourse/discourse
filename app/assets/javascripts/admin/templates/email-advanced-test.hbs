@@ -3,7 +3,9 @@
 <div class='email-advanced-test'>
   <label for="email">{{i18n 'admin.email.advanced_test.email'}}</label>
   {{textarea name="email" value=email class="email-body"}}
-  <button class='btn' {{action "run"}}>{{i18n 'admin.email.advanced_test.run'}}</button>
+  {{d-button
+    action=(action "run")
+    label="admin.email.advanced_test.run"}}
 </div>
 
 {{#conditional-loading-spinner condition=loading}}

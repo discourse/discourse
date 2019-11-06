@@ -1,3 +1,6 @@
+import { makeArray } from "discourse-common/lib/helpers";
+import { empty, notEmpty, match } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { url } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -7,10 +10,10 @@ import { THEMES, COMPONENTS } from "admin/models/theme";
 
 const THEME_UPLOAD_VAR = 2;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   downloadUrl: url("model.id", "/admin/customize/themes/%@/export"),
   previewUrl: url("model.id", "/admin/themes/%@/preview"),
-  addButtonDisabled: Ember.computed.empty("selectedChildThemeId"),
+  addButtonDisabled: empty("selectedChildThemeId"),
   editRouteName: "adminCustomizeThemes.edit",
 
   @computed("model.editedFields")
@@ -79,14 +82,14 @@ export default Ember.Controller.extend({
     return settings.map(setting => ThemeSettings.create(setting));
   },
 
-  hasSettings: Ember.computed.notEmpty("settings"),
+  hasSettings: notEmpty("settings"),
 
   @computed("model.translations")
   translations(translations) {
     return translations.map(setting => ThemeSettings.create(setting));
   },
 
-  hasTranslations: Ember.computed.notEmpty("translations"),
+  hasTranslations: notEmpty("translations"),
 
   @computed("model.remoteError", "updatingRemote")
   showRemoteError(errorMessage, updating) {
@@ -124,8 +127,8 @@ export default Ember.Controller.extend({
         });
 
         this.get("parentController.model.content").forEach(theme => {
-          const children = Ember.makeArray(theme.get("childThemes"));
-          const rawChildren = Ember.makeArray(theme.get("child_themes"));
+          const children = makeArray(theme.get("childThemes"));
+          const rawChildren = makeArray(theme.get("child_themes"));
           const index = children ? children.indexOf(model) : -1;
           if (index > -1) {
             children.splice(index, 1);
@@ -147,10 +150,7 @@ export default Ember.Controller.extend({
       "scss"
     );
   },
-  sourceIsHttp: Ember.computed.match(
-    "model.remote_theme.remote_url",
-    /^http(s)?:\/\//
-  ),
+  sourceIsHttp: match("model.remote_theme.remote_url", /^http(s)?:\/\//),
   actions: {
     updateToLatest() {
       this.set("updatingRemote", true);

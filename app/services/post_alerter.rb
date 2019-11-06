@@ -221,7 +221,7 @@ class PostAlerter
     group_id = post.topic
       .topic_allowed_groups
       .where(group_id: user.groups.pluck(:id))
-      .pluck(:group_id).first
+      .pluck_first(:group_id)
 
     stat = stats.find { |s| s[:group_id] == group_id }
     return unless stat && stat[:inbox_count] > 0
@@ -453,7 +453,7 @@ class PostAlerter
     if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
       clients = user.user_api_keys
         .where("('push' = ANY(scopes) OR 'notifications' = ANY(scopes))")
-        .where("push_url IS NOT NULL")
+        .where("push_url IS NOT NULL AND push_url <> ''")
         .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
         .where("revoked_at IS NULL")
         .pluck(:client_id, :push_url)

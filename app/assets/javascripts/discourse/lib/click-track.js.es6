@@ -1,7 +1,9 @@
+import { later } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseURL from "discourse/lib/url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { selectedText } from "discourse/lib/utilities";
+import { Promise } from "rsvp";
 
 export function isValidLink($link) {
   // Do not track:
@@ -95,7 +97,7 @@ export default {
       }
     }
 
-    let trackPromise = Ember.RSVP.resolve();
+    let trackPromise = Promise.resolve();
     if (tracking) {
       if (!Ember.testing && navigator.sendBeacon) {
         const data = new FormData();
@@ -134,7 +136,7 @@ export default {
           $link.attr("href", null);
           $link.data("auto-route", true);
 
-          Ember.run.later(() => {
+          later(() => {
             $link.removeClass("no-href");
             $link.attr("href", $link.data("href"));
             $link.data("href", null);

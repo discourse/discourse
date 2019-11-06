@@ -575,6 +575,9 @@ users:
     default: 730
     min: 0
     max: 3650
+  user_selected_primary_groups:
+    default: false
+    client: true
 
 groups:
   enable_group_directory:
@@ -969,6 +972,7 @@ email:
       - none
       - X-Spam-Flag
       - X-Spam-Status
+      - X-SES-Spam-Verdict
   email_prefix: ""
   email_site_title: ""
   disable_emails:
@@ -1044,10 +1048,16 @@ email:
   email_custom_css:
     default: ""
     hidden: true
+  email_custom_css_compiled:
+    default: ""
+    hidden: true
   email_total_attachment_size_limit_kb:
     default: 0
     max: 51200
   post_excerpts_in_emails: false
+  raw_email_max_length: 220000
+  raw_rejected_email_max_length: 4000
+  delete_rejected_email_after_days: 90
 
 files:
   max_image_size_kb:
@@ -1201,8 +1211,11 @@ files:
     default: 5
     min: 0
     max: 20
-  decompressed_file_max_size_mb:
+  decompressed_theme_max_file_size_mb:
     default: 1000
+    hidden: true
+  decompressed_backup_max_file_size_mb:
+    default: 100000
     hidden: true
 
 trust:
@@ -1727,6 +1740,7 @@ uncategorized:
   slug_generation_method:
     default: "ascii"
     enum: "SlugSetting"
+    client: true
     locale_default:
       ja: "none"
       zh_CN: "none"
@@ -1853,6 +1867,10 @@ uncategorized:
 
   delete_drafts_older_than_n_days:
     default: 180
+
+  backup_drafts_to_pm_length:
+    default: 0
+    hidden: true
 
   tos_topic_id:
     default: -1
@@ -2005,6 +2023,19 @@ user_preferences:
     type: category_list
     default: ""
 
+  default_tags_watching:
+    type: tag_list
+    default: ""
+  default_tags_tracking:
+    type: tag_list
+    default: ""
+  default_tags_muted:
+    type: tag_list
+    default: ""
+  default_tags_watching_first_post:
+    type: tag_list
+    default: ""
+
   default_text_size:
     type: enum
     default: normal
@@ -2025,6 +2056,11 @@ api:
     default: 30
   retry_web_hook_events:
     default: false
+  api_key_last_used_epoch: 
+    default: "" # Value is added in a migration
+    hidden: true
+  revoke_api_keys_days:
+    default: 180
 
 user_api:
   allow_user_api_keys:
@@ -2085,6 +2121,7 @@ tags:
     default: false
     refresh: true
   max_tags_in_filter_list:
+    client: true
     default: 30
     min: 1
     refresh: true

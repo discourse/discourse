@@ -1,9 +1,11 @@
+import { isEmpty } from "@ember/utils";
 import InputValidation from "discourse/models/input-validation";
 import debounce from "discourse/lib/debounce";
 import { setting } from "discourse/lib/computed";
 import { default as computed } from "ember-addons/ember-computed-decorators";
+import Mixin from "@ember/object/mixin";
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   uniqueUsernameValidation: null,
 
   maxUsernameLength: setting("max_username_length"),
@@ -14,7 +16,7 @@ export default Ember.Mixin.create({
     Discourse.User.checkUsername(null, this.accountEmail).then(result => {
       if (
         result.suggestion &&
-        (Ember.isEmpty(this.accountUsername) ||
+        (isEmpty(this.accountUsername) ||
           this.accountUsername === this.get("authOptions.username"))
       ) {
         this.setProperties({
@@ -37,7 +39,7 @@ export default Ember.Mixin.create({
     }
 
     // If blank, fail without a reason
-    if (Ember.isEmpty(accountUsername)) {
+    if (isEmpty(accountUsername)) {
       return InputValidation.create({ failed: true });
     }
 
@@ -67,7 +69,7 @@ export default Ember.Mixin.create({
 
   shouldCheckUsernameAvailability() {
     return (
-      !Ember.isEmpty(this.accountUsername) &&
+      !isEmpty(this.accountUsername) &&
       this.accountUsername.length >= this.minUsernameLength
     );
   },

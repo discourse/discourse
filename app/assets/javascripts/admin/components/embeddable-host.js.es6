@@ -1,26 +1,30 @@
+import { isEmpty } from "@ember/utils";
+import { or } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import computed from "ember-addons/ember-computed-decorators";
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Component.extend(bufferedProperty("host"), {
+export default Component.extend(bufferedProperty("host"), {
   editToggled: false,
   tagName: "tr",
   categoryId: null,
 
-  editing: Ember.computed.or("host.isNew", "editToggled"),
+  editing: or("host.isNew", "editToggled"),
 
   @on("didInsertElement")
   @observes("editing")
   _focusOnInput() {
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       this.element.querySelector(".host-name").focus();
     });
   },
 
   @computed("buffered.host", "host.isSaving")
   cantSave(host, isSaving) {
-    return isSaving || Ember.isEmpty(host);
+    return isSaving || isEmpty(host);
   },
 
   actions: {

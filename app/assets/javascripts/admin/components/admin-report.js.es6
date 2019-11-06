@@ -1,3 +1,8 @@
+import { makeArray } from "discourse-common/lib/helpers";
+import { alias, or, and, reads, equal, notEmpty } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
+import Component from "@ember/component";
 import ReportLoader from "discourse/lib/reports-loader";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
@@ -34,7 +39,7 @@ function collapseWeekly(data, average) {
   return aggregate;
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ["isEnabled", "isLoading", "dasherizedDataSourceName"],
   classNames: ["admin-report"],
   isEnabled: true,
@@ -54,12 +59,9 @@ export default Ember.Component.extend({
   showHeader: true,
   showTitle: true,
   showFilteringUI: false,
-  showDatesOptions: Ember.computed.alias("model.dates_filtering"),
-  showRefresh: Ember.computed.or(
-    "showDatesOptions",
-    "model.available_filters.length"
-  ),
-  shouldDisplayTrend: Ember.computed.and("showTrend", "model.prev_period"),
+  showDatesOptions: alias("model.dates_filtering"),
+  showRefresh: or("showDatesOptions", "model.available_filters.length"),
+  shouldDisplayTrend: and("showTrend", "model.prev_period"),
 
   init() {
     this._super(...arguments);
@@ -67,8 +69,8 @@ export default Ember.Component.extend({
     this._reports = [];
   },
 
-  startDate: Ember.computed.reads("filters.startDate"),
-  endDate: Ember.computed.reads("filters.endDate"),
+  startDate: reads("filters.startDate"),
+  endDate: reads("filters.endDate"),
 
   didReceiveAttrs() {
     this._super(...arguments);
@@ -80,16 +82,12 @@ export default Ember.Component.extend({
     }
   },
 
-  showError: Ember.computed.or(
-    "showTimeoutError",
-    "showExceptionError",
-    "showNotFoundError"
-  ),
-  showNotFoundError: Ember.computed.equal("model.error", "not_found"),
-  showTimeoutError: Ember.computed.equal("model.error", "timeout"),
-  showExceptionError: Ember.computed.equal("model.error", "exception"),
+  showError: or("showTimeoutError", "showExceptionError", "showNotFoundError"),
+  showNotFoundError: equal("model.error", "not_found"),
+  showTimeoutError: equal("model.error", "timeout"),
+  showExceptionError: equal("model.error", "exception"),
 
-  hasData: Ember.computed.notEmpty("model.data"),
+  hasData: notEmpty("model.data"),
 
   @computed("dataSourceName", "model.type")
   dasherizedDataSourceName(dataSourceName, type) {
@@ -111,7 +109,7 @@ export default Ember.Component.extend({
   displayedModes(currentMode, reportModes, forcedModes) {
     const modes = forcedModes ? forcedModes.split(",") : reportModes;
 
-    return Ember.makeArray(modes).map(mode => {
+    return makeArray(modes).map(mode => {
       const base = `btn-default mode-btn ${mode}`;
       const cssClass = currentMode === mode ? `${base} is-current` : base;
 
@@ -311,7 +309,7 @@ export default Ember.Component.extend({
 
     this.setProperties({ isLoading: true, rateLimitationString: null });
 
-    Ember.run.next(() => {
+    next(() => {
       let payload = this._buildPayload(["prev_period"]);
 
       const callback = response => {
@@ -367,12 +365,12 @@ export default Ember.Component.extend({
   _buildOptions(mode) {
     if (mode === "table") {
       const tableOptions = JSON.parse(JSON.stringify(TABLE_OPTIONS));
-      return Ember.Object.create(
+      return EmberObject.create(
         Object.assign(tableOptions, this.get("reportOptions.table") || {})
       );
     } else {
       const chartOptions = JSON.parse(JSON.stringify(CHART_OPTIONS));
-      return Ember.Object.create(
+      return EmberObject.create(
         Object.assign(chartOptions, this.get("reportOptions.chart") || {})
       );
     }

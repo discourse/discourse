@@ -1,3 +1,4 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import Composer from "discourse/models/composer";
 import showModal from "discourse/lib/show-modal";
 import {
@@ -7,7 +8,7 @@ import {
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import PermissionType from "discourse/models/permission-type";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   navMode: "latest",
 
   queryParams,
@@ -84,6 +85,8 @@ export default Discourse.Route.extend({
       );
       if (parentCategorySlug) {
         filter = `tags/c/${parentCategorySlug}/${categorySlug}/${tagId}/l/${topicFilter}`;
+      } else if (this.noSubcategories) {
+        filter = `tags/c/${categorySlug}/none/${tagId}/l/${topicFilter}`;
       } else {
         filter = `tags/c/${categorySlug}/${tagId}/l/${topicFilter}`;
       }
@@ -161,7 +164,8 @@ export default Discourse.Route.extend({
       category: this.category,
       filterMode: this.filterMode,
       navMode: this.navMode,
-      tagNotification: this.tagNotification
+      tagNotification: this.tagNotification,
+      noSubcategories: this.noSubcategories
     });
   },
 

@@ -1,8 +1,10 @@
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   categoryNameKey: null,
-  adminSiteSettings: Ember.inject.controller(),
+  adminSiteSettings: inject(),
 
   @computed("adminSiteSettings.visibleSiteSettings", "categoryNameKey")
   category(categories, nameKey) {

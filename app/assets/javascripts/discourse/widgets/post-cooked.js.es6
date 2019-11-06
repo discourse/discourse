@@ -165,7 +165,13 @@ export default class PostCooked {
 
       ajax(`/posts/by_number/${topicId}/${postId}`)
         .then(result => {
+          const post = this.decoratorHelper.getModel();
+          const quotedPosts = post.quoted || {};
+          quotedPosts[result.id] = result;
+          post.set("quoted", quotedPosts);
+
           const div = $("<div class='expanded-quote'></div>");
+          div.data("post-id", result.id);
           div.html(result.cooked);
           _decorators.forEach(cb => cb(div, this.decoratorHelper));
 

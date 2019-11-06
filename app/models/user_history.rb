@@ -97,7 +97,10 @@ class UserHistory < ActiveRecord::Base
       web_hook_deactivate: 76,
       change_theme_setting: 77,
       disable_theme_component: 78,
-      enable_theme_component: 79
+      enable_theme_component: 79,
+      api_key_create: 80,
+      api_key_update: 81,
+      api_key_destroy: 82,
     )
   end
 
@@ -171,7 +174,10 @@ class UserHistory < ActiveRecord::Base
       :embeddable_host_destroy,
       :change_theme_setting,
       :disable_theme_component,
-      :enable_theme_component
+      :enable_theme_component,
+      :api_key_create,
+      :api_key_update,
+      :api_key_destroy,
     ]
   end
 

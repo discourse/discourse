@@ -1,7 +1,9 @@
+import { isEmpty } from "@ember/utils";
+import Component from "@ember/component";
 import computed from "ember-addons/ember-computed-decorators";
 import DiscourseURL from "discourse/lib/url";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "section",
   classNameBindings: [
     ":category-boxes",
@@ -11,12 +13,12 @@ export default Ember.Component.extend({
 
   @computed("categories.[].uploaded_logo.url")
   anyLogos() {
-    return this.categories.any(c => !Ember.isEmpty(c.get("uploaded_logo.url")));
+    return this.categories.any(c => !isEmpty(c.get("uploaded_logo.url")));
   },
 
   @computed("categories.[].subcategories")
   hasSubcategories() {
-    return this.categories.any(c => !Ember.isEmpty(c.get("subcategories")));
+    return this.categories.any(c => !isEmpty(c.get("subcategories")));
   },
 
   click(e) {

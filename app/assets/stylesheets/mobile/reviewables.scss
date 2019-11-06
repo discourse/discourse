@@ -5,6 +5,7 @@
     .reviewable-list {
       order: 2;
       width: 100%;
+      padding-bottom: 4em;
     }
 
     .reviewable-filters {
@@ -44,8 +45,9 @@
 }
 
 .reviewable-contents {
+  .reviewable-post-header,
   .post-body {
-    max-width: 295px;
+    max-width: 100%;
 
     p {
       overflow-x: scroll;

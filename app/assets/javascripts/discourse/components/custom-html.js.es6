@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { getCustomHTML } from "discourse/helpers/custom-html";
 import { getOwner } from "discourse-common/lib/get-owner";
 
-export default Ember.Component.extend({
+export default Component.extend({
   triggerAppEvent: null,
 
   init() {

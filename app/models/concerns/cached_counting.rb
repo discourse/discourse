@@ -58,7 +58,7 @@ module CachedCounting
     end
 
     def request_id(query_params, retries = 0)
-      id = where(query_params).pluck(:id).first
+      id = where(query_params).pluck_first(:id)
       id ||= create!(query_params.merge(count: 0)).id
     rescue # primary key violation
       if retries == 0

@@ -1,3 +1,9 @@
+import { throttle } from "@ember/runloop";
+import { next } from "@ember/runloop";
+import { debounce } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
+import { later } from "@ember/runloop";
+import Component from "@ember/component";
 import userSearch from "discourse/lib/user-search";
 import {
   default as computed,
@@ -53,7 +59,7 @@ export function addComposerUploadHandler(extensions, method) {
   });
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
 
   uploadProgress: 0,
@@ -182,7 +188,7 @@ export default Ember.Component.extend({
         transformComplete: v => v.username || v.name,
         afterComplete() {
           // ensures textarea scroll position is correct
-          Ember.run.scheduleOnce("afterRender", () => $input.blur().focus());
+          scheduleOnce("afterRender", () => $input.blur().focus());
         }
       });
     }
@@ -191,22 +197,8 @@ export default Ember.Component.extend({
       this._initInputPreviewSync($input, $preview);
     } else {
       $input.on("scroll", () =>
-        Ember.run.throttle(
-          this,
-          this._syncEditorAndPreviewScroll,
-          $input,
-          $preview,
-          20
-        )
+        throttle(this, this._syncEditorAndPreviewScroll, $input, $preview, 20)
       );
-    }
-
-    if (!this.site.mobileView) {
-      $preview
-        .off("touchstart mouseenter", "img")
-        .on("touchstart mouseenter", "img", () => {
-          this._placeImageScaleButtons($preview);
-        });
     }
 
     // Focus on the body unless we have a title
@@ -323,7 +315,7 @@ export default Ember.Component.extend({
       this.appEvents.on(event, this, this._resetShouldBuildScrollMap);
     });
 
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       $input.on("touchstart mouseenter", () => {
         if (!$preview.is(":visible")) return;
         $preview.off("scroll");
@@ -349,7 +341,7 @@ export default Ember.Component.extend({
       this.set("shouldBuildScrollMap", false);
     }
 
-    Ember.run.throttle(this, $callback, $input, $preview, this.scrollMap, 20);
+    throttle(this, $callback, $input, $preview, this.scrollMap, 20);
   },
 
   _teardownInputPreviewSync() {
@@ -566,7 +558,7 @@ export default Ember.Component.extend({
   },
 
   _warnMentionedGroups($preview) {
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       var found = this.warnedGroupMentions || [];
       $preview.find(".mention-group.notify").each((idx, e) => {
         const $e = $(e);
@@ -590,16 +582,11 @@ export default Ember.Component.extend({
   _warnCannotSeeMention($preview) {
     const composerDraftKey = this.get("composer.draftKey");
 
-    if (
-      composerDraftKey === Composer.CREATE_TOPIC ||
-      composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY ||
-      composerDraftKey === Composer.REPLY_AS_NEW_TOPIC_KEY ||
-      composerDraftKey === Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY
-    ) {
+    if (composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
       return;
     }
 
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       let found = this.warnedCannotSeeMentions || [];
 
       $preview.find(".mention.cannot-see").each((idx, e) => {
@@ -609,7 +596,7 @@ export default Ember.Component.extend({
         if (found.indexOf(name) === -1) {
           // add a delay to allow for typing, so you don't open the warning right away
           // previously we would warn after @bob even if you were about to mention @bob2
-          Ember.run.later(
+          later(
             this,
             () => {
               if (
@@ -630,7 +617,7 @@ export default Ember.Component.extend({
   },
 
   _resetUpload(removePlaceholder) {
-    Ember.run.next(() => {
+    next(() => {
       if (this._validUploads > 0) {
         this._validUploads--;
       }
@@ -849,7 +836,11 @@ export default Ember.Component.extend({
           return;
         }
 
-        const replacement = match.replace(imageScaleRegex, `$1,${scale}%$3`);
+        const replacement = match.replace(
+          imageScaleRegex,
+          `![$1|$2, ${scale}%]($4)`
+        );
+
         this.appEvents.trigger(
           "composer:replace-text",
           matchingPlaceholder[index],
@@ -864,11 +855,18 @@ export default Ember.Component.extend({
     // regex matches only upload placeholders with size defined,
     // which is required for resizing
 
-    // original string `![28|690x226,5%](upload://ceEfx3vO7bx7Cecv2co1SrnoTpW.png)`
-    // match 1 `![28|690x226`
-    // match 2 `5`
-    // match 3 `](upload://ceEfx3vO7bx7Cecv2co1SrnoTpW.png)`
-    const imageScaleRegex = /(!\[(?:\S*?(?=\|)\|)*?(?:\d{1,6}x\d{1,6})+?)(?:,?(\d{1,3})?%?)?(\]\(upload:\/\/\S*?\))/g;
+    // original string `![image|690x220, 50%](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
+    // group 1 `image`
+    // group 2 `690x220`
+    // group 3 `, 50%`
+    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png'
+    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
+
+    // Notes:
+    // Group 3 is optional. group 4 can match images with or without a markdown title.
+    // All matches are whitespace tolerant as long it's still valid markdown
+
+    const imageScaleRegex = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?\]\((upload:\/\/.*?)\)/g;
 
     // wraps previewed upload markdown in a codeblock in its own class to keep a track
     // of indexes later on to replace the correct upload placeholder in the composer
@@ -909,9 +907,9 @@ export default Ember.Component.extend({
   @on("willDestroyElement")
   _composerClosed() {
     this.appEvents.trigger("composer:will-close");
-    Ember.run.next(() => {
+    next(() => {
       // need to wait a bit for the "slide down" transition of the composer
-      Ember.run.later(
+      later(
         () => this.appEvents.trigger("composer:closed"),
         Ember.testing ? 0 : 400
       );
@@ -932,8 +930,6 @@ export default Ember.Component.extend({
   },
 
   showPreview() {
-    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
-    this._placeImageScaleButtons($preview);
     this.send("togglePreview");
   },
 
@@ -984,7 +980,7 @@ export default Ember.Component.extend({
       // Paint mentions
       const unseenMentions = linkSeenMentions($preview, this.siteSettings);
       if (unseenMentions.length) {
-        Ember.run.debounce(
+        debounce(
           this,
           this._renderUnseenMentions,
           $preview,
@@ -999,7 +995,7 @@ export default Ember.Component.extend({
       // Paint category hashtags
       const unseenCategoryHashtags = linkSeenCategoryHashtags($preview);
       if (unseenCategoryHashtags.length) {
-        Ember.run.debounce(
+        debounce(
           this,
           this._renderUnseenCategoryHashtags,
           $preview,
@@ -1012,7 +1008,7 @@ export default Ember.Component.extend({
       if (this.siteSettings.tagging_enabled) {
         const unseenTagHashtags = linkSeenTagHashtags($preview);
         if (unseenTagHashtags.length) {
-          Ember.run.debounce(
+          debounce(
             this,
             this._renderUnseenTagHashtags,
             $preview,
@@ -1023,7 +1019,7 @@ export default Ember.Component.extend({
       }
 
       // Paint oneboxes
-      Ember.run.debounce(
+      debounce(
         this,
         () => {
           const oneboxes = {};
@@ -1082,9 +1078,7 @@ export default Ember.Component.extend({
         );
       }
 
-      if (this.site.mobileView && $preview.is(":visible")) {
-        this._placeImageScaleButtons($preview);
-      }
+      this._placeImageScaleButtons($preview);
 
       this.trigger("previewRefreshed", $preview);
       this.afterRefresh($preview);

@@ -1,15 +1,16 @@
+import { alias } from "@ember/object/computed";
+import { later } from "@ember/runloop";
+import Controller from "@ember/controller";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   loading: false,
   errorMessage: null,
   successMessage: null,
-  backupEnabled: Ember.computed.alias("model.second_factor_backup_enabled"),
-  remainingCodes: Ember.computed.alias(
-    "model.second_factor_remaining_backup_codes"
-  ),
+  backupEnabled: alias("model.second_factor_backup_enabled"),
+  remainingCodes: alias("model.second_factor_remaining_backup_codes"),
   backupCodes: null,
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
@@ -101,7 +102,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   _hideCopyMessage() {
-    Ember.run.later(
+    later(
       () => this.setProperties({ successMessage: null, errorMessage: null }),
       2000
     );

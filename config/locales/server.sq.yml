@@ -834,7 +834,7 @@ sq:
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
-    delete_drafts_older_than_n_days: Delete drafts older than (n) days.
+    delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     enable_emoji: "Enable emoji"
@@ -933,11 +933,6 @@ sq:
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
   invite_password_instructions:
     subject_template: "Vendos fjalëkalimin për llogarinë tek %{site_name}"
-  admin_confirmation_mailer:
-    text_body_template: |
-      Ju lutemi të konfirmoni që dëshironi të shtoni **%{target_username}** si një administrator në këtë faqe.
-
-      [Konfirmo llogarinë e administratorit](%{admin_confirm_url})
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
     inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](%{base_path}/guidelines)."
@@ -1026,26 +1021,6 @@ sq:
     only_reply_by_email: "Përgjigjju këtij email-i për të vazhduar."
     visit_link_to_respond: "[Shiko Temën](%{base_url}%{url}) për tu përgjigjur."
     posted_by: "Postuar nga %{username} më %{post_date}"
-    invited_to_private_message_body: |
-      %{username} ju ftoi tek mesazhi
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      në
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} ju ftoi në një bisedë
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      tek
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       text_body_template: |
         %{header_instructions}

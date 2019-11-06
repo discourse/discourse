@@ -1,3 +1,6 @@
+import { makeArray } from "discourse-common/lib/helpers";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { setting } from "discourse/lib/computed";
 import computed from "ember-addons/ember-computed-decorators";
 import AdminDashboard from "admin/models/admin-dashboard";
@@ -6,16 +9,14 @@ import PeriodComputationMixin from "admin/mixins/period-computation";
 
 function staticReport(reportType) {
   return Ember.computed("reports.[]", function() {
-    return Ember.makeArray(this.reports).find(
-      report => report.type === reportType
-    );
+    return makeArray(this.reports).find(report => report.type === reportType);
   });
 }
 
-export default Ember.Controller.extend(PeriodComputationMixin, {
+export default Controller.extend(PeriodComputationMixin, {
   isLoading: false,
   dashboardFetchedAt: null,
-  exceptionController: Ember.inject.controller("exception"),
+  exceptionController: inject("exception"),
   logSearchQueriesEnabled: setting("log_search_queries"),
   basePath: Discourse.BaseUri,
 
@@ -93,7 +94,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
           this.setProperties({
             dashboardFetchedAt: new Date(),
             model: adminDashboardModel,
-            reports: Ember.makeArray(adminDashboardModel.reports).map(x =>
+            reports: makeArray(adminDashboardModel.reports).map(x =>
               Report.create(x)
             )
           });

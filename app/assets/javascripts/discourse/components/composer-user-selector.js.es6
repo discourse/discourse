@@ -1,9 +1,11 @@
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   showSelector: true,
   shouldHide: false,
   defaultUsernameCount: 0,
@@ -75,7 +77,7 @@ export default Ember.Component.extend({
     toggleSelector() {
       this.set("showSelector", true);
 
-      Ember.run.schedule("afterRender", () => {
+      schedule("afterRender", () => {
         $(this.element)
           .find("input")
           .focus();
