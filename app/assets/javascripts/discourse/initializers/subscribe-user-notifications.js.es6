@@ -128,7 +128,7 @@ export default {
         Discourse.set("assetVersion", data)
       );
 
-      if (!ENV.environment !== "test") {
+      if (ENV.environment !== "test") {
         bus.subscribe(alertChannel(user), data => onNotification(data, user));
         initDesktopNotifications(bus, appEvents);
 

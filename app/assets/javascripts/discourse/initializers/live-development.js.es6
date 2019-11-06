@@ -44,7 +44,7 @@ export default {
     });
 
     // Useful to export this for debugging purposes
-    if (Discourse.Environment === "development" && !ENV.environment !== "test") {
+    if (Discourse.Environment === "development" && ENV.environment !== "test") {
       window.DiscourseURL = DiscourseURL;
     }
 
