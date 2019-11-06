@@ -1360,7 +1360,8 @@ export default Controller.extend(bufferedProperty("model"), {
             if (callback) {
               callback(this, data);
             } else {
-              Ember.Logger.warn("unknown topic bus message type", data);
+              // eslint-disable-next-line no-console
+              console.warn("unknown topic bus message type", data);
             }
           }
         }
