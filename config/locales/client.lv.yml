@@ -2283,16 +2283,13 @@ lv:
         none: "Šobrīd nav aktīvu API atslēgu."
         user: "Lietotājs"
         title: "API"
-        key: "API atslēga"
         created: Radīts
         generate: "Radīt"
-        regenerate: "Atkārtoti radīt"
         revoke: "Atsaukt"
-        confirm_regen: "Vai jūs esat drošs, ka vēlaties aizstāt šo API atslēgu ar jaunu?"
-        confirm_revoke: "Vai jūs esat drošs, ka vēlaties atsaukt šo atslēgu?"
-        info_html: "Jūsu API atslēga ļaus jums izveidot un atjaunināt tēmas, izmantojot JSON izsaukumus."
         all_users: "Visi lietotāji"
-        note_html: "Saglabājiet šo atslēgu <strong>slepenu</strong>, jo ikviens lietotājs, kam tā ir zināma, var izveidot jebkādus ierakstus ar jebkuru lietotāju kā autoru."
+        show_details: Detaļas
+        description: Apraksts
+        save: Saglabāt
       web_hooks:
         detailed_instruction: "Ja būs signāls par izvēlēto notikumu, uz norādīto URL tiks nosūtīts POST pieprasījums."
         create: "Izveidot"

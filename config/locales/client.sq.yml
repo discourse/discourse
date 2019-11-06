@@ -2028,16 +2028,13 @@ sq:
         none: "Për momentin, nuk ka çelësa API aktivë."
         user: "Përdorues"
         title: "API"
-        key: "API Key"
         created: Krijuar
         generate: "Gjenero"
-        regenerate: "Rigjenero"
         revoke: "Revoko"
-        confirm_regen: "Are you sure you want to replace that API Key with a new one?"
-        confirm_revoke: "Are you sure you want to revoke that key?"
-        info_html: "Çelësi juaj API ju lejon të krijoni dhe updejtoni tema nëpërmjet thirrjeve JSON."
         all_users: "Gjithë Përdoruesit"
-        note_html: "Mbaje këtë çelës <strong>sekret</strong>, të gjithë përdoruesit që e kanë mund të krijojnë postime me të. "
+        show_details: Detaje
+        description: Përshkrimi
+        save: Ruaj
       web_hooks:
         title: "Webhooks"
         save: "Ruaj"

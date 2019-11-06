@@ -2768,16 +2768,14 @@ hy:
         none: "Ակտիվ API Key այս պահին չկա:"
         user: "Օգտատեր"
         title: "API"
-        key: "API Key"
         created: Ստեղծված
+        updated: Թարմացված
         generate: "Գեներացնել"
-        regenerate: "Վերագեներացնել"
         revoke: "Հետ կանչել"
-        confirm_regen: "Դուք համոզվա՞ծ եք, որ ցանկանում եք փոխարինել այդ API Key-ն նորով:"
-        confirm_revoke: "Դուք համոզվա՞ծ եք, որ ցանկանում եք հետ կանչել այդ API Key-ն:"
-        info_html: "Ձեր API Key-ն թույլ կտա ստեղծել և թարմացնել թեմաներ՝ օգտագործելով JSON կանչեր:"
         all_users: "Բոլոր Օգտատերերը"
-        note_html: "Պահեք այս բանալին <strong>գաղտնի</strong>, բոլոր օգտատերերը, ովքեր ունեն այն, կարող են ստեղծել կամայական գրառումներ՝ որպես ցանկացած օգտատեր:"
+        show_details: Մանրամասներ
+        description: Նկարագրություն
+        save: Պահպանել
       web_hooks:
         title: "Webhook-ներ"
         none: "Այս պահին webhook-ներ չկան:"

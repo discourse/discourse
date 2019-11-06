@@ -3011,16 +3011,13 @@ da:
         none: "Der er ingen aktive API-nøgler i øjeblikket."
         user: "Bruger"
         title: "API"
-        key: "API-nøgle"
         created: Oprettet
         generate: "Generér"
-        regenerate: "Regenerér"
         revoke: "Tilbagekald"
-        confirm_regen: "Er du sikker på, at du ønsker at erstatte API-nøglen med en ny?"
-        confirm_revoke: "Er du sikker på, at du ønsker at tilbagekalde nøglen?"
-        info_html: "Din API-nøgle giver dig mulighed for at oprette og opdatere emner vha. JSON-kald."
         all_users: "Alle brugere"
-        note_html: "Hold denne nøgle <strong>hemmelig</strong>, alle brugere som har den kan oprette vilkårlige indlæg, som enhver bruger."
+        show_details: Detaljer
+        description: Beskrivelse
+        save: Gem
       web_hooks:
         title: "Webhooks"
         none: "Der er ingen webhooks i øjeblikket"

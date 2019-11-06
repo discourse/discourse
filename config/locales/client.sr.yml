@@ -1654,16 +1654,13 @@ sr:
         none: "Nema aktivnih API ključeva"
         user: "Korisnik"
         title: "API"
-        key: "API Ključ"
         created: Napravljeno
         generate: "Generiši"
-        regenerate: "Regeneriši"
         revoke: "Povuci"
-        confirm_regen: "Jeste li sigurni da želite zameniti taj API ključ sa novim?"
-        confirm_revoke: "Jeste li sigurni da želite povući taj ključ?"
-        info_html: "Vaš API ključ će vam dozvoliti da otvarate i nadograđujete teme koristeći JSON pozive."
         all_users: "Svi korisnici"
-        note_html: "Čuvajte ovaj ključ <strong>tajnim</strong>, svi korisnici koji ga imaju mogu stvarati proizvoljne poruke kao bilo koji korisnici."
+        show_details: Detalji
+        description: Opis
+        save: Sačuvaj
       web_hooks:
         save: "Sačuvaj"
         destroy: "Obriši"

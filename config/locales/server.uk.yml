@@ -2081,9 +2081,6 @@ uk:
       subject_template: "Повідомлення приховано через скарги спільноти, персонал повідомлено"
     welcome_user:
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
-    welcome_moderator:
-      title: "Ласкаво просимо модератор"
-      subject_template: "Вітаємо, ви зараз модератор!"
     welcome_invite:
       title: "Ласкаво просимо"
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
@@ -2749,6 +2746,11 @@ uk:
         few: '&quot;%{tag_name}&quot; обмежено такими категоріями: %{category_names}'
         many: '&quot;%{tag_name}&quot; обмежено такими категоріями: %{category_names}'
         other: '&quot;%{tag_name}&quot; обмежено такими категоріями: %{category_names}'
+    required_tags_from_group:
+      one: "Ви повинні включити принаймні тег %{count} %{tag_group_name}."
+      few: "Ви повинні включити принаймні теги %{count} %{tag_group_name}."
+      many: "Ви повинні включити принаймні теги %{count} %{tag_group_name}."
+      other: "Ви повинні включити принаймні %{count} %{tag_group_name} теги."
   rss_by_tag: "Теми з тегом %{tag}"
   finish_installation:
     congratulations: "Вітаємо, Ви встановили Дискурс!"
@@ -2919,6 +2921,14 @@ uk:
     user_merged: "%{username} був об'єднаний з цим обліковим записом"
     user_delete_self: "Вилучено самостійно з %{url}"
     webhook_deactivation_reason: "Ваш webhook автоматично відключений. Ми отримали декілька відповідей з помилками HTTP-статусу '%{status}'."
+    api_key:
+      automatic_revoked:
+        one: "Автоматично відкликано, останню активність більше, ніж %{count} день тому"
+        few: "Автоматично відкликано, останню активність більше, ніж %{count} днів тому"
+        many: "Автоматично відкликано, останню активність більше, ніж %{count} днів тому"
+        other: "Автоматично відкликано, остання активність більше, ніж %{count} днів тому"
+      revoked: Скасовано
+      restored: Відновлено
   reviewables:
     priorities:
       low: "Низький"

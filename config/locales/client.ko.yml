@@ -2436,16 +2436,13 @@ ko:
         none: "지금 활성화된 API 키가 없습니다."
         user: "사용자"
         title: "API"
-        key: "API 키"
         created: 생성일자
         generate: "API 키 생성"
-        regenerate: "API 키 재생성"
         revoke: "폐지"
-        confirm_regen: "API 키를 새로 발급 받으시겠습니까?"
-        confirm_revoke: "API 키를 폐지하겠습니까?"
-        info_html: "당신의 API 키는 JSON호출을 이용하여 토픽을 생성하거나 수정할 수 있습니다."
         all_users: "전체 유저"
-        note_html: "이 키의 <strong>보안에 특별히 주의</strong>하세요. 이 키를 아는 모든 사용자는 다른 사용자의 이름으로 글을 작성할 수 있습니다."
+        show_details: 세부 내용
+        description: 내용
+        save: 저장
       web_hooks:
         title: "Webhook"
         none: "현재 webhook이 없습니다."

@@ -1153,6 +1153,7 @@ id:
       api:
         user: "Pengguna"
         created: Dibuat
+        show_details: Detil
       web_hooks:
         destroy: "Hapus"
         active: "Aktif"

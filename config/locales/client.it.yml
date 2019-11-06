@@ -95,6 +95,12 @@ it:
         x_days:
           one: "%{count} giorno fa"
           other: "%{count}giorni fa"
+        x_months:
+          one: "%{count} mese fa"
+          other: "%{count} mesi fa"
+        x_years:
+          one: "%{count} anno fa"
+          other: "%{count} anni fa"
       later:
         x_days:
           one: "%{count} giorno dopo"
@@ -225,6 +231,7 @@ it:
       other: "{{count}} caratteri"
     related_messages:
       title: "Messaggi correlati"
+      see_all: 'Vedi <a href="%{path}">tutti i messaggi</a> di @ %{username} ...'
     suggested_topics:
       title: "Argomenti Suggeriti"
       pm_title: "Messaggi Suggeriti"
@@ -298,6 +305,8 @@ it:
     banner:
       close: "Nascondi questo annuncio."
       edit: "Modifica questo annuncio >>"
+    pwa:
+      install_banner: "Vuoi <a href>installare %{title} su questo dispositivo?</a>"
     choose_topic:
       none_found: "Nessun argomento trovato."
       title:
@@ -312,7 +321,25 @@ it:
       order_by: "Ordina per"
       in_reply_to: "in risposta a"
       explain:
+        why: "spiega perché questo oggetto è stato aggiunto alla coda"
+        title: "Punteggio revisionabile"
+        formula: "Formula"
+        subtotal: "Totale parziale"
         total: "Totale"
+        min_score_visibility: "Punteggio minimo per visibilità"
+        score_to_hide: "Punteggio per nascondere messaggio"
+        take_action_bonus:
+          name: "ha preso provvedimenti"
+          title: "Quando un membro dello staff sceglie intervenire, la segnalazione riceve un bonus."
+        user_accuracy_bonus:
+          name: "precisione dell&#39;utente"
+          title: "Agli utenti le cui segnalazioni sono state storicamente accettate viene concesso un bonus."
+        trust_level_bonus:
+          name: "livello di esperienza"
+          title: "Gli articoli revisionabili creati da utenti con un livello di esperienza più elevato hanno un punteggio più alto."
+        type_bonus:
+          name: "tipo di bonus"
+          title: "Ad alcune tipologie revisionabili può essere assegnato un bonus dallo staff, per aumentare la loro priorità."
       claim_help:
         optional: "Puoi rivendicare questo elemento per evitare che altri lo revisionino."
         required: "Per poter revisionare gli elementi devi prima rivendicarli."
@@ -584,6 +611,7 @@ it:
         remove_owner: "Rimuovi come Proprietario"
         remove_owner_description: "Rimuovi <b>%{username}</b>come proprietario di questo gruppo "
         owner: "Proprietario"
+        forbidden: "Non puoi ancora visualizzare i membri."
       topics: "Argomenti"
       posts: "Messaggi"
       mentions: "Menzioni"
@@ -596,6 +624,7 @@ it:
         only_admins: "Solo gli amministratori"
         mods_and_admins: "Solo i moderatori e gli amministratori"
         members_mods_and_admins: "Solo i membri del gruppo, i moderatori e gli amministratori"
+        owners_mods_and_admins: "Solo proprietari di gruppi, moderatori e amministratori"
         everyone: "Chiunque"
       notifications:
         watching:
@@ -847,14 +876,19 @@ it:
         disable: "Disabilita"
         enable: "Abilita"
         enable_long: "Abilita codici di backup"
+        manage: "Gestisci i codici di backup. Hai <strong>{{count}}</strong> codici di backup rimanenti."
         copied_to_clipboard: "Copiato nella Clipboard"
         copy_to_clipboard_error: "Errore durante la copia nella Clipboard"
         remaining_codes: "Ti sono rimasti <strong>{{count}}</strong> codici di backup."
+        use: "Usa un codice di backup"
+        enable_prerequisites: "È necessario abilitare un secondo fattore primario prima di generare codici di backup."
         codes:
           title: "Codici di backup generati"
           description: "Ciascuno di questi codici di backup può essere usato una sola volta. Conservali in un posto sicuro ma accessibile."
       second_factor:
         title: "Autenticazione a Due Fattori"
+        enable: "Gestione autenticazione a due fattori"
+        forgot_password: "Ha dimenticato la password?"
         confirm_password_description: "Per favore conferma la tua password per continuare"
         name: "Nome"
         label: "Codice"
@@ -868,10 +902,28 @@ it:
         extended_description: |
           L'autenticazione a due fattori aggiunge ulteriore sicurezza al tuo account attraverso la richiesta di un token usa e getta oltre alla tua password. I token possono essere generati su dispositivi <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
         oauth_enabled_warning: "Tieni presente che gli accessi ai social network saranno disabilitati dopo aver attivato l'autenticazione a due fattori nel tuo account."
+        use: "Usa l&#39;app Authenticator"
         enforced_notice: "E' obbligatorio abilitare l'autenticazione a due fattori per accedere a questo sito."
+        disable: "disabilita"
+        disable_title: "Disabilita Secondo Fattore"
+        disable_confirm: "Sei sicuro di voler disabilitare tutti i secondi fattori?"
         edit: "Modifica"
+        edit_title: "Modifica secondo fattore"
+        edit_description: "Nome del secondo fattore"
+        enable_security_key_description: "Quando la chiave di sicurezza fisica è pronta, premi il pulsante Registra qui sotto."
+        totp:
+          title: "Authenticator basati su Token"
+          add: "Nuovo Authenticator"
+          default_name: "Il mio Authenticator"
         security_key:
           register: "Registrare"
+          title: "Security Keys"
+          add: "Registra Security Key"
+          default_name: "Security Key principale"
+          not_allowed_error: "Il processo di registrazione della Security Key è scaduto o è stato annullato."
+          already_added_error: "Hai già registrato questa Security Key. Non è necessario registrarla di nuovo."
+          edit: "Modifica Security Key"
+          edit_description: "Nome Security Key"
           delete: "Elimina"
       change_about:
         title: "Modifica i dati personali"
@@ -898,6 +950,9 @@ it:
         uploaded_avatar_empty: "Aggiungi un'immagine personalizzata"
         upload_title: "Carica la tua foto"
         image_is_not_a_square: "Attenzione: abbiamo ritagliato l'immagine; la larghezza e l'altezza non erano uguali."
+      change_profile_background:
+        title: "Testata Profilo "
+        instructions: "Le testate dei profili saranno centrate e avranno una larghezza predefinita di 1110 px."
       change_card_background:
         title: "Sfondo Scheda Utente"
         instructions: "Le immagini di sfondo saranno centrate e per difetto avranno un'ampiezza di 590px."
@@ -921,6 +976,10 @@ it:
         revoke: "Revoca"
         cancel: "Annulla"
         not_connected: "(non connesso)"
+        confirm_modal_title: "Collega un account %{provider} "
+        confirm_description:
+          account_specific: "Il tuo account %{provider} &#39;%{account_description}&#39; verrà utilizzato per l&#39;autenticazione."
+          generic: "Il tuo account %{provider} verrà utilizzato per l&#39;autenticazione."
       name:
         title: "Nome"
         instructions: "il tuo nome completo (opzionale)"
@@ -1260,6 +1319,7 @@ it:
       complete_username_not_found: "Nessun account con nome utente <b>%{username}</b>"
       complete_email_not_found: "Nessun account con email <b>%{email}</b>"
       confirm_title: "Procedi su %{site_name}."
+      logging_in_as: "Accesso come %{email}"
       confirm_button: Completa l'accesso
     login:
       title: "Connetti"
@@ -1267,8 +1327,11 @@ it:
       password: "Password"
       second_factor_title: "Autenticazione a due fattori"
       second_factor_description: "Per favore, inserisci il codice di autenticazione della tua app:"
+      second_factor_backup: "Accedi utilizzando un codice di backup"
       second_factor_backup_title: "Backup Due Fattori"
       second_factor_backup_description: "Per favore, inserisci uno dei tuoi codici di backup:"
+      second_factor: "Accedi utilizzando l&#39;app Authenticator"
+      security_key_description: "Quando hai preparato la chiave di sicurezza fisica, premi il pulsante Autentica con Security Key qui sotto."
       email_placeholder: "email o nome utente"
       caps_lock_warning: "Il Blocco Maiuscole è attivo"
       error: "Errore sconosciuto"
@@ -2935,16 +2998,13 @@ it:
         none: "Non ci sono chiavi API attive al momento."
         user: "Utente"
         title: "API"
-        key: "Chiave API"
         created: Creazione
         generate: "Genera"
-        regenerate: "Rigenera"
         revoke: "Revoca"
-        confirm_regen: "Sei sicuro di voler sostituire la API Key con una nuova?"
-        confirm_revoke: "Sei sicuro di revocare la chiave?"
-        info_html: "La tua chiave API ti permetterà di creare e aggiornare gli argomenti usando chiamate JSON."
         all_users: "Tutti gli Utenti"
-        note_html: "Mantieni <strong>segreta</strong> questa chiave, tutti gli utenti che la possiedono possono creare messaggi per conto di altri."
+        show_details: Dettagli
+        description: Descrizione
+        save: Salva
       web_hooks:
         title: "Webhook"
         none: "Non ci sono webhook disponibili adesso."

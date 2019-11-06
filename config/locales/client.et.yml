@@ -2393,16 +2393,13 @@ et:
         none: "Hetkel aktiivsed API võtmed puuduvad."
         user: "Kasutaja"
         title: "API"
-        key: "API võti"
         created: Loodud
         generate: "Genereeri"
-        regenerate: "Genereeri uus"
         revoke: "Tühista "
-        confirm_regen: "Oled kindel, et soovid selle API võtme asendada uuega?"
-        confirm_revoke: "Oled kindel, et soovid selle võtme tühistada?"
-        info_html: "See API võti lubab Sul teemasid luua ja uuendada JSON kutsete kaudu."
         all_users: "Kõik kasutajad"
-        note_html: "Hoia seda võtit <strong>salajas</strong>, iga kasutaja, kes seda omab, võib luua suvalisi postitusi suvalise kasutaja nime alt."
+        show_details: Üksikasjad
+        description: Kirjeldus
+        save: Salvesta
       web_hooks:
         title: "Veebihaagid"
         none: "Hetkel veebihaagid puuduvad."

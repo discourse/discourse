@@ -2465,16 +2465,13 @@ hu:
         none: "Jelenleg nincsenek elérhető API kulcsok."
         user: "Felhasználó"
         title: "API"
-        key: "API kulcs"
         created: Létrehozott
         generate: "Generálás"
-        regenerate: "Regenerálás"
         revoke: "Visszavonás"
-        confirm_regen: "Biztosan ki szeretnéd cserélni ezt az API kulcsot egy újra?"
-        confirm_revoke: "Biztosan vissza szeretnéd vonni ezt a kulcsot?"
-        info_html: "Az API kulcsod lehetővé fogja tenni számodra, hogy JSON hívásokkal létrehozz és frissíts témaköröket."
         all_users: "Minden felhasználó"
-        note_html: "Tartsd meg ezt a kulcsot <strong>titkos</strong>, minden felhasználó akinek megvan lehet hogy létrehoz egy korlátlan bejegyzést mint akármelyik felhasználó"
+        show_details: Részletek
+        description: Leírás
+        save: Mentés
       web_hooks:
         title: "Webhooks"
         create: "Létrehoz"

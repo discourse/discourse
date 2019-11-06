@@ -2448,13 +2448,11 @@ ja:
         key: "Key"
         created: 作成者
         generate: "API キーを生成"
-        regenerate: "API キーを再生成"
         revoke: "無効化"
-        confirm_regen: "このAPIキーを新しいものに置き換えてもよろしいですか?"
-        confirm_revoke: "このキーを無効化してもよろしいですか？"
-        info_html: "API キーを使うと、JSON 呼び出しでトピックの作成・更新を行うことが出来ます。"
         all_users: "全てのユーザ"
-        note_html: "このキーは、秘密にしてください。このキーを持っている全てのユーザは任意のユーザとして、好きな投稿を作成できます"
+        show_details: 詳細
+        description: 説明
+        save: 保存
       web_hooks:
         title: "Webhooks"
         none: "現在、Webhooksはありません。"

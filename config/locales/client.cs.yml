@@ -2783,16 +2783,13 @@ cs:
         none: "Nejsou tu žádné aktivní API klíče."
         user: "Uživatel"
         title: "API"
-        key: "API klíč"
         created: Vytvořený
         generate: "Vygenerovat API klíč"
-        regenerate: "Znovu-vygenerovat API klíč"
         revoke: "zrušit"
-        confirm_regen: "Určitě chcete nahradit tenhle API klíč novým?"
-        confirm_revoke: "Jste si jisti, že chcete tento klíč zrušit?"
-        info_html: "Váš API klíč umožní vytvářet a aktualizovat témata pomocí JSONových volání."
         all_users: "Všichni uživatelé"
-        note_html: "Uchovejte tento klíč <strong>v bezpečí</strong>, každý, kdo má tento klíč, může libovolně vytvářet příspěvky na fóru i za ostatní uživatele."
+        show_details: Podrobnosti
+        description: Popis
+        save: Uložit
       web_hooks:
         title: "Webhooks"
         none: "Právě tu nejsou žádné webhooks."

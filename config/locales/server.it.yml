@@ -1944,6 +1944,7 @@ it:
     autoclosed_disabled_lastpost: "Questo argomento è ora aperto. Sono permesse altre risposte."
     auto_deleted_by_timer: "Eliminato automaticamente dal timer."
   login:
+    security_key_description: "Quando hai preparato la chiave di sicurezza fisica, premi il pulsante Autentica con Security Key qui sotto."
     not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via mail quando potrai collegarti."
     incorrect_username_email_or_password: "Nome utente, email o password errati"
     incorrect_password: "Password errata"

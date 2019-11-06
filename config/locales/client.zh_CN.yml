@@ -2912,16 +2912,13 @@ zh_CN:
         none: "当前没有可用的 API 密钥。"
         user: "用户"
         title: "API"
-        key: "API 密钥"
         created: 创建时间
         generate: "生成"
-        regenerate: "重新生成"
         revoke: "撤销"
-        confirm_regen: "确定要用新的 API 密钥替代该密钥？"
-        confirm_revoke: "确定要撤销该密钥？"
-        info_html: "API 密钥可以用来通过 JSON 调用创建和更新主题。"
         all_users: "所有用户"
-        note_html: "请<strong>安全地</strong>保管密钥，任何拥有该密钥的用户可以使用它以论坛任何用户的名义发帖。"
+        show_details: 详情
+        description: 描述
+        save: 保存
       web_hooks:
         title: "Webhooks"
         none: "当前没有 Webhooks。"

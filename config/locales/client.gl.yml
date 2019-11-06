@@ -1777,16 +1777,13 @@ gl:
         none: "Non hai chaves activas da API agora mesmo."
         user: "Usuario"
         title: "API"
-        key: "Chave da API"
         created: Creado
         generate: "Xerar"
-        regenerate: "Rexenerar"
         revoke: "Revogar"
-        confirm_regen: "Confirmas a substitución da chave da API por unha nova?"
-        confirm_revoke: "Confirmas a revogación desta chave?"
-        info_html: "A chave da API permitirache crear e actualizar temas usando chamadas JSON."
         all_users: "Todos os usuarios"
-        note_html: "Manter esta chave en <strong>secreto</strong>, todos os usuarios que a teñan poderían crear e publicar co nome da calquera usuario."
+        show_details: Detalles
+        description: Descrición
+        save: Gardar
       web_hooks:
         save: "Gardar"
         destroy: "Eliminar"

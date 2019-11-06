@@ -2567,7 +2567,7 @@ uk:
       allow_global_tags_label: "Також дозволити інші мітки"
       tag_group_selector_placeholder: "(Необов’язково) Група тегів"
       required_tag_group_description: "Потрібні нові теми, щоб мати теги з групи тегів:"
-      min_tags_from_required_group_label: 'Кількість тегів:'
+      min_tags_from_required_group_label: "Кількість тегів:"
       required_tag_group_label: "Група тегів:"
       topic_featured_link_allowed: "Дозволити популярні посилання в цій категорії"
       delete: "Видалити категорію"
@@ -3281,18 +3281,30 @@ uk:
         none: "Наразі немає жодного активного ключа API."
         user: "Користувач"
         title: "API"
-        key: "Ключ API"
+        key: "Ключ"
         created: Створено
+        updated: Оновлено
         last_used: Використано
         never_used: (ніколи)
         generate: "Згенерувати"
-        regenerate: "Перегенерувати"
+        undo_revoke: "Скасувати відкликання"
         revoke: "Анулювати"
-        confirm_regen: "Are you sure you want to replace that API Key with a new one?"
-        confirm_revoke: "Are you sure you want to revoke that key?"
-        info_html: "Your API key will allow you to create and update topics using JSON calls."
         all_users: "All Users"
-        note_html: "Нікому <strong>не повідомляйте</strong> цей ключ. Той, у кого він є, зможе створювати повідомлення, видаючи себе за будь-якого користувача форуму."
+        active_keys: "Активні ключі API"
+        manage_keys: Керування ключами
+        show_details: Деталі
+        description: Опис
+        no_description: (без опису)
+        all_api_keys: Усі ключі API
+        user_mode: Користувацький рівень
+        impersonate_all_users: Видавати себе за іншого користувача
+        single_user: "Один користувач"
+        user_placeholder: Введіть ім’я користувача
+        description_placeholder: "Для чого цей ключ буде використовуватися?"
+        save: Зберегти
+        new_key: Новий ключ API
+        revoked: Відкликано
+        delete: Видалити назавжди
       web_hooks:
         title: "Вебгуки"
         none: "Зараз вебгуків немає."
@@ -3881,6 +3893,9 @@ uk:
             change_theme_setting: "змінити налаштування теми"
             disable_theme_component: "відключити компонент теми"
             enable_theme_component: "включити компонент теми"
+            api_key_create: "api ключ створено"
+            api_key_update: "api ключ оновлено"
+            api_key_destroy: "api ключ знищено"
         screened_emails:
           title: "Screened Emails"
           description: "Коли хтось намагатиметься створити новий обліковий запис, наступні електронні скриньки буде перевірено, і реєстрацію заблоковано, або вжито якихось інших дій."

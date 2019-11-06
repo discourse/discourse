@@ -3045,18 +3045,15 @@ fi:
         none: "Aktiivisia API avaimia ei ole määritelty."
         user: "Käyttäjä"
         title: "Rajapinta"
-        key: "Rajapinnan avain"
         created: Luotu
         last_used: Viimeksi käytetty
         never_used: (ei koskaan)
         generate: "Luo"
-        regenerate: "Tee uusi"
         revoke: "Peruuta"
-        confirm_regen: "Oletko varma, että haluat korvata tämän API avaimen uudella?"
-        confirm_revoke: "Oletko varma, että haluat peruuttaa tämän avaimen?"
-        info_html: "Rajapinta-avaimen avulla voi aloittaa ja päivittää ketjuja JSON-pyynnöillä."
         all_users: "Kaikki käyttäjät"
-        note_html: "Pidä tämä avain <strong>salaisena</strong>, sen haltija voi luoda viestejä esiintyen minä hyvänsä käyttäjänä."
+        show_details: Yksityiskohdat
+        description: Kuvaus
+        save: Tallenna
       web_hooks:
         title: "Webhookit"
         none: "Webhookeja ei ole nyt."

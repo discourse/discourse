@@ -7,5 +7,5 @@
 
 fi:
   site_settings:
-    presence_enabled: 'Näytä ketkä parhaillaan kirjoittavat tai muokkaavat viestiä ketjussa, jossa käyttäjä on?'
-    presence_max_users_shown: 'Kuinka monta käyttäjää enintään näytetään.'
+    presence_enabled: "Näytä ketkä parhaillaan kirjoittavat tai muokkaavat viestiä ketjussa, jossa käyttäjä on?"
+    presence_max_users_shown: "Kuinka monta käyttäjää enintään näytetään."

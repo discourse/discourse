@@ -2179,16 +2179,14 @@ sv:
         none: "Det finns inga aktiva API-nycklar just nu."
         user: "Användare"
         title: "API"
-        key: "API-nyckel"
+        key: "Key"
         created: Skapad
         generate: "Generera"
-        regenerate: "Regenerera"
         revoke: "Återkalla"
-        confirm_regen: "Är du säker på att du vill ersätta den API-nyckeln med en ny?"
-        confirm_revoke: "Är du säker på att du vill återkalla den nyckeln?"
-        info_html: "Din API-nyckel kommer tillåta dig att skapa och uppdatera ämnen med hjälp av JSON-anrop."
         all_users: "Alla användare"
-        note_html: "Håll denna nyckel <strong>hemlig</strong>, alla användare som har den kan skapa godtyckliga inlägg som alla användare."
+        show_details: Detaljer
+        description: Beskrivning
+        save: Spara
       web_hooks:
         title: "Webhookar"
         none: "Det finns inga webhookar just nu."

@@ -2382,16 +2382,13 @@ sk:
         none: "V súčasnosti neexistujú žiadne aktívne API kľúče."
         user: "Používateľ"
         title: "API"
-        key: "API kľúč"
         created: Vytvorené
         generate: "Generovať"
-        regenerate: "Obnov"
         revoke: "Zrušiť"
-        confirm_regen: "Ste si istý, že chcete nahradiť tento API kľúč novým?"
-        confirm_revoke: "Ste si istý, že chcete obnoviť tento kľúč?"
-        info_html: "Váš API kľúč Vám umožní vytváranie a aktualizovanie tém prostredníctvom volaní JSON."
         all_users: "Všetci používatelia"
-        note_html: "Držte tento kľúč <strong>v tajnosti</strong>, všetci užívatelia ktorí ho vlastnia môžu vytvárať ľubovoľné príspevky pod ľubovoľným používateľským menom. "
+        show_details: Detaily
+        description: Popis
+        save: Uložiť
       web_hooks:
         create: "Vytvoriť"
         save: "Uložiť"

@@ -1906,6 +1906,7 @@ he:
     default_title_count_mode: "מצב בררת מחדל למונה כותרות עמודים"
     retain_web_hook_events_period_days: "מספר הימים לשמירת רשומות אירועי התלייה."
     retry_web_hook_events: "לנסות מחדש אירועי התליה שנכשלו במשך 4 פעמים. פרקי הזמן שבין הניסיונות החוזרים הם 1, 5, 25 ו־125 דקות."
+    revoke_api_keys_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API שלא היה בשימוש (0 - לעולם לא)."
     allow_user_api_keys: "איפשור יצירת מפתחות API למשתמשים"
     allow_user_api_key_scopes: "רשימת אזורים מותרים למפתחות API של משתמשים"
     max_api_keys_per_user: "מספר מקסימלי של מפתחות API של משתמש לכל משתמש"
@@ -2509,13 +2510,13 @@ he:
       text_body_template: |
         אהלן. שמנו לב שקריאת הפורום מעסיקה אותך רבות, שזה נהדר, לכן קידמנו את  [דרגת האמון](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) בך!
         אנו מאוד שמחים לראות שנעים לך לקחת חלק בפעילות הקהילתית ונשמח לדעת עוד עליך. ממליצים לך להשקיע רגע קט כדי [למלא את הפרופיל שלך](%{base_url}/my/preferences/profile), או סתם [לפתוח דיון חדש](%{base_url}/categories).
-    welcome_moderator:
-      title: "ברוך בואך לצוות הפיקוח"
-      subject_template: "ברכותינו, הרשאותיך מעתה מאפשרות לך לפקח!"
+    welcome_staff:
+      title: "ברוך בואך לסגל"
+      subject_template: "ברכותינו, הרשאותיך מעכשיו הן %{role}!"
       text_body_template: |
-        הוענק לך מצב פיקוח על ידי מישהו מבין חברי הסגל.
+        קיבלת הרשאות %{role} על ידי מישהו מבין חברי הסגל.
 
-        הרשאות פיקוח מעניקות לך גישה אל <a href='%{base_url}/admin' target='_blank'>מנשק הניהול</a>.
+        הרשאות %{role} מעניקות לך גישה אל <a href='%{base_url}/admin' target='_blank'>מנשק הניהול</a>.
 
         כוח רב טומן בחובו אחריות רבה. אם תחום הפיקוח זר לך, ניתן לפנות אל [המדריך למפקחים](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
@@ -4067,6 +4068,14 @@ he:
     user_merged: "%{username} מוזג לתוך החשבון הזה"
     user_delete_self: "מחיקה עצמית מתוך %{url}"
     webhook_deactivation_reason: "ההתלייה שלך הושבתה אוטומטית. קיבלו מגוון תגובות כשל בצורת HTTP ‚%{status}’."
+    api_key:
+      automatic_revoked:
+        one: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מיום (%{count})"
+        two: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מיומיים (%{count})"
+        many: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מ־%{count} ימים"
+        other: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מ־%{count} ימים"
+      revoked: נשל
+      restored: שוחזר
   reviewables:
     priorities:
       low: "נמוכה"

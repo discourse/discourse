@@ -2981,16 +2981,14 @@ pt_BR:
         none: "Não existem chaves API ativas no momento."
         user: "Usuário"
         title: "API"
-        key: "Chave API"
+        key: "Chave"
         created: Criado
         generate: "Gerar"
-        regenerate: "Regenerar"
         revoke: "Revogar"
-        confirm_regen: "Tem a certeza que quer substituir esta chave API por uma nova?"
-        confirm_revoke: "Tem a certeza que quer revogar esta chave?"
-        info_html: "Sua chave de API permitirá a criação e edição de tópicos usando requests JSON."
         all_users: "Todos os Usuários"
-        note_html: "Guarde esta chave <strong>secretamente</strong>, todos usuários que tiverem acesso a ela poderão criar posts arbritários no forum como qualquer usuário."
+        show_details: Detalhes
+        description: Descrição
+        save: Salvar
       web_hooks:
         title: "Webhooks"
         none: "Não existem webhooks no momento."

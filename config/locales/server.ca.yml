@@ -2210,6 +2210,9 @@ ca:
         Hola. Veiem que heu estat molt ocupat llegint, cosa fantàstica, de manera que us hem promogut un [nivell de confiança!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/).
 
         Estem molt contents que passeu temps amb nosaltres, i ens agradaria conèixer-vos més bé. Dediqueu un moment a [omplir el vostre perfil](%{base_url}/my/preferences/profile), o bé podeu [començar un tema nou](%{base_url}/categories).
+    welcome_staff:
+      title: "Benvingut membre de l'equip responsable"
+      subject_template: "Enhorabona, ara sou %{role}!"
     welcome_invite:
       title: "Benvingut convidat"
       subject_template: "Benvingut a %{site_name}!"
@@ -3313,6 +3316,12 @@ ca:
     user_merged: "%{username} s'ha combinat en aquest compte"
     user_delete_self: "Suprimit per si mateix des de %{url}"
     webhook_deactivation_reason: "S'ha desactivat automàticament el vostre webhook. Hem rebut diverses respostes d'error d'estat HTTP '%{status}'."
+    api_key:
+      automatic_revoked:
+        one: "Revocat automàticament, fa més d'un %{count} dia de l'última activitat"
+        other: "Revocat automàticament, fa més de %{count} dies de l'última activitat"
+      revoked: Revocat
+      restored: Restaurat
   reviewables:
     priorities:
       low: "Baixa"
