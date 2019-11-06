@@ -495,6 +495,14 @@ video {
   max-height: 500px;
 }
 
+.video {
+  // Height determined by aspect-ratio
+  max-height: 500px;
+  > video {
+    max-height: unset;
+  }
+}
+
 @-webkit-keyframes fadein {
   from {
     opacity: 0;
