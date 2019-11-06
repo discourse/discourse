@@ -1,8 +1,10 @@
+import error from "@ember/error";
+
 let _topicFooterButtons = {};
 
 export function registerTopicFooterButton(button) {
   if (!button.id) {
-    Ember.error(`Attempted to register a topic button: ${button} with no id.`);
+    error(`Attempted to register a topic button: ${button} with no id.`);
     return;
   }
 
@@ -52,7 +54,7 @@ export function registerTopicFooterButton(button) {
     !normalizedButton.title &&
     !normalizedButton.translatedTitle
   ) {
-    Ember.error(
+    error(
       `Attempted to register a topic button: ${button.id} with no icon or title.`
     );
     return;
