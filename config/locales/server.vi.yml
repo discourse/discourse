@@ -14,7 +14,7 @@ vi:
     formats:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
+      date_only: "%B %-d, %Y"
   date:
     month_names: [~, Tháng Một, Tháng Hai, Tháng Ba, Tháng Tư, Tháng Năm, Tháng Sáu, Tháng Bảy, Tháng Tám, Tháng Chín, Tháng Mười, Tháng Mười Một, Tháng Mười Hai]
     <<: *datetime_formats
