@@ -119,9 +119,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   h2,
   h3 {
     margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
   }
   h1,
   h2 {
@@ -201,9 +199,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       }
       .website-name a,
       .location span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        @include ellipsis;
         color: $primary;
       }
       .location {
@@ -226,16 +222,10 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       display: flex;
       align-items: flex-start;
       .user-badge {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
         background: $primary-very-low;
         border: 1px solid $primary-low;
         color: $primary;
-      }
-      .badge-display-name {
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
       .more-user-badges {
         a {
