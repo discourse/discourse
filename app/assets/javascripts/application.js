@@ -1,3 +1,4 @@
+//= require_tree ./discourse/config
 //= require_tree ./ember-addons/utils
 //= require ./ember-addons/decorator-alias
 //= require ./ember-addons/macro-alias
@@ -102,4 +103,3 @@
 //= require_tree ./discourse/initializers
 //= require_tree ./discourse/services
 //= require_tree ./discourse/widgets
-//= require_tree ./discourse/config

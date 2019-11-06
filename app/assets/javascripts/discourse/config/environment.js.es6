@@ -1,1 +1,1 @@
-export default { environment: Ember.Testing ? "testing" : "development" };
+export default { environment: Ember.testing ? "test" : "development" };
