@@ -391,4 +391,25 @@ describe Discourse do
     end
   end
 
+  describe "Utils.execute_command" do
+    it "works for individual commands" do
+      expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
+      expect(Discourse::Utils.execute_command("pwd", chdir: "plugins").strip).to eq("#{Rails.root.to_s}/plugins")
+    end
+
+    it "works with a block" do
+      Discourse::Utils.execute_command do |runner|
+        expect(runner.exec("pwd").strip).to eq(Rails.root.to_s)
+      end
+
+      result = Discourse::Utils.execute_command(chdir: "plugins") do |runner|
+        expect(runner.exec("pwd").strip).to eq("#{Rails.root.to_s}/plugins")
+        runner.exec("pwd")
+      end
+
+      # Should return output of block
+      expect(result.strip).to eq("#{Rails.root.to_s}/plugins")
+    end
+  end
+
 end
