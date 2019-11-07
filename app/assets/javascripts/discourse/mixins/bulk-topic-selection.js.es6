@@ -2,6 +2,7 @@ import { alias } from "@ember/object/computed";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { on } from "ember-addons/ember-computed-decorators";
 import Mixin from "@ember/object/mixin";
+import Topic from "discourse/models/topic";
 
 export default Mixin.create({
   bulkSelectEnabled: false,
@@ -33,9 +34,9 @@ export default Mixin.create({
 
       let promise;
       if (this.selected.length > 0) {
-        promise = Discourse.Topic.bulkOperation(this.selected, operation);
+        promise = Topic.bulkOperation(this.selected, operation);
       } else {
-        promise = Discourse.Topic.bulkOperationByFilter(
+        promise = Topic.bulkOperationByFilter(
           "unread",
           operation,
           this.get("category.id"),
