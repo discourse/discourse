@@ -5,7 +5,6 @@ import {
   default as computed,
   on
 } from "ember-addons/ember-computed-decorators";
-import { defaultHomepage } from "discourse/lib/utilities";
 import PreloadStore from "preload-store";
 
 function isNew(topic) {
