@@ -410,6 +410,23 @@ describe Discourse do
       # Should return output of block
       expect(result.strip).to eq("#{Rails.root.to_s}/plugins")
     end
+
+    it "does not leak chdir between threads" do
+      has_done_chdir = false
+      has_checked_chdir = false
+
+      thread = Thread.new do
+        Discourse::Utils.execute_command(chdir: "plugins") do
+          has_done_chdir = true
+          sleep(0.01) until has_checked_chdir
+        end
+      end
+
+      sleep(0.01) until has_done_chdir
+      expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
+      has_checked_chdir = true
+      thread.join
+    end
   end
 
 end
