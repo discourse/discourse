@@ -4,7 +4,9 @@ import {
   WidgetKeyUpHook,
   WidgetKeyDownHook,
   WidgetMouseDownOutsideHook,
-  WidgetDragHook
+  WidgetDragHook,
+  WidgetInputHook,
+  WidgetChangeHook
 } from "discourse/widgets/hooks";
 import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
@@ -368,6 +370,14 @@ export default class Widget {
 
     if (this.drag) {
       properties["widget-drag"] = new WidgetDragHook(this);
+    }
+
+    if (this.input) {
+      properties["widget-input"] = new WidgetInputHook(this);
+    }
+
+    if (this.change) {
+      properties["widget-change"] = new WidgetChangeHook(this);
     }
 
     const attributes = properties["attributes"] || {};
