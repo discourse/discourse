@@ -7,6 +7,7 @@ import Archetype from "discourse/models/archetype";
 import PostActionType from "discourse/models/post-action-type";
 import Singleton from "discourse/mixins/singleton";
 import RestModel from "discourse/models/rest";
+import TrustLevel from "discourse/models/trust-level";
 import PreloadStore from "preload-store";
 
 const Site = RestModel.extend({
@@ -176,9 +177,7 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.trust_levels) {
-      result.trustLevels = result.trust_levels.map(tl =>
-        Discourse.TrustLevel.create(tl)
-      );
+      result.trustLevels = result.trust_levels.map(tl => TrustLevel.create(tl));
       delete result.trust_levels;
     }
 

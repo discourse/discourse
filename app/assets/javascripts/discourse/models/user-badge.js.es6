@@ -2,6 +2,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import { Promise } from "rsvp";
+import Topic from "discourse/models/topic";
 
 const UserBadge = Discourse.Model.extend({
   @discourseComputed
@@ -35,7 +36,7 @@ UserBadge.reopenClass({
     }
     var topics = {};
     json.topics.forEach(function(topicJson) {
-      topics[topicJson.id] = Discourse.Topic.create(topicJson);
+      topics[topicJson.id] = Topic.create(topicJson);
     });
 
     // Create the badges.
