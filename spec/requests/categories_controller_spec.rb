@@ -8,18 +8,6 @@ describe CategoriesController do
 
   context 'index' do
 
-    it 'suppresses categories correctly' do
-      post = create_post(title: 'super AMAZING AMAZING post')
-
-      get "/categories"
-      expect(response.body).to include('AMAZING AMAZING')
-
-      post.topic.category.update_columns(suppress_from_latest: true)
-
-      get "/categories"
-      expect(response.body).not_to include('AMAZING AMAZING')
-    end
-
     it 'web crawler view has correct urls for subfolder install' do
       GlobalSetting.stubs(:relative_url_root).returns('/forum')
       Discourse.stubs(:base_uri).returns("/forum")

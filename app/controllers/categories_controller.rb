@@ -47,8 +47,7 @@ class CategoriesController < ApplicationController
         style = SiteSetting.desktop_category_page_style
         topic_options = {
           per_page: SiteSetting.categories_topics,
-          no_definitions: true,
-          exclude_category_ids: Category.where(suppress_from_latest: true).pluck(:id)
+          no_definitions: true
         }
 
         if style == "categories_and_latest_topics".freeze
@@ -238,8 +237,7 @@ class CategoriesController < ApplicationController
 
     topic_options = {
       per_page: SiteSetting.categories_topics,
-      no_definitions: true,
-      exclude_category_ids: Category.where(suppress_from_latest: true).pluck(:id)
+      no_definitions: true
     }
 
     result = CategoryAndTopicLists.new
@@ -291,7 +289,6 @@ class CategoriesController < ApplicationController
         :email_in,
         :email_in_allow_strangers,
         :mailinglist_mirror,
-        :suppress_from_latest,
         :all_topics_wiki,
         :parent_category_id,
         :auto_close_hours,

@@ -38,16 +38,6 @@ class CategoryFeaturedTopic < ActiveRecord::Base
     end
   end
 
-  @@exclude_category_ids = DistributedCache.new('excluded_category_ids_from_featured')
-
-  def self.cached_exclude_category_ids
-    @@exclude_category_ids['ids'] ||= Category.where(suppress_from_latest: true).pluck(:id)
-  end
-
-  def self.clear_exclude_category_ids
-    @@exclude_category_ids.clear
-  end
-
   def self.clear_batch!
     $redis.del(NEXT_CATEGORY_ID_KEY)
   end
@@ -59,8 +49,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
       per_page: c.num_featured_topics,
       except_topic_ids: [c.topic_id],
       visible: true,
-      no_definitions: true,
-      exclude_category_ids: CategoryFeaturedTopic.cached_exclude_category_ids
+      no_definitions: true
     }
 
     # It may seem a bit odd that we are running 2 queries here, when admin

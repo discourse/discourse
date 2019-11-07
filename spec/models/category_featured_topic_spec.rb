@@ -12,10 +12,6 @@ describe CategoryFeaturedTopic do
     fab!(:category)      { Fabricate(:category) }
     let!(:category_post) { PostCreator.create(user, raw: "I put this post in the category", title: "categorize THIS", category: category.id) }
 
-    before do
-      CategoryFeaturedTopic.clear_exclude_category_ids
-    end
-
     it "works in batched mode" do
       category2 = Fabricate(:category)
       post2 = create_post(category: category2.id)
@@ -55,20 +51,6 @@ describe CategoryFeaturedTopic do
       invisible_post.topic.update_status('visible', false, Fabricate(:admin))
       CategoryFeaturedTopic.feature_topics_for(category)
       expect(CategoryFeaturedTopic.count).to be(1)
-    end
-
-    it 'should not include topics from suppressed categories' do
-      CategoryFeaturedTopic.feature_topics_for(category)
-      expect(
-        CategoryFeaturedTopic.where(category_id: category.id).order('rank asc').pluck(:topic_id)
-      ).to contain_exactly(category_post.topic.id)
-
-      category.update(suppress_from_latest: true)
-
-      CategoryFeaturedTopic.feature_topics_for(category)
-      expect(
-        CategoryFeaturedTopic.where(category_id: category.id).order('rank asc').pluck(:topic_id)
-      ).to_not contain_exactly(category_post.topic.id)
     end
 
     it 'should feature stuff in the correct order' do

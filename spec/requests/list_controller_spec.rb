@@ -21,12 +21,6 @@ RSpec.describe ListController do
       get "/latest?max_posts=bob"
       expect(response.status).to eq(400)
 
-      get "/latest?exclude_category_ids=bob"
-      expect(response.status).to eq(400)
-
-      get "/latest?exclude_category_ids[]=bob"
-      expect(response.status).to eq(400)
-
       get "/latest?max_posts=1111111111111111111111111111111111111111"
       expect(response.status).to eq(400)
 
@@ -41,10 +35,7 @@ RSpec.describe ListController do
     end
 
     it "returns 200 for legit requests" do
-      get "/latest.json?exclude_category_ids%5B%5D=69&exclude_category_ids%5B%5D=70&no_definitions=true&no_subcategories=false&page=1&_=1534296100767"
-      expect(response.status).to eq(200)
-
-      get "/latest.json?exclude_category_ids=-1"
+      get "/latest.json?no_definitions=true&no_subcategories=false&page=1&_=1534296100767"
       expect(response.status).to eq(200)
 
       get "/latest.json?max_posts=12"
@@ -106,33 +97,6 @@ RSpec.describe ListController do
       data = JSON.parse(response.body)
       expect(data["topic_list"]["topics"].length).to eq(1)
     end
-  end
-
-  describe 'suppress from latest' do
-
-    it 'supresses categories' do
-      topic
-
-      get "/latest.json"
-      data = JSON.parse(response.body)
-      expect(data["topic_list"]["topics"].length).to eq(1)
-
-      get "/categories_and_latest.json"
-      data = JSON.parse(response.body)
-      expect(data["topic_list"]["topics"].length).to eq(1)
-
-      topic.category.suppress_from_latest = true
-      topic.category.save
-
-      get "/latest.json"
-      data = JSON.parse(response.body)
-      expect(data["topic_list"]["topics"].length).to eq(0)
-
-      get "/categories_and_latest.json"
-      data = JSON.parse(response.body)
-      expect(data["topic_list"]["topics"].length).to eq(0)
-    end
-
   end
 
   describe 'titles for crawler layout' do
