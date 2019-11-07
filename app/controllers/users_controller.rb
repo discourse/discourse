@@ -206,7 +206,7 @@ class UsersController < ApplicationController
         new_value: user.title
       }
 
-      if current_user.staff?
+      if current_user.staff? && current_user != user
         StaffActionLogger.new(current_user).log_title_change(user, log_params)
       else
         UserHistory.create!(log_params.merge(target_user_id: user.id, action: UserHistory.actions[:change_title]))
@@ -220,7 +220,7 @@ class UsersController < ApplicationController
         previous_value: previous_title
       }
 
-      if current_user.staff?
+      if current_user.staff? && current_user != user
         StaffActionLogger.new(current_user).log_title_revoke(user, log_params)
       else
         UserHistory.create!(log_params.merge(target_user_id: user.id, action: UserHistory.actions[:revoke_title]))
