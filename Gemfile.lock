@@ -243,7 +243,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.9.21)
+    onebox (1.9.22)
       htmlentities (~> 4.3)
       multi_json (~> 1.11)
       mustache
@@ -497,7 +497,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.9.21)
+  onebox (= 1.9.22)
   openid-redis-store
   parallel_tests
   pg
