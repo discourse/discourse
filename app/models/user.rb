@@ -908,7 +908,7 @@ class User < ActiveRecord::Base
   def email_confirmed?
     email_tokens.where(email: email, confirmed: true).present? ||
     email_tokens.empty? ||
-    single_sign_on_record&.external_email == email
+    single_sign_on_record&.external_email&.downcase == email
   end
 
   def activate
