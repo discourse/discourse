@@ -59,7 +59,7 @@ module Imap
         end
       end
 
-      def open_mailbox(mailbox_name, write = false)
+      def open_mailbox(mailbox_name, write: false)
         if write
           raise 'two-way IMAP sync is disabled' if !SiteSetting.enable_imap_write
           imap.select(mailbox_name)

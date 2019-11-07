@@ -77,7 +77,7 @@ describe Imap::Sync do
       expect(post.raw).to eq('This is an email *body*. :smile:')
 
       incoming_email = post.incoming_email
-      expect(incoming_email.raw).to eq(email)
+      expect(incoming_email.raw.lines.map(&:strip)).to eq(email.lines.map(&:strip))
       expect(incoming_email.message_id).to eq(message_id)
       expect(incoming_email.from_address).to eq(from)
       expect(incoming_email.to_addresses).to eq(group.email_username)

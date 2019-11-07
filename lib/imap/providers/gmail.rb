@@ -6,11 +6,7 @@ module Imap
       X_GM_LABELS = 'X-GM-LABELS'
 
       def imap
-        @imap ||= begin
-          imap = super
-          apply_gmail_patch(imap)
-          imap
-        end
+        @imap ||= super.tap { |imap| apply_gmail_patch(imap) }
       end
 
       def emails(mailbox_name, uids, fields)

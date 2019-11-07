@@ -132,7 +132,7 @@ module Imap
       if !idle && SiteSetting.enable_imap_write
         to_sync = IncomingEmail.where(imap_sync: true)
         if to_sync.size > 0
-          @provider.open_mailbox(@group.imap_mailbox_name, true)
+          @provider.open_mailbox(@group.imap_mailbox_name, write: true)
           to_sync.each do |incoming_email|
             Rails.logger.debug("[IMAP] Updating email for #{@group.name} (#{@group.id}) and incoming email #{incoming_email.id}.")
             update_email(@group.imap_mailbox_name, incoming_email)
