@@ -1,5 +1,6 @@
 import DiscourseURL from "discourse/lib/url";
 import { currentThemeIds, refreshCSS } from "discourse/lib/theme-selector";
+import ENV from "discourse-common/config/environment";
 
 //  Use the message bus for live reloading of components for faster development.
 export default {
@@ -43,7 +44,7 @@ export default {
     });
 
     // Useful to export this for debugging purposes
-    if (Discourse.Environment === "development" && !Ember.testing) {
+    if (Discourse.Environment === "development" && ENV.environment !== "test") {
       window.DiscourseURL = DiscourseURL;
     }
 

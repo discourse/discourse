@@ -96,6 +96,9 @@ var define, requirejs;
       },
       "@ember/component/helper": {
         default: Ember.Helper
+      },
+      "@ember/error": {
+        default: Ember.error
       }
     };
   }

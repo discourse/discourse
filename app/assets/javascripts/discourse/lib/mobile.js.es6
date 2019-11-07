@@ -1,4 +1,5 @@
 import deprecated from "discourse-common/lib/deprecated";
+import ENV from "discourse-common/config/environment";
 
 let mobileForced = false;
 
@@ -12,7 +13,7 @@ const Mobile = {
     this.isMobileDevice = mobileForced || $html.hasClass("mobile-device");
     this.mobileView = mobileForced || $html.hasClass("mobile-view");
 
-    if (Ember.testing || mobileForced) {
+    if (ENV.environment === "test" || mobileForced) {
       return;
     }
 
