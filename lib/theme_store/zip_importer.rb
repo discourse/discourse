@@ -53,9 +53,7 @@ class ThemeStore::ZipImporter
   end
 
   def all_files
-    Dir.chdir(@temp_folder) do
-      Dir.glob("**/**").reject { |f| File.directory?(f) }
-    end
+    Dir.glob("**/**", base: @temp_folder).reject { |f| File.directory?(f) }
   end
 
   def [](value)
