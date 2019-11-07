@@ -1,4 +1,3 @@
-//= require_tree ./discourse/config
 //= require_tree ./ember-addons/utils
 //= require ./ember-addons/decorator-alias
 //= require ./ember-addons/macro-alias
