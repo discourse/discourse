@@ -188,6 +188,7 @@ var define, requirejs;
   };
 
   function reify(mod, name, rseen) {
+    name = checkForAlias(name);
     var deps = mod.deps;
     var length = deps.length;
     var reified = new Array(length);
@@ -217,7 +218,6 @@ var define, requirejs;
   }
 
   function requireFrom(name, origin) {
-    name = checkForAlias(name);
     var mod = EMBER_MODULES[name] || registry[name];
     if (!mod) {
       throw new Error(
