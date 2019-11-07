@@ -1,4 +1,4 @@
-import { notEmpty, empty } from "@ember/object/computed";
+import { notEmpty, empty, equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
@@ -24,7 +24,7 @@ export default Component.extend({
 
   btnIcon: notEmpty("icon"),
 
-  btnLink: Ember.computed.equal("display", "link"),
+  btnLink: equal("display", "link"),
 
   @discourseComputed("icon", "translatedLabel")
   btnType(icon, translatedLabel) {

@@ -1,7 +1,9 @@
 import { gt, equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import { THEMES, COMPONENTS } from "admin/models/theme";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { default as computed } from "ember-addons/ember-computed-decorators";
+import { getOwner } from "@ember/application";
 
 export default Component.extend({
   THEMES: THEMES,
@@ -70,7 +72,7 @@ export default Component.extend({
       }
     },
     navigateToTheme(theme) {
-      Ember.getOwner(this)
+      getOwner(this)
         .lookup("router:main")
         .transitionTo("adminCustomizeThemes.show", theme);
     }

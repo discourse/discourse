@@ -6,6 +6,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import Category from "discourse/models/category";
 import { REMINDER_TYPE } from "discourse/controllers/edit-topic-timer";
+import ENV from "discourse-common/config/environment";
 
 export default Component.extend(
   bufferedRender({
@@ -86,7 +87,7 @@ export default Component.extend(
         buffer.push("</h3>");
 
         // TODO Sam: concerned this can cause a heavy rerender loop
-        if (!Ember.testing) {
+        if (ENV.environment !== "test") {
           this._delayedRerender = later(this, this.rerender, rerenderDelay);
         }
       }

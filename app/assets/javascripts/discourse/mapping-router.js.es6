@@ -1,11 +1,12 @@
 import { defaultHomepage } from "discourse/lib/utilities";
 import { rewritePath } from "discourse/lib/url";
+import ENV from "discourse-common/config/environment";
 
 const rootURL = Discourse.BaseUri;
 
 const BareRouter = Ember.Router.extend({
   rootURL,
-  location: Ember.testing ? "none" : "discourse-location",
+  location: ENV.environment === "test" ? "none" : "discourse-location",
 
   handleURL(url) {
     url = rewritePath(url);

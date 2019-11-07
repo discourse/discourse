@@ -3,6 +3,7 @@ import { scheduleOnce } from "@ember/runloop";
 import { diff, patch } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
 import DirtyKeys from "discourse/lib/dirty-keys";
+import ENV from "discourse-common/config/environment";
 
 export default class WidgetGlue {
   constructor(name, register, attrs) {
@@ -34,7 +35,7 @@ export default class WidgetGlue {
     cancel(this._timeout);
 
     // in test mode return early if store cannot be found
-    if (Ember.testing) {
+    if (ENV.environment === "test") {
       try {
         this.register.lookup("service:store");
       } catch (e) {
