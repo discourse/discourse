@@ -91,7 +91,7 @@ GEM
     cppjieba_rb (0.3.3)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    crass (1.0.4)
+    crass (1.0.5)
     css_parser (1.7.0)
       addressable
     debug_inspector (0.0.3)
@@ -173,7 +173,7 @@ GEM
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
     logster (2.4.1)
-    loofah (2.2.3)
+    loofah (2.3.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lru_redux (1.1.0)
