@@ -1,5 +1,5 @@
 import NotificationOptionsComponent from "select-kit/components/notifications-button";
-
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default NotificationOptionsComponent.extend({
   pluginApiIdentifiers: ["tag-notifications-button"],
