@@ -755,34 +755,46 @@ QUnit.test("Image resizing buttons", async assert => {
 
   // Default
   uploads[0] = "![test|690x313, 50%](upload://test.png)";
-  await click(find(".button-wrapper .scale-btn[data-scale='50']")[0]);
+  await click(
+    find(".button-wrapper[data-image-index='0'] .scale-btn[data-scale='50']")
+  );
   assertImageResized(assert, uploads);
 
   // Targets the correct image if two on the same line
   uploads[6] =
     "![onTheSameLine1|200x200, 50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)";
-  await click(find(".button-wrapper .scale-btn[data-scale='50']")[3]);
+  await click(
+    find(".button-wrapper[data-image-index='3'] .scale-btn[data-scale='50']")
+  );
   assertImageResized(assert, uploads);
 
   // Try the other image on the same line
   uploads[6] =
     "![onTheSameLine1|200x200, 50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250, 75%](upload://onTheSameLine2.jpeg)";
-  await click(find(".button-wrapper .scale-btn[data-scale='75']")[4]);
+  await click(
+    find(".button-wrapper[data-image-index='4'] .scale-btn[data-scale='75']")
+  );
   assertImageResized(assert, uploads);
 
   // Make sure we target the correct image if there are duplicates
   uploads[7] = "![identicalImage|300x300, 50%](upload://identicalImage.png)";
-  await click(find(".button-wrapper .scale-btn[data-scale='50']")[5]);
+  await click(
+    find(".button-wrapper[data-image-index='5'] .scale-btn[data-scale='50']")
+  );
   assertImageResized(assert, uploads);
 
   // Try the other dupe
   uploads[8] = "![identicalImage|300x300, 75%](upload://identicalImage.png)";
-  await click(find(".button-wrapper .scale-btn[data-scale='75']")[6]);
+  await click(
+    find(".button-wrapper[data-image-index='6'] .scale-btn[data-scale='75']")
+  );
   assertImageResized(assert, uploads);
 
   // Don't mess with image titles
   uploads[10] = `![image|690x220, 75%](upload://test.png "image title")`;
-  await click(find(".button-wrapper .scale-btn[data-scale='75']")[8]);
+  await click(
+    find(".button-wrapper[data-image-index='8'] .scale-btn[data-scale='75']")
+  );
   assertImageResized(assert, uploads);
 
   await fillIn(

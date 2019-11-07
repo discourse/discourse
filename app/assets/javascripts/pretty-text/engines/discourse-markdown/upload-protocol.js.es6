@@ -20,15 +20,12 @@ function rule(state) {
       addImage(uploads, blockToken);
     }
 
-    if (!blockToken.children) {
-      continue;
-    }
+    if (!blockToken.children) continue;
 
     for (let j = 0; j < blockToken.children.length; j++) {
       let token = blockToken.children[j];
-      if (token.tag === "img" || token.tag === "a") {
-        addImage(uploads, token);
-      }
+
+      if (token.tag === "img" || token.tag === "a") addImage(uploads, token);
     }
   }
 
