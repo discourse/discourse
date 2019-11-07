@@ -142,18 +142,6 @@ const TopicTrackingState = Discourse.Model.extend({
       }
     }
 
-    if (filter === defaultHomepage()) {
-      const suppressed_from_latest_category_ids = Discourse.Site.currentProp(
-        "suppressed_from_latest_category_ids"
-      );
-      if (
-        suppressed_from_latest_category_ids &&
-        suppressed_from_latest_category_ids.includes(data.payload.category_id)
-      ) {
-        return;
-      }
-    }
-
     if (
       ["all", "latest", "new"].includes(filter) &&
       data.message_type === "new_topic"
