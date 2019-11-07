@@ -616,29 +616,4 @@ RSpec.describe ListController do
       expect(ListController.best_periods_for(nil, :daily)).to eq([:daily, :all])
     end
   end
-
-  describe "categories suppression" do
-    let(:category_one) { Fabricate(:category_with_definition) }
-    let(:sub_category) { Fabricate(:category_with_definition, parent_category: category_one, suppress_from_latest: true) }
-    let!(:topic_in_sub_category) { Fabricate(:topic, category: sub_category) }
-
-    let(:category_two) { Fabricate(:category_with_definition, suppress_from_latest: true) }
-    let!(:topic_in_category_two) { Fabricate(:topic, category: category_two) }
-
-    it "suppresses categories from the latest list" do
-      get "/#{SiteSetting.homepage}.json"
-      expect(response.status).to eq(200)
-
-      topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
-      expect(topic_titles).not_to include(topic_in_sub_category.title, topic_in_category_two.title)
-    end
-
-    it "does not suppress" do
-      get "/#{SiteSetting.homepage}.json", params: { category: category_one.id }
-      expect(response.status).to eq(200)
-
-      topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
-      expect(topic_titles).to include(topic_in_sub_category.title)
-    end
-  end
 end
