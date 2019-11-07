@@ -1,16 +1,15 @@
 import Component from "@ember/component";
-import emberComputed from "@ember/object/computed";
 
 export default Component.extend({
   classNames: ["d-date-time-input"],
   date: null,
   showTime: true,
 
-  _hours: emberComputed("date", function() {
+  _hours: Ember.computed("date", function() {
     return this.date ? this.date.getHours() : null;
   }),
 
-  _minutes: emberComputed("date", function() {
+  _minutes: Ember.computed("date", function() {
     return this.date ? this.date.getMinutes() : null;
   }),
 

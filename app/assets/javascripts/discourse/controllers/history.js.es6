@@ -1,4 +1,4 @@
-import emberComputed, { alias, gt, not, or, equal } from "@ember/object/computed";
+import { alias, gt, not, or, equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -9,7 +9,7 @@ import { sanitizeAsync } from "discourse/lib/text";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 function customTagArray(fieldName) {
-  return emberComputed(fieldName, function() {
+  return Ember.computed(fieldName, function() {
     var val = this.get(fieldName);
     if (!val) {
       return val;

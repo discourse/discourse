@@ -2,10 +2,9 @@ import AdminUser from "admin/models/admin-user";
 import RestModel from "discourse/models/rest";
 import { ajax } from "discourse/lib/ajax";
 import computed from "ember-addons/ember-computed-decorators";
-import emberComputed from "@ember/object/computed";
 
 const ApiKey = RestModel.extend({
-  user: emberComputed("_user", {
+  user: Ember.computed("_user", {
     get() {
       return this._user;
     },

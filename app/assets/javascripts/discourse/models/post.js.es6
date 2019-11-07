@@ -1,6 +1,6 @@
 import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import emberComputed, { equal, and, or, not } from "@ember/object/computed";
+import { equal, and, or, not } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
@@ -17,7 +17,7 @@ import { Promise } from "rsvp";
 
 const Post = RestModel.extend({
   // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
-  siteSettings: emberComputed({
+  siteSettings: Ember.computed({
     get() {
       return Discourse.SiteSettings;
     },

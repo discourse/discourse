@@ -1,5 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import emberComputed, { and, or, alias, reads } from "@ember/object/computed";
+import { and, or, alias, reads } from "@ember/object/computed";
 import { debounce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
@@ -158,7 +158,7 @@ export default Controller.extend({
     return "title";
   },
 
-  showToolbar: emberComputed({
+  showToolbar: Ember.computed({
     get() {
       const keyValueStore = getOwner(this).lookup("key-value-store:main");
       const storedVal = keyValueStore.get("toolbar-enabled");

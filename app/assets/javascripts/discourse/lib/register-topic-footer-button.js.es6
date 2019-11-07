@@ -1,5 +1,4 @@
 import error from "@ember/error";
-import emberComputed from "@ember/object/computed";
 
 let _topicFooterButtons = {};
 
@@ -71,7 +70,7 @@ export function getTopicFooterButtons() {
       .filter(x => x)
   );
 
-  return emberComputed(...dependentKeys, {
+  return Ember.computed(...dependentKeys, {
     get() {
       const _isFunction = descriptor =>
         descriptor && typeof descriptor === "function";

@@ -1,5 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import emberComputed, { gt, equal, or } from "@ember/object/computed";
+import { gt, equal, or } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
@@ -63,7 +63,7 @@ const User = RestModel.extend({
     return UserDraftsStream.create({ user: this });
   },
 
-  staff: emberComputed("admin", "moderator", {
+  staff: Ember.computed("admin", "moderator", {
     get() {
       return this.admin || this.moderator;
     },
