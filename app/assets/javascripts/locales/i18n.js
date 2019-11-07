@@ -319,7 +319,8 @@ I18n.enableVerboseLocalization = function() {
       if (!_.isEmpty(value)) {
         message += ", parameters: " + JSON.stringify(value);
       }
-      Ember.Logger.info(message);
+      // eslint-disable-next-line no-console
+      console.info(message);
     }
     return t.apply(I18n, [scope, value]) + " (#" + current + ")";
   };

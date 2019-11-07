@@ -9,6 +9,7 @@ import { outputExportResult } from "discourse/lib/export-result";
 import { isNumeric } from "discourse/lib/utilities";
 import { SCHEMA_VERSION, default as Report } from "admin/models/report";
 import computed from "ember-addons/ember-computed-decorators";
+import ENV from "discourse-common/config/environment";
 
 const TABLE_OPTIONS = {
   perPage: 8,
@@ -162,8 +163,8 @@ export default Component.extend({
     let reportKey = "reports:";
     reportKey += [
       dataSourceName,
-      Ember.testing ? "start" : startDate.replace(/-/g, ""),
-      Ember.testing ? "end" : endDate.replace(/-/g, ""),
+      ENV.environment === "test" ? "start" : startDate.replace(/-/g, ""),
+      ENV.environment === "test" ? "end" : endDate.replace(/-/g, ""),
       "[:prev_period]",
       this.get("reportOptions.table.limit"),
       customFilters
