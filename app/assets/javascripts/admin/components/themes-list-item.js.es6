@@ -44,7 +44,7 @@ export default Component.extend({
   animate(isInitial) {
     const $container = $(this.element);
     const $list = $(this.element.querySelector(".components-list"));
-    if ($list.length === 0 || ENV.environment === 'test') {
+    if ($list.length === 0 || ENV.environment === "test") {
       return;
     }
     const duration = 300;
