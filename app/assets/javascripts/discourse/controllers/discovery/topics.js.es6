@@ -8,6 +8,7 @@ import showModal from "discourse/lib/show-modal";
 import { userPath } from "discourse/lib/url";
 import TopicList from "discourse/models/topic-list";
 import computed from "ember-addons/ember-computed-decorators";
+import Topic from "discourse/models/topic";
 
 const controllerOpts = {
   discovery: inject(),
@@ -83,7 +84,7 @@ const controllerOpts = {
 
     resetNew() {
       this.topicTrackingState.resetNew();
-      Discourse.Topic.resetNew().then(() => this.send("refresh"));
+      Topic.resetNew().then(() => this.send("refresh"));
     },
 
     dismissReadPosts() {

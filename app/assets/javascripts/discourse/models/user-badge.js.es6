@@ -2,6 +2,7 @@ import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import computed from "ember-addons/ember-computed-decorators";
 import { Promise } from "rsvp";
+import Topic from "discourse/models/topic";
 
 const UserBadge = Discourse.Model.extend({
   @computed
@@ -35,7 +36,7 @@ UserBadge.reopenClass({
     }
     var topics = {};
     json.topics.forEach(function(topicJson) {
-      topics[topicJson.id] = Discourse.Topic.create(topicJson);
+      topics[topicJson.id] = Topic.create(topicJson);
     });
 
     // Create the badges.

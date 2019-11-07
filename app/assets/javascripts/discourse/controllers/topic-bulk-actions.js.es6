@@ -1,6 +1,7 @@
 import { empty, alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Topic from "discourse/models/topic";
 
 const _buttons = [];
 
@@ -88,7 +89,7 @@ export default Controller.extend(ModalFunctionality, {
     this.set("loading", true);
 
     const topics = this.get("model.topics");
-    return Discourse.Topic.bulkOperation(topics, operation)
+    return Topic.bulkOperation(topics, operation)
       .then(result => {
         this.set("loading", false);
         if (result && result.topic_ids) {
