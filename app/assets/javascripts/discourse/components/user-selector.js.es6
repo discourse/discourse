@@ -1,5 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import { on, observes } from "ember-addons/ember-computed-decorators";
+import { on, observes } from "discourse-common/utils/decorators";
 import TextField from "discourse/components/text-field";
 import userSearch from "discourse/lib/user-search";
 import { findRawTemplate } from "discourse/lib/raw-templates";

@@ -2,7 +2,7 @@ import { isEmpty } from "@ember/utils";
 import InputValidation from "discourse/models/input-validation";
 import debounce from "discourse/lib/debounce";
 import { setting } from "discourse/lib/computed";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
@@ -27,7 +27,7 @@ export default Mixin.create({
     });
   }, 500),
 
-  @computed("accountUsername")
+  @discourseComputed("accountUsername")
   basicUsernameValidation(accountUsername) {
     this.set("uniqueUsernameValidation", null);
 
@@ -118,7 +118,7 @@ export default Mixin.create({
   }, 500),
 
   // Actually wait for the async name check before we're 100% sure we're good to go
-  @computed("uniqueUsernameValidation", "basicUsernameValidation")
+  @discourseComputed("uniqueUsernameValidation", "basicUsernameValidation")
   usernameValidation() {
     const basicValidation = this.basicUsernameValidation;
     const uniqueUsername = this.uniqueUsernameValidation;

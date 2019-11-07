@@ -1,10 +1,10 @@
 import { isEmpty } from "@ember/utils";
 import InputValidation from "discourse/models/input-validation";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
-  @computed()
+  @discourseComputed()
   nameInstructions() {
     return I18n.t(
       this.siteSettings.full_name_required
@@ -14,7 +14,7 @@ export default Mixin.create({
   },
 
   // Validate the name.
-  @computed("accountName")
+  @discourseComputed("accountName")
   nameValidation() {
     if (this.siteSettings.full_name_required && isEmpty(this.accountName)) {
       return InputValidation.create({ failed: true });

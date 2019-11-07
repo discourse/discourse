@@ -1,6 +1,6 @@
 import { makeArray } from "discourse-common/lib/helpers";
-import { on } from "ember-addons/ember-computed-decorators";
-import computed from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
 
 export default SelectKitHeaderComponent.extend({
@@ -38,14 +38,14 @@ export default SelectKitHeaderComponent.extend({
     $filter.width(availableSpace - parentRightPadding * 4);
   },
 
-  @computed("computedContent.selection.[]")
+  @discourseComputed("computedContent.selection.[]")
   names(selection) {
     return makeArray(selection)
       .map(s => s.name)
       .join(",");
   },
 
-  @computed("computedContent.selection.[]")
+  @discourseComputed("computedContent.selection.[]")
   values(selection) {
     return makeArray(selection)
       .map(s => s.value)

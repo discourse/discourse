@@ -1,7 +1,7 @@
 //= require_tree ./ember-addons/utils
 //= require ./ember-addons/decorator-alias
 //= require ./ember-addons/macro-alias
-//= require ./ember-addons/ember-computed-decorators
+//= require ./discourse-common/utils/decorators
 //= require_tree ./discourse-common
 //= require i18n-patches
 //= require_tree ./select-kit

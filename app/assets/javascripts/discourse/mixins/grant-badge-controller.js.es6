@@ -1,11 +1,11 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { empty } from "@ember/object/computed";
-import computed from "ember-addons/ember-computed-decorators";
 import UserBadge from "discourse/models/user-badge";
 import { convertIconClass } from "discourse-common/lib/icon-library";
 import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
-  @computed("allBadges.[]", "userBadges.[]")
+  @discourseComputed("allBadges.[]", "userBadges.[]")
   grantableBadges(allBadges, userBadges) {
     const granted = userBadges.reduce((map, badge) => {
       map[badge.get("badge_id")] = true;
@@ -31,7 +31,7 @@ export default Mixin.create({
 
   noGrantableBadges: empty("grantableBadges"),
 
-  @computed("selectedBadgeId", "grantableBadges")
+  @discourseComputed("selectedBadgeId", "grantableBadges")
   selectedBadgeGrantable(selectedBadgeId, grantableBadges) {
     return (
       grantableBadges &&

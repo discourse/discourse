@@ -1,6 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import InputValidation from "discourse/models/input-validation";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
@@ -12,21 +12,21 @@ export default Mixin.create({
     this.set("rejectedPasswordsMessages", new Map());
   },
 
-  @computed("passwordMinLength")
+  @discourseComputed("passwordMinLength")
   passwordInstructions() {
     return I18n.t("user.password.instructions", {
       count: this.passwordMinLength
     });
   },
 
-  @computed("isDeveloper", "admin")
+  @discourseComputed("isDeveloper", "admin")
   passwordMinLength(isDeveloper, admin) {
     return isDeveloper || admin
       ? this.siteSettings.min_admin_password_length
       : this.siteSettings.min_password_length;
   },
 
-  @computed(
+  @discourseComputed(
     "accountPassword",
     "passwordRequired",
     "rejectedPasswords.[]",

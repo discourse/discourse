@@ -9,7 +9,7 @@ import AddArchetypeClass from "discourse/mixins/add-archetype-class";
 import ClickTrack from "discourse/lib/click-track";
 import Scrolling from "discourse/mixins/scrolling";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 300;
 

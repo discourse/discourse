@@ -3,9 +3,9 @@ import Component from "@ember/component";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 
@@ -14,7 +14,7 @@ export default Component.extend({
   _picker: null,
   value: null,
 
-  @computed("site.mobileView")
+  @discourseComputed("site.mobileView")
   inputType(mobileView) {
     return mobileView ? "date" : "text";
   },
@@ -83,7 +83,7 @@ export default Component.extend({
     }
   },
 
-  @computed()
+  @discourseComputed()
   placeholder() {
     return I18n.t("dates.placeholder");
   },

@@ -1,8 +1,8 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import computed from "ember-addons/ember-computed-decorators";
 import WatchedWord from "admin/models/watched-word";
 import { ajax } from "discourse/lib/ajax";
 import { fmt } from "discourse/lib/computed";
@@ -27,22 +27,22 @@ export default Controller.extend({
     );
   },
 
-  @computed("actionNameKey", "adminWatchedWords.model")
+  @discourseComputed("actionNameKey", "adminWatchedWords.model")
   currentAction(actionName) {
     return this.findAction(actionName);
   },
 
-  @computed("currentAction.words.[]", "adminWatchedWords.model")
+  @discourseComputed("currentAction.words.[]", "adminWatchedWords.model")
   filteredContent(words) {
     return words || [];
   },
 
-  @computed("actionNameKey")
+  @discourseComputed("actionNameKey")
   actionDescription(actionNameKey) {
     return I18n.t("admin.watched_words.action_descriptions." + actionNameKey);
   },
 
-  @computed("currentAction.count")
+  @discourseComputed("currentAction.count")
   wordCount(count) {
     return count || 0;
   },

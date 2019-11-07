@@ -1,7 +1,7 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { setting } from "discourse/lib/computed";
-import computed from "ember-addons/ember-computed-decorators";
 import AdminDashboard from "admin/models/admin-dashboard";
 import VersionCheck from "admin/models/version-check";
 
@@ -13,7 +13,7 @@ export default Controller.extend({
   exceptionController: inject("exception"),
   showVersionChecks: setting("version_checks"),
 
-  @computed("problems.length")
+  @discourseComputed("problems.length")
   foundProblems(problemsLength) {
     return this.currentUser.get("admin") && (problemsLength || 0) > 0;
   },
@@ -77,7 +77,7 @@ export default Controller.extend({
       .finally(() => this.set("loadingProblems", false));
   },
 
-  @computed("problemsFetchedAt")
+  @discourseComputed("problemsFetchedAt")
   problemsTimestamp(problemsFetchedAt) {
     return moment(problemsFetchedAt)
       .locale("en")

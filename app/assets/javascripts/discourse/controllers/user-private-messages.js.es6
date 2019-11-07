@@ -1,8 +1,8 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias, equal, and } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import computed from "ember-addons/ember-computed-decorators";
 import Topic from "discourse/models/topic";
 
 export default Controller.extend({
@@ -22,17 +22,17 @@ export default Controller.extend({
 
   showNewPM: and("user.viewingSelf", "currentUser.can_send_private_messages"),
 
-  @computed("selected.[]", "bulkSelectEnabled")
+  @discourseComputed("selected.[]", "bulkSelectEnabled")
   hasSelection(selected, bulkSelectEnabled) {
     return bulkSelectEnabled && selected && selected.length > 0;
   },
 
-  @computed("hasSelection", "pmView", "archive")
+  @discourseComputed("hasSelection", "pmView", "archive")
   canMoveToInbox(hasSelection, pmView, archive) {
     return hasSelection && (pmView === "archive" || archive);
   },
 
-  @computed("hasSelection", "pmView", "archive")
+  @discourseComputed("hasSelection", "pmView", "archive")
   canArchive(hasSelection, pmView, archive) {
     return hasSelection && pmView !== "archive" && !archive;
   },

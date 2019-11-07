@@ -1,9 +1,9 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import computed from "ember-addons/ember-computed-decorators";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 
@@ -14,22 +14,22 @@ export default Controller.extend(ModalFunctionality, {
   date: "",
   time: "",
 
-  @computed("saving")
+  @discourseComputed("saving")
   buttonTitle(saving) {
     return saving ? I18n.t("saving") : I18n.t("topic.change_timestamp.action");
   },
 
-  @computed("date", "time")
+  @discourseComputed("date", "time")
   createdAt(date, time) {
     return moment(`${date} ${time}`, "YYYY-MM-DD HH:mm:ss");
   },
 
-  @computed("createdAt")
+  @discourseComputed("createdAt")
   validTimestamp(createdAt) {
     return moment().diff(createdAt, "minutes") < 0;
   },
 
-  @computed("saving", "date", "validTimestamp")
+  @discourseComputed("saving", "date", "validTimestamp")
   buttonDisabled(saving, date, validTimestamp) {
     if (saving || validTimestamp) return true;
     return isEmpty(date);

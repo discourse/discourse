@@ -1,9 +1,8 @@
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
-import { on, observes } from "ember-addons/ember-computed-decorators";
+import { on, observes } from "discourse-common/utils/decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor } from "discourse/lib/text";
-
 import {
   extendedEmojiList,
   isSkinTonableEmoji,

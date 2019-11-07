@@ -1,6 +1,7 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
-import computed from "ember-addons/ember-computed-decorators";
+
 
 export default Component.extend({
   classNames: ["badge-title"],
@@ -8,7 +9,7 @@ export default Component.extend({
   saved: false,
   saving: false,
 
-  @computed("selectableUserBadges", "selectedUserBadgeId")
+  @discourseComputed("selectableUserBadges", "selectedUserBadgeId")
   selectedUserBadge(selectableUserBadges, selectedUserBadgeId) {
     return selectableUserBadges.findBy("id", parseInt(selectedUserBadgeId));
   },

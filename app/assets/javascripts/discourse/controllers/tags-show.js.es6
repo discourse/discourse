@@ -2,9 +2,9 @@ import { alias } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import {
   default as NavItem,
@@ -72,12 +72,12 @@ export default Controller.extend(BulkTopicSelection, {
 
   categories: alias("site.categoriesList"),
 
-  @computed("list", "list.draft")
+  @discourseComputed("list", "list.draft")
   createTopicLabel(list, listDraft) {
     return listDraft ? "topic.open_draft" : "topic.create";
   },
 
-  @computed(
+  @discourseComputed(
     "canCreateTopic",
     "category",
     "canCreateTopicOnCategory",
@@ -108,7 +108,7 @@ export default Controller.extend(BulkTopicSelection, {
     "q"
   ],
 
-  @computed("category", "tag.id", "filterMode")
+  @discourseComputed("category", "tag.id", "filterMode")
   navItems(category, tagId, filterMode) {
     return NavItem.buildList(category, {
       tagId,
@@ -116,12 +116,12 @@ export default Controller.extend(BulkTopicSelection, {
     });
   },
 
-  @computed("category")
+  @discourseComputed("category")
   showTagFilter() {
     return Discourse.SiteSettings.show_filter_by_tag;
   },
 
-  @computed("additionalTags", "canAdminTag", "category")
+  @discourseComputed("additionalTags", "canAdminTag", "category")
   showAdminControls(additionalTags, canAdminTag, category) {
     return !additionalTags && canAdminTag && !category;
   },
@@ -135,7 +135,7 @@ export default Controller.extend(BulkTopicSelection, {
     this.set("application.showFooter", !this.get("list.canLoadMore"));
   },
 
-  @computed("navMode", "list.topics.length", "loading")
+  @discourseComputed("navMode", "list.topics.length", "loading")
   footerMessage(navMode, listTopicsLength, loading) {
     if (loading || listTopicsLength !== 0) {
       return;

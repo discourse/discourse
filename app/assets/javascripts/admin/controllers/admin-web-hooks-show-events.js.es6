@@ -1,8 +1,9 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import computed from "ember-addons/ember-computed-decorators";
+
 
 export default Controller.extend({
   pingDisabled: false,
@@ -14,7 +15,7 @@ export default Controller.extend({
     this.incomingEventIds = [];
   },
 
-  @computed("incomingCount")
+  @discourseComputed("incomingCount")
   hasIncoming(incomingCount) {
     return incomingCount > 0;
   },

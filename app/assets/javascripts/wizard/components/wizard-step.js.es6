@@ -2,9 +2,9 @@ import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import getUrl from "discourse-common/lib/get-url";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
 
 jQuery.fn.wiggle = function(times, duration) {
@@ -34,16 +34,16 @@ export default Component.extend({
     this.autoFocus();
   },
 
-  @computed("step.index")
+  @discourseComputed("step.index")
   showQuitButton: index => index === 0,
 
-  @computed("step.displayIndex", "wizard.totalSteps")
+  @discourseComputed("step.displayIndex", "wizard.totalSteps")
   showNextButton: (current, total) => current < total,
 
-  @computed("step.displayIndex", "wizard.totalSteps")
+  @discourseComputed("step.displayIndex", "wizard.totalSteps")
   showDoneButton: (current, total) => current === total,
 
-  @computed(
+  @discourseComputed(
     "step.index",
     "step.displayIndex",
     "wizard.totalSteps",
@@ -53,10 +53,10 @@ export default Component.extend({
     return index !== 0 && displayIndex !== total && completed;
   },
 
-  @computed("step.index")
+  @discourseComputed("step.index")
   showBackButton: index => index > 0,
 
-  @computed("step.banner")
+  @discourseComputed("step.banner")
   bannerImage(src) {
     if (!src) {
       return;
@@ -80,7 +80,7 @@ export default Component.extend({
     }
   },
 
-  @computed("step.index", "wizard.totalSteps")
+  @discourseComputed("step.index", "wizard.totalSteps")
   barStyle(displayIndex, totalSteps) {
     let ratio = parseFloat(displayIndex) / parseFloat(totalSteps - 1);
     if (ratio < 0) {

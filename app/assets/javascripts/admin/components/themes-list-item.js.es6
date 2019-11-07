@@ -2,9 +2,9 @@ import { gt, and } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { escape } from "pretty-text/sanitizer";
 
@@ -54,7 +54,7 @@ export default Component.extend({
     }
   },
 
-  @computed(
+  @discourseComputed(
     "theme.component",
     "theme.childThemes.@each.name",
     "theme.childThemes.length",
@@ -75,12 +75,12 @@ export default Component.extend({
     });
   },
 
-  @computed("children")
+  @discourseComputed("children")
   childrenString(children) {
     return children.join(", ");
   },
 
-  @computed(
+  @discourseComputed(
     "theme.childThemes.length",
     "theme.component",
     "childrenExpanded",

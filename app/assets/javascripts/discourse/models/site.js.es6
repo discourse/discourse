@@ -1,8 +1,8 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { alias, sort } from "@ember/object/computed";
 import EmberObject from "@ember/object";
-import computed from "ember-addons/ember-computed-decorators";
 import Archetype from "discourse/models/archetype";
 import PostActionType from "discourse/models/post-action-type";
 import Singleton from "discourse/mixins/singleton";
@@ -18,7 +18,7 @@ const Site = RestModel.extend({
     this.topicCountDesc = ["topic_count:desc"];
   },
 
-  @computed("notification_types")
+  @discourseComputed("notification_types")
   notificationLookup(notificationTypes) {
     const result = [];
     Object.keys(notificationTypes).forEach(
@@ -27,7 +27,7 @@ const Site = RestModel.extend({
     return result;
   },
 
-  @computed("post_action_types.[]")
+  @discourseComputed("post_action_types.[]")
   flagTypes() {
     const postActionTypes = this.post_action_types;
     if (!postActionTypes) return [];
@@ -52,7 +52,7 @@ const Site = RestModel.extend({
   },
 
   // Sort subcategories under parents
-  @computed("categoriesByCount", "categories.[]")
+  @discourseComputed("categoriesByCount", "categories.[]")
   sortedCategories(cats) {
     const result = [],
       remaining = {};
@@ -79,13 +79,13 @@ const Site = RestModel.extend({
     return result;
   },
 
-  @computed
+  @discourseComputed
   baseUri() {
     return Discourse.baseUri;
   },
 
   // Returns it in the correct order, by setting
-  @computed
+  @discourseComputed
   categoriesList() {
     return this.siteSettings.fixed_category_positions
       ? this.categories

@@ -1,6 +1,9 @@
 import Component from "@ember/component";
-import { on } from "ember-addons/ember-computed-decorators";
-import computed from "ember-addons/ember-computed-decorators";
+import {
+  default as discourseComputed,
+  on
+} from "discourse-common/utils/decorators";
+
 const { run, isPresent, makeArray, isEmpty } = Ember;
 import UtilsMixin from "select-kit/mixins/utils";
 
@@ -27,7 +30,7 @@ export default Component.extend(UtilsMixin, {
 
   ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title"),
 
-  @computed("computedContent.title", "name")
+  @discourseComputed("computedContent.title", "name")
   title(computedContentTitle, name) {
     if (computedContentTitle) return computedContentTitle;
     if (name) return name;
@@ -35,7 +38,7 @@ export default Component.extend(UtilsMixin, {
     return null;
   },
 
-  @computed("computedContent")
+  @discourseComputed("computedContent")
   guid(computedContent) {
     return Ember.guidFor(computedContent);
   },
@@ -46,7 +49,7 @@ export default Component.extend(UtilsMixin, {
 
   value: Ember.computed.alias("computedContent.value"),
 
-  @computed("templateForRow")
+  @discourseComputed("templateForRow")
   template(templateForRow) {
     return templateForRow(this);
   },
@@ -67,7 +70,7 @@ export default Component.extend(UtilsMixin, {
     }
   },
 
-  @computed(
+  @discourseComputed(
     "computedContent.icon",
     "computedContent.icons",
     "computedContent.originalContent.icon"

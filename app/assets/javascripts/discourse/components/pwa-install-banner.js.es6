@@ -1,9 +1,9 @@
 import { bind } from "@ember/runloop";
 import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 const USER_DISMISSED_PROMPT_KEY = "dismissed-pwa-install-banner";
 
@@ -28,7 +28,7 @@ export default Component.extend({
     window.removeEventListener("beforeinstallprompt", this._promptEventHandler);
   },
 
-  @computed
+  @discourseComputed
   bannerDismissed: {
     set(value) {
       this.keyValueStore.set({ key: USER_DISMISSED_PROMPT_KEY, value });
@@ -39,7 +39,7 @@ export default Component.extend({
     }
   },
 
-  @computed("deferredInstallPromptEvent", "bannerDismissed")
+  @discourseComputed("deferredInstallPromptEvent", "bannerDismissed")
   showPWAInstallBanner() {
     const launchedFromDiscourseHub =
       window.location.search.indexOf("discourse_app=1") !== -1;

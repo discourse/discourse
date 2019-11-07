@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   attributeBindings: [
@@ -16,14 +16,14 @@ export default Component.extend({
   tagName: "span",
   tabindex: -1,
 
-  @computed("computedContent")
+  @discourseComputed("computedContent")
   guid(computedContent) {
     return Ember.guidFor(computedContent);
   },
 
   ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title"),
 
-  @computed("computedContent.title", "name")
+  @discourseComputed("computedContent.title", "name")
   title(computedContentTitle, name) {
     if (computedContentTitle) return computedContentTitle;
     if (name) return name;
@@ -41,7 +41,7 @@ export default Component.extend({
     return this.getWithDefault("computedContent.locked", false);
   }),
 
-  @computed("computedContent", "highlightedSelection.[]")
+  @discourseComputed("computedContent", "highlightedSelection.[]")
   isHighlighted(computedContent, highlightedSelection) {
     return highlightedSelection.includes(this.computedContent);
   },

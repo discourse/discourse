@@ -1,5 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
+
 
 export default Component.extend({
   classNameBindings: [
@@ -8,7 +9,7 @@ export default Component.extend({
     "condition:visible"
   ],
 
-  @computed("size")
+  @discourseComputed("size")
   containerClass(size) {
     return size === "small" ? "inline-spinner" : undefined;
   }

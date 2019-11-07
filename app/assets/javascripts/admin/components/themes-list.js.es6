@@ -1,7 +1,7 @@
 import { gt, equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import { THEMES, COMPONENTS } from "admin/models/theme";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   THEMES: THEMES,
@@ -16,7 +16,7 @@ export default Component.extend({
   themesTabActive: equal("currentTab", THEMES),
   componentsTabActive: equal("currentTab", COMPONENTS),
 
-  @computed("themes", "components", "currentTab")
+  @discourseComputed("themes", "components", "currentTab")
   themesList(themes, components) {
     if (this.themesTabActive) {
       return themes;
@@ -25,7 +25,7 @@ export default Component.extend({
     }
   },
 
-  @computed(
+  @discourseComputed(
     "themesList",
     "currentTab",
     "themesList.@each.user_selectable",
@@ -40,7 +40,7 @@ export default Component.extend({
     );
   },
 
-  @computed(
+  @discourseComputed(
     "themesList",
     "currentTab",
     "themesList.@each.user_selectable",

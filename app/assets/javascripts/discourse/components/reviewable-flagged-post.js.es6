@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { gt } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import { longDate } from "discourse/lib/formatter";
 import { historyHeat } from "discourse/widgets/post-edits-indicator";
 import showModal from "discourse/lib/show-modal";
@@ -8,12 +8,12 @@ import showModal from "discourse/lib/show-modal";
 export default Component.extend({
   hasEdits: gt("reviewable.post_version", 1),
 
-  @computed("reviewable.post_updated_at")
+  @discourseComputed("reviewable.post_updated_at")
   historyClass(updatedAt) {
     return historyHeat(this.siteSettings, new Date(updatedAt));
   },
 
-  @computed("reviewable.post_updated_at")
+  @discourseComputed("reviewable.post_updated_at")
   editedDate(updatedAt) {
     return longDate(updatedAt);
   },

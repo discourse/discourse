@@ -1,16 +1,17 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
+
 
 export default Component.extend({
   editorId: reads("fieldName"),
 
-  @computed("fieldName")
+  @discourseComputed("fieldName")
   currentEditorMode(fieldName) {
     return fieldName === "css" ? "scss" : fieldName;
   },
 
-  @computed("fieldName", "styles.html", "styles.css")
+  @discourseComputed("fieldName", "styles.html", "styles.css")
   resetDisabled(fieldName) {
     return (
       this.get(`styles.${fieldName}`) ===
@@ -18,7 +19,7 @@ export default Component.extend({
     );
   },
 
-  @computed("styles", "fieldName")
+  @discourseComputed("styles", "fieldName")
   editorContents: {
     get(styles, fieldName) {
       return styles[fieldName];

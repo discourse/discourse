@@ -1,6 +1,6 @@
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 
 export default Controller.extend({

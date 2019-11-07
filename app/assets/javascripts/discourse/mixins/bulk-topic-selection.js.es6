@@ -1,6 +1,6 @@
 import { alias } from "@ember/object/computed";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({

@@ -1,27 +1,27 @@
 import Component from "@ember/component";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 
 export default Component.extend({
   classNames: ["group-membership-button"],
 
-  @computed("model.public_admission", "userIsGroupUser")
+  @discourseComputed("model.public_admission", "userIsGroupUser")
   canJoinGroup(publicAdmission, userIsGroupUser) {
     return publicAdmission && !userIsGroupUser;
   },
 
-  @computed("model.public_exit", "userIsGroupUser")
+  @discourseComputed("model.public_exit", "userIsGroupUser")
   canLeaveGroup(publicExit, userIsGroupUser) {
     return publicExit && userIsGroupUser;
   },
 
-  @computed("model.allow_membership_requests", "userIsGroupUser")
+  @discourseComputed("model.allow_membership_requests", "userIsGroupUser")
   canRequestMembership(allowMembershipRequests, userIsGroupUser) {
     return allowMembershipRequests && !userIsGroupUser;
   },
 
-  @computed("model.is_group_user")
+  @discourseComputed("model.is_group_user")
   userIsGroupUser(isGroupUser) {
     return !!isGroupUser;
   },

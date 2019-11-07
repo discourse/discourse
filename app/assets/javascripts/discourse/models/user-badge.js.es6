@@ -1,10 +1,10 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
-import computed from "ember-addons/ember-computed-decorators";
 import { Promise } from "rsvp";
 
 const UserBadge = Discourse.Model.extend({
-  @computed
+  @discourseComputed
   postUrl: function() {
     if (this.topic_title) {
       return "/t/-/" + this.topic_id + "/" + this.post_number;

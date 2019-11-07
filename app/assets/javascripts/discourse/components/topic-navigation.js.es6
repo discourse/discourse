@@ -2,7 +2,7 @@ import EmberObject from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { later } from "@ember/runloop";
 import Component from "@ember/component";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
 import PanEvents, {
   SWIPE_VELOCITY,

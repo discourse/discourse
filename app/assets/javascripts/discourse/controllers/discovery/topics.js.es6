@@ -1,3 +1,4 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias, not, gt, empty, notEmpty, equal } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import DiscoveryController from "discourse/controllers/discovery";
@@ -7,7 +8,7 @@ import { endWith } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
 import { userPath } from "discourse/lib/url";
 import TopicList from "discourse/models/topic-list";
-import computed from "ember-addons/ember-computed-decorators";
+
 
 const controllerOpts = {
   discovery: inject(),
@@ -98,17 +99,17 @@ const controllerOpts = {
     return filter.match(new RegExp(filterType + "$", "gi")) ? true : false;
   },
 
-  @computed("model.filter", "model.topics.length")
+  @discourseComputed("model.filter", "model.topics.length")
   showDismissRead(filter, topicsLength) {
     return this.isFilterPage(filter, "unread") && topicsLength > 0;
   },
 
-  @computed("model.filter", "model.topics.length")
+  @discourseComputed("model.filter", "model.topics.length")
   showResetNew(filter, topicsLength) {
     return filter === "new" && topicsLength > 0;
   },
 
-  @computed("model.filter", "model.topics.length")
+  @discourseComputed("model.filter", "model.topics.length")
   showDismissAtTop(filter, topicsLength) {
     return (
       (this.isFilterPage(filter, "new") ||
@@ -128,7 +129,7 @@ const controllerOpts = {
   weekly: equal("period", "weekly"),
   daily: equal("period", "daily"),
 
-  @computed("allLoaded", "model.topics.length")
+  @discourseComputed("allLoaded", "model.topics.length")
   footerMessage(allLoaded, topicsLength) {
     if (!allLoaded) return;
 
@@ -151,7 +152,7 @@ const controllerOpts = {
     }
   },
 
-  @computed("allLoaded", "model.topics.length")
+  @discourseComputed("allLoaded", "model.topics.length")
   footerEducation(allLoaded, topicsLength) {
     if (!allLoaded || topicsLength > 0 || !this.currentUser) {
       return;
