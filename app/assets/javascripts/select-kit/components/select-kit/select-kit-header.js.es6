@@ -1,5 +1,6 @@
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+
 const { isEmpty, makeArray } = Ember;
 
 export default Component.extend({
@@ -23,7 +24,7 @@ export default Component.extend({
 
   ariaLabel: Ember.computed.or("computedContent.ariaLabel", "sanitizedTitle"),
 
-  @computed("computedContent.title", "name")
+  @discourseComputed("computedContent.title", "name")
   title(computedContentTitle, name) {
     if (computedContentTitle) return computedContentTitle;
     if (name) return name;
@@ -33,7 +34,7 @@ export default Component.extend({
 
   // this might need a more advanced solution
   // but atm it's the only case we have to handle
-  @computed("title")
+  @discourseComputed("title")
   sanitizedTitle(title) {
     return String(title).replace("&hellip;", "");
   },
@@ -44,7 +45,7 @@ export default Component.extend({
 
   value: Ember.computed.alias("computedContent.value"),
 
-  @computed("computedContent.icon", "computedContent.icons")
+  @discourseComputed("computedContent.icon", "computedContent.icons")
   icons(icon, icons) {
     return makeArray(icon)
       .concat(icons)

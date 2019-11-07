@@ -1,9 +1,9 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import debounce from "discourse/lib/debounce";
 import { i18n } from "discourse/lib/computed";
 import AdminUser from "admin/models/admin-user";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Controller.extend(CanCheckEmails, {
   model: null,
@@ -24,7 +24,7 @@ export default Controller.extend(CanCheckEmails, {
     this._canLoadMore = true;
   },
 
-  @computed("query")
+  @discourseComputed("query")
   title(query) {
     return I18n.t("admin.users.titles." + query);
   },

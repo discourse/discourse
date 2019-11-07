@@ -33,7 +33,7 @@ export function registerTopicFooterButton(button) {
     // css class appended to the button
     classNames: [],
 
-    // computed properties which should force a button state refresh
+    // discourseComputed properties which should force a button state refresh
     // eg: ["topic.bookmarked", "topic.category_id"]
     dependentKeys: [],
 
@@ -88,37 +88,37 @@ export function getTopicFooterButtons() {
       return Object.values(_topicFooterButtons)
         .filter(button => _compute(button, "displayed"))
         .map(button => {
-          const computedButon = {};
+          const discourseComputedButon = {};
 
-          computedButon.id = button.id;
+          discourseComputedButon.id = button.id;
 
           const label = _compute(button, "label");
-          computedButon.label = label
+          discourseComputedButon.label = label
             ? I18n.t(label)
             : _compute(button, "translatedLabel");
 
           const title = _compute(button, "title");
-          computedButon.title = title
+          discourseComputedButon.title = title
             ? I18n.t(title)
             : _compute(button, "translatedTitle");
 
-          computedButon.classNames = (
+          discourseComputedButon.classNames = (
             _compute(button, "classNames") || []
           ).join(" ");
 
-          computedButon.icon = _compute(button, "icon");
-          computedButon.disabled = _compute(button, "disabled");
-          computedButon.dropdown = _compute(button, "dropdown");
-          computedButon.priority = _compute(button, "priority");
+          discourseComputedButon.icon = _compute(button, "icon");
+          discourseComputedButon.disabled = _compute(button, "disabled");
+          discourseComputedButon.dropdown = _compute(button, "dropdown");
+          discourseComputedButon.priority = _compute(button, "priority");
 
           if (_isFunction(button.action)) {
-            computedButon.action = () => button.action.apply(this);
+            discourseComputedButon.action = () => button.action.apply(this);
           } else {
             const actionName = button.action;
-            computedButon.action = () => this[actionName]();
+            discourseComputedButon.action = () => this[actionName]();
           }
 
-          return computedButon;
+          return discourseComputedButon;
         })
         .sortBy("priority")
         .reverse();

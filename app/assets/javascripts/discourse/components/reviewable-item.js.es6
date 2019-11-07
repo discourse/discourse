@@ -1,7 +1,7 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import computed from "ember-addons/ember-computed-decorators";
 import Category from "discourse/models/category";
 import optionalService from "discourse/lib/optional-service";
 import showModal from "discourse/lib/show-modal";
@@ -17,17 +17,17 @@ export default Component.extend({
   editing: false,
   _updates: null,
 
-  @computed("reviewable.type")
+  @discourseComputed("reviewable.type")
   customClass(type) {
     return type.dasherize();
   },
 
-  @computed("siteSettings.reviewable_claiming", "reviewable.topic")
+  @discourseComputed("siteSettings.reviewable_claiming", "reviewable.topic")
   claimEnabled(claimMode, topic) {
     return claimMode !== "disabled" && !!topic;
   },
 
-  @computed(
+  @discourseComputed(
     "claimEnabled",
     "siteSettings.reviewable_claiming",
     "reviewable.claimed_by"
@@ -44,7 +44,10 @@ export default Component.extend({
     return claimMode !== "required";
   },
 
-  @computed("siteSettings.reviewable_claiming", "reviewable.claimed_by")
+  @discourseComputed(
+    "siteSettings.reviewable_claiming",
+    "reviewable.claimed_by"
+  )
   claimHelp(claimMode, claimedBy) {
     if (claimedBy) {
       return claimedBy.id === this.currentUser.id
@@ -61,7 +64,7 @@ export default Component.extend({
 
   // Find a component to render, if one exists. For example:
   // `ReviewableUser` will return `reviewable-user`
-  @computed("reviewable.type")
+  @discourseComputed("reviewable.type")
   reviewableComponent(type) {
     if (_components[type] !== undefined) {
       return _components[type];

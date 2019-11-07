@@ -1,6 +1,6 @@
 import { notEmpty, empty, equal } from "@ember/object/computed";
 import Component from "@ember/component";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
 
 export default Component.extend({
@@ -26,7 +26,7 @@ export default Component.extend({
 
   btnLink: equal("display", "link"),
 
-  @computed("icon", "translatedLabel")
+  @discourseComputed("icon", "translatedLabel")
   btnType(icon, translatedLabel) {
     if (icon) {
       return translatedLabel ? "btn-icon-text" : "btn-icon";
@@ -37,7 +37,7 @@ export default Component.extend({
 
   noText: empty("translatedLabel"),
 
-  @computed("title")
+  @discourseComputed("title")
   translatedTitle: {
     get() {
       if (this._translatedTitle) return this._translatedTitle;
@@ -48,7 +48,7 @@ export default Component.extend({
     }
   },
 
-  @computed("label")
+  @discourseComputed("label")
   translatedLabel: {
     get() {
       if (this._translatedLabel) return this._translatedLabel;

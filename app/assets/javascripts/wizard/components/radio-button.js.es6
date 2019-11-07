@@ -1,6 +1,6 @@
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
-import { observes, on } from "ember-addons/ember-computed-decorators";
+import { observes, on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "label",

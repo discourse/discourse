@@ -1,9 +1,9 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import {
-  default as computed,
+  default as discourseComputed,
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { buttonDetails } from "discourse/lib/notification-levels";
 import { allLevels } from "discourse/lib/notification-levels";
 
@@ -20,7 +20,7 @@ export default DropdownSelectBoxComponent.extend({
   i18nPrefix: "",
   i18nPostfix: "",
 
-  @computed("iconForSelectedDetails")
+  @discourseComputed("iconForSelectedDetails")
   headerIcon(iconForSelectedDetails) {
     return iconForSelectedDetails;
   },
@@ -47,7 +47,7 @@ export default DropdownSelectBoxComponent.extend({
     return content;
   },
 
-  @computed("computedValue")
+  @discourseComputed("computedValue")
   selectedDetails(computedValue) {
     return buttonDetails(computedValue);
   }

@@ -9,10 +9,10 @@ import Quote from "discourse/lib/quote";
 import Draft from "discourse/models/draft";
 import Composer from "discourse/models/composer";
 import {
-  default as computed,
+  default as discourseComputed,
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import InputValidation from "discourse/models/input-validation";
 import { getOwner } from "discourse-common/lib/get-owner";
 import {
@@ -110,7 +110,7 @@ export default Controller.extend({
     this.set("showPreview", val === "true");
   },
 
-  @computed("showPreview")
+  @discourseComputed("showPreview")
   toggleText(showPreview) {
     return showPreview
       ? I18n.t("composer.hide_preview")
@@ -127,7 +127,7 @@ export default Controller.extend({
     }
   },
 
-  @computed(
+  @discourseComputed(
     "model.replyingToTopic",
     "model.creatingPrivateMessage",
     "model.targetUsernames",
@@ -184,7 +184,7 @@ export default Controller.extend({
 
   topicModel: alias("topicController.model"),
 
-  @computed("model.canEditTitle", "model.creatingPrivateMessage")
+  @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
     return (
       this.site.can_tag_topics &&
@@ -194,12 +194,12 @@ export default Controller.extend({
     );
   },
 
-  @computed("model.editingPost", "model.topic.details.can_edit")
+  @discourseComputed("model.editingPost", "model.topic.details.can_edit")
   disableCategoryChooser(editingPost, canEditTopic) {
     return editingPost && !canEditTopic;
   },
 
-  @computed("model.editingPost", "model.topic.canEditTags")
+  @discourseComputed("model.editingPost", "model.topic.canEditTags")
   disableTagsChooser(editingPost, canEditTags) {
     return editingPost && !canEditTags;
   },
@@ -208,12 +208,12 @@ export default Controller.extend({
 
   canUnlistTopic: and("model.creatingTopic", "isStaffUser"),
 
-  @computed("canWhisper", "replyingToWhisper")
+  @discourseComputed("canWhisper", "replyingToWhisper")
   showWhisperToggle(canWhisper, replyingToWhisper) {
     return canWhisper && !replyingToWhisper;
   },
 
-  @computed("model.post")
+  @discourseComputed("model.post")
   replyingToWhisper(repliedToPost) {
     return (
       repliedToPost && repliedToPost.post_type === this.site.post_types.whisper
@@ -222,14 +222,14 @@ export default Controller.extend({
 
   isWhispering: or("replyingToWhisper", "model.whisper"),
 
-  @computed("model.action", "isWhispering")
+  @discourseComputed("model.action", "isWhispering")
   saveIcon(action, isWhispering) {
     if (isWhispering) return "far-eye-slash";
 
     return SAVE_ICONS[action];
   },
 
-  @computed("model.action", "isWhispering", "model.editConflict")
+  @discourseComputed("model.action", "isWhispering", "model.editConflict")
   saveLabel(action, isWhispering, editConflict) {
     if (editConflict) return "composer.overwrite_edit";
     else if (isWhispering) return "composer.create_whisper";
@@ -237,7 +237,7 @@ export default Controller.extend({
     return SAVE_LABELS[action];
   },
 
-  @computed("isStaffUser", "model.action")
+  @discourseComputed("isStaffUser", "model.action")
   canWhisper(isStaffUser, action) {
     return (
       this.siteSettings.enable_whispers &&
@@ -260,7 +260,7 @@ export default Controller.extend({
     return option;
   },
 
-  @computed("model.composeState", "model.creatingTopic", "model.post")
+  @discourseComputed("model.composeState", "model.creatingTopic", "model.post")
   popupMenuOptions(composeState) {
     if (composeState === "open" || composeState === "fullscreen") {
       const options = [];
@@ -295,7 +295,7 @@ export default Controller.extend({
     }
   },
 
-  @computed("model.creatingPrivateMessage", "model.targetUsernames")
+  @discourseComputed("model.creatingPrivateMessage", "model.targetUsernames")
   showWarning(creatingPrivateMessage, usernames) {
     if (!this.get("currentUser.staff")) {
       return false;
@@ -315,17 +315,17 @@ export default Controller.extend({
     return creatingPrivateMessage;
   },
 
-  @computed("model.topic.title")
+  @discourseComputed("model.topic.title")
   draftTitle(topicTitle) {
     return emojiUnescape(escapeExpression(topicTitle));
   },
 
-  @computed
+  @discourseComputed
   allowUpload() {
     return authorizesOneOrMoreExtensions();
   },
 
-  @computed()
+  @discourseComputed()
   uploadIcon: () => uploadIcon(),
 
   actions: {
@@ -1054,7 +1054,7 @@ export default Controller.extend({
     debounce(this, this._saveDraft, 2000);
   },
 
-  @computed("model.categoryId", "lastValidatedAt")
+  @discourseComputed("model.categoryId", "lastValidatedAt")
   categoryValidation(categoryId, lastValidatedAt) {
     if (!this.siteSettings.allow_uncategorized_topics && !categoryId) {
       return InputValidation.create({
@@ -1065,7 +1065,7 @@ export default Controller.extend({
     }
   },
 
-  @computed("model.category", "model.tags", "lastValidatedAt")
+  @discourseComputed("model.category", "model.tags", "lastValidatedAt")
   tagValidation(category, tags, lastValidatedAt) {
     const tagsArray = tags || [];
     if (
@@ -1112,12 +1112,12 @@ export default Controller.extend({
     $(".d-editor-input").autocomplete({ cancel: true });
   },
 
-  @computed("model.action")
+  @discourseComputed("model.action")
   canEdit(action) {
     return action === "edit" && this.currentUser.can_edit;
   },
 
-  @computed("model.composeState")
+  @discourseComputed("model.composeState")
   visible(state) {
     return state && state !== "closed";
   }

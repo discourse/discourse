@@ -1,5 +1,5 @@
 import NotificationOptionsComponent from "select-kit/components/notifications-button";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default NotificationOptionsComponent.extend({
   pluginApiIdentifiers: ["tag-notifications-button"],
@@ -16,7 +16,7 @@ export default NotificationOptionsComponent.extend({
     return this.notificationLevel;
   },
 
-  @computed("iconForSelectedDetails")
+  @discourseComputed("iconForSelectedDetails")
   headerIcon(iconForSelectedDetails) {
     return iconForSelectedDetails;
   }

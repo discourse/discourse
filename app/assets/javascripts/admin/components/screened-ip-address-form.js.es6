@@ -1,3 +1,4 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 /**
@@ -12,20 +13,19 @@ import Component from "@ember/component";
 **/
 
 import ScreenedIpAddress from "admin/models/screened-ip-address";
-import computed from "ember-addons/ember-computed-decorators";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["screened-ip-address-form"],
   formSubmitted: false,
   actionName: "block",
 
-  @computed
+  @discourseComputed
   adminWhitelistEnabled() {
     return Discourse.SiteSettings.use_admin_ip_whitelist;
   },
 
-  @computed("adminWhitelistEnabled")
+  @discourseComputed("adminWhitelistEnabled")
   actionNames(adminWhitelistEnabled) {
     if (adminWhitelistEnabled) {
       return [

@@ -1,9 +1,9 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Ember.TextField.extend({
   classNameBindings: ["invalid"],
 
-  @computed("number")
+  @discourseComputed("number")
   value: {
     get(number) {
       return parseInt(number);
@@ -21,7 +21,7 @@ export default Ember.TextField.extend({
     }
   },
 
-  @computed("placeholderKey")
+  @discourseComputed("placeholderKey")
   placeholder(key) {
     return key ? I18n.t(key) : "";
   }

@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import TopicTimer from "discourse/models/topic-timer";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -17,7 +17,7 @@ export default Controller.extend(ModalFunctionality, {
   loading: false,
   isPublic: "true",
 
-  @computed("model.closed")
+  @discourseComputed("model.closed")
   publicTimerTypes(closed) {
     let types = [
       {
@@ -50,17 +50,21 @@ export default Controller.extend(ModalFunctionality, {
     return types;
   },
 
-  @computed()
+  @discourseComputed()
   privateTimerTypes() {
     return [{ id: REMINDER_TYPE, name: I18n.t("topic.reminder.title") }];
   },
 
-  @computed("isPublic", "publicTimerTypes", "privateTimerTypes")
+  @discourseComputed("isPublic", "publicTimerTypes", "privateTimerTypes")
   selections(isPublic, publicTimerTypes, privateTimerTypes) {
     return "true" === isPublic ? publicTimerTypes : privateTimerTypes;
   },
 
-  @computed("isPublic", "model.topic_timer", "model.private_topic_timer")
+  @discourseComputed(
+    "isPublic",
+    "model.topic_timer",
+    "model.private_topic_timer"
+  )
   topicTimer(isPublic, publicTopicTimer, privateTopicTimer) {
     return "true" === isPublic ? publicTopicTimer : privateTopicTimer;
   },

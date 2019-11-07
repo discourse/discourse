@@ -1,7 +1,7 @@
 import MultiSelectComponent from "select-kit/components/multi-select";
 import TagsMixin from "select-kit/mixins/tags";
 import renderTag from "discourse/lib/render-tag";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
 const { get, run } = Ember;
 
@@ -55,12 +55,12 @@ export default MultiSelectComponent.extend(TagsMixin, {
     this.set("tags", values.filter(v => v));
   },
 
-  @computed("tags")
+  @discourseComputed("tags")
   values(tags) {
     return makeArray(tags);
   },
 
-  @computed("tags")
+  @discourseComputed("tags")
   content(tags) {
     return makeArray(tags);
   },

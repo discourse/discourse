@@ -1,6 +1,8 @@
 import SelectKitComponent from "select-kit/components/select-kit";
-import computed from "ember-addons/ember-computed-decorators";
-import { on } from "ember-addons/ember-computed-decorators";
+import {
+  default as discourseComputed,
+  on
+} from "discourse-common/utils/decorators";
 const { get, isNone, isEmpty, makeArray, run } = Ember;
 import {
   applyOnSelectPluginApiCallbacks,
@@ -67,7 +69,7 @@ export default SelectKitComponent.extend({
     });
   },
 
-  @computed("filter", "shouldDisplayCreateRow")
+  @discourseComputed("filter", "shouldDisplayCreateRow")
   createRowComputedContent(filter, shouldDisplayCreateRow) {
     if (shouldDisplayCreateRow) {
       let content = this.createContentFromInput(filter);
@@ -75,12 +77,12 @@ export default SelectKitComponent.extend({
     }
   },
 
-  @computed("filter", "computedValues")
+  @discourseComputed("filter", "computedValues")
   shouldDisplayCreateRow(filter, computedValues) {
     return this._super() && !computedValues.includes(filter);
   },
 
-  @computed
+  @discourseComputed
   shouldDisplayFilter() {
     return true;
   },
@@ -126,7 +128,7 @@ export default SelectKitComponent.extend({
     });
   },
 
-  @computed("computedAsyncContent.[]", "computedValues.[]")
+  @discourseComputed("computedAsyncContent.[]", "computedValues.[]")
   filteredAsyncComputedContent(computedAsyncContent, computedValues) {
     computedAsyncContent = computedAsyncContent.filter(c => {
       return !computedValues.includes(get(c, "value"));
@@ -139,7 +141,7 @@ export default SelectKitComponent.extend({
     return computedAsyncContent;
   },
 
-  @computed("computedContent.[]", "computedValues.[]", "filter")
+  @discourseComputed("computedContent.[]", "computedValues.[]", "filter")
   filteredComputedContent(computedContent, computedValues, filter) {
     computedContent = computedContent.filter(c => {
       return !computedValues.includes(get(c, "value"));
@@ -182,7 +184,7 @@ export default SelectKitComponent.extend({
     return content;
   },
 
-  @computed("filter")
+  @discourseComputed("filter")
   templateForCreateRow() {
     return rowComponent => {
       return I18n.t("select_kit.create", {
@@ -195,7 +197,7 @@ export default SelectKitComponent.extend({
     return this._super() && !this.hasReachedMaximum;
   },
 
-  @computed("computedValues.[]", "computedContent.[]")
+  @discourseComputed("computedValues.[]", "computedContent.[]")
   selection(computedValues, computedContent) {
     const selected = [];
 
@@ -207,7 +209,7 @@ export default SelectKitComponent.extend({
     return selected;
   },
 
-  @computed("selection.[]")
+  @discourseComputed("selection.[]")
   hasSelection(selection) {
     return !isEmpty(selection);
   },

@@ -4,9 +4,9 @@ import { debounce } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import InputValidation from "discourse/models/input-validation";
 import { load } from "pretty-text/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
@@ -34,7 +34,7 @@ export default Component.extend({
     }
   },
 
-  @computed(
+  @discourseComputed(
     "composer.titleLength",
     "composer.missingTitleCharacters",
     "composer.minimumTitleLength",
@@ -68,7 +68,7 @@ export default Component.extend({
     }
   },
 
-  @computed("watchForLink")
+  @discourseComputed("watchForLink")
   titleMaxLength() {
     // maxLength gets in the way of pasting long links, so don't use it if featured links are allowed.
     // Validation will display a message if titles are too long.
@@ -182,7 +182,7 @@ export default Component.extend({
     }
   },
 
-  @computed("composer.title", "composer.titleLength")
+  @discourseComputed("composer.title", "composer.titleLength")
   isAbsoluteUrl(title, titleLength) {
     return (
       titleLength > 0 &&

@@ -1,5 +1,5 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   init() {
@@ -17,13 +17,16 @@ export default Component.extend({
     ];
   },
 
-  @computed("model.visibility_level", "model.public_admission")
+  @discourseComputed("model.visibility_level", "model.public_admission")
   disableMembershipRequestSetting(visibility_level, publicAdmission) {
     visibility_level = parseInt(visibility_level);
     return publicAdmission || visibility_level > 1;
   },
 
-  @computed("model.visibility_level", "model.allow_membership_requests")
+  @discourseComputed(
+    "model.visibility_level",
+    "model.allow_membership_requests"
+  )
   disablePublicSetting(visibility_level, allowMembershipRequests) {
     visibility_level = parseInt(visibility_level);
     return allowMembershipRequests || visibility_level > 1;

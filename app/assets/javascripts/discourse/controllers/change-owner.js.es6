@@ -1,3 +1,4 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
 import { next } from "@ember/runloop";
@@ -6,7 +7,6 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),
@@ -17,7 +17,7 @@ export default Controller.extend(ModalFunctionality, {
   selectedPostsCount: alias("topicController.selectedPostsCount"),
   selectedPostsUsername: alias("topicController.selectedPostsUsername"),
 
-  @computed("saving", "new_user")
+  @discourseComputed("saving", "new_user")
   buttonDisabled(saving, newUser) {
     return saving || isEmpty(newUser);
   },

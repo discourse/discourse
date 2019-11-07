@@ -1,10 +1,10 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { cancel } from "@ember/runloop";
 import { later } from "@ember/runloop";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import Category from "discourse/models/category";
-import computed from "ember-addons/ember-computed-decorators";
 import { REMINDER_TYPE } from "discourse/controllers/edit-topic-timer";
 import ENV from "discourse-common/config/environment";
 
@@ -22,7 +22,7 @@ export default Component.extend(
       "categoryId"
     ],
 
-    @computed("statusType")
+    @discourseComputed("statusType")
     canRemoveTimer(type) {
       if (type === REMINDER_TYPE) return true;
       return this.currentUser && this.currentUser.get("canManageTopic");

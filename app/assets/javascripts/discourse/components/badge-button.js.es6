@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   tagName: "span",
@@ -10,7 +10,7 @@ export default Component.extend({
     "badge.enabled::disabled"
   ],
 
-  @computed("badge.description")
+  @discourseComputed("badge.description")
   title(badgeDescription) {
     return $("<div>" + badgeDescription + "</div>").text();
   },

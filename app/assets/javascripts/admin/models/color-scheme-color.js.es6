@@ -1,8 +1,8 @@
 import {
-  default as computed,
+  default as discourseComputed,
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { propertyNotEqual } from "discourse/lib/computed";
 
 const ColorSchemeColor = Discourse.Model.extend({
@@ -15,7 +15,7 @@ const ColorSchemeColor = Discourse.Model.extend({
   },
 
   // Whether value has changed since it was last saved.
-  @computed("hex")
+  @discourseComputed("hex")
   changed(hex) {
     if (!this.originals) return false;
     if (hex !== this.originals.hex) return true;
@@ -27,7 +27,7 @@ const ColorSchemeColor = Discourse.Model.extend({
   overridden: propertyNotEqual("hex", "default_hex"),
 
   // Whether the saved value is different than Discourse's default color scheme.
-  @computed("default_hex", "hex")
+  @discourseComputed("default_hex", "hex")
   savedIsOverriden(defaultHex) {
     return this.originals.hex !== defaultHex;
   },
@@ -42,7 +42,7 @@ const ColorSchemeColor = Discourse.Model.extend({
     }
   },
 
-  @computed("name")
+  @discourseComputed("name")
   translatedName(name) {
     if (!this.is_advanced) {
       return I18n.t(`admin.customize.colors.${name}.name`);
@@ -51,7 +51,7 @@ const ColorSchemeColor = Discourse.Model.extend({
     }
   },
 
-  @computed("name")
+  @discourseComputed("name")
   description(name) {
     if (!this.is_advanced) {
       return I18n.t(`admin.customize.colors.${name}.description`);
@@ -66,7 +66,7 @@ const ColorSchemeColor = Discourse.Model.extend({
 
     @property brightness
   **/
-  @computed("hex")
+  @discourseComputed("hex")
   brightness(hex) {
     if (hex.length === 6 || hex.length === 3) {
       if (hex.length === 3) {
@@ -94,7 +94,7 @@ const ColorSchemeColor = Discourse.Model.extend({
     }
   },
 
-  @computed("hex")
+  @discourseComputed("hex")
   valid(hex) {
     return hex.match(/^([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/) !== null;
   }

@@ -1,16 +1,16 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { escapeExpression } from "discourse/lib/utilities";
 import { extractError } from "discourse/lib/ajax-error";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Controller.extend(ModalFunctionality, {
   offerHelp: null,
   helpSeen: false,
 
-  @computed("accountEmailOrUsername", "disabled")
+  @discourseComputed("accountEmailOrUsername", "disabled")
   submitDisabled(accountEmailOrUsername, disabled) {
     return isEmpty((accountEmailOrUsername || "").trim()) || disabled;
   },

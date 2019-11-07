@@ -5,9 +5,9 @@ import { scheduleOnce } from "@ember/runloop";
 import { later } from "@ember/runloop";
 import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import Composer from "discourse/models/composer";
 import afterTransition from "discourse/lib/after-transition";
 import positioningWorkaround from "discourse/lib/safari-hacks";
@@ -42,12 +42,12 @@ export default Component.extend(KeyEnterEscape, {
     "currentUserPrimaryGroupClass"
   ],
 
-  @computed("currentUser.primary_group_name")
+  @discourseComputed("currentUser.primary_group_name")
   currentUserPrimaryGroupClass(primaryGroupName) {
     return primaryGroupName && `group-${primaryGroupName}`;
   },
 
-  @computed("composer.composeState")
+  @discourseComputed("composer.composeState")
   composeState(composeState) {
     return composeState || Composer.CLOSED;
   },

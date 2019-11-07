@@ -9,9 +9,9 @@ import UserPostsStream from "discourse/models/user-posts-stream";
 import Singleton from "discourse/mixins/singleton";
 import { longDate } from "discourse/lib/formatter";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import UserActionStat from "discourse/models/user-action-stat";
@@ -43,22 +43,22 @@ const User = RestModel.extend({
     reason: null
   },
 
-  @computed("can_be_deleted", "post_count")
+  @discourseComputed("can_be_deleted", "post_count")
   canBeDeleted(canBeDeleted, postCount) {
     return canBeDeleted && postCount <= 5;
   },
 
-  @computed()
+  @discourseComputed()
   stream() {
     return UserStream.create({ user: this });
   },
 
-  @computed()
+  @discourseComputed()
   postsStream() {
     return UserPostsStream.create({ user: this });
   },
 
-  @computed()
+  @discourseComputed()
   userDraftsStream() {
     return UserDraftsStream.create({ user: this });
   },
@@ -78,7 +78,7 @@ const User = RestModel.extend({
     return ajax(`/session/${this.username}`, { type: "DELETE" });
   },
 
-  @computed("username_lower")
+  @discourseComputed("username_lower")
   searchContext(username) {
     return {
       type: "user",
@@ -87,7 +87,7 @@ const User = RestModel.extend({
     };
   },
 
-  @computed("username", "name")
+  @discourseComputed("username", "name")
   displayName(username, name) {
     if (Discourse.SiteSettings.enable_names && !isEmpty(name)) {
       return name;
@@ -95,7 +95,7 @@ const User = RestModel.extend({
     return username;
   },
 
-  @computed("profile_background_upload_url")
+  @discourseComputed("profile_background_upload_url")
   profileBackgroundUrl(bgUrl) {
     if (isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) {
       return "".htmlSafe();
@@ -107,13 +107,13 @@ const User = RestModel.extend({
     ).htmlSafe();
   },
 
-  @computed()
+  @discourseComputed()
   path() {
     // no need to observe, requires a hard refresh to update
     return userPath(this.username_lower);
   },
 
-  @computed()
+  @discourseComputed()
   userApiKeys() {
     const keys = this.user_api_keys;
     if (keys) {
@@ -171,33 +171,33 @@ const User = RestModel.extend({
 
   adminPath: url("id", "username_lower", "/admin/users/%@1/%@2"),
 
-  @computed()
+  @discourseComputed()
   mutedTopicsPath() {
     return defaultHomepage() === "latest"
       ? Discourse.getURL("/?state=muted")
       : Discourse.getURL("/latest?state=muted");
   },
 
-  @computed()
+  @discourseComputed()
   watchingTopicsPath() {
     return defaultHomepage() === "latest"
       ? Discourse.getURL("/?state=watching")
       : Discourse.getURL("/latest?state=watching");
   },
 
-  @computed()
+  @discourseComputed()
   trackingTopicsPath() {
     return defaultHomepage() === "latest"
       ? Discourse.getURL("/?state=tracking")
       : Discourse.getURL("/latest?state=tracking");
   },
 
-  @computed("username")
+  @discourseComputed("username")
   username_lower(username) {
     return username.toLowerCase();
   },
 
-  @computed("trust_level")
+  @discourseComputed("trust_level")
   trustLevel(trustLevel) {
     return Discourse.Site.currentProp("trustLevels").findBy(
       "id",
@@ -210,26 +210,26 @@ const User = RestModel.extend({
   isElder: equal("trust_level", 4),
   canManageTopic: or("staff", "isElder"),
 
-  @computed("previous_visit_at")
+  @discourseComputed("previous_visit_at")
   previousVisitAt(previous_visit_at) {
     return new Date(previous_visit_at);
   },
 
-  @computed("suspended_till")
+  @discourseComputed("suspended_till")
   suspended(suspendedTill) {
     return suspendedTill && moment(suspendedTill).isAfter();
   },
 
-  @computed("suspended_till")
+  @discourseComputed("suspended_till")
   suspendedForever: isForever,
 
-  @computed("silenced_till")
+  @discourseComputed("silenced_till")
   silencedForever: isForever,
 
-  @computed("suspended_till")
+  @discourseComputed("suspended_till")
   suspendedTillDate: longDate,
 
-  @computed("silenced_till")
+  @discourseComputed("silenced_till")
   silencedTillDate: longDate,
 
   changeUsername(new_username) {
@@ -492,7 +492,7 @@ const User = RestModel.extend({
 
   numGroupsToDisplay: 2,
 
-  @computed("groups.[]")
+  @discourseComputed("groups.[]")
   filteredGroups() {
     const groups = this.groups || [];
 
@@ -501,19 +501,19 @@ const User = RestModel.extend({
     });
   },
 
-  @computed("filteredGroups", "numGroupsToDisplay")
+  @discourseComputed("filteredGroups", "numGroupsToDisplay")
   displayGroups(filteredGroups, numGroupsToDisplay) {
     const groups = filteredGroups.slice(0, numGroupsToDisplay);
     return groups.length === 0 ? null : groups;
   },
 
-  @computed("filteredGroups", "numGroupsToDisplay")
+  @discourseComputed("filteredGroups", "numGroupsToDisplay")
   showMoreGroupsLink(filteredGroups, numGroupsToDisplay) {
     return filteredGroups.length > numGroupsToDisplay;
   },
 
   // The user's stat count, excluding PMs.
-  @computed("statsExcludingPms.@each.count")
+  @discourseComputed("statsExcludingPms.@each.count")
   statsCountNonPM() {
     if (isEmpty(this.statsExcludingPms)) return 0;
     let count = 0;
@@ -526,7 +526,7 @@ const User = RestModel.extend({
   },
 
   // The user's stats, excluding PMs.
-  @computed("stats.@each.isPM")
+  @discourseComputed("stats.@each.isPM")
   statsExcludingPms() {
     if (isEmpty(this.stats)) return [];
     return this.stats.rejectBy("isPM");
@@ -661,7 +661,7 @@ const User = RestModel.extend({
     );
   },
 
-  @computed("can_delete_account")
+  @discourseComputed("can_delete_account")
   canDeleteAccount(canDeleteAccount) {
     return !Discourse.SiteSettings.enable_sso && canDeleteAccount;
   },
@@ -768,7 +768,7 @@ const User = RestModel.extend({
       : this.admin || group.get("is_group_owner");
   },
 
-  @computed("groups.@each.title", "badges.[]")
+  @discourseComputed("groups.@each.title", "badges.[]")
   availableTitles() {
     let titles = [];
 
@@ -794,7 +794,7 @@ const User = RestModel.extend({
       });
   },
 
-  @computed("user_option.text_size_seq", "user_option.text_size")
+  @discourseComputed("user_option.text_size_seq", "user_option.text_size")
   currentTextSize(serverSeq, serverSize) {
     if ($.cookie("text_size")) {
       const [cookieSize, cookieSeq] = $.cookie("text_size").split("|");
@@ -817,7 +817,7 @@ const User = RestModel.extend({
     }
   },
 
-  @computed("second_factor_enabled", "staff")
+  @discourseComputed("second_factor_enabled", "staff")
   enforcedSecondFactor(secondFactorEnabled, staff) {
     const enforce = Discourse.SiteSettings.enforce_second_factor;
     return (

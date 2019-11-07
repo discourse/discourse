@@ -1,7 +1,7 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { or, equal, and } from "@ember/object/computed";
 import RestModel from "discourse/models/rest";
-import { on } from "ember-addons/ember-computed-decorators";
-import computed from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 import UserActionGroup from "discourse/models/user-action-group";
 import { postUrl } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
@@ -35,7 +35,7 @@ const UserAction = RestModel.extend({
     }
   },
 
-  @computed("action_type")
+  @discourseComputed("action_type")
   descriptionKey(action) {
     if (action === null || UserAction.TO_SHOW.indexOf(action) >= 0) {
       if (this.isPM) {
@@ -66,12 +66,12 @@ const UserAction = RestModel.extend({
     }
   },
 
-  @computed("username")
+  @discourseComputed("username")
   sameUser(username) {
     return username === Discourse.User.currentProp("username");
   },
 
-  @computed("target_username")
+  @discourseComputed("target_username")
   targetUser(targetUsername) {
     return targetUsername === Discourse.User.currentProp("username");
   },
@@ -80,27 +80,27 @@ const UserAction = RestModel.extend({
   targetDisplayName: or("target_name", "target_username"),
   actingDisplayName: or("acting_name", "acting_username"),
 
-  @computed("target_username")
+  @discourseComputed("target_username")
   targetUserUrl(username) {
     return userPath(username);
   },
 
-  @computed("username")
+  @discourseComputed("username")
   usernameLower(username) {
     return username.toLowerCase();
   },
 
-  @computed("usernameLower")
+  @discourseComputed("usernameLower")
   userUrl(usernameLower) {
     return userPath(usernameLower);
   },
 
-  @computed()
+  @discourseComputed()
   postUrl() {
     return postUrl(this.slug, this.topic_id, this.post_number);
   },
 
-  @computed()
+  @discourseComputed()
   replyUrl() {
     return postUrl(this.slug, this.topic_id, this.reply_to_post_number);
   },
@@ -145,7 +145,7 @@ const UserAction = RestModel.extend({
     }
   },
 
-  @computed(
+  @discourseComputed(
     "childGroups",
     "childGroups.likes.items",
     "childGroups.likes.items.[]",
