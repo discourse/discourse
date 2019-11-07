@@ -7,6 +7,8 @@ const MOUSE_DOWN_OUTSIDE_ATTRIBUTE_NAME =
 const KEY_UP_ATTRIBUTE_NAME = "_discourse_key_up_widget";
 const KEY_DOWN_ATTRIBUTE_NAME = "_discourse_key_down_widget";
 const DRAG_ATTRIBUTE_NAME = "_discourse_drag_widget";
+const INPUT_ATTRIBUTE_NAME = "_discourse_input_widget";
+const CHANGE_ATTRIBUTE_NAME = "_discourse_change_widget";
 
 function buildHook(attributeName, setAttr) {
   return class {
@@ -42,6 +44,8 @@ export const WidgetMouseDownOutsideHook = buildHook(
 export const WidgetKeyUpHook = buildHook(KEY_UP_ATTRIBUTE_NAME);
 export const WidgetKeyDownHook = buildHook(KEY_DOWN_ATTRIBUTE_NAME);
 export const WidgetDragHook = buildHook(DRAG_ATTRIBUTE_NAME);
+export const WidgetInputHook = buildHook(INPUT_ATTRIBUTE_NAME);
+export const WidgetChangeHook = buildHook(CHANGE_ATTRIBUTE_NAME);
 
 function nodeCallback(node, attrName, cb) {
   const widget = findWidget(node, attrName);
@@ -166,6 +170,14 @@ WidgetClickHook.setupDocumentCallback = function() {
 
   $(document).on("keydown.discourse-widget", e => {
     nodeCallback(e.target, KEY_DOWN_ATTRIBUTE_NAME, w => w.keyDown(e));
+  });
+
+  $(document).on("input.discourse-widget", e => {
+    nodeCallback(e.target, INPUT_ATTRIBUTE_NAME, w => w.input(e));
+  });
+
+  $(document).on("change.discourse-widget", e => {
+    nodeCallback(e.target, CHANGE_ATTRIBUTE_NAME, w => w.change(e));
   });
 
   _watchingDocument = true;
