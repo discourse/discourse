@@ -14,6 +14,16 @@ class BasicGroupSerializer < ApplicationSerializer
              :title,
              :grant_trust_level,
              :incoming_email,
+             :smtp_server,
+             :smtp_port,
+             :smtp_ssl,
+             :imap_server,
+             :imap_port,
+             :imap_ssl,
+             :imap_mailbox_name,
+             :imap_mailboxes,
+             :email_username,
+             :email_password,
              :has_messages,
              :flair_url,
              :flair_bg_color,
@@ -52,6 +62,50 @@ class BasicGroupSerializer < ApplicationSerializer
   end
 
   def include_automatic_membership_email_domains?
+    scope.is_admin?
+  end
+
+  def include_smtp_server?
+    scope.is_admin?
+  end
+
+  def include_smtp_port?
+    scope.is_admin?
+  end
+
+  def include_smtp_ssl?
+    scope.is_admin?
+  end
+
+  def include_imap_server?
+    scope.is_admin?
+  end
+
+  def include_imap_port?
+    scope.is_admin?
+  end
+
+  def include_imap_ssl?
+    scope.is_admin?
+  end
+
+  def include_imap_mailbox_name?
+    scope.is_admin?
+  end
+
+  def include_imap_mailboxes?
+    scope.is_admin?
+  end
+
+  def include_email_username?
+    scope.is_admin?
+  end
+
+  def include_email_password?
+    scope.is_admin?
+  end
+
+  def include_automatic_membership_retroactive?
     scope.is_admin?
   end
 
