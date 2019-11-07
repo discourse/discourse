@@ -268,7 +268,7 @@ const Report = Discourse.Model.extend({
   },
 
   @discourseComputed("labels")
-  discourseComputedLabels(labels) {
+  computedLabels(labels) {
     return labels.map(label => {
       const type = label.type || "string";
 

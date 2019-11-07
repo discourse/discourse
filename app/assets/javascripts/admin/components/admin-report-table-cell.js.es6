@@ -9,7 +9,7 @@ export default Component.extend({
   options: null,
 
   @discourseComputed("label", "data", "options")
-  discourseComputedLabel(label, data, options) {
+  computedLabel(label, data, options) {
     return label.compute(data, options || {});
   },
 
