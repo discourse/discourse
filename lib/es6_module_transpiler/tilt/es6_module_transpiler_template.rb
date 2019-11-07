@@ -89,7 +89,6 @@ JS
          "discourse/models/user-action",
          "discourse/routes/discourse",
          "discourse/models/category",
-         "discourse/models/trust-level",
          "discourse/models/site",
          "discourse/models/user",
          "discourse/models/session",
