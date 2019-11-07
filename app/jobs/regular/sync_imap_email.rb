@@ -18,7 +18,7 @@ module Jobs
             Base64.decode64(email['RFC822']),
             allow_auto_generated: true,
             import_mode: args[:import_mode],
-            destinations: [{ type: :group, obj: group }],
+            destinations: [group],
             uid_validity: args[:uid_validity],
             uid: email['UID']
           )

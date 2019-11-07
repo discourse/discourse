@@ -44,7 +44,7 @@ describe GroupSmtpMailer do
 
   let(:receiver) {
     receiver = Email::Receiver.new(email,
-      destinations: [{ type: :group, obj: group }],
+      destinations: [group],
       uid_validity: 1,
       uid: 10000
     )

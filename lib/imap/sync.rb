@@ -112,7 +112,7 @@ module Imap
             receiver = Email::Receiver.new(email['RFC822'],
               allow_auto_generated: true,
               import_mode: import_mode,
-              destinations: [{ type: :group, obj: @group }],
+              destinations: [@group],
               uid_validity: @status[:uid_validity],
               uid: email['UID']
             )

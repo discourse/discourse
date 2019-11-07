@@ -630,10 +630,7 @@ module Email
     def sent_to_mailinglist_mirror?
       @sent_to_mailinglist_mirror ||= begin
         destinations.each do |destination|
-          next unless destination[:type] == :category
-
-          category = destination[:obj]
-          return true if category.mailinglist_mirror?
+          return true if destination.is_a?(Category) && destination.mailinglist_mirror?
         end
 
         false
@@ -644,10 +641,10 @@ module Email
       # only check for a group/category when 'email_in' is enabled
       if SiteSetting.email_in
         group = Group.find_by_email(address)
-        return { type: :group, obj: group } if group
+        return group if group
 
         category = Category.find_by_email(address)
-        return { type: :category, obj: category } if category
+        return category if category
       end
 
       # reply
@@ -656,7 +653,7 @@ module Email
         match.captures.each do |c|
           next if c.blank?
           post_reply_key = PostReplyKey.find_by(reply_key: c)
-          return { type: :reply, obj: post_reply_key } if post_reply_key
+          return post_reply_key if post_reply_key
         end
       end
       nil
@@ -667,19 +664,13 @@ module Email
                 has_been_forwarded? &&
                 process_forwarded_email(destination, user)
 
-      return if is_bounce? && destination[:type] != :reply
+      return if is_bounce? && !destination.is_a?(PostReplyKey)
 
-      case destination[:type]
-      when :group
+      if destination.is_a?(Group)
         user ||= stage_from_user
-
-        group = destination[:obj]
-        create_group_post(group, user, body, elided)
-
-      when :category
-        category = destination[:obj]
-
-        raise StrangersNotAllowedError    if (user.nil? || user.staged?) && !category.email_in_allow_strangers
+        create_group_post(destination, user, body, elided)
+      elsif destination.is_a?(Category)
+        raise StrangersNotAllowedError    if (user.nil? || user.staged?) && !destination.email_in_allow_strangers
 
         user ||= stage_from_user
 
@@ -689,19 +680,18 @@ module Email
                      raw: body,
                      elided: elided,
                      title: subject,
-                     category: category.id,
+                     category: destination.id,
                      skip_validations: user.staged?)
 
-      when :reply
+      elsif destination.is_a?(PostReplyKey)
         # We don't stage new users for emails to reply addresses, exit if user is nil
         raise BadDestinationAddress if user.blank?
 
-        post_reply_key = destination[:obj]
-        post = Post.with_deleted.find(post_reply_key.post_id)
+        post = Post.with_deleted.find(destination.post_id)
         raise ReplyNotAllowedError if !Guardian.new(user).can_create_post?(post&.topic)
 
-        if post_reply_key.user_id != user.id && !forwarded_reply_key?(post_reply_key, user)
-          raise ReplyUserNotMatchingError, "post_reply_key.user_id => #{post_reply_key.user_id.inspect}, user.id => #{user.id.inspect}"
+        if destination.user_id != user.id && !forwarded_reply_key?(destination, user)
+          raise ReplyUserNotMatchingError, "post_reply_key.user_id => #{destination.user_id.inspect}, user.id => #{user.id.inspect}"
         end
 
         create_reply(user: user,
@@ -811,31 +801,27 @@ module Email
     end
 
     def forwarded_email_create_topic(destination: , user: , raw: , title: , date: nil, embedded_user: nil)
-      case destination[:type]
-      when :group
-        group = destination[:obj]
+      if destination.is_a?(Group)
         topic_user = embedded_user&.call || user
         create_topic(user: topic_user,
                      raw: raw,
                      title: title,
                      archetype: Archetype.private_message,
                      target_usernames: [user.username],
-                     target_group_names: [group.name],
+                     target_group_names: [destination.name],
                      is_group_message: true,
                      skip_validations: true,
                      created_at: date)
 
-      when :category
-        category = destination[:obj]
-
-        return false if user.staged? && !category.email_in_allow_strangers
+      elsif destination.is_a?(Category)
+        return false if user.staged? && !destination.email_in_allow_strangers
         return false if !user.has_trust_level?(SiteSetting.email_in_min_trust)
 
         topic_user = embedded_user&.call || user
         create_topic(user: topic_user,
                      raw: raw,
                      title: title,
-                     category: category.id,
+                     category: destination.id,
                      skip_validations: topic_user.staged?,
                      created_at: date)
       else
@@ -864,7 +850,7 @@ module Email
         # create reply when available
         if @before_embedded.present?
           post_type = Post.types[:regular]
-          post_type = Post.types[:whisper] if post.topic.private_message? && destination[:obj].usernames[user.username]
+          post_type = Post.types[:whisper] if post.topic.private_message? && destination.usernames[user.username]
 
           create_reply(user: user,
                        raw: @before_embedded,
