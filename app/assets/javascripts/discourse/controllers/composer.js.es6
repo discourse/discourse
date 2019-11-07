@@ -25,6 +25,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
 import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
+import ENV from "discourse-common/config/environment";
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -67,7 +68,7 @@ function loadDraft(store, opts) {
 
 const _popupMenuOptionsCallbacks = [];
 
-let _checkDraftPopup = !Ember.testing;
+let _checkDraftPopup = !ENV.environment === "test";
 
 export function toggleCheckDraftPopup(enabled) {
   _checkDraftPopup = enabled;

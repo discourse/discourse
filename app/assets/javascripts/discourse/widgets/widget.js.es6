@@ -11,6 +11,7 @@ import {
 import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { Promise } from "rsvp";
+import ENV from "discourse-common/config/environment";
 
 const _registry = {};
 
@@ -118,7 +119,7 @@ export default class Widget {
     this.keyValueStore = register.lookup("key-value-store:main");
 
     // Helps debug widgets
-    if (Discourse.Environment === "development" || Ember.testing) {
+    if (Discourse.Environment === "development" || ENV.environment === "test") {
       const ds = this.defaultState(attrs);
       if (typeof ds !== "object") {
         throw new Error(`defaultState must return an object`);

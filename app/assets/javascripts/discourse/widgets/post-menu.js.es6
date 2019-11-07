@@ -5,11 +5,12 @@ import { avatarAtts } from "discourse/widgets/actions-summary";
 import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
+import ENV from "discourse-common/config/environment";
 
 const LIKE_ACTION = 2;
 
 function animateHeart($elem, start, end, complete) {
-  if (Ember.testing) {
+  if (ENV.environment === "test") {
     return run(this, complete);
   }
 

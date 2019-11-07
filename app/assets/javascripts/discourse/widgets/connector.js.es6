@@ -22,8 +22,8 @@ export default class Connector {
         );
       }
 
-      const container = Ember.getOwner
-        ? Ember.getOwner(mounted)
+      const container = getOwner
+        ? getOwner(mounted)
         : mounted.container;
 
       let view;

@@ -10,6 +10,8 @@ import {
   emojiSearch
 } from "pretty-text/emoji";
 import { safariHacksDisabled } from "discourse/lib/utilities";
+import ENV from "discourse-common/config/environment";
+
 const { run } = Ember;
 
 const PER_ROW = 11;
@@ -509,7 +511,7 @@ export default Component.extend({
       this.$picker.css(_.merge(attributes, options));
     };
 
-    if (Ember.testing || !this.automaticPositioning) {
+    if (ENV.environment === "test" || !this.automaticPositioning) {
       desktopPositioning();
       return;
     }
