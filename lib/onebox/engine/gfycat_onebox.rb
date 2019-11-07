@@ -41,6 +41,7 @@ module Onebox
               </p>
 
             </article>
+            <div style="clear: both"></div>
           </aside>
         HTML
       end
