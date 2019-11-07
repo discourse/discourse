@@ -1,5 +1,5 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import {
   PRIVATE_MESSAGE,
   CREATE_TOPIC,
@@ -76,7 +76,7 @@ export default DropdownSelectBoxComponent.extend({
     return content;
   },
 
-  @computed("options", "canWhisper", "action")
+  @discourseComputed("options", "canWhisper", "action")
   content(options, canWhisper, action) {
     let items = [];
 

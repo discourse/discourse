@@ -1,10 +1,10 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyNotEqual } from "discourse/lib/computed";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Controller.extend(bufferedProperty("model"), {
   adminBadges: inject(),
@@ -19,7 +19,7 @@ export default Controller.extend(bufferedProperty("model"), {
   readOnly: alias("buffered.system"),
   showDisplayName: propertyNotEqual("name", "displayName"),
 
-  @computed("model.query", "buffered.query")
+  @discourseComputed("model.query", "buffered.query")
   hasQuery(modelQuery, bufferedQuery) {
     if (bufferedQuery) {
       return bufferedQuery.trim().length > 0;

@@ -6,10 +6,10 @@ import { later } from "@ember/runloop";
 import Component from "@ember/component";
 import userSearch from "discourse/lib/user-search";
 import {
-  default as computed,
+  default as discourseComputed,
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import {
   linkSeenMentions,
   fetchUnseenMentions
@@ -43,7 +43,6 @@ import {
   cacheShortUploadUrl,
   resolveAllShortUrls
 } from "pretty-text/upload-short-url";
-
 import {
   INLINE_ONEBOX_LOADING_CSS_CLASS,
   INLINE_ONEBOX_CSS_CLASS
@@ -69,7 +68,7 @@ export default Component.extend({
   scrollMap: null,
   uploadFilenamePlaceholder: null,
 
-  @computed("uploadFilenamePlaceholder")
+  @discourseComputed("uploadFilenamePlaceholder")
   uploadPlaceholder(uploadFilenamePlaceholder) {
     const clipboard = I18n.t("clipboard");
     const filename = uploadFilenamePlaceholder
@@ -78,7 +77,7 @@ export default Component.extend({
     return `[${I18n.t("uploading_filename", { filename })}]() `;
   },
 
-  @computed("composer.requiredCategoryMissing")
+  @discourseComputed("composer.requiredCategoryMissing")
   replyPlaceholder(requiredCategoryMissing) {
     if (requiredCategoryMissing) {
       return "composer.reply_placeholder_choose_category";
@@ -90,14 +89,14 @@ export default Component.extend({
     }
   },
 
-  @computed
+  @discourseComputed
   showLink() {
     return (
       this.currentUser && this.currentUser.get("link_posting_access") !== "none"
     );
   },
 
-  @computed("composer.requiredCategoryMissing", "composer.replyLength")
+  @discourseComputed("composer.requiredCategoryMissing", "composer.replyLength")
   disableTextarea(requiredCategoryMissing, replyLength) {
     return requiredCategoryMissing && replyLength === 0;
   },
@@ -123,7 +122,7 @@ export default Component.extend({
     }
   },
 
-  @computed
+  @discourseComputed
   markdownOptions() {
     return {
       previewing: true,
@@ -214,7 +213,7 @@ export default Component.extend({
     this.appEvents.trigger("composer:will-open");
   },
 
-  @computed(
+  @discourseComputed(
     "composer.reply",
     "composer.replyLength",
     "composer.missingReplyCharacters",

@@ -1,6 +1,6 @@
 import { alias, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
 import PasswordValidation from "discourse/mixins/password-validation";
@@ -18,7 +18,7 @@ export default Controller.extend(PasswordValidation, {
     "model.second_factor_required",
     "model.security_key_required"
   ),
-  @computed("model.security_key_required")
+  @discourseComputed("model.security_key_required")
   secondFactorMethod(security_key_required) {
     return security_key_required
       ? SECOND_FACTOR_METHODS.SECURITY_KEY
@@ -30,14 +30,14 @@ export default Controller.extend(PasswordValidation, {
   requiresApproval: false,
   redirected: false,
 
-  @computed()
+  @discourseComputed()
   continueButtonText() {
     return I18n.t("password_reset.continue", {
       site_name: this.siteSettings.title
     });
   },
 
-  @computed("redirectTo")
+  @discourseComputed("redirectTo")
   redirectHref(redirectTo) {
     return Discourse.getURL(redirectTo || "/");
   },

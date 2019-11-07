@@ -1,5 +1,5 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["timezone-input"],
@@ -9,7 +9,7 @@ export default ComboBoxComponent.extend({
   filterable: true,
   allowAny: false,
 
-  @computed
+  @discourseComputed
   content() {
     let timezones;
 

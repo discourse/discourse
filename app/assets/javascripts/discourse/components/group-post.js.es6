@@ -1,7 +1,7 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
-  @computed("post.url")
+  @discourseComputed("post.url")
   postUrl: Discourse.getURL
 });

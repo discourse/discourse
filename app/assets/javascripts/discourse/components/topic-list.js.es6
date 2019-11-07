@@ -2,9 +2,9 @@ import { alias, reads } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import LoadMore from "discourse/mixins/load-more";
 import { on } from "@ember/object/evented";
 
@@ -24,24 +24,24 @@ export default Component.extend(LoadMore, {
     this.refreshLastVisited();
   }),
 
-  @computed("bulkSelectEnabled")
+  @discourseComputed("bulkSelectEnabled")
   toggleInTitle(bulkSelectEnabled) {
     return !bulkSelectEnabled && this.canBulkSelect;
   },
 
-  @computed
+  @discourseComputed
   sortable() {
     return !!this.changeSort;
   },
 
   skipHeader: reads("site.mobileView"),
 
-  @computed("order")
+  @discourseComputed("order")
   showLikes(order) {
     return order === "likes";
   },
 
-  @computed("order")
+  @discourseComputed("order")
   showOpLikes(order) {
     return order === "op_likes";
   },

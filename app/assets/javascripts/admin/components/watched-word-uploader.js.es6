@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
 
 export default Component.extend(UploadMixin, {
@@ -13,7 +13,7 @@ export default Component.extend(UploadMixin, {
     return { skipValidation: true };
   },
 
-  @computed("actionKey")
+  @discourseComputed("actionKey")
   data(actionKey) {
     return { action_key: actionKey };
   },

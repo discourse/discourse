@@ -1,9 +1,9 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { toTitleCase } from "discourse/lib/formatter";
 import { emojiUnescape } from "discourse/lib/text";
-import computed from "ember-addons/ember-computed-decorators";
 
 const NavItem = Discourse.Model.extend({
-  @computed("categoryName", "name")
+  @discourseComputed("categoryName", "name")
   title(categoryName, name) {
     const extra = {};
 
@@ -15,7 +15,7 @@ const NavItem = Discourse.Model.extend({
     return I18n.t("filters." + name.replace("/", ".") + ".help", extra);
   },
 
-  @computed("categoryName", "name", "count")
+  @discourseComputed("categoryName", "name", "count")
   displayName(categoryName, name, count) {
     count = count || 0;
 
@@ -39,13 +39,13 @@ const NavItem = Discourse.Model.extend({
     );
   },
 
-  @computed("name")
+  @discourseComputed("name")
   categoryName(name) {
     const split = name.split("/");
     return split[0] === "category" ? split[1] : null;
   },
 
-  @computed("name")
+  @discourseComputed("name")
   categorySlug(name) {
     const split = name.split("/");
     if (split[0] === "category" && split[1]) {
@@ -58,7 +58,7 @@ const NavItem = Discourse.Model.extend({
     return null;
   },
 
-  @computed("filterMode")
+  @discourseComputed("filterMode")
   href(filterMode) {
     let customHref = null;
 
@@ -76,7 +76,7 @@ const NavItem = Discourse.Model.extend({
     return Discourse.getURL("/") + filterMode;
   },
 
-  @computed("name", "category", "categorySlug", "noSubcategories")
+  @discourseComputed("name", "category", "categorySlug", "noSubcategories")
   filterMode(name, category, categorySlug, noSubcategories) {
     if (name.split("/")[0] === "category") {
       return "c/" + categorySlug;
@@ -94,7 +94,7 @@ const NavItem = Discourse.Model.extend({
     }
   },
 
-  @computed("name", "category", "topicTrackingState.messageCount")
+  @discourseComputed("name", "category", "topicTrackingState.messageCount")
   count(name, category) {
     const state = this.topicTrackingState;
     if (state) {
@@ -104,7 +104,7 @@ const NavItem = Discourse.Model.extend({
 });
 
 const ExtraNavItem = NavItem.extend({
-  href: computed("href", {
+  href: discourseComputed("href", {
     get() {
       if (this._href) {
         return this._href;

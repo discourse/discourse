@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import computed from "ember-addons/ember-computed-decorators";
 
 /**
   A model representing a Topic's details that aren't always present, such as a list of participants.
@@ -32,7 +32,7 @@ const TopicDetails = RestModel.extend({
     this.set("loaded", true);
   },
 
-  @computed("notification_level", "notifications_reason_id")
+  @discourseComputed("notification_level", "notifications_reason_id")
   notificationReasonText(level, reason) {
     if (typeof level !== "number") {
       level = 1;

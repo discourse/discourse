@@ -1,3 +1,4 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
 import { alias, or, and, reads, equal, notEmpty } from "@ember/object/computed";
 import EmberObject from "@ember/object";
@@ -8,7 +9,6 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { isNumeric } from "discourse/lib/utilities";
 import { SCHEMA_VERSION, default as Report } from "admin/models/report";
-import computed from "ember-addons/ember-computed-decorators";
 import ENV from "discourse-common/config/environment";
 
 const TABLE_OPTIONS = {
@@ -90,23 +90,23 @@ export default Component.extend({
 
   hasData: notEmpty("model.data"),
 
-  @computed("dataSourceName", "model.type")
+  @discourseComputed("dataSourceName", "model.type")
   dasherizedDataSourceName(dataSourceName, type) {
     return (dataSourceName || type || "undefined").replace(/_/g, "-");
   },
 
-  @computed("dataSourceName", "model.type")
+  @discourseComputed("dataSourceName", "model.type")
   dataSource(dataSourceName, type) {
     dataSourceName = dataSourceName || type;
     return `/admin/reports/${dataSourceName}`;
   },
 
-  @computed("displayedModes.length")
+  @discourseComputed("displayedModes.length")
   showModes(displayedModesLength) {
     return displayedModesLength > 1;
   },
 
-  @computed("currentMode", "model.modes", "forcedModes")
+  @discourseComputed("currentMode", "model.modes", "forcedModes")
   displayedModes(currentMode, reportModes, forcedModes) {
     const modes = forcedModes ? forcedModes.split(",") : reportModes;
 
@@ -122,12 +122,12 @@ export default Component.extend({
     });
   },
 
-  @computed("currentMode")
+  @discourseComputed("currentMode")
   modeComponent(currentMode) {
     return `admin-report-${currentMode}`;
   },
 
-  @computed("startDate")
+  @discourseComputed("startDate")
   normalizedStartDate(startDate) {
     return startDate && typeof startDate.isValid === "function"
       ? moment
@@ -139,7 +139,7 @@ export default Component.extend({
           .format("YYYYMMDD");
   },
 
-  @computed("endDate")
+  @discourseComputed("endDate")
   normalizedEndDate(endDate) {
     return endDate && typeof endDate.isValid === "function"
       ? moment
@@ -151,7 +151,7 @@ export default Component.extend({
           .format("YYYYMMDD");
   },
 
-  @computed(
+  @discourseComputed(
     "dataSourceName",
     "normalizedStartDate",
     "normalizedEndDate",

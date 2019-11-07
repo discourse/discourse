@@ -1,9 +1,9 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import RestModel from "discourse/models/rest";
-import computed from "ember-addons/ember-computed-decorators";
 import PermissionType from "discourse/models/permission-type";
 
 export default RestModel.extend({
-  @computed("permissions")
+  @discourseComputed("permissions")
   permissionName(permissions) {
     if (!permissions) return "public";
 

@@ -1,20 +1,20 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { propertyEqual } from "discourse/lib/computed";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   tagName: "li",
   classNameBindings: ["active", "tabClassName"],
 
-  @computed("tab")
+  @discourseComputed("tab")
   tabClassName(tab) {
     return "edit-category-" + tab;
   },
 
   active: propertyEqual("selectedTab", "tab"),
 
-  @computed("tab")
+  @discourseComputed("tab")
   title(tab) {
     return I18n.t("category." + tab.replace("-", "_"));
   },

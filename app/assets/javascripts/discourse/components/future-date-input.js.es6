@@ -2,9 +2,9 @@ import { isEmpty } from "@ember/utils";
 import { equal, and, empty } from "@ember/object/computed";
 import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 
@@ -59,7 +59,7 @@ export default Component.extend({
     this.set("basedOnLastPost", this.isBasedOnLastPost);
   },
 
-  @computed("input", "isBasedOnLastPost")
+  @discourseComputed("input", "isBasedOnLastPost")
   duration(input, isBasedOnLastPost) {
     const now = moment();
 
@@ -70,7 +70,7 @@ export default Component.extend({
     }
   },
 
-  @computed("input", "isBasedOnLastPost")
+  @discourseComputed("input", "isBasedOnLastPost")
   executeAt(input, isBasedOnLastPost) {
     if (isBasedOnLastPost) {
       return moment()
@@ -87,7 +87,7 @@ export default Component.extend({
     if (this.label) this.set("displayLabel", I18n.t(this.label));
   },
 
-  @computed(
+  @discourseComputed(
     "statusType",
     "input",
     "isCustom",
@@ -118,7 +118,7 @@ export default Component.extend({
     }
   },
 
-  @computed("isBasedOnLastPost", "input", "lastPostedAt")
+  @discourseComputed("isBasedOnLastPost", "input", "lastPostedAt")
   willCloseImmediately(isBasedOnLastPost, input, lastPostedAt) {
     if (isBasedOnLastPost && input) {
       let closeDate = moment(lastPostedAt);
@@ -127,7 +127,7 @@ export default Component.extend({
     }
   },
 
-  @computed("isBasedOnLastPost", "lastPostedAt")
+  @discourseComputed("isBasedOnLastPost", "lastPostedAt")
   willCloseI18n(isBasedOnLastPost, lastPostedAt) {
     if (isBasedOnLastPost) {
       const diff = Math.round(

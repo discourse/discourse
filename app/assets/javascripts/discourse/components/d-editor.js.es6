@@ -7,10 +7,10 @@ import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 /*global Mousetrap:true */
 import {
-  default as computed,
+  default as discourseComputed,
   on,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { cookAsync } from "discourse/lib/text";
@@ -229,7 +229,7 @@ export default Component.extend({
   emojiPickerIsActive: false,
   emojiStore: service("emoji-store"),
 
-  @computed("placeholder")
+  @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
     if (placeholder) return I18n.t(placeholder);
     return null;
@@ -327,7 +327,7 @@ export default Component.extend({
     $(this.element.querySelector(".d-editor-preview")).off("click.preview");
   },
 
-  @computed
+  @discourseComputed
   toolbar() {
     const toolbar = new Toolbar(
       this.getProperties("site", "siteSettings", "showLink")

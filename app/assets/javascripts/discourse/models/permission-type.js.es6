@@ -1,7 +1,7 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const PermissionType = Discourse.Model.extend({
-  @computed("id")
+  @discourseComputed("id")
   description(id) {
     var key = "";
 

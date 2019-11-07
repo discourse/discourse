@@ -1,7 +1,7 @@
 import { debounce } from "@ember/runloop";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
 import Badge from "discourse/models/badge";

@@ -2,9 +2,9 @@ import { alias, not } from "@ember/object/computed";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 
 export default Component.extend(
@@ -23,7 +23,7 @@ export default Component.extend(
     bad: alias("validation.failed"),
     good: not("bad"),
 
-    @computed("shownAt", "validation.lastShownAt")
+    @discourseComputed("shownAt", "validation.lastShownAt")
     lastShownAt(shownAt, lastShownAt) {
       return shownAt || lastShownAt;
     },

@@ -1,7 +1,7 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
-import computed from "ember-addons/ember-computed-decorators";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -64,29 +64,29 @@ export const ListItemDefaults = {
     }
   },
 
-  @computed("topic.id")
+  @discourseComputed("topic.id")
   unreadIndicatorChannel(topicId) {
     return `/private-messages/unread-indicator/${topicId}`;
   },
 
-  @computed("topic.unread_by_group_member")
+  @discourseComputed("topic.unread_by_group_member")
   unreadClass(unreadByGroupMember) {
     return unreadByGroupMember ? "" : "read";
   },
 
-  @computed("topic.unread_by_group_member")
+  @discourseComputed("topic.unread_by_group_member")
   includeUnreadIndicator(unreadByGroupMember) {
     return typeof unreadByGroupMember !== "undefined";
   },
 
-  @computed
+  @discourseComputed
   newDotText() {
     return this.currentUser && this.currentUser.trust_level > 0
       ? ""
       : I18n.t("filters.new.lower_title");
   },
 
-  @computed("topic", "lastVisitedTopic")
+  @discourseComputed("topic", "lastVisitedTopic")
   unboundClassNames(topic, lastVisitedTopic) {
     let classes = [];
 
@@ -131,7 +131,7 @@ export const ListItemDefaults = {
     return this.get("topic.op_like_count") > 0;
   },
 
-  @computed
+  @discourseComputed
   expandPinned: function() {
     const pinned = this.get("topic.pinned");
     if (!pinned) {

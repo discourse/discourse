@@ -3,9 +3,9 @@ import { alias, gte, and, gt, not, or } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import User from "discourse/models/user";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { durationTiny } from "discourse/lib/formatter";
@@ -50,26 +50,26 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   // If inside a topic
   topicPostCount: null,
 
-  @computed("user.staff")
+  @discourseComputed("user.staff")
   staff: isStaff => (isStaff ? "staff" : ""),
 
-  @computed("user.trust_level")
+  @discourseComputed("user.trust_level")
   newUser: trustLevel => (trustLevel === 0 ? "new-user" : ""),
 
-  @computed("user.name")
+  @discourseComputed("user.name")
   nameFirst(name) {
     return prioritizeNameInUx(name, this.siteSettings);
   },
 
-  @computed("username")
+  @discourseComputed("username")
   usernameClass: username => (username ? `user-card-${username}` : ""),
 
-  @computed("username", "topicPostCount")
+  @discourseComputed("username", "topicPostCount")
   togglePostsLabel(username, count) {
     return I18n.t("topic.filter_to", { username, count });
   },
 
-  @computed("user.user_fields.@each.value")
+  @discourseComputed("user.user_fields.@each.value")
   publicUserFields() {
     const siteUserFields = this.site.get("user_fields");
     if (!isEmpty(siteUserFields)) {
@@ -86,25 +86,25 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     }
   },
 
-  @computed("user.trust_level")
+  @discourseComputed("user.trust_level")
   removeNoFollow(trustLevel) {
     return trustLevel > 2 && !this.siteSettings.tl3_links_no_follow;
   },
 
-  @computed("user.badge_count", "user.featured_user_badges.length")
+  @discourseComputed("user.badge_count", "user.featured_user_badges.length")
   moreBadgesCount: (badgeCount, badgeLength) => badgeCount - badgeLength,
 
-  @computed("user.time_read", "user.recent_time_read")
+  @discourseComputed("user.time_read", "user.recent_time_read")
   showRecentTimeRead(timeRead, recentTimeRead) {
     return timeRead !== recentTimeRead && recentTimeRead !== 0;
   },
 
-  @computed("user.recent_time_read")
+  @discourseComputed("user.recent_time_read")
   recentTimeRead(recentTimeReadSeconds) {
     return durationTiny(recentTimeReadSeconds);
   },
 
-  @computed("showRecentTimeRead", "user.time_read", "recentTimeRead")
+  @discourseComputed("showRecentTimeRead", "user.time_read", "recentTimeRead")
   timeReadTooltip(showRecent, timeRead, recentTimeRead) {
     if (showRecent) {
       return I18n.t("time_read_recently_tooltip", {

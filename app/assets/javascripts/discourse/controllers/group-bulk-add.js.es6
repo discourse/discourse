@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
-import computed from "ember-addons/ember-computed-decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
@@ -8,7 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 export default Controller.extend(ModalFunctionality, {
   loading: false,
 
-  @computed("input", "loading", "result")
+  @discourseComputed("input", "loading", "result")
   disableAddButton(input, loading, result) {
     return loading || isEmpty(input) || input.length <= 0 || result;
   },

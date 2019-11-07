@@ -1,5 +1,6 @@
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+
 const { isEmpty } = Ember;
 
 export default Component.extend({
@@ -8,8 +9,8 @@ export default Component.extend({
   classNameBindings: ["isFocused", "isHidden"],
   isHidden: Ember.computed.not("shouldDisplayFilter"),
 
-  @computed("placeholder")
-  computedPlaceholder(placeholder) {
+  @discourseComputed("placeholder")
+  discourseComputedPlaceholder(placeholder) {
     return isEmpty(placeholder) ? "" : I18n.t(placeholder);
   }
 });

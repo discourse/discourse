@@ -2,9 +2,9 @@ import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { defaultHomepage } from "discourse/lib/utilities";
 import PreloadStore from "preload-store";
 
@@ -206,7 +206,7 @@ const TopicTrackingState = Discourse.Model.extend({
     this.set("incomingCount", 0);
   },
 
-  @computed("incomingCount")
+  @discourseComputed("incomingCount")
   hasIncoming(incomingCount) {
     return incomingCount && incomingCount > 0;
   },

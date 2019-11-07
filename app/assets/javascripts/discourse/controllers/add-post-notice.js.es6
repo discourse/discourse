@@ -1,7 +1,7 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import computed from "ember-addons/ember-computed-decorators";
 import { cookAsync } from "discourse/lib/text";
 
 export default Controller.extend(ModalFunctionality, {
@@ -12,7 +12,7 @@ export default Controller.extend(ModalFunctionality, {
   notice: null,
   saving: false,
 
-  @computed("saving", "notice")
+  @discourseComputed("saving", "notice")
   disabled(saving, notice) {
     return saving || isEmpty(notice);
   },
