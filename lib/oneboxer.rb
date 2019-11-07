@@ -290,10 +290,6 @@ module Oneboxer
 
       options[:cookie] = fd.cookie if fd.cookie
 
-      if Rails.env.development? && SiteSetting.port.to_i > 0
-        Onebox.options = { allowed_ports: [80, 443, SiteSetting.port.to_i] }
-      end
-
       r = Onebox.preview(uri.to_s, options)
 
       { onebox: r.to_s, preview: r&.placeholder_html.to_s }
