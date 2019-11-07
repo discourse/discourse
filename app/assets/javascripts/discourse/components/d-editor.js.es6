@@ -30,7 +30,7 @@ import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor } from "discourse/lib/text";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).

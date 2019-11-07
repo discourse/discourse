@@ -25,7 +25,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
 import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 function loadDraft(store, opts) {
   opts = opts || {};

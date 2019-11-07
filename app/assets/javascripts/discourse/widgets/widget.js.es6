@@ -9,7 +9,7 @@ import {
 import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { Promise } from "rsvp";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 const _registry = {};
 

@@ -1,4 +1,4 @@
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 //  Track visible elemnts on the screen.
 const Eyeline = function Eyeline(selector) {

@@ -3,7 +3,7 @@ import { scheduleOnce } from "@ember/runloop";
 import { diff, patch } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
 import DirtyKeys from "discourse/lib/dirty-keys";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 export default class WidgetGlue {
   constructor(name, register, attrs) {

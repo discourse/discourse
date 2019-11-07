@@ -1,5 +1,5 @@
 import deprecated from "discourse-common/lib/deprecated";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 let mobileForced = false;
 

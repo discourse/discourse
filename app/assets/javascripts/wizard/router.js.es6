@@ -1,5 +1,5 @@
 import getUrl from "discourse-common/lib/get-url";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 const Router = Ember.Router.extend({
   rootURL: getUrl("/wizard/"),

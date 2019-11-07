@@ -48,7 +48,7 @@ import {
   INLINE_ONEBOX_LOADING_CSS_CLASS,
   INLINE_ONEBOX_CSS_CLASS
 } from "pretty-text/context/inline-onebox-css-classes";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 

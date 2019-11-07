@@ -10,7 +10,7 @@ import {
   emojiSearch
 } from "pretty-text/emoji";
 import { safariHacksDisabled } from "discourse/lib/utilities";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 const { run } = Ember;
 

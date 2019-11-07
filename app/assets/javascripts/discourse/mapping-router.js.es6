@@ -1,6 +1,6 @@
 import { defaultHomepage } from "discourse/lib/utilities";
 import { rewritePath } from "discourse/lib/url";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 const rootURL = Discourse.BaseUri;
 

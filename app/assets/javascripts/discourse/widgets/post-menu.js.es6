@@ -5,7 +5,7 @@ import { avatarAtts } from "discourse/widgets/actions-summary";
 import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 const LIKE_ACTION = 2;
 

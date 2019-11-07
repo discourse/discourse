@@ -12,7 +12,7 @@ import { load } from "pretty-text/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
 import { ajax } from "discourse/lib/ajax";
 import afterTransition from "discourse/lib/after-transition";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 export default Component.extend({
   classNames: ["title-input"],

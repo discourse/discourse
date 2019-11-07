@@ -3,7 +3,7 @@ import { scheduleOnce } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 // This route is used for retrieving a topic based on params
 export default DiscourseRoute.extend({

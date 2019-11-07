@@ -7,7 +7,7 @@ import {
 } from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { escape } from "pretty-text/sanitizer";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 const MAX_COMPONENTS = 4;
 

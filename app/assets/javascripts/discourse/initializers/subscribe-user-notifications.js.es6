@@ -12,7 +12,7 @@ import {
   isPushNotificationsEnabled
 } from "discourse/lib/push-notifications";
 import { set } from "@ember/object";
-import ENV from "discourse/config/environment";
+import ENV from "discourse-common/config/environment";
 
 export default {
   name: "subscribe-user-notifications",
