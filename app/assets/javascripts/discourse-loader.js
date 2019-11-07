@@ -188,7 +188,7 @@ var define, requirejs;
   };
 
   function reify(mod, name, rseen) {
-    name = checkForAlias(name);
+    name = transformForAliases(name);
     var deps = mod.deps;
     var length = deps.length;
     var reified = new Array(length);
@@ -231,7 +231,7 @@ var define, requirejs;
     throw new Error("Could not find module " + name);
   }
 
-  function checkForAlias(name) {
+  function transformForAliases(name) {
     return ALIASES[name] ? ALIASES[name] : name;
   }
 
