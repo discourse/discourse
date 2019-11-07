@@ -1,7 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 
-
 export default EmberObject.extend({
   showDefault: null,
 

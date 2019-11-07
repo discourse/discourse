@@ -2,7 +2,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { later } from "@ember/runloop";
 import Controller from "@ember/controller";
 
-
 export default Controller.extend({
   @discourseComputed("model.colors", "onlyOverridden")
   colors(allColors, onlyOverridden) {

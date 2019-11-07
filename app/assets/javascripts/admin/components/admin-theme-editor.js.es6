@@ -56,7 +56,11 @@ export default Component.extend({
     return targets.find(t => t.name === currentTargetName).customNames;
   },
 
-  @discourseComputed("currentTargetName", "fieldName", "theme.theme_fields.@each.error")
+  @discourseComputed(
+    "currentTargetName",
+    "fieldName",
+    "theme.theme_fields.@each.error"
+  )
   error(target, fieldName) {
     return this.theme.getError(target, fieldName);
   },

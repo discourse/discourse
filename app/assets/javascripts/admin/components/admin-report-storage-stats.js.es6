@@ -3,7 +3,6 @@ import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import { setting } from "discourse/lib/computed";
 
-
 export default Component.extend({
   classNames: ["admin-report-storage-stats"],
 

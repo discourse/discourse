@@ -6,7 +6,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyNotEqual } from "discourse/lib/computed";
 
-
 export default Controller.extend(bufferedProperty("model"), {
   adminBadges: inject(),
   saving: false,

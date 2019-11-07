@@ -444,7 +444,11 @@ const Composer = RestModel.extend({
     }
   },
 
-  @discourseComputed("minimumPostLength", "replyLength", "canEditTopicFeaturedLink")
+  @discourseComputed(
+    "minimumPostLength",
+    "replyLength",
+    "canEditTopicFeaturedLink"
+  )
   missingReplyCharacters(
     minimumPostLength,
     replyLength,
@@ -459,7 +463,11 @@ const Composer = RestModel.extend({
     return minimumPostLength - replyLength;
   },
 
-  @discourseComputed("privateMessage", "topicFirstPost", "topic.pm_with_non_human_user")
+  @discourseComputed(
+    "privateMessage",
+    "topicFirstPost",
+    "topic.pm_with_non_human_user"
+  )
   minimumPostLength(privateMessage, topicFirstPost, pmWithNonHumanUser) {
     if (pmWithNonHumanUser) {
       return 1;

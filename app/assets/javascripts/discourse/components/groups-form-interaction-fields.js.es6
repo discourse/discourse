@@ -46,7 +46,11 @@ export default Component.extend({
     ];
   },
 
-  @discourseComputed("siteSettings.email_in", "model.automatic", "currentUser.admin")
+  @discourseComputed(
+    "siteSettings.email_in",
+    "model.automatic",
+    "currentUser.admin"
+  )
   showEmailSettings(emailIn, automatic, isAdmin) {
     return emailIn && isAdmin && !automatic;
   }

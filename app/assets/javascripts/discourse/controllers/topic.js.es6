@@ -100,7 +100,10 @@ export default Controller.extend(bufferedProperty("model"), {
     return mobileView && postsCount > 3;
   },
 
-  @discourseComputed("model.postStream.posts", "model.postStream.postsWithPlaceholders")
+  @discourseComputed(
+    "model.postStream.posts",
+    "model.postStream.postsWithPlaceholders"
+  )
   postsToRender(posts, postsWithPlaceholders) {
     return this.capabilities.isAndroid ? posts : postsWithPlaceholders;
   },
@@ -1230,7 +1233,11 @@ export default Controller.extend(bufferedProperty("model"), {
     return canMovePosts && selectedPostsCount > 0;
   },
 
-  @discourseComputed("currentUser.admin", "selectedPostsCount", "selectedPostsUsername")
+  @discourseComputed(
+    "currentUser.admin",
+    "selectedPostsCount",
+    "selectedPostsUsername"
+  )
   canChangeOwner(isAdmin, selectedPostsCount, selectedPostsUsername) {
     return (
       isAdmin && selectedPostsCount > 0 && selectedPostsUsername !== undefined

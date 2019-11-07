@@ -7,7 +7,6 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import DiscourseURL from "discourse/lib/url";
 
-
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),
 

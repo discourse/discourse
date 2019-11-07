@@ -6,7 +6,6 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { escapeExpression } from "discourse/lib/utilities";
 import { extractError } from "discourse/lib/ajax-error";
 
-
 export default Controller.extend(ModalFunctionality, {
   offerHelp: null,
   helpSeen: false,

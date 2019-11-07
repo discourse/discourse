@@ -1,7 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 
-
 export default Component.extend({
   init() {
     this._super(...arguments);
@@ -24,7 +23,10 @@ export default Component.extend({
     return publicAdmission || visibility_level > 1;
   },
 
-  @discourseComputed("model.visibility_level", "model.allow_membership_requests")
+  @discourseComputed(
+    "model.visibility_level",
+    "model.allow_membership_requests"
+  )
   disablePublicSetting(visibility_level, allowMembershipRequests) {
     visibility_level = parseInt(visibility_level);
     return allowMembershipRequests || visibility_level > 1;

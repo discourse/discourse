@@ -2,7 +2,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-
 export default Component.extend({
   saving: null,
 

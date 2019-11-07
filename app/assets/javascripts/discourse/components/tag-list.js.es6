@@ -2,7 +2,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { sort } from "@ember/object/computed";
 import Component from "@ember/component";
 
-
 export default Component.extend({
   classNameBindings: [":tag-list", "categoryClass", "tagGroupNameClass"],
 

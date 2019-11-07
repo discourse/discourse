@@ -60,7 +60,11 @@ export default Controller.extend(ModalFunctionality, {
     return "true" === isPublic ? publicTimerTypes : privateTimerTypes;
   },
 
-  @discourseComputed("isPublic", "model.topic_timer", "model.private_topic_timer")
+  @discourseComputed(
+    "isPublic",
+    "model.topic_timer",
+    "model.private_topic_timer"
+  )
   topicTimer(isPublic, publicTopicTimer, privateTopicTimer) {
     return "true" === isPublic ? publicTopicTimer : privateTopicTimer;
   },

@@ -303,7 +303,12 @@ export default Component.extend(
         : "select_kit.filter_placeholder";
     },
 
-    @discourseComputed("filter", "filterable", "autoFilterable", "renderedFilterOnce")
+    @discourseComputed(
+      "filter",
+      "filterable",
+      "autoFilterable",
+      "renderedFilterOnce"
+    )
     shouldFilter(filter, filterable, autoFilterable, renderedFilterOnce) {
       if (renderedFilterOnce && filterable) return true;
       if (filterable) return true;
@@ -428,7 +433,12 @@ export default Component.extend(
       this._boundaryActionHandler("onStopLoading");
     },
 
-    @discourseComputed("selection.[]", "isExpanded", "filter", "highlightedSelection.[]")
+    @discourseComputed(
+      "selection.[]",
+      "isExpanded",
+      "filter",
+      "highlightedSelection.[]"
+    )
     collectionHeaderComputedContent() {
       return applyCollectionHeaderCallbacks(
         this.pluginApiIdentifiers,

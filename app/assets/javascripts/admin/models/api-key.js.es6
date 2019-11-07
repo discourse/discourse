@@ -3,7 +3,6 @@ import AdminUser from "admin/models/admin-user";
 import RestModel from "discourse/models/rest";
 import { ajax } from "discourse/lib/ajax";
 
-
 const ApiKey = RestModel.extend({
   user: Ember.computed("_user", {
     get() {

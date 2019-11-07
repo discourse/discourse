@@ -5,7 +5,6 @@ import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { escapeExpression } from "discourse/lib/utilities";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
 
-
 export default Component.extend(
   bufferedRender({
     classNames: ["topic-statuses"],

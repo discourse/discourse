@@ -6,7 +6,6 @@ import Controller from "@ember/controller";
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-
 export default Controller.extend(GrantBadgeController, {
   adminUser: inject(),
   user: alias("adminUser.model"),

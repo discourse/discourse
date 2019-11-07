@@ -28,7 +28,11 @@ export default Controller.extend(ModalFunctionality, {
     return categoryLinkHTML(category, { allowUncategorized: true });
   },
 
-  @discourseComputed("categoryLink", "model.pinned_globally", "model.pinned_until")
+  @discourseComputed(
+    "categoryLink",
+    "model.pinned_globally",
+    "model.pinned_until"
+  )
   unPinMessage(categoryLink, pinnedGlobally, pinnedUntil) {
     let name = "topic.feature_topic.unpin";
     if (pinnedGlobally) name += "_globally";

@@ -3,7 +3,6 @@ import { not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import ColorSchemeColor from "admin/models/color-scheme-color";
 
-
 const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
   init() {
     this._super(...arguments);

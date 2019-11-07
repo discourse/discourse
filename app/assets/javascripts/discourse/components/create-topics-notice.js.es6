@@ -47,7 +47,12 @@ export default Component.extend({
     );
   },
 
-  @discourseComputed("enabled", "shouldSee", "publicTopicCount", "publicPostCount")
+  @discourseComputed(
+    "enabled",
+    "shouldSee",
+    "publicTopicCount",
+    "publicPostCount"
+  )
   hidden() {
     return (
       !this.enabled ||

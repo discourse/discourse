@@ -2,7 +2,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 
-
 const ScreenedIpAddress = Discourse.Model.extend({
   @discourseComputed("action_name")
   actionName(actionName) {

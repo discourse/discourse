@@ -3,7 +3,6 @@ import { equal } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 
-
 const ACTIONS = ["delete", "delete_replies", "edit", "none"];
 
 export default Component.extend({

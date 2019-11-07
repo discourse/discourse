@@ -1,6 +1,5 @@
 import discourseComputed from "discourse-common/utils/decorators";
 
-
 export default Ember.TextField.extend({
   classNameBindings: ["invalid"],
 

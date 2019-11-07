@@ -5,7 +5,6 @@ import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Category from "discourse/models/category";
 
-
 export default buildCategoryPanel("general", {
   init() {
     this._super(...arguments);

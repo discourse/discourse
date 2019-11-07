@@ -82,7 +82,11 @@ const Theme = RestModel.extend({
     };
   },
 
-  @discourseComputed("fieldNames", "theme_fields.[]", "theme_fields.@each.error")
+  @discourseComputed(
+    "fieldNames",
+    "theme_fields.[]",
+    "theme_fields.@each.error"
+  )
   fields(fieldNames) {
     const hash = {};
     Object.keys(fieldNames).forEach(target => {

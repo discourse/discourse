@@ -163,7 +163,12 @@ const Report = Discourse.Model.extend({
     return this._iconForTrend(yesterdayTrend, higherIsBetter);
   },
 
-  @discourseComputed("prev_period", "currentTotal", "currentAverage", "higher_is_better")
+  @discourseComputed(
+    "prev_period",
+    "currentTotal",
+    "currentAverage",
+    "higher_is_better"
+  )
   trend(prev, currentTotal, currentAverage, higherIsBetter) {
     const total = this.average ? currentAverage : currentTotal;
     return this._computeTrend(prev, total, higherIsBetter);

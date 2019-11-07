@@ -50,7 +50,11 @@ export default RestModel.extend({
   loading: or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost"),
   notLoading: not("loading"),
 
-  @discourseComputed("isMegaTopic", "stream.length", "topic.highest_post_number")
+  @discourseComputed(
+    "isMegaTopic",
+    "stream.length",
+    "topic.highest_post_number"
+  )
   filteredPostsCount(isMegaTopic, streamLength, topicHighestPostNumber) {
     return isMegaTopic ? topicHighestPostNumber : streamLength;
   },

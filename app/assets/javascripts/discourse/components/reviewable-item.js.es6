@@ -44,7 +44,10 @@ export default Component.extend({
     return claimMode !== "required";
   },
 
-  @discourseComputed("siteSettings.reviewable_claiming", "reviewable.claimed_by")
+  @discourseComputed(
+    "siteSettings.reviewable_claiming",
+    "reviewable.claimed_by"
+  )
   claimHelp(claimMode, claimedBy) {
     if (claimedBy) {
       return claimedBy.id === this.currentUser.id

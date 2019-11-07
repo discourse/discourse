@@ -1,7 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 
-
 const VersionCheck = Discourse.Model.extend({
   @discourseComputed("updated_at")
   noCheckPerformed(updatedAt) {

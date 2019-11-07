@@ -1,7 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 
-
 export default Controller.extend({
   queryParams: ["start_date", "end_date", "filters"],
   start_date: null,

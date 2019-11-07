@@ -2,7 +2,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 
-
 // Lists of topics on a user's page.
 export default Controller.extend({
   application: inject(),

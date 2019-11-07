@@ -4,7 +4,6 @@ import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import CleansUp from "discourse/mixins/cleans-up";
 
-
 function entranceDate(dt, showTime) {
   const today = new Date();
 

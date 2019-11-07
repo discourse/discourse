@@ -4,7 +4,6 @@ import Controller from "@ember/controller";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-
 export default Controller.extend(PreferencesTabController, {
   init() {
     this._super(...arguments);

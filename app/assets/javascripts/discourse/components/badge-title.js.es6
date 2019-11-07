@@ -2,7 +2,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 
-
 export default Component.extend({
   classNames: ["badge-title"],
 

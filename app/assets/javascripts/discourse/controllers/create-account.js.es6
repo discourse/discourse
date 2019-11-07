@@ -149,7 +149,11 @@ export default Controller.extend(
       });
     },
 
-    @discourseComputed("accountEmail", "authOptions.email", "authOptions.email_valid")
+    @discourseComputed(
+      "accountEmail",
+      "authOptions.email",
+      "authOptions.email_valid"
+    )
     emailValidated() {
       return (
         this.get("authOptions.email") === this.accountEmail &&

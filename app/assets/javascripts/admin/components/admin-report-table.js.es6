@@ -18,7 +18,11 @@ export default Component.extend({
     return labelsLength === 2;
   },
 
-  @discourseComputed("totalsForSample", "options.total", "model.dates_filtering")
+  @discourseComputed(
+    "totalsForSample",
+    "options.total",
+    "model.dates_filtering"
+  )
   showTotalForSample(totalsForSample, total, datesFiltering) {
     // check if we have at least one cell which contains a value
     const sum = totalsForSample
@@ -34,7 +38,11 @@ export default Component.extend({
     return reportTotal && total && twoColumns;
   },
 
-  @discourseComputed("model.{average,data}", "totalsForSample.1.value", "twoColumns")
+  @discourseComputed(
+    "model.{average,data}",
+    "totalsForSample.1.value",
+    "twoColumns"
+  )
   showAverage(model, sampleTotalValue, hasTwoColumns) {
     return (
       model.average &&

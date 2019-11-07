@@ -9,7 +9,6 @@ import showModal from "discourse/lib/show-modal";
 import { userPath } from "discourse/lib/url";
 import TopicList from "discourse/models/topic-list";
 
-
 const controllerOpts = {
   discovery: inject(),
   discoveryTopics: inject("discovery/topics"),

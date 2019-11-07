@@ -2,7 +2,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
 import Component from "@ember/component";
 
-
 export default Component.extend({
   editorId: reads("fieldName"),
 

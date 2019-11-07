@@ -3,7 +3,6 @@ import { and, not, equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 
-
 export default Component.extend({
   classNames: ["flag-action-type"],
 
@@ -12,7 +11,12 @@ export default Component.extend({
     return I18n.t("flagging.custom_placeholder_" + nameKey);
   },
 
-  @discourseComputed("flag.name", "flag.name_key", "flag.is_custom_flag", "username")
+  @discourseComputed(
+    "flag.name",
+    "flag.name_key",
+    "flag.is_custom_flag",
+    "username"
+  )
   formattedName(name, nameKey, isCustomFlag, username) {
     if (isCustomFlag) {
       return name.replace("{{username}}", username);

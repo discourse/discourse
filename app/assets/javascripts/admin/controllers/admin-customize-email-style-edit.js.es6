@@ -1,7 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 
-
 export default Controller.extend({
   @discourseComputed("model.isSaving")
   saveButtonText(isSaving) {

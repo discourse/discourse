@@ -4,7 +4,6 @@ import Component from "@ember/component";
 /* You might be looking for navigation-item. */
 import { iconHTML } from "discourse-common/lib/icon-library";
 
-
 export default Component.extend({
   tagName: "li",
   classNameBindings: ["active"],

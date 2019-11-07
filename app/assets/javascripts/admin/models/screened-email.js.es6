@@ -1,7 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 
-
 const ScreenedEmail = Discourse.Model.extend({
   @discourseComputed("action")
   actionName(action) {

@@ -1,7 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 
-
 export default Component.extend({
   @discourseComputed("user.dismissed_banner_key", "banner.key", "hide")
   visible(dismissedBannerKey, bannerKey, hide) {

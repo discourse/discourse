@@ -73,7 +73,11 @@ export default Controller.extend(CanCheckEmails, {
 
   preferencesPath: fmt("model.username_lower", userPath("%@/preferences")),
 
-  @discourseComputed("model.can_delete_all_posts", "model.staff", "model.post_count")
+  @discourseComputed(
+    "model.can_delete_all_posts",
+    "model.staff",
+    "model.post_count"
+  )
   deleteAllPostsExplanation(canDeleteAllPosts, staff, postCount) {
     if (canDeleteAllPosts) {
       return null;

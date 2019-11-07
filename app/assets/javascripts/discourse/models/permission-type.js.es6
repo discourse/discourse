@@ -1,6 +1,5 @@
 import discourseComputed from "discourse-common/utils/decorators";
 
-
 const PermissionType = Discourse.Model.extend({
   @discourseComputed("id")
   description(id) {

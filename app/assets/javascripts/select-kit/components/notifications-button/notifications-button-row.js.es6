@@ -15,7 +15,10 @@ export default DropdownSelectBoxRoxComponent.extend({
     return I18n.t(`${prefix}.${key}${postfix}.title`);
   },
 
-  @discourseComputed("computedContent.name", "computedContent.originalContent.icon")
+  @discourseComputed(
+    "computedContent.name",
+    "computedContent.originalContent.icon"
+  )
   icon(contentName, icon) {
     return iconHTML(icon, { class: contentName.dasherize() });
   },

@@ -5,7 +5,6 @@ import { propertyEqual } from "discourse/lib/computed";
 import InputValidation from "discourse/models/input-validation";
 import { emailValid } from "discourse/lib/utilities";
 
-
 export default Controller.extend({
   taken: false,
   saving: false,

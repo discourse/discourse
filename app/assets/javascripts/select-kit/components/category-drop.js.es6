@@ -23,7 +23,12 @@ export default ComboBoxComponent.extend({
   subCategory: false,
   isAsync: Ember.computed.not("subCategory"),
 
-  @discourseComputed("categories", "hasSelection", "subCategory", "noSubcategories")
+  @discourseComputed(
+    "categories",
+    "hasSelection",
+    "subCategory",
+    "noSubcategories"
+  )
   categoriesWithShortcuts(
     categories,
     hasSelection,

@@ -128,7 +128,12 @@ export default SelectKitComponent.extend({
     return computedAsyncContent;
   },
 
-  @discourseComputed("computedContent.[]", "computedValue", "filter", "shouldFilter")
+  @discourseComputed(
+    "computedContent.[]",
+    "computedValue",
+    "filter",
+    "shouldFilter"
+  )
   filteredComputedContent(
     computedContent,
     computedValue,

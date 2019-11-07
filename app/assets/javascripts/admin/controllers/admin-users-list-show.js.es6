@@ -5,7 +5,6 @@ import { i18n } from "discourse/lib/computed";
 import AdminUser from "admin/models/admin-user";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 
-
 export default Controller.extend(CanCheckEmails, {
   model: null,
   query: null,

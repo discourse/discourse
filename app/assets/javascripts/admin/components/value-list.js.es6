@@ -4,7 +4,6 @@ import { empty, alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import { on } from "discourse-common/utils/decorators";
 
-
 export default Component.extend({
   classNameBindings: [":value-list"],
 

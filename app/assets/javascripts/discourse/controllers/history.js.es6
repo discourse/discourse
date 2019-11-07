@@ -39,7 +39,11 @@ export default Controller.extend(ModalFunctionality, {
   previousTagChanges: customTagArray("model.tags_changes.previous"),
   currentTagChanges: customTagArray("model.tags_changes.current"),
 
-  @discourseComputed("previousVersion", "model.current_version", "model.version_count")
+  @discourseComputed(
+    "previousVersion",
+    "model.current_version",
+    "model.version_count"
+  )
   revisionsText(previous, current, total) {
     return I18n.t(
       "post.revisions.controls.comparing_previous_to_current_out_of_total",
@@ -172,7 +176,11 @@ export default Controller.extend(ModalFunctionality, {
 
   isEitherRevisionHidden: or("model.previous_hidden", "model.current_hidden"),
 
-  @discourseComputed("model.previous_hidden", "model.current_hidden", "displayingInline")
+  @discourseComputed(
+    "model.previous_hidden",
+    "model.current_hidden",
+    "displayingInline"
+  )
   hiddenClasses(prevHidden, currentHidden, displayingInline) {
     if (displayingInline) {
       return this.isEitherRevisionHidden ? "hidden-revision-either" : null;

@@ -3,7 +3,6 @@ import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { propertyEqual } from "discourse/lib/computed";
 
-
 export default Component.extend({
   tagName: "li",
   classNameBindings: ["active", "tabClassName"],

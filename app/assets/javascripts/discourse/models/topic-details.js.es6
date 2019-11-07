@@ -2,7 +2,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 
-
 /**
   A model representing a Topic's details that aren't always present, such as a list of participants.
   When showing topics in lists and such this information should not be required.

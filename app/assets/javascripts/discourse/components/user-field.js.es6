@@ -2,7 +2,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { fmt } from "discourse/lib/computed";
 
-
 export default Component.extend({
   classNameBindings: [":user-field", "field.field_type", "customFieldClass"],
   layoutName: fmt("field.field_type", "components/user-fields/%@"),

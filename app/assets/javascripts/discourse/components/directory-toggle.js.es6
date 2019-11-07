@@ -3,7 +3,6 @@ import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 
-
 export default Component.extend(
   bufferedRender({
     tagName: "th",

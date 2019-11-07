@@ -34,7 +34,12 @@ export default Controller.extend(CanCheckEmails, {
     return !isEmpty(background.toString());
   },
 
-  @discourseComputed("model.profile_hidden", "indexStream", "viewingSelf", "forceExpand")
+  @discourseComputed(
+    "model.profile_hidden",
+    "indexStream",
+    "viewingSelf",
+    "forceExpand"
+  )
   collapsedInfo(profileHidden, indexStream, viewingSelf, forceExpand) {
     if (profileHidden) {
       return true;

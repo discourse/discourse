@@ -2,7 +2,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { gt } from "@ember/object/computed";
 import Controller from "@ember/controller";
 
-
 export default Controller.extend({
   faqOverriden: gt("siteSettings.faq_url.length", 0),
 

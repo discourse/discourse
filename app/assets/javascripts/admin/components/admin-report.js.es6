@@ -10,7 +10,6 @@ import { outputExportResult } from "discourse/lib/export-result";
 import { isNumeric } from "discourse/lib/utilities";
 import { SCHEMA_VERSION, default as Report } from "admin/models/report";
 
-
 const TABLE_OPTIONS = {
   perPage: 8,
   total: true,

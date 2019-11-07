@@ -2,7 +2,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { findAll } from "discourse/models/login-method";
 
-
 export default Component.extend({
   elementId: "login-buttons",
   classNameBindings: ["hidden"],

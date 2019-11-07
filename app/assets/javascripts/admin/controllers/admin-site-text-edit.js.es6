@@ -3,7 +3,6 @@ import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 
-
 export default Controller.extend(bufferedProperty("siteText"), {
   saved: false,
 

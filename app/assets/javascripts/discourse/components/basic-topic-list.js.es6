@@ -2,7 +2,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { alias, not } from "@ember/object/computed";
 import Component from "@ember/component";
 
-
 export default Component.extend({
   loadingMore: alias("topicList.loadingMore"),
   loading: not("loaded"),

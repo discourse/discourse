@@ -1,6 +1,5 @@
 import discourseComputed from "discourse-common/utils/decorators";
 
-
 export default Discourse.Model.extend({
   @discourseComputed("days_visited", "time_period")
   days_visited_percent(daysVisited, timePeriod) {
