@@ -2023,6 +2023,19 @@ user_preferences:
     type: category_list
     default: ""
 
+  default_tags_watching:
+    type: tag_list
+    default: ""
+  default_tags_tracking:
+    type: tag_list
+    default: ""
+  default_tags_muted:
+    type: tag_list
+    default: ""
+  default_tags_watching_first_post:
+    type: tag_list
+    default: ""
+
   default_text_size:
     type: enum
     default: normal
@@ -2043,6 +2056,11 @@ api:
     default: 30
   retry_web_hook_events:
     default: false
+  api_key_last_used_epoch: 
+    default: "" # Value is added in a migration
+    hidden: true
+  revoke_api_keys_days:
+    default: 180
 
 user_api:
   allow_user_api_keys:

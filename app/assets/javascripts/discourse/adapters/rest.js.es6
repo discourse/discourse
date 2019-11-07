@@ -1,6 +1,7 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { hashString } from "discourse/lib/hash";
+import { underscore } from "@ember/string";
 
 const ADMIN_MODELS = [
   "plugin",
@@ -66,7 +67,7 @@ export default EmberObject.extend({
   pathFor(store, type, findArgs) {
     let path =
       this.basePath(store, type, findArgs) +
-      Ember.String.underscore(store.pluralize(this.apiNameFor(type)));
+      underscore(store.pluralize(this.apiNameFor(type)));
     return this.appendQueryParams(path, findArgs);
   },
 
@@ -108,7 +109,7 @@ export default EmberObject.extend({
 
   update(store, type, id, attrs) {
     const data = {};
-    const typeField = Ember.String.underscore(this.apiNameFor(type));
+    const typeField = underscore(this.apiNameFor(type));
     data[typeField] = attrs;
 
     return ajax(
@@ -121,7 +122,7 @@ export default EmberObject.extend({
 
   createRecord(store, type, attrs) {
     const data = {};
-    const typeField = Ember.String.underscore(this.apiNameFor(type));
+    const typeField = underscore(this.apiNameFor(type));
     data[typeField] = attrs;
     return ajax(this.pathFor(store, type), this.getPayload("POST", data)).then(
       function(json) {

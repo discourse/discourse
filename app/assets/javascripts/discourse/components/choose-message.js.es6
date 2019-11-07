@@ -1,3 +1,5 @@
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import debounce from "discourse/lib/debounce";
@@ -31,7 +33,7 @@ export default Component.extend({
   search: debounce(function(title) {
     const currentTopicId = this.currentTopicId;
 
-    if (Ember.isEmpty(title)) {
+    if (isEmpty(title)) {
       this.setProperties({ messages: null, loading: false });
       return;
     }
@@ -56,7 +58,7 @@ export default Component.extend({
 
   actions: {
     chooseMessage(message) {
-      const messageId = Ember.get(message, "id");
+      const messageId = get(message, "id");
       this.set("selectedTopicId", messageId);
       next(() => $(`#choose-message-${messageId}`).prop("checked", "true"));
       return false;

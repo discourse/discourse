@@ -1,6 +1,7 @@
 import { run } from "@ember/runloop";
 import pageVisible from "discourse/lib/page-visible";
 import logout from "discourse/lib/logout";
+import { Promise } from "rsvp";
 
 let _trackView = false;
 let _transientHeader = null;
@@ -163,13 +164,13 @@ export function ajax() {
     url !== Discourse.getURL("/clicks/track") &&
     !Discourse.Session.currentProp("csrfToken")
   ) {
-    promise = new Ember.RSVP.Promise((resolve, reject) => {
+    promise = new Promise((resolve, reject) => {
       ajaxObj = updateCsrfToken().then(() => {
         performAjax(resolve, reject);
       });
     });
   } else {
-    promise = new Ember.RSVP.Promise(performAjax);
+    promise = new Promise(performAjax);
   }
 
   promise.abort = () => {

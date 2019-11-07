@@ -106,10 +106,8 @@ sup img.emoji {
 }
 
 .emoji-picker .info {
-  text-overflow: ellipsis;
+  @include ellipsis;
   padding-left: 8px;
-  white-space: nowrap;
-  overflow: hidden;
   font-weight: 700;
   max-width: 125px;
 }

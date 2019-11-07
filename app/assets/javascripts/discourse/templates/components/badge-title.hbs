@@ -18,7 +18,11 @@
 
     <div class="control-group">
       <div class="controls">
-        <button class="btn btn-primary" disabled={{saving}} {{action "save"}}> {{savingStatus}} </button>
+        {{d-button
+          class="btn-primary"
+          action=(action "save")
+          disabled=saving
+          label=(if saving "saving" "save")}}
         {{#if saved}}{{i18n 'saved'}}{{/if}}
       </div>
     </div>

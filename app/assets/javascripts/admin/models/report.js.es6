@@ -1,3 +1,5 @@
+import { makeArray } from "discourse-common/lib/helpers";
+import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
 import { escapeExpression } from "discourse/lib/utilities";
 import { ajax } from "discourse/lib/ajax";
@@ -136,7 +138,7 @@ const Report = Discourse.Model.extend({
 
   @computed("data", "currentTotal")
   currentAverage(data, total) {
-    return Ember.makeArray(data).length === 0
+    return makeArray(data).length === 0
       ? 0
       : parseFloat((total / parseFloat(data.length)).toFixed(1));
   },
@@ -392,7 +394,7 @@ const Report = Discourse.Model.extend({
   },
 
   _numberLabel(value, options = {}) {
-    const formatNumbers = Ember.isEmpty(options.formatNumbers)
+    const formatNumbers = isEmpty(options.formatNumbers)
       ? true
       : options.formatNumbers;
 

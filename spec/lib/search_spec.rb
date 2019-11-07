@@ -22,13 +22,13 @@ describe Search do
 
         link to an audio file: https://somesite.com/content/file123.m4a
 
-        link to a video file: https://somesite.com/content/somethingelse.mov
+        link to a video file: https://somesite.com/content/somethingelse.MOV
       RAW
       result = Search::GroupedSearchResults.blurb_for(cooked)
       expect(result).to eq("link to an external page: https://google.com/?u=bar link to an audio file: #{I18n.t("search.audio")} link to a video file: #{I18n.t("search.video")}")
     end
 
-    it "strips URLs correctly when blurb is" do
+    it "strips URLs correctly when blurb is longer than limit" do
       cooked = <<~RAW
         Here goes a test cooked with enough characters to hit the blurb limit.
 
@@ -41,6 +41,13 @@ describe Search do
       expect(result).to eq("Here goes a test cooked with enough characters to hit the blurb limit. Something is very interesting about this audio file. #{I18n.t("search.audio")}")
     end
 
+    it "does not fail on bad URLs" do
+      cooked = <<~RAW
+        invalid URL: http:error] should not trip up blurb generation.
+      RAW
+      result = Search::GroupedSearchResults.blurb_for(cooked)
+      expect(result).to eq("invalid URL: http:error] should not trip up blurb generation.")
+    end
   end
 
 end

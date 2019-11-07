@@ -313,9 +313,7 @@ $mobile-breakpoint: 700px;
       }
       td.x-value {
         max-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        @include ellipsis;
       }
     }
     .bar-container {
@@ -861,9 +859,7 @@ table#user-badges {
 .value-list {
   .value {
     padding: 0.125em 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
     display: flex;
 
     &:last-child {

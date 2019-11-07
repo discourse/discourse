@@ -1,3 +1,5 @@
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import { equal, and, or, not } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
@@ -11,6 +13,7 @@ import { postUrl } from "discourse/lib/utilities";
 import { cookAsync } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
+import { Promise } from "rsvp";
 
 const Post = RestModel.extend({
   // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
@@ -93,7 +96,7 @@ const Post = RestModel.extend({
 
   @computed("link_counts.@each.internal")
   internalLinks() {
-    if (Ember.isEmpty(this.link_counts)) return null;
+    if (isEmpty(this.link_counts)) return null;
 
     return this.link_counts.filterBy("internal").filterBy("title");
   },
@@ -228,7 +231,7 @@ const Post = RestModel.extend({
       });
     }
 
-    return promise || Ember.RSVP.Promise.resolve();
+    return promise || Promise.resolve();
   },
 
   /**
@@ -281,7 +284,7 @@ const Post = RestModel.extend({
         if (key === "reply_to_user" && value && oldValue) {
           skip =
             value.username === oldValue.username ||
-            Ember.get(value, "username") === Ember.get(oldValue, "username");
+            get(value, "username") === get(oldValue, "username");
         }
 
         if (!skip) {

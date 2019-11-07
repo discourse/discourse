@@ -78,10 +78,16 @@ class Search
 
       urls = Set.new
       cooked.scan(URI.regexp(%w{http https})) { urls << $& }
-
       urls.each do |url|
-        cooked.gsub!(url, I18n.t("search.video")) if url.match(/.(mov|mp4|webm|ogv)/)
-        cooked.gsub!(url, I18n.t("search.audio")) if url.match(/.(mp3|ogg|wav|m4a)/)
+        begin
+          case File.extname(URI(url).path || "")
+          when Oneboxer::VIDEO_REGEX
+            cooked.gsub!(url, I18n.t("search.video"))
+          when Oneboxer::AUDIO_REGEX
+            cooked.gsub!(url, I18n.t("search.audio"))
+          end
+        rescue URI::InvalidURIError
+        end
       end
 
       if term
@@ -93,12 +99,11 @@ class Search
         end
 
         blurb = TextHelper.excerpt(cooked, phrase,
-          radius: blurb_length / 2,
-          seperator: " "
+          radius: blurb_length / 2
         )
       end
 
-      blurb = TextHelper.truncate(cooked, length: blurb_length, seperator: " ") if blurb.blank?
+      blurb = TextHelper.truncate(cooked, length: blurb_length) if blurb.blank?
       Sanitize.clean(blurb)
     end
   end

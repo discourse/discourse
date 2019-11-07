@@ -10,6 +10,7 @@ import {
 } from "ember-addons/ember-computed-decorators";
 import { THEMES, COMPONENTS } from "admin/models/theme";
 import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
+import { set } from "@ember/object";
 
 const MIN_NAME_LENGTH = 4;
 
@@ -46,7 +47,7 @@ export default Controller.extend(ModalFunctionality, {
   themes(installedThemes) {
     return POPULAR_THEMES.map(t => {
       if (installedThemes.includes(t.name)) {
-        Ember.set(t, "installed", true);
+        set(t, "installed", true);
       }
       return t;
     });

@@ -91,7 +91,6 @@ ru:
         from_reply_by_address_error: "Происходит, когда заголовок From совпадает с ответом по адресу электронной почты."
         inactive_user_error: "Происходит, когда отправитель неактивен."
         silenced_user_error: "Происходит, когда отправитель заблокирован."
-        bad_destination_address: "Происходит, когда ни один из адресатов, указанных в полях To/Cc/Bcc не совпадает со входящим адресом электронной почты."
         strangers_not_allowed_error: "Происходит когда пользователь пытается создать новую тему в разделе, участником которого он не является."
         insufficient_trust_level_error: "Происходит когда пользователь пытается создать новую тему в категории, недоступной ему по уровню доступа."
         reply_user_not_matching_error: "Происходит, когда ответ приходит с адреса, отличного от того, на который было направлено уведомление."
@@ -767,7 +766,6 @@ ru:
     activated: "Извините, эта учетная запись уже активирована."
     admin_confirm:
       title: "Подтвердите Учетную Запись Администратора"
-      description: "Вы уверены что хотите <b>%{target_username}</b> назначить администратором?"
       grant: "Предоставить Доступ Администратора"
       complete: "<b>%{target_username}</b> сейчас является администратором."
       back_to: "Вернуться к %{title}"
@@ -1851,10 +1849,6 @@ ru:
   admin_confirmation_mailer:
     title: "Подтверждение Администратора"
     subject_template: "[%{email_prefix}] Подтверждение новой Учетной Записи Администратора"
-    text_body_template: |
-      Пожалуйста, подтвердите, что вы хотите добавить **%{target_username}** администратором вашего форума.
-
-      [Подтверждение Учетной Записи Администратора](%{admin_confirm_url})
   test_mailer:
     subject_template: "[%{email_prefix}] Проверка доставки по e-mail почте"
   new_version_mailer:
@@ -2292,7 +2286,6 @@ ru:
     missing: "К сожалению, нам не удалось найти ни одного аватара, связанного с этим электронным адресом. Попытаетесь загрузить аватар снова?"
   flag_reason:
     sockpuppet: "Новый пользователь создал тему, а другой новый пользователь ответил с этого же IP адреса (%{ip_address}). Смотрите параметр <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> сайта."
-    spam_hosts: "Этот новый пользователь пытался создать множество сообщений с ссылками на один и тот же домен. Смотрите параметр <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> сайта."
   skipped_email_log:
     exceeded_emails_limit: "Превышен max_emails_per_day_per_user"
     exceeded_bounces_limit: "Превышен bounce_score_threshold"

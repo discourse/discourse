@@ -110,15 +110,6 @@ fa_IR:
       random_mention:
         reply: |-
           سلام! برای اینکه بفهمی من چکار میتوانم بکنم، بگو `@%{discobot_username} %{help_trigger} `.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger} `
-          > :left_speech_bubble: _کار نیکی انجام بده، بدون آنکه انتظار داشته باشی که پاداش بگیری، با این دیدگاه که ممکن است روزی فرد دیگری همین کار را برای شما انجام دهد_ &mdash; شاهزاده دایانا
-
-          `@%{discobot_username} %{magic_8_ball_trigger} `
-          > :crystal_ball: میتونی روش حساب کنی
       do_not_understand:
         first_response: |-
           سلام، متشکرم از پاسخی که دادی!
@@ -252,12 +243,6 @@ fa_IR:
           من در این مبحث یک سوپرایز برای شما دارم. اگر برای یک چالش آماده ای، **آیکون جستجو** <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> را درگوشه ی بالا سمت چپ &#8598; انتخاب کن که جستجو اش بکنی.
 
           سعی کن که عبارت "سنجاب" را در این مبحث جستجو کنی
-        hidden_message: |-
-          چطور تونستی این سنجاب رو نادیده بگیری؟ :wink:
-
-          <img src="%{base_uri}/images/capybara-eating.gif"/>
-
-          آیا متوجه شدی که الان تو در ابتدای مبحث هستی؟ به این سنجاب گرسنه‌ی بیچاره، با **پاسخ دادن توسط شکلک `:herb:`** (در پاسخ بنویس `:herb:`) غذا بده تا علاوه بر آن به صورت اتوماتیک به آخر مبحث برگردی.
         reply: |-
           بله پیداش کردی :tada:
 

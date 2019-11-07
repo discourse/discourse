@@ -46,7 +46,7 @@ import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.34";
+const PLUGIN_API_VERSION = "0.8.36";
 
 class PluginApi {
   constructor(version, container) {
@@ -463,7 +463,7 @@ class PluginApi {
 
    ```javascript
    api.customUserAvatarClasses(user => {
-      if (Ember.get(user, 'primary_group_name') === 'managers') {
+      if (get(user, 'primary_group_name') === 'managers') {
         return ['managers'];
       }
     });
@@ -716,7 +716,7 @@ class PluginApi {
 
   /**
    *
-   * Adds a new item in the navigation bar.
+   * Adds a new item in the navigation bar. Returns the NavItem object created.
    *
    * Example:
    *
@@ -729,14 +729,20 @@ class PluginApi {
    * An optional `customFilter` callback can be included to not display the
    * nav item on certain routes
    *
+   * An optional `init` callback can be included to run custom code on menu
+   * init
+   *
    * Example:
    *
    * addNavigationBarItem({
    *   name: "link-to-bugs-category",
    *   displayName: "bugs"
    *   href: "/c/bugs",
+   *   init: (navItem, category) => { if (category) { navItem.set("category", category)  } }
    *   customFilter: (category, args, router) => { category && category.name !== 'bug' }
-   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') "/a-feature"; }
+   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') "/a-feature"; },
+   *   before: "top",
+   *   forceActive(category, args, router) => router.currentURL === "/a/b/c/d";
    * })
    */
   addNavigationBarItem(item) {
@@ -763,7 +769,23 @@ class PluginApi {
         };
       }
 
-      addNavItem(item);
+      const forceActive = item.forceActive;
+      if (forceActive) {
+        const router = this.container.lookup("service:router");
+        item.forceActive = function(category, args) {
+          return forceActive(category, args, router);
+        };
+      }
+
+      const init = item.init;
+      if (init) {
+        const router = this.container.lookup("service:router");
+        item.init = function(navItem, category, args) {
+          init(navItem, category, args, router);
+        };
+      }
+
+      return addNavItem(item);
     }
   }
 

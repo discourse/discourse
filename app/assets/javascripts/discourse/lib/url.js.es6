@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
@@ -62,7 +63,7 @@ export function groupPath(subPath) {
 
 let _jumpScheduled = false;
 export function jumpToElement(elementId) {
-  if (_jumpScheduled || Ember.isEmpty(elementId)) {
+  if (_jumpScheduled || isEmpty(elementId)) {
     return;
   }
 
@@ -191,7 +192,7 @@ const DiscourseURL = EmberObject.extend({
   routeTo(path, opts) {
     opts = opts || {};
 
-    if (Ember.isEmpty(path)) {
+    if (isEmpty(path)) {
       return;
     }
 

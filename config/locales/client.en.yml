@@ -998,14 +998,14 @@ en:
           default_name: "My Authenticator"
         security_key:
           register: "Register"
-          title: 'Security Keys'
+          title: "Security Keys"
           add: "Register Security Key"
           default_name: "Main Security Key"
           not_allowed_error: "The security key registration process either timed out or was cancelled."
           already_added_error: "You have already registered this security key. You don’t have to register it again."
-          edit: 'Edit Security Key'
-          edit_description: 'Security Key Name'
-          delete: 'Delete'
+          edit: "Edit Security Key"
+          edit_description: "Security Key Name"
+          delete: "Delete"
 
       change_about:
         title: "Change About Me"
@@ -1037,8 +1037,8 @@ en:
         image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
 
       change_profile_background:
-        title: "Profile Background"
-        instructions: "Profile backgrounds will be centered and have a default width of 850px."
+        title: "Profile Header"
+        instructions: "Profile headers will be centered and have a default width of 1110px."
 
       change_card_background:
         title: "User Card Background"
@@ -2606,10 +2606,14 @@ en:
       tags_allowed_tags: "Restrict these tags to this category:"
       tags_allowed_tag_groups: "Restrict these tag groups to this category:"
       tags_placeholder: "(Optional) list of allowed tags"
-      tags_tab_description: "Tags and tag groups specified here will only be available in this category and other categories that also specify them. They won't be available for use in other categories."
+      tags_tab_description: "Tags and tag groups specified above will only be available in this category and other categories that also specify them. They won't be available for use in other categories."
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
       manage_tag_groups_link: "Manage tag groups here."
       allow_global_tags_label: "Also allow other tags"
+      tag_group_selector_placeholder: "(Optional) Tag group"
+      required_tag_group_description: "Require new topics to have tags from a tag group:"
+      min_tags_from_required_group_label: "Num Tags:"
+      required_tag_group_label: "Tag group:"
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete Category"
       create: "New Category"
@@ -3095,6 +3099,7 @@ en:
         parent_tag_description: "Tags from this group can't be used unless the parent tag is present."
         one_per_topic_label: "Limit one tag per topic from this group"
         new_name: "New Tag Group"
+        name_placeholder: "Tag Group Name"
         save: "Save"
         delete: "Delete"
         confirm_delete: "Are you sure you want to delete this tag group?"
@@ -3310,18 +3315,30 @@ en:
         none: "There are no active API keys right now."
         user: "User"
         title: "API"
-        key: "API Key"
+        key: "Key"
         created: Created
+        updated: Updated
         last_used: Last Used
         never_used: (never)
         generate: "Generate"
-        regenerate: "Regenerate"
+        undo_revoke: "Undo Revoke"
         revoke: "Revoke"
-        confirm_regen: "Are you sure you want to replace that API Key with a new one?"
-        confirm_revoke: "Are you sure you want to revoke that key?"
-        info_html: "Your API key will allow you to create and update topics using JSON calls."
         all_users: "All Users"
-        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts as any user."
+        active_keys: "Active API Keys"
+        manage_keys: Manage Keys
+        show_details: Details
+        description: Description
+        no_description: (no description)
+        all_api_keys: All API Keys
+        user_mode: User Level
+        impersonate_all_users: Impersonate any user
+        single_user: "Single User"
+        user_placeholder: Enter username
+        description_placeholder: What will this key be used for?
+        save: Save
+        new_key: New API Key
+        revoked: Revoked
+        delete: Permenantly Delete
 
       web_hooks:
         title: "Webhooks"
@@ -3915,6 +3932,9 @@ en:
             enable_theme_component: "enable theme component"
             revoke_title: "revoke title"
             change_title: "change title"
+            api_key_create: "api key create"
+            api_key_update: "api key update"
+            api_key_destroy: "api key destroy"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

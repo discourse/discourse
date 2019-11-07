@@ -1,3 +1,5 @@
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import { or, gt } from "@ember/object/computed";
 import RestModel from "discourse/models/rest";
 import { default as computed } from "ember-addons/ember-computed-decorators";
@@ -161,11 +163,11 @@ const Theme = RestModel.extend({
 
   hasEdited(target, name) {
     if (name) {
-      return !Ember.isEmpty(this.getField(target, name));
+      return !isEmpty(this.getField(target, name));
     } else {
       let fields = this.theme_fields || [];
       return fields.any(
-        field => field.target === target && !Ember.isEmpty(field.value)
+        field => field.target === target && !isEmpty(field.value)
       );
     }
   },
@@ -227,8 +229,8 @@ const Theme = RestModel.extend({
       themeFields[key] = field;
     } else {
       const changed =
-        (Ember.isEmpty(existingField.value) && !Ember.isEmpty(value)) ||
-        (Ember.isEmpty(value) && !Ember.isEmpty(existingField.value));
+        (isEmpty(existingField.value) && !isEmpty(value)) ||
+        (isEmpty(value) && !isEmpty(existingField.value));
 
       existingField.value = value;
       if (changed) {
@@ -242,7 +244,7 @@ const Theme = RestModel.extend({
   @computed("childThemes.[]")
   child_theme_ids(childThemes) {
     if (childThemes) {
-      return childThemes.map(theme => Ember.get(theme, "id"));
+      return childThemes.map(theme => get(theme, "id"));
     }
   },
 

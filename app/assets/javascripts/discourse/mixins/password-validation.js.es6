@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import InputValidation from "discourse/models/input-validation";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import Mixin from "@ember/object/mixin";
@@ -55,7 +56,7 @@ export default Mixin.create({
     }
 
     // If blank, fail without a reason
-    if (Ember.isEmpty(password)) {
+    if (isEmpty(password)) {
       return InputValidation.create({ failed: true });
     }
 
@@ -67,14 +68,14 @@ export default Mixin.create({
       });
     }
 
-    if (!Ember.isEmpty(accountUsername) && password === accountUsername) {
+    if (!isEmpty(accountUsername) && password === accountUsername) {
       return InputValidation.create({
         failed: true,
         reason: I18n.t("user.password.same_as_username")
       });
     }
 
-    if (!Ember.isEmpty(accountEmail) && password === accountEmail) {
+    if (!isEmpty(accountEmail) && password === accountEmail) {
       return InputValidation.create({
         failed: true,
         reason: I18n.t("user.password.same_as_email")

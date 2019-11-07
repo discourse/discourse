@@ -4,6 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import Model from "discourse/models/model";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { Promise } from "rsvp";
 
 // Whether to show the category badge in topic lists
 function displayCategoryInList(site, category) {
@@ -54,7 +55,7 @@ const TopicList = RestModel.extend({
 
   loadMore() {
     if (this.loadingMore) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     let moreUrl = this.more_topics_url;
@@ -97,7 +98,7 @@ const TopicList = RestModel.extend({
       });
     } else {
       // Return a promise indicating no more results
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
   },
 

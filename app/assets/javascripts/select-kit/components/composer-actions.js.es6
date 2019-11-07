@@ -7,6 +7,8 @@ import {
   REPLY,
   EDIT
 } from "discourse/models/composer";
+import { camelize } from "@ember/string";
+import { empty } from "@ember/object/computed";
 
 // Component can get destroyed and lose state
 let _topicSnapshot = null;
@@ -26,7 +28,7 @@ export default DropdownSelectBoxComponent.extend({
   allowInitialValueMutation: false,
   allowAutoSelectFirst: false,
   showFullTitle: false,
-  isHidden: Ember.computed.empty("content"),
+  isHidden: empty("content"),
 
   didReceiveAttrs() {
     this._super(...arguments);
@@ -292,7 +294,7 @@ export default DropdownSelectBoxComponent.extend({
 
   actions: {
     onSelect(value) {
-      let action = `${Ember.String.camelize(value)}Selected`;
+      let action = `${camelize(value)}Selected`;
       if (this[action]) {
         let model = this.composerModel;
         this[action](

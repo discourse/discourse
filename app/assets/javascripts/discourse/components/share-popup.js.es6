@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { bind } from "@ember/runloop";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
@@ -59,7 +60,7 @@ export default Component.extend({
     const $currentTargetOffset = $target.offset();
     const $this = $(this.element);
 
-    if (Ember.isEmpty(url)) {
+    if (isEmpty(url)) {
       return;
     }
 

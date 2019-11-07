@@ -1,3 +1,5 @@
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import {
   default as computed,
@@ -215,7 +217,7 @@ const TopicTrackingState = Discourse.Model.extend({
 
   // If we have a cached topic list, we can update it from our tracking information.
   updateTopics(topics) {
-    if (Ember.isEmpty(topics)) {
+    if (isEmpty(topics)) {
       return;
     }
 
@@ -389,8 +391,8 @@ const TopicTrackingState = Discourse.Model.extend({
       );
     }
 
-    let categoryId = category ? Ember.get(category, "id") : null;
-    let categoryName = category ? Ember.get(category, "name") : null;
+    let categoryId = category ? get(category, "id") : null;
+    let categoryName = category ? get(category, "name") : null;
 
     if (name === "new") {
       return this.countNew(categoryId);

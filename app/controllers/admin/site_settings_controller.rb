@@ -92,8 +92,35 @@ class Admin::SiteSettingsController < Admin::AdminController
             users.each { |user| category_users << { category_id: category_id, user_id: user.id, notification_level: notification_level } }
             CategoryUser.insert_all!(category_users)
           end
+        end
+      elsif id.start_with?("default_tags_")
+        previous_tag_ids = Tag.where(name: previous_value.split("|")).pluck(:id)
+        new_tag_ids = Tag.where(name: new_value.split("|")).pluck(:id)
+        now = Time.zone.now
 
-          CategoryUser.where(category_id: category_id, notification_level: notification_level).first_or_create!(notification_level: notification_level)
+        case id
+        when "default_tags_watching"
+          notification_level = NotificationLevels.all[:watching]
+        when "default_tags_tracking"
+          notification_level = NotificationLevels.all[:tracking]
+        when "default_tags_muted"
+          notification_level = NotificationLevels.all[:muted]
+        when "default_tags_watching_first_post"
+          notification_level = NotificationLevels.all[:watching_first_post]
+        end
+
+        (previous_tag_ids - new_tag_ids).each do |tag_id|
+          TagUser.where(tag_id: tag_id, notification_level: notification_level).delete_all
+        end
+
+        (new_tag_ids - previous_tag_ids).each do |tag_id|
+          skip_user_ids = TagUser.where(tag_id: tag_id).pluck(:user_id)
+
+          User.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
+            tag_users = []
+            users.each { |user| tag_users << { tag_id: tag_id, user_id: user.id, notification_level: notification_level, created_at: now, updated_at: now } }
+            TagUser.insert_all!(tag_users)
+          end
         end
       end
     end

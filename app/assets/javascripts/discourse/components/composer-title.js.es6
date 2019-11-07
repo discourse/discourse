@@ -8,7 +8,8 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 import InputValidation from "discourse/models/input-validation";
-import { load, lookupCache } from "pretty-text/oneboxer";
+import { load } from "pretty-text/oneboxer";
+import { lookupCache } from "pretty-text/oneboxer-cache";
 import { ajax } from "discourse/lib/ajax";
 import afterTransition from "discourse/lib/after-transition";
 

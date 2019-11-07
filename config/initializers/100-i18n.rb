@@ -12,5 +12,8 @@ I18n.reload!
 I18n.init_accelerator!
 
 unless Rails.env.test?
-  MessageBus.subscribe("/i18n-flush") { I18n.reload! }
+  MessageBus.subscribe("/i18n-flush") do
+    I18n.reload!
+    ExtraLocalesController.clear_cache!
+  end
 end

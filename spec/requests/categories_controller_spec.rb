@@ -349,6 +349,7 @@ describe CategoriesController do
         it "updates attributes correctly" do
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
+          tag_group = Fabricate(:tag_group)
 
           put "/categories/#{category.id}.json", params: {
             name: "hello",
@@ -364,7 +365,9 @@ describe CategoriesController do
               "dancing" => "frogs"
             },
             minimum_required_tags: "",
-            allow_global_tags: 'true'
+            allow_global_tags: 'true',
+            required_tag_group_name: tag_group.name,
+            min_tags_from_required_group: 2
           }
 
           expect(response.status).to eq(200)
@@ -379,6 +382,8 @@ describe CategoriesController do
           expect(category.custom_fields).to eq("dancing" => "frogs")
           expect(category.minimum_required_tags).to eq(0)
           expect(category.allow_global_tags).to eq(true)
+          expect(category.required_tag_group_id).to eq(tag_group.id)
+          expect(category.min_tags_from_required_group).to eq(2)
         end
 
         it 'logs the changes correctly' do

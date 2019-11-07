@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -11,7 +12,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @computed("accountEmailOrUsername", "disabled")
   submitDisabled(accountEmailOrUsername, disabled) {
-    return Ember.isEmpty((accountEmailOrUsername || "").trim()) || disabled;
+    return isEmpty((accountEmailOrUsername || "").trim()) || disabled;
   },
 
   onShow() {

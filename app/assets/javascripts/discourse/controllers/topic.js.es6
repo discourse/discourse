@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { or, and, not, alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
@@ -24,6 +25,7 @@ import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { userPath } from "discourse/lib/url";
 import showModal from "discourse/lib/show-modal";
 import TopicTimer from "discourse/models/topic-timer";
+import { Promise } from "rsvp";
 
 let customPostMessageCallbacks = {};
 
@@ -72,7 +74,7 @@ export default Controller.extend(bufferedProperty("model"), {
   @observes("model.title", "category")
   _titleChanged() {
     const title = this.get("model.title");
-    if (!Ember.isEmpty(title)) {
+    if (!isEmpty(title)) {
       // force update lazily loaded titles
       this.send("refreshTitle");
     }
@@ -267,7 +269,7 @@ export default Controller.extend(bufferedProperty("model"), {
     selectText(postId, buffer) {
       const loadedPost = this.get("model.postStream").findLoadedPost(postId);
       const promise = loadedPost
-        ? Ember.RSVP.resolve(loadedPost)
+        ? Promise.resolve(loadedPost)
         : this.get("model.postStream").loadPost(postId);
 
       return promise.then(post => {
@@ -825,7 +827,7 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     addNotice(post) {
-      return new Ember.RSVP.Promise(function(resolve, reject) {
+      return new Promise(function(resolve, reject) {
         const controller = showModal("add-post-notice");
         controller.setProperties({ post, resolve, reject });
       });
@@ -985,7 +987,7 @@ export default Controller.extend(bufferedProperty("model"), {
       composerController
         .open(options)
         .then(() => {
-          return Ember.isEmpty(quotedText) ? "" : quotedText;
+          return isEmpty(quotedText) ? "" : quotedText;
         })
         .then(q => {
           const postUrl = `${location.protocol}//${location.host}${post.get(

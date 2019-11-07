@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { inject } from "@ember/controller";
@@ -17,12 +18,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @computed("saving", "new_user")
   buttonDisabled(saving, newUser) {
-    return saving || Ember.isEmpty(newUser);
-  },
-
-  @computed("saving")
-  buttonTitle(saving) {
-    return saving ? I18n.t("saving") : I18n.t("topic.change_owner.action");
+    return saving || isEmpty(newUser);
   },
 
   onShow() {

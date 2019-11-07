@@ -91,7 +91,6 @@ bs_BA:
         from_reply_by_address_error: "Događa se kada se zaglavlje From poklapa s odgovorom na adresu e-pošte."
         inactive_user_error: "Dešava se kada pošiljalac nije aktivan."
         silenced_user_error: "Dešava se kada je pošiljalac utišan."
-        bad_destination_address: "Dešava se kada se nijedna adresa e-pošte u poljima To / Cc / Bcc ne podudara sa konfiguriranom dolaznom adresom e-pošte."
         strangers_not_allowed_error: "Dešava se kada je korisnik pokušao da kreira novu temu u kategoriji u kojoj nije član."
         insufficient_trust_level_error: "Dešava se kada korisnik pokuša da kreira novu temu u kategoriji za koju nema potreban nivo pouzdanosti."
         reply_user_not_matching_error: "Događa se kada je stigao odgovor s druge adrese e-pošte na koju je obavijest poslana."

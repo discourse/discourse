@@ -159,6 +159,16 @@ describe User do
     end
   end
 
+  context '.set_default_tags_preferences' do
+    let(:tag) { Fabricate(:tag) }
+
+    it "should set default tag preferences when new user created" do
+      SiteSetting.default_tags_watching = tag.name
+      user = Fabricate(:user)
+      expect(TagUser.exists?(tag_id: tag.id, user_id: user.id, notification_level: TagUser.notification_levels[:watching])).to be_truthy
+    end
+  end
+
   describe 'reviewable' do
     let(:user) { Fabricate(:user, active: false) }
     fab!(:admin) { Fabricate(:admin) }
@@ -1123,56 +1133,6 @@ describe User do
       u.user_stat.first_post_created_at = 25.hours.ago
       expect(u.new_user_posting_on_first_day?).to eq(true)
     end
-  end
-
-  describe 'api keys' do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:other_admin) { Fabricate(:admin) }
-    fab!(:user) { Fabricate(:user) }
-
-    describe '.generate_api_key' do
-
-      it "generates an api key when none exists, and regenerates when it does" do
-        expect(user.api_key).to be_blank
-
-        # Generate a key
-        api_key = user.generate_api_key(admin)
-        expect(api_key.user).to eq(user)
-        expect(api_key.key).to be_present
-        expect(api_key.created_by).to eq(admin)
-
-        user.reload
-        expect(user.api_key).to eq(api_key)
-
-        # Regenerate a key. Keeps the same record, updates the key
-        new_key = user.generate_api_key(other_admin)
-        expect(new_key.id).to eq(api_key.id)
-        expect(new_key.key).to_not eq(api_key.key)
-        expect(new_key.created_by).to eq(other_admin)
-      end
-
-    end
-
-    describe '.revoke_api_key' do
-
-      it "revokes an api key when exists" do
-        expect(user.api_key).to be_blank
-
-        # Revoke nothing does nothing
-        user.revoke_api_key
-        user.reload
-        expect(user.api_key).to be_blank
-
-        # When a key is present it is removed
-        user.generate_api_key(admin)
-        user.reload
-        user.revoke_api_key
-        user.reload
-        expect(user.api_key).to be_blank
-      end
-
-    end
-
   end
 
   describe "posted too much in topic" do

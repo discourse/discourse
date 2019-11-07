@@ -9,6 +9,7 @@ import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "preload-store";
 import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
+import { hash } from "rsvp";
 
 const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   renderTemplate() {
@@ -44,11 +45,11 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   },
 
   _findCategoriesAndTopics(filter) {
-    return Ember.RSVP.hash({
+    return hash({
       wrappedCategoriesList: PreloadStore.getAndRemove("categories_list"),
       topicsList: PreloadStore.getAndRemove(`topic_list_${filter}`)
-    }).then(hash => {
-      let { wrappedCategoriesList, topicsList } = hash;
+    }).then(response => {
+      let { wrappedCategoriesList, topicsList } = response;
       let categoriesList =
         wrappedCategoriesList && wrappedCategoriesList.category_list;
 

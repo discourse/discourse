@@ -281,7 +281,7 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def lookup_api_user(api_key_value, request)
-    if api_key = ApiKey.where(key: api_key_value).includes(:user).first
+    if api_key = ApiKey.active.where(key: api_key_value).includes(:user).first
       api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
 
       if api_key.allowed_ips.present? && !api_key.allowed_ips.any? { |ip| ip.include?(request.ip) }

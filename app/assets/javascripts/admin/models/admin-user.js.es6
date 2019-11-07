@@ -4,9 +4,9 @@ import { ajax } from "discourse/lib/ajax";
 import computed from "ember-addons/ember-computed-decorators";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import ApiKey from "admin/models/api-key";
 import Group from "discourse/models/group";
 import { userPath } from "discourse/lib/url";
+import { Promise } from "rsvp";
 
 const wrapAdmin = user => (user ? AdminUser.create(user) : null);
 
@@ -55,16 +55,6 @@ const AdminUser = Discourse.User.extend({
         reset_bounce_score_after: null
       })
     );
-  },
-
-  generateApiKey() {
-    return ajax(`/admin/users/${this.id}/generate_api_key`, {
-      type: "POST"
-    }).then(result => {
-      const apiKey = ApiKey.create(result.api_key);
-      this.set("api_key", apiKey);
-      return apiKey;
-    });
   },
 
   groupAdded(added) {
@@ -514,7 +504,7 @@ const AdminUser = Discourse.User.extend({
 
   loadDetails() {
     if (this.loadedDetails) {
-      return Ember.RSVP.resolve(this);
+      return Promise.resolve(this);
     }
 
     return AdminUser.find(this.id).then(result => {

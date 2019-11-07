@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
@@ -27,7 +28,7 @@ export default Component.extend({
   shareUrl(forcedShareUrl, shareUrl) {
     shareUrl = forcedShareUrl || shareUrl;
 
-    if (Ember.isEmpty(shareUrl)) {
+    if (isEmpty(shareUrl)) {
       return;
     }
 

@@ -111,15 +111,6 @@ el:
       random_mention:
         reply: |-
           Γεια σου! Για να μάθεις τι μπορώ να κάνω, πες `@%{discobot_username} %{help_trigger}`.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Κάνε μια τυχαία πράξη καλωσύνης, χωρίς προσδοκία ή ανταμοιβή, απλά με την επίγνωση ότι κάποιος κάποια μέρα θα κάνει το ίδιο για σένα_ &mdash; Πριγκίπισσα Diana
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Βασίσου πάνω του
       do_not_understand:
         first_response: |-
           Επ, ευχαριστώ για την απάντηση!
@@ -241,12 +232,6 @@ el:
           _ψιτ_ … Έχω κρύψει μια έκπληξη σε αυτό το νήμα. Αν είσαι μέσα και σε τρώει η περιέργεια, **πάτα το εικονίδιο αναζήτησης** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> επάνω δεξιά &#8599; για να την ψάξεις.
 
           Δοκίμασε να ψάξεις για τον όρο "capy&#8203;bara" σε αυτό το νήμα
-        hidden_message: |-
-          Πως αλήθεια σου ξέφυγε αυτός ο υδρόχειρος (capybara); :wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          Συνειδητοποίησες ότι έχεις επιστρέψει πίσω στην αρχή; Τάισε τον φτωχό και πεινασμένο υδρόχειρο **απαντώντας με το `:herb:` emoji** και αυτόματα θα μεταφερθείς στο τέλος.
         reply: |-
           Ναιιιι το βρήκες :tada:
 

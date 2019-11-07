@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { not, or, gt } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { iconHTML } from "discourse-common/lib/icon-library";
@@ -241,7 +242,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
         .then(() => {
           if (!token) {
             const redirect = this.siteSettings.logout_redirect;
-            if (Ember.isEmpty(redirect)) {
+            if (isEmpty(redirect)) {
               window.location = Discourse.getURL("/");
             } else {
               window.location.href = redirect;

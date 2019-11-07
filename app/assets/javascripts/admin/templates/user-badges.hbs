@@ -22,7 +22,10 @@
       <label>{{i18n 'admin.badges.reason'}}</label>
       {{input type="text" value=badgeReason}}<br><small>{{i18n 'admin.badges.reason_help'}}</small>
       </div>
-      <button class='btn btn-primary' {{action "grantBadge"}}>{{i18n 'admin.badges.grant'}}</button>
+      {{d-button
+        class="btn-primary"
+        action=(action "grantBadge")
+        label="admin.badges.grant"}}
     </form>
     {{/if}}
 
@@ -52,9 +55,14 @@
           <td>{{age-with-tooltip userBadge.granted_at}}</td>
           <td>
             {{#if userBadge.grouped}}
-              <button class='btn' {{action "expandGroup" userBadge}}>{{{i18n 'admin.badges.expand'}}}</button>
+              {{d-button
+                action=(action "expandGroup" userBadge)
+                label="admin.badges.expand"}}
             {{else}}
-              <button class='btn btn-danger' {{action "revokeBadge" userBadge}}>{{i18n 'admin.badges.revoke'}}</button>
+              {{d-button
+                class="btn-danger"
+                action=(action "revokeBadge" userBadge)
+                label="admin.badges.revoke"}}
             {{/if}}
           </td>
         </tr>

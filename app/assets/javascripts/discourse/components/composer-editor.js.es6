@@ -836,7 +836,11 @@ export default Component.extend({
           return;
         }
 
-        const replacement = match.replace(imageScaleRegex, `$1,${scale}%$3`);
+        const replacement = match.replace(
+          imageScaleRegex,
+          `![$1|$2, ${scale}%]($4)`
+        );
+
         this.appEvents.trigger(
           "composer:replace-text",
           matchingPlaceholder[index],
@@ -851,11 +855,18 @@ export default Component.extend({
     // regex matches only upload placeholders with size defined,
     // which is required for resizing
 
-    // original string `![28|690x226,5%](upload://ceEfx3vO7bx7Cecv2co1SrnoTpW.png)`
-    // match 1 `![28|690x226`
-    // match 2 `5`
-    // match 3 `](upload://ceEfx3vO7bx7Cecv2co1SrnoTpW.png)`
-    const imageScaleRegex = /(!\[(?:\S*?(?=\|)\|)*?(?:\d{1,6}x\d{1,6})+?)(?:,?(\d{1,3})?%?)?(\]\(upload:\/\/\S*?\))/g;
+    // original string `![image|690x220, 50%](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
+    // group 1 `image`
+    // group 2 `690x220`
+    // group 3 `, 50%`
+    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png'
+    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
+
+    // Notes:
+    // Group 3 is optional. group 4 can match images with or without a markdown title.
+    // All matches are whitespace tolerant as long it's still valid markdown
+
+    const imageScaleRegex = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?\]\((upload:\/\/.*?)\)/g;
 
     // wraps previewed upload markdown in a codeblock in its own class to keep a track
     // of indexes later on to replace the correct upload placeholder in the composer

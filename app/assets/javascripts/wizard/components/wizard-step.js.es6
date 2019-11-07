@@ -5,6 +5,7 @@ import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
+import { htmlSafe } from "@ember/template";
 
 jQuery.fn.wiggle = function(times, duration) {
   if (times > 0) {
@@ -89,7 +90,7 @@ export default Component.extend({
       ratio = 1;
     }
 
-    return Ember.String.htmlSafe(`width: ${ratio * 200}px`);
+    return htmlSafe(`width: ${ratio * 200}px`);
   },
 
   autoFocus() {

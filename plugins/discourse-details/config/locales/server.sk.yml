@@ -7,4 +7,4 @@
 
 sk:
   site_settings:
-    details_enabled: "Povoliť vlastnosť detailov. Ak toto zmeníte, musíte znovu sparsovať všetky príspevky: \"rake posts:rebake\"."
+    details_enabled: 'Povoliť vlastnosť detailov. Ak toto zmeníte, musíte znovu sparsovať všetky príspevky: "rake posts:rebake".'

@@ -51,6 +51,7 @@ class Category < ActiveRecord::Base
 
   validates :num_featured_topics, numericality: { only_integer: true, greater_than: 0 }
   validates :search_priority, inclusion: { in: Searchable::PRIORITIES.values }
+  validates :min_tags_from_required_group, numericality: { only_integer: true, greater_than: 0 }
 
   validate :parent_category_validator
   validate :email_in_validator
@@ -93,6 +94,8 @@ class Category < ActiveRecord::Base
   has_many :tags, through: :category_tags
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
+  belongs_to :required_tag_group, class_name: 'TagGroup'
+
   belongs_to :reviewable_by_group, class_name: 'Group'
 
   scope :latest, -> { order('topic_count DESC') }
@@ -555,6 +558,10 @@ class Category < ActiveRecord::Base
     self.tag_groups = TagGroup.where(name: group_names).all.to_a
   end
 
+  def required_tag_group_name=(group_name)
+    self.required_tag_group = group_name ? TagGroup.where(name: group_name).first : nil
+  end
+
   def downcase_email
     self.email_in = (email_in || "").strip.downcase.presence
   end
@@ -805,6 +812,16 @@ class Category < ActiveRecord::Base
       .where(topics: { id: nil })
       .find_each do |category|
       category.create_category_definition
+    end
+  end
+
+  def slug_path
+    if self.parent_category_id.present?
+      slug_path = self.parent_category.slug_path
+      slug_path.push(self.slug_for_url)
+      slug_path
+    else
+      [self.slug_for_url]
     end
   end
 

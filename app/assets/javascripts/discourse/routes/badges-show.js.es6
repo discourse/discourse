@@ -2,6 +2,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import UserBadge from "discourse/models/user-badge";
 import Badge from "discourse/models/badge";
 import PreloadStore from "preload-store";
+import { hash } from "rsvp";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -52,7 +53,7 @@ export default DiscourseRoute.extend({
       userBadgesAll
     };
 
-    return Ember.RSVP.hash(promises);
+    return hash(promises);
   },
 
   titleToken() {

@@ -2,6 +2,7 @@ import { later } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { formatUsername } from "discourse/lib/utilities";
+import { Promise } from "rsvp";
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -189,11 +190,11 @@ function onNotification(data) {
 // Wraps Notification.requestPermission in a Promise
 function requestPermission() {
   if (havePermission === true) {
-    return Ember.RSVP.resolve();
+    return Promise.resolve();
   } else if (havePermission === false) {
-    return Ember.RSVP.reject();
+    return Promise.reject();
   } else {
-    return new Ember.RSVP.Promise(function(resolve, reject) {
+    return new Promise(function(resolve, reject) {
       Notification.requestPermission(function(status) {
         if (status === "granted") {
           resolve();

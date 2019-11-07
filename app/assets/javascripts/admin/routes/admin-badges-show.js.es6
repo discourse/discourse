@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import Route from "@ember/routing/route";
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
@@ -5,7 +6,7 @@ import showModal from "discourse/lib/show-modal";
 
 export default Route.extend({
   serialize(m) {
-    return { badge_id: Ember.get(m, "id") || "new" };
+    return { badge_id: get(m, "id") || "new" };
   },
 
   model(params) {

@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import EmberObject from "@ember/object";
 import {
   default as computed,
@@ -19,7 +20,7 @@ export default EmberObject.extend({
   contextType: {
     get(searchContext) {
       if (searchContext) {
-        return Ember.get(searchContext, "type");
+        return get(searchContext, "type");
       }
     },
     set(value, searchContext) {

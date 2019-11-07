@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias, or, gt, not, and } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { inject as service } from "@ember/service";
@@ -8,6 +9,7 @@ import computed from "ember-addons/ember-computed-decorators";
 import User from "discourse/models/user";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { set } from "@ember/object";
 
 export default Controller.extend(CanCheckEmails, {
   indexStream: false,
@@ -29,7 +31,7 @@ export default Controller.extend(CanCheckEmails, {
 
   @computed("model.profileBackgroundUrl")
   hasProfileBackgroundUrl(background) {
-    return !Ember.isEmpty(background.toString());
+    return !isEmpty(background.toString());
   },
 
   @computed("model.profile_hidden", "indexStream", "viewingSelf", "forceExpand")
@@ -108,19 +110,17 @@ export default Controller.extend(CanCheckEmails, {
   @computed("model.user_fields.@each.value")
   publicUserFields() {
     const siteUserFields = this.site.get("user_fields");
-    if (!Ember.isEmpty(siteUserFields)) {
+    if (!isEmpty(siteUserFields)) {
       const userFields = this.get("model.user_fields");
       return siteUserFields
         .filterBy("show_on_profile", true)
         .sortBy("position")
         .map(field => {
-          Ember.set(field, "dasherized_name", field.get("name").dasherize());
+          set(field, "dasherized_name", field.get("name").dasherize());
           const value = userFields
             ? userFields[field.get("id").toString()]
             : null;
-          return Ember.isEmpty(value)
-            ? null
-            : EmberObject.create({ value, field });
+          return isEmpty(value) ? null : EmberObject.create({ value, field });
         })
         .compact();
     }

@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { and, or, alias, reads } from "@ember/object/computed";
 import { debounce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
@@ -23,6 +24,7 @@ import {
 import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
 import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
+import { Promise } from "rsvp";
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -302,7 +304,7 @@ export default Controller.extend({
 
     // We need exactly one user to issue a warning
     if (
-      Ember.isEmpty(usernames) ||
+      isEmpty(usernames) ||
       usernames.split(",").length !== 1 ||
       hasTargetGroups
     ) {
@@ -441,8 +443,8 @@ export default Controller.extend({
       this.closeAutocomplete();
 
       if (
-        Ember.isEmpty(this.get("model.reply")) &&
-        Ember.isEmpty(this.get("model.title"))
+        isEmpty(this.get("model.reply")) &&
+        isEmpty(this.get("model.title"))
       ) {
         this.close();
       } else {
@@ -744,7 +746,7 @@ export default Controller.extend({
   // Notify the composer messages controller that a reply has been typed. Some
   // messages only appear after typing.
   checkReplyLength() {
-    if (!Ember.isEmpty("model.reply")) {
+    if (!isEmpty("model.reply")) {
       this.appEvents.trigger("composer:typed-reply");
     }
   },
@@ -800,7 +802,7 @@ export default Controller.extend({
       composerModel = null;
     }
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       if (composerModel && composerModel.replyDirty) {
         // If we're already open, we don't have to do anything
         if (
@@ -944,7 +946,7 @@ export default Controller.extend({
         this.appEvents.trigger("draft:destroyed", key)
       );
     } else {
-      return Ember.RSVP.Promise.resolve();
+      return Promise.resolve();
     }
   },
 
@@ -961,7 +963,7 @@ export default Controller.extend({
     }
 
     if (_checkDraftPopup) {
-      return new Ember.RSVP.Promise(resolve => {
+      return new Promise(resolve => {
         bootbox.dialog(I18n.t("drafts.abandon.confirm"), [
           {
             label: I18n.t("drafts.abandon.no_value"),
@@ -987,7 +989,7 @@ export default Controller.extend({
     const keyPrefix =
       this.model.action === "edit" ? "post.abandon_edit" : "post.abandon";
 
-    return new Ember.RSVP.Promise(resolve => {
+    return new Promise(resolve => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
         bootbox.dialog(I18n.t(keyPrefix + ".confirm"), [
           {

@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { reads, equal, not, or, and } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
@@ -16,6 +17,8 @@ import {
 import { escapeExpression, tinyAvatar } from "discourse/lib/utilities";
 import { propertyNotEqual } from "discourse/lib/computed";
 import throttle from "discourse/lib/throttle";
+import { Promise } from "rsvp";
+import { set } from "@ember/object";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
@@ -116,7 +119,7 @@ const Composer = RestModel.extend({
     set(categoryId) {
       const oldCategoryId = this._categoryId;
 
-      if (Ember.isEmpty(categoryId)) {
+      if (isEmpty(categoryId)) {
         categoryId = null;
       }
       this._categoryId = categoryId;
@@ -420,7 +423,7 @@ const Composer = RestModel.extend({
 
   @computed("metaData")
   hasMetaData(metaData) {
-    return metaData ? Ember.isEmpty(Ember.keys(metaData)) : false;
+    return metaData ? isEmpty(Ember.keys(metaData)) : false;
   },
 
   replyDirty: propertyNotEqual("reply", "originalText"),
@@ -610,7 +613,7 @@ const Composer = RestModel.extend({
       }
     }
 
-    if (!Ember.isEmpty(reply)) {
+    if (!isEmpty(reply)) {
       return;
     }
 
@@ -633,7 +636,7 @@ const Composer = RestModel.extend({
     if (!opts) opts = {};
     this.set("loading", false);
 
-    const replyBlank = Ember.isEmpty(this.reply);
+    const replyBlank = isEmpty(this.reply);
 
     const composer = this;
     if (
@@ -754,7 +757,7 @@ const Composer = RestModel.extend({
 
   // Overwrite to implement custom logic
   beforeSave() {
-    return Ember.RSVP.Promise.resolve();
+    return Promise.resolve();
   },
 
   save(opts) {
@@ -791,7 +794,7 @@ const Composer = RestModel.extend({
   editPost(opts) {
     const post = this.post;
     const oldCooked = post.cooked;
-    let promise = Ember.RSVP.resolve();
+    let promise = Promise.resolve();
 
     // Update the topic if we're editing the first post
     if (this.title && post.post_number === 1) {
@@ -857,7 +860,7 @@ const Composer = RestModel.extend({
     Object.keys(serializer).forEach(f => {
       const val = this.get(serializer[f]);
       if (typeof val !== "undefined") {
-        Ember.set(dest, f, val);
+        set(dest, f, val);
       }
     });
     return dest;
@@ -1055,12 +1058,20 @@ const Composer = RestModel.extend({
 
     let data = this.serialize(_draft_serializer);
 
-    if (data.postId && !Ember.isEmpty(this.originalText)) {
+    if (data.postId && !isEmpty(this.originalText)) {
       data.originalText = this.originalText;
     }
 
-    return Draft.save(this.draftKey, this.draftSequence, data)
+    return Draft.save(
+      this.draftKey,
+      this.draftSequence,
+      data,
+      this.messageBus.clientId
+    )
       .then(result => {
+        if (result.draft_sequence) {
+          this.draftSequence = result.draft_sequence;
+        }
         if (result.conflict_user) {
           this.setProperties({
             draftSaving: false,
@@ -1075,10 +1086,27 @@ const Composer = RestModel.extend({
           });
         }
       })
-      .catch(() => {
+      .catch(e => {
+        let draftStatus;
+        const xhr = e && e.jqXHR;
+
+        if (
+          xhr &&
+          xhr.status === 409 &&
+          xhr.responseJSON &&
+          xhr.responseJSON.errors &&
+          xhr.responseJSON.errors.length
+        ) {
+          const json = e.jqXHR.responseJSON;
+          draftStatus = json.errors[0];
+          if (json.extras && json.extras.description) {
+            bootbox.alert(json.extras.description);
+          }
+        }
+
         this.setProperties({
           draftSaving: false,
-          draftStatus: I18n.t("composer.drafts_offline"),
+          draftStatus: draftStatus || I18n.t("composer.drafts_offline"),
           draftConflictUser: null
         });
       });

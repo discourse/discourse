@@ -1,3 +1,5 @@
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import { alias, sort } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import computed from "ember-addons/ember-computed-decorators";
@@ -39,7 +41,7 @@ const Site = RestModel.extend({
 
     let siteFields = this.user_fields;
 
-    if (!Ember.isEmpty(siteFields)) {
+    if (!isEmpty(siteFields)) {
       return siteFields.map(f => {
         let value = fields ? fields[f.id.toString()] : null;
         value = value || "&mdash;".htmlSafe();
@@ -109,7 +111,7 @@ const Site = RestModel.extend({
 
   updateCategory(newCategory) {
     const categories = this.categories;
-    const categoryId = Ember.get(newCategory, "id");
+    const categoryId = get(newCategory, "id");
     const existingCategory = categories.findBy("id", categoryId);
 
     // Don't update null permissions

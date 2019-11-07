@@ -12,7 +12,7 @@ export default Component.extend({
   type: "button",
 
   tagName: "button",
-  classNameBindings: [":btn", "noText", "btnType"],
+  classNameBindings: ["btnLink::btn", "btnLink", "noText", "btnType"],
   attributeBindings: [
     "form",
     "disabled",
@@ -23,6 +23,8 @@ export default Component.extend({
   ],
 
   btnIcon: notEmpty("icon"),
+
+  btnLink: Ember.computed.equal("display", "link"),
 
   @computed("icon", "translatedLabel")
   btnType(icon, translatedLabel) {

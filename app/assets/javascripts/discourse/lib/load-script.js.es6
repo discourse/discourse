@@ -1,5 +1,7 @@
 import { run } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
+import { Promise } from "rsvp";
+
 const _loaded = {};
 const _loading = {};
 
@@ -38,7 +40,7 @@ export function loadCSS(url) {
 export default function loadScript(url, opts) {
   // TODO: Remove this once plugins have been updated not to use it:
   if (url === "defer/html-sanitizer-bundle") {
-    return Ember.RSVP.Promise.resolve();
+    return Promise.resolve();
   }
 
   opts = opts || {};
@@ -55,7 +57,7 @@ export default function loadScript(url, opts) {
     }
   });
 
-  return new Ember.RSVP.Promise(function(resolve) {
+  return new Promise(function(resolve) {
     // If we already loaded this url
     if (_loaded[url]) {
       return resolve();
@@ -65,7 +67,7 @@ export default function loadScript(url, opts) {
     }
 
     let done;
-    _loading[url] = new Ember.RSVP.Promise(function(_done) {
+    _loading[url] = new Promise(function(_done) {
       done = _done;
     });
 

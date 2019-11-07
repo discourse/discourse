@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { equal, and, empty } from "@ember/object/computed";
 import Component from "@ember/component";
 import {
@@ -106,10 +107,7 @@ export default Component.extend({
   ) {
     if (!statusType || willCloseImmediately) return false;
 
-    if (
-      statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE &&
-      Ember.isEmpty(categoryId)
-    ) {
+    if (statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE && isEmpty(categoryId)) {
       return false;
     }
 
