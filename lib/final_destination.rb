@@ -37,6 +37,7 @@ class FinalDestination
     @opts = opts || {}
     @force_get_hosts = @opts[:force_get_hosts] || []
     @preserve_fragment_url_hosts = @opts[:preserve_fragment_url_hosts] || []
+    @force_custom_user_agent_hosts = @opts[:force_custom_user_agent_hosts] || []
     @opts[:max_redirects] ||= 5
     @opts[:lookup_ip] ||= lambda { |host| FinalDestination.lookup_ip(host) }
 
@@ -66,6 +67,7 @@ class FinalDestination
     @timeout = @opts[:timeout] || nil
     @preserve_fragment_url = @preserve_fragment_url_hosts.any? { |host| hostname_matches?(host) }
     @validate_uri = @opts.fetch(:validate_uri) { true }
+    @user_agent = @force_custom_user_agent_hosts.any? { |host| hostname_matches?(host) } ? Onebox.options.user_agent : "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
   end
 
   def self.connection_timeout
@@ -82,7 +84,7 @@ class FinalDestination
 
   def request_headers
     result = {
-      "User-Agent" => "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+      "User-Agent" => @user_agent,
       "Accept" => "*/*",
       "Host" => @uri.hostname
     }
