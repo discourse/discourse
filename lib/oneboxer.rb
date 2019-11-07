@@ -30,6 +30,10 @@ module Oneboxer
     @force_get_hosts ||= ['http://us.battle.net']
   end
 
+  def self.force_custom_user_agent_hosts
+    @force_custom_user_agent_hosts ||= ['http://codepen.io']
+  end
+
   def self.allowed_post_types
     @allowed_post_types ||= [Post.types[:regular], Post.types[:moderator_action]]
   end
@@ -270,7 +274,12 @@ module Oneboxer
 
   def self.external_onebox(url)
     Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-      fd = FinalDestination.new(url, ignore_redirects: ignore_redirects, ignore_hostnames: blacklisted_domains, force_get_hosts: force_get_hosts, preserve_fragment_url_hosts: preserve_fragment_url_hosts)
+      fd = FinalDestination.new(url,
+                              ignore_redirects: ignore_redirects,
+                              ignore_hostnames: blacklisted_domains,
+                              force_get_hosts: force_get_hosts,
+                              force_custom_user_agent_hosts: force_custom_user_agent_hosts,
+                              preserve_fragment_url_hosts: preserve_fragment_url_hosts)
       uri = fd.resolve
       return blank_onebox if uri.blank? || blacklisted_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
 
