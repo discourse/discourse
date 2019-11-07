@@ -22,9 +22,7 @@ export default class Connector {
         );
       }
 
-      const container = getOwner
-        ? getOwner(mounted)
-        : mounted.container;
+      const container = getOwner ? getOwner(mounted) : mounted.container;
 
       let view;
 
