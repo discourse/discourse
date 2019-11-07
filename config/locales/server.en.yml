@@ -2680,7 +2680,7 @@ en:
 
     welcome_staff:
       title: "Welcome Staff"
-      subject_template: "Congratulations, you’re now a %{role}!"
+      subject_template: "Congratulations, you’ve been granted %{role} status!"
       text_body_template: |
         You’ve been granted %{role} status by a fellow staff member.
 
