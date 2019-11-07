@@ -9,7 +9,6 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { isNumeric } from "discourse/lib/utilities";
 import { SCHEMA_VERSION, default as Report } from "admin/models/report";
-import computed from "ember-addons/ember-computed-decorators";
 import ENV from "discourse-common/config/environment";
 
 const TABLE_OPTIONS = {
