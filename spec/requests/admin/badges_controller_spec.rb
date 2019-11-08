@@ -163,12 +163,17 @@ describe Admin::BadgesController do
           user_with_badge_title.update(title: 'Oathbreaker')
         end
 
-        it 'updates the user title' do
+        it 'updates the user title in a job' do
+          Jobs.expects(:enqueue).with(
+            :bulk_user_title_update,
+            new_title: 'Shieldbearer',
+            granted_badge_id: badge.id,
+            action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
+          )
+
           put "/admin/badges/#{badge.id}.json", params: {
             name: "Shieldbearer"
           }
-
-          expect(user_with_badge_title.reload.title).to eq('Shieldbearer')
         end
       end
     end
