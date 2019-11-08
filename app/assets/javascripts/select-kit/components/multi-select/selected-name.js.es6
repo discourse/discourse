@@ -1,6 +1,7 @@
 import { or, alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
+import { default as computed } from "@ember/object/computed";
 
 export default Component.extend({
   attributeBindings: [
@@ -38,7 +39,7 @@ export default Component.extend({
 
   value: alias("computedContent.value"),
 
-  isLocked: Ember.computed("computedContent.locked", function() {
+  isLocked: computed("computedContent.locked", function() {
     return this.getWithDefault("computedContent.locked", false);
   }),
 
