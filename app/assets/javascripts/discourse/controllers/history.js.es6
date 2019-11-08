@@ -1,5 +1,12 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { alias, gt, not, or, equal } from "@ember/object/computed";
+import {
+  default as computed,
+  alias,
+  gt,
+  not,
+  or,
+  equal
+} from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -10,7 +17,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import Post from "discourse/models/post";
 
 function customTagArray(fieldName) {
-  return Ember.computed(fieldName, function() {
+  return computed(fieldName, function() {
     var val = this.get(fieldName);
     if (!val) {
       return val;

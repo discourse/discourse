@@ -1,7 +1,13 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import { equal, and, or, not } from "@ember/object/computed";
+import {
+  default as computed,
+  equal,
+  and,
+  or,
+  not
+} from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
@@ -16,8 +22,8 @@ import Composer from "discourse/models/composer";
 import { Promise } from "rsvp";
 
 const Post = RestModel.extend({
-  // TODO: Remove this once one instantiate all `Post` models via the store.
-  siteSettings: Ember.computed({
+  // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
+  siteSettings: computed({
     get() {
       return Discourse.SiteSettings;
     },
