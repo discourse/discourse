@@ -151,7 +151,7 @@ var define, requirejs;
   }
 
   Module.prototype.makeRequire = function() {
-    var name = this.name;
+    var name = transformForAliases(this.name);
 
     return (
       this._require ||
@@ -217,7 +217,7 @@ var define, requirejs;
   }
 
   function requireFrom(name, origin) {
-    name = checkForAlias(name);
+    name = transformForAliases(name);
     var mod = EMBER_MODULES[name] || registry[name];
     if (!mod) {
       throw new Error(
@@ -231,7 +231,7 @@ var define, requirejs;
     throw new Error("Could not find module " + name);
   }
 
-  function checkForAlias(name) {
+  function transformForAliases(name) {
     return ALIASES[name] ? ALIASES[name] : name;
   }
 
