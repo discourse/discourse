@@ -78,7 +78,8 @@ var define, requirejs;
         inject: Ember.inject.service
       },
       "@ember/utils": {
-        isEmpty: Ember.isEmpty
+        isEmpty: Ember.isEmpty,
+        isNone: Ember.isNone
       },
       rsvp: {
         default: Ember.RSVP,
@@ -104,9 +105,6 @@ var define, requirejs;
       },
       "@ember/error": {
         default: Ember.error
-      },
-      "@ember/utils": {
-        isNone: Ember.isNone
       }
     };
   }
