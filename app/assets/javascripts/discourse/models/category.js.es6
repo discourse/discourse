@@ -411,7 +411,7 @@ Category.reopenClass({
 Object.defineProperty(Discourse, "Category", {
   get() {
     deprecated(
-      "Import the Category object instead of using Discourse.Category",
+      "Import the Category class instead of using Discourse.Category",
       { since: "2.4.0", dropFrom: "2.5.0" }
     );
     return Category;

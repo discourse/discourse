@@ -259,7 +259,7 @@ export function addNavItem(item) {
 
 Object.defineProperty(Discourse, "NavItem", {
   get() {
-    deprecated("Import the NavItem object instead of using Discourse.NavItem", {
+    deprecated("Import the NavItem class instead of using Discourse.NavItem", {
       since: "2.4.0",
       dropFrom: "2.5.0"
     });

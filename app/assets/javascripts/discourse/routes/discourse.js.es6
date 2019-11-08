@@ -2,6 +2,7 @@ import { once } from "@ember/runloop";
 import Composer from "discourse/models/composer";
 import { getOwner } from "discourse-common/lib/get-owner";
 import Route from "@ember/routing/route";
+import deprecated from "discourse-common/lib/deprecated";
 
 const DiscourseRoute = Route.extend({
   showFooter: false,
@@ -104,6 +105,16 @@ const DiscourseRoute = Route.extend({
 
   isPoppedState(transition) {
     return !transition._discourse_intercepted && !!transition.intent.url;
+  }
+});
+
+Object.defineProperty(Discourse, "Route", {
+  get() {
+    deprecated("Import the Route class instead of using Discourse.Route", {
+      since: "2.4.0",
+      dropFrom: "2.5.0"
+    });
+    return Route;
   }
 });
 
