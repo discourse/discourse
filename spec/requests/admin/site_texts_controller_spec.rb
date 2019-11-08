@@ -415,6 +415,37 @@ RSpec.describe Admin::SiteTextsController do
         json = ::JSON.parse(response.body)
         expect(json['site_text']['value']).to_not eq(ru_mf_text)
       end
+
+      context 'when updating a translation override for a system badge' do
+        fab!(:user_with_badge_title) { Fabricate(:active_user) }
+        let(:badge) { Badge.find(Badge::Regular) }
+
+        before do
+          BadgeGranter.grant(badge, user_with_badge_title)
+          user_with_badge_title.update(title: 'Regular')
+        end
+
+        it 'updates matching user titles to the override text in a job' do
+          Jobs.expects(:enqueue).with(
+            :bulk_user_title_update,
+            new_title: 'Terminator',
+            granted_badge_id: badge.id,
+            action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
+          )
+          put '/admin/customize/site_texts/badges.regular.name.json', params: {
+            site_text: { value: 'Terminator' }
+          }
+
+          Jobs.expects(:enqueue).with(
+            :bulk_user_title_update,
+            granted_badge_id: badge.id,
+            action: Jobs::BulkUserTitleUpdate::RESET_ACTION
+          )
+
+          # Revert
+          delete "/admin/customize/site_texts/badges.regular.name.json"
+        end
+      end
     end
 
     context "reseeding" do

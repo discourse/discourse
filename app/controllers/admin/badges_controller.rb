@@ -125,6 +125,15 @@ class Admin::BadgesController < Admin::AdminController
       badge.save!
     end
 
+    if opts[:new].blank?
+      Jobs.enqueue(
+        :bulk_user_title_update,
+        new_title: badge.name,
+        granted_badge_id: badge.id,
+        action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
+      )
+    end
+
     errors
   rescue ActiveRecord::RecordInvalid
     errors.push(*badge.errors.full_messages)

@@ -9,6 +9,7 @@ class UserProfile < ActiveRecord::Base
   belongs_to :user, inverse_of: :user_profile
   belongs_to :card_background_upload, class_name: "Upload"
   belongs_to :profile_background_upload, class_name: "Upload"
+  belongs_to :granted_title_badge, class_name: "Badge"
 
   validates :bio_raw, length: { maximum: 3000 }
   validates :website, url: true, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
@@ -161,15 +162,18 @@ end
 #  views                        :integer          default(0), not null
 #  profile_background_upload_id :integer
 #  card_background_upload_id    :integer
+#  granted_title_badge_id       :integer
 #
 # Indexes
 #
 #  index_user_profiles_on_bio_cooked_version  (bio_cooked_version)
 #  index_user_profiles_on_card_background     (card_background)
 #  index_user_profiles_on_profile_background  (profile_background)
+#  index_user_profiles_on_granted_title_badge_id (granted_title_badge)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (card_background_upload_id => uploads.id)
 #  fk_rails_...  (profile_background_upload_id => uploads.id)
+#  fk_rails_...  (granted_title_badge_id => badges.id)
 #

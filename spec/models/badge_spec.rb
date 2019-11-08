@@ -95,6 +95,33 @@ describe Badge do
     end
   end
 
+  describe '.find_system_badge_id_from_translation_key' do
+    let(:translation_key) { 'badges.regular.name' }
+
+    it 'uses a translation key to get a system badge id, mainly to find which badge a translation override corresponds to' do
+      expect(Badge.find_system_badge_id_from_translation_key(translation_key)).to eq(
+        Badge::Regular
+      )
+    end
+
+    context 'when the translation key is snake case' do
+      let(:translation_key) { 'badges.crazy_in_love.name' }
+
+      it 'works to get the badge' do
+        expect(Badge.find_system_badge_id_from_translation_key(translation_key)).to eq(
+          Badge::CrazyInLove
+        )
+      end
+    end
+
+    context 'when a translation key not for a badge is provided' do
+      let(:translation_key) { 'reports.flags.title' }
+      it 'returns nil' do
+        expect(Badge.find_system_badge_id_from_translation_key(translation_key)).to eq(nil)
+      end
+    end
+  end
+
   context "First Quote" do
     let(:quoted_post_badge) do
       Badge.find(Badge::FirstQuote)
