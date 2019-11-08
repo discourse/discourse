@@ -1,10 +1,11 @@
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
+import UserAction from "discourse/models/user-action";
 
 // A helper to build a user topic list route
 export default (viewName, path, channel) => {
   return UserTopicListRoute.extend({
-    userActionType: Discourse.UserAction.TYPES.messages_received,
+    userActionType: UserAction.TYPES.messages_received,
 
     titleToken() {
       const key = viewName === "index" ? "inbox" : viewName;
