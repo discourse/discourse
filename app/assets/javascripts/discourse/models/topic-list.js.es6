@@ -2,11 +2,24 @@ import { notEmpty } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
-import Model from "discourse/models/model";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { Promise } from "rsvp";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
+import { isEmpty } from "@ember/utils";
+import User from "discourse/models/user";
+
+function extractByKey(collection, klass) {
+  const retval = {};
+  if (isEmpty(collection)) {
+    return retval;
+  }
+
+  collection.forEach(function(item) {
+    retval[item.id] = klass.create(item);
+  });
+  return retval;
+}
 
 // Whether to show the category badge in topic lists
 function displayCategoryInList(site, category) {
@@ -139,8 +152,8 @@ TopicList.reopenClass({
     // Stitch together our side loaded data
 
     const categories = Category.list(),
-      users = Model.extractByKey(result.users, Discourse.User),
-      groups = Model.extractByKey(result.primary_groups, EmberObject);
+      users = extractByKey(result.users, User),
+      groups = extractByKey(result.primary_groups, EmberObject);
 
     return result.topic_list[listKey].map(t => {
       t.category = categories.findBy("id", t.category_id);

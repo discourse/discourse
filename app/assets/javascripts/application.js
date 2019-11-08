@@ -36,7 +36,6 @@
 //= require ./discourse/lib/show-modal
 //= require ./discourse/mixins/scrolling
 //= require ./discourse/lib/ajax-error
-//= require ./discourse/models/model
 //= require ./discourse/models/result-set
 //= require ./discourse/models/store
 //= require ./discourse/models/action-summary

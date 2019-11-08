@@ -1,5 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
-const Draft = Discourse.Model.extend();
+import EmberObject from "@ember/object";
+
+const Draft = EmberObject.extend();
 
 Draft.reopenClass({
   clear(key, sequence) {

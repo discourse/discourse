@@ -1,6 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
+import EmberObject from "@ember/object";
 
-export default Discourse.Model.extend({
+export default EmberObject.extend({
   @discourseComputed("days_visited", "time_period")
   days_visited_percent(daysVisited, timePeriod) {
     return Math.round((daysVisited * 100) / timePeriod);

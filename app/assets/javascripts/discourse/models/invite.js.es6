@@ -4,7 +4,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { userPath } from "discourse/lib/url";
 import { Promise } from "rsvp";
 
-const Invite = Discourse.Model.extend({
+const Invite = EmberObject.extend({
   rescind() {
     ajax("/invites", {
       type: "DELETE",

@@ -2,8 +2,9 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import ColorSchemeColor from "admin/models/color-scheme-color";
+import EmberObject from "@ember/object";
 
-const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
+const ColorScheme = EmberObject.extend(Ember.Copyable, {
   init() {
     this._super(...arguments);
 

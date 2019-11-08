@@ -1,8 +1,7 @@
-/**
-  A data model representing a group of UserActions
-**/
-export default Discourse.Model.extend({
-  push: function(item) {
+import EmberObject from "@ember/object";
+
+export default EmberObject.extend({
+  push(item) {
     if (!this.items) {
       this.items = [];
     }

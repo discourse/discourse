@@ -1,5 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
-const LivePostCounts = Discourse.Model.extend({});
+import EmberObject from "@ember/object";
+
+const LivePostCounts = EmberObject.extend({});
 
 LivePostCounts.reopenClass({
   find() {
