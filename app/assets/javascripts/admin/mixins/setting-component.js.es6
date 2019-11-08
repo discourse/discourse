@@ -4,8 +4,8 @@ import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { on } from "@ember/object/evented";
 import Mixin from "@ember/object/mixin";
 import showModal from "discourse/lib/show-modal";
-import AboutRoute from "discourse/routes/about";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
 
 const CUSTOM_TYPES = [
   "bool",
@@ -151,22 +151,20 @@ export default Mixin.create({
       const key = this.buffered.get("setting");
 
       if (defaultUserPreferences.includes(key)) {
-        AboutRoute.create()
-          .model()
-          .then(result => {
-            const controller = showModal("site-setting-default-categories", {
-              model: {
-                count: result.stats.user_count,
-                key: key.replace(/_/g, " ")
-              },
-              admin: true
-            });
-
-            controller.set("onClose", () => {
-              this.updateExistingUsers = controller.updateExistingUsers;
-              this.send("save");
-            });
+        ajax("/about.json").then(result => {
+          const controller = showModal("site-setting-default-categories", {
+            model: {
+              count: result.about.stats.user_count,
+              key: key.replace(/_/g, " ")
+            },
+            admin: true
           });
+
+          controller.set("onClose", () => {
+            this.updateExistingUsers = controller.updateExistingUsers;
+            this.send("save");
+          });
+        });
       } else {
         this.send("save");
       }
