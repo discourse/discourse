@@ -240,6 +240,39 @@ describe TopicQuery do
     end
   end
 
+  context 'mute_all_categories_by_default' do
+    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
+
+    before do
+      SiteSetting.mute_all_categories_by_default = true
+    end
+
+    it 'should remove all topics from new and latest lists by default' do
+      expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
+      expect(topic_query.list_latest.topics.map(&:id)).not_to include(topic.id)
+    end
+
+    it 'should include tracked category topics in new and latest lists' do
+      topic = Fabricate(:topic, category: category)
+      CategoryUser.create!(user_id: user.id,
+                           category_id: category.id,
+                           notification_level: CategoryUser.notification_levels[:tracking])
+      expect(topic_query.list_new.topics.map(&:id)).to include(topic.id)
+      expect(topic_query.list_latest.topics.map(&:id)).to include(topic.id)
+    end
+
+    it 'should include default watched category topics in latest list for anonymous users' do
+      SiteSetting.default_categories_watching = category.id.to_s
+      expect(TopicQuery.new.list_latest.topics.map(&:id)).to include(topic.id)
+    end
+
+    it 'should include topics when filtered by category' do
+      topic_query = TopicQuery.new(user, category: topic.category_id)
+      expect(topic_query.list_latest.topics.map(&:id)).to include(topic.id)
+    end
+  end
+
   context 'muted tags' do
     it 'is removed from new and latest lists' do
       SiteSetting.tagging_enabled = true

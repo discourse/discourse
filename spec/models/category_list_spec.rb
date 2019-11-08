@@ -65,6 +65,35 @@ describe CategoryList do
     end
   end
 
+  context "when mute_all_categories_by_default enabled" do
+    fab!(:category) { Fabricate(:category) }
+
+    before do
+      SiteSetting.mute_all_categories_by_default = true
+    end
+
+    it "removes the category by default" do
+      expect(category_list.categories).not_to include(category)
+    end
+
+    it "returns correct notification level for user tracking category" do
+      CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:tracking], category.id)
+      notification_level = category_list.categories.find { |c| c.id == category.id }.notification_level
+      expect(notification_level).to eq(CategoryUser.notification_levels[:tracking])
+    end
+
+    it "returns correct notification level in default categories for anonymous" do
+      SiteSetting.default_categories_watching = category.id.to_s
+      notification_level = CategoryList.new(Guardian.new).categories.find { |c| c.id == category.id }.notification_level
+      expect(notification_level).to eq(CategoryUser.notification_levels[:regular])
+    end
+
+    it "removes the default muted categories for anonymous" do
+      SiteSetting.default_categories_muted = category.id.to_s
+      expect(CategoryList.new(Guardian.new).categories).not_to include(category)
+    end
+  end
+
   context "with a category" do
 
     fab!(:topic_category) { Fabricate(:category_with_definition, num_featured_topics: 2) }
@@ -114,11 +143,11 @@ describe CategoryList do
         expect(category.notification_level).to eq(NotificationLevels.all[:watching])
       end
 
-      it "returns no notication level for anonymous users" do
+      it "returns default notication level for anonymous users" do
         category_list = CategoryList.new(Guardian.new(nil))
         category = category_list.categories.find { |c| c.id == topic_category.id }
 
-        expect(category.notification_level).to be_nil
+        expect(category.notification_level).to eq(NotificationLevels.all[:regular])
       end
     end
 

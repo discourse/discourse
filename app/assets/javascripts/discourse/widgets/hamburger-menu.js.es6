@@ -173,7 +173,7 @@ export default createWidget("hamburger-menu", {
   listCategories() {
     const maxCategoriesToDisplay = this.siteSettings
       .header_dropdown_category_count;
-    let categories = this.site.get("categoriesByCount");
+    let categories = [];
 
     if (this.currentUser) {
       const allCategories = this.site
@@ -203,6 +203,10 @@ export default createWidget("hamburger-menu", {
           .filter(c => !categories.includes(c))
           .sort((a, b) => b.topic_count - a.topic_count)
       );
+    } else {
+      categories = this.site
+        .get("categoriesByCount")
+        .filter(c => c.notification_level !== NotificationLevels.MUTED);
     }
 
     if (!this.siteSettings.allow_uncategorized_topics) {
