@@ -2,6 +2,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import { Promise } from "rsvp";
+import Session from "discourse/models/session";
 
 const LoginMethod = EmberObject.extend({
   @discourseComputed
@@ -52,7 +53,7 @@ LoginMethod.reopenClass({
 
       const input = document.createElement("input");
       input.setAttribute("name", "authenticity_token");
-      input.setAttribute("value", Discourse.Session.currentProp("csrfToken"));
+      input.setAttribute("value", Session.currentProp("csrfToken"));
       form.appendChild(input);
 
       document.body.appendChild(form);

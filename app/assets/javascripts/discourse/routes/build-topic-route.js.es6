@@ -1,6 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import { defaultHomepage } from "discourse/lib/utilities";
+import Session from "discourse/models/session";
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {
@@ -19,7 +20,7 @@ function filterQueryParams(params, defaultParams) {
 function findTopicList(store, tracking, filter, filterParams, extras) {
   extras = extras || {};
   return new Promise(function(resolve) {
-    const session = Discourse.Session.current();
+    const session = Session.current();
 
     if (extras.cached) {
       const cachedList = session.get("topicList");
@@ -62,7 +63,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
       tracking.sync(list, list.filter);
       tracking.trackIncoming(list.filter);
     }
-    Discourse.Session.currentProp("topicList", list);
+    Session.currentProp("topicList", list);
     if (list.topic_list && list.topic_list.top_tags) {
       Discourse.Site.currentProp("top_tags", list.topic_list.top_tags);
     }

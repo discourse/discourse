@@ -1,6 +1,7 @@
 import { run } from "@ember/runloop";
 import pageVisible from "discourse/lib/page-visible";
 import logout from "discourse/lib/logout";
+import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 
 let _trackView = false;
@@ -44,7 +45,7 @@ function handleRedirect(data) {
 
 export function updateCsrfToken() {
   return ajax("/session/csrf").then(result => {
-    Discourse.Session.currentProp("csrfToken", result.csrf);
+    Session.currentProp("csrfToken", result.csrf);
   });
 }
 
@@ -120,7 +121,7 @@ export function ajax() {
       // note: for bad CSRF we don't loop an extra request right away.
       //  this allows us to eliminate the possibility of having a loop.
       if (xhr.status === 403 && xhr.responseText === '["BAD CSRF"]') {
-        Discourse.Session.current().set("csrfToken", null);
+        Session.current().set("csrfToken", null);
       }
 
       // If it's a parsererror, don't reject
@@ -162,7 +163,7 @@ export function ajax() {
     args.type &&
     args.type.toUpperCase() !== "GET" &&
     url !== Discourse.getURL("/clicks/track") &&
-    !Discourse.Session.currentProp("csrfToken")
+    !Session.currentProp("csrfToken")
   ) {
     promise = new Promise((resolve, reject) => {
       ajaxObj = updateCsrfToken().then(() => {
