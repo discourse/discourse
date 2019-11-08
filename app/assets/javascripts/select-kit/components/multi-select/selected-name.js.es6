@@ -1,7 +1,6 @@
-import { or, alias } from "@ember/object/computed";
+import { default as computed, or, alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import { default as computed } from "@ember/object/computed";
 
 export default Component.extend({
   attributeBindings: [
