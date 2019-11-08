@@ -1,3 +1,4 @@
+import { alias, or } from "@ember/object/computed";
 import { makeArray } from "discourse-common/lib/helpers";
 import { on } from "discourse-common/utils/decorators";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -13,13 +14,13 @@ export default SelectKitHeaderComponent.extend({
   classNames: "multi-select-header",
   layoutName:
     "select-kit/templates/components/multi-select/multi-select-header",
-  selectedNameComponent: Ember.computed.alias("options.selectedNameComponent"),
+  selectedNameComponent: alias("options.selectedNameComponent"),
 
-  forceEscape: Ember.computed.alias("options.forceEscape"),
+  forceEscape: alias("options.forceEscape"),
 
-  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title", "names"),
+  ariaLabel: or("computedContent.ariaLabel", "title", "names"),
 
-  title: Ember.computed.or("computedContent.title", "names"),
+  title: or("computedContent.title", "names"),
 
   @on("didRender")
   _positionFilter() {

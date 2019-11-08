@@ -1,3 +1,4 @@
+import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import { CLOSE_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
@@ -188,8 +189,8 @@ export const FORMAT = "YYYY-MM-DD HH:mmZ";
 export default ComboBoxComponent.extend(DatetimeMixin, {
   pluginApiIdentifiers: ["future-date-input-selector"],
   classNames: ["future-date-input-selector"],
-  isCustom: Ember.computed.equal("value", "pick_date_and_time"),
-  isBasedOnLastPost: Ember.computed.equal("value", "set_based_on_last_post"),
+  isCustom: equal("value", "pick_date_and_time"),
+  isBasedOnLastPost: equal("value", "set_based_on_last_post"),
   rowComponent: "future-date-input-selector/future-date-input-selector-row",
   headerComponent:
     "future-date-input-selector/future-date-input-selector-header",

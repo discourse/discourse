@@ -1,3 +1,4 @@
+import { empty, alias } from "@ember/object/computed";
 import Category from "discourse/models/category";
 import ComboBox from "select-kit/components/combo-box";
 import TagsMixin from "select-kit/mixins/tags";
@@ -19,11 +20,11 @@ export default ComboBox.extend(TagsMixin, {
   classNameBindings: ["noTags"],
   verticalOffset: 3,
   filterable: true,
-  noTags: Ember.computed.empty("selection"),
+  noTags: empty("selection"),
   allowCreate: null,
-  allowAny: Ember.computed.alias("allowCreate"),
-  caretUpIcon: Ember.computed.alias("caretIcon"),
-  caretDownIcon: Ember.computed.alias("caretIcon"),
+  allowAny: alias("allowCreate"),
+  caretUpIcon: alias("caretIcon"),
+  caretDownIcon: alias("caretIcon"),
   isAsync: true,
   fullWidthOnMobile: true,
 

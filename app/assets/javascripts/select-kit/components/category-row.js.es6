@@ -1,3 +1,4 @@
+import { bool } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -8,9 +9,9 @@ export default SelectKitRowComponent.extend({
   layoutName: "select-kit/templates/components/category-row",
   classNames: "category-row",
 
-  hideParentCategory: Ember.computed.bool("options.hideParentCategory"),
-  allowUncategorized: Ember.computed.bool("options.allowUncategorized"),
-  categoryLink: Ember.computed.bool("options.categoryLink"),
+  hideParentCategory: bool("options.hideParentCategory"),
+  allowUncategorized: bool("options.allowUncategorized"),
+  categoryLink: bool("options.categoryLink"),
 
   @discourseComputed("options.displayCategoryDescription")
   displayCategoryDescription(displayCategoryDescription) {
