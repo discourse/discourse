@@ -185,7 +185,7 @@ NavItem.reopenClass({
     }
 
     items = items
-      .map(i => Discourse.NavItem.fromText(i, args))
+      .map(i => NavItem.fromText(i, args))
       .filter(
         i => i !== null && !(category && i.get("name").indexOf("categor") === 0)
       );

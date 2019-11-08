@@ -85,16 +85,14 @@ JS
     def whitelisted?(path)
 
       @@whitelisted ||= Set.new(
-        ["discourse/models/nav-item",
-         "discourse/models/user-action",
+        [
          "discourse/routes/discourse",
          "discourse/models/category",
          "discourse/models/site",
          "discourse/models/user",
          "discourse/models/session",
-         "discourse/models/model",
-         "discourse/models/post",
-         "discourse/views/grouped"]
+         "discourse/models/model"
+        ]
       )
 
       @@whitelisted.include?(path) || path =~ /discourse\/mixins/

@@ -1,3 +1,5 @@
+import UserAction from "discourse/models/user-action";
+
 QUnit.module("Discourse.UserStream");
 
 QUnit.test("basics", assert => {
@@ -20,12 +22,9 @@ QUnit.test("filterParam", assert => {
   // defaults to posts/topics
   assert.equal(stream.get("filterParam"), "4,5");
 
-  stream.set("filter", Discourse.UserAction.TYPES.likes_given);
-  assert.equal(
-    stream.get("filterParam"),
-    Discourse.UserAction.TYPES.likes_given
-  );
+  stream.set("filter", UserAction.TYPES.likes_given);
+  assert.equal(stream.get("filterParam"), UserAction.TYPES.likes_given);
 
-  stream.set("filter", Discourse.UserAction.TYPES.replies);
+  stream.set("filter", UserAction.TYPES.replies);
   assert.equal(stream.get("filterParam"), "6,9");
 });

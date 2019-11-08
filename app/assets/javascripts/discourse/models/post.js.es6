@@ -326,7 +326,7 @@ const Post = RestModel.extend({
 
     // need to wait to hear back from server (stuff may not be loaded)
 
-    return Discourse.Post.updateBookmark(this.id, this.bookmarked)
+    return Post.updateBookmark(this.id, this.bookmarked)
       .then(result => {
         this.set("topic.bookmarked", result.topic_bookmarked);
         this.appEvents.trigger("page:bookmark-post-toggled", this);
@@ -423,7 +423,7 @@ Post.reopenClass({
 
   loadQuote(postId) {
     return ajax(`/posts/${postId}.json`).then(result => {
-      const post = Discourse.Post.create(result);
+      const post = Post.create(result);
       return Quote.build(post, post.raw, { raw: true, full: true });
     });
   },

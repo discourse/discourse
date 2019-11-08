@@ -1,4 +1,5 @@
 import discourseComputed from "discourse-common/utils/decorators";
+import NavItem from "discourse/models/nav-item";
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 
@@ -47,7 +48,7 @@ export default Component.extend({
       }, {});
     }
 
-    return Discourse.NavItem.buildList(category, {
+    return NavItem.buildList(category, {
       filterMode,
       noSubcategories,
       persistedQueryParams: params
