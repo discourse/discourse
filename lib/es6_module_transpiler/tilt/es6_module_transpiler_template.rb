@@ -85,7 +85,7 @@ JS
     def whitelisted?(path)
 
       @@whitelisted ||= Set.new(
-        ["discourse/models/nav-item",
+        [
          "discourse/routes/discourse",
          "discourse/models/category",
          "discourse/models/site",

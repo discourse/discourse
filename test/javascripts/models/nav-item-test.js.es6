@@ -1,7 +1,8 @@
 import { run } from "@ember/runloop";
 import createStore from "helpers/create-store";
+import NavItem from "discourse/models/nav-item";
 
-QUnit.module("Discourse.NavItem", {
+QUnit.module("NavItem", {
   beforeEach() {
     run(function() {
       const asianCategory = Discourse.Category.create({
@@ -17,11 +18,7 @@ QUnit.test("href", assert => {
   assert.expect(4);
 
   function href(text, expected, label) {
-    assert.equal(
-      Discourse.NavItem.fromText(text, {}).get("href"),
-      expected,
-      label
-    );
+    assert.equal(NavItem.fromText(text, {}).get("href"), expected, label);
   }
 
   href("latest", "/latest", "latest");
