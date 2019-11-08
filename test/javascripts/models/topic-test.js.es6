@@ -1,9 +1,9 @@
 import EmberObject from "@ember/object";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
+import Category from "discourse/models/category";
+import Topic from "discourse/models/topic";
 
 QUnit.module("model:topic");
-
-import Topic from "discourse/models/topic";
 
 QUnit.test("defaults", assert => {
   const topic = Topic.create({ id: 1234 });
@@ -84,7 +84,7 @@ QUnit.test("has suggestedTopics", assert => {
 
 QUnit.test("category relationship", assert => {
   // It finds the category by id
-  const category = Discourse.Category.list()[0];
+  const category = Category.list()[0];
   const topic = Topic.create({ id: 1111, category_id: category.get("id") });
 
   assert.equal(topic.get("category"), category);
@@ -92,7 +92,7 @@ QUnit.test("category relationship", assert => {
 
 QUnit.test("updateFromJson", assert => {
   const topic = Topic.create({ id: 1234 });
-  const category = Discourse.Category.list()[0];
+  const category = Category.list()[0];
 
   topic.updateFromJson({
     post_stream: [1, 2, 3],

@@ -65,7 +65,7 @@ export default (filterArg, params) => {
 
     _setupNavigation(category) {
       const noSubcategories = params && !!params.no_subcategories,
-        filterMode = `c/${Discourse.Category.slugFor(category)}${
+        filterMode = `c/${Category.slugFor(category)}${
           noSubcategories ? "/none" : ""
         }/l/${this.filter(category)}`;
 
@@ -92,9 +92,9 @@ export default (filterArg, params) => {
     },
 
     _retrieveTopicList(category, transition) {
-      const listFilter = `c/${Discourse.Category.slugFor(
+      const listFilter = `c/${Category.slugFor(category)}/l/${this.filter(
           category
-        )}/l/${this.filter(category)}`,
+        )}`,
         findOpts = filterQueryParams(transition.to.queryParams, params),
         extras = { cached: this.isPoppedState(transition) };
 

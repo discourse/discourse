@@ -1,11 +1,12 @@
 import { run } from "@ember/runloop";
 import createStore from "helpers/create-store";
 import NavItem from "discourse/models/nav-item";
+import Category from "discourse/models/category";
 
 QUnit.module("NavItem", {
   beforeEach() {
     run(function() {
-      const asianCategory = Discourse.Category.create({
+      const asianCategory = Category.create({
         name: "确实是这样",
         id: 343434
       });

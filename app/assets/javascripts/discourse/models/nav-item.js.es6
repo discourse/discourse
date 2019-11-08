@@ -1,6 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { toTitleCase } from "discourse/lib/formatter";
 import { emojiUnescape } from "discourse/lib/text";
+import Category from "discourse/models/category";
 
 const NavItem = Discourse.Model.extend({
   @discourseComputed("categoryName", "name")
@@ -53,7 +54,7 @@ const NavItem = Discourse.Model.extend({
         "nameLower",
         split[1].toLowerCase()
       );
-      return cat ? Discourse.Category.slugFor(cat) : null;
+      return cat ? Category.slugFor(cat) : null;
     }
     return null;
   },
@@ -84,7 +85,7 @@ const NavItem = Discourse.Model.extend({
       let mode = "";
       if (category) {
         mode += "c/";
-        mode += Discourse.Category.slugFor(category);
+        mode += Category.slugFor(category);
         if (noSubcategories) {
           mode += "/none";
         }
@@ -143,7 +144,7 @@ NavItem.reopenClass({
     )
       return null;
 
-    if (!Discourse.Category.list() && testName === "categories") return null;
+    if (!Category.list() && testName === "categories") return null;
     if (!Discourse.Site.currentProp("top_menu_items").includes(testName))
       return null;
 

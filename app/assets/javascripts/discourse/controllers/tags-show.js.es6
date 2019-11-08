@@ -11,6 +11,7 @@ import {
   extraNavItemProperties,
   customNavItemHref
 } from "discourse/models/nav-item";
+import Category from "discourse/models/category";
 
 if (extraNavItemProperties) {
   extraNavItemProperties(function(text, opts) {
@@ -36,7 +37,7 @@ if (customNavItemHref) {
 
       if (category) {
         path += "c/";
-        path += Discourse.Category.slugFor(category);
+        path += Category.slugFor(category);
         if (navItem.get("noSubcategories")) {
           path += "/none";
         }

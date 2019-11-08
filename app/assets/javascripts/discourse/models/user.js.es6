@@ -631,17 +631,14 @@ const User = RestModel.extend({
 
   @observes("muted_category_ids")
   updateMutedCategories() {
-    this.set(
-      "mutedCategories",
-      Discourse.Category.findByIds(this.muted_category_ids)
-    );
+    this.set("mutedCategories", Category.findByIds(this.muted_category_ids));
   },
 
   @observes("tracked_category_ids")
   updateTrackedCategories() {
     this.set(
       "trackedCategories",
-      Discourse.Category.findByIds(this.tracked_category_ids)
+      Category.findByIds(this.tracked_category_ids)
     );
   },
 
@@ -649,7 +646,7 @@ const User = RestModel.extend({
   updateWatchedCategories() {
     this.set(
       "watchedCategories",
-      Discourse.Category.findByIds(this.watched_category_ids)
+      Category.findByIds(this.watched_category_ids)
     );
   },
 
@@ -657,7 +654,7 @@ const User = RestModel.extend({
   updateWatchedFirstPostCategories() {
     this.set(
       "watchedFirstPostCategories",
-      Discourse.Category.findByIds(this.watched_first_post_category_ids)
+      Category.findByIds(this.watched_first_post_category_ids)
     );
   },
 

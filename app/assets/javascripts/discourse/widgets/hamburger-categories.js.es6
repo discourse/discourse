@@ -1,6 +1,7 @@
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { number } from "discourse/lib/formatter";
+import Category from "discourse/models/category";
 
 createWidget("hamburger-category", {
   tagName: "li.category-link",
@@ -10,7 +11,7 @@ createWidget("hamburger-category", {
       this.tagName += ".subcategory";
     }
 
-    this.tagName += ".category-" + Discourse.Category.slugFor(c, "-");
+    this.tagName += ".category-" + Category.slugFor(c, "-");
 
     const results = [
       this.attach("category-link", { category: c, allowUncategorized: true })

@@ -5,6 +5,7 @@ import { on } from "discourse-common/utils/decorators";
 import UserActionGroup from "discourse/models/user-action-group";
 import { postUrl } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
+import Category from "discourse/models/category";
 
 const UserActionTypes = {
   likes_given: 1,
@@ -31,7 +32,7 @@ const UserAction = RestModel.extend({
   _attachCategory() {
     const categoryId = this.category_id;
     if (categoryId) {
-      this.set("category", Discourse.Category.findById(categoryId));
+      this.set("category", Category.findById(categoryId));
     }
   },
 

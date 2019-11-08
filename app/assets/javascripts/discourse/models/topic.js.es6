@@ -18,6 +18,7 @@ import {
   observes,
   on
 } from "discourse-common/utils/decorators";
+import Category from "discourse/models/category";
 
 export function loadTopicView(topic, args) {
   const data = _.merge({}, args);
@@ -208,7 +209,7 @@ const Topic = RestModel.extend({
   @on("init")
   @observes("category_id")
   _categoryIdChanged() {
-    this.set("category", Discourse.Category.findById(this.category_id));
+    this.set("category", Category.findById(this.category_id));
   },
 
   @observes("categoryName")
