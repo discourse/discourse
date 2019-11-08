@@ -1,7 +1,13 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import { default as computed, equal, and, or, not } from "@ember/object/computed";
+import {
+  default as computed,
+  equal,
+  and,
+  or,
+  not
+} from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";

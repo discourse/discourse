@@ -1,5 +1,12 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { default as computed, alias, gt, not, or, equal } from "@ember/object/computed";
+import {
+  default as computed,
+  alias,
+  gt,
+  not,
+  or,
+  equal
+} from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";

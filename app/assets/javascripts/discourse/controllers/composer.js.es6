@@ -1,5 +1,11 @@
 import { isEmpty } from "@ember/utils";
-import { default as computed, and, or, alias, reads } from "@ember/object/computed";
+import {
+  default as computed,
+  and,
+  or,
+  alias,
+  reads
+} from "@ember/object/computed";
 import { debounce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
