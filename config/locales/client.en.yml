@@ -3930,6 +3930,8 @@ en:
             change_theme_setting: "change theme setting"
             disable_theme_component: "disable theme component"
             enable_theme_component: "enable theme component"
+            revoke_title: "revoke title"
+            change_title: "change title"
             api_key_create: "api key create"
             api_key_update: "api key update"
             api_key_destroy: "api key destroy"

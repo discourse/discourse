@@ -1911,11 +1911,17 @@ describe UsersController do
 
       expect(user.reload.title).to eq(badge.display_name)
       expect(user.user_profile.badge_granted_title).to eq(true)
+      expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
 
-      user.title = "testing"
-      user.save
+      badge.update allow_title: false
+
+      put "/u/#{user.username}/preferences/badge_title.json", params: { user_badge_id: user_badge.id }
+
+      user.reload
       user.user_profile.reload
+      expect(user.title).to eq('')
       expect(user.user_profile.badge_granted_title).to eq(false)
+      expect(user.user_profile.granted_title_badge_id).to eq(nil)
     end
 
     context "with overrided name" do

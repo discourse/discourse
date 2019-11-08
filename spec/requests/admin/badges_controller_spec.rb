@@ -153,6 +153,29 @@ describe Admin::BadgesController do
         expect(badge.name).to eq('123456')
         expect(badge.query).to eq(sql)
       end
+
+      context 'when there is a user with a title granted using the badge' do
+        fab!(:user_with_badge_title) { Fabricate(:active_user) }
+        fab!(:badge) { Fabricate(:badge, name: 'Oathbreaker', allow_title: true) }
+
+        before do
+          BadgeGranter.grant(badge, user_with_badge_title)
+          user_with_badge_title.update(title: 'Oathbreaker')
+        end
+
+        it 'updates the user title in a job' do
+          Jobs.expects(:enqueue).with(
+            :bulk_user_title_update,
+            new_title: 'Shieldbearer',
+            granted_badge_id: badge.id,
+            action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
+          )
+
+          put "/admin/badges/#{badge.id}.json", params: {
+            name: "Shieldbearer"
+          }
+        end
+      end
     end
   end
 end

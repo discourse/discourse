@@ -352,6 +352,27 @@ class StaffActionLogger
     ))
   end
 
+  def log_title_revoke(user, opts = {})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:revoke_title],
+      target_user_id: user.id,
+      details: opts[:revoke_reason],
+      previous_value: opts[:previous_value]
+    ))
+  end
+
+  def log_title_change(user, opts = {})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:change_title],
+      target_user_id: user.id,
+      details: opts[:details],
+      new_value: opts[:new_value],
+      previous_value: opts[:previous_value]
+    ))
+  end
+
   def log_check_email(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create!(params(opts).merge(
