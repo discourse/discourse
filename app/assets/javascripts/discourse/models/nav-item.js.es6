@@ -3,6 +3,7 @@ import { toTitleCase } from "discourse/lib/formatter";
 import { emojiUnescape } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("categoryName", "name")
@@ -255,3 +256,13 @@ export function addNavItem(item) {
   NavItem.extraNavItems.push(navItem);
   return navItem;
 }
+
+Object.defineProperty(Discourse, "NavItem", {
+  get() {
+    deprecated("Import the NavItem object instead of using Discourse.NavItem", {
+      since: "2.4.0",
+      dropFrom: "2.5.0"
+    });
+    return NavItem;
+  }
+});
