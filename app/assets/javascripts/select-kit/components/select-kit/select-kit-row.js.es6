@@ -1,3 +1,4 @@
+import { alias, or } from "@ember/object/computed";
 import Component from "@ember/component";
 import {
   default as discourseComputed,
@@ -26,9 +27,9 @@ export default Component.extend(UtilsMixin, {
     "computedContent.originalContent.classNames"
   ],
 
-  forceEscape: Ember.computed.alias("options.forceEscape"),
+  forceEscape: alias("options.forceEscape"),
 
-  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title"),
+  ariaLabel: or("computedContent.ariaLabel", "title"),
 
   @discourseComputed("computedContent.title", "name")
   title(computedContentTitle, name) {
@@ -43,11 +44,11 @@ export default Component.extend(UtilsMixin, {
     return Ember.guidFor(computedContent);
   },
 
-  label: Ember.computed.or("computedContent.label", "title", "name"),
+  label: or("computedContent.label", "title", "name"),
 
-  name: Ember.computed.alias("computedContent.name"),
+  name: alias("computedContent.name"),
 
-  value: Ember.computed.alias("computedContent.value"),
+  value: alias("computedContent.value"),
 
   @discourseComputed("templateForRow")
   template(templateForRow) {
