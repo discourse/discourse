@@ -447,9 +447,7 @@ export default Controller.extend(bufferedProperty("model"), {
         : "/";
       ajax("/t/" + topic.get("id") + "/timings.json?last=1", { type: "DELETE" })
         .then(() => {
-          const highestSeenByTopic = Discourse.Session.currentProp(
-            "highestSeenByTopic"
-          );
+          const highestSeenByTopic = this.session.get("highestSeenByTopic");
           highestSeenByTopic[topic.get("id")] = null;
           DiscourseURL.routeTo(goToPath);
         })

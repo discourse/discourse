@@ -19,6 +19,7 @@ import {
   on
 } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
+import Session from "discourse/models/session";
 
 export function loadTopicView(topic, args) {
   const data = _.merge({}, args);
@@ -306,7 +307,7 @@ const Topic = RestModel.extend({
   // So take what the browser has seen into consideration.
   @discourseComputed("new_posts", "id")
   displayNewPosts(newPosts, id) {
-    const highestSeen = Discourse.Session.currentProp("highestSeenByTopic")[id];
+    const highestSeen = Session.currentProp("highestSeenByTopic")[id];
     if (highestSeen) {
       const delta = highestSeen - this.last_read_post_number;
       if (delta > 0) {

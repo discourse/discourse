@@ -13,6 +13,9 @@
 //= require ./discourse/lib/utilities
 //= require ./discourse/lib/page-visible
 //= require ./discourse/lib/logout
+//= require ./discourse/mixins/singleton
+//= require ./discourse/models/rest
+//= require ./discourse/models/session
 //= require ./discourse/lib/ajax
 //= require ./discourse/lib/text
 //= require ./discourse/lib/hash
@@ -34,7 +37,6 @@
 //= require ./discourse/mixins/scrolling
 //= require ./discourse/lib/ajax-error
 //= require ./discourse/models/model
-//= require ./discourse/models/rest
 //= require ./discourse/models/result-set
 //= require ./discourse/models/store
 //= require ./discourse/models/action-summary

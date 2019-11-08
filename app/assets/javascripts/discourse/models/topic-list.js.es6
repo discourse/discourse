@@ -6,6 +6,7 @@ import Model from "discourse/models/model";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { Promise } from "rsvp";
 import Category from "discourse/models/category";
+import Session from "discourse/models/session";
 
 // Whether to show the category badge in topic lists
 function displayCategoryInList(site, category) {
@@ -93,7 +94,7 @@ const TopicList = RestModel.extend({
             more_topics_url: result.topic_list.more_topics_url
           });
 
-          Discourse.Session.currentProp("topicList", this);
+          Session.currentProp("topicList", this);
           return this.more_topics_url;
         }
       });
@@ -123,7 +124,7 @@ const TopicList = RestModel.extend({
         i++;
       });
 
-      if (storeInSession) Discourse.Session.currentProp("topicList", this);
+      if (storeInSession) Session.currentProp("topicList", this);
     });
   }
 });
