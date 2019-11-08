@@ -151,7 +151,7 @@ var define, requirejs;
   }
 
   Module.prototype.makeRequire = function() {
-    var name = this.name;
+    var name = transformForAliases(this.name);
 
     return (
       this._require ||
@@ -188,7 +188,6 @@ var define, requirejs;
   };
 
   function reify(mod, name, rseen) {
-    name = transformForAliases(name);
     var deps = mod.deps;
     var length = deps.length;
     var reified = new Array(length);
@@ -218,6 +217,7 @@ var define, requirejs;
   }
 
   function requireFrom(name, origin) {
+    name = transformForAliases(name);
     var mod = EMBER_MODULES[name] || registry[name];
     if (!mod) {
       throw new Error(
