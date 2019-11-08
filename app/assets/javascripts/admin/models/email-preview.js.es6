@@ -1,5 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
-const EmailPreview = Discourse.Model.extend({});
+import EmberObject from "@ember/object";
+
+const EmailPreview = EmberObject.extend({});
 
 export function oneWeekAgo() {
   return moment()

@@ -2,8 +2,9 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { toTitleCase } from "discourse/lib/formatter";
 import { emojiUnescape } from "discourse/lib/text";
 import Category from "discourse/models/category";
+import EmberObject from "@ember/object";
 
-const NavItem = Discourse.Model.extend({
+const NavItem = EmberObject.extend({
   @discourseComputed("categoryName", "name")
   title(categoryName, name) {
     const extra = {};

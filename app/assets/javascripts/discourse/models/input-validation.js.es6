@@ -1,4 +1,2 @@
-import Model from "discourse/models/model";
-
-// A trivial model we use to handle input validation
-export default Model.extend();
+import EmberObject from "@ember/object";
+export default EmberObject.extend();

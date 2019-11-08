@@ -8,6 +8,7 @@ import {
 import { defaultHomepage } from "discourse/lib/utilities";
 import PreloadStore from "preload-store";
 import Category from "discourse/models/category";
+import EmberObject from "@ember/object";
 
 function isNew(topic) {
   return (
@@ -25,7 +26,7 @@ function isUnread(topic) {
   );
 }
 
-const TopicTrackingState = Discourse.Model.extend({
+const TopicTrackingState = EmberObject.extend({
   messageCount: 0,
 
   @on("init")

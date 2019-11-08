@@ -89,7 +89,6 @@ JS
          "discourse/routes/discourse",
          "discourse/models/site",
          "discourse/models/user",
-         "discourse/models/model"
         ]
       )
 

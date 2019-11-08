@@ -3,8 +3,9 @@ import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
+import EmberObject from "@ember/object";
 
-const UserBadge = Discourse.Model.extend({
+const UserBadge = EmberObject.extend({
   @discourseComputed
   postUrl: function() {
     if (this.topic_title) {

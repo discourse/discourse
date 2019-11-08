@@ -4,8 +4,9 @@ import {
   on
 } from "discourse-common/utils/decorators";
 import { propertyNotEqual } from "discourse/lib/computed";
+import EmberObject from "@ember/object";
 
-const ColorSchemeColor = Discourse.Model.extend({
+const ColorSchemeColor = EmberObject.extend({
   @on("init")
   startTrackingChanges() {
     this.set("originals", { hex: this.hex || "FFFFFF" });

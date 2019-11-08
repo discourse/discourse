@@ -6,6 +6,8 @@ import {
 } from "discourse-common/utils/decorators";
 import computed from "@ember/object/computed";
 import FocusEvent from "discourse-common/mixins/focus-event";
+import EmberObject from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
 
 const _pluginCallbacks = [];
 
@@ -205,5 +207,15 @@ const Discourse = Ember.Application.extend(FocusEvent, {
     }
   })
 }).create();
+
+Object.defineProperty(Discourse, "Model", {
+  get() {
+    deprecated("Use an `@ember/object` instead of Discourse.Model", {
+      since: "2.4.0",
+      dropFrom: "2.5.0"
+    });
+    return EmberObject;
+  }
+});
 
 export default Discourse;
