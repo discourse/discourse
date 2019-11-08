@@ -8,8 +8,5 @@ export default SelectKitHeaderComponent.extend({
   clearable: alias("options.clearable"),
   caretUpIcon: alias("options.caretUpIcon"),
   caretDownIcon: alias("options.caretDownIcon"),
-  shouldDisplayClearableButton: and(
-    "clearable",
-    "computedContent.hasSelection"
-  )
+  shouldDisplayClearableButton: and("clearable", "computedContent.hasSelection")
 });
