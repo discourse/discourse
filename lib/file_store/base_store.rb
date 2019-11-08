@@ -139,9 +139,13 @@ module FileStore
       FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
       FileUtils.cp(file.path, path)
       # keep latest 500 files
-      Discourse::Utils.execute_command <<~COMMAND
-        set -o pipefail; ls -t #{CACHE_DIR} | tail -n +#{CACHE_MAXIMUM_SIZE + 1} | awk '$0="#{CACHE_DIR}"$0' | xargs rm -f
-      COMMAND
+      processes = Open3.pipeline(
+        "ls -t #{CACHE_DIR}",
+        "tail -n +#{CACHE_MAXIMUM_SIZE + 1}",
+        "awk '$0=\"#{CACHE_DIR}\"$0'",
+        "xargs rm -f"
+      )
+      raise "Error clearing old cache" if !processes.all?(&:success?)
     end
 
     private
