@@ -93,8 +93,8 @@ JS
          "discourse/models/user",
          "discourse/models/session",
          "discourse/models/model",
-         "discourse/models/post",
-         "discourse/views/grouped"]
+         "discourse/models/post"
+        ]
       )
 
       @@whitelisted.include?(path) || path =~ /discourse\/mixins/
