@@ -104,6 +104,9 @@ var define, requirejs;
       },
       "@ember/error": {
         default: Ember.error
+      },
+      "@ember/utils": {
+        isNone: Ember.isNone
       }
     };
   }
