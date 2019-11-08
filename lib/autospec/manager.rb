@@ -364,8 +364,9 @@ class Autospec::Manager
       puts
       puts
       if specs.length == 0
-        puts "No specs have failed yet! "
+        puts "No specs have failed yet! Aborting anyway"
         puts
+        abort_runners
       else
         puts "The following specs have failed:"
         specs.each { |s| puts s }
