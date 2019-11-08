@@ -110,7 +110,7 @@ module I18n
       end
 
       if dup_options.present?
-        return translate_no_cache(key, options)
+        return translate_no_cache(key, **options)
       end
 
       locale ||= config.locale
