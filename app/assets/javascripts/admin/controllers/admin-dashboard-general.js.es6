@@ -6,9 +6,10 @@ import { setting } from "discourse/lib/computed";
 import AdminDashboard from "admin/models/admin-dashboard";
 import Report from "admin/models/report";
 import PeriodComputationMixin from "admin/mixins/period-computation";
+import computed from "@ember/object/computed";
 
 function staticReport(reportType) {
-  return Ember.computed("reports.[]", function() {
+  return computed("reports.[]", function() {
     return makeArray(this.reports).find(report => report.type === reportType);
   });
 }

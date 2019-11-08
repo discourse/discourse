@@ -4,6 +4,7 @@ import {
   default as discourseComputed,
   observes
 } from "discourse-common/utils/decorators";
+import computed from "@ember/object/computed";
 import FocusEvent from "discourse-common/mixins/focus-event";
 
 const _pluginCallbacks = [];
@@ -188,7 +189,7 @@ const Discourse = Ember.Application.extend(FocusEvent, {
     _pluginCallbacks.push({ version, code });
   },
 
-  assetVersion: Ember.computed({
+  assetVersion: computed({
     get() {
       return this.currentAssetVersion;
     },

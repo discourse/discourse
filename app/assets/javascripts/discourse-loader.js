@@ -81,6 +81,7 @@ var define, requirejs;
         isEmpty: Ember.isEmpty
       },
       rsvp: {
+        default: Ember.RSVP,
         Promise: Ember.RSVP.Promise,
         hash: Ember.RSVP.hash,
         all: Ember.RSVP.all
