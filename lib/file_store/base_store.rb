@@ -139,7 +139,9 @@ module FileStore
       FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
       FileUtils.cp(file.path, path)
       # keep latest 500 files
-      `ls -tr #{CACHE_DIR} | head -n -#{CACHE_MAXIMUM_SIZE} | awk '$0="#{CACHE_DIR}"$0' | xargs rm -f`
+      Discourse::Utils.execute_command <<~COMMAND
+        set -o pipefail; ls -t #{CACHE_DIR} | tail -n +#{CACHE_MAXIMUM_SIZE + 1} | awk '$0="#{CACHE_DIR}"$0' | xargs rm -f
+      COMMAND
     end
 
     private
