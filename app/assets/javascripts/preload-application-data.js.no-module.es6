@@ -1,6 +1,5 @@
 (function() {
   var ps = require("preload-store").default;
-  var rsvp = require("rsvp");
   var preloadedDataElement = document.getElementById("data-preloaded");
 
   if (preloadedDataElement) {
@@ -49,7 +48,7 @@
     Discourse.S3BaseUrl = setupData.s3BaseUrl;
   }
 
-  rsvp.configure("onerror", function(e) {
+  Ember.RSVP.configure("onerror", function(e) {
     // Ignore TransitionAborted exceptions that bubble up
     if (e && e.message === "TransitionAborted") {
       return;
