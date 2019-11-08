@@ -86,7 +86,6 @@ JS
 
       @@whitelisted ||= Set.new(
         ["discourse/models/nav-item",
-         "discourse/models/user-action",
          "discourse/routes/discourse",
          "discourse/models/category",
          "discourse/models/site",
