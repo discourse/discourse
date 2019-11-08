@@ -91,8 +91,7 @@ JS
          "discourse/models/site",
          "discourse/models/user",
          "discourse/models/session",
-         "discourse/models/model",
-         "discourse/models/post"
+         "discourse/models/model"
         ]
       )
 

@@ -7,6 +7,7 @@ import { propertyGreaterThan, propertyLessThan } from "discourse/lib/computed";
 import { on, observes } from "discourse-common/utils/decorators";
 import { sanitizeAsync } from "discourse/lib/text";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import Post from "discourse/models/post";
 
 function customTagArray(fieldName) {
   return Ember.computed(fieldName, function() {
@@ -59,19 +60,19 @@ export default Controller.extend(ModalFunctionality, {
   refresh(postId, postVersion) {
     this.set("loading", true);
 
-    Discourse.Post.loadRevision(postId, postVersion).then(result => {
+    Post.loadRevision(postId, postVersion).then(result => {
       this.setProperties({ loading: false, model: result });
     });
   },
 
   hide(postId, postVersion) {
-    Discourse.Post.hideRevision(postId, postVersion).then(() =>
+    Post.hideRevision(postId, postVersion).then(() =>
       this.refresh(postId, postVersion)
     );
   },
 
   show(postId, postVersion) {
-    Discourse.Post.showRevision(postId, postVersion).then(() =>
+    Post.showRevision(postId, postVersion).then(() =>
       this.refresh(postId, postVersion)
     );
   },
