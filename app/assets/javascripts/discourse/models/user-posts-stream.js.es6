@@ -1,4 +1,4 @@
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import UserAction from "discourse/models/user-action";

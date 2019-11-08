@@ -1,10 +1,10 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias, gt, not, or, equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import computed from "ember-addons/ember-computed-decorators";
 import { propertyGreaterThan, propertyLessThan } from "discourse/lib/computed";
-import { on, observes } from "ember-addons/ember-computed-decorators";
+import { on, observes } from "discourse-common/utils/decorators";
 import { sanitizeAsync } from "discourse/lib/text";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
@@ -39,7 +39,11 @@ export default Controller.extend(ModalFunctionality, {
   previousTagChanges: customTagArray("model.tags_changes.previous"),
   currentTagChanges: customTagArray("model.tags_changes.current"),
 
-  @computed("previousVersion", "model.current_version", "model.version_count")
+  @discourseComputed(
+    "previousVersion",
+    "model.current_version",
+    "model.version_count"
+  )
   revisionsText(previous, current, total) {
     return I18n.t(
       "post.revisions.controls.comparing_previous_to_current_out_of_total",
@@ -101,17 +105,17 @@ export default Controller.extend(ModalFunctionality, {
       });
   },
 
-  @computed("model.created_at")
+  @discourseComputed("model.created_at")
   createdAtDate(createdAt) {
     return moment(createdAt).format("LLLL");
   },
 
-  @computed("model.current_version")
+  @discourseComputed("model.current_version")
   previousVersion(current) {
     return current - 1;
   },
 
-  @computed("model.current_revision", "model.previous_revision")
+  @discourseComputed("model.current_revision", "model.previous_revision")
   displayGoToPrevious(current, prev) {
     return prev && current > prev;
   },
@@ -140,17 +144,17 @@ export default Controller.extend(ModalFunctionality, {
   loadNextDisabled: or("loading", "hideGoToNext"),
   loadLastDisabled: or("loading", "hideGoToLast"),
 
-  @computed("model.previous_hidden")
+  @discourseComputed("model.previous_hidden")
   displayShow(prevHidden) {
     return prevHidden && this.currentUser && this.currentUser.get("staff");
   },
 
-  @computed("model.previous_hidden")
+  @discourseComputed("model.previous_hidden")
   displayHide(prevHidden) {
     return !prevHidden && this.currentUser && this.currentUser.get("staff");
   },
 
-  @computed(
+  @discourseComputed(
     "model.last_revision",
     "model.current_revision",
     "model.can_edit",
@@ -160,19 +164,23 @@ export default Controller.extend(ModalFunctionality, {
     return !!(canEdit && topicController && lastRevision === currentRevision);
   },
 
-  @computed("model.wiki")
+  @discourseComputed("model.wiki")
   editButtonLabel(wiki) {
     return `post.revisions.controls.${wiki ? "edit_wiki" : "edit_post"}`;
   },
 
-  @computed()
+  @discourseComputed()
   displayRevert() {
     return this.currentUser && this.currentUser.get("staff");
   },
 
   isEitherRevisionHidden: or("model.previous_hidden", "model.current_hidden"),
 
-  @computed("model.previous_hidden", "model.current_hidden", "displayingInline")
+  @discourseComputed(
+    "model.previous_hidden",
+    "model.current_hidden",
+    "displayingInline"
+  )
   hiddenClasses(prevHidden, currentHidden, displayingInline) {
     if (displayingInline) {
       return this.isEitherRevisionHidden ? "hidden-revision-either" : null;
@@ -192,22 +200,22 @@ export default Controller.extend(ModalFunctionality, {
   displayingSideBySide: equal("viewMode", "side_by_side"),
   displayingSideBySideMarkdown: equal("viewMode", "side_by_side_markdown"),
 
-  @computed("displayingInline")
+  @discourseComputed("displayingInline")
   inlineClass(displayingInline) {
     return displayingInline ? "btn-danger" : "btn-flat";
   },
 
-  @computed("displayingSideBySide")
+  @discourseComputed("displayingSideBySide")
   sideBySideClass(displayingSideBySide) {
     return displayingSideBySide ? "btn-danger" : "btn-flat";
   },
 
-  @computed("displayingSideBySideMarkdown")
+  @discourseComputed("displayingSideBySideMarkdown")
   sideBySideMarkdownClass(displayingSideBySideMarkdown) {
     return displayingSideBySideMarkdown ? "btn-danger" : "btn-flat";
   },
 
-  @computed("model.category_id_changes")
+  @discourseComputed("model.category_id_changes")
   previousCategory(changes) {
     if (changes) {
       var category = Discourse.Category.findById(changes["previous"]);
@@ -215,7 +223,7 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("model.category_id_changes")
+  @discourseComputed("model.category_id_changes")
   currentCategory(changes) {
     if (changes) {
       var category = Discourse.Category.findById(changes["current"]);
@@ -223,12 +231,12 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("model.wiki_changes")
+  @discourseComputed("model.wiki_changes")
   wikiDisabled(changes) {
     return changes && !changes["current"];
   },
 
-  @computed("model.post_type_changes")
+  @discourseComputed("model.post_type_changes")
   postTypeDisabled(changes) {
     return (
       changes &&
@@ -236,7 +244,7 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
-  @computed("viewMode", "model.title_changes")
+  @discourseComputed("viewMode", "model.title_changes")
   titleDiff(viewMode) {
     if (viewMode === "side_by_side_markdown") {
       viewMode = "side_by_side";

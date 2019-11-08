@@ -1,8 +1,8 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import CleansUp from "discourse/mixins/cleans-up";
-import computed from "ember-addons/ember-computed-decorators";
 
 function entranceDate(dt, showTime) {
   const today = new Date();
@@ -34,23 +34,23 @@ export default Component.extend(CleansUp, {
   topic: null,
   visible: null,
 
-  @computed("topic.created_at")
+  @discourseComputed("topic.created_at")
   createdDate: createdAt => new Date(createdAt),
 
-  @computed("topic.bumped_at")
+  @discourseComputed("topic.bumped_at")
   bumpedDate: bumpedAt => new Date(bumpedAt),
 
-  @computed("createdDate", "bumpedDate")
+  @discourseComputed("createdDate", "bumpedDate")
   showTime(createdDate, bumpedDate) {
     return (
       bumpedDate.getTime() - createdDate.getTime() < 1000 * 60 * 60 * 24 * 2
     );
   },
 
-  @computed("createdDate", "showTime")
+  @discourseComputed("createdDate", "showTime")
   topDate: (createdDate, showTime) => entranceDate(createdDate, showTime),
 
-  @computed("bumpedDate", "showTime")
+  @discourseComputed("bumpedDate", "showTime")
   bottomDate: (bumpedDate, showTime) => entranceDate(bumpedDate, showTime),
 
   didInsertElement() {

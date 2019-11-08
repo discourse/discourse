@@ -1,6 +1,6 @@
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import PermissionType from "discourse/models/permission-type";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 
 export default buildCategoryPanel("security", {
   editingPermissions: false,

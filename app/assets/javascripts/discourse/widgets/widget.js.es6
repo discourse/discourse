@@ -4,11 +4,14 @@ import {
   WidgetKeyUpHook,
   WidgetKeyDownHook,
   WidgetMouseDownOutsideHook,
-  WidgetDragHook
+  WidgetDragHook,
+  WidgetInputHook,
+  WidgetChangeHook
 } from "discourse/widgets/hooks";
 import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { Promise } from "rsvp";
+import ENV from "discourse-common/config/environment";
 
 const _registry = {};
 
@@ -116,7 +119,7 @@ export default class Widget {
     this.keyValueStore = register.lookup("key-value-store:main");
 
     // Helps debug widgets
-    if (Discourse.Environment === "development" || Ember.testing) {
+    if (Discourse.Environment === "development" || ENV.environment === "test") {
       const ds = this.defaultState(attrs);
       if (typeof ds !== "object") {
         throw new Error(`defaultState must return an object`);
@@ -368,6 +371,14 @@ export default class Widget {
 
     if (this.drag) {
       properties["widget-drag"] = new WidgetDragHook(this);
+    }
+
+    if (this.input) {
+      properties["widget-input"] = new WidgetInputHook(this);
+    }
+
+    if (this.change) {
+      properties["widget-change"] = new WidgetChangeHook(this);
     }
 
     const attributes = properties["attributes"] || {};

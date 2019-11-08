@@ -10,10 +10,10 @@ import { throwAjaxError } from "discourse/lib/ajax-error";
 import Quote from "discourse/lib/quote";
 import Draft from "discourse/models/draft";
 import {
-  default as computed,
+  default as discourseComputed,
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { escapeExpression, tinyAvatar } from "discourse/lib/utilities";
 import { propertyNotEqual } from "discourse/lib/computed";
 import throttle from "discourse/lib/throttle";
@@ -108,7 +108,7 @@ const Composer = RestModel.extend({
 
   sharedDraft: equal("action", CREATE_SHARED_DRAFT),
 
-  @computed
+  @discourseComputed
   categoryId: {
     get() {
       return this._categoryId;
@@ -132,12 +132,12 @@ const Composer = RestModel.extend({
     }
   },
 
-  @computed("categoryId")
+  @discourseComputed("categoryId")
   category(categoryId) {
     return categoryId ? this.site.categories.findBy("id", categoryId) : null;
   },
 
-  @computed("category")
+  @discourseComputed("category")
   minimumRequiredTags(category) {
     return category && category.minimum_required_tags > 0
       ? category.minimum_required_tags
@@ -150,18 +150,18 @@ const Composer = RestModel.extend({
   notCreatingPrivateMessage: not("creatingPrivateMessage"),
   notPrivateMessage: not("privateMessage"),
 
-  @computed("editingPost", "topic.details.can_edit")
+  @discourseComputed("editingPost", "topic.details.can_edit")
   disableTitleInput(editingPost, canEditTopic) {
     return editingPost && !canEditTopic;
   },
 
-  @computed("privateMessage", "archetype.hasOptions")
+  @discourseComputed("privateMessage", "archetype.hasOptions")
   showCategoryChooser(isPrivateMessage, hasOptions) {
     const manyCategories = this.site.categories.length > 1;
     return !isPrivateMessage && (hasOptions || manyCategories);
   },
 
-  @computed("creatingPrivateMessage", "topic")
+  @discourseComputed("creatingPrivateMessage", "topic")
   privateMessage(creatingPrivateMessage, topic) {
     return (
       creatingPrivateMessage || (topic && topic.archetype === "private_message")
@@ -170,7 +170,7 @@ const Composer = RestModel.extend({
 
   topicFirstPost: or("creatingTopic", "editingFirstPost"),
 
-  @computed("action")
+  @discourseComputed("action")
   editingPost: isEdit,
 
   replyingToTopic: equal("action", REPLY),
@@ -202,7 +202,7 @@ const Composer = RestModel.extend({
     }
   },
 
-  @computed
+  @discourseComputed
   composerTime: {
     get() {
       let total = this.composerTotalOpened || 0;
@@ -216,7 +216,7 @@ const Composer = RestModel.extend({
     }
   },
 
-  @computed("archetypeId")
+  @discourseComputed("archetypeId")
   archetype(archetypeId) {
     return this.archetypes.findBy("id", archetypeId);
   },
@@ -251,7 +251,7 @@ const Composer = RestModel.extend({
     "notPrivateMessage"
   ),
 
-  @computed("canEditTitle", "creatingPrivateMessage", "categoryId")
+  @discourseComputed("canEditTitle", "creatingPrivateMessage", "categoryId")
   canEditTopicFeaturedLink(canEditTitle, creatingPrivateMessage, categoryId) {
     if (
       !this.siteSettings.topic_featured_link_enabled ||
@@ -277,14 +277,14 @@ const Composer = RestModel.extend({
     );
   },
 
-  @computed("canEditTopicFeaturedLink")
+  @discourseComputed("canEditTopicFeaturedLink")
   titlePlaceholder(canEditTopicFeaturedLink) {
     return canEditTopicFeaturedLink
       ? "composer.title_or_link_placeholder"
       : "composer.title_placeholder";
   },
 
-  @computed("action", "post", "topic", "topic.title")
+  @discourseComputed("action", "post", "topic", "topic.title")
   replyOptions(action, post, topic, topicTitle) {
     const options = {
       userLink: null,
@@ -334,7 +334,7 @@ const Composer = RestModel.extend({
     return options;
   },
 
-  @computed(
+  @discourseComputed(
     "loading",
     "canEditTitle",
     "titleLength",
@@ -405,7 +405,7 @@ const Composer = RestModel.extend({
     }
   },
 
-  @computed("canCategorize", "categoryId")
+  @discourseComputed("canCategorize", "categoryId")
   requiredCategoryMissing(canCategorize, categoryId) {
     return (
       canCategorize &&
@@ -414,14 +414,14 @@ const Composer = RestModel.extend({
     );
   },
 
-  @computed("minimumTitleLength", "titleLength", "post.static_doc")
+  @discourseComputed("minimumTitleLength", "titleLength", "post.static_doc")
   titleLengthValid(minTitleLength, titleLength, staticDoc) {
     if (this.user.admin && staticDoc && titleLength > 0) return true;
     if (titleLength < minTitleLength) return false;
     return titleLength <= this.siteSettings.max_topic_title_length;
   },
 
-  @computed("metaData")
+  @discourseComputed("metaData")
   hasMetaData(metaData) {
     return metaData ? isEmpty(Ember.keys(metaData)) : false;
   },
@@ -430,12 +430,12 @@ const Composer = RestModel.extend({
 
   titleDirty: propertyNotEqual("title", "originalTitle"),
 
-  @computed("minimumTitleLength", "titleLength")
+  @discourseComputed("minimumTitleLength", "titleLength")
   missingTitleCharacters(minimumTitleLength, titleLength) {
     return minimumTitleLength - titleLength;
   },
 
-  @computed("privateMessage")
+  @discourseComputed("privateMessage")
   minimumTitleLength(privateMessage) {
     if (privateMessage) {
       return this.siteSettings.min_personal_message_title_length;
@@ -444,7 +444,11 @@ const Composer = RestModel.extend({
     }
   },
 
-  @computed("minimumPostLength", "replyLength", "canEditTopicFeaturedLink")
+  @discourseComputed(
+    "minimumPostLength",
+    "replyLength",
+    "canEditTopicFeaturedLink"
+  )
   missingReplyCharacters(
     minimumPostLength,
     replyLength,
@@ -459,7 +463,11 @@ const Composer = RestModel.extend({
     return minimumPostLength - replyLength;
   },
 
-  @computed("privateMessage", "topicFirstPost", "topic.pm_with_non_human_user")
+  @discourseComputed(
+    "privateMessage",
+    "topicFirstPost",
+    "topic.pm_with_non_human_user"
+  )
   minimumPostLength(privateMessage, topicFirstPost, pmWithNonHumanUser) {
     if (pmWithNonHumanUser) {
       return 1;
@@ -473,13 +481,13 @@ const Composer = RestModel.extend({
     }
   },
 
-  @computed("title")
+  @discourseComputed("title")
   titleLength(title) {
     title = title || "";
     return title.replace(/\s+/gim, " ").trim().length;
   },
 
-  @computed("reply")
+  @discourseComputed("reply")
   replyLength(reply) {
     reply = reply || "";
 

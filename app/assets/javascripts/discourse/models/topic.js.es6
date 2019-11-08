@@ -14,10 +14,10 @@ import { emojiUnescape } from "discourse/lib/text";
 import PreloadStore from "preload-store";
 import { userPath } from "discourse/lib/url";
 import {
-  default as computed,
+  default as discourseComputed,
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 export function loadTopicView(topic, args) {
   const data = _.merge({}, args);
@@ -42,18 +42,18 @@ const Topic = RestModel.extend({
   message: null,
   errorLoading: false,
 
-  @computed("last_read_post_number", "highest_post_number")
+  @discourseComputed("last_read_post_number", "highest_post_number")
   visited(lastReadPostNumber, highestPostNumber) {
     // >= to handle case where there are deleted posts at the end of the topic
     return lastReadPostNumber >= highestPostNumber;
   },
 
-  @computed("posters.firstObject")
+  @discourseComputed("posters.firstObject")
   creator(poster) {
     return poster && poster.user;
   },
 
-  @computed("posters.[]")
+  @discourseComputed("posters.[]")
   lastPoster(posters) {
     let user;
     if (posters && posters.length > 0) {
@@ -65,7 +65,7 @@ const Topic = RestModel.extend({
     return user || this.creator;
   },
 
-  @computed("posters.[]", "participants.[]")
+  @discourseComputed("posters.[]", "participants.[]")
   featuredUsers(posters, participants) {
     let users = posters;
     const maxUserCount = 5;
@@ -95,7 +95,7 @@ const Topic = RestModel.extend({
     return users;
   },
 
-  @computed("fancy_title")
+  @discourseComputed("fancy_title")
   fancyTitle(title) {
     let fancyTitle = censor(
       emojiUnescape(title || ""),
@@ -110,7 +110,7 @@ const Topic = RestModel.extend({
   },
 
   // returns createdAt if there's no bumped date
-  @computed("bumped_at", "createdAt")
+  @discourseComputed("bumped_at", "createdAt")
   bumpedAt(bumped_at, createdAt) {
     if (bumped_at) {
       return new Date(bumped_at);
@@ -119,7 +119,7 @@ const Topic = RestModel.extend({
     }
   },
 
-  @computed("bumpedAt", "createdAt")
+  @discourseComputed("bumpedAt", "createdAt")
   bumpedAtTitle(bumpedAt, createdAt) {
     const firstPost = I18n.t("first_post");
     const lastPost = I18n.t("last_post");
@@ -129,12 +129,12 @@ const Topic = RestModel.extend({
     return `${firstPost}: ${createdAtDate}\n${lastPost}: ${bumpedAtDate}`;
   },
 
-  @computed("created_at")
+  @discourseComputed("created_at")
   createdAt(created_at) {
     return new Date(created_at);
   },
 
-  @computed
+  @discourseComputed
   postStream() {
     return this.store.createRecord("postStream", {
       id: this.id,
@@ -142,7 +142,7 @@ const Topic = RestModel.extend({
     });
   },
 
-  @computed("tags")
+  @discourseComputed("tags")
   visibleListTags(tags) {
     if (!tags || !Discourse.SiteSettings.suppress_overlapping_tags_in_list) {
       return tags;
@@ -160,7 +160,7 @@ const Topic = RestModel.extend({
     return newTags;
   },
 
-  @computed("related_messages")
+  @discourseComputed("related_messages")
   relatedMessages(relatedMessages) {
     if (relatedMessages) {
       const store = this.store;
@@ -172,7 +172,7 @@ const Topic = RestModel.extend({
     }
   },
 
-  @computed("suggested_topics")
+  @discourseComputed("suggested_topics")
   suggestedTopics(suggestedTopics) {
     if (suggestedTopics) {
       const store = this.store;
@@ -184,12 +184,12 @@ const Topic = RestModel.extend({
     }
   },
 
-  @computed("posts_count")
+  @discourseComputed("posts_count")
   replyCount(postsCount) {
     return postsCount - 1;
   },
 
-  @computed
+  @discourseComputed
   details() {
     return this.store.createRecord("topicDetails", {
       id: this.id,
@@ -200,7 +200,7 @@ const Topic = RestModel.extend({
   invisible: not("visible"),
   deleted: notEmpty("deleted_at"),
 
-  @computed("id")
+  @discourseComputed("id")
   searchContext(id) {
     return { type: "topic", id };
   },
@@ -223,12 +223,12 @@ const Topic = RestModel.extend({
 
   categoryClass: fmt("category.fullSlug", "category-%@"),
 
-  @computed("tags")
+  @discourseComputed("tags")
   tagClasses(tags) {
     return tags && tags.map(t => `tag-${t}`).join(" ");
   },
 
-  @computed("url")
+  @discourseComputed("url")
   shareUrl(url) {
     const user = Discourse.User.current();
     const userQueryString = user ? `?u=${user.get("username_lower")}` : "";
@@ -237,7 +237,7 @@ const Topic = RestModel.extend({
 
   printUrl: fmt("url", "%@/print"),
 
-  @computed("id", "slug")
+  @discourseComputed("id", "slug")
   url(id, slug) {
     slug = slug || "";
     if (slug.trim().length === 0) {
@@ -255,18 +255,18 @@ const Topic = RestModel.extend({
     return url;
   },
 
-  @computed("new_posts", "unread")
+  @discourseComputed("new_posts", "unread")
   totalUnread(newPosts, unread) {
     const count = (unread || 0) + (newPosts || 0);
     return count > 0 ? count : null;
   },
 
-  @computed("last_read_post_number", "url")
+  @discourseComputed("last_read_post_number", "url")
   lastReadUrl(lastReadPostNumber) {
     return this.urlForPostNumber(lastReadPostNumber);
   },
 
-  @computed("last_read_post_number", "highest_post_number", "url")
+  @discourseComputed("last_read_post_number", "highest_post_number", "url")
   lastUnreadUrl(lastReadPostNumber, highestPostNumber) {
     if (highestPostNumber <= lastReadPostNumber) {
       if (this.get("category.navigate_to_first_post_after_read")) {
@@ -279,23 +279,23 @@ const Topic = RestModel.extend({
     }
   },
 
-  @computed("highest_post_number", "url")
+  @discourseComputed("highest_post_number", "url")
   lastPostUrl(highestPostNumber) {
     return this.urlForPostNumber(highestPostNumber);
   },
 
-  @computed("url")
+  @discourseComputed("url")
   firstPostUrl() {
     return this.urlForPostNumber(1);
   },
 
-  @computed("url")
+  @discourseComputed("url")
   summaryUrl() {
     const summaryQueryString = this.has_summary ? "?filter=summary" : "";
     return `${this.urlForPostNumber(1)}${summaryQueryString}`;
   },
 
-  @computed("last_poster.username")
+  @discourseComputed("last_poster.username")
   lastPosterUrl(username) {
     return userPath(username);
   },
@@ -303,7 +303,7 @@ const Topic = RestModel.extend({
   // The amount of new posts to display. It might be different than what the server
   // tells us if we are still asynchronously flushing our "recently read" data.
   // So take what the browser has seen into consideration.
-  @computed("new_posts", "id")
+  @discourseComputed("new_posts", "id")
   displayNewPosts(newPosts, id) {
     const highestSeen = Discourse.Session.currentProp("highestSeenByTopic")[id];
     if (highestSeen) {
@@ -319,7 +319,7 @@ const Topic = RestModel.extend({
     return newPosts;
   },
 
-  @computed("views")
+  @discourseComputed("views")
   viewsHeat(v) {
     if (v >= Discourse.SiteSettings.topic_views_heat_high) {
       return "heatmap-high";
@@ -333,7 +333,7 @@ const Topic = RestModel.extend({
     return null;
   },
 
-  @computed("archetype")
+  @discourseComputed("archetype")
   archetypeObject(archetype) {
     return Discourse.Site.currentProp("archetypes").findBy("id", archetype);
   },
@@ -532,14 +532,14 @@ const Topic = RestModel.extend({
     });
   },
 
-  @computed("excerpt")
+  @discourseComputed("excerpt")
   escapedExcerpt(excerpt) {
     return emojiUnescape(excerpt);
   },
 
   hasExcerpt: notEmpty("excerpt"),
 
-  @computed("excerpt")
+  @discourseComputed("excerpt")
   excerptTruncated(excerpt) {
     return excerpt && excerpt.substr(excerpt.length - 8, 8) === "&hellip;";
   },

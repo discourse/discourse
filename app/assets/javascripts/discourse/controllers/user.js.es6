@@ -1,3 +1,4 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { alias, or, gt, not, and } from "@ember/object/computed";
 import EmberObject from "@ember/object";
@@ -5,7 +6,6 @@ import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
-import computed from "ember-addons/ember-computed-decorators";
 import User from "discourse/models/user";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
@@ -18,23 +18,28 @@ export default Controller.extend(CanCheckEmails, {
   currentPath: alias("router._router.currentPath"),
   adminTools: optionalService(),
 
-  @computed("model.username")
+  @discourseComputed("model.username")
   viewingSelf(username) {
     let currentUser = this.currentUser;
     return currentUser && username === currentUser.get("username");
   },
 
-  @computed("viewingSelf", "model.profile_hidden")
+  @discourseComputed("viewingSelf", "model.profile_hidden")
   canExpandProfile(viewingSelf, profileHidden) {
     return !profileHidden && viewingSelf;
   },
 
-  @computed("model.profileBackgroundUrl")
+  @discourseComputed("model.profileBackgroundUrl")
   hasProfileBackgroundUrl(background) {
     return !isEmpty(background.toString());
   },
 
-  @computed("model.profile_hidden", "indexStream", "viewingSelf", "forceExpand")
+  @discourseComputed(
+    "model.profile_hidden",
+    "indexStream",
+    "viewingSelf",
+    "forceExpand"
+  )
   collapsedInfo(profileHidden, indexStream, viewingSelf, forceExpand) {
     if (profileHidden) {
       return true;
@@ -56,58 +61,58 @@ export default Controller.extend(CanCheckEmails, {
     "hasReceivedWarnings"
   ),
 
-  @computed("model.suspended", "currentUser.staff")
+  @discourseComputed("model.suspended", "currentUser.staff")
   isNotSuspendedOrIsStaff(suspended, isStaff) {
     return !suspended || isStaff;
   },
 
   linkWebsite: not("model.isBasic"),
 
-  @computed("model.trust_level")
+  @discourseComputed("model.trust_level")
   removeNoFollow(trustLevel) {
     return trustLevel > 2 && !this.siteSettings.tl3_links_no_follow;
   },
 
-  @computed("viewingSelf", "currentUser.admin")
+  @discourseComputed("viewingSelf", "currentUser.admin")
   showBookmarks(viewingSelf, isAdmin) {
     return viewingSelf || isAdmin;
   },
 
-  @computed("viewingSelf")
+  @discourseComputed("viewingSelf")
   showDrafts(viewingSelf) {
     return viewingSelf;
   },
 
-  @computed("viewingSelf", "currentUser.admin")
+  @discourseComputed("viewingSelf", "currentUser.admin")
   showPrivateMessages(viewingSelf, isAdmin) {
     return (
       this.siteSettings.enable_personal_messages && (viewingSelf || isAdmin)
     );
   },
 
-  @computed("viewingSelf", "currentUser.staff")
+  @discourseComputed("viewingSelf", "currentUser.staff")
   showNotificationsTab(viewingSelf, staff) {
     return viewingSelf || staff;
   },
 
-  @computed("model.name")
+  @discourseComputed("model.name")
   nameFirst(name) {
     return prioritizeNameInUx(name, this.siteSettings);
   },
 
-  @computed("model.badge_count")
+  @discourseComputed("model.badge_count")
   showBadges(badgeCount) {
     return Discourse.SiteSettings.enable_badges && badgeCount > 0;
   },
 
-  @computed()
+  @discourseComputed()
   canInviteToForum() {
     return User.currentProp("can_invite_to_forum");
   },
 
   canDeleteUser: and("model.can_be_deleted", "model.can_delete_all_posts"),
 
-  @computed("model.user_fields.@each.value")
+  @discourseComputed("model.user_fields.@each.value")
   publicUserFields() {
     const siteUserFields = this.site.get("user_fields");
     if (!isEmpty(siteUserFields)) {

@@ -1,10 +1,12 @@
+import ENV from "discourse-common/config/environment";
+
 //  Track visible elemnts on the screen.
 const Eyeline = function Eyeline(selector) {
   this.selector = selector;
 };
 
 Eyeline.prototype.update = function() {
-  if (Ember.testing) {
+  if (ENV.environment === "test") {
     return;
   }
 
@@ -61,7 +63,7 @@ Eyeline.prototype.update = function() {
 
 //  Call this when we know aren't loading any more elements. Mark the rest as seen
 Eyeline.prototype.flushRest = function() {
-  if (Ember.testing) {
+  if (ENV.environment === "test") {
     return;
   }
 

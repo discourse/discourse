@@ -1,3 +1,4 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { equal, and, or, not } from "@ember/object/computed";
@@ -8,7 +9,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import ActionSummary from "discourse/models/action-summary";
 import { propertyEqual } from "discourse/lib/computed";
 import Quote from "discourse/lib/quote";
-import computed from "ember-addons/ember-computed-decorators";
 import { postUrl } from "discourse/lib/utilities";
 import { cookAsync } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
@@ -28,7 +28,7 @@ const Post = RestModel.extend({
     }
   }),
 
-  @computed("url")
+  @discourseComputed("url")
   shareUrl(url) {
     const user = Discourse.User.current();
     const userSuffix = user ? `?u=${user.username_lower}` : "";
@@ -48,24 +48,24 @@ const Post = RestModel.extend({
   deleted: or("deleted_at", "deletedViaTopic"),
   notDeleted: not("deleted"),
 
-  @computed("name", "username")
+  @discourseComputed("name", "username")
   showName(name, username) {
     return (
       name && name !== username && Discourse.SiteSettings.display_name_on_posts
     );
   },
 
-  @computed("firstPost", "deleted_by", "topic.deleted_by")
+  @discourseComputed("firstPost", "deleted_by", "topic.deleted_by")
   postDeletedBy(firstPost, deletedBy, topicDeletedBy) {
     return firstPost ? topicDeletedBy : deletedBy;
   },
 
-  @computed("firstPost", "deleted_at", "topic.deleted_at")
+  @discourseComputed("firstPost", "deleted_at", "topic.deleted_at")
   postDeletedAt(firstPost, deletedAt, topicDeletedAt) {
     return firstPost ? topicDeletedAt : deletedAt;
   },
 
-  @computed("post_number", "topic_id", "topic.slug")
+  @discourseComputed("post_number", "topic_id", "topic.slug")
   url(post_number, topic_id, topicSlug) {
     return postUrl(
       topicSlug || this.topic_slug,
@@ -75,12 +75,12 @@ const Post = RestModel.extend({
   },
 
   // Don't drop the /1
-  @computed("post_number", "url")
+  @discourseComputed("post_number", "url")
   urlWithNumber(postNumber, baseUrl) {
     return postNumber === 1 ? `${baseUrl}/1` : baseUrl;
   },
 
-  @computed("username")
+  @discourseComputed("username")
   usernameUrl: userPath,
 
   topicOwner: propertyEqual("topic.details.created_by.id", "user_id"),
@@ -94,14 +94,14 @@ const Post = RestModel.extend({
       .catch(popupAjaxError);
   },
 
-  @computed("link_counts.@each.internal")
+  @discourseComputed("link_counts.@each.internal")
   internalLinks() {
     if (isEmpty(this.link_counts)) return null;
 
     return this.link_counts.filterBy("internal").filterBy("title");
   },
 
-  @computed("actions_summary.@each.can_act")
+  @discourseComputed("actions_summary.@each.can_act")
   flagsAvailable() {
     // TODO: Investigate why `this.site` is sometimes null when running
     // Search - Search with context

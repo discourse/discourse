@@ -1,5 +1,5 @@
 import SingleSelectComponent from "select-kit/components/single-select";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 
 export default SingleSelectComponent.extend({
   pluginApiIdentifiers: ["dropdown-select-box"],

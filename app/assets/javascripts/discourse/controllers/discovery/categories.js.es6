@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
 import { inject } from "@ember/controller";
-import computed from "ember-addons/ember-computed-decorators";
 import DiscoveryController from "discourse/controllers/discovery";
 import { dasherize } from "@ember/string";
 
@@ -19,7 +19,7 @@ export default DiscoveryController.extend({
 
   canEdit: reads("currentUser.staff"),
 
-  @computed("model.categories.[].featuredTopics.length")
+  @discourseComputed("model.categories.[].featuredTopics.length")
   latestTopicOnly() {
     return (
       this.get("model.categories").find(
@@ -28,7 +28,7 @@ export default DiscoveryController.extend({
     );
   },
 
-  @computed("model.parentCategory")
+  @discourseComputed("model.parentCategory")
   categoryPageStyle(parentCategory) {
     let style = this.site.mobileView
       ? "categories_with_featured_topics"

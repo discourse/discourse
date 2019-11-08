@@ -3,7 +3,7 @@ import { alias } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { escapeExpression } from "discourse/lib/utilities";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Sharing from "discourse/lib/sharing";
 
 export default Component.extend({
@@ -13,18 +13,18 @@ export default Component.extend({
 
   topic: alias("panel.model.topic"),
 
-  @computed
+  @discourseComputed
   sources() {
     return Sharing.activeSources(this.siteSettings.share_links);
   },
 
-  @computed("type", "topic.title")
+  @discourseComputed("type", "topic.title")
   shareTitle(type, topicTitle) {
     topicTitle = escapeExpression(topicTitle);
     return I18n.t("share.topic_html", { topicTitle });
   },
 
-  @computed("panel.model.shareUrl", "topic.shareUrl")
+  @discourseComputed("panel.model.shareUrl", "topic.shareUrl")
   shareUrl(forcedShareUrl, shareUrl) {
     shareUrl = forcedShareUrl || shareUrl;
 

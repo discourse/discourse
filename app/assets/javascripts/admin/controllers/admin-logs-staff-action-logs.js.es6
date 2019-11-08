@@ -5,9 +5,9 @@ import Controller from "@ember/controller";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   model: null,
@@ -15,7 +15,7 @@ export default Controller.extend({
   filtersExists: gt("filterCount", 0),
   userHistoryActions: null,
 
-  @computed("filters.action_name")
+  @discourseComputed("filters.action_name")
   actionFilter(name) {
     return name ? I18n.t("admin.logs.staff_actions.actions." + name) : null;
   },

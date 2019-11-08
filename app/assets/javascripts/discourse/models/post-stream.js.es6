@@ -5,7 +5,7 @@ import { ajax } from "discourse/lib/ajax";
 import DiscourseURL from "discourse/lib/url";
 import RestModel from "discourse/models/rest";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { loadTopicView } from "discourse/models/topic";
 import { Promise } from "rsvp";
 
@@ -50,17 +50,21 @@ export default RestModel.extend({
   loading: or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost"),
   notLoading: not("loading"),
 
-  @computed("isMegaTopic", "stream.length", "topic.highest_post_number")
+  @discourseComputed(
+    "isMegaTopic",
+    "stream.length",
+    "topic.highest_post_number"
+  )
   filteredPostsCount(isMegaTopic, streamLength, topicHighestPostNumber) {
     return isMegaTopic ? topicHighestPostNumber : streamLength;
   },
 
-  @computed("posts.[]")
+  @discourseComputed("posts.[]")
   hasPosts() {
     return this.get("posts.length") > 0;
   },
 
-  @computed("hasPosts", "filteredPostsCount")
+  @discourseComputed("hasPosts", "filteredPostsCount")
   hasLoadedData(hasPosts, filteredPostsCount) {
     return hasPosts && filteredPostsCount > 0;
   },
@@ -68,7 +72,7 @@ export default RestModel.extend({
   canAppendMore: and("notLoading", "hasPosts", "lastPostNotLoaded"),
   canPrependMore: and("notLoading", "hasPosts", "firstPostNotLoaded"),
 
-  @computed("hasLoadedData", "firstPostId", "posts.[]")
+  @discourseComputed("hasLoadedData", "firstPostId", "posts.[]")
   firstPostPresent(hasLoadedData, firstPostId) {
     if (!hasLoadedData) {
       return false;
@@ -81,17 +85,17 @@ export default RestModel.extend({
   firstId: null,
   lastId: null,
 
-  @computed("isMegaTopic", "stream.firstObject", "firstId")
+  @discourseComputed("isMegaTopic", "stream.firstObject", "firstId")
   firstPostId(isMegaTopic, streamFirstId, firstId) {
     return isMegaTopic ? firstId : streamFirstId;
   },
 
-  @computed("isMegaTopic", "stream.lastObject", "lastId")
+  @discourseComputed("isMegaTopic", "stream.lastObject", "lastId")
   lastPostId(isMegaTopic, streamLastId, lastId) {
     return isMegaTopic ? lastId : streamLastId;
   },
 
-  @computed("hasLoadedData", "lastPostId", "posts.@each.id")
+  @discourseComputed("hasLoadedData", "lastPostId", "posts.@each.id")
   loadedAllPosts(hasLoadedData, lastPostId) {
     if (!hasLoadedData) {
       return false;
@@ -109,7 +113,7 @@ export default RestModel.extend({
     Returns a JS Object of current stream filter options. It should match the query
     params for the stream.
   **/
-  @computed("summary", "userFilters.[]")
+  @discourseComputed("summary", "userFilters.[]")
   streamFilters(summary) {
     const result = {};
     if (summary) {
@@ -124,7 +128,7 @@ export default RestModel.extend({
     return result;
   },
 
-  @computed("streamFilters.[]", "topic.posts_count", "posts.length")
+  @discourseComputed("streamFilters.[]", "topic.posts_count", "posts.length")
   hasNoFilters() {
     const streamFilters = this.streamFilters;
     return !(
@@ -137,7 +141,7 @@ export default RestModel.extend({
     Returns the window of posts above the current set in the stream, bound to the top of the stream.
     This is the collection we'll ask for when scrolling upwards.
   **/
-  @computed("posts.[]", "stream.[]")
+  @discourseComputed("posts.[]", "stream.[]")
   previousWindow() {
     // If we can't find the last post loaded, bail
     const firstPost = _.first(this.posts);
@@ -163,7 +167,7 @@ export default RestModel.extend({
     Returns the window of posts below the current set in the stream, bound by the bottom of the
     stream. This is the collection we use when scrolling downwards.
   **/
-  @computed("posts.lastObject", "stream.[]")
+  @discourseComputed("posts.lastObject", "stream.[]")
   nextWindow(lastLoadedPost) {
     // If we can't find the last post loaded, bail
     if (!lastLoadedPost) {

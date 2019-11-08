@@ -1,33 +1,32 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import RestModel from "discourse/models/rest";
-import computed from "ember-addons/ember-computed-decorators";
 import { postUrl } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 import User from "discourse/models/user";
-
 import {
   NEW_TOPIC_KEY,
   NEW_PRIVATE_MESSAGE_KEY
 } from "discourse/models/composer";
 
 export default RestModel.extend({
-  @computed("draft_username")
+  @discourseComputed("draft_username")
   editableDraft(draftUsername) {
     return draftUsername === User.currentProp("username");
   },
 
-  @computed("username_lower")
+  @discourseComputed("username_lower")
   userUrl(usernameLower) {
     return userPath(usernameLower);
   },
 
-  @computed("topic_id")
+  @discourseComputed("topic_id")
   postUrl(topicId) {
     if (!topicId) return;
 
     return postUrl(this.slug, this.topic_id, this.post_number);
   },
 
-  @computed("draft_key")
+  @discourseComputed("draft_key")
   draftType(draftKey) {
     switch (draftKey) {
       case NEW_TOPIC_KEY:

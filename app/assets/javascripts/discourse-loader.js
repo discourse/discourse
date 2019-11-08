@@ -3,6 +3,10 @@ var define, requirejs;
 (function() {
   // In future versions of ember we don't need this
   var EMBER_MODULES = {};
+  var ALIASES = {
+    "ember-addons/ember-computed-decorators":
+      "discourse-common/utils/decorators"
+  };
   if (typeof Ember !== "undefined") {
     EMBER_MODULES = {
       jquery: { default: $ },
@@ -76,7 +80,7 @@ var define, requirejs;
       "@ember/utils": {
         isEmpty: Ember.isEmpty
       },
-      "rsvp": {
+      rsvp: {
         Promise: Ember.RSVP.Promise,
         hash: Ember.RSVP.hash,
         all: Ember.RSVP.all
@@ -96,6 +100,9 @@ var define, requirejs;
       },
       "@ember/component/helper": {
         default: Ember.Helper
+      },
+      "@ember/error": {
+        default: Ember.error
       }
     };
   }
@@ -210,6 +217,7 @@ var define, requirejs;
   }
 
   function requireFrom(name, origin) {
+    name = checkForAlias(name);
     var mod = EMBER_MODULES[name] || registry[name];
     if (!mod) {
       throw new Error(
@@ -221,6 +229,10 @@ var define, requirejs;
 
   function missingModule(name) {
     throw new Error("Could not find module " + name);
+  }
+
+  function checkForAlias(name) {
+    return ALIASES[name] ? ALIASES[name] : name;
   }
 
   requirejs = require = function(name) {

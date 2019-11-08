@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { or } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import KeyValueStore from "discourse/lib/key-value-store";
 import {
   context,
@@ -19,12 +19,12 @@ const keyValueStore = new KeyValueStore(context);
 export default Component.extend({
   classNames: ["controls"],
 
-  @computed("isNotSupported")
+  @discourseComputed("isNotSupported")
   notificationsPermission(isNotSupported) {
     return isNotSupported ? "" : Notification.permission;
   },
 
-  @computed
+  @discourseComputed
   notificationsDisabled: {
     set(value) {
       keyValueStore.setItem("notifications-disabled", value);
@@ -35,27 +35,27 @@ export default Component.extend({
     }
   },
 
-  @computed
+  @discourseComputed
   isNotSupported() {
     return typeof window.Notification === "undefined";
   },
 
-  @computed("isNotSupported", "notificationsPermission")
+  @discourseComputed("isNotSupported", "notificationsPermission")
   isDeniedPermission(isNotSupported, notificationsPermission) {
     return isNotSupported ? false : notificationsPermission === "denied";
   },
 
-  @computed("isNotSupported", "notificationsPermission")
+  @discourseComputed("isNotSupported", "notificationsPermission")
   isGrantedPermission(isNotSupported, notificationsPermission) {
     return isNotSupported ? false : notificationsPermission === "granted";
   },
 
-  @computed("isGrantedPermission", "notificationsDisabled")
+  @discourseComputed("isGrantedPermission", "notificationsDisabled")
   isEnabledDesktop(isGrantedPermission, notificationsDisabled) {
     return isGrantedPermission ? !notificationsDisabled : false;
   },
 
-  @computed
+  @discourseComputed
   isEnabledPush: {
     set(value) {
       const user = this.currentUser;

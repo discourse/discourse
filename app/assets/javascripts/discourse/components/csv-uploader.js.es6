@@ -1,5 +1,5 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
 import { on } from "@ember/object/evented";
 
@@ -12,14 +12,14 @@ export default Component.extend(UploadMixin, {
     return { csvOnly: true };
   },
 
-  @computed("uploading")
+  @discourseComputed("uploading")
   uploadButtonText(uploading) {
     return uploading
       ? I18n.t("uploading")
       : I18n.t("user.invited.bulk_invite.text");
   },
 
-  @computed("uploading")
+  @discourseComputed("uploading")
   uploadButtonDisabled(uploading) {
     // https://github.com/emberjs/ember.js/issues/10976#issuecomment-132417731
     return uploading ? true : null;

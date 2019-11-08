@@ -1,6 +1,5 @@
-import computed from "ember-addons/ember-computed-decorators";
-import { observes } from "ember-addons/ember-computed-decorators";
-
+import discourseComputed from "discourse-common/utils/decorators";
+import { observes } from "discourse-common/utils/decorators";
 import {
   createPreviewComponent,
   darkLightDiff,
@@ -14,7 +13,7 @@ export default createPreviewComponent(305, 165, {
 
   classNameBindings: ["isSelected"],
 
-  @computed("selectedId", "colorsId")
+  @discourseComputed("selectedId", "colorsId")
   isSelected(selectedId, colorsId) {
     return selectedId === colorsId;
   },

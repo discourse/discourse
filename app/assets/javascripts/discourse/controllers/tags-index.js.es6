@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias, notEmpty } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import computed from "ember-addons/ember-computed-decorators";
 import showModal from "discourse/lib/show-modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -19,7 +19,7 @@ export default Controller.extend({
     this.sortProperties = ["totalCount:desc", "id"];
   },
 
-  @computed("groupedByCategory", "groupedByTagGroup")
+  @discourseComputed("groupedByCategory", "groupedByTagGroup")
   otherTagsTitleKey(groupedByCategory, groupedByTagGroup) {
     if (!groupedByCategory && !groupedByTagGroup) {
       return "tagging.all_tags";
@@ -28,7 +28,7 @@ export default Controller.extend({
     }
   },
 
-  @computed
+  @discourseComputed
   actionsMapping() {
     return {
       manageGroups: () => this.send("showTagGroups"),

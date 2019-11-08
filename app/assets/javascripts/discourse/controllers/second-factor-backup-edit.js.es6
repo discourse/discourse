@@ -1,7 +1,7 @@
 import { alias } from "@ember/object/computed";
 import { later } from "@ember/runloop";
 import Controller from "@ember/controller";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
@@ -14,7 +14,7 @@ export default Controller.extend(ModalFunctionality, {
   backupCodes: null,
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
-  @computed("backupEnabled")
+  @discourseComputed("backupEnabled")
   generateBackupCodeBtnLabel(backupEnabled) {
     return backupEnabled
       ? "user.second_factor_backup.regenerate"

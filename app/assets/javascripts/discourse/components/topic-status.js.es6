@@ -1,9 +1,9 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { escapeExpression } from "discourse/lib/utilities";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend(
   bufferedRender({
@@ -28,7 +28,7 @@ export default Component.extend(
       return false;
     },
 
-    @computed("disableActions")
+    @discourseComputed("disableActions")
     canAct(disableActions) {
       return this.currentUser && !disableActions;
     },

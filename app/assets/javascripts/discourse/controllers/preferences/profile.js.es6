@@ -1,7 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cookAsync } from "discourse/lib/text";
@@ -22,7 +22,7 @@ export default Controller.extend(PreferencesTabController, {
     ];
   },
 
-  @computed("model.user_fields.@each.value")
+  @discourseComputed("model.user_fields.@each.value")
   userFields() {
     let siteUserFields = this.site.get("user_fields");
     if (!isEmpty(siteUserFields)) {
@@ -41,7 +41,7 @@ export default Controller.extend(PreferencesTabController, {
     }
   },
 
-  @computed("model.can_change_bio")
+  @discourseComputed("model.can_change_bio")
   canChangeBio(canChangeBio) {
     return canChangeBio;
   },

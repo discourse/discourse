@@ -4,9 +4,9 @@ import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 /*global Resumable:true */
 
@@ -91,12 +91,12 @@ export default Component.extend(
       }
     },
 
-    @computed("title", "text")
+    @discourseComputed("title", "text")
     translatedTitle(title, text) {
       return title ? I18n.t(title) : text;
     },
 
-    @computed("isUploading", "progress")
+    @discourseComputed("isUploading", "progress")
     text(isUploading, progress) {
       if (isUploading) {
         return progress + " %";

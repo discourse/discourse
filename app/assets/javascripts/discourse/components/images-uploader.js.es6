@@ -1,12 +1,12 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
 
 export default Component.extend(UploadMixin, {
   type: "avatar",
   tagName: "span",
 
-  @computed("uploading")
+  @discourseComputed("uploading")
   uploadButtonText(uploading) {
     return uploading ? I18n.t("uploading") : I18n.t("upload");
   },

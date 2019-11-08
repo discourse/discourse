@@ -1,7 +1,7 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 const ACTIONS = ["delete", "delete_replies", "edit", "none"];
 
@@ -10,7 +10,7 @@ export default Component.extend({
   postAction: null,
   postEdit: null,
 
-  @computed
+  @discourseComputed
   penaltyActions() {
     return ACTIONS.map(id => {
       return { id, name: I18n.t(`admin.user.penalty_post_${id}`) };

@@ -1,5 +1,6 @@
 import PreloadStore from "preload-store";
 import { ajax } from "discourse/lib/ajax";
+import Topic from "discourse/models/topic";
 
 const CategoryList = Ember.ArrayProxy.extend({
   init() {
@@ -39,7 +40,7 @@ CategoryList.reopenClass({
 
       if (c.topics) {
         c.topics = c.topics.map(t => {
-          const topic = Discourse.Topic.create(t);
+          const topic = Topic.create(t);
           topic.set("category", c);
           return topic;
         });
