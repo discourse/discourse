@@ -2022,6 +2022,9 @@ user_preferences:
   default_categories_watching_first_post:
     type: category_list
     default: ""
+  mute_all_categories_by_default:
+    default: false
+    client: true
 
   default_tags_watching:
     type: tag_list

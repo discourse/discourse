@@ -197,6 +197,26 @@ class CategoryUser < ActiveRecord::Base
     SQL
   end
 
+  def self.default_notification_level
+    SiteSetting.mute_all_categories_by_default ? notification_levels[:muted] : notification_levels[:regular]
+  end
+
+  def self.notification_levels_for(guardian)
+    if guardian.anonymous?
+      notification_levels = [
+        SiteSetting.default_categories_watching.split("|"),
+        SiteSetting.default_categories_tracking.split("|"),
+        SiteSetting.default_categories_watching_first_post.split("|"),
+      ].flatten.map { |id| [id.to_i, 1] }
+
+      notification_levels += SiteSetting.default_categories_muted.split("|").map { |id| [id.to_i, 0] }
+    else
+      notification_levels = CategoryUser.where(user: guardian.user).pluck(:category_id, :notification_level)
+    end
+
+    Hash[*notification_levels.flatten]
+  end
+
 end
 
 # == Schema Information
