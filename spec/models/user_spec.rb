@@ -1964,6 +1964,7 @@ describe User do
 
       user.update!(title: nil)
       expect(user.user_profile.reload.badge_granted_title).to eq(false)
+      expect(user.user_profile.granted_title_badge_id).to eq(nil)
     end
 
     context 'when a custom badge name has been set and it matches the title' do
