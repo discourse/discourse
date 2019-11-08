@@ -5,6 +5,7 @@ import ResultSet from "discourse/models/result-set";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { underscore } from "@ember/string";
 import { set } from "@ember/object";
+import Category from "discourse/models/category";
 
 let _identityMap;
 
@@ -272,7 +273,7 @@ export default EmberObject.extend({
     // to category. That should either respect this or be
     // removed.
     if (subType === "category" && type !== "topic") {
-      return Discourse.Category.findById(id);
+      return Category.findById(id);
     }
 
     if (root.meta && root.meta.types) {

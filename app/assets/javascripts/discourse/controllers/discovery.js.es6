@@ -2,6 +2,7 @@ import { alias, not } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
 
 export default Controller.extend({
   discoveryTopics: inject("discovery/topics"),
@@ -25,7 +26,7 @@ export default Controller.extend({
     if (category) {
       url =
         "/c/" +
-        Discourse.Category.slugFor(category) +
+        Category.slugFor(category) +
         (this.noSubcategories ? "/none" : "") +
         "/l";
     }

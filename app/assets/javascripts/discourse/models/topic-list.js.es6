@@ -5,6 +5,7 @@ import RestModel from "discourse/models/rest";
 import Model from "discourse/models/model";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { Promise } from "rsvp";
+import Category from "discourse/models/category";
 
 // Whether to show the category badge in topic lists
 function displayCategoryInList(site, category) {
@@ -136,7 +137,7 @@ TopicList.reopenClass({
 
     // Stitch together our side loaded data
 
-    const categories = Discourse.Category.list(),
+    const categories = Category.list(),
       users = Model.extractByKey(result.users, Discourse.User),
       groups = Model.extractByKey(result.primary_groups, EmberObject);
 

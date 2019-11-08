@@ -87,7 +87,6 @@ JS
       @@whitelisted ||= Set.new(
         [
          "discourse/routes/discourse",
-         "discourse/models/category",
          "discourse/models/site",
          "discourse/models/user",
          "discourse/models/session",

@@ -81,7 +81,7 @@ export default ComboBoxComponent.extend({
     const contentLength = (content && content.length) || 0;
     return (
       contentLength >= 15 ||
-      (this.isAsync && contentLength < Discourse.Category.list().length)
+      (this.isAsync && contentLength < Category.list().length)
     );
   },
 
@@ -141,7 +141,7 @@ export default ComboBoxComponent.extend({
         categoryURL = Discourse.getURL(this.noCategoriesUrl);
       } else {
         const category = Category.findById(parseInt(categoryId, 10));
-        const slug = Discourse.Category.slugFor(category);
+        const slug = Category.slugFor(category);
         categoryURL = Discourse.getURL("/c/") + slug;
       }
 
@@ -164,7 +164,7 @@ export default ComboBoxComponent.extend({
         return;
       }
 
-      let results = Discourse.Category.search(filter);
+      let results = Category.search(filter);
 
       if (!this.siteSettings.allow_uncategorized_topics) {
         results = results.filter(result => {
