@@ -4,6 +4,7 @@ import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-r
 import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { isNone } from "@ember/utils";
 
 export default SelectKitRowComponent.extend({
   layoutName: "select-kit/templates/components/category-row",
@@ -15,7 +16,7 @@ export default SelectKitRowComponent.extend({
 
   @discourseComputed("options.displayCategoryDescription")
   displayCategoryDescription(displayCategoryDescription) {
-    if (Ember.isNone(displayCategoryDescription)) {
+    if (isNone(displayCategoryDescription)) {
       return true;
     }
 
@@ -63,7 +64,7 @@ export default SelectKitRowComponent.extend({
 
   @discourseComputed("parentCategoryid")
   hasParentCategory(parentCategoryid) {
-    return !Ember.isNone(parentCategoryid);
+    return !isNone(parentCategoryid);
   },
 
   @discourseComputed("category")
