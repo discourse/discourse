@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import {
   default as discourseComputed,
@@ -34,7 +35,7 @@ export default DropdownSelectBoxComponent.extend({
     });
   },
 
-  iconForSelectedDetails: Ember.computed.alias("selectedDetails.icon"),
+  iconForSelectedDetails: alias("selectedDetails.icon"),
 
   computeHeaderContent() {
     let content = this._super(...arguments);

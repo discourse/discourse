@@ -1,3 +1,4 @@
+import { alias, not } from "@ember/object/computed";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
@@ -10,18 +11,18 @@ export default ComboBoxComponent.extend({
   classNameBindings: ["categoryStyle"],
   classNames: "category-drop",
   verticalOffset: 3,
-  content: Ember.computed.alias("categoriesWithShortcuts"),
+  content: alias("categoriesWithShortcuts"),
   rowComponent: "category-row",
   headerComponent: "category-drop/category-drop-header",
   allowAutoSelectFirst: false,
   tagName: "li",
-  categoryStyle: Ember.computed.alias("siteSettings.category_style"),
+  categoryStyle: alias("siteSettings.category_style"),
   noCategoriesLabel: I18n.t("categories.no_subcategory"),
   fullWidthOnMobile: true,
   caretDownIcon: "caret-right",
   caretUpIcon: "caret-down",
   subCategory: false,
-  isAsync: Ember.computed.not("subCategory"),
+  isAsync: not("subCategory"),
 
   @discourseComputed(
     "categories",

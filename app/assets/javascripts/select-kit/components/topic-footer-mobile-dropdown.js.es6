@@ -1,3 +1,4 @@
+import { empty } from "@ember/object/computed";
 import ComboBoxComponent from "select-kit/components/combo-box";
 
 export default ComboBoxComponent.extend({
@@ -8,7 +9,7 @@ export default ComboBoxComponent.extend({
   allowInitialValueMutation: false,
   allowAutoSelectFirst: false,
   nameProperty: "label",
-  isHidden: Ember.computed.empty("content"),
+  isHidden: empty("content"),
 
   computeHeaderContent() {
     const content = this._super(...arguments);
