@@ -40,8 +40,9 @@ describe UserSerializer do
   end
 
   context "with a user" do
+    let(:scope) { Guardian.new }
     fab!(:user) { Fabricate(:user) }
-    let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
+    let(:serializer) { UserSerializer.new(user, scope: scope, root: false) }
     let(:json) { serializer.as_json }
     fab!(:upload) { Fabricate(:upload) }
     fab!(:upload2) { Fabricate(:upload) }
@@ -162,6 +163,33 @@ describe UserSerializer do
 
       it "has a cooked bio" do
         expect(json[:bio_cooked]).to eq 'my cooked bio'
+      end
+    end
+
+    describe "second_factor_enabled" do
+      let(:scope) { Guardian.new(user) }
+      it "is false by default" do
+        expect(json[:second_factor_enabled]).to eq(false)
+      end
+
+      context "when totp enabled" do
+        before do
+          User.any_instance.stubs(:totp_enabled?).returns(true)
+        end
+
+        it "is true" do
+          expect(json[:second_factor_enabled]).to eq(true)
+        end
+      end
+
+      context "when security_keys enabled" do
+        before do
+          User.any_instance.stubs(:security_keys_enabled?).returns(true)
+        end
+
+        it "is true" do
+          expect(json[:second_factor_enabled]).to eq(true)
+        end
       end
     end
   end
