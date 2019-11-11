@@ -74,6 +74,7 @@ class Promotion
       @user.save!
       @user.user_profile.recook_bio
       @user.user_profile.save!
+      DiscourseEvent.trigger(:user_promoted, user_id: @user.id, new_trust_level: new_level, old_trust_level: old_level)
       Group.user_trust_level_change!(@user.id, @user.trust_level)
       BadgeGranter.queue_badge_grant(Badge::Trigger::TrustLevelChange, user: @user)
     end
@@ -142,4 +143,10 @@ class Promotion
     end
   end
 
+  private
+
+  def send_advanced_tutorial_message(user)
+    return unless SiteSetting.send_tl2_promotion_message?
+    Jobs.enqueue(:send_system_message, user_id: user.id, message_type: "tl2_promotion_message")
+  end
 end
