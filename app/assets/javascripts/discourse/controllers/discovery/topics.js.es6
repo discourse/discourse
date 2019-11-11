@@ -84,7 +84,7 @@ const controllerOpts = {
 
     resetNew() {
       this.topicTrackingState.resetNew();
-      Topic.resetNew().then(() => this.send("refresh"));
+      Topic.resetNew(this.category, !this.noSubcategories).then(() => this.send("refresh"));
     },
 
     dismissReadPosts() {
@@ -106,7 +106,7 @@ const controllerOpts = {
 
   @discourseComputed("model.filter", "model.topics.length")
   showResetNew(filter, topicsLength) {
-    return filter === "new" && topicsLength > 0;
+    return this.isFilterPage(filter, "new") && topicsLength > 0;
   },
 
   @discourseComputed("model.filter", "model.topics.length")
