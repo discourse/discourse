@@ -1,6 +1,6 @@
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { renderSpinner } from "discourse/helpers/loading-spinner";
 import { escapeExpression } from "discourse/lib/utilities";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
@@ -35,7 +35,7 @@ export default Component.extend(
 
     @on("init")
     @observes("logs.[]")
-    _updateFormattedLogs: debounce(function() {
+    _updateFormattedLogs: discourseDebounce(function() {
       const logs = this.logs;
       if (logs.length === 0) return;
 

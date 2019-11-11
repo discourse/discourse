@@ -1,6 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import InputValidation from "discourse/models/input-validation";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { setting } from "discourse/lib/computed";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
@@ -12,7 +12,7 @@ export default Mixin.create({
 
   minUsernameLength: setting("min_username_length"),
 
-  fetchExistingUsername: debounce(function() {
+  fetchExistingUsername: discourseDebounce(function() {
     Discourse.User.checkUsername(null, this.accountEmail).then(result => {
       if (
         result.suggestion &&
@@ -74,7 +74,7 @@ export default Mixin.create({
     );
   },
 
-  checkUsernameAvailability: debounce(function() {
+  checkUsernameAvailability: discourseDebounce(function() {
     if (this.shouldCheckUsernameAvailability()) {
       return Discourse.User.checkUsername(
         this.accountUsername,

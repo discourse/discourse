@@ -7,7 +7,7 @@ import {
 } from "discourse-common/utils/decorators";
 import Group from "discourse/models/group";
 import InputValidation from "discourse/models/input-validation";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 
 export default Component.extend({
   disableSave: null,
@@ -64,7 +64,7 @@ export default Component.extend({
     );
   },
 
-  checkGroupName: debounce(function() {
+  checkGroupName: discourseDebounce(function() {
     name = this.nameInput;
     if (isEmpty(name)) return;
 

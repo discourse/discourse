@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { outputExportResult } from "discourse/lib/export-result";
 import { exportEntity } from "discourse/lib/export-csv";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
@@ -9,7 +9,7 @@ export default Controller.extend({
   filter: null,
   savedIpAddress: null,
 
-  show: debounce(function() {
+  show: discourseDebounce(function() {
     this.set("loading", true);
     ScreenedIpAddress.findAll(this.filter).then(result => {
       this.setProperties({ model: result, loading: false });

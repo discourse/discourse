@@ -1,4 +1,4 @@
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
@@ -79,7 +79,7 @@ function performSearch(
     });
 }
 
-var debouncedSearch = debounce(performSearch, 300);
+var debouncedSearch = discourseDebounce(performSearch, 300);
 
 function organizeResults(r, options) {
   if (r === CANCELLED_STATUS) {
