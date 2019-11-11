@@ -1,5 +1,5 @@
 import { later } from "@ember/runloop";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import {
   safariHacksDisabled,
   iOSWithVisualViewport
@@ -132,7 +132,7 @@ function positioningWorkaround($fixedElement) {
     positioningWorkaround.blur(evt);
   };
 
-  var blurred = debounce(blurredNow, 250);
+  var blurred = discourseDebounce(blurredNow, 250);
 
   var positioningHack = function(evt) {
     // we need this, otherwise changing focus means we never clear
@@ -217,7 +217,7 @@ function positioningWorkaround($fixedElement) {
     }
   }
 
-  const checkForInputs = debounce(function() {
+  const checkForInputs = discourseDebounce(function() {
     attachTouchStart(fixedElement, lastTouched);
 
     $fixedElement.find("input[type=text],textarea").each(function() {

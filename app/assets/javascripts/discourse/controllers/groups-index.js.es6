@@ -1,6 +1,6 @@
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import {
   default as discourseComputed,
   observes
@@ -28,7 +28,7 @@ export default Controller.extend({
   },
 
   @observes("filterInput")
-  _setFilter: debounce(function() {
+  _setFilter: discourseDebounce(function() {
     this.set("filter", this.filterInput);
   }, 500),
 

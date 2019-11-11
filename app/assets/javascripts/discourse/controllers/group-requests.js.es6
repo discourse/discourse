@@ -7,7 +7,7 @@ import {
   default as discourseComputed,
   observes
 } from "discourse-common/utils/decorators";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 
 export default Controller.extend({
   queryParams: ["order", "desc", "filter"],
@@ -21,7 +21,7 @@ export default Controller.extend({
   application: inject(),
 
   @observes("filterInput")
-  _setFilter: debounce(function() {
+  _setFilter: discourseDebounce(function() {
     this.set("filter", this.filterInput);
   }, 500),
 

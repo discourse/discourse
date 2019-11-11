@@ -1,5 +1,5 @@
 import { scheduleOnce } from "@ember/runloop";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import Mixin from "@ember/object/mixin";
 
 /**
@@ -43,7 +43,7 @@ const Scrolling = Mixin.create({
     };
 
     if (opts.debounce) {
-      onScrollMethod = debounce(onScrollMethod, opts.debounce);
+      onScrollMethod = discourseDebounce(onScrollMethod, opts.debounce);
     }
 
     ScrollingDOMMethods.bindOnScroll(onScrollMethod, opts.name);

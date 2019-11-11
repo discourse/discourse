@@ -1,7 +1,7 @@
 import { equal, reads, gte } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import Invite from "discourse/models/invite";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   default as discourseComputed,
@@ -27,7 +27,7 @@ export default Controller.extend({
   },
 
   @observes("searchTerm")
-  _searchTermChanged: debounce(function() {
+  _searchTermChanged: discourseDebounce(function() {
     Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
       invites => this.set("model", invites)
     );

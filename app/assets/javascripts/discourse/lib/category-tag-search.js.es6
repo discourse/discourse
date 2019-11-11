@@ -1,4 +1,4 @@
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import Category from "discourse/models/category";
 import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
@@ -21,7 +21,7 @@ function searchTags(term, categories, limit) {
       resolve(CANCELLED_STATUS);
     }, 5000);
 
-    const debouncedSearch = debounce((q, cats, resultFunc) => {
+    const debouncedSearch = discourseDebounce((q, cats, resultFunc) => {
       oldSearch = $.ajax(Discourse.getURL("/tags/filter/search"), {
         type: "GET",
         cache: true,

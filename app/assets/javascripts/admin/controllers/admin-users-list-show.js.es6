@@ -1,6 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse/lib/computed";
 import AdminUser from "admin/models/admin-user";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
@@ -29,7 +29,7 @@ export default Controller.extend(CanCheckEmails, {
     return I18n.t("admin.users.titles." + query);
   },
 
-  _filterUsers: debounce(function() {
+  _filterUsers: discourseDebounce(function() {
     this.resetFilters();
   }, 250).observes("listFilter"),
 
