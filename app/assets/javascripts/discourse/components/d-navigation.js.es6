@@ -31,7 +31,7 @@ export default Component.extend({
   navItems(filterMode, category, noSubcategories) {
     // we don't want to show the period in the navigation bar since it's in a dropdown
     if (filterMode.indexOf("top/") === 0) {
-      filterMode = filterMode.replace("top/", "");
+      filterMode = "top";
     }
 
     let params;
