@@ -1,25 +1,19 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { toTitleCase } from "discourse/lib/formatter";
 import { emojiUnescape } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 
 const NavItem = EmberObject.extend({
-  @discourseComputed("categoryName", "name")
-  title(categoryName, name) {
+  @discourseComputed("name")
+  title(name) {
     const extra = {};
-
-    if (categoryName) {
-      name = "category";
-      extra.categoryName = categoryName;
-    }
 
     return I18n.t("filters." + name.replace("/", ".") + ".help", extra);
   },
 
-  @discourseComputed("categoryName", "name", "count")
-  displayName(categoryName, name, count) {
+  @discourseComputed("name", "count")
+  displayName(name, count) {
     count = count || 0;
 
     if (
@@ -32,33 +26,9 @@ const NavItem = EmberObject.extend({
     let extra = { count: count };
     const titleKey = count === 0 ? ".title" : ".title_with_count";
 
-    if (categoryName) {
-      name = "category";
-      extra.categoryName = toTitleCase(categoryName);
-    }
-
     return emojiUnescape(
       I18n.t(`filters.${name.replace("/", ".") + titleKey}`, extra)
     );
-  },
-
-  @discourseComputed("name")
-  categoryName(name) {
-    const split = name.split("/");
-    return split[0] === "category" ? split[1] : null;
-  },
-
-  @discourseComputed("name")
-  categorySlug(name) {
-    const split = name.split("/");
-    if (split[0] === "category" && split[1]) {
-      const cat = Discourse.Site.current().categories.findBy(
-        "nameLower",
-        split[1].toLowerCase()
-      );
-      return cat ? Category.slugFor(cat) : null;
-    }
-    return null;
   },
 
   @discourseComputed("filterMode")
@@ -79,22 +49,18 @@ const NavItem = EmberObject.extend({
     return Discourse.getURL("/") + filterMode;
   },
 
-  @discourseComputed("name", "category", "categorySlug", "noSubcategories")
-  filterMode(name, category, categorySlug, noSubcategories) {
-    if (name.split("/")[0] === "category") {
-      return "c/" + categorySlug;
-    } else {
-      let mode = "";
-      if (category) {
-        mode += "c/";
-        mode += Category.slugFor(category);
-        if (noSubcategories) {
-          mode += "/none";
-        }
-        mode += "/l/";
+  @discourseComputed("name", "category", "noSubcategories")
+  filterMode(name, category, noSubcategories) {
+    let mode = "";
+    if (category) {
+      mode += "c/";
+      mode += Category.slugFor(category);
+      if (noSubcategories) {
+        mode += "/none";
       }
-      return mode + name.replace(" ", "-");
+      mode += "/l/";
     }
+    return mode + name.replace(" ", "-");
   },
 
   @discourseComputed("name", "category", "topicTrackingState.messageCount")
