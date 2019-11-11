@@ -20,6 +20,7 @@ import {
 } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
+import { Promise } from "rsvp";
 
 export function loadTopicView(topic, args) {
   const data = _.merge({}, args);
