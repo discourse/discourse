@@ -337,6 +337,15 @@ describe "category tag restrictions" do
         # model tags depend on which make is chosen:
         expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['honda']))).to eq(['accord', 'civic', 'ford'])
         expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['ford']))).to eq(['honda', 'mustang', 'taurus'])
+
+        makes.update!(one_per_topic: true)
+        expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['honda']))).to eq(['accord', 'civic'])
+        expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['ford']))).to eq(['mustang', 'taurus'])
+
+        honda_group.update!(one_per_topic: true)
+        ford_group.update!(one_per_topic: true)
+        expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['honda']))).to eq(['accord', 'civic'])
+        expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['ford']))).to eq(['mustang', 'taurus'])
       end
 
       it "can apply the tags to a topic" do

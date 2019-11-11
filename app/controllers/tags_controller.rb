@@ -209,6 +209,8 @@ class TagsController < ::ApplicationController
       filter_params[:order] = Tag.sanitize_sql_for_order(
         ["lower(name) = lower(?) DESC, topic_count DESC", clean_name]
       )
+    else
+      filter_params[:order] = "topic_count DESC"
     end
 
     tags_with_counts = DiscourseTagging.filter_allowed_tags(
