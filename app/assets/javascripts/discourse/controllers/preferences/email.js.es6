@@ -2,7 +2,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { empty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { propertyEqual } from "discourse/lib/computed";
-import InputValidation from "discourse/models/input-validation";
+import EmberObject from "@ember/object";
 import { emailValid } from "discourse/lib/utilities";
 
 export default Controller.extend({
@@ -43,7 +43,7 @@ export default Controller.extend({
   @discourseComputed("invalidEmail")
   emailValidation(invalidEmail) {
     if (invalidEmail) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("user.email.invalid")
       });

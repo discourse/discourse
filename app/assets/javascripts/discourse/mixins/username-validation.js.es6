@@ -1,9 +1,9 @@
 import { isEmpty } from "@ember/utils";
-import InputValidation from "discourse/models/input-validation";
 import discourseDebounce from "discourse/lib/debounce";
 import { setting } from "discourse/lib/computed";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
+import EmberObject from "@ember/object";
 
 export default Mixin.create({
   uniqueUsernameValidation: null,
@@ -32,7 +32,7 @@ export default Mixin.create({
     this.set("uniqueUsernameValidation", null);
 
     if (accountUsername && accountUsername === this.prefilledUsername) {
-      return InputValidation.create({
+      return EmberObject.create({
         ok: true,
         reason: I18n.t("user.username.prefilled")
       });
@@ -40,12 +40,12 @@ export default Mixin.create({
 
     // If blank, fail without a reason
     if (isEmpty(accountUsername)) {
-      return InputValidation.create({ failed: true });
+      return EmberObject.create({ failed: true });
     }
 
     // If too short
     if (accountUsername.length < this.siteSettings.min_username_length) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("user.username.too_short")
       });
@@ -53,7 +53,7 @@ export default Mixin.create({
 
     // If too long
     if (accountUsername.length > this.maxUsernameLength) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("user.username.too_long")
       });
@@ -61,7 +61,7 @@ export default Mixin.create({
 
     this.checkUsernameAvailability();
     // Let's check it out asynchronously
-    return InputValidation.create({
+    return EmberObject.create({
       failed: true,
       reason: I18n.t("user.username.checking")
     });
@@ -87,7 +87,7 @@ export default Mixin.create({
           }
           return this.set(
             "uniqueUsernameValidation",
-            InputValidation.create({
+            EmberObject.create({
               ok: true,
               reason: I18n.t("user.username.available")
             })
@@ -96,7 +96,7 @@ export default Mixin.create({
           if (result.suggestion) {
             return this.set(
               "uniqueUsernameValidation",
-              InputValidation.create({
+              EmberObject.create({
                 failed: true,
                 reason: I18n.t("user.username.not_available", result)
               })
@@ -104,7 +104,7 @@ export default Mixin.create({
           } else {
             return this.set(
               "uniqueUsernameValidation",
-              InputValidation.create({
+              EmberObject.create({
                 failed: true,
                 reason: result.errors
                   ? result.errors.join(" ")

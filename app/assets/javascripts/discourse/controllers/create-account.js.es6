@@ -10,13 +10,13 @@ import {
   on
 } from "discourse-common/utils/decorators";
 import { emailValid } from "discourse/lib/utilities";
-import InputValidation from "discourse/models/input-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
 import NameValidation from "discourse/mixins/name-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { userPath } from "discourse/lib/url";
 import { findAll } from "discourse/models/login-method";
+import EmberObject from "@ember/object";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -110,13 +110,13 @@ export default Controller.extend(
     emailValidation(email, rejectedEmails) {
       // If blank, fail without a reason
       if (isEmpty(email)) {
-        return InputValidation.create({
+        return EmberObject.create({
           failed: true
         });
       }
 
       if (rejectedEmails.includes(email)) {
-        return InputValidation.create({
+        return EmberObject.create({
           failed: true,
           reason: I18n.t("user.email.invalid")
         });
@@ -126,7 +126,7 @@ export default Controller.extend(
         this.get("authOptions.email") === email &&
         this.get("authOptions.email_valid")
       ) {
-        return InputValidation.create({
+        return EmberObject.create({
           ok: true,
           reason: I18n.t("user.email.authenticated", {
             provider: this.authProviderDisplayName(
@@ -137,13 +137,13 @@ export default Controller.extend(
       }
 
       if (emailValid(email)) {
-        return InputValidation.create({
+        return EmberObject.create({
           ok: true,
           reason: I18n.t("user.email.ok")
         });
       }
 
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("user.email.invalid")
       });

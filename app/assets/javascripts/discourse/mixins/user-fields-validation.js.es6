@@ -1,6 +1,5 @@
 import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
-import InputValidation from "discourse/models/input-validation";
 import {
   on,
   default as discourseComputed
@@ -36,9 +35,9 @@ export default Mixin.create({
         return !val || isEmpty(val);
       });
       if (anyEmpty) {
-        return InputValidation.create({ failed: true });
+        return EmberObject.create({ failed: true });
       }
     }
-    return InputValidation.create({ ok: true });
+    return EmberObject.create({ ok: true });
   }
 });

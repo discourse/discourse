@@ -6,8 +6,8 @@ import {
   observes
 } from "discourse-common/utils/decorators";
 import Group from "discourse/models/group";
-import InputValidation from "discourse/models/input-validation";
 import discourseDebounce from "discourse/lib/debounce";
+import EmberObject from "@ember/object";
 
 export default Component.extend({
   disableSave: null,
@@ -74,7 +74,7 @@ export default Component.extend({
       if (response.available) {
         this.set(
           validationName,
-          InputValidation.create({
+          EmberObject.create({
             ok: true,
             reason: I18n.t("admin.groups.new.name.available")
           })
@@ -101,6 +101,6 @@ export default Component.extend({
 
     const options = { failed: true };
     if (reason) options.reason = reason;
-    this.set("basicNameValidation", InputValidation.create(options));
+    this.set("basicNameValidation", EmberObject.create(options));
   }
 });

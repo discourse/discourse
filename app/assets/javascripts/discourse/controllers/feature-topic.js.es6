@@ -4,7 +4,7 @@ import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
-import InputValidation from "discourse/models/input-validation";
+import EmberObject from "@ember/object";
 
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),
@@ -79,7 +79,7 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("pinDisabled")
   pinInCategoryValidation(pinDisabled) {
     if (pinDisabled) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("topic.feature_topic.pin_validation")
       });
@@ -89,7 +89,7 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("pinGloballyDisabled")
   pinGloballyValidation(pinGloballyDisabled) {
     if (pinGloballyDisabled) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("topic.feature_topic.pin_validation")
       });

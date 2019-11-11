@@ -47,7 +47,6 @@
 //= require ./discourse/models/badge
 //= require ./discourse/models/permission-type
 //= require ./discourse/models/user-action-group
-//= require ./discourse/models/input-validation
 //= require ./discourse/models/trust-level
 //= require ./discourse/lib/search
 //= require ./discourse/lib/user-search

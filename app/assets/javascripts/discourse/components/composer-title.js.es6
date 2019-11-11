@@ -7,12 +7,12 @@ import {
   default as discourseComputed,
   observes
 } from "discourse-common/utils/decorators";
-import InputValidation from "discourse/models/input-validation";
 import { load } from "pretty-text/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
 import { ajax } from "discourse/lib/ajax";
 import afterTransition from "discourse/lib/after-transition";
 import ENV from "discourse-common/config/environment";
+import EmberObject from "@ember/object";
 
 export default Component.extend({
   classNames: ["title-input"],
@@ -60,7 +60,7 @@ export default Component.extend({
     }
 
     if (reason) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason,
         lastShownAt: lastValidatedAt

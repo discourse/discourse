@@ -19,7 +19,6 @@ import {
   observes,
   on
 } from "discourse-common/utils/decorators";
-import InputValidation from "discourse/models/input-validation";
 import { getOwner } from "discourse-common/lib/get-owner";
 import {
   escapeExpression,
@@ -32,6 +31,7 @@ import { shortDate } from "discourse/lib/formatter";
 import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
 import ENV from "discourse-common/config/environment";
+import EmberObject from "@ember/object";
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -1063,7 +1063,7 @@ export default Controller.extend({
   @discourseComputed("model.categoryId", "lastValidatedAt")
   categoryValidation(categoryId, lastValidatedAt) {
     if (!this.siteSettings.allow_uncategorized_topics && !categoryId) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("composer.error.category_missing"),
         lastShownAt: lastValidatedAt
@@ -1079,7 +1079,7 @@ export default Controller.extend({
       category &&
       category.minimum_required_tags > tagsArray.length
     ) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("composer.error.tags_missing", {
           count: category.minimum_required_tags
