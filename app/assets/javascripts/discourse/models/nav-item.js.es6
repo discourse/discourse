@@ -122,6 +122,9 @@ NavItem.reopenClass({
     if (opts.category) {
       args.category = opts.category;
     }
+    if (opts.tagId) {
+      args.tagId = opts.tagId;
+    }
     if (opts.persistedQueryParams) {
       args.persistedQueryParams = opts.persistedQueryParams;
     }
