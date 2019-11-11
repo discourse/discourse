@@ -135,6 +135,7 @@ class Topic < ActiveRecord::Base
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
+  attr_accessor :category_user_data
 
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :participants

@@ -217,6 +217,16 @@ class CategoryUser < ActiveRecord::Base
     Hash[*notification_levels.flatten]
   end
 
+  def self.lookup_for(user, category_ids)
+    return {} if user.blank? || category_ids.blank?
+    create_lookup(CategoryUser.where(category_id: category_ids, user_id: user.id))
+  end
+
+  def self.create_lookup(category_users)
+    category_users.each_with_object({}) do |category_user, acc|
+      acc[category_user.category_id] = category_user
+    end
+  end
 end
 
 # == Schema Information
