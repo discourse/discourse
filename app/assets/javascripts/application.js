@@ -26,7 +26,6 @@
 //= require ./discourse/lib/lock-on
 //= require ./discourse/lib/url
 //= require ./discourse/lib/debounce
-//= require ./discourse/lib/throttle
 //= require ./discourse/lib/quote
 //= require ./discourse/lib/key-value-store
 //= require ./discourse/lib/computed
