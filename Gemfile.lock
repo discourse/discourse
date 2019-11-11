@@ -188,7 +188,7 @@ GEM
     method_source (0.9.2)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    mini_racer (0.2.6)
+    mini_racer (0.2.8)
       libv8 (>= 6.9.411)
     mini_scheduler (0.12.2)
       sidekiq
@@ -548,4 +548,4 @@ DEPENDENCIES
   yaml-lint
 
 BUNDLED WITH
-   1.17.3
+   2.1.0.pre.2
