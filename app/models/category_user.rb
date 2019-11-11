@@ -207,9 +207,9 @@ class CategoryUser < ActiveRecord::Base
         SiteSetting.default_categories_watching.split("|"),
         SiteSetting.default_categories_tracking.split("|"),
         SiteSetting.default_categories_watching_first_post.split("|"),
-      ].flatten.map { |id| [id.to_i, 1] }
+      ].flatten.map { |id| [id.to_i, notification_levels[:regular]] }
 
-      notification_levels += SiteSetting.default_categories_muted.split("|").map { |id| [id.to_i, 0] }
+      notification_levels += SiteSetting.default_categories_muted.split("|").map { |id| [id.to_i, notification_levels[:muted]] }
     else
       notification_levels = CategoryUser.where(user: guardian.user).pluck(:category_id, :notification_level)
     end
