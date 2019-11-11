@@ -559,7 +559,7 @@ class PostAlerter
     end
   end
 
-  def notify_post_users(post, notified)
+  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true)
     return unless post.topic
 
     warn_if_not_sidekiq
@@ -570,8 +570,14 @@ class PostAlerter
           FROM topic_users
          WHERE notification_level = :watching
            AND topic_id = :topic_id
+         /*category*/
+         /*tags*/
+      )
+    SQL
 
-         UNION
+    if include_category_watchers
+      condition.sub! "/*category*/", <<~SQL
+        UNION
 
         SELECT cu.user_id
           FROM category_users cu
@@ -580,14 +586,12 @@ class PostAlerter
          WHERE cu.notification_level = :watching
            AND cu.category_id = :category_id
            AND tu.user_id IS NULL
-
-        /*tags*/
-      )
-    SQL
+      SQL
+    end
 
     tag_ids = post.topic.topic_tags.pluck('topic_tags.tag_id')
 
-    if tag_ids.present?
+    if include_tag_watchers && tag_ids.present?
       condition.sub! "/*tags*/", <<~SQL
         UNION
 
