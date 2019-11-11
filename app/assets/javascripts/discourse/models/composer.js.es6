@@ -16,7 +16,7 @@ import {
 } from "discourse-common/utils/decorators";
 import { escapeExpression, tinyAvatar } from "discourse/lib/utilities";
 import { propertyNotEqual } from "discourse/lib/computed";
-import throttle from "discourse/lib/throttle";
+import { throttle } from "@ember/runloop";
 import { Promise } from "rsvp";
 import { set } from "@ember/object";
 
@@ -226,15 +226,18 @@ const Composer = RestModel.extend({
     return this.set("metaData", EmberObject.create());
   },
 
-  // view detected user is typing
-  typing: throttle(
-    function() {
-      const typingTime = this.typingTime || 0;
-      this.set("typingTime", typingTime + 100);
-    },
-    100,
-    false
-  ),
+  // called whenever the user types to update the typing time
+  typing() {
+    throttle(
+      this,
+      function() {
+        const typingTime = this.typingTime || 0;
+        this.set("typingTime", typingTime + 100);
+      },
+      100,
+      false
+    );
+  },
 
   editingFirstPost: and("editingPost", "post.firstPost"),
 
