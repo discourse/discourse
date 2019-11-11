@@ -8,20 +8,9 @@ import {
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import {
   default as NavItem,
-  extraNavItemProperties,
   customNavItemHref
 } from "discourse/models/nav-item";
 import Category from "discourse/models/category";
-
-if (extraNavItemProperties) {
-  extraNavItemProperties(function(text, opts) {
-    if (opts && opts.tagId) {
-      return { tagId: opts.tagId };
-    } else {
-      return {};
-    }
-  });
-}
 
 if (customNavItemHref) {
   customNavItemHref(function(navItem) {
