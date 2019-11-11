@@ -2,6 +2,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
+import { Promise } from "rsvp";
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {
