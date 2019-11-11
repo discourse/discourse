@@ -220,17 +220,17 @@ describe Email::AuthenticationResults do
 
     context "with a single authentication-results header" do
       context "with a valid fail" do
-        let(:headers) { "valid.com; dmarc=fail"}
+        let(:headers) { "valid.com; dmarc=fail" }
         include_examples "is verdict", :fail
       end
 
       context "with a valid pass" do
-        let(:headers) { "valid.com; dmarc=pass"}
+        let(:headers) { "valid.com; dmarc=pass" }
         include_examples "is verdict", :pass
       end
 
       context "with a valid error" do
-        let(:headers) { "valid.com; dmarc=error"}
+        let(:headers) { "valid.com; dmarc=error" }
         include_examples "is verdict", :gray
       end
 
