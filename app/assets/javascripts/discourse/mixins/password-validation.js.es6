@@ -1,7 +1,7 @@
 import { isEmpty } from "@ember/utils";
-import InputValidation from "discourse/models/input-validation";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
+import EmberObject from "@ember/object";
 
 export default Mixin.create({
   rejectedPasswords: null,
@@ -43,11 +43,11 @@ export default Mixin.create({
     passwordMinLength
   ) {
     if (!passwordRequired) {
-      return InputValidation.create({ ok: true });
+      return EmberObject.create({ ok: true });
     }
 
     if (rejectedPasswords.includes(password)) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason:
           this.rejectedPasswordsMessages.get(password) ||
@@ -57,33 +57,33 @@ export default Mixin.create({
 
     // If blank, fail without a reason
     if (isEmpty(password)) {
-      return InputValidation.create({ failed: true });
+      return EmberObject.create({ failed: true });
     }
 
     // If too short
     if (password.length < passwordMinLength) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("user.password.too_short")
       });
     }
 
     if (!isEmpty(accountUsername) && password === accountUsername) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("user.password.same_as_username")
       });
     }
 
     if (!isEmpty(accountEmail) && password === accountEmail) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("user.password.same_as_email")
       });
     }
 
     // Looks good!
-    return InputValidation.create({
+    return EmberObject.create({
       ok: true,
       reason: I18n.t("user.password.ok")
     });

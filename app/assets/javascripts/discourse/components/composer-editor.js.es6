@@ -26,7 +26,7 @@ import Composer from "discourse/models/composer";
 import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
 import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
 import { ajax } from "discourse/lib/ajax";
-import InputValidation from "discourse/models/input-validation";
+import EmberObject from "@ember/object";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import {
@@ -246,7 +246,7 @@ export default Component.extend({
     }
 
     if (reason) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason,
         lastShownAt: lastValidatedAt

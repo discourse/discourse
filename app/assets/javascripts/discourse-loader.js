@@ -220,6 +220,15 @@ var define, requirejs;
 
   function requireFrom(name, origin) {
     name = transformForAliases(name);
+
+    if (name === "discourse/models/input-validation") {
+      // eslint-disable-next-line no-console
+      console.log(
+        "input-validation has been removed and should be replaced with `@ember/object`"
+      );
+      return Ember.Object;
+    }
+
     var mod = EMBER_MODULES[name] || registry[name];
     if (!mod) {
       throw new Error(

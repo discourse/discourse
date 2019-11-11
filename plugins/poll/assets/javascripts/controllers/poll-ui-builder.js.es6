@@ -3,7 +3,7 @@ import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
-import InputValidation from "discourse/models/input-validation";
+import EmberObject from "@ember/object";
 
 export default Controller.extend({
   regularPollType: "regular",
@@ -260,7 +260,7 @@ export default Controller.extend({
       };
     }
 
-    return InputValidation.create(options);
+    return EmberObject.create(options);
   },
 
   @computed("pollStep")
@@ -274,7 +274,7 @@ export default Controller.extend({
       };
     }
 
-    return InputValidation.create(options);
+    return EmberObject.create(options);
   },
 
   @computed("disableInsert")
@@ -288,7 +288,7 @@ export default Controller.extend({
       };
     }
 
-    return InputValidation.create(options);
+    return EmberObject.create(options);
   },
 
   _comboboxOptions(start_index, end_index) {

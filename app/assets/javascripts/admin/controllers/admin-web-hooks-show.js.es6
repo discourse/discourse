@@ -5,7 +5,7 @@ import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { extractDomainFromUrl } from "discourse/lib/utilities";
-import InputValidation from "discourse/models/input-validation";
+import EmberObject from "@ember/object";
 
 export default Controller.extend({
   adminWebHooks: inject(),
@@ -41,14 +41,14 @@ export default Controller.extend({
   secretValidation(secret) {
     if (!isEmpty(secret)) {
       if (secret.indexOf(" ") !== -1) {
-        return InputValidation.create({
+        return EmberObject.create({
           failed: true,
           reason: I18n.t("admin.web_hooks.secret_invalid")
         });
       }
 
       if (secret.length < 12) {
-        return InputValidation.create({
+        return EmberObject.create({
           failed: true,
           reason: I18n.t("admin.web_hooks.secret_too_short")
         });
@@ -59,7 +59,7 @@ export default Controller.extend({
   @discourseComputed("model.wildcard_web_hook", "model.web_hook_event_types.[]")
   eventTypeValidation(isWildcard, eventTypes) {
     if (!isWildcard && isEmpty(eventTypes)) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("admin.web_hooks.event_type_missing")
       });
