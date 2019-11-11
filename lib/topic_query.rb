@@ -876,7 +876,9 @@ class TopicQuery
           .references("cu")
           .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id")
           .where("category_users.user_id IS NULL OR category_users.user_id = :user_id", user_id: user.id)
-          .where("topics.category_id = :category_id OR COALESCE(category_users.notification_level, :muted) <> :muted OR tu.notification_level > :regular",
+          .where("topics.category_id = :category_id
+                 OR COALESCE(category_users.notification_level, :muted) <> :muted
+                 OR tu.notification_level > :regular",
                  muted: CategoryUser.notification_levels[:muted],
                  regular: TopicUser.notification_levels[:regular],
                  category_id: category_id || -1)
@@ -895,7 +897,9 @@ class TopicQuery
         .references("cu")
         .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id")
         .where("category_users.user_id IS NULL OR category_users.user_id = :user_id", user_id: user.id)
-        .where("category_users.notification_level IS NULL OR category_users.notification_level <> :muted OR category_users.category_id = :category_id OR tu.notification_level >= :tracking",
+        .where("category_users.notification_level IS NULL
+               OR category_users.notification_level <> :muted
+               OR category_users.category_id = :category_id OR tu.notification_level >= :tracking",
                muted: CategoryUser.notification_levels[:muted],
                tracking: TopicUser.notification_levels[:tracking],
                category_id: category_id || -1)
