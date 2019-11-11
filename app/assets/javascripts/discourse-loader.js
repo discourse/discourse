@@ -226,7 +226,7 @@ var define, requirejs;
       console.log(
         "input-validation has been removed and should be replaced with `@ember/object`"
       );
-      return Ember.Object;
+      name = "@ember/object";
     }
 
     var mod = EMBER_MODULES[name] || registry[name];
