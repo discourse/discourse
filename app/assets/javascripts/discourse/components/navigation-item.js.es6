@@ -20,10 +20,7 @@ export default Component.extend(
       if (active !== undefined) {
         return active;
       }
-      return (
-        contentFilterMode === filterMode ||
-        filterMode.indexOf(contentFilterMode) === 0
-      );
+      return contentFilterMode === filterMode;
     },
 
     buildBuffer(buffer) {

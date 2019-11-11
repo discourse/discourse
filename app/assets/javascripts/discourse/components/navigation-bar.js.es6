@@ -25,7 +25,7 @@ export default Component.extend({
     let item = navItems.find(i => i.active === true);
 
     item =
-      item || navItems.find(i => i.get("filterMode").indexOf(filterMode) === 0);
+      item || navItems.find(i => i.get("filterMode") === filterMode);
 
     if (!item) {
       let connectors = this.connectors;

@@ -31,8 +31,8 @@ const NavItem = EmberObject.extend({
     );
   },
 
-  @discourseComputed("filterMode")
-  href(filterMode) {
+  @discourseComputed("filterMode", "category", "noSubcategories")
+  href(filterMode, category, noSubcategories) {
     let customHref = null;
 
     NavItem.customNavItemHrefs.forEach(function(cb) {
@@ -46,21 +46,25 @@ const NavItem = EmberObject.extend({
       return customHref;
     }
 
-    return Discourse.getURL("/") + filterMode;
+    let url = Discourse.getURL("/");
+
+    if (category) {
+      url += "c/";
+      url += Category.slugFor(category);
+      if (noSubcategories) {
+        url += "/none";
+      }
+      url += "/l/";
+    }
+
+    url += this.filterMode;
+
+    return url;
   },
 
-  @discourseComputed("name", "category", "noSubcategories")
-  filterMode(name, category, noSubcategories) {
-    let mode = "";
-    if (category) {
-      mode += "c/";
-      mode += Category.slugFor(category);
-      if (noSubcategories) {
-        mode += "/none";
-      }
-      mode += "/l/";
-    }
-    return mode + name.replace(" ", "-");
+  @discourseComputed("name")
+  filterMode(name) {
+    return name.replace(" ", "-");
   },
 
   @discourseComputed("name", "category", "topicTrackingState.messageCount")
@@ -151,7 +155,7 @@ NavItem.reopenClass({
 
     if (
       args.filterMode &&
-      !items.some(i => i.indexOf(args.filterMode) !== -1)
+      !items.some(i => args.filterMode === i)
     ) {
       items.push(args.filterMode);
     }

@@ -23,7 +23,6 @@ export default DiscourseRoute.extend({
     const tag = this.store.createRecord("tag", {
       id: Handlebars.Utils.escapeExpression(params.tag_id)
     });
-    let f = "";
 
     if (params.additional_tags) {
       this.set(
@@ -38,15 +37,7 @@ export default DiscourseRoute.extend({
       this.set("additionalTags", null);
     }
 
-    if (params.category) {
-      f = "c/";
-      if (params.parent_category) {
-        f += `${params.parent_category}/`;
-      }
-      f += `${params.category}/l/`;
-    }
-    f += this.navMode;
-    this.set("filterMode", f);
+    this.set("filterMode", this.navMode);
 
     if (params.category) {
       this.set("categorySlug", params.category);
