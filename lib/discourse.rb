@@ -160,11 +160,11 @@ module Discourse
   end
 
   def self.top_menu_items
-    @top_menu_items ||= Discourse.filters + [:category, :categories, :top]
+    @top_menu_items ||= Discourse.filters + [:categories, :top]
   end
 
   def self.anonymous_top_menu_items
-    @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:category, :categories, :top]
+    @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:categories, :top]
   end
 
   PIXEL_RATIOS ||= [1, 1.5, 2, 3]

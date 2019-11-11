@@ -16,7 +16,7 @@ QUnit.module("NavItem", {
 });
 
 QUnit.test("href", assert => {
-  assert.expect(4);
+  assert.expect(2);
 
   function href(text, expected, label) {
     assert.equal(NavItem.fromText(text, {}).get("href"), expected, label);
@@ -24,8 +24,6 @@ QUnit.test("href", assert => {
 
   href("latest", "/latest", "latest");
   href("categories", "/categories", "categories");
-  href("category/bug", "/c/bug", "English category name");
-  href("category/确实是这样", "/c/343434-category", "Chinese category name");
 });
 
 QUnit.test("count", assert => {
