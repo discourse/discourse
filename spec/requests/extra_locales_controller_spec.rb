@@ -23,6 +23,14 @@ describe ExtraLocalesController do
       expect(response.status).to eq(403)
     end
 
+    it "requires a valid version" do
+      get "/extra-locales/overrides", params: { v: 'a' }
+      expect(response.status).to eq(400)
+
+      get "/extra-locales/overrides?v[foo]=1"
+      expect(response.status).to eq(400)
+    end
+
     context "logged in as a moderator" do
 
       let(:moderator) { Fabricate(:moderator) }
