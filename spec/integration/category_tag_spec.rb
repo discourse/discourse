@@ -326,7 +326,7 @@ describe "category tag restrictions" do
         car_category.allowed_tag_groups = [makes.name, honda_group.name, ford_group.name]
       end
 
-      it "handles all those rules" do
+      it "handles all those rules", :focus do
         # car tags can't be used outside of car category:
         expect_same_tag_names(filter_allowed_tags(for_input: true), [tag1, tag2, tag3, tag4])
         expect_same_tag_names(filter_allowed_tags(for_input: true, category: other_category), [tag1, tag2, tag3, tag4])
@@ -346,6 +346,17 @@ describe "category tag restrictions" do
         ford_group.update!(one_per_topic: true)
         expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['honda']))).to eq(['accord', 'civic'])
         expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['ford']))).to eq(['mustang', 'taurus'])
+
+        car_category.update!(allow_global_tags: true)
+        expect_same_tag_names(filter_allowed_tags(for_input: true, category: car_category),
+          ['ford', 'honda', tag1, tag2, tag3, tag4]
+        )
+        expect_same_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['ford']),
+          ['mustang', 'taurus', tag1, tag2, tag3, tag4]
+        )
+        expect_same_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['ford', 'mustang']),
+          [tag1, tag2, tag3, tag4]
+        )
       end
 
       it "can apply the tags to a topic" do

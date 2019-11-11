@@ -148,7 +148,7 @@ module DiscourseTagging
       SELECT t.name as tag_name, t.id as tag_id, tgm.id as tgm_id, tg.id as tag_group_id, tg.parent_tag_id as parent_tag_id,
         tg.one_per_topic as one_per_topic
       FROM tags t
-      LEFT OUTER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id
+      LEFT OUTER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
       LEFT OUTER JOIN tag_groups tg ON tg.id = tgm.tag_group_id
     )
   SQL
@@ -157,13 +157,13 @@ module DiscourseTagging
     category_restrictions AS (
       SELECT t.name as tag_name, t.id as tag_id, ct.id as ct_id, ct.category_id as category_id
       FROM tags t
-      INNER JOIN category_tags ct ON t.id = ct.tag_id
+      INNER JOIN category_tags ct ON t.id = ct.tag_id /*and_name_like*/
 
       UNION
 
       SELECT t.name as tag_name, t.id as tag_id, ctg.id as ctg_id, ctg.category_id as category_id
       FROM tags t
-      INNER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id
+      INNER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
       INNER JOIN category_tag_groups ctg ON tgm.tag_group_id = ctg.tag_group_id
     )
   SQL
@@ -171,7 +171,9 @@ module DiscourseTagging
   PERMITTED_TAGS_SQL ||= <<~SQL
     permitted_tag_groups AS (
       SELECT tg.id as tag_group_id, tgp.group_id as group_id, tgp.permission_type as permission_type
-      FROM tag_groups tg
+      FROM tags t
+      INNER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
+      INNER JOIN tag_groups tg ON tg.id = tgm.tag_group_id
       INNER JOIN tag_group_permissions tgp
       ON tg.id = tgp.tag_group_id
       AND tgp.group_id = #{Group::AUTO_GROUPS[:everyone]}
@@ -267,6 +269,9 @@ module DiscourseTagging
       term.downcase!
       builder.where("LOWER(name) LIKE :term")
       builder_params[:term] = "%#{term}%"
+      sql.gsub!("/*and_name_like*/", "AND LOWER(t.name) LIKE :term")
+    else
+      sql.gsub!("/*and_name_like*/", "")
     end
 
     if opts[:for_input] && filter_for_non_staff && category&.required_tag_group
@@ -287,8 +292,6 @@ module DiscourseTagging
       SQL
     end
 
-    result = builder.query(builder_params).uniq { |t| t.id }
-
     if builder_params[:selected_tag_ids] && (opts[:for_input] || opts[:for_topic])
       one_tag_per_group_ids = DB.query(<<~SQL, builder_params[:selected_tag_ids]).map(&:id)
         SELECT DISTINCT(tg.id)
@@ -298,15 +301,14 @@ module DiscourseTagging
       SQL
 
       if !one_tag_per_group_ids.empty?
-        result.reject do |t|
-          one_tag_per_group_ids.include?(t.tag_group_id) && !selected_tag_ids.include?(t.id)
-        end
-      else
-        result
+        builder.where(
+          "tag_group_id IS NULL OR tag_group_id NOT IN (?) OR id IN (:selected_tag_ids)",
+          one_tag_per_group_ids
+        )
       end
-    else
-      result
     end
+
+    result = builder.query(builder_params).uniq { |t| t.id }
   end
 
   def self.filter_visible(query, guardian = nil)
