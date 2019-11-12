@@ -33,8 +33,7 @@ export function categoryBadgeHTML(category, opts) {
   if (
     !category ||
     (!opts.allowUncategorized &&
-      get(category, "id") ===
-        Site.currentProp("uncategorized_category_id") &&
+      get(category, "id") === Site.currentProp("uncategorized_category_id") &&
       Discourse.SiteSettings.suppress_uncategorized_badge)
   )
     return "";

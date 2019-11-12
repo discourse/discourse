@@ -37,8 +37,7 @@ export default Component.extend({
 
     if (
       category &&
-      get(category, "id") ===
-        Site.currentProp("uncategorized_category_id")
+      get(category, "id") === Site.currentProp("uncategorized_category_id")
     ) {
       category = null;
     }

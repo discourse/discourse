@@ -114,8 +114,7 @@ NavItem.reopenClass({
       return null;
 
     if (!Category.list() && testName === "categories") return null;
-    if (!Site.currentProp("top_menu_items").includes(testName))
-      return null;
+    if (!Site.currentProp("top_menu_items").includes(testName)) return null;
 
     var args = { name: name, hasIcon: name === "unread" },
       extra = null,

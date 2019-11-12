@@ -170,10 +170,7 @@ export default ComboBoxComponent.extend({
 
       if (!this.siteSettings.allow_uncategorized_topics) {
         results = results.filter(result => {
-          return (
-            result.id !==
-            Site.currentProp("uncategorized_category_id")
-          );
+          return result.id !== Site.currentProp("uncategorized_category_id");
         });
       }
 
