@@ -30,7 +30,7 @@ export default function(helpers) {
   const { response, success, parsePostData } = helpers;
 
   this.get("/fruits/:id", function(request) {
-    const fruit = fruits.find(f => f.id === parseInt(request.params.id));
+    const fruit = fruits.find(f => f.id === parseInt(request.params.id, 10));
     return response({ __rest_serializer: "1", fruit, farmers, colors });
   });
 
@@ -58,7 +58,7 @@ export default function(helpers) {
   });
 
   this.get("/widgets/:widget_id", function(request) {
-    const w = _widgets.findBy("id", parseInt(request.params.widget_id));
+    const w = _widgets.findBy("id", parseInt(request.params.widget_id, 10));
     if (w) {
       return response({ widget: w, extras: { hello: "world" } });
     } else {
@@ -91,7 +91,7 @@ export default function(helpers) {
         result = result.filterBy("name", qp.name);
       }
       if (qp.id) {
-        result = result.filterBy("id", parseInt(qp.id));
+        result = result.filterBy("id", parseInt(qp.id, 10));
       }
     }
 

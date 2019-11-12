@@ -67,7 +67,7 @@ KeyValueStore.prototype = {
     if (!safeLocalStorage) {
       return def;
     }
-    const result = parseInt(this.get(key));
+    const result = parseInt(this.get(key), 10);
     if (!isFinite(result)) {
       return def;
     }

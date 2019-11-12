@@ -36,7 +36,7 @@ export default Controller.extend({
 
   @discourseComputed("colorSchemeId", "model.color_scheme_id")
   colorSchemeChanged(colorSchemeId, existingId) {
-    colorSchemeId = colorSchemeId === null ? null : parseInt(colorSchemeId);
+    colorSchemeId = colorSchemeId === null ? null : parseInt(colorSchemeId, 10);
     return colorSchemeId !== existingId;
   },
 
@@ -189,7 +189,7 @@ export default Controller.extend({
       let schemeId = this.colorSchemeId;
       this.set(
         "model.color_scheme_id",
-        schemeId === null ? null : parseInt(schemeId)
+        schemeId === null ? null : parseInt(schemeId, 10)
       );
       this.model.saveChanges("color_scheme_id");
     },
@@ -239,7 +239,7 @@ export default Controller.extend({
     },
 
     addChildTheme() {
-      let themeId = parseInt(this.selectedChildThemeId);
+      let themeId = parseInt(this.selectedChildThemeId, 10);
       let theme = this.allThemes.findBy("id", themeId);
       this.model.addChildTheme(theme);
     },

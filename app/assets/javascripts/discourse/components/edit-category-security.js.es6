@@ -38,7 +38,7 @@ export default buildCategoryPanel("security", {
       if (!this.get("category.is_special")) {
         this.category.addPermission({
           group_name: group + "",
-          permission: PermissionType.create({ id: parseInt(id) })
+          permission: PermissionType.create({ id: parseInt(id, 10) })
         });
       }
 

@@ -65,7 +65,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
   _handlePanDone(offset, event) {
     const $window = $(window);
-    const windowWidth = parseInt($window.width());
+    const windowWidth = $window.width();
     const $menuPanels = $(".menu-panel");
     const menuOrigin = this._panMenuOrigin;
     this._shouldMenuClose(event, menuOrigin)
@@ -246,16 +246,16 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     }
 
     const $window = $(window);
-    const windowWidth = parseInt($window.width());
+    const windowWidth = $window.width();
 
     const headerWidth = $("#main-outlet .container").width() || 1100;
-    const remaining = parseInt((windowWidth - headerWidth) / 2);
+    const remaining = (windowWidth - headerWidth) / 2;
     const viewMode = remaining < 50 ? "slide-in" : "drop-down";
 
     $menuPanels.each((idx, panel) => {
       const $panel = $(panel);
       const $headerCloak = $(".header-cloak");
-      let width = parseInt($panel.attr("data-max-width") || 300);
+      let width = parseInt($panel.attr("data-max-width"), 10) || 300;
       if (windowWidth - width < 50) {
         width = windowWidth - 50;
       }
@@ -281,7 +281,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       const $panelBody = $(".panel-body", $panel);
       // 2 pixel fudge allows for firefox subpixel sizing stuff causing scrollbar
       let contentHeight =
-        parseInt($(".panel-body-contents", $panel).height()) + 2;
+        $(".panel-body-contents", $panel).height() + 2;
 
       // We use a mutationObserver to check for style changes, so it's important
       // we don't set it if it doesn't change. Same goes for the $panelBody!
@@ -300,7 +300,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         }
 
         // adjust panel height
-        const fullHeight = parseInt($window.height());
+        const fullHeight = $window.height();
         const offsetTop = $panel.offset().top;
         const scrollTop = $window.scrollTop();
 
@@ -373,14 +373,12 @@ export function headerHeight() {
 
   const headerOffset = $header.offset();
   const headerOffsetTop = headerOffset ? headerOffset.top : 0;
-  return parseInt(
-    $header.outerHeight() + headerOffsetTop - $(window).scrollTop()
-  );
+  return $header.outerHeight() + headerOffsetTop - $(window).scrollTop();
 }
 
 export function headerTop() {
   const $header = $("header.d-header");
   const headerOffset = $header.offset();
   const headerOffsetTop = headerOffset ? headerOffset.top : 0;
-  return parseInt(headerOffsetTop - $(window).scrollTop());
+  return headerOffsetTop - $(window).scrollTop();
 }
