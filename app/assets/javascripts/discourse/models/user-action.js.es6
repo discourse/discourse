@@ -6,6 +6,7 @@ import UserActionGroup from "discourse/models/user-action-group";
 import { postUrl } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
+import User from "discourse/models/user";
 
 const UserActionTypes = {
   likes_given: 1,
@@ -69,12 +70,12 @@ const UserAction = RestModel.extend({
 
   @discourseComputed("username")
   sameUser(username) {
-    return username === Discourse.User.currentProp("username");
+    return username === User.currentProp("username");
   },
 
   @discourseComputed("target_username")
   targetUser(targetUsername) {
-    return targetUsername === Discourse.User.currentProp("username");
+    return targetUsername === User.currentProp("username");
   },
 
   presentName: or("name", "username"),

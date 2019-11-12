@@ -17,6 +17,7 @@ import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { userPath } from "discourse/lib/url";
 import { findAll } from "discourse/models/login-method";
 import EmberObject from "@ember/object";
+import User from "discourse/models/user";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -244,7 +245,7 @@ export default Controller.extend(
       }
 
       this.set("formSubmitted", true);
-      return Discourse.User.createAccount(attrs).then(
+      return User.createAccount(attrs).then(
         result => {
           this.set("isDeveloper", false);
           if (result.success) {

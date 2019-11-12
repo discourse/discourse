@@ -22,6 +22,7 @@ import Category from "discourse/models/category";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 export function loadTopicView(topic, args) {
   const data = _.merge({}, args);
@@ -234,7 +235,7 @@ const Topic = RestModel.extend({
 
   @discourseComputed("url")
   shareUrl(url) {
-    const user = Discourse.User.current();
+    const user = User.current();
     const userQueryString = user ? `?u=${user.get("username_lower")}` : "";
     return `${url}${userQueryString}`;
   },

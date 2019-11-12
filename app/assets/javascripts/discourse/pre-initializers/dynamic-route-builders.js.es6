@@ -3,6 +3,7 @@ import buildTopicRoute from "discourse/routes/build-topic-route";
 import DiscoverySortableController from "discourse/controllers/discovery-sortable";
 import TagsShowRoute from "discourse/routes/tags-show";
 import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 export default {
   after: "inject-discourse-objects",
@@ -55,8 +56,8 @@ export default {
     Discourse.DiscoveryTopRoute = buildTopicRoute("top", {
       actions: {
         willTransition() {
-          Discourse.User.currentProp("should_be_redirected_to_top", false);
-          Discourse.User.currentProp("redirected_to_top.reason", null);
+          User.currentProp("should_be_redirected_to_top", false);
+          User.currentProp("redirected_to_top.reason", null);
           return this._super(...arguments);
         }
       }

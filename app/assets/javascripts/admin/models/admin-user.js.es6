@@ -7,10 +7,11 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
 import { userPath } from "discourse/lib/url";
 import { Promise } from "rsvp";
+import User from "discourse/models/user";
 
 const wrapAdmin = user => (user ? AdminUser.create(user) : null);
 
-const AdminUser = Discourse.User.extend({
+const AdminUser = User.extend({
   adminUserView: true,
   customGroups: filter("groups", g => !g.automatic && Group.create(g)),
   automaticGroups: filter("groups", g => g.automatic && Group.create(g)),

@@ -1,5 +1,6 @@
 import { h } from "virtual-dom";
 import { renderIcon } from "discourse-common/lib/icon-library";
+import User from "discourse/models/user";
 
 const _decorators = [];
 
@@ -9,7 +10,7 @@ export function addFeaturedLinkMetaDecorator(decorator) {
 
 export function extractLinkMeta(topic) {
   const href = topic.get("featured_link");
-  const target = Discourse.User.currentProp("external_links_in_new_tab")
+  const target = User.currentProp("external_links_in_new_tab")
     ? "_blank"
     : "";
 

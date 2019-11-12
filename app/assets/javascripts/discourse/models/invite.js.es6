@@ -4,6 +4,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { userPath } from "discourse/lib/url";
 import { Promise } from "rsvp";
 import { isNone } from "@ember/utils";
+import User from "discourse/models/user";
 
 const Invite = EmberObject.extend({
   rescind() {
@@ -28,7 +29,7 @@ Invite.reopenClass({
   create() {
     const result = this._super.apply(this, arguments);
     if (result.user) {
-      result.user = Discourse.User.create(result.user);
+      result.user = User.create(result.user);
     }
     return result;
   },

@@ -5,6 +5,7 @@ import showModal from "discourse/lib/show-modal";
 import BackupStatus from "admin/models/backup-status";
 import Backup from "admin/models/backup";
 import PreloadStore from "preload-store";
+import User from "discourse/models/user";
 
 const LOG_CHANNEL = "/admin/backups/logs";
 
@@ -12,7 +13,7 @@ export default DiscourseRoute.extend({
   activate() {
     this.messageBus.subscribe(LOG_CHANNEL, log => {
       if (log.message === "[STARTED]") {
-        Discourse.User.currentProp("hideReadOnlyAlert", true);
+        User.currentProp("hideReadOnlyAlert", true);
         this.controllerFor("adminBackups").set(
           "model.isOperationRunning",
           true
@@ -31,7 +32,7 @@ export default DiscourseRoute.extend({
           })
         );
       } else if (log.message === "[SUCCESS]") {
-        Discourse.User.currentProp("hideReadOnlyAlert", false);
+        User.currentProp("hideReadOnlyAlert", false);
         this.controllerFor("adminBackups").set(
           "model.isOperationRunning",
           false

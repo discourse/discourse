@@ -5,6 +5,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { selectedText } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
 import ENV from "discourse-common/config/environment";
+import User from "discourse/models/user";
 
 export function isValidLink($link) {
   // Do not track:
@@ -64,7 +65,7 @@ export default {
       // Warn the user if they cannot download the file.
       if (
         Discourse.SiteSettings.prevent_anons_from_downloading_files &&
-        !Discourse.User.current()
+        !User.current()
       ) {
         bootbox.alert(I18n.t("post.errors.attachment_download_requires_login"));
       } else if (wantsNewWindow(e)) {
@@ -83,7 +84,7 @@ export default {
     const postId = $article.data("post-id");
     const topicId = $("#topic").data("topic-id") || $article.data("topic-id");
     const userId = $link.data("user-id") || $article.data("user-id");
-    const ownLink = userId && userId === Discourse.User.currentProp("id");
+    const ownLink = userId && userId === User.currentProp("id");
 
     // Update badge clicks unless it's our own.
     if (tracking && !ownLink) {
@@ -119,7 +120,7 @@ export default {
     }
 
     const isInternal = DiscourseURL.isInternal(href);
-    const openExternalInNewTab = Discourse.User.currentProp(
+    const openExternalInNewTab = User.currentProp(
       "external_links_in_new_tab"
     );
 

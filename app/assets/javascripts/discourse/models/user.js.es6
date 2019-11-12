@@ -27,6 +27,7 @@ import { Promise } from "rsvp";
 import { getProperties } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -249,7 +250,7 @@ const User = RestModel.extend({
   },
 
   copy() {
-    return Discourse.User.create(this.getProperties(Object.keys(this)));
+    return User.create(this.getProperties(Object.keys(this)));
   },
 
   save(fields) {
@@ -361,7 +362,7 @@ const User = RestModel.extend({
           "external_links_in_new_tab",
           "dynamic_favicon"
         );
-        Discourse.User.current().setProperties(userProps);
+        User.current().setProperties(userProps);
         this.setProperties(updatedState);
       })
       .finally(() => {
@@ -541,7 +542,7 @@ const User = RestModel.extend({
       return ajax(userPath(`${user.get("username")}.json`), { data: options });
     }).then(json => {
       if (!isEmpty(json.user.stats)) {
-        json.user.stats = Discourse.User.groupStats(
+        json.user.stats = User.groupStats(
           json.user.stats.map(s => {
             if (s.count) s.count = parseInt(s.count, 10);
             return UserActionStat.create(s);
@@ -562,7 +563,7 @@ const User = RestModel.extend({
       }
 
       if (json.user.invited_by) {
-        json.user.invited_by = Discourse.User.create(json.user.invited_by);
+        json.user.invited_by = User.create(json.user.invited_by);
       }
 
       if (!isEmpty(json.user.featured_user_badge_ids)) {
@@ -585,7 +586,7 @@ const User = RestModel.extend({
   },
 
   findStaffInfo() {
-    if (!Discourse.User.currentProp("staff")) {
+    if (!User.currentProp("staff")) {
       return Promise.resolve(null);
     }
     return ajax(userPath(`${this.username_lower}/staff-info.json`)).then(
@@ -681,7 +682,7 @@ const User = RestModel.extend({
       type: "PUT",
       data: { notification_level: level, expiring_at: expiringAt }
     }).then(() => {
-      const currentUser = Discourse.User.current();
+      const currentUser = User.current();
       if (currentUser) {
         if (level === "normal" || level === "mute") {
           currentUser.ignored_users.removeObject(this.username);
@@ -827,7 +828,7 @@ const User = RestModel.extend({
 });
 
 User.reopenClass(Singleton, {
-  // Find a `Discourse.User` for a given username.
+  // Find a `User` for a given username.
   findByUsername(username, options) {
     const user = User.create({ username: username });
     return user.findDetails(options);
@@ -907,7 +908,7 @@ let warned = false;
 Object.defineProperty(Discourse, "User", {
   get() {
     if (!warned) {
-      deprecated("Import the User class instead of using Discourse.User", {
+      deprecated("Import the User class instead of using User", {
         since: "2.4.0",
         dropFrom: "2.6.0"
       });
