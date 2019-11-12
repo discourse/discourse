@@ -47,10 +47,16 @@ export const WidgetDragHook = buildHook(DRAG_ATTRIBUTE_NAME);
 export const WidgetInputHook = buildHook(INPUT_ATTRIBUTE_NAME);
 export const WidgetChangeHook = buildHook(CHANGE_ATTRIBUTE_NAME);
 
-function nodeCallback(node, attrName, cb) {
+function nodeCallback(node, attrName, cb, options = { rerender: true }) {
+  const { rerender } = options;
   const widget = findWidget(node, attrName);
+
   if (widget) {
-    widget.rerenderResult(() => cb(widget));
+    if (rerender) {
+      widget.rerenderResult(() => cb(widget));
+    } else {
+      cb(widget);
+    }
   }
 }
 
@@ -173,11 +179,15 @@ WidgetClickHook.setupDocumentCallback = function() {
   });
 
   $(document).on("input.discourse-widget", e => {
-    nodeCallback(e.target, INPUT_ATTRIBUTE_NAME, w => w.input(e));
+    nodeCallback(e.target, INPUT_ATTRIBUTE_NAME, w => w.input(e), {
+      rerender: false
+    });
   });
 
   $(document).on("change.discourse-widget", e => {
-    nodeCallback(e.target, CHANGE_ATTRIBUTE_NAME, w => w.change(e));
+    nodeCallback(e.target, CHANGE_ATTRIBUTE_NAME, w => w.change(e), {
+      rerender: false
+    });
   });
 
   _watchingDocument = true;
