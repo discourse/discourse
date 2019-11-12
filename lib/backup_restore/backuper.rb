@@ -245,12 +245,11 @@ module BackupRestore
       Discourse::Utils.execute_command('tar', '--create', '--file', tar_filename, '--files-from', '/dev/null')
 
       log "Archiving data dump..."
-      FileUtils.cd(File.dirname(@dump_filename)) do
-        Discourse::Utils.execute_command(
-          'tar', '--append', '--dereference', '--file', tar_filename, File.basename(@dump_filename),
-          failure_message: "Failed to archive data dump."
-        )
-      end
+      Discourse::Utils.execute_command(
+        'tar', '--append', '--dereference', '--file', tar_filename, File.basename(@dump_filename),
+        failure_message: "Failed to archive data dump.",
+        cd: File.dirname(@dump_filename)
+      )
 
       add_local_uploads_to_archive(tar_filename)
       add_remote_uploads_to_archive(tar_filename) if SiteSetting.Upload.enable_s3_uploads
