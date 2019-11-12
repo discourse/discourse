@@ -6,6 +6,7 @@ import { on } from "discourse-common/utils/decorators";
 import PermissionType from "discourse/models/permission-type";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import deprecated from "discourse-common/lib/deprecated";
+import Site from "discourse/models/site";
 
 const Category = RestModel.extend({
   permissions: null,
@@ -214,7 +215,7 @@ const Category = RestModel.extend({
 
   @discourseComputed("id")
   isUncategorizedCategory(id) {
-    return id === Discourse.Site.currentProp("uncategorized_category_id");
+    return id === Site.currentProp("uncategorized_category_id");
   }
 });
 
@@ -226,7 +227,7 @@ Category.reopenClass({
       _uncategorized ||
       Category.list().findBy(
         "id",
-        Discourse.Site.currentProp("uncategorized_category_id")
+        Site.currentProp("uncategorized_category_id")
       );
     return _uncategorized;
   },
@@ -250,15 +251,15 @@ Category.reopenClass({
   },
 
   list() {
-    return Discourse.Site.currentProp("categoriesList");
+    return Site.currentProp("categoriesList");
   },
 
   listByActivity() {
-    return Discourse.Site.currentProp("sortedCategories");
+    return Site.currentProp("sortedCategories");
   },
 
   _idMap() {
-    return Discourse.Site.currentProp("categoriesById");
+    return Site.currentProp("categoriesById");
   },
 
   findSingleBySlug(slug) {
