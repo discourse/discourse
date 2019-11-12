@@ -3,6 +3,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
+import User from "discourse/models/user";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("name")
@@ -102,7 +103,7 @@ NavItem.reopenClass({
     var split = text.split(","),
       name = split[0],
       testName = name.split("/")[0],
-      anonymous = !Discourse.User.current();
+      anonymous = !User.current();
 
     opts = opts || {};
 

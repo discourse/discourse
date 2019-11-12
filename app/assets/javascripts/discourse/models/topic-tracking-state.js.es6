@@ -9,6 +9,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import PreloadStore from "preload-store";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
+import User from "discourse/models/user";
 
 function isNew(topic) {
   return (
@@ -46,7 +47,7 @@ const TopicTrackingState = EmberObject.extend({
       }
 
       if (["new_topic", "latest"].includes(data.message_type)) {
-        const muted_category_ids = Discourse.User.currentProp(
+        const muted_category_ids = User.currentProp(
           "muted_category_ids"
         );
         if (

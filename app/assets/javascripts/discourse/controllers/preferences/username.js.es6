@@ -9,6 +9,7 @@ import { setting, propertyEqual } from "discourse/lib/computed";
 import DiscourseURL from "discourse/lib/url";
 import { userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import User from "discourse/models/user";
 
 export default Controller.extend({
   taken: false,
@@ -41,7 +42,7 @@ export default Controller.extend({
       if (isEmpty(this.newUsername)) return;
       if (this.unchanged) return;
 
-      Discourse.User.checkUsername(
+      User.checkUsername(
         newUsername,
         undefined,
         this.get("model.id")

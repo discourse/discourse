@@ -20,6 +20,7 @@ import { cookAsync } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { Promise } from "rsvp";
+import User from "discourse/models/user";
 
 const Post = RestModel.extend({
   // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
@@ -36,7 +37,7 @@ const Post = RestModel.extend({
 
   @discourseComputed("url")
   shareUrl(url) {
-    const user = Discourse.User.current();
+    const user = User.current();
     const userSuffix = user ? `?u=${user.username_lower}` : "";
 
     if (this.firstPost) {
@@ -376,7 +377,7 @@ Post.reopenClass({
     }
 
     if (json && json.reply_to_user) {
-      json.reply_to_user = Discourse.User.create(json.reply_to_user);
+      json.reply_to_user = User.create(json.reply_to_user);
     }
 
     return json;

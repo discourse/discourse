@@ -3,6 +3,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import User from "discourse/models/user";
 
 export default function($elem) {
   if (!$elem) {
@@ -77,7 +78,7 @@ export default function($elem) {
             ];
             if (
               !Discourse.SiteSettings.prevent_anons_from_downloading_files ||
-              Discourse.User.current()
+              User.current()
             ) {
               src.push(
                 '<a class="image-source-link" href="' +
