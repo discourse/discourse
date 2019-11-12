@@ -1,7 +1,9 @@
+import { isEmpty } from "@ember/utils";
 import { scheduleOnce } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
+import ENV from "discourse-common/config/environment";
 
 // This route is used for retrieving a topic based on params
 export default DiscourseRoute.extend({
@@ -68,7 +70,7 @@ export default DiscourseRoute.extend({
         }
         DiscourseURL.jumpToPost(closest, opts);
 
-        if (!Ember.isEmpty(topic.draft)) {
+        if (!isEmpty(topic.draft)) {
           composerController.open({
             draft: Draft.getLocal(topic.draft_key, topic.draft),
             draftKey: topic.draft_key,
@@ -79,7 +81,7 @@ export default DiscourseRoute.extend({
         }
       })
       .catch(e => {
-        if (!Ember.testing) {
+        if (ENV.environment !== "test") {
           // eslint-disable-next-line no-console
           console.log("Could not view topic", e);
         }

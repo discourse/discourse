@@ -1,6 +1,6 @@
 import { notEmpty, not } from "@ember/object/computed";
 import Component from "@ember/component";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import UploadMixin from "discourse/mixins/upload";
 
 export default Component.extend(UploadMixin, {
@@ -15,7 +15,7 @@ export default Component.extend(UploadMixin, {
     };
   },
 
-  @computed("hasName", "name")
+  @discourseComputed("hasName", "name")
   data(hasName, name) {
     return hasName ? { name } : {};
   },

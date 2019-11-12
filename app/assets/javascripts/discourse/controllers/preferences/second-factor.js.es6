@@ -1,6 +1,6 @@
 import { alias, and } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { default as DiscourseURL, userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -27,12 +27,12 @@ export default Controller.extend(CanCheckEmails, {
     this.set("totps", []);
   },
 
-  @computed
+  @discourseComputed
   displayOAuthWarning() {
     return findAll().length > 0;
   },
 
-  @computed("currentUser")
+  @discourseComputed("currentUser")
   showEnforcedNotice(user) {
     return user && user.enforcedSecondFactor;
   },

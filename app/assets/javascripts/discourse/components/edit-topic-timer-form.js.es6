@@ -1,12 +1,12 @@
+import { isEmpty } from "@ember/utils";
 import { alias, equal, or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
-
+} from "discourse-common/utils/decorators";
 import {
   PUBLISH_TO_CATEGORY_STATUS_TYPE,
   OPEN_STATUS_TYPE,
@@ -26,7 +26,7 @@ export default Component.extend({
   reminder: equal("selection", REMINDER_TYPE),
   showTimeOnly: or("autoOpen", "autoDelete", "reminder", "autoBump"),
 
-  @computed(
+  @discourseComputed(
     "topicTimer.updateTime",
     "loading",
     "publishToCategory",
@@ -34,13 +34,13 @@ export default Component.extend({
   )
   saveDisabled(updateTime, loading, publishToCategory, topicTimerCategoryId) {
     return (
-      Ember.isEmpty(updateTime) ||
+      isEmpty(updateTime) ||
       loading ||
       (publishToCategory && !topicTimerCategoryId)
     );
   },
 
-  @computed("topic.visible")
+  @discourseComputed("topic.visible")
   excludeCategoryId(visible) {
     if (visible) return this.get("topic.category_id");
   },

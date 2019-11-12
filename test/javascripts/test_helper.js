@@ -117,7 +117,9 @@ QUnit.testStart(function(ctx) {
   Discourse.SiteSettings = dup(Discourse.SiteSettingsOriginal);
   Discourse.BaseUri = "";
   Discourse.BaseUrl = "http://localhost:3000";
-  Discourse.Session.resetCurrent();
+
+  let Session = require("discourse/models/session").default;
+  Session.resetCurrent();
   Discourse.User.resetCurrent();
   resetSite(Discourse.SiteSettings);
 

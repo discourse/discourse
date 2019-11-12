@@ -6,10 +6,10 @@ import { later } from "@ember/runloop";
 import Component from "@ember/component";
 import userSearch from "discourse/lib/user-search";
 import {
-  default as computed,
+  default as discourseComputed,
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import {
   linkSeenMentions,
   fetchUnseenMentions
@@ -26,7 +26,7 @@ import Composer from "discourse/models/composer";
 import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
 import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
 import { ajax } from "discourse/lib/ajax";
-import InputValidation from "discourse/models/input-validation";
+import EmberObject from "@ember/object";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import {
@@ -43,11 +43,11 @@ import {
   cacheShortUploadUrl,
   resolveAllShortUrls
 } from "pretty-text/upload-short-url";
-
 import {
   INLINE_ONEBOX_LOADING_CSS_CLASS,
   INLINE_ONEBOX_CSS_CLASS
 } from "pretty-text/context/inline-onebox-css-classes";
+import ENV from "discourse-common/config/environment";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
@@ -68,7 +68,7 @@ export default Component.extend({
   scrollMap: null,
   uploadFilenamePlaceholder: null,
 
-  @computed("uploadFilenamePlaceholder")
+  @discourseComputed("uploadFilenamePlaceholder")
   uploadPlaceholder(uploadFilenamePlaceholder) {
     const clipboard = I18n.t("clipboard");
     const filename = uploadFilenamePlaceholder
@@ -77,7 +77,7 @@ export default Component.extend({
     return `[${I18n.t("uploading_filename", { filename })}]() `;
   },
 
-  @computed("composer.requiredCategoryMissing")
+  @discourseComputed("composer.requiredCategoryMissing")
   replyPlaceholder(requiredCategoryMissing) {
     if (requiredCategoryMissing) {
       return "composer.reply_placeholder_choose_category";
@@ -89,14 +89,14 @@ export default Component.extend({
     }
   },
 
-  @computed
+  @discourseComputed
   showLink() {
     return (
       this.currentUser && this.currentUser.get("link_posting_access") !== "none"
     );
   },
 
-  @computed("composer.requiredCategoryMissing", "composer.replyLength")
+  @discourseComputed("composer.requiredCategoryMissing", "composer.replyLength")
   disableTextarea(requiredCategoryMissing, replyLength) {
     return requiredCategoryMissing && replyLength === 0;
   },
@@ -122,7 +122,7 @@ export default Component.extend({
     }
   },
 
-  @computed
+  @discourseComputed
   markdownOptions() {
     return {
       previewing: true,
@@ -213,7 +213,7 @@ export default Component.extend({
     this.appEvents.trigger("composer:will-open");
   },
 
-  @computed(
+  @discourseComputed(
     "composer.reply",
     "composer.replyLength",
     "composer.missingReplyCharacters",
@@ -246,7 +246,7 @@ export default Component.extend({
     }
 
     if (reason) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason,
         lastShownAt: lastValidatedAt
@@ -273,7 +273,7 @@ export default Component.extend({
       const lastMatch = matchingPlaceholder[matchingPlaceholder.length - 1];
       const regex = new RegExp(regexString);
       const orderNr = regex.exec(lastMatch)[1]
-        ? parseInt(regex.exec(lastMatch)[1]) + 1
+        ? parseInt(regex.exec(lastMatch)[1], 10) + 1
         : 1;
       data.orderNr = orderNr;
       const filenameWithOrderNr = `${filename}(${orderNr})`;
@@ -822,7 +822,8 @@ export default Component.extend({
       const index = parseInt(
         $(e.target)
           .parent()
-          .attr("data-image-index")
+          .attr("data-image-index"),
+        10
       );
 
       const scale = e.target.attributes["data-scale"].value;
@@ -836,7 +837,11 @@ export default Component.extend({
           return;
         }
 
-        const replacement = match.replace(imageScaleRegex, `$1,${scale}%$3`);
+        const replacement = match.replace(
+          imageScaleRegex,
+          `![$1|$2, ${scale}%]($4)`
+        );
+
         this.appEvents.trigger(
           "composer:replace-text",
           matchingPlaceholder[index],
@@ -851,11 +856,18 @@ export default Component.extend({
     // regex matches only upload placeholders with size defined,
     // which is required for resizing
 
-    // original string `![28|690x226,5%](upload://ceEfx3vO7bx7Cecv2co1SrnoTpW.png)`
-    // match 1 `![28|690x226`
-    // match 2 `5`
-    // match 3 `](upload://ceEfx3vO7bx7Cecv2co1SrnoTpW.png)`
-    const imageScaleRegex = /(!\[(?:\S*?(?=\|)\|)*?(?:\d{1,6}x\d{1,6})+?)(?:,?(\d{1,3})?%?)?(\]\(upload:\/\/\S*?\))/g;
+    // original string `![image|690x220, 50%](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
+    // group 1 `image`
+    // group 2 `690x220`
+    // group 3 `, 50%`
+    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png'
+    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
+
+    // Notes:
+    // Group 3 is optional. group 4 can match images with or without a markdown title.
+    // All matches are whitespace tolerant as long it's still valid markdown
+
+    const imageScaleRegex = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?\]\((upload:\/\/.*?)\)/g;
 
     // wraps previewed upload markdown in a codeblock in its own class to keep a track
     // of indexes later on to replace the correct upload placeholder in the composer
@@ -900,7 +912,7 @@ export default Component.extend({
       // need to wait a bit for the "slide down" transition of the composer
       later(
         () => this.appEvents.trigger("composer:closed"),
-        Ember.testing ? 0 : 400
+        ENV.environment === "test" ? 0 : 400
       );
     });
 

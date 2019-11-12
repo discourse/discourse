@@ -1,5 +1,6 @@
 import DiscourseURL from "discourse/lib/url";
 import { currentThemeIds, refreshCSS } from "discourse/lib/theme-selector";
+import ENV from "discourse-common/config/environment";
 
 //  Use the message bus for live reloading of components for faster development.
 export default {
@@ -12,7 +13,10 @@ export default {
       window.location.search.indexOf("?preview_theme_id=") === 0
     ) {
       // force preview theme id to always be carried along
-      const themeId = parseInt(window.location.search.slice(18).split("&")[0]);
+      const themeId = parseInt(
+        window.location.search.slice(18).split("&")[0],
+        10
+      );
       if (!isNaN(themeId)) {
         const patchState = function(f) {
           const patched = window.history[f];
@@ -43,7 +47,7 @@ export default {
     });
 
     // Useful to export this for debugging purposes
-    if (Discourse.Environment === "development" && !Ember.testing) {
+    if (Discourse.Environment === "development" && ENV.environment !== "test") {
       window.DiscourseURL = DiscourseURL;
     }
 

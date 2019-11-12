@@ -1,5 +1,6 @@
 import { next } from "@ember/runloop";
 import deprecated from "discourse-common/lib/deprecated";
+import { setOwner, getOwner } from "@ember/application";
 
 export default class Connector {
   constructor(widget, opts) {
@@ -21,9 +22,7 @@ export default class Connector {
         );
       }
 
-      const container = Ember.getOwner
-        ? Ember.getOwner(mounted)
-        : mounted.container;
+      const container = getOwner ? getOwner(mounted) : mounted.container;
 
       let view;
 
@@ -52,8 +51,8 @@ export default class Connector {
       }
 
       if (view) {
-        if (Ember.setOwner) {
-          Ember.setOwner(view, Ember.getOwner(mounted));
+        if (setOwner) {
+          setOwner(view, getOwner(mounted));
         }
         mounted._connected.push(view);
         view.renderer.appendTo(view, $elem[0]);

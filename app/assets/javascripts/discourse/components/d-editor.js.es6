@@ -7,10 +7,10 @@ import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 /*global Mousetrap:true */
 import {
-  default as computed,
+  default as discourseComputed,
   on,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { cookAsync } from "discourse/lib/text";
@@ -29,6 +29,8 @@ import { translations } from "pretty-text/emoji/data";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor } from "discourse/lib/text";
 import showModal from "discourse/lib/show-modal";
+import { Promise } from "rsvp";
+import ENV from "discourse-common/config/environment";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -136,7 +138,7 @@ class Toolbar {
       shortcut: "Shift+7",
       title: "composer.olist_title",
       perform: e =>
-        e.applyList(i => (!i ? "1. " : `${parseInt(i) + 1}. `), "list_item")
+        e.applyList(i => (!i ? "1. " : `${parseInt(i, 10) + 1}. `), "list_item")
     });
 
     if (siteSettings.support_mixed_text_direction) {
@@ -227,7 +229,7 @@ export default Component.extend({
   emojiPickerIsActive: false,
   emojiStore: service("emoji-store"),
 
-  @computed("placeholder")
+  @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
     if (placeholder) return I18n.t(placeholder);
     return null;
@@ -325,7 +327,7 @@ export default Component.extend({
     $(this.element.querySelector(".d-editor-preview")).off("click.preview");
   },
 
-  @computed
+  @discourseComputed
   toolbar() {
     const toolbar = new Toolbar(
       this.getProperties("site", "siteSettings", "showLink")
@@ -374,7 +376,7 @@ export default Component.extend({
     }
 
     // Debouncing in test mode is complicated
-    if (Ember.testing) {
+    if (ENV.environment === "test") {
       this._updatePreview();
     } else {
       debounce(this, this._updatePreview, 30);
@@ -453,7 +455,7 @@ export default Component.extend({
       },
 
       dataSource: term => {
-        return new Ember.RSVP.Promise(resolve => {
+        return new Promise(resolve => {
           const full = `:${term}`;
           term = term.toLowerCase();
 

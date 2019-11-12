@@ -1,12 +1,12 @@
 import { equal, reads, gte } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import Invite from "discourse/models/invite";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   user: null,
@@ -27,7 +27,7 @@ export default Controller.extend({
   },
 
   @observes("searchTerm")
-  _searchTermChanged: debounce(function() {
+  _searchTermChanged: discourseDebounce(function() {
     Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
       invites => this.set("model", invites)
     );
@@ -35,7 +35,7 @@ export default Controller.extend({
 
   inviteRedeemed: equal("filter", "redeemed"),
 
-  @computed("filter")
+  @discourseComputed("filter")
   showBulkActionButtons(filter) {
     return (
       filter === "pending" &&
@@ -50,7 +50,7 @@ export default Controller.extend({
 
   showSearch: gte("totalInvites", 10),
 
-  @computed("invitesCount.total", "invitesCount.pending")
+  @discourseComputed("invitesCount.total", "invitesCount.pending")
   pendingLabel(invitesCountTotal, invitesCountPending) {
     if (invitesCountTotal > 50) {
       return I18n.t("user.invited.pending_tab_with_count", {
@@ -61,7 +61,7 @@ export default Controller.extend({
     }
   },
 
-  @computed("invitesCount.total", "invitesCount.redeemed")
+  @discourseComputed("invitesCount.total", "invitesCount.redeemed")
   redeemedLabel(invitesCountTotal, invitesCountRedeemed) {
     if (invitesCountTotal > 50) {
       return I18n.t("user.invited.redeemed_tab_with_count", {

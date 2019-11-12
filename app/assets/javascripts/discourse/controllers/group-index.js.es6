@@ -4,10 +4,10 @@ import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
-import debounce from "discourse/lib/debounce";
+} from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse/lib/debounce";
 
 export default Controller.extend({
   queryParams: ["order", "desc", "filter"],
@@ -23,7 +23,7 @@ export default Controller.extend({
   application: inject(),
 
   @observes("filterInput")
-  _setFilter: debounce(function() {
+  _setFilter: discourseDebounce(function() {
     this.set("filter", this.filterInput);
   }, 500),
 
@@ -43,22 +43,22 @@ export default Controller.extend({
     }
   },
 
-  @computed("order", "desc", "filter")
+  @discourseComputed("order", "desc", "filter")
   memberParams(order, desc, filter) {
     return { order, desc, filter };
   },
 
-  @computed("model.members")
+  @discourseComputed("model.members")
   hasMembers(members) {
     return members && members.length > 0;
   },
 
-  @computed("model")
+  @discourseComputed("model")
   canManageGroup(model) {
     return this.currentUser && this.currentUser.canManageGroup(model);
   },
 
-  @computed
+  @discourseComputed
   filterPlaceholder() {
     if (this.currentUser && this.currentUser.admin) {
       return "groups.members.filter_placeholder_admin";

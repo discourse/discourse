@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { notEmpty, or, not } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -5,17 +6,17 @@ import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { setting } from "discourse/lib/computed";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { emailValid } from "discourse/lib/utilities";
-import InputValidation from "discourse/models/input-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
 import NameValidation from "discourse/mixins/name-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { userPath } from "discourse/lib/url";
 import { findAll } from "discourse/models/login-method";
+import EmberObject from "@ember/object";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -57,7 +58,7 @@ export default Controller.extend(
       this._createUserFields();
     },
 
-    @computed(
+    @discourseComputed(
       "passwordRequired",
       "nameValidation.failed",
       "emailValidation.failed",
@@ -81,7 +82,7 @@ export default Controller.extend(
 
     usernameRequired: not("authOptions.omit_username"),
 
-    @computed
+    @discourseComputed
     fullnameRequired() {
       return (
         this.get("siteSettings.full_name_required") ||
@@ -89,12 +90,12 @@ export default Controller.extend(
       );
     },
 
-    @computed("authOptions.auth_provider")
+    @discourseComputed("authOptions.auth_provider")
     passwordRequired(authProvider) {
-      return Ember.isEmpty(authProvider);
+      return isEmpty(authProvider);
     },
 
-    @computed
+    @discourseComputed
     disclaimerHtml() {
       return I18n.t("create_account.disclaimer", {
         tos_link: this.get("siteSettings.tos_url") || Discourse.getURL("/tos"),
@@ -105,17 +106,17 @@ export default Controller.extend(
     },
 
     // Check the email address
-    @computed("accountEmail", "rejectedEmails.[]")
+    @discourseComputed("accountEmail", "rejectedEmails.[]")
     emailValidation(email, rejectedEmails) {
       // If blank, fail without a reason
-      if (Ember.isEmpty(email)) {
-        return InputValidation.create({
+      if (isEmpty(email)) {
+        return EmberObject.create({
           failed: true
         });
       }
 
       if (rejectedEmails.includes(email)) {
-        return InputValidation.create({
+        return EmberObject.create({
           failed: true,
           reason: I18n.t("user.email.invalid")
         });
@@ -125,7 +126,7 @@ export default Controller.extend(
         this.get("authOptions.email") === email &&
         this.get("authOptions.email_valid")
       ) {
-        return InputValidation.create({
+        return EmberObject.create({
           ok: true,
           reason: I18n.t("user.email.authenticated", {
             provider: this.authProviderDisplayName(
@@ -136,19 +137,23 @@ export default Controller.extend(
       }
 
       if (emailValid(email)) {
-        return InputValidation.create({
+        return EmberObject.create({
           ok: true,
           reason: I18n.t("user.email.ok")
         });
       }
 
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("user.email.invalid")
       });
     },
 
-    @computed("accountEmail", "authOptions.email", "authOptions.email_valid")
+    @discourseComputed(
+      "accountEmail",
+      "authOptions.email",
+      "authOptions.email_valid"
+    )
     emailValidated() {
       return (
         this.get("authOptions.email") === this.accountEmail &&
@@ -176,7 +181,7 @@ export default Controller.extend(
       }
       if (
         this.get("emailValidation.ok") &&
-        (Ember.isEmpty(this.accountUsername) || this.get("authOptions.email"))
+        (isEmpty(this.accountUsername) || this.get("authOptions.email"))
       ) {
         // If email is valid and username has not been entered yet,
         // or email and username were filled automatically by 3rd parth auth,
@@ -186,7 +191,7 @@ export default Controller.extend(
     }.observes("emailValidation", "accountEmail"),
 
     // Determines whether at least one login button is enabled
-    @computed
+    @discourseComputed
     hasAtLeastOneLoginButton() {
       return findAll().length > 0;
     },
@@ -226,12 +231,12 @@ export default Controller.extend(
       const userFields = this.userFields;
       const destinationUrl = this.get("authOptions.destination_url");
 
-      if (!Ember.isEmpty(destinationUrl)) {
+      if (!isEmpty(destinationUrl)) {
         $.cookie("destination_url", destinationUrl, { path: "/" });
       }
 
       // Add the userfields to the data
-      if (!Ember.isEmpty(userFields)) {
+      if (!isEmpty(userFields)) {
         attrs.userFields = {};
         userFields.forEach(
           f => (attrs.userFields[f.get("field.id")] = f.get("value"))

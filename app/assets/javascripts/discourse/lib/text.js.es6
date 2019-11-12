@@ -4,6 +4,7 @@ import WhiteLister from "pretty-text/white-lister";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
 import loadScript from "discourse/lib/load-script";
 import { formatUsername } from "discourse/lib/utilities";
+import { Promise } from "rsvp";
 
 function getOpts(opts) {
   const siteSettings = Discourse.__container__.lookup("site-settings:main"),
@@ -51,7 +52,7 @@ function loadMarkdownIt() {
       console.error(e);
     });
   } else {
-    return Ember.RSVP.Promise.resolve();
+    return Promise.resolve();
   }
 }
 

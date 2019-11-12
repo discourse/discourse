@@ -1,7 +1,13 @@
 <p>
   {{i18n 'admin.logs.screened_emails.description'}}
 </p>
-  <button class="btn btn-default screened-email-export" {{action "exportScreenedEmailList"}} title="{{i18n 'admin.export_csv.button_title.screened_email'}}">{{d-icon "download"}}{{i18n 'admin.export_csv.button_text'}}</button>
+
+{{d-button
+  class="btn-default screened-email-export"
+  action=(action "exportScreenedEmailList")
+  title="admin.export_csv.button_title.screened_email"
+  icon="download"
+  label="admin.export_csv.button_text"}}
 
 <br>
 

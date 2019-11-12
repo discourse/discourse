@@ -3,6 +3,10 @@ var define, requirejs;
 (function() {
   // In future versions of ember we don't need this
   var EMBER_MODULES = {};
+  var ALIASES = {
+    "ember-addons/ember-computed-decorators":
+      "discourse-common/utils/decorators"
+  };
   if (typeof Ember !== "undefined") {
     EMBER_MODULES = {
       jquery: { default: $ },
@@ -11,7 +15,13 @@ var define, requirejs;
         default: Ember.Controller,
         inject: Ember.inject.controller
       },
-      "@ember/object": { default: Ember.Object },
+      "@ember/object": {
+        default: Ember.Object,
+        get: Ember.get,
+        getProperties: Ember.getProperties,
+        set: Ember.set,
+        setProperties: Ember.setProperties
+      },
       "@ember/object/computed": {
         default: Ember.computed,
         alias: Ember.computed.alias,
@@ -66,6 +76,35 @@ var define, requirejs;
       "@ember/service": {
         default: Ember.Service,
         inject: Ember.inject.service
+      },
+      "@ember/utils": {
+        isEmpty: Ember.isEmpty,
+        isNone: Ember.isNone
+      },
+      rsvp: {
+        default: Ember.RSVP,
+        Promise: Ember.RSVP.Promise,
+        hash: Ember.RSVP.hash,
+        all: Ember.RSVP.all
+      },
+      "@ember/string": {
+        dasherize: Ember.String.dasherize,
+        classify: Ember.String.classify,
+        underscore: Ember.String.underscore,
+        camelize: Ember.String.camelize
+      },
+      "@ember/template": {
+        htmlSafe: Ember.String.htmlSafe
+      },
+      "@ember/application": {
+        setOwner: Ember.setOwner,
+        getOwner: Ember.getOwner
+      },
+      "@ember/component/helper": {
+        default: Ember.Helper
+      },
+      "@ember/error": {
+        default: Ember.error
       }
     };
   }
@@ -101,6 +140,15 @@ var define, requirejs;
     );
   }
 
+  function deprecatedModule(depricated, useInstead) {
+    let warning = "[DEPRECATION] `" + depricated + "` is deprecated.";
+    if (useInstead) {
+      warning += " Please use `" + useInstead + "` instead.";
+    }
+    // eslint-disable-next-line no-console
+    console.warn(warning);
+  }
+
   var defaultDeps = ["require", "exports", "module"];
 
   function Module(name, deps, callback, exports) {
@@ -114,7 +162,7 @@ var define, requirejs;
   }
 
   Module.prototype.makeRequire = function() {
-    var name = this.name;
+    var name = transformForAliases(this.name);
 
     return (
       this._require ||
@@ -180,6 +228,16 @@ var define, requirejs;
   }
 
   function requireFrom(name, origin) {
+    name = transformForAliases(name);
+
+    if (name === "discourse/models/input-validation") {
+      // eslint-disable-next-line no-console
+      console.log(
+        "input-validation has been removed and should be replaced with `@ember/object`"
+      );
+      name = "@ember/object";
+    }
+
     var mod = EMBER_MODULES[name] || registry[name];
     if (!mod) {
       throw new Error(
@@ -191,6 +249,14 @@ var define, requirejs;
 
   function missingModule(name) {
     throw new Error("Could not find module " + name);
+  }
+
+  function transformForAliases(name) {
+    let alias = ALIASES[name];
+    if (!alias) return name;
+
+    deprecatedModule(name, alias);
+    return alias;
   }
 
   requirejs = require = function(name) {

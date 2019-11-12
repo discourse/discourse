@@ -1,7 +1,8 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import EmberObject from "@ember/object";
 
-const PermissionType = Discourse.Model.extend({
-  @computed("id")
+const PermissionType = EmberObject.extend({
+  @discourseComputed("id")
   description(id) {
     var key = "";
 

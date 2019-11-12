@@ -1,7 +1,7 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import LivePostCounts from "discourse/models/live-post-counts";
 
 export default Component.extend({
@@ -36,7 +36,7 @@ export default Component.extend({
     }
   },
 
-  @computed()
+  @discourseComputed()
   shouldSee() {
     const user = this.currentUser;
     return (
@@ -47,7 +47,12 @@ export default Component.extend({
     );
   },
 
-  @computed("enabled", "shouldSee", "publicTopicCount", "publicPostCount")
+  @discourseComputed(
+    "enabled",
+    "shouldSee",
+    "publicTopicCount",
+    "publicPostCount"
+  )
   hidden() {
     return (
       !this.enabled ||
@@ -57,7 +62,7 @@ export default Component.extend({
     );
   },
 
-  @computed(
+  @discourseComputed(
     "publicTopicCount",
     "publicPostCount",
     "topicTrackingState.incomingCount"

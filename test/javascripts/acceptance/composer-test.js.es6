@@ -721,49 +721,68 @@ QUnit.test("Image resizing buttons", async assert => {
   await click("#create-topic");
 
   let uploads = [
+    // 0 Default markdown with dimensions- should work
     "![test|690x313](upload://test.png)",
-    "[img]http://example.com/image.jpg[/img]",
-    "![anotherOne|690x463](upload://anotherOne.jpeg)",
-    "![](upload://withoutAltAndSize.jpeg)",
+    // 1 Image with scaling percentage, should work
+    "![test|690x313,50%](upload://test.png)",
+    // 2 image with scaling percentage and a proceeding whitespace, should work
+    "![test|690x313, 50%](upload://test.png)",
+    // 3 No dimensions, should not work
+    "![test](upload://test.jpeg)",
+    // 4 Wrapped in backquetes should not work
     "`![test|690x313](upload://test.png)`",
-    "![withoutSize](upload://withoutSize.png)",
+    // 5 html image - should not work
     "<img src='http://someimage.jpg' wight='20' height='20'>",
+    // 6 two images one the same line, but both are syntactically correct - both should work
     "![onTheSameLine1|200x200](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)",
+    // 7 & 8 Identical images - both should work
     "![identicalImage|300x300](upload://identicalImage.png)",
-    "![identicalImage|300x300](upload://identicalImage.png)"
+    "![identicalImage|300x300](upload://identicalImage.png)",
+    // 9 Image with whitespaces in alt - should work
+    "![image with spaces in alt|690x220](upload://test.png)",
+    // 10 Image with markdown title - should work
+    `![image|690x220](upload://test.png "image title")`,
+    // 11 bbcode - should not work
+    "[img]http://example.com/image.jpg[/img]"
   ];
 
   await fillIn(".d-editor-input", uploads.join("\n"));
 
   assert.ok(
-    find(".button-wrapper").length === 6,
+    find(".button-wrapper").length === 9,
     "it adds correct amount of scaling button groups"
   );
 
-  uploads[0] = "![test|690x313,50%](upload://test.png)";
+  // Default
+  uploads[0] = "![test|690x313, 50%](upload://test.png)";
   await click(find(".button-wrapper .scale-btn[data-scale='50']")[0]);
   assertImageResized(assert, uploads);
 
-  uploads[2] = "![anotherOne|690x463,75%](upload://anotherOne.jpeg)";
-  await click(find(".button-wrapper .scale-btn[data-scale='75']")[1]);
+  // Targets the correct image if two on the same line
+  uploads[6] =
+    "![onTheSameLine1|200x200, 50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)";
+  await click(find(".button-wrapper .scale-btn[data-scale='50']")[3]);
   assertImageResized(assert, uploads);
 
-  uploads[7] =
-    "![onTheSameLine1|200x200,50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)";
-  await click(find(".button-wrapper .scale-btn[data-scale='50']")[2]);
+  // Try the other image on the same line
+  uploads[6] =
+    "![onTheSameLine1|200x200, 50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250, 75%](upload://onTheSameLine2.jpeg)";
+  await click(find(".button-wrapper .scale-btn[data-scale='75']")[4]);
   assertImageResized(assert, uploads);
 
-  uploads[7] =
-    "![onTheSameLine1|200x200,50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250,75%](upload://onTheSameLine2.jpeg)";
-  await click(find(".button-wrapper .scale-btn[data-scale='75']")[3]);
+  // Make sure we target the correct image if there are duplicates
+  uploads[7] = "![identicalImage|300x300, 50%](upload://identicalImage.png)";
+  await click(find(".button-wrapper .scale-btn[data-scale='50']")[5]);
   assertImageResized(assert, uploads);
 
-  uploads[8] = "![identicalImage|300x300,50%](upload://identicalImage.png)";
-  await click(find(".button-wrapper .scale-btn[data-scale='50']")[4]);
+  // Try the other dupe
+  uploads[8] = "![identicalImage|300x300, 75%](upload://identicalImage.png)";
+  await click(find(".button-wrapper .scale-btn[data-scale='75']")[6]);
   assertImageResized(assert, uploads);
 
-  uploads[9] = "![identicalImage|300x300,75%](upload://identicalImage.png)";
-  await click(find(".button-wrapper .scale-btn[data-scale='75']")[5]);
+  // Don't mess with image titles
+  uploads[10] = `![image|690x220, 75%](upload://test.png "image title")`;
+  await click(find(".button-wrapper .scale-btn[data-scale='75']")[8]);
   assertImageResized(assert, uploads);
 
   await fillIn(

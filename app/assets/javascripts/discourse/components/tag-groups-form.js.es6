@@ -1,14 +1,15 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import PermissionType from "discourse/models/permission-type";
 
 export default Component.extend(bufferedProperty("model"), {
   tagName: "",
 
-  @computed("buffered.isSaving", "buffered.name", "buffered.tag_names")
+  @discourseComputed("buffered.isSaving", "buffered.name", "buffered.tag_names")
   savingDisabled(isSaving, name, tagNames) {
-    return isSaving || Ember.isEmpty(name) || Ember.isEmpty(tagNames);
+    return isSaving || isEmpty(name) || isEmpty(tagNames);
   },
 
   actions: {

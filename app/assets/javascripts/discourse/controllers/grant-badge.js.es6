@@ -1,11 +1,12 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import computed from "ember-addons/ember-computed-decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
+import { all } from "rsvp";
 
 export default Controller.extend(ModalFunctionality, GrantBadgeController, {
   topicController: inject("topic"),
@@ -20,12 +21,12 @@ export default Controller.extend(ModalFunctionality, GrantBadgeController, {
     this.userBadges = [];
   },
 
-  @computed("topicController.selectedPosts")
+  @discourseComputed("topicController.selectedPosts")
   post() {
     return this.get("topicController.selectedPosts")[0];
   },
 
-  @computed("post")
+  @discourseComputed("post")
   badgeReason(post) {
     const url = post.get("url");
     const protocolAndHost =
@@ -34,7 +35,7 @@ export default Controller.extend(ModalFunctionality, GrantBadgeController, {
     return url.indexOf("/") === 0 ? protocolAndHost + url : url;
   },
 
-  @computed("saving", "selectedBadgeGrantable")
+  @discourseComputed("saving", "selectedBadgeGrantable")
   buttonDisabled(saving, selectedBadgeGrantable) {
     return saving || !selectedBadgeGrantable;
   },
@@ -42,7 +43,7 @@ export default Controller.extend(ModalFunctionality, GrantBadgeController, {
   onShow() {
     this.set("loading", true);
 
-    Ember.RSVP.all([
+    all([
       Badge.findAll(),
       UserBadge.findByUsername(this.get("post.username"))
     ]).then(([allBadges, userBadges]) => {

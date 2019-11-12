@@ -1,6 +1,6 @@
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
-import { on, observes } from "ember-addons/ember-computed-decorators";
+import { on, observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   @on("init")

@@ -1,5 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   tagName: "section",
@@ -8,10 +9,10 @@ export default Component.extend({
     "anyLogos:with-logos:no-logos"
   ],
 
-  @computed("categories.[].uploaded_logo.url")
+  @discourseComputed("categories.[].uploaded_logo.url")
   anyLogos() {
     return this.categories.any(c => {
-      return !Ember.isEmpty(c.get("uploaded_logo.url"));
+      return !isEmpty(c.get("uploaded_logo.url"));
     });
   }
 });

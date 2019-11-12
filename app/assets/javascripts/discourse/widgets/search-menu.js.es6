@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { debounce } from "@ember/runloop";
 import { later } from "@ember/runloop";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -99,7 +100,7 @@ export default createWidget("search-menu", {
     const contextEnabled = searchData.contextEnabled;
 
     const ctx = contextEnabled ? this.searchContext() : null;
-    const type = ctx ? Ember.get(ctx, "type") : null;
+    const type = ctx ? get(ctx, "type") : null;
 
     let url = "/search";
     const params = [];

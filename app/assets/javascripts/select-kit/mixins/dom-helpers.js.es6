@@ -1,6 +1,6 @@
 import { next } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({

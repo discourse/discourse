@@ -1,3 +1,5 @@
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import { cancel } from "@ember/runloop";
 import { scheduleOnce } from "@ember/runloop";
 import { later } from "@ember/runloop";
@@ -214,13 +216,13 @@ const TopicRoute = DiscourseRoute.extend({
 
   setupParams(topic, params) {
     const postStream = topic.get("postStream");
-    postStream.set("summary", Ember.get(params, "filter") === "summary");
+    postStream.set("summary", get(params, "filter") === "summary");
 
-    const usernames = Ember.get(params, "username_filters"),
+    const usernames = get(params, "username_filters"),
       userFilters = postStream.get("userFilters");
 
     userFilters.clear();
-    if (!Ember.isEmpty(usernames) && usernames !== "undefined") {
+    if (!isEmpty(usernames) && usernames !== "undefined") {
       userFilters.addObjects(usernames.split(","));
     }
 

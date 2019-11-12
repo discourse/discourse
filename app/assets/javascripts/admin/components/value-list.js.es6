@@ -1,7 +1,8 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { makeArray } from "discourse-common/lib/helpers";
 import { empty, alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import { on } from "ember-addons/ember-computed-decorators";
-import computed from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNameBindings: [":value-list"],
@@ -29,9 +30,9 @@ export default Component.extend({
     );
   },
 
-  @computed("choices.[]", "collection.[]")
+  @discourseComputed("choices.[]", "collection.[]")
   filteredChoices(choices, collection) {
-    return Ember.makeArray(choices).filter(i => collection.indexOf(i) < 0);
+    return makeArray(choices).filter(i => collection.indexOf(i) < 0);
   },
 
   keyDown(event) {

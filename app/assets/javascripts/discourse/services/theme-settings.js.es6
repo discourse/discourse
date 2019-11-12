@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import Service from "@ember/service";
 
 export default Service.extend({
@@ -14,7 +15,7 @@ export default Service.extend({
 
   getSetting(themeId, settingsKey) {
     if (this._settings[themeId]) {
-      return Ember.get(this._settings[themeId], settingsKey);
+      return get(this._settings[themeId], settingsKey);
     }
     return null;
   },

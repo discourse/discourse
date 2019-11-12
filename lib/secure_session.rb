@@ -16,8 +16,12 @@ class SecureSession
 
   def set(key, val, expires: nil)
     expires ||= SecureSession.expiry
-    $redis.setex(prefixed_key(key), SecureSession.expiry.to_i, val.to_s)
+    $redis.setex(prefixed_key(key), expires.to_i, val.to_s)
     true
+  end
+
+  def ttl(key)
+    $redis.ttl(prefixed_key(key))
   end
 
   def [](key)

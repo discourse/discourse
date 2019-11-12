@@ -1,6 +1,6 @@
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 
 // Mostly hacks because `flag.hbs` didn't use `radio-button`
 export default Component.extend({

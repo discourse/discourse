@@ -1,6 +1,5 @@
 import { htmlHelper } from "discourse-common/lib/helpers";
 import { iconHTML } from "discourse-common/lib/icon-library";
-
 import {
   PENDING,
   APPROVED,

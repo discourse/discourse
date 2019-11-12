@@ -1,15 +1,16 @@
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
-import { on, observes } from "ember-addons/ember-computed-decorators";
+import { on, observes } from "discourse-common/utils/decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor } from "discourse/lib/text";
-
 import {
   extendedEmojiList,
   isSkinTonableEmoji,
   emojiSearch
 } from "pretty-text/emoji";
 import { safariHacksDisabled } from "discourse/lib/utilities";
+import ENV from "discourse-common/config/environment";
+
 const { run } = Ember;
 
 const PER_ROW = 11;
@@ -441,7 +442,10 @@ export default Component.extend({
     );
     $diversityScales.on("click", event => {
       const $selectedDiversity = $(event.currentTarget);
-      this.set("selectedDiversity", parseInt($selectedDiversity.data("level")));
+      this.set(
+        "selectedDiversity",
+        parseInt($selectedDiversity.data("level"), 10)
+      );
       return false;
     });
   },
@@ -509,7 +513,7 @@ export default Component.extend({
       this.$picker.css(_.merge(attributes, options));
     };
 
-    if (Ember.testing || !this.automaticPositioning) {
+    if (ENV.environment === "test" || !this.automaticPositioning) {
       desktopPositioning();
       return;
     }

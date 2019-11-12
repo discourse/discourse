@@ -1,4 +1,4 @@
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 
 export default Ember.TextField.extend({
   @on("init")

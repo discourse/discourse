@@ -91,7 +91,6 @@ fr:
         from_reply_by_address_error: "Survient quand l'entête 'From' correspond à l'adresse courriel 'Reply by'."
         inactive_user_error: "Se produit quand l'expéditeur n'est pas actif."
         silenced_user_error: "Se produit lorsque l'expéditeur a été mis sous silence."
-        bad_destination_address: "Se produit quand aucune des adresses de courriel des champs To/Cc/Bcc ne correspondent à une adresse de courriel entrante configurée."
         strangers_not_allowed_error: "Se produit quand un utilisateur a essayé de créer un nouveau sujet dans une catégorie dans laquelle il n'est pas membre."
         insufficient_trust_level_error: "Se produit quand un utilisateur a essayé de créer un nouveau sujet dans une catégorie pour laquelle il n'a pas le niveau de confiance nécessaire."
         reply_user_not_matching_error: "Se produit quand une réponse est venue d'une adresse de courriel différente de celle où a été envoyée la notification."
@@ -729,7 +728,6 @@ fr:
     activated: "Désolé, ce compte a déjà été activé."
     admin_confirm:
       title: "Confirmer le compte administrateur"
-      description: "Êtes-vous sûr de vouloir <b>%{target_username}</b> comme administrateur ?"
       grant: "Accorder l'accès administrateur"
       complete: "<b>%{target_username}</b> est maintenant un administrateur."
       back_to: "Retourner à %{title}"
@@ -1266,7 +1264,6 @@ fr:
     editing_grace_period_max_diff_high_trust: "Nombre maximum de changements de caractères autorisés dans le délai de grâce d'édition, si plus de changements, enregistrez une autre révision de poste (niveaux de confiance 2 et plus)."
     staff_edit_locks_post: "Les messages seront vérouillés à la modification si modifiés par des responsables"
     post_edit_time_limit: "Un auteur du niveau de confiance 0 ou 1 peut modifier ses messages pendant (n) minutes après leur publication. Mettre à 0 pour retirer cette limite."
-    tl2_post_edit_time_limit: "Un auteur du niveau de confiance 2 peut modifier ses messages pendant (n) minutes après leur publication. Mettre à 0 pour retirer cette limite. "
     edit_history_visible_to_public: "Autoriser tout le monde à voir les versions précédentes d'un message modifié. Quand désactivé, seuls les responsables peuvent voir l'historique."
     delete_removed_posts_after: "Les messages retirés par leur auteur seront automatiquement supprimés après (n) heures. Pour une valeur renseignée à 0, les messages seront supprimés immédiatement."
     max_image_width: "Largeur maximale des images dans un message"
@@ -1435,9 +1432,9 @@ fr:
     enable_github_logins: "Activer l'authentification GitHub, nécessite github_client_id et github_client_secret. Voir <a href='https://meta.discourse.org/t/13745' target='_blank'>Configurer GitHub Login pour Discourse</a>."
     github_client_id: "Id client pour l'authentification Github, enregistré sur <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Secret client pour l'authentification Github, enregistré sur <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    enable_discord_logins: 'Permettre aux utilisateurs de s''authentifier via Discord ?'
+    enable_discord_logins: "Permettre aux utilisateurs de s'authentifier via Discord ?"
     discord_client_id: 'Identifiant de l''utilisateur Discord (en cas de besoin, le créer via <a href="https://discordapp.com/developers/applications/me">le portail de développement Discord</a>)'
-    discord_secret: 'Clé secrète Discord'
+    discord_secret: "Clé secrète Discord"
     discord_trusted_guilds: ' Seuls les membres de ces guildes Discord peuvent se connecter via Discord. Utiliser les identifiants numériques des guildes. Pour plus d''informations, suivre les instructions<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">ici</a>. Laisser blanc pour autoriser toutes les guildes.'
     readonly_mode_during_backup: "Activer le mode lecture seule pendant une sauvegarde"
     enable_backups: "Autoriser les administrateurs à créer de nouveaux sauvegardes du forum"
@@ -1747,7 +1744,7 @@ fr:
     embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
     notify_about_flags_after: "S'il y a des signalements qui n'ont pas été gérés après ce nombre d'heures, envoyer un message direct aux modérateurs. 0 pour désactiver."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
-    delete_drafts_older_than_n_days: Supprimer les ébauches plus vieux que (n) jours.
+    delete_drafts_older_than_n_days: "Supprimer les ébauches plus vieux que (n) jours."
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode de démarrage (mettre à 0 pour désactiver)"
     prevent_anons_from_downloading_files: "Refuser le téléchargement de pièces jointes aux visiteurs. ATTENTION : cela empêchera de fonctionner les ressources envoyées en pièce jointe qui ne sont pas des images."
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. \"encodé\" générera des chaines de caractères encodées avec des pourcentages. \"aucune\" désactivera complètement les identifiants."
@@ -1969,6 +1966,12 @@ fr:
     autoclosed_disabled_lastpost: "Ce sujet est maintenant ouvert. Vous pouvez y participer."
     auto_deleted_by_timer: "Supprimé automatiquement par planification"
   login:
+    security_key_description: "Dès que votre clé de sécurité physique est prête, appuyer sur le bouton S'authentifier avec une clé de sécurité ci-dessous."
+    security_key_alternative: "Vous ne trouvez pas votre clé de sécurité ou voulez utiliser une autre méthode ?"
+    security_key_authenticate: "S'authentifier avec une clé de sécurité"
+    security_key_not_allowed_error: "La procédure d'authentification de la clé de sécurité a expiré ou a été annulée."
+    security_key_no_matching_credential_error: "Aucun identifiant correspondant n'a pu être trouvé dans la clé de sécurité donnée."
+    security_key_support_missing_error: "Votre appareil ou navigateur actuel ne supporte pas l'utilisation de clés de sécurité. Veuillez utiliser une autre méthode."
     not_approved: "Votre compte n'a pas encore été approuvé. Vous serez notifié par courriel quand cela sera fait."
     incorrect_username_email_or_password: "pseudo, adresse de courriel ou mot de passe incorrect"
     incorrect_password: "Mot de passe incorrect"
@@ -2161,10 +2164,6 @@ fr:
   admin_confirmation_mailer:
     title: "Confirmation de l'Administrateur"
     subject_template: "[%{email_prefix}] Confirmer votre nouveau compte"
-    text_body_template: |
-      Merci de confirmer que vous aimeriez ajouter **%{target_username}** comme administrateur de votre forum.
-
-      [Confirm Administrator Account](%{admin_confirm_url})
   test_mailer:
     title: "Envoyer un courriel de test"
     subject_template: "[%{email_prefix}] Test de délivrabilité courriel"
@@ -2742,42 +2741,6 @@ fr:
     visit_link_to_respond_pm: "[Voir le message](%{base_url}%{url}) pour répondre à %{participants}."
     posted_by: "Redigé par %{username} le %{post_date}"
     pm_participants: "Participants : %{participants}"
-    invited_group_to_private_message_body: |
-      %{username} a invité @%{group_name} à un message
-
-      > **%{topic_title}**
-
-      >
-
-      > %{topic_excerpt}
-
-      sur
-
-      > %{site_title} -- %{site_description}
-    invited_to_private_message_body: |
-      %{username} vous a invité(e) à un message
-
-      > **%{topic_title}**
-
-      >
-
-      > %{topic_excerpt}
-
-      sur
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} vous a invité(e) à une discussion
-
-      > **%{topic_title}**
-
-      >
-
-      > %{topic_excerpt}
-
-      sur
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       title: "Utilisateur a invité groupe au MD"
       subject_template: "[%{email_prefix}] %{username} a invité @%{group_name} dans la conversation « %{topic_title} »"
@@ -3165,7 +3128,6 @@ fr:
     missing: "Désolé, nous ne parvenons pas à trouver un avatar associé à cette adresse mail. Pouvez-vous essayer de la télécharger à nouveau ?"
   flag_reason:
     sockpuppet: "Un nouvel utilisateur a créé un sujet et un autre nouvel utilisateur avec la même adresse IP (%{ip_address}) a répondu. Voir le paramètre <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Ce nouvel utilisateur a tenté de créer plusieurs messages avec des liens vers le même domaine. Voir le paramètre <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "max_emails_per_day_per_user dépassé"
     exceeded_bounces_limit: "bounce_score_threshold dépassé"
@@ -4147,4 +4109,4 @@ fr:
   email_style:
     html_missing_placeholder: "Le modèle HTML doit inclure %{placeholder}"
   discord:
-    not_in_allowed_guild: 'L''authentification a échoué. Vous n''êtes membre d''aucune guilde Discord autorisée.'
+    not_in_allowed_guild: "L'authentification a échoué. Vous n'êtes membre d'aucune guilde Discord autorisée."

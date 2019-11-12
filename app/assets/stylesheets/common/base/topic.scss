@@ -220,9 +220,7 @@ a.badge-category {
     display: flex;
     align-items: center;
     span:not(.badge) {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      @include ellipsis;
     }
   }
   ul {

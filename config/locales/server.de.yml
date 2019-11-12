@@ -92,7 +92,6 @@ de:
         from_reply_by_address_error: "Passiert wenn der From-Header mit der Antwort E-Mail-Adresse übereinstimmt."
         inactive_user_error: "Passiert wenn der Sender nicht aktiv ist."
         silenced_user_error: "Kommt vor, wenn der Absender stummgeschaltet wurde."
-        bad_destination_address: "Passiert wenn keine der E-Mail Adressen in den Feldern To/Cc/Bcc zu einer konfigurierten Eingangs-E-Mail-Adresse passt."
         strangers_not_allowed_error: "Passiert wenn ein Benutzer versuchte ein neues Thema in einer Kategorie ohne Mitgliedschaft zu erstellen."
         insufficient_trust_level_error: "Passiert wenn ein Benutzer versuchte ein neues Thema in einer Kategorie zu erstellen, ohne die erforderliche Vertrauensstufe dafür zu haben."
         reply_user_not_matching_error: "Passiert wenn die E-Mail-Adresse der Antwort von der Adresse abweicht, an die gesendet wurde."
@@ -714,7 +713,6 @@ de:
     activated: "Bitte entschuldige, dieses Konto wurde bereits aktiviert."
     admin_confirm:
       title: "Admnistrator-Konto bestätigen"
-      description: "Bist du sicher, dass <b>%{target_username}</b> ein Administrator sein soll?"
       grant: "Administrationsrechte vergeben"
       complete: "<b>%{target_username}</b> ist jetzt ein Administrator."
       back_to: "Zurück zu %{title}"
@@ -1251,7 +1249,6 @@ de:
     editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die während der Bearbeitungsfrist erlaubt sind. Bei größeren Änderungen wird eine neue Beitragsversion gespeichert (Vertrauensstufe 2 und höher)"
     staff_edit_locks_post: "Beiträge werden für die Bearbeitung gesperrt, wenn sie von Team-Mitgliedern bearbeitet werden"
     post_edit_time_limit: "Autoren der Vertrauensstufen 0 und 1 können ihre Beiträge (n) Minuten nach dem Schreiben noch ändern. 0 bedeutet immer."
-    tl2_post_edit_time_limit: "Ein Autor der Vertrauensstufen 2 kann seine Beiträge (n) Minuten nach dem Schreiben noch ändern. 0 bedeutet immer."
     edit_history_visible_to_public: "Erlaube jedem, vorherige Versionen eines bearbeiteten Beitrags zu sehen. Wenn deaktiviert sind diese nur für Team-Mitglieder sichtbar."
     delete_removed_posts_after: "Beiträge, die deren Verfasser selbst entfernt hat, werden nach (n) Stunden automatisch gelöscht. Die Beiträge werden sofort gelöscht, wenn dieser Wert auf 0 gesetzt wird."
     max_image_width: "Maximale Breite von Thumbnails von Bildern in einem Beitrag."
@@ -1420,9 +1417,9 @@ de:
     enable_github_logins: "GitHub-Authentifizierung aktivieren, erfordert github_client_id und github_client_secret. Siehe <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
     github_client_id: "Client-ID für GitHub-Authentifizierung, registriert auf <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Client-Secret für GitHub-Authentifizierung, registriert auf <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    enable_discord_logins: 'Benutzern erlauben, sich mit Discord zu authentifizieren?'
+    enable_discord_logins: "Benutzern erlauben, sich mit Discord zu authentifizieren?"
     discord_client_id: 'Discord Client ID (benötigst du eine? besuche<a href="https://discordapp.com/developers/applications/me">das Discord Entwickler Portal</a>)'
-    discord_secret: 'Discord geheimer Schlüssel'
+    discord_secret: "Discord geheimer Schlüssel"
     discord_trusted_guilds: 'Das Einloggen per Discord nur Mitgliedern dieser Discord Gilden gestatten. Verwende die numerische ID der Gilde. Lies die Anleitung <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">hier</a>, um mehr zu erfahren. Leer lassen um jede Gilde zuzulassen.'
     readonly_mode_during_backup: "Nur-Lesen-Modus beim Erstellen einer Sicherung aktivieren"
     enable_backups: "Erlaube Administratoren, Backups des Forums zu erstellen"
@@ -2145,10 +2142,6 @@ de:
   admin_confirmation_mailer:
     title: "Admin-Bestätigung"
     subject_template: "[%{email_prefix}] Bestätige neues Administrator-Konto"
-    text_body_template: |
-      Bitte bestätige, dass du **%{target_username}** als Administrator in deinem Forum hinzufügen möchtest.
-
-      [Administrator-Konto bestätigen](%{admin_confirm_url})
   test_mailer:
     title: "Test-E-Mail"
     subject_template: "[%{email_prefix}] Test der E-Mail-Zustellbarkeit"
@@ -2764,36 +2757,6 @@ de:
     visit_link_to_respond_pm: "[Rufe die Nachricht auf](%{base_url}%{url}) um %{participants} zu antworten."
     posted_by: "Erstellt von %{username} am %{post_date}"
     pm_participants: "Teilnehmer: %{participants}"
-    invited_group_to_private_message_body: |
-      %{username} hat @%{group_name} eingeladen zu einer Nachricht
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      bei
-
-      > %{site_title} -- %{site_description}
-    invited_to_private_message_body: |
-      %{username} hat dich zu einer Unterhaltung eingeladen
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      bei
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} hat dich zu einer Diskussion eingeladen
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      bei
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       title: "Benutzer hat Gruppe zu Nachricht eingeladen"
       subject_template: "[%{email_prefix}] %{username} hat @%{group_name} zu einer Unterhaltung '%{topic_title}' eingeladen"
@@ -3170,7 +3133,6 @@ de:
     missing: "Hoppla, wir können kein Profilbild für diese E-Mail-Adresse finden. Kannst du versuchen es erneut hochzuladen?"
   flag_reason:
     sockpuppet: "Ein neuer Benutzer hat ein Thema erstellt und ein anderer neuer Benutzer mit der selben IP-Adresse (%{ip_address}) hat darauf geantwortet. Beachte die <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> Einstellung."
-    spam_hosts: "Dieser Benutzer hat versucht, mehrere Antworten mit Links zur gleichen Domain zu schreiben. Beachte die <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>-Einstellung."
   skipped_email_log:
     exceeded_emails_limit: "max_emails_per_day_per_user überschritten"
     exceeded_bounces_limit: "bounce_score_threshold wurde überschritten"
@@ -4121,4 +4083,4 @@ de:
   email_style:
     html_missing_placeholder: "Die HTML Vorlage muss %{placeholder}beinhalten"
   discord:
-    not_in_allowed_guild: 'Authentifizierung fehlgeschlagen. Du bist kein Mitglied einer erlaubten Discord Gilde.'
+    not_in_allowed_guild: "Authentifizierung fehlgeschlagen. Du bist kein Mitglied einer erlaubten Discord Gilde."

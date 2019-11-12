@@ -71,6 +71,17 @@ describe "category tag restrictions" do
       expect { other_category.update(allowed_tags: [tag1.name, 'tag-stuff', tag2.name, 'another-tag']) }.to change { Tag.count }.by(2)
     end
 
+    context 'required tags from tag group' do
+      fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
+      before { category_with_tags.update!(required_tag_group: tag_group, min_tags_from_required_group: 1) }
+
+      it "search only returns the allowed tags" do
+        expect(filter_allowed_tags(for_input: true, category: category_with_tags)).to contain_exactly(tag1)
+        expect(filter_allowed_tags(for_input: true, category: category_with_tags, selected_tags: [tag1.name])).to contain_exactly(tag2)
+        expect(filter_allowed_tags(for_input: true, category: category_with_tags, selected_tags: [tag2.name])).to contain_exactly(tag1)
+      end
+    end
+
     context 'category allows other tags to be used' do
       before do
         category_with_tags.update!(allow_global_tags: true)
@@ -92,6 +103,17 @@ describe "category tag restrictions" do
         expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag3, tag4)
         expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name])).to contain_exactly(tag4)
         expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name], term: 'tag')).to contain_exactly(tag4)
+      end
+
+      context 'required tags from tag group' do
+        fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
+        before { category_with_tags.update!(required_tag_group: tag_group, min_tags_from_required_group: 1) }
+
+        it "search only returns the allowed tags" do
+          expect(filter_allowed_tags(for_input: true, category: category_with_tags)).to contain_exactly(tag1, tag3)
+          expect(filter_allowed_tags(for_input: true, category: category_with_tags, selected_tags: [tag1.name])).to contain_exactly(tag2, tag3, tag4)
+          expect(filter_allowed_tags(for_input: true, category: category_with_tags, selected_tags: [tag2.name])).to contain_exactly(tag1, tag3)
+        end
       end
     end
   end
@@ -131,6 +153,17 @@ describe "category tag restrictions" do
       expect(post.topic.tags.map(&:name)).to eq([tag1.name])
     end
 
+    context 'required tags from tag group' do
+      fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
+      before { category.update!(required_tag_group: tag_group, min_tags_from_required_group: 1) }
+
+      it "search only returns the allowed tags" do
+        expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1)
+        expect(filter_allowed_tags(for_input: true, category: category, selected_tags: [tag1.name])).to contain_exactly(tag2)
+        expect(filter_allowed_tags(for_input: true, category: category, selected_tags: [tag2.name])).to contain_exactly(tag1)
+      end
+    end
+
     context 'category allows other tags to be used' do
       before do
         category.update!(allow_global_tags: true)
@@ -152,6 +185,17 @@ describe "category tag restrictions" do
         expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag3, tag4)
         tag_group1.tags = [tag2, tag3, tag4]
         expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag1)
+      end
+
+      context 'required tags from tag group' do
+        fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
+        before { category.update!(required_tag_group: tag_group, min_tags_from_required_group: 1) }
+
+        it "search only returns the allowed tags" do
+          expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag3)
+          expect(filter_allowed_tags(for_input: true, category: category, selected_tags: [tag1.name])).to contain_exactly(tag2, tag3, tag4)
+          expect(filter_allowed_tags(for_input: true, category: category, selected_tags: [tag2.name])).to contain_exactly(tag1, tag3)
+        end
       end
 
       context 'another category has restricted tags using groups' do
@@ -227,6 +271,19 @@ describe "category tag restrictions" do
       expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag1, tag3)
       expect(filter_allowed_tags(for_input: true, selected_tags: [tag1.name])).to contain_exactly(tag2, tag3, common)
       expect(filter_allowed_tags(for_input: true, selected_tags: [tag3.name])).to contain_exactly(tag4, tag1, common)
+    end
+
+    context 'required tags from tag group' do
+      fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
+      fab!(:category) { Fabricate(:category, required_tag_group: tag_group, min_tags_from_required_group: 1) }
+
+      it "search only returns the allowed tags" do
+        tag_group_with_parent = Fabricate(:tag_group, parent_tag_id: tag1.id, tags: [tag3, tag4])
+        expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2)
+        expect(filter_allowed_tags(for_input: true, category: category, selected_tags: [tag2.name])).to contain_exactly(tag1)
+        expect(filter_allowed_tags(for_input: true, category: category, selected_tags: [tag1.name])).to contain_exactly(tag2, tag3, tag4)
+        expect(filter_allowed_tags(for_input: true, category: category, selected_tags: [tag1.name, tag2.name])).to contain_exactly(tag3, tag4)
+      end
     end
 
     context "and category restrictions" do

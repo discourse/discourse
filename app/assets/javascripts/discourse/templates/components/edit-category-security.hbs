@@ -47,7 +47,10 @@
     {{/if}}
   {{else}}
     {{#unless category.is_special}}
-      <button {{action "editPermissions"}} class="btn btn-default btn-default edit-permission">{{i18n 'category.edit_permissions'}}</button>
+      {{d-button
+        action=(action "editPermissions")
+        class="btn-default edit-permission"
+        label="category.edit_permissions"}}
     {{/unless}}
   {{/if}}
 </section>

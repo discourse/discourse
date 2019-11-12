@@ -195,19 +195,34 @@ RSpec.describe ListController do
       user
     end
 
-    let!(:topic) do
-      Fabricate(:private_message_topic,
-        allowed_groups: [group],
-      )
+    describe 'with unicode_usernames' do
+      before { SiteSetting.unicode_usernames = false }
+
+      it 'should return the right response' do
+        group.add(user)
+        topic = Fabricate(:private_message_topic, allowed_groups: [group])
+        get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+
+        expect(response.status).to eq(200)
+
+        expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
+          .to eq(topic.id)
+      end
     end
 
-    it 'should return the right response' do
-      get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+    describe 'with unicode_usernames' do
+      before { SiteSetting.unicode_usernames = true }
 
-      expect(response.status).to eq(200)
+      it 'Returns a 200 with unicode group name' do
+        unicode_group = Fabricate(:group, name: '群群组')
+        unicode_group.add(user)
+        topic = Fabricate(:private_message_topic, allowed_groups: [unicode_group])
+        get "/topics/private-messages-group/#{user.username}/#{URI.escape(unicode_group.name)}.json"
+        expect(response.status).to eq(200)
 
-      expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
-        .to eq(topic.id)
+        expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
+          .to eq(topic.id)
+      end
     end
   end
 

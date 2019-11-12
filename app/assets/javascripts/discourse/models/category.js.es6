@@ -1,9 +1,12 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { get } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
-import computed from "ember-addons/ember-computed-decorators";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 import PermissionType from "discourse/models/permission-type";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import deprecated from "discourse-common/lib/deprecated";
+import Site from "discourse/models/site";
 
 const Category = RestModel.extend({
   permissions: null,
@@ -38,7 +41,7 @@ const Category = RestModel.extend({
     }
   },
 
-  @computed
+  @discourseComputed
   availablePermissions() {
     return [
       PermissionType.create({ id: PermissionType.FULL }),
@@ -47,52 +50,52 @@ const Category = RestModel.extend({
     ];
   },
 
-  @computed("id")
+  @discourseComputed("id")
   searchContext(id) {
     return { type: "category", id, category: this };
   },
 
-  @computed("notification_level")
+  @discourseComputed("notification_level")
   isMuted(notificationLevel) {
     return notificationLevel === NotificationLevels.MUTED;
   },
 
-  @computed("name")
+  @discourseComputed("name")
   url() {
     return Discourse.getURL("/c/") + Category.slugFor(this);
   },
 
-  @computed
+  @discourseComputed
   fullSlug() {
     return Category.slugFor(this).replace(/\//g, "-");
   },
 
-  @computed("name")
+  @discourseComputed("name")
   nameLower(name) {
     return name.toLowerCase();
   },
 
-  @computed("url")
+  @discourseComputed("url")
   unreadUrl(url) {
     return `${url}/l/unread`;
   },
 
-  @computed("url")
+  @discourseComputed("url")
   newUrl(url) {
     return `${url}/l/new`;
   },
 
-  @computed("color", "text_color")
+  @discourseComputed("color", "text_color")
   style(color, textColor) {
     return `background-color: #${color}; color: #${textColor}`;
   },
 
-  @computed("topic_count")
+  @discourseComputed("topic_count")
   moreTopics(topicCount) {
     return topicCount > (this.num_featured_topics || 2);
   },
 
-  @computed("topic_count", "subcategories")
+  @discourseComputed("topic_count", "subcategories")
   totalTopicCount(topicCount, subcats) {
     let count = topicCount;
     if (subcats) {
@@ -180,26 +183,26 @@ const Category = RestModel.extend({
     this.availableGroups.addObject(permission.group_name);
   },
 
-  @computed("topics")
+  @discourseComputed("topics")
   latestTopic(topics) {
     if (topics && topics.length) {
       return topics[0];
     }
   },
 
-  @computed("topics")
+  @discourseComputed("topics")
   featuredTopics(topics) {
     if (topics && topics.length) {
       return topics.slice(0, this.num_featured_topics || 2);
     }
   },
 
-  @computed("id", "topicTrackingState.messageCount")
+  @discourseComputed("id", "topicTrackingState.messageCount")
   unreadTopics(id) {
     return this.topicTrackingState.countUnread(id);
   },
 
-  @computed("id", "topicTrackingState.messageCount")
+  @discourseComputed("id", "topicTrackingState.messageCount")
   newTopics(id) {
     return this.topicTrackingState.countNew(id);
   },
@@ -210,9 +213,9 @@ const Category = RestModel.extend({
     return ajax(url, { data: { notification_level }, type: "POST" });
   },
 
-  @computed("id")
+  @discourseComputed("id")
   isUncategorizedCategory(id) {
-    return id === Discourse.Site.currentProp("uncategorized_category_id");
+    return id === Site.currentProp("uncategorized_category_id");
   }
 });
 
@@ -224,7 +227,7 @@ Category.reopenClass({
       _uncategorized ||
       Category.list().findBy(
         "id",
-        Discourse.Site.currentProp("uncategorized_category_id")
+        Site.currentProp("uncategorized_category_id")
       );
     return _uncategorized;
   },
@@ -232,15 +235,15 @@ Category.reopenClass({
   slugFor(category, separator = "/") {
     if (!category) return "";
 
-    const parentCategory = Ember.get(category, "parentCategory");
+    const parentCategory = get(category, "parentCategory");
     let result = "";
 
     if (parentCategory) {
       result = Category.slugFor(parentCategory) + separator;
     }
 
-    const id = Ember.get(category, "id"),
-      slug = Ember.get(category, "slug");
+    const id = get(category, "id"),
+      slug = get(category, "slug");
 
     return !slug || slug.trim().length === 0
       ? `${result}${id}-category`
@@ -248,15 +251,15 @@ Category.reopenClass({
   },
 
   list() {
-    return Discourse.Site.currentProp("categoriesList");
+    return Site.currentProp("categoriesList");
   },
 
   listByActivity() {
-    return Discourse.Site.currentProp("sortedCategories");
+    return Site.currentProp("sortedCategories");
   },
 
-  idMap() {
-    return Discourse.Site.currentProp("categoriesById");
+  _idMap() {
+    return Site.currentProp("categoriesById");
   },
 
   findSingleBySlug(slug) {
@@ -271,7 +274,7 @@ Category.reopenClass({
     if (!id) {
       return;
     }
-    return Category.idMap()[id];
+    return Category._idMap()[id];
   },
 
   findByIds(ids = []) {
@@ -403,6 +406,16 @@ Category.reopenClass({
     return _.sortBy(data, category => {
       return category.get("read_restricted");
     });
+  }
+});
+
+Object.defineProperty(Discourse, "Category", {
+  get() {
+    deprecated(
+      "Import the Category class instead of using Discourse.Category",
+      { since: "2.4.0", dropFrom: "2.5.0" }
+    );
+    return Category;
   }
 });
 

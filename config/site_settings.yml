@@ -1584,23 +1584,9 @@ developer:
     client: true
 
 embedding:
-  feed_polling_enabled:
-    default: false
-    hidden: true
-  feed_polling_url:
-    default: ""
-    hidden: true
-  feed_polling_frequency_mins:
-    min: 5
-    max: 180
-    default: 60
-    hidden: true
   embed_by_username:
     default: ""
     type: username
-    hidden: true
-  embed_username_key_from_feed:
-    default: ""
     hidden: true
   embed_post_limit:
     default: 100
@@ -2025,6 +2011,9 @@ user_preferences:
   default_categories_watching_first_post:
     type: category_list
     default: ""
+  mute_all_categories_by_default:
+    default: false
+    client: true
 
   default_tags_watching:
     type: tag_list
@@ -2059,6 +2048,11 @@ api:
     default: 30
   retry_web_hook_events:
     default: false
+  api_key_last_used_epoch: 
+    default: "" # Value is added in a migration
+    hidden: true
+  revoke_api_keys_days:
+    default: 180
 
 user_api:
   allow_user_api_keys:

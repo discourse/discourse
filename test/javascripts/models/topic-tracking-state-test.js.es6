@@ -1,5 +1,6 @@
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import createStore from "helpers/create-store";
+import Category from "discourse/models/category";
 
 QUnit.module("model:topic-tracking-state");
 
@@ -37,7 +38,7 @@ QUnit.test("subscribe to category", function(assert) {
     }),
     categoryList = [darth, luke];
 
-  sandbox.stub(Discourse.Category, "list").returns(categoryList);
+  sandbox.stub(Category, "list").returns(categoryList);
 
   const state = TopicTrackingState.create();
 

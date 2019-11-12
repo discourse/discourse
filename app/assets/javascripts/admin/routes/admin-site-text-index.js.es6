@@ -1,5 +1,6 @@
 import Route from "@ember/routing/route";
 import showModal from "discourse/lib/show-modal";
+import { getProperties } from "@ember/object";
 
 export default Route.extend({
   queryParams: {
@@ -10,7 +11,7 @@ export default Route.extend({
   model(params) {
     return this.store.find(
       "site-text",
-      Ember.getProperties(params, "q", "overridden")
+      getProperties(params, "q", "overridden")
     );
   },
 

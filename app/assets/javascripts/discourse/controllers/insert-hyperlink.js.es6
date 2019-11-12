@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { debounce } from "@ember/runloop";
 import { cancel } from "@ember/runloop";
 import { scheduleOnce } from "@ember/runloop";
@@ -148,7 +149,7 @@ export default Controller.extend(ModalFunctionality, {
         origLink.indexOf("://") === -1 ? `http://${origLink}` : origLink;
       const sel = this._lastSel;
 
-      if (Ember.isEmpty(linkUrl)) {
+      if (isEmpty(linkUrl)) {
         return;
       }
 

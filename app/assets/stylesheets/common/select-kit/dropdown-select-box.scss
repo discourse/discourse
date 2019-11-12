@@ -78,9 +78,7 @@
           font-size: $font-0;
           color: $primary;
           padding: 0;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+          @include ellipsis;
           max-width: 100%;
         }
 

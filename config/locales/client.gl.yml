@@ -1,7 +1,4 @@
 # encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
-#
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
@@ -512,7 +509,7 @@ gl:
         name: "Nome"
         edit: "Editar"
         security_key:
-          delete: 'Eliminar'
+          delete: "Eliminar"
       change_about:
         title: "Cambiar «Verbo de min»"
       change_username:
@@ -534,9 +531,6 @@ gl:
         uploaded_avatar_empty: "Engadir unha imaxe personalizada"
         upload_title: "Envía a túa imaxe"
         image_is_not_a_square: "Aviso: recortamos a túa imaxe; a largura e a altura eran distintas."
-      change_profile_background:
-        title: "Fondo do perfil"
-        instructions: "Os fondos dos perfís centraranse e terán unha largura predeterminada de 850px."
       change_card_background:
         title: "Fondo das fichas dos usuarios"
         instructions: "As imaxes dos fondos centraranse e terán unha largura predeterminada de 590px."
@@ -687,6 +681,8 @@ gl:
         header_title: "perfil, mensaxes, marcadores e preferencias"
       title:
         title: "Título"
+      primary_group:
+        title: "Grupo primario"
       filters:
         all: "Todo"
       stream:
@@ -1275,6 +1271,8 @@ gl:
         image_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir imaxes."
         attachment_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir anexos."
         attachment_download_requires_login: "Sentímolo pero debes iniciar sesión para descargar anexos."
+      abandon_edit:
+        no_value: "Non, seguir"
       abandon:
         confirm: "Confirmas o abandono da túa publicación?"
         no_value: "Non, seguir"
@@ -1749,7 +1747,6 @@ gl:
               public: "Todos"
           membership:
             automatic: Automático
-            trust_level: Nivel de confianza
             trust_levels_title: "Nivel de confianza automático concedido aos membros cando son engadidos:"
             trust_levels_none: "Ningún"
             automatic_membership_email_domains: "Os usuarios que se rexistraron cun dominio de correo electrónico que coincida exactamente con algún da lista engadiranse automaticamente a este grupo:"
@@ -1777,16 +1774,13 @@ gl:
         none: "Non hai chaves activas da API agora mesmo."
         user: "Usuario"
         title: "API"
-        key: "Chave da API"
         created: Creado
         generate: "Xerar"
-        regenerate: "Rexenerar"
         revoke: "Revogar"
-        confirm_regen: "Confirmas a substitución da chave da API por unha nova?"
-        confirm_revoke: "Confirmas a revogación desta chave?"
-        info_html: "A chave da API permitirache crear e actualizar temas usando chamadas JSON."
         all_users: "Todos os usuarios"
-        note_html: "Manter esta chave en <strong>secreto</strong>, todos os usuarios que a teñan poderían crear e publicar co nome da calquera usuario."
+        show_details: Detalles
+        description: Descrición
+        save: Gardar
       web_hooks:
         save: "Gardar"
         destroy: "Eliminar"
@@ -2336,6 +2330,8 @@ gl:
           search: "Buscar"
           groups: "Grupos"
           dashboard: "Panel"
+        default_categories:
+          modal_yes: "Si"
       badges:
         title: Insignias
         new_badge: Nova insignia
@@ -2418,18 +2414,13 @@ gl:
         category: "Publicación a categoría"
         add_host: "Engadir host"
         settings: "Axustes para o encaixado"
-        feed_settings: "Axustes das fontes"
-        feed_description: "Dotar dunha fonte RSS/ATOM o teu sitio pode mellorar a capacidade de Discourse para importar o teu contido."
         crawling_settings: "Axustes do extractor"
         crawling_description: "Cando o Discourse crea temas para as túas publicacións, se non existe unha fonte RSS/ATOM, tentará analizar o contido do teu HTML. Ás veces pode ser difícil extraer o contido, por iso damos a posibilidade de especificar as regras do CSS para facilitar a extracción."
         embed_by_username: "Nome do usuario para crear o tema"
         embed_post_limit: "Número máximo de publicacións a encaixar"
-        embed_username_key_from_feed: "Clave para extraer da fonte o nome do usuario do discourse"
         embed_truncate: "Truncar as publicacións encaixadas"
         embed_whitelist_selector: "Selector CSS de elementos permitidos nos encaixados"
         embed_blacklist_selector: "Selector CSS para elementos retirados nos encaixados"
-        feed_polling_enabled: "Importar publicacións vía RSS/ATOM"
-        feed_polling_url: "URL da fonte RSS/ATOM para facer a extracción"
         save: "Gardar axustes de encaixado"
       permalink:
         title: "Ligazóns permanentes"

@@ -1135,56 +1135,6 @@ describe User do
     end
   end
 
-  describe 'api keys' do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:other_admin) { Fabricate(:admin) }
-    fab!(:user) { Fabricate(:user) }
-
-    describe '.generate_api_key' do
-
-      it "generates an api key when none exists, and regenerates when it does" do
-        expect(user.api_key).to be_blank
-
-        # Generate a key
-        api_key = user.generate_api_key(admin)
-        expect(api_key.user).to eq(user)
-        expect(api_key.key).to be_present
-        expect(api_key.created_by).to eq(admin)
-
-        user.reload
-        expect(user.api_key).to eq(api_key)
-
-        # Regenerate a key. Keeps the same record, updates the key
-        new_key = user.generate_api_key(other_admin)
-        expect(new_key.id).to eq(api_key.id)
-        expect(new_key.key).to_not eq(api_key.key)
-        expect(new_key.created_by).to eq(other_admin)
-      end
-
-    end
-
-    describe '.revoke_api_key' do
-
-      it "revokes an api key when exists" do
-        expect(user.api_key).to be_blank
-
-        # Revoke nothing does nothing
-        user.revoke_api_key
-        user.reload
-        expect(user.api_key).to be_blank
-
-        # When a key is present it is removed
-        user.generate_api_key(admin)
-        user.reload
-        user.revoke_api_key
-        user.reload
-        expect(user.api_key).to be_blank
-      end
-
-    end
-
-  end
-
   describe "posted too much in topic" do
     let!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let!(:topic) { Fabricate(:post).topic }
@@ -2007,11 +1957,35 @@ describe User do
       expect(user.user_profile.reload.badge_granted_title).to eq(false)
 
       badge.update!(allow_title: true)
+      user.badges.reload
       user.update!(title: badge.name)
       expect(user.user_profile.reload.badge_granted_title).to eq(true)
+      expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
 
       user.update!(title: nil)
       expect(user.user_profile.reload.badge_granted_title).to eq(false)
+      expect(user.user_profile.granted_title_badge_id).to eq(nil)
+    end
+
+    context 'when a custom badge name has been set and it matches the title' do
+      let(:customized_badge_name) { 'Merit Badge' }
+
+      before do
+        TranslationOverride.upsert!(I18n.locale, Badge.i18n_key(badge.name), customized_badge_name)
+      end
+
+      it 'sets badge_granted_title correctly' do
+        BadgeGranter.grant(badge, user)
+
+        badge.update!(allow_title: true)
+        user.update!(title: customized_badge_name)
+        expect(user.user_profile.reload.badge_granted_title).to eq(true)
+        expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
+      end
+
+      after do
+        TranslationOverride.revert!(I18n.locale, Badge.i18n_key(badge.name))
+      end
     end
   end
 

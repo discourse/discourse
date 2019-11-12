@@ -37,9 +37,7 @@
 
       &.title {
         text-align: left;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+        @include ellipsis;
 
         .d-icon {
           color: $primary-low-mid;

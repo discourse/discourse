@@ -5,6 +5,9 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  <button class='btn btn-primary' {{action "dismissReadTopics" dismissTopics}}>
-    {{d-icon "check"}} {{i18n 'topics.bulk.dismiss'}}</button>
+  {{d-button
+    class="btn-primary"
+    action=(route-action "dismissReadTopics" dismissTopics)
+    icon="check"
+    label="topics.bulk.dismiss"}}
 </div>

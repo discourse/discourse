@@ -1759,7 +1759,7 @@ RSpec.describe TopicsController do
       end
 
       context 'and the user is not logged in' do
-        let(:api_key) { topic.user.generate_api_key(topic.user) }
+        let(:api_key) { Fabricate(:api_key, user: topic.user) }
 
         it 'redirects to the login page' do
           get "/t/#{topic.slug}/#{topic.id}.json"

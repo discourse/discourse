@@ -1,6 +1,6 @@
 import { alias, filter, or } from "@ember/object/computed";
 import Component from "@ember/component";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 
 //  A breadcrumb including category drop downs
 export default Component.extend({
@@ -21,7 +21,7 @@ export default Component.extend({
     return !c.get("parentCategory");
   }),
 
-  @computed("parentCategories")
+  @discourseComputed("parentCategories")
   parentCategoriesSorted(parentCategories) {
     if (this.siteSettings.fixed_category_positions) {
       return parentCategories;
@@ -30,20 +30,20 @@ export default Component.extend({
     return parentCategories.sortBy("totalTopicCount").reverse();
   },
 
-  @computed("category")
+  @discourseComputed("category")
   hidden(category) {
     return this.site.mobileView && !category;
   },
 
   firstCategory: or("{parentCategory,category}"),
 
-  @computed("category", "parentCategory")
+  @discourseComputed("category", "parentCategory")
   secondCategory(category, parentCategory) {
     if (parentCategory) return category;
     return null;
   },
 
-  @computed("firstCategory", "hideSubcategories")
+  @discourseComputed("firstCategory", "hideSubcategories")
   childCategories(firstCategory, hideSubcategories) {
     if (hideSubcategories) {
       return [];

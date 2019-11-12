@@ -125,10 +125,10 @@ ca:
           > :game_die: 3, 6
 
           `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Porta a terme un acte aleatori de generositat, sense cap expectativa de recompensa, amb la certesa que qualsevol dia potser algú farà el mateix per tu_&mdash; Princesa Diana
+          %{quote_sample}
 
-          `@%{discobot_username}%{magic_8_ball_trigger}`
-          > :crystal_ball: Pots comptar-hi
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Podeu comptar-hi
       do_not_understand:
         first_response: |-
           Hola, gràcies per la resposta!
@@ -280,7 +280,7 @@ ca:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Us heu adonat que torneu a ser al principi? Doneu menjar a aquest pobre capibara **responent amb l'emoji `:herb:`** i sereu enviat automàticament al final.
+          Us heu adonat que torneu a ser al principi? Doneu menjar a aquest pobre capibara **responent amb l'emoji `%{search_answer}`emoji** i sereu enviat automàticament al final.
         reply: |-
           Visca, ho heu trobat :tada:
 

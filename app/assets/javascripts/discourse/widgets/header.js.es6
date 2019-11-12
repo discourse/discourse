@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -558,7 +559,7 @@ export default createWidget("header", {
     if (service) {
       const ctx = service.get("searchContext");
       if (ctx) {
-        return Ember.get(ctx, "type");
+        return get(ctx, "type");
       }
     }
   }

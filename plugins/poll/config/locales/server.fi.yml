@@ -7,7 +7,7 @@
 
 fi:
   site_settings:
-    poll_enabled: "Salli äänestykset?"
+    poll_enabled: "Sallitaanko äänestykset?"
     poll_maximum_options: "Äänestysvaihtoehtojen suurin sallittu määrä."
     poll_edit_window_mins: "Kuinka monta minuuttia on aikaa muokata äänestystä sen luomisen jälkeen."
     poll_minimum_trust_level_to_create: "Vähimmäisluottamustaso, jolla voi luoda äänestyksiä."

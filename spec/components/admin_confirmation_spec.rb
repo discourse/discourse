@@ -33,6 +33,7 @@ describe AdminConfirmation do
       expect(ac.performed_by).to eq(admin)
       expect(ac.target_user).to eq(user)
       expect(ac.token).to eq(@token)
+      Jobs.expects(:enqueue).with(:send_system_message, user_id: user.id, message_type: 'welcome_staff', message_options: { role: :admin })
       ac.email_confirmed!
 
       user.reload

@@ -1,10 +1,12 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
-import computed from "ember-addons/ember-computed-decorators";
-import { on, observes } from "ember-addons/ember-computed-decorators";
+import { on, observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Category from "discourse/models/category";
 
 export default Component.extend(bufferedProperty("host"), {
   editToggled: false,
@@ -21,9 +23,9 @@ export default Component.extend(bufferedProperty("host"), {
     });
   },
 
-  @computed("buffered.host", "host.isSaving")
+  @discourseComputed("buffered.host", "host.isSaving")
   cantSave(host, isSaving) {
-    return isSaving || Ember.isEmpty(host);
+    return isSaving || isEmpty(host);
   },
 
   actions: {
@@ -49,7 +51,7 @@ export default Component.extend(bufferedProperty("host"), {
       host
         .save(props)
         .then(() => {
-          host.set("category", Discourse.Category.findById(this.categoryId));
+          host.set("category", Category.findById(this.categoryId));
           this.set("editToggled", false);
         })
         .catch(popupAjaxError);

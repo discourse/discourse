@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { later } from "@ember/runloop";
 import Component from "@ember/component";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
 import copyText from "discourse/lib/copy-text";
@@ -9,7 +9,7 @@ import copyText from "discourse/lib/copy-text";
 export default Component.extend({
   classNames: ["ip-lookup"],
 
-  @computed("other_accounts.length", "totalOthersWithSameIP")
+  @discourseComputed("other_accounts.length", "totalOthersWithSameIP")
   otherAccountsToDelete(otherAccountsLength, totalOthersWithSameIP) {
     // can only delete up to 50 accounts at a time
     const total = Math.min(50, totalOthersWithSameIP || 0);

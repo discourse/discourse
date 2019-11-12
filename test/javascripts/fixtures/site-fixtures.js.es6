@@ -41,7 +41,6 @@ export default {
         "starred",
         "read",
         "posted",
-        "category",
         "categories",
         "top"
       ],
@@ -49,7 +48,6 @@ export default {
         "latest",
         "top",
         "categories",
-        "category",
         "categories",
         "top"
       ],

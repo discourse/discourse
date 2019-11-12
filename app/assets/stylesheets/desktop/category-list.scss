@@ -80,9 +80,7 @@
       color: dark-light-choose($primary-medium, $secondary-high);
     }
     .title {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      @include ellipsis;
       flex: 0 1 auto;
     }
     .topic-statuses {

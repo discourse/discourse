@@ -1,11 +1,12 @@
+import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import WatchedWord from "admin/models/watched-word";
 import {
-  default as computed,
+  default as discourseComputed,
   on,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["watched-word-form"],
@@ -13,7 +14,7 @@ export default Component.extend({
   actionKey: null,
   showMessage: false,
 
-  @computed("regularExpressions")
+  @discourseComputed("regularExpressions")
   placeholderKey(regularExpressions) {
     return (
       "admin.watched_words.form.placeholder" +
@@ -23,12 +24,12 @@ export default Component.extend({
 
   @observes("word")
   removeMessage() {
-    if (this.showMessage && !Ember.isEmpty(this.word)) {
+    if (this.showMessage && !isEmpty(this.word)) {
       this.set("showMessage", false);
     }
   },
 
-  @computed("word")
+  @discourseComputed("word")
   isUniqueWord(word) {
     const words = this.filteredContent || [];
     const filtered = words.filter(content => content.action === this.actionKey);

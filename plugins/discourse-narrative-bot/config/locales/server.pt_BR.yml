@@ -113,15 +113,6 @@ pt_BR:
       random_mention:
         reply: |-
           Oi! Para descobrir o que eu posso fazer diga `@%{discobot_username} %{help_trigger}`.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Realize um ato aleatório de bondade, sem expectativa de recompensa, seguro sabendo que um dia alguém poderá fazer o mesmo por você_ &mdash; Princesa Diana
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Você pode confiar nela
       do_not_understand:
         first_response: |-
           Ei, obrigado pela resposta!
@@ -269,12 +260,6 @@ pt_BR:
           _xiiu_ … eu escondi uma surpresa neste tópico. Se você está pronto para o desafio, **selecione o ícone de pesquisa** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> no canto superior direito &#8599; para pesquisar por ela.
 
           Tente pesquisar pelo termo "capy&#8203;bara" (em inglês) neste tópico
-        hidden_message: |-
-          Como você não viu esta capivara? :wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          Você percebeu que agora está de volta ao começo? Alimente esta pobre capivara faminta **respondendo com o emoji `:herb:`** e você será levado automaticamente para o final.
         reply: |-
           Yay você a encontrou :tada:
 

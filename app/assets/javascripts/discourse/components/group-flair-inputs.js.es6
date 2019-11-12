@@ -1,25 +1,26 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { debounce } from "@ember/runloop";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import { convertIconClass } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   classNames: ["group-flair-inputs"],
 
-  @computed
+  @discourseComputed
   demoAvatarUrl() {
     return Discourse.getURL("/images/avatar.png");
   },
 
-  @computed("model.flair_url")
+  @discourseComputed("model.flair_url")
   flairPreviewIcon(flairURL) {
     return flairURL && /fa(r|b?)-/.test(flairURL);
   },
 
-  @computed("model.flair_url", "flairPreviewIcon")
+  @discourseComputed("model.flair_url", "flairPreviewIcon")
   flairPreviewIconUrl(flairURL, flairPreviewIcon) {
     return flairPreviewIcon ? convertIconClass(flairURL) : "";
   },
@@ -48,12 +49,12 @@ export default Component.extend({
     }
   },
 
-  @computed("model.flair_url", "flairPreviewIcon")
+  @discourseComputed("model.flair_url", "flairPreviewIcon")
   flairPreviewImage(flairURL, flairPreviewIcon) {
     return flairURL && !flairPreviewIcon;
   },
 
-  @computed(
+  @discourseComputed(
     "model.flair_url",
     "flairPreviewImage",
     "model.flairBackgroundHexColor",
@@ -77,15 +78,15 @@ export default Component.extend({
 
     if (flairHexColor) style += `color: #${flairHexColor};`;
 
-    return Ember.String.htmlSafe(style);
+    return htmlSafe(style);
   },
 
-  @computed("model.flairBackgroundHexColor")
+  @discourseComputed("model.flairBackgroundHexColor")
   flairPreviewClasses(flairBackgroundHexColor) {
     if (flairBackgroundHexColor) return "rounded";
   },
 
-  @computed("flairPreviewImage")
+  @discourseComputed("flairPreviewImage")
   flairPreviewLabel(flairPreviewImage) {
     const key = flairPreviewImage ? "image" : "icon";
     return I18n.t(`groups.flair_preview_${key}`);

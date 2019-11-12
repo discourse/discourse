@@ -1,5 +1,6 @@
+import { default as computed, or, alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   attributeBindings: [
@@ -16,14 +17,14 @@ export default Component.extend({
   tagName: "span",
   tabindex: -1,
 
-  @computed("computedContent")
+  @discourseComputed("computedContent")
   guid(computedContent) {
     return Ember.guidFor(computedContent);
   },
 
-  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title"),
+  ariaLabel: or("computedContent.ariaLabel", "title"),
 
-  @computed("computedContent.title", "name")
+  @discourseComputed("computedContent.title", "name")
   title(computedContentTitle, name) {
     if (computedContentTitle) return computedContentTitle;
     if (name) return name;
@@ -31,17 +32,17 @@ export default Component.extend({
     return null;
   },
 
-  label: Ember.computed.or("computedContent.label", "title", "name"),
+  label: or("computedContent.label", "title", "name"),
 
-  name: Ember.computed.alias("computedContent.name"),
+  name: alias("computedContent.name"),
 
-  value: Ember.computed.alias("computedContent.value"),
+  value: alias("computedContent.value"),
 
-  isLocked: Ember.computed("computedContent.locked", function() {
+  isLocked: computed("computedContent.locked", function() {
     return this.getWithDefault("computedContent.locked", false);
   }),
 
-  @computed("computedContent", "highlightedSelection.[]")
+  @discourseComputed("computedContent", "highlightedSelection.[]")
   isHighlighted(computedContent, highlightedSelection) {
     return highlightedSelection.includes(this.computedContent);
   },

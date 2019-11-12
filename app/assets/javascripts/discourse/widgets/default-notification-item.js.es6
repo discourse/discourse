@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
@@ -74,7 +75,7 @@ export const DefaultNotificationItem = createWidget(
 
       const description = data.topic_title;
 
-      return Ember.isEmpty(description) ? "" : escapeExpression(description);
+      return isEmpty(description) ? "" : escapeExpression(description);
     },
 
     text(notificationName, data) {

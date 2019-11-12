@@ -91,7 +91,6 @@ pt:
         from_reply_by_address_error: "Acontece quando o valor do cabeçalho From coincide com o endereço de e-mail de resposta."
         inactive_user_error: "Acontece quando o remetente não está ativo."
         silenced_user_error: "Acontece quando o remetente foi silenciado."
-        bad_destination_address: "Acontece quando nenhum dos endereços de e-mail nos campos Para/Cc/Bcc coincidem com um endereço de e-mail de 'A Receber' configurado."
         strangers_not_allowed_error: "Acontece quando um utilizador tentou criar um novo tópico numa categoria em que não é membro."
         insufficient_trust_level_error: "Acontece quando um utilizador tentou criar um novo tópico numa categoria em que não tem o nível de confiança necessário."
         reply_user_not_matching_error: "Acontece quando uma resposta veio de um endereço de e-mail diferente de onde a notificação foi enviada."
@@ -511,7 +510,6 @@ pt:
     activated: "Desculpe, esta conta já foi ativada."
     admin_confirm:
       title: "Confirmar Conta de Administrador"
-      description: "Tem a certeza que deseja que o <b>%{target_username}</b> seja um administrador?"
       grant: "Conceder Acesso de Administrador"
       complete: "<b>%{target_username}</b> é agora um administrador."
       back_to: "Voltar para %{title}"
@@ -1159,7 +1157,7 @@ pt:
     embed_post_limit: "Número máximo de mensagens a serem incorporadas."
     embed_username_required: "O nome de utilizador para a criação de tópico é necessário."
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
-    delete_drafts_older_than_n_days: Eliminar rascunhos mais antigos que (n) days.
+    delete_drafts_older_than_n_days: "Eliminar rascunhos mais antigos que (n) days."
     bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"
     prevent_anons_from_downloading_files: "Previna que utilizadores anónimos descarreguem anexos. AVISO: isto irá fazer com que quaisquer atributos (que não sejam imagens) publicados como anexos não funcionem."
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
@@ -1518,26 +1516,6 @@ pt:
     only_reply_by_email: "Responda a este email para responder."
     visit_link_to_respond: "[Visitar Tópico](%{base_url}%{url}) para responder."
     posted_by: "Publicado por %{username} em %{post_date}"
-    invited_to_private_message_body: |
-      %{username} convidou-o para uma mensagem
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      at
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} convidou-o para uma discussão
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      em
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       text_body_template: |2
 
@@ -1732,7 +1710,6 @@ pt:
     missing: "Desculpe, mas não conseguimos encontrar nenhum avatar associado com esse endereço de email. Pode tentar carregá-lo novamente?"
   flag_reason:
     sockpuppet: "Um novo utilizador criou um tópico, no qual um outro novo utilizador com o mesmo IP (%{ip_address}) respondeu. Veja as configurações de <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> nas configurações do sítio."
-    spam_hosts: "Este novo utilizador tentou criar múltiplas publicações com ligações ao mesmo domínio. Verifique as configurações do sítio de <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "Excedeu max_emails_per_day_per_user"
     exceeded_bounces_limit: "Ultrapassou bounce_score_threshold"

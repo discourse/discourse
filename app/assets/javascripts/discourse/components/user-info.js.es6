@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import { userPath } from "discourse/lib/url";
 
 export function normalize(name) {
@@ -12,7 +12,7 @@ export default Component.extend({
   attributeBindings: ["data-username"],
   size: "small",
 
-  @computed("user.username")
+  @discourseComputed("user.username")
   userPath(username) {
     return userPath(username);
   },
@@ -22,7 +22,7 @@ export default Component.extend({
   // TODO: In later ember releases `hasBlock` works without this
   hasBlock: alias("template"),
 
-  @computed("user.name", "user.username")
+  @discourseComputed("user.name", "user.username")
   name(name, username) {
     if (name && normalize(username) !== normalize(name)) {
       return name;

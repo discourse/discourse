@@ -122,9 +122,7 @@
       }
 
       .action-title {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
       }
 
       .topic-link,
@@ -136,9 +134,7 @@
       .username {
         margin-right: 5px;
         max-width: 100px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        @include ellipsis;
         @media screen and (max-width: 500px) {
           display: none;
         }
@@ -358,9 +354,7 @@
       a {
         padding: 5px;
         display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
 
         span.username {
           color: $primary;

@@ -75,7 +75,6 @@ nb_NO:
         from_reply_by_address_error: "Skjer når avsender i meldingshodet er identisk med den konfigurerte adressen for svar via e-post."
         inactive_user_error: "Skjer når senderen ikke er aktiv."
         silenced_user_error: "Skjer når senderen er dempet."
-        bad_destination_address: "Skjer når ingen av adressene i To-, Cc- eller Bcc-feltene passer med en konfigurert innkommende e-postadresse."
         strangers_not_allowed_error: "Skjer når en bruker har forsøkt å opprette et nytt emne i en kategori som vedkommende ikke er medlem av."
         insufficient_trust_level_error: "Skjer når en bruker har forsøkt å opprette et nytt emne i en kategori som vedkommende ikke har påkrevet tillitsnivå for."
         reply_user_not_matching_error: "Skjer når et innkommende svar kommer fra en annen e-postadresse enn varselet var sendt til."
@@ -592,7 +591,6 @@ nb_NO:
     activated: "Beklager, denne kontoen er allerede aktivert."
     admin_confirm:
       title: "Bekreft admin-konto"
-      description: "Er du sikker på at du ønsker at <b>%{target_username}</b> skal være en administrator?"
       grant: "Tildel admin-tilgang"
       complete: "<b>%{target_username}</b> er nå en administrator."
       back_to: "Gå tilbake til %{title}"

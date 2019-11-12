@@ -1,7 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
+import EmberObject from "@ember/object";
 
-const EmailLog = Discourse.Model.extend({});
+const EmailLog = EmberObject.extend({});
 
 EmailLog.reopenClass({
   create(attrs) {

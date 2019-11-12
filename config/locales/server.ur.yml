@@ -91,7 +91,6 @@ ur:
         from_reply_by_address_error: "ہو جاتا ہے جب ہم فرام ہیڈر جواب بذریعہ ای میل ایڈریس سے ملتا ہے۔"
         inactive_user_error: "ہو جاتا ہے جب بھیجنے والا سرگرم نہ ہو۔"
         silenced_user_error: "ہو جاتا ہے جب بھیجنے والا خاموش کیا گیا ہو۔"
-        bad_destination_address: "ہو جاتا ہے جب To/Cc/Bcc فیلڈز میں کوئی بھی ای میل ایڈریس ترتیب کردہ آنے والے ای میل ایڈریسوں سے مَیچ نہ کرے۔"
         strangers_not_allowed_error: "ہو جاتا ہے جب کسی صارف نے ایک ایسے زُمرہ میں نیا ٹاپک بنانے کی کوشش کی ہو جس کا وہ رکن نہ ہوں۔"
         insufficient_trust_level_error: "ہو جاتا ہے جب کسی صارف نے ایک ایسے زُمرہ میں نیا ٹاپک بنانے کی کوشش کی ہو جس پر اُن کے پاس مطلوبہ ٹرسٹ لَیول نہ ہو۔"
         reply_user_not_matching_error: "ہو جاتا ہے جب جواب ایک ایسے ای میل ایڈریس سے آیا ہو جو اطلاع بھیجے جانے والے ایڈریس سے مختلف ہو۔"
@@ -729,7 +728,6 @@ ur:
     activated: "معذرت، یہ اکاؤنٹ پہلے ہی سے چالو کر دیا گیا ہے۔"
     admin_confirm:
       title: "توثیق ایڈمن اکاؤنٹ"
-      description: "کیا آپ واقعی <b>%{target_username}</b> کو ایک ایڈمِنِسٹریٹر بننا چاہتے ہیں؟"
       grant: "عطا ایڈمن رسائی"
       complete: "<b>%{target_username}</b> اب ایک ایڈمِنِسٹریٹر ہے۔"
       back_to: "%{title} پر واپس جائیں"
@@ -1266,7 +1264,6 @@ ur:
     editing_grace_period_max_diff_high_trust: "ترمیم کی رعایتی مدت کے دوران حروف تبدیلیوں کی زیادہ سے زیادہ تعداد، اگر اِس سے زیادہ تبدیل کیے جائیں تو ایک اور پوسٹ رَوِیژن سٹور کریں (ٹرسٹ لَیول 2 اور اوپر)"
     staff_edit_locks_post: "پوسٹس کو ترمیم کرنے سے روک دیا جائے گا اگر وہ اسٹاف کے اراکین کی طرف سے ترمیم کی گئی ہوں"
     post_edit_time_limit: "ایک tl0 یا tl1 مصنف اشاعت کے بعد (ن) منٹ تک اپنی پوسٹ میں ترمیم یا اسے خارج کرسکتا ہے۔ ہمیشہ کیلئے 0 پر سَیٹ کریں۔"
-    tl2_post_edit_time_limit: "ایک tl2 مصنف اشاعت کے بعد (ن) منٹ تک اپنی پوسٹ میں ترمیم یا اسے خارج کرسکتا ہے۔ ہمیشہ کیلئے 0 پر سَیٹ کریں۔"
     edit_history_visible_to_public: "سب کو ایک ترمیم شدہ پوسٹ کے پچھلے ورژن دیکھنے کی اجازت دیں۔ غیر فعال ہونے پر، صرف اسٹاف ممبران دیکھ سکتے ہیں۔"
     delete_removed_posts_after: "مصنف کی طرف سے ہٹائی گئی پوسٹس خود کار طریقے سے (ن) گھنٹوں کے بعد حذف کردی جائیں گی۔ اگر 0 پر سیٹ ہو، تو پوسٹس کو فوری طور پر حذف کردیا جائے گا۔"
     max_image_width: "پوسٹ میں تصاویر کی زیادہ سے زیادہ تھَمب نَیل چوڑائی"
@@ -1435,9 +1432,9 @@ ur:
     enable_github_logins: "گِٹ ہَب توثیق فعال کریں۔ github_client_id اور github_client_secret ضروری ہیں۔ دیکھیے <a href='https://meta.discourse.org/t/13745' target='_blank'>ڈسکورس کیلئے گِٹ ہَب لاگ اِن ترتیب دیں</a>۔"
     github_client_id: "گِٹ ہَب توثیق کیلئے کلائنٹ آئی ڈی، <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a> پر رجسٹر کردہ"
     github_client_secret: "گِٹ ہَب توثیق کیلئے کلائنٹ سیکرٹ، <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a> پر رجسٹر کردہ"
-    enable_discord_logins: 'صارفین کو بذریعہ ڈِسکَورڈ تصدیق کی اجازت دیں؟'
+    enable_discord_logins: "صارفین کو بذریعہ ڈِسکَورڈ تصدیق کی اجازت دیں؟"
     discord_client_id: 'ڈِسکَورڈ کلائنٹ ID (ایک کی ضرورت ہے؟ <a href="https://discordapp.com/developers/applications/me">ڈِسکَورڈ ڈَوَیلپر پَورٹل</a> ملاحظہ کریں)'
-    discord_secret: 'ڈِسکَورڈ سیکرٹ کی۔'
+    discord_secret: "ڈِسکَورڈ سیکرٹ کی۔"
     discord_trusted_guilds: 'صرف اِن ڈِسکَورڈ گِلڈز کے ممبران کو بذریعہ ڈِسکَورڈ لاگ اِن ہونے کی اجازت دیں۔ گِلڈ کیلئے ہندسوں والی شناخت استعمال کریں۔ مزید معلومات کیلئے، ہدایات کو <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">یہاں</a> چیک کریں۔ کسی بھی گِلڈ کو اجازت دینے کیلئے خالی چھوڑ دیں۔'
     readonly_mode_during_backup: "بیک اَپ کرتے وقت صرف پڑھنے کا مَوڈ فعال کریں"
     enable_backups: "ایڈمِنِسٹریٹروں کو فورم کے بیک اَپ بنانے کی اجازت دیں"
@@ -1750,7 +1747,7 @@ ur:
     embed_username_required: "ٹاپک کی تخلیق کیلئے صارف نام ضروری ہے۔"
     notify_about_flags_after: "اگر ایسے فلَیگ موجود ہیں جن پر اتنے گھنٹوں کے بعد بھی کام نہیں کیا جا سکا، تو ماڈریٹرز کو ذاتی پیغام بھیجیں۔ غیر فعال کرنے کیلئے 0 پر سَیٹ کریں۔"
     show_create_topics_notice: "اگر سائٹ میں 5 سے کم عوامی ٹاپک موجود ہیں، تو کچھ ٹاپک تخلیق کرنے کیلئے منتظمین کو ایک نوٹس دکھائیں۔"
-    delete_drafts_older_than_n_days: (ن) دنوں سے پرانے ڈرافٹ حذف کریں۔
+    delete_drafts_older_than_n_days: "(ن) دنوں سے پرانے ڈرافٹ حذف کریں۔"
     bootstrap_mode_min_users: "بُوٹسٹرَیپ مَوڈ غیر فعال کرنے کیلئے درکار صارفین کی کم از کم تعداد (غیر فعال کرنے کیلئے 0 پر سَیٹ کریں)"
     prevent_anons_from_downloading_files: "گمنام صارفین کو اٹَیچمنٹس ڈاؤن لوڈ کرنے سے روکیں۔ انتباہ: ایسا کرنے سے کوئی بھی غیر تصویر سائٹ کے اثاثہ جات، جو اٹَیچمنٹ کے طور پرشائع کیے گئے ہوں، بھی کام کرنا چھوڑ دیں گے۔"
     slug_generation_method: "سلَگ تخلیق کا طریقہ منتخب کریں۔ 'انکوڈ کردہ' فیصد انکوڈِنگ سٹرِنگ تخلیق کرے گ۔. 'کوئی بھی نہیں' سلَگ کو غیر فعال کر دے گا۔"
@@ -2153,10 +2150,6 @@ ur:
   admin_confirmation_mailer:
     title: "ایڈمن کی توثیق"
     subject_template: "[%{email_prefix}] نئے ایڈمن اکاؤنٹ کی توثیق کریں"
-    text_body_template: |
-      براہ مہربانی تصدیق کریں کہ آپ **%{target_username}** کو اپنے فورَم کے ایڈمِنِسٹریٹر کے طور پر شامل کرنا چاہتے ہیں۔
-
-      [ایڈمِنِسٹریٹر اکاؤنٹ کی تصدیق کریں](%{admin_confirm_url})
   test_mailer:
     title: "مَیلر ٹیسٹ کریں"
     subject_template: "[%{email_prefix}] ای میل قابل ترسیل ہونے کا ٹیسٹ"
@@ -2778,36 +2771,6 @@ ur:
     visit_link_to_respond_pm: "[پیغام وِزِٹ کریں](%{base_url}%{url}) %{participants} کا جواب دینے کیلئے۔"
     posted_by: "%{post_date} کو %{username} نے پوسٹ کیا"
     pm_participants: "شرکاء: %{participants}"
-    invited_group_to_private_message_body: |
-      %{inviter_name} نے %{group_name} کو ایک پیغام پر مدعو کیا
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      پر
-
-      > %{site_title}-- %{site_description}
-    invited_to_private_message_body: |
-      %{inviter_name} نے آپ کو ایک پیغام پر مدعو کیا
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      پر
-
-      > %{site_title}-- %{site_description}
-    invited_to_topic_body: |
-      %{inviter_name} نے آپ کو ایک بحث پر مدعو کیا
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      پر
-
-      > %{site_title}-- %{site_description}
     user_invited_to_private_message_pm_group:
       title: "صارف نے گروپ ذاتی پیغام میں مدعو کیا"
       subject_template: "[%{email_prefix}]%{username} نے @%{group_name} کو پیغام '%{topic_title}' میں مدعو کیا"
@@ -3188,7 +3151,6 @@ ur:
     missing: "معذرت، ہم اس ای میل ایڈریس سے منسلک کوئی اوتار تلاش نہیں کر سکے۔ کیا آپ اُسے دوبارہ اَپ لوڈ کرنے کی کوشش کر سکتے ہیں؟"
   flag_reason:
     sockpuppet: "ایک نئے صارف نے ایک ٹاپک بنایا، اور اُسی IP ایڈریس (%{ip_address}) پر ایک نئے صارف نے جواب دیا۔ `flag_sockpuppets` سائٹ ترتیب دیکھیے۔"
-    spam_hosts: "اِس نئے صارف ایک ہی ڈومَین (%{domain}) کے لِنکس کے ساتھ کئی پوسٹس تخلیق کرنے کی کوشش کی۔ <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> سائٹ کی ترتیب دیکھیے۔"
   skipped_email_log:
     exceeded_emails_limit: "max_emails_per_day_per_user سے تجاوز کر گیا"
     exceeded_bounces_limit: "bounce_score_threshold سے تجاوز کر گیا"
@@ -3968,4 +3930,4 @@ ur:
   email_style:
     html_missing_placeholder: "HTML ٹَیمپلیٹ میں %{placeholder} کا شامل ہونا لاذمی ہے۔"
   discord:
-    not_in_allowed_guild: 'تصدیق میں ناکامی۔ آپ کسی اجازت یافتہ ڈِسکَورڈ گِلڈ کے ممبر نہیں ہیں۔'
+    not_in_allowed_guild: "تصدیق میں ناکامی۔ آپ کسی اجازت یافتہ ڈِسکَورڈ گِلڈ کے ممبر نہیں ہیں۔"

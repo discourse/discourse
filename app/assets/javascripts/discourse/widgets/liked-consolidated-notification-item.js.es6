@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { createWidgetFrom } from "discourse/widgets/widget";
 import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -21,11 +22,11 @@ createWidgetFrom(
       const description = I18n.t(
         "notifications.liked_consolidated_description",
         {
-          count: parseInt(data.count)
+          count: parseInt(data.count, 10)
         }
       );
 
-      return Ember.isEmpty(description) ? "" : escapeExpression(description);
+      return isEmpty(description) ? "" : escapeExpression(description);
     }
   }
 );

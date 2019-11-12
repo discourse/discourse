@@ -1,9 +1,9 @@
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 export default Component.extend({
   showSelector: true,
@@ -58,17 +58,17 @@ export default Component.extend({
     }
   },
 
-  @computed("usernames")
+  @discourseComputed("usernames")
   splitUsernames(usernames) {
     return usernames.split(",");
   },
 
-  @computed("splitUsernames", "defaultUsernameCount")
+  @discourseComputed("splitUsernames", "defaultUsernameCount")
   limitedUsernames(splitUsernames, count) {
     return splitUsernames.slice(0, count).join(", ");
   },
 
-  @computed("splitUsernames", "defaultUsernameCount")
+  @discourseComputed("splitUsernames", "defaultUsernameCount")
   hiddenUsersCount(splitUsernames, count) {
     return `${splitUsernames.length - count} ${I18n.t("more")}`;
   },

@@ -1,5 +1,7 @@
+import { alias } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
 import ComboBoxSelectBoxHeaderComponent from "select-kit/components/combo-box/combo-box-header";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 
 export default ComboBoxSelectBoxHeaderComponent.extend({
@@ -8,11 +10,11 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
   classNames: "category-drop-header",
 
   classNameBindings: ["categoryStyleClass"],
-  categoryStyleClass: Ember.computed.alias("site.category_style"),
+  categoryStyleClass: alias("site.category_style"),
 
-  @computed("computedContent.value", "computedContent.name")
+  @discourseComputed("computedContent.value", "computedContent.name")
   category(value, name) {
-    if (Ember.isEmpty(value)) {
+    if (isEmpty(value)) {
       const uncat = Category.findUncategorized();
       if (uncat && uncat.get("name") === name) {
         return uncat;
@@ -22,17 +24,17 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
     }
   },
 
-  @computed("category.color")
+  @discourseComputed("category.color")
   categoryBackgroundColor(categoryColor) {
     return categoryColor || "#e9e9e9";
   },
 
-  @computed("category.text_color")
+  @discourseComputed("category.text_color")
   categoryTextColor(categoryTextColor) {
     return categoryTextColor || "#333";
   },
 
-  @computed("category", "categoryBackgroundColor", "categoryTextColor")
+  @discourseComputed("category", "categoryBackgroundColor", "categoryTextColor")
   categoryStyle(category, categoryBackgroundColor, categoryTextColor) {
     const categoryStyle = this.siteSettings.category_style;
 

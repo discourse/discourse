@@ -1,12 +1,12 @@
 import Controller from "@ember/controller";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import Permalink from "admin/models/permalink";
 
 export default Controller.extend({
   loading: false,
   filter: null,
 
-  show: debounce(function() {
+  show: discourseDebounce(function() {
     Permalink.findAll(this.filter).then(result => {
       this.set("model", result);
       this.set("loading", false);

@@ -7,9 +7,14 @@ class TrustLevel3Requirements
   class PenaltyCounts
     attr_reader :silenced, :suspended
 
-    def initialize(row)
+    def initialize(user, row)
       @silenced = row['silence_count'] || 0
       @suspended = row['suspend_count'] || 0
+
+      # If penalty started more than 6 months ago and still continues, it will
+      # not be selected by the query from 'penalty_counts'.
+      @silenced += 1 if @silenced == 0 && user.silenced?
+      @suspended += 1 if @suspended == 0 && user.suspended?
     end
 
     def total
@@ -114,7 +119,7 @@ class TrustLevel3Requirements
         AND uh.created_at > :since
     SQL
 
-    PenaltyCounts.new(DB.query_hash(sql, args).first)
+    PenaltyCounts.new(@user, DB.query_hash(sql, args).first)
   end
 
   def min_days_visited

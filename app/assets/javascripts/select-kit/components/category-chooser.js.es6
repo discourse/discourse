@@ -1,5 +1,5 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -53,7 +53,7 @@ export default ComboBoxComponent.extend({
     });
   },
 
-  @computed("rootNone", "rootNoneLabel")
+  @discourseComputed("rootNone", "rootNoneLabel")
   none(rootNone, rootNoneLabel) {
     if (
       this.siteSettings.allow_uncategorized_topics ||

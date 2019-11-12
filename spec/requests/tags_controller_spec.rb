@@ -90,6 +90,72 @@ describe TagsController do
       get "/tags/test"
       expect(response.status).to eq(200)
     end
+
+    context "with a category in the path" do
+      fab!(:topic_in_category) {
+        Fabricate(
+          :topic,
+          tags: [tag],
+          category: category
+        )
+      }
+
+      fab!(:topic_in_category_without_tag) {
+        Fabricate(
+          :topic,
+          category: category
+        )
+      }
+
+      fab!(:topic_out_of_category) {
+        Fabricate(
+          :topic,
+          tags: [tag]
+        )
+      }
+
+      it "should produce the topic inside the category and not the topic outside of it" do
+        get "/tags/c/#{category.slug}/#{tag.name}.json"
+
+        topic_ids = json['topic_list']['topics'].map { |x| x['id'] }
+        expect(topic_ids).to include(topic_in_category.id)
+        expect(topic_ids).to_not include(topic_out_of_category.id)
+        expect(topic_ids).to_not include(topic_in_category_without_tag.id)
+      end
+    end
+
+    context "with a subcategory in the path" do
+      fab!(:topic_in_subcategory) {
+        Fabricate(
+          :topic,
+          tags: [tag],
+          category: subcategory
+        )
+      }
+
+      fab!(:topic_in_subcategory_without_tag) {
+        Fabricate(
+          :topic,
+          category: subcategory
+        )
+      }
+
+      fab!(:topic_out_of_subcategory) {
+        Fabricate(
+          :topic,
+          tags: [tag]
+        )
+      }
+
+      it "should produce the topic inside the subcategory and not the topic outside of it" do
+        get "/tags/c/#{category.slug}/#{subcategory.slug}/#{tag.name}.json"
+
+        topic_ids = json['topic_list']['topics'].map { |x| x['id'] }
+        expect(topic_ids).to include(topic_in_subcategory.id)
+        expect(topic_ids).to_not include(topic_out_of_subcategory.id)
+        expect(topic_ids).to_not include(topic_in_subcategory_without_tag.id)
+      end
+    end
   end
 
   describe '#check_hashtag' do

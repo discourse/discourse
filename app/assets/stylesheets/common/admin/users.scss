@@ -102,10 +102,8 @@
 
 .admin-users-list {
   td.username {
-    white-space: nowrap;
+    @include ellipsis;
     overflow-wrap: break-word;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   @media screen and (max-width: 970px) and (min-width: 768px) {
     td.username {

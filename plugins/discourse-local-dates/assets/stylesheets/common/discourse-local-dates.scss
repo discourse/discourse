@@ -198,9 +198,7 @@
           border: 0;
           outline: none;
           flex: 1;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          @include ellipsis;
           width: 100%;
           text-align: left;
         }

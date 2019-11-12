@@ -59,6 +59,15 @@ class Admin::SiteTextsController < Admin::AdminController
 
     if translation_override.errors.empty?
       StaffActionLogger.new(current_user).log_site_text_change(id, value, old_value)
+      system_badge_id = Badge.find_system_badge_id_from_translation_key(id)
+      if system_badge_id.present?
+        Jobs.enqueue(
+          :bulk_user_title_update,
+          new_title: value,
+          granted_badge_id: system_badge_id,
+          action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
+        )
+      end
       render_serialized(site_text, SiteTextSerializer, root: 'site_text', rest_serializer: true)
     else
       render json: failed_json.merge(
@@ -69,10 +78,19 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def revert
     site_text = find_site_text
-    old_text = I18n.t(site_text[:id])
-    TranslationOverride.revert!(I18n.locale, site_text[:id])
+    id = site_text[:id]
+    old_text = I18n.t(id)
+    TranslationOverride.revert!(I18n.locale, id)
     site_text = find_site_text
-    StaffActionLogger.new(current_user).log_site_text_change(site_text[:id], site_text[:value], old_text)
+    StaffActionLogger.new(current_user).log_site_text_change(id, site_text[:value], old_text)
+    system_badge_id = Badge.find_system_badge_id_from_translation_key(id)
+    if system_badge_id.present?
+      Jobs.enqueue(
+        :bulk_user_title_update,
+        granted_badge_id: system_badge_id,
+        action: Jobs::BulkUserTitleUpdate::RESET_ACTION
+      )
+    end
     render_serialized(site_text, SiteTextSerializer, root: 'site_text', rest_serializer: true)
   end
 

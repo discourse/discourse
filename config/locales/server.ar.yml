@@ -47,7 +47,6 @@ ar:
         no_message_id_error: "يحدث عندما لا يحتوي البريد ترويسة ’Message-Id‘."
         no_body_detected_error: "يحدث عندما يتعذّر استخراج المتن وعدم وجود مرفقات."
         inactive_user_error: "يحدث عندما يكون المرسل خاملًا."
-        bad_destination_address: "يحدث عندما لا تتطابق عناوين البريد في حقول ”إلى/ن‌ك/ن‌ك‌م“ أحد عناوين البريد الوارد المضبوطة."
         strangers_not_allowed_error: "يحدث عندما يحاول العضو إنشاء موضوع جديد في قسم و هو ليس عضوًا به."
         insufficient_trust_level_error: "يحدث عندما يحاول العضو إنشاء موضوع جديد في قسم و هو لا يملك مستوى الثّقة المطلوب لذلك."
         reply_user_not_matching_error: "يحدث عندما يأتي الرّدّ من بريد إلكترونيّ مختلف عن الذي أُرسل إليه الإشعار."
@@ -588,7 +587,6 @@ ar:
     missing_session: "لا نستظيع تحديد اذا كان حسابك قد أنشئ. رجاء التأكد من أن (الكوكيز) بالمتصفح الذى تستخدمة منشطة."
     admin_confirm:
       title: "تاكيد حساب المدير"
-      description: "أمتأكّد من جعل <b>%{target_username}</b> مديرًا؟"
       grant: "اجعلة مُديراً"
       complete: "المستخدم <b>%{target_username}</b> مدير الآن."
       back_to: "العودة إلي %{title}"
@@ -1183,7 +1181,7 @@ ar:
     embed_post_limit: "أقصى عدد للمشاركات المضمنة."
     embed_username_required: "إسم المستخدم مطلوب لإضافة مقالة"
     show_create_topics_notice: "إذا كان الموقع يحتوي على أقل من 5 مواضيع عامة , إظهار إشعار مطالبة المسؤولين إنشاء بعض المواضيع."
-    delete_drafts_older_than_n_days: حذف المسودات مضى عليها أكثر من (ن) يوما.
+    delete_drafts_older_than_n_days: "حذف المسودات مضى عليها أكثر من (ن) يوما."
     prevent_anons_from_downloading_files: "امنع المستخدمين المجهولين من تحميل المرفقات. تحذير:سوف تمنع اي شخص ليس لديه صوره موقع اصول نشره كمرفقات من العمل."
     slug_generation_method: "اختر طريقه توليد سبيكه . 'مشفره' سوف تقوم بتوليد سلسله مئويه مشفره.'لاشي' سوف يعطل السبيكه"
     enable_emoji: "فعّل الإيموجي"
@@ -1332,11 +1330,6 @@ ar:
     subject_template: "أكّد عدم رغبتك بعد الآن باستقبال تحديثات %{site_title} على البريد"
   invite_password_instructions:
     subject_template: "اضبط كلمة سرّ لحسابك على %{site_name}"
-  admin_confirmation_mailer:
-    text_body_template: |
-      رجاء أكّد رغبتك بإضافة **%{target_username}** كمدير لمنتداك.
-
-      [أكّد حساب المدير](%{admin_confirm_url})
   new_version_mailer:
     subject_template: "[%{email_prefix}] إصدارة دسكورس جديدة، ثمّة تحديث متوفّر"
   flag_reasons:
@@ -1505,7 +1498,6 @@ ar:
     missing: "نأسف، لم نعثر على أيّ صورة رمزيّة مرتبطة بعنوان البريد هذا. هلّا أعدت رفعها ثانيةً؟"
   flag_reason:
     sockpuppet: "عضو جديد نشر موضوع جديد ثم قام عضو جديد اخر له نفس الIP (%{ip_address}) بالرد علية. انظر إعدادات<a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "عضو جديد حاول إنشاء عدة منشورات تحتوي علي روابط لنفس العنوان. انظر إعدادات <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     user_email_no_user: "تعذّر العثور على مستخدم معرّفه %{user_id}"
     user_email_post_not_found: "تعذر إيجاد المشاركة ذات المعرف %{post_id}"

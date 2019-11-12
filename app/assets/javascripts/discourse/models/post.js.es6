@@ -1,4 +1,13 @@
-import { equal, and, or, not } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import {
+  default as computed,
+  equal,
+  and,
+  or,
+  not
+} from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
@@ -6,15 +15,15 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import ActionSummary from "discourse/models/action-summary";
 import { propertyEqual } from "discourse/lib/computed";
 import Quote from "discourse/lib/quote";
-import computed from "ember-addons/ember-computed-decorators";
 import { postUrl } from "discourse/lib/utilities";
 import { cookAsync } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
+import { Promise } from "rsvp";
 
 const Post = RestModel.extend({
   // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
-  siteSettings: Ember.computed({
+  siteSettings: computed({
     get() {
       return Discourse.SiteSettings;
     },
@@ -25,7 +34,7 @@ const Post = RestModel.extend({
     }
   }),
 
-  @computed("url")
+  @discourseComputed("url")
   shareUrl(url) {
     const user = Discourse.User.current();
     const userSuffix = user ? `?u=${user.username_lower}` : "";
@@ -45,24 +54,24 @@ const Post = RestModel.extend({
   deleted: or("deleted_at", "deletedViaTopic"),
   notDeleted: not("deleted"),
 
-  @computed("name", "username")
+  @discourseComputed("name", "username")
   showName(name, username) {
     return (
       name && name !== username && Discourse.SiteSettings.display_name_on_posts
     );
   },
 
-  @computed("firstPost", "deleted_by", "topic.deleted_by")
+  @discourseComputed("firstPost", "deleted_by", "topic.deleted_by")
   postDeletedBy(firstPost, deletedBy, topicDeletedBy) {
     return firstPost ? topicDeletedBy : deletedBy;
   },
 
-  @computed("firstPost", "deleted_at", "topic.deleted_at")
+  @discourseComputed("firstPost", "deleted_at", "topic.deleted_at")
   postDeletedAt(firstPost, deletedAt, topicDeletedAt) {
     return firstPost ? topicDeletedAt : deletedAt;
   },
 
-  @computed("post_number", "topic_id", "topic.slug")
+  @discourseComputed("post_number", "topic_id", "topic.slug")
   url(post_number, topic_id, topicSlug) {
     return postUrl(
       topicSlug || this.topic_slug,
@@ -72,12 +81,12 @@ const Post = RestModel.extend({
   },
 
   // Don't drop the /1
-  @computed("post_number", "url")
+  @discourseComputed("post_number", "url")
   urlWithNumber(postNumber, baseUrl) {
     return postNumber === 1 ? `${baseUrl}/1` : baseUrl;
   },
 
-  @computed("username")
+  @discourseComputed("username")
   usernameUrl: userPath,
 
   topicOwner: propertyEqual("topic.details.created_by.id", "user_id"),
@@ -91,14 +100,14 @@ const Post = RestModel.extend({
       .catch(popupAjaxError);
   },
 
-  @computed("link_counts.@each.internal")
+  @discourseComputed("link_counts.@each.internal")
   internalLinks() {
-    if (Ember.isEmpty(this.link_counts)) return null;
+    if (isEmpty(this.link_counts)) return null;
 
     return this.link_counts.filterBy("internal").filterBy("title");
   },
 
-  @computed("actions_summary.@each.can_act")
+  @discourseComputed("actions_summary.@each.can_act")
   flagsAvailable() {
     // TODO: Investigate why `this.site` is sometimes null when running
     // Search - Search with context
@@ -228,7 +237,7 @@ const Post = RestModel.extend({
       });
     }
 
-    return promise || Ember.RSVP.Promise.resolve();
+    return promise || Promise.resolve();
   },
 
   /**
@@ -281,7 +290,7 @@ const Post = RestModel.extend({
         if (key === "reply_to_user" && value && oldValue) {
           skip =
             value.username === oldValue.username ||
-            Ember.get(value, "username") === Ember.get(oldValue, "username");
+            get(value, "username") === get(oldValue, "username");
         }
 
         if (!skip) {
@@ -317,7 +326,7 @@ const Post = RestModel.extend({
 
     // need to wait to hear back from server (stuff may not be loaded)
 
-    return Discourse.Post.updateBookmark(this.id, this.bookmarked)
+    return Post.updateBookmark(this.id, this.bookmarked)
       .then(result => {
         this.set("topic.bookmarked", result.topic_bookmarked);
         this.appEvents.trigger("page:bookmark-post-toggled", this);
@@ -414,7 +423,7 @@ Post.reopenClass({
 
   loadQuote(postId) {
     return ajax(`/posts/${postId}.json`).then(result => {
-      const post = Discourse.Post.create(result);
+      const post = Post.create(result);
       return Quote.build(post, post.raw, { raw: true, full: true });
     });
   },

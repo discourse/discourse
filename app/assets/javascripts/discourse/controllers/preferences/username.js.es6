@@ -1,9 +1,10 @@
+import { isEmpty } from "@ember/utils";
 import { empty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { setting, propertyEqual } from "discourse/lib/computed";
 import DiscourseURL from "discourse/lib/url";
 import { userPath } from "discourse/lib/url";
@@ -37,7 +38,7 @@ export default Controller.extend({
       this.set("taken", false);
       this.set("errorMessage", null);
 
-      if (Ember.isEmpty(this.newUsername)) return;
+      if (isEmpty(this.newUsername)) return;
       if (this.unchanged) return;
 
       Discourse.User.checkUsername(
@@ -54,7 +55,7 @@ export default Controller.extend({
     }
   },
 
-  @computed("saving")
+  @discourseComputed("saving")
   saveButtonText(saving) {
     if (saving) return I18n.t("saving");
     return I18n.t("user.change");

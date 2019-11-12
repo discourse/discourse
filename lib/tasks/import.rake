@@ -391,8 +391,8 @@ def update_users
              , MAX(p.created_at) max_created_at
           FROM posts p
           JOIN topics t ON t.id = p.topic_id AND t.archetype <> ?
-         WHERE deleted_at IS NULL
-      GROUP BY user_id
+         WHERE p.deleted_at IS NULL
+      GROUP BY p.user_id
     )
     UPDATE users
        SET first_seen_at  = X.min_created_at

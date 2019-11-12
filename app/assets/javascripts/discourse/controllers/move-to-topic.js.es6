@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { alias, equal } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { inject } from "@ember/controller";
@@ -5,7 +6,7 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { movePosts, mergeTopic } from "discourse/models/topic";
 import DiscourseURL from "discourse/lib/url";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, {
@@ -45,14 +46,12 @@ export default Controller.extend(ModalFunctionality, {
   selectedAllPosts: alias("topicController.selectedAllPosts"),
   selectedPosts: alias("topicController.selectedPosts"),
 
-  @computed("saving", "selectedTopicId", "topicName")
+  @discourseComputed("saving", "selectedTopicId", "topicName")
   buttonDisabled(saving, selectedTopicId, topicName) {
-    return (
-      saving || (Ember.isEmpty(selectedTopicId) && Ember.isEmpty(topicName))
-    );
+    return saving || (isEmpty(selectedTopicId) && isEmpty(topicName));
   },
 
-  @computed(
+  @discourseComputed(
     "saving",
     "newTopic",
     "existingTopic",
@@ -96,7 +95,7 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("selectedAllPosts", "selectedPosts", "selectedPosts.[]")
+  @discourseComputed("selectedAllPosts", "selectedPosts", "selectedPosts.[]")
   canSplitTopic(selectedAllPosts, selectedPosts) {
     return (
       !selectedAllPosts &&
@@ -106,7 +105,7 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
-  @computed("canSplitTopic")
+  @discourseComputed("canSplitTopic")
   canSplitToPM(canSplitTopic) {
     return canSplitTopic && (this.currentUser && this.currentUser.admin);
   },

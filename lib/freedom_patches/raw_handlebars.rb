@@ -18,19 +18,19 @@ class Barber::Precompiler
       # very hacky but lets us use ES6. I'm ashamed of this code -RW
       transpiled = transpiled[0...transpiled.index('export ')]
 
-      @precompiler = StringIO.new <<END
-      var __RawHandlebars;
-      (function() {
-        #{transpiled};
-        __RawHandlebars = RawHandlebars;
-      })();
+      @precompiler = StringIO.new <<~END
+        var __RawHandlebars;
+        (function() {
+          #{transpiled};
+          __RawHandlebars = RawHandlebars;
+        })();
 
-      Barber = {
-        precompile: function(string) {
-          return __RawHandlebars.precompile(string, false).toString();
-        }
-      };
-END
+        Barber = {
+          precompile: function(string) {
+            return __RawHandlebars.precompile(string, false).toString();
+          }
+        };
+      END
     end
 
     @precompiler

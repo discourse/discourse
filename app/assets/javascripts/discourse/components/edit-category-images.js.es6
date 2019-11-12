@@ -1,14 +1,14 @@
 import EmberObject from "@ember/object";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 
 export default buildCategoryPanel("images").extend({
-  @computed("category.uploaded_background.url")
+  @discourseComputed("category.uploaded_background.url")
   backgroundImageUrl(uploadedBackgroundUrl) {
     return uploadedBackgroundUrl || "";
   },
 
-  @computed("category.uploaded_logo.url")
+  @discourseComputed("category.uploaded_logo.url")
   logoImageUrl(uploadedLogoUrl) {
     return uploadedLogoUrl || "";
   },

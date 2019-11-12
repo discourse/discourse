@@ -233,7 +233,7 @@ class Invite < ActiveRecord::Base
   end
 
   def resend_invite
-    self.update_columns(created_at: Time.zone.now, updated_at: Time.zone.now)
+    self.update_columns(updated_at: Time.zone.now)
     Jobs.enqueue(:invite_email, invite_id: self.id)
   end
 

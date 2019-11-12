@@ -1,6 +1,7 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
 import lightbox from "discourse/lib/lightbox";
 import { ajax } from "discourse/lib/ajax";
@@ -23,36 +24,36 @@ export default Component.extend(UploadMixin, {
     }
   },
 
-  @computed("imageUrl", "placeholderUrl")
+  @discourseComputed("imageUrl", "placeholderUrl")
   showingPlaceholder(imageUrl, placeholderUrl) {
     return !imageUrl && placeholderUrl;
   },
 
-  @computed("placeholderUrl")
+  @discourseComputed("placeholderUrl")
   placeholderStyle(url) {
-    if (Ember.isEmpty(url)) {
+    if (isEmpty(url)) {
       return "".htmlSafe();
     }
     return `background-image: url(${url})`.htmlSafe();
   },
 
-  @computed("imageUrl")
+  @discourseComputed("imageUrl")
   imageCDNURL(url) {
-    if (Ember.isEmpty(url)) {
+    if (isEmpty(url)) {
       return "".htmlSafe();
     }
 
     return Discourse.getURLWithCDN(url);
   },
 
-  @computed("imageCDNURL")
+  @discourseComputed("imageCDNURL")
   backgroundStyle(url) {
     return `background-image: url(${url})`.htmlSafe();
   },
 
-  @computed("imageUrl")
+  @discourseComputed("imageUrl")
   imageBaseName(imageUrl) {
-    if (Ember.isEmpty(imageUrl)) return;
+    if (isEmpty(imageUrl)) return;
     return imageUrl.split("/").slice(-1)[0];
   },
 

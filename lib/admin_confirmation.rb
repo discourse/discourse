@@ -26,6 +26,7 @@ class AdminConfirmation
     Jobs.enqueue(
       :admin_confirmation_email,
       to_address: @performed_by.email,
+      target_email: @target_user.email,
       target_username: @target_user.username,
       token: @token
     )

@@ -58,7 +58,6 @@ fa_IR:
         auto_generated_email_error: "زمانی که 'اولویت' سربرگ به: فهرست، شکسته، انبوه یا پاسخ خودکار اتفاق می‌افتد. یا وقتی سربرگ دیگری شامل: ثبت خودکار، پاسخ خودکار یا ایجاد خودکار باشد."
         no_body_detected_error: "وقتی که نمی‌توانیم متن را استخراج کنیم و ضمیمه‌ای وجود ندارد اتفاق می‌افتد."
         inactive_user_error: "هنگامی که ارسال کننده فعال نباشد."
-        bad_destination_address: "وقتی ایمیل‌‌های To/Cc/Bcc با یکی از ایمیل‌های پیکربندی شده ورودی هماهنگ نیستند، اتفاق می‌افتد"
         strangers_not_allowed_error: "هنگامی که که کاربر سعی در ایجاد موضوع در دسته‌بندی می کند که در آن عضو نیست، رخ می‌دهد."
         insufficient_trust_level_error: "وقتی اتفاق می‌افتد که کاربر قصد ایجاد موضوع در دسته‌بندی را دارد که سطح اعتمادش با آن دسته‌بندی هماهنگ نیست."
         reply_user_not_matching_error: "وقتی رخ می‌دهد که پاسخ از ایمیل متفاوتی از آنچه که ما اطلاع‌سانی را به آن ارسال کرده ایم، دریافت شده باشد."
@@ -503,7 +502,6 @@ fa_IR:
     activated: "با عرض پوزش، این حساب کاربری در حال حاضر فعال شده است."
     admin_confirm:
       title: "تایید حساب کاربری مدیریت"
-      description: "آیا از انتخاب <b>%{target_username}</b> به عنوان مدیریت اطمینان دارید؟"
       grant: "اعطای دسترسی مدیریت"
       complete: "<b>%{target_username}</b> یک مدیر ارشد است."
       back_to: "بازگشت به %{title}"
@@ -1178,7 +1176,7 @@ fa_IR:
     embed_post_limit: "حداکثر تعداد نوشته‌هایی که می‌توانید جا‌سازی کنید. "
     embed_username_required: "نام‌کاربری برای ایجاد تاپیک مورد نیاز است."
     show_create_topics_notice: "اگر سایت کمتر از 5 موضوع عمومی دارد٬ مدیران اطلاع بده تا موضوعات بیشتری بسازند."
-    delete_drafts_older_than_n_days: پیش‌نویس‌های قدیمی‌تر از (n) روز را حذف کن
+    delete_drafts_older_than_n_days: "پیش‌نویس‌های قدیمی‌تر از (n) روز را حذف کن"
     bootstrap_mode_min_users: "حداقل تعداد کاربرانی که نیاز است تا حالت خود‌راه‌انداز غیر‌فعال شود (0 برای غیر‌فعال)"
     prevent_anons_from_downloading_files: "جلوگیری از دانلود کردن فایل پیوست توسط افراد ناشناس. اخطار: این گزینه از هر سایت بدون عکسی جلوگیری می کند. "
     slug_generation_method: "یک روش ایجاد نام یکتا انتخاب کنید. 'encoded' رشته‌ای شامل درصد ایجاد می‌کند. 'none' اسم یکتا را به صورت کلی غیر‌فعال می‌نماید."
@@ -1433,10 +1431,6 @@ fa_IR:
   admin_confirmation_mailer:
     title: "تایید مدیریت"
     subject_template: "[%{email_prefix}] تایید حساب کاربری مدیر جدید"
-    text_body_template: |
-      لطفا تایید کنید که می‌خواهید **%{target_username}** را به عنوان مدیر اضافه کنید.
-
-      [تایید حساب کاربری مدیریت](%{admin_confirm_url})
   test_mailer:
     title: "تست نامه‌رسان"
     subject_template: "[%{email_prefix}] تست تحویل ایمیل"
@@ -1679,26 +1673,6 @@ fa_IR:
     only_reply_by_email: "برای پاسخدهی، به این ایمیل پاسخ دهید."
     visit_link_to_respond: "[موضوع را](%{base_url}%{url}) برای ارسال پاسخ ببینید."
     posted_by: "نوشته شده توسط {username}% در تاریخ {post_date}%"
-    invited_to_private_message_body: |
-      %{username} شما را به یک پیام دعوت کرده
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      در
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} شما را به یک بحث دعوت کرده
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      در
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       title: "کاربر دعوت شده به پیام خصوصی"
       text_body_template: |
@@ -1988,7 +1962,6 @@ fa_IR:
     missing: "با عرض پوزش، نمی‌توانیم آواتار مرتبطی با این ایمیل پیدا کنیم. لطفا دوباره آپلود کنید."
   flag_reason:
     sockpuppet: "یک کاربر جدید موضوع جدیدی ایجاد کرده و کاربری با همان آیپی به موضوع پاسخ داده (%{ip_address}). قسمت <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> را از تنظیمات سایت ببینید."
-    spam_hosts: "این کاربر تلاش کرده چند نوشته با لینک به یک دامنه ارسال کند. قسمت <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> را از تنظیمات سایت ببینید."
   skipped_email_log:
     exceeded_emails_limit: "مقدار max_emails_per_day_per_user بیش از حد مجاز است"
     exceeded_bounces_limit: "مقدار bounce_score_threshold بیش از حد مجاز است"

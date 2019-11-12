@@ -109,8 +109,9 @@
           <div class="control-group">
             <div class="controls">
               <h2>{{i18n "user.second_factor.disable_title"}}</h2>
-              {{d-button action=(action "disableAllSecondFactors")
-                class="btn btn-danger"
+              {{d-button
+                class="btn-danger"
+                action=(action "disableAllSecondFactors")
                 disabled=loading
                 label="disable"}}
             </div>
@@ -137,8 +138,10 @@
 
       <div class="control-group">
         <div class="controls">
-          {{d-button action=(action "confirmPassword")
+          {{d-button
             class="btn-primary"
+            type="submit"
+            action=(action "confirmPassword")
             disabled=loading
             label="continue"}}
 

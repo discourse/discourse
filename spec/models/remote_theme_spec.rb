@@ -170,6 +170,7 @@ describe RemoteTheme do
       @theme.save
       @theme.reload
 
+      expect(remote.diff_local_changes[:diff]).not_to include("similarity index 100%")
       expect(remote.diff_local_changes[:diff]).to include("background-color: blue")
     end
   end

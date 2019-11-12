@@ -92,6 +92,7 @@ en:
       component_no_default: "Theme components can't be default theme"
       component_no_color_scheme: "Theme components can't have color palettes"
       no_multilevels_components: "Themes with child themes can't be child themes themselves"
+      optimized_link: Optimized image links are ephemeral and should not be included in theme source code.
     settings_errors:
       invalid_yaml: "Provided YAML is invalid."
       data_type_not_a_number: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list` and `enum`"
@@ -298,6 +299,7 @@ en:
       other: "%{count} likes"
     last_reply: "Last reply"
     created: "Created"
+    new_topic: "Create new topic"
 
   no_mentions_allowed: "Sorry, you can't mention other users."
   too_many_mentions:
@@ -824,7 +826,7 @@ en:
     activated: "Sorry, this account has already been activated."
     admin_confirm:
       title: "Confirm Admin Account"
-      description: "Are you sure you want <b>%{target_username}</b> to be an administrator?"
+      description: "Are you sure you want <b>%{target_username} (%{target_email})</b> to be an administrator?"
       grant: "Grant Admin Access"
       complete: "<b>%{target_username}</b> is now an administrator."
       back_to: "Return to %{title}"
@@ -1340,6 +1342,8 @@ en:
       other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
     missing_mailgun_api_key: "The server is configured to send emails via Mailgun but you haven't provided an API key used to verify the webhook messages."
     bad_favicon_url: "The favicon is failing to load. Check your favicon setting in <a href='%{base_path}/admin/site_settings'>Site Settings</a>."
+    deprecated_api_usage: "We detected an API request using a deprecated authentication method. Please update it to use <a href='https://meta.discourse.org/t/discourse-api-documentation/22706'>header based auth</a>."
+    update_mail_receiver: "We detected an outdated version of mail-receiver. Please ssh into this server and run `/var/discourse/launcher rebuild mail-receiver`."
     poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> and service provider."
     poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a>."
     force_https_warning: "Your website is using SSL. But `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
@@ -2068,6 +2072,7 @@ en:
     default_categories_tracking: "List of categories that are tracked by default."
     default_categories_muted: "List of categories that are muted by default."
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
+    mute_all_categories_by_default: "Set the default notification level of all the categories to muted. Require users opt-in to categories for them to appear in 'latest' and 'categories' pages. If you wish to amend the defaults for anonymous users set 'default_categories_' settings."
 
     default_tags_watching: "List of tags that are watched by default."
     default_tags_tracking: "List of tags that are tracked by default."
@@ -2080,6 +2085,7 @@ en:
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
+    revoke_api_keys_days: "Number of days before an unused API key is automatically revoked (0 for never)"
 
     allow_user_api_keys: "Allow generation of user API keys"
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
@@ -2479,7 +2485,7 @@ en:
     title: "Admin Confirmation"
     subject_template: "[%{email_prefix}] Confirm new Admin Account"
     text_body_template: |
-      Please confirm that you'd like to add **%{target_username}** as an administrator for your forum.
+      Please confirm that you'd like to add **%{target_username} (%{target_email})** as an administrator for your forum.
 
       [Confirm Administrator Account](%{admin_confirm_url})
 
@@ -2679,13 +2685,13 @@ en:
 
         We’re really glad you’re spending time with us and we’d love to know more about you. Take a moment to [fill out your profile](%{base_url}/my/preferences/profile), or feel free to [start a new topic](%{base_url}/categories).
 
-    welcome_moderator:
-      title: "Welcome Moderator"
-      subject_template: "Congratulations, you’re now a moderator!"
+    welcome_staff:
+      title: "Welcome Staff"
+      subject_template: "Congratulations, you’ve been granted %{role} status!"
       text_body_template: |
-        You’ve been granted moderator status by a fellow staff member.
+        You’ve been granted %{role} status by a fellow staff member.
 
-        As a moderator, you now have access to the <a href='%{base_url}/admin' target='_blank'>admin interface</a>.
+        As a %{role}, you now have access to the <a href='%{base_url}/admin' target='_blank'>admin interface</a>.
 
         With great power comes great responsibility. If you’re new to moderating, please refer to the [Moderation Guide](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
@@ -4574,6 +4580,12 @@ en:
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."
+    api_key:
+      automatic_revoked:
+        one: "Automatically revoked, last activity more than %{count} day ago"
+        other: "Automatically revoked, last activity more than %{count} days ago"
+      revoked: Revoked
+      restored: Restored
 
   reviewables:
     priorities:

@@ -7,6 +7,7 @@ import {
 } from "discourse/routes/build-topic-route";
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import PermissionType from "discourse/models/permission-type";
+import Category from "discourse/models/category";
 
 export default DiscourseRoute.extend({
   navMode: "latest",
@@ -79,12 +80,11 @@ export default DiscourseRoute.extend({
     let filter;
 
     if (categorySlug) {
-      const category = Discourse.Category.findBySlug(
-        categorySlug,
-        parentCategorySlug
-      );
+      const category = Category.findBySlug(categorySlug, parentCategorySlug);
       if (parentCategorySlug) {
         filter = `tags/c/${parentCategorySlug}/${categorySlug}/${tagId}/l/${topicFilter}`;
+      } else if (this.noSubcategories) {
+        filter = `tags/c/${categorySlug}/none/${tagId}/l/${topicFilter}`;
       } else {
         filter = `tags/c/${categorySlug}/${tagId}/l/${topicFilter}`;
       }
@@ -162,7 +162,8 @@ export default DiscourseRoute.extend({
       category: this.category,
       filterMode: this.filterMode,
       navMode: this.navMode,
-      tagNotification: this.tagNotification
+      tagNotification: this.tagNotification,
+      noSubcategories: this.noSubcategories
     });
   },
 

@@ -245,9 +245,7 @@
   .topic-link {
     color: $header_primary;
     display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
   }
   .topic-statuses {
     .d-icon {
@@ -275,9 +273,7 @@
     flex: 0 1 auto;
     min-width: 1px;
     .badge-wrapper {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      @include ellipsis;
     }
   }
   .badge-wrapper {
@@ -305,9 +301,7 @@
     flex: 1 0 0%; // unit on flex-basis is required for IE11
     .discourse-tags {
       color: $header_primary-high;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      @include ellipsis;
       .discourse-tag {
         display: inline; // tags need to stay inline in order for them to truncate
       }
@@ -357,9 +351,7 @@ $mobile-avatar-height: 1.532em;
     padding: 0 5px;
     border: 1px solid $primary-low;
     border-radius: 0.25em;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    @include ellipsis;
 
     .icon {
       display: flex;
@@ -376,9 +368,7 @@ $mobile-avatar-height: 1.532em;
     }
 
     span {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      @include ellipsis;
     }
   }
 

@@ -3,6 +3,8 @@ import { ajax } from "discourse/lib/ajax";
 import DiscourseURL from "discourse/lib/url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { selectedText } from "discourse/lib/utilities";
+import { Promise } from "rsvp";
+import ENV from "discourse-common/config/environment";
 
 export function isValidLink($link) {
   // Do not track:
@@ -96,9 +98,9 @@ export default {
       }
     }
 
-    let trackPromise = Ember.RSVP.resolve();
+    let trackPromise = Promise.resolve();
     if (tracking) {
-      if (!Ember.testing && navigator.sendBeacon) {
+      if (ENV.environment !== "test" && navigator.sendBeacon) {
         const data = new FormData();
         data.append("url", href);
         data.append("post_id", postId);

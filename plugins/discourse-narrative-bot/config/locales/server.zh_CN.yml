@@ -120,10 +120,10 @@ zh_CN:
           > 开始交互式教程。`{name-of-tutorial}`可以是一个：`%{tracks}`。
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3，6
+          > :game_die: 3, 6
 
           `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _随手做些善举，不要期待任何的回报，肯定能懂得一个道理：总有一天有人会为你做同样的事情。_ &mdash; 戴安娜公主
+          %{quote_sample}
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: 你可能需要它
@@ -279,7 +279,7 @@ zh_CN:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          注意到你回到主题开头了么？**带 `:herb:` 这个 emoji 回复** 来喂养这只可怜又饥饿的 capabara，你会自动跳转到结尾。
+          注意到你回到主题开头了么？**带 `%{search_answer}` 这个 emoji 回复** 来喂养这只可怜又饥饿的 capabara，你会自动跳转到结尾。
         reply: |-
           你找到啦 :tada:
 

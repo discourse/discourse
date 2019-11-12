@@ -165,6 +165,13 @@ module DiscourseTagging
     # Filters for category-specific tags:
     category = opts[:category]
 
+    if opts[:for_input] && !guardian.nil? && !guardian.is_staff? && category&.required_tag_group
+      required_tag_ids = category.required_tag_group.tags.pluck(:id)
+      if (required_tag_ids & selected_tag_ids).size < category.min_tags_from_required_group
+        query = query.where('tags.id IN (?)', required_tag_ids)
+      end
+    end
+
     if category && (category.tags.count > 0 || category.tag_groups.count > 0)
       if category.allow_global_tags
         # Select tags that:

@@ -1,16 +1,17 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import ColorSchemeColor from "admin/models/color-scheme-color";
-import computed from "ember-addons/ember-computed-decorators";
+import EmberObject from "@ember/object";
 
-const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
+const ColorScheme = EmberObject.extend(Ember.Copyable, {
   init() {
     this._super(...arguments);
 
     this.startTrackingChanges();
   },
 
-  @computed
+  @discourseComputed
   description() {
     return "" + this.name;
   },
@@ -42,7 +43,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
     return newScheme;
   },
 
-  @computed("name", "colors.@each.changed", "saving")
+  @discourseComputed("name", "colors.@each.changed", "saving")
   changed(name) {
     if (!this.originals) return false;
     if (this.originals.name !== name) return true;
@@ -51,7 +52,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
     return false;
   },
 
-  @computed("changed")
+  @discourseComputed("changed")
   disableSave(changed) {
     if (this.theme_id) {
       return false;

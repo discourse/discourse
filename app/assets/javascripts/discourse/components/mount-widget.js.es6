@@ -6,6 +6,7 @@ import { WidgetClickHook } from "discourse/widgets/hooks";
 import { queryRegistry } from "discourse/widgets/widget";
 import { getRegister } from "discourse-common/lib/get-owner";
 import DirtyKeys from "discourse/lib/dirty-keys";
+import { camelize } from "@ember/string";
 
 let _cleanCallbacks = {};
 export function addWidgetCleanCallback(widgetName, fn) {
@@ -80,7 +81,7 @@ export default Component.extend({
   afterPatch() {},
 
   eventDispatched(eventName, key, refreshArg) {
-    const onRefresh = Ember.String.camelize(eventName.replace(/:/, "-"));
+    const onRefresh = camelize(eventName.replace(/:/, "-"));
     this.dirtyKeys.keyDirty(key, { onRefresh, refreshArg });
     this.queueRerender();
   },

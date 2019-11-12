@@ -113,15 +113,6 @@ hy:
       random_mention:
         reply: |-
           Բարև! Իմանալու համար, թե ինչ կարող եմ ես անել, հիշատակեք `@%{discobot_username} %{help_trigger}`:
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _ Որևէ բարություն արեք՝ առանց պարգևատրման սպասումների, իմանալով, որ երբևիցե որևէ մեկը կարող է անել նույնը Ձեզ համար _ &mdash; Արքայադուստր Դիանա
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Դուք կարող եք ապավինել դրան
       do_not_understand:
         first_response: |-
           Հեյ, շնորհակալություն պատասխանի համար!
@@ -259,12 +250,6 @@ hy:
           _պը՛տ_ … Ես անակնկալ եմ թաքցրել այս թեմայում: Եթե Ձեզ հետաքրքրում է այս մարտահրավերը, այն որոնելու համար **ընտրեք որոնման պատկերակը** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> վերևի աջ կողմում &#8599; :
 
           Փորձեք որոնել "ծովա&#8203;խոզուկ" տերմինը այս թեմայում:
-        hidden_message: |-
-          Ինչպե՞ս եք բաց թողել այս ծովախոզուկին :wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          Դուք նկատե՞ցիք, որ այժմ վերադարձել եք սկիզբ: Կերակրեք այս խեղճ փոքրիկ ծովախոզուկին` **պատասխանելով `:herb:` էմոջիով** և Դուք ավտոմատ կերպով կտեղափոխվեք դեպի վերջ:
         reply: |-
           Ուռա, Դուք գտաք այն! :tada:
 

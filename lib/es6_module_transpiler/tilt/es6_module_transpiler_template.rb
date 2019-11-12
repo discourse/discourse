@@ -82,26 +82,6 @@ JS
       end
     end
 
-    def whitelisted?(path)
-
-      @@whitelisted ||= Set.new(
-        ["discourse/models/nav-item",
-         "discourse/models/user-action",
-         "discourse/routes/discourse",
-         "discourse/models/category",
-         "discourse/models/trust-level",
-         "discourse/models/site",
-         "discourse/models/user",
-         "discourse/models/session",
-         "discourse/models/model",
-         "discourse/models/topic",
-         "discourse/models/post",
-         "discourse/views/grouped"]
-      )
-
-      @@whitelisted.include?(path) || path =~ /discourse\/mixins/
-    end
-
     def babel_transpile(source)
       klass = self.class
       klass.protect do
@@ -137,39 +117,6 @@ JS
         )
 
         @output = klass.v8.eval(source)
-      end
-
-      # For backwards compatibility with plugins, for now export the Global format too.
-      # We should eventually have an upgrade system for plugins to use ES6 or some other
-      # resolve based API.
-      if whitelisted?(scope.logical_path) &&
-        scope.logical_path =~ /(discourse|admin)\/(controllers|components|views|routes|mixins|models)\/(.*)/
-
-        type = Regexp.last_match[2]
-        file_name = Regexp.last_match[3].gsub(/[\-\/]/, '_')
-        class_name = file_name.classify
-
-        # Rails removes pluralization when calling classify
-        if file_name.end_with?('s') && (!class_name.end_with?('s'))
-          class_name << "s"
-        end
-        require_name = module_name(scope.root_path, scope.logical_path)
-
-        if require_name !~ /\-test$/ && require_name !~ /^discourse\/plugins\//
-          result = "#{class_name}#{type.classify}"
-
-          # HAX
-          result = "Controller" if result == "ControllerController"
-          result = "Route" if result == "DiscourseRoute"
-          result = "View" if result == "ViewView"
-
-          result = result.gsub(/Mixin$/, '')
-          result = result.gsub(/Model$/, '')
-
-          if result != "PostMenuView"
-            @output << "\n\nDiscourse.#{result} = require('#{require_name}').default;\n"
-          end
-        end
       end
 
       @output

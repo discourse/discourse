@@ -72,6 +72,16 @@
     </div>
   </section>
 
-  <button {{action "save"}} disabled={{savingDisabled}} class='btn btn-default'>{{i18n 'tagging.groups.save'}}</button>
-  <button {{action "destroy"}} disabled={{buffered.isNew}} class='btn btn-danger'>{{d-icon "far-trash-alt"}} {{i18n 'tagging.groups.delete'}}</button>
+  {{d-button
+    class="btn-default"
+    action=(action "save")
+    disabled=savingDisabled
+    label="tagging.groups.save"}}
+
+  {{d-button
+    class="btn-danger"
+    action=(action "destroy")
+    disabled=buffered.isNew
+    icon="far-trash-alt"
+    label="tagging.groups.delete"}}
 </div>

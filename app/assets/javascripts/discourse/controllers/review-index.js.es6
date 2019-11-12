@@ -1,5 +1,5 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Controller.extend({
   queryParams: [
@@ -27,7 +27,7 @@ export default Controller.extend({
     this.set("filtersExpanded", !this.site.mobileView);
   },
 
-  @computed("reviewableTypes")
+  @discourseComputed("reviewableTypes")
   allTypes() {
     return (this.reviewableTypes || []).map(type => {
       return {
@@ -37,7 +37,7 @@ export default Controller.extend({
     });
   },
 
-  @computed
+  @discourseComputed
   priorities() {
     return ["low", "medium", "high"].map(priority => {
       return {
@@ -47,7 +47,7 @@ export default Controller.extend({
     });
   },
 
-  @computed
+  @discourseComputed
   sortOrders() {
     return ["priority", "priority_asc", "created_at", "created_at_asc"].map(
       order => {
@@ -59,7 +59,7 @@ export default Controller.extend({
     );
   },
 
-  @computed
+  @discourseComputed
   statuses() {
     return [
       "pending",
@@ -74,7 +74,7 @@ export default Controller.extend({
     });
   },
 
-  @computed("filtersExpanded")
+  @discourseComputed("filtersExpanded")
   toggleFiltersIcon(filtersExpanded) {
     return filtersExpanded ? "chevron-up" : "chevron-down";
   },

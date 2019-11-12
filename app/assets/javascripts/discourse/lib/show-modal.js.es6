@@ -1,3 +1,5 @@
+import { dasherize } from "@ember/string";
+
 export default function(name, opts) {
   opts = opts || {};
   const container = Discourse.__container__;
@@ -13,7 +15,7 @@ export default function(name, opts) {
   modalController.set("name", controllerName);
 
   let controller = container.lookup("controller:" + controllerName);
-  const templateName = opts.templateName || Ember.String.dasherize(name);
+  const templateName = opts.templateName || dasherize(name);
 
   const renderArgs = { into: "modal", outlet: "modalBody" };
   if (controller) {

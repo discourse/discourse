@@ -66,7 +66,7 @@ module Middleware
             if @env[DISCOURSE_RENDER] == "crawler" || CrawlerDetection.crawler?(user_agent, @env["HTTP_VIA"])
               :true
             else
-              user_agent.downcase.include?("discourse") ? :true : :false
+              user_agent.downcase.include?("discourse") && !user_agent.downcase.include?("mobile") ? :true : :false
             end
           end
         @is_crawler == :true

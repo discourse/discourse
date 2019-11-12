@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import computed from "ember-addons/ember-computed-decorators";
 
 // Lists of topics on a user's page.
 export default Controller.extend({
@@ -26,7 +26,7 @@ export default Controller.extend({
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   }.observes("model.canLoadMore"),
 
-  @computed("incomingCount")
+  @discourseComputed("incomingCount")
   hasIncoming(incomingCount) {
     return incomingCount > 0;
   },

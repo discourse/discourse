@@ -143,8 +143,6 @@
       dd {
         padding: 0;
         margin: 0 15px 0 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
         color: $primary;
 
         &.groups {
@@ -182,9 +180,7 @@
       h2 {
         font-weight: normal;
         max-width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
       }
 
       h3 {
