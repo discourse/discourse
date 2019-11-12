@@ -280,8 +280,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
       const $panelBody = $(".panel-body", $panel);
       // 2 pixel fudge allows for firefox subpixel sizing stuff causing scrollbar
-      let contentHeight =
-        $(".panel-body-contents", $panel).height() + 2;
+      let contentHeight = $(".panel-body-contents", $panel).height() + 2;
 
       // We use a mutationObserver to check for style changes, so it's important
       // we don't set it if it doesn't change. Same goes for the $panelBody!

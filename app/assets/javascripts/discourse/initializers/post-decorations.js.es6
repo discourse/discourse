@@ -26,7 +26,10 @@ export default {
           const players = $("audio", $elem);
           if (players.length) {
             players.on("play", () => {
-              const postId = parseInt($elem.closest("article").data("post-id"), 10);
+              const postId = parseInt(
+                $elem.closest("article").data("post-id"),
+                10
+              );
               if (postId) {
                 api.preventCloak(postId);
               }

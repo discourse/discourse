@@ -822,8 +822,9 @@ export default Component.extend({
       const index = parseInt(
         $(e.target)
           .parent()
-          .attr("data-image-index")
-      , 10);
+          .attr("data-image-index"),
+        10
+      );
 
       const scale = e.target.attributes["data-scale"].value;
       const matchingPlaceholder = this.get("composer.reply").match(
