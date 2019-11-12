@@ -142,11 +142,4 @@ class Promotion
       user.change_trust_level!(2, log_action_for: performed_by || Discourse.system_user)
     end
   end
-
-  private
-
-  def send_advanced_tutorial_message(user)
-    return unless SiteSetting.send_tl2_promotion_message?
-    Jobs.enqueue(:send_system_message, user_id: user.id, message_type: "tl2_promotion_message")
-  end
 end

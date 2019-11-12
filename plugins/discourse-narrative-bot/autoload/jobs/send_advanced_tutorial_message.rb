@@ -6,10 +6,8 @@ module Jobs
       user = User.find_by(id: args[:user_id])
       raise Discourse::InvalidParameters.new(:user_id) if user.nil?
 
-      discobot_user = User.find(-2)
-
       PostCreator.create!(
-        discobot_user,
+        Discourse.system_user,
         title: I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"),
         raw: I18n.t("discourse_narrative_bot.tl2_promotion_message.text_body_template"),
         archetype: Archetype.private_message,

@@ -8,7 +8,7 @@ RSpec.describe Jobs::SendAdvancedTutorialMessage do
 
   it 'sends a message to the promoted user' do
     user = Fabricate(:user)
-    discobot_user = User.find(-2)
+    discobot_user = Discourse.system_user
     Jobs.enqueue(:send_advanced_tutorial_message, user_id: user.id)
 
     topic = Topic.last
