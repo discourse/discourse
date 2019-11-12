@@ -698,7 +698,7 @@ describe UserNotifications do
     end
 
     it "replaces secure audio/video with placeholder" do
-      reply = Fabricate(:post, topic_id: post.topic_id, raw: "Video: \n#{video_upload.url}")
+      reply = Fabricate(:post, topic_id: post.topic_id, raw: "Video: #{video_upload.url}")
 
       notification = Fabricate(
         :notification,
