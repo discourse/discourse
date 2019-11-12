@@ -292,30 +292,29 @@ module BackupRestore
       upload_directory = File.join("uploads", @current_db)
       count = 0
 
-      FileUtils.cd(@tmp_directory) do
-        Upload.find_each do |upload|
-          next if upload.local?
-          filename = File.join(@tmp_directory, upload_directory, store.get_path_for_upload(upload))
+      Upload.find_each do |upload|
+        next if upload.local?
+        filename = File.join(@tmp_directory, upload_directory, store.get_path_for_upload(upload))
 
-          begin
-            FileUtils.mkdir_p(File.dirname(filename))
-            store.download_file(upload, filename)
-          rescue StandardError => ex
-            log "Failed to download file with upload ID #{upload.id} from S3", ex
-          end
-
-          if File.exists?(filename)
-            Discourse::Utils.execute_command(
-              'tar', '--append', '--file', tar_filename, upload_directory,
-              failure_message: "Failed to add #{upload.original_filename} to archive.", success_status_codes: [0, 1]
-            )
-
-            File.delete(filename)
-          end
-
-          count += 1
-          log "#{count} files have already been downloaded. Still downloading..." if count % 500 == 0
+        begin
+          FileUtils.mkdir_p(File.dirname(filename))
+          store.download_file(upload, filename)
+        rescue StandardError => ex
+          log "Failed to download file with upload ID #{upload.id} from S3", ex
         end
+
+        if File.exists?(filename)
+          Discourse::Utils.execute_command(
+            'tar', '--append', '--file', tar_filename, upload_directory,
+            failure_message: "Failed to add #{upload.original_filename} to archive.", success_status_codes: [0, 1],
+            cd: @tmp_directory
+          )
+
+          File.delete(filename)
+        end
+
+        count += 1
+        log "#{count} files have already been downloaded. Still downloading..." if count % 500 == 0
       end
 
       log "No uploads found on S3. Skipping archiving of uploads stored on S3..." if count == 0
