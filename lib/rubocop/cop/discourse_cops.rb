@@ -16,12 +16,16 @@ module RuboCop
       class NoChdir < Cop
         MSG = 'Chdir is not thread safe.'
 
-        def_node_matcher :using_chdir?, <<-MATCHER
+        def_node_matcher :using_dir_chdir?, <<-MATCHER
           (send (const nil? :Dir) :chdir ...)
         MATCHER
 
+        def_node_matcher :using_fileutils_cd?, <<-MATCHER
+          (send (const nil? :FileUtils) :cd ...)
+        MATCHER
+
         def on_send(node)
-          return unless using_chdir?(node)
+          return if !(using_dir_chdir?(node) || using_fileutils_cd?(node))
           add_offense(node, message: MSG)
         end
       end

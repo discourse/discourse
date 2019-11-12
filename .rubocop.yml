@@ -133,3 +133,5 @@ DiscourseCops/NoChdir:
   Enabled: true
   Exclude:
     - 'spec/**/*' # Specs are run sequentially, so chdir can be used
+    - 'lib/theme_store/**/*' # TODO
+    - 'lib/backup_restore/**/*' # TODO
