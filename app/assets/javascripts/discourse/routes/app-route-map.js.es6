@@ -212,7 +212,7 @@ export default function() {
         path: "/c/:category/:tag_id/l/" + filter
       });
       this.route("showCategoryNone" + filter.capitalize(), {
-        path: "/c/:category/:tag_id/l/" + filter
+        path: "/c/:category/none/:tag_id/l/" + filter
       });
       this.route("showParentCategory" + filter.capitalize(), {
         path: "/c/:parent_category/:category/:tag_id/l/" + filter
