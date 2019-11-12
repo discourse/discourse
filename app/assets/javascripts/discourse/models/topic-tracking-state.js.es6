@@ -410,12 +410,11 @@ const TopicTrackingState = EmberObject.extend({
 
   loadStates(data) {
     const states = this.states;
-    const idMap = Category.idMap();
 
     // I am taking some shortcuts here to avoid 500 gets for a large list
     if (data) {
       data.forEach(topic => {
-        var category = idMap[topic.category_id];
+        let category = Category.findById(topic.category_id);
         if (category && category.parent_category_id) {
           topic.parent_category_id = category.parent_category_id;
         }

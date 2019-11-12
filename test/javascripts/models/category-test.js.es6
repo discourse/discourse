@@ -184,19 +184,6 @@ QUnit.test("findSingleBySlug", assert => {
   );
 });
 
-QUnit.test("findByIds", assert => {
-  const store = createStore();
-  const categories = {
-    1: store.createRecord("category", { id: 1 }),
-    2: store.createRecord("category", { id: 2 })
-  };
-
-  sandbox.stub(Category, "idMap").returns(categories);
-  assert.deepEqual(Category.findByIds([1, 2, 3]), _.values(categories));
-
-  assert.deepEqual(Category.findByIds(), []);
-});
-
 QUnit.test("search with category name", assert => {
   const store = createStore(),
     category1 = store.createRecord("category", {
