@@ -738,7 +738,7 @@ lt:
         edit: "Redaguoti"
         security_key:
           register: "Registruokis"
-          delete: 'Pašalinti'
+          delete: "Pašalinti"
       change_about:
         title: "Keisti Apie Mane"
         error: "Rasta klaida bandant pakeisti reikšmę. Prašom patikslinti veiksmus."
@@ -761,9 +761,6 @@ lt:
         uploaded_avatar_empty: "Pridėti paveiksliuką"
         upload_title: "Įkelti savo nuotrauką"
         image_is_not_a_square: "Įspėjimas: jūs ką tik apkirpote nuotrauką, tačiau plotis ir ilgis nėra vienodi."
-      change_profile_background:
-        title: "Profilio fonas"
-        instructions: "Profilio fonas bus išcentruotas ir turės numatytą 850px plotį."
       change_card_background:
         title: "Paskyros fonas"
         instructions: "Fono paveiksliukas bus sucentruotas ir turės numatytą 590px plotį."
@@ -945,6 +942,9 @@ lt:
         header_title: "Profilis, žinutės, žymės ir nustatymai"
       title:
         title: "Antraštė"
+        none: "(nieko)"
+      primary_group:
+        title: "Pagrindinė Grupė"
         none: "(nieko)"
       filters:
         all: "Visi"
@@ -1776,6 +1776,8 @@ lt:
         image_upload_not_allowed_for_new_user: "Atsiprašome, bet nauji vartotojai negali įkelti nuotraukų."
         attachment_upload_not_allowed_for_new_user: "Atsiprašome, bet nauji vartotojai negali įkelti priedų."
         attachment_download_requires_login: "Atsiprašome, bet jūs turite būti prisijungęs, kad galėtumėt atsisiųsti priedus."
+      abandon_edit:
+        no_value: "Ne, palikti"
       abandon:
         confirm: "Ar tikrai norite atšaukti savo įrašą?"
         no_value: "Ne, palikti"
@@ -2393,7 +2395,6 @@ lt:
               staff: "Grupės valdytojai ir moderatoriai"
           membership:
             automatic: Automatini
-            trust_level: Patikimumo lygis
             trust_levels_title: "Pasitikėjimo lygis automatiškai suteikiamas nariui kai jis prideda:"
             trust_levels_none: "Nieko"
             automatic_membership_email_domains: "Vartotojai, kurie užsiregistravo su el. paštu, kuris sutampa su šiame sąraše esančiu el. paštu bus automatiškai pridėti į šią grupę:"
@@ -2422,16 +2423,13 @@ lt:
         none: "Šiuo metu nėra jokių aktyvių API raktų."
         user: "Vartotojas"
         title: "API"
-        key: "API raktas"
         created: Sukurta
         generate: "Generuoti"
-        regenerate: "Pergeneruoti"
         revoke: "Pašalinti"
-        confirm_regen: "Ar tikrai norite pakeisti šį API raktą nauju?"
-        confirm_revoke: "Ar tikrai norite pašalinti šį raktą?"
-        info_html: "Jūsų API raktas leis jums kurti ir atnaujinti temas naudojant JSON užklausas."
         all_users: "Visi vartotojai"
-        note_html: "Tai slapta <strong>funkcija</strong>, su ja gali kurti įrašus bet kokiu vardu."
+        show_details: Detalės
+        description: Aprašymas
+        save: Saugoti
       web_hooks:
         create: "Sukurti"
         save: "Saugoti"
@@ -3065,6 +3063,8 @@ lt:
           search: "Ieškoti"
           groups: "Grupės"
           dashboard: "Apžvalga"
+        default_categories:
+          modal_yes: "Taip"
       badges:
         title: Trofėjai
         new_badge: Naujas ženklelis

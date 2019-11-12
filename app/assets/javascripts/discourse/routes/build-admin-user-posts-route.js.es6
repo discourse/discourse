@@ -1,7 +1,8 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import { emojiUnescape } from "discourse/lib/text";
 
 export default function(filter) {
-  return Discourse.Route.extend({
+  return DiscourseRoute.extend({
     actions: {
       didTransition() {
         this.controllerFor("user").set("indexStream", true);

@@ -1,7 +1,8 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
-import computed from "ember-addons/ember-computed-decorators";
+import Mixin from "@ember/object/mixin";
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   queryParams: ["period"],
   period: "monthly",
 
@@ -11,7 +12,7 @@ export default Ember.Mixin.create({
     this.availablePeriods = ["yearly", "quarterly", "monthly", "weekly"];
   },
 
-  @computed("period")
+  @discourseComputed("period")
   startDate(period) {
     let fullDay = moment()
       .locale("en")
@@ -36,7 +37,7 @@ export default Ember.Mixin.create({
     }
   },
 
-  @computed()
+  @discourseComputed()
   lastWeek() {
     return moment()
       .locale("en")
@@ -45,7 +46,7 @@ export default Ember.Mixin.create({
       .subtract(1, "week");
   },
 
-  @computed()
+  @discourseComputed()
   lastMonth() {
     return moment()
       .locale("en")
@@ -54,7 +55,7 @@ export default Ember.Mixin.create({
       .subtract(1, "month");
   },
 
-  @computed()
+  @discourseComputed()
   endDate() {
     return moment()
       .locale("en")
@@ -63,7 +64,7 @@ export default Ember.Mixin.create({
       .endOf("day");
   },
 
-  @computed()
+  @discourseComputed()
   today() {
     return moment()
       .locale("en")

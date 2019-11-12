@@ -526,7 +526,9 @@ class PostCreator
 
     @user.user_stat.save!
 
-    @user.update(last_posted_at: @post.created_at)
+    if !@topic.private_message? && @post.post_type != Post.types[:whisper]
+      @user.update(last_posted_at: @post.created_at)
+    end
   end
 
   def create_post_notice

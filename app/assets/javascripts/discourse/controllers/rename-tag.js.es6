@@ -1,10 +1,11 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import computed from "ember-addons/ember-computed-decorators";
 import BufferedContent from "discourse/mixins/buffered-content";
 import { extractError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend(ModalFunctionality, BufferedContent, {
-  @computed("buffered.id", "id")
+export default Controller.extend(ModalFunctionality, BufferedContent, {
+  @discourseComputed("buffered.id", "id")
   renameDisabled(inputTagName, currentTagName) {
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
     const newTagName = inputTagName

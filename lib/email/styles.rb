@@ -36,7 +36,7 @@ module Email
     def custom_styles
       return @custom_styles unless @custom_styles.nil?
 
-      css = EmailStyle.new.css
+      css = EmailStyle.new.compiled_css
       @custom_styles = {}
 
       if !css.blank?

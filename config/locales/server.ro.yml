@@ -45,7 +45,6 @@ ro:
         auto_generated_email_error: "Apare când header-ul de 'precedență' este setat pe: list, junk, bulk sau auto_reply, sau atunci când orice alt header conține: auto-submitted, auto-replied sau auto-generated."
         no_body_detected_error: "Apare când nu am putut extrage corpul mesajului și nu existau fișiere atașate."
         inactive_user_error: "Apare când expeditorul nu este activ."
-        bad_destination_address: "Apare când niciuna dintre adresele de email din câmpurile To/Cc/Bcc nu se potrivește cu o adresa de email expeditor configurată."
         strangers_not_allowed_error: "Apare când un utilizator a încercat să creeze un nou subiect într-o categorie în care nu este membru. "
         insufficient_trust_level_error: "Apare atunci când un utilizator a încercat să creeze un subiect nou într-o categorie pentru care nu are nivelul de încredere necesar."
         reply_user_not_matching_error: "Apare atunci când un răspuns a venit de la o adresă de email diferită de cea la care a fost trimisă notificarea."
@@ -471,7 +470,6 @@ ro:
     activated: "Acest cont a fost deja activat."
     admin_confirm:
       title: "Confirmă contul de Administrator"
-      description: "Eșți sigur că vrei ca <b>%{target_username}</b> să fie administrator?"
       grant: "Acordă titlu de admin"
       complete: "<b>%{target_username}</b> este administrator."
       back_to: "Întoarce-te la %{title}"
@@ -1117,7 +1115,7 @@ ro:
     embed_post_limit: "Numărul maxim de postări care să fie încorporate."
     embed_username_required: "Numele utilizator pentru acest subiect este obligatoriu."
     show_create_topics_notice: "Dacă site-ul are mai puțin de 5 subiecte publice, afișează o notificare prin care se cere adminilor să creeze subiecte."
-    delete_drafts_older_than_n_days: șterge drafturile mai vechi de (n) zile.
+    delete_drafts_older_than_n_days: "șterge drafturile mai vechi de (n) zile."
     bootstrap_mode_min_users: "Numărul minim de utilizatori necesar pentru dezactivarea modului bootstrap (0 pentru dezactivare)"
     prevent_anons_from_downloading_files: "Blochează utilizatorii anonimi de la descărcarea de atașamente. ATENȚIE: aceasta va face ca toate resursele site-ului care sunt postate ca atașamente să nu mai meargă."
     slug_generation_method: "Alege o metodă de generare de identificator. 'encodat' va genera șir de caractere encodate cu procentaje. 'nimic' va dezactiva complet identificatorii."
@@ -1459,26 +1457,6 @@ ro:
     only_reply_by_email: "Dă reply la acest email pentru a răspunde."
     visit_link_to_respond: "[Vizitează subiect](%{base_url}%{url}) pentru a răspunde."
     posted_by: "Postat de %{username} pe data %{post_date}"
-    invited_to_private_message_body: |
-      %{username} te-a invitat la un mesaj
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      pe
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} te-a invitat la o discuție
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      pe
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       text_body_template: |
         %{header_instructions}
@@ -1659,7 +1637,6 @@ ro:
     missing: "Ne pare rău, dar nu putem găsi avatarul asociat cu această adresă de email. Ai putea să îl încarci din nou?"
   flag_reason:
     sockpuppet: "Un utilizator nou a creat un subiect, și un alt utilizator nou de la aceeași adresă de IP (%{ip_address}) a răspuns. Vezi <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> la setările site-ului."
-    spam_hosts: "Acest nou utilizator a încrecat să creeze postări multiple cu link-uri către acelasi domeniu. Vezi <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> la setările site-ului."
   skipped_email_log:
     exceeded_emails_limit: "Depășit max_emails_per_day_per_user"
     exceeded_bounces_limit: "Depășit bounce_score_threshold"

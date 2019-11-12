@@ -1,6 +1,5 @@
-import { lookupCache } from "pretty-text/oneboxer";
+import { lookupCache } from "pretty-text/oneboxer-cache";
 import { cachedInlineOnebox } from "pretty-text/inline-oneboxer";
-
 import {
   INLINE_ONEBOX_LOADING_CSS_CLASS,
   INLINE_ONEBOX_CSS_CLASS

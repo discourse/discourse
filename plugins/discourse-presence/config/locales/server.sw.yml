@@ -7,5 +7,5 @@
 
 sw:
   site_settings:
-    presence_enabled: 'Onyesha watumiaji ambao wanaongelea mada ya sasa, au wana hariri mada?'
-    presence_max_users_shown: 'Kiwango cha juu cha watumiaji kilicho onyeshwa.'
+    presence_enabled: "Onyesha watumiaji ambao wanaongelea mada ya sasa, au wana hariri mada?"
+    presence_max_users_shown: "Kiwango cha juu cha watumiaji kilicho onyeshwa."

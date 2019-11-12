@@ -1,16 +1,17 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { findAll } from "discourse/models/login-method";
-import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   elementId: "login-buttons",
   classNameBindings: ["hidden"],
 
-  @computed("buttons.length", "showLoginWithEmailLink")
+  @discourseComputed("buttons.length", "showLoginWithEmailLink")
   hidden(buttonsCount, showLoginWithEmailLink) {
     return buttonsCount === 0 && !showLoginWithEmailLink;
   },
 
-  @computed
+  @discourseComputed
   buttons() {
     return findAll();
   },

@@ -17,6 +17,10 @@ class EmailStyle
     SiteSetting.email_custom_css || default_css
   end
 
+  def compiled_css
+    SiteSetting.email_custom_css_compiled.presence || css
+  end
+
   def default_html
     self.class.default_template
   end

@@ -1,6 +1,7 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   queryParams: [
     "priority",
     "type",
@@ -26,7 +27,7 @@ export default Ember.Controller.extend({
     this.set("filtersExpanded", !this.site.mobileView);
   },
 
-  @computed("reviewableTypes")
+  @discourseComputed("reviewableTypes")
   allTypes() {
     return (this.reviewableTypes || []).map(type => {
       return {
@@ -36,7 +37,7 @@ export default Ember.Controller.extend({
     });
   },
 
-  @computed
+  @discourseComputed
   priorities() {
     return ["low", "medium", "high"].map(priority => {
       return {
@@ -46,7 +47,7 @@ export default Ember.Controller.extend({
     });
   },
 
-  @computed
+  @discourseComputed
   sortOrders() {
     return ["priority", "priority_asc", "created_at", "created_at_asc"].map(
       order => {
@@ -58,7 +59,7 @@ export default Ember.Controller.extend({
     );
   },
 
-  @computed
+  @discourseComputed
   statuses() {
     return [
       "pending",
@@ -73,7 +74,7 @@ export default Ember.Controller.extend({
     });
   },
 
-  @computed("filtersExpanded")
+  @discourseComputed("filtersExpanded")
   toggleFiltersIcon(filtersExpanded) {
     return filtersExpanded ? "chevron-up" : "chevron-down";
   },

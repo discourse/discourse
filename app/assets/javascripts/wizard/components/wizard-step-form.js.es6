@@ -1,8 +1,9 @@
-import computed from "ember-addons/ember-computed-decorators";
+import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [":wizard-step-form", "customStepClass"],
 
-  @computed("step.id")
+  @discourseComputed("step.id")
   customStepClass: stepId => `wizard-step-${stepId}`
 });

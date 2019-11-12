@@ -1,20 +1,23 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { equal } from "@ember/object/computed";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
 
 const ACTIONS = ["delete", "delete_replies", "edit", "none"];
 
-export default Ember.Component.extend({
+export default Component.extend({
   postId: null,
   postAction: null,
   postEdit: null,
 
-  @computed
+  @discourseComputed
   penaltyActions() {
     return ACTIONS.map(id => {
       return { id, name: I18n.t(`admin.user.penalty_post_${id}`) };
     });
   },
 
-  editing: Ember.computed.equal("postAction", "edit"),
+  editing: equal("postAction", "edit"),
 
   actions: {
     penaltyChanged() {
@@ -22,7 +25,7 @@ export default Ember.Component.extend({
 
       // If we switch to edit mode, jump to the edit textarea
       if (postAction === "edit") {
-        Ember.run.scheduleOnce("afterRender", () => {
+        scheduleOnce("afterRender", () => {
           let elem = this.element;
           let body = elem.closest(".modal-body");
           body.scrollTop(body.height());

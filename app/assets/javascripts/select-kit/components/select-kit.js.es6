@@ -1,5 +1,8 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import EmberObject from "@ember/object";
+import Component from "@ember/component";
 const { get, isNone, run, isEmpty, makeArray } = Ember;
-import computed from "ember-addons/ember-computed-decorators";
+
 import UtilsMixin from "select-kit/mixins/utils";
 import DomHelpersMixin from "select-kit/mixins/dom-helpers";
 import EventsMixin from "select-kit/mixins/events";
@@ -10,7 +13,7 @@ import {
   applyCollectionHeaderCallbacks
 } from "select-kit/mixins/plugin-api";
 
-export default Ember.Component.extend(
+export default Component.extend(
   UtilsMixin,
   PluginApiMixin,
   DomHelpersMixin,
@@ -86,11 +89,11 @@ export default Ember.Component.extend(
       this.noneValue = "__none__";
       this.set(
         "headerComponentOptions",
-        Ember.Object.create({ forceEscape: this.forceEscape })
+        EmberObject.create({ forceEscape: this.forceEscape })
       );
       this.set(
         "rowComponentOptions",
-        Ember.Object.create({
+        EmberObject.create({
           forceEscape: this.forceEscape
         })
       );
@@ -221,7 +224,7 @@ export default Ember.Component.extend(
       return this.computeContentItem(contentItem, options);
     },
 
-    @computed(
+    @discourseComputed(
       "isAsync",
       "isLoading",
       "filteredAsyncComputedContent.[]",
@@ -248,28 +251,28 @@ export default Ember.Component.extend(
       return !this.hasReachedMaximum;
     },
 
-    @computed("maximum", "selection.[]")
+    @discourseComputed("maximum", "selection.[]")
     hasReachedMaximum(maximum, selection) {
       if (!maximum) return false;
       selection = makeArray(selection);
       return selection.length >= maximum;
     },
 
-    @computed("minimum", "selection.[]")
+    @discourseComputed("minimum", "selection.[]")
     hasReachedMinimum(minimum, selection) {
       if (!minimum) return true;
       selection = makeArray(selection);
       return selection.length >= minimum;
     },
 
-    @computed("shouldFilter", "allowAny")
+    @discourseComputed("shouldFilter", "allowAny")
     shouldDisplayFilter(shouldFilter, allowAny) {
       if (shouldFilter) return true;
       if (allowAny) return true;
       return false;
     },
 
-    @computed("filter", "collectionComputedContent.[]", "isLoading")
+    @discourseComputed("filter", "collectionComputedContent.[]", "isLoading")
     noContentRow(filter, collectionComputedContent, isLoading) {
       if (
         filter.length > 0 &&
@@ -280,7 +283,7 @@ export default Ember.Component.extend(
       }
     },
 
-    @computed("hasReachedMaximum", "hasReachedMinimum", "isExpanded")
+    @discourseComputed("hasReachedMaximum", "hasReachedMinimum", "isExpanded")
     validationMessage(hasReachedMaximum, hasReachedMinimum) {
       if (hasReachedMaximum && this.maximum) {
         const key = this.maximumLabel || "select_kit.max_content_reached";
@@ -293,14 +296,19 @@ export default Ember.Component.extend(
       }
     },
 
-    @computed("allowAny")
+    @discourseComputed("allowAny")
     filterPlaceholder(allowAny) {
       return allowAny
         ? "select_kit.filter_placeholder_with_any"
         : "select_kit.filter_placeholder";
     },
 
-    @computed("filter", "filterable", "autoFilterable", "renderedFilterOnce")
+    @discourseComputed(
+      "filter",
+      "filterable",
+      "autoFilterable",
+      "renderedFilterOnce"
+    )
     shouldFilter(filter, filterable, autoFilterable, renderedFilterOnce) {
       if (renderedFilterOnce && filterable) return true;
       if (filterable) return true;
@@ -308,7 +316,7 @@ export default Ember.Component.extend(
       return false;
     },
 
-    @computed(
+    @discourseComputed(
       "computedValue",
       "filter",
       "collectionComputedContent.[]",
@@ -329,7 +337,7 @@ export default Ember.Component.extend(
       return false;
     },
 
-    @computed("filter", "shouldDisplayCreateRow")
+    @discourseComputed("filter", "shouldDisplayCreateRow")
     createRowComputedContent(filter, shouldDisplayCreateRow) {
       if (shouldDisplayCreateRow) {
         let content = this.createContentFromInput(filter);
@@ -341,17 +349,17 @@ export default Ember.Component.extend(
       }
     },
 
-    @computed
+    @discourseComputed
     templateForRow() {
       return () => null;
     },
 
-    @computed
+    @discourseComputed
     templateForNoneRow() {
       return () => null;
     },
 
-    @computed("filter")
+    @discourseComputed("filter")
     templateForCreateRow() {
       return rowComponent => {
         return I18n.t("select_kit.create", {
@@ -360,7 +368,7 @@ export default Ember.Component.extend(
       };
     },
 
-    @computed("none")
+    @discourseComputed("none")
     noneRowComputedContent(none) {
       if (isNone(none)) return null;
 
@@ -425,7 +433,12 @@ export default Ember.Component.extend(
       this._boundaryActionHandler("onStopLoading");
     },
 
-    @computed("selection.[]", "isExpanded", "filter", "highlightedSelection.[]")
+    @discourseComputed(
+      "selection.[]",
+      "isExpanded",
+      "filter",
+      "highlightedSelection.[]"
+    )
     collectionHeaderComputedContent() {
       return applyCollectionHeaderCallbacks(
         this.pluginApiIdentifiers,
@@ -434,7 +447,7 @@ export default Ember.Component.extend(
       );
     },
 
-    @computed("selection.[]", "isExpanded", "headerIcon")
+    @discourseComputed("selection.[]", "isExpanded", "headerIcon")
     headerComputedContent() {
       return applyHeaderContentPluginApiCallbacks(
         this.pluginApiIdentifiers,

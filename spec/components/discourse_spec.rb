@@ -65,6 +65,33 @@ describe Discourse do
     end
   end
 
+  context 'plugins' do
+    let(:plugin_class) do
+      Class.new(Plugin::Instance) do
+        attr_accessor :enabled
+        def enabled?
+          @enabled
+        end
+      end
+    end
+
+    let(:plugin1) { plugin_class.new.tap { |p| p.enabled = true } }
+    let(:plugin2) { plugin_class.new.tap { |p| p.enabled = false } }
+
+    before { Discourse.plugins.append(plugin1, plugin2) }
+    after { Discourse.plugins.clear }
+
+    it 'can find plugins correctly' do
+      expect(Discourse.plugins).to contain_exactly(plugin1, plugin2)
+
+      # Exclude disabled plugins by default
+      expect(Discourse.find_plugins({})).to contain_exactly(plugin1)
+
+      # Include disabled plugins when requested
+      expect(Discourse.find_plugins(include_disabled: true)).to contain_exactly(plugin1, plugin2)
+    end
+  end
+
   context 'authenticators' do
     it 'returns inbuilt authenticators' do
       expect(Discourse.authenticators).to match_array(Discourse::BUILTIN_AUTH.map(&:authenticator))
@@ -128,6 +155,12 @@ describe Discourse do
       expect(Discourse.site_contact_user.username).to eq("system")
     end
 
+  end
+
+  context '#system_user' do
+    it 'returns the system user' do
+      expect(Discourse.system_user.id).to eq(-1)
+    end
   end
 
   context "#store" do
@@ -355,6 +388,44 @@ describe Discourse do
       expect {
         Discourse.deprecate(SecureRandom.hex, raise_error: true)
       }.to raise_error(Discourse::Deprecation)
+    end
+  end
+
+  describe "Utils.execute_command" do
+    it "works for individual commands" do
+      expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
+      expect(Discourse::Utils.execute_command("pwd", chdir: "plugins").strip).to eq("#{Rails.root.to_s}/plugins")
+    end
+
+    it "works with a block" do
+      Discourse::Utils.execute_command do |runner|
+        expect(runner.exec("pwd").strip).to eq(Rails.root.to_s)
+      end
+
+      result = Discourse::Utils.execute_command(chdir: "plugins") do |runner|
+        expect(runner.exec("pwd").strip).to eq("#{Rails.root.to_s}/plugins")
+        runner.exec("pwd")
+      end
+
+      # Should return output of block
+      expect(result.strip).to eq("#{Rails.root.to_s}/plugins")
+    end
+
+    it "does not leak chdir between threads" do
+      has_done_chdir = false
+      has_checked_chdir = false
+
+      thread = Thread.new do
+        Discourse::Utils.execute_command(chdir: "plugins") do
+          has_done_chdir = true
+          sleep(0.01) until has_checked_chdir
+        end
+      end
+
+      sleep(0.01) until has_done_chdir
+      expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
+      has_checked_chdir = true
+      thread.join
     end
   end
 

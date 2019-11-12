@@ -1,5 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
-const Draft = Discourse.Model.extend();
+import EmberObject from "@ember/object";
+
+const Draft = EmberObject.extend();
 
 Draft.reopenClass({
   clear(key, sequence) {
@@ -21,11 +23,11 @@ Draft.reopenClass({
     return current;
   },
 
-  save(key, sequence, data) {
+  save(key, sequence, data, clientId) {
     data = typeof data === "string" ? data : JSON.stringify(data);
     return ajax("/draft.json", {
       type: "POST",
-      data: { draft_key: key, sequence, data }
+      data: { draft_key: key, sequence, data, owner: clientId }
     });
   }
 });

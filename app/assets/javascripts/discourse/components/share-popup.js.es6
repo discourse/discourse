@@ -1,24 +1,28 @@
+import { isEmpty } from "@ember/utils";
+import { bind } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { longDateNoYear } from "discourse/lib/formatter";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import Sharing from "discourse/lib/sharing";
 import { nativeShare } from "discourse/lib/pwa-utils";
 
-export default Ember.Component.extend({
+export default Component.extend({
   elementId: "share-link",
   classNameBindings: ["visible"],
   link: null,
   visible: null,
 
-  @computed
+  @discourseComputed
   sources() {
     return Sharing.activeSources(this.siteSettings.share_links);
   },
 
-  @computed("type", "postNumber")
+  @discourseComputed("type", "postNumber")
   shareTitle(type, postNumber) {
     if (type === "topic") {
       return I18n.t("share.topic");
@@ -29,7 +33,7 @@ export default Ember.Component.extend({
     return I18n.t("share.topic");
   },
 
-  @computed("date")
+  @discourseComputed("date")
   displayDate(date) {
     return longDateNoYear(new Date(date));
   },
@@ -56,7 +60,7 @@ export default Ember.Component.extend({
     const $currentTargetOffset = $target.offset();
     const $this = $(this.element);
 
-    if (Ember.isEmpty(url)) {
+    if (isEmpty(url)) {
       return;
     }
 
@@ -88,7 +92,7 @@ export default Ember.Component.extend({
     this.set("link", url);
     this.set("visible", true);
 
-    Ember.run.scheduleOnce("afterRender", this, this._focusUrl);
+    scheduleOnce("afterRender", this, this._focusUrl);
   },
 
   _mouseDownHandler(event) {
@@ -153,9 +157,9 @@ export default Ember.Component.extend({
 
   @on("init")
   _setupHandlers() {
-    this._boundMouseDownHandler = Ember.run.bind(this, this._mouseDownHandler);
-    this._boundClickHandler = Ember.run.bind(this, this._clickHandler);
-    this._boundKeydownHandler = Ember.run.bind(this, this._keydownHandler);
+    this._boundMouseDownHandler = bind(this, this._mouseDownHandler);
+    this._boundClickHandler = bind(this, this._clickHandler);
+    this._boundKeydownHandler = bind(this, this._keydownHandler);
   },
 
   didInsertElement() {

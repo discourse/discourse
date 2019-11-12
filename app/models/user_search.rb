@@ -16,7 +16,9 @@ class UserSearch
     @limit = opts[:limit] || 20
     @groups = opts[:groups]
     @guardian = Guardian.new(@searching_user)
-    @guardian.ensure_can_see_groups!(@groups) if @groups
+    @guardian.ensure_can_see_groups_members! @groups if @groups
+    @guardian.ensure_can_see_category! Category.find(@category_id) if @category_id
+    @guardian.ensure_can_see_topic! Topic.find(@topic_id) if @topic_id
   end
 
   def scoped_users
@@ -117,18 +119,26 @@ class UserSearch
 
     # 3. category matches
     if secure_category_id
+      @searching_user.present?
+
+      category_groups = Group.where(<<~SQL, secure_category_id, MAX_SIZE_PRIORITY_MENTION)
+        groups.id IN (
+          SELECT group_id FROM category_groups
+          JOIN groups g ON group_id = g.id
+          WHERE
+            category_id = ? AND
+            user_count < ?
+        )
+      SQL
+
+      category_groups = category_groups.members_visible_groups(@searching_user)
+
       in_category = filtered_by_term_users
-        .where(<<~SQL, secure_category_id, MAX_SIZE_PRIORITY_MENTION)
+        .where(<<~SQL, category_groups.pluck(:id))
           users.id IN (
             SELECT gu.user_id
             FROM group_users gu
-            WHERE group_id IN (
-              SELECT group_id FROM category_groups
-              JOIN groups g ON group_id = g.id
-              WHERE
-                category_id = ? AND
-                user_count < ?
-            )
+            WHERE group_id IN (?)
             LIMIT 200
           )
           SQL

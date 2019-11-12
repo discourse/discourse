@@ -1,7 +1,9 @@
+import { alias, or } from "@ember/object/computed";
+import { makeArray } from "discourse-common/lib/helpers";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
 import TagsMixin from "select-kit/mixins/tags";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 const { isEmpty, run } = Ember;
 
 export default ComboBoxComponent.extend(TagsMixin, {
@@ -9,14 +11,14 @@ export default ComboBoxComponent.extend(TagsMixin, {
   classNameBindings: ["categoryStyle", "tagClass"],
   classNames: "tag-drop",
   verticalOffset: 3,
-  value: Ember.computed.alias("tagId"),
+  value: alias("tagId"),
   headerComponent: "tag-drop/tag-drop-header",
   allowAutoSelectFirst: false,
   tagName: "li",
-  showFilterByTag: Ember.computed.alias("siteSettings.show_filter_by_tag"),
-  currentCategory: Ember.computed.or("secondCategory", "firstCategory"),
+  showFilterByTag: alias("siteSettings.show_filter_by_tag"),
+  currentCategory: or("secondCategory", "firstCategory"),
   tagId: null,
-  categoryStyle: Ember.computed.alias("siteSettings.category_style"),
+  categoryStyle: alias("siteSettings.category_style"),
   mutateAttributes() {},
   fullWidthOnMobile: true,
   caretDownIcon: "caret-right",
@@ -24,18 +26,18 @@ export default ComboBoxComponent.extend(TagsMixin, {
   allowContentReplacement: true,
   isAsync: true,
 
-  @computed("tagId")
+  @discourseComputed("tagId")
   noTagsSelected() {
     return this.tagId === "none";
   },
 
-  @computed("showFilterByTag", "content")
+  @discourseComputed("showFilterByTag", "content")
   isHidden(showFilterByTag, content) {
     if (showFilterByTag && !isEmpty(content)) return false;
     return true;
   },
 
-  @computed("content")
+  @discourseComputed("content")
   filterable(content) {
     return content && content.length >= 15;
   },
@@ -62,12 +64,12 @@ export default ComboBoxComponent.extend(TagsMixin, {
     return content;
   },
 
-  @computed("tagId")
+  @discourseComputed("tagId")
   tagClass(tagId) {
     return tagId ? `tag-${tagId}` : "tag_all";
   },
 
-  @computed("firstCategory", "secondCategory")
+  @discourseComputed("firstCategory", "secondCategory")
   allTagsUrl() {
     if (this.currentCategory) {
       return Discourse.getURL(this.get("currentCategory.url") + "?allTags=1");
@@ -76,7 +78,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
     }
   },
 
-  @computed("firstCategory", "secondCategory")
+  @discourseComputed("firstCategory", "secondCategory")
   noTagsUrl() {
     var url = "/tags";
     if (this.currentCategory) {
@@ -85,17 +87,17 @@ export default ComboBoxComponent.extend(TagsMixin, {
     return Discourse.getURL(`${url}/none`);
   },
 
-  @computed("tag")
+  @discourseComputed("tag")
   allTagsLabel() {
     return I18n.t("tagging.selector_all_tags");
   },
 
-  @computed("tag")
+  @discourseComputed("tag")
   noTagsLabel() {
     return I18n.t("tagging.selector_no_tags");
   },
 
-  @computed("tagId", "allTagsLabel", "noTagsLabel")
+  @discourseComputed("tagId", "allTagsLabel", "noTagsLabel")
   shortcuts(tagId, allTagsLabel, noTagsLabel) {
     const shortcuts = [];
 
@@ -118,12 +120,12 @@ export default ComboBoxComponent.extend(TagsMixin, {
     return shortcuts;
   },
 
-  @computed("site.top_tags", "shortcuts")
+  @discourseComputed("site.top_tags", "shortcuts")
   content(topTags, shortcuts) {
     if (this.siteSettings.tags_sort_alphabetically && topTags) {
       return shortcuts.concat(topTags.sort());
     } else {
-      return shortcuts.concat(Ember.makeArray(topTags));
+      return shortcuts.concat(makeArray(topTags));
     }
   },
 

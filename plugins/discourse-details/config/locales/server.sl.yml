@@ -7,4 +7,4 @@
 
 sl:
   site_settings:
-    details_enabled: "Omogočite skrij besedilo funkcinalnost. Če to spremenite, morate ponovno zapeči vse prispevke z: \"rake posts:rebake\"."
+    details_enabled: 'Omogočite skrij besedilo funkcinalnost. Če to spremenite, morate ponovno zapeči vse prispevke z: "rake posts:rebake".'

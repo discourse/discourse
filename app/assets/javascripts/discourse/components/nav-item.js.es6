@@ -1,13 +1,15 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
+import Component from "@ember/component";
 /* You might be looking for navigation-item. */
 import { iconHTML } from "discourse-common/lib/icon-library";
-import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "li",
   classNameBindings: ["active"],
-  router: Ember.inject.service(),
+  router: service(),
 
-  @computed("label", "i18nLabel", "icon")
+  @discourseComputed("label", "i18nLabel", "icon")
   contents(label, i18nLabel, icon) {
     let text = i18nLabel || I18n.t(label);
     if (icon) {
@@ -16,7 +18,7 @@ export default Ember.Component.extend({
     return text;
   },
 
-  @computed("route", "router.currentRoute")
+  @discourseComputed("route", "router.currentRoute")
   active(route, currentRoute) {
     if (!route) {
       return;

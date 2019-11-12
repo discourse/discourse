@@ -1,3 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 /**
   A form to create an IP address that will be blocked or whitelisted.
   Example usage:
@@ -10,20 +13,19 @@
 **/
 
 import ScreenedIpAddress from "admin/models/screened-ip-address";
-import computed from "ember-addons/ember-computed-decorators";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["screened-ip-address-form"],
   formSubmitted: false,
   actionName: "block",
 
-  @computed
+  @discourseComputed
   adminWhitelistEnabled() {
     return Discourse.SiteSettings.use_admin_ip_whitelist;
   },
 
-  @computed("adminWhitelistEnabled")
+  @discourseComputed("adminWhitelistEnabled")
   actionNames(adminWhitelistEnabled) {
     if (adminWhitelistEnabled) {
       return [
@@ -61,7 +63,7 @@ export default Ember.Component.extend({
           .then(result => {
             this.setProperties({ ip_address: "", formSubmitted: false });
             this.action(ScreenedIpAddress.create(result.screened_ip_address));
-            Ember.run.schedule("afterRender", () =>
+            schedule("afterRender", () =>
               this.element.querySelector(".ip-address-input").focus()
             );
           })
@@ -83,7 +85,7 @@ export default Ember.Component.extend({
 
   @on("didInsertElement")
   _init() {
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       $(this.element.querySelector(".ip-address-input")).keydown(e => {
         if (e.keyCode === 13) {
           this.send("submit");

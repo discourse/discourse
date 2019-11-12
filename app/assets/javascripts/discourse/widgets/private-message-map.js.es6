@@ -1,3 +1,4 @@
+import { makeArray } from "discourse-common/lib/helpers";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { avatarFor, avatarImg } from "discourse/widgets/post";
@@ -146,7 +147,7 @@ export default createWidget("private-message-map", {
     if (
       !this.state.isEditing &&
       this.site.mobileView &&
-      Ember.makeArray(participants[0]).length > 4
+      makeArray(participants[0]).length > 4
     ) {
       hideNamesClass = ".hide-names";
     }

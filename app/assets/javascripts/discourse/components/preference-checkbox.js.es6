@@ -1,9 +1,10 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["controls"],
 
-  @computed("labelKey")
+  @discourseComputed("labelKey")
   label(labelKey) {
     return I18n.t(labelKey);
   },

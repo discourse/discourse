@@ -1,12 +1,13 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
 
-export default Ember.Controller.extend({
-  @computed("model.isSaving")
+export default Controller.extend({
+  @discourseComputed("model.isSaving")
   saveButtonText(isSaving) {
     return isSaving ? I18n.t("saving") : I18n.t("admin.customize.save");
   },
 
-  @computed("model.changed", "model.isSaving")
+  @discourseComputed("model.changed", "model.isSaving")
   saveDisabled(changed, isSaving) {
     return !changed || isSaving;
   },

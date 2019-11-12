@@ -1,15 +1,16 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ensureJSON, plainJSON, prettyJSON } from "discourse/lib/formatter";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "li",
   expandDetails: null,
   expandDetailsRequestKey: "request",
   expandDetailsResponseKey: "response",
 
-  @computed("model.status")
+  @discourseComputed("model.status")
   statusColorClasses(status) {
     if (!status) return "";
 
@@ -20,25 +21,25 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("model.created_at")
+  @discourseComputed("model.created_at")
   createdAt(createdAt) {
     return moment(createdAt).format("YYYY-MM-DD HH:mm:ss");
   },
 
-  @computed("model.duration")
+  @discourseComputed("model.duration")
   completion(duration) {
     const seconds = Math.floor(duration / 10.0) / 100.0;
     return I18n.t("admin.web_hooks.events.completed_in", { count: seconds });
   },
 
-  @computed("expandDetails")
+  @discourseComputed("expandDetails")
   expandRequestIcon(expandDetails) {
     return expandDetails === this.expandDetailsRequestKey
       ? "ellipsis-h"
       : "ellipsis-v";
   },
 
-  @computed("expandDetails")
+  @discourseComputed("expandDetails")
   expandResponseIcon(expandDetails) {
     return expandDetails === this.expandDetailsResponseKey
       ? "ellipsis-h"

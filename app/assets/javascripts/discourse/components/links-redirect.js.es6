@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import ClickTrack from "discourse/lib/click-track";
 
-export default Ember.Component.extend({
+export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 

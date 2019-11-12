@@ -110,15 +110,6 @@ id:
       random_mention:
         reply: |-
           Hei! Untuk tahu saya bisa melakukan apa, ketik `@%{discobot_username} %{help_trigger}`.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Lakukan kebaikan apa saja tanpa pamrih, ingatlah kalau suatu hari seseorang mungkin melakukan yang sama kepada kamu_ &mdash; Princess Diana
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Kamu mungkin bergantung padanya
       do_not_understand:
         first_response: |-
           Hei, terima kasih balasannya!

@@ -56,7 +56,11 @@
             </div>
           {{/if}}
 
-          <button class='btn btn-primary' {{action "submit"}} disabled={{submitDisabled}}>{{i18n 'invites.accept_invite'}}</button>
+          {{d-button
+            class="btn-primary"
+            action=(action "submit")
+            disabled=submitDisabled
+            label="invites.accept_invite"}}
 
           {{#if errorMessage}}
             <br/><br/>

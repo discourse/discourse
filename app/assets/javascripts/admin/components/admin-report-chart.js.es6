@@ -1,7 +1,11 @@
+import { makeArray } from "discourse-common/lib/helpers";
+import { debounce } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import { number } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["admin-report-chart"],
   limit: 8,
   total: 0,
@@ -10,7 +14,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     this.resizeHandler = () =>
-      Ember.run.debounce(this, this._scheduleChartRendering, 500);
+      debounce(this, this._scheduleChartRendering, 500);
   },
 
   didInsertElement() {
@@ -30,11 +34,11 @@ export default Ember.Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
-    Ember.run.debounce(this, this._scheduleChartRendering, 100);
+    debounce(this, this._scheduleChartRendering, 100);
   },
 
   _scheduleChartRendering() {
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       this._renderChart(
         this.model,
         this.element && this.element.querySelector(".chart-canvas")
@@ -46,10 +50,8 @@ export default Ember.Component.extend({
     if (!chartCanvas) return;
 
     const context = chartCanvas.getContext("2d");
-    const chartData = Ember.makeArray(
-      model.get("chartData") || model.get("data")
-    );
-    const prevChartData = Ember.makeArray(
+    const chartData = makeArray(model.get("chartData") || model.get("data"));
+    const prevChartData = makeArray(
       model.get("prevChartData") || model.get("prev_data")
     );
 

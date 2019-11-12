@@ -1,7 +1,10 @@
-import computed from "ember-addons/ember-computed-decorators";
+import { alias, none, or } from "@ember/object/computed";
+import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
+
 const { isEmpty, makeArray } = Ember;
 
-export default Ember.Component.extend({
+export default Component.extend({
   layoutName: "select-kit/templates/components/select-kit/select-kit-header",
   classNames: ["select-kit-header"],
   classNameBindings: ["isFocused", "isNone"],
@@ -14,15 +17,15 @@ export default Ember.Component.extend({
     "name:data-name"
   ],
 
-  forceEscape: Ember.computed.alias("options.forceEscape"),
+  forceEscape: alias("options.forceEscape"),
 
-  isNone: Ember.computed.none("computedContent.value"),
+  isNone: none("computedContent.value"),
 
   ariaHasPopup: "true",
 
-  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "sanitizedTitle"),
+  ariaLabel: or("computedContent.ariaLabel", "sanitizedTitle"),
 
-  @computed("computedContent.title", "name")
+  @discourseComputed("computedContent.title", "name")
   title(computedContentTitle, name) {
     if (computedContentTitle) return computedContentTitle;
     if (name) return name;
@@ -32,18 +35,18 @@ export default Ember.Component.extend({
 
   // this might need a more advanced solution
   // but atm it's the only case we have to handle
-  @computed("title")
+  @discourseComputed("title")
   sanitizedTitle(title) {
     return String(title).replace("&hellip;", "");
   },
 
-  label: Ember.computed.or("computedContent.label", "title", "name"),
+  label: or("computedContent.label", "title", "name"),
 
-  name: Ember.computed.alias("computedContent.name"),
+  name: alias("computedContent.name"),
 
-  value: Ember.computed.alias("computedContent.value"),
+  value: alias("computedContent.value"),
 
-  @computed("computedContent.icon", "computedContent.icons")
+  @discourseComputed("computedContent.icon", "computedContent.icons")
   icons(icon, icons) {
     return makeArray(icon)
       .concat(icons)

@@ -1,3 +1,6 @@
+import { get } from "@ember/object";
+import { not, notEmpty, equal, and, or } from "@ember/object/computed";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { flushMap } from "discourse/models/store";
 import RestModel from "discourse/models/rest";
@@ -11,10 +14,13 @@ import { emojiUnescape } from "discourse/lib/text";
 import PreloadStore from "preload-store";
 import { userPath } from "discourse/lib/url";
 import {
-  default as computed,
+  default as discourseComputed,
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
+import Category from "discourse/models/category";
+import Session from "discourse/models/session";
+import { Promise } from "rsvp";
 
 export function loadTopicView(topic, args) {
   const data = _.merge({}, args);
@@ -39,18 +45,18 @@ const Topic = RestModel.extend({
   message: null,
   errorLoading: false,
 
-  @computed("last_read_post_number", "highest_post_number")
+  @discourseComputed("last_read_post_number", "highest_post_number")
   visited(lastReadPostNumber, highestPostNumber) {
     // >= to handle case where there are deleted posts at the end of the topic
     return lastReadPostNumber >= highestPostNumber;
   },
 
-  @computed("posters.firstObject")
+  @discourseComputed("posters.firstObject")
   creator(poster) {
     return poster && poster.user;
   },
 
-  @computed("posters.[]")
+  @discourseComputed("posters.[]")
   lastPoster(posters) {
     let user;
     if (posters && posters.length > 0) {
@@ -62,7 +68,7 @@ const Topic = RestModel.extend({
     return user || this.creator;
   },
 
-  @computed("posters.[]", "participants.[]")
+  @discourseComputed("posters.[]", "participants.[]")
   featuredUsers(posters, participants) {
     let users = posters;
     const maxUserCount = 5;
@@ -92,7 +98,7 @@ const Topic = RestModel.extend({
     return users;
   },
 
-  @computed("fancy_title")
+  @discourseComputed("fancy_title")
   fancyTitle(title) {
     let fancyTitle = censor(
       emojiUnescape(title || ""),
@@ -107,7 +113,7 @@ const Topic = RestModel.extend({
   },
 
   // returns createdAt if there's no bumped date
-  @computed("bumped_at", "createdAt")
+  @discourseComputed("bumped_at", "createdAt")
   bumpedAt(bumped_at, createdAt) {
     if (bumped_at) {
       return new Date(bumped_at);
@@ -116,7 +122,7 @@ const Topic = RestModel.extend({
     }
   },
 
-  @computed("bumpedAt", "createdAt")
+  @discourseComputed("bumpedAt", "createdAt")
   bumpedAtTitle(bumpedAt, createdAt) {
     const firstPost = I18n.t("first_post");
     const lastPost = I18n.t("last_post");
@@ -126,12 +132,12 @@ const Topic = RestModel.extend({
     return `${firstPost}: ${createdAtDate}\n${lastPost}: ${bumpedAtDate}`;
   },
 
-  @computed("created_at")
+  @discourseComputed("created_at")
   createdAt(created_at) {
     return new Date(created_at);
   },
 
-  @computed
+  @discourseComputed
   postStream() {
     return this.store.createRecord("postStream", {
       id: this.id,
@@ -139,7 +145,7 @@ const Topic = RestModel.extend({
     });
   },
 
-  @computed("tags")
+  @discourseComputed("tags")
   visibleListTags(tags) {
     if (!tags || !Discourse.SiteSettings.suppress_overlapping_tags_in_list) {
       return tags;
@@ -157,7 +163,7 @@ const Topic = RestModel.extend({
     return newTags;
   },
 
-  @computed("related_messages")
+  @discourseComputed("related_messages")
   relatedMessages(relatedMessages) {
     if (relatedMessages) {
       const store = this.store;
@@ -169,7 +175,7 @@ const Topic = RestModel.extend({
     }
   },
 
-  @computed("suggested_topics")
+  @discourseComputed("suggested_topics")
   suggestedTopics(suggestedTopics) {
     if (suggestedTopics) {
       const store = this.store;
@@ -181,12 +187,12 @@ const Topic = RestModel.extend({
     }
   },
 
-  @computed("posts_count")
+  @discourseComputed("posts_count")
   replyCount(postsCount) {
     return postsCount - 1;
   },
 
-  @computed
+  @discourseComputed
   details() {
     return this.store.createRecord("topicDetails", {
       id: this.id,
@@ -194,10 +200,10 @@ const Topic = RestModel.extend({
     });
   },
 
-  invisible: Ember.computed.not("visible"),
-  deleted: Ember.computed.notEmpty("deleted_at"),
+  invisible: not("visible"),
+  deleted: notEmpty("deleted_at"),
 
-  @computed("id")
+  @discourseComputed("id")
   searchContext(id) {
     return { type: "topic", id };
   },
@@ -205,7 +211,7 @@ const Topic = RestModel.extend({
   @on("init")
   @observes("category_id")
   _categoryIdChanged() {
-    this.set("category", Discourse.Category.findById(this.category_id));
+    this.set("category", Category.findById(this.category_id));
   },
 
   @observes("categoryName")
@@ -220,12 +226,12 @@ const Topic = RestModel.extend({
 
   categoryClass: fmt("category.fullSlug", "category-%@"),
 
-  @computed("tags")
+  @discourseComputed("tags")
   tagClasses(tags) {
     return tags && tags.map(t => `tag-${t}`).join(" ");
   },
 
-  @computed("url")
+  @discourseComputed("url")
   shareUrl(url) {
     const user = Discourse.User.current();
     const userQueryString = user ? `?u=${user.get("username_lower")}` : "";
@@ -234,7 +240,7 @@ const Topic = RestModel.extend({
 
   printUrl: fmt("url", "%@/print"),
 
-  @computed("id", "slug")
+  @discourseComputed("id", "slug")
   url(id, slug) {
     slug = slug || "";
     if (slug.trim().length === 0) {
@@ -252,18 +258,18 @@ const Topic = RestModel.extend({
     return url;
   },
 
-  @computed("new_posts", "unread")
+  @discourseComputed("new_posts", "unread")
   totalUnread(newPosts, unread) {
     const count = (unread || 0) + (newPosts || 0);
     return count > 0 ? count : null;
   },
 
-  @computed("last_read_post_number", "url")
+  @discourseComputed("last_read_post_number", "url")
   lastReadUrl(lastReadPostNumber) {
     return this.urlForPostNumber(lastReadPostNumber);
   },
 
-  @computed("last_read_post_number", "highest_post_number", "url")
+  @discourseComputed("last_read_post_number", "highest_post_number", "url")
   lastUnreadUrl(lastReadPostNumber, highestPostNumber) {
     if (highestPostNumber <= lastReadPostNumber) {
       if (this.get("category.navigate_to_first_post_after_read")) {
@@ -276,23 +282,23 @@ const Topic = RestModel.extend({
     }
   },
 
-  @computed("highest_post_number", "url")
+  @discourseComputed("highest_post_number", "url")
   lastPostUrl(highestPostNumber) {
     return this.urlForPostNumber(highestPostNumber);
   },
 
-  @computed("url")
+  @discourseComputed("url")
   firstPostUrl() {
     return this.urlForPostNumber(1);
   },
 
-  @computed("url")
+  @discourseComputed("url")
   summaryUrl() {
     const summaryQueryString = this.has_summary ? "?filter=summary" : "";
     return `${this.urlForPostNumber(1)}${summaryQueryString}`;
   },
 
-  @computed("last_poster.username")
+  @discourseComputed("last_poster.username")
   lastPosterUrl(username) {
     return userPath(username);
   },
@@ -300,9 +306,9 @@ const Topic = RestModel.extend({
   // The amount of new posts to display. It might be different than what the server
   // tells us if we are still asynchronously flushing our "recently read" data.
   // So take what the browser has seen into consideration.
-  @computed("new_posts", "id")
+  @discourseComputed("new_posts", "id")
   displayNewPosts(newPosts, id) {
-    const highestSeen = Discourse.Session.currentProp("highestSeenByTopic")[id];
+    const highestSeen = Session.currentProp("highestSeenByTopic")[id];
     if (highestSeen) {
       const delta = highestSeen - this.last_read_post_number;
       if (delta > 0) {
@@ -316,7 +322,7 @@ const Topic = RestModel.extend({
     return newPosts;
   },
 
-  @computed("views")
+  @discourseComputed("views")
   viewsHeat(v) {
     if (v >= Discourse.SiteSettings.topic_views_heat_high) {
       return "heatmap-high";
@@ -330,13 +336,13 @@ const Topic = RestModel.extend({
     return null;
   },
 
-  @computed("archetype")
+  @discourseComputed("archetype")
   archetypeObject(archetype) {
     return Discourse.Site.currentProp("archetypes").findBy("id", archetype);
   },
 
-  isPrivateMessage: Ember.computed.equal("archetype", "private_message"),
-  isBanner: Ember.computed.equal("archetype", "banner"),
+  isPrivateMessage: equal("archetype", "private_message"),
+  isBanner: equal("archetype", "banner"),
 
   toggleStatus(property) {
     this.toggleProperty(property);
@@ -371,12 +377,12 @@ const Topic = RestModel.extend({
 
   toggleBookmark() {
     if (this.bookmarking) {
-      return Ember.RSVP.Promise.resolve();
+      return Promise.resolve();
     }
     this.set("bookmarking", true);
 
     const stream = this.postStream;
-    const posts = Ember.get(stream, "posts");
+    const posts = get(stream, "posts");
     const firstPost =
       posts && posts[0] && posts[0].get("post_number") === 1 && posts[0];
     const bookmark = !this.bookmarked;
@@ -414,7 +420,7 @@ const Topic = RestModel.extend({
       );
     }
 
-    return new Ember.RSVP.Promise(resolve => {
+    return new Promise(resolve => {
       if (unbookmarkedPosts.length > 1) {
         bootbox.confirm(
           I18n.t("bookmarks.confirm_clear"),
@@ -495,10 +501,7 @@ const Topic = RestModel.extend({
     );
   },
 
-  isPinnedUncategorized: Ember.computed.and(
-    "pinned",
-    "category.isUncategorizedCategory"
-  ),
+  isPinnedUncategorized: and("pinned", "category.isUncategorizedCategory"),
 
   clearPin() {
     // Clear the pin optimistically from the object
@@ -532,20 +535,21 @@ const Topic = RestModel.extend({
     });
   },
 
-  @computed("excerpt")
+  @discourseComputed("excerpt")
   escapedExcerpt(excerpt) {
     return emojiUnescape(excerpt);
   },
 
-  hasExcerpt: Ember.computed.notEmpty("excerpt"),
+  hasExcerpt: notEmpty("excerpt"),
 
-  @computed("excerpt")
+  @discourseComputed("excerpt")
   excerptTruncated(excerpt) {
     return excerpt && excerpt.substr(excerpt.length - 8, 8) === "&hellip;";
   },
 
   readLastPost: propertyEqual("last_read_post_number", "highest_post_number"),
-  canClearPin: Ember.computed.and("pinned", "readLastPost"),
+  canClearPin: and("pinned", "readLastPost"),
+  canEditTags: or("details.can_edit", "details.can_edit_tags"),
 
   archiveMessage() {
     this.set("archiving", true);
@@ -610,6 +614,17 @@ const Topic = RestModel.extend({
     return ajax(`/t/${this.id}/reset-bump-date`, { type: "PUT" }).catch(
       popupAjaxError
     );
+  },
+
+  updateTags(tags) {
+    if (!tags || tags.length === 0) {
+      tags = [""];
+    }
+
+    return ajax(`/t/${this.id}/tags`, {
+      type: "PUT",
+      data: { tags: tags }
+    });
   }
 });
 
@@ -623,7 +638,7 @@ Topic.reopenClass({
 
   createActionSummary(result) {
     if (result.actions_summary) {
-      const lookup = Ember.Object.create();
+      const lookup = EmberObject.create();
       result.actions_summary = result.actions_summary.map(a => {
         a.post = result;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);

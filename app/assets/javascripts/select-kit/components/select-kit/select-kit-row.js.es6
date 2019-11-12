@@ -1,9 +1,14 @@
-import { on } from "ember-addons/ember-computed-decorators";
-import computed from "ember-addons/ember-computed-decorators";
+import { alias, or } from "@ember/object/computed";
+import Component from "@ember/component";
+import {
+  default as discourseComputed,
+  on
+} from "discourse-common/utils/decorators";
+
 const { run, isPresent, makeArray, isEmpty } = Ember;
 import UtilsMixin from "select-kit/mixins/utils";
 
-export default Ember.Component.extend(UtilsMixin, {
+export default Component.extend(UtilsMixin, {
   layoutName: "select-kit/templates/components/select-kit/select-kit-row",
   classNames: ["select-kit-row"],
   tagName: "li",
@@ -22,11 +27,11 @@ export default Ember.Component.extend(UtilsMixin, {
     "computedContent.originalContent.classNames"
   ],
 
-  forceEscape: Ember.computed.alias("options.forceEscape"),
+  forceEscape: alias("options.forceEscape"),
 
-  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title"),
+  ariaLabel: or("computedContent.ariaLabel", "title"),
 
-  @computed("computedContent.title", "name")
+  @discourseComputed("computedContent.title", "name")
   title(computedContentTitle, name) {
     if (computedContentTitle) return computedContentTitle;
     if (name) return name;
@@ -34,18 +39,18 @@ export default Ember.Component.extend(UtilsMixin, {
     return null;
   },
 
-  @computed("computedContent")
+  @discourseComputed("computedContent")
   guid(computedContent) {
     return Ember.guidFor(computedContent);
   },
 
-  label: Ember.computed.or("computedContent.label", "title", "name"),
+  label: or("computedContent.label", "title", "name"),
 
-  name: Ember.computed.alias("computedContent.name"),
+  name: alias("computedContent.name"),
 
-  value: Ember.computed.alias("computedContent.value"),
+  value: alias("computedContent.value"),
 
-  @computed("templateForRow")
+  @discourseComputed("templateForRow")
   template(templateForRow) {
     return templateForRow(this);
   },
@@ -66,7 +71,7 @@ export default Ember.Component.extend(UtilsMixin, {
     }
   },
 
-  @computed(
+  @discourseComputed(
     "computedContent.icon",
     "computedContent.icons",
     "computedContent.originalContent.icon"

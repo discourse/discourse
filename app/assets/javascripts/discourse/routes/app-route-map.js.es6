@@ -156,7 +156,6 @@ export default function() {
         this.route("email");
         this.route("second-factor");
         this.route("second-factor-backup");
-        this.route("about", { path: "/about-me" });
       });
 
       this.route(
@@ -200,6 +199,7 @@ export default function() {
   this.route("tags", { resetNamespace: true }, function() {
     this.route("show", { path: "/:tag_id" });
     this.route("showCategory", { path: "/c/:category/:tag_id" });
+    this.route("showCategoryNone", { path: "/c/:category/none/:tag_id" });
     this.route("showParentCategory", {
       path: "/c/:parent_category/:category/:tag_id"
     });
@@ -210,6 +210,9 @@ export default function() {
       });
       this.route("showCategory" + filter.capitalize(), {
         path: "/c/:category/:tag_id/l/" + filter
+      });
+      this.route("showCategoryNone" + filter.capitalize(), {
+        path: "/c/:category/none/:tag_id/l/" + filter
       });
       this.route("showParentCategory" + filter.capitalize(), {
         path: "/c/:parent_category/:category/:tag_id/l/" + filter
@@ -224,7 +227,8 @@ export default function() {
     "tagGroups",
     { path: "/tag_groups", resetNamespace: true },
     function() {
-      this.route("show", { path: "/:id" });
+      this.route("edit", { path: "/:id" });
+      this.route("new");
     }
   );
 

@@ -1,9 +1,10 @@
-import computed from "ember-addons/ember-computed-decorators";
+import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   currentStepId: null,
 
-  @computed("currentStepId")
+  @discourseComputed("currentStepId")
   showCanvas(currentStepId) {
     return currentStepId === "finished";
   }

@@ -1,7 +1,13 @@
-import ApiKey from "admin/models/api-key";
+import Route from "@ember/routing/route";
 
-export default Ember.Route.extend({
-  model() {
-    return ApiKey.find();
+export default Route.extend({
+  actions: {
+    show(apiKey) {
+      this.transitionTo("adminApiKeys.show", apiKey.id);
+    },
+
+    new() {
+      this.transitionTo("adminApiKeys.new");
+    }
   }
 });

@@ -113,15 +113,11 @@ sl:
       random_mention:
         reply: |-
           Pozdravljeni! Da izveste, kaj znam, recite `@%{discobot_username} %{help_trigger}`.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
+        tracks: |-
+          Trenutno znam narediti naslednje stvari:
 
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Naredite naključno dejanje prijaznosti, brez pričakovanja nagrade, z zavedanjem da bo en dan mogoče nekdo to naredil vam._ &mdash; Princess Diana
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Na to se lahko zanesete
+          `@%{discobot_username} %{reset_trigger} {naziv-pripovedi}`
+          > Začni interaktivno pripoved.  `{naziv-pripovedi}` je lahko ena od sledečih: %{tracks}.
       do_not_understand:
         first_response: |-
           Hvala za odgovor!
@@ -135,9 +131,19 @@ sl:
 
           Medtem vas ne bom motil.
     new_user_narrative:
+      reset_trigger: "vodič"
+      title: "Priznanje o opravljenem vodiču za novega uporabnika"
       cert_title: "Priznanje za uspešno končan vodič za nove uporabnike."
       hello:
         title: "Pozdravljeni!"
+        message: |-
+          Dobrodošli - zahvaljujemo se vam za pridružitev %{title}!
+
+          - Jaz sem samo robot ampak [naše osebje](%{base_uri}/about) je tudi na voljo, če potrebujete pomoč prave osebe.
+
+          - Iz varnostnih razlogov je omejeno kaj lahko novi uporabniki počnete. Ko vas bolje spoznamo, boste dobili [nove zmožnosti](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (in [značke](%{base_uri}/badges)).
+
+          - Verjamemo v [prijazno obnašanje v skupnosti](%{base_uri}/guidelines).
       onebox:
         instructions: |-
           Kot naslednji korak, ali lahko delite enega od spodnjih povezav z menoj? Odgovorite s **povezavo v svoji vrstici**, in se bo samodejno razširila tako, da bo vsebovala kratkek povzetek.
@@ -259,12 +265,6 @@ sl:
           _psst_ … V to temo sem skril presenečenje. Če ste pripravljeni sprejeti ta izziv, **izberite išči ikono** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> zgoraj desno &#8599; za iskanje.
 
           Poskusite poiskati "capy&#8203;bara" v tej temi.
-        hidden_message: |-
-          Kako ste spregledali capybara? :wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          Ali ste opazili, da ste spet na začetku? Nahranite ubogega, lačnega capybara tako da **odgovorite z `:herb:` emoji** in to vas bo samodejno prestavilo na konec.
         reply: |-
           Super, našli ste ga :tada:
 
@@ -287,6 +287,7 @@ sl:
       certificate:
         alt: "Priznanje"
     advanced_user_narrative:
+      reset_trigger: "napredni vodič"
       cert_title: "Priznanje za uspešno končan vodič za napredne uporabnike."
       title: ":arrow_up: Napredne uporabniške funkcije"
       start_message: |-
@@ -326,6 +327,10 @@ sl:
           Ali mi naredite uslugo in **prekličete izbris**?
         not_found: |-
           Imate težavo? Uporabite prikaži več<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> da razkrijete akcijo <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> prekliči izbris.
+        reply: |-
+          Uf, to je bilo pa blizu! Hvala, da ste to rešili :wink:
+
+          Vedite, da imate samo ur%{deletion_after}ur za preklic izbrisa prispevka.
       category_hashtag:
         instructions: |-
           Ali ste vedeli, da se lahko navežete na kategorijo ali oznako v vašem prispevku? Na primer, ali ste videli %{category} kategorijo?

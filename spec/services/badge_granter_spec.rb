@@ -196,6 +196,33 @@ describe BadgeGranter do
       expect(user.reload.title).to eq(nil)
     end
 
+    context 'when the badge name is customized, and the customized name is the same as the user title' do
+      let(:customized_badge_name) { 'Merit Badge' }
+
+      before do
+        TranslationOverride.upsert!(I18n.locale, Badge.i18n_key(badge.name), customized_badge_name)
+      end
+
+      it 'revokes the badge and title and does necessary cleanup' do
+        user.title = customized_badge_name; user.save!
+        expect(badge.reload.grant_count).to eq(1)
+        StaffActionLogger.any_instance.expects(:log_badge_revoke).with(user_badge)
+        StaffActionLogger.any_instance.expects(:log_title_revoke).with(
+          user,
+          revoke_reason: 'user title was same as revoked badge name or custom badge name',
+          previous_value: user_badge.user.title
+        )
+        BadgeGranter.revoke(user_badge, revoked_by: admin)
+        expect(UserBadge.find_by(user: user, badge: badge)).not_to be_present
+        expect(badge.reload.grant_count).to eq(0)
+        expect(user.notifications.where(notification_type: Notification.types[:granted_badge])).to be_empty
+        expect(user.reload.title).to eq(nil)
+      end
+
+      after do
+        TranslationOverride.revert!(I18n.locale, Badge.i18n_key(badge.name))
+      end
+    end
   end
 
   context "update_badges" do

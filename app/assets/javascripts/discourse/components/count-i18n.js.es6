@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     tagName: "span",
     rerenderTriggers: ["count", "suffix"],

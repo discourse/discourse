@@ -1,11 +1,13 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { or } from "@ember/object/computed";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["controls"],
 
-  buttonDisabled: Ember.computed.or("model.isSaving", "saveDisabled"),
+  buttonDisabled: or("model.isSaving", "saveDisabled"),
 
-  @computed("model.isSaving")
+  @discourseComputed("model.isSaving")
   savingText(saving) {
     return saving ? "saving" : "save";
   }

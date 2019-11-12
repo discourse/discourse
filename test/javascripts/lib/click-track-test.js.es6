@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
 import { fixture, logIn } from "helpers/qunit-helpers";
@@ -173,7 +174,7 @@ QUnit.skip("restores the href after a while", async assert => {
   assert.timeout(75);
 
   const done = assert.async();
-  Ember.run.later(() => {
+  later(() => {
     assert.equal(fixture("a").attr("href"), "http://www.google.com");
     done();
   });

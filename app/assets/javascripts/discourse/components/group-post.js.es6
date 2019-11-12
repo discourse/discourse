@@ -1,6 +1,7 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
-  @computed("post.url")
+export default Component.extend({
+  @discourseComputed("post.url")
   postUrl: Discourse.getURL
 });

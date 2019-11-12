@@ -1,6 +1,7 @@
+import { alias, not } from "@ember/object/computed";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 const { isEmpty } = Ember;
@@ -10,20 +11,25 @@ export default ComboBoxComponent.extend({
   classNameBindings: ["categoryStyle"],
   classNames: "category-drop",
   verticalOffset: 3,
-  content: Ember.computed.alias("categoriesWithShortcuts"),
+  content: alias("categoriesWithShortcuts"),
   rowComponent: "category-row",
   headerComponent: "category-drop/category-drop-header",
   allowAutoSelectFirst: false,
   tagName: "li",
-  categoryStyle: Ember.computed.alias("siteSettings.category_style"),
+  categoryStyle: alias("siteSettings.category_style"),
   noCategoriesLabel: I18n.t("categories.no_subcategory"),
   fullWidthOnMobile: true,
   caretDownIcon: "caret-right",
   caretUpIcon: "caret-down",
   subCategory: false,
-  isAsync: Ember.computed.not("subCategory"),
+  isAsync: not("subCategory"),
 
-  @computed("categories", "hasSelection", "subCategory", "noSubcategories")
+  @discourseComputed(
+    "categories",
+    "hasSelection",
+    "subCategory",
+    "noSubcategories"
+  )
   categoriesWithShortcuts(
     categories,
     hasSelection,
@@ -70,12 +76,12 @@ export default ComboBoxComponent.extend({
     this.forceValue(this.get("category.id"));
   },
 
-  @computed("content")
+  @discourseComputed("content")
   filterable(content) {
     const contentLength = (content && content.length) || 0;
     return (
       contentLength >= 15 ||
-      (this.isAsync && contentLength < Discourse.Category.list().length)
+      (this.isAsync && contentLength < Category.list().length)
     );
   },
 
@@ -107,7 +113,7 @@ export default ComboBoxComponent.extend({
     return content;
   },
 
-  @computed("parentCategory.name", "subCategory")
+  @discourseComputed("parentCategory.name", "subCategory")
   allCategoriesLabel(categoryName, subCategory) {
     if (subCategory) {
       return I18n.t("categories.all_subcategories", { categoryName });
@@ -115,12 +121,12 @@ export default ComboBoxComponent.extend({
     return I18n.t("categories.all");
   },
 
-  @computed("parentCategory.url", "subCategory")
+  @discourseComputed("parentCategory.url", "subCategory")
   allCategoriesUrl(parentCategoryUrl, subCategory) {
     return Discourse.getURL(subCategory ? parentCategoryUrl || "/" : "/");
   },
 
-  @computed("parentCategory.url")
+  @discourseComputed("parentCategory.url")
   noCategoriesUrl(parentCategoryUrl) {
     return Discourse.getURL(`${parentCategoryUrl}/none`);
   },
@@ -135,7 +141,7 @@ export default ComboBoxComponent.extend({
         categoryURL = Discourse.getURL(this.noCategoriesUrl);
       } else {
         const category = Category.findById(parseInt(categoryId, 10));
-        const slug = Discourse.Category.slugFor(category);
+        const slug = Category.slugFor(category);
         categoryURL = Discourse.getURL("/c/") + slug;
       }
 
@@ -158,7 +164,7 @@ export default ComboBoxComponent.extend({
         return;
       }
 
-      let results = Discourse.Category.search(filter);
+      let results = Category.search(filter);
 
       if (!this.siteSettings.allow_uncategorized_topics) {
         results = results.filter(result => {

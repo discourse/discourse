@@ -1,11 +1,14 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { not } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import ActionSummary from "discourse/models/action-summary";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
-import computed from "ember-addons/ember-computed-decorators";
 import optionalService from "discourse/lib/optional-service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   adminTools: optionalService(),
   userDetails: null,
   selected: null,
@@ -29,17 +32,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("spammerDetails.canDelete", "selected.name_key")
+  @discourseComputed("spammerDetails.canDelete", "selected.name_key")
   showDeleteSpammer(canDeleteSpammer, nameKey) {
     return canDeleteSpammer && nameKey === "spam";
   },
 
-  @computed("flagTopic")
+  @discourseComputed("flagTopic")
   title(flagTopic) {
     return flagTopic ? "flagging_topic.title" : "flagging.title";
   },
 
-  @computed("post", "flagTopic", "model.actions_summary.@each.can_act")
+  @discourseComputed("post", "flagTopic", "model.actions_summary.@each.can_act")
   flagsAvailable() {
     if (!this.flagTopic) {
       // flagging post
@@ -57,7 +60,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return flagsAvailable;
     } else {
       // flagging topic
-      let lookup = Ember.Object.create();
+      let lookup = EmberObject.create();
       let model = this.model;
       model.get("actions_summary").forEach(a => {
         a.flagTopic = model;
@@ -74,7 +77,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("post", "flagTopic", "model.actions_summary.@each.can_act")
+  @discourseComputed("post", "flagTopic", "model.actions_summary.@each.can_act")
   staffFlagsAvailable() {
     return (
       this.get("model.flagsAvailable") &&
@@ -82,7 +85,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     );
   },
 
-  @computed("selected.is_custom_flag", "message.length")
+  @discourseComputed("selected.is_custom_flag", "message.length")
   submitEnabled() {
     const selected = this.selected;
     if (!selected) return false;
@@ -97,20 +100,20 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return true;
   },
 
-  submitDisabled: Ember.computed.not("submitEnabled"),
+  submitDisabled: not("submitEnabled"),
 
   // Staff accounts can "take action"
-  @computed("flagTopic", "selected.is_custom_flag")
+  @discourseComputed("flagTopic", "selected.is_custom_flag")
   canTakeAction(flagTopic, isCustomFlag) {
     return !flagTopic && !isCustomFlag && this.currentUser.get("staff");
   },
 
-  @computed("selected.is_custom_flag")
+  @discourseComputed("selected.is_custom_flag")
   submitIcon(isCustomFlag) {
     return isCustomFlag ? "envelope" : "flag";
   },
 
-  @computed("selected.is_custom_flag", "flagTopic")
+  @discourseComputed("selected.is_custom_flag", "flagTopic")
   submitLabel(isCustomFlag, flagTopic) {
     if (isCustomFlag) {
       return flagTopic
@@ -154,6 +157,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
         params = $.extend(params, opts);
       }
 
+      this.appEvents.trigger(
+        this.flagTopic ? "topic:flag-created" : "post:flag-created",
+        this.model,
+        postAction,
+        params
+      );
+
       this.send("hideModal");
 
       postAction
@@ -183,7 +193,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("flagTopic", "selected.name_key")
+  @discourseComputed("flagTopic", "selected.name_key")
   canSendWarning(flagTopic, nameKey) {
     return (
       !flagTopic && this.currentUser.get("staff") && nameKey === "notify_user"

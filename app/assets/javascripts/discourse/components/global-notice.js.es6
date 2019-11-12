@@ -1,9 +1,11 @@
-import { on } from "ember-addons/ember-computed-decorators";
+import { bind } from "@ember/runloop";
+import Component from "@ember/component";
+import { on } from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import LogsNotice from "discourse/services/logs-notice";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     rerenderTriggers: ["site.isReadOnly", "siteSettings.disable_emails"],
 
@@ -65,7 +67,7 @@ export default Ember.Component.extend(
         notices.push([
           LogsNotice.currentProp("message"),
           "alert-logs-notice",
-          `<div class='close'>${iconHTML("times")}</div>`
+          `<button class='btn btn-flat close'>${iconHTML("times")}</button>`
         ]);
       }
 
@@ -87,13 +89,10 @@ export default Ember.Component.extend(
 
     @on("didInsertElement")
     _setupLogsNotice() {
-      this._boundRerenderBuffer = Ember.run.bind(this, this.rerenderBuffer);
+      this._boundRerenderBuffer = bind(this, this.rerenderBuffer);
       LogsNotice.current().addObserver("hidden", this._boundRerenderBuffer);
 
-      this._boundResetCurrentProp = Ember.run.bind(
-        this,
-        this._resetCurrentProp
-      );
+      this._boundResetCurrentProp = bind(this, this._resetCurrentProp);
       $(this.element).on(
         "click.global-notice",
         ".alert-logs-notice .close",

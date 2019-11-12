@@ -66,18 +66,14 @@
   }
 
   .title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
     display: block;
   }
 
   .name {
     font-size: $font-0;
     max-width: 400px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
   }
 
   .edit-reason {

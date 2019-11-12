@@ -1,3 +1,6 @@
+import { isEmpty } from "@ember/utils";
+import { default as computed, gt, equal, or } from "@ember/object/computed";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
@@ -6,9 +9,9 @@ import UserPostsStream from "discourse/models/user-posts-stream";
 import Singleton from "discourse/mixins/singleton";
 import { longDate } from "discourse/lib/formatter";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import UserActionStat from "discourse/models/user-action-stat";
@@ -20,6 +23,8 @@ import PreloadStore from "preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
+import { Promise } from "rsvp";
+import { getProperties } from "@ember/object";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -30,35 +35,35 @@ export const SECOND_FACTOR_METHODS = {
 const isForever = dt => moment().diff(dt, "years") < -500;
 
 const User = RestModel.extend({
-  hasPMs: Ember.computed.gt("private_messages_stats.all", 0),
-  hasStartedPMs: Ember.computed.gt("private_messages_stats.mine", 0),
-  hasUnreadPMs: Ember.computed.gt("private_messages_stats.unread", 0),
+  hasPMs: gt("private_messages_stats.all", 0),
+  hasStartedPMs: gt("private_messages_stats.mine", 0),
+  hasUnreadPMs: gt("private_messages_stats.unread", 0),
 
   redirected_to_top: {
     reason: null
   },
 
-  @computed("can_be_deleted", "post_count")
+  @discourseComputed("can_be_deleted", "post_count")
   canBeDeleted(canBeDeleted, postCount) {
     return canBeDeleted && postCount <= 5;
   },
 
-  @computed()
+  @discourseComputed()
   stream() {
     return UserStream.create({ user: this });
   },
 
-  @computed()
+  @discourseComputed()
   postsStream() {
     return UserPostsStream.create({ user: this });
   },
 
-  @computed()
+  @discourseComputed()
   userDraftsStream() {
     return UserDraftsStream.create({ user: this });
   },
 
-  staff: Ember.computed("admin", "moderator", {
+  staff: computed("admin", "moderator", {
     get() {
       return this.admin || this.moderator;
     },
@@ -73,7 +78,7 @@ const User = RestModel.extend({
     return ajax(`/session/${this.username}`, { type: "DELETE" });
   },
 
-  @computed("username_lower")
+  @discourseComputed("username_lower")
   searchContext(username) {
     return {
       type: "user",
@@ -82,20 +87,17 @@ const User = RestModel.extend({
     };
   },
 
-  @computed("username", "name")
+  @discourseComputed("username", "name")
   displayName(username, name) {
-    if (Discourse.SiteSettings.enable_names && !Ember.isEmpty(name)) {
+    if (Discourse.SiteSettings.enable_names && !isEmpty(name)) {
       return name;
     }
     return username;
   },
 
-  @computed("profile_background_upload_url")
+  @discourseComputed("profile_background_upload_url")
   profileBackgroundUrl(bgUrl) {
-    if (
-      Ember.isEmpty(bgUrl) ||
-      !Discourse.SiteSettings.allow_profile_backgrounds
-    ) {
+    if (isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) {
       return "".htmlSafe();
     }
     return (
@@ -105,18 +107,18 @@ const User = RestModel.extend({
     ).htmlSafe();
   },
 
-  @computed()
+  @discourseComputed()
   path() {
     // no need to observe, requires a hard refresh to update
     return userPath(this.username_lower);
   },
 
-  @computed()
+  @discourseComputed()
   userApiKeys() {
     const keys = this.user_api_keys;
     if (keys) {
       return keys.map(raw => {
-        let obj = Ember.Object.create(raw);
+        let obj = EmberObject.create(raw);
 
         obj.revoke = () => {
           this.revokeApiKey(obj);
@@ -169,33 +171,33 @@ const User = RestModel.extend({
 
   adminPath: url("id", "username_lower", "/admin/users/%@1/%@2"),
 
-  @computed()
+  @discourseComputed()
   mutedTopicsPath() {
     return defaultHomepage() === "latest"
       ? Discourse.getURL("/?state=muted")
       : Discourse.getURL("/latest?state=muted");
   },
 
-  @computed()
+  @discourseComputed()
   watchingTopicsPath() {
     return defaultHomepage() === "latest"
       ? Discourse.getURL("/?state=watching")
       : Discourse.getURL("/latest?state=watching");
   },
 
-  @computed()
+  @discourseComputed()
   trackingTopicsPath() {
     return defaultHomepage() === "latest"
       ? Discourse.getURL("/?state=tracking")
       : Discourse.getURL("/latest?state=tracking");
   },
 
-  @computed("username")
+  @discourseComputed("username")
   username_lower(username) {
     return username.toLowerCase();
   },
 
-  @computed("trust_level")
+  @discourseComputed("trust_level")
   trustLevel(trustLevel) {
     return Discourse.Site.currentProp("trustLevels").findBy(
       "id",
@@ -203,31 +205,31 @@ const User = RestModel.extend({
     );
   },
 
-  isBasic: Ember.computed.equal("trust_level", 0),
-  isLeader: Ember.computed.equal("trust_level", 3),
-  isElder: Ember.computed.equal("trust_level", 4),
-  canManageTopic: Ember.computed.or("staff", "isElder"),
+  isBasic: equal("trust_level", 0),
+  isLeader: equal("trust_level", 3),
+  isElder: equal("trust_level", 4),
+  canManageTopic: or("staff", "isElder"),
 
-  @computed("previous_visit_at")
+  @discourseComputed("previous_visit_at")
   previousVisitAt(previous_visit_at) {
     return new Date(previous_visit_at);
   },
 
-  @computed("suspended_till")
+  @discourseComputed("suspended_till")
   suspended(suspendedTill) {
     return suspendedTill && moment(suspendedTill).isAfter();
   },
 
-  @computed("suspended_till")
+  @discourseComputed("suspended_till")
   suspendedForever: isForever,
 
-  @computed("silenced_till")
+  @discourseComputed("silenced_till")
   silencedForever: isForever,
 
-  @computed("suspended_till")
+  @discourseComputed("suspended_till")
   suspendedTillDate: longDate,
 
-  @computed("silenced_till")
+  @discourseComputed("silenced_till")
   silencedTillDate: longDate,
 
   changeUsername(new_username) {
@@ -266,7 +268,8 @@ const User = RestModel.extend({
       "tracked_tags",
       "watched_tags",
       "watching_first_post_tags",
-      "date_of_birth"
+      "date_of_birth",
+      "primary_group_id"
     ];
 
     const data = this.getProperties(
@@ -349,7 +352,7 @@ const User = RestModel.extend({
     })
       .then(result => {
         this.set("bio_excerpt", result.user.bio_excerpt);
-        const userProps = Ember.getProperties(
+        const userProps = getProperties(
           this.user_option,
           "enable_quoting",
           "enable_defer",
@@ -489,7 +492,7 @@ const User = RestModel.extend({
 
   numGroupsToDisplay: 2,
 
-  @computed("groups.[]")
+  @discourseComputed("groups.[]")
   filteredGroups() {
     const groups = this.groups || [];
 
@@ -498,21 +501,21 @@ const User = RestModel.extend({
     });
   },
 
-  @computed("filteredGroups", "numGroupsToDisplay")
+  @discourseComputed("filteredGroups", "numGroupsToDisplay")
   displayGroups(filteredGroups, numGroupsToDisplay) {
     const groups = filteredGroups.slice(0, numGroupsToDisplay);
     return groups.length === 0 ? null : groups;
   },
 
-  @computed("filteredGroups", "numGroupsToDisplay")
+  @discourseComputed("filteredGroups", "numGroupsToDisplay")
   showMoreGroupsLink(filteredGroups, numGroupsToDisplay) {
     return filteredGroups.length > numGroupsToDisplay;
   },
 
   // The user's stat count, excluding PMs.
-  @computed("statsExcludingPms.@each.count")
+  @discourseComputed("statsExcludingPms.@each.count")
   statsCountNonPM() {
-    if (Ember.isEmpty(this.statsExcludingPms)) return 0;
+    if (isEmpty(this.statsExcludingPms)) return 0;
     let count = 0;
     this.statsExcludingPms.forEach(val => {
       if (this.inAllStream(val)) {
@@ -523,9 +526,9 @@ const User = RestModel.extend({
   },
 
   // The user's stats, excluding PMs.
-  @computed("stats.@each.isPM")
+  @discourseComputed("stats.@each.isPM")
   statsExcludingPms() {
-    if (Ember.isEmpty(this.stats)) return [];
+    if (isEmpty(this.stats)) return [];
     return this.stats.rejectBy("isPM");
   },
 
@@ -535,7 +538,7 @@ const User = RestModel.extend({
     return PreloadStore.getAndRemove(`user_${user.get("username")}`, () => {
       return ajax(userPath(`${user.get("username")}.json`), { data: options });
     }).then(json => {
-      if (!Ember.isEmpty(json.user.stats)) {
+      if (!isEmpty(json.user.stats)) {
         json.user.stats = Discourse.User.groupStats(
           json.user.stats.map(s => {
             if (s.count) s.count = parseInt(s.count, 10);
@@ -544,7 +547,7 @@ const User = RestModel.extend({
         );
       }
 
-      if (!Ember.isEmpty(json.user.groups)) {
+      if (!isEmpty(json.user.groups)) {
         const groups = [];
 
         for (let i = 0; i < json.user.groups.length; i++) {
@@ -560,7 +563,7 @@ const User = RestModel.extend({
         json.user.invited_by = Discourse.User.create(json.user.invited_by);
       }
 
-      if (!Ember.isEmpty(json.user.featured_user_badge_ids)) {
+      if (!isEmpty(json.user.featured_user_badge_ids)) {
         const userBadgesMap = {};
         UserBadge.createFromJson(json).forEach(userBadge => {
           userBadgesMap[userBadge.get("id")] = userBadge;
@@ -581,7 +584,7 @@ const User = RestModel.extend({
 
   findStaffInfo() {
     if (!Discourse.User.currentProp("staff")) {
-      return Ember.RSVP.resolve(null);
+      return Promise.resolve(null);
     }
     return ajax(userPath(`${this.username_lower}/staff-info.json`)).then(
       info => {
@@ -628,17 +631,14 @@ const User = RestModel.extend({
 
   @observes("muted_category_ids")
   updateMutedCategories() {
-    this.set(
-      "mutedCategories",
-      Discourse.Category.findByIds(this.muted_category_ids)
-    );
+    this.set("mutedCategories", Category.findByIds(this.muted_category_ids));
   },
 
   @observes("tracked_category_ids")
   updateTrackedCategories() {
     this.set(
       "trackedCategories",
-      Discourse.Category.findByIds(this.tracked_category_ids)
+      Category.findByIds(this.tracked_category_ids)
     );
   },
 
@@ -646,7 +646,7 @@ const User = RestModel.extend({
   updateWatchedCategories() {
     this.set(
       "watchedCategories",
-      Discourse.Category.findByIds(this.watched_category_ids)
+      Category.findByIds(this.watched_category_ids)
     );
   },
 
@@ -654,11 +654,11 @@ const User = RestModel.extend({
   updateWatchedFirstPostCategories() {
     this.set(
       "watchedFirstPostCategories",
-      Discourse.Category.findByIds(this.watched_first_post_category_ids)
+      Category.findByIds(this.watched_first_post_category_ids)
     );
   },
 
-  @computed("can_delete_account")
+  @discourseComputed("can_delete_account")
   canDeleteAccount(canDeleteAccount) {
     return !Discourse.SiteSettings.enable_sso && canDeleteAccount;
   },
@@ -670,7 +670,7 @@ const User = RestModel.extend({
         data: { context: window.location.pathname }
       });
     } else {
-      return Ember.RSVP.reject(I18n.t("user.delete_yourself_not_allowed"));
+      return Promise.reject(I18n.t("user.delete_yourself_not_allowed"));
     }
   },
 
@@ -765,7 +765,7 @@ const User = RestModel.extend({
       : this.admin || group.get("is_group_owner");
   },
 
-  @computed("groups.@each.title", "badges.[]")
+  @discourseComputed("groups.@each.title", "badges.[]")
   availableTitles() {
     let titles = [];
 
@@ -791,7 +791,7 @@ const User = RestModel.extend({
       });
   },
 
-  @computed("user_option.text_size_seq", "user_option.text_size")
+  @discourseComputed("user_option.text_size_seq", "user_option.text_size")
   currentTextSize(serverSeq, serverSize) {
     if ($.cookie("text_size")) {
       const [cookieSize, cookieSeq] = $.cookie("text_size").split("|");
@@ -814,7 +814,7 @@ const User = RestModel.extend({
     }
   },
 
-  @computed("second_factor_enabled", "staff")
+  @discourseComputed("second_factor_enabled", "staff")
   enforcedSecondFactor(secondFactorEnabled, staff) {
     const enforce = Discourse.SiteSettings.enforce_second_factor;
     return (

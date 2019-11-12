@@ -57,6 +57,50 @@ describe DiscourseTagging do
           expect(tags.size).to eq(3)
         end
       end
+
+      context 'with required tags from tag group' do
+        fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
+        fab!(:category) { Fabricate(:category, required_tag_group: tag_group, min_tags_from_required_group: 1) }
+
+        it "returns the required tags if none have been selected" do
+          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user),
+            for_input: true,
+            category: category,
+            term: 'fun'
+          ).to_a
+          expect(tags).to contain_exactly(tag1, tag2)
+        end
+
+        it "returns all allowed tags if a required tag is selected" do
+          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user),
+            for_input: true,
+            category: category,
+            selected_tags: [tag1.name],
+            term: 'fun'
+          ).to_a
+          expect(tags).to contain_exactly(tag2, tag3)
+        end
+
+        it "returns required tags if not enough are selected" do
+          category.update!(min_tags_from_required_group: 2)
+          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user),
+            for_input: true,
+            category: category,
+            selected_tags: [tag1.name],
+            term: 'fun'
+          ).to_a
+          expect(tags).to contain_exactly(tag2)
+        end
+
+        it "let's staff ignore the requirement" do
+          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(admin),
+            for_input: true,
+            category: category,
+            term: 'fun'
+          ).to_a
+          expect(tags).to contain_exactly(tag1, tag2, tag3)
+        end
+      end
     end
   end
 
@@ -234,6 +278,52 @@ describe DiscourseTagging do
         valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [parent_tag.name, common.name])
         expect(valid).to eq(true)
         expect(topic.reload.tags.map(&:name)).to contain_exactly(*[parent_tag, common].map(&:name))
+      end
+    end
+
+    context "enforces required tags from a tag group" do
+      fab!(:category) { Fabricate(:category) }
+      fab!(:tag_group) { Fabricate(:tag_group) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+
+      before do
+        tag_group.tags = [tag1, tag2]
+        category.update(
+          required_tag_group: tag_group,
+          min_tags_from_required_group: 1
+        )
+      end
+
+      it "when no tags are present" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [])
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t("tags.required_tags_from_group", count: 1, tag_group_name: tag_group.name)
+        )
+      end
+
+      it "when tags are not part of the tag group" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag3.name])
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t("tags.required_tags_from_group", count: 1, tag_group_name: tag_group.name)
+        )
+      end
+
+      it "when requirement is met" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name])
+        expect(valid).to eq(true)
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, tag2.name])
+        expect(valid).to eq(true)
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag2.name, tag3.name])
+        expect(valid).to eq(true)
+      end
+
+      it "lets staff ignore the restriction" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [])
+        expect(valid).to eq(true)
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag3.name])
+        expect(valid).to eq(true)
       end
     end
   end

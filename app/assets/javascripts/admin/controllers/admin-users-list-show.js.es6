@@ -1,10 +1,11 @@
-import debounce from "discourse/lib/debounce";
+import discourseComputed from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
+import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse/lib/computed";
 import AdminUser from "admin/models/admin-user";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
-import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend(CanCheckEmails, {
+export default Controller.extend(CanCheckEmails, {
   model: null,
   query: null,
   order: null,
@@ -23,12 +24,12 @@ export default Ember.Controller.extend(CanCheckEmails, {
     this._canLoadMore = true;
   },
 
-  @computed("query")
+  @discourseComputed("query")
   title(query) {
     return I18n.t("admin.users.titles." + query);
   },
 
-  _filterUsers: debounce(function() {
+  _filterUsers: discourseDebounce(function() {
     this.resetFilters();
   }, 250).observes("listFilter"),
 

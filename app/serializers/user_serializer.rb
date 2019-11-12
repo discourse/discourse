@@ -72,6 +72,7 @@ class UserSerializer < BasicUserSerializer
              :profile_view_count,
              :time_read,
              :recent_time_read,
+             :primary_group_id,
              :primary_group_name,
              :primary_group_flair_url,
              :primary_group_flair_bg_color,
@@ -163,7 +164,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def second_factor_enabled
-    object.totp_enabled?
+    object.totp_enabled? || object.security_keys_enabled?
   end
 
   def include_second_factor_backup_enabled?

@@ -1911,11 +1911,17 @@ describe UsersController do
 
       expect(user.reload.title).to eq(badge.display_name)
       expect(user.user_profile.badge_granted_title).to eq(true)
+      expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
 
-      user.title = "testing"
-      user.save
+      badge.update allow_title: false
+
+      put "/u/#{user.username}/preferences/badge_title.json", params: { user_badge_id: user_badge.id }
+
+      user.reload
       user.user_profile.reload
+      expect(user.title).to eq('')
       expect(user.user_profile.badge_granted_title).to eq(false)
+      expect(user.user_profile.granted_title_badge_id).to eq(nil)
     end
 
     context "with overrided name" do
@@ -3079,8 +3085,10 @@ describe UsersController do
     end
 
     it "searches only for users who have access to private topic" do
+      searching_user = Fabricate(:user)
       privileged_user = Fabricate(:user, trust_level: 4, username: "joecabit", name: "Lawrence Tierney")
       privileged_group = Fabricate(:group)
+      privileged_group.add(searching_user)
       privileged_group.add(privileged_user)
       privileged_group.save
 
@@ -3090,6 +3098,7 @@ describe UsersController do
 
       private_topic = Fabricate(:topic, category: category)
 
+      sign_in(searching_user)
       get "/u/search/users.json", params: {
         term: user.name.split(" ").last, topic_id: private_topic.id, topic_allowed_users: "true"
       }
@@ -3098,6 +3107,15 @@ describe UsersController do
       json = JSON.parse(response.body)
       expect(json["users"].map { |u| u["username"] }).to_not include(user.username)
       expect(json["users"].map { |u| u["username"] }).to include(privileged_user.username)
+    end
+
+    it "interprets blank category id correctly" do
+      pm_topic = Fabricate(:private_message_post).topic
+      sign_in(pm_topic.user)
+      get "/u/search/users.json", params: {
+        term: "", topic_id: pm_topic.id, category_id: ""
+      }
+      expect(response.status).to eq(200)
     end
 
     context "when `enable_names` is true" do

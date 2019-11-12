@@ -1,6 +1,6 @@
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import PermissionType from "discourse/models/permission-type";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 
 export default buildCategoryPanel("security", {
   editingPermissions: false,
@@ -38,7 +38,7 @@ export default buildCategoryPanel("security", {
       if (!this.get("category.is_special")) {
         this.category.addPermission({
           group_name: group + "",
-          permission: PermissionType.create({ id: parseInt(id) })
+          permission: PermissionType.create({ id: parseInt(id, 10) })
         });
       }
 

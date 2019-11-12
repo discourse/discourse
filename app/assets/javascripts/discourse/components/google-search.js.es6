@@ -1,12 +1,14 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { alias } from "@ember/object/computed";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["google-search-form"],
   classNameBindings: ["hidden:hidden"],
 
-  hidden: Ember.computed.alias("siteSettings.login_required"),
+  hidden: alias("siteSettings.login_required"),
 
-  @computed
+  @discourseComputed
   siteUrl() {
     return `${location.protocol}//${location.host}${Discourse.getURL("/")}`;
   }

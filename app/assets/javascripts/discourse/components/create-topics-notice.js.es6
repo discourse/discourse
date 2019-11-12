@@ -1,8 +1,10 @@
-import computed from "ember-addons/ember-computed-decorators";
-import { observes } from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { alias } from "@ember/object/computed";
+import Component from "@ember/component";
+import { observes } from "discourse-common/utils/decorators";
 import LivePostCounts from "discourse/models/live-post-counts";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ["hidden:hidden", ":create-topics-notice"],
 
   enabled: false,
@@ -11,7 +13,7 @@ export default Ember.Component.extend({
   publicPostCount: null,
 
   requiredTopics: 5,
-  requiredPosts: Ember.computed.alias("siteSettings.tl1_requires_read_posts"),
+  requiredPosts: alias("siteSettings.tl1_requires_read_posts"),
 
   init() {
     this._super(...arguments);
@@ -34,7 +36,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed()
+  @discourseComputed()
   shouldSee() {
     const user = this.currentUser;
     return (
@@ -45,7 +47,12 @@ export default Ember.Component.extend({
     );
   },
 
-  @computed("enabled", "shouldSee", "publicTopicCount", "publicPostCount")
+  @discourseComputed(
+    "enabled",
+    "shouldSee",
+    "publicTopicCount",
+    "publicPostCount"
+  )
   hidden() {
     return (
       !this.enabled ||
@@ -55,7 +62,7 @@ export default Ember.Component.extend({
     );
   },
 
-  @computed(
+  @discourseComputed(
     "publicTopicCount",
     "publicPostCount",
     "topicTrackingState.incomingCount"

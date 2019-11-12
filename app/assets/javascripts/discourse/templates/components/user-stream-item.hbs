@@ -48,9 +48,11 @@
     {{d-icon child.icon class="icon"}}
     {{#each child.items as |grandChild|}}
       {{#if grandChild.removableBookmark}}
-        <button class="btn btn-default remove-bookmark" {{action removeBookmark grandChild}}>
-          {{d-icon 'times'}} {{i18n "bookmarks.remove"}}
-        </button>
+        {{d-button
+          class="btn-default remove-bookmark"
+          action=(action removeBookmark grandChild)
+          icon="times"
+          label="bookmarks.remove"}}
       {{else}}
           <a href={{grandChild.userUrl}} data-user-card={{grandChild.username}} class='avatar-link'><div class='avatar-wrapper'>{{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true" avatarTemplatePath="acting_avatar_template"}}</div></a>
           {{#if grandChild.edit_reason}} &mdash; <span class="edit-reason">{{grandChild.edit_reason}}</span>{{/if}}

@@ -9,7 +9,9 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  <button class='btn btn-primary' disabled={{buttonDisabled}} {{action "grantBadge"}}>
-    {{i18n 'admin.badges.grant'}}
-  </button>
+  {{d-button
+    class="btn-primary"
+    disabled=buttonDisabled
+    action=(action "grantBadge")
+    label="admin.badges.grant"}}
 </div>

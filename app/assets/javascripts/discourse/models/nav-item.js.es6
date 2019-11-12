@@ -1,22 +1,19 @@
-import { toTitleCase } from "discourse/lib/formatter";
+import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
-import computed from "ember-addons/ember-computed-decorators";
+import Category from "discourse/models/category";
+import EmberObject from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
 
-const NavItem = Discourse.Model.extend({
-  @computed("categoryName", "name")
-  title(categoryName, name) {
+const NavItem = EmberObject.extend({
+  @discourseComputed("name")
+  title(name) {
     const extra = {};
-
-    if (categoryName) {
-      name = "category";
-      extra.categoryName = categoryName;
-    }
 
     return I18n.t("filters." + name.replace("/", ".") + ".help", extra);
   },
 
-  @computed("categoryName", "name", "count")
-  displayName(categoryName, name, count) {
+  @discourseComputed("name", "count")
+  displayName(name, count) {
     count = count || 0;
 
     if (
@@ -29,36 +26,12 @@ const NavItem = Discourse.Model.extend({
     let extra = { count: count };
     const titleKey = count === 0 ? ".title" : ".title_with_count";
 
-    if (categoryName) {
-      name = "category";
-      extra.categoryName = toTitleCase(categoryName);
-    }
-
     return emojiUnescape(
       I18n.t(`filters.${name.replace("/", ".") + titleKey}`, extra)
     );
   },
 
-  @computed("name")
-  categoryName(name) {
-    const split = name.split("/");
-    return split[0] === "category" ? split[1] : null;
-  },
-
-  @computed("name")
-  categorySlug(name) {
-    const split = name.split("/");
-    if (split[0] === "category" && split[1]) {
-      const cat = Discourse.Site.current().categories.findBy(
-        "nameLower",
-        split[1].toLowerCase()
-      );
-      return cat ? Discourse.Category.slugFor(cat) : null;
-    }
-    return null;
-  },
-
-  @computed("filterMode")
+  @discourseComputed("filterMode")
   href(filterMode) {
     let customHref = null;
 
@@ -76,25 +49,21 @@ const NavItem = Discourse.Model.extend({
     return Discourse.getURL("/") + filterMode;
   },
 
-  @computed("name", "category", "categorySlug", "noSubcategories")
-  filterMode(name, category, categorySlug, noSubcategories) {
-    if (name.split("/")[0] === "category") {
-      return "c/" + categorySlug;
-    } else {
-      let mode = "";
-      if (category) {
-        mode += "c/";
-        mode += Discourse.Category.slugFor(category);
-        if (noSubcategories) {
-          mode += "/none";
-        }
-        mode += "/l/";
+  @discourseComputed("name", "category", "noSubcategories")
+  filterMode(name, category, noSubcategories) {
+    let mode = "";
+    if (category) {
+      mode += "c/";
+      mode += Category.slugFor(category);
+      if (noSubcategories) {
+        mode += "/none";
       }
-      return mode + name.replace(" ", "-");
+      mode += "/l/";
     }
+    return mode + name.replace(" ", "-");
   },
 
-  @computed("name", "category", "topicTrackingState.messageCount")
+  @discourseComputed("name", "category", "topicTrackingState.messageCount")
   count(name, category) {
     const state = this.topicTrackingState;
     if (state) {
@@ -104,7 +73,7 @@ const NavItem = Discourse.Model.extend({
 });
 
 const ExtraNavItem = NavItem.extend({
-  href: computed("href", {
+  href: discourseComputed("href", {
     get() {
       if (this._href) {
         return this._href;
@@ -117,6 +86,8 @@ const ExtraNavItem = NavItem.extend({
       return (this._href = value);
     }
   }),
+
+  count: 0,
 
   customFilter: null
 });
@@ -141,7 +112,7 @@ NavItem.reopenClass({
     )
       return null;
 
-    if (!Discourse.Category.list() && testName === "categories") return null;
+    if (!Category.list() && testName === "categories") return null;
     if (!Discourse.Site.currentProp("top_menu_items").includes(testName))
       return null;
 
@@ -150,6 +121,9 @@ NavItem.reopenClass({
       self = this;
     if (opts.category) {
       args.category = opts.category;
+    }
+    if (opts.tagId) {
+      args.tagId = opts.tagId;
     }
     if (opts.persistedQueryParams) {
       args.persistedQueryParams = opts.persistedQueryParams;
@@ -183,7 +157,7 @@ NavItem.reopenClass({
     }
 
     items = items
-      .map(i => Discourse.NavItem.fromText(i, args))
+      .map(i => NavItem.fromText(i, args))
       .filter(
         i => i !== null && !(category && i.get("name").indexOf("categor") === 0)
       );
@@ -193,12 +167,46 @@ NavItem.reopenClass({
       return item.customFilter.call(this, category, args);
     });
 
+    let forceActive = false;
+
     extraItems.forEach(item => {
+      if (item.init) {
+        item.init.call(this, item, category, args);
+      }
+
+      const before = item.before;
+      if (before) {
+        let i = 0;
+        for (i = 0; i < items.length; i++) {
+          if (items[i].name === before) {
+            break;
+          }
+        }
+        items.splice(i, 0, item);
+      } else {
+        items.push(item);
+      }
+
       if (!item.customHref) return;
+
       item.set("href", item.customHref.call(this, category, args));
+
+      if (item.forceActive && item.forceActive.call(this, category, args)) {
+        item.active = true;
+        forceActive = true;
+      } else {
+        item.active = undefined;
+      }
     });
 
-    return items.concat(extraItems);
+    if (forceActive) {
+      items.forEach(i => {
+        if (i.active === undefined) {
+          i.active = false;
+        }
+      });
+    }
+    return items;
   }
 });
 
@@ -213,5 +221,17 @@ export function customNavItemHref(cb) {
 }
 
 export function addNavItem(item) {
-  NavItem.extraNavItems.push(ExtraNavItem.create(item));
+  const navItem = ExtraNavItem.create(item);
+  NavItem.extraNavItems.push(navItem);
+  return navItem;
 }
+
+Object.defineProperty(Discourse, "NavItem", {
+  get() {
+    deprecated("Import the NavItem class instead of using Discourse.NavItem", {
+      since: "2.4.0",
+      dropFrom: "2.5.0"
+    });
+    return NavItem;
+  }
+});

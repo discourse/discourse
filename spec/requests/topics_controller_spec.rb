@@ -1027,6 +1027,31 @@ RSpec.describe TopicsController do
             expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
           end
 
+          it "can add a tag to wiki topic" do
+            SiteSetting.min_trust_to_edit_wiki_post = 2
+            topic.first_post.update!(wiki: true)
+            user = Fabricate(:user)
+            sign_in(user)
+
+            expect do
+              put "/t/#{topic.id}/tags.json", params: {
+                tags: [tag.name]
+              }
+            end.not_to change { topic.reload.first_post.revisions.count }
+
+            expect(response.status).to eq(403)
+            user.update!(trust_level: 2)
+
+            expect do
+              put "/t/#{topic.id}/tags.json", params: {
+                tags: [tag.name]
+              }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+          end
+
           it 'does not remove tag if no params is given' do
             topic.tags << tag
 
@@ -1734,7 +1759,7 @@ RSpec.describe TopicsController do
       end
 
       context 'and the user is not logged in' do
-        let(:api_key) { topic.user.generate_api_key(topic.user) }
+        let(:api_key) { Fabricate(:api_key, user: topic.user) }
 
         it 'redirects to the login page' do
           get "/t/#{topic.slug}/#{topic.id}.json"

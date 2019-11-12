@@ -1,6 +1,7 @@
-import computed from "ember-addons/ember-computed-decorators";
+import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
-  @computed("field.value")
+export default Component.extend({
+  @discourseComputed("field.value")
   showStaffCount: staffCount => staffCount > 1
 });

@@ -1,6 +1,7 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import Component from "@ember/component";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   init() {
     this._super(...arguments);
 
@@ -45,7 +46,11 @@ export default Ember.Component.extend({
     ];
   },
 
-  @computed("siteSettings.email_in", "model.automatic", "currentUser.admin")
+  @discourseComputed(
+    "siteSettings.email_in",
+    "model.automatic",
+    "currentUser.admin"
+  )
   showEmailSettings(emailIn, automatic, isAdmin) {
     return emailIn && isAdmin && !automatic;
   }

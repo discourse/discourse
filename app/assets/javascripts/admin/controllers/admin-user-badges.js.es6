@@ -1,13 +1,17 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { alias, sort } from "@ember/object/computed";
+import { next } from "@ember/runloop";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend(GrantBadgeController, {
-  adminUser: Ember.inject.controller(),
-  user: Ember.computed.alias("adminUser.model"),
-  userBadges: Ember.computed.alias("model"),
-  allBadges: Ember.computed.alias("badges"),
-  sortedBadges: Ember.computed.sort("model", "badgeSortOrder"),
+export default Controller.extend(GrantBadgeController, {
+  adminUser: inject(),
+  user: alias("adminUser.model"),
+  userBadges: alias("model"),
+  allBadges: alias("badges"),
+  sortedBadges: sort("model", "badgeSortOrder"),
 
   init() {
     this._super(...arguments);
@@ -15,7 +19,7 @@ export default Ember.Controller.extend(GrantBadgeController, {
     this.badgeSortOrder = ["granted_at:desc"];
   },
 
-  @computed("model", "model.[]", "model.expandedBadges.[]")
+  @discourseComputed("model", "model.[]", "model.expandedBadges.[]")
   groupedBadges() {
     const allBadges = this.model;
 
@@ -69,7 +73,7 @@ export default Ember.Controller.extend(GrantBadgeController, {
       ).then(
         () => {
           this.set("badgeReason", "");
-          Ember.run.next(() => {
+          next(() => {
             // Update the selected badge ID after the combobox has re-rendered.
             const newSelectedBadge = this.grantableBadges[0];
             if (newSelectedBadge) {

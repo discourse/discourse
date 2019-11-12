@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 
-export default Ember.Component.extend(LoadMore, {
+export default Component.extend(LoadMore, {
   init() {
     this._super(...arguments);
 

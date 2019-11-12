@@ -1,7 +1,9 @@
-import debounce from "discourse/lib/debounce";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
+import discourseDebounce from "discourse/lib/debounce";
 import { selectedText } from "discourse/lib/utilities";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["quote-button"],
   classNameBindings: ["visible"],
   visible: false,
@@ -102,15 +104,18 @@ export default Ember.Component.extend({
     }
 
     // change the position of the button
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       let top = markerOffset.top;
       let left = markerOffset.left + Math.max(0, parentScrollLeft);
 
       if (showAtEnd) {
-        top = top + 20;
+        const nearRightEdgeOfScreen =
+          $(window).width() - $quoteButton.outerWidth() < left + 10;
+
+        top = nearRightEdgeOfScreen ? top + 50 : top + 20;
         left = Math.min(
           left + 10,
-          $(window).width() - $quoteButton.outerWidth()
+          $(window).width() - $quoteButton.outerWidth() - 10
         );
       } else {
         top = top - $quoteButton.outerHeight() - 5;
@@ -123,7 +128,10 @@ export default Ember.Component.extend({
   didInsertElement() {
     const { isWinphone, isAndroid } = this.capabilities;
     const wait = isWinphone || isAndroid ? 250 : 25;
-    const onSelectionChanged = debounce(() => this._selectionChanged(), wait);
+    const onSelectionChanged = discourseDebounce(
+      () => this._selectionChanged(),
+      wait
+    );
 
     $(document)
       .on("mousedown.quote-button", e => {

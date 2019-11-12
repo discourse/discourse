@@ -39,7 +39,10 @@
           content=badgeGroupings
           class="badge-selector"
           nameProperty="name"}}
-        <button {{action "editGroupings"}} class='btn btn-icon no-text btn-default'>{{d-icon "pencil-alt"}}</button>
+        {{d-button
+          class="btn-default"
+          action=(route-action "editGroupings")
+          icon="pencil-alt"}}
       </div>
     </div>
 
@@ -138,7 +141,11 @@
     </div>
 
     <div class='buttons'>
-      <button {{action "save"}} disabled={{saving}} class='btn btn-primary'>{{i18n 'admin.badges.save'}}</button>
+      {{d-button
+        class="btn-primary"
+        action=(action "save")
+        disabled=saving
+        label="admin.badges.save"}}
       <span class='saving'>{{savingStatus}}</span>
       {{#unless readOnly}}
         <a {{action "destroy"}} class='delete-link'>{{i18n 'admin.badges.delete'}}</a>

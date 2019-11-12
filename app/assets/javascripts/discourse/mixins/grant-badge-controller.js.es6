@@ -1,9 +1,11 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { empty } from "@ember/object/computed";
 import UserBadge from "discourse/models/user-badge";
 import { convertIconClass } from "discourse-common/lib/icon-library";
+import Mixin from "@ember/object/mixin";
 
-export default Ember.Mixin.create({
-  @computed("allBadges.[]", "userBadges.[]")
+export default Mixin.create({
+  @discourseComputed("allBadges.[]", "userBadges.[]")
   grantableBadges(allBadges, userBadges) {
     const granted = userBadges.reduce((map, badge) => {
       map[badge.get("badge_id")] = true;
@@ -27,9 +29,9 @@ export default Ember.Mixin.create({
       .sort((a, b) => a.get("name").localeCompare(b.get("name")));
   },
 
-  noGrantableBadges: Ember.computed.empty("grantableBadges"),
+  noGrantableBadges: empty("grantableBadges"),
 
-  @computed("selectedBadgeId", "grantableBadges")
+  @discourseComputed("selectedBadgeId", "grantableBadges")
   selectedBadgeGrantable(selectedBadgeId, grantableBadges) {
     return (
       grantableBadges &&

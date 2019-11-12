@@ -1,15 +1,17 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { equal } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
-import computed from "ember-addons/ember-computed-decorators";
+import EmberObject from "@ember/object";
 
-const ScreenedIpAddress = Discourse.Model.extend({
-  @computed("action_name")
+const ScreenedIpAddress = EmberObject.extend({
+  @discourseComputed("action_name")
   actionName(actionName) {
     return I18n.t(`admin.logs.screened_ips.actions.${actionName}`);
   },
 
-  isBlocked: Ember.computed.equal("action_name", "block"),
+  isBlocked: equal("action_name", "block"),
 
-  @computed("ip_address")
+  @discourseComputed("ip_address")
   isRange(ipAddress) {
     return ipAddress.indexOf("/") > 0;
   },

@@ -1,7 +1,8 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import Draft from "discourse/models/draft";
 import Composer from "discourse/models/composer";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   renderTemplate() {
     this.render("user/messages");
   },

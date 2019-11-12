@@ -123,10 +123,10 @@ he:
           > :game_die: 3, 6
 
           `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _ניקטו במעשה אקראי של חסד, ללא ציפייה לתמורה, בטוחים בידיעה שיום אחד מישהו עלול לעשות אותו הדבר בשבילכם_ &mdash; הנסיכה דיינה
+          %{quote_sample}
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: אתם יכולים לסמוך על כך
+          > :crystal_ball: אפשר לסמוך על זה
       do_not_understand:
         first_response: |-
           הי, תודה על התגובה!
@@ -275,11 +275,11 @@ he:
 
           יש לנסות לחפש את הביטוי „capy&#8203;bara” בנושא הזה
         hidden_message: |-
-          איך הצלחת לפספס את הקפיברה הזאת? :wink:
+          איך החמצת את הקפיברה הזאת? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          שמת לב שחזרת להתחלה? אולי נאכיל את הקפיברה המסכנה הזאת על ידי **השבה עם האמוג׳י `:herb:`** ומיד הדיון יוקפץ לסופו.
+          שמת לב שחזרת להתחלה? יש להאכיל את הקפיברה המסכנה על ידי שליחת תגובה עם ** האמוג׳י `%{search_answer}`** ומיד תתבצע הקפצה לסוף.
         reply: |-
           הידד! מצאת אותה :tada:
 

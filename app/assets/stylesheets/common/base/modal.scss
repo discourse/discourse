@@ -268,11 +268,14 @@
   section.field {
     padding: 0.25em 0;
     margin-bottom: 5px;
-  }
-
-  section.field .field-item {
-    display: inline-block;
-    margin-right: 10px;
+    &.with-items {
+      display: flex;
+      align-items: flex-start;
+    }
+    .field-item {
+      display: inline-block;
+      margin-right: 10px;
+    }
   }
 
   // password reset modal
@@ -445,6 +448,9 @@
         }
       }
     }
+  }
+  #category-min-tags-from-group {
+    width: 100px;
   }
 }
 

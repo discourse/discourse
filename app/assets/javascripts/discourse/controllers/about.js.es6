@@ -1,9 +1,11 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { gt } from "@ember/object/computed";
+import Controller from "@ember/controller";
 
-export default Ember.Controller.extend({
-  faqOverriden: Ember.computed.gt("siteSettings.faq_url.length", 0),
+export default Controller.extend({
+  faqOverriden: gt("siteSettings.faq_url.length", 0),
 
-  @computed
+  @discourseComputed
   contactInfo() {
     if (this.siteSettings.contact_url) {
       return I18n.t("about.contact_info", {

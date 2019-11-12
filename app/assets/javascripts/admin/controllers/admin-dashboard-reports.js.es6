@@ -1,10 +1,13 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { debounce } from "@ember/runloop";
+import Controller from "@ember/controller";
+
 const { get } = Ember;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   filter: null,
 
-  @computed("model.[]", "filter")
+  @discourseComputed("model.[]", "filter")
   filterReports(reports, filter) {
     if (filter) {
       filter = filter.toLowerCase();
@@ -20,7 +23,7 @@ export default Ember.Controller.extend({
 
   actions: {
     filterReports(filter) {
-      Ember.run.debounce(this, this._performFiltering, filter, 250);
+      debounce(this, this._performFiltering, filter, 250);
     }
   },
 

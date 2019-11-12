@@ -197,6 +197,13 @@ describe SearchController do
       expect(response.status).to eq(400)
     end
 
+    it "returns a 400 error if you search for null bytes" do
+      term = "hello\0hello"
+
+      get "/search.json", params: { q: term }
+      expect(response.status).to eq(400)
+    end
+
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search.json", params: { q: 'bantha' }

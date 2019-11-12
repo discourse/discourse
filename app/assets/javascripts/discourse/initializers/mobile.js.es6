@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 import Mobile from "discourse/lib/mobile";
 import { setResolverOption } from "discourse-common/resolver";
 import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
@@ -17,7 +18,7 @@ export default {
     setResolverOption("mobileView", Mobile.mobileView);
 
     if (isAppWebview()) {
-      Ember.run.later(() => {
+      later(() => {
         postRNWebviewMessage(
           "headerBg",
           $(".d-header").css("background-color")

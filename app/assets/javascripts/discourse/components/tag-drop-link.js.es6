@@ -1,7 +1,8 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
-import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "a",
   classNameBindings: [
     ":tag-badge-wrapper",
@@ -11,7 +12,7 @@ export default Ember.Component.extend({
   ],
   attributeBindings: ["href"],
 
-  @computed("tagId", "category")
+  @discourseComputed("tagId", "category")
   href(tagId, category) {
     var url = "/tags";
     if (category) {
@@ -20,7 +21,7 @@ export default Ember.Component.extend({
     return url + "/" + tagId;
   },
 
-  @computed("tagId")
+  @discourseComputed("tagId")
   tagClass(tagId) {
     return "tag-" + tagId;
   },

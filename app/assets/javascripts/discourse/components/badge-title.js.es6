@@ -1,20 +1,16 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
-import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["badge-title"],
 
   saved: false,
   saving: false,
 
-  @computed("saving")
-  savingStatus(saving) {
-    return saving ? I18n.t("saving") : I18n.t("save");
-  },
-
-  @computed("selectableUserBadges", "selectedUserBadgeId")
+  @discourseComputed("selectableUserBadges", "selectedUserBadgeId")
   selectedUserBadge(selectableUserBadges, selectedUserBadgeId) {
-    return selectableUserBadges.findBy("id", parseInt(selectedUserBadgeId));
+    return selectableUserBadges.findBy("id", parseInt(selectedUserBadgeId, 10));
   },
 
   actions: {

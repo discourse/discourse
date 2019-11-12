@@ -1,4 +1,5 @@
-import debounce from "discourse/lib/debounce";
+import { later } from "@ember/runloop";
+import discourseDebounce from "discourse/lib/debounce";
 import {
   safariHacksDisabled,
   iOSWithVisualViewport
@@ -94,10 +95,7 @@ function positioningWorkaround($fixedElement) {
 
       if (!iOSWithVisualViewport()) {
         fixedElement.style.height = oldHeight;
-        Ember.run.later(
-          () => $(fixedElement).removeClass("no-transition"),
-          500
-        );
+        later(() => $(fixedElement).removeClass("no-transition"), 500);
       }
 
       $(window).scrollTop(originalScrollTop);
@@ -114,10 +112,16 @@ function positioningWorkaround($fixedElement) {
     // document.activeElement is also unreliable (iOS does not mark buttons as focused)
     // so instead, we store the last touched element and check against it
 
+    // cancel blur event if user is:
+    // - switching to another iOS app
+    // - invoking a select-kit dropdown
+    // - invoking mentions
+    // - invoking a toolbar button
     if (
       lastTouchedElement &&
-      ($(lastTouchedElement).hasClass("select-kit-header") ||
-        $(lastTouchedElement).closest(".autocomplete") ||
+      (document.visibilityState === "hidden" ||
+        $(lastTouchedElement).hasClass("select-kit-header") ||
+        $(lastTouchedElement).closest(".autocomplete").length ||
         ["span", "svg", "button"].includes(
           lastTouchedElement.nodeName.toLowerCase()
         ))
@@ -128,7 +132,7 @@ function positioningWorkaround($fixedElement) {
     positioningWorkaround.blur(evt);
   };
 
-  var blurred = debounce(blurredNow, 250);
+  var blurred = discourseDebounce(blurredNow, 250);
 
   var positioningHack = function(evt) {
     // we need this, otherwise changing focus means we never clear
@@ -213,7 +217,7 @@ function positioningWorkaround($fixedElement) {
     }
   }
 
-  const checkForInputs = debounce(function() {
+  const checkForInputs = discourseDebounce(function() {
     attachTouchStart(fixedElement, lastTouched);
 
     $fixedElement.find("input[type=text],textarea").each(function() {

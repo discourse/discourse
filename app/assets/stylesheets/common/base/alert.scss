@@ -8,21 +8,12 @@
     position: absolute;
     top: 8px;
     right: 8px;
-    line-height: $line-height-small;
     font-size: $font-up-3;
-    color: $primary-low-mid;
-    @include hover {
-      color: $primary-medium;
-      cursor: pointer;
+    .d-icon {
+      color: $primary-low-mid;
     }
   }
-  button.close {
-    padding: 0;
-    cursor: pointer;
-    background: transparent;
-    border: 0;
-    -webkit-appearance: none;
-  }
+
   &.alert-success {
     background-color: $success-low;
     color: $primary;

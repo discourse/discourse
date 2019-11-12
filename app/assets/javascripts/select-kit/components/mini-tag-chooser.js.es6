@@ -1,11 +1,15 @@
+import { empty, alias } from "@ember/object/computed";
 import Category from "discourse/models/category";
 import ComboBox from "select-kit/components/combo-box";
 import TagsMixin from "select-kit/mixins/tags";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import renderTag from "discourse/lib/render-tag";
 import { escapeExpression } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import { iconHTML } from "discourse-common/lib/icon-library";
-const { get, isEmpty, run, makeArray } = Ember;
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { debounce } from "@ember/runloop";
 
 export default ComboBox.extend(TagsMixin, {
   allowContentReplacement: true,
@@ -16,11 +20,11 @@ export default ComboBox.extend(TagsMixin, {
   classNameBindings: ["noTags"],
   verticalOffset: 3,
   filterable: true,
-  noTags: Ember.computed.empty("selection"),
+  noTags: empty("selection"),
   allowCreate: null,
-  allowAny: Ember.computed.alias("allowCreate"),
-  caretUpIcon: Ember.computed.alias("caretIcon"),
-  caretDownIcon: Ember.computed.alias("caretIcon"),
+  allowAny: alias("allowCreate"),
+  caretUpIcon: alias("caretIcon"),
+  caretDownIcon: alias("caretIcon"),
   isAsync: true,
   fullWidthOnMobile: true,
 
@@ -47,12 +51,13 @@ export default ComboBox.extend(TagsMixin, {
       parseInt(
         this.limit ||
           this.maximum ||
-          this.get("siteSettings.max_tags_per_topic")
+          this.get("siteSettings.max_tags_per_topic"),
+        10
       )
     );
   },
 
-  @computed(
+  @discourseComputed(
     "computedValue",
     "filter",
     "collectionComputedContent.[]",
@@ -95,12 +100,12 @@ export default ComboBox.extend(TagsMixin, {
     );
   },
 
-  @computed("hasReachedMaximum")
+  @discourseComputed("hasReachedMaximum")
   caretIcon(hasReachedMaximum) {
     return hasReachedMaximum ? null : "plus";
   },
 
-  @computed("tags")
+  @discourseComputed("tags")
   selection(tags) {
     return makeArray(tags).map(c => this.computeContentItem(c));
   },
@@ -136,7 +141,7 @@ export default ComboBox.extend(TagsMixin, {
     return true;
   },
 
-  @computed("tags.[]", "filter", "highlightedSelection.[]")
+  @discourseComputed("tags.[]", "filter", "highlightedSelection.[]")
   collectionHeader(tags, filter, highlightedSelection) {
     if (!isEmpty(tags)) {
       let output = "";
@@ -226,7 +231,7 @@ export default ComboBox.extend(TagsMixin, {
   },
 
   destroyTags(tags) {
-    tags = Ember.makeArray(tags).map(c => get(c, "value"));
+    tags = makeArray(tags).map(c => get(c, "value"));
 
     // work around usage with buffered proxy
     // it does not listen on array changes, similar hack already on select
@@ -237,7 +242,7 @@ export default ComboBox.extend(TagsMixin, {
 
     this.set(
       "searchDebounce",
-      run.debounce(this, this._prepareSearch, this.filter, 350)
+      debounce(this, this._prepareSearch, this.filter, 350)
     );
   },
 
@@ -270,7 +275,7 @@ export default ComboBox.extend(TagsMixin, {
       if (isEmpty(this.collectionComputedContent)) {
         this.set(
           "searchDebounce",
-          run.debounce(this, this._prepareSearch, this.filter, 350)
+          debounce(this, this._prepareSearch, this.filter, 350)
         );
       }
     },
@@ -282,7 +287,7 @@ export default ComboBox.extend(TagsMixin, {
       filter = isEmpty(filter) ? null : filter;
       this.set(
         "searchDebounce",
-        run.debounce(this, this._prepareSearch, filter, 350)
+        debounce(this, this._prepareSearch, filter, 350)
       );
     }
   }

@@ -1,10 +1,12 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { alias, not } from "@ember/object/computed";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
-  loadingMore: Ember.computed.alias("topicList.loadingMore"),
-  loading: Ember.computed.not("loaded"),
+export default Component.extend({
+  loadingMore: alias("topicList.loadingMore"),
+  loading: not("loaded"),
 
-  @computed("topicList.loaded")
+  @discourseComputed("topicList.loaded")
   loaded() {
     var topicList = this.topicList;
     if (topicList) {
@@ -71,7 +73,7 @@ export default Ember.Component.extend({
     });
   },
 
-  @computed("topics")
+  @discourseComputed("topics")
   showUnreadIndicator(topics) {
     return topics.some(
       topic => typeof topic.unread_by_group_member !== "undefined"
@@ -103,7 +105,7 @@ export default Ember.Component.extend({
           }
         }
 
-        const topic = this.topics.findBy("id", parseInt(topicId));
+        const topic = this.topics.findBy("id", parseInt(topicId, 10));
         this.appEvents.trigger("topic-entrance:show", {
           topic,
           position: target.offset()

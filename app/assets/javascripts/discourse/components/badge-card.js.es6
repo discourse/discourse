@@ -1,16 +1,17 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { sanitize, emojiUnescape } from "discourse/lib/text";
 
-export default Ember.Component.extend({
+export default Component.extend({
   size: "medium",
   classNameBindings: [":badge-card", "size", "badge.slug"],
 
-  @computed("badge.url", "filterUser", "username")
+  @discourseComputed("badge.url", "filterUser", "username")
   url(badgeUrl, filterUser, username) {
     return filterUser ? `${badgeUrl}?username=${username}` : badgeUrl;
   },
 
-  @computed("count", "badge.grant_count")
+  @discourseComputed("count", "badge.grant_count")
   displayCount(count, grantCount) {
     if (count == null) {
       return grantCount;
@@ -20,7 +21,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("size")
+  @discourseComputed("size")
   summary(size) {
     if (size === "large") {
       const longDescription = this.get("badge.long_description");

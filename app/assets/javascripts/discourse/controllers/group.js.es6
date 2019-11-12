@@ -1,6 +1,9 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import EmberObject from "@ember/object";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 
-const Tab = Ember.Object.extend({
+const Tab = EmberObject.extend({
   init() {
     this._super(...arguments);
     let name = this.name;
@@ -9,13 +12,13 @@ const Tab = Ember.Object.extend({
   }
 });
 
-export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
+export default Controller.extend({
+  application: inject(),
   counts: null,
   showing: "members",
   destroying: null,
 
-  @computed(
+  @discourseComputed(
     "showMessages",
     "model.user_count",
     "canManageGroup",
@@ -65,7 +68,7 @@ export default Ember.Controller.extend({
     return defaultTabs;
   },
 
-  @computed("model.is_group_user")
+  @discourseComputed("model.is_group_user")
   showMessages(isGroupUser) {
     if (!this.siteSettings.enable_personal_messages) {
       return false;
@@ -74,17 +77,17 @@ export default Ember.Controller.extend({
     return isGroupUser || (this.currentUser && this.currentUser.admin);
   },
 
-  @computed("model.is_group_owner", "model.automatic")
+  @discourseComputed("model.is_group_owner", "model.automatic")
   canEditGroup(isGroupOwner, automatic) {
     return !automatic && isGroupOwner;
   },
 
-  @computed("model.displayName", "model.full_name")
+  @discourseComputed("model.displayName", "model.full_name")
   groupName(displayName, fullName) {
     return (fullName || displayName).capitalize();
   },
 
-  @computed(
+  @discourseComputed(
     "model.name",
     "model.flair_url",
     "model.flair_bg_color",
@@ -99,12 +102,12 @@ export default Ember.Controller.extend({
     };
   },
 
-  @computed("model.messageable")
+  @discourseComputed("model.messageable")
   displayGroupMessageButton(messageable) {
     return this.currentUser && messageable;
   },
 
-  @computed("model", "model.automatic")
+  @discourseComputed("model", "model.automatic")
   canManageGroup(model, automatic) {
     return (
       this.currentUser &&

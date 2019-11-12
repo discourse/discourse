@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import highlightText from "discourse/lib/highlight-text";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "span",
 
   _highlightOnInsert: function() {

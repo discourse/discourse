@@ -1,5 +1,8 @@
+import { run } from "@ember/runloop";
 import pageVisible from "discourse/lib/page-visible";
 import logout from "discourse/lib/logout";
+import Session from "discourse/models/session";
+import { Promise } from "rsvp";
 
 let _trackView = false;
 let _transientHeader = null;
@@ -42,7 +45,7 @@ function handleRedirect(data) {
 
 export function updateCsrfToken() {
   return ajax("/session/csrf").then(result => {
-    Discourse.Session.currentProp("csrfToken", result.csrf);
+    Session.currentProp("csrfToken", result.csrf);
   });
 }
 
@@ -96,7 +99,7 @@ export function ajax() {
       handleRedirect(data);
       handleLogoff(xhr);
 
-      Ember.run(() => {
+      run(() => {
         Discourse.Site.currentProp(
           "isReadOnly",
           !!xhr.getResponseHeader("Discourse-Readonly")
@@ -107,7 +110,7 @@ export function ajax() {
         data = { result: data, xhr: xhr };
       }
 
-      Ember.run(null, resolve, data);
+      run(null, resolve, data);
     };
 
     args.error = (xhr, textStatus, errorThrown) => {
@@ -118,7 +121,7 @@ export function ajax() {
       // note: for bad CSRF we don't loop an extra request right away.
       //  this allows us to eliminate the possibility of having a loop.
       if (xhr.status === 403 && xhr.responseText === '["BAD CSRF"]') {
-        Discourse.Session.current().set("csrfToken", null);
+        Session.current().set("csrfToken", null);
       }
 
       // If it's a parsererror, don't reject
@@ -128,7 +131,7 @@ export function ajax() {
       xhr.jqTextStatus = textStatus;
       xhr.requestedUrl = url;
 
-      Ember.run(null, reject, {
+      run(null, reject, {
         jqXHR: xhr,
         textStatus: textStatus,
         errorThrown: errorThrown
@@ -160,15 +163,15 @@ export function ajax() {
     args.type &&
     args.type.toUpperCase() !== "GET" &&
     url !== Discourse.getURL("/clicks/track") &&
-    !Discourse.Session.currentProp("csrfToken")
+    !Session.currentProp("csrfToken")
   ) {
-    promise = new Ember.RSVP.Promise((resolve, reject) => {
+    promise = new Promise((resolve, reject) => {
       ajaxObj = updateCsrfToken().then(() => {
         performAjax(resolve, reject);
       });
     });
   } else {
-    promise = new Ember.RSVP.Promise(performAjax);
+    promise = new Promise(performAjax);
   }
 
   promise.abort = () => {

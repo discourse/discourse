@@ -28,6 +28,7 @@ class CookedPostProcessor
     @size_cache = {}
 
     @disable_loading_image = !!opts[:disable_loading_image]
+    @omit_nofollow = post.omit_nofollow?
   end
 
   def post_process(bypass_bump: false, new_post: false)
@@ -425,7 +426,7 @@ class CookedPostProcessor
     informations = +"#{original_width}×#{original_height}"
     informations << " #{upload.human_filesize}" if upload
 
-    a["title"] = CGI.escapeHTML(img["title"] || filename)
+    a["title"] = CGI.escapeHTML(img["title"] || img["alt"] || filename)
 
     meta.add_child create_icon_node("far-image")
     meta.add_child create_span_node("filename", a["title"])
@@ -580,7 +581,7 @@ class CookedPostProcessor
       end
     end
 
-    if @cooking_options[:omit_nofollow] || !SiteSetting.add_rel_nofollow_to_user_content
+    if @omit_nofollow || !SiteSetting.add_rel_nofollow_to_user_content
       @doc.css(".onebox-body a, .onebox a").each { |a| a.remove_attribute("rel") }
     end
   end
@@ -617,7 +618,7 @@ class CookedPostProcessor
   end
 
   def enforce_nofollow
-    if !@cooking_options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
+    if !@omit_nofollow && SiteSetting.add_rel_nofollow_to_user_content
       PrettyText.add_rel_nofollow_to_user_content(@doc)
     end
   end

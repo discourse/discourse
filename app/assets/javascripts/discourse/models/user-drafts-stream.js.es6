@@ -1,10 +1,10 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
 import UserDraft from "discourse/models/user-draft";
 import { emojiUnescape } from "discourse/lib/text";
-import computed from "ember-addons/ember-computed-decorators";
-
+import { Promise } from "rsvp";
 import {
   NEW_TOPIC_KEY,
   NEW_PRIVATE_MESSAGE_KEY
@@ -38,7 +38,7 @@ export default RestModel.extend({
     return this.findItems();
   },
 
-  @computed("content.length", "loaded")
+  @discourseComputed("content.length", "loaded")
   noContent(contentLength, loaded) {
     return loaded && contentLength === 0;
   },
@@ -55,11 +55,11 @@ export default RestModel.extend({
 
     const lastLoadedUrl = this.lastLoadedUrl;
     if (lastLoadedUrl === findUrl) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     if (this.loading) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     this.set("loading", true);

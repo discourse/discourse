@@ -2,6 +2,7 @@ QUnit.module("rest-model");
 
 import createStore from "helpers/create-store";
 import RestModel from "discourse/models/rest";
+import RestAdapter from "discourse/adapters/rest";
 
 QUnit.test("munging", assert => {
   const store = createStore();
@@ -100,4 +101,38 @@ QUnit.test("destroyRecord", assert => {
       assert.ok(result);
     });
   });
+});
+
+QUnit.test("custom api name", async assert => {
+  const store = createStore(type => {
+    if (type === "adapter:my-widget") {
+      return RestAdapter.extend({
+        // An adapter like this is used when the server-side key/url
+        // do not match the name of the es6 class
+        apiNameFor() {
+          return "widget";
+        }
+      }).create();
+    }
+  });
+
+  // The pretenders only respond to requests for `widget`
+  // If these basic tests pass, the name override worked correctly
+
+  //Create
+  const widget = store.createRecord("my-widget");
+  await widget.save({ name: "Evil Widget" });
+  assert.equal(widget.id, 100, "it saved a new record successully");
+  assert.equal(widget.get("name"), "Evil Widget");
+
+  // Update
+  await widget.update({ name: "new name" });
+  assert.equal(widget.get("name"), "new name");
+
+  // Destroy
+  await widget.destroyRecord();
+
+  // Lookup
+  const foundWidget = await store.find("my-widget", 123);
+  assert.equal(foundWidget.name, "Trout Lure");
 });

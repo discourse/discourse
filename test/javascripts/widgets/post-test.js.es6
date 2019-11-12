@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
 
 moduleForWidget("post");
@@ -861,7 +862,7 @@ widgetTest("pm map", {
       showTopicMap: true,
       showPMMap: true,
       allowedGroups: [],
-      allowedUsers: [Ember.Object.create({ username: "eviltrout" })]
+      allowedUsers: [EmberObject.create({ username: "eviltrout" })]
     });
   },
   test(assert) {

@@ -34,6 +34,30 @@ describe ThemeField do
     expect(theme_field.value_baked).to_not include('<script')
   end
 
+  it 'adds an error when optimized image links are included' do
+    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "body_tag", value: <<~HTML)
+      <img src="http://mysite.invalid/uploads/default/optimized/1X/6d749a141f513f88f167e750e528515002043da1_2_1282x1000.png"/>
+    HTML
+    theme_field.ensure_baked!
+    expect(theme_field.error).to include(I18n.t("themes.errors.optimized_link"))
+
+    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "scss", value: <<~SCSS)
+      body {
+        background: url(http://mysite.invalid/uploads/default/optimized/1X/6d749a141f513f88f167e750e528515002043da1_2_1282x1000.png);
+      }
+    SCSS
+    theme_field.ensure_baked!
+    expect(theme_field.error).to include(I18n.t("themes.errors.optimized_link"))
+
+    theme_field.update(value: <<~SCSS)
+      body {
+        background: url(http://notdiscourse.invalid/optimized/my_image.png);
+      }
+    SCSS
+    theme_field.ensure_baked!
+    expect(theme_field.error).to eq(nil)
+  end
+
   it 'only extracts inline javascript to an external file' do
     html = <<~HTML
     <script type="text/discourse-plugin" version="0.8">

@@ -1,23 +1,24 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     classes: ["text-muted", "text-danger", "text-successful", "text-muted"],
     icons: ["far-circle", "times-circle", "circle", "circle"],
 
-    @computed("deliveryStatuses", "model.last_delivery_status")
+    @discourseComputed("deliveryStatuses", "model.last_delivery_status")
     status(deliveryStatuses, lastDeliveryStatus) {
       return deliveryStatuses.find(s => s.id === lastDeliveryStatus);
     },
 
-    @computed("status.id", "icons")
+    @discourseComputed("status.id", "icons")
     icon(statusId, icons) {
       return icons[statusId - 1];
     },
 
-    @computed("status.id", "classes")
+    @discourseComputed("status.id", "classes")
     class(statusId, classes) {
       return classes[statusId - 1];
     },

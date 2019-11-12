@@ -1,7 +1,8 @@
-export default Ember.Route.extend({
+import Route from "@ember/routing/route";
+export default Route.extend({
   model(params) {
     const all = this.modelFor("adminCustomize.colors");
-    const model = all.findBy("id", parseInt(params.scheme_id));
+    const model = all.findBy("id", parseInt(params.scheme_id, 10));
     return model ? model : this.replaceWith("adminCustomize.colors.index");
   },
 

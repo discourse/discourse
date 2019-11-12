@@ -1,63 +1,8 @@
 // This is a mechanism for quickly rendering templates which is Ember aware
 // templates are highly compatible with Ember so you don't need to worry about calling "get"
-// and computed properties function, additionally it uses stringParams like Ember does
-
-// compat with ie8 in case this gets picked up elsewhere
-const objectCreate =
-  Object.create ||
-  function(parent) {
-    function F() {}
-    F.prototype = parent;
-    return new F();
-  };
+// and discourseComputed properties function, additionally it uses stringParams like Ember does
 
 const RawHandlebars = Handlebars.create();
-
-RawHandlebars.helper = function() {};
-RawHandlebars.helpers = objectCreate(Handlebars.helpers);
-
-RawHandlebars.helpers["get"] = function(context, options) {
-  var firstContext = options.contexts[0];
-  var val = firstContext[context];
-
-  if (context.indexOf("controller.") === 0) {
-    context = context.slice(context.indexOf(".") + 1);
-  }
-
-  return val === undefined ? Ember.get(firstContext, context) : val;
-};
-
-// adds compatability so this works with stringParams
-function stringCompatHelper(fn) {
-  const old = RawHandlebars.helpers[fn];
-  RawHandlebars.helpers[fn] = function(context, options) {
-    return old.apply(this, [
-      RawHandlebars.helpers.get(context, options),
-      options
-    ]);
-  };
-}
-
-// #each .. in support (as format is transformed to this)
-RawHandlebars.registerHelper("each", function(
-  localName,
-  inKeyword,
-  contextName,
-  options
-) {
-  var list = Ember.get(this, contextName);
-  var output = [];
-  var innerContext = objectCreate(this);
-  for (var i = 0; i < list.length; i++) {
-    innerContext[localName] = list[i];
-    output.push(options.fn(innerContext));
-  }
-  return output.join("");
-});
-
-stringCompatHelper("if");
-stringCompatHelper("unless");
-stringCompatHelper("with");
 
 function buildPath(blk, args) {
   var result = {
@@ -113,14 +58,14 @@ function replaceGet(ast) {
 
 if (Handlebars.Compiler) {
   RawHandlebars.Compiler = function() {};
-  RawHandlebars.Compiler.prototype = objectCreate(
+  RawHandlebars.Compiler.prototype = Object.create(
     Handlebars.Compiler.prototype
   );
   RawHandlebars.Compiler.prototype.compiler = RawHandlebars.Compiler;
 
   RawHandlebars.JavaScriptCompiler = function() {};
 
-  RawHandlebars.JavaScriptCompiler.prototype = objectCreate(
+  RawHandlebars.JavaScriptCompiler.prototype = Object.create(
     Handlebars.JavaScriptCompiler.prototype
   );
   RawHandlebars.JavaScriptCompiler.prototype.compiler =
@@ -171,17 +116,6 @@ if (Handlebars.Compiler) {
   };
 }
 
-RawHandlebars.get = function(ctx, property, options) {
-  if (options.types && options.data.view) {
-    var view = options.data.view;
-    return view.getStream
-      ? view.getStream(property).value()
-      : view.getAttr(property);
-  } else {
-    return Ember.get(ctx, property);
-  }
-};
-
 export function template() {
   return RawHandlebars.template.apply(this, arguments);
 }
@@ -192,10 +126,6 @@ export function precompile() {
 
 export function compile() {
   return RawHandlebars.compile.apply(this, arguments);
-}
-
-export function get() {
-  return RawHandlebars.get.apply(this, arguments);
 }
 
 export default RawHandlebars;

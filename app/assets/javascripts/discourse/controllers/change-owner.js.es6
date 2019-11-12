@@ -1,28 +1,25 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
+import { alias } from "@ember/object/computed";
+import { next } from "@ember/runloop";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import DiscourseURL from "discourse/lib/url";
-import computed from "ember-addons/ember-computed-decorators";
+import Topic from "discourse/models/topic";
 
-export default Ember.Controller.extend(ModalFunctionality, {
-  topicController: Ember.inject.controller("topic"),
+export default Controller.extend(ModalFunctionality, {
+  topicController: inject("topic"),
 
   saving: false,
   new_user: null,
 
-  selectedPostsCount: Ember.computed.alias(
-    "topicController.selectedPostsCount"
-  ),
-  selectedPostsUsername: Ember.computed.alias(
-    "topicController.selectedPostsUsername"
-  ),
+  selectedPostsCount: alias("topicController.selectedPostsCount"),
+  selectedPostsUsername: alias("topicController.selectedPostsUsername"),
 
-  @computed("saving", "new_user")
+  @discourseComputed("saving", "new_user")
   buttonDisabled(saving, newUser) {
-    return saving || Ember.isEmpty(newUser);
-  },
-
-  @computed("saving")
-  buttonTitle(saving) {
-    return saving ? I18n.t("saving") : I18n.t("topic.change_owner.action");
+    return saving || isEmpty(newUser);
   },
 
   onShow() {
@@ -41,17 +38,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
         username: this.new_user
       };
 
-      Discourse.Topic.changeOwners(
-        this.get("topicController.model.id"),
-        options
-      ).then(
+      Topic.changeOwners(this.get("topicController.model.id"), options).then(
         () => {
           this.send("closeModal");
           this.topicController.send("deselectAll");
           if (this.get("topicController.multiSelect")) {
             this.topicController.send("toggleMultiSelect");
           }
-          Ember.run.next(() =>
+          next(() =>
             DiscourseURL.routeTo(this.get("topicController.model.url"))
           );
         },

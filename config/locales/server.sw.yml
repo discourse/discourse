@@ -66,7 +66,6 @@ sw:
         no_sender_detected_error: "Inatokea tukishindwa kupata barua pepe halali kutoka kwenye sehemu uliyoandika barua pepe."
         inactive_user_error: "Inatokea kama mtumiaji hayuko hewani."
         silenced_user_error: "Inatokea mtumaji akiwa amenyamazishwa."
-        bad_destination_address: "Inatokea kama hakuna barua pepe kwenye nafasi za Kwenda/Cc/Bcc haziendani na barua pepe inayoingia."
         strangers_not_allowed_error: "Inatokea wakati mtumiaji akijaribu kutengeneza mada mpya ndani ya kategoria ambayo sio mwanyamachama."
         insufficient_trust_level_error: "Inatokea wakati mtumiaji akijaribu kutengeneza mada mpya ndani ya kategoria ambacho hana kiwango cha uaminifu."
         reply_user_not_matching_error: "Inatokea kama jibu limetoka kwenye barua pepe tofauti na barua pepe iliyopokea taarifa."
@@ -424,7 +423,6 @@ sw:
     activated: "Samahani, akaunti hii imeshaanzishwa."
     admin_confirm:
       title: "Thibitisha Akaunti ya Kiongozi"
-      description: "Una uhakika unataka <b>%{target_username}</b>kuwa msimamizi?"
       grant: "Toa ufikivu wa Kiongozi"
       complete: "<b>%{target_username}</b>ni msimamizi."
       back_to: "Rudi kwenye %{title}"
@@ -924,7 +922,7 @@ sw:
     embed_post_limit: "Kiwango cha juu cha machapisho yakuambatanisha."
     embed_username_required: "Jina la mtumiaji kwa ajili ya kutengeneza mada linahitajika."
     show_create_topics_notice: "Kama tovuti ina machapisho chini ya 5, onyesha notisi kuwaambia viongozi kutengeneza mada mpya."
-    delete_drafts_older_than_n_days: Futa mswadajaribio zenye umri zaidi ya siku (n).
+    delete_drafts_older_than_n_days: "Futa mswadajaribio zenye umri zaidi ya siku (n)."
     enable_emoji: "Ruhusu ishara"
     emoji_set: "Ungependa ishara yako iwe vipi?"
     approve_post_count: "Namba za machapisho kutoka kwa mtumiaji mpya au wa msingi ambazo lazima zipate kibali"
@@ -1156,10 +1154,6 @@ sw:
   admin_confirmation_mailer:
     title: "Uthibitisho wa Kiongozi"
     subject_template: "[%{email_prefix}] Thibitisha akaunti mpya ya Kiongozi"
-    text_body_template: |
-      Tafadhali thibitisha kuwa ungependa kumuongeza **%{target_username}** kama msimazi wa jukwaa lako.
-
-      [Thibitisha Akaunti ya Msimamizi](%{admin_confirm_url})
   test_mailer:
     subject_template: "[%{email_prefix}] Majaribio ya Kuwasilisha Barua Pepe"
   new_version_mailer_with_notes:
@@ -1472,34 +1466,6 @@ sw:
     only_reply_by_email: "Jibu barua pepe hii kutoa maoni."
     visit_link_to_respond: "[Tembelea Mada](%{base_url}%{url}) kutoa maoni."
     posted_by: "Imeandikwa na %{username}tarehe %{post_date}"
-    invited_group_to_private_message_body: |
-      %{username} amekaribishwa @%{group_name} kwenye ujumbe
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      kwenye
-
-      > %{site_title} -- %{site_description}
-    invited_to_private_message_body: |
-      %{username} amekukaribisha kwenye ujumbe
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      kwenye
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} amekukaribisha kwenye majadiliano
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      kwenye
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       title: "Mtumiaji Amekaribishwa kwenye PM"
       subject_template: "[%{email_prefix}] %{username} amemkaribisha @%{group_name} kwenye ujumbe '%{topic_title}'"
@@ -1846,7 +1812,6 @@ sw:
     missing: "Samahani, tumeshindwa kuona picha inayoendana na barua pepe hiyo. Unaweza kuipakia tena?"
   flag_reason:
     sockpuppet: "Mtumiaji mpya ametengeneza mada, na mtumiaji mpya mwenye anwani ya mtandao hiyo hiyo (%{ip_address}) amejibu. Angalia mpangilio wa tovuti <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Mtumiaji mpya amejaribu kutengeneza machapisho mengi yenye viungo kwenda kwa kikoa. Tembelea <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> mpangilio wa tovuti."
   skipped_email_log:
     exceeded_emails_limit: "Kiwango kimepita max_emails_per_day_per_user"
     exceeded_bounces_limit: "Kiwango kimepita bounce_score_threshold"

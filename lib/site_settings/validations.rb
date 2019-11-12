@@ -65,6 +65,58 @@ module SiteSettings::Validations
     validate_default_categories(category_ids, default_categories_selected)
   end
 
+  def validate_default_tags(tag_names, default_tags_selected)
+    validate_error :default_tags_already_selected if (tag_names & default_tags_selected).size > 0
+  end
+
+  def validate_default_tags_watching(new_val)
+    tag_names = new_val.split('|').to_set
+
+    default_tags_selected = [
+      SiteSetting.default_tags_tracking.split("|"),
+      SiteSetting.default_tags_muted.split("|"),
+      SiteSetting.default_tags_watching_first_post.split("|")
+    ].flatten.to_set
+
+    validate_default_tags(tag_names, default_tags_selected)
+  end
+
+  def validate_default_tags_tracking(new_val)
+    tag_names = new_val.split('|').to_set
+
+    default_tags_selected = [
+      SiteSetting.default_tags_watching.split("|"),
+      SiteSetting.default_tags_muted.split("|"),
+      SiteSetting.default_tags_watching_first_post.split("|")
+    ].flatten.to_set
+
+    validate_default_tags(tag_names, default_tags_selected)
+  end
+
+  def validate_default_tags_muted(new_val)
+    tag_names = new_val.split('|').to_set
+
+    default_tags_selected = [
+      SiteSetting.default_tags_watching.split("|"),
+      SiteSetting.default_tags_tracking.split("|"),
+      SiteSetting.default_tags_watching_first_post.split("|")
+    ].flatten.to_set
+
+    validate_default_tags(tag_names, default_tags_selected)
+  end
+
+  def validate_default_tags_watching_first_post(new_val)
+    tag_names = new_val.split('|').to_set
+
+    default_tags_selected = [
+      SiteSetting.default_tags_watching.split("|"),
+      SiteSetting.default_tags_tracking.split("|"),
+      SiteSetting.default_tags_muted.split("|")
+    ].flatten.to_set
+
+    validate_default_tags(tag_names, default_tags_selected)
+  end
+
   def validate_enable_s3_uploads(new_val)
     validate_error :s3_upload_bucket_is_required if new_val == "t" && SiteSetting.s3_upload_bucket.blank?
   end

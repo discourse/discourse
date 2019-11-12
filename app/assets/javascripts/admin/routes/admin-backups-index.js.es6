@@ -1,6 +1,7 @@
+import Route from "@ember/routing/route";
 import Backup from "admin/models/backup";
 
-export default Ember.Route.extend({
+export default Route.extend({
   activate() {
     this.messageBus.subscribe("/admin/backups", backups =>
       this.controller.set("model", backups.map(backup => Backup.create(backup)))

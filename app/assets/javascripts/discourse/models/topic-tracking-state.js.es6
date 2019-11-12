@@ -1,10 +1,14 @@
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { defaultHomepage } from "discourse/lib/utilities";
 import PreloadStore from "preload-store";
+import Category from "discourse/models/category";
+import EmberObject from "@ember/object";
 
 function isNew(topic) {
   return (
@@ -22,7 +26,7 @@ function isUnread(topic) {
   );
 }
 
-const TopicTrackingState = Discourse.Model.extend({
+const TopicTrackingState = EmberObject.extend({
   messageCount: 0,
 
   @on("init")
@@ -55,7 +59,7 @@ const TopicTrackingState = Discourse.Model.extend({
 
       // fill parent_category_id we need it for counting new/unread
       if (data.payload && data.payload.category_id) {
-        var category = Discourse.Category.findById(data.payload.category_id);
+        var category = Category.findById(data.payload.category_id);
 
         if (category && category.parent_category_id) {
           data.payload.parent_category_id = category.parent_category_id;
@@ -131,7 +135,7 @@ const TopicTrackingState = Discourse.Model.extend({
     const categoryId = data.payload && data.payload.category_id;
 
     if (filterCategory && filterCategory.get("id") !== categoryId) {
-      const category = categoryId && Discourse.Category.findById(categoryId);
+      const category = categoryId && Category.findById(categoryId);
       if (
         !category ||
         category.get("parentCategory.id") !== filterCategory.get("id")
@@ -192,7 +196,7 @@ const TopicTrackingState = Discourse.Model.extend({
     if (split.length >= 4) {
       filter = split[split.length - 1];
       // c/cat/subcat/l/latest
-      var category = Discourse.Category.findSingleBySlug(
+      var category = Category.findSingleBySlug(
         split.splice(1, split.length - 3).join("/")
       );
       this.set("filterCategory", category);
@@ -204,7 +208,7 @@ const TopicTrackingState = Discourse.Model.extend({
     this.set("incomingCount", 0);
   },
 
-  @computed("incomingCount")
+  @discourseComputed("incomingCount")
   hasIncoming(incomingCount) {
     return incomingCount && incomingCount > 0;
   },
@@ -215,7 +219,7 @@ const TopicTrackingState = Discourse.Model.extend({
 
   // If we have a cached topic list, we can update it from our tracking information.
   updateTopics(topics) {
-    if (Ember.isEmpty(topics)) {
+    if (isEmpty(topics)) {
       return;
     }
 
@@ -389,8 +393,8 @@ const TopicTrackingState = Discourse.Model.extend({
       );
     }
 
-    let categoryId = category ? Ember.get(category, "id") : null;
-    let categoryName = category ? Ember.get(category, "name") : null;
+    let categoryId = category ? get(category, "id") : null;
+    let categoryName = category ? get(category, "name") : null;
 
     if (name === "new") {
       return this.countNew(categoryId);
@@ -406,7 +410,7 @@ const TopicTrackingState = Discourse.Model.extend({
 
   loadStates(data) {
     const states = this.states;
-    const idMap = Discourse.Category.idMap();
+    const idMap = Category.idMap();
 
     // I am taking some shortcuts here to avoid 500 gets for a large list
     if (data) {

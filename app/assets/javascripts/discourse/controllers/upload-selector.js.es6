@@ -1,8 +1,10 @@
+import { equal } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import {
   allowsAttachments,
   authorizesAllExtensions,
@@ -17,21 +19,21 @@ function uploadTranslate(key) {
   return `upload_selector.${key}`;
 }
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   showMore: false,
   imageUrl: null,
   imageLink: null,
-  local: Ember.computed.equal("selection", "local"),
-  remote: Ember.computed.equal("selection", "remote"),
+  local: equal("selection", "local"),
+  remote: equal("selection", "remote"),
   selection: "local",
 
-  @computed()
+  @discourseComputed()
   uploadIcon: () => uploadIcon(),
 
-  @computed()
+  @discourseComputed()
   title: () => uploadTranslate("title"),
 
-  @computed("selection")
+  @discourseComputed("selection")
   tip(selection) {
     const authorized_extensions = authorizesAllExtensions()
       ? ""

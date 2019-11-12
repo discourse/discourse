@@ -17,15 +17,15 @@ describe Draft do
         random_key: "random"
       }
 
-      Draft.set(user, "new_private_message", 0, draft.to_json)
+      Draft.set(user, "xyz", 0, draft.to_json)
       draft["reply"] = "test" * 100
 
       half_grace = (SiteSetting.editing_grace_period / 2 + 1).seconds
 
       freeze_time half_grace.from_now
-      Draft.set(user, "new_private_message", 77, draft.to_json)
+      Draft.set(user, "xyz", 0, draft.to_json)
 
-      draft_post = BackupDraftPost.find_by(user_id: user.id, key: "new_private_message").post
+      draft_post = BackupDraftPost.find_by(user_id: user.id, key: "xyz").post
 
       expect(draft_post.revisions.count).to eq(0)
 
@@ -33,7 +33,7 @@ describe Draft do
 
       # this should trigger a post revision as 10 minutes have passed
       draft["reply"] = "hello"
-      Draft.set(user, "new_private_message", 77, draft.to_json)
+      Draft.set(user, "xyz", 0, draft.to_json)
 
       draft_topic = BackupDraftTopic.find_by(user_id: user.id)
       expect(draft_topic.topic.posts_count).to eq(2)
@@ -65,11 +65,48 @@ describe Draft do
     expect(Draft.get(user, "test", 0)).to eq nil
   end
 
+  it "should cross check with DraftSequence table" do
+
+    Draft.set(user, "test", 0, "old")
+    expect(Draft.get(user, "test", 0)).to eq "old"
+
+    DraftSequence.next!(user, "test")
+    seq = DraftSequence.next!(user, "test")
+    expect(seq).to eq(2)
+
+    expect do
+      Draft.set(user, "test", seq - 1, "error")
+    end.to raise_error(Draft::OutOfSequence)
+
+    expect do
+      Draft.set(user, "test", seq + 1, "error")
+    end.to raise_error(Draft::OutOfSequence)
+
+    Draft.set(user, "test", seq, "data")
+    expect(Draft.get(user, "test", seq)).to eq "data"
+
+    expect do
+      expect(Draft.get(user, "test", seq - 1)).to eq "data"
+    end.to raise_error(Draft::OutOfSequence)
+
+    expect do
+      expect(Draft.get(user, "test", seq + 1)).to eq "data"
+    end.to raise_error(Draft::OutOfSequence)
+  end
+
   it "should disregard old draft if sequence decreases" do
     Draft.set(user, "test", 0, "data")
+    DraftSequence.next!(user, "test")
     Draft.set(user, "test", 1, "hello")
-    Draft.set(user, "test", 0, "foo")
-    expect(Draft.get(user, "test", 0)).to eq nil
+
+    expect do
+      Draft.set(user, "test", 0, "foo")
+    end.to raise_error(Draft::OutOfSequence)
+
+    expect do
+      Draft.get(user, "test", 0)
+    end.to raise_error(Draft::OutOfSequence)
+
     expect(Draft.get(user, "test", 1)).to eq "hello"
   end
 
@@ -89,7 +126,8 @@ describe Draft do
     Draft.cleanup!
 
     expect(Draft.count).to eq 0
-    Draft.set(Fabricate(:user), Draft::NEW_TOPIC, seq + 1, 'draft')
+
+    Draft.set(Fabricate(:user), Draft::NEW_TOPIC, 0, 'draft')
 
     Draft.cleanup!
 
@@ -160,10 +198,11 @@ describe Draft do
     it 'nukes the post draft when a post is created' do
       user = Fabricate(:user)
       topic = Fabricate(:topic)
-      p = PostCreator.new(user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create
-      Draft.set(p.user, p.topic.draft_key, 0, 'hello')
 
-      PostCreator.new(user, raw: Fabricate.build(:post).raw).create
+      Draft.set(user, topic.draft_key, 0, 'hello')
+
+      p = PostCreator.new(user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create
+
       expect(Draft.get(p.user, p.topic.draft_key, DraftSequence.current(p.user, p.topic.draft_key))).to eq nil
     end
 
@@ -180,7 +219,19 @@ describe Draft do
       Draft.set(u, 'new_topic', 0, 'hello')
       Draft.set(u, 'new_topic', 0, 'goodbye')
 
-      expect(Draft.find_draft(u, 'new_topic').revisions).to eq(2)
+      expect(Draft.find_by(user_id: u.id, draft_key: 'new_topic').revisions).to eq(2)
+    end
+
+    it 'handles owner switching gracefully' do
+      user = Fabricate(:user)
+      draft_seq = Draft.set(user, 'new_topic', 0, 'hello', _owner = 'ABCDEF')
+      expect(draft_seq).to eq(0)
+
+      draft_seq = Draft.set(user, 'new_topic', 0, 'hello world', _owner = 'HIJKL')
+      expect(draft_seq).to eq(1)
+
+      draft_seq = Draft.set(user, 'new_topic', 1, 'hello world', _owner = 'HIJKL')
+      expect(draft_seq).to eq(1)
     end
   end
 end

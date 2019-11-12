@@ -1,8 +1,11 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { alias } from "@ember/object/computed";
+import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
-import computed from "ember-addons/ember-computed-decorators";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { on } from "@ember/object/evented";
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -33,7 +36,7 @@ export const ListItemDefaults = {
   tagName: "tr",
   classNameBindings: [":topic-list-item", "unboundClassNames", "topic.visited"],
   attributeBindings: ["data-topic-id"],
-  "data-topic-id": Ember.computed.alias("topic.id"),
+  "data-topic-id": alias("topic.id"),
 
   didInsertElement() {
     this._super(...arguments);
@@ -61,29 +64,29 @@ export const ListItemDefaults = {
     }
   },
 
-  @computed("topic.id")
+  @discourseComputed("topic.id")
   unreadIndicatorChannel(topicId) {
     return `/private-messages/unread-indicator/${topicId}`;
   },
 
-  @computed("topic.unread_by_group_member")
+  @discourseComputed("topic.unread_by_group_member")
   unreadClass(unreadByGroupMember) {
     return unreadByGroupMember ? "" : "read";
   },
 
-  @computed("topic.unread_by_group_member")
+  @discourseComputed("topic.unread_by_group_member")
   includeUnreadIndicator(unreadByGroupMember) {
     return typeof unreadByGroupMember !== "undefined";
   },
 
-  @computed
+  @discourseComputed
   newDotText() {
     return this.currentUser && this.currentUser.trust_level > 0
       ? ""
       : I18n.t("filters.new.lower_title");
   },
 
-  @computed("topic", "lastVisitedTopic")
+  @discourseComputed("topic", "lastVisitedTopic")
   unboundClassNames(topic, lastVisitedTopic) {
     let classes = [];
 
@@ -128,7 +131,7 @@ export const ListItemDefaults = {
     return this.get("topic.op_like_count") > 0;
   },
 
-  @computed
+  @discourseComputed
   expandPinned: function() {
     const pinned = this.get("topic.pinned");
     if (!pinned) {
@@ -202,7 +205,7 @@ export const ListItemDefaults = {
     $topic.on("animationend", () => $topic.removeClass("highlighted"));
   },
 
-  _highlightIfNeeded: Ember.on("didInsertElement", function() {
+  _highlightIfNeeded: on("didInsertElement", function() {
     // highlight the last topic viewed
     if (this.session.get("lastTopicIdViewed") === this.get("topic.id")) {
       this.session.set("lastTopicIdViewed", null);
@@ -215,7 +218,7 @@ export const ListItemDefaults = {
   })
 };
 
-export default Ember.Component.extend(
+export default Component.extend(
   ListItemDefaults,
   bufferedRender({
     rerenderTriggers: ["bulkSelectEnabled", "topic.pinned"],

@@ -1,24 +1,25 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["embed-setting"],
 
-  @computed("field")
+  @discourseComputed("field")
   inputId(field) {
     return field.dasherize();
   },
 
-  @computed("field")
+  @discourseComputed("field")
   translationKey(field) {
     return `admin.embedding.${field}`;
   },
 
-  @computed("type")
+  @discourseComputed("type")
   isCheckbox(type) {
     return type === "checkbox";
   },
 
-  @computed("value")
+  @discourseComputed("value")
   checked: {
     get(value) {
       return !!value;

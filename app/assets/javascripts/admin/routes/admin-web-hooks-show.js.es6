@@ -1,4 +1,8 @@
-export default Discourse.Route.extend({
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import DiscourseRoute from "discourse/routes/discourse";
+
+export default DiscourseRoute.extend({
   serialize(model) {
     return { web_hook_id: model.get("id") || "new" };
   },
@@ -7,14 +11,11 @@ export default Discourse.Route.extend({
     if (params.web_hook_id === "new") {
       return this.store.createRecord("web-hook");
     }
-    return this.store.find("web-hook", Ember.get(params, "web_hook_id"));
+    return this.store.find("web-hook", get(params, "web_hook_id"));
   },
 
   setupController(controller, model) {
-    if (
-      model.get("isNew") ||
-      Ember.isEmpty(model.get("web_hook_event_types"))
-    ) {
+    if (model.get("isNew") || isEmpty(model.get("web_hook_event_types"))) {
       model.set("web_hook_event_types", controller.get("defaultEventTypes"));
     }
 

@@ -38,11 +38,10 @@ PreloadStore.store("site", {
     "starred",
     "read",
     "posted",
-    "category",
     "categories",
     "top"
   ],
-  anonymous_top_menu_items: ["latest", "category", "categories", "top"],
+  anonymous_top_menu_items: ["latest", "categories", "top"],
   uncategorized_category_id: 17,
   categories: [
     {

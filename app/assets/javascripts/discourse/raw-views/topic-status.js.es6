@@ -1,14 +1,15 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import EmberObject from "@ember/object";
 
-export default Ember.Object.extend({
+export default EmberObject.extend({
   showDefault: null,
 
-  @computed("defaultIcon")
+  @discourseComputed("defaultIcon")
   renderDiv(defaultIcon) {
     return (defaultIcon || this.statuses.length > 0) && !this.noDiv;
   },
 
-  @computed
+  @discourseComputed
   statuses() {
     const topic = this.topic;
     const results = [];

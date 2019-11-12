@@ -68,6 +68,38 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  context "#second_factor_enabled" do
+    fab!(:user) { Fabricate(:user) }
+    let :serializer do
+      CurrentUserSerializer.new(user, scope: Guardian.new(user), root: false)
+    end
+    let(:json) { serializer.as_json }
+
+    it "is false by default" do
+      expect(json[:second_factor_enabled]).to eq(false)
+    end
+
+    context "when totp enabled" do
+      before do
+        User.any_instance.stubs(:totp_enabled?).returns(true)
+      end
+
+      it "is true" do
+        expect(json[:second_factor_enabled]).to eq(true)
+      end
+    end
+
+    context "when security_keys enabled" do
+      before do
+        User.any_instance.stubs(:security_keys_enabled?).returns(true)
+      end
+
+      it "is true" do
+        expect(json[:second_factor_enabled]).to eq(true)
+      end
+    end
+  end
+
   context "#groups" do
     fab!(:member) { Fabricate(:user) }
     let :serializer do

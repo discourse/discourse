@@ -1,18 +1,19 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   saved: false,
   embedding: null,
 
   // show settings if we have at least one created host
-  @computed("embedding.embeddable_hosts.@each.isCreated")
+  @discourseComputed("embedding.embeddable_hosts.@each.isCreated")
   showSecondary() {
     const hosts = this.get("embedding.embeddable_hosts");
     return hosts.length && hosts.findBy("isCreated");
   },
 
-  @computed("embedding.base_url")
+  @discourseComputed("embedding.base_url")
   embeddingCode(baseUrl) {
     const html = `<div id='discourse-comments'></div>
 

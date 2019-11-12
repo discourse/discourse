@@ -1,12 +1,14 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { get } from "@ember/object";
+import Component from "@ember/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
-export default Ember.Component.extend({
+export default Component.extend({
   elementId: "suggested-topics",
   classNames: ["suggested-topics"],
 
-  @computed("topic")
+  @discourseComputed("topic")
   suggestedTitle(topic) {
     const href = this.currentUser && this.currentUser.pmPath(topic);
     return topic.get("isPrivateMessage") && href
@@ -18,7 +20,7 @@ export default Ember.Component.extend({
       : I18n.t("suggested_topics.title");
   },
 
-  @computed("topic", "topicTrackingState.messageCount")
+  @discourseComputed("topic", "topicTrackingState.messageCount")
   browseMoreMessage(topic) {
     // TODO decide what to show for pms
     if (topic.get("isPrivateMessage")) {
@@ -34,7 +36,7 @@ export default Ember.Component.extend({
 
     if (
       category &&
-      Ember.get(category, "id") ===
+      get(category, "id") ===
         Discourse.Site.currentProp("uncategorized_category_id")
     ) {
       category = null;

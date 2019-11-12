@@ -1,20 +1,23 @@
+import { gt, equal } from "@ember/object/computed";
+import Component from "@ember/component";
 import { THEMES, COMPONENTS } from "admin/models/theme";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { getOwner } from "@ember/application";
 
-export default Ember.Component.extend({
+export default Component.extend({
   THEMES: THEMES,
   COMPONENTS: COMPONENTS,
 
   classNames: ["themes-list"],
 
-  hasThemes: Ember.computed.gt("themesList.length", 0),
-  hasActiveThemes: Ember.computed.gt("activeThemes.length", 0),
-  hasInactiveThemes: Ember.computed.gt("inactiveThemes.length", 0),
+  hasThemes: gt("themesList.length", 0),
+  hasActiveThemes: gt("activeThemes.length", 0),
+  hasInactiveThemes: gt("inactiveThemes.length", 0),
 
-  themesTabActive: Ember.computed.equal("currentTab", THEMES),
-  componentsTabActive: Ember.computed.equal("currentTab", COMPONENTS),
+  themesTabActive: equal("currentTab", THEMES),
+  componentsTabActive: equal("currentTab", COMPONENTS),
 
-  @computed("themes", "components", "currentTab")
+  @discourseComputed("themes", "components", "currentTab")
   themesList(themes, components) {
     if (this.themesTabActive) {
       return themes;
@@ -23,7 +26,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed(
+  @discourseComputed(
     "themesList",
     "currentTab",
     "themesList.@each.user_selectable",
@@ -38,7 +41,7 @@ export default Ember.Component.extend({
     );
   },
 
-  @computed(
+  @discourseComputed(
     "themesList",
     "currentTab",
     "themesList.@each.user_selectable",
@@ -68,7 +71,7 @@ export default Ember.Component.extend({
       }
     },
     navigateToTheme(theme) {
-      Ember.getOwner(this)
+      getOwner(this)
         .lookup("router:main")
         .transitionTo("adminCustomizeThemes.show", theme);
     }

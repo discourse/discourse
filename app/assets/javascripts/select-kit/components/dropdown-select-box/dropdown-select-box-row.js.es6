@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
 
 export default SelectKitRowComponent.extend({
@@ -5,7 +6,5 @@ export default SelectKitRowComponent.extend({
     "select-kit/templates/components/dropdown-select-box/dropdown-select-box-row",
   classNames: "dropdown-select-box-row",
 
-  description: Ember.computed.alias(
-    "computedContent.originalContent.description"
-  )
+  description: alias("computedContent.originalContent.description")
 });

@@ -85,18 +85,10 @@ JS
     def whitelisted?(path)
 
       @@whitelisted ||= Set.new(
-        ["discourse/models/nav-item",
-         "discourse/models/user-action",
-         "discourse/routes/discourse",
-         "discourse/models/category",
-         "discourse/models/trust-level",
+        [
          "discourse/models/site",
          "discourse/models/user",
-         "discourse/models/session",
-         "discourse/models/model",
-         "discourse/models/topic",
-         "discourse/models/post",
-         "discourse/views/grouped"]
+        ]
       )
 
       @@whitelisted.include?(path) || path =~ /discourse\/mixins/
@@ -157,11 +149,6 @@ JS
 
         if require_name !~ /\-test$/ && require_name !~ /^discourse\/plugins\//
           result = "#{class_name}#{type.classify}"
-
-          # HAX
-          result = "Controller" if result == "ControllerController"
-          result = "Route" if result == "DiscourseRoute"
-          result = "View" if result == "ViewView"
 
           result = result.gsub(/Mixin$/, '')
           result = result.gsub(/Model$/, '')

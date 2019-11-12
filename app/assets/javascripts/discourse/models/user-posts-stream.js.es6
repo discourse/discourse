@@ -1,9 +1,11 @@
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import UserAction from "discourse/models/user-action";
+import { Promise } from "rsvp";
+import EmberObject from "@ember/object";
 
-export default Discourse.Model.extend({
+export default EmberObject.extend({
   loaded: false,
 
   @on("init")
@@ -24,7 +26,7 @@ export default Discourse.Model.extend({
 
   filterBy(opts) {
     if (this.loaded && this.filter === opts.filter) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     this.setProperties(
@@ -43,7 +45,7 @@ export default Discourse.Model.extend({
 
   findItems() {
     if (this.loading || !this.canLoadMore) {
-      return Ember.RSVP.reject();
+      return Promise.reject();
     }
 
     this.set("loading", true);

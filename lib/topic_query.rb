@@ -640,9 +640,16 @@ class TopicQuery
   end
 
   def get_category_id(category_id_or_slug)
-    return nil unless category_id_or_slug
+    return nil unless category_id_or_slug.present?
     category_id = category_id_or_slug.to_i
-    category_id = Category.where(slug: category_id_or_slug).pluck_first(:id) if category_id == 0
+
+    if category_id == 0
+      category_id =
+        Category
+          .where(slug: category_id_or_slug, parent_category_id: nil)
+          .pluck_first(:id)
+    end
+
     category_id
   end
 
@@ -656,7 +663,7 @@ class TopicQuery
     options[:visible] = false if @user && @user.id == options[:filtered_to_user]
 
     # Start with a list of all topics
-    result = Topic.unscoped
+    result = Topic.unscoped.includes(:category)
 
     if @user
       result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
@@ -676,7 +683,7 @@ class TopicQuery
               SELECT :category_id
             ) AND
             topics.id NOT IN (
-              SELECT c3.topic_id FROM categories c3 WHERE c3.parent_category_id = :category_id
+              SELECT c3.topic_id FROM categories c3 WHERE c3.parent_category_id = :category_id AND c3.topic_id IS NOT NULL
             )
           SQL
         result = result.where(sql, category_id: category_id)
@@ -746,7 +753,7 @@ class TopicQuery
     end
 
     result = apply_ordering(result, options)
-    result = result.listable_topics.includes(:category)
+    result = result.listable_topics
 
     if options[:exclude_category_ids] && options[:exclude_category_ids].is_a?(Array) && options[:exclude_category_ids].size > 0
       result = result.where("categories.id NOT IN (?)", options[:exclude_category_ids].map(&:to_i)).references(:categories)
@@ -862,7 +869,34 @@ class TopicQuery
   def remove_muted_categories(list, user, opts = nil)
     category_id = get_category_id(opts[:exclude]) if opts
 
-    if user
+    if SiteSetting.mute_all_categories_by_default
+      if user
+        list = list.references("cu")
+          .where("
+          NOT EXISTS (
+            SELECT 1
+              FROM categories c
+              LEFT OUTER JOIN category_users cu
+              ON c.id = cu.category_id AND cu.user_id = :user_id
+            WHERE c.id = topics.category_id
+              AND c.id <> :category_id
+              AND (COALESCE(cu.notification_level, :muted) = :muted)
+              AND (COALESCE(tu.notification_level, :regular) <= :regular)
+          )", user_id: user.id,
+              muted: CategoryUser.notification_levels[:muted],
+              regular: TopicUser.notification_levels[:regular],
+              category_id: category_id || -1)
+      else
+        category_ids = [
+          SiteSetting.default_categories_watching.split("|"),
+          SiteSetting.default_categories_tracking.split("|"),
+          SiteSetting.default_categories_watching_first_post.split("|")
+        ].flatten.map(&:to_i)
+        category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
+
+        list = list.where("topics.category_id IN (?)", category_ids) if category_ids.present?
+      end
+    elsif user
       list = list.references("cu")
         .where("
         NOT EXISTS (

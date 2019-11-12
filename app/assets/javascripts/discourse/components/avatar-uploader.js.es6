@@ -1,7 +1,8 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import UploadMixin from "discourse/mixins/upload";
 
-export default Ember.Component.extend(UploadMixin, {
+export default Component.extend(UploadMixin, {
   type: "avatar",
   tagName: "span",
   imageIsNotASquare: false,
@@ -20,7 +21,7 @@ export default Ember.Component.extend(UploadMixin, {
     this.done();
   },
 
-  @computed("user_id")
+  @discourseComputed("user_id")
   data(user_id) {
     return { user_id };
   }

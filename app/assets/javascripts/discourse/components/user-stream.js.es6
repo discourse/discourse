@@ -1,3 +1,5 @@
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 import ClickTrack from "discourse/lib/click-track";
 import Post from "discourse/models/post";
@@ -5,9 +7,10 @@ import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { on } from "@ember/object/evented";
 
-export default Ember.Component.extend(LoadMore, {
-  _initialize: Ember.on("init", function() {
+export default Component.extend(LoadMore, {
+  _initialize: on("init", function() {
     const filter = this.get("stream.filter");
     if (filter) {
       this.set("classNames", [
@@ -22,10 +25,10 @@ export default Ember.Component.extend(LoadMore, {
   classNames: ["user-stream"],
 
   _scrollTopOnModelChange: function() {
-    Ember.run.schedule("afterRender", () => $(document).scrollTop(0));
+    schedule("afterRender", () => $(document).scrollTop(0));
   }.observes("stream.user.id"),
 
-  _inserted: Ember.on("didInsertElement", function() {
+  _inserted: on("didInsertElement", function() {
     this.bindScrolling({ name: "user-stream-view" });
 
     $(window).on("resize.discourse-on-scroll", () => this.scrolled());
@@ -41,7 +44,7 @@ export default Ember.Component.extend(LoadMore, {
   }),
 
   // This view is being removed. Shut down operations
-  _destroyed: Ember.on("willDestroyElement", function() {
+  _destroyed: on("willDestroyElement", function() {
     this.unbindScrolling("user-stream-view");
     $(window).unbind("resize.discourse-on-scroll");
     $(this.element).off("click.details-disabled", "details.disabled");

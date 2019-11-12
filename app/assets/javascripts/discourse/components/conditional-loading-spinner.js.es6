@@ -1,13 +1,14 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [
     ":loading-container",
     "containerClass",
     "condition:visible"
   ],
 
-  @computed("size")
+  @discourseComputed("size")
   containerClass(size) {
     return size === "small" ? "inline-spinner" : undefined;
   }

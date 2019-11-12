@@ -1,6 +1,7 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import PreloadStore from "preload-store";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   titleToken() {
     return I18n.t("invites.accept_title");
   },

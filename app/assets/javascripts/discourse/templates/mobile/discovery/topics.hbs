@@ -30,12 +30,20 @@
   {{conditional-loading-spinner condition=model.loadingMore}}
   {{#if allLoaded}}
     {{#if showDismissRead}}
-      <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics' class='btn btn-default dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
+      {{d-button
+        class="btn-default dismiss-read"
+        id="dismiss-topics"
+        action=(action "dismissReadPosts")
+        title="topics.bulk.dismiss_tooltip"
+        label="topics.bulk.dismiss_button"}}
     {{/if}}
     {{#if showResetNew}}
-      <button id='dismiss-new' class='btn btn-default dismiss-read' {{action "resetNew"}}>
-        {{d-icon "check"}}
-        {{i18n 'topics.bulk.dismiss_new'}}</button>
+      {{d-button
+        class="btn-default dismiss-read"
+        id="dismiss-new"
+        action=(action "resetNew")
+        icon="check"
+        label="topics.bulk.dismiss_new"}}
     {{/if}}
 
     {{#footer-message education=footerEducation message=footerMessage}}

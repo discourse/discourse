@@ -1003,7 +1003,7 @@ describe PostAlerter do
       it "triggers a notification" do
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
 
-        expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name]) }.to change { Notification.count }.by(1)
+        expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name]) }.to change { Notification.where(user_id: user.id).count }.by(1)
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
 
         expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name]) }.to change { Notification.count }.by(0)

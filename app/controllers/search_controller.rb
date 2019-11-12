@@ -24,6 +24,10 @@ class SearchController < ApplicationController
       raise Discourse::InvalidParameters.new(:q)
     end
 
+    if @search_term.present? && @search_term.include?("\u0000")
+      raise Discourse::InvalidParameters.new("string contains null byte")
+    end
+
     search_args = {
       type_filter: 'topic',
       guardian: guardian,
@@ -67,6 +71,10 @@ class SearchController < ApplicationController
 
   def query
     params.require(:term)
+
+    if params[:term].include?("\u0000")
+      raise Discourse::InvalidParameters.new("string contains null byte")
+    end
 
     search_args = { guardian: guardian }
 

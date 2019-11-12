@@ -1,17 +1,18 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "th",
   classNames: ["admin-report-table-header"],
   classNameBindings: ["label.mainProperty", "label.type", "isCurrentSort"],
   attributeBindings: ["label.title:title"],
 
-  @computed("currentSortLabel.sortProperty", "label.sortProperty")
+  @discourseComputed("currentSortLabel.sortProperty", "label.sortProperty")
   isCurrentSort(currentSortField, labelSortField) {
     return currentSortField === labelSortField;
   },
 
-  @computed("currentSortDirection")
+  @discourseComputed("currentSortDirection")
   sortIcon(currentSortDirection) {
     return currentSortDirection === 1 ? "caret-up" : "caret-down";
   }

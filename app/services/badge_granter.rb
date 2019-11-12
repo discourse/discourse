@@ -72,8 +72,19 @@ class BadgeGranter
         StaffActionLogger.new(options[:revoked_by]).log_badge_revoke(user_badge)
       end
 
-      # If the user's title is the same as the badge name, remove their title.
-      if user_badge.user.title == user_badge.badge.name
+      # If the user's title is the same as the badge name OR the custom badge name, remove their title.
+      custom_badge_name = TranslationOverride.find_by(translation_key: user_badge.badge.translation_key)&.value
+      user_title_is_badge_name = user_badge.user.title == user_badge.badge.name
+      user_title_is_custom_badge_name = custom_badge_name.present? && user_badge.user.title == custom_badge_name
+
+      if user_title_is_badge_name || user_title_is_custom_badge_name
+        if options[:revoked_by]
+          StaffActionLogger.new(options[:revoked_by]).log_title_revoke(
+            user_badge.user,
+            revoke_reason: 'user title was same as revoked badge name or custom badge name',
+            previous_value: user_badge.user.title
+          )
+        end
         user_badge.user.title = nil
         user_badge.user.save!
       end

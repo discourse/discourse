@@ -1,7 +1,11 @@
-import { observes } from "ember-addons/ember-computed-decorators";
+import { debounce } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
+import { observes } from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
 import Badge from "discourse/models/badge";
+import Category from "discourse/models/category";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
@@ -28,7 +32,7 @@ const REGEXP_POST_TIME_WHEN = /^(before|after)/gi;
 
 const IN_OPTIONS_MAPPING = { images: "with" };
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["search-advanced-options"],
 
   init() {
@@ -71,13 +75,13 @@ export default Ember.Component.extend({
 
     this._init();
 
-    Ember.run.scheduleOnce("afterRender", () => this._update());
+    scheduleOnce("afterRender", () => this._update());
   },
 
   @observes("searchTerm")
   _updateOptions() {
     this._update();
-    Ember.run.debounce(this, this._update, 250);
+    debounce(this, this._update, 250);
   },
 
   _init() {
@@ -221,7 +225,7 @@ export default Ember.Component.extend({
         .replace(REGEXP_CATEGORY_PREFIX, "")
         .split(":");
       if (subcategories.length > 1) {
-        const userInput = Discourse.Category.findBySlug(
+        const userInput = Category.findBySlug(
           subcategories[1],
           subcategories[0]
         );
@@ -231,14 +235,14 @@ export default Ember.Component.extend({
         )
           this.set("searchedTerms.category", userInput);
       } else if (isNaN(subcategories)) {
-        const userInput = Discourse.Category.findSingleBySlug(subcategories[0]);
+        const userInput = Category.findSingleBySlug(subcategories[0]);
         if (
           (!existingInput && userInput) ||
           (existingInput && userInput && existingInput.id !== userInput.id)
         )
           this.set("searchedTerms.category", userInput);
       } else {
-        const userInput = Discourse.Category.findById(subcategories[0]);
+        const userInput = Category.findById(subcategories[0]);
         if (
           (!existingInput && userInput) ||
           (existingInput && userInput && existingInput.id !== userInput.id)

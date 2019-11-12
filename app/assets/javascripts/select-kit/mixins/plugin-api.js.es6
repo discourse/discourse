@@ -1,6 +1,9 @@
+import Mixin from "@ember/object/mixin";
+import { isNone } from "@ember/utils";
+
 let _appendContentCallbacks = {};
 function appendContent(pluginApiIdentifiers, contentFunction) {
-  if (Ember.isNone(_appendContentCallbacks[pluginApiIdentifiers])) {
+  if (isNone(_appendContentCallbacks[pluginApiIdentifiers])) {
     _appendContentCallbacks[pluginApiIdentifiers] = [];
   }
 
@@ -9,7 +12,7 @@ function appendContent(pluginApiIdentifiers, contentFunction) {
 
 let _prependContentCallbacks = {};
 function prependContent(pluginApiIdentifiers, contentFunction) {
-  if (Ember.isNone(_prependContentCallbacks[pluginApiIdentifiers])) {
+  if (isNone(_prependContentCallbacks[pluginApiIdentifiers])) {
     _prependContentCallbacks[pluginApiIdentifiers] = [];
   }
 
@@ -18,7 +21,7 @@ function prependContent(pluginApiIdentifiers, contentFunction) {
 
 let _modifyContentCallbacks = {};
 function modifyContent(pluginApiIdentifiers, contentFunction) {
-  if (Ember.isNone(_modifyContentCallbacks[pluginApiIdentifiers])) {
+  if (isNone(_modifyContentCallbacks[pluginApiIdentifiers])) {
     _modifyContentCallbacks[pluginApiIdentifiers] = [];
   }
 
@@ -27,9 +30,7 @@ function modifyContent(pluginApiIdentifiers, contentFunction) {
 
 let _modifyHeaderComputedContentCallbacks = {};
 function modifyHeaderComputedContent(pluginApiIdentifiers, contentFunction) {
-  if (
-    Ember.isNone(_modifyHeaderComputedContentCallbacks[pluginApiIdentifiers])
-  ) {
+  if (isNone(_modifyHeaderComputedContentCallbacks[pluginApiIdentifiers])) {
     _modifyHeaderComputedContentCallbacks[pluginApiIdentifiers] = [];
   }
 
@@ -40,7 +41,7 @@ function modifyHeaderComputedContent(pluginApiIdentifiers, contentFunction) {
 
 let _modifyCollectionHeaderCallbacks = {};
 function modifyCollectionHeader(pluginApiIdentifiers, contentFunction) {
-  if (Ember.isNone(_modifyCollectionHeaderCallbacks[pluginApiIdentifiers])) {
+  if (isNone(_modifyCollectionHeaderCallbacks[pluginApiIdentifiers])) {
     _modifyCollectionHeaderCallbacks[pluginApiIdentifiers] = [];
   }
 
@@ -49,7 +50,7 @@ function modifyCollectionHeader(pluginApiIdentifiers, contentFunction) {
 
 let _onSelectNoneCallbacks = {};
 function onSelectNone(pluginApiIdentifiers, mutationFunction) {
-  if (Ember.isNone(_onSelectNoneCallbacks[pluginApiIdentifiers])) {
+  if (isNone(_onSelectNoneCallbacks[pluginApiIdentifiers])) {
     _onSelectNoneCallbacks[pluginApiIdentifiers] = [];
   }
 
@@ -58,7 +59,7 @@ function onSelectNone(pluginApiIdentifiers, mutationFunction) {
 
 let _onSelectCallbacks = {};
 function onSelect(pluginApiIdentifiers, mutationFunction) {
-  if (Ember.isNone(_onSelectCallbacks[pluginApiIdentifiers])) {
+  if (isNone(_onSelectCallbacks[pluginApiIdentifiers])) {
     _onSelectCallbacks[pluginApiIdentifiers] = [];
   }
 
@@ -167,7 +168,7 @@ export function clearCallbacks() {
 }
 
 const EMPTY_ARRAY = Object.freeze([]);
-export default Ember.Mixin.create({
+export default Mixin.create({
   concatenatedProperties: ["pluginApiIdentifiers"],
   pluginApiIdentifiers: EMPTY_ARRAY
 });

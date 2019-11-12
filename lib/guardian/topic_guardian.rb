@@ -184,4 +184,16 @@ module TopicGuardian
   def can_banner_topic?(topic)
     topic && authenticated? && !topic.private_message? && is_staff?
   end
+
+  def can_edit_tags?(topic)
+    return false unless can_tag_topics?
+    return false if topic.private_message? && !can_tag_pms?
+    return true if can_edit_topic?(topic)
+
+    if topic&.first_post&.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
+      return can_create_post?(topic)
+    end
+
+    false
+  end
 end
