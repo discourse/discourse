@@ -60,11 +60,13 @@ export default RestModel.extend({
           post.updateActionsSummary(data.result);
         }
         const remaining = parseInt(
-          data.xhr.getResponseHeader("Discourse-Actions-Remaining") || 0
-        , 10);
+          data.xhr.getResponseHeader("Discourse-Actions-Remaining") || 0,
+          10
+        );
         const max = parseInt(
-          data.xhr.getResponseHeader("Discourse-Actions-Max") || 0
-        , 10);
+          data.xhr.getResponseHeader("Discourse-Actions-Max") || 0,
+          10
+        );
         return { acted: true, remaining, max };
       })
       .catch(error => {

@@ -321,8 +321,9 @@ export class Tag {
         if (msoListClasses.includes(attrs.class)) {
           try {
             const level = parseInt(
-              attrs.style.match(/level./)[0].replace("level", "")
-            , 10);
+              attrs.style.match(/level./)[0].replace("level", ""),
+              10
+            );
             indent = Array(level).join("\t") + indent;
           } finally {
             if (attrs.class === "MsoListParagraphCxSpFirst") {

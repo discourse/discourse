@@ -15,7 +15,10 @@ export default Route.extend({
         name: I18n.t("admin.badges.new_badge")
       });
     }
-    return this.modelFor("adminBadges").findBy("id", parseInt(params.badge_id, 10));
+    return this.modelFor("adminBadges").findBy(
+      "id",
+      parseInt(params.badge_id, 10)
+    );
   },
 
   actions: {

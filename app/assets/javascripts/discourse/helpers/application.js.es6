@@ -22,7 +22,10 @@ registerUnbound("number", (orig, params) => {
 
   let title = I18n.toNumber(orig, { precision: 0 });
   if (params.numberKey) {
-    title = I18n.t(params.numberKey, { number: title, count: parseInt(orig, 10) });
+    title = I18n.t(params.numberKey, {
+      number: title,
+      count: parseInt(orig, 10)
+    });
   }
 
   let classNames = "number";
