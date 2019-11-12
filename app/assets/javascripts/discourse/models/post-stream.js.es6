@@ -8,6 +8,7 @@ import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { loadTopicView } from "discourse/models/topic";
 import { Promise } from "rsvp";
+import User from "discourse/models/user";
 
 export default RestModel.extend({
   _identityMap: null,
@@ -605,8 +606,8 @@ export default RestModel.extend({
         return this.findPostsByIds([postId])
           .then(posts => {
             const ignoredUsers =
-              Discourse.User.current() &&
-              Discourse.User.current().get("ignored_users");
+              User.current() &&
+              User.current().get("ignored_users");
             posts.forEach(p => {
               if (ignoredUsers && ignoredUsers.includes(p.username)) {
                 this.stream.removeObject(postId);

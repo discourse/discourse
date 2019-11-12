@@ -4,6 +4,7 @@ import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("name")
@@ -100,8 +101,8 @@ NavItem.reopenClass({
 
   // create a nav item from the text, will return null if there is not valid nav item for this particular text
   fromText(text, opts) {
-    var testName = text.split("/")[0],
-      anonymous = !Discourse.User.current();
+    let testName = text.split("/")[0],
+      anonymous = !User.current();
 
     opts = opts || {};
 

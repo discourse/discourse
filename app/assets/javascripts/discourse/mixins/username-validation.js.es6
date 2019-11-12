@@ -4,6 +4,7 @@ import { setting } from "discourse/lib/computed";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 import EmberObject from "@ember/object";
+import User from "discourse/models/user";
 
 export default Mixin.create({
   uniqueUsernameValidation: null,
@@ -13,7 +14,7 @@ export default Mixin.create({
   minUsernameLength: setting("min_username_length"),
 
   fetchExistingUsername: discourseDebounce(function() {
-    Discourse.User.checkUsername(null, this.accountEmail).then(result => {
+    User.checkUsername(null, this.accountEmail).then(result => {
       if (
         result.suggestion &&
         (isEmpty(this.accountUsername) ||
@@ -76,7 +77,7 @@ export default Mixin.create({
 
   checkUsernameAvailability: discourseDebounce(function() {
     if (this.shouldCheckUsernameAvailability()) {
-      return Discourse.User.checkUsername(
+      return User.checkUsername(
         this.accountUsername,
         this.accountEmail
       ).then(result => {
