@@ -10,7 +10,7 @@ export default Component.extend({
 
   @discourseComputed("selectableUserBadges", "selectedUserBadgeId")
   selectedUserBadge(selectableUserBadges, selectedUserBadgeId) {
-    return selectableUserBadges.findBy("id", parseInt(selectedUserBadgeId));
+    return selectableUserBadges.findBy("id", parseInt(selectedUserBadgeId, 10));
   },
 
   actions: {

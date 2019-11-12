@@ -47,7 +47,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
           this.limit ||
             this.maximum ||
             this.get("siteSettings.max_tags_per_topic")
-        )
+        , 10)
       );
     }
   },

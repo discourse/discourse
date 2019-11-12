@@ -195,11 +195,11 @@ export function durationTiny(distance, ageOpts) {
       const numYears = distanceInMinutes / 525600.0;
       const remainder = numYears % 1;
       if (remainder < 0.25) {
-        formatted = t("about_x_years", { count: parseInt(numYears) });
+        formatted = t("about_x_years", { count: Math.floor(numYears) });
       } else if (remainder < 0.75) {
-        formatted = t("over_x_years", { count: parseInt(numYears) });
+        formatted = t("over_x_years", { count: Math.floor(numYears) });
       } else {
-        formatted = t("almost_x_years", { count: parseInt(numYears) + 1 });
+        formatted = t("almost_x_years", { count: Math.floor(numYears) + 1 });
       }
 
       break;

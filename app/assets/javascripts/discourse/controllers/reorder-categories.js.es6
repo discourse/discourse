@@ -115,7 +115,7 @@ export default Controller.extend(ModalFunctionality, Ember.Evented, {
 
   actions: {
     change(cat, e) {
-      let position = parseInt($(e.target).val());
+      let position = parseInt($(e.target).val(), 10);
       let amount = Math.min(
         Math.max(position, 0),
         this.categoriesOrdered.length - 1

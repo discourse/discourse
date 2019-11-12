@@ -145,22 +145,22 @@ function renderImage(tokens, idx, options, env, slf) {
         // calculate using percentage
         if (match[5] && match[6] && match[6] === "%") {
           let percent = parseFloat(match[5]) / 100.0;
-          width = parseInt(width * percent);
-          height = parseInt(height * percent);
+          width = parseInt(width * percent, 10);
+          height = parseInt(height * percent, 10);
         }
 
         // calculate using only given width
         if (match[5] && match[6] && match[6] === "x") {
           let wr = parseFloat(match[5]) / width;
-          width = parseInt(match[5]);
-          height = parseInt(height * wr);
+          width = parseInt(match[5], 10);
+          height = parseInt(height * wr, 10);
         }
 
         // calculate using only given height
         if (match[5] && match[4] && match[4] === "x" && !match[6]) {
           let hr = parseFloat(match[5]) / height;
-          height = parseInt(match[5]);
-          width = parseInt(width * hr);
+          height = parseInt(match[5], 10);
+          width = parseInt(width * hr, 10);
         }
 
         if (token.attrIndex("width") === -1) {

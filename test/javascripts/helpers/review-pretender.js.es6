@@ -128,7 +128,7 @@ export default function(helpers) {
     return response(200, {
       reviewable_perform_result: {
         success: true,
-        remove_reviewable_ids: [parseInt(request.params.id)]
+        remove_reviewable_ids: [parseInt(request.params.id, 10)]
       }
     });
   });

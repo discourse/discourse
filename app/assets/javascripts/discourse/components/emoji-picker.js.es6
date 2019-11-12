@@ -442,7 +442,7 @@ export default Component.extend({
     );
     $diversityScales.on("click", event => {
       const $selectedDiversity = $(event.currentTarget);
-      this.set("selectedDiversity", parseInt($selectedDiversity.data("level")));
+      this.set("selectedDiversity", parseInt($selectedDiversity.data("level"), 10));
       return false;
     });
   },
