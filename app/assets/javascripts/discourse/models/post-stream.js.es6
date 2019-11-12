@@ -606,8 +606,7 @@ export default RestModel.extend({
         return this.findPostsByIds([postId])
           .then(posts => {
             const ignoredUsers =
-              User.current() &&
-              User.current().get("ignored_users");
+              User.current() && User.current().get("ignored_users");
             posts.forEach(p => {
               if (ignoredUsers && ignoredUsers.includes(p.username)) {
                 this.stream.removeObject(postId);

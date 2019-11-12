@@ -10,9 +10,7 @@ export function addFeaturedLinkMetaDecorator(decorator) {
 
 export function extractLinkMeta(topic) {
   const href = topic.get("featured_link");
-  const target = User.currentProp("external_links_in_new_tab")
-    ? "_blank"
-    : "";
+  const target = User.currentProp("external_links_in_new_tab") ? "_blank" : "";
 
   if (!href) {
     return;
