@@ -267,17 +267,16 @@ module BackupRestore
       log "Archiving uploads..."
       upload_directory = "uploads/" + @current_db
 
-      FileUtils.cd(File.join(Rails.root, "public")) do
-        if File.directory?(upload_directory)
-          exclude_optimized = SiteSetting.include_thumbnails_in_backups ? '' : "--exclude=#{upload_directory}/optimized"
+      if File.directory?(File.join(Rails.root, "public", upload_directory))
+        exclude_optimized = SiteSetting.include_thumbnails_in_backups ? '' : "--exclude=#{upload_directory}/optimized"
 
-          Discourse::Utils.execute_command(
-            'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, upload_directory,
-            failure_message: "Failed to archive uploads.", success_status_codes: [0, 1]
-          )
-        else
-          log "No local uploads found. Skipping archiving of local uploads..."
-        end
+        Discourse::Utils.execute_command(
+          'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, upload_directory,
+          failure_message: "Failed to archive uploads.", success_status_codes: [0, 1],
+          cd: File.join(Rails.root, "public")
+        )
+      else
+        log "No local uploads found. Skipping archiving of local uploads..."
       end
     end
 
