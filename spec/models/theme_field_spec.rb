@@ -49,7 +49,7 @@ describe ThemeField do
     theme_field.ensure_baked!
     expect(theme_field.error).to include(I18n.t("themes.errors.optimized_link"))
 
-    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "scss", value: <<~SCSS)
+    theme_field.update(value: <<~SCSS)
       body {
         background: url(http://notdiscourse.invalid/optimized/my_image.png);
       }
