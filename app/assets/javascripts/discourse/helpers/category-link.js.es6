@@ -3,6 +3,7 @@ import { registerUnbound } from "discourse-common/lib/helpers";
 import { isRTL } from "discourse/lib/text-direction";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import Category from "discourse/models/category";
+import Site from "discourse/models/site";
 
 let escapeExpression = Handlebars.Utils.escapeExpression;
 let _renderer = defaultCategoryLinkRenderer;
@@ -33,7 +34,7 @@ export function categoryBadgeHTML(category, opts) {
     !category ||
     (!opts.allowUncategorized &&
       get(category, "id") ===
-        Discourse.Site.currentProp("uncategorized_category_id") &&
+        Site.currentProp("uncategorized_category_id") &&
       Discourse.SiteSettings.suppress_uncategorized_badge)
   )
     return "";

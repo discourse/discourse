@@ -2,6 +2,7 @@ import buildCategoryRoute from "discourse/routes/build-category-route";
 import buildTopicRoute from "discourse/routes/build-topic-route";
 import DiscoverySortableController from "discourse/controllers/discovery-sortable";
 import TagsShowRoute from "discourse/routes/tags-show";
+import Site from "discourse/models/site";
 
 export default {
   after: "inject-discourse-objects",
@@ -19,7 +20,7 @@ export default {
       no_subcategories: true
     });
 
-    const site = Discourse.Site.current();
+    const site = Site.current();
     site.get("filters").forEach(filter => {
       const filterCapitalized = filter.capitalize();
       app[

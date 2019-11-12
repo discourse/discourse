@@ -19,6 +19,7 @@ import { propertyNotEqual } from "discourse/lib/computed";
 import { throttle } from "@ember/runloop";
 import { Promise } from "rsvp";
 import { set } from "@ember/object";
+import Site from "discourse/models/site";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
@@ -1146,7 +1147,7 @@ Composer.reopenClass({
   create(args) {
     args = args || {};
     args.user = args.user || Discourse.User.current();
-    args.site = args.site || Discourse.Site.current();
+    args.site = args.site || Site.current();
     args.siteSettings = args.siteSettings || Discourse.SiteSettings;
     return this._super(args);
   },

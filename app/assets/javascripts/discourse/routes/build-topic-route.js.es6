@@ -3,6 +3,7 @@ import { queryParams } from "discourse/controllers/discovery-sortable";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
+import Site from "discourse/models/site";
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {
@@ -66,7 +67,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
     }
     Session.currentProp("topicList", list);
     if (list.topic_list && list.topic_list.top_tags) {
-      Discourse.Site.currentProp("top_tags", list.topic_list.top_tags);
+      Site.currentProp("top_tags", list.topic_list.top_tags);
     }
     return list;
   });

@@ -4,6 +4,8 @@ import DiscourseURL from "discourse/lib/url";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import Site from "discourse/models/site";
+
 const { isEmpty } = Ember;
 
 export default ComboBoxComponent.extend({
@@ -170,7 +172,7 @@ export default ComboBoxComponent.extend({
         results = results.filter(result => {
           return (
             result.id !==
-            Discourse.Site.currentProp("uncategorized_category_id")
+            Site.currentProp("uncategorized_category_id")
           );
         });
       }
