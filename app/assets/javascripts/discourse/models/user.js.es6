@@ -27,7 +27,6 @@ import { Promise } from "rsvp";
 import { getProperties } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
-import User from "discourse/models/user";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,

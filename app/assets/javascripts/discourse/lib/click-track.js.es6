@@ -120,9 +120,7 @@ export default {
     }
 
     const isInternal = DiscourseURL.isInternal(href);
-    const openExternalInNewTab = User.currentProp(
-      "external_links_in_new_tab"
-    );
+    const openExternalInNewTab = User.currentProp("external_links_in_new_tab");
 
     if (!wantsNewWindow(e)) {
       if (!isInternal && openExternalInNewTab) {
