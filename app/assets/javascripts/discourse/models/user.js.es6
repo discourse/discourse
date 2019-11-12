@@ -25,6 +25,7 @@ import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { Promise } from "rsvp";
 import { getProperties } from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -898,6 +899,20 @@ User.reopenClass(Singleton, {
       },
       type: "POST"
     });
+  }
+});
+
+let warned = false;
+Object.defineProperty(Discourse, "User", {
+  get() {
+    if (!warned) {
+      deprecated("Import the User class instead of using Discourse.User", {
+        since: "2.4.0",
+        dropFrom: "2.6.0"
+      });
+      warned = true;
+    }
+    return User;
   }
 });
 
