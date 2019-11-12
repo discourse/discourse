@@ -139,8 +139,8 @@ var define, requirejs;
     );
   }
 
-  function depricatedModule(depricated, useInstead) {
-    let warning = "[DEPRECATION] `" + name + "` is deprecated.";
+  function deprecatedModule(depricated, useInstead) {
+    let warning = "[DEPRECATION] `" + depricated + "` is deprecated.";
     if (useInstead) {
       warning += " Please use `" + useInstead + "` instead.";
     }
@@ -245,7 +245,7 @@ var define, requirejs;
     let alias = ALIASES[name];
     if (!alias) return name;
 
-    depricatedModule(name, alias);
+    deprecatedModule(name, alias);
     return alias;
   }
 
