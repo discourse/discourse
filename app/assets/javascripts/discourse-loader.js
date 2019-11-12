@@ -140,6 +140,15 @@ var define, requirejs;
     );
   }
 
+  function deprecatedModule(depricated, useInstead) {
+    let warning = "[DEPRECATION] `" + depricated + "` is deprecated.";
+    if (useInstead) {
+      warning += " Please use `" + useInstead + "` instead.";
+    }
+    // eslint-disable-next-line no-console
+    console.warn(warning);
+  }
+
   var defaultDeps = ["require", "exports", "module"];
 
   function Module(name, deps, callback, exports) {
@@ -243,7 +252,11 @@ var define, requirejs;
   }
 
   function transformForAliases(name) {
-    return ALIASES[name] ? ALIASES[name] : name;
+    let alias = ALIASES[name];
+    if (!alias) return name;
+
+    deprecatedModule(name, alias);
+    return alias;
   }
 
   requirejs = require = function(name) {
