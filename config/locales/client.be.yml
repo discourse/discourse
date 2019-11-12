@@ -1750,7 +1750,6 @@ be:
         embed_by_username: "Імя карыстальніка для стварэння тэмы"
         embed_post_limit: "Максімальную колькасць паведамленняў для ўстаўкі"
         embed_classname_whitelist: "Дазволеныя імёны класаў CSS"
-        feed_polling_enabled: "Імпартаваць паведамленні праз RSS"
       permalink:
         title: "Сталыя спасылкі"
         url: "URL спасылка"

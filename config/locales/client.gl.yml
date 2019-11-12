@@ -1,7 +1,4 @@
 # encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
-#
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
@@ -2417,18 +2414,13 @@ gl:
         category: "Publicación a categoría"
         add_host: "Engadir host"
         settings: "Axustes para o encaixado"
-        feed_settings: "Axustes das fontes"
-        feed_description: "Dotar dunha fonte RSS/ATOM o teu sitio pode mellorar a capacidade de Discourse para importar o teu contido."
         crawling_settings: "Axustes do extractor"
         crawling_description: "Cando o Discourse crea temas para as túas publicacións, se non existe unha fonte RSS/ATOM, tentará analizar o contido do teu HTML. Ás veces pode ser difícil extraer o contido, por iso damos a posibilidade de especificar as regras do CSS para facilitar a extracción."
         embed_by_username: "Nome do usuario para crear o tema"
         embed_post_limit: "Número máximo de publicacións a encaixar"
-        embed_username_key_from_feed: "Clave para extraer da fonte o nome do usuario do discourse"
         embed_truncate: "Truncar as publicacións encaixadas"
         embed_whitelist_selector: "Selector CSS de elementos permitidos nos encaixados"
         embed_blacklist_selector: "Selector CSS para elementos retirados nos encaixados"
-        feed_polling_enabled: "Importar publicacións vía RSS/ATOM"
-        feed_polling_url: "URL da fonte RSS/ATOM para facer a extracción"
         save: "Gardar axustes de encaixado"
       permalink:
         title: "Ligazóns permanentes"

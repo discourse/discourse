@@ -4405,9 +4405,6 @@ uk:
         embed_whitelist_selector: "Селектори CSS які дозволені для використання."
         embed_blacklist_selector: "Селектори CSS які заборонені для використання."
         embed_classname_whitelist: "Дозволені імена класів CSS"
-        feed_polling_enabled: "Імпортувати дописи через RSS/ATOM"
-        feed_polling_url: "Посилання на RSS/ATOM"
-        feed_polling_frequency_mins: "Частота опитування стрічки (в хвилинах)"
         save: "Зберегти налаштування вбудовування"
       permalink:
         title: "Постійні посилання"

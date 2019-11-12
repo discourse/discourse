@@ -1581,23 +1581,9 @@ developer:
     client: true
 
 embedding:
-  feed_polling_enabled:
-    default: false
-    hidden: true
-  feed_polling_url:
-    default: ""
-    hidden: true
-  feed_polling_frequency_mins:
-    min: 5
-    max: 180
-    default: 60
-    hidden: true
   embed_by_username:
     default: ""
     type: username
-    hidden: true
-  embed_username_key_from_feed:
-    default: ""
     hidden: true
   embed_post_limit:
     default: 100
