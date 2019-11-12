@@ -6,7 +6,7 @@
 <div class="api-key">
   {{#admin-form-row label="admin.api.key"}}
     {{#if model.revoked_at}}{{d-icon 'times-circle'}}{{/if}}
-    {{model.key}}
+    <div>{{model.key}}</div>
   {{/admin-form-row}}
 
   {{#admin-form-row label="admin.api.description"}}
