@@ -327,10 +327,9 @@ class TopicsController < ApplicationController
       if category && topic_tags = (params[:tags] || topic.tags.pluck(:name)).reject { |c| c.empty? }
         if topic_tags.present?
           allowed_tags = DiscourseTagging.filter_allowed_tags(
-            Tag.all,
             guardian,
             category: category
-          ).pluck("tags.name")
+          ).map(&:name)
 
           invalid_tags = topic_tags - allowed_tags
 

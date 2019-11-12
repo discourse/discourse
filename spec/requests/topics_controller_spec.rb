@@ -1103,6 +1103,7 @@ RSpec.describe TopicsController do
           fab!(:restricted_category) { Fabricate(:category) }
           fab!(:tag1) { Fabricate(:tag) }
           fab!(:tag2) { Fabricate(:tag) }
+          let(:tag3) { Fabricate(:tag) }
           let!(:tag_group_1) { Fabricate(:tag_group, tag_names: [tag1.name]) }
           fab!(:tag_group_2) { Fabricate(:tag_group) }
 
@@ -1187,7 +1188,8 @@ RSpec.describe TopicsController do
           end
 
           it 'allows category change when topic has a read-only tag' do
-            Fabricate(:tag_group, permissions: { "staff" => 1, "everyone" => 3 }, tag_names: [tag1.name])
+            Fabricate(:tag_group, permissions: { "staff" => 1, "everyone" => 3 }, tag_names: [tag3.name])
+            topic.update!(tags: [tag3])
 
             put "/t/#{topic.slug}/#{topic.id}.json", params: {
               category_id: category.id
@@ -1195,21 +1197,21 @@ RSpec.describe TopicsController do
 
             result = ::JSON.parse(response.body)
             expect(response.status).to eq(200)
-            expect(topic.reload.tags).to include(tag1)
+            expect(topic.reload.tags).to contain_exactly(tag3)
           end
 
           it 'does not leak tag name when trying to use a staff tag' do
-            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag2.name])
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag3.name])
 
             put "/t/#{topic.slug}/#{topic.id}.json", params: {
-              tags: [tag2.name],
+              tags: [tag3.name],
               category_id: category.id
             }
 
             result = ::JSON.parse(response.body)
             expect(response.status).to eq(422)
             expect(result['errors']).to be_present
-            expect(result['errors'][0]).not_to include(tag2.name)
+            expect(result['errors'][0]).not_to include(tag3.name)
           end
 
           it 'will clean tag params' do

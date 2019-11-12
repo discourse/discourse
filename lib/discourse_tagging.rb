@@ -2,11 +2,11 @@
 
 module DiscourseTagging
 
-  TAGS_FIELD_NAME = "tags"
-  TAGS_FILTER_REGEXP = /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
-  TAGS_STAFF_CACHE_KEY = "staff_tag_names"
+  TAGS_FIELD_NAME ||= "tags"
+  TAGS_FILTER_REGEXP ||= /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
+  TAGS_STAFF_CACHE_KEY ||= "staff_tag_names"
 
-  TAG_GROUP_TAG_IDS_SQL = <<-SQL
+  TAG_GROUP_TAG_IDS_SQL ||= <<-SQL
       SELECT tag_id
         FROM tag_group_memberships tgm
   INNER JOIN tag_groups tg
@@ -49,12 +49,14 @@ module DiscourseTagging
         # guardian is explicitly nil cause we don't want to strip all
         # staff tags that already passed validation
         tags = filter_allowed_tags(
-          Tag.where_name(tag_names),
           nil, # guardian
           for_topic: true,
           category: category,
-          selected_tags: tag_names
-        ).to_a
+          selected_tags: tag_names,
+          only_tag_names: tag_names
+        )
+
+        tags = Tag.where(id: tags.map(&:id)).all.to_a if tags.size > 0
 
         if tags.size < tag_names.size && (category.nil? || category.allow_global_tags || (category.tags.count == 0 && category.tag_groups.count == 0))
           tag_names.each do |name|
@@ -141,17 +143,123 @@ module DiscourseTagging
     end
   end
 
+  TAG_GROUP_RESTRICTIONS_SQL ||= <<~SQL
+    tag_group_restrictions AS (
+      SELECT t.name as tag_name, t.id as tag_id, tgm.id as tgm_id, tg.id as tag_group_id, tg.parent_tag_id as parent_tag_id,
+        tg.one_per_topic as one_per_topic
+      FROM tags t
+      LEFT OUTER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
+      LEFT OUTER JOIN tag_groups tg ON tg.id = tgm.tag_group_id
+    )
+  SQL
+
+  CATEGORY_RESTRICTIONS_SQL ||= <<~SQL
+    category_restrictions AS (
+      SELECT t.name as tag_name, t.id as tag_id, ct.id as ct_id, ct.category_id as category_id
+      FROM tags t
+      INNER JOIN category_tags ct ON t.id = ct.tag_id /*and_name_like*/
+
+      UNION
+
+      SELECT t.name as tag_name, t.id as tag_id, ctg.id as ctg_id, ctg.category_id as category_id
+      FROM tags t
+      INNER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
+      INNER JOIN category_tag_groups ctg ON tgm.tag_group_id = ctg.tag_group_id
+    )
+  SQL
+
+  PERMITTED_TAGS_SQL ||= <<~SQL
+    permitted_tag_groups AS (
+      SELECT tg.id as tag_group_id, tgp.group_id as group_id, tgp.permission_type as permission_type
+      FROM tags t
+      INNER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
+      INNER JOIN tag_groups tg ON tg.id = tgm.tag_group_id
+      INNER JOIN tag_group_permissions tgp
+      ON tg.id = tgp.tag_group_id
+      AND tgp.group_id = #{Group::AUTO_GROUPS[:everyone]}
+      AND tgp.permission_type = #{TagGroupPermission.permission_types[:full]}
+    )
+  SQL
+
   # Options:
   #   term: a search term to filter tags by name
+  #   order: order by for the query
+  #   limit: max number of results
   #   category: a Category to which the object being tagged belongs
   #   for_input: result is for an input field, so only show permitted tags
   #   for_topic: results are for tagging a topic
   #   selected_tags: an array of tag names that are in the current selection
-  def self.filter_allowed_tags(query, guardian, opts = {})
+  #   only_tag_names: limit results to tags with these names
+  def self.filter_allowed_tags(guardian, opts = {})
     selected_tag_ids = opts[:selected_tags] ? Tag.where_name(opts[:selected_tags]).pluck(:id) : []
+    category = opts[:category]
+    category_has_restricted_tags = category ? (category.tags.count > 0 || category.tag_groups.count > 0) : false
 
-    if !opts[:for_topic] && !selected_tag_ids.empty?
-      query = query.where('tags.id NOT IN (?)', selected_tag_ids)
+    # If guardian is nil, it means the caller doesn't want tags to be filtered
+    # based on guardian rules. Use the same rules as for staff users.
+    filter_for_non_staff = !guardian.nil? && !guardian.is_staff?
+
+    builder_params = {}
+
+    unless selected_tag_ids.empty?
+      builder_params[:selected_tag_ids] = selected_tag_ids
+    end
+
+    sql = +"WITH #{TAG_GROUP_RESTRICTIONS_SQL}, #{CATEGORY_RESTRICTIONS_SQL}"
+    if (opts[:for_input] || opts[:for_topic]) && filter_for_non_staff
+      sql << ", #{PERMITTED_TAGS_SQL} "
+    end
+
+    outer_join = category.nil? || category.allow_global_tags || !category_has_restricted_tags
+
+    sql << <<~SQL
+      SELECT t.id, t.name, t.topic_count, t.pm_topic_count,
+        tgr.tgm_id as tgm_id, tgr.tag_group_id as tag_group_id, tgr.parent_tag_id as parent_tag_id,
+        tgr.one_per_topic as one_per_topic
+      FROM tags t
+      INNER JOIN tag_group_restrictions tgr ON tgr.tag_id = t.id
+      #{outer_join ? "LEFT OUTER" : "INNER"}
+        JOIN category_restrictions cr ON t.id = cr.tag_id
+      /*where*/
+      /*order_by*/
+      /*limit*/
+    SQL
+
+    builder = DB.build(sql)
+
+    builder.limit(opts[:limit]) if opts[:limit]
+    builder.order_by(opts[:order]) if opts[:order]
+
+    if !opts[:for_topic] && builder_params[:selected_tag_ids]
+      builder.where("id NOT IN (:selected_tag_ids)")
+    end
+
+    if opts[:only_tag_names]
+      builder.where("LOWER(name) IN (?)", opts[:only_tag_names].map(&:downcase))
+    end
+
+    # parent tag requirements
+    if opts[:for_input]
+      builder.where(
+        builder_params[:selected_tag_ids] ?
+          "tgm_id IS NULL OR parent_tag_id IS NULL OR parent_tag_id IN (:selected_tag_ids)" :
+          "tgm_id IS NULL OR parent_tag_id IS NULL"
+      )
+    end
+
+    if category && category_has_restricted_tags
+      builder.where(
+        category.allow_global_tags ? "category_id = ? OR category_id IS NULL" : "category_id = ?",
+        category.id
+      )
+    elsif category || opts[:for_input] || opts[:for_topic]
+      # tags not restricted to any categories
+      builder.where("category_id IS NULL")
+    end
+
+    if filter_for_non_staff && (opts[:for_input] || opts[:for_topic])
+      # exclude staff-only tag groups
+      builder.where("tag_group_id IS NULL OR tag_group_id IN (SELECT tag_group_id FROM permitted_tag_groups)")
     end
 
     term = opts[:term]
@@ -159,128 +267,48 @@ module DiscourseTagging
       term = term.gsub("_", "\\_")
       clean_tag(term)
       term.downcase!
-      query = query.where('lower(tags.name) like ?', "%#{term}%")
+      builder.where("LOWER(name) LIKE :term")
+      builder_params[:term] = "%#{term}%"
+      sql.gsub!("/*and_name_like*/", "AND LOWER(t.name) LIKE :term")
+    else
+      sql.gsub!("/*and_name_like*/", "")
     end
 
-    # Filters for category-specific tags:
-    category = opts[:category]
-
-    if opts[:for_input] && !guardian.nil? && !guardian.is_staff? && category&.required_tag_group
+    if opts[:for_input] && filter_for_non_staff && category&.required_tag_group
       required_tag_ids = category.required_tag_group.tags.pluck(:id)
       if (required_tag_ids & selected_tag_ids).size < category.min_tags_from_required_group
-        query = query.where('tags.id IN (?)', required_tag_ids)
+        builder.where("id IN (?)", required_tag_ids)
       end
     end
 
-    if category && (category.tags.count > 0 || category.tag_groups.count > 0)
-      if category.allow_global_tags
-        # Select tags that:
-        #   * are restricted to the given category
-        #   * belong to no tag groups and aren't restricted to other categories
-        #   * belong to tag groups that are not restricted to any categories
-        query = query.where(<<~SQL, category.tag_groups.pluck(:id), category.id)
-          tags.id IN (
-            SELECT t.id FROM tags t
-            LEFT JOIN category_tags ct ON t.id = ct.tag_id
-            LEFT JOIN (
-              SELECT xtgm.tag_id, xtgm.tag_group_id
-              FROM tag_group_memberships xtgm
-              INNER JOIN category_tag_groups ctg
-              ON xtgm.tag_group_id = ctg.tag_group_id
-            ) AS tgm ON t.id = tgm.tag_id
-            WHERE (tgm.tag_group_id IS NULL AND ct.category_id IS NULL)
-               OR tgm.tag_group_id IN (?)
-               OR ct.category_id = ?
-          )
-        SQL
-      else
-        # Select only tags that are restricted to the given category
-        query = query.where(<<~SQL, category.id, category.tag_groups.pluck(:id))
-          tags.id IN (
-            SELECT tag_id FROM category_tags WHERE category_id = ?
-            UNION
-            SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?)
-          )
-        SQL
-      end
-    elsif opts[:for_input] || opts[:for_topic] || category
-      # exclude tags that are restricted to other categories
-      if CategoryTag.exists?
-        query = query.where("tags.id NOT IN (SELECT tag_id FROM category_tags)")
-      end
+    if filter_for_non_staff
+      # remove hidden tags
+      builder.where(<<~SQL, Group::AUTO_GROUPS[:everyone])
+        id NOT IN (
+          SELECT tag_id
+            FROM tag_group_memberships tgm
+           WHERE tag_group_id NOT IN (SELECT tag_group_id FROM tag_group_permissions WHERE group_id = ?)
+        )
+      SQL
+    end
 
-      if CategoryTagGroup.exists?
-        tag_group_ids = CategoryTagGroup.pluck(:tag_group_id).uniq
-        query = query.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))", tag_group_ids)
+    if builder_params[:selected_tag_ids] && (opts[:for_input] || opts[:for_topic])
+      one_tag_per_group_ids = DB.query(<<~SQL, builder_params[:selected_tag_ids]).map(&:id)
+        SELECT DISTINCT(tg.id)
+          FROM tag_groups tg
+        INNER JOIN tag_group_memberships tgm ON tg.id = tgm.tag_group_id AND tgm.tag_id IN (?)
+         WHERE tg.one_per_topic
+      SQL
+
+      if !one_tag_per_group_ids.empty?
+        builder.where(
+          "tag_group_id IS NULL OR tag_group_id NOT IN (?) OR id IN (:selected_tag_ids)",
+          one_tag_per_group_ids
+        )
       end
     end
 
-    if opts[:for_input] || opts[:for_topic]
-      unless guardian.nil? || guardian.is_staff?
-        all_staff_tags = DiscourseTagging.staff_tag_names
-        query = query.where('tags.name NOT IN (?)', all_staff_tags) if all_staff_tags.present?
-      end
-    end
-
-    if opts[:for_input]
-      # exclude tag groups that have a parent tag which is missing from selected_tags
-
-      if selected_tag_ids.empty?
-        sql = "tags.id NOT IN (#{TAG_GROUP_TAG_IDS_SQL} WHERE tg.parent_tag_id IS NOT NULL)"
-        query = query.where(sql)
-      else
-        exclude_group_ids = one_per_topic_group_ids(selected_tag_ids)
-
-        if exclude_group_ids.empty?
-          # tags that don't belong to groups that require a parent tag,
-          # and tags that belong to groups with parent tag selected
-          query = query.where(<<~SQL, selected_tag_ids, selected_tag_ids)
-            tags.id NOT IN (
-              #{TAG_GROUP_TAG_IDS_SQL}
-              WHERE tg.parent_tag_id NOT IN (?)
-            )
-            OR tags.id IN (
-              #{TAG_GROUP_TAG_IDS_SQL}
-              WHERE tg.parent_tag_id IN (?)
-            )
-          SQL
-        else
-          # It's possible that the selected tags violate some one-tag-per-group restrictions,
-          # so filter them out by picking one from each group.
-          limit_tag_ids = TagGroupMembership.select('distinct on (tag_group_id) tag_id')
-            .where(tag_id: selected_tag_ids)
-            .where(tag_group_id: exclude_group_ids)
-            .map(&:tag_id)
-          sql = "(tags.id NOT IN (#{TAG_GROUP_TAG_IDS_SQL} WHERE (tg.parent_tag_id NOT IN (?) OR tg.id in (?))) OR tags.id IN (?))"
-          query = query.where(sql, selected_tag_ids, exclude_group_ids, limit_tag_ids)
-        end
-      end
-    elsif opts[:for_topic] && !selected_tag_ids.empty?
-      # One tag per group restriction
-      exclude_group_ids = one_per_topic_group_ids(selected_tag_ids)
-
-      unless exclude_group_ids.empty?
-        limit_tag_ids = TagGroupMembership.select('distinct on (tag_group_id) tag_id')
-          .where(tag_id: selected_tag_ids)
-          .where(tag_group_id: exclude_group_ids)
-          .map(&:tag_id)
-        sql = "(tags.id NOT IN (#{TAG_GROUP_TAG_IDS_SQL} WHERE (tg.id in (?))) OR tags.id IN (?))"
-        query = query.where(sql, exclude_group_ids, limit_tag_ids)
-      end
-    end
-
-    if guardian.nil? || guardian.is_staff?
-      query
-    else
-      filter_visible(query, guardian)
-    end
-  end
-
-  def self.one_per_topic_group_ids(selected_tag_ids)
-    TagGroup.where(one_per_topic: true)
-      .joins(:tag_group_memberships)
-      .where('tag_group_memberships.tag_id in (?)', selected_tag_ids)
-      .pluck(:id)
+    result = builder.query(builder_params).uniq { |t| t.id }
   end
 
   def self.filter_visible(query, guardian = nil)
