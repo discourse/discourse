@@ -82,18 +82,6 @@ JS
       end
     end
 
-    def whitelisted?(path)
-
-      @@whitelisted ||= Set.new(
-        [
-         "discourse/models/site",
-         "discourse/models/user",
-        ]
-      )
-
-      @@whitelisted.include?(path)
-    end
-
     def babel_transpile(source)
       klass = self.class
       klass.protect do
@@ -129,33 +117,6 @@ JS
         )
 
         @output = klass.v8.eval(source)
-      end
-
-      # For backwards compatibility with plugins, for now export the Global format too.
-      # We should eventually have an upgrade system for plugins to use ES6 or some other
-      # resolve based API.
-      if whitelisted?(scope.logical_path) &&
-        scope.logical_path =~ /(discourse|admin)\/(controllers|components|views|routes|mixins|models)\/(.*)/
-
-        type = Regexp.last_match[2]
-        file_name = Regexp.last_match[3].gsub(/[\-\/]/, '_')
-        class_name = file_name.classify
-
-        # Rails removes pluralization when calling classify
-        if file_name.end_with?('s') && (!class_name.end_with?('s'))
-          class_name << "s"
-        end
-        require_name = module_name(scope.root_path, scope.logical_path)
-
-        if require_name !~ /\-test$/ && require_name !~ /^discourse\/plugins\//
-          result = "#{class_name}#{type.classify}"
-
-          result = result.gsub(/Model$/, '')
-
-          if result != "PostMenuView"
-            @output << "\n\nDiscourse.#{result} = require('#{require_name}').default;\n"
-          end
-        end
       end
 
       @output

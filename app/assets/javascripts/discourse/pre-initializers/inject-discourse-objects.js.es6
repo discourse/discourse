@@ -8,6 +8,8 @@ import {
   default as TopicTrackingState
 } from "discourse/models/topic-tracking-state";
 import ScreenTrack from "discourse/lib/screen-track";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 const ALL_TARGETS = ["controller", "component", "route", "model", "adapter"];
 
@@ -29,7 +31,7 @@ export default {
     app.register("message-bus:main", messageBus, { instantiate: false });
     ALL_TARGETS.forEach(t => app.inject(t, "messageBus", "message-bus:main"));
 
-    const currentUser = Discourse.User.current();
+    const currentUser = User.current();
     app.register("current-user:main", currentUser, { instantiate: false });
 
     const topicTrackingState = TopicTrackingState.create({
@@ -49,7 +51,7 @@ export default {
       app.inject(t, "siteSettings", "site-settings:main")
     );
 
-    const site = Discourse.Site.current();
+    const site = Site.current();
     app.register("site:main", site, { instantiate: false });
     ALL_TARGETS.forEach(t => app.inject(t, "site", "site:main"));
 
