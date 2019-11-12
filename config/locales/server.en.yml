@@ -92,6 +92,7 @@ en:
       component_no_default: "Theme components can't be default theme"
       component_no_color_scheme: "Theme components can't have color palettes"
       no_multilevels_components: "Themes with child themes can't be child themes themselves"
+      optimized_link: Optimized image links are ephemeral and should not be included in theme source code.
     settings_errors:
       invalid_yaml: "Provided YAML is invalid."
       data_type_not_a_number: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list` and `enum`"
