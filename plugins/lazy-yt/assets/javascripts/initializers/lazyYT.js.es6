@@ -14,7 +14,10 @@ export default {
           $(".lazyYT", $elem).lazyYT({
             onPlay(e, $el) {
               // don't cloak posts that have playing videos in them
-              const postId = parseInt($el.closest("article").data("post-id"), 10);
+              const postId = parseInt(
+                $el.closest("article").data("post-id"),
+                10
+              );
               if (postId) {
                 api.preventCloak(postId);
               }
