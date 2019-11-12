@@ -361,11 +361,8 @@ class UserNotifications < ActionMailer::Base
     raw.scan(URI.regexp(%w{http https})) { urls << $& }
 
     urls.each do |url|
-      begin
-        if (url.start_with?(Discourse.store.s3_upload_host) && FileHelper.is_supported_media?(url))
-          raw = raw.sub(url, "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>")
-        end
-      rescue URI::InvalidURIError
+      if (url.start_with?(Discourse.store.s3_upload_host) && FileHelper.is_supported_media?(url))
+        raw = raw.sub(url, "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>")
       end
     end
 
