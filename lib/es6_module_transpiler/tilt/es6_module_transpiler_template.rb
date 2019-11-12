@@ -91,7 +91,7 @@ JS
         ]
       )
 
-      @@whitelisted.include?(path) || path =~ /discourse\/mixins/
+      @@whitelisted.include?(path)
     end
 
     def babel_transpile(source)
@@ -150,7 +150,6 @@ JS
         if require_name !~ /\-test$/ && require_name !~ /^discourse\/plugins\//
           result = "#{class_name}#{type.classify}"
 
-          result = result.gsub(/Mixin$/, '')
           result = result.gsub(/Model$/, '')
 
           if result != "PostMenuView"
