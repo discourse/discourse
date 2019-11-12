@@ -257,7 +257,7 @@ Category.reopenClass({
     return Discourse.Site.currentProp("sortedCategories");
   },
 
-  idMap() {
+  _idMap() {
     return Discourse.Site.currentProp("categoriesById");
   },
 
@@ -273,7 +273,7 @@ Category.reopenClass({
     if (!id) {
       return;
     }
-    return Category.idMap()[id];
+    return Category._idMap()[id];
   },
 
   findByIds(ids = []) {
