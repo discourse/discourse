@@ -42,17 +42,15 @@ export default Controller.extend({
       if (isEmpty(this.newUsername)) return;
       if (this.unchanged) return;
 
-      User.checkUsername(
-        newUsername,
-        undefined,
-        this.get("model.id")
-      ).then(result => {
-        if (result.errors) {
-          this.set("errorMessage", result.errors.join(" "));
-        } else if (result.available === false) {
-          this.set("taken", true);
+      User.checkUsername(newUsername, undefined, this.get("model.id")).then(
+        result => {
+          if (result.errors) {
+            this.set("errorMessage", result.errors.join(" "));
+          } else if (result.available === false) {
+            this.set("taken", true);
+          }
         }
-      });
+      );
     }
   },
 

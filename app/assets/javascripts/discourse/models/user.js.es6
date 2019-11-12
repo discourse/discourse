@@ -26,7 +26,6 @@ import Category from "discourse/models/category";
 import { Promise } from "rsvp";
 import { getProperties } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
-import User from "discourse/models/user";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,

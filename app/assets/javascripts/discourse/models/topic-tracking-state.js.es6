@@ -47,9 +47,7 @@ const TopicTrackingState = EmberObject.extend({
       }
 
       if (["new_topic", "latest"].includes(data.message_type)) {
-        const muted_category_ids = User.currentProp(
-          "muted_category_ids"
-        );
+        const muted_category_ids = User.currentProp("muted_category_ids");
         if (
           muted_category_ids &&
           muted_category_ids.includes(data.payload.category_id)

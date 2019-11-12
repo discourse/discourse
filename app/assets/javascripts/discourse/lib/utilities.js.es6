@@ -327,10 +327,7 @@ function staffExtensionsRegex() {
 }
 
 function isAuthorizedFile(fileName) {
-  if (
-    User.currentProp("staff") &&
-    staffExtensionsRegex().test(fileName)
-  ) {
+  if (User.currentProp("staff") && staffExtensionsRegex().test(fileName)) {
     return true;
   }
   return extensionsRegex().test(fileName);
