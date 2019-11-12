@@ -875,7 +875,7 @@ class TopicQuery
         list = list
           .references("cu")
           .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id")
-          .where("category_users.user_id IS NULL OR category_users.user_id = :user_id", user_id: user.id)
+          .where("COALESCE(category_users.user_id, :user_id) = :user_id", user_id: user.id)
           .where("topics.category_id = :category_id
                  OR COALESCE(category_users.notification_level, :muted) <> :muted
                  OR tu.notification_level > :regular",
@@ -896,7 +896,7 @@ class TopicQuery
       list = list
         .references("cu")
         .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id")
-        .where("category_users.user_id IS NULL OR category_users.user_id = :user_id", user_id: user.id)
+        .where("COALESCE(category_users.user_id, :user_id) = :user_id", user_id: user.id)
         .where("category_users.notification_level IS NULL
                OR category_users.notification_level <> :muted
                OR category_users.category_id = :category_id OR tu.notification_level >= :tracking",

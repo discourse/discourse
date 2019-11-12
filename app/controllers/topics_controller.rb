@@ -852,7 +852,7 @@ class TopicsController < ApplicationController
       category_ids = [params[:category_id]]
 
       if params[:include_subcategories] == 'true'
-        category_ids = category_ids.concat(Category.where(parent_category_id: params[:category_id]))
+        category_ids = category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
       end
 
       category_ids.each do |category_id|
