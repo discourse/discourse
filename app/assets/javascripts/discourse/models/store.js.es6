@@ -219,6 +219,13 @@ export default EmberObject.extend({
   _resultSet(type, result, findArgs) {
     const adapter = this.adapterFor(type);
     const typeName = underscore(this.pluralize(adapter.apiNameFor(type)));
+
+    if (!result[typeName]) {
+      // eslint-disable-next-line no-console
+      console.error(`JSON response is missing \`${typeName}\` key`, result);
+      return;
+    }
+
     const content = result[typeName].map(obj =>
       this._hydrate(type, obj, result)
     );
