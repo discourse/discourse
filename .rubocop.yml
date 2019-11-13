@@ -1,6 +1,3 @@
-require:
- - ./lib/rubocop/cop/discourse_cops.rb
-
 AllCops:
   TargetRubyVersion: 2.4
   DisabledByDefault: true
@@ -128,9 +125,3 @@ Style/SingleLineMethods:
 Style/Semicolon:
   Enabled: true
   AllowAsExpressionSeparator: true
-
-DiscourseCops/NoChdir:
-  Enabled: true
-  Exclude:
-    - 'spec/**/*' # Specs are run sequentially, so chdir can be used
-    - 'lib/backup_restore/**/*' # TODO
