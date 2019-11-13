@@ -432,29 +432,28 @@ module BackupRestore
 
       public_uploads_path = File.join(Rails.root, "public")
 
-      FileUtils.cd(public_uploads_path) do
-        FileUtils.mkdir_p("uploads")
+      FileUtils.mkdir_p(File.join(public_uploads_path, "uploads"))
 
-        tmp_uploads_path = Dir.glob(File.join(@tmp_directory, "uploads", "*")).first
-        return if tmp_uploads_path.blank?
-        previous_db_name = BackupMetadata.value_for("db_name") || File.basename(tmp_uploads_path)
-        current_db_name = RailsMultisite::ConnectionManagement.current_db
-        optimized_images_exist = File.exist?(File.join(tmp_uploads_path, 'optimized'))
+      tmp_uploads_path = Dir.glob(File.join(@tmp_directory, "uploads", "*")).first
+      return if tmp_uploads_path.blank?
+      previous_db_name = BackupMetadata.value_for("db_name") || File.basename(tmp_uploads_path)
+      current_db_name = RailsMultisite::ConnectionManagement.current_db
+      optimized_images_exist = File.exist?(File.join(tmp_uploads_path, 'optimized'))
 
-        Discourse::Utils.execute_command(
-          'rsync', '-avp', '--safe-links', "#{tmp_uploads_path}/", "uploads/#{current_db_name}/",
-          failure_message: "Failed to restore uploads."
-        )
+      Discourse::Utils.execute_command(
+        'rsync', '-avp', '--safe-links', "#{tmp_uploads_path}/", "uploads/#{current_db_name}/",
+        failure_message: "Failed to restore uploads.",
+        chdir: public_uploads_path
+      )
 
-        remap_uploads(previous_db_name, current_db_name)
+      remap_uploads(previous_db_name, current_db_name)
 
-        if SiteSetting.Upload.enable_s3_uploads
-          migrate_to_s3
-          remove_local_uploads(File.join(public_uploads_path, "uploads/#{current_db_name}"))
-        end
-
-        generate_optimized_images unless optimized_images_exist
+      if SiteSetting.Upload.enable_s3_uploads
+        migrate_to_s3
+        remove_local_uploads(File.join(public_uploads_path, "uploads/#{current_db_name}"))
       end
+
+      generate_optimized_images unless optimized_images_exist
     end
 
     def remap_uploads(previous_db_name, current_db_name)
