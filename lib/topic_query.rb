@@ -874,8 +874,7 @@ class TopicQuery
       if user
         list = list
           .references("cu")
-          .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id")
-          .where("COALESCE(category_users.user_id, :user_id) = :user_id", user_id: user.id)
+          .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
           .where("topics.category_id = :category_id
                  OR COALESCE(category_users.notification_level, :muted) <> :muted
                  OR tu.notification_level > :regular",
@@ -895,8 +894,7 @@ class TopicQuery
     elsif user
       list = list
         .references("cu")
-        .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id")
-        .where("COALESCE(category_users.user_id, :user_id) = :user_id", user_id: user.id)
+        .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
         .where("category_users.notification_level IS NULL
                OR category_users.notification_level <> :muted
                OR category_users.category_id = :category_id OR tu.notification_level >= :tracking",
@@ -944,7 +942,6 @@ class TopicQuery
   def remove_already_seen_for_category(list, user)
     if user
       list = list
-        .where("category_users.user_id IS NULL OR category_users.user_id = :user_id", user_id: user.id)
         .where("category_users.last_seen_at IS NULL OR topics.created_at > category_users.last_seen_at")
     end
 
