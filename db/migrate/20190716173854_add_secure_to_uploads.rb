@@ -4,13 +4,19 @@ class AddSecureToUploads < ActiveRecord::Migration[5.2]
   def up
     add_column :uploads, :secure, :boolean, default: false, null: false
 
-    if SiteSetting.prevent_anons_from_downloading_files
-      Upload.find_each do |upload|
-        next if FileHelper.is_supported_image?(upload.original_filename)
-        next if upload.for_theme || upload.for_site_setting
+    prevent_anons_from_downloading_files = \
+      DB.query_single("SELECT value FROM site_settings WHERE name = 'prevent_anons_from_downloading_files'").first == 't'
 
-        execute("UPDATE uploads SET secure = 't' WHERE id = '#{upload.id}'")
-      end
+    if prevent_anons_from_downloading_files
+      execute(
+        <<-SQL
+        UPDATE uploads SET secure = 't' WHERE id IN (
+          SELECT DISTINCT(uploads.id) FROM uploads
+          INNER JOIN post_uploads ON post_uploads.upload_id = uploads.id
+          WHERE original_filename NOT SIMILAR TO '%\.(jpg|jpeg|png|gif|svg|ico)'
+        )
+        SQL
+      )
     end
   end
 
