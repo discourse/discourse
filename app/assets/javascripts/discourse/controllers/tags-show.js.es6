@@ -11,13 +11,14 @@ import {
   customNavItemHref
 } from "discourse/models/nav-item";
 import Category from "discourse/models/category";
+import Site from "discourse/models/site";
 
 if (customNavItemHref) {
   customNavItemHref(function(navItem) {
     if (navItem.get("tagId")) {
       const name = navItem.get("name");
 
-      if (!Discourse.Site.currentProp("filters").includes(name)) {
+      if (!Site.currentProp("filters").includes(name)) {
         return null;
       }
 

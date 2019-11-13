@@ -1,14 +1,16 @@
 import { cancel } from "@ember/runloop";
 import { later } from "@ember/runloop";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { setCaretPosition, caretPosition } from "discourse/lib/utilities";
+import Site from "discourse/models/site";
+
 /**
   This is a jQuery plugin to support autocompleting values in our text fields.
 
   @module $.fn.autocomplete
 **/
-import { iconHTML } from "discourse-common/lib/icon-library";
-export const CANCELLED_STATUS = "__CANCELLED";
-import { setCaretPosition, caretPosition } from "discourse/lib/utilities";
 
+export const CANCELLED_STATUS = "__CANCELLED";
 const allowedLettersRegex = /[\s\t\[\{\(\/]/;
 
 const keys = {
@@ -319,7 +321,7 @@ export default function(options) {
         vOffset = BELOW;
       }
 
-      if (Discourse.Site.currentProp("mobileView")) {
+      if (Site.currentProp("mobileView")) {
         if (me.height() / 2 >= pos.top) {
           vOffset = BELOW;
         }

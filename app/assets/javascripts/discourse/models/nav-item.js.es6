@@ -3,6 +3,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
+import Site from "discourse/models/site";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("name")
@@ -18,7 +19,7 @@ const NavItem = EmberObject.extend({
 
     if (
       name === "latest" &&
-      (!Discourse.Site.currentProp("mobileView") || this.tagId !== undefined)
+      (!Site.currentProp("mobileView") || this.tagId !== undefined)
     ) {
       count = 0;
     }
@@ -106,13 +107,12 @@ NavItem.reopenClass({
 
     if (
       anonymous &&
-      !Discourse.Site.currentProp("anonymous_top_menu_items").includes(testName)
+      !Site.currentProp("anonymous_top_menu_items").includes(testName)
     )
       return null;
 
     if (!Category.list() && testName === "categories") return null;
-    if (!Discourse.Site.currentProp("top_menu_items").includes(testName))
-      return null;
+    if (!Site.currentProp("top_menu_items").includes(testName)) return null;
 
     var args = { name: text, hasIcon: text === "unread" };
     if (opts.category) {

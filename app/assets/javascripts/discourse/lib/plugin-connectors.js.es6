@@ -1,3 +1,5 @@
+import Site from "discourse/models/site";
+
 let _connectorCache;
 let _rawConnectorCache;
 let _extraConnectorClasses = {};
@@ -22,7 +24,7 @@ const DefaultConnectorClass = {
 };
 
 function findOutlets(collection, callback) {
-  const disabledPlugins = Discourse.Site.currentProp("disabled_plugins") || [];
+  const disabledPlugins = Site.currentProp("disabled_plugins") || [];
 
   Object.keys(collection).forEach(function(res) {
     if (res.indexOf("/connectors/") !== -1) {

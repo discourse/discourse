@@ -3,6 +3,7 @@ import pageVisible from "discourse/lib/page-visible";
 import logout from "discourse/lib/logout";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
+import Site from "discourse/models/site";
 
 let _trackView = false;
 let _transientHeader = null;
@@ -100,7 +101,7 @@ export function ajax() {
       handleLogoff(xhr);
 
       run(() => {
-        Discourse.Site.currentProp(
+        Site.currentProp(
           "isReadOnly",
           !!xhr.getResponseHeader("Discourse-Readonly")
         );

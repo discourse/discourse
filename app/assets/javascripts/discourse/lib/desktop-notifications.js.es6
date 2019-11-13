@@ -3,6 +3,7 @@ import DiscourseURL from "discourse/lib/url";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { formatUsername } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
+import Site from "discourse/models/site";
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -213,7 +214,7 @@ function requestPermission() {
 function i18nKey(notification_type) {
   return (
     "notifications.popup." +
-    Discourse.Site.current().get("notificationLookup")[notification_type]
+    Site.current().get("notificationLookup")[notification_type]
   );
 }
 
