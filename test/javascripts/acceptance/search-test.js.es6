@@ -50,6 +50,14 @@ QUnit.test("search for a tag", async assert => {
 });
 
 QUnit.test("search scope checkbox", async assert => {
+  await visit("/tags/important");
+  await click("#search-button");
+  assert.ok(
+    exists(".search-context input:checked"),
+    "scope to tag checkbox is checked"
+  );
+  await click("#search-button");
+
   await visit("/c/bug");
   await click("#search-button");
   assert.ok(

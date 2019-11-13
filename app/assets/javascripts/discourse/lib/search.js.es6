@@ -167,6 +167,8 @@ export function searchContextDescription(type, name) {
         return I18n.t("search.context.user", { username: name });
       case "category":
         return I18n.t("search.context.category", { category: name });
+      case "tag":
+        return I18n.t("search.context.tag", { tag: name });
       case "private_messages":
         return I18n.t("search.context.private_messages");
     }

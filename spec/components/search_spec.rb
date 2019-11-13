@@ -792,6 +792,21 @@ describe Search do
       expect(search.posts.length).to eq(2)
     end
 
+    it 'can use tag as a search context' do
+      tag = Fabricate(:tag, name: 'important-stuff')
+
+      topic = Fabricate(:topic)
+      topic_no_tag = Fabricate(:topic)
+      Fabricate(:topic_tag, tag: tag, topic: topic)
+
+      post = Fabricate(:post, topic: topic, user: topic.user, raw: 'This is my hello')
+      _another_post = Fabricate(:post, topic: topic_no_tag, user: topic.user)
+
+      search = Search.execute('hello', search_context: tag)
+      expect(search.posts.map(&:id).sort).to eq([post.id].sort)
+      expect(search.posts.length).to eq(1)
+    end
+
   end
 
   describe 'Chinese search' do

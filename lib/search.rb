@@ -791,6 +791,8 @@ class Search
     posts = Post.where(post_type: Topic.visible_post_types(@guardian.user))
       .joins(:post_search_data, :topic)
       .joins("LEFT JOIN categories ON categories.id = topics.category_id")
+      .joins("LEFT JOIN topic_tags ON topic_tags.topic_id = topics.id")
+      .joins("LEFT JOIN tags ON tags.id = topic_tags.tag_id")
 
     is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
 
@@ -862,6 +864,8 @@ class Search
         elsif @search_context.is_a?(Topic)
           posts.where("topics.id = #{@search_context.id}")
             .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
+        elsif @search_context.is_a?(Tag)
+          posts.where("tags.id = #{@search_context.id}")
         end
       else
         posts = categories_ignored(posts) unless @category_filter_matched
