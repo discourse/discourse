@@ -118,10 +118,12 @@ QUnit.testStart(function(ctx) {
   Discourse.BaseUri = "";
   Discourse.BaseUrl = "http://localhost:3000";
 
+  let User = require("discourse/models/user").default;
   let Session = require("discourse/models/session").default;
   Session.resetCurrent();
-  Discourse.User.resetCurrent();
+  User.resetCurrent();
   resetSite(Discourse.SiteSettings);
+  Discourse.currentUser = User.current();
 
   _DiscourseURL.redirectedTo = null;
   _DiscourseURL.redirectTo = function(url) {
