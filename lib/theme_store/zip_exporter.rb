@@ -26,34 +26,32 @@ class ThemeStore::ZipExporter
   end
 
   def export_to_folder
-    FileUtils.mkdir(@temp_folder)
+    destination_folder = File.join(@temp_folder, @export_name)
+    FileUtils.mkdir_p(destination_folder)
 
-    Dir.chdir(@temp_folder) do
-      FileUtils.mkdir(@export_name)
+    @theme.theme_fields.each do |field|
+      next unless path = field.file_path
 
-      @theme.theme_fields.each do |field|
-        next unless path = field.file_path
+      # Belt and braces approach here. All the user input should already be
+      # sanitized, but check for attempts to leave the temp directory anyway
+      pathname = Pathname.new(File.join(destination_folder, path))
+      folder_path = pathname.parent.cleanpath
+      raise RuntimeError.new("Theme exporter tried to leave directory") unless folder_path.to_s.starts_with?(destination_folder)
+      pathname.parent.mkpath
+      path = pathname.realdirpath
+      raise RuntimeError.new("Theme exporter tried to leave directory") unless path.to_s.starts_with?(destination_folder)
 
-        # Belt and braces approach here. All the user input should already be
-        # sanitized, but check for attempts to leave the temp directory anyway
-        pathname = Pathname.new("#{@export_name}/#{path}")
-        folder_path = pathname.parent.cleanpath
-        raise RuntimeError.new("Theme exporter tried to leave directory") unless folder_path.to_s.starts_with?("#{@export_name}")
-        pathname.parent.mkpath
-        path = pathname.realdirpath
-        raise RuntimeError.new("Theme exporter tried to leave directory") unless path.to_s.starts_with?("#{@temp_folder}/#{@export_name}")
-
-        if ThemeField.types[field.type_id] == :theme_upload_var
-          filename = Discourse.store.path_for(field.upload)
-          content = filename ? File.read(filename) : Discourse.store.download(field.upload).read
-        else
-          content = field.value
-        end
-        File.write(path, content)
+      if ThemeField.types[field.type_id] == :theme_upload_var
+        filename = Discourse.store.path_for(field.upload)
+        content = filename ? File.read(filename) : Discourse.store.download(field.upload).read
+      else
+        content = field.value
       end
-
-      File.write("#{@export_name}/about.json", JSON.pretty_generate(@theme.generate_metadata_hash))
+      File.write(path, content)
     end
+
+    File.write(File.join(destination_folder, "about.json"), JSON.pretty_generate(@theme.generate_metadata_hash))
+
     @temp_folder
   end
 
@@ -62,6 +60,6 @@ class ThemeStore::ZipExporter
   def export_package
     export_to_folder
 
-    Dir.chdir(@temp_folder) { Compression::Zip.new.compress(@temp_folder, @export_name) }
+    Compression::Zip.new.compress(@temp_folder, @export_name)
   end
 end

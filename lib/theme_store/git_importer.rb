@@ -33,14 +33,14 @@ class ThemeStore::GitImporter
     exporter = ThemeStore::ZipExporter.new(theme)
     local_temp_folder = exporter.export_to_folder
 
-    Dir.chdir(@temp_folder) do
-      Discourse::Utils.execute_command("git", "checkout", local_version)
-      Discourse::Utils.execute_command("rm -rf ./*/")
-      Discourse::Utils.execute_command("cp", "-rf", "#{local_temp_folder}/#{exporter.export_name}/.", @temp_folder)
-      Discourse::Utils.execute_command("git", "checkout", "about.json")
+    Discourse::Utils.execute_command(chdir: @temp_folder) do |runner|
+      runner.exec("git", "checkout", local_version)
+      runner.exec("rm -rf ./*/")
+      runner.exec("cp", "-rf", "#{local_temp_folder}/#{exporter.export_name}/.", @temp_folder)
+      runner.exec("git", "checkout", "about.json")
       # add + diff staged to catch uploads but exclude renamed assets
-      Discourse::Utils.execute_command("git", "add", "-A")
-      return Discourse::Utils.execute_command("git", "diff", "--staged", "--diff-filter=r")
+      runner.exec("git", "add", "-A")
+      return runner.exec("git", "diff", "--staged", "--diff-filter=r")
     end
   ensure
     FileUtils.rm_rf local_temp_folder if local_temp_folder
@@ -49,18 +49,16 @@ class ThemeStore::GitImporter
   def commits_since(hash)
     commit_hash, commits_behind = nil
 
-    Dir.chdir(@temp_folder) do
-      commit_hash = Discourse::Utils.execute_command("git", "rev-parse", "HEAD").strip
-      commits_behind = Discourse::Utils.execute_command("git", "rev-list", "#{hash}..HEAD", "--count").strip
+    Discourse::Utils.execute_command(chdir: @temp_folder) do |runner|
+      commit_hash = runner.exec("git", "rev-parse", "HEAD").strip
+      commits_behind = runner.exec("git", "rev-list", "#{hash}..HEAD", "--count").strip
     end
 
     [commit_hash, commits_behind]
   end
 
   def version
-    Dir.chdir(@temp_folder) do
-      Discourse::Utils.execute_command("git", "rev-parse", "HEAD").strip
-    end
+    Discourse::Utils.execute_command("git", "rev-parse", "HEAD", chdir: @temp_folder).strip
   end
 
   def cleanup!
@@ -82,9 +80,7 @@ class ThemeStore::GitImporter
   end
 
   def all_files
-    Dir.chdir(@temp_folder) do
-      Dir.glob("**/*").reject { |f| File.directory?(f) }
-    end
+    Dir.glob("**/*", base: @temp_folder).reject { |f| File.directory?(f) }
   end
 
   def [](value)
@@ -111,10 +107,8 @@ class ThemeStore::GitImporter
     ssh_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_ssh_#{SecureRandom.hex}"
     FileUtils.mkdir_p ssh_folder
 
-    Dir.chdir(ssh_folder) do
-      File.write('id_rsa', @private_key.strip)
-      FileUtils.chmod(0600, 'id_rsa')
-    end
+    File.write("#{ssh_folder}/id_rsa", @private_key.strip)
+    FileUtils.chmod(0600, "#{ssh_folder}/id_rsa")
 
     begin
       git_ssh_command = { 'GIT_SSH_COMMAND' => "ssh -i #{ssh_folder}/id_rsa -o StrictHostKeyChecking=no" }
