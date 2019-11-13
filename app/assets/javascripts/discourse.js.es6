@@ -8,7 +8,6 @@ import { computed } from "@ember/object";
 import FocusEvent from "discourse-common/mixins/focus-event";
 import EmberObject from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
-import User from "discourse/models/user";
 
 const _pluginCallbacks = [];
 
@@ -63,7 +62,10 @@ const Discourse = Ember.Application.extend(FocusEvent, {
     }
 
     var displayCount = this.displayCount;
-    if (displayCount > 0 && !User.currentProp("dynamic_favicon")) {
+    var dynamicFavicon = this.currentUser
+      ? !this.currentUser.get("dynamic_favicon")
+      : false;
+    if (displayCount > 0 && dynamicFavicon) {
       title = `(${displayCount}) ${title}`;
     }
 
@@ -72,15 +74,15 @@ const Discourse = Ember.Application.extend(FocusEvent, {
 
   @discourseComputed("contextCount", "notificationCount")
   displayCount() {
-    return User.current() &&
-      User.currentProp("title_count_mode") === "notifications"
+    return this.currentUser &&
+      this.currentUser.get("title_count_mode") === "notifications"
       ? this.notificationCount
       : this.contextCount;
   },
 
   @observes("contextCount", "notificationCount")
   faviconChanged() {
-    if (User.currentProp("dynamic_favicon")) {
+    if (this.currentUser && this.currentUser.get("dynamic_favicon")) {
       let url = Discourse.SiteSettings.site_favicon_url;
 
       // Since the favicon is cached on the browser for a really long time, we
