@@ -145,7 +145,8 @@ export function searchForTerm(term, opts) {
   if (opts.searchContext) {
     data.search_context = {
       type: opts.searchContext.type,
-      id: opts.searchContext.id
+      id: opts.searchContext.id,
+      name: opts.searchContext.name
     };
   }
 

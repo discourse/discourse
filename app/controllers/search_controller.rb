@@ -170,7 +170,7 @@ class SearchController < ApplicationController
       elsif 'topic' == search_context[:type]
         context_obj = Topic.find_by(id: search_context[:id].to_i)
       elsif 'tag' == search_context[:type]
-        context_obj = Tag.where_name(search_context[:id]).first
+        context_obj = Tag.where_name(search_context[:name]).first
       end
 
       type_filter = nil

@@ -14,6 +14,6 @@ export default RestModel.extend({
 
   @discourseComputed("id")
   searchContext(id) {
-    return { type: "tag", id, tag: this };
+    return { type: "tag", id, tag: this, name: id };
   }
 });
