@@ -248,7 +248,7 @@ module BackupRestore
       Discourse::Utils.execute_command(
         'tar', '--append', '--dereference', '--file', tar_filename, File.basename(@dump_filename),
         failure_message: "Failed to archive data dump.",
-        cd: File.dirname(@dump_filename)
+        chdir: File.dirname(@dump_filename)
       )
 
       add_local_uploads_to_archive(tar_filename)
@@ -273,7 +273,7 @@ module BackupRestore
         Discourse::Utils.execute_command(
           'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, upload_directory,
           failure_message: "Failed to archive uploads.", success_status_codes: [0, 1],
-          cd: File.join(Rails.root, "public")
+          chdir: File.join(Rails.root, "public")
         )
       else
         log "No local uploads found. Skipping archiving of local uploads..."
@@ -307,7 +307,7 @@ module BackupRestore
           Discourse::Utils.execute_command(
             'tar', '--append', '--file', tar_filename, upload_directory,
             failure_message: "Failed to add #{upload.original_filename} to archive.", success_status_codes: [0, 1],
-            cd: @tmp_directory
+            chdir: @tmp_directory
           )
 
           File.delete(filename)

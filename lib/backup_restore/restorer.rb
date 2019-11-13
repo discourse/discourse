@@ -443,7 +443,7 @@ module BackupRestore
       Discourse::Utils.execute_command(
         'rsync', '-avp', '--safe-links', "#{tmp_uploads_path}/", "uploads/#{current_db_name}/",
         failure_message: "Failed to restore uploads.",
-        cd: public_uploads_path
+        chdir: public_uploads_path
       )
 
       remap_uploads(previous_db_name, current_db_name)
