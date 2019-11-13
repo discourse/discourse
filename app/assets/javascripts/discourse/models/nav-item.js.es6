@@ -99,9 +99,7 @@ NavItem.reopenClass({
 
   // create a nav item from the text, will return null if there is not valid nav item for this particular text
   fromText(text, opts) {
-    var split = text.split(","),
-      name = split[0],
-      testName = name.split("/")[0],
+    var testName = text.split("/")[0],
       anonymous = !Discourse.User.current();
 
     opts = opts || {};
@@ -116,7 +114,7 @@ NavItem.reopenClass({
     if (!Discourse.Site.currentProp("top_menu_items").includes(testName))
       return null;
 
-    var args = { name: name, hasIcon: name === "unread" };
+    var args = { name: text, hasIcon: text === "unread" };
     if (opts.category) {
       args.category = opts.category;
     }
