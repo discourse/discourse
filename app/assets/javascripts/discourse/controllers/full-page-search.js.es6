@@ -14,7 +14,6 @@ import {
   observes
 } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
-import Tag from "discourse/models/tag";
 import { escapeExpression } from "discourse/lib/utilities";
 import { setTransient } from "discourse/lib/page-tracker";
 import Composer from "discourse/models/composer";
