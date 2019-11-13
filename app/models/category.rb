@@ -3,6 +3,7 @@
 class Category < ActiveRecord::Base
   self.ignored_columns = %w{
     uploaded_meta_id
+    suppress_from_latest
   }
 
   include Searchable

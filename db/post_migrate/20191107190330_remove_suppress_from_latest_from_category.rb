@@ -6,9 +6,34 @@ class RemoveSuppressFromLatestFromCategory < ActiveRecord::Migration[6.0]
   }
 
   def up
-    muted_category_ids = SiteSetting.default_categories_muted.split("|")
-    suppressed_category_ids = Category.where(suppress_from_latest: true).pluck(:id).map(&:to_s)
-    SiteSetting.default_categories_muted = (muted_category_ids + suppressed_category_ids).uniq.join("|")
+    ids = DB.query_single("SELECT id::text FROM categories WHERE suppress_from_latest = TRUE")
+
+    if ids.present?
+      muted_ids = DB.query_single("SELECT value from site_settings WHERE name = 'default_categories_muted'").first
+      ids += muted_ids.split("|") if muted_ids.present?
+      ids.uniq!
+
+      # We shouldn't encourage to have more than 10 categories in `default_categories_muted` site setting.
+      if ids.count <= 10
+        DB.exec(<<~SQL, muted: CategoryUser.notification_levels[:muted])
+          INSERT INTO category_users (category_id, user_id, notification_level)
+            SELECT c.id category_id, u.id user_id, :muted
+            FROM users u
+              CROSS JOIN categories c
+              LEFT JOIN category_users cu
+                ON u.id = cu.user_id
+                  AND c.id = cu.category_id
+            WHERE c.suppress_from_latest = TRUE
+              AND cu.notification_level IS NULL
+        SQL
+
+        DB.exec(<<~SQL, value: ids.join("|"))
+          UPDATE site_settings
+          SET value = :value
+          WHERE name = 'default_categories_muted'
+        SQL
+      end
+    end
 
     DROPPED_COLUMNS.each do |table, columns|
       Migration::ColumnDropper.execute_drop(table, columns)
