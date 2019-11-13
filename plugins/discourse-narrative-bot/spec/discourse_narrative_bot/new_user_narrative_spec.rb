@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe DiscourseNarrativeBot::NewUserNarrative do
   let!(:welcome_topic) { Fabricate(:topic, title: 'Welcome to Discourse') }
-  let(:discobot_user) { User.find(-2) }
+  let(:discobot_user) { ::DiscourseNarrativeBot::Base.new.discobot_user }
   let(:first_post) { Fabricate(:post, user: discobot_user) }
   let(:user) { Fabricate(:user) }
 

@@ -33,6 +33,7 @@ after_initialize do
     '../autoload/jobs/narrative_timeout.rb',
     '../autoload/jobs/narrative_init.rb',
     '../autoload/jobs/send_default_welcome_message.rb',
+    '../autoload/jobs/send_advanced_tutorial_message.rb',
     '../autoload/jobs/onceoff/grant_badges.rb',
     '../autoload/jobs/onceoff/remap_old_bot_images.rb',
     '../lib/discourse_narrative_bot/actions.rb',
@@ -243,6 +244,15 @@ after_initialize do
         topic_id: topic_id,
         input: :topic_notification_level_changed
       )
+    end
+  end
+
+  self.on(:user_promoted) do |args|
+    promoted_from_tl1 = args[:new_trust_level] == TrustLevel[2] &&
+      args[:old_trust_level] == TrustLevel[1]
+
+    if SiteSetting.discourse_narrative_bot_enabled && promoted_from_tl1
+      Jobs.enqueue(:send_advanced_tutorial_message, user_id: args[:user_id])
     end
   end
 end
