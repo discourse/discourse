@@ -722,6 +722,10 @@ class ApplicationController < ActionController::Base
         session[:destination_url] = destination_url
         redirect_to path('/session/sso')
         return
+      elsif !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
+        # Only one authentication provider, direct straight to it
+        cookies[:destination_url] = destination_url
+        redirect_to path("/auth/#{Discourse.enabled_authenticators.first.name}")
       else
         # save original URL in a cookie (javascript redirects after login in this case)
         cookies[:destination_url] = destination_url
