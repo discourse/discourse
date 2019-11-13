@@ -853,6 +853,11 @@ User.reopenClass(Singleton, {
     return null;
   },
 
+  resetCurrent(user) {
+    this._super(user);
+    Discourse.currentUser = user;
+  },
+
   checkUsername(username, email, for_user_id) {
     return ajax(userPath("check_username"), {
       data: { username, email, for_user_id }

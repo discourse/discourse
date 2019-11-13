@@ -124,7 +124,6 @@ QUnit.testStart(function(ctx) {
   Session.resetCurrent();
   User.resetCurrent();
   resetSite(Discourse.SiteSettings);
-  Discourse.currentUser = User.current();
 
   _DiscourseURL.redirectedTo = null;
   _DiscourseURL.redirectTo = function(url) {

@@ -61,11 +61,9 @@ const Discourse = Ember.Application.extend(FocusEvent, {
       $("title").text(title);
     }
 
-    var displayCount = this.displayCount;
-    var dynamicFavicon = this.currentUser
-      ? !this.currentUser.get("dynamic_favicon")
-      : false;
-    if (displayCount > 0 && dynamicFavicon) {
+    let displayCount = this.displayCount;
+    let dynamicFavicon = this.currentUser && this.currentUser.dynamic_favicon;
+    if (displayCount > 0 && !dynamicFavicon) {
       title = `(${displayCount}) ${title}`;
     }
 
