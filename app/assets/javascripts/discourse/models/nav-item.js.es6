@@ -95,7 +95,7 @@ const ExtraNavItem = NavItem.extend({
 NavItem.reopenClass({
   extraArgsCallbacks: [],
   customNavItemHrefs: [],
-  extraNavItems: [],
+  extraNavItemDescriptors: [],
 
   // create a nav item from the text, will return null if there is not valid nav item for this particular text
   fromText(text, opts) {
@@ -159,10 +159,12 @@ NavItem.reopenClass({
         i => i !== null && !(category && i.get("name").indexOf("categor") === 0)
       );
 
-    const extraItems = NavItem.extraNavItems.filter(item => {
-      if (!item.customFilter) return true;
-      return item.customFilter(category, args);
-    });
+    const extraItems = NavItem.extraNavItemDescriptors
+      .map(descriptor => ExtraNavItem.create(descriptor))
+      .filter(item => {
+        if (!item.customFilter) return true;
+        return item.customFilter(category, args);
+      });
 
     let forceActive = false;
 
@@ -218,9 +220,7 @@ export function customNavItemHref(cb) {
 }
 
 export function addNavItem(item) {
-  const navItem = ExtraNavItem.create(item);
-  NavItem.extraNavItems.push(navItem);
-  return navItem;
+  NavItem.extraNavItemDescriptors.push(item);
 }
 
 Object.defineProperty(Discourse, "NavItem", {
