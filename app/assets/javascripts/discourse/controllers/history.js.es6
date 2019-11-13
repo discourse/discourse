@@ -9,7 +9,7 @@ import { sanitizeAsync } from "discourse/lib/text";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import Post from "discourse/models/post";
 import Category from "discourse/models/category";
-import computed from "@ember/object";
+import { computed } from "@ember/object";
 
 function customTagArray(fieldName) {
   return computed(fieldName, function() {
