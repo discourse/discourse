@@ -26,6 +26,7 @@ import Category from "discourse/models/category";
 import { Promise } from "rsvp";
 import { getProperties } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
+import Site from "discourse/models/site";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -200,7 +201,7 @@ const User = RestModel.extend({
 
   @discourseComputed("trust_level")
   trustLevel(trustLevel) {
-    return Discourse.Site.currentProp("trustLevels").findBy(
+    return Site.currentProp("trustLevels").findBy(
       "id",
       parseInt(trustLevel, 10)
     );

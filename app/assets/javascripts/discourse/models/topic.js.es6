@@ -21,6 +21,7 @@ import {
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
+import Site from "discourse/models/site";
 
 export function loadTopicView(topic, args) {
   const data = _.merge({}, args);
@@ -102,7 +103,7 @@ const Topic = RestModel.extend({
   fancyTitle(title) {
     let fancyTitle = censor(
       emojiUnescape(title || ""),
-      Discourse.Site.currentProp("censored_regexp")
+      Site.currentProp("censored_regexp")
     );
 
     if (Discourse.SiteSettings.support_mixed_text_direction) {
@@ -338,7 +339,7 @@ const Topic = RestModel.extend({
 
   @discourseComputed("archetype")
   archetypeObject(archetype) {
-    return Discourse.Site.currentProp("archetypes").findBy("id", archetype);
+    return Site.currentProp("archetypes").findBy("id", archetype);
   },
 
   isPrivateMessage: equal("archetype", "private_message"),
@@ -641,7 +642,7 @@ Topic.reopenClass({
       const lookup = EmberObject.create();
       result.actions_summary = result.actions_summary.map(a => {
         a.post = result;
-        a.actionType = Discourse.Site.current().postActionTypeById(a.id);
+        a.actionType = Site.current().postActionTypeById(a.id);
         const actionSummary = ActionSummary.create(a);
         lookup.set(a.actionType.get("name_key"), actionSummary);
         return actionSummary;

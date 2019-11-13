@@ -14,6 +14,7 @@ import { cookAsync } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { Promise } from "rsvp";
+import Site from "discourse/models/site";
 
 const Post = RestModel.extend({
   // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
@@ -355,7 +356,7 @@ Post.reopenClass({
 
       // this area should be optimized, it is creating way too many objects per post
       json.actions_summary = json.actions_summary.map(a => {
-        a.actionType = Discourse.Site.current().postActionTypeById(a.id);
+        a.actionType = Site.current().postActionTypeById(a.id);
         a.count = a.count || 0;
         const actionSummary = ActionSummary.create(a);
         lookup[a.actionType.name_key] = actionSummary;
