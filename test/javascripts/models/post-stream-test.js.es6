@@ -1,5 +1,6 @@
 import Post from "discourse/models/post";
 import createStore from "helpers/create-store";
+import User from "discourse/models/user";
 
 QUnit.module("model:post-stream");
 
@@ -549,7 +550,7 @@ QUnit.test("staging and undoing a new post", assert => {
     "the original post is lastAppended"
   );
 
-  const user = Discourse.User.create({
+  const user = User.create({
     username: "eviltrout",
     name: "eviltrout",
     id: 321
@@ -650,7 +651,7 @@ QUnit.test("staging and committing a post", assert => {
     "the original post is lastAppended"
   );
 
-  const user = Discourse.User.create({
+  const user = User.create({
     username: "eviltrout",
     name: "eviltrout",
     id: 321
@@ -772,7 +773,7 @@ QUnit.test("comitting and triggerNewPostInStream race condition", assert => {
   const store = postStream.store;
 
   postStream.appendPost(store.createRecord("post", { id: 1, post_number: 1 }));
-  const user = Discourse.User.create({
+  const user = User.create({
     username: "eviltrout",
     name: "eviltrout",
     id: 321
@@ -804,8 +805,8 @@ QUnit.test("comitting and triggerNewPostInStream race condition", assert => {
 QUnit.test("triggerNewPostInStream for ignored posts", async assert => {
   const postStream = buildStream(280, [1]);
   const store = postStream.store;
-  Discourse.User.resetCurrent(
-    Discourse.User.create({
+  User.resetCurrent(
+    User.create({
       username: "eviltrout",
       name: "eviltrout",
       id: 321,

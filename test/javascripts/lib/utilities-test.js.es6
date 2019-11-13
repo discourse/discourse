@@ -17,6 +17,7 @@ import {
   setCaretPosition,
   fillMissingDates
 } from "discourse/lib/utilities";
+import User from "discourse/models/user";
 import * as Utilities from "discourse/lib/utilities";
 
 QUnit.module("lib:utilities");
@@ -72,7 +73,7 @@ QUnit.test("uploading one file", assert => {
 
 QUnit.test("new user cannot upload images", assert => {
   Discourse.SiteSettings.newuser_max_images = 0;
-  Discourse.User.resetCurrent(Discourse.User.create());
+  User.resetCurrent(User.create());
   sandbox.stub(bootbox, "alert");
 
   assert.not(validUpload([{ name: "image.png" }]), "the upload is not valid");
@@ -87,7 +88,7 @@ QUnit.test("new user cannot upload images", assert => {
 QUnit.test("new user cannot upload attachments", assert => {
   Discourse.SiteSettings.newuser_max_attachments = 0;
   sandbox.stub(bootbox, "alert");
-  Discourse.User.resetCurrent(Discourse.User.create());
+  User.resetCurrent(User.create());
 
   assert.not(validUpload([{ name: "roman.txt" }]));
   assert.ok(
@@ -120,7 +121,7 @@ QUnit.test("skipping validation works", assert => {
 QUnit.test("staff can upload anything in PM", assert => {
   const files = [{ name: "some.docx" }];
   Discourse.SiteSettings.authorized_extensions = "jpeg";
-  Discourse.User.resetCurrent(Discourse.User.create({ moderator: true }));
+  User.resetCurrent(User.create({ moderator: true }));
 
   sandbox.stub(bootbox, "alert");
 
@@ -151,8 +152,8 @@ var dummyBlob = function() {
 };
 
 QUnit.test("allows valid uploads to go through", assert => {
-  Discourse.User.resetCurrent(Discourse.User.create());
-  Discourse.User.currentProp("trust_level", 1);
+  User.resetCurrent(User.create());
+  User.currentProp("trust_level", 1);
   sandbox.stub(bootbox, "alert");
 
   // image

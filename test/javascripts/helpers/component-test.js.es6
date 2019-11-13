@@ -2,6 +2,7 @@ import EmberObject from "@ember/object";
 import createStore from "helpers/create-store";
 import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
+import User from "discourse/models/user";
 
 export default function(name, opts) {
   opts = opts || {};
@@ -29,7 +30,7 @@ export default function(name, opts) {
 
     const store = createStore();
     if (!opts.anonymous) {
-      const currentUser = Discourse.User.create({ username: "eviltrout" });
+      const currentUser = User.create({ username: "eviltrout" });
       this.currentUser = currentUser;
       this.registry.register("current-user:main", this.currentUser, {
         instantiate: false

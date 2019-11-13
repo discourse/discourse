@@ -2,6 +2,7 @@ import { later } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
 import { fixture, logIn } from "helpers/qunit-helpers";
+import User from "discourse/models/user";
 
 QUnit.module("lib:click-track", {
   beforeEach() {
@@ -104,7 +105,7 @@ QUnit.skip(
   "tracks external URLs when opening in another window",
   async assert => {
     assert.expect(3);
-    Discourse.User.currentProp("external_links_in_new_tab", true);
+    User.currentProp("external_links_in_new_tab", true);
 
     const done = assert.async();
     /* global server */
@@ -140,7 +141,7 @@ QUnit.skip("does not track right clicks inside quotes", async assert => {
 });
 
 QUnit.skip("does not track clicks links in quotes", async assert => {
-  Discourse.User.currentProp("external_links_in_new_tab", true);
+  User.currentProp("external_links_in_new_tab", true);
   assert.notOk(track(generateClickEventOn(".quote a:last-child")));
   assert.ok(window.open.calledWith("https://google.com", "_blank"));
 });
@@ -154,7 +155,7 @@ QUnit.skip("does not track clicks on mailto", async assert => {
 });
 
 QUnit.skip("removes the href and put it as a data attribute", async assert => {
-  Discourse.User.currentProp("external_links_in_new_tab", true);
+  User.currentProp("external_links_in_new_tab", true);
 
   assert.notOk(track(generateClickEventOn("a")));
 
@@ -188,7 +189,7 @@ function badgeClickCount(assert, id, expected) {
 
 QUnit.skip("does not update badge clicks on my own link", async assert => {
   sandbox
-    .stub(Discourse.User, "currentProp")
+    .stub(User, "currentProp")
     .withArgs("id")
     .returns(314);
   badgeClickCount(assert, "with-badge", 1);
@@ -196,7 +197,7 @@ QUnit.skip("does not update badge clicks on my own link", async assert => {
 
 QUnit.skip("does not update badge clicks in my own post", async assert => {
   sandbox
-    .stub(Discourse.User, "currentProp")
+    .stub(User, "currentProp")
     .withArgs("id")
     .returns(3141);
   badgeClickCount(assert, "with-badge-but-not-mine", 1);

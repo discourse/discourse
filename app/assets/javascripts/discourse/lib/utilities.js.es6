@@ -1,6 +1,5 @@
 import { escape } from "pretty-text/sanitizer";
 import toMarkdown from "discourse/lib/to-markdown";
-import User from "discourse/models/user";
 
 const homepageSelector = "meta[name=discourse_current_homepage]";
 
@@ -239,7 +238,7 @@ export function validateUploadedFile(file, opts) {
 
   // check that the uploaded file is authorized
   if (opts.allowStaffToUploadAnyFileInPm && opts.isPrivateMessage) {
-    if (User.currentProp("staff")) {
+    if (Discourse.User.currentProp("staff")) {
       return true;
     }
   }
@@ -271,7 +270,7 @@ export function validateUploadedFile(file, opts) {
 
   if (!opts.bypassNewUserRestriction) {
     // ensures that new users can upload a file
-    if (!User.current().isAllowedToUploadAFile(opts.type)) {
+    if (!Discourse.User.current().isAllowedToUploadAFile(opts.type)) {
       bootbox.alert(
         I18n.t(`post.errors.${opts.type}_upload_not_allowed_for_new_user`)
       );
@@ -305,7 +304,7 @@ function staffExtensions() {
 
 function imagesExtensions() {
   let exts = extensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
-  if (User.currentProp("staff")) {
+  if (Discourse.User.currentProp("staff")) {
     const staffExts = staffExtensions().filter(ext =>
       IMAGES_EXTENSIONS_REGEX.test(ext)
     );
@@ -327,7 +326,10 @@ function staffExtensionsRegex() {
 }
 
 function isAuthorizedFile(fileName) {
-  if (User.currentProp("staff") && staffExtensionsRegex().test(fileName)) {
+  if (
+    Discourse.User.currentProp("staff") &&
+    staffExtensionsRegex().test(fileName)
+  ) {
     return true;
   }
   return extensionsRegex().test(fileName);
@@ -338,7 +340,7 @@ function isAuthorizedImage(fileName) {
 }
 
 export function authorizedExtensions() {
-  const exts = User.currentProp("staff")
+  const exts = Discourse.User.currentProp("staff")
     ? [...extensions(), ...staffExtensions()]
     : extensions();
   return exts.filter(ext => ext.length > 0).join(", ");
@@ -354,7 +356,7 @@ export function authorizesAllExtensions() {
   return (
     Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0 ||
     (Discourse.SiteSettings.authorized_extensions_for_staff.indexOf("*") >= 0 &&
-      User.currentProp("staff"))
+      Discourse.User.currentProp("staff"))
   );
 }
 
