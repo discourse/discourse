@@ -80,7 +80,7 @@ class ThemeStore::GitImporter
   end
 
   def all_files
-    Dir.glob("**/*", base: @temp_folder).reject { |f| File.directory?(f) }
+    Dir.glob("**/*", base: @temp_folder).reject { |f| File.directory?(File.join(@temp_folder, f)) }
   end
 
   def [](value)
