@@ -3,7 +3,7 @@ import { userPath } from "discourse/lib/url";
 import { formatUsername, escapeExpression } from "discourse/lib/utilities";
 import { normalize } from "discourse/components/user-info";
 import { renderAvatar } from "discourse/helpers/user-avatar";
-import computed from "@ember/object/computed";
+import { computed } from "@ember/object";
 
 export default Component.extend({
   usersTemplates: computed("users.[]", function() {

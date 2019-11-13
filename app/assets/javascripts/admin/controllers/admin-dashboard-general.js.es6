@@ -6,7 +6,7 @@ import { setting } from "discourse/lib/computed";
 import AdminDashboard from "admin/models/admin-dashboard";
 import Report from "admin/models/report";
 import PeriodComputationMixin from "admin/mixins/period-computation";
-import computed from "@ember/object/computed";
+import { computed } from "@ember/object";
 
 function staticReport(reportType) {
   return computed("reports.[]", function() {

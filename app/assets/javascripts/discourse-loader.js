@@ -20,10 +20,10 @@ var define, requirejs;
         get: Ember.get,
         getProperties: Ember.getProperties,
         set: Ember.set,
-        setProperties: Ember.setProperties
+        setProperties: Ember.setProperties,
+        computed: Ember.computed
       },
       "@ember/object/computed": {
-        default: Ember.computed,
         alias: Ember.computed.alias,
         and: Ember.computed.and,
         bool: Ember.computed.bool,

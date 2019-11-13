@@ -1,11 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import {
-  default as computed,
-  and,
-  or,
-  alias,
-  reads
-} from "@ember/object/computed";
+import { and, or, alias, reads } from "@ember/object/computed";
 import { debounce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
@@ -31,7 +25,7 @@ import { shortDate } from "discourse/lib/formatter";
 import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
 import ENV from "discourse-common/config/environment";
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 
 function loadDraft(store, opts) {
   opts = opts || {};

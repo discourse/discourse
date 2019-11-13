@@ -5,7 +5,7 @@ import { h } from "virtual-dom";
 import { avatarFor } from "discourse/widgets/post";
 import { userPath } from "discourse/lib/url";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import computed from "@ember/object/computed";
+import { computed } from "@ember/object";
 
 export function actionDescriptionHtml(actionCode, createdAt, username) {
   const dt = new Date(createdAt);
