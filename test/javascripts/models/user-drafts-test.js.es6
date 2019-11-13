@@ -1,10 +1,11 @@
 import UserDraft from "discourse/models/user-draft";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
+import User from "discourse/models/user";
 
 QUnit.module("model:user-drafts");
 
 QUnit.test("stream", assert => {
-  const user = Discourse.User.create({ id: 1, username: "eviltrout" });
+  const user = User.create({ id: 1, username: "eviltrout" });
   const stream = user.get("userDraftsStream");
   assert.present(stream, "a user has a drafts stream by default");
   assert.equal(stream.get("itemsLoaded"), 0, "no items are loaded by default");
