@@ -164,14 +164,14 @@ NavItem.reopenClass({
 
     const extraItems = NavItem.extraNavItems.filter(item => {
       if (!item.customFilter) return true;
-      return item.customFilter.call(this, category, args);
+      return item.customFilter(category, args);
     });
 
     let forceActive = false;
 
     extraItems.forEach(item => {
       if (item.init) {
-        item.init.call(this, item, category, args);
+        item.init(item, category, args);
       }
 
       const before = item.before;
@@ -189,9 +189,9 @@ NavItem.reopenClass({
 
       if (!item.customHref) return;
 
-      item.set("href", item.customHref.call(this, category, args));
+      item.set("href", item.customHref(category, args));
 
-      if (item.forceActive && item.forceActive.call(this, category, args)) {
+      if (item.forceActive && item.forceActive(category, args)) {
         item.active = true;
         forceActive = true;
       } else {
