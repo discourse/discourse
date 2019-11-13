@@ -89,11 +89,12 @@ function dup(obj) {
 }
 
 function resetSite(siteSettings, extras) {
-  var createStore = require("helpers/create-store").default;
-  var siteAttrs = $.extend({}, fixtures["site.json"].site, extras || {});
+  let createStore = require("helpers/create-store").default;
+  let siteAttrs = $.extend({}, fixtures["site.json"].site, extras || {});
+  let Site = require("discourse/models/site").default;
   siteAttrs.store = createStore();
   siteAttrs.siteSettings = siteSettings;
-  Discourse.Site.resetCurrent(Discourse.Site.create(siteAttrs));
+  Site.resetCurrent(Site.create(siteAttrs));
 }
 
 QUnit.testStart(function(ctx) {

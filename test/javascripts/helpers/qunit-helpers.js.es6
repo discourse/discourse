@@ -20,20 +20,19 @@ import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
+import User from "discourse/models/user";
 
 export function currentUser() {
-  return Discourse.User.create(
-    sessionFixtures["/session/current.json"].current_user
-  );
+  return User.create(sessionFixtures["/session/current.json"].current_user);
 }
 
 export function updateCurrentUser(properties) {
-  Discourse.User.current().setProperties(properties);
+  User.current().setProperties(properties);
 }
 
 // Note: do not use this in acceptance tests. Use `loggedIn: true` instead
 export function logIn() {
-  Discourse.User.resetCurrent(currentUser());
+  User.resetCurrent(currentUser());
 }
 
 const Plugin = $.fn.modal;
@@ -119,7 +118,7 @@ export function acceptance(name, options) {
       }
       flushMap();
       localStorage.clear();
-      Discourse.User.resetCurrent();
+      User.resetCurrent();
       resetSite(Discourse.SiteSettings);
       resetExtraClasses();
       clearOutletCache();
