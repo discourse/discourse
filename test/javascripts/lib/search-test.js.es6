@@ -1,4 +1,7 @@
-import { translateResults, searchContextDescription } from "discourse/lib/search";
+import {
+  translateResults,
+  searchContextDescription
+} from "discourse/lib/search";
 
 QUnit.module("lib:search");
 
@@ -33,10 +36,25 @@ QUnit.test("unescapesEmojisInBlurbs", assert => {
 });
 
 QUnit.test("searchContextDescription", assert => {
-  assert.equal(searchContextDescription("topic"), I18n.t("search.context.topic"));
-  assert.equal(searchContextDescription("user", "silvio.dante"), I18n.t("search.context.user", { username: "silvio.dante" }));
-  assert.equal(searchContextDescription("category", "staff"), I18n.t("search.context.category", { category: "staff" }));
-  assert.equal(searchContextDescription("tag", "important"), I18n.t("search.context.tag", { tag: "important" }));
-  assert.equal(searchContextDescription("private_messages"), I18n.t("search.context.private_messages"));
+  assert.equal(
+    searchContextDescription("topic"),
+    I18n.t("search.context.topic")
+  );
+  assert.equal(
+    searchContextDescription("user", "silvio.dante"),
+    I18n.t("search.context.user", { username: "silvio.dante" })
+  );
+  assert.equal(
+    searchContextDescription("category", "staff"),
+    I18n.t("search.context.category", { category: "staff" })
+  );
+  assert.equal(
+    searchContextDescription("tag", "important"),
+    I18n.t("search.context.tag", { tag: "important" })
+  );
+  assert.equal(
+    searchContextDescription("private_messages"),
+    I18n.t("search.context.private_messages")
+  );
   assert.equal(searchContextDescription("bad_type"), null);
 });

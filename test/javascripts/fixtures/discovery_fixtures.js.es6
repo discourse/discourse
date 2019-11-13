@@ -3757,20 +3757,18 @@ export default {
     }
   },
   "/tags/important/l/latest.json": {
-    users: [
-      { id: 1, username: "sam", avatar_template: "/images/avatar.png" }
-    ],
+    users: [{ id: 1, username: "sam", avatar_template: "/images/avatar.png" }],
     primary_groups: [],
     topic_list: {
       can_create_topic: true,
       draft: null,
-      draft_key: 'new_topic',
+      draft_key: "new_topic",
       draft_sequence: 4,
       per_page: 30,
       tags: [
         {
           id: 1,
-          name: 'test',
+          name: "test",
           topic_count: 2,
           staff: false
         }
@@ -3778,17 +3776,17 @@ export default {
       topics: [
         {
           id: 16,
-          title: 'Dinosaurs are the best',
-          fancy_title: 'Dinosaurs are the best',
-          slug: 'dinosaurs-are-the-best',
+          title: "Dinosaurs are the best",
+          fancy_title: "Dinosaurs are the best",
+          slug: "dinosaurs-are-the-best",
           posts_count: 1,
           reply_count: 0,
           highest_post_number: 1,
           image_url: null,
-          created_at: '2019-11-12T05:19:52.300Z',
-          last_posted_at: '2019-11-12T05:19:52.848Z',
+          created_at: "2019-11-12T05:19:52.300Z",
+          last_posted_at: "2019-11-12T05:19:52.848Z",
           bumped: true,
-          bumped_at: '2019-11-12T05:19:52.848Z',
+          bumped_at: "2019-11-12T05:19:52.848Z",
           unseen: false,
           last_read_post_number: 1,
           unread: 0,
@@ -3801,21 +3799,19 @@ export default {
           notification_level: 3,
           bookmarked: false,
           liked: false,
-          tags: [
-            'test'
-          ],
+          tags: ["test"],
           views: 2,
           like_count: 0,
           has_summary: false,
-          archetype: 'regular',
-          last_poster_username: 'sam',
+          archetype: "regular",
+          last_poster_username: "sam",
           category_id: 1,
           pinned_globally: false,
           featured_link: null,
           posters: [
             {
-              extras: 'latest single',
-              description: 'Original Poster, Most Recent Poster',
+              extras: "latest single",
+              description: "Original Poster, Most Recent Poster",
               user_id: 1,
               primary_group_id: null
             }
@@ -3823,17 +3819,17 @@ export default {
         },
         {
           id: 15,
-          title: 'This is a test tagged post',
-          fancy_title: 'This is a test tagged post',
-          slug: 'this-is-a-test-tagged-post',
+          title: "This is a test tagged post",
+          fancy_title: "This is a test tagged post",
+          slug: "this-is-a-test-tagged-post",
           posts_count: 1,
           reply_count: 0,
           highest_post_number: 1,
           image_url: null,
-          created_at: '2019-11-12T05:19:32.032Z',
-          last_posted_at: '2019-11-12T05:19:32.516Z',
+          created_at: "2019-11-12T05:19:32.032Z",
+          last_posted_at: "2019-11-12T05:19:32.516Z",
           bumped: true,
-          bumped_at: '2019-11-12T05:19:32.516Z',
+          bumped_at: "2019-11-12T05:19:32.516Z",
           unseen: false,
           last_read_post_number: 1,
           unread: 0,
@@ -3846,21 +3842,19 @@ export default {
           notification_level: 3,
           bookmarked: false,
           liked: false,
-          tags: [
-            'test'
-          ],
+          tags: ["test"],
           views: 1,
           like_count: 0,
           has_summary: false,
-          archetype: 'regular',
-          last_poster_username: 'sam',
+          archetype: "regular",
+          last_poster_username: "sam",
           category_id: 3,
           pinned_globally: false,
           featured_link: null,
           posters: [
             {
-              extras: 'latest single',
-              description: 'Original Poster, Most Recent Poster',
+              extras: "latest single",
+              description: "Original Poster, Most Recent Poster",
               user_id: 1,
               primary_group_id: null
             }
