@@ -187,9 +187,9 @@ NavItem.reopenClass({
         items.push(item);
       }
 
-      if (!item.customHref) return;
-
-      item.set("href", item.customHref(category, args));
+      if (item.customHref) {
+        item.set("href", item.customHref(category, args));
+      }
 
       if (item.forceActive && item.forceActive(category, args)) {
         item.active = true;
