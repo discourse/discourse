@@ -415,6 +415,15 @@ createWidget("discourse-poll-info", {
   }
 });
 
+createWidget("discourse-poll-results-chart", {
+  tagName: "canvas.poll-results-chart",
+  buildAttributes(attrs) {
+    return {
+      id: `poll-results-chart-${attrs.id}`
+    };
+  }
+});
+
 createWidget("discourse-poll-buttons", {
   tagName: "div.poll-buttons",
 
@@ -575,6 +584,7 @@ export default createWidget("discourse-poll", {
     return h("div", [
       this.attach("discourse-poll-container", newAttrs),
       this.attach("discourse-poll-info", newAttrs),
+      this.attach("discourse-poll-results-chart", newAttrs),
       this.attach("discourse-poll-buttons", newAttrs)
     ]);
   },

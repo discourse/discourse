@@ -1,6 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { observes } from "ember-addons/ember-computed-decorators";
 import { getRegister } from "discourse-common/lib/get-owner";
+import loadScript from "discourse/lib/load-script";
 import WidgetGlue from "discourse/widgets/glue";
 
 function initializePolls(api) {
@@ -88,15 +89,47 @@ function initializePolls(api) {
       }
 
       if (poll) {
-        const glue = new WidgetGlue("discourse-poll", register, {
+        const attrs = {
           id: `${pollName}-${post.id}`,
           post,
           poll,
           vote
-        });
+        };
+        const glue = new WidgetGlue("discourse-poll", register, attrs);
         glue.appendTo(pollElem);
         _glued.push(glue);
+        drawChart(attrs);
       }
+    });
+  }
+
+  function drawChart(attrs) {
+    loadScript("/javascripts/Chart.min.js").then(() => {
+      var config = {
+        type: "pie",
+        data: {
+          datasets: [
+            {
+              data: attrs.poll.options.map(o => o.votes),
+              label:
+                attrs.poll.status === "open"
+                  ? "In-progress responses"
+                  : "Responses"
+            }
+          ],
+          labels: attrs.poll.options.map(o => o.html)
+        },
+        options: {
+          responsive: true
+        }
+      };
+      // eslint-disable-next-line
+      new Chart(
+        document
+          .querySelector(`#poll-results-chart-${attrs.id}`)
+          .getContext("2d"),
+        config
+      );
     });
   }
 
