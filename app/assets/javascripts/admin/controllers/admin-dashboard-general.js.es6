@@ -1,8 +1,8 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { setting } from "discourse/lib/computed";
-import computed from "ember-addons/ember-computed-decorators";
 import AdminDashboard from "admin/models/admin-dashboard";
 import Report from "admin/models/report";
 import PeriodComputationMixin from "admin/mixins/period-computation";
@@ -20,12 +20,12 @@ export default Controller.extend(PeriodComputationMixin, {
   logSearchQueriesEnabled: setting("log_search_queries"),
   basePath: Discourse.BaseUri,
 
-  @computed("siteSettings.dashboard_general_tab_activity_metrics")
+  @discourseComputed("siteSettings.dashboard_general_tab_activity_metrics")
   activityMetrics(metrics) {
     return (metrics || "").split("|").filter(m => m);
   },
 
-  @computed
+  @discourseComputed
   activityMetricsFilters() {
     return {
       startDate: this.lastMonth,
@@ -33,14 +33,14 @@ export default Controller.extend(PeriodComputationMixin, {
     };
   },
 
-  @computed
+  @discourseComputed
   topReferredTopicsOptions() {
     return {
       table: { total: false, limit: 8 }
     };
   },
 
-  @computed
+  @discourseComputed
   topReferredTopicsFilters() {
     return {
       startDate: moment()
@@ -50,7 +50,7 @@ export default Controller.extend(PeriodComputationMixin, {
     };
   },
 
-  @computed
+  @discourseComputed
   trendingSearchFilters() {
     return {
       startDate: moment()
@@ -60,14 +60,14 @@ export default Controller.extend(PeriodComputationMixin, {
     };
   },
 
-  @computed
+  @discourseComputed
   trendingSearchOptions() {
     return {
       table: { total: false, limit: 8 }
     };
   },
 
-  @computed
+  @discourseComputed
   trendingSearchDisabledLabel() {
     return I18n.t("admin.dashboard.reports.trending_search.disabled", {
       basePath: Discourse.BaseUri
@@ -107,7 +107,7 @@ export default Controller.extend(PeriodComputationMixin, {
     }
   },
 
-  @computed("startDate", "endDate")
+  @discourseComputed("startDate", "endDate")
   filters(startDate, endDate) {
     return { startDate, endDate };
   },

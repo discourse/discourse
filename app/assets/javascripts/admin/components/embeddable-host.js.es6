@@ -1,10 +1,10 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
-import computed from "ember-addons/ember-computed-decorators";
-import { on, observes } from "ember-addons/ember-computed-decorators";
+import { on, observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Component.extend(bufferedProperty("host"), {
@@ -22,7 +22,7 @@ export default Component.extend(bufferedProperty("host"), {
     });
   },
 
-  @computed("buffered.host", "host.isSaving")
+  @discourseComputed("buffered.host", "host.isSaving")
   cantSave(host, isSaving) {
     return isSaving || isEmpty(host);
   },

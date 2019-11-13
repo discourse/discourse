@@ -1,5 +1,5 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import computed, { on } from "ember-addons/ember-computed-decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["period-chooser"],
@@ -9,7 +9,7 @@ export default DropdownSelectBoxComponent.extend({
   value: Ember.computed.alias("period"),
   isHidden: Ember.computed.alias("showPeriods"),
 
-  @computed("isExpanded")
+  @discourseComputed("isExpanded")
   caretIcon(isExpanded) {
     return isExpanded ? "caret-up" : "caret-down";
   },

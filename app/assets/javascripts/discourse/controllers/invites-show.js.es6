@@ -1,7 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import { alias, notEmpty } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import getUrl from "discourse-common/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
@@ -26,24 +26,24 @@ export default Controller.extend(
     userFields: null,
     inviteImageUrl: getUrl("/images/envelope.svg"),
 
-    @computed
+    @discourseComputed
     welcomeTitle() {
       return I18n.t("invites.welcome_to", {
         site_name: this.siteSettings.title
       });
     },
 
-    @computed("email")
+    @discourseComputed("email")
     yourEmailMessage(email) {
       return I18n.t("invites.your_email", { email: email });
     },
 
-    @computed
+    @discourseComputed
     externalAuthsEnabled() {
       return findLoginMethods().length > 0;
     },
 
-    @computed(
+    @discourseComputed(
       "usernameValidation.failed",
       "passwordValidation.failed",
       "nameValidation.failed",
@@ -58,7 +58,7 @@ export default Controller.extend(
       return usernameFailed || passwordFailed || nameFailed || userFieldsFailed;
     },
 
-    @computed
+    @discourseComputed
     fullnameRequired() {
       return (
         this.siteSettings.full_name_required || this.siteSettings.enable_names

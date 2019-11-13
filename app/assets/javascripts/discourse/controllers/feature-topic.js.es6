@@ -1,9 +1,9 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
-import computed from "ember-addons/ember-computed-decorators";
 import InputValidation from "discourse/models/input-validation";
 
 export default Controller.extend(ModalFunctionality, {
@@ -23,12 +23,16 @@ export default Controller.extend(ModalFunctionality, {
     });
   },
 
-  @computed("model.category")
+  @discourseComputed("model.category")
   categoryLink(category) {
     return categoryLinkHTML(category, { allowUncategorized: true });
   },
 
-  @computed("categoryLink", "model.pinned_globally", "model.pinned_until")
+  @discourseComputed(
+    "categoryLink",
+    "model.pinned_globally",
+    "model.pinned_until"
+  )
   unPinMessage(categoryLink, pinnedGlobally, pinnedUntil) {
     let name = "topic.feature_topic.unpin";
     if (pinnedGlobally) name += "_globally";
@@ -38,12 +42,12 @@ export default Controller.extend(ModalFunctionality, {
     return I18n.t(name, { categoryLink, until });
   },
 
-  @computed("categoryLink")
+  @discourseComputed("categoryLink")
   pinMessage(categoryLink) {
     return I18n.t("topic.feature_topic.pin", { categoryLink });
   },
 
-  @computed("categoryLink", "pinnedInCategoryCount")
+  @discourseComputed("categoryLink", "pinnedInCategoryCount")
   alreadyPinnedMessage(categoryLink, count) {
     const key =
       count === 0
@@ -52,27 +56,27 @@ export default Controller.extend(ModalFunctionality, {
     return I18n.t(key, { categoryLink, count });
   },
 
-  @computed("parsedPinnedInCategoryUntil")
+  @discourseComputed("parsedPinnedInCategoryUntil")
   pinDisabled(parsedPinnedInCategoryUntil) {
     return !this._isDateValid(parsedPinnedInCategoryUntil);
   },
 
-  @computed("parsedPinnedGloballyUntil")
+  @discourseComputed("parsedPinnedGloballyUntil")
   pinGloballyDisabled(parsedPinnedGloballyUntil) {
     return !this._isDateValid(parsedPinnedGloballyUntil);
   },
 
-  @computed("model.pinnedInCategoryUntil")
+  @discourseComputed("model.pinnedInCategoryUntil")
   parsedPinnedInCategoryUntil(pinnedInCategoryUntil) {
     return this._parseDate(pinnedInCategoryUntil);
   },
 
-  @computed("model.pinnedGloballyUntil")
+  @discourseComputed("model.pinnedGloballyUntil")
   parsedPinnedGloballyUntil(pinnedGloballyUntil) {
     return this._parseDate(pinnedGloballyUntil);
   },
 
-  @computed("pinDisabled")
+  @discourseComputed("pinDisabled")
   pinInCategoryValidation(pinDisabled) {
     if (pinDisabled) {
       return InputValidation.create({
@@ -82,7 +86,7 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("pinGloballyDisabled")
+  @discourseComputed("pinGloballyDisabled")
   pinGloballyValidation(pinGloballyDisabled) {
     if (pinGloballyDisabled) {
       return InputValidation.create({

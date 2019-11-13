@@ -1,3 +1,4 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { alias, or, readOnly } from "@ember/object/computed";
 import EmberObject from "@ember/object";
@@ -13,7 +14,6 @@ import { findAll } from "discourse/models/login-method";
 import { escape } from "pretty-text/sanitizer";
 import { escapeExpression, areCookiesEnabled } from "discourse/lib/utilities";
 import { extractError } from "discourse/lib/ajax-error";
-import computed from "ember-addons/ember-computed-decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 
@@ -55,17 +55,17 @@ export default Controller.extend(ModalFunctionality, {
     });
   },
 
-  @computed("showSecondFactor", "showSecurityKey")
+  @discourseComputed("showSecondFactor", "showSecurityKey")
   credentialsClass(showSecondFactor, showSecurityKey) {
     return showSecondFactor || showSecurityKey ? "hidden" : "";
   },
 
-  @computed("showSecondFactor", "showSecurityKey")
+  @discourseComputed("showSecondFactor", "showSecurityKey")
   secondFactorClass(showSecondFactor, showSecurityKey) {
     return showSecondFactor || showSecurityKey ? "" : "hidden";
   },
 
-  @computed("awaitingApproval", "hasAtLeastOneLoginButton")
+  @discourseComputed("awaitingApproval", "hasAtLeastOneLoginButton")
   modalBodyClasses(awaitingApproval, hasAtLeastOneLoginButton) {
     const classes = ["login-modal"];
     if (awaitingApproval) classes.push("awaiting-approval");
@@ -73,31 +73,31 @@ export default Controller.extend(ModalFunctionality, {
     return classes.join(" ");
   },
 
-  @computed("showSecondFactor", "showSecurityKey")
+  @discourseComputed("showSecondFactor", "showSecurityKey")
   disableLoginFields(showSecondFactor, showSecurityKey) {
     return showSecondFactor || showSecurityKey;
   },
 
-  @computed("canLoginLocalWithEmail")
+  @discourseComputed("canLoginLocalWithEmail")
   hasAtLeastOneLoginButton(canLoginLocalWithEmail) {
     return findAll().length > 0 || canLoginLocalWithEmail;
   },
 
-  @computed("loggingIn")
+  @discourseComputed("loggingIn")
   loginButtonLabel(loggingIn) {
     return loggingIn ? "login.logging_in" : "login.title";
   },
 
   loginDisabled: or("loggingIn", "loggedIn"),
 
-  @computed("loggingIn", "application.canSignUp")
+  @discourseComputed("loggingIn", "application.canSignUp")
   showSignupLink(loggingIn, canSignUp) {
     return canSignUp && !loggingIn;
   },
 
   showSpinner: readOnly("loggingIn"),
 
-  @computed("canLoginLocalWithEmail", "processingEmailLink")
+  @discourseComputed("canLoginLocalWithEmail", "processingEmailLink")
   showLoginWithEmailLink(canLoginLocalWithEmail, processingEmailLink) {
     return canLoginLocalWithEmail && !processingEmailLink;
   },

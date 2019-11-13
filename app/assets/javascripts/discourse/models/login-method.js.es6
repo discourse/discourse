@@ -1,20 +1,20 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
-import computed from "ember-addons/ember-computed-decorators";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import { Promise } from "rsvp";
 
 const LoginMethod = EmberObject.extend({
-  @computed
+  @discourseComputed
   title() {
     return this.title_override || I18n.t(`login.${this.name}.title`);
   },
 
-  @computed
+  @discourseComputed
   prettyName() {
     return this.pretty_name_override || I18n.t(`login.${this.name}.name`);
   },
 
-  @computed
+  @discourseComputed
   message() {
     return this.message_override || I18n.t(`login.${this.name}.message`);
   },

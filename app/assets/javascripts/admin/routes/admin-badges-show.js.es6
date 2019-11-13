@@ -51,7 +51,8 @@ export default Route.extend({
         })
         .catch(function(error) {
           badge.set("preview_loading", false);
-          Ember.Logger.error(error);
+          // eslint-disable-next-line no-console
+          console.error(error);
           bootbox.alert("Network error");
         });
     }

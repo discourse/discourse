@@ -5,9 +5,9 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const THEME_FIELD_VARIABLE_TYPE_IDS = [2, 3, 4];
@@ -69,7 +69,7 @@ export default Controller.extend(ModalFunctionality, {
   enabled: and("nameValid", "fileSelected"),
   disabled: not("enabled"),
 
-  @computed("name", "adminCustomizeThemesShow.model.theme_fields")
+  @discourseComputed("name", "adminCustomizeThemesShow.model.theme_fields")
   errorMessage(name, themeFields) {
     if (name) {
       if (!name.match(/^[a-z_][a-z0-9_-]*$/i)) {
@@ -94,7 +94,7 @@ export default Controller.extend(ModalFunctionality, {
     return null;
   },
 
-  @computed("errorMessage")
+  @discourseComputed("errorMessage")
   nameValid(errorMessage) {
     return null === errorMessage;
   },

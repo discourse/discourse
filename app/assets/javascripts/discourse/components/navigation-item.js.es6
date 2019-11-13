@@ -1,5 +1,5 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 
 export default Component.extend(
@@ -15,7 +15,7 @@ export default Component.extend(
     hidden: false,
     rerenderTriggers: ["content.count"],
 
-    @computed("content.filterMode", "filterMode", "content.active")
+    @discourseComputed("content.filterMode", "filterMode", "content.active")
     active(contentFilterMode, filterMode, active) {
       if (active !== undefined) {
         return active;

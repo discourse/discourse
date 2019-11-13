@@ -1,5 +1,5 @@
 import { next } from "@ember/runloop";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 
 export default Component.extend({

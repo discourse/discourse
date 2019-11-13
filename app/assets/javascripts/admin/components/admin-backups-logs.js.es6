@@ -4,7 +4,7 @@ import debounce from "discourse/lib/debounce";
 import { renderSpinner } from "discourse/helpers/loading-spinner";
 import { escapeExpression } from "discourse/lib/utilities";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
-import { observes, on } from "ember-addons/ember-computed-decorators";
+import { observes, on } from "discourse-common/utils/decorators";
 
 export default Component.extend(
   bufferedRender({

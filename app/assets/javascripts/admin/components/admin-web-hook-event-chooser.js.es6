@@ -1,27 +1,27 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   classNames: ["hook-event"],
   typeName: alias("type.name"),
 
-  @computed("typeName")
+  @discourseComputed("typeName")
   name(typeName) {
     return I18n.t(`admin.web_hooks.${typeName}_event.name`);
   },
 
-  @computed("typeName")
+  @discourseComputed("typeName")
   details(typeName) {
     return I18n.t(`admin.web_hooks.${typeName}_event.details`);
   },
 
-  @computed("model.[]", "typeName")
+  @discourseComputed("model.[]", "typeName")
   eventTypeExists(eventTypes, typeName) {
     return eventTypes.any(event => event.name === typeName);
   },
 
-  @computed("eventTypeExists")
+  @discourseComputed("eventTypeExists")
   enabled: {
     get(eventTypeExists) {
       return eventTypeExists;

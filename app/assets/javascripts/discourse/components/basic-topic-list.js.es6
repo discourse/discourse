@@ -1,12 +1,12 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias, not } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   loadingMore: alias("topicList.loadingMore"),
   loading: not("loaded"),
 
-  @computed("topicList.loaded")
+  @discourseComputed("topicList.loaded")
   loaded() {
     var topicList = this.topicList;
     if (topicList) {
@@ -73,7 +73,7 @@ export default Component.extend({
     });
   },
 
-  @computed("topics")
+  @discourseComputed("topics")
   showUnreadIndicator(topics) {
     return topics.some(
       topic => typeof topic.unread_by_group_member !== "undefined"

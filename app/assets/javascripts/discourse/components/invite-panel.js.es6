@@ -1,9 +1,9 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { alias, and, equal } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import { emailValid } from "discourse/lib/utilities";
-import computed from "ember-addons/ember-computed-decorators";
 import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
 import { i18n } from "discourse/lib/computed";
@@ -30,7 +30,7 @@ export default Component.extend({
     this.reset();
   },
 
-  @computed(
+  @discourseComputed(
     "isAdmin",
     "emailOrUsername",
     "invitingToTopic",
@@ -73,7 +73,7 @@ export default Component.extend({
     return false;
   },
 
-  @computed(
+  @discourseComputed(
     "isAdmin",
     "emailOrUsername",
     "inviteModel.saving",
@@ -113,24 +113,24 @@ export default Component.extend({
     return false;
   },
 
-  @computed("inviteModel.saving")
+  @discourseComputed("inviteModel.saving")
   buttonTitle(saving) {
     return saving ? "topic.inviting" : "topic.invite_reply.action";
   },
 
   // We are inviting to a topic if the topic isn't the current user.
   // The current user would mean we are inviting to the forum in general.
-  @computed("inviteModel")
+  @discourseComputed("inviteModel")
   invitingToTopic(inviteModel) {
     return inviteModel !== this.currentUser;
   },
 
-  @computed("inviteModel", "inviteModel.details.can_invite_via_email")
+  @discourseComputed("inviteModel", "inviteModel.details.can_invite_via_email")
   canInviteViaEmail(inviteModel, canInviteViaEmail) {
     return this.inviteModel === this.currentUser ? true : canInviteViaEmail;
   },
 
-  @computed("isPM", "canInviteViaEmail")
+  @discourseComputed("isPM", "canInviteViaEmail")
   showCopyInviteButton(isPM, canInviteViaEmail) {
     return canInviteViaEmail && !isPM;
   },
@@ -148,7 +148,7 @@ export default Component.extend({
   // scope to allowed usernames
   allowExistingMembers: alias("invitingToTopic"),
 
-  @computed("isAdmin", "inviteModel.group_users")
+  @discourseComputed("isAdmin", "inviteModel.group_users")
   isGroupOwnerOrAdmin(isAdmin, groupUsers) {
     return (
       isAdmin || (groupUsers && groupUsers.some(groupUser => groupUser.owner))
@@ -156,7 +156,7 @@ export default Component.extend({
   },
 
   // Show Groups? (add invited user to private group)
-  @computed(
+  @discourseComputed(
     "isGroupOwnerOrAdmin",
     "emailOrUsername",
     "isPrivateTopic",
@@ -180,13 +180,13 @@ export default Component.extend({
     );
   },
 
-  @computed("emailOrUsername")
+  @discourseComputed("emailOrUsername")
   showCustomMessage(emailOrUsername) {
     return this.inviteModel === this.currentUser || emailValid(emailOrUsername);
   },
 
   // Instructional text for the modal.
-  @computed(
+  @discourseComputed(
     "isPM",
     "invitingToTopic",
     "emailOrUsername",
@@ -231,7 +231,7 @@ export default Component.extend({
     }
   },
 
-  @computed("isPrivateTopic")
+  @discourseComputed("isPrivateTopic")
   showGroupsClass(isPrivateTopic) {
     return isPrivateTopic ? "required" : "optional";
   },
@@ -240,7 +240,7 @@ export default Component.extend({
     return Group.findAll({ term, ignore_automatic: true });
   },
 
-  @computed("isPM", "emailOrUsername", "invitingExistingUserToTopic")
+  @discourseComputed("isPM", "emailOrUsername", "invitingExistingUserToTopic")
   successMessage(isPM, emailOrUsername, invitingExistingUserToTopic) {
     if (this.hasGroups) {
       return I18n.t("topic.invite_private.success_group");
@@ -257,14 +257,14 @@ export default Component.extend({
     }
   },
 
-  @computed("isPM")
+  @discourseComputed("isPM")
   errorMessage(isPM) {
     return isPM
       ? I18n.t("topic.invite_private.error")
       : I18n.t("topic.invite_reply.error");
   },
 
-  @computed("canInviteViaEmail")
+  @discourseComputed("canInviteViaEmail")
   placeholderKey(canInviteViaEmail) {
     return canInviteViaEmail
       ? "topic.invite_private.email_or_username_placeholder"

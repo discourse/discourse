@@ -5,9 +5,9 @@ import UserAction from "discourse/models/user-action";
 import { emojiUnescape } from "discourse/lib/text";
 import { Promise } from "rsvp";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 export default RestModel.extend({
   loaded: false,
@@ -17,7 +17,7 @@ export default RestModel.extend({
     this.setProperties({ itemsLoaded: 0, content: [] });
   },
 
-  @computed("filter")
+  @discourseComputed("filter")
   filterParam(filter) {
     if (filter === Discourse.UserAction.TYPES.replies) {
       return [UserAction.TYPES.replies, UserAction.TYPES.quotes].join(",");
@@ -51,7 +51,7 @@ export default RestModel.extend({
     return this.findItems();
   },
 
-  @computed("loaded", "content.[]")
+  @discourseComputed("loaded", "content.[]")
   noContent(loaded, content) {
     return loaded && content.length === 0;
   },

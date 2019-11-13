@@ -1,6 +1,6 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 const { isEmpty } = Ember;
@@ -23,7 +23,12 @@ export default ComboBoxComponent.extend({
   subCategory: false,
   isAsync: Ember.computed.not("subCategory"),
 
-  @computed("categories", "hasSelection", "subCategory", "noSubcategories")
+  @discourseComputed(
+    "categories",
+    "hasSelection",
+    "subCategory",
+    "noSubcategories"
+  )
   categoriesWithShortcuts(
     categories,
     hasSelection,
@@ -70,7 +75,7 @@ export default ComboBoxComponent.extend({
     this.forceValue(this.get("category.id"));
   },
 
-  @computed("content")
+  @discourseComputed("content")
   filterable(content) {
     const contentLength = (content && content.length) || 0;
     return (
@@ -107,7 +112,7 @@ export default ComboBoxComponent.extend({
     return content;
   },
 
-  @computed("parentCategory.name", "subCategory")
+  @discourseComputed("parentCategory.name", "subCategory")
   allCategoriesLabel(categoryName, subCategory) {
     if (subCategory) {
       return I18n.t("categories.all_subcategories", { categoryName });
@@ -115,12 +120,12 @@ export default ComboBoxComponent.extend({
     return I18n.t("categories.all");
   },
 
-  @computed("parentCategory.url", "subCategory")
+  @discourseComputed("parentCategory.url", "subCategory")
   allCategoriesUrl(parentCategoryUrl, subCategory) {
     return Discourse.getURL(subCategory ? parentCategoryUrl || "/" : "/");
   },
 
-  @computed("parentCategory.url")
+  @discourseComputed("parentCategory.url")
   noCategoriesUrl(parentCategoryUrl) {
     return Discourse.getURL(`${parentCategoryUrl}/none`);
   },

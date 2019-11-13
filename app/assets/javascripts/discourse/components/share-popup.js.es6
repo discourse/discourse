@@ -5,9 +5,9 @@ import Component from "@ember/component";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { longDateNoYear } from "discourse/lib/formatter";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import Sharing from "discourse/lib/sharing";
 import { nativeShare } from "discourse/lib/pwa-utils";
 
@@ -17,12 +17,12 @@ export default Component.extend({
   link: null,
   visible: null,
 
-  @computed
+  @discourseComputed
   sources() {
     return Sharing.activeSources(this.siteSettings.share_links);
   },
 
-  @computed("type", "postNumber")
+  @discourseComputed("type", "postNumber")
   shareTitle(type, postNumber) {
     if (type === "topic") {
       return I18n.t("share.topic");
@@ -33,7 +33,7 @@ export default Component.extend({
     return I18n.t("share.topic");
   },
 
-  @computed("date")
+  @discourseComputed("date")
   displayDate(date) {
     return longDateNoYear(new Date(date));
   },

@@ -1,6 +1,6 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["group-dropdown"],
@@ -12,7 +12,7 @@ export default ComboBoxComponent.extend({
   allowAutoSelectFirst: false,
   valueAttribute: "name",
 
-  @computed("content")
+  @discourseComputed("content")
   filterable(content) {
     return content && content.length >= 10;
   },
@@ -27,7 +27,7 @@ export default ComboBoxComponent.extend({
     return content;
   },
 
-  @computed
+  @discourseComputed
   collectionHeader() {
     if (
       this.siteSettings.enable_group_directory ||

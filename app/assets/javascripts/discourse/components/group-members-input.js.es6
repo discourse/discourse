@@ -1,7 +1,7 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { lte } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyEqual } from "discourse/lib/computed";
 
@@ -9,7 +9,7 @@ export default Component.extend({
   classNames: ["group-members-input"],
   addButton: true,
 
-  @computed("model.limit", "model.offset", "model.user_count")
+  @discourseComputed("model.limit", "model.offset", "model.user_count")
   currentPage(limit, offset, userCount) {
     if (userCount === 0) {
       return 0;
@@ -18,7 +18,7 @@ export default Component.extend({
     return Math.floor(offset / limit) + 1;
   },
 
-  @computed("model.limit", "model.user_count")
+  @discourseComputed("model.limit", "model.user_count")
   totalPages(limit, userCount) {
     if (userCount === 0) {
       return 0;
@@ -26,7 +26,7 @@ export default Component.extend({
     return Math.ceil(userCount / limit);
   },
 
-  @computed("model.usernames")
+  @discourseComputed("model.usernames")
   disableAddButton(usernames) {
     return !usernames || !(usernames.length > 0);
   },

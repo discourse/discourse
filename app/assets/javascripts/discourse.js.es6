@@ -1,9 +1,9 @@
 /*global Mousetrap:true*/
 import { buildResolver } from "discourse-common/resolver";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import FocusEvent from "discourse-common/mixins/focus-event";
 
 const _pluginCallbacks = [];
@@ -66,7 +66,7 @@ const Discourse = Ember.Application.extend(FocusEvent, {
     document.title = title;
   },
 
-  @computed("contextCount", "notificationCount")
+  @discourseComputed("contextCount", "notificationCount")
   displayCount() {
     return Discourse.User.current() &&
       Discourse.User.currentProp("title_count_mode") === "notifications"
@@ -179,7 +179,7 @@ const Discourse = Ember.Application.extend(FocusEvent, {
     });
   },
 
-  @computed("currentAssetVersion", "desiredAssetVersion")
+  @discourseComputed("currentAssetVersion", "desiredAssetVersion")
   requiresRefresh(currentAssetVersion, desiredAssetVersion) {
     return desiredAssetVersion && currentAssetVersion !== desiredAssetVersion;
   },

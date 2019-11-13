@@ -1,6 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 
@@ -12,7 +12,7 @@ export default SelectKitRowComponent.extend({
   allowUncategorized: Ember.computed.bool("options.allowUncategorized"),
   categoryLink: Ember.computed.bool("options.categoryLink"),
 
-  @computed("options.displayCategoryDescription")
+  @discourseComputed("options.displayCategoryDescription")
   displayCategoryDescription(displayCategoryDescription) {
     if (Ember.isNone(displayCategoryDescription)) {
       return true;
@@ -21,12 +21,12 @@ export default SelectKitRowComponent.extend({
     return displayCategoryDescription;
   },
 
-  @computed("descriptionText", "description", "category.name")
+  @discourseComputed("descriptionText", "description", "category.name")
   title(descriptionText, description, name) {
     return descriptionText || description || name;
   },
 
-  @computed("computedContent.value", "computedContent.name")
+  @discourseComputed("computedContent.value", "computedContent.name")
   category(value, name) {
     if (isEmpty(value)) {
       const uncat = Category.findUncategorized();
@@ -38,7 +38,7 @@ export default SelectKitRowComponent.extend({
     }
   },
 
-  @computed("category", "parentCategory")
+  @discourseComputed("category", "parentCategory")
   badgeForCategory(category, parentCategory) {
     return categoryBadgeHTML(category, {
       link: this.categoryLink,
@@ -47,7 +47,7 @@ export default SelectKitRowComponent.extend({
     }).htmlSafe();
   },
 
-  @computed("parentCategory")
+  @discourseComputed("parentCategory")
   badgeForParentCategory(parentCategory) {
     return categoryBadgeHTML(parentCategory, {
       link: this.categoryLink,
@@ -55,22 +55,22 @@ export default SelectKitRowComponent.extend({
     }).htmlSafe();
   },
 
-  @computed("parentCategoryid")
+  @discourseComputed("parentCategoryid")
   parentCategory(parentCategoryId) {
     return Category.findById(parentCategoryId);
   },
 
-  @computed("parentCategoryid")
+  @discourseComputed("parentCategoryid")
   hasParentCategory(parentCategoryid) {
     return !Ember.isNone(parentCategoryid);
   },
 
-  @computed("category")
+  @discourseComputed("category")
   parentCategoryid(category) {
     return category.get("parent_category_id");
   },
 
-  @computed(
+  @discourseComputed(
     "category.totalTopicCount",
     "category.topic_count",
     "options.countSubcategories"
@@ -79,19 +79,19 @@ export default SelectKitRowComponent.extend({
     return countSubcats ? totalCount : topicCount;
   },
 
-  @computed("displayCategoryDescription", "category.description")
+  @discourseComputed("displayCategoryDescription", "category.description")
   shouldDisplayDescription(displayCategoryDescription, description) {
     return displayCategoryDescription && description && description !== "null";
   },
 
-  @computed("category.description_text")
+  @discourseComputed("category.description_text")
   descriptionText(descriptionText) {
     if (descriptionText) {
       return this._formatCategoryDescription(descriptionText);
     }
   },
 
-  @computed("category.description")
+  @discourseComputed("category.description")
   description(description) {
     if (description) {
       return this._formatCategoryDescription(description);

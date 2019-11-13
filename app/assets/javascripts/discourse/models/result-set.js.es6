@@ -1,4 +1,4 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { Promise } from "rsvp";
 
 export default Ember.ArrayProxy.extend({
@@ -15,7 +15,7 @@ export default Ember.ArrayProxy.extend({
   __type: null,
   resultSetMeta: null,
 
-  @computed("totalRows", "length")
+  @discourseComputed("totalRows", "length")
   canLoadMore(totalRows, length) {
     return length < totalRows;
   },

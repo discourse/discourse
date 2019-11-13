@@ -1,10 +1,10 @@
 import Component from "@ember/component";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "span",
 
-  @computed("text")
+  @discourseComputed("text")
   translatedText(text) {
     if (text) return I18n.t(text);
   },

@@ -1,5 +1,5 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   tagName: "input",
@@ -25,7 +25,7 @@ export default Component.extend({
     }
   },
 
-  @computed("value", "selection")
+  @discourseComputed("value", "selection")
   checked(value, selection) {
     return value === selection;
   }

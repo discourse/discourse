@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["site-text"],

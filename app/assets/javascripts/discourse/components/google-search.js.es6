@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   classNames: ["google-search-form"],
@@ -8,7 +8,7 @@ export default Component.extend({
 
   hidden: alias("siteSettings.login_required"),
 
-  @computed
+  @discourseComputed
   siteUrl() {
     return `${location.protocol}//${location.host}${Discourse.getURL("/")}`;
   }

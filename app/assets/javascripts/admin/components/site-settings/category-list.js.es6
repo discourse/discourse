@@ -1,8 +1,8 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
-  @computed("value")
+  @discourseComputed("value")
   selectedCategories: {
     get(value) {
       return Discourse.Category.findByIds(value.split("|"));

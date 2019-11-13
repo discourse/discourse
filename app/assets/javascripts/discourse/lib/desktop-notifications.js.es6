@@ -28,14 +28,16 @@ function init(messageBus, appEvents) {
   try {
     keyValueStore.getItem(focusTrackerKey);
   } catch (e) {
-    Ember.Logger.info(
+    // eslint-disable-next-line no-console
+    console.info(
       "Discourse desktop notifications are disabled - localStorage denied."
     );
     return;
   }
 
   if (!("Notification" in window)) {
-    Ember.Logger.info(
+    // eslint-disable-next-line no-console
+    console.info(
       "Discourse desktop notifications are disabled - not supported by browser"
     );
     return;
@@ -49,7 +51,8 @@ function init(messageBus, appEvents) {
       return;
     }
   } catch (e) {
-    Ember.Logger.warn(
+    // eslint-disable-next-line no-console
+    console.warn(
       "Unexpected error, Notification is defined on window but not a responding correctly " +
         e
     );
@@ -60,7 +63,8 @@ function init(messageBus, appEvents) {
     // Preliminary checks passed, continue with setup
     setupNotifications(appEvents);
   } catch (e) {
-    Ember.Logger.error(e);
+    // eslint-disable-next-line no-console
+    console.error(e);
   }
 }
 

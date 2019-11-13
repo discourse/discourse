@@ -45,8 +45,8 @@
   {{/admin-form-row}}
 
   {{#admin-form-row label="admin.api.last_used"}}
-    {{#if k.last_used_at}}
-      {{format-date k.last_used_at leaveAgo="true"}}
+    {{#if model.last_used_at}}
+      {{format-date model.last_used_at leaveAgo="true"}}
     {{else}}
       {{i18n "admin.api.never_used"}}
     {{/if}}

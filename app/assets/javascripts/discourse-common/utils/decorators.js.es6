@@ -1,9 +1,9 @@
-import handleDescriptor from "./utils/handle-descriptor";
-import isDescriptor from "./utils/is-descriptor";
-import extractValue from "./utils/extract-value";
+import handleDescriptor from "ember-addons/utils/handle-descriptor";
+import isDescriptor from "ember-addons/utils/is-descriptor";
+import extractValue from "ember-addons/utils/extract-value";
 
-export default function computedDecorator(...params) {
-  // determine if user called as @computed('blah', 'blah') or @computed
+export default function discourseComputedDecorator(...params) {
+  // determine if user called as @discourseComputed('blah', 'blah') or @discourseComputed
   if (isDescriptor(params[params.length - 1])) {
     return handleDescriptor(...arguments);
   } else {
@@ -25,7 +25,7 @@ export function readOnly(target, name, desc) {
   };
 }
 
-import decoratorAlias from "./decorator-alias";
+import decoratorAlias from "ember-addons/decorator-alias";
 
 export var on = decoratorAlias(Ember.on, "Can not `on` without event names");
 export var observes = decoratorAlias(
@@ -33,7 +33,7 @@ export var observes = decoratorAlias(
   "Can not `observe` without property names"
 );
 
-import macroAlias from "./macro-alias";
+import macroAlias from "ember-addons/macro-alias";
 
 export var alias = macroAlias(Ember.computed.alias);
 export var and = macroAlias(Ember.computed.and);

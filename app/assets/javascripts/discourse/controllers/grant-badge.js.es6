@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import computed from "ember-addons/ember-computed-decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
@@ -21,12 +21,12 @@ export default Controller.extend(ModalFunctionality, GrantBadgeController, {
     this.userBadges = [];
   },
 
-  @computed("topicController.selectedPosts")
+  @discourseComputed("topicController.selectedPosts")
   post() {
     return this.get("topicController.selectedPosts")[0];
   },
 
-  @computed("post")
+  @discourseComputed("post")
   badgeReason(post) {
     const url = post.get("url");
     const protocolAndHost =
@@ -35,7 +35,7 @@ export default Controller.extend(ModalFunctionality, GrantBadgeController, {
     return url.indexOf("/") === 0 ? protocolAndHost + url : url;
   },
 
-  @computed("saving", "selectedBadgeGrantable")
+  @discourseComputed("saving", "selectedBadgeGrantable")
   buttonDisabled(saving, selectedBadgeGrantable) {
     return saving || !selectedBadgeGrantable;
   },

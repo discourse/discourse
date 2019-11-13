@@ -89,12 +89,10 @@ JS
          "discourse/models/user-action",
          "discourse/routes/discourse",
          "discourse/models/category",
-         "discourse/models/trust-level",
          "discourse/models/site",
          "discourse/models/user",
          "discourse/models/session",
          "discourse/models/model",
-         "discourse/models/topic",
          "discourse/models/post",
          "discourse/views/grouped"]
       )

@@ -1,7 +1,7 @@
 import { next } from "@ember/runloop";
 import MountWidget from "discourse/components/mount-widget";
 import Docking from "discourse/mixins/docking";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
 
 const headerPadding = () => {

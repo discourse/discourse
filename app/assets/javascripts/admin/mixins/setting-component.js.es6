@@ -1,5 +1,5 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias, oneWay } from "@ember/object/computed";
-import computed from "ember-addons/ember-computed-decorators";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { on } from "@ember/object/evented";
 import Mixin from "@ember/object/mixin";
@@ -32,7 +32,7 @@ export default Mixin.create({
   validationMessage: null,
   isSecret: oneWay("setting.secret"),
 
-  @computed("buffered.value", "setting.value")
+  @discourseComputed("buffered.value", "setting.value")
   dirty(bufferVal, settingVal) {
     if (bufferVal === null || bufferVal === undefined) bufferVal = "";
     if (settingVal === null || settingVal === undefined) settingVal = "";
@@ -40,7 +40,7 @@ export default Mixin.create({
     return bufferVal.toString() !== settingVal.toString();
   },
 
-  @computed("setting", "buffered.value")
+  @discourseComputed("setting", "buffered.value")
   preview(setting, value) {
     // A bit hacky, but allows us to use helpers
     if (setting.get("setting") === "category_style") {
@@ -62,22 +62,22 @@ export default Mixin.create({
     }
   },
 
-  @computed("componentType")
+  @discourseComputed("componentType")
   typeClass(componentType) {
     return componentType.replace(/\_/g, "-");
   },
 
-  @computed("setting.setting")
+  @discourseComputed("setting.setting")
   settingName(setting) {
     return setting.replace(/\_/g, " ");
   },
 
-  @computed("type")
+  @discourseComputed("type")
   componentType(type) {
     return CUSTOM_TYPES.indexOf(type) !== -1 ? type : "string";
   },
 
-  @computed("setting")
+  @discourseComputed("setting")
   type(setting) {
     if (setting.type === "list" && setting.list_type) {
       return `${setting.list_type}_list`;
@@ -86,12 +86,12 @@ export default Mixin.create({
     return setting.type;
   },
 
-  @computed("typeClass")
+  @discourseComputed("typeClass")
   componentName(typeClass) {
     return "site-settings/" + typeClass;
   },
 
-  @computed("setting.default", "buffered.value")
+  @discourseComputed("setting.default", "buffered.value")
   overridden(settingDefault, bufferedValue) {
     return settingDefault !== bufferedValue;
   },

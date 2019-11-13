@@ -8,10 +8,10 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyEqual } from "discourse/lib/computed";
 import { i18n } from "discourse/lib/computed";
 import {
-  default as computed,
+  default as discourseComputed,
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 export default Component.extend(bufferedProperty("userField"), {
   editing: empty("userField.id"),
@@ -22,7 +22,7 @@ export default Component.extend(bufferedProperty("userField"), {
 
   userFieldsDescription: i18n("admin.user_fields.description"),
 
-  @computed("buffered.field_type")
+  @discourseComputed("buffered.field_type")
   bufferedFieldType(fieldType) {
     return UserField.fieldTypeById(fieldType);
   },
@@ -39,12 +39,12 @@ export default Component.extend(bufferedProperty("userField"), {
     $(".user-field-name").select();
   },
 
-  @computed("userField.field_type")
+  @discourseComputed("userField.field_type")
   fieldName(fieldType) {
     return UserField.fieldTypeById(fieldType).get("name");
   },
 
-  @computed(
+  @discourseComputed(
     "userField.editable",
     "userField.required",
     "userField.show_on_profile",

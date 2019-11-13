@@ -283,6 +283,10 @@ class Auth::DefaultCurrentUserProvider
   def lookup_api_user(api_key_value, request)
     if api_key = ApiKey.active.where(key: api_key_value).includes(:user).first
       api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
+      if !header_api_key?
+        # Notify admins of deprecated auth method
+        AdminDashboardData.add_problem_message('dashboard.deprecated_api_usage', 1.day)
+      end
 
       if api_key.allowed_ips.present? && !api_key.allowed_ips.any? { |ip| ip.include?(request.ip) }
         Rails.logger.warn("[Unauthorized API Access] username: #{api_username}, IP address: #{request.ip}")

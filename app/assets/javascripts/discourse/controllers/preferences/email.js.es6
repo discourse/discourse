@@ -1,9 +1,9 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { empty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { propertyEqual } from "discourse/lib/computed";
 import InputValidation from "discourse/models/input-validation";
 import { emailValid } from "discourse/lib/utilities";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Controller.extend({
   taken: false,
@@ -24,23 +24,23 @@ export default Controller.extend({
 
   unchanged: propertyEqual("newEmailLower", "currentUser.email"),
 
-  @computed("newEmail")
+  @discourseComputed("newEmail")
   newEmailLower(newEmail) {
     return newEmail.toLowerCase().trim();
   },
 
-  @computed("saving")
+  @discourseComputed("saving")
   saveButtonText(saving) {
     if (saving) return I18n.t("saving");
     return I18n.t("user.change");
   },
 
-  @computed("newEmail")
+  @discourseComputed("newEmail")
   invalidEmail(newEmail) {
     return !emailValid(newEmail);
   },
 
-  @computed("invalidEmail")
+  @discourseComputed("invalidEmail")
   emailValidation(invalidEmail) {
     if (invalidEmail) {
       return InputValidation.create({

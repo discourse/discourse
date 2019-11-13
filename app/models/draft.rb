@@ -282,5 +282,5 @@ end
 #
 # Indexes
 #
-#  index_drafts_on_user_id_and_draft_key  (user_id,draft_key)
+#  index_drafts_on_user_id_and_draft_key  (user_id,draft_key) UNIQUE
 #

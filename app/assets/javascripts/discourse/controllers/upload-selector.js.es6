@@ -2,9 +2,9 @@ import { equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import {
   allowsAttachments,
   authorizesAllExtensions,
@@ -27,13 +27,13 @@ export default Controller.extend(ModalFunctionality, {
   remote: equal("selection", "remote"),
   selection: "local",
 
-  @computed()
+  @discourseComputed()
   uploadIcon: () => uploadIcon(),
 
-  @computed()
+  @discourseComputed()
   title: () => uploadTranslate("title"),
 
-  @computed("selection")
+  @discourseComputed("selection")
   tip(selection) {
     const authorized_extensions = authorizesAllExtensions()
       ? ""

@@ -1,10 +1,10 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import RestModel from "discourse/models/rest";
 import UserAction from "discourse/models/user-action";
 import { i18n } from "discourse/lib/computed";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default RestModel.extend({
-  @computed("action_type")
+  @discourseComputed("action_type")
   isPM(actionType) {
     return (
       actionType === UserAction.TYPES.messages_sent ||
@@ -14,7 +14,7 @@ export default RestModel.extend({
 
   description: i18n("action_type", "user_action_groups.%@"),
 
-  @computed("action_type")
+  @discourseComputed("action_type")
   isResponse(actionType) {
     return (
       actionType === UserAction.TYPES.replies ||

@@ -7,8 +7,8 @@ const BufferedProxy = window.BufferedProxy; // import BufferedProxy from 'ember-
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   on,
-  default as computed
-} from "ember-addons/ember-computed-decorators";
+  default as discourseComputed
+} from "discourse-common/utils/decorators";
 import Ember from "ember";
 
 export default Controller.extend(ModalFunctionality, Ember.Evented, {
@@ -23,7 +23,7 @@ export default Controller.extend(ModalFunctionality, Ember.Evented, {
     this.fixIndices();
   },
 
-  @computed("site.categories")
+  @discourseComputed("site.categories")
   categoriesBuffered(categories) {
     const bufProxy = EmberObjectProxy.extend(BufferedProxy);
     return categories.map(c => bufProxy.create({ content: c }));
@@ -31,7 +31,7 @@ export default Controller.extend(ModalFunctionality, Ember.Evented, {
 
   categoriesOrdered: sort("categoriesBuffered", "categoriesSorting"),
 
-  @computed("categoriesBuffered.@each.hasBufferedChanges")
+  @discourseComputed("categoriesBuffered.@each.hasBufferedChanges")
   showApplyAll() {
     let anyChanged = false;
     this.categoriesBuffered.forEach(bc => {

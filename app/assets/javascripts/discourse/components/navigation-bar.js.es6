@@ -1,9 +1,9 @@
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
 
@@ -17,7 +17,7 @@ export default Component.extend({
     this.set("connectors", renderedConnectorsFor("extra-nav-item", null, this));
   },
 
-  @computed("filterMode", "navItems")
+  @discourseComputed("filterMode", "navItems")
   selectedNavItem(filterMode, navItems) {
     if (filterMode.indexOf("top/") === 0) {
       filterMode = "top";

@@ -1,17 +1,17 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Discourse.Model.extend({
-  @computed("days_visited", "time_period")
+  @discourseComputed("days_visited", "time_period")
   days_visited_percent(daysVisited, timePeriod) {
     return Math.round((daysVisited * 100) / timePeriod);
   },
 
-  @computed("min_days_visited", "time_period")
+  @discourseComputed("min_days_visited", "time_period")
   min_days_visited_percent(minDaysVisited, timePeriod) {
     return Math.round((minDaysVisited * 100) / timePeriod);
   },
 
-  @computed(
+  @discourseComputed(
     "days_visited",
     "min_days_visited",
     "num_topics_replied_to",

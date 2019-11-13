@@ -2,9 +2,9 @@ import { isEmpty } from "@ember/utils";
 import { not } from "@ember/object/computed";
 import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import Group from "discourse/models/group";
 import InputValidation from "discourse/models/input-validation";
 import debounce from "discourse/lib/debounce";
@@ -26,7 +26,7 @@ export default Component.extend({
 
   canEdit: not("model.automatic"),
 
-  @computed("basicNameValidation", "uniqueNameValidation")
+  @discourseComputed("basicNameValidation", "uniqueNameValidation")
   nameValidation(basicNameValidation, uniqueNameValidation) {
     return uniqueNameValidation ? uniqueNameValidation : basicNameValidation;
   },

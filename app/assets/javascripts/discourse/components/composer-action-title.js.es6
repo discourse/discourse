@@ -1,6 +1,6 @@
 import { alias, equal } from "@ember/object/computed";
 import Component from "@ember/component";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import {
   PRIVATE_MESSAGE,
   CREATE_TOPIC,
@@ -24,7 +24,7 @@ export default Component.extend({
   action: alias("model.action"),
   isEditing: equal("action", EDIT),
 
-  @computed("options", "action")
+  @discourseComputed("options", "action")
   actionTitle(opts, action) {
     if (TITLES[action]) {
       return I18n.t(TITLES[action]);

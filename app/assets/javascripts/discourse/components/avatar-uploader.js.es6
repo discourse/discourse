@@ -1,5 +1,5 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
 
 export default Component.extend(UploadMixin, {
@@ -21,7 +21,7 @@ export default Component.extend(UploadMixin, {
     this.done();
   },
 
-  @computed("user_id")
+  @discourseComputed("user_id")
   data(user_id) {
     return { user_id };
   }

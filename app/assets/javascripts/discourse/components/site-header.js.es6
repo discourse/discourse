@@ -2,7 +2,7 @@ import { cancel } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
 import { later } from "@ember/runloop";
 import MountWidget from "discourse/components/mount-widget";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import Docking from "discourse/mixins/docking";
 import PanEvents, {
   SWIPE_VELOCITY,

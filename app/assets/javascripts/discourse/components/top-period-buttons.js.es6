@@ -1,10 +1,10 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   classNames: ["top-title-buttons"],
 
-  @computed("period")
+  @discourseComputed("period")
   periods(period) {
     return this.site.get("periods").filter(p => p !== period);
   },

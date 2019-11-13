@@ -4,9 +4,9 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import debounce from "discourse/lib/debounce";
 
 export default Controller.extend({
@@ -70,12 +70,12 @@ export default Controller.extend({
     });
   },
 
-  @computed("model.requesters")
+  @discourseComputed("model.requesters")
   hasRequesters(requesters) {
     return requesters && requesters.length > 0;
   },
 
-  @computed
+  @discourseComputed
   filterPlaceholder() {
     if (this.currentUser && this.currentUser.admin) {
       return "groups.members.filter_placeholder_admin";

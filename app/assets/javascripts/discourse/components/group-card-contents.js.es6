@@ -1,7 +1,7 @@
 import { alias, match, gt, or } from "@ember/object/computed";
 import Component from "@ember/component";
 import { setting } from "discourse/lib/computed";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
 import { groupPath } from "discourse/lib/url";
@@ -34,14 +34,14 @@ export default Component.extend(CardContentsBase, CleansUp, {
 
   group: null,
 
-  @computed("group.user_count", "group.members.length")
+  @discourseComputed("group.user_count", "group.members.length")
   moreMembersCount: (memberCount, maxMemberDisplay) =>
     memberCount - maxMemberDisplay,
 
-  @computed("group.name")
+  @discourseComputed("group.name")
   groupClass: name => (name ? `group-card-${name}` : ""),
 
-  @computed("group")
+  @discourseComputed("group")
   groupPath(group) {
     return groupPath(group.name);
   },

@@ -1,15 +1,15 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { none } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import BadgeGrouping from "discourse/models/badge-grouping";
 import RestModel from "discourse/models/rest";
-import computed from "ember-addons/ember-computed-decorators";
 import { Promise } from "rsvp";
 
 const Badge = RestModel.extend({
   newBadge: none("id"),
 
-  @computed
+  @discourseComputed
   url() {
     return Discourse.getURL(`/badges/${this.id}/${this.slug}`);
   },
@@ -27,7 +27,7 @@ const Badge = RestModel.extend({
     }
   },
 
-  @computed("badge_type.name")
+  @discourseComputed("badge_type.name")
   badgeTypeClassName(type) {
     type = type || "";
     return `badge-type-${type.toLowerCase()}`;

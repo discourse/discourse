@@ -4,7 +4,7 @@ import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import debounce from "discourse/lib/debounce";
 import { searchForTerm } from "discourse/lib/search";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   loading: null,
