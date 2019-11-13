@@ -13,7 +13,7 @@ class AddSecureToUploads < ActiveRecord::Migration[5.2]
         UPDATE uploads SET secure = 't' WHERE id IN (
           SELECT DISTINCT(uploads.id) FROM uploads
           INNER JOIN post_uploads ON post_uploads.upload_id = uploads.id
-          WHERE original_filename NOT SIMILAR TO '%\.(jpg|jpeg|png|gif|svg|ico)'
+          WHERE LOWER(original_filename) NOT SIMILAR TO '%\.(jpg|jpeg|png|gif|svg|ico)'
         )
         SQL
       )
