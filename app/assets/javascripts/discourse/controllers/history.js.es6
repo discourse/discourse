@@ -1,12 +1,5 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import {
-  default as computed,
-  alias,
-  gt,
-  not,
-  or,
-  equal
-} from "@ember/object/computed";
+import { alias, gt, not, or, equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -16,6 +9,7 @@ import { sanitizeAsync } from "discourse/lib/text";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import Post from "discourse/models/post";
 import Category from "discourse/models/category";
+import computed from "@ember/object";
 
 function customTagArray(fieldName) {
   return computed(fieldName, function() {

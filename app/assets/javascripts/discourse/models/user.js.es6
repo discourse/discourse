@@ -1,6 +1,6 @@
 import { isEmpty } from "@ember/utils";
-import { default as computed, gt, equal, or } from "@ember/object/computed";
-import EmberObject from "@ember/object";
+import { gt, equal, or } from "@ember/object/computed";
+import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";

@@ -4,7 +4,7 @@ import {
   default as discourseComputed,
   observes
 } from "discourse-common/utils/decorators";
-import computed from "@ember/object/computed";
+import { computed } from "@ember/object";
 import FocusEvent from "discourse-common/mixins/focus-event";
 import EmberObject from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
