@@ -80,9 +80,9 @@ const ColorSchemeColor = EmberObject.extend({
           hex.substr(2, 1);
       }
       return Math.round(
-        (parseInt("0x" + hex.substr(0, 2)) * 299 +
-          parseInt("0x" + hex.substr(2, 2)) * 587 +
-          parseInt("0x" + hex.substr(4, 2)) * 114) /
+        (parseInt(hex.substr(0, 2), 16) * 299 +
+          parseInt(hex.substr(2, 2), 16) * 587 +
+          parseInt(hex.substr(4, 2), 16) * 114) /
           1000
       );
     }

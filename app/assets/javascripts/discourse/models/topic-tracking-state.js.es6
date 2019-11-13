@@ -9,6 +9,8 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import PreloadStore from "preload-store";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 function isNew(topic) {
   return (
@@ -46,9 +48,7 @@ const TopicTrackingState = EmberObject.extend({
       }
 
       if (["new_topic", "latest"].includes(data.message_type)) {
-        const muted_category_ids = Discourse.User.currentProp(
-          "muted_category_ids"
-        );
+        const muted_category_ids = User.currentProp("muted_category_ids");
         if (
           muted_category_ids &&
           muted_category_ids.includes(data.payload.category_id)
@@ -145,7 +145,7 @@ const TopicTrackingState = EmberObject.extend({
     }
 
     if (filter === defaultHomepage()) {
-      const suppressed_from_latest_category_ids = Discourse.Site.currentProp(
+      const suppressed_from_latest_category_ids = Site.currentProp(
         "suppressed_from_latest_category_ids"
       );
       if (
@@ -410,12 +410,11 @@ const TopicTrackingState = EmberObject.extend({
 
   loadStates(data) {
     const states = this.states;
-    const idMap = Category.idMap();
 
     // I am taking some shortcuts here to avoid 500 gets for a large list
     if (data) {
       data.forEach(topic => {
-        var category = idMap[topic.category_id];
+        let category = Category.findById(topic.category_id);
         if (category && category.parent_category_id) {
           topic.parent_category_id = category.parent_category_id;
         }

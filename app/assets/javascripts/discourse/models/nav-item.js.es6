@@ -3,6 +3,8 @@ import { emojiUnescape } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("name")
@@ -18,7 +20,7 @@ const NavItem = EmberObject.extend({
 
     if (
       name === "latest" &&
-      (!Discourse.Site.currentProp("mobileView") || this.tagId !== undefined)
+      (!Site.currentProp("mobileView") || this.tagId !== undefined)
     ) {
       count = 0;
     }
@@ -95,30 +97,25 @@ const ExtraNavItem = NavItem.extend({
 NavItem.reopenClass({
   extraArgsCallbacks: [],
   customNavItemHrefs: [],
-  extraNavItems: [],
+  extraNavItemDescriptors: [],
 
   // create a nav item from the text, will return null if there is not valid nav item for this particular text
   fromText(text, opts) {
-    var split = text.split(","),
-      name = split[0],
-      testName = name.split("/")[0],
-      anonymous = !Discourse.User.current();
+    let testName = text.split("/")[0],
+      anonymous = !User.current();
 
     opts = opts || {};
 
     if (
       anonymous &&
-      !Discourse.Site.currentProp("anonymous_top_menu_items").includes(testName)
+      !Site.currentProp("anonymous_top_menu_items").includes(testName)
     )
       return null;
 
     if (!Category.list() && testName === "categories") return null;
-    if (!Discourse.Site.currentProp("top_menu_items").includes(testName))
-      return null;
+    if (!Site.currentProp("top_menu_items").includes(testName)) return null;
 
-    var args = { name: name, hasIcon: name === "unread" },
-      extra = null,
-      self = this;
+    var args = { name: text, hasIcon: text === "unread" };
     if (opts.category) {
       args.category = opts.category;
     }
@@ -131,10 +128,9 @@ NavItem.reopenClass({
     if (opts.noSubcategories) {
       args.noSubcategories = true;
     }
-    NavItem.extraArgsCallbacks.forEach(cb => {
-      extra = cb.call(self, text, opts);
-      _.merge(args, extra);
-    });
+    NavItem.extraArgsCallbacks.forEach(cb =>
+      _.merge(args, cb.call(this, text, opts))
+    );
 
     const store = Discourse.__container__.lookup("service:store");
     return store.createRecord("nav-item", args);
@@ -162,16 +158,18 @@ NavItem.reopenClass({
         i => i !== null && !(category && i.get("name").indexOf("categor") === 0)
       );
 
-    const extraItems = NavItem.extraNavItems.filter(item => {
-      if (!item.customFilter) return true;
-      return item.customFilter.call(this, category, args);
-    });
+    const extraItems = NavItem.extraNavItemDescriptors
+      .map(descriptor => ExtraNavItem.create(descriptor))
+      .filter(item => {
+        if (!item.customFilter) return true;
+        return item.customFilter(category, args);
+      });
 
     let forceActive = false;
 
     extraItems.forEach(item => {
       if (item.init) {
-        item.init.call(this, item, category, args);
+        item.init(item, category, args);
       }
 
       const before = item.before;
@@ -187,11 +185,11 @@ NavItem.reopenClass({
         items.push(item);
       }
 
-      if (!item.customHref) return;
+      if (item.customHref) {
+        item.set("href", item.customHref(category, args));
+      }
 
-      item.set("href", item.customHref.call(this, category, args));
-
-      if (item.forceActive && item.forceActive.call(this, category, args)) {
+      if (item.forceActive && item.forceActive(category, args)) {
         item.active = true;
         forceActive = true;
       } else {
@@ -221,9 +219,7 @@ export function customNavItemHref(cb) {
 }
 
 export function addNavItem(item) {
-  const navItem = ExtraNavItem.create(item);
-  NavItem.extraNavItems.push(navItem);
-  return navItem;
+  NavItem.extraNavItemDescriptors.push(item);
 }
 
 Object.defineProperty(Discourse, "NavItem", {

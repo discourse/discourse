@@ -1,3 +1,5 @@
+import User from "discourse/models/user";
+
 let _renderer = defaultRenderTag;
 
 export function replaceTagRenderer(fn) {
@@ -12,10 +14,10 @@ function defaultRenderTag(tag, params) {
   const tagName = params.tagName || "a";
   let path;
   if (tagName === "a" && !params.noHref) {
-    if (params.isPrivateMessage && Discourse.User.current()) {
+    if (params.isPrivateMessage && User.current()) {
       const username = params.tagsForUser
         ? params.tagsForUser
-        : Discourse.User.current().username;
+        : User.current().username;
       path = `/u/${username}/messages/tags/${tag}`;
     } else {
       path = `/tags/${tag}`;

@@ -785,7 +785,7 @@ class PluginApi {
         };
       }
 
-      return addNavItem(item);
+      addNavItem(item);
     }
   }
 

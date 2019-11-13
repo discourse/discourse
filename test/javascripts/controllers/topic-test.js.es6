@@ -3,6 +3,7 @@ import { next } from "@ember/runloop";
 import Topic from "discourse/models/topic";
 import PostStream from "discourse/models/post-stream";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
+import User from "discourse/models/user";
 
 moduleFor("controller:topic", "controller:topic", {
   needs: [
@@ -223,7 +224,7 @@ QUnit.test("canDeleteSelected", function(assert) {
     ],
     stream: [1, 2, 3]
   };
-  const currentUser = Discourse.User.create({ admin: false });
+  const currentUser = User.create({ admin: false });
   this.registry.register("current-user:main", currentUser, {
     instantiate: false
   });
@@ -316,7 +317,7 @@ QUnit.test("Can split/merge topic", function(assert) {
 });
 
 QUnit.test("canChangeOwner", function(assert) {
-  const currentUser = Discourse.User.create({ admin: false });
+  const currentUser = User.create({ admin: false });
   this.registry.register("current-user:main", currentUser, {
     instantiate: false
   });

@@ -15,6 +15,35 @@ RSpec.describe ApplicationController do
       get "/"
       expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
     end
+
+    it "should redirect to login normally" do
+      get "/"
+      expect(response).to redirect_to("/login")
+    end
+
+    it "should redirect to SSO if enabled" do
+      SiteSetting.sso_url = 'http://someurl.com'
+      SiteSetting.enable_sso = true
+      get "/"
+      expect(response).to redirect_to("/session/sso")
+    end
+
+    it "should redirect to authenticator if only one, and local logins disabled" do
+      # Local logins and google enabled, direct to login UI
+      SiteSetting.enable_google_oauth2_logins = true
+      get "/"
+      expect(response).to redirect_to("/login")
+
+      # Only google enabled, login immediately
+      SiteSetting.enable_local_logins = false
+      get "/"
+      expect(response).to redirect_to("/auth/google_oauth2")
+
+      # Google and GitHub enabled, direct to login UI
+      SiteSetting.enable_github_logins = true
+      get "/"
+      expect(response).to redirect_to("/login")
+    end
   end
 
   describe '#redirect_to_second_factor_if_required' do

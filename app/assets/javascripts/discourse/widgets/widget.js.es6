@@ -118,6 +118,8 @@ export default class Widget {
     this.appEvents = register.lookup("service:app-events");
     this.keyValueStore = register.lookup("key-value-store:main");
 
+    this.init();
+
     // Helps debug widgets
     if (Discourse.Environment === "development" || ENV.environment === "test") {
       const ds = this.defaultState(attrs);
@@ -143,6 +145,8 @@ export default class Widget {
   defaultState() {
     return {};
   }
+
+  init() {}
 
   destroy() {}
 

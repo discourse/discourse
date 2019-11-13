@@ -5,6 +5,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import OpenComposer from "discourse/mixins/open-composer";
 import { scrollTop } from "discourse/mixins/scroll-top";
+import User from "discourse/models/user";
 
 export default DiscourseRoute.extend(OpenComposer, {
   redirect() {
@@ -12,7 +13,7 @@ export default DiscourseRoute.extend(OpenComposer, {
   },
 
   beforeModel(transition) {
-    const user = Discourse.User;
+    const user = User;
     const url = transition.intent.url;
 
     if (

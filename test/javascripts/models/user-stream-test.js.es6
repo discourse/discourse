@@ -1,9 +1,10 @@
 import UserAction from "discourse/models/user-action";
+import User from "discourse/models/user";
 
-QUnit.module("Discourse.UserStream");
+QUnit.module("model: UserStream");
 
 QUnit.test("basics", assert => {
-  var user = Discourse.User.create({ id: 1, username: "eviltrout" });
+  var user = User.create({ id: 1, username: "eviltrout" });
   var stream = user.get("stream");
   assert.present(stream, "a user has a stream by default");
   assert.equal(stream.get("user"), user, "the stream points back to the user");
@@ -16,7 +17,7 @@ QUnit.test("basics", assert => {
 });
 
 QUnit.test("filterParam", assert => {
-  var user = Discourse.User.create({ id: 1, username: "eviltrout" });
+  var user = User.create({ id: 1, username: "eviltrout" });
   var stream = user.get("stream");
 
   // defaults to posts/topics

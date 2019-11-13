@@ -3,6 +3,7 @@ import EmberObject from "@ember/object";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import { Promise } from "rsvp";
 import Session from "discourse/models/session";
+import Site from "discourse/models/site";
 
 const LoginMethod = EmberObject.extend({
   @discourseComputed
@@ -70,7 +71,7 @@ export function findAll() {
 
   methods = [];
 
-  Discourse.Site.currentProp("auth_providers").forEach(provider =>
+  Site.currentProp("auth_providers").forEach(provider =>
     methods.pushObject(LoginMethod.create(provider))
   );
 

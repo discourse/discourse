@@ -1,6 +1,3 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
@@ -3326,21 +3323,15 @@ ko:
         category: "카테고리에 게시"
         add_host: "Host 추가"
         settings: "삽입(Embedding) 설정"
-        feed_settings: "피드 설정"
-        feed_description: "당신 사이트의 RSS/ATOM 피드를 알려주시면 Discourse가 그 사이트 컨텐트를 더 잘 가져올 수 있습니다."
         crawling_settings: "크롤러 설정"
         crawling_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
         embed_by_username: "토픽을 만들 때 사용할 아이디"
         embed_post_limit: "삽입(embed)할 글 최대갯수"
-        embed_username_key_from_feed: "피드에서 discourse usename을 꺼내오기 위한 키(key)"
         embed_title_scrubber: "게시글의 제목을 긁어오기 위해 정규표현식이 사용되었습니다"
         embed_truncate: "임베드된 글 뒷부분 잘라내기"
         embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
         embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
         embed_classname_whitelist: "허용된 CSS 클래스"
-        feed_polling_enabled: "RSS/ATOM으로 글 가져오기"
-        feed_polling_url: "긁어올 RSS/ATOM 피드 URL"
-        feed_polling_frequency_mins: "피드 폴링 빈도(분당)"
         save: "삽입(Embedding) 설정 저장하기"
       permalink:
         title: "고유링크"

@@ -17,12 +17,10 @@ class ThemeStore::ZipImporter
   def import!
     FileUtils.mkdir(@temp_folder)
 
-    Dir.chdir(@temp_folder) do
-      available_size = SiteSetting.decompressed_theme_max_file_size_mb
-      Compression::Engine.engine_for(@original_filename).tap do |engine|
-        engine.decompress(@temp_folder, @filename, available_size)
-        engine.strip_directory(@temp_folder, @temp_folder, relative: true)
-      end
+    available_size = SiteSetting.decompressed_theme_max_file_size_mb
+    Compression::Engine.engine_for(@original_filename).tap do |engine|
+      engine.decompress(@temp_folder, @filename, available_size)
+      engine.strip_directory(@temp_folder, @temp_folder, relative: true)
     end
   rescue RuntimeError
     raise RemoteTheme::ImportError, I18n.t("themes.import_error.unpack_failed")
@@ -53,9 +51,7 @@ class ThemeStore::ZipImporter
   end
 
   def all_files
-    Dir.chdir(@temp_folder) do
-      Dir.glob("**/**").reject { |f| File.directory?(f) }
-    end
+    Dir.glob("**/**", base: @temp_folder).reject { |f| File.directory?(f) }
   end
 
   def [](value)

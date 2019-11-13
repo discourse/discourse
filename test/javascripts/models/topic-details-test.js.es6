@@ -1,3 +1,5 @@
+import User from "discourse/models/user";
+
 QUnit.module("model:topic-details");
 
 import Topic from "discourse/models/topic";
@@ -25,5 +27,5 @@ QUnit.test("updateFromJson", assert => {
     1,
     "it loaded the allowed users"
   );
-  assert.containsInstance(details.get("allowed_users"), Discourse.User);
+  assert.containsInstance(details.get("allowed_users"), User);
 });

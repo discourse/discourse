@@ -20,10 +20,10 @@ var define, requirejs;
         get: Ember.get,
         getProperties: Ember.getProperties,
         set: Ember.set,
-        setProperties: Ember.setProperties
+        setProperties: Ember.setProperties,
+        computed: Ember.computed
       },
       "@ember/object/computed": {
-        default: Ember.computed,
         alias: Ember.computed.alias,
         and: Ember.computed.and,
         bool: Ember.computed.bool,
@@ -140,6 +140,15 @@ var define, requirejs;
     );
   }
 
+  function deprecatedModule(depricated, useInstead) {
+    var warning = "[DEPRECATION] `" + depricated + "` is deprecated.";
+    if (useInstead) {
+      warning += " Please use `" + useInstead + "` instead.";
+    }
+    // eslint-disable-next-line no-console
+    console.warn(warning);
+  }
+
   var defaultDeps = ["require", "exports", "module"];
 
   function Module(name, deps, callback, exports) {
@@ -243,7 +252,11 @@ var define, requirejs;
   }
 
   function transformForAliases(name) {
-    return ALIASES[name] ? ALIASES[name] : name;
+    var alias = ALIASES[name];
+    if (!alias) return name;
+
+    deprecatedModule(name, alias);
+    return alias;
   }
 
   requirejs = require = function(name) {

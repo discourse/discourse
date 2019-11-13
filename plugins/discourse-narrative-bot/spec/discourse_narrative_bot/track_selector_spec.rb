@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe DiscourseNarrativeBot::TrackSelector do
   let(:user) { Fabricate(:user) }
-  let(:discobot_user) { User.find(-2) }
+  let(:discobot_user) { ::DiscourseNarrativeBot::Base.new.discobot_user }
   let(:narrative) { DiscourseNarrativeBot::NewUserNarrative.new }
 
   let(:random_mention_reply) do

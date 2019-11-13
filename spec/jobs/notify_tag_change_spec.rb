@@ -25,4 +25,13 @@ describe ::Jobs::NotifyTagChange do
     expect(notification.user_id).to eq(user.id)
     expect(notification.topic_id).to eq(post.topic_id)
   end
+
+  it 'doesnt create notification for user watching category' do
+    CategoryUser.create!(
+      user_id: user.id,
+      category_id: post.topic.category_id,
+      notification_level: TopicUser.notification_levels[:watching]
+    )
+    expect { described_class.new.execute(post_id: post.id, notified_user_ids: [regular_user.id]) }.not_to change { Notification.count }
+  end
 end

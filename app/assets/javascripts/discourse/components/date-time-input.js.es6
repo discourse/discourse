@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import computed from "@ember/object/computed";
+import { computed } from "@ember/object";
 
 export default Component.extend({
   classNames: ["d-date-time-input"],

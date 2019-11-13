@@ -105,7 +105,7 @@ export default Component.extend({
           }
         }
 
-        const topic = this.topics.findBy("id", parseInt(topicId));
+        const topic = this.topics.findBy("id", parseInt(topicId, 10));
         this.appEvents.trigger("topic-entrance:show", {
           topic,
           position: target.offset()

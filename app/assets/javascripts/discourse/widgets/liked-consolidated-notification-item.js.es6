@@ -22,7 +22,7 @@ createWidgetFrom(
       const description = I18n.t(
         "notifications.liked_consolidated_description",
         {
-          count: parseInt(data.count)
+          count: parseInt(data.count, 10)
         }
       );
 

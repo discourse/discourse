@@ -339,7 +339,7 @@ export default createWidget("hamburger-menu", {
       this.sendWidgetAction("toggleHamburger");
     } else {
       const $window = $(window);
-      const windowWidth = parseInt($window.width(), 10);
+      const windowWidth = $window.width();
       const $panel = $(".menu-panel");
       $panel.addClass("animate");
       const panelOffsetDirection = this.site.mobileView ? "left" : "right";

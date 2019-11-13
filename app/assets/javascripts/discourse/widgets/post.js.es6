@@ -709,7 +709,7 @@ export default createWidget("post", {
 
     // only warn once per day
     const yesterday = new Date().getTime() - 1000 * 60 * 60 * 24;
-    if (lastWarnedLikes && parseInt(lastWarnedLikes) > yesterday) {
+    if (lastWarnedLikes && parseInt(lastWarnedLikes, 10) > yesterday) {
       return;
     }
 
