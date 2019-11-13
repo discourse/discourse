@@ -116,9 +116,7 @@ NavItem.reopenClass({
     if (!Discourse.Site.currentProp("top_menu_items").includes(testName))
       return null;
 
-    var args = { name: name, hasIcon: name === "unread" },
-      extra = null,
-      self = this;
+    var args = { name: name, hasIcon: name === "unread" };
     if (opts.category) {
       args.category = opts.category;
     }
@@ -131,10 +129,9 @@ NavItem.reopenClass({
     if (opts.noSubcategories) {
       args.noSubcategories = true;
     }
-    NavItem.extraArgsCallbacks.forEach(cb => {
-      extra = cb.call(self, text, opts);
-      _.merge(args, extra);
-    });
+    NavItem.extraArgsCallbacks.forEach(cb =>
+      _.merge(args, cb.call(this, text, opts))
+    );
 
     const store = Discourse.__container__.lookup("service:store");
     return store.createRecord("nav-item", args);
