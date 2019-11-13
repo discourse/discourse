@@ -3,6 +3,7 @@ import createStore from "helpers/create-store";
 import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
+import Site from "discourse/models/site";
 
 export default function(name, opts) {
   opts = opts || {};
@@ -12,7 +13,7 @@ export default function(name, opts) {
   }
 
   test(name, function(assert) {
-    this.site = Discourse.Site.current();
+    this.site = Site.current();
 
     this.registry.register("site-settings:main", Discourse.SiteSettings, {
       instantiate: false
