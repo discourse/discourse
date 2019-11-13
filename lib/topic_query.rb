@@ -895,10 +895,10 @@ class TopicQuery
       list = list
         .references("cu")
         .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
-        .where("category_users.notification_level IS NULL
-               OR category_users.notification_level <> :muted
+        .where("COALESCE(category_users.notification_level, :regular) <> :muted
                OR category_users.category_id = :category_id OR tu.notification_level >= :tracking",
                muted: CategoryUser.notification_levels[:muted],
+               regular: CategoryUser.notification_levels[:regular],
                tracking: TopicUser.notification_levels[:tracking],
                category_id: category_id || -1)
     end
