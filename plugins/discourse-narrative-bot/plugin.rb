@@ -114,7 +114,7 @@ after_initialize do
           max_file_size: SiteSetting.max_image_size_kb.kilobytes,
           tmp_file_name: 'narrative-bot-avatar',
           follow_redirect: true
-        )
+        ).read
       rescue OpenURI::HTTPError
         # Ignore if fetching image returns a non 200 response
       end
