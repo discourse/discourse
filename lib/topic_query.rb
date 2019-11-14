@@ -517,6 +517,7 @@ class TopicQuery
     result = remove_muted_topics(result, @user)
     result = remove_muted_categories(result, @user, exclude: options[:category])
     result = remove_muted_tags(result, @user, options)
+    result = remove_already_seen_for_category(result, @user)
 
     self.class.results_filter_callbacks.each do |filter_callback|
       result = filter_callback.call(:new, result, @user, options)
@@ -871,21 +872,15 @@ class TopicQuery
 
     if SiteSetting.mute_all_categories_by_default
       if user
-        list = list.references("cu")
-          .where("
-          NOT EXISTS (
-            SELECT 1
-              FROM categories c
-              LEFT OUTER JOIN category_users cu
-              ON c.id = cu.category_id AND cu.user_id = :user_id
-            WHERE c.id = topics.category_id
-              AND c.id <> :category_id
-              AND (COALESCE(cu.notification_level, :muted) = :muted)
-              AND (COALESCE(tu.notification_level, :regular) <= :regular)
-          )", user_id: user.id,
-              muted: CategoryUser.notification_levels[:muted],
-              regular: TopicUser.notification_levels[:regular],
-              category_id: category_id || -1)
+        list = list
+          .references("cu")
+          .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
+          .where("topics.category_id = :category_id
+                 OR COALESCE(category_users.notification_level, :muted) <> :muted
+                 OR tu.notification_level > :regular",
+                 muted: CategoryUser.notification_levels[:muted],
+                 regular: TopicUser.notification_levels[:regular],
+                 category_id: category_id || -1)
       else
         category_ids = [
           SiteSetting.default_categories_watching.split("|"),
@@ -897,20 +892,15 @@ class TopicQuery
         list = list.where("topics.category_id IN (?)", category_ids) if category_ids.present?
       end
     elsif user
-      list = list.references("cu")
-        .where("
-        NOT EXISTS (
-          SELECT 1
-            FROM category_users cu
-           WHERE cu.user_id = :user_id
-             AND cu.category_id = topics.category_id
-             AND cu.notification_level = :muted
-             AND cu.category_id <> :category_id
-             AND (tu.notification_level IS NULL OR tu.notification_level < :tracking)
-        )", user_id: user.id,
-            muted: CategoryUser.notification_levels[:muted],
-            tracking: TopicUser.notification_levels[:tracking],
-            category_id: category_id || -1)
+      list = list
+        .references("cu")
+        .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
+        .where("COALESCE(category_users.notification_level, :regular) <> :muted
+               OR category_users.category_id = :category_id OR tu.notification_level >= :tracking",
+               muted: CategoryUser.notification_levels[:muted],
+               regular: CategoryUser.notification_levels[:regular],
+               tracking: TopicUser.notification_levels[:tracking],
+               category_id: category_id || -1)
     end
 
     list
@@ -947,6 +937,15 @@ class TopicQuery
              AND tt.topic_id = topics.id
         ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
     end
+  end
+
+  def remove_already_seen_for_category(list, user)
+    if user
+      list = list
+        .where("category_users.last_seen_at IS NULL OR topics.created_at > category_users.last_seen_at")
+    end
+
+    list
   end
 
   def new_messages(params)
