@@ -31,14 +31,17 @@ import { findRawTemplate } from "discourse/lib/raw-templates";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import {
   tinyAvatar,
-  displayErrorForUpload,
-  getUploadMarkdown,
-  validateUploadedFiles,
-  authorizesOneOrMoreImageExtensions,
   formatUsername,
   clipboardData,
   safariHacksDisabled
 } from "discourse/lib/utilities";
+import {
+  validateUploadedFiles,
+  authorizesOneOrMoreImageExtensions,
+  getUploadMarkdown,
+  displayErrorForUpload
+} from "discourse/lib/uploads";
+
 import {
   cacheShortUploadUrl,
   resolveAllShortUrls
@@ -82,7 +85,7 @@ export default Component.extend({
     if (requiredCategoryMissing) {
       return "composer.reply_placeholder_choose_category";
     } else {
-      const key = authorizesOneOrMoreImageExtensions()
+      const key = authorizesOneOrMoreImageExtensions(this.currentUser.staff)
         ? "reply_placeholder"
         : "reply_placeholder_no_images";
       return `composer.${key}`;
@@ -700,6 +703,7 @@ export default Component.extend({
       if (this._pasted) data.formData.pasted = true;
 
       const opts = {
+        user: this.currentUser,
         isPrivateMessage,
         allowStaffToUploadAnyFileInPm: this.siteSettings
           .allow_staff_to_upload_any_file_in_pm

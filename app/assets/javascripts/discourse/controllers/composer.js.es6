@@ -14,12 +14,11 @@ import {
   on
 } from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { escapeExpression, safariHacksDisabled } from "discourse/lib/utilities";
 import {
-  escapeExpression,
-  uploadIcon,
   authorizesOneOrMoreExtensions,
-  safariHacksDisabled
-} from "discourse/lib/utilities";
+  uploadIcon
+} from "discourse/lib/uploads";
 import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
 import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
@@ -322,11 +321,13 @@ export default Controller.extend({
 
   @discourseComputed
   allowUpload() {
-    return authorizesOneOrMoreExtensions();
+    return authorizesOneOrMoreExtensions(this.currentUser.staff);
   },
 
   @discourseComputed()
-  uploadIcon: () => uploadIcon(),
+  uploadIcon() {
+    return uploadIcon(this.currentUser.staff);
+  },
 
   actions: {
     togglePreview() {
