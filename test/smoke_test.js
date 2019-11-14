@@ -87,6 +87,40 @@ const path = require("path");
     });
   }
 
+  const login = async function() {
+    await exec("open login modal", () => {
+      return page.click(".login-button");
+    });
+
+    await exec("login modal is open", () => {
+      return page.waitForSelector(".login-modal", { visible: true });
+    });
+
+    await exec("type in credentials & log in", () => {
+      let promise = page.type(
+        "#login-account-name",
+        process.env.DISCOURSE_USERNAME || "smoke_user"
+      );
+
+      promise = promise.then(() => {
+        return page.type(
+          "#login-account-password",
+          process.env.DISCOURSE_PASSWORD || "P4ssw0rd"
+        );
+      });
+
+      promise = promise.then(() => {
+        return page.click(".login-modal .btn-primary");
+      });
+
+      return promise;
+    });
+
+    await exec("is logged in", () => {
+      return page.waitForSelector(".current-user", { visible: true });
+    });
+  };
+
   await exec("go to site", () => {
     return page.goto(url);
   });
@@ -94,6 +128,10 @@ const path = require("path");
   await exec("expect a log in button in the header", () => {
     return page.waitForSelector("header .login-button", { visible: true });
   });
+
+  if (process.env.LOGIN_AT_BEGINNING) {
+    await login();
+  }
 
   await exec("go to latest page", () => {
     return page.goto(path.join(url, "latest"));
@@ -128,40 +166,18 @@ const path = require("path");
   });
 
   if (!process.env.READONLY_TESTS) {
-    await exec("open login modal", () => {
-      return page.click(".login-button");
-    });
+    if (!process.env.LOGIN_AT_BEGINNING) {
+      await login();
+    }
 
-    await exec("login modal is open", () => {
-      return page.waitForSelector(".login-modal", { visible: true });
-    });
-
-    await exec("type in credentials & log in", () => {
-      let promise = page.type(
-        "#login-account-name",
-        process.env.DISCOURSE_USERNAME || "smoke_user"
-      );
+    await exec("go home", () => {
+      let promise = page.waitForSelector("#site-logo, #site-text-logo", { visible: true });
 
       promise = promise.then(() => {
-        return page.type(
-          "#login-account-password",
-          process.env.DISCOURSE_PASSWORD || "P4ssw0rd"
-        );
-      });
-
-      promise = promise.then(() => {
-        return page.click(".login-modal .btn-primary");
+        return page.click("#site-logo, #site-text-logo");
       });
 
       return promise;
-    });
-
-    await exec("is logged in", () => {
-      return page.waitForSelector(".current-user", { visible: true });
-    });
-
-    await exec("go home", () => {
-      return page.click("#site-logo, #site-text-logo");
     });
 
     await exec("it shows a topic list", () => {
