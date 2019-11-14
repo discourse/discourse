@@ -26,6 +26,8 @@ class ReviewablesController < ApplicationController
       topic_id: topic_id,
       priority: params[:priority],
       username: params[:username],
+      from_date: params[:from_date],
+      to_date: params[:to_date],
       type: params[:type],
       sort_order: params[:sort_order]
     }
