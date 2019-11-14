@@ -232,7 +232,14 @@ class Upload < ActiveRecord::Base
 
   def update_secure_status
     return false if self.for_theme || self.for_site_setting
+    mark_secure = should_be_secure?
 
+    self.update_column("secure", mark_secure)
+    Discourse.store.update_upload_ACL(self) if Discourse.store.external?
+  end
+
+  def should_be_secure?
+    mark_secure = false
     if FileHelper.is_supported_media?(self.original_filename)
       if SiteSetting.secure_media?
         mark_secure = true if SiteSetting.login_required?
@@ -248,9 +255,7 @@ class Upload < ActiveRecord::Base
     else
       mark_secure = SiteSetting.prevent_anons_from_downloading_files?
     end
-
-    self.update_column("secure", mark_secure)
-    Discourse.store.update_upload_ACL(self) if Discourse.store.external?
+    mark_secure
   end
 
   def self.migrate_to_new_scheme(limit: nil)
