@@ -7,13 +7,13 @@ import {
 } from "discourse-common/utils/decorators";
 import {
   allowsAttachments,
-  authorizesAllExtensions,
   authorizedExtensions,
+  authorizesAllExtensions,
   uploadIcon
-} from "discourse/lib/utilities";
+} from "discourse/lib/uploads";
 
-function uploadTranslate(key) {
-  if (allowsAttachments()) {
+function uploadTranslate(key, user) {
+  if (allowsAttachments(user.staff)) {
     key += "_with_attachments";
   }
   return `upload_selector.${key}`;
@@ -28,17 +28,23 @@ export default Controller.extend(ModalFunctionality, {
   selection: "local",
 
   @discourseComputed()
-  uploadIcon: () => uploadIcon(),
+  uploadIcon() {
+    return uploadIcon(this.currentUser.staff);
+  },
 
   @discourseComputed()
-  title: () => uploadTranslate("title"),
+  title() {
+    return uploadTranslate("title", this.currentUser);
+  },
 
   @discourseComputed("selection")
   tip(selection) {
-    const authorized_extensions = authorizesAllExtensions()
+    const authorized_extensions = authorizesAllExtensions(
+      this.currentUser.staff
+    )
       ? ""
-      : `(${authorizedExtensions()})`;
-    return I18n.t(uploadTranslate(`${selection}_tip`), {
+      : `(${authorizedExtensions(this.currentUser.staff)})`;
+    return I18n.t(uploadTranslate(`${selection}_tip`, this.currentUser), {
       authorized_extensions
     });
   },

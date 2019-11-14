@@ -1,7 +1,7 @@
 import {
   displayErrorForUpload,
   validateUploadedFiles
-} from "discourse/lib/utilities";
+} from "discourse/lib/uploads";
 import getUrl from "discourse-common/lib/get-url";
 import { on } from "@ember/object/evented";
 import Mixin from "@ember/object/mixin";
@@ -78,7 +78,7 @@ export default Mixin.create({
 
     $upload.on("fileuploadsubmit", (e, data) => {
       const opts = _.merge(
-        { bypassNewUserRestriction: true },
+        { bypassNewUserRestriction: true, user: this.currentUser },
         this.validateUploadedFilesOptions()
       );
       const isValid = validateUploadedFiles(data.files, opts);
