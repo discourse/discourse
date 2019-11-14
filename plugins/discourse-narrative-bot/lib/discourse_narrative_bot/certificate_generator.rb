@@ -93,7 +93,12 @@ module DiscourseNarrativeBot
     end
 
     def fetch_image(url)
-      URI(url).open('rb', redirect: true, allow_redirections: :all).read
+      FileHelper.download(
+        url.to_s,
+        max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+        tmp_file_name: 'narrative-bot-logo',
+        follow_redirect: true
+      )&.read
     rescue OpenURI::HTTPError
       # Ignore if fetching image returns a non 200 response
     end
