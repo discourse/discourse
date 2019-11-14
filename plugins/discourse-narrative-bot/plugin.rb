@@ -110,11 +110,11 @@ after_initialize do
       def fetch_avatar_url(user)
         avatar_url = UrlHelper.absolute(Discourse.base_uri + user.avatar_template.gsub('{size}', '250'))
         FileHelper.download(
-          avatar_url,
+          avatar_url.to_s,
           max_file_size: SiteSetting.max_image_size_kb.kilobytes,
           tmp_file_name: 'narrative-bot-avatar',
           follow_redirect: true
-        ).read
+        )&.read
       rescue OpenURI::HTTPError
         # Ignore if fetching image returns a non 200 response
       end
