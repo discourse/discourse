@@ -262,7 +262,7 @@ createWidget("timeline-scrollarea", {
     const position = this.position();
     this.state.scrolledPost = position.current;
 
-    if (position.current === position.scrollPosition) {
+    if (position.current === position.scrollPosition || this.site.mobileView) {
       this.sendWidgetAction("jumpToIndex", position.current);
     } else {
       this.sendWidgetAction("jumpEnd");
