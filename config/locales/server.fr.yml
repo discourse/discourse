@@ -1351,7 +1351,6 @@ fr:
     content_security_policy: "Activer Content-Security-Policy"
     content_security_policy_report_only: "Activer Content-Security-Policy-Report-Only"
     content_security_policy_collect_reports: "Activer collecte de rapports CSP violation à /csp_reports"
-    content_security_policy_script_src: "Sources supplementaires de scripts acceptés. L'hôte actuel et le CDN sont inclus par défaut."
     invalidate_inactive_admin_email_after_days: "Les comptes admin qui n'ont pas visité le site depuis ce nombre de jours devront re-valider leurs adresses courriel avant de se connecter. 0 pour désactiver."
     top_menu: "Déterminer les éléments qui apparaissent dans la navigation de la page d'accueil, et dans quel ordre. Exemple latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "L'ordre des éléments dans le menu de rédaction. Exemple like|edit|flag|delete|share|bookmark|reply"

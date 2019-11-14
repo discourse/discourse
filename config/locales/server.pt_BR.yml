@@ -1335,7 +1335,6 @@ pt_BR:
     content_security_policy: "Habilitar Content-Security-Policy"
     content_security_policy_report_only: "Habilitar Content-Security-Policy-Report-Only"
     content_security_policy_collect_reports: "Habilitar a coleta de relatórios de violação de CSP em /csp_reports"
-    content_security_policy_script_src: "Origens adicionais de script na lista de permissões. O host atual e o CDN são incluídos por padrão."
     invalidate_inactive_admin_email_after_days: "As contas de administrador que não visitaram o site neste número de dias precisarão validar novamente seu endereço de e-mail antes de efetuar login. Defina como 0 para desabilitar."
     top_menu: "Determina quais items aparecem na navegação da homepage, e em qual ordem. Exemplo latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine quais itens aparecem no menu de postagem e em qual ordem. Exemplo como | editar | sinalizar | excluir | compartilhar | marcador | resposta"

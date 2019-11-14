@@ -950,6 +950,9 @@ fi:
         uploaded_avatar_empty: "Lisää oma kuva"
         upload_title: "Lataa oma kuva"
         image_is_not_a_square: "Varoitus: olemme rajanneet kuvaasti; korkeus ja leveys eivät olleet samoja"
+      change_profile_background:
+        title: "Profiilin yläkuva"
+        instructions: "Profiilin yläkuva keskitetään ja sen oletusleveys on 1110 px."
       change_card_background:
         title: "Käyttäjäkortin taustakuva"
         instructions: "Taustakuvan leveys on 590 pikseliä."
@@ -2377,9 +2380,14 @@ fi:
       tags_allowed_tags: "Rajaa nämä tunnisteet tälle alueelle:"
       tags_allowed_tag_groups: "Rajaa nämä tunnisteryhmät tälle alueelle:"
       tags_placeholder: "(Ei-pakollinen) lista sallituista tunnisteista"
+      tags_tab_description: "Yllä määritellyt tunnisteet ja tunnisteryhmät ovat käytössä vain tällä alueella sekä muilla alueilla, jotka samalla tapaa ovat ne määritelleet. Muilla alueilla ne eivät ole käytettävissä."
       tag_groups_placeholder: "(Ei-pakollinen) lista sallituista tunnisteryhmistä"
       manage_tag_groups_link: "Hallitse tunnisteryhmiä tästä."
       allow_global_tags_label: "Salli myös muut tunnisteet"
+      tag_group_selector_placeholder: "(Ei-pakollinen) tunnisteryhmä"
+      required_tag_group_description: "Edellytä, että uudella ketjulla on tunnisteita tunnisteryhmästä:"
+      min_tags_from_required_group_label: "Tunnisteiden määrä:"
+      required_tag_group_label: "Tunnisteryhmä:"
       topic_featured_link_allowed: "Salli ketjulinkit tällä alueella"
       delete: "Poista alue"
       create: "Uusi alue"
@@ -2845,6 +2853,7 @@ fi:
         parent_tag_description: "Tämän ryhmän tunnisteita voi käyttää vain, jos emotunniste on asetettu"
         one_per_topic_label: "Rajoita tästä ryhmästä yhteen tunnisteeseen per ketju"
         new_name: "Uusi ryhmä tunnisteita"
+        name_placeholder: "Tunnisteryhmän nimi"
         save: "Tallenna"
         delete: "Poista"
         confirm_delete: "Oletko varma, että haluat poistaa tämän tunnisteryhmän?"
@@ -3045,15 +3054,30 @@ fi:
         none: "Aktiivisia API avaimia ei ole määritelty."
         user: "Käyttäjä"
         title: "Rajapinta"
+        key: "Avain"
         created: Luotu
+        updated: Päivitetty
         last_used: Viimeksi käytetty
         never_used: (ei koskaan)
         generate: "Luo"
+        undo_revoke: "Kumoa jäädytys"
         revoke: "Peruuta"
         all_users: "Kaikki käyttäjät"
+        active_keys: "Aktiiviset rajapinta-avaimet"
+        manage_keys: Hallinnoi avaimia
         show_details: Yksityiskohdat
         description: Kuvaus
+        no_description: (ei kuvausta)
+        all_api_keys: Kaikki rajapinta-avaimet
+        user_mode: Käyttäjän taso
+        impersonate_all_users: Esiinny minä käyttäjänä tahansa
+        single_user: "Yksittäinen käyttäjä"
+        user_placeholder: Anna käyttäjänim
+        description_placeholder: "Mitä tällä avaimella voi tehdä?"
         save: Tallenna
+        new_key: Uusi rajapinta-avain
+        revoked: Jäädytetty
+        delete: Poista pysyvästi
       web_hooks:
         title: "Webhookit"
         none: "Webhookeja ei ole nyt."
@@ -3634,6 +3658,9 @@ fi:
             change_theme_setting: "muutti teema-asetusta"
             disable_theme_component: "otti teemakomponentin käytöstä"
             enable_theme_component: "otti teemakomponentin käyttöön"
+            api_key_create: "loi rajapinta-avaimen"
+            api_key_update: "päivitti rajapinta-avainta"
+            api_key_destroy: "tuhosi rajapinta-avaimen"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."

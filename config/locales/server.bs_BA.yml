@@ -84,8 +84,8 @@ bs_BA:
       missing_attachment: "(Nedostaje prilog %{filename})"
       errors:
         empty_email_error: "Dešava se kada je sirova pošta koju smo primili bila prazna."
-        no_message_id_error: "Dešava se kada pošta nema zaglavlje &#39;Message-Id&#39;."
-        auto_generated_email_error: "Dešava se kada je zaglavlje &#39;prvenstva&#39; postavljeno na: listu, bezvrijedno, skupno ili auto_reply, ili kada bilo koje drugo zaglavlje sadrži: automatsko slanje, automatsko odgovaranje ili automatsko generiranje."
+        no_message_id_error: "Dešava se kada pošta nema zaglavlje 'Message-Id'."
+        auto_generated_email_error: "Dešava se kada je zaglavlje 'prvenstva' postavljeno na: listu, bezvrijedno, skupno ili auto_reply, ili kada bilo koje drugo zaglavlje sadrži: automatsko slanje, automatsko odgovaranje ili automatsko generiranje."
         no_body_detected_error: "Dešava se kada nismo mogli da izvučemo telo i nije bilo nikakvih vezanosti."
         no_sender_detected_error: "Dešava se kada nismo mogli pronaći važeću adresu e-pošte u zaglavlju From."
         from_reply_by_address_error: "Događa se kada se zaglavlje From poklapa s odgovorom na adresu e-pošte."
