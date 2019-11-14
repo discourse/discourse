@@ -658,7 +658,7 @@ bs_BA:
           description: "Nećete biti obaviješteni o bilo kojoj poruci u ovoj grupi."
       flair_url: "Slika Avatara sposobnosti"
       flair_url_placeholder: "(Opciono) URL slike ili Font Awesome class"
-      flair_url_description: 'Koristite kvadratne slike ne manje od 20px od 20px ili FontAwesome ikone (prihvaćeni formati: &quot;fa-icon&quot;, &quot;far fa-icon&quot; ili &quot;fab fa-icon&quot;).'
+      flair_url_description: 'Koristite kvadratne slike ne manje od 20px od 20px ili FontAwesome ikone (prihvaćeni formati: "fa-icon", "far fa-icon" ili "fab fa-icon").'
       flair_bg_color: "Boja pozadine Slike Avatara sposobnosti"
       flair_bg_color_placeholder: "(Opciono) Hex broj boje"
       flair_color: "Boja Avatara sposobnosti"
@@ -2827,7 +2827,7 @@ bs_BA:
       manage_groups_description: "Definišite grupe za organizovanje oznaka"
       upload: "Prenesi oznake"
       upload_description: "Otpremite csv datoteku da biste grupisali oznake"
-      upload_instructions: "Jedan po liniji, opciono sa oznakom grupe u formatu &#39;tag_name, tag_group&#39;."
+      upload_instructions: "Jedan po liniji, opciono sa oznakom grupe u formatu 'tag_name, tag_group'."
       upload_successful: "Oznake koje su uspješno prenesene"
       delete_unused_confirmation:
         one: "%{count} tag će biti izbrisan: %{tags}"
@@ -3039,7 +3039,7 @@ bs_BA:
         delete: "Delete"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        delete_owner_confirm: "Ukloni privilegije vlasnika za &#39;%{username}&#39;?"
+        delete_owner_confirm: "Ukloni privilegije vlasnika za '%{username}'?"
         add: "Dodaj"
         custom: "Custom"
         automatic: "Automatsko"
@@ -3190,7 +3190,7 @@ bs_BA:
           title: "Prenesite rezervnu kopiju na ovu instancu"
           uploading: "Uploading..."
           uploading_progress: "Snimanje ... {{progress}}% \\ t"
-          success: "&#39;{{filename}}&#39; je uspješno otpremljen. Datoteka se sada obrađuje i traje do jednog minuta da se pojavi na listi."
+          success: "'{{filename}}' je uspješno otpremljen. Datoteka se sada obrađuje i traje do jednog minuta da se pojavi na listi."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
           is_running: "An operation is currently running..."
@@ -3249,7 +3249,7 @@ bs_BA:
         new_style: "New Style"
         install: "Instaliraj"
         delete: "Delete"
-        delete_confirm: 'Jeste li sigurni da želite izbrisati &quot;%{theme_name}&quot;?'
+        delete_confirm: 'Jeste li sigurni da želite izbrisati "%{theme_name}"?'
         color: "Color"
         opacity: "Opacity"
         copy: "Copy"
@@ -3660,7 +3660,7 @@ bs_BA:
             filter: "Pretraži"
           roll_up:
             text: "Roll up"
-            title: "Stvara nove unose za zabranu podmreže ako postoje najmanje &quot;min_ban_entries_for_roll_up&quot; stavke."
+            title: "Stvara nove unose za zabranu podmreže ako postoje najmanje 'min_ban_entries_for_roll_up' stavke."
         search_logs:
           title: "Logovi pretrage"
           term: "Term"

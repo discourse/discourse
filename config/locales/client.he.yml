@@ -1833,6 +1833,7 @@ he:
       context:
         user: "חיפוש פוסטים לפי @{{username}}"
         category: "חפשו את הקטגוריה #{{category}}"
+        tag: "חיפוש אחר התגית #{{tag}}"
         topic: "חפשו בנושא זה"
         private_messages: "חיפוש הודעות"
       advanced:
@@ -3895,6 +3896,8 @@ he:
             change_theme_setting: "שנוי הגדרות ערכת עיצוב"
             disable_theme_component: "נטרול רכיב בערכת עיצוב"
             enable_theme_component: "הפעלת רכיב בערכת עיצוב"
+            revoke_title: "כותרת השלילה"
+            change_title: "שינוי הכותרת"
             api_key_create: "נוצר מפתח api"
             api_key_update: "עודכן מפתח api"
             api_key_destroy: "הושמד מפתח api"

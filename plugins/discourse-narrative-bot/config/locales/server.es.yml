@@ -146,7 +146,7 @@ es:
       hello:
         title: "¡Saludos!"
         message: |-
-          Gracias por unirte %{title}, ¡y bienvenido!
+          Gracias por unirte a %{title}, ¡y bienvenido!
 
           - Solo soy un robot, pero [nuestro amigable staff](%{base_uri}/about) también está aquí para ayudarte si necesitas comunicarte con una persona.
 

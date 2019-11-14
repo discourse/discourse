@@ -56,6 +56,7 @@ he:
       component_no_default: "רכיבי ערכת העיצוב לא יכולים להיות בררת המחדל של ערכת העיצוב"
       component_no_color_scheme: "לרכיבי ערכת עיצוב לא יכולים להיות מבחרי צבעים"
       no_multilevels_components: "ערכות עיצוב עם ערכות עיצוב צאצאיות לא יכולות להיות צאצאיות בעצמן"
+      optimized_link: קישורים משופרים לתמונות הם בני חלוף ואין לכלול אותם בקוד המקור של ערכת העיצוב.
     settings_errors:
       invalid_yaml: "ה־YAML שסופק שגוי."
       data_type_not_a_number: "הגדרת הסוג `%{name}` אינה נתמכת. הסוגים הנתמכים הם `integer`,‏ `bool`,‏ `list` ו־`enum`"
@@ -1310,6 +1311,8 @@ he:
       other: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
     missing_mailgun_api_key: "השרת מוגדר לשלוח דוא״ל דרך Mailgun אך לא סיפקת מפתח API שישמש לאימות ההודעות דרך ההתליה."
     bad_favicon_url: "טעינת סמל האתר נכשלה. נא לבדוק את הגדרות סמל האתר שלך תחת <a href='%{base_path}/admin/site_settings'>הגדרות האתר</a>."
+    deprecated_api_usage: "זיהינו בקשת API שמשתמשת בשיטת אימות מיושנת. נא לעדכן אותה כדי שתשתמש ב<a href='https://meta.discourse.org/t/discourse-api-documentation/22706'>אימות מבוסס כותרת</a>."
+    update_mail_receiver: "זיהינו גרסה מיושנת של מנגנון קבלת דוא״ל (mail-receiver). נא להתחבר לשרת הזה ב־ssh ולהריץ את הפקודה `‎/var/discourse/launcher rebuild mail-receiver`."
     poll_pop3_timeout: "החיבור לשרת POP3 התנתק. דוא\"ל נכנס לא יכול להשלף ואינו מאוחזר. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם ואת ספק השירות."
     poll_pop3_auth_error: "החיבור לשרת POP3 נכשל בשל שגיאת הזדהות. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם."
     force_https_warning: "האתר שלך משתמש ב־SSL. אך `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` לא מופעל עדיין בהגדרות האתר שלך."
@@ -1453,7 +1456,7 @@ he:
     content_security_policy: "הפעלת Content-Security-Policy (מדיניות אבטחת תוכן)"
     content_security_policy_report_only: "הפעלת Content-Security-Policy-Report-Only (מדיניות אבטחת תוכן בדיווח בלבד)"
     content_security_policy_collect_reports: "הפעלת איסוף דוחות הפרה של CSP (מדיניות אבטחת תוכן) תחת ‎/csp_reports"
-    content_security_policy_script_src: "רשימת מקורות מורשים נוספים לסקריפטים. המארח וה־CDN הנוכחיים נוספים כבררת מחדל."
+    content_security_policy_script_src: "מקורות נוספים לסקריפטים שעברו אישור. המארח וה־CDN הנוכחיים נכללים כבררת מחדל. ניתן לעיין ב<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>התקפות XSS בעזרת CSP - מדיניות אבטחת תוכן.</a>"
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי לנטרל."
     top_menu: "החליטו אילו פריטים יופיעו בניווט עמוד הבית ובאיזה סדר לדוגמה |אחרונים|חדשים|קטגוריות|מובילים|נקראו|פורסמו|סימניות"
     post_menu: "החליטו אילו פריטים מופיעים בתפריט הפוסט, ובאיזה סדר. למשל like|edit|flag|delete|share|bookmark|reply"
@@ -1898,6 +1901,7 @@ he:
     default_categories_tracking: "רשימת קטגוריות שנעקבת כברירת מחדל."
     default_categories_muted: "רשימת קטגוריות שמושתקות כברירת מחדל."
     default_categories_watching_first_post: "רשימת קטגוריות שבה הפוסט הראשון בכל נושא ייצפה אוטומטית."
+    mute_all_categories_by_default: "הגדרת כל רמות ההתראות כבררת מחדל בכל הקטגוריות למושתק. לדרוש ממשתמשים לבחור באופן יזום קטגוריות שיופיעו תחת ‚אחרונים’ ו־‚קטגוריות’. אם ברצונך להוסיף את בררות המחדל למשתמשים אלמוניים עליך להגדיר את ‚default_categories_‎’."
     default_tags_watching: "רשימת תגיות שבצפייה כבררת מחדל."
     default_tags_tracking: "רשימת תגיות שבמעקב כבררת מחדל"
     default_tags_muted: "רשימת תגיות שמושתקות כבררת מחדל."
@@ -2512,7 +2516,7 @@ he:
         אנו מאוד שמחים לראות שנעים לך לקחת חלק בפעילות הקהילתית ונשמח לדעת עוד עליך. ממליצים לך להשקיע רגע קט כדי [למלא את הפרופיל שלך](%{base_url}/my/preferences/profile), או סתם [לפתוח דיון חדש](%{base_url}/categories).
     welcome_staff:
       title: "ברוך בואך לסגל"
-      subject_template: "ברכותינו, הרשאותיך מעכשיו הן %{role}!"
+      subject_template: "ברכותינו, מצבך מעתה הוא %{role}!"
       text_body_template: |
         קיבלת הרשאות %{role} על ידי מישהו מבין חברי הסגל.
 

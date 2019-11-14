@@ -22,6 +22,14 @@ nl:
       description: "Onze geavanceerde gebruikers handleiding afgerond"
   discourse_narrative_bot:
     bio: "Hallo, ik ben geen echt persoon. Ik ben een bot die jou uitleg geeft over deze website. Om met mij te communiceren, stuur me een bericht of vermeld mij **`@%{discobot_username}`** ergens."
+    tl2_promotion_message:
+      subject_template: "Gefeliciteerd met de promotie van uw vertrouwensniveau!"
+      text_body_template: |
+        Nu u bent gepromoveerd, is het tijd voor wat geavanceerde functies!
+
+        Beantwoord dit bericht met `@discobot start advanced tutorial` om meer te lezen over wat u kunt doen.
+
+        U bent van harte uitgenodigd om mee te blijven werken – we genieten van uw aanwezigheid.
     dice:
       trigger: "gooi"
       invalid: |-

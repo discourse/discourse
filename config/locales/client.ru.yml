@@ -1833,6 +1833,7 @@ ru:
       context:
         user: "Искать сообщения от @{{username}}"
         category: "Искать в разделе #{{category}}"
+        tag: "Поиск по #{{tag}} тегу"
         topic: "Искать в этой теме"
         private_messages: "Искать в личных сообщениях"
       advanced:
@@ -3281,15 +3282,30 @@ ru:
         none: "Отсутствует ключ API."
         user: "Пользователь"
         title: "API"
+        key: "Ключ"
         created: Создано
+        updated: Обновленный
         last_used: Последнее Использование
         never_used: (никогда)
         generate: "Сгенерировать"
+        undo_revoke: "Отменить"
         revoke: "Отозвать"
         all_users: "Все пользователи"
+        active_keys: "Активные API  ключи"
+        manage_keys: Управление Ключами
         show_details: Детали
         description: Описание
+        no_description: (без описания)
+        all_api_keys: Все API ключи
+        user_mode: Уровень Пользователя
+        impersonate_all_users: Представиться как пользователь
+        single_user: "Отдельный Пользователь"
+        user_placeholder: Введите псевдоним
+        description_placeholder: "Для чего будет использоваться этот ключ?"
         save: Сохранить
+        new_key: Новый API ключ
+        revoked: Отозвать
+        delete: Окончательно Удалить
       web_hooks:
         title: "Webhooks"
         none: "Сейчас нет веб-перехватчиков."
@@ -3878,6 +3894,11 @@ ru:
             change_theme_setting: "изменить настройки темы"
             disable_theme_component: "отключить компонент темы"
             enable_theme_component: "включить компонент темы"
+            revoke_title: "отозвать название"
+            change_title: "изменить название"
+            api_key_create: "создать api ключ"
+            api_key_update: "обновление api ключа"
+            api_key_destroy: "уничтожить api ключ"
         screened_emails:
           title: "Почтовые адреса"
           description: "Когда кто-то создаёт новую учётную запись, проверяется данный почтовый адрес и регистрация блокируется или производятся другие дополнительные действия."

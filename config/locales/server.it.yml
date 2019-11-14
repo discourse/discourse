@@ -1333,7 +1333,6 @@ it:
     content_security_policy: "Abilita Content-Security-Policy"
     content_security_policy_report_only: "Abilita Content-Security-Policy-Report-Only"
     content_security_policy_collect_reports: "Abilita raccolta di report di violazione CSP in /csp_reports"
-    content_security_policy_script_src: "Ulteriori fonti di script nella whitelist. L'host attuale e il CDN sono inclusi per impostazione predefinita."
     invalidate_inactive_admin_email_after_days: "Gli account amministratore che non hanno visitato il sito in questo numero di giorni dovranno riconvalidare il proprio indirizzo email prima di accedere. Impostare su 0 per disabilitare."
     top_menu: "Determina quali oggetti appaiono nella navigazione della pagina iniziale, e in quale ordine. Esempio latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determina quali elementi vengono mostrati nel menu del messaggio, e in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
@@ -1945,6 +1944,8 @@ it:
     auto_deleted_by_timer: "Eliminato automaticamente dal timer."
   login:
     security_key_description: "Quando hai preparato la chiave di sicurezza fisica, premi il pulsante Autentica con Security Key qui sotto."
+    security_key_authenticate: "Autentica con Security Key"
+    security_key_not_allowed_error: "Il processo di autenticazione con Security Key è scaduto o è stato annullato."
     not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via mail quando potrai collegarti."
     incorrect_username_email_or_password: "Nome utente, email o password errati"
     incorrect_password: "Password errata"
@@ -2159,7 +2160,7 @@ it:
     ignored: "Grazie per averci informato. Stiamo provvedendo."
     ignored_and_deleted: "Grazie per averci informato. Abbiamo rimosso il messaggio."
   temporarily_closed_due_to_flags:
-    one: "Questo argomento è temporaneamente chiuso per almeno un&#39;ora %{count} a causa di un numero elevato di flag di comunità."
+    one: "Questo argomento è temporaneamente chiuso per almeno un'ora %{count} a causa di un numero elevato di flag di comunità."
     other: "Questo argomento resterà temporaneamente chiuso per almeno %{count} ore a causa di un numero elevato di segnalazioni dalla comunità."
   system_messages:
     private_topic_title: "Argomento #%{id}"
@@ -3455,8 +3456,8 @@ it:
         other: "Nessuno dei tags selezionati può essere utilizzato"
       in_this_category: '''%{tag_name}'' non può essere utilizzato in questa categoria'
       restricted_to:
-        one: '&quot;%{tag_name}&quot; è limitato alla categoria &quot;%{category_names}&quot;'
-        other: '''%{tag_name}'' è limitato alle seguenti categorie: %{category_names}'
+        one: '"%{tag_name}" è limitato alla categoria "%{category_names}"'
+        other: '"%{tag_name}" è limitato alle seguenti categorie: %{category_names}'
   rss_by_tag: "Argomenti etichettati %{tag}"
   finish_installation:
     congratulations: "Congratulazioni, hai installato Discourse!"

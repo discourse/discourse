@@ -963,8 +963,8 @@ fr:
         not_connected: "(non connecté)"
         confirm_modal_title: "Connectez le compte %{provider}"
         confirm_description:
-          account_specific: "Votre compte %{provider} &#39;%{account_description}&#39; sera utilisé pour l&#39;authentification."
-          generic: "Votre compte %{provider} sera utilisé pour l&#39;authentification."
+          account_specific: "Votre compte %{provider} '%{account_description}' sera utilisé pour l'authentification."
+          generic: "Votre compte %{provider} sera utilisé pour l'authentification."
       name:
         title: "Nom d'utilisateur"
         instructions: "votre nom complet (facultatif)"
@@ -2399,7 +2399,7 @@ fr:
       special_warning: "Avertissement : cette catégorie est une catégorie pré-remplie et les réglages de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas utiliser cette catégorie, supprimez là au lieu de détourner sa fonction."
       uncategorized_security_warning: "Cette catégorie est spéciale. Elle sert de zone d'attente pour les sujets qui n'ont pas de catégorie ; vous ne pouvez pas changer ses paramètres de sécurité."
       uncategorized_general_warning: 'Cette catégorie est spéciale. Elle sert de catégorie par défaut pour les nouveaux sujets qui ne sont pas liés à une catégorie. Si vous souhaitez changer cela et forcer la sélection de catégorie, <a href="%{settingLink}">veuillez désactiver ce paramètre</a>. Si vous voulez modifier son nom ou sa description, allez dans <a href="%{customizeLink}">Personnaliser / Contenu</a>.'
-      pending_permission_change_alert: "Vous n&#39;avez pas ajouté %{group} à cette catégorie; cliquez sur ce bouton pour les ajouter."
+      pending_permission_change_alert: "Vous n'avez pas ajouté %{group} à cette catégorie; cliquez sur ce bouton pour les ajouter."
       images: "Images"
       email_in: "Adresse de courriel entrant personnalisée :"
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
@@ -3122,7 +3122,7 @@ fr:
           details: "Quand un nouvel élément est prêt à être vérifié et quand son état est mis à jour."
         notification_event:
           name: "Notification d'Événement"
-          details: "Lorsqu&#39;un utilisateur reçoit une notification dans son flux."
+          details: "Lorsqu'un utilisateur reçoit une notification dans son flux."
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"

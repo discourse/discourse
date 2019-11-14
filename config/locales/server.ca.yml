@@ -1375,7 +1375,6 @@ ca:
     content_security_policy: "Activa Content-Security-Policy (CSP)"
     content_security_policy_report_only: "Activa Content-Security-Policy-Report-Only"
     content_security_policy_collect_reports: "Habilita la recol·lecció de reports de violació de CSP en /csp_reports"
-    content_security_policy_script_src: "Fonts addicionals de scripts permeses. L'amfitrió actual i el CDN s'hi inclouen per defecte."
     invalidate_inactive_admin_email_after_days: "Els comptes d'administrador que no hagin visitat el lloc web en aquest nombre de dies hauran de tornar a validar la seva adreça de correu abans d'iniciar la sessió. 0 per a desactivar-ho."
     top_menu: "Determineu quins elements apareixen en la navegació de la pàgina principal i en quin ordre. Per exemple, latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determineu quins elements apareixen en el menú de publicacions i en qui ordre. Exemple: like|edit|flag|delete|share|bookmark|reply"
@@ -2212,7 +2211,6 @@ ca:
         Estem molt contents que passeu temps amb nosaltres, i ens agradaria conèixer-vos més bé. Dediqueu un moment a [omplir el vostre perfil](%{base_url}/my/preferences/profile), o bé podeu [començar un tema nou](%{base_url}/categories).
     welcome_staff:
       title: "Benvingut membre de l'equip responsable"
-      subject_template: "Enhorabona, ara sou %{role}!"
     welcome_invite:
       title: "Benvingut convidat"
       subject_template: "Benvingut a %{site_name}!"
@@ -3137,10 +3135,10 @@ ca:
       invalid:
         one: "No es pot fer servir l'etiqueta que heu seleccionat"
         other: "No es pot fer servir cap de les etiquetes que heu seleccionat"
-      in_this_category: '&quot;%{tag_name}&quot; no es pot utilitzar en aquesta categoria'
+      in_this_category: '"%{tag_name}" no es pot utilitzar en aquesta categoria'
       restricted_to:
-        one: '&quot;%{tag_name}&quot; està restringit a la categoria &quot;%{category_names}&quot;'
-        other: '&quot;%{tag_name}&quot; és restringit a les següents categories: %{category_names}'
+        one: '"%{tag_name}" està restringit a la categoria "%{category_names}"'
+        other: '"%{tag_name}" és restringit a les següents categories: %{category_names}'
   rss_by_tag: "Temes etiquetats amb %{tag}"
   finish_installation:
     congratulations: "Enhorabona, heu instal·lat Discourse!"
@@ -3306,7 +3304,7 @@ ca:
       posted: '%{username} publicat en "%{topic}" - %{site_title}'
       private_message: '%{username} us ha enviat un missatge privat en "%{topic}" - %{site_title}'
       linked: '%{username} ha enllaçat a la vostra publicació des de "%{topic}" - %{site_title}'
-      watching_first_post: '%{username} ha creat un tema nou &quot;%{topic}&quot; - %{site_title}'
+      watching_first_post: '%{username} ha creat un tema nou "%{topic}" - %{site_title}'
       confirm_title: "Notificacions activades - %{site_title}"
       confirm_body: "Èxit! S'han activat les notificacions."
       custom: "Notificació de %{username} en %{site_title}"

@@ -2919,6 +2919,7 @@ zh_CN:
         show_details: 详情
         description: 描述
         save: 保存
+        revoked: 已撤销
       web_hooks:
         title: "Webhooks"
         none: "当前没有 Webhooks。"
