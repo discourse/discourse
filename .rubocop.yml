@@ -2,12 +2,12 @@ AllCops:
   TargetRubyVersion: 2.4
   DisabledByDefault: true
   Exclude:
-    - 'db/schema.rb'
-    - 'bundle/**/*'
-    - 'vendor/**/*'
-    - 'node_modules/**/*'
-    - 'public/**/*'
-    - 'plugins/**/gems/**/*'
+    - "db/schema.rb"
+    - "bundle/**/*"
+    - "vendor/**/*"
+    - "node_modules/**/*"
+    - "public/**/*"
+    - "plugins/**/gems/**/*"
 
 # Prefer &&/|| over and/or.
 Style/AndOr:
@@ -57,7 +57,7 @@ Layout/SpaceAroundOperators:
   Enabled: true
 
 Layout/SpaceBeforeFirstArg:
-    Enabled: true
+  Enabled: true
 
 # Defining a method with parameters needs parentheses.
 Style/MethodDefParentheses:
@@ -125,3 +125,6 @@ Style/SingleLineMethods:
 Style/Semicolon:
   Enabled: true
   AllowAsExpressionSeparator: true
+
+Style/RedundantReturn:
+  Enabled: true
