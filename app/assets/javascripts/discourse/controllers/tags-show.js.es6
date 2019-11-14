@@ -6,9 +6,7 @@ import {
   observes
 } from "discourse-common/utils/decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
-import {
-  default as NavItem
-} from "discourse/models/nav-item";
+import { default as NavItem } from "discourse/models/nav-item";
 
 export default Controller.extend(BulkTopicSelection, {
   application: inject(),
