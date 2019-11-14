@@ -33,8 +33,8 @@ const NavItem = EmberObject.extend({
     );
   },
 
-  @discourseComputed("filterMode")
-  href(filterMode) {
+  @discourseComputed("name", "category", "noSubcategories", "tagId")
+  href(filterMode, category, noSubcategories, tagId) {
     let customHref = null;
 
     NavItem.customNavItemHrefs.forEach(function(cb) {
@@ -48,7 +48,8 @@ const NavItem = EmberObject.extend({
       return customHref;
     }
 
-    return Discourse.getURL("/") + filterMode;
+    const context = { category, noSubcategories, tagId };
+    return NavItem.pathFor(filterMode, context);
   },
 
   @discourseComputed("name", "category", "noSubcategories")
@@ -98,6 +99,46 @@ NavItem.reopenClass({
   extraArgsCallbacks: [],
   customNavItemHrefs: [],
   extraNavItemDescriptors: [],
+
+  pathFor(filterType, context) {
+    let path = Discourse.getURL("");
+    let includesCategoryContext = false;
+    let includesTagContext = false;
+
+    if (filterType === "categories") {
+      path += "/categories";
+      return path;
+    }
+
+    if (context.tagId && Site.currentProp("filters").includes(filterType)) {
+      includesTagContext = true;
+      path += "/tags";
+    }
+
+    if (context.category) {
+      includesCategoryContext = true;
+      path += `/c/${Category.slugFor(context.category)}`;
+
+      if (context.noSubcategories) {
+        path += "/none";
+      }
+    }
+
+    if (includesTagContext) {
+      path += `/${context.tagId}`;
+    }
+
+    if (includesTagContext || includesCategoryContext) {
+      path += "/l";
+    }
+
+    path += `/${filterType}`;
+
+    // In the case of top, the nav item doesn't include a period because the
+    // period has its own selector just below
+
+    return path;
+  },
 
   // Create a nav item given a filterType. It returns null if there is not
   // valid nav item. The name is a historical artifact.

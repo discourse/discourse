@@ -7,40 +7,8 @@ import {
 } from "discourse-common/utils/decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import {
-  default as NavItem,
-  customNavItemHref
+  default as NavItem
 } from "discourse/models/nav-item";
-import Category from "discourse/models/category";
-import Site from "discourse/models/site";
-
-if (customNavItemHref) {
-  customNavItemHref(function(navItem) {
-    if (navItem.get("tagId")) {
-      const name = navItem.get("name");
-
-      if (!Site.currentProp("filters").includes(name)) {
-        return null;
-      }
-
-      let path = "/tags/";
-      const category = navItem.get("category");
-
-      if (category) {
-        path += "c/";
-        path += Category.slugFor(category);
-        if (navItem.get("noSubcategories")) {
-          path += "/none";
-        }
-        path += "/";
-      }
-
-      path += `${navItem.get("tagId")}/l/`;
-      return `${path}${name.replace(" ", "-")}`;
-    } else {
-      return null;
-    }
-  });
-}
 
 export default Controller.extend(BulkTopicSelection, {
   application: inject(),
