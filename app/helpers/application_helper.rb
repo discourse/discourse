@@ -456,7 +456,7 @@ module ApplicationHelper
   end
 
   def client_side_setup_data
-    service_worker_url = Rails.env.development? ? 'service-worker.js' : Rails.application.assets_manifest.assets['service-worker.js']
+    service_worker_url = 'service-worker.js'
 
     setup_data = {
       cdn: Rails.configuration.action_controller.asset_host,
