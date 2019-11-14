@@ -437,7 +437,7 @@ class CookedPostProcessor
   def get_filename(upload, src)
     return File.basename(src) unless upload
     return upload.original_filename unless upload.original_filename =~ /^blob(\.png)?$/i
-    return I18n.t("upload.pasted_image_filename")
+    I18n.t("upload.pasted_image_filename")
   end
 
   def create_node(tag_name, klass)

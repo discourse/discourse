@@ -115,7 +115,7 @@ class ReviewableSerializer < ApplicationSerializer
   end
 
   def topic_url
-    return object.topic&.url
+    object.topic&.url
   end
 
   def include_topic_url?

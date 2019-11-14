@@ -370,7 +370,7 @@ module DiscourseTagging
       tag_names.uniq!
     end
 
-    return opts[:unlimited] ? tag_names : tag_names[0...SiteSetting.max_tags_per_topic]
+    opts[:unlimited] ? tag_names : tag_names[0...SiteSetting.max_tags_per_topic]
   end
 
   def self.add_or_create_tags_by_name(taggable, tag_names_arg, opts = {})

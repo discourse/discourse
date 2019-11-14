@@ -104,7 +104,7 @@ class SearchLog < ActiveRecord::Base
         details << { x: Date.parse(record['date'].to_s), y: record['count'] }
       end
 
-    return {
+    {
       type: "search_log_term",
       title: I18n.t("search_logs.graph_title"),
       start_date: start_of(period),

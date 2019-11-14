@@ -84,7 +84,7 @@ module Jobs
         end
       end
 
-      return topic
+      topic
     end
 
     def send_invite(invite)
