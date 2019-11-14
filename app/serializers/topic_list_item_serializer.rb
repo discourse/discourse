@@ -88,7 +88,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def allowed_user_count
-    return object.allowed_users.count
+    object.allowed_users.count
   end
 
   def include_allowed_user_count?
