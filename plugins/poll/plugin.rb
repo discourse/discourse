@@ -230,6 +230,16 @@ after_initialize do
         serialized_voters(poll, opts)
       end
 
+      def grouped_voters(post_id, poll_name, user, opts = {})
+        post = Post.find_by(id: post_id)
+        raise Discourse::InvalidParameters.new("post_id is invalid") unless post
+
+        poll = Poll.find_by(post_id: post_id, name: poll_name)
+        raise Discourse::InvalidParameters.new("poll_name is invalid") unless poll&.can_see_voters?(user)
+
+        serialized_voters(poll, opts)
+      end
+
       def schedule_jobs(post)
         Poll.where(post: post).find_each do |poll|
           job_args = {
@@ -304,7 +314,7 @@ after_initialize do
   class DiscoursePoll::PollsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
-    before_action :ensure_logged_in, except: [:voters]
+    before_action :ensure_logged_in, except: [:voters, :grouped_voters]
 
     def vote
       post_id   = params.require(:post_id)
@@ -344,12 +354,24 @@ after_initialize do
         render_json_error e.message
       end
     end
+
+    def grouped_voters
+      post_id   = params.require(:post_id)
+      poll_name = params.require(:poll_name)
+
+      begin
+        render json: { voters: DiscoursePoll::Poll.grouped_voters(post_id, poll_name, current_user) }
+      rescue StandardError => e
+        render_json_error e.message
+      end
+    end
   end
 
   DiscoursePoll::Engine.routes.draw do
     put "/vote" => "polls#vote"
     put "/toggle_status" => "polls#toggle_status"
     get "/voters" => 'polls#voters'
+    get "/grouped_voters" => 'polls#grouped_voters'
   end
 
   Discourse::Application.routes.append do

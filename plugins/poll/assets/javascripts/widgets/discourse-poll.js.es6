@@ -424,6 +424,7 @@ createWidget("discourse-poll-info", {
 
 createWidget("discourse-poll-pie-canvas", {
   tagName: "canvas.poll-results-canvas",
+
   buildAttributes(attrs) {
     return {
       id: `poll-results-chart-${attrs.id}`
@@ -431,10 +432,51 @@ createWidget("discourse-poll-pie-canvas", {
   }
 });
 
+function fetchGroupedVoters(data) {
+  return ajax("/polls/grouped_voters.json", { data }).catch(error => {
+    if (error) {
+      popupAjaxError(error);
+    } else {
+      bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
+    }
+  });
+}
+
+createWidget("discourse-poll-grouped-pies", {
+  tagName: "div.poll-grouped-pies",
+  html(attrs) {
+    later(() => {
+      fetchGroupedVoters({
+        post_id: attrs.post.id,
+        poll_name: attrs.poll.name
+      }).then(result => {
+        // eslint-disable-next-line
+        console.log(result);
+      });
+    }, 100);
+    return "";
+  }
+});
+
+function clearPieChart(id) {
+  let el = document.querySelector(`#poll-results-chart-${id}`);
+  if (el) el.parentNode.removeChild(el);
+}
+
 createWidget("discourse-poll-pie-chart", {
   tagName: "div.poll-results-chart",
   html(attrs) {
-    if (attrs.showResults && attrs.poll.chart) {
+    const contents = [];
+
+    if (!attrs.showResults) {
+      clearPieChart(this.attrs.id);
+      return contents;
+    }
+
+    if (attrs.showAdvanced) {
+      clearPieChart(this.attrs.id);
+      contents.push(this.attach("discourse-poll-grouped-pies", attrs));
+    } else {
       let data = attrs.poll.get("options").map(o => o.votes);
       let labels = attrs.poll.get("options").map(o => o.html);
       loadScript("/javascripts/Chart.min.js").then(() => {
@@ -463,12 +505,20 @@ createWidget("discourse-poll-pie-chart", {
           }
         });
       }, 500);
-      return this.attach("discourse-poll-pie-canvas", attrs);
-    } else {
-      let el = document.querySelector(`#poll-results-chart-${this.attrs.id}`);
-      if (el) el.parentNode.removeChild(el);
+      contents.push(this.attach("discourse-poll-pie-canvas", attrs));
     }
-    return "";
+
+    const text = attrs.showAdvanced
+      ? "Combined Responces"
+      : "Grouped Responses";
+    contents.push(new RawHtml({ html: `<a>${text}</a>` }));
+    return contents;
+  },
+
+  click(e) {
+    if ($(e.target).closest("a").length !== 0) {
+      this.sendWidgetAction("showAdvancedPieCharts", e.target);
+    }
   }
 });
 
@@ -809,5 +859,9 @@ export default createWidget("discourse-poll", {
       .finally(() => {
         state.loading = false;
       });
+  },
+
+  showAdvancedPieCharts() {
+    this.attrs.showAdvanced = !this.attrs.showAdvanced;
   }
 });
