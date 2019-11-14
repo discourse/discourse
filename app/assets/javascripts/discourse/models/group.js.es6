@@ -24,8 +24,6 @@ const Group = RestModel.extend({
     this.set("owners", []);
   },
 
-  hasOwners: notEmpty("owners"),
-
   @discourseComputed("automatic_membership_email_domains")
   emailDomains(value) {
     return isEmpty(value) ? "" : value;
@@ -34,14 +32,6 @@ const Group = RestModel.extend({
   @discourseComputed("automatic")
   type(automatic) {
     return automatic ? "automatic" : "custom";
-  },
-
-  @discourseComputed("user_count")
-  userCountDisplay(userCount) {
-    // don't display zero its ugly
-    if (userCount > 0) {
-      return userCount;
-    }
   },
 
   findMembers(params) {
