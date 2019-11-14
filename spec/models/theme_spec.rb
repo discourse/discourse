@@ -267,7 +267,7 @@ HTML
     def transpile(html)
       f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: 1, name: "after_header", value: html)
       f.ensure_baked!
-      return f.value_baked, f.javascript_cache
+      [f.value_baked, f.javascript_cache]
     end
 
     it "transpiles ES6 code" do

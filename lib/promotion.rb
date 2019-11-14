@@ -103,7 +103,7 @@ class Promotion
     return false if (stat.time_read / 60) < SiteSetting.tl1_requires_time_spent_mins
     return false if ((Time.now - user.created_at) / 60) < SiteSetting.tl1_requires_time_spent_mins
 
-    return true
+    true
   end
 
   def self.tl3_met?(user)

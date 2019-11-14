@@ -25,7 +25,7 @@ class ThemesInstallTask
       end
     end
 
-    return log, counts
+    [log, counts]
   end
 
   attr_reader :url, :options

@@ -320,7 +320,7 @@ class SessionController < ApplicationController
 
   def invalid_security_key(user, err_message = nil)
     stage_webauthn_security_key_challenge(user) if !params[:security_key_credential]
-    return render json: failed_json.merge(
+    render json: failed_json.merge(
       error: err_message || I18n.t("login.invalid_security_key"),
       reason: "invalid_security_key",
       backup_enabled: user.backup_codes_enabled?
@@ -403,7 +403,7 @@ class SessionController < ApplicationController
       end
     end
 
-    return render json: { error: I18n.t('email_login.invalid_token') }
+    render json: { error: I18n.t('email_login.invalid_token') }
   rescue ::Webauthn::SecurityKeyError => err
     invalid_security_key(user, err.message)
   end

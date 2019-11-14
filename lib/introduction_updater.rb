@@ -27,7 +27,7 @@ class IntroductionUpdater
   protected
 
   def summary_from_post(post)
-    return post ? post.raw.split("\n").first : nil
+    post ? post.raw.split("\n").first : nil
   end
 
   def find_welcome_post

@@ -228,7 +228,7 @@ class Reviewable < ActiveRecord::Base
     priority ||= SiteSetting.reviewable_default_visibility
     id = Reviewable.priorities[priority.to_sym]
     return 0.0 if id.nil?
-    return PluginStore.get('reviewables', "priority_#{id}").to_f
+    PluginStore.get('reviewables', "priority_#{id}").to_f
   end
 
   def history

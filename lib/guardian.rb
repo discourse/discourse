@@ -120,7 +120,7 @@ class Guardian
   def can_see?(obj)
     if obj
       see_method = method_name_for :see, obj
-      return (see_method ? public_send(see_method, obj) : true)
+      (see_method ? public_send(see_method, obj) : true)
     end
   end
 
@@ -539,7 +539,7 @@ class Guardian
   def can_do?(action, obj)
     if obj && authenticated?
       action_method = method_name_for action, obj
-      return (action_method ? public_send(action_method, obj) : true)
+      (action_method ? public_send(action_method, obj) : true)
     else
       false
     end

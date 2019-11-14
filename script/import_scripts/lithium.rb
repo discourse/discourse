@@ -855,7 +855,7 @@ SQL
       return nil
     end
 
-    return upload, real_filename
+    [upload, real_filename]
   end
 
   def post_process_posts
