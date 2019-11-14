@@ -239,7 +239,7 @@ module SvgSprite
 
   def self.version(theme_ids = [])
     get_set_cache("version_#{Theme.transform_ids(theme_ids).join(',')}") do
-      Digest::SHA1.hexdigest(all_icons(theme_ids).join('|'))
+      Digest::SHA1.hexdigest(bundle(theme_ids))
     end
   end
 
