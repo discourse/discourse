@@ -261,7 +261,8 @@ after_initialize do
           results: poll["results"].presence || "always",
           min: poll["min"],
           max: poll["max"],
-          step: poll["step"]
+          step: poll["step"],
+          chart: poll["chart"] || false
         )
 
         poll["options"].each do |option|

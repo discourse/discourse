@@ -8,6 +8,9 @@ import evenRound from "discourse/plugins/poll/lib/even-round";
 import { avatarFor } from "discourse/widgets/post";
 import round from "discourse/lib/round";
 import { relativeAge } from "discourse/lib/formatter";
+import loadScript from "discourse/lib/load-script";
+import { getColors } from "../lib/chart-colors";
+import { later } from "@ember/runloop";
 
 function optionHtml(option) {
   const $node = $(`<span>${option.html}</span>`);
@@ -322,8 +325,12 @@ createWidget("discourse-poll-container", {
     const options = poll.get("options");
 
     if (attrs.showResults) {
-      const type = poll.get("type") === "number" ? "number" : "standard";
-      return this.attach(`discourse-poll-${type}-results`, attrs);
+      if (attrs.poll.get("chart")) {
+        return this.attach("discourse-poll-results-chart", attrs);
+      } else {
+        const type = poll.get("type") === "number" ? "number" : "standard";
+        return this.attach(`discourse-poll-${type}-results`, attrs);
+      }
     } else if (options) {
       return h(
         "ul",
@@ -415,12 +422,53 @@ createWidget("discourse-poll-info", {
   }
 });
 
-createWidget("discourse-poll-results-chart", {
-  tagName: "canvas.poll-results-chart",
+createWidget("discourse-poll-results-canvas", {
+  tagName: "canvas.poll-results-canvas",
   buildAttributes(attrs) {
     return {
       id: `poll-results-chart-${attrs.id}`
     };
+  }
+});
+
+createWidget("discourse-poll-results-chart", {
+  tagName: "div.poll-results-chart",
+  html(attrs) {
+    if (attrs.showResults && attrs.poll.chart) {
+      let data = attrs.poll.get("options").map(o => o.votes);
+      let labels = attrs.poll.get("options").map(o => o.html);
+      loadScript("/javascripts/Chart.min.js").then(() => {
+        later(() => {
+          let el = document.querySelector(
+            `#poll-results-chart-${this.attrs.id}`
+          );
+          if (!el.$chartjs) {
+            let config = {
+              type: "pie",
+              data: {
+                datasets: [
+                  {
+                    data: data,
+                    backgroundColor: getColors(data.length)
+                  }
+                ],
+                labels: labels
+              },
+              options: {
+                responsive: true
+              }
+            };
+            // eslint-disable-next-line
+            new Chart(el.getContext("2d"), config);
+          }
+        });
+      }, 500);
+      return this.attach("discourse-poll-results-canvas", attrs);
+    } else {
+      let el = document.querySelector(`#poll-results-chart-${this.attrs.id}`);
+      if (el) el.parentNode.removeChild(el);
+    }
+    return "";
   }
 });
 
@@ -584,7 +632,6 @@ export default createWidget("discourse-poll", {
     return h("div", [
       this.attach("discourse-poll-container", newAttrs),
       this.attach("discourse-poll-info", newAttrs),
-      this.attach("discourse-poll-results-chart", newAttrs),
       this.attach("discourse-poll-buttons", newAttrs)
     ]);
   },

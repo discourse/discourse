@@ -109,3 +109,5 @@ en:
           label: Enter one poll option per line
         automatic_close:
           label: Automatically close poll
+        show_chart:
+          label: Show chart of results

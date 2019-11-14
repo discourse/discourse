@@ -173,6 +173,8 @@ export default Controller.extend({
     "pollMax",
     "pollStep",
     "autoClose",
+    "showChart",
+
     "date",
     "time"
   )
@@ -187,6 +189,7 @@ export default Controller.extend({
     pollMax,
     pollStep,
     autoClose,
+    showChart,
     date,
     time
   ) {
@@ -212,6 +215,7 @@ export default Controller.extend({
     if (pollMax) pollHeader += ` max=${pollMax}`;
     if (isNumber) pollHeader += ` step=${step}`;
     if (publicPoll) pollHeader += ` public=true`;
+    if (showChart) pollHeader += ` chart=true`;
     if (autoClose) {
       let closeDate = moment(
         date + " " + time,
@@ -306,6 +310,7 @@ export default Controller.extend({
       pollMax: null,
       pollStep: 1,
       autoClose: false,
+      showChart: false,
       date: moment()
         .add(1, "day")
         .format("YYYY-MM-DD"),
