@@ -70,8 +70,8 @@ const Topic = RestModel.extend({
     return user || this.creator;
   },
 
-  @discourseComputed("posters.[]", "participants.[]")
-  featuredUsers(posters, participants) {
+  @discourseComputed("posters.[]", "participants.[]", "allowed_user_count")
+  featuredUsers(posters, participants, allowedUserCount) {
     let users = posters;
     const maxUserCount = 5;
     const posterCount = users.length;
@@ -94,6 +94,13 @@ const Topic = RestModel.extend({
           }
         }
         return false;
+      });
+    }
+
+    if (this.isPrivateMessage && allowedUserCount > maxUserCount) {
+      users.splice(maxUserCount - 2, 1); // remove second-last avatar
+      users.push({
+        moreCount: `+${allowedUserCount - maxUserCount + 1}`
       });
     }
 
