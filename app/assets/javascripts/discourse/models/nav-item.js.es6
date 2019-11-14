@@ -99,23 +99,23 @@ NavItem.reopenClass({
   customNavItemHrefs: [],
   extraNavItemDescriptors: [],
 
-  // create a nav item from the text, will return null if there is not valid nav item for this particular text
-  fromText(text, opts) {
-    let testName = text.split("/")[0],
-      anonymous = !User.current();
+  // Create a nav item given a filterType. It returns null if there is not
+  // valid nav item. The name is a historical artifact.
+  fromText(filterType, opts) {
+    const anonymous = !User.current();
 
     opts = opts || {};
 
     if (
       anonymous &&
-      !Site.currentProp("anonymous_top_menu_items").includes(testName)
+      !Site.currentProp("anonymous_top_menu_items").includes(filterType)
     )
       return null;
 
-    if (!Category.list() && testName === "categories") return null;
-    if (!Site.currentProp("top_menu_items").includes(testName)) return null;
+    if (!Category.list() && filterType === "categories") return null;
+    if (!Site.currentProp("top_menu_items").includes(filterType)) return null;
 
-    var args = { name: text, hasIcon: text === "unread" };
+    var args = { name: filterType, hasIcon: filterType === "unread" };
     if (opts.category) {
       args.category = opts.category;
     }
@@ -129,7 +129,7 @@ NavItem.reopenClass({
       args.noSubcategories = true;
     }
     NavItem.extraArgsCallbacks.forEach(cb =>
-      _.merge(args, cb.call(this, text, opts))
+      _.merge(args, cb.call(this, filterType, opts))
     );
 
     const store = Discourse.__container__.lookup("service:store");
@@ -145,11 +145,10 @@ NavItem.reopenClass({
 
     let items = Discourse.SiteSettings.top_menu.split("|");
 
-    if (
-      args.filterMode &&
-      !items.some(i => i.indexOf(args.filterMode) !== -1)
-    ) {
-      items.push(args.filterMode);
+    const filterType = (args.filterMode || "").split("/").pop();
+
+    if (!items.some(i => filterType === i)) {
+      items.push(filterType);
     }
 
     items = items
