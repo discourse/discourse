@@ -14,6 +14,7 @@ export default Controller.extend({
   votePollResult: "on_vote",
   closedPollResult: "on_close",
   staffPollResult: "staff_only",
+  pollChartTypes: [{ name: "Bar", value: "bar"}, { name: "Pie", value: "pie"}],
 
   init() {
     this._super(...arguments);
@@ -173,7 +174,7 @@ export default Controller.extend({
     "pollMax",
     "pollStep",
     "autoClose",
-    "showChart",
+    "chartType",
 
     "date",
     "time"
@@ -189,7 +190,7 @@ export default Controller.extend({
     pollMax,
     pollStep,
     autoClose,
-    showChart,
+    chartType,
     date,
     time
   ) {
@@ -215,7 +216,7 @@ export default Controller.extend({
     if (pollMax) pollHeader += ` max=${pollMax}`;
     if (isNumber) pollHeader += ` step=${step}`;
     if (publicPoll) pollHeader += ` public=true`;
-    if (showChart) pollHeader += ` chart=true`;
+    if (chartType) pollHeader += ` chart=${chartType}`;
     if (autoClose) {
       let closeDate = moment(
         date + " " + time,
@@ -310,7 +311,7 @@ export default Controller.extend({
       pollMax: null,
       pollStep: 1,
       autoClose: false,
-      showChart: false,
+      chartType: "bar",
       date: moment()
         .add(1, "day")
         .format("YYYY-MM-DD"),

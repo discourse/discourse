@@ -325,12 +325,12 @@ createWidget("discourse-poll-container", {
     const options = poll.get("options");
 
     if (attrs.showResults) {
-      if (attrs.poll.get("chart")) {
-        return this.attach("discourse-poll-results-chart", attrs);
-      } else {
-        const type = poll.get("type") === "number" ? "number" : "standard";
-        return this.attach(`discourse-poll-${type}-results`, attrs);
-      }
+      const type = poll.get("type") === "number" ? "number" : "standard";
+      const resultsWidget =
+        type === "number" || attrs.poll.get("chart") !== "pie"
+          ? `discourse-poll-${type}-results`
+          : "discourse-poll-pie-chart";
+      return this.attach(resultsWidget, attrs);
     } else if (options) {
       return h(
         "ul",
@@ -422,7 +422,7 @@ createWidget("discourse-poll-info", {
   }
 });
 
-createWidget("discourse-poll-results-canvas", {
+createWidget("discourse-poll-pie-canvas", {
   tagName: "canvas.poll-results-canvas",
   buildAttributes(attrs) {
     return {
@@ -431,7 +431,7 @@ createWidget("discourse-poll-results-canvas", {
   }
 });
 
-createWidget("discourse-poll-results-chart", {
+createWidget("discourse-poll-pie-chart", {
   tagName: "div.poll-results-chart",
   html(attrs) {
     if (attrs.showResults && attrs.poll.chart) {
@@ -463,7 +463,7 @@ createWidget("discourse-poll-results-chart", {
           }
         });
       }, 500);
-      return this.attach("discourse-poll-results-canvas", attrs);
+      return this.attach("discourse-poll-pie-canvas", attrs);
     } else {
       let el = document.querySelector(`#poll-results-chart-${this.attrs.id}`);
       if (el) el.parentNode.removeChild(el);

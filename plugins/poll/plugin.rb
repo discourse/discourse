@@ -262,7 +262,7 @@ after_initialize do
           min: poll["min"],
           max: poll["max"],
           step: poll["step"],
-          chart: poll["chart"] || false
+          chart: poll["chart"] || "bar"
         )
 
         poll["options"].each do |option|
