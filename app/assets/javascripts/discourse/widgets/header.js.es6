@@ -267,7 +267,7 @@ createWidget("header-cloak", {
   scheduleRerender() {}
 });
 
-const forceContextEnabled = ["category", "user", "private_messages"];
+const forceContextEnabled = ["category", "user", "private_messages", "tag"];
 
 let additionalPanels = [];
 export function attachAdditionalPanel(name, toggle, transformAttrs) {

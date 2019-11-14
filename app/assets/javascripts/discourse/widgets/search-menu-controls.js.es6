@@ -54,7 +54,7 @@ createWidget("search-context", {
     if (ctx) {
       const description = searchContextDescription(
         get(ctx, "type"),
-        get(ctx, "user.username") || get(ctx, "category.name")
+        get(ctx, "user.username") || get(ctx, "category.name") || get(ctx, "tag.id")
       );
       result.push(
         h("label", [
