@@ -2347,6 +2347,31 @@ RSpec.describe TopicsController do
       user.reload
       expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
     end
+
+    context 'category' do
+      fab!(:category) { Fabricate(:category) }
+      fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
+
+      it 'updates last_seen_at for main category' do
+        sign_in(user)
+        category_user = CategoryUser.create!(category_id: category.id, user_id: user.id)
+        subcategory_user = CategoryUser.create!(category_id: subcategory.id, user_id: user.id)
+        put "/topics/reset-new.json?category_id=#{category.id}"
+
+        expect(category_user.reload.last_seen_at).not_to be_nil
+        expect(subcategory_user.reload.last_seen_at).to be_nil
+      end
+
+      it 'updates last_seen_at for main category and subcategories' do
+        sign_in(user)
+        category_user = CategoryUser.create!(category_id: category.id, user_id: user.id)
+        subcategory_user = CategoryUser.create!(category_id: subcategory.id, user_id: user.id)
+        put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true"
+
+        expect(category_user.reload.last_seen_at).not_to be_nil
+        expect(subcategory_user.reload.last_seen_at).not_to be_nil
+      end
+    end
   end
 
   describe '#feature_stats' do

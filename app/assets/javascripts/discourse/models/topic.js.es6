@@ -765,8 +765,9 @@ Topic.reopenClass({
     });
   },
 
-  resetNew() {
-    return ajax("/topics/reset-new", { type: "PUT" });
+  resetNew(category, include_subcategories) {
+    const data = category ? { category_id: category.id, include_subcategories } : {};
+    return ajax("/topics/reset-new", { type: "PUT", data });
   },
 
   idForSlug(slug) {
