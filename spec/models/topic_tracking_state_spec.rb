@@ -353,6 +353,28 @@ describe TopicTrackingState do
     expect(report.length).to eq(1)
   end
 
+  it "correctly handles seen categories" do
+    user = Fabricate(:user)
+    post
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(1)
+
+    CategoryUser.create!(user_id: user.id,
+                         notification_level: CategoryUser.notification_levels[:regular],
+                         category_id: post.topic.category_id,
+                         last_seen_at: post.topic.created_at
+                         )
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(0)
+
+    post.topic.touch(:created_at)
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(1)
+  end
+
   it "correctly handles capping" do
     user = Fabricate(:user)
 
