@@ -6,8 +6,6 @@
 # authors: Nick Sahler, Alan Tan
 # url: https://github.com/discourse/discourse/tree/master/plugins/discourse-narrative-bot
 
-require 'open-uri'
-
 enabled_site_setting :discourse_narrative_bot_enabled
 hide_plugin if self.respond_to?(:hide_plugin)
 
@@ -111,7 +109,12 @@ after_initialize do
 
       def fetch_avatar_url(user)
         avatar_url = UrlHelper.absolute(Discourse.base_uri + user.avatar_template.gsub('{size}', '250'))
-        open(avatar_url, 'rb').read
+        FileHelper.download(
+          avatar_url,
+          max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+          tmp_file_name: 'narrative-bot-avatar',
+          follow_redirect: true
+        )
       rescue OpenURI::HTTPError
         # Ignore if fetching image returns a non 200 response
       end
