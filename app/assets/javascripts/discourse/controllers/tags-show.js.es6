@@ -99,11 +99,12 @@ export default Controller.extend(BulkTopicSelection, {
     "q"
   ],
 
-  @discourseComputed("category", "tag.id", "filterMode")
-  navItems(category, tagId, filterMode) {
+  @discourseComputed("category", "tag.id", "filterMode", "noSubcategories")
+  navItems(category, tagId, filterMode, noSubcategories) {
     return NavItem.buildList(category, {
       tagId,
-      filterMode
+      filterMode,
+      noSubcategories
     });
   },
 
