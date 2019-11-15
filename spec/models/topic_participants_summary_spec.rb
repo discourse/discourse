@@ -21,9 +21,9 @@ describe TopicParticipantsSummary do
     fab!(:user4) { Fabricate(:user) }
     fab!(:user5) { Fabricate(:user) }
 
-    it "must never contains the user and at most 4 participants" do
+    it "must never contains the user and at most 5 participants" do
       topic.allowed_user_ids = [user1.id, user2.id, user3.id, user4.id, user5.id]
-      expect(summary.map(&:user)).to eq([user1, user2, user3, user4])
+      expect(summary.map(&:user)).to eq([user1, user2, user3, user4, user5])
     end
 
   end
