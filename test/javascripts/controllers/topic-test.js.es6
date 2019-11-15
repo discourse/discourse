@@ -324,7 +324,10 @@ QUnit.test("canChangeOwner", function(assert) {
   this.registry.injection("controller", "currentUser", "current-user:main");
 
   const postStream = {
-    posts: [{ id: 1, username: "gary" }, { id: 2, username: "lili" }],
+    posts: [
+      { id: 1, username: "gary" },
+      { id: 2, username: "lili" }
+    ],
     stream: [1, 2]
   };
 
