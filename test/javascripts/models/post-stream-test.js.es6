@@ -141,11 +141,7 @@ QUnit.test("closestPostNumberFor", assert => {
 
 QUnit.test("closestDaysAgoFor", assert => {
   const postStream = buildStream(1231);
-  postStream.set("timelineLookup", [
-    [1, 10],
-    [3, 8],
-    [5, 1]
-  ]);
+  postStream.set("timelineLookup", [[1, 10], [3, 8], [5, 1]]);
 
   assert.equal(postStream.closestDaysAgoFor(1), 10);
   assert.equal(postStream.closestDaysAgoFor(2), 10);
