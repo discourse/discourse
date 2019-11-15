@@ -652,10 +652,7 @@ const Composer = RestModel.extend({
     const replyBlank = isEmpty(this.reply);
 
     const composer = this;
-    if (
-      !replyBlank &&
-      ((opts.reply || isEdit(opts.action)) && this.replyDirty)
-    ) {
+    if (!replyBlank && (opts.reply || isEdit(opts.action)) && this.replyDirty) {
       return;
     }
 

@@ -49,10 +49,10 @@ export function isPushNotificationsSupported(mobileView) {
   if (
     !(
       "serviceWorker" in navigator &&
-      (ServiceWorkerRegistration &&
+      ServiceWorkerRegistration &&
         typeof Notification !== "undefined" &&
         "showNotification" in ServiceWorkerRegistration.prototype &&
-        "PushManager" in window)
+        "PushManager" in window
     )
   ) {
     return false;

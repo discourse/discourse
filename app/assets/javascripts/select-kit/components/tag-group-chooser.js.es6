@@ -27,7 +27,10 @@ export default MultiSelectComponent.extend(TagsMixin, {
   },
 
   mutateValues(values) {
-    this.set("tagGroups", values.filter(v => v));
+    this.set(
+      "tagGroups",
+      values.filter(v => v)
+    );
   },
 
   @discourseComputed("tagGroups")

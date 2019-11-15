@@ -81,7 +81,10 @@ export default Controller.extend(ModalFunctionality, {
     const topics = this.get("model.topics");
     // const relistButtonIndex = _buttons.findIndex(b => b.action === 'relistTopics');
 
-    this.set("buttons", _buttons.filter(b => b.buttonVisible(topics)));
+    this.set(
+      "buttons",
+      _buttons.filter(b => b.buttonVisible(topics))
+    );
     this.set("modal.modalClass", "topic-bulk-actions-modal small");
     this.send("changeBulkTemplate", "modal/bulk-actions-buttons");
   },

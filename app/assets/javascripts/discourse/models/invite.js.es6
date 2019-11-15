@@ -53,9 +53,9 @@ Invite.reopenClass({
   findInvitedCount(user) {
     if (!user) Promise.resolve();
 
-    return ajax(userPath(`${user.username_lower}/invited_count.json`)).then(
-      result => EmberObject.create(result.counts)
-    );
+    return ajax(
+      userPath(`${user.username_lower}/invited_count.json`)
+    ).then(result => EmberObject.create(result.counts));
   },
 
   reinviteAll() {

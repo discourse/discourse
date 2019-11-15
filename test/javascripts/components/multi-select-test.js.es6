@@ -14,7 +14,10 @@ componentTest("with objects and values", {
   template: "{{multi-select content=items values=values}}",
 
   beforeEach() {
-    this.set("items", [{ id: 1, name: "hello" }, { id: 2, name: "world" }]);
+    this.set("items", [
+      { id: 1, name: "hello" },
+      { id: 2, name: "world" }
+    ]);
     this.set("values", [1, 2]);
   },
 
