@@ -198,8 +198,14 @@ NavItem.reopenClass({
         i => i !== null && !(category && i.get("name").indexOf("categor") === 0)
       );
 
+    const context = {
+      category: args.category,
+      tagId: args.tagId,
+      noSubcategories: args.noSubcategories
+    };
+
     const extraItems = NavItem.extraNavItemDescriptors
-      .map(descriptor => ExtraNavItem.create(descriptor))
+      .map(descriptor => ExtraNavItem.create(_.merge({}, context, descriptor)))
       .filter(item => {
         if (!item.customFilter) return true;
         return item.customFilter(category, args);
