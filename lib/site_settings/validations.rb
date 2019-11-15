@@ -143,6 +143,17 @@ module SiteSettings::Validations
     validate_bucket_setting("s3_backup_bucket", SiteSetting.s3_upload_bucket, new_val)
   end
 
+  def validate_enforce_second_factor(new_val)
+    return if SiteSetting.enable_local_logins
+    validate_error :second_factor_cannot_be_enforced_with_disabled_local_login
+  end
+
+  def validate_enable_local_logins(new_val)
+    return if new_val == "t"
+    return if SiteSetting.enforce_second_factor == "no"
+    validate_error :local_login_cannot_be_disabled_if_second_factor_enforced
+  end
+
   private
 
   def validate_bucket_setting(setting_name, upload_bucket, backup_bucket)
