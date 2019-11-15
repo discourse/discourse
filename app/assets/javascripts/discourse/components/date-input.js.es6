@@ -26,6 +26,10 @@ export default Component.extend({
     } else {
       this._loadPikadayPicker(container);
     }
+
+    if (this.date && this._picker) {
+      this._picker.setDate(this.date, true);
+    }
   },
 
   didUpdateAttrs() {
@@ -70,6 +74,9 @@ export default Component.extend({
     };
     picker.destroy = () => {
       /* do nothing for native */
+    };
+    picker.setDate = date => {
+      picker.value = date;
     };
     this._picker = picker;
   },

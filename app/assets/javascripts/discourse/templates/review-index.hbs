@@ -59,6 +59,10 @@
         </div>
       {{/if}}
 
+      <div class='reviewable-filter date-range'>
+        {{date-time-input-range showFromTime=false showToTime=false from=filterFromDate to=filterToDate onChange=setRange}}
+      </div>
+
       <div class='reviewable-filter sort-order'>
         {{i18n "review.order_by"}}
         {{combo-box value=filterSortOrder content=sortOrders}}

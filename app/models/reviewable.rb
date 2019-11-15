@@ -406,7 +406,9 @@ class Reviewable < ActiveRecord::Base
     offset: nil,
     priority: nil,
     username: nil,
-    sort_order: nil
+    sort_order: nil,
+    from_date: nil,
+    to_date: nil
   )
     min_score = Reviewable.min_score_for_priority(priority)
 
@@ -434,6 +436,8 @@ class Reviewable < ActiveRecord::Base
     result = result.where(category_id: category_id) if category_id
     result = result.where(topic_id: topic_id) if topic_id
     result = result.where("score >= ?", min_score) if min_score > 0
+    result = result.where("created_at >= ?", from_date) if from_date
+    result = result.where("created_at <= ?", to_date) if to_date
 
     # If a reviewable doesn't have a target, allow us to filter on who created that reviewable.
     if user_id
