@@ -35,6 +35,7 @@ describe ReviewableSerializer do
   describe "urls" do
 
     it "links to the flagged post" do
+      Discourse.stubs(:base_url).returns("http://test.localhost/subfolder")
       fp = Fabricate(:reviewable_flagged_post)
       json = described_class.new(fp, scope: Guardian.new(admin), root: nil).as_json
       expect(json[:target_url]).to eq(Discourse.base_url + fp.post.url)
