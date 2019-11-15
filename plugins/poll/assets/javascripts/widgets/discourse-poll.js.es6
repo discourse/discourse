@@ -448,7 +448,8 @@ createWidget("discourse-poll-grouped-pies", {
     later(() => {
       fetchGroupedVoters({
         post_id: attrs.post.id,
-        poll_name: attrs.poll.name
+        poll_name: attrs.poll.name,
+        field: 1
       }).then(result => {
         // eslint-disable-next-line
         console.log(result);
@@ -509,7 +510,7 @@ createWidget("discourse-poll-pie-chart", {
     }
 
     const text = attrs.showAdvanced
-      ? "Combined Responces"
+      ? "Combined Responses"
       : "Grouped Responses";
     contents.push(new RawHtml({ html: `<a>${text}</a>` }));
     return contents;

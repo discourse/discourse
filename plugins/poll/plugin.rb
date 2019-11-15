@@ -220,6 +220,31 @@ after_initialize do
         result
       end
 
+      def grouped_serialized_voters(poll, user_custom_field)
+        poll_votes = PollVote.where(poll: poll)
+        user_ids = poll_votes.map(&:user_id).uniq
+
+        users = User.where(id: user_ids).to_a
+        fields = User.preload_custom_fields(users, ["user_field_#{user_custom_field.id}"])
+        user_fields = {}
+        fields.each { |f| user_fields["#{f[0]}"] = f[2] }
+
+        # puts "%%%%%%%%%%%"
+        # puts user_fields
+        # puts "%%%%%%%%%%%"
+
+        votes_with_field = poll_votes.map do |vote|
+          v = vote.attributes
+          puts v.inspect
+
+          v["field_value"] = user_fields[v["user_id"].to_s]
+          return v
+        end
+
+        puts '$$$$$$$$$$$$$$'
+        puts votes_with_field
+      end
+
       def voters(post_id, poll_name, user, opts = {})
         post = Post.find_by(id: post_id)
         raise Discourse::InvalidParameters.new("post_id is invalid") unless post
@@ -230,14 +255,16 @@ after_initialize do
         serialized_voters(poll, opts)
       end
 
-      def grouped_voters(post_id, poll_name, user, opts = {})
+      def grouped_voters(post_id, poll_name, user_custom_field_id, user)
         post = Post.find_by(id: post_id)
         raise Discourse::InvalidParameters.new("post_id is invalid") unless post
 
         poll = Poll.find_by(post_id: post_id, name: poll_name)
         raise Discourse::InvalidParameters.new("poll_name is invalid") unless poll&.can_see_voters?(user)
 
-        serialized_voters(poll, opts)
+        user_custom_field = UserCustomField.find_by(id: user_custom_field_id)
+        raise Discourse::InvalidParameters.new("user_custom_field is invalid") unless user_custom_field
+        grouped_serialized_voters(poll, user_custom_field)
       end
 
       def schedule_jobs(post)
@@ -358,9 +385,10 @@ after_initialize do
     def grouped_voters
       post_id   = params.require(:post_id)
       poll_name = params.require(:poll_name)
+      field = params.require(:field)
 
       begin
-        render json: { voters: DiscoursePoll::Poll.grouped_voters(post_id, poll_name, current_user) }
+        render json: { voters: DiscoursePoll::Poll.grouped_voters(post_id, poll_name, field, current_user) }
       rescue StandardError => e
         render_json_error e.message
       end
