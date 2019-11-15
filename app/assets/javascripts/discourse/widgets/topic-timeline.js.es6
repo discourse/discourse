@@ -211,7 +211,8 @@ createWidget("timeline-scrollarea", {
       position.lastRead > 3 &&
       Math.abs(position.lastRead - position.current) > 3 &&
       Math.abs(position.lastRead - position.total) > 1 &&
-      position.lastRead && position.lastRead !== position.total;
+      position.lastRead &&
+      position.lastRead !== position.total;
 
     if (hasBackPosition) {
       const lastReadTop = Math.round(

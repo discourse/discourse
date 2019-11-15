@@ -132,7 +132,9 @@ export default DropdownSelectBoxComponent.extend({
       (action !== REPLY && _topicSnapshot) ||
       (action === REPLY &&
         _topicSnapshot &&
-        options.userAvatar && options.userLink && options.topicLink)
+        options.userAvatar &&
+        options.userLink &&
+        options.topicLink)
     ) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_to_topic.label"),
