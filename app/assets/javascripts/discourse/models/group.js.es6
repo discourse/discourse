@@ -283,9 +283,7 @@ Group.reopenClass({
   },
 
   checkName(name) {
-    return ajax("/groups/check-name", {
-      data: { group_name: name }
-    }).catch(popupAjaxError);
+    return ajax("/groups/check-name", { data: { group_name: name } });
   }
 });
 
