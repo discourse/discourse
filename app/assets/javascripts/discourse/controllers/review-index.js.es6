@@ -9,6 +9,8 @@ export default Controller.extend({
     "category_id",
     "topic_id",
     "username",
+    "from_date",
+    "to_date",
     "sort_order"
   ],
   type: null,
@@ -19,6 +21,8 @@ export default Controller.extend({
   topic_id: null,
   filtersExpanded: false,
   username: "",
+  from_date: null,
+  to_date: null,
   sort_order: "priority",
 
   init(...args) {
@@ -79,6 +83,15 @@ export default Controller.extend({
     return filtersExpanded ? "chevron-up" : "chevron-down";
   },
 
+  setRange(range) {
+    if (range.from) {
+      this.set("from", new Date(range.from).toISOString().split("T")[0]);
+    }
+    if (range.to) {
+      this.set("to", new Date(range.to).toISOString().split("T")[0]);
+    }
+  },
+
   actions: {
     remove(ids) {
       if (!ids) {
@@ -103,6 +116,8 @@ export default Controller.extend({
         status: this.filterStatus,
         category_id: this.filterCategoryId,
         username: this.filterUsername,
+        from_date: this.filterFromDate,
+        to_date: this.filterToDate,
         sort_order: this.filterSortOrder
       });
       this.send("refreshRoute");

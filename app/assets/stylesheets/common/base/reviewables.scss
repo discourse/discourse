@@ -121,6 +121,17 @@
     .category-chooser {
       width: 100%;
     }
+
+    .d-date-time-input-range {
+      width: inherit;
+      border: none;
+      padding: 0;
+
+      .d-date-input {
+        flex: 1 1 auto;
+        border: 1px solid $primary-medium;
+      }
+    }
   }
 }
 
