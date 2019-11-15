@@ -19,7 +19,7 @@ export default DiscourseRoute.extend({
       filterInput: this._params.filter
     });
 
-    controller.refreshMembers();
+    controller.findMembers(true);
   },
 
   actions: {

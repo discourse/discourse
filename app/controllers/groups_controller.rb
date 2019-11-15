@@ -208,20 +208,11 @@ class GroupsController < ApplicationController
 
     guardian.ensure_can_see_group_members!(group)
 
-    limit = (params[:limit] || 20).to_i
+    limit = (params[:limit] || 50).to_i
     offset = params[:offset].to_i
 
-    if limit < 0
-      raise Discourse::InvalidParameters.new(:limit)
-    end
-
-    if limit > 1000
-      raise Discourse::InvalidParameters.new(:limit)
-    end
-
-    if offset < 0
-      raise Discourse::InvalidParameters.new(:offset)
-    end
+    raise Discourse::InvalidParameters.new(:limit) if limit < 0 || limit > 1000
+    raise Discourse::InvalidParameters.new(:offset) if offset < 0
 
     dir = (params[:desc] && !params[:desc].blank?) ? 'DESC' : 'ASC'
     order = ""

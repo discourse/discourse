@@ -55,8 +55,7 @@ export default Component.extend(CardContentsBase, CleansUp, {
         if (!group.flair_url && !group.flair_bg_color) {
           group.set("flair_url", "fa-users");
         }
-        group.set("limit", maxMembersToDisplay);
-        return group.findMembers();
+        return group.findMembers({ limit: maxMembersToDisplay }, true);
       })
       .catch(() => this._close())
       .finally(() => this.set("loading", null));
