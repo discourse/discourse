@@ -129,4 +129,14 @@ module Helpers
   ensure
     $stdout = old_stdout
   end
+
+  def set_subfolder(f)
+    global_setting :relative_url_root, f
+    old_root = ActionController::Base.config.relative_url_root
+    ActionController::Base.config.relative_url_root = f
+
+    before_next_spec do
+      ActionController::Base.config.relative_url_root = old_root
+    end
+  end
 end

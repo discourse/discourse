@@ -248,12 +248,7 @@ RSpec.describe InlineUploads do
 
       context "subfolder" do
         before do
-          global_setting :relative_url_root, "/community"
-          ActionController::Base.config.relative_url_root = "/community"
-        end
-
-        after do
-          ActionController::Base.config.relative_url_root = nil
+          set_subfolder "/community"
         end
 
         it "should correct subfolder images" do

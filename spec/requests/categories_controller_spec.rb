@@ -21,8 +21,7 @@ describe CategoriesController do
     end
 
     it 'web crawler view has correct urls for subfolder install' do
-      GlobalSetting.stubs(:relative_url_root).returns('/forum')
-      Discourse.stubs(:base_uri).returns("/forum")
+      set_subfolder "/forum"
       get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
       html = Nokogiri::HTML(response.body)
       expect(html.css('body.crawler')).to be_present

@@ -204,8 +204,7 @@ RSpec.describe ApplicationController do
       end
 
       it 'supports subfolder with permalinks' do
-        GlobalSetting.stubs(:relative_url_root).returns('/forum')
-        Discourse.stubs(:base_uri).returns("/forum")
+        set_subfolder "/forum"
 
         trashed_topic = create_post.topic
         trashed_topic.trash!

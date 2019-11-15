@@ -31,19 +31,15 @@ describe ApplicationHelper do
         global_setting :s3_cdn_url, 'https://s3cdn.com'
       end
 
-      after do
-        ActionController::Base.config.relative_url_root = nil
-      end
-
       it "deals correctly with subfolder" do
-        ActionController::Base.config.relative_url_root = "/community"
+        set_subfolder "/community"
         expect(helper.preload_script("application")).to include('https://s3cdn.com/assets/application.js')
       end
 
       it "replaces cdn URLs with s3 cdn subfolder paths" do
         global_setting :s3_cdn_url, 'https://s3cdn.com/s3_subpath'
         set_cdn_url "https://awesome.com"
-        ActionController::Base.config.relative_url_root = "/community"
+        set_subfolder "/community"
         expect(helper.preload_script("application")).to include('https://s3cdn.com/s3_subpath/assets/application.js')
       end
 
