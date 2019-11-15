@@ -386,8 +386,7 @@ describe FileStore::S3Store do
 
       # none of this should matter at all
       # subfolder should not leak into uploads
-      global_setting :relative_url_root, '/community'
-      Discourse.stubs(:base_uri).returns("/community")
+      set_subfolder "/community"
 
       url = "//s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/livechat/original/gif.png"
 

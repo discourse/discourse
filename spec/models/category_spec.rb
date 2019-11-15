@@ -446,8 +446,7 @@ describe Category do
     end
 
     it "correctly creates permalink when category slug is changed in subfolder install" do
-      GlobalSetting.stubs(:relative_url_root).returns('/forum')
-      Discourse.stubs(:base_uri).returns("/forum")
+      set_subfolder '/forum'
       old_url = @category.url
       @category.update(slug: 'new-category')
       permalink = Permalink.last

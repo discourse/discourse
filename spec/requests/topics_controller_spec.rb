@@ -1861,7 +1861,8 @@ RSpec.describe TopicsController do
 
     describe 'clear_notifications' do
       it 'correctly clears notifications if specified via cookie' do
-        Discourse.stubs(:base_uri).returns("/eviltrout")
+        set_subfolder "/eviltrout"
+
         notification = Fabricate(:notification)
         sign_in(notification.user)
 
@@ -2146,8 +2147,7 @@ RSpec.describe TopicsController do
     end
 
     it 'renders rss of the topic correctly with subfolder' do
-      GlobalSetting.stubs(:relative_url_root).returns('/forum')
-      Discourse.stubs(:base_uri).returns("/forum")
+      set_subfolder "/forum"
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(200)
       expect(response.body).to_not include("/forum/forum")

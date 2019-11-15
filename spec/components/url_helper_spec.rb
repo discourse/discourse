@@ -33,7 +33,8 @@ describe UrlHelper do
       store = stub
       store.expects(:has_been_uploaded?).returns(false)
       Discourse.stubs(:store).returns(store)
-      Discourse.stubs(:base_uri).returns("/subpath")
+
+      set_subfolder "/subpath"
       expect(UrlHelper.is_local("/subpath/assets/javascripts/all.js")).to eq(true)
     end
 

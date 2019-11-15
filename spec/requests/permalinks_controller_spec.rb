@@ -18,8 +18,7 @@ describe PermalinksController do
 
     it "should work for subfolder installs too" do
       permalink.update!(topic_id: topic.id)
-      GlobalSetting.stubs(:relative_url_root).returns('/forum')
-      Discourse.stubs(:base_uri).returns("/forum")
+      set_subfolder "/forum"
 
       get "/#{permalink.url}"
 
