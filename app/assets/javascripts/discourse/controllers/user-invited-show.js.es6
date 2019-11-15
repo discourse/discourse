@@ -28,9 +28,11 @@ export default Controller.extend({
 
   @observes("searchTerm")
   _searchTermChanged: discourseDebounce(function() {
-    Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
-      invites => this.set("model", invites)
-    );
+    Invite.findInvitedBy(
+      this.user,
+      this.filter,
+      this.searchTerm
+    ).then(invites => this.set("model", invites));
   }, 250),
 
   inviteRedeemed: equal("filter", "redeemed"),

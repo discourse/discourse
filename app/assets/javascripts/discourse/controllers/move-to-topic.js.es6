@@ -107,7 +107,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("canSplitTopic")
   canSplitToPM(canSplitTopic) {
-    return canSplitTopic && (this.currentUser && this.currentUser.admin);
+    return canSplitTopic && this.currentUser && this.currentUser.admin;
   },
 
   actions: {

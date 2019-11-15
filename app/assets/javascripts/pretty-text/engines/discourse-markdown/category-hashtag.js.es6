@@ -8,7 +8,10 @@ function addHashtag(buffer, matches, state) {
 
   if (result) {
     token = new state.Token("link_open", "a", 1);
-    token.attrs = [["class", "hashtag"], ["href", result[0]]];
+    token.attrs = [
+      ["class", "hashtag"],
+      ["href", result[0]]
+    ];
     token.block = false;
     buffer.push(token);
 

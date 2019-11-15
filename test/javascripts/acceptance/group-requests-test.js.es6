@@ -126,5 +126,8 @@ QUnit.test("Group Requests", async assert => {
       .trim(),
     "denied"
   );
-  assert.deepEqual(requests, [["19", "true"], ["20", undefined]]);
+  assert.deepEqual(requests, [
+    ["19", "true"],
+    ["20", undefined]
+  ]);
 });
