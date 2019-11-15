@@ -105,4 +105,61 @@ describe SiteSettings::Validations do
       end
     end
   end
+
+  describe "enforce second factor & local login interplay" do
+    describe "#validate_enforce_second_factor" do
+      let(:error_message) { I18n.t("errors.site_settings.second_factor_cannot_be_enforced_with_disabled_local_login") }
+      context "when local logins are disabled" do
+        before do
+          SiteSetting.enable_local_logins = false
+        end
+
+        it "should raise an error" do
+          expect { subject.validate_enforce_second_factor("t") }.to raise_error(Discourse::InvalidParameters, error_message)
+        end
+      end
+
+      context "when local logins are enabled" do
+        before do
+          SiteSetting.enable_local_logins = true
+        end
+
+        it "should be ok" do
+          expect { subject.validate_enforce_second_factor("t") }.not_to raise_error(Discourse::InvalidParameters, error_message)
+        end
+      end
+    end
+
+    describe "#validate_enable_local_logins" do
+      let(:error_message) { I18n.t("errors.site_settings.local_login_cannot_be_disabled_if_second_factor_enforced") }
+
+      context "when the new value is false" do
+        context "when enforce second factor is enabled" do
+          before do
+            SiteSetting.enforce_second_factor = "all"
+          end
+
+          it "should raise an error" do
+            expect { subject.validate_enable_local_logins("f") }.to raise_error(Discourse::InvalidParameters, error_message)
+          end
+        end
+
+        context "when enforce second factor is disabled" do
+          before do
+            SiteSetting.enforce_second_factor = "no"
+          end
+
+          it "should be ok" do
+            expect { subject.validate_enable_local_logins("f") }.not_to raise_error(Discourse::InvalidParameters, error_message)
+          end
+        end
+      end
+
+      context "when the new value is true" do
+        it "should be ok" do
+          expect { subject.validate_enable_local_logins("t") }.not_to raise_error(Discourse::InvalidParameters, error_message)
+        end
+      end
+    end
+  end
 end
