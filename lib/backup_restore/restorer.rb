@@ -11,7 +11,12 @@ module BackupRestore
     attr_reader :success
 
     def self.pg_produces_portable_dump?(version)
-      version = Gem::Version.new(version)
+      # anything pg 11 or above will produce a non-portable dump
+      return false if version.to_i >= 11
+
+      # below 11, the behaviour was changed in multiple different minor
+      # versions depending on major release line - we list those versions below
+      gem_version = Gem::Version.new(version)
 
       %w{
         10.3
@@ -20,7 +25,7 @@ module BackupRestore
         9.4.17
         9.3.22
       }.each do |unportable_version|
-        return false if Gem::Dependency.new("", "~> #{unportable_version}").match?("", version)
+        return false if Gem::Dependency.new("", "~> #{unportable_version}").match?("", gem_version)
       end
 
       true
@@ -52,12 +57,13 @@ module BackupRestore
       ensure_directory_exists(@tmp_directory)
 
       copy_archive_to_tmp_directory
-      unzip_archive
+      decompress_archive
 
       extract_metadata
       validate_metadata
 
       extract_dump
+      create_missing_discourse_functions
 
       if !can_restore_into_different_schema?
         log "Cannot restore into different schema, restoring in-place"
@@ -86,6 +92,9 @@ module BackupRestore
       extract_uploads
 
       after_restore_hook
+    rescue Compression::Strategy::ExtractFailed
+      log "The uncompressed file is too big. Consider increasing the decompressed_theme_max_file_size_mb hidden setting."
+      rollback
     rescue SystemExit
       log "Restore process was cancelled!"
       rollback
@@ -103,7 +112,75 @@ module BackupRestore
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
 
+    ### The methods listed below are public just for testing purposes.
+    ### This is not a good practice, but we need to be sure that our new compression API will work.
+
+    attr_reader :tmp_directory
+
+    def ensure_directory_exists(directory)
+      log "Making sure #{directory} exists..."
+      FileUtils.mkdir_p(directory)
+    end
+
+    def copy_archive_to_tmp_directory
+      if @store.remote?
+        log "Downloading archive to tmp directory..."
+        failure_message = "Failed to download archive to tmp directory."
+      else
+        log "Copying archive to tmp directory..."
+        failure_message = "Failed to copy archive to tmp directory."
+      end
+
+      @store.download_file(@filename, @archive_filename, failure_message)
+    end
+
+    def decompress_archive
+      return unless @is_archive
+
+      log "Unzipping archive, this may take a while..."
+
+      pipeline = Compression::Pipeline.new([Compression::Tar.new, Compression::Gzip.new])
+
+      unzipped_path = pipeline.decompress(@tmp_directory, @archive_filename, available_size)
+      pipeline.strip_directory(unzipped_path, @tmp_directory)
+    end
+
+    def extract_metadata
+      metadata_path = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
+      @metadata = if File.exists?(metadata_path)
+        data = Oj.load_file(@meta_filename)
+        raise "Failed to load metadata file." if !data
+        data
+      else
+        log "No metadata file to extract."
+        if @filename =~ /-#{BackupRestore::VERSION_PREFIX}(\d{14})/
+          { "version" => Regexp.last_match[1].to_i }
+        else
+          raise "Migration version is missing from the filename."
+        end
+      end
+    end
+
+    def extract_dump
+      @dump_filename =
+        if @is_archive
+          # For backwards compatibility
+          old_dump_path = File.join(@tmp_directory, BackupRestore::OLD_DUMP_FILE)
+          File.exists?(old_dump_path) ? old_dump_path : File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+        else
+          File.join(@tmp_directory, @filename)
+        end
+
+      log "Extracting dump file..."
+
+      Compression::Gzip.new.decompress(@tmp_directory, @dump_filename, available_size)
+    end
+
     protected
+
+    def available_size
+      SiteSetting.decompressed_backup_max_file_size_mb
+    end
 
     def ensure_restore_is_enabled
       raise BackupRestore::RestoreDisabledError unless Rails.env.development? || SiteSetting.allow_restore?
@@ -134,11 +211,11 @@ module BackupRestore
       @tmp_directory = File.join(Rails.root, "tmp", "restores", @current_db, @timestamp)
       @archive_filename = File.join(@tmp_directory, @filename)
       @tar_filename = @archive_filename[0...-3]
-      @meta_filename = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
       @is_archive = !(@filename =~ /.sql.gz$/)
 
       @logs = []
       @readonly_mode_was_enabled = Discourse.readonly_mode?
+      @created_functions_for_table_columns = []
     end
 
     def listen_for_shutdown_signal
@@ -187,52 +264,6 @@ module BackupRestore
       false
     end
 
-    def copy_archive_to_tmp_directory
-      if @store.remote?
-        log "Downloading archive to tmp directory..."
-        failure_message = "Failed to download archive to tmp directory."
-      else
-        log "Copying archive to tmp directory..."
-        failure_message = "Failed to copy archive to tmp directory."
-      end
-
-      @store.download_file(@filename, @archive_filename, failure_message)
-    end
-
-    def unzip_archive
-      return unless @is_archive
-
-      log "Unzipping archive, this may take a while..."
-
-      FileUtils.cd(@tmp_directory) do
-        Discourse::Utils.execute_command('gzip', '--decompress', @archive_filename, failure_message: "Failed to unzip archive.")
-      end
-    end
-
-    def extract_metadata
-      @metadata =
-        if system('tar', '--list', '--file', @tar_filename, BackupRestore::METADATA_FILE)
-          log "Extracting metadata file..."
-          FileUtils.cd(@tmp_directory) do
-            Discourse::Utils.execute_command(
-              'tar', '--extract', '--file', @tar_filename, BackupRestore::METADATA_FILE,
-              failure_message: "Failed to extract metadata file."
-            )
-          end
-
-          data = Oj.load_file(@meta_filename)
-          raise "Failed to load metadata file." if !data
-          data
-        else
-          log "No metadata file to extract."
-          if @filename =~ /-#{BackupRestore::VERSION_PREFIX}(\d{14})/
-            { "version" => Regexp.last_match[1].to_i }
-          else
-            raise "Migration version is missing from the filename."
-          end
-        end
-    end
-
     def validate_metadata
       log "Validating metadata..."
       log "  Current version: #{@current_version}"
@@ -243,31 +274,6 @@ module BackupRestore
 
       error = "You're trying to restore a more recent version of the schema. You should migrate first!"
       raise error if @metadata["version"] > @current_version
-    end
-
-    def extract_dump
-      @dump_filename =
-        if @is_archive
-          # For backwards compatibility
-          if system('tar', '--list', '--file', @tar_filename, BackupRestore::OLD_DUMP_FILE)
-            File.join(@tmp_directory, BackupRestore::OLD_DUMP_FILE)
-          else
-            File.join(@tmp_directory, BackupRestore::DUMP_FILE)
-          end
-        else
-          File.join(@tmp_directory, @filename)
-        end
-
-      return unless @is_archive
-
-      log "Extracting dump file..."
-
-      FileUtils.cd(@tmp_directory) do
-        Discourse::Utils.execute_command(
-          'tar', '--extract', '--file', @tar_filename, File.basename(@dump_filename),
-          failure_message: "Failed to extract dump file."
-        )
-      end
     end
 
     def get_dumped_by_version
@@ -286,7 +292,7 @@ module BackupRestore
 
     def restore_dump_command
       if File.extname(@dump_filename) == '.gz'
-        "gzip -d < #{@dump_filename} | #{sed_command} | #{psql_command} 2>&1"
+        "#{sed_command} #{@dump_filename.gsub('.gz', '')} | #{psql_command} 2>&1"
       else
         "#{psql_command} 2>&1 < #{@dump_filename}"
       end
@@ -398,12 +404,15 @@ module BackupRestore
 
     def reconnect_database
       log "Reconnecting to the database..."
+      RailsMultisite::ConnectionManagement::reload if RailsMultisite::ConnectionManagement::instance
       RailsMultisite::ConnectionManagement::establish_connection(db: @current_db)
     end
 
     def reload_site_settings
       log "Reloading site settings..."
       SiteSetting.refresh!
+
+      DiscourseEvent.trigger(:site_settings_restored)
 
       if @disable_emails && SiteSetting.disable_emails == 'no'
         log "Disabling outgoing emails for non-staff users..."
@@ -418,44 +427,80 @@ module BackupRestore
     end
 
     def extract_uploads
-      if system('tar', '--exclude=*/*', '--list', '--file', @tar_filename, 'uploads')
-        log "Extracting uploads..."
+      return unless File.exists?(File.join(@tmp_directory, 'uploads'))
+      log "Extracting uploads..."
 
-        FileUtils.cd(@tmp_directory) do
-          Discourse::Utils.execute_command(
-            'tar', '--extract', '--keep-newer-files', '--file', @tar_filename, 'uploads/',
-            failure_message: "Failed to extract uploads."
-          )
-        end
+      public_uploads_path = File.join(Rails.root, "public")
 
-        public_uploads_path = File.join(Rails.root, "public")
+      FileUtils.mkdir_p(File.join(public_uploads_path, "uploads"))
 
-        FileUtils.cd(public_uploads_path) do
-          FileUtils.mkdir_p("uploads")
+      tmp_uploads_path = Dir.glob(File.join(@tmp_directory, "uploads", "*")).first
+      return if tmp_uploads_path.blank?
+      previous_db_name = BackupMetadata.value_for("db_name") || File.basename(tmp_uploads_path)
+      current_db_name = RailsMultisite::ConnectionManagement.current_db
+      optimized_images_exist = File.exist?(File.join(tmp_uploads_path, 'optimized'))
 
-          tmp_uploads_path = Dir.glob(File.join(@tmp_directory, "uploads", "*")).first
-          previous_db_name = File.basename(tmp_uploads_path)
-          current_db_name = RailsMultisite::ConnectionManagement.current_db
-          optimized_images_exist = File.exist?(File.join(tmp_uploads_path, 'optimized'))
+      Discourse::Utils.execute_command(
+        'rsync', '-avp', '--safe-links', "#{tmp_uploads_path}/", "uploads/#{current_db_name}/",
+        failure_message: "Failed to restore uploads.",
+        chdir: public_uploads_path
+      )
 
-          Discourse::Utils.execute_command(
-            'rsync', '-avp', '--safe-links', "#{tmp_uploads_path}/", "uploads/#{current_db_name}/",
-            failure_message: "Failed to restore uploads."
-          )
+      remap_uploads(previous_db_name, current_db_name)
 
-          if previous_db_name != current_db_name
-            log "Remapping uploads..."
-            DbHelper.remap("uploads/#{previous_db_name}", "uploads/#{current_db_name}")
-          end
-
-          if SiteSetting.Upload.enable_s3_uploads
-            migrate_to_s3
-            remove_local_uploads(File.join(public_uploads_path, "uploads/#{current_db_name}"))
-          end
-
-          generate_optimized_images unless optimized_images_exist
-        end
+      if SiteSetting.Upload.enable_s3_uploads
+        migrate_to_s3
+        remove_local_uploads(File.join(public_uploads_path, "uploads/#{current_db_name}"))
       end
+
+      generate_optimized_images unless optimized_images_exist
+    end
+
+    def remap_uploads(previous_db_name, current_db_name)
+      log "Remapping uploads..."
+
+      was_multisite = BackupMetadata.value_for("multisite") == "t"
+      uploads_folder = was_multisite ? "/" : "/uploads/#{current_db_name}/"
+
+      if (old_base_url = BackupMetadata.value_for("base_url")) && old_base_url != Discourse.base_url
+        remap(old_base_url, Discourse.base_url)
+      end
+
+      current_s3_base_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_base_url : nil
+      if (old_s3_base_url = BackupMetadata.value_for("s3_base_url")) && old_base_url != current_s3_base_url
+        remap("#{old_s3_base_url}/", uploads_folder)
+      end
+
+      current_s3_cdn_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : nil
+      if (old_s3_cdn_url = BackupMetadata.value_for("s3_cdn_url")) && old_s3_cdn_url != current_s3_cdn_url
+        base_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : Discourse.base_url
+        remap("#{old_s3_cdn_url}/", UrlHelper.schemaless("#{base_url}#{uploads_folder}"))
+
+        old_host = URI.parse(old_s3_cdn_url).host
+        new_host = URI.parse(base_url).host
+        remap(old_host, new_host)
+      end
+
+      if (old_cdn_url = BackupMetadata.value_for("cdn_url")) && old_cdn_url != Discourse.asset_host
+        base_url = Discourse.asset_host || Discourse.base_url
+        remap("#{old_cdn_url}/", UrlHelper.schemaless("#{base_url}/"))
+
+        old_host = URI.parse(old_cdn_url).host
+        new_host = URI.parse(base_url).host
+        remap(old_host, new_host)
+      end
+
+      if previous_db_name != current_db_name
+        remap("uploads/#{previous_db_name}", "uploads/#{current_db_name}")
+      end
+
+    rescue => ex
+      log "Something went wrong while remapping uploads.", ex
+    end
+
+    def remap(from, to)
+      puts "Remapping '#{from}' to '#{to}'"
+      DbHelper.remap(from, to, verbose: true, excluded_tables: ["backup_metadata"])
     end
 
     def migrate_to_s3
@@ -463,6 +508,7 @@ module BackupRestore
       ENV["SKIP_FAILED"] = "1"
       ENV["MIGRATE_TO_MULTISITE"] = "1" if Rails.configuration.multisite
       Rake::Task["uploads:migrate_to_s3"].invoke
+      Jobs.run_later!
     end
 
     def remove_local_uploads(directory)
@@ -516,8 +562,46 @@ module BackupRestore
       log "Something went wrong while notifying user.", ex
     end
 
+    def create_missing_discourse_functions
+      log "Creating missing functions in the discourse_functions schema"
+
+      all_readonly_table_columns = []
+
+      Dir[Rails.root.join(Discourse::DB_POST_MIGRATE_PATH, "*.rb")].each do |path|
+        require path
+        class_name = File.basename(path, ".rb").sub(/^\d+_/, "").camelize
+        migration_class = class_name.constantize
+
+        if migration_class.const_defined?(:DROPPED_TABLES)
+          migration_class::DROPPED_TABLES.each do |table_name|
+            all_readonly_table_columns << [table_name]
+          end
+        end
+
+        if migration_class.const_defined?(:DROPPED_COLUMNS)
+          migration_class::DROPPED_COLUMNS.each do |table_name, column_names|
+            column_names.each do |column_name|
+              all_readonly_table_columns << [table_name, column_name]
+            end
+          end
+        end
+      end
+
+      existing_function_names = Migration::BaseDropper.existing_discourse_function_names.map { |name| "#{name}()" }
+
+      all_readonly_table_columns.each do |table_name, column_name|
+        function_name = Migration::BaseDropper.readonly_function_name(table_name, column_name, with_schema: false)
+
+        if !existing_function_names.include?(function_name)
+          Migration::BaseDropper.create_readonly_function(table_name, column_name)
+          @created_functions_for_table_columns << [table_name, column_name]
+        end
+      end
+    end
+
     def clean_up
       log "Cleaning stuff up..."
+      drop_created_discourse_functions
       remove_tmp_directory
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
@@ -545,6 +629,15 @@ module BackupRestore
       Stylesheet::Manager.cache.clear
     end
 
+    def drop_created_discourse_functions
+      log "Dropping function from the discourse_functions schema"
+      @created_functions_for_table_columns.each do |table_name, column_name|
+        Migration::BaseDropper.drop_readonly_function(table_name, column_name)
+      end
+    rescue => ex
+      log "Something went wrong while dropping functions from the discourse_functions schema", ex
+    end
+
     def disable_readonly_mode
       return if @readonly_mode_was_enabled
       log "Disabling readonly mode..."
@@ -560,17 +653,14 @@ module BackupRestore
       log "Something went wrong while marking restore as finished.", ex
     end
 
-    def ensure_directory_exists(directory)
-      log "Making sure #{directory} exists..."
-      FileUtils.mkdir_p(directory)
-    end
-
     def after_restore_hook
       log "Executing the after_restore_hook..."
       DiscourseEvent.trigger(:restore_complete)
     end
 
     def log(message, ex = nil)
+      return if Rails.env.test?
+
       timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
       puts(message)
       publish_log(message, timestamp)
@@ -589,5 +679,4 @@ module BackupRestore
     end
 
   end
-
 end

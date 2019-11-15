@@ -44,6 +44,12 @@
   .category-chooser {
     width: 50%;
   }
+
+  .modal-body.insert-link {
+    input {
+      min-width: 450px;
+    }
+  }
 }
 
 .edit-category-modal {
@@ -89,7 +95,7 @@
         max-width: 48%;
       }
 
-      @include breakpoint(mobile) {
+      @include breakpoint(mobile-extra-large) {
         flex: 1 1 auto;
         min-width: 49%;
         max-width: unset;

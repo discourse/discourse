@@ -1,83 +1,87 @@
 {{#d-modal-body title="poll.ui_builder.title" class="poll-ui-builder"}}
   <form class="poll-ui-builder-form form-horizontal">
-    <div class="input-group poll-select">
-      <label class="input-group-label">{{i18n 'poll.ui_builder.poll_type.label'}}</label>
-      {{combo-box content=pollTypes
-                  value=pollType
-                  allowInitialValueMutation=true
-                  valueAttribute="value"}}
-    </div>
-
-    <div class="input-group poll-select">
-      <label class="input-group-label">{{i18n 'poll.ui_builder.poll_result.label'}}</label>
-      {{combo-box content=pollResults
-                  value=pollResult
-                  allowInitialValueMutation=true
-                  valueAttribute="value"}}
-    </div>
-
-
-    {{#if showMinMax}}
-      <div class="input-group poll-number">
-        {{input-tip validation=minMaxValueValidation}}
-        <label class="input-group-label">{{i18n 'poll.ui_builder.poll_config.min'}}</label>
-        {{input type='number'
-                value=pollMin
-                valueAttribute="value"
-                class="poll-options-min"}}
+    <div class="options">
+      <div class="input-group poll-select">
+        <label class="input-group-label">{{i18n 'poll.ui_builder.poll_type.label'}}</label>
+        {{combo-box content=pollTypes
+                    value=pollType
+                    allowInitialValueMutation=true
+                    valueAttribute="value"}}
       </div>
 
-
-      <div class="input-group poll-number">
-        <label class="input-group-label">{{i18n 'poll.ui_builder.poll_config.max'}}</label>
-        {{input type='number'
-                value=pollMax
-                valueAttribute="value"
-                class="poll-options-max"}}
+      <div class="input-group poll-select">
+        <label class="input-group-label">{{i18n 'poll.ui_builder.poll_result.label'}}</label>
+        {{combo-box content=pollResults
+                    value=pollResult
+                    allowInitialValueMutation=true
+                    valueAttribute="value"}}
       </div>
 
-      {{#if isNumber}}
+      {{#if showMinMax}}
         <div class="input-group poll-number">
-          <label class="input-group-label">{{i18n 'poll.ui_builder.poll_config.step'}}</label>
+          <label class="input-group-label">{{i18n 'poll.ui_builder.poll_config.min'}}</label>
           {{input type='number'
-                  value=pollStep
+                  value=pollMin
                   valueAttribute="value"
-                  min="1"
-                  class="poll-options-step"}}
+                  class="poll-options-min"}}
+        </div>
+        {{input-tip validation=minMaxValueValidation}}
+
+        <div class="input-group poll-number">
+          <label class="input-group-label">{{i18n 'poll.ui_builder.poll_config.max'}}</label>
+          {{input type='number'
+                  value=pollMax
+                  valueAttribute="value"
+                  class="poll-options-max"}}
+        </div>
+
+        {{#if isNumber}}
+          <div class="input-group poll-number">
+            <label class="input-group-label">{{i18n 'poll.ui_builder.poll_config.step'}}</label>
+            {{input type='number'
+                    value=pollStep
+                    valueAttribute="value"
+                    min="1"
+                    class="poll-options-step"}}
+          </div>
           {{input-tip validation=minStepValueValidation}}
+        {{/if}}
+      {{/if}}
+
+      {{#unless isNumber}}
+        <div class="input-group poll-textarea">
+          <label>{{i18n 'poll.ui_builder.poll_options.label'}}</label>
+          {{textarea value=pollOptions autocomplete="discourse"}}
+        </div>
+        {{input-tip validation=minNumOfOptionsValidation}}
+      {{/unless}}
+
+      <div class="input-group poll-checkbox">
+        <label>
+          {{input type='checkbox' checked=publicPoll}}
+          {{i18n "poll.ui_builder.poll_public.label"}}
+        </label>
+      </div>
+
+      <div class="input-group poll-checkbox">
+        <label>
+          {{input type="checkbox" checked=autoClose}}
+          {{i18n "poll.ui_builder.automatic_close.label"}}
+        </label>
+      </div>
+
+      {{#if autoClose}}
+        <div class="input-group poll-date">
+          {{date-picker-future value=date containerId="date-container"}}
+          {{input type="time" value=time}}
+          <div id="date-container"></div>
         </div>
       {{/if}}
-    {{/if}}
-
-    {{#unless isNumber}}
-      <div class="input-group poll-textarea">
-        <label>{{i18n 'poll.ui_builder.poll_options.label'}}</label>
-        {{textarea value=pollOptions autocomplete="discourse"}}
-        {{input-tip validation=minNumOfOptionsValidation}}
-      </div>
-    {{/unless}}
-
-    <div class="input-group poll-checkbox">
-      <label>
-        {{input type='checkbox' checked=publicPoll}}
-        {{i18n "poll.ui_builder.poll_public.label"}}
-      </label>
     </div>
 
-    <div class="input-group poll-checkbox">
-      <label>
-        {{input type="checkbox" checked=autoClose}}
-        {{i18n "poll.ui_builder.automatic_close.label"}}
-      </label>
+    <div class="d-editor-preview">
+      {{cook-text this.pollOutput}}
     </div>
-
-    {{#if autoClose}}
-      <div class="input-group">
-        {{date-picker-future value=date containerId="date-container"}}
-        {{input type="time" value=time}}
-        <div id="date-container"></div>
-      </div>
-    {{/if}}
   </form>
 {{/d-modal-body}}
 

@@ -1,4 +1,5 @@
-export default Ember.Route.extend({
+import Route from "@ember/routing/route";
+export default Route.extend({
   setupController(controller) {
     const accountCreated = this.controllerFor("account-created").get(
       "accountCreated"

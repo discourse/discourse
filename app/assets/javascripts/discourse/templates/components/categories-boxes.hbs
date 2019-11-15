@@ -1,5 +1,6 @@
 {{#each categories as |c|}}
-  <div class='category category-box category-box-{{unbound c.slug}}' style={{border-color c.color}} data-url={{c.url}}>
+  <div class='category category-box category-box-{{unbound c.slug}}' style={{border-color c.color}}
+   data-url={{c.url}}>
     <div class='category-box-inner'>
       <div class="category-logo">
         {{#if c.uploaded_logo.url}}
@@ -12,12 +13,14 @@
       </div>
       <div class="category-details">
         <div class='category-box-heading'>
-          <h3>
-            {{#if c.read_restricted}}
-              {{d-icon 'lock'}}
-            {{/if}}
-            {{c.name}}
-          </h3>
+          <a href={{c.url}}>
+            <h3>
+              {{#if c.read_restricted}}
+                {{d-icon 'lock'}}
+              {{/if}}
+              {{c.name}}
+            </h3>
+          </a>
         </div>
 
         <div class='description'>

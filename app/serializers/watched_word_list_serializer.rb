@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class WatchedWordListSerializer < ApplicationSerializer
-  attributes :actions, :words, :regular_expressions
+  attributes :actions, :words, :regular_expressions, :compiled_regular_expressions
 
   def actions
     WatchedWord.actions.keys
@@ -17,5 +17,13 @@ class WatchedWordListSerializer < ApplicationSerializer
   # in the admin section
   def regular_expressions
     SiteSetting.watched_words_regular_expressions?
+  end
+
+  def compiled_regular_expressions
+    expressions = {}
+    WatchedWord.actions.keys.each do |action|
+      expressions[action] = WordWatcher.word_matcher_regexp(action)&.source
+    end
+    expressions
   end
 end

@@ -1,35 +1,57 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import NavItem from "discourse/models/nav-item";
+import { inject as service } from "@ember/service";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
+  router: service(),
+  persistedQueryParams: null,
+
   tagName: "",
 
-  @computed("category")
+  @discourseComputed("category")
   showCategoryNotifications(category) {
     return category && this.currentUser;
   },
 
-  @computed()
+  @discourseComputed()
   categories() {
     return this.site.get("categoriesList");
   },
 
-  @computed("hasDraft")
+  @discourseComputed("hasDraft")
   createTopicLabel(hasDraft) {
     return hasDraft ? "topic.open_draft" : "topic.create";
   },
 
-  @computed("category.can_edit")
+  @discourseComputed("category.can_edit")
   showCategoryEdit: canEdit => canEdit,
 
-  @computed("filterMode", "category", "noSubcategories")
+  @discourseComputed("filterMode", "category", "noSubcategories")
   navItems(filterMode, category, noSubcategories) {
     // we don't want to show the period in the navigation bar since it's in a dropdown
     if (filterMode.indexOf("top/") === 0) {
-      filterMode = filterMode.replace("top/", "");
+      filterMode = "top";
     }
-    return Discourse.NavItem.buildList(category, {
+
+    let params;
+    const currentRouteQueryParams = this.get("router.currentRoute.queryParams");
+    if (this.persistedQueryParams && currentRouteQueryParams) {
+      const currentKeys = Object.keys(currentRouteQueryParams);
+      const discoveryKeys = Object.keys(this.persistedQueryParams);
+      const supportedKeys = currentKeys.filter(
+        i => discoveryKeys.indexOf(i) > 0
+      );
+      params = supportedKeys.reduce((object, key) => {
+        object[key] = currentRouteQueryParams[key];
+        return object;
+      }, {});
+    }
+
+    return NavItem.buildList(category, {
       filterMode,
-      noSubcategories
+      noSubcategories,
+      persistedQueryParams: params
     });
   }
 });

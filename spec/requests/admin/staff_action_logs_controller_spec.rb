@@ -26,7 +26,7 @@ describe Admin::StaffActionLogsController do
       expect(json["staff_action_logs"].length).to eq(1)
       expect(json["staff_action_logs"][0]["action_name"]).to eq("delete_topic")
 
-      expect(json["user_history_actions"]).to include(
+      expect(json["extras"]["user_history_actions"]).to include(
         "id" => 'delete_topic', "action_id" => UserHistory.actions[:delete_topic]
       )
     end
@@ -60,7 +60,7 @@ describe Admin::StaffActionLogsController do
         get "/admin/logs/staff_action_logs.json", params: {}
 
         json = JSON.parse(response.body)
-        action = json['user_history_actions'].first
+        action = json['extras']['user_history_actions'].first
 
         expect(action['id']).to eq plugin_extended_action.to_s
         expect(action['action_id']).to eq UserHistory.actions[:custom_staff]

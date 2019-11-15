@@ -85,7 +85,7 @@ def consume_mapping(map_lines, totals)
   Mapping::FIELDS.each do |field|
     totals[field] += m.public_send(field)
   end
-  return m
+  m
 end
 
 def create_memstats_not_available(totals)
@@ -136,7 +136,7 @@ def get_commandline(pid)
     loop { break if commandline.shift == "-jar" }
     return "[java] #{commandline.shift}"
   end
-  return commandline.join(' ')
+  commandline.join(' ')
 end
 
 if ARGV.include? '--yaml'

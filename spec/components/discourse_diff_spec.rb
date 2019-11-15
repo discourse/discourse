@@ -76,6 +76,13 @@ describe DiscourseDiff do
       expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"revision-content\"><p>this is a paragraph</p></div><div class=\"revision-content\"><p>this is a <ins>great </ins>paragraph</p></div>")
     end
 
+    it "adds <ins> and <del> tags on consecutive paragraphs" do
+      before = "<p>this is one paragraph</p><p>here is yet another</p>"
+      after = "<p>this is one great paragraph</p><p>here is another</p>"
+      got = DiscourseDiff.new(before, after).side_by_side_html
+      expect(got).to eq("<div class=\"revision-content\"><p>this is one paragraph</p><p>here is <del>yet </del>another</p></div><div class=\"revision-content\"><p>this is one <ins>great </ins>paragraph</p><p>here is another</p></div>")
+    end
+
     it "adds <del> tags around removed text on the left div" do
       before = "<p>this is a great paragraph</p>"
       after = "<p>this is a paragraph</p>"

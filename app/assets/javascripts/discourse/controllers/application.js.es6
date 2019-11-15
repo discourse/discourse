@@ -1,11 +1,14 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
+import Controller from "@ember/controller";
 import { isAppWebview, isiOSPWA } from "discourse/lib/utilities";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   showTop: true,
   showFooter: false,
+  router: service(),
 
-  @computed
+  @discourseComputed
   canSignUp() {
     return (
       !Discourse.SiteSettings.invite_only &&
@@ -14,12 +17,12 @@ export default Ember.Controller.extend({
     );
   },
 
-  @computed
+  @discourseComputed
   loginRequired() {
-    return Discourse.SiteSettings.login_required && !Discourse.User.current();
+    return Discourse.SiteSettings.login_required && !this.currentUser;
   },
 
-  @computed
+  @discourseComputed
   showFooterNav() {
     return isAppWebview() || isiOSPWA();
   }

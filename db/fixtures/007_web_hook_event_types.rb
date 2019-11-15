@@ -44,3 +44,8 @@ WebHookEventType.seed do |b|
   b.id = WebHookEventType::REVIEWABLE
   b.name = "reviewable"
 end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::NOTIFICATION
+  b.name = "notification"
+end

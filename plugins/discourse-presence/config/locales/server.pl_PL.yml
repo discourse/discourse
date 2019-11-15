@@ -7,4 +7,5 @@
 
 pl_PL:
   site_settings:
-    presence_enabled: 'Pokaż użytkowników, którzy aktualnie odpowiadają na bieżący temat lub edytują bieżący wpis?'
+    presence_enabled: "Pokaż użytkowników, którzy aktualnie odpowiadają na bieżący temat lub edytują bieżący wpis?"
+    presence_max_users_shown: "Maksymalna liczba pokazywanych użytkowników."

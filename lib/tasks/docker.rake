@@ -16,6 +16,7 @@
 # => RSPEC_SEED                set to seed to use for rspec tests (applies to core rspec tests only)
 # => PAUSE_ON_TERMINATE        set to 1 to pause prior to terminating redis and pg
 # => JS_TIMEOUT                set timeout for qunit tests in ms
+# => WARMUP_TMP_FOLDER runs a single spec to warmup the tmp folder and obtain accurate results when profiling specs.
 #
 # Other useful environment variables (not specific to this rake task)
 # => COMMIT_HASH    used by the discourse_test docker image to load a specific commit of discourse
@@ -70,6 +71,7 @@ task 'docker:test' do
         puts "Listing prettier offenses in #{ENV['SINGLE_PLUGIN']}:"
         @good &&= run_or_fail_prettier("plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss", "plugins/#{ENV['SINGLE_PLUGIN']}/**/*.es6")
       else
+        @good &&= run_or_fail("bundle exec rake plugin:update_all") unless ENV["SKIP_PLUGINS"]
         @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
         @good &&= run_or_fail("yarn eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_CORE"]
         @good &&= run_or_fail("yarn eslint --ext .es6 app/assets/javascripts test/javascripts plugins") unless ENV["SKIP_PLUGINS"]
@@ -113,29 +115,52 @@ task 'docker:test' do
 
       @good &&= run_or_fail("bundle exec rake db:create")
 
+      if ENV['USE_TURBO']
+        @good &&= run_or_fail("bundle exec rake parallel:create")
+      end
+
       if ENV["INSTALL_OFFICIAL_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
       end
 
-      if ENV["SKIP_PLUGINS"]
-        @good &&= run_or_fail("bundle exec rake db:migrate")
-      else
-        @good &&= run_or_fail("LOAD_PLUGINS=1 bundle exec rake db:migrate")
+      if ENV["UPDATE_ALL_PLUGINS"]
+        @good &&= run_or_fail("bundle exec rake plugin:update_all")
+      end
+
+      command_prefix =
+        if ENV["SKIP_PLUGINS"]
+          ""
+        else
+          "LOAD_PLUGINS=1 "
+        end
+
+      @good &&= run_or_fail("#{command_prefix}bundle exec rake db:migrate")
+
+      if ENV['USE_TURBO']
+        @good &&= run_or_fail("bundle exec rake parallel:migrate")
       end
 
       puts "travis_fold:end:prepare_tests" if ENV["TRAVIS"]
 
       unless ENV["JS_ONLY"]
         puts "travis_fold:start:ruby_tests" if ENV["TRAVIS"]
+
+        if ENV['WARMUP_TMP_FOLDER']
+          run_or_fail('bundle exec rspec ./spec/requests/groups_controller_spec.rb')
+        end
+
         unless ENV["SKIP_CORE"]
           params = []
-          params << "--profile"
-          params << "--fail-fast"
-          if ENV["BISECT"]
-            params << "--bisect"
-          end
-          if ENV["RSPEC_SEED"]
-            params << "--seed #{ENV["RSPEC_SEED"]}"
+
+          unless ENV['USE_TURBO']
+            params << "--profile"
+            params << "--fail-fast"
+            if ENV["BISECT"]
+              params << "--bisect"
+            end
+            if ENV["RSPEC_SEED"]
+              params << "--seed #{ENV["RSPEC_SEED"]}"
+            end
           end
 
           if ENV['PARALLEL']
@@ -155,7 +180,11 @@ task 'docker:test' do
             puts "Running spec subset #{subset + 1} of #{total}"
           end
 
-          @good &&= run_or_fail("bundle exec rspec #{params.join(' ')}".strip)
+          if ENV['USE_TURBO']
+            @good &&= run_or_fail("bundle exec ./bin/turbo_rspec #{params.join(' ')}".strip)
+          else
+            @good &&= run_or_fail("bundle exec rspec #{params.join(' ')}".strip)
+          end
         end
 
         unless ENV["SKIP_PLUGINS"]

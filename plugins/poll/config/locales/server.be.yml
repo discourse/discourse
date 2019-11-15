@@ -1,0 +1,37 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+be:
+  site_settings:
+    poll_enabled: "Дазволіць апытанні?"
+    poll_maximum_options: "Максімальную колькасць варыянтаў, дазволеных у апытанні."
+    poll_edit_window_mins: "Колькасць хвілін пасля стварэння паста, на працягу якога апытанні могуць рэдагавацца."
+    poll_minimum_trust_level_to_create: "Вызначэнне мінімальнага ўзроўню даверу, неабходны для стварэння апытанняў."
+  poll:
+    invalid_argument: "Несапраўднае значэнне '% {значэнне}' для аргументу '% {аргумент}'."
+    multiple_polls_without_name: "Ёсць некалькі апытанняў без імя. Выкарыстоўвайце «<код> назва <"
+    multiple_polls_with_same_name: "Ёсць некалькі апытанняў з тым жа імем: <моцны>% {імя} <"
+    default_poll_must_have_at_least_2_options: "Апытанне павінен мець па крайняй меры 2 варыянту."
+    named_poll_must_have_at_least_2_options: "Апытанне з імем <моцны>% {імя} <"
+    default_poll_must_have_different_options: "Апытанне павінен мець розныя варыянты."
+    named_poll_must_have_different_options: "Апытанне з імем <моцны>% {імя} <"
+    default_poll_with_multiple_choices_has_invalid_parameters: "Апытанне з множным выбарам мае недапушчальныя параметры."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Апытанне з імем <моцны>% {імя} <"
+    requires_at_least_1_valid_option: "Вы павінны абраць па меншай меры 1 недапушчальны варыянт."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Вы не можаце змяніць апытанне пасля першага% {хвілін} хвілін."
+      cannot_edit_named_poll_with_votes: "Вы не можаце змяніць назву апытання <моцны> $ {імя} <"
+    no_poll_with_this_name: "Няма апытання назвалі <моцны>% {імя} <"
+    post_is_deleted: "Не можа дзейнічаць на выдалены пост."
+    user_cant_post_in_topic: "Вы не можаце галасаваць, таму што вы не можаце пісаць у гэтай тэме."
+    topic_must_be_open_to_vote: "Тэма павінна быць адкрыта, каб галасаваць."
+    poll_must_be_open_to_vote: "Апытанне павінен быць адкрыты, каб галасаваць."
+    topic_must_be_open_to_toggle_status: "Тэма павінна быць адкрыта для пераключэння статусу."
+    only_staff_or_op_can_toggle_status: "Толькі штатны супрацоўнік або арыгінальны плакат можа пераключыць статус апытання."
+    insufficient_rights_to_create: "Вы не можаце ствараць апытанні."
+    email:
+      link_to_poll: "Націсніце, каб паглядзець апытанне."

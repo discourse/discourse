@@ -28,11 +28,13 @@ class AdminEmailTemplateSerializer < ApplicationSerializer
   end
 
   def can_revert?
-    current_body, current_subject = body, subject
-
-    I18n.overrides_disabled do
-      return I18n.t("#{object}.subject_template") != current_subject ||
-             I18n.t("#{object}.text_body_template") != current_body
+    subject_key = "#{object}.subject_template"
+    body_key = "#{object}.text_body_template"
+    keys = [subject_key, body_key]
+    if options[:overridden_keys]
+      keys.any? { |k| options[:overridden_keys].include?(k) }
+    else
+      TranslationOverride.exists?(locale: I18n.locale, translation_key: keys)
     end
   end
 end

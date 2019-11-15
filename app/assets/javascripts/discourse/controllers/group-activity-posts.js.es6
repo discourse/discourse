@@ -1,10 +1,12 @@
-import { observes } from "ember-addons/ember-computed-decorators";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
+import { observes } from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 
-export default Ember.Controller.extend({
-  group: Ember.inject.controller(),
-  groupActivity: Ember.inject.controller(),
-  application: Ember.inject.controller(),
+export default Controller.extend({
+  group: inject(),
+  groupActivity: inject(),
+  application: inject(),
   canLoadMore: true,
   loading: false,
   emptyText: fmt("type", "groups.empty.%@"),

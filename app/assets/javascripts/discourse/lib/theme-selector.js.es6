@@ -43,16 +43,12 @@ export function setLocalTheme(ids, themeSeq) {
   }
 }
 
-export function refreshCSS(node, hash, newHref, options) {
+export function refreshCSS(node, hash, newHref) {
   let $orig = $(node);
 
   if ($orig.data("reloading")) {
-    if (options && options.force) {
-      clearTimeout($orig.data("timeout"));
-      $orig.data("copy").remove();
-    } else {
-      return;
-    }
+    clearTimeout($orig.data("timeout"));
+    $orig.data("copy").remove();
   }
 
   if (!$orig.data("orig")) {
@@ -99,7 +95,7 @@ export function previewTheme(ids = []) {
             `link[rel=stylesheet][data-target=${theme.target}]`
           )[0];
           if (node) {
-            refreshCSS(node, null, theme.new_href, { force: true });
+            refreshCSS(node, null, theme.new_href);
           }
         });
       }

@@ -142,8 +142,11 @@
   overflow: auto;
 
   &:not(.history-modal) {
-    .modal-body:not(.reorder-categories) {
-      max-height: none !important;
+    .modal-body:not(.reorder-categories):not(.poll-ui-builder) {
+      max-height: 80vh !important;
+      @media screen and (max-height: 500px) {
+        max-height: 65vh !important;
+      }
     }
   }
 }
@@ -196,6 +199,53 @@
     &.full-height-modal {
       max-height: calc(100vh - 150px);
     }
+
+    &.insert-link {
+      overflow-y: visible;
+      input {
+        min-width: 300px;
+      }
+
+      .inputs {
+        position: relative;
+        .spinner {
+          position: absolute;
+          right: 8px;
+          top: -15px;
+          width: 10px;
+          height: 10px;
+        }
+        .internal-link-results {
+          position: absolute;
+          top: 70%;
+          padding: 5px 10px;
+          box-shadow: shadow("card");
+          z-index: 5;
+          background-color: $secondary;
+          max-height: 150px;
+          width: 90%;
+          overflow-y: auto;
+          > .search-link {
+            padding: 6px;
+            border-bottom: 1px solid $primary-low;
+            cursor: pointer;
+            display: block;
+            &:hover,
+            &:focus {
+              background-color: $highlight-medium;
+            }
+            .search-category {
+              display: flex;
+              align-items: center;
+            }
+            .discourse-tags {
+              display: inline-block;
+              font-size: $font-down-1;
+            }
+          }
+        }
+      }
+    }
     textarea {
       width: 99%;
       height: 80px;
@@ -218,11 +268,14 @@
   section.field {
     padding: 0.25em 0;
     margin-bottom: 5px;
-  }
-
-  section.field .field-item {
-    display: inline-block;
-    margin-right: 10px;
+    &.with-items {
+      display: flex;
+      align-items: flex-start;
+    }
+    .field-item {
+      display: inline-block;
+      margin-right: 10px;
+    }
   }
 
   // password reset modal
@@ -350,13 +403,28 @@
     margin-right: 0.25em;
   }
 
+  .pending-permission-change-alert {
+    margin-left: auto;
+    max-width: 250px;
+    background: $primary-very-high;
+    color: $secondary;
+    margin-top: 10px;
+    padding: 5px 10px;
+    position: relative;
+    .arrow-div {
+      border: solid transparent;
+      content: " ";
+      position: absolute;
+      border-bottom-color: $primary-very-high;
+      border-width: 7px;
+      top: -13px;
+      left: 200px;
+    }
+  }
+
   .add-permission {
     position: relative;
     top: 0.1em;
-  }
-
-  .add-permission-icon {
-    margin: 0;
   }
 
   .edit-category-tab-settings {
@@ -380,6 +448,9 @@
         }
       }
     }
+  }
+  #category-min-tags-from-group {
+    width: 100px;
   }
 }
 
@@ -425,24 +496,62 @@
   }
 }
 
-.change-timestamp,
-.poll-ui-builder {
-  max-width: 420px;
-  .date-picker {
-    min-width: 8em;
+.modal .modal-body.change-timestamp {
+  #date-container {
+    .pika-single {
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+    }
   }
 
+  form {
+    display: flex;
+
+    .date-picker-wrapper,
+    input[type="time"] {
+      width: 50%;
+    }
+
+    .date-picker-wrapper {
+      display: flex;
+      flex: 1;
+
+      .date-picker {
+        flex: 1;
+      }
+    }
+
+    input.date-picker,
+    input[type="time"] {
+      text-align: left;
+      margin: 0;
+    }
+  }
+}
+
+.change-timestamp {
+  max-width: 420px;
+}
+
+.change-timestamp,
+.poll-ui-builder {
   #date-container {
     .pika-single {
       position: relative !important; // overriding another important
       display: inline-block;
-      margin-top: 5px;
+      margin-top: 0.5em;
     }
   }
 
+  .date-picker-wrapper {
+    min-width: 130px;
+    margin-right: 0.5em;
+  }
+
   input[type="time"] {
-    width: 7em;
-    text-align: center;
+    width: 130px;
   }
 
   form {

@@ -12,6 +12,16 @@ class MetadataController < ApplicationController
     render template: "metadata/opensearch.xml"
   end
 
+  def app_association_android
+    raise Discourse::NotFound unless SiteSetting.app_association_android.present?
+    render plain: SiteSetting.app_association_android, content_type: 'application/json'
+  end
+
+  def app_association_ios
+    raise Discourse::NotFound unless SiteSetting.app_association_ios.present?
+    render plain: SiteSetting.app_association_ios, content_type: 'application/json'
+  end
+
   private
 
   def default_manifest
@@ -37,11 +47,16 @@ class MetadataController < ApplicationController
     }
 
     logo = SiteSetting.site_manifest_icon_url
-    manifest[:icons] << {
-      src: UrlHelper.absolute(logo),
-      sizes: "512x512",
-      type: MiniMime.lookup_by_filename(logo)&.content_type || "image/png"
-    } if logo
+    if logo
+      icon_entry = {
+        src: UrlHelper.absolute(logo),
+        sizes: "512x512",
+        type: MiniMime.lookup_by_filename(logo)&.content_type || "image/png"
+      }
+      manifest[:icons] << icon_entry.dup
+      icon_entry[:purpose] = "maskable"
+      manifest[:icons] << icon_entry
+    end
 
     manifest[:short_name] = SiteSetting.short_title if SiteSetting.short_title.present?
 

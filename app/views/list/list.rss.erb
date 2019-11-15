@@ -20,10 +20,12 @@
           <category><%= topic.category.name %></category>
           <description><![CDATA[
             <% if username.present? %>
-            <p><%= t('author_wrote', author: link_to("@#{username}", "#{Discourse.base_url}/u/#{topic.user.username_lower}")).html_safe %></p>
+            <p><%= t('author_wrote', author: link_to("@#{username}", "#{Discourse.base_url}/u/#{url_encode(topic.user.username_lower)}")).html_safe %></p>
             <% end %>
             <blockquote>
-              <%= topic.posts.first.cooked.html_safe %>
+              <%- if first_post = topic.ordered_posts.first %>
+              <%= first_post.cooked.html_safe %>
+              <%- end %>
             </blockquote>
             <p><%= t 'num_posts' %> <%= topic.posts_count %></p>
             <p><%= t 'num_participants' %> <%= topic.participant_count %></p>

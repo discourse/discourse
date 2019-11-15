@@ -7,5 +7,7 @@
 
 et:
   js:
+    details:
+      title: Peida üksikasjad
     composer:
       details_title: Kokkuvõte

@@ -16,12 +16,20 @@ class Auth::AuthProvider
   attr_accessor(*auth_attributes)
 
   def enabled_setting=(val)
-    Discourse.deprecate("enabled_setting is deprecated. Please define authenticator.enabled? instead")
+    Discourse.deprecate("(#{authenticator.name}) enabled_setting is deprecated. Please define authenticator.enabled? instead")
     @enabled_setting = val
   end
 
   def background_color=(val)
-    Discourse.deprecate("background_color is no longer functional. Please use CSS instead")
+    Discourse.deprecate("(#{authenticator.name}) background_color is no longer functional. Please use CSS instead")
+  end
+
+  def full_screen_login=(val)
+    Discourse.deprecate("(#{authenticator.name}) full_screen_login is now forced. The full_screen_login parameter can be removed from the auth_provider.")
+  end
+
+  def full_screen_login_setting=(val)
+    Discourse.deprecate("(#{authenticator.name}) full_screen_login is now forced. The full_screen_login_setting parameter can be removed from the auth_provider.")
   end
 
   def name

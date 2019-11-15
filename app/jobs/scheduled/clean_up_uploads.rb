@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class CleanUpUploads < Jobs::Scheduled
+  class CleanUpUploads < ::Jobs::Scheduled
     every 1.hour
 
     def execute(args)
@@ -16,6 +16,10 @@ module Jobs
         .find_each(&:destroy!)
 
       return unless SiteSetting.clean_up_uploads?
+
+      if c = last_cleanup
+        return if (Time.zone.now.to_i - c) < (grace_period / 2).hours
+      end
 
       base_url = Discourse.store.internal? ? Discourse.store.relative_base_url : Discourse.store.absolute_base_url
       s3_hostname = URI.parse(base_url).hostname
@@ -87,6 +91,28 @@ module Jobs
           upload.delete
         end
       end
+
+      self.last_cleanup = Time.zone.now.to_i
     end
+
+    def last_cleanup=(v)
+      $redis.setex(last_cleanup_key, 7.days.to_i, v.to_s)
+    end
+
+    def last_cleanup
+      v = $redis.get(last_cleanup_key)
+      v ? v.to_i : v
+    end
+
+    def reset_last_cleanup!
+      $redis.del(last_cleanup_key)
+    end
+
+    protected
+
+    def last_cleanup_key
+      "LAST_UPLOAD_CLEANUP"
+    end
+
   end
 end

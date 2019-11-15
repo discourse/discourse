@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'reviewable'
-
 class ReviewableUser < Reviewable
 
   def self.create_for(user)

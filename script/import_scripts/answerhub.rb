@@ -52,6 +52,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
     add_moderators
     add_admins
     import_avatars
+    create_permalinks
   end
 
   def import_users
@@ -70,7 +71,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
     batches(BATCH_SIZE) do |offset|
       query = "SELECT c_id, c_creation_date, c_name, c_primaryEmail, c_last_seen, c_description
       FROM #{TABLE_PREFIX}_authoritables
-      WHERE c_type='user'
+      WHERE c_type = 'user'
       AND c_active = 1
       AND c_system <> 1
       AND c_id > #{@last_user_id}
@@ -81,7 +82,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
       @last_user_id = results.to_a.last['c_id']
 
       create_users(results, total: total_count, offset: offset) do |user|
-        puts user['c_id'].to_s + ' ' + user['c_name']
+        # puts user['c_id'].to_s + ' ' + user['c_name']
         next if @lookup.user_id_from_imported_user_id(user['c_id'])
         { id: user['c_id'],
           email: "#{SecureRandom.hex}@invalid.invalid",
@@ -122,7 +123,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
     results = @client.query(query)
 
     create_categories(results) do |c|
-      puts c.inspect
+      # puts c.inspect
       {
         id: c['c_id'],
         name: c['c_name'],
@@ -162,10 +163,9 @@ class ImportScripts::AnswerHub < ImportScripts::Base
 
       create_posts(topics, total: total_count, offset: offset) do |t|
         user_id = user_id_from_imported_user_id(t['c_author']) || Discourse::SYSTEM_USER_ID
+        body = process_mentions(t['c_body'])
         if PROCESS_UPLOADS == 1
-          body = process_uploads(t['c_body'], user_id)
-        else
-          body = t['c_body']
+          body = process_uploads(body, user_id)
         end
         markdown_body = HtmlToMarkdown.new(body).to_markdown
         {
@@ -216,20 +216,26 @@ class ImportScripts::AnswerHub < ImportScripts::Base
       @last_post_id = posts.to_a.last['c_id']
 
       create_posts(posts, total: total_count, offset: offset) do |p|
-        t = topic_lookup_from_imported_post_id(p['c_parent'])
+        t = topic_lookup_from_imported_post_id(p['c_originalParent'])
         next unless t
+
+        reply_to_post_id = post_id_from_imported_post_id(p['c_parent'])
+        reply_to_post = reply_to_post_id.present? ? Post.find(reply_to_post_id) : nil
+        reply_to_post_number = reply_to_post.present? ? reply_to_post.post_number : nil
+
         user_id = user_id_from_imported_user_id(p['c_author']) || Discourse::SYSTEM_USER_ID
+
+        body = process_mentions(p['c_body'])
         if PROCESS_UPLOADS == 1
-          body = process_uploads(p['c_body'], user_id)
-        else
-          body = t['c_body']
+          body = process_uploads(body, user_id)
         end
+
         markdown_body = HtmlToMarkdown.new(body).to_markdown
         {
           id: p['c_id'],
           user_id: user_id,
           topic_id: t[:topic_id],
-          reply_to_post_number: t[:post_number],
+          reply_to_post_number: reply_to_post_number,
           raw: markdown_body,
           created_at: p['c_creation_date'],
           post_create_action: proc do |post_info|
@@ -240,7 +246,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
                   user_id = user_id_from_imported_user_id(p['c_author']) || Discourse::SYSTEM_USER_ID
                   current_user = User.find(user_id)
                   solved = DiscourseSolved.accept_answer!(post, current_user)
-                  puts "SOLVED: #{solved}"
+                  # puts "SOLVED: #{solved}"
                 end
               end
             rescue ActiveRecord::RecordInvalid
@@ -426,6 +432,58 @@ class ImportScripts::AnswerHub < ImportScripts::Base
     end
 
     body
+  end
+
+  def process_mentions(body)
+    raw = body.dup
+
+    # https://example.forum.com/forums/users/1469/XYZ_Rob.html
+    raw.gsub!(/(https:\/\/example.forum.com\/forums\/users\/\d+\/[\w_%-.]*.html)/) do
+      legacy_url = $1
+      import_user_id = legacy_url.match(/https:\/\/example.forum.com\/forums\/users\/(\d+)\/[\w_%-.]*.html/).captures
+
+      user = @lookup.find_user_by_import_id(import_user_id[0])
+      if user.present?
+        # puts "/users/#{user.username}"
+        "/users/#{user.username}"
+      else
+        # puts legacy_url
+        legacy_url
+      end
+    end
+
+    # /forums/users/395/petrocket.html
+    raw.gsub!(/(\/forums\/users\/\d+\/[\w_%-.]*.html)/) do
+      legacy_url = $1
+      import_user_id = legacy_url.match(/\/forums\/users\/(\d+)\/[\w_%-.]*.html/).captures
+
+      # puts raw
+      user = @lookup.find_user_by_import_id(import_user_id[0])
+      if user.present?
+        # puts "/users/#{user.username}"
+        "/users/#{user.username}"
+      else
+        # puts legacy_url
+        legacy_url
+      end
+    end
+
+    raw
+  end
+
+  def create_permalinks
+    puts '', 'Creating redirects...', ''
+
+    # https://example.forum.com/forums/questions/2005/missing-file.html
+    Topic.find_each do |topic|
+      pcf = topic.first_post.custom_fields
+      if pcf && pcf["import_id"]
+        id = pcf["import_id"]
+        slug = Slug.for(topic.title)
+        Permalink.create(url: "questions/#{id}/#{slug}.html", topic_id: topic.id) rescue nil
+        print '.'
+      end
+    end
   end
 
   def staff_guardian

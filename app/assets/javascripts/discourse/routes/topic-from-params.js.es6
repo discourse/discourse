@@ -1,8 +1,12 @@
+import { isEmpty } from "@ember/utils";
+import { scheduleOnce } from "@ember/runloop";
+import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
+import ENV from "discourse-common/config/environment";
 
 // This route is used for retrieving a topic based on params
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   // Avoid default model hook
   model(params) {
     return params;
@@ -35,6 +39,11 @@ export default Discourse.Route.extend({
         // TODO we are seeing errors where closest post is null and this is exploding
         // we need better handling and logging for this condition.
 
+        // there are no closestPost for hidden topics
+        if (topic.view_hidden) {
+          return;
+        }
+
         // The post we requested might not exist. Let's find the closest post
         const closestPost = postStream.closestPostForPostNumber(
           params.nearPost || 1
@@ -47,10 +56,11 @@ export default Discourse.Route.extend({
           enteredAt: new Date().getTime().toString()
         });
 
+        this.appEvents.trigger("page:topic-loaded", topic);
         topicController.subscribe();
 
         // Highlight our post after the next render
-        Ember.run.scheduleOnce("afterRender", () =>
+        scheduleOnce("afterRender", () =>
           this.appEvents.trigger("post:highlight", closest)
         );
 
@@ -60,7 +70,7 @@ export default Discourse.Route.extend({
         }
         DiscourseURL.jumpToPost(closest, opts);
 
-        if (!Ember.isEmpty(topic.draft)) {
+        if (!isEmpty(topic.draft)) {
           composerController.open({
             draft: Draft.getLocal(topic.draft_key, topic.draft),
             draftKey: topic.draft_key,
@@ -71,10 +81,23 @@ export default Discourse.Route.extend({
         }
       })
       .catch(e => {
-        if (!Ember.testing) {
+        if (ENV.environment !== "test") {
           // eslint-disable-next-line no-console
           console.log("Could not view topic", e);
         }
       });
+  },
+
+  actions: {
+    willTransition() {
+      this.controllerFor("topic").set(
+        "previousURL",
+        document.location.pathname
+      );
+
+      // NOTE: omitting this return can break the back button when transitioning quickly between
+      // topics and the latest page.
+      return true;
+    }
   }
 });

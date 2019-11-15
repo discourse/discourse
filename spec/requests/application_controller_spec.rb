@@ -11,14 +11,38 @@ RSpec.describe ApplicationController do
       SiteSetting.login_required = true
     end
 
-    it "should carry-forward authComplete param to login page redirect" do
-      get "/?authComplete=true"
-      expect(response).to redirect_to('/login?authComplete=true')
-    end
-
     it "should never cache a login redirect" do
       get "/"
       expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    end
+
+    it "should redirect to login normally" do
+      get "/"
+      expect(response).to redirect_to("/login")
+    end
+
+    it "should redirect to SSO if enabled" do
+      SiteSetting.sso_url = 'http://someurl.com'
+      SiteSetting.enable_sso = true
+      get "/"
+      expect(response).to redirect_to("/session/sso")
+    end
+
+    it "should redirect to authenticator if only one, and local logins disabled" do
+      # Local logins and google enabled, direct to login UI
+      SiteSetting.enable_google_oauth2_logins = true
+      get "/"
+      expect(response).to redirect_to("/login")
+
+      # Only google enabled, login immediately
+      SiteSetting.enable_local_logins = false
+      get "/"
+      expect(response).to redirect_to("/auth/google_oauth2")
+
+      # Google and GitHub enabled, direct to login UI
+      SiteSetting.enable_github_logins = true
+      get "/"
+      expect(response).to redirect_to("/login")
     end
   end
 
@@ -44,6 +68,18 @@ RSpec.describe ApplicationController do
 
       get "/"
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
+    end
+
+    it "should not redirect anonymous users when enforce_second_factor is 'all'" do
+      SiteSetting.enforce_second_factor = "all"
+      SiteSetting.allow_anonymous_posting = true
+      sign_in(user)
+
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
+
+      get "/"
+      expect(response.status).to eq(200)
     end
 
     it "should redirect admins when enforce_second_factor is 'staff'" do
@@ -138,6 +174,12 @@ RSpec.describe ApplicationController do
         topic = create_post.topic
         Permalink.create!(url: topic.relative_url, topic_id: topic.id + 1)
         topic.trash!
+
+        SiteSetting.detailed_404 = false
+        get topic.relative_url
+        expect(response.status).to eq(404)
+
+        SiteSetting.detailed_404 = true
         get topic.relative_url
         expect(response.status).to eq(410)
       end
@@ -197,7 +239,7 @@ RSpec.describe ApplicationController do
         response_body = response.body
 
         expect(response_body).to include(I18n.t('page_not_found.search_button'))
-        expect(response_body).to have_tag("input", with: { value: 'nopenope' })
+        expect(response_body).to have_tag("input", with: { value: 'nope nope' })
       end
 
       it 'should not include Google search if login_required is enabled' do
@@ -460,5 +502,11 @@ RSpec.describe ApplicationController do
         [directive, sources]
       end.to_h
     end
+  end
+
+  it 'can respond to a request with */* accept header' do
+    get '/', headers: { HTTP_ACCEPT: '*/*' }
+    expect(response.status).to eq(200)
+    expect(response.body).to include('Discourse')
   end
 end

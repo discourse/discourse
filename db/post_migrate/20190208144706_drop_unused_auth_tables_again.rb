@@ -3,11 +3,13 @@
 require 'migration/table_dropper'
 
 class DropUnusedAuthTablesAgain < ActiveRecord::Migration[5.2]
-  def up
-    %i{
+  DROPPED_TABLES ||= %i{
         facebook_user_infos
         twitter_user_infos
-      }.each do |table|
+      }
+
+  def up
+    DROPPED_TABLES.each do |table|
       Migration::TableDropper.execute_drop(table)
     end
   end

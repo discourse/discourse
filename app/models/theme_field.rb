@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'theme_settings_parser'
-require_dependency 'theme_translation_parser'
-require_dependency 'theme_javascript_compiler'
-
 class ThemeField < ActiveRecord::Base
 
   belongs_to :upload
@@ -64,7 +60,7 @@ class ThemeField < ActiveRecord::Base
   validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
-  BASE_COMPILER_VERSION = 11
+  BASE_COMPILER_VERSION = 14
   DEPENDENT_CONSTANTS = [BASE_COMPILER_VERSION,
                         GlobalSetting.cdn_url]
   COMPILER_VERSION = Digest::SHA1.hexdigest(DEPENDENT_CONSTANTS.join)
@@ -74,6 +70,8 @@ class ThemeField < ActiveRecord::Base
   def process_html(html)
     errors = []
     javascript_cache || build_javascript_cache
+
+    errors << I18n.t("themes.errors.optimized_link") if contains_optimized_link?(html)
 
     js_compiler = ThemeJavascriptCompiler.new(theme_id, self.theme.name)
 
@@ -138,7 +136,7 @@ class ThemeField < ActiveRecord::Base
       when "hbs"
         js_compiler.append_ember_template(filename.sub("discourse/templates/", ""), content)
       when "raw.hbs"
-        js_compiler.append_raw_template(filename, content)
+        js_compiler.append_raw_template(filename.sub("discourse/templates/", ""), content)
       else
         raise ThemeJavascriptCompiler::CompileError.new(I18n.t("themes.compile_error.unrecognized_extension", extension: extension))
       end
@@ -185,19 +183,24 @@ class ThemeField < ActiveRecord::Base
       data = translation_data
 
       js = <<~JS
-        /* Translation data for theme #{self.theme_id} (#{self.name})*/
-        const data = #{data.to_json};
+        export default {
+          name: "theme-#{theme_id}-translations",
+          initialize() {
+            /* Translation data for theme #{self.theme_id} (#{self.name})*/
+            const data = #{data.to_json};
 
-        for (let lang in data){
-          let cursor = I18n.translations;
-          for (let key of [lang, "js", "theme_translations"]){
-            cursor = cursor[key] = cursor[key] || {};
+            for (let lang in data){
+              let cursor = I18n.translations;
+              for (let key of [lang, "js", "theme_translations"]){
+                cursor = cursor[key] = cursor[key] || {};
+              }
+              cursor[#{self.theme_id}] = data[lang];
+            }
           }
-          cursor[#{self.theme_id}] = data[lang];
-        }
+        };
       JS
 
-      js_compiler.append_plugin_script(js, 0)
+      js_compiler.append_module(js, "discourse/pre-initializers/theme-#{theme_id}-translations", include_variables: false)
     rescue ThemeTranslationParser::InvalidYaml => e
       errors << e.message
     end
@@ -343,7 +346,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   def compile_scss
-    Stylesheet::Compiler.compile("@import \"common/foundation/variables\"; @import \"theme_variables\"; @import \"theme_field\";",
+    Stylesheet::Compiler.compile("@import \"common/foundation/variables\"; @import \"common/foundation/mixins\"; @import \"theme_variables\"; @import \"theme_field\";",
       "theme.scss",
       theme_field: self.value.dup,
       theme: self.theme
@@ -354,7 +357,11 @@ class ThemeField < ActiveRecord::Base
     result = ["failed"]
     begin
       result = compile_scss
-      self.error = nil unless error.nil?
+      if contains_optimized_link?(self.value)
+        self.error = I18n.t("themes.errors.optimized_link")
+      else
+        self.error = nil unless error.nil?
+      end
     rescue SassC::SyntaxError => e
       self.error = e.message unless self.destroyed?
     end
@@ -364,6 +371,10 @@ class ThemeField < ActiveRecord::Base
 
   def target_name
     Theme.targets[target_id].to_s
+  end
+
+  def contains_optimized_link?(text)
+    OptimizedImage::URL_REGEX.match?(text)
   end
 
   class ThemeFileMatcher

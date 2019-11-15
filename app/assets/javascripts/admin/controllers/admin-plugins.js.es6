@@ -1,7 +1,8 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
 
-export default Ember.Controller.extend({
-  @computed
+export default Controller.extend({
+  @discourseComputed
   adminRoutes: function() {
     return this.model
       .map(p => {

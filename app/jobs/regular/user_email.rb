@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
-require_dependency 'email/sender'
-require_dependency 'user_notifications'
-
 module Jobs
 
   # Asynchronously send an email to a user
-  class UserEmail < Jobs::Base
+  class UserEmail < ::Jobs::Base
     include Skippable
 
     sidekiq_options queue: 'low'
@@ -40,6 +37,10 @@ module Jobs
 
         unless post.present?
           return skip(SkippedEmailLog.reason_types[:user_email_post_not_found])
+        end
+
+        if !Guardian.new(user).can_see?(post)
+          return skip(SkippedEmailLog.reason_types[:user_email_access_denied])
         end
       end
 
@@ -188,7 +189,7 @@ module Jobs
       when Net::SMTPServerBusy
         1.hour + (rand(30) * (count + 1))
       else
-        Jobs::UserEmail.seconds_to_delay(count)
+        ::Jobs::UserEmail.seconds_to_delay(count)
       end
     end
 

@@ -94,7 +94,7 @@ export default createWidget("header-topic-info", {
       );
     }
 
-    const title = [h("h1", heading)];
+    const title = [h("h1.header-title", heading)];
     const category = topic.get("category");
 
     if (loaded || category) {

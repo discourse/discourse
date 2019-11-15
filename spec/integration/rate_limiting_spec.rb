@@ -14,6 +14,31 @@ describe 'rate limiter integration' do
     RateLimiter.disable
   end
 
+  it "will rate limit message bus requests once queueing" do
+    freeze_time
+
+    global_setting :reject_message_bus_queue_seconds, 0.1
+
+    post "/message-bus/#{SecureRandom.hex}/poll", headers: {
+      "HTTP_X_REQUEST_START" => "t=#{Time.now.to_f - 0.2}"
+    }
+
+    expect(response.status).to eq(429)
+    expect(response.headers['Retry-After']).to be > 29
+  end
+
+  it "will not rate limit when all is good" do
+    freeze_time
+
+    global_setting :reject_message_bus_queue_seconds, 0.1
+
+    post "/message-bus/#{SecureRandom.hex}/poll", headers: {
+      "HTTP_X_REQUEST_START" => "t=#{Time.now.to_f - 0.05}"
+    }
+
+    expect(response.status).to eq(200)
+  end
+
   it "will clear the token cookie if invalid" do
     name = Auth::DefaultCurrentUserProvider::TOKEN_COOKIE
 

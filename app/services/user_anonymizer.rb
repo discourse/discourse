@@ -66,7 +66,7 @@ class UserAnonymizer
       @user.user_associated_accounts.try(:destroy_all)
       @user.instagram_user_info.try(:destroy)
       @user.user_open_ids.find_each { |x| x.destroy }
-      @user.api_key.try(:destroy)
+      @user.api_keys.find_each { |x| x.try(:destroy) }
       @user.user_emails.secondary.destroy_all
 
       @user_history = log_action

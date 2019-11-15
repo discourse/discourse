@@ -18,6 +18,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @keep_newlines = options[:keep_newlines] == true
     @keep_emoji_images = options[:keep_emoji_images] == true
     @keep_onebox_source = options[:keep_onebox_source] == true
+    @keep_onebox_body = options[:keep_onebox_body] == true
     @remap_emoji = options[:remap_emoji] == true
     @start_excerpt = false
     @in_details_depth = 0
@@ -34,7 +35,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       parser.parse(html)
     end
     excerpt = me.excerpt.strip
-    excerpt = excerpt.gsub(/\s*\n+\s*/, "\n\n") if options[:keep_onebox_source]
+    excerpt = excerpt.gsub(/\s*\n+\s*/, "\n\n") if options[:keep_onebox_source] || options[:keep_onebox_body]
     excerpt = CGI.unescapeHTML(excerpt) if options[:text_entities] == true
     excerpt
   end
@@ -95,13 +96,22 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
     when "aside"
       attributes = Hash[*attributes.flatten]
-      unless @keep_onebox_source && attributes['class'].include?('onebox')
+      unless (@keep_onebox_source || @keep_onebox_body) && attributes['class'].include?('onebox')
         @in_quote = true
       end
 
+      if @keep_onebox_body && attributes['class'].include?('quote') && attributes['data-topic'].present?
+        @in_quote = false
+      end
+
     when 'article'
-      if @keep_onebox_source && attributes.include?(['class', 'onebox-body'])
-        @in_quote = true
+      if attributes.include?(['class', 'onebox-body'])
+        @in_quote = !@keep_onebox_body
+      end
+
+    when 'header'
+      if attributes.include?(['class', 'source'])
+        @in_quote = !@keep_onebox_source
       end
 
     when "div", "span"

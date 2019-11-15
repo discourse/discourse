@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 export default function logout(siteSettings, keyValueStore) {
   if (!siteSettings || !keyValueStore) {
     const container = Discourse.__container__;
@@ -8,8 +9,8 @@ export default function logout(siteSettings, keyValueStore) {
   keyValueStore.abandonLocal();
 
   const redirect = siteSettings.logout_redirect;
-  if (Ember.isEmpty(redirect)) {
-    window.location.pathname = Discourse.getURL("/");
+  if (isEmpty(redirect)) {
+    window.location = Discourse.getURL("/");
   } else {
     window.location.href = redirect;
   }

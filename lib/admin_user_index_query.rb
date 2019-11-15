@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'trust_level'
-
 class AdminUserIndexQuery
 
   def initialize(params = {}, klass = User, trust_levels = TrustLevel.levels)

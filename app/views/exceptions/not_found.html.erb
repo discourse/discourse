@@ -1,4 +1,12 @@
-<h1 class="page-not-found"><%= t 'page_not_found.title' %></h1>
+<div class="page-not-found">
+  <h1 class="title"><%= @title %></h1>
+
+  <%- if @group&.allow_membership_requests %>
+    <a href="<%= group_path @group.name %>" class='btn btn-primary'><%= SvgSprite.raw_svg('user-plus') %> <%= I18n.t('not_in_group.request_membership') %></a>
+  <%- elsif @group&.public_admission %>
+    <a href="<%= group_path @group.name %>" class='btn btn-primary'><%= SvgSprite.raw_svg('user-plus') %> <%= I18n.t('not_in_group.join_group') %></a>
+  <%- end %>
+</div>
 
 <%= build_plugin_html 'server:not-found-before-topics' %>
 

@@ -1298,7 +1298,8 @@ export default {
         last_poster_username: null,
         category_id: 7,
         pinned_globally: false,
-        posters: []
+        posters: [],
+        tags: ["dev", "slow"]
       },
       {
         id: 14727,

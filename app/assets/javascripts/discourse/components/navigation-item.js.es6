@@ -1,7 +1,8 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     tagName: "li",
     classNameBindings: [
@@ -14,8 +15,11 @@ export default Ember.Component.extend(
     hidden: false,
     rerenderTriggers: ["content.count"],
 
-    @computed("content.filterMode", "filterMode")
-    active(contentFilterMode, filterMode) {
+    @discourseComputed("content.filterMode", "filterMode", "content.active")
+    active(contentFilterMode, filterMode, active) {
+      if (active !== undefined) {
+        return active;
+      }
       return (
         contentFilterMode === filterMode ||
         filterMode.indexOf(contentFilterMode) === 0
@@ -26,13 +30,26 @@ export default Ember.Component.extend(
       const content = this.content;
 
       let href = content.get("href");
+      let queryParams = [];
 
       // Include the category id if the option is present
       if (content.get("includeCategoryId")) {
         let categoryId = this.get("category.id");
         if (categoryId) {
-          href += `?category_id=${categoryId}`;
+          queryParams.push(`category_id=${categoryId}`);
         }
+      }
+
+      // ensures we keep discovery query params added through plugin api
+      if (content.persistedQueryParams) {
+        Object.keys(content.persistedQueryParams).forEach(key => {
+          const value = content.persistedQueryParams[key];
+          queryParams.push(`${key}=${value}`);
+        });
+      }
+
+      if (queryParams.length) {
+        href += `?${queryParams.join("&")}`;
       }
 
       if (

@@ -52,6 +52,20 @@
           -moz-hyphens: auto;
           -webkit-hyphens: auto;
           hyphens: auto;
+          margin-top: 0.25em;
+        }
+      }
+    }
+
+    .search-result-topic {
+      .second-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+
+        .discourse-tags {
+          flex-wrap: wrap;
+          display: contents;
         }
       }
     }
@@ -139,9 +153,7 @@
 
             .name,
             .slug {
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
+              @include ellipsis;
             }
 
             .name {
@@ -193,9 +205,7 @@
 
             .username,
             .name {
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
+              @include ellipsis;
             }
 
             .username {

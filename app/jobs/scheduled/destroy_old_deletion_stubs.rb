@@ -2,7 +2,7 @@
 
 module Jobs
   # various consistency checks
-  class DestroyOldDeletionStubs < Jobs::Scheduled
+  class DestroyOldDeletionStubs < ::Jobs::Scheduled
     every 30.minutes
 
     def execute(args)

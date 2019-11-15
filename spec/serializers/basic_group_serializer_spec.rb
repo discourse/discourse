@@ -26,7 +26,7 @@ describe BasicGroupSerializer do
   end
 
   describe '#bio_raw' do
-    fab!(:group) { Fabricate(:group, bio_raw: 'testing') }
+    fab!(:group) { Fabricate(:group, bio_raw: 'testing :slightly_smiling_face:') }
 
     subject do
       described_class.new(group, scope: guardian, root: false, owner_group_ids: [group.id])
@@ -34,7 +34,8 @@ describe BasicGroupSerializer do
 
     describe 'group owner' do
       it 'should include bio_raw' do
-        expect(subject.as_json[:bio_raw]).to eq('testing')
+        expect(subject.as_json[:bio_raw]).to eq('testing :slightly_smiling_face:')
+        expect(subject.as_json[:bio_excerpt]).to start_with('testing <img')
       end
     end
   end
@@ -86,6 +87,31 @@ describe BasicGroupSerializer do
 
       it 'should not be present' do
         expect(subject.as_json[:has_messages]).to eq(nil)
+      end
+    end
+  end
+
+  describe '#can_see_members' do
+    fab!(:group) { Fabricate(:group, members_visibility_level: Group.visibility_levels[:members]) }
+
+    describe 'for a group user' do
+      fab!(:user) { Fabricate(:user) }
+      let(:guardian) { Guardian.new(user) }
+
+      before do
+        group.add(user)
+      end
+
+      it 'should be true' do
+        expect(subject.as_json[:can_see_members]).to eq(true)
+      end
+    end
+
+    describe 'for a normal user' do
+      let(:guardian) { Guardian.new(Fabricate(:user)) }
+
+      it 'should be false' do
+        expect(subject.as_json[:can_see_members]).to eq(false)
       end
     end
   end

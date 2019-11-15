@@ -60,7 +60,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
 
     user.save!
 
-    if invite.via_email
+    if invite.emailed_status != Invite.emailed_status_types[:not_required]
       user.email_tokens.create!(email: user.email)
       user.activate
     end

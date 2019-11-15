@@ -3,10 +3,6 @@
 require 'mini_racer'
 require 'nokogiri'
 require 'erb'
-require_dependency 'url_helper'
-require_dependency 'excerpt_parser'
-require_dependency 'discourse_tagging'
-require_dependency 'pretty_text/helpers'
 
 module PrettyText
   @mutex = Mutex.new
@@ -77,6 +73,7 @@ module PrettyText
       ctx.attach("console.log", proc { |l| p l })
       ctx.eval('window.console = console;')
     end
+    ctx.eval("__PRETTY_TEXT = true")
 
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
     ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
@@ -152,6 +149,7 @@ module PrettyText
         #{"__optInput.disableEmojis = true" if opts[:disable_emojis]}
         __paths = #{paths_json};
         __optInput.getURL = __getURL;
+        #{"__optInput.features = #{opts[:features].to_json};" if opts[:features]}
         __optInput.getCurrentUser = __getCurrentUser;
         __optInput.lookupAvatar = __lookupAvatar;
         __optInput.lookupPrimaryUserGroup = __lookupPrimaryUserGroup;
@@ -161,7 +159,7 @@ module PrettyText
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupUploadUrls = __lookupUploadUrls;
-        __optInput.censoredWords = #{WordWatcher.words_for_action(:censor).join('|').to_json};
+        __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
       JS
 
       if opts[:topicId]
@@ -185,19 +183,6 @@ module PrettyText
       DiscourseEvent.trigger(:markdown_context, context)
       baked = context.eval("__pt.cook(#{text.inspect})")
     end
-
-    # if baked.blank? && !(opts || {})[:skip_blank_test]
-    #   # we may have a js engine issue
-    #   test = markdown("a", skip_blank_test: true)
-    #   if test.blank?
-    #     Rails.logger.warn("Markdown engine appears to have crashed, resetting context")
-    #     reset_context
-    #     opts ||= {}
-    #     opts = opts.dup
-    #     opts[:skip_blank_test] = true
-    #     baked = markdown(text, opts)
-    #   end
-    # end
 
     baked
   end

@@ -73,6 +73,14 @@ describe Invite do
         end
       end
 
+      context 'links' do
+        it 'does not enqueue a job to email the invite' do
+          expect do
+            Invite.generate_invite_link(iceking, inviter, topic)
+          end.not_to change { Jobs::InviteEmail.jobs.size }
+        end
+      end
+
       context 'destroyed' do
         it "can invite the same user after their invite was destroyed" do
           Invite.invite_by_email(iceking, inviter, topic).destroy!
@@ -151,26 +159,25 @@ describe Invite do
           end
         end
 
-        it 'correctly marks invite as sent via email' do
-          expect(invite.via_email).to eq(true)
+        it 'correctly marks invite emailed_status for email invites' do
+          expect(invite.emailed_status).to eq(Invite.emailed_status_types[:sending])
 
           Invite.invite_by_email(iceking, inviter, topic)
-          expect(invite.reload.via_email).to eq(true)
+          expect(invite.reload.emailed_status).to eq(Invite.emailed_status_types[:sending])
         end
 
-        it 'does not mark invite as sent via email after generating invite link' do
-          expect(invite.via_email).to eq(true)
+        it 'does not mark emailed_status as sending after generating invite link' do
+          expect(invite.emailed_status).to eq(Invite.emailed_status_types[:sending])
 
           Invite.generate_invite_link(iceking, inviter, topic)
-          expect(invite.reload.via_email).to eq(false)
+          expect(invite.reload.emailed_status).to eq(Invite.emailed_status_types[:not_required])
 
           Invite.invite_by_email(iceking, inviter, topic)
-          expect(invite.reload.via_email).to eq(false)
+          expect(invite.reload.emailed_status).to eq(Invite.emailed_status_types[:not_required])
 
           Invite.generate_invite_link(iceking, inviter, topic)
-          expect(invite.reload.via_email).to eq(false)
+          expect(invite.reload.emailed_status).to eq(Invite.emailed_status_types[:not_required])
         end
-
       end
     end
   end
@@ -494,6 +501,22 @@ describe Invite do
       expect(invite_1.deleted_at).to eq(nil)
       expect(invite_2.deleted_at).to eq(nil)
       expect(expired_invite.deleted_at).to be_present
+    end
+  end
+
+  describe '#emailed_status_types' do
+    context "verify enum sequence" do
+      before do
+        @emailed_status_types = Invite.emailed_status_types
+      end
+
+      it "'not_required' should be at 0 position" do
+        expect(@emailed_status_types[:not_required]).to eq(0)
+      end
+
+      it "'sent' should be at 4th position" do
+        expect(@emailed_status_types[:sent]).to eq(4)
+      end
     end
   end
 end

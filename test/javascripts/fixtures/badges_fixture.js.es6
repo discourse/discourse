@@ -404,6 +404,30 @@ export default {
       badge_type_id: 3
     }
   },
+  "/badges/50": {
+    badge_types: [
+      {
+        id: 3,
+        name: "Bronze"
+      }
+    ],
+    badge: {
+      id: 50,
+      name: "CustomBadge",
+      description: null,
+      long_description: "",
+      grant_count: 10,
+      allow_title: true,
+      multiple_grant: true,
+      icon: "fa-certificate",
+      listable: true,
+      enabled: true,
+      badge_grouping_id: 1,
+      system: false,
+      badge_type_id: 3,
+      has_badge: true
+    }
+  },
   "/user_badges.json": {
     badges: [
       {

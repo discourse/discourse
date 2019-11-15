@@ -153,6 +153,19 @@ describe FinalDestination do
       end
     end
 
+    context "with a redirect to login path" do
+      before do
+        redirect_response("https://eviltrout.com/t/xyz/1", "https://eviltrout.com/login")
+      end
+
+      it "does not follow redirect" do
+        final = FinalDestination.new('https://eviltrout.com/t/xyz/1', opts)
+        expect(final.resolve.to_s).to eq('https://eviltrout.com/t/xyz/1')
+        expect(final.redirected?).to eq(false)
+        expect(final.status).to eq(:resolved)
+      end
+    end
+
     context "GET can be forced" do
       before do
         stub_request(:head, 'https://force.get.com/posts?page=4')

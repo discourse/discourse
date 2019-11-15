@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'enum'
-
 class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
@@ -83,15 +81,17 @@ class Group < ActiveRecord::Base
     only_admins: 1,
     mods_and_admins: 2,
     members_mods_and_admins: 3,
+    owners_mods_and_admins: 4,
     everyone: 99
   }
 
   def self.visibility_levels
     @visibility_levels = Enum.new(
       public: 0,
-      members: 1,
-      staff: 2,
-      owners: 3
+      logged_on_users: 1,
+      members: 2,
+      staff: 3,
+      owners: 4
     )
   end
 
@@ -109,6 +109,11 @@ class Group < ActiveRecord::Base
       sql = <<~SQL
         groups.id IN (
           SELECT g.id FROM groups g WHERE g.visibility_level = :public
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          WHERE g.visibility_level = :logged_on_users AND :user_id IS NOT NULL
 
           UNION ALL
 
@@ -146,6 +151,59 @@ class Group < ActiveRecord::Base
     groups
   }
 
+  scope :members_visible_groups, Proc.new { |user, order, opts|
+    groups = self.order(order || "name ASC")
+
+    if !opts || !opts[:include_everyone]
+      groups = groups.where("groups.id > 0")
+    end
+
+    unless user&.admin
+      sql = <<~SQL
+        groups.id IN (
+          SELECT g.id FROM groups g WHERE g.members_visibility_level = :public
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          WHERE g.members_visibility_level = :logged_on_users AND :user_id IS NOT NULL
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id
+          WHERE g.members_visibility_level = :members
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          LEFT JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id AND
+                                 gu.owner
+          WHERE g.members_visibility_level = :staff AND (gu.id IS NOT NULL OR :is_staff)
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id AND
+                                 gu.owner
+          WHERE g.members_visibility_level = :owners
+
+        )
+      SQL
+
+      groups = groups.where(
+        sql,
+        Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
+      )
+
+    end
+
+    groups
+  }
+
   scope :mentionable, lambda { |user|
     where(self.mentionable_sql_clause,
       levels: alias_levels(user),
@@ -158,6 +216,9 @@ class Group < ActiveRecord::Base
           (
             messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id)
+          ) OR (
+            messageable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]} AND id in (
+            SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
           )", levels: alias_levels(user), user_id: user && user.id)
   }
 
@@ -168,7 +229,11 @@ class Group < ActiveRecord::Base
       mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
       AND id in (
         SELECT group_id FROM group_users WHERE user_id = :user_id)
-      )
+    ) OR (
+      mentionable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]}
+      AND id in (
+        SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
+    )
     SQL
   end
 
@@ -179,11 +244,13 @@ class Group < ActiveRecord::Base
       levels = [ALIAS_LEVELS[:everyone],
                 ALIAS_LEVELS[:only_admins],
                 ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
+                ALIAS_LEVELS[:members_mods_and_admins],
+                ALIAS_LEVELS[:owners_mods_and_admins]]
     elsif user && user.moderator?
       levels = [ALIAS_LEVELS[:everyone],
                 ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
+                ALIAS_LEVELS[:members_mods_and_admins],
+                ALIAS_LEVELS[:owners_mods_and_admins]]
     end
 
     levels
@@ -209,8 +276,10 @@ class Group < ActiveRecord::Base
   end
 
   def cook_bio
-    if !self.bio_raw.blank?
+    if self.bio_raw.present?
       self.bio_cooked = PrettyText.cook(self.bio_raw)
+    else
+      self.bio_cooked = nil
     end
   end
 
@@ -288,6 +357,25 @@ class Group < ActiveRecord::Base
     (10..19).to_a
   end
 
+  def set_message_default_notification_levels!(topic, ignore_existing: false)
+    group_users.pluck(:user_id, :notification_level).each do |user_id, notification_level|
+      next if user_id == -1
+      next if user_id == topic.user_id
+      next if ignore_existing && TopicUser.where(user_id: user_id, topic_id: topic.id).exists?
+
+      action =
+        case notification_level
+        when TopicUser.notification_levels[:tracking] then "track!"
+        when TopicUser.notification_levels[:regular]  then "regular!"
+        when TopicUser.notification_levels[:muted]    then "mute!"
+        when TopicUser.notification_levels[:watching] then "watch!"
+        else "track!"
+        end
+
+      topic.notifier.public_send(action, user_id)
+    end
+  end
+
   def self.refresh_automatic_group!(name)
     return unless id = AUTO_GROUPS[name]
 
@@ -322,17 +410,19 @@ class Group < ActiveRecord::Base
       group.update!(messageable_level: ALIAS_LEVELS[:everyone])
     end
 
+    group.update!(visibility_level: Group.visibility_levels[:logged_on_users]) if group.visibility_level == Group.visibility_levels[:public]
+
     # Remove people from groups they don't belong in.
     remove_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE id <= 0 OR NOT admin"
+        "SELECT id FROM users WHERE id <= 0 OR NOT admin OR staged"
       when :moderators
-        "SELECT id FROM users WHERE id <= 0 OR NOT moderator"
+        "SELECT id FROM users WHERE id <= 0 OR NOT moderator OR staged"
       when :staff
-        "SELECT id FROM users WHERE id <= 0 OR (NOT admin AND NOT moderator)"
+        "SELECT id FROM users WHERE id <= 0 OR (NOT admin AND NOT moderator) OR staged"
       when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE id <= 0 OR trust_level < #{id - 10}"
+        "SELECT id FROM users WHERE id <= 0 OR trust_level < #{id - 10} OR staged"
       end
 
     DB.exec <<-SQL
@@ -346,15 +436,15 @@ class Group < ActiveRecord::Base
     insert_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE id > 0 AND admin"
+        "SELECT id FROM users WHERE id > 0 AND admin AND NOT staged"
       when :moderators
-        "SELECT id FROM users WHERE id > 0 AND moderator"
+        "SELECT id FROM users WHERE id > 0 AND moderator AND NOT staged"
       when :staff
-        "SELECT id FROM users WHERE id > 0 AND (moderator OR admin)"
+        "SELECT id FROM users WHERE id > 0 AND (moderator OR admin) AND NOT staged"
       when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE id > 0 AND trust_level >= #{id - 10}"
+        "SELECT id FROM users WHERE id > 0 AND trust_level >= #{id - 10} AND NOT staged"
       when :trust_level_0
-        "SELECT id FROM users WHERE id > 0"
+        "SELECT id FROM users WHERE id > 0 AND NOT staged"
       end
 
     DB.exec <<-SQL
@@ -521,8 +611,19 @@ class Group < ActiveRecord::Base
 
   PUBLISH_CATEGORIES_LIMIT = 10
 
-  def add(user)
+  def add(user, notify: false, automatic: false)
     self.users.push(user) unless self.users.include?(user)
+
+    if notify
+      Notification.create!(
+        notification_type: Notification.types[:membership_request_accepted],
+        user_id: user.id,
+        data: {
+          group_id: id,
+          group_name: name
+        }.to_json
+      )
+    end
 
     if self.categories.count < PUBLISH_CATEGORIES_LIMIT
       MessageBus.publish('/categories', {
@@ -532,12 +633,15 @@ class Group < ActiveRecord::Base
       Discourse.request_refresh!(user_ids: [user.id])
     end
 
+    DiscourseEvent.trigger(:user_added_to_group, user, self, automatic: automatic)
+
     self
   end
 
   def remove(user)
     self.group_users.where(user: user).each(&:destroy)
     user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
+    DiscourseEvent.trigger(:user_removed_from_group, user, self)
   end
 
   def add_owner(user)
@@ -794,9 +898,11 @@ end
 #  visibility_level                   :integer          default(0), not null
 #  public_exit                        :boolean          default(FALSE), not null
 #  public_admission                   :boolean          default(FALSE), not null
+#  publish_read_state                 :boolean          default(FALSE), not null
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
+#  members_visibility_level           :integer          default(0), not null
 #
 # Indexes
 #

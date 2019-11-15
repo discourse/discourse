@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'topic_subtype'
-
 class Report
   # Change this line each time report format change
   # and you want to ensure cache is reset
@@ -15,6 +13,21 @@ class Report
 
   def self.default_days
     30
+  end
+
+  def self.default_labels
+    [
+      {
+        type: :date,
+        property: :x,
+        title: I18n.t("reports.default.labels.day")
+      },
+      {
+        type: :number,
+        property: :y,
+        title: I18n.t("reports.default.labels.count")
+      },
+    ]
   end
 
   def initialize(type)
@@ -68,6 +81,8 @@ class Report
 
   def self.wrap_slow_query(timeout = 20000)
     ActiveRecord::Base.connection.transaction do
+      # Allows only read only transactions
+      DB.exec "SET TRANSACTION READ ONLY"
       # Set a statement timeout so we can't tie up the server
       DB.exec "SET LOCAL statement_timeout = #{timeout}"
       yield
@@ -102,18 +117,7 @@ class Report
       primary_color: self.primary_color,
       secondary_color: self.secondary_color,
       available_filters: self.available_filters.map { |k, v| { id: k }.merge(v) },
-      labels: labels || [
-        {
-          type: :date,
-          property: :x,
-          title: I18n.t("reports.default.labels.day")
-        },
-        {
-          type: :number,
-          property: :y,
-          title: I18n.t("reports.default.labels.count")
-        },
-      ],
+      labels: labels || Report.default_labels,
       average: self.average,
       percent: self.percent,
       higher_is_better: self.higher_is_better,
@@ -148,6 +152,7 @@ class Report
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
     report.filters = opts[:filters] if opts[:filters]
+    report.labels = Report.default_labels
 
     report
   end

@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'flag_query'
-
 module Jobs
 
-  class PendingReviewablesReminder < Jobs::Scheduled
+  class PendingReviewablesReminder < ::Jobs::Scheduled
     every 1.hour
 
     attr_reader :sent_reminder

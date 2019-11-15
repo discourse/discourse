@@ -20,6 +20,7 @@ bg:
           at_least_min_options:
             one: "Избери поне <strong>%{count}</strong> отговора"
             other: "Избери поне <strong>%{count}</strong> отговора"
+          between_min_and_max_options: "Може да изберете между <strong>%{min}</strong> и <strong>%{max}</strong> възможни отговора."
       cast-votes:
         title: "Изчислете вашите гласове"
         label: "Гласувай сега!"

@@ -1,4 +1,4 @@
-import { logIn, replaceCurrentUser } from "helpers/qunit-helpers";
+import { logIn, updateCurrentUser } from "helpers/qunit-helpers";
 
 QUnit.module("lib:discourse");
 
@@ -59,7 +59,7 @@ QUnit.test("title counts are updated correctly", assert => {
   );
 
   logIn();
-  replaceCurrentUser({ dynamic_favicon: false });
+  updateCurrentUser({ dynamic_favicon: false });
 
   Discourse.set("hasFocus", true);
   Discourse.set("hasFocus", false);

@@ -1,3 +1,5 @@
+import { run } from "@ember/runloop";
+import { later } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { minimumOffset } from "discourse/lib/offset-calculator";
@@ -65,9 +67,10 @@ const bindings = {
   "shift+p": { handler: "pinUnpinTopic" },
   "shift+r": { handler: "replyToTopic" },
   "shift+s": { click: "#topic-footer-buttons button.share", anonymous: true }, // share topic
-  "shift+u": { handler: "goToUnreadPost" },
+  "shift+l": { handler: "goToUnreadPost" },
   "shift+z shift+z": { handler: "logout" },
   "shift+f11": { handler: "fullscreenComposer", global: true },
+  "shift+u": { handler: "deferTopic" },
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
   "x r": {
@@ -85,7 +88,7 @@ export default {
     this._stopCallback();
 
     this.searchService = this.container.lookup("search-service:main");
-    this.appEvents = this.container.lookup("app-events:main");
+    this.appEvents = this.container.lookup("service:app-events");
     this.currentUser = this.container.lookup("current-user:main");
     let siteSettings = this.container.lookup("site-settings:main");
 
@@ -139,7 +142,7 @@ export default {
   quoteReply() {
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
-    Ember.run.later(() => $(".d-editor .quote").click(), 500);
+    later(() => $(".d-editor .quote").click(), 500);
 
     return false;
   },
@@ -209,7 +212,7 @@ export default {
   },
 
   showPageSearch(event) {
-    Ember.run(() => {
+    run(() => {
       this.appEvents.trigger("header:keyboard-trigger", {
         type: "page-search",
         event
@@ -218,7 +221,7 @@ export default {
   },
 
   printTopic(event) {
-    Ember.run(() => {
+    run(() => {
       if ($(".container.posts").length) {
         event.preventDefault(); // We need to stop printing the current page in Firefox
         this.container.lookup("controller:topic").print();
@@ -240,7 +243,7 @@ export default {
 
     this.container.lookup("controller:composer").open({
       action: Composer.CREATE_TOPIC,
-      draftKey: Composer.CREATE_TOPIC
+      draftKey: Composer.NEW_TOPIC_KEY
     });
   },
 
@@ -438,9 +441,22 @@ export default {
       $selected = $articles.filter("[data-islastviewedtopic=true]");
     }
 
+    // Discard selection if it is not in viewport, so users can combine
+    // keyboard shortcuts with mouse scrolling.
+    if ($selected.length !== 0 && !fast) {
+      const offset = minimumOffset();
+      const beginScreen = $(window).scrollTop() - offset;
+      const endScreen = beginScreen + window.innerHeight + offset;
+      const beginArticle = $selected.offset().top;
+      const endArticle = $selected.offset().top + $selected.height();
+      if (beginScreen > endArticle || beginArticle > endScreen) {
+        $selected = null;
+      }
+    }
+
     // If still nothing is selected, select the first post that is
     // visible and cancel move operation.
-    if ($selected.length === 0) {
+    if (!$selected || $selected.length === 0) {
       const offset = minimumOffset();
       $selected = $articles
         .toArray()
@@ -618,5 +634,9 @@ export default {
 
   _replyToPost() {
     this.container.lookup("controller:topic").send("replyToPost");
+  },
+
+  deferTopic() {
+    this.container.lookup("controller:topic").send("deferTopic");
   }
 };

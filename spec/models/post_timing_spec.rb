@@ -164,4 +164,24 @@ describe PostTiming do
 
   end
 
+  describe 'decrementing posts read count when destroying post timings' do
+    let(:initial_read_count) { 0 }
+    let(:post) { Fabricate(:post, reads: initial_read_count) }
+
+    before do
+      PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]])
+    end
+
+    it '#destroy_last_for decrements the reads count for a post' do
+      PostTiming.destroy_last_for(post.user, post.topic_id)
+
+      expect(post.reload.reads).to eq initial_read_count
+    end
+
+    it '#destroy_for decrements the reads count for a post' do
+      PostTiming.destroy_for(post.user, [post.topic_id])
+
+      expect(post.reload.reads).to eq initial_read_count
+    end
+  end
 end

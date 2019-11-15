@@ -68,12 +68,13 @@ class TopicsBulkAction
   end
 
   def dismiss_posts
-    sql = "
-    UPDATE topic_users tu
-    SET highest_seen_post_number = t.highest_post_number , last_read_post_number = highest_post_number
-    FROM topics t
-    WHERE t.id = tu.topic_id AND tu.user_id = :user_id AND t.id IN (:topic_ids)
-    "
+    highest_number_source_column = @user.staff? ? 'highest_staff_post_number' : 'highest_post_number'
+    sql = <<~SQL
+      UPDATE topic_users tu
+      SET highest_seen_post_number = t.#{highest_number_source_column} , last_read_post_number = t.#{highest_number_source_column}
+      FROM topics t
+      WHERE t.id = tu.topic_id AND tu.user_id = :user_id AND t.id IN (:topic_ids)
+    SQL
 
     DB.exec(sql, user_id: @user.id, topic_ids: @topic_ids)
     @changed_ids.concat @topic_ids

@@ -4,10 +4,12 @@ require 'rails_helper'
 
 RSpec.describe DiscourseNarrativeBot::CertificateGenerator do
   let(:user) { Fabricate(:user) }
+  let(:avatar_url) { 'http://test.localhost/cdn/avatar.png' }
+  let(:date) { "2017-00-10" }
 
   describe 'when an invalid date is given' do
     it 'should default to the current date' do
-      expect { described_class.new(user, "2017-00-10") }.to_not raise_error
+      expect { described_class.new(user, date, avatar_url) }.to_not raise_error
     end
   end
 
@@ -19,7 +21,7 @@ RSpec.describe DiscourseNarrativeBot::CertificateGenerator do
       end
 
       it 'should not try to fetch a image' do
-        expect(described_class.new(user, "2017-02-10").send(:logo_group, 1, 1, 1))
+        expect(described_class.new(user, date, avatar_url).send(:logo_group, 1, 1, 1))
           .to eq(nil)
       end
     end

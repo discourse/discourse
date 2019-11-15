@@ -1,4 +1,4 @@
-import { acceptance, logIn } from "helpers/qunit-helpers";
+import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("New Group");
 
@@ -12,12 +12,10 @@ QUnit.test("As an anon user", async assert => {
   );
 });
 
+acceptance("New Group", { loggedIn: true });
+
 QUnit.test("Creating a new group", async assert => {
-  logIn();
-  Discourse.reset();
-
   await visit("/g");
-
   await click(".groups-header-new");
 
   assert.equal(

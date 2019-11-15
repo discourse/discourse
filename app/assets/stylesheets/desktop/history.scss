@@ -16,10 +16,10 @@
       background-color: $danger-medium;
     }
   }
-  #display-modes {
-    text-align: right;
-    display: inline-block;
-    float: right;
+
+  #revision {
+    display: flex;
+    justify-content: space-between;
   }
 
   #revisions {
@@ -58,5 +58,10 @@
   }
   .modal-header {
     height: 42px;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: space-between;
   }
 }

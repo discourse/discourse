@@ -15,6 +15,23 @@
       display: flex;
       align-items: center;
       height: 100%;
+
+      .header-row {
+        width: 100%;
+
+        .logo-wrapper {
+          float: left;
+        }
+        .auth-buttons {
+          float: right;
+          margin-top: 0.4em;
+
+          .login-button,
+          .signup-button {
+            padding: 8px 14px;
+          }
+        }
+      }
     }
   }
 
@@ -228,9 +245,7 @@
   .topic-link {
     color: $header_primary;
     display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
   }
   .topic-statuses {
     .d-icon {
@@ -240,29 +255,29 @@
       color: $danger;
     }
   }
-  h1 {
-    margin: 0 0 0.25em 0;
+  .header-title {
+    margin: 0 0 0.15em 0;
+    .archetype-private_message & {
+      // PMs might have participant avatars in the header
+      margin: 0;
+    }
     font-size: $font-up-3;
     width: 100%;
   }
   .categories-wrapper {
     display: inline-flex;
+    align-items: center;
     // Protection against a very rare edge case in mobile header for topics with
     // very long category names and lots of tags at the same time
     max-width: 80%;
     flex: 0 1 auto;
     min-width: 1px;
     .badge-wrapper {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      @include ellipsis;
     }
   }
   .badge-wrapper {
     margin-right: 8px;
-    &.bullet {
-      padding-top: 2px; // alignment hack
-    }
   }
   .badge-wrapper.bullet {
     .badge-category-parent-bg,
@@ -286,9 +301,7 @@
     flex: 1 0 0%; // unit on flex-basis is required for IE11
     .discourse-tags {
       color: $header_primary-high;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      @include ellipsis;
       .discourse-tag {
         display: inline; // tags need to stay inline in order for them to truncate
       }
@@ -338,9 +351,7 @@ $mobile-avatar-height: 1.532em;
     padding: 0 5px;
     border: 1px solid $primary-low;
     border-radius: 0.25em;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    @include ellipsis;
 
     .icon {
       display: flex;
@@ -357,9 +368,7 @@ $mobile-avatar-height: 1.532em;
     }
 
     span {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      @include ellipsis;
     }
   }
 

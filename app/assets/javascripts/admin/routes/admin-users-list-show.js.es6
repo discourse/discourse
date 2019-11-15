@@ -1,4 +1,6 @@
-export default Discourse.Route.extend({
+import DiscourseRoute from "discourse/routes/discourse";
+
+export default DiscourseRoute.extend({
   queryParams: {
     order: { refreshModel: true },
     ascending: { refreshModel: true }
@@ -21,7 +23,7 @@ export default Discourse.Route.extend({
           refreshing: false
         });
 
-        controller._refreshUsers();
+        controller.resetFilters();
       }
     }
   }

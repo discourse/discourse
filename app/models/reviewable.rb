@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'enum'
-require_dependency 'reviewable/actions'
-require_dependency 'reviewable/conversation'
-require_dependency 'reviewable/editable_fields'
-require_dependency 'reviewable/perform_result'
-require_dependency 'reviewable_serializer'
-
 class Reviewable < ActiveRecord::Base
   class UpdateConflict < StandardError; end
 
@@ -38,7 +31,15 @@ class Reviewable < ActiveRecord::Base
 
   after_commit(on: :create) do
     DiscourseEvent.trigger(:reviewable_created, self)
+  end
+
+  after_commit(on: [:create, :update]) do
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
+  end
+
+  # Can be used if several actions are equivalent
+  def self.action_aliases
+    {}
   end
 
   # The gaps are in case we want more precision in the future
@@ -68,6 +69,12 @@ class Reviewable < ActiveRecord::Base
       ignored: 3,
       deleted: 4
     )
+  end
+
+  # This number comes from looking at forums in the wild and what numbers work.
+  # As the site accumulates real data it'll be based on the site activity instead.
+  def self.typical_sensitivity
+    12.5
   end
 
   # Generate `pending?`, `rejected?`, etc helper methods
@@ -151,7 +158,8 @@ class Reviewable < ActiveRecord::Base
 
     type_bonus = PostActionType.where(id: reviewable_score_type).pluck(:score_bonus)[0] || 0
     take_action_bonus = take_action ? 5.0 : 0.0
-    sub_total = (ReviewableScore.user_flag_score(user) + type_bonus + take_action_bonus)
+    user_accuracy_bonus = ReviewableScore.user_accuracy_bonus(user)
+    sub_total = ReviewableScore.calculate_score(user, type_bonus, take_action_bonus)
 
     # We can force a reviewable to hit the threshold, for example with queued posts
     if force_review && sub_total < Reviewable.min_score_for_priority
@@ -163,6 +171,7 @@ class Reviewable < ActiveRecord::Base
       status: ReviewableScore.statuses[:pending],
       reviewable_score_type: reviewable_score_type,
       score: sub_total,
+      user_accuracy_bonus: user_accuracy_bonus,
       meta_topic_id: meta_topic_id,
       take_action_bonus: take_action_bonus,
       created_at: created_at || Time.zone.now
@@ -183,15 +192,24 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
-  def self.sensitivity_score(sensitivity, scale: 1.0)
+  def self.sensitivity_score_value(sensitivity, scale)
     return Float::MAX if sensitivity == 0
 
     ratio = sensitivity / Reviewable.sensitivity[:low].to_f
-    high = PluginStore.get('reviewables', "priority_#{Reviewable.priorities[:high]}")
-    return (10.0 * scale) if high.nil?
+    high = (
+      PluginStore.get('reviewables', "priority_#{Reviewable.priorities[:high]}") ||
+      typical_sensitivity
+    ).to_f
 
     # We want this to be hard to reach
-    (high.to_f * ratio) * scale
+    ((high.to_f * ratio) * scale).truncate(2)
+  end
+
+  def self.sensitivity_score(sensitivity, scale: 1.0)
+    # If the score is less than the default visibility, bring it up to that level.
+    # Otherwise we have the confusing situation where a post might be hidden and
+    # moderators would never see it!
+    [sensitivity_score_value(sensitivity, scale), min_score_for_priority].max
   end
 
   def self.score_to_auto_close_topic
@@ -210,7 +228,7 @@ class Reviewable < ActiveRecord::Base
     priority ||= SiteSetting.reviewable_default_visibility
     id = Reviewable.priorities[priority.to_sym]
     return 0.0 if id.nil?
-    return PluginStore.get('reviewables', "priority_#{id}").to_f
+    PluginStore.get('reviewables', "priority_#{id}").to_f
   end
 
   def history
@@ -283,11 +301,15 @@ class Reviewable < ActiveRecord::Base
   def perform(performed_by, action_id, args = nil)
     args ||= {}
 
+    # Support this action or any aliases
+    aliases = self.class.action_aliases
+    valid = [ action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first) ].flatten
+
     # Ensure the user has access to the action
     actions = actions_for(Guardian.new(performed_by), args)
-    raise InvalidAction.new(action_id, self.class) unless actions.has?(action_id)
+    raise InvalidAction.new(action_id, self.class) unless valid.any? { |a| actions.has?(a) }
 
-    perform_method = "perform_#{action_id}".to_sym
+    perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
     raise InvalidAction.new(action_id, self.class) unless respond_to?(perform_method)
 
     result = nil
@@ -462,31 +484,67 @@ class Reviewable < ActiveRecord::Base
       .count
   end
 
+  def explain_score
+    DB.query(<<~SQL, reviewable_id: id)
+      SELECT rs.reviewable_id,
+        rs.user_id,
+        CASE WHEN (u.admin OR u.moderator) THEN 5.0 ELSE u.trust_level END AS trust_level_bonus,
+        us.flags_agreed,
+        us.flags_disagreed,
+        us.flags_ignored,
+        rs.score,
+        rs.user_accuracy_bonus,
+        rs.take_action_bonus,
+        COALESCE(pat.score_bonus, 0.0) AS type_bonus
+      FROM reviewable_scores AS rs
+      INNER JOIN users AS u ON u.id = rs.user_id
+      LEFT OUTER JOIN user_stats AS us ON us.user_id = rs.user_id
+      LEFT OUTER JOIN post_action_types AS pat ON pat.id = rs.reviewable_score_type
+        WHERE rs.reviewable_id = :reviewable_id
+    SQL
+  end
+
 protected
 
   def recalculate_score
-    # Recalculate the pending score and return it
-    result = DB.query(<<~SQL, id: self.id, pending: ReviewableScore.statuses[:pending])
+    # pending/agreed scores count
+    sql = <<~SQL
       UPDATE reviewables
       SET score = COALESCE((
         SELECT sum(score)
         FROM reviewable_scores AS rs
         WHERE rs.reviewable_id = :id
+          AND rs.status IN (:pending, :agreed)
       ), 0.0)
       WHERE id = :id
       RETURNING score
     SQL
 
+    result = DB.query(
+      sql,
+      id: self.id,
+      pending: ReviewableScore.statuses[:pending],
+      agreed: ReviewableScore.statuses[:agreed]
+    )
+
     # Update topic score
-    DB.query(<<~SQL, topic_id: topic_id, pending: Reviewable.statuses[:pending])
+    sql = <<~SQL
       UPDATE topics
       SET reviewable_score = COALESCE((
         SELECT SUM(score)
         FROM reviewables AS r
         WHERE r.topic_id = :topic_id
+          AND r.status IN (:pending, :approved)
       ), 0.0)
       WHERE id = :topic_id
     SQL
+
+    DB.query(
+      sql,
+      topic_id: topic_id,
+      pending: Reviewable.statuses[:pending],
+      approved: Reviewable.statuses[:approved]
+    )
 
     self.score = result[0].score
   end

@@ -16,7 +16,9 @@ class ReviewableQueuedPostSerializer < ReviewableSerializer
     :is_poll,
     :typing_duration_msecs,
     :composer_open_duration_msecs,
-    :tags
+    :tags,
+    :via_email,
+    :raw_email
   )
 
   def reply_to_post_number

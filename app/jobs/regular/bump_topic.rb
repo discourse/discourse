@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class BumpTopic < Jobs::Base
+  class BumpTopic < ::Jobs::Base
 
     def execute(args)
       topic_timer = TopicTimer.find_by(id: args[:topic_timer_id] || args[:topic_status_update_id])

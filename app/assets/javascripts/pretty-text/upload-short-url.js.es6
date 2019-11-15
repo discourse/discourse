@@ -1,3 +1,5 @@
+import { debounce } from "@ember/runloop";
+import { ATTACHMENT_CSS_CLASS } from "./engines/discourse-markdown-it";
 let _cache = {};
 
 export function lookupCachedUploadUrl(shortUrl) {
@@ -36,8 +38,6 @@ export function cacheShortUploadUrl(shortUrl, value) {
 export function resetCache() {
   _cache = {};
 }
-
-export const ATTACHMENT_CSS_CLASS = "attachment";
 
 function _loadCachedShortUrls($uploads) {
   $uploads.each((idx, upload) => {
@@ -100,7 +100,7 @@ export function resolveAllShortUrls(ajax) {
     $shortUploadUrls = $(attributes);
     if ($shortUploadUrls.length > 0) {
       // this is carefully batched so we can do a leading debounce (trigger right away)
-      return Ember.run.debounce(
+      return debounce(
         null,
         () => _loadShortUrls($shortUploadUrls, ajax),
         450,

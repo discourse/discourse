@@ -1,10 +1,12 @@
 <section class="user-content">
 
 <div class="group-members-actions">
-    {{text-field value=filterInput
-        placeholderKey=filterPlaceholder
-        autocomplete="discourse"
-        class="group-username-filter no-blur"}}
+    {{#if model.can_see_members}}
+      {{text-field value=filterInput
+          placeholderKey=filterPlaceholder
+          autocomplete="discourse"
+          class="group-username-filter no-blur"}}
+    {{/if}}
 
   <div class="group-members-manage">
     {{#if canManageGroup}}
@@ -76,9 +78,13 @@
   {{/load-more}}
 
   {{conditional-loading-spinner condition=loading}}
-{{else}}
+{{else if model.can_see_members}}
   <br>
 
   <div>{{i18n "groups.empty.members"}}</div>
+{{else}}
+  <br>
+
+  <div>{{i18n "groups.members.forbidden"}}</div>
 {{/if}}
 </section>

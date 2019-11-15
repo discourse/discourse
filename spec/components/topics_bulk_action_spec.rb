@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'topics_bulk_action'
 
 describe TopicsBulkAction do
   fab!(:topic) { Fabricate(:topic) }
@@ -20,6 +19,32 @@ describe TopicsBulkAction do
 
       expect(tu.last_read_post_number).to eq(3)
       expect(tu.highest_seen_post_number).to eq(3)
+    end
+
+    context "when the user is staff" do
+      fab!(:user) { Fabricate(:admin) }
+
+      context "when the highest_staff_post_number is > highest_post_number for a topic (e.g. whisper is last post)" do
+        it "dismisses posts" do
+          post1 = create_post(user: user)
+          p = create_post(topic_id: post1.topic_id)
+          create_post(topic_id: post1.topic_id)
+
+          whisper = PostCreator.new(
+            user,
+            topic_id: post1.topic.id,
+            post_type: Post.types[:whisper],
+            raw: 'this is a whispered reply'
+          ).create
+
+          TopicsBulkAction.new(user, [post1.topic_id], type: 'dismiss_posts').perform!
+
+          tu = TopicUser.find_by(user_id: user.id, topic_id: post1.topic_id)
+
+          expect(tu.last_read_post_number).to eq(4)
+          expect(tu.highest_seen_post_number).to eq(4)
+        end
+      end
     end
   end
 

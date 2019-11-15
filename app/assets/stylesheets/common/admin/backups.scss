@@ -45,7 +45,7 @@ $rollback-darker: darken($rollback, 20%) !default;
         }
       }
     }
-    @include breakpoint(mobile) {
+    @include breakpoint(mobile-extra-large) {
       td.backup-filename {
         grid-column-start: 1;
         grid-column-end: 3;

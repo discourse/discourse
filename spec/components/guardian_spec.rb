@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 require 'guardian'
-require_dependency 'post_destroyer'
-require_dependency 'post_locker'
 
 describe Guardian do
 
@@ -19,6 +17,7 @@ describe Guardian do
   fab!(:automatic_group) { Fabricate(:group, automatic: true) }
   fab!(:plain_category) { Fabricate(:category) }
 
+  let(:trust_level_0) { build(:user, trust_level: 0) }
   let(:trust_level_1) { build(:user, trust_level: 1) }
   let(:trust_level_2) { build(:user, trust_level: 2) }
   let(:trust_level_3) { build(:user, trust_level: 3) }
@@ -344,6 +343,37 @@ describe Guardian do
         group.update!(messageable_level: Group::ALIAS_LEVELS[level])
         expect(Guardian.new(admin).can_send_private_message?(group)).to eq(true)
       end
+    end
+
+    it "allows TL0 to message group with messageable_level = everyone" do
+      group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
+      expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(true)
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
+    end
+
+    it "respects the group members messageable_level" do
+      group.update!(messageable_level: Group::ALIAS_LEVELS[:members_mods_and_admins])
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(false)
+
+      group.add(user)
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
+
+      expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(false)
+
+      #  group membership trumps min_trust_to_send_messages setting
+      group.add(trust_level_0)
+      expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(true)
+    end
+
+    it "respects the group owners messageable_level" do
+      group.update!(messageable_level: Group::ALIAS_LEVELS[:owners_mods_and_admins])
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(false)
+
+      group.add(user)
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(false)
+
+      group.add_owner(user)
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
     end
 
     context 'target user has private message disabled' do
@@ -775,6 +805,13 @@ describe Guardian do
 
         PostActionCreator.create(user, first_post, :off_topic)
         expect(Guardian.new(moderator).can_see?(private_topic)).to be_truthy
+      end
+
+      it "allows staff to set banner topics" do
+        topic = Fabricate(:topic)
+
+        expect(Guardian.new(admin).can_banner_topic?(nil)).to be_falsey
+        expect(Guardian.new(admin).can_banner_topic?(topic)).to be_truthy
       end
     end
 
@@ -1363,32 +1400,65 @@ describe Guardian do
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
       end
 
-      context 'post is older than post_edit_time_limit' do
-        let(:old_post) { build(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago) }
+      describe 'post edit time limits' do
+        context 'post is older than post_edit_time_limit' do
+          let(:old_post) { build(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago) }
 
-        before do
-          SiteSetting.post_edit_time_limit = 5
+          before do
+            topic.user.update_columns(trust_level:  1)
+            SiteSetting.post_edit_time_limit = 5
+          end
+
+          it 'returns false to the author of the post' do
+            expect(Guardian.new(old_post.user).can_edit?(old_post)).to be_falsey
+          end
+
+          it 'returns true as a moderator' do
+            expect(Guardian.new(moderator).can_edit?(old_post)).to eq(true)
+          end
+
+          it 'returns true as an admin' do
+            expect(Guardian.new(admin).can_edit?(old_post)).to eq(true)
+          end
+
+          it 'returns false for another regular user trying to edit your post' do
+            expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_falsey
+          end
+
+          it 'returns true for another regular user trying to edit a wiki post' do
+            old_post.wiki = true
+            expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_truthy
+          end
         end
 
-        it 'returns false to the author of the post' do
-          expect(Guardian.new(old_post.user).can_edit?(old_post)).to be_falsey
-        end
+        context 'post is older than tl2_post_edit_time_limit' do
+          let(:old_post) { build(:post, topic: topic, user: topic.user, created_at: 12.minutes.ago) }
 
-        it 'returns true as a moderator' do
-          expect(Guardian.new(moderator).can_edit?(old_post)).to eq(true)
-        end
+          before do
+            topic.user.update_columns(trust_level: 2)
+            SiteSetting.tl2_post_edit_time_limit = 10
+          end
 
-        it 'returns true as an admin' do
-          expect(Guardian.new(admin).can_edit?(old_post)).to eq(true)
-        end
+          it 'returns false to the author of the post' do
+            expect(Guardian.new(old_post.user).can_edit?(old_post)).to be_falsey
+          end
 
-        it 'returns false for another regular user trying to edit your post' do
-          expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_falsey
-        end
+          it 'returns true as a moderator' do
+            expect(Guardian.new(moderator).can_edit?(old_post)).to eq(true)
+          end
 
-        it 'returns true for another regular user trying to edit a wiki post' do
-          old_post.wiki = true
-          expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_truthy
+          it 'returns true as an admin' do
+            expect(Guardian.new(admin).can_edit?(old_post)).to eq(true)
+          end
+
+          it 'returns false for another regular user trying to edit your post' do
+            expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_falsey
+          end
+
+          it 'returns true for another regular user trying to edit a wiki post' do
+            old_post.wiki = true
+            expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_truthy
+          end
         end
       end
 
@@ -1417,6 +1487,16 @@ describe Guardian do
 
       it 'returns false as a regular user' do
         expect(Guardian.new(coding_horror).can_edit?(topic)).to be_falsey
+      end
+
+      context "locked" do
+        let(:post) { Fabricate(:post, locked_by_id: admin.id) }
+        let(:topic) { post.topic }
+
+        it "doesn't allow users to edit locked topics" do
+          expect(Guardian.new(topic.user).can_edit?(topic)).to eq(false)
+          expect(Guardian.new(admin).can_edit?(topic)).to eq(true)
+        end
       end
 
       context 'not archived' do
@@ -1648,6 +1728,40 @@ describe Guardian do
       GroupUser.create!(group_id: group.id, user_id: user.id)
       topic.category.update!(reviewable_by_group_id: group.id)
       expect(Guardian.new(user).can_review_topic?(topic)).to eq(true)
+    end
+  end
+
+  context "can_create_topic?" do
+    it 'returns true for staff user' do
+      expect(Guardian.new(moderator).can_create_topic?(topic)).to eq(true)
+    end
+
+    it 'returns false for user with insufficient trust level' do
+      SiteSetting.min_trust_to_create_topic = 3
+      expect(Guardian.new(user).can_create_topic?(topic)).to eq(false)
+    end
+
+    it 'returns true for user with sufficient trust level' do
+      SiteSetting.min_trust_to_create_topic = 3
+      expect(Guardian.new(trust_level_4).can_create_topic?(topic)).to eq(true)
+    end
+
+    it 'returns false when posting in "uncategorized" is disabled and there is no other category available for posting' do
+      SiteSetting.allow_uncategorized_topics = false
+
+      plain_category.set_permissions(group => :readonly)
+      plain_category.save
+      expect(Guardian.new(user).can_create_topic?(topic)).to eq(false)
+    end
+
+    it 'returns true when there is a category available for posting' do
+      SiteSetting.allow_uncategorized_topics = false
+
+      plain_category.set_permissions(group => :full)
+      plain_category.save
+      group.add(user)
+      group.save
+      expect(Guardian.new(user).can_create_topic?(topic)).to eq(true)
     end
   end
 
@@ -2104,87 +2218,6 @@ describe Guardian do
 
   end
 
-  describe "can_delete_user?" do
-    it "is false without a logged in user" do
-      expect(Guardian.new(nil).can_delete_user?(user)).to be_falsey
-    end
-
-    it "is false without a user to look at" do
-      expect(Guardian.new(admin).can_delete_user?(nil)).to be_falsey
-    end
-
-    it "is false for regular users" do
-      expect(Guardian.new(user).can_delete_user?(coding_horror)).to be_falsey
-    end
-
-    context "delete myself" do
-      fab!(:myself) { Fabricate(:user, created_at: 6.months.ago) }
-      subject      { Guardian.new(myself).can_delete_user?(myself) }
-
-      it "is true to delete myself and I have never made a post" do
-        expect(subject).to be_truthy
-      end
-
-      it "is true to delete myself and I have only made 1 post" do
-        myself.stubs(:post_count).returns(1)
-        expect(subject).to be_truthy
-      end
-
-      it "is false to delete myself and I have made 2 posts" do
-        myself.stubs(:post_count).returns(2)
-        expect(subject).to be_falsey
-      end
-    end
-
-    shared_examples "can_delete_user examples" do
-      it "is true if user is not an admin and has never posted" do
-        expect(Guardian.new(actor).can_delete_user?(Fabricate.build(:user, created_at: 100.days.ago))).to be_truthy
-      end
-
-      it "is true if user is not an admin and first post is not too old" do
-        user = Fabricate.build(:user, created_at: 100.days.ago)
-        user.stubs(:post_count).returns(10)
-        user.stubs(:first_post_created_at).returns(9.days.ago)
-        SiteSetting.delete_user_max_post_age = 10
-        expect(Guardian.new(actor).can_delete_user?(user)).to be_truthy
-      end
-
-      it "is false if user is an admin" do
-        expect(Guardian.new(actor).can_delete_user?(another_admin)).to be_falsey
-      end
-
-      it "is false if user's first post is too old" do
-        user = Fabricate.build(:user, created_at: 100.days.ago)
-        user.stubs(:post_count).returns(10)
-        user.stubs(:first_post_created_at).returns(11.days.ago)
-        SiteSetting.delete_user_max_post_age = 10
-        expect(Guardian.new(actor).can_delete_user?(user)).to be_falsey
-      end
-    end
-
-    shared_examples "can_delete_user staff examples" do
-      it "is true if posts are less than or equal to 5" do
-        user = Fabricate.build(:user, created_at: 100.days.ago)
-        user.stubs(:post_count).returns(4)
-        user.stubs(:first_post_created_at).returns(11.days.ago)
-        SiteSetting.delete_user_max_post_age = 10
-        expect(Guardian.new(actor).can_delete_user?(user)).to be_truthy
-      end
-    end
-
-    context "for moderators" do
-      let(:actor) { moderator }
-      include_examples "can_delete_user examples"
-      include_examples "can_delete_user staff examples"
-    end
-
-    context "for admins" do
-      let(:actor) { admin }
-      include_examples "can_delete_user examples"
-      include_examples "can_delete_user staff examples"
-    end
-  end
-
   describe "can_delete_all_posts?" do
     it "is false without a logged in user" do
       expect(Guardian.new(nil).can_delete_all_posts?(user)).to be_falsey
@@ -2342,6 +2375,39 @@ describe Guardian do
       it "returns true if the title is set to an empty string" do
         expect(Guardian.new(user).can_grant_title?(user, '')).to eq(true)
       end
+    end
+  end
+
+  describe 'can_use_primary_group?' do
+    fab!(:group) { Fabricate(:group, title: 'Groupie') }
+
+    it 'is false without a logged in user' do
+      expect(Guardian.new(nil).can_use_primary_group?(user)).to be_falsey
+    end
+
+    it 'is false with no group_id' do
+      user.update(groups: [group])
+      expect(Guardian.new(user).can_use_primary_group?(user, nil)).to be_falsey
+    end
+
+    it 'is false if the group does not exist' do
+      user.update(groups: [group])
+      expect(Guardian.new(user).can_use_primary_group?(user, Group.last.id + 1)).to be_falsey
+    end
+
+    it 'is false if the user is not a part of the group' do
+      user.update(groups: [])
+      expect(Guardian.new(user).can_use_primary_group?(user, group.id)).to be_falsey
+    end
+
+    it 'is false if the group is automatic' do
+      user.update(groups: [Group.new(name: 'autooo', automatic: true)])
+      expect(Guardian.new(user).can_use_primary_group?(user, group.id)).to be_falsey
+    end
+
+    it 'is true if the user is a part of the group, and the group is custom' do
+      user.update(groups: [group])
+      expect(Guardian.new(user).can_use_primary_group?(user, group.id)).to be_truthy
     end
   end
 
@@ -2865,7 +2931,7 @@ describe Guardian do
       let(:old_post) { build(:post, user: trust_level_2, created_at: 6.minutes.ago) }
       before do
         SiteSetting.min_trust_to_allow_self_wiki = 2
-        SiteSetting.post_edit_time_limit = 5
+        SiteSetting.tl2_post_edit_time_limit = 5
       end
 
       it 'returns false when user satisfies trust level and owns the post' do
@@ -2976,7 +3042,7 @@ describe Guardian do
   end
 
   describe(:can_see_group) do
-    it 'Correctly handles owner visibile groups' do
+    it 'Correctly handles owner visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:owners])
 
       member = Fabricate(:user)
@@ -2988,13 +3054,14 @@ describe Guardian do
       group.reload
 
       expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(another_user).can_see_group?(group)).to eq(false)
       expect(Guardian.new(moderator).can_see_group?(group)).to eq(false)
       expect(Guardian.new(member).can_see_group?(group)).to eq(false)
       expect(Guardian.new.can_see_group?(group)).to eq(false)
       expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
     end
 
-    it 'Correctly handles staff visibile groups' do
+    it 'Correctly handles staff visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:staff])
 
       member = Fabricate(:user)
@@ -3005,6 +3072,7 @@ describe Guardian do
       group.add_owner(owner)
       group.reload
 
+      expect(Guardian.new(another_user).can_see_group?(group)).to eq(false)
       expect(Guardian.new(member).can_see_group?(group)).to eq(false)
       expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
       expect(Guardian.new(moderator).can_see_group?(group)).to eq(true)
@@ -3012,7 +3080,7 @@ describe Guardian do
       expect(Guardian.new.can_see_group?(group)).to eq(false)
     end
 
-    it 'Correctly handles member visibile groups' do
+    it 'Correctly handles member visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:members])
 
       member = Fabricate(:user)
@@ -3025,9 +3093,28 @@ describe Guardian do
 
       expect(Guardian.new(moderator).can_see_group?(group)).to eq(false)
       expect(Guardian.new.can_see_group?(group)).to eq(false)
+      expect(Guardian.new(another_user).can_see_group?(group)).to eq(false)
       expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
       expect(Guardian.new(member).can_see_group?(group)).to eq(true)
       expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
+    end
+
+    it 'Correctly handles logged-on-user visible groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:logged_on_users])
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new.can_see_group?(group)).to eq(false)
+      expect(Guardian.new(moderator).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(member).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(another_user).can_see_group?(group)).to eq(true)
     end
 
     it 'Correctly handles public groups' do
@@ -3038,8 +3125,92 @@ describe Guardian do
 
   end
 
+  describe(:can_see_group_members) do
+    it 'Correctly handles group members visibility for owner' do
+      group = Group.new(name: 'group', members_visibility_level: Group.visibility_levels[:owners])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(admin).can_see_group_members?(group)).to eq(true)
+      expect(Guardian.new(another_user).can_see_group_members?(group)).to eq(false)
+      expect(Guardian.new(moderator).can_see_group_members?(group)).to eq(false)
+      expect(Guardian.new(member).can_see_group_members?(group)).to eq(false)
+      expect(Guardian.new.can_see_group_members?(group)).to eq(false)
+      expect(Guardian.new(owner).can_see_group_members?(group)).to eq(true)
+    end
+
+    it 'Correctly handles group members visibility for staff' do
+      group = Group.new(name: 'group', members_visibility_level: Group.visibility_levels[:staff])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(another_user).can_see_group_members?(group)).to eq(false)
+      expect(Guardian.new(member).can_see_group_members?(group)).to eq(false)
+      expect(Guardian.new(admin).can_see_group_members?(group)).to eq(true)
+      expect(Guardian.new(moderator).can_see_group_members?(group)).to eq(true)
+      expect(Guardian.new(owner).can_see_group_members?(group)).to eq(true)
+      expect(Guardian.new.can_see_group_members?(group)).to eq(false)
+    end
+
+    it 'Correctly handles group members visibility for member' do
+      group = Group.new(name: 'group', members_visibility_level: Group.visibility_levels[:members])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(moderator).can_see_group_members?(group)).to eq(false)
+      expect(Guardian.new.can_see_group_members?(group)).to eq(false)
+      expect(Guardian.new(another_user).can_see_group_members?(group)).to eq(false)
+      expect(Guardian.new(admin).can_see_group_members?(group)).to eq(true)
+      expect(Guardian.new(member).can_see_group_members?(group)).to eq(true)
+      expect(Guardian.new(owner).can_see_group_members?(group)).to eq(true)
+    end
+
+    it 'Correctly handles group members visibility for logged-on-user' do
+      group = Group.new(name: 'group', members_visibility_level: Group.visibility_levels[:logged_on_users])
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new.can_see_group_members?(group)).to eq(false)
+      expect(Guardian.new(moderator).can_see_group_members?(group)).to eq(true)
+      expect(Guardian.new(admin).can_see_group_members?(group)).to eq(true)
+      expect(Guardian.new(member).can_see_group_members?(group)).to eq(true)
+      expect(Guardian.new(owner).can_see_group_members?(group)).to eq(true)
+      expect(Guardian.new(another_user).can_see_group_members?(group)).to eq(true)
+    end
+
+    it 'Correctly handles group members visibility for public' do
+      group = Group.new(name: 'group', members_visibility_level: Group.visibility_levels[:public])
+
+      expect(Guardian.new.can_see_group_members?(group)).to eq(true)
+    end
+
+  end
+
   describe '#can_see_groups?' do
-    it 'correctly handles owner visibile groups' do
+    it 'correctly handles owner visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:owners])
 
       member = Fabricate(:user)
@@ -3051,6 +3222,7 @@ describe Guardian do
       group.reload
 
       expect(Guardian.new(admin).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new(another_user).can_see_groups?([group])).to eq(false)
       expect(Guardian.new(moderator).can_see_groups?([group])).to eq(false)
       expect(Guardian.new(member).can_see_groups?([group])).to eq(false)
       expect(Guardian.new.can_see_groups?([group])).to eq(false)
@@ -3075,9 +3247,10 @@ describe Guardian do
       expect(Guardian.new(member).can_see_groups?([group, group2])).to eq(false)
       expect(Guardian.new.can_see_groups?([group, group2])).to eq(false)
       expect(Guardian.new(owner).can_see_groups?([group, group2])).to eq(false)
+      expect(Guardian.new(another_user).can_see_groups?([group, group2])).to eq(false)
     end
 
-    it 'correctly handles staff visibile groups' do
+    it 'correctly handles staff visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:staff])
 
       member = Fabricate(:user)
@@ -3093,9 +3266,10 @@ describe Guardian do
       expect(Guardian.new(moderator).can_see_groups?([group])).to eq(true)
       expect(Guardian.new(owner).can_see_groups?([group])).to eq(true)
       expect(Guardian.new.can_see_groups?([group])).to eq(false)
+      expect(Guardian.new(another_user).can_see_groups?([group])).to eq(false)
     end
 
-    it 'correctly handles member visibile groups' do
+    it 'correctly handles member visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:members])
 
       member = Fabricate(:user)
@@ -3106,11 +3280,31 @@ describe Guardian do
       group.add_owner(owner)
       group.reload
 
+      expect(Guardian.new(another_user).can_see_groups?([group])).to eq(false)
       expect(Guardian.new(moderator).can_see_groups?([group])).to eq(false)
       expect(Guardian.new.can_see_groups?([group])).to eq(false)
       expect(Guardian.new(admin).can_see_groups?([group])).to eq(true)
       expect(Guardian.new(member).can_see_groups?([group])).to eq(true)
       expect(Guardian.new(owner).can_see_groups?([group])).to eq(true)
+    end
+
+    it 'correctly handles logged-on-user visible groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:logged_on_users])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(member).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new(admin).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new(moderator).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new(owner).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new.can_see_groups?([group])).to eq(false)
+      expect(Guardian.new(another_user).can_see_groups?([group])).to eq(true)
     end
 
     it 'correctly handles the case where the user is not a member of every group' do
@@ -3139,7 +3333,7 @@ describe Guardian do
       expect(Guardian.new.can_see_groups?([group])).to eq(true)
     end
 
-    it 'correctly handles there case where not every group is public' do
+    it 'correctly handles case where not every group is public' do
       group1 = Group.new(name: 'group', visibility_level: Group.visibility_levels[:public])
       group2 = Group.new(name: 'group', visibility_level: Group.visibility_levels[:private])
 

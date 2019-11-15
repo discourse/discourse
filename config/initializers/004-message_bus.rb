@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+if GlobalSetting.skip_redis?
+  MessageBus.configure(backend: :memory)
+  return
+end
+
 MessageBus.site_id_lookup do |env = nil|
   if env
     setup_message_bus_env(env)
@@ -11,6 +16,14 @@ end
 
 def setup_message_bus_env(env)
   return if env["__mb"]
+
+  ::Middleware::RequestTracker.populate_request_queue_seconds!(env)
+
+  if queue_time = env["REQUEST_QUEUE_SECONDS"]
+    if queue_time > (GlobalSetting.reject_message_bus_queue_seconds).to_f
+      raise RateLimiter::LimitExceeded, 30 + (rand * 120).to_i
+    end
+  end
 
   host = RailsMultisite::ConnectionManagement.host(env)
   RailsMultisite::ConnectionManagement.with_hostname(host) do
@@ -32,6 +45,9 @@ def setup_message_bus_env(env)
       Discourse.warn_exception(e, message: "Unexpected error in Message Bus")
     end
     user_id = user && user.id
+
+    raise Discourse::InvalidAccess if !user_id && SiteSetting.login_required
+
     is_admin = !!(user && user.admin?)
     group_ids = if is_admin
       # special rule, admin is allowed access to all groups

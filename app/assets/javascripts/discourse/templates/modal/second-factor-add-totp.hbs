@@ -1,0 +1,56 @@
+{{#d-modal-body}}
+  {{#conditional-loading-spinner condition=loading}}
+    {{#if errorMessage}}
+    <div class="control-group">
+      <div class="controls">
+        <div class='alert alert-error'>{{errorMessage}}</div>
+      </div>
+    </div>
+    {{/if}}
+
+    <div class="control-group">
+      <div class="controls">
+        {{{i18n 'user.second_factor.enable_description'}}}
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        <div class="qr-code-container">
+          <div class="qr-code">
+            {{{secondFactorImage}}}
+          </div>
+        </div>
+
+        <p>
+          {{#if showSecondFactorKey}}
+            {{secondFactorKey}}
+          {{else}}
+            <a {{action "showSecondFactorKey"}}>{{i18n 'user.second_factor.show_key_description'}}</a>
+          {{/if}}
+        </p>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label input-prepend">{{i18n 'user.second_factor.name'}}</label>
+      <div class="controls">
+        {{second-factor-input value=secondFactorName inputId='second-factor-name' placeholder=(i18n 'user.second_factor.totp.default_name')}}
+      </div>
+
+      <label class="control-label input-prepend">{{i18n 'user.second_factor.label'}}</label>
+      <div class="controls">
+        {{second-factor-input maxlength=6 value=secondFactorToken inputId='second-factor-token' placeholder='123456'}}
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        {{d-button
+          class="btn-primary add-totp"
+          action=(action "enableSecondFactor")
+          label="enable"}}
+      </div>
+    </div>
+  {{/conditional-loading-spinner}}
+{{/d-modal-body}}

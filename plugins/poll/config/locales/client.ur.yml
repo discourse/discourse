@@ -22,6 +22,8 @@ ur:
           title: "نتائج <strong>ووٹ</strong> پر دکھائے جائیں گے۔"
         closed:
           title: "نتائج <strong>بند ہونے</strong> پر دکھائے جائیں گے۔"
+        staff:
+          title: "نتائج صرف <strong>سٹاف</strong> ممبران کو دکھائے جاتے ہیں۔"
       multiple:
         help:
           at_least_min_options:
@@ -74,6 +76,7 @@ ur:
           always: ہمیشہ نظر آتا ہے
           vote: ووٹ پر
           closed: بند کر دیا جب
+          staff: صرف سٹاف کیلئے
         poll_config:
           max: زیادہ سے زیادہ
           min: کم از کم

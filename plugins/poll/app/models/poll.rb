@@ -24,6 +24,7 @@ class Poll < ActiveRecord::Base
     always: 0,
     on_vote: 1,
     on_close: 2,
+    staff_only: 3,
   }
 
   enum visibility: {
@@ -40,7 +41,10 @@ class Poll < ActiveRecord::Base
   end
 
   def can_see_results?(user)
-    always? || is_closed? || (on_vote? && has_voted?(user))
+    return true if always?
+    return !!user&.staff? if staff_only?
+    return has_voted?(user) if on_vote?
+    is_closed?
   end
 
   def has_voted?(user)

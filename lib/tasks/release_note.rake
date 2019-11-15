@@ -66,6 +66,7 @@ def split_comments(text)
   text = normalize_terms(text)
   terms = ["FIX:", "FEATURE:", "UX:", "SECURITY:" , "PERF:"]
   terms.each do |term|
+    text = text.gsub(/(#{term})+/i, term)
     text = newlines_at_term(text, term)
   end
   text.split("\n")

@@ -1,4 +1,7 @@
-export default Discourse.Route.extend({
+import DiscourseRoute from "discourse/routes/discourse";
+import User from "discourse/models/user";
+
+export default DiscourseRoute.extend({
   titleToken() {
     const username = this.modelFor("user").username;
     if (username) {
@@ -39,7 +42,9 @@ export default Discourse.Route.extend({
       return this.currentUser;
     }
 
-    return Discourse.User.create({ username: params.username });
+    return User.create({
+      username: encodeURIComponent(params.username)
+    });
   },
 
   afterModel() {

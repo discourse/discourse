@@ -53,9 +53,7 @@
     font-size: $font-0;
     margin-right: 8px;
     display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
     vertical-align: middle;
     a {
       color: dark-light-choose($primary-high, $secondary-low);
@@ -235,6 +233,8 @@ blockquote {
   // !important here otherwise it won't work.
   img {
     max-width: 100% !important;
+    object-fit: cover;
+    object-position: top;
   }
 }
 
@@ -639,7 +639,8 @@ blockquote > *:last-child {
   font-size: $font-down-1;
 }
 
-.who-liked {
+.who-liked,
+.who-read {
   transition: height 0.5s;
   a {
     margin: 0 0.25em 0.5em 0;
@@ -905,11 +906,12 @@ a.mention-group {
 }
 
 .post-notice {
+  align-items: center;
   background-color: $tertiary-low;
   border-top: 1px solid $primary-low;
-  color: $primary;
-  padding: 0.8em;
+  display: flex;
   max-width: calc(#{$topic-body-width} + #{$topic-avatar-width} - 0.1em);
+  padding: 0.8em;
 
   &.old {
     background-color: unset;
@@ -921,8 +923,6 @@ a.mention-group {
   }
 
   p {
-    display: flex;
-    align-items: center;
     margin: 0;
   }
 
@@ -930,5 +930,14 @@ a.mention-group {
     font-size: 2em;
     color: $primary-high;
     margin-right: 0.65em;
+  }
+}
+
+#topic-footer-buttons {
+  .reason {
+    color: $primary-high;
+    display: inline;
+    margin: 0 0 0 8px;
+    line-height: $line-height-medium;
   }
 }

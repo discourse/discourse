@@ -1,0 +1,11 @@
+{{#if value}}
+  <span class='score-value'>
+    <span class='score-number'>{{float value}}</span>
+    {{#if label}}
+      <span class='score-value-type' title={{i18n (concat "review.explain." label ".title")}}>
+        {{i18n (concat "review.explain." label ".name")}}
+      </span>
+    {{/if}}
+  </span>
+  <span class='op'>+</span>
+{{/if}}

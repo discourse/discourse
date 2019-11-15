@@ -14,3 +14,6 @@ bg:
     magic_8_ball:
       answers:
         '9': "Да"
+    new_user_narrative:
+      hello:
+        title: "Привет!"

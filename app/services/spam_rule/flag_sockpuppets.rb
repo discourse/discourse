@@ -34,7 +34,12 @@ class SpamRule::FlagSockpuppets
   end
 
   def flag_sockpuppet_users
-    message = I18n.t('flag_reason.sockpuppet', ip_address: @post.user.ip_address, base_path: Discourse.base_path)
+    message = I18n.t(
+      'flag_reason.sockpuppet',
+      ip_address: @post.user.ip_address,
+      base_path: Discourse.base_path,
+      locale: SiteSetting.default_locale
+    )
 
     PostActionCreator.create(Discourse.system_user, @post, :spam, message: message)
 

@@ -7,4 +7,4 @@
 
 ca:
   site_settings:
-    daily_performance_report: "Analitza els logs de NGINX diàriament, i publica un tema només per a l'equip amb els detalls"
+    daily_performance_report: "Analitza els registres (logs) de NGINX diàriament, i publica un tema sols per a l'equip responsable amb els detalls."

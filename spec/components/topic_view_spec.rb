@@ -694,4 +694,21 @@ describe TopicView do
       expect(topic_view.last_post_id).to eq(p3.id)
     end
   end
+
+  describe '#read_time' do
+    let!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      PostCreator.create!(Discourse.system_user, topic_id: topic.id, raw: "![image|100x100](upload://upload.png)")
+      topic_view.topic.reload
+    end
+
+    it 'should return the right read time' do
+      SiteSetting.read_time_word_count = 500
+      expect(topic_view.read_time).to eq(1)
+
+      SiteSetting.read_time_word_count = 0
+      expect(topic_view.read_time).to eq(nil)
+    end
+  end
 end

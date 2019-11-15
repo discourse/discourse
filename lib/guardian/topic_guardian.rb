@@ -39,7 +39,8 @@ module TopicGuardian
     is_staff? ||
     (user &&
       user.trust_level >= SiteSetting.min_trust_to_create_topic.to_i &&
-      can_create_post?(parent))
+      can_create_post?(parent) &&
+      Category.topic_create_allowed(self).limit(1).count == 1)
   end
 
   def can_create_topic_on_category?(category)
@@ -76,7 +77,14 @@ module TopicGuardian
     return true if is_moderator? && can_create_post?(topic)
 
     # can't edit topics in secured categories where you don't have permission to create topics
-    return false if !can_create_topic_on_category?(topic.category)
+    # except for a tiny edge case where the topic is uncategorized and you are trying
+    # to fix it but uncategorized is disabled
+    if (
+      SiteSetting.allow_uncategorized_topics ||
+      topic.category_id != SiteSetting.uncategorized_category_id
+    )
+      return false if !can_create_topic_on_category?(topic.category)
+    end
 
     # TL4 users can edit archived topics, but can not edit private messages
     return true if (
@@ -97,7 +105,9 @@ module TopicGuardian
     )
 
     return false if topic.archived
-    is_my_own?(topic) && !topic.edit_time_limit_expired?
+    is_my_own?(topic) &&
+      !topic.edit_time_limit_expired?(user) &&
+      !Post.where(topic_id: topic.id, post_number: 1).where.not(locked_by_id: nil).exists?
   end
 
   # Recovery Method
@@ -145,8 +155,8 @@ module TopicGuardian
     can_see_category?(topic.category)
   end
 
-  def can_see_topic_if_not_deleted?(topic)
-    can_see_topic?(topic, false)
+  def can_get_access_to_topic?(topic)
+    topic&.access_topic_via_group.present? && authenticated?
   end
 
   def filter_allowed_categories(records)
@@ -172,6 +182,18 @@ module TopicGuardian
   end
 
   def can_banner_topic?(topic)
-    authenticated? && !topic.private_message? && is_staff?
+    topic && authenticated? && !topic.private_message? && is_staff?
+  end
+
+  def can_edit_tags?(topic)
+    return false unless can_tag_topics?
+    return false if topic.private_message? && !can_tag_pms?
+    return true if can_edit_topic?(topic)
+
+    if topic&.first_post&.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
+      return can_create_post?(topic)
+    end
+
+    false
   end
 end

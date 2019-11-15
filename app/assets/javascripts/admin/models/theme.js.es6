@@ -1,5 +1,8 @@
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { or, gt } from "@ember/object/computed";
 import RestModel from "discourse/models/rest";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -13,11 +16,11 @@ export const COMPONENTS = "components";
 const SETTINGS_TYPE_ID = 5;
 
 const Theme = RestModel.extend({
-  isActive: Ember.computed.or("default", "user_selectable"),
-  isPendingUpdates: Ember.computed.gt("remote_theme.commits_behind", 0),
-  hasEditedFields: Ember.computed.gt("editedFields.length", 0),
+  isActive: or("default", "user_selectable"),
+  isPendingUpdates: gt("remote_theme.commits_behind", 0),
+  hasEditedFields: gt("editedFields.length", 0),
 
-  @computed("theme_fields.[]")
+  @discourseComputed("theme_fields.[]")
   targets() {
     return [
       { id: 0, name: "common" },
@@ -45,7 +48,7 @@ const Theme = RestModel.extend({
     });
   },
 
-  @computed("theme_fields.[]")
+  @discourseComputed("theme_fields.[]")
   fieldNames() {
     const common = [
       "scss",
@@ -79,7 +82,11 @@ const Theme = RestModel.extend({
     };
   },
 
-  @computed("fieldNames", "theme_fields.[]", "theme_fields.@each.error")
+  @discourseComputed(
+    "fieldNames",
+    "theme_fields.[]",
+    "theme_fields.@each.error"
+  )
   fields(fieldNames) {
     const hash = {};
     Object.keys(fieldNames).forEach(target => {
@@ -109,7 +116,7 @@ const Theme = RestModel.extend({
     return hash;
   },
 
-  @computed("theme_fields")
+  @discourseComputed("theme_fields")
   themeFields(fields) {
     if (!fields) {
       this.set("theme_fields", []);
@@ -125,7 +132,7 @@ const Theme = RestModel.extend({
     return hash;
   },
 
-  @computed("theme_fields", "theme_fields.[]")
+  @discourseComputed("theme_fields", "theme_fields.[]")
   uploads(fields) {
     if (!fields) {
       return [];
@@ -135,19 +142,19 @@ const Theme = RestModel.extend({
     );
   },
 
-  @computed("theme_fields", "theme_fields.@each.error")
+  @discourseComputed("theme_fields", "theme_fields.@each.error")
   isBroken(fields) {
     return fields && fields.any(field => field.error && field.error.length > 0);
   },
 
-  @computed("theme_fields.[]")
+  @discourseComputed("theme_fields.[]")
   editedFields(fields) {
     return fields.filter(
       field => !Ember.isBlank(field.value) && field.type_id !== SETTINGS_TYPE_ID
     );
   },
 
-  @computed("remote_theme.last_error_text")
+  @discourseComputed("remote_theme.last_error_text")
   remoteError(errorText) {
     if (errorText && errorText.length > 0) {
       return errorText;
@@ -160,11 +167,11 @@ const Theme = RestModel.extend({
 
   hasEdited(target, name) {
     if (name) {
-      return !Ember.isEmpty(this.getField(target, name));
+      return !isEmpty(this.getField(target, name));
     } else {
       let fields = this.theme_fields || [];
       return fields.any(
-        field => field.target === target && !Ember.isEmpty(field.value)
+        field => field.target === target && !isEmpty(field.value)
       );
     }
   },
@@ -226,8 +233,8 @@ const Theme = RestModel.extend({
       themeFields[key] = field;
     } else {
       const changed =
-        (Ember.isEmpty(existingField.value) && !Ember.isEmpty(value)) ||
-        (Ember.isEmpty(value) && !Ember.isEmpty(existingField.value));
+        (isEmpty(existingField.value) && !isEmpty(value)) ||
+        (isEmpty(value) && !isEmpty(existingField.value));
 
       existingField.value = value;
       if (changed) {
@@ -238,10 +245,10 @@ const Theme = RestModel.extend({
     }
   },
 
-  @computed("childThemes.[]")
+  @discourseComputed("childThemes.[]")
   child_theme_ids(childThemes) {
     if (childThemes) {
-      return childThemes.map(theme => Ember.get(theme, "id"));
+      return childThemes.map(theme => get(theme, "id"));
     }
   },
 
@@ -262,7 +269,7 @@ const Theme = RestModel.extend({
     return this.saveChanges("child_theme_ids");
   },
 
-  @computed("name", "default")
+  @discourseComputed("name", "default")
   description: function(name, isDefault) {
     if (isDefault) {
       return I18n.t("admin.customize.theme.default_name", { name: name });

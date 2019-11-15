@@ -20,6 +20,7 @@ RSpec.describe Admin::GroupsController do
           owner_usernames: [user.username].join(","),
           allow_membership_requests: true,
           membership_request_template: 'Testing',
+          members_visibility_level: Group.visibility_levels[:staff]
         }
       }
     end
@@ -35,6 +36,7 @@ RSpec.describe Admin::GroupsController do
       expect(group.users).to contain_exactly(admin, user)
       expect(group.allow_membership_requests).to eq(true)
       expect(group.membership_request_template).to eq('Testing')
+      expect(group.members_visibility_level).to eq(Group.visibility_levels[:staff])
     end
 
     context "custom_fields" do

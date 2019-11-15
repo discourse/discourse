@@ -1,7 +1,8 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { resendActivationEmail } from "discourse/lib/user-activation";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   actions: {
     sendActivationEmail() {
       resendActivationEmail(this.username).then(() => {

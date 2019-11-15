@@ -395,4 +395,31 @@ describe FileStore::S3Store do
     end
   end
 
+  describe ".download_url" do
+    include_context "s3 helpers"
+    let(:s3_object) { stub }
+
+    it "returns correct short URL with dl=1 param" do
+      expect(store.download_url(upload)).to eq("#{upload.short_path}?dl=1")
+    end
+  end
+
+  describe ".url_for" do
+    include_context "s3 helpers"
+    let(:s3_object) { stub }
+
+    it "returns signed URL with content disposition when requesting to download image" do
+      s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+      s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+      opts = {
+        expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS,
+        response_content_disposition: %Q|attachment; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|
+      }
+
+      s3_object.expects(:presigned_url).with(:get, opts)
+
+      expect(store.url_for(upload, force_download: true)).not_to eq(upload.url)
+    end
+  end
+
 end

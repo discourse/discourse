@@ -27,6 +27,7 @@ et:
   topics: "Teemad"
   posts: "postitused"
   loading: "Laetakse"
+  sign_up: "Liitu"
   log_in: "Logi sisse"
   submit: "Saada"
   purge_reason: "Kustutatud automaatselt kui mahajäetud, deaktiveeritud konto"
@@ -44,7 +45,6 @@ et:
         auto_generated_email_error: "Juhtub, kui 'precedence' päis on seatud väärtusele: list, junk, bulk või auto_reply või kui mingi muu päis sisaldab väärtusi: auto-submitted, auto-replied või auto-generated."
         no_body_detected_error: "Juhtub, kui meil ei õnnestunud keha eraldada ja manused puudusid."
         inactive_user_error: "Juhtub, kui saatja ei ole aktiveeritud."
-        bad_destination_address: "Juhtub, kui ükski To/Cc/Bcc meiliaadresidest ei lange kokku seadistatud sissetulavate meiliaadressidega."
         strangers_not_allowed_error: "Juhtub, kui kasutaja proovib teha teemat liiki, millesse ta ise ei kuulu."
         insufficient_trust_level_error: "Juhtub, kui kasutaja proovib teha teemat liiki, millele tal puudub vajalik usaldustase."
         reply_user_not_matching_error: "Juhtub, kui vastus tuleb teistsuguselt meiliaadressilt kui see, millele märguanne saadeti."
@@ -120,6 +120,8 @@ et:
   not_found: "Päritud URLi või ressurssi ei leitud."
   invalid_access: "Päritud ressursi vaatamiseks puuduvad õigused."
   read_only_mode_enabled: "Sait on kirjutuskaitstud. Interaktsioonid on keelatud."
+  not_in_group:
+    join_group: "Liitu grupiga"
   reading_time: "Lugemise aeg"
   likes: "Meeldimisi"
   too_many_replies:
@@ -139,6 +141,7 @@ et:
     permalink: "Püsilink"
     imported_from: "See on kaasnev vestlusteema originaalsisestusele %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Loodud"
   no_mentions_allowed: "Vabandust, sa ei saa teisi kasutajaid mainida."
   too_many_mentions:
     one: "Vabandust, sa tohid postituses vaid üht kasutajat mainida."
@@ -420,27 +423,27 @@ et:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
       edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "tundmatu brauser"
     device:
       android: "Androidi seade"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "Mobiilne seade"
-      mac: "Mac"
       linux: "GNU/Linuxiga arvuti"
+      mac: "Mac"
+      mobile: "Mobiilne seade"
       windows: "Windowsi arvuti"
       unknown: "tundmatu seade"
     os:
       android: "Android"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "tundmatu operatsioonisüsteem"
   change_email:
@@ -541,6 +544,8 @@ et:
     authorize: "Autoriseeri"
     read: "lugemine"
     read_write: "lugemine ja kirjutamine"
+    otp_confirmation:
+      confirm_title: "Edasi saidile %{site_name}"
     scopes:
       read: "Loe kõiki"
       write: "Kirjuta kõikidesse"
@@ -552,6 +557,7 @@ et:
         day: Päev
     post_edits:
       labels:
+        edited_at: Date
         post: Postitus
         author: Autor
         edit_reason: Põhjus
@@ -748,6 +754,7 @@ et:
     min_topic_title_length: "Lühim lubatud teema pealkirja pikkus tähemärkides"
     max_topic_title_length: "Maksimaalne lubatud teema pealkirja pikkus tähemärkides"
     min_personal_message_title_length: "Minimaalne lubatud teema pealkirja pikkus tähemärkides"
+    min_admin_password_length: "Minimaalne administraatori parooli pikkus."
     enable_instagram_logins: "Luba autentimine Instagrami abil, nõuab instagram_consumer_key ja instagram_consumer_secret"
     instagram_consumer_key: "Teenusekasutaja avalik võti Instagrami abil autentimiseks"
     instagram_consumer_secret: "Teenusekasutaja salajane võti Instagrami abil autentimiseks"
@@ -782,6 +789,7 @@ et:
   login:
     not_approved: "Kontot pole veel kinnitatud. Teid teavitatakse e-post teel, kui sisselogimine on võimaldatud."
     admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminnina sisse logida."
+    omniauth_confirm_button: "Jätka"
     already_logged_in: "Oih, näib, et üritad vastu võtta võõra kasutaja kutset. Kui Sa ei ole kasutaja %{current_user}, logi palun välja ja proovi uuesti."
   admin:
     email:
@@ -806,6 +814,20 @@ et:
     in_reply_to: "Vastuseks"
     unsubscribe:
       title: "Tühista tellimus"
+    user_replied:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_quoted:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_linked:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_mentioned:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_group_mentioned:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_posted:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_watching_first_post:
+      subject_template: "[%{email_prefix}] %{topic_title}"
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
@@ -1048,6 +1070,8 @@ et:
         title: "Organisatsioon"
       colors:
         title: "Kujundusteema"
+      themes_further_reading:
+        title: "Kujundused"
       logos:
         title: "Logod"
         fields:
@@ -1101,6 +1125,8 @@ et:
         title: "Ignoreeri"
       approve:
         title: "Kinnita"
+      approve_user:
+        title: "Kiida kasutaja heaks"
       reject_user:
         delete:
           title: "Kustuta kasutaja"

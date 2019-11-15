@@ -1,8 +1,10 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 
 // Lists of topics on a user's page.
-export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
+export default Controller.extend({
+  application: inject(),
 
   hideCategory: false,
   showPosters: false,
@@ -16,11 +18,15 @@ export default Ember.Controller.extend({
     this.newIncoming = [];
   },
 
+  saveScrollPosition: function() {
+    this.session.set("topicListScrollPosition", $(window).scrollTop());
+  },
+
   _showFooter: function() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   }.observes("model.canLoadMore"),
 
-  @computed("incomingCount")
+  @discourseComputed("incomingCount")
   hasIncoming(incomingCount) {
     return incomingCount > 0;
   },

@@ -553,38 +553,77 @@ describe Email::Receiver do
       SiteSetting.incoming_email_prefer_html = false
 
       expect { process(:no_body_with_image) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/<img/)
+
+      post = topic.posts.last
+      upload = post.uploads.first
+
+      expect(post.raw).to include(
+        "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})"
+      )
 
       expect { process(:inline_image) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/Before\s+<img.+>\s+After/)
+
+      post = topic.posts.last
+      upload = post.uploads.first
+
+      expect(post.raw).to include(
+        "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})"
+      )
     end
 
     it "supports attached images in HTML part" do
       SiteSetting.incoming_email_prefer_html = true
 
       expect { process(:inline_image) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/\*\*Before\*\*\s+<img.+>\s+\*After\*/)
+
+      post = topic.posts.last
+      upload = post.uploads.last
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      **Before**
+
+      ![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})
+
+      *After*
+      MD
     end
 
     it "supports attachments" do
       SiteSetting.authorized_extensions = "txt|jpg"
       expect { process(:attached_txt_file) }.to change { topic.posts.count }
       post = topic.posts.last
-      expect(post.raw).to match(/\APlease find some text file attached\.\s+<a class='attachment' href='\/uploads\/default\/original\/.+?txt'>text\.txt<\/a> \(20 Bytes\)\z/)
-      expect(post.uploads.size).to eq 1
+      upload = post.uploads.first
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      Please find some text file attached.
+
+      [#{upload.original_filename}|attachment](#{upload.short_url}) (20 Bytes)
+      MD
 
       expect { process(:apple_mail_attachment) }.to change { topic.posts.count }
       post = topic.posts.last
-      expect(post.raw).to match(/\APicture below\.\s+<img.+?src="\/uploads\/default\/original\/.+?jpeg" class="">\s+Picture above\.\z/)
-      expect(post.uploads.size).to eq 1
+      upload = post.uploads.first
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      Picture below.
+
+      ![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})
+
+      Picture above.
+      MD
     end
 
     it "supports eml attachments" do
       SiteSetting.authorized_extensions = "eml"
       expect { process(:attached_eml_file) }.to change { topic.posts.count }
       post = topic.posts.last
-      expect(post.raw).to match(/\APlease find the eml file attached\.\s+<a class='attachment' href='\/uploads\/default\/original\/.+?eml'>sample\.eml<\/a> \(193 Bytes\)\z/)
-      expect(post.uploads.size).to eq 1
+      upload = post.uploads.first
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      Please find the eml file attached.
+
+      [#{upload.original_filename}|attachment](#{upload.short_url}) (193 Bytes)
+      MD
     end
 
     context "when attachment is rejected" do
@@ -613,8 +652,11 @@ describe Email::Receiver do
       SiteSetting.authorized_extensions = "pdf"
       expect { process(:attached_pdf_file) }.to change { topic.posts.count }
       post = topic.posts.last
-      expect(post.raw).to match(/\A\s+<a class='attachment' href='\/uploads\/default\/original\/.+?pdf'>discourse\.pdf<\/a> \(64 KB\)\z/)
-      expect(post.uploads.size).to eq 1
+      upload = post.uploads.last
+
+      expect(post.raw).to include(
+        "[#{upload.original_filename}|attachment](#{upload.short_url}) (64 KB)"
+      )
     end
 
     it "supports liking via email" do
@@ -664,6 +706,41 @@ describe Email::Receiver do
       expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
     end
 
+  end
+
+  shared_examples "creates topic with forwarded message as quote" do |destination, address|
+    it "creates topic with forwarded message as quote" do
+      expect { process(:forwarded_email_1) }.to change(Topic, :count)
+
+      topic = Topic.last
+      if destination == :category
+        expect(topic.category).to eq(Category.where(email_in: address).first)
+      else
+        expect(topic.archetype).to eq(Archetype.private_message)
+        expect(topic.allowed_groups).to eq(Group.where(incoming_email: address))
+      end
+
+      post = Post.last
+
+      expect(post.user.email).to eq("ba@bar.com")
+      expect(post.raw).to eq(<<~EOF.chomp
+        @team, can you have a look at this email below?
+
+        [quote]
+        From: Some One &lt;some@one\\.com&gt;
+        To: Ba Bar &lt;ba@bar\\.com&gt;
+        Date: Mon, 1 Dec 2016 00:13:37 \\+0100
+        Subject: Discoursing much?
+
+        Hello Ba Bar,
+
+        Discoursing much today?
+
+        XoXo
+        [/quote]
+      EOF
+      )
+    end
   end
 
   context "new message to a group" do
@@ -759,8 +836,13 @@ describe Email::Receiver do
     it "supports any kind of attachments when 'allow_all_attachments_for_group_messages' is enabled" do
       SiteSetting.allow_all_attachments_for_group_messages = true
       expect { process(:attached_rb_file) }.to change(Topic, :count)
-      expect(Post.last.raw).to match(/<a\sclass='attachment'[^>]*>discourse\.rb<\/a>/)
-      expect(Post.last.uploads.length).to eq 1
+
+      post = Topic.last.first_post
+      upload = post.uploads.first
+
+      expect(post.raw).to include(
+        "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.filesize} Bytes)"
+      )
     end
 
     it "reenables user's PM email notifications when user emails new topic to group" do
@@ -771,10 +853,10 @@ describe Email::Receiver do
       expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
     end
 
-    context "with forwarded emails enabled" do
+    context "with forwarded emails behaviour set to create replies" do
       before do
         Fabricate(:group, incoming_email: "some_group@bar.com")
-        SiteSetting.enable_forwarded_emails = true
+        SiteSetting.forwarded_emails_behaviour = "create_replies"
       end
 
       it "handles forwarded emails" do
@@ -795,7 +877,7 @@ describe Email::Receiver do
         group.add(Fabricate(:user, email: "ba@bar.com"))
         group.save
 
-        SiteSetting.enable_forwarded_emails = true
+        SiteSetting.forwarded_emails_behaviour = "create_replies"
         expect { process(:forwarded_email_2) }.to change(Topic, :count)
 
         forwarded_post, last_post = *Post.last(2)
@@ -814,6 +896,14 @@ describe Email::Receiver do
         expect { process(:forwarded_email_3) }.to change(Topic, :count)
       end
 
+    end
+
+    context "with forwarded emails behaviour set to quote" do
+      before do
+        SiteSetting.forwarded_emails_behaviour = "quote"
+      end
+
+      include_examples "creates topic with forwarded message as quote", :group, "team@bar.com|meat@bar.com"
     end
 
     context "when message sent to a group has no key and find_related_post_with_key is enabled" do
@@ -906,6 +996,21 @@ describe Email::Receiver do
 
       Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
       expect { process(:spam_x_spam_status) }.to change { Topic.count }.by(1) # Topic created
+
+      topic = Topic.last
+      expect(topic.visible).to eq(false)
+
+      post = Post.last
+      expect(post.hidden).to eq(true)
+      expect(post.hidden_at).not_to eq(nil)
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+    end
+
+    it "creates hidden topic for X-SES-Spam-Verdict" do
+      SiteSetting.email_in_spam_header = 'X-SES-Spam-Verdict'
+
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_ses_spam_verdict) }.to change { Topic.count }.by(1) # Topic created
 
       topic = Topic.last
       expect(topic.visible).to eq(false)
@@ -1155,6 +1260,22 @@ describe Email::Receiver do
 
         include_examples "does not create staged users", :no_date, Email::Receiver::InvalidPost
       end
+
+      context "with forwarded emails behaviour set to quote" do
+        before do
+          SiteSetting.forwarded_emails_behaviour = "quote"
+        end
+
+        context "with a category which allows strangers" do
+          fab!(:category) { Fabricate(:category, email_in: "team@bar.com", email_in_allow_strangers: true) }
+          include_examples "creates topic with forwarded message as quote", :category, "team@bar.com"
+        end
+
+        context "with a category which doesn't allow strangers" do
+          fab!(:category) { Fabricate(:category, email_in: "team@bar.com", email_in_allow_strangers: false) }
+          include_examples "cleans up staged users", :forwarded_email_1, Email::Receiver::StrangersNotAllowedError
+        end
+      end
     end
 
     context "email is a reply" do
@@ -1173,9 +1294,9 @@ describe Email::Receiver do
         include_examples "does not create staged users", :reply_user_not_matching, Email::Receiver::ReplyUserNotMatchingError
       end
 
-      context "when forwarded emails are enabled" do
+      context "with forwarded emails behaviour set to create replies" do
         before do
-          SiteSetting.enable_forwarded_emails = true
+          SiteSetting.forwarded_emails_behaviour = "create_replies"
         end
 
         context "when a reply contains a forwareded email" do

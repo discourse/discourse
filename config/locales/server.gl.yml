@@ -24,6 +24,7 @@ gl:
   topics: "Temas"
   posts: "publicacións"
   loading: "Cargndo"
+  sign_up: "Crear unha conta"
   log_in: "Iniciar sesión"
   submit: "Enviar"
   anonymous: "Anónimo"
@@ -81,6 +82,7 @@ gl:
     loading: "Cargando a discusión..."
     permalink: "Ligazón permanente"
     in_reply_to: "▶ %{username}"
+    created: "Creado"
   no_mentions_allowed: "Sentímolo pero non podes mencionar outros usuarios"
   invalid_characters: "contén caracteres incorrectos"
   next_page: "páxina seguinte →"
@@ -269,12 +271,16 @@ gl:
       every_hour: "cada hora"
       daily: "diariamente"
       weekly: "semanalmente"
+  user_api_key:
+    otp_confirmation:
+      confirm_title: "Continuar a %{site_name}"
   reports:
     default:
       labels:
         day: Día
     post_edits:
       labels:
+        edited_at: Data
         post: Publicación
         editor: Editor
         edit_reason: Razón

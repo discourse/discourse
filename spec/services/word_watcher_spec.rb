@@ -10,6 +10,25 @@ describe WordWatcher do
     $redis.flushall
   end
 
+  describe '.word_matcher_regexp' do
+    let!(:word1) { Fabricate(:watched_word, action: WatchedWord.actions[:block]).word }
+    let!(:word2) { Fabricate(:watched_word, action: WatchedWord.actions[:block]).word }
+
+    context 'format of the result regexp' do
+      it "is correct when watched_words_regular_expressions = true" do
+        SiteSetting.watched_words_regular_expressions = true
+        regexp = WordWatcher.word_matcher_regexp(:block)
+        expect(regexp.inspect).to eq("/(#{word1})|(#{word2})/i")
+      end
+
+      it "is correct when watched_words_regular_expressions = false" do
+        SiteSetting.watched_words_regular_expressions = false
+        regexp = WordWatcher.word_matcher_regexp(:block)
+        expect(regexp.inspect).to eq("/(?:\\W|^)(#{word1}|#{word2})(?=\\W|$)/i")
+      end
+    end
+  end
+
   describe "word_matches_for_action?" do
     it "is falsey when there are no watched words" do
       expect(WordWatcher.new(raw).word_matches_for_action?(:require_approval)).to be_falsey
@@ -62,6 +81,37 @@ describe WordWatcher do
         end
       end
 
+      context 'multiple matches' do
+        context 'non regexp words' do
+          it 'lists all matching words' do
+            %w{bananas hate hates}.each do |word|
+              Fabricate(:watched_word, word: word, action: WatchedWord.actions[:block])
+            end
+            matches = WordWatcher.new("I hate bananas").word_matches_for_action?(:block, all_matches: true)
+            expect(matches).to contain_exactly('hate', 'bananas')
+            matches = WordWatcher.new("She hates bananas too").word_matches_for_action?(:block, all_matches: true)
+            expect(matches).to contain_exactly('hates', 'bananas')
+          end
+        end
+
+        context 'regexp words' do
+          before do
+            SiteSetting.watched_words_regular_expressions = true
+          end
+
+          it 'lists all matching patterns' do
+            Fabricate(:watched_word, word: "(pine)?apples", action: WatchedWord.actions[:block])
+            Fabricate(:watched_word, word: "((move|store)(d)?)|((watch|listen)(ed|ing)?)", action: WatchedWord.actions[:block])
+
+            matches = WordWatcher.new("pine pineapples apples").word_matches_for_action?(:block, all_matches: true)
+            expect(matches).to contain_exactly('pineapples', 'apples')
+
+            matches = WordWatcher.new("go watched watch ed ing move d moveed moved moving").word_matches_for_action?(:block, all_matches: true)
+            expect(matches).to contain_exactly(*%w{watched watch move moved})
+          end
+        end
+      end
+
       context "emojis" do
         it "handles emoji" do
           Fabricate(:watched_word, word: ":joy:", action: WatchedWord.actions[:require_approval])
@@ -94,7 +144,7 @@ describe WordWatcher do
             action: WatchedWord.actions[:block]
           )
           m = WordWatcher.new("this is not a test.").word_matches_for_action?(:block)
-          expect(m[1]).to eq("test")
+          expect(m[0]).to eq("test")
         end
 
         it "supports regular expressions as a site setting" do
@@ -104,11 +154,11 @@ describe WordWatcher do
             action: WatchedWord.actions[:require_approval]
           )
           m = WordWatcher.new("Evil Trout is cool").word_matches_for_action?(:require_approval)
-          expect(m[1]).to eq("Trout")
+          expect(m[0]).to eq("Trout")
           m = WordWatcher.new("Evil Troot is cool").word_matches_for_action?(:require_approval)
-          expect(m[1]).to eq("Troot")
+          expect(m[0]).to eq("Troot")
           m = WordWatcher.new("trooooooooot").word_matches_for_action?(:require_approval)
-          expect(m[1]).to eq("trooooooooot")
+          expect(m[0]).to eq("trooooooooot")
         end
 
         it "support uppercase" do
@@ -121,9 +171,9 @@ describe WordWatcher do
           m = WordWatcher.new('Amazing place').word_matches_for_action?(:require_approval)
           expect(m).to be_nil
           m = WordWatcher.new('Amazing applesauce').word_matches_for_action?(:require_approval)
-          expect(m[1]).to eq('applesauce')
+          expect(m[0]).to eq('applesauce')
           m = WordWatcher.new('Amazing AppleSauce').word_matches_for_action?(:require_approval)
-          expect(m[1]).to eq('AppleSauce')
+          expect(m[0]).to eq('AppleSauce')
         end
       end
 

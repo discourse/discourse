@@ -60,3 +60,33 @@
   padding-right: 40px;
   padding-left: 40px;
 }
+
+// Fixes github oneboxes for RTL sites
+.rtl aside.onebox.githubblob {
+  padding: 12px 25px 12px 12px !important;
+  direction: ltr !important;
+}
+
+.rtl aside.onebox.githubblob .source {
+  background-position: 0 50% !important;
+  padding-right: 20px;
+}
+
+.rtl pre.onebox code ol.lines {
+  margin: 0 0 0 40px !important;
+}
+
+.rtl pre.onebox code ol.lines li:before {
+  right: -40px;
+  padding-left: 5px;
+  padding-right: 0;
+  text-align: right !important;
+}
+
+.rtl pre.onebox code ol.lines li {
+  padding-right: 5px;
+  padding-left: 0;
+  margin-right: 0;
+  border-right: 1px solid #cfcfcf;
+  border-left: none !important;
+}

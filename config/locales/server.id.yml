@@ -25,6 +25,7 @@ id:
   topics: "Topik"
   posts: "post"
   loading: "Memuat"
+  sign_up: "Mendaftar"
   log_in: "Log In"
   purge_reason: "Secara otomatis dihapus sebagai akun yang ditinggalkan, dinon-aktifkan."
   disable_remote_images_download_reason: "Unduh gambar jarak jauh dimatikan karena ruang penyimpanan di server tidak cukup."
@@ -95,6 +96,8 @@ id:
   not_found: "URL atau sumber yang diminta tidak dapat ditemukan."
   invalid_access: "Anda tidak diijinkan untuk melihat sumber yang diminta."
   read_only_mode_enabled: "Situs ini dalam modus read-only. Interaksi dinonaktifkan."
+  not_in_group:
+    join_group: "Gabung dengan grup"
   reading_time: "Waktu bacaan"
   likes: "Suka"
   too_many_replies:
@@ -107,6 +110,7 @@ id:
     loading: "Sedang memuat diskusi..."
     imported_from: "Ini adalah topik diskusi tambahan untuk topik utama di %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Dibuat"
   no_mentions_allowed: "Maaf, Anda tidak dapat menyebut pengguna lain."
   too_many_mentions:
     other: "Maaf, Anda hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
@@ -327,6 +331,8 @@ id:
     authorize: "Izinkan"
     read: "baca"
     read_write: "baca/tulis"
+    otp_confirmation:
+      confirm_title: "Lanjut ke %{site_name}"
   reports:
     default:
       labels:
@@ -502,6 +508,8 @@ id:
   topic_statuses:
     autoclosed_disabled: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
     autoclosed_disabled_lastpost: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
+  login:
+    omniauth_confirm_button: "Lanjutkan"
   admin:
     email:
       sent_test: "terkirim!"

@@ -1,11 +1,17 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
-import BadgeSelectController from "discourse/mixins/badge-select-controller";
 
-export default Ember.Component.extend(BadgeSelectController, {
+export default Component.extend({
   classNames: ["badge-title"],
 
   saved: false,
   saving: false,
+
+  @discourseComputed("selectableUserBadges", "selectedUserBadgeId")
+  selectedUserBadge(selectableUserBadges, selectedUserBadgeId) {
+    return selectableUserBadges.findBy("id", parseInt(selectedUserBadgeId, 10));
+  },
 
   actions: {
     save() {

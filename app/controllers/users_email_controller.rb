@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'rate_limiter'
-require_dependency 'email_validator'
-require_dependency 'email_updater'
-
 class UsersEmailController < ApplicationController
 
   requires_login only: [:index, :update]

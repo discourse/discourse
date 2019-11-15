@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-#
-require_dependency 'archetype'
 
 class PostTiming < ActiveRecord::Base
   belongs_to :topic
@@ -73,6 +71,8 @@ class PostTiming < ActiveRecord::Base
         last_read_post_number: last_read
       )
 
+      topic.posts.find_by(post_number: post_number).decrement!(:reads)
+
       if !topic.private_message?
         set_minimum_first_unread!(user_id: user.id, date: topic.updated_at)
       end
@@ -88,6 +88,8 @@ class PostTiming < ActiveRecord::Base
       TopicUser
         .where('user_id = ? and topic_id in (?)', user_id, topic_ids)
         .delete_all
+
+      Post.where(topic_id: topic_ids).update_all('reads = reads - 1')
 
       date = Topic.listable_topics.where(id: topic_ids).minimum(:updated_at)
 
@@ -176,6 +178,7 @@ SQL
     topic_time = max_time_per_post if topic_time > max_time_per_post
 
     TopicUser.update_last_read(current_user, topic_id, highest_seen, new_posts_read, topic_time, opts)
+    TopicGroup.update_last_read(current_user, topic_id, highest_seen)
 
     if total_changed > 0
       current_user.reload

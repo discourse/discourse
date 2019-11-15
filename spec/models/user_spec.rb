@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'user'
 
 describe User do
   let(:user) { Fabricate(:user) }
@@ -157,6 +156,16 @@ describe User do
       SiteSetting.send_welcome_message = false
       Jobs.expects(:enqueue).with(:send_system_message, user_id: user.id, message_type: 'welcome_user').never
       user.enqueue_welcome_message('welcome_user')
+    end
+  end
+
+  context '.set_default_tags_preferences' do
+    let(:tag) { Fabricate(:tag) }
+
+    it "should set default tag preferences when new user created" do
+      SiteSetting.default_tags_watching = tag.name
+      user = Fabricate(:user)
+      expect(TagUser.exists?(tag_id: tag.id, user_id: user.id, notification_level: TagUser.notification_levels[:watching])).to be_truthy
     end
   end
 
@@ -1126,56 +1135,6 @@ describe User do
     end
   end
 
-  describe 'api keys' do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:other_admin) { Fabricate(:admin) }
-    fab!(:user) { Fabricate(:user) }
-
-    describe '.generate_api_key' do
-
-      it "generates an api key when none exists, and regenerates when it does" do
-        expect(user.api_key).to be_blank
-
-        # Generate a key
-        api_key = user.generate_api_key(admin)
-        expect(api_key.user).to eq(user)
-        expect(api_key.key).to be_present
-        expect(api_key.created_by).to eq(admin)
-
-        user.reload
-        expect(user.api_key).to eq(api_key)
-
-        # Regenerate a key. Keeps the same record, updates the key
-        new_key = user.generate_api_key(other_admin)
-        expect(new_key.id).to eq(api_key.id)
-        expect(new_key.key).to_not eq(api_key.key)
-        expect(new_key.created_by).to eq(other_admin)
-      end
-
-    end
-
-    describe '.revoke_api_key' do
-
-      it "revokes an api key when exists" do
-        expect(user.api_key).to be_blank
-
-        # Revoke nothing does nothing
-        user.revoke_api_key
-        user.reload
-        expect(user.api_key).to be_blank
-
-        # When a key is present it is removed
-        user.generate_api_key(admin)
-        user.reload
-        user.revoke_api_key
-        user.reload
-        expect(user.api_key).to be_blank
-      end
-
-    end
-
-  end
-
   describe "posted too much in topic" do
     let!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let!(:topic) { Fabricate(:post).topic }
@@ -1581,6 +1540,11 @@ describe User do
 
   context "when user preferences are overriden" do
 
+    fab!(:category0) { Fabricate(:category) }
+    fab!(:category1) { Fabricate(:category) }
+    fab!(:category2) { Fabricate(:category) }
+    fab!(:category3) { Fabricate(:category) }
+
     before do
       SiteSetting.default_email_digest_frequency = 1440 # daily
       SiteSetting.default_email_level = UserOption.email_level_types[:never]
@@ -1596,10 +1560,10 @@ describe User do
 
       SiteSetting.default_topics_automatic_unpin = false
 
-      SiteSetting.default_categories_watching = "1"
-      SiteSetting.default_categories_tracking = "2"
-      SiteSetting.default_categories_muted = "3"
-      SiteSetting.default_categories_watching_first_post = "4"
+      SiteSetting.default_categories_watching = category0.id.to_s
+      SiteSetting.default_categories_tracking = category1.id.to_s
+      SiteSetting.default_categories_muted = category2.id.to_s
+      SiteSetting.default_categories_watching_first_post = category3.id.to_s
     end
 
     it "has overriden preferences" do
@@ -1617,10 +1581,10 @@ describe User do
       expect(options.auto_track_topics_after_msecs).to eq(0)
       expect(options.notification_level_when_replying).to eq(3)
 
-      expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([1])
-      expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([2])
-      expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([3])
-      expect(CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)).to eq([4])
+      expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([category0.id])
+      expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([category1.id])
+      expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([category2.id])
+      expect(CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)).to eq([category3.id])
     end
 
     it "does not set category preferences for staged users" do
@@ -1817,7 +1781,7 @@ describe User do
     let!(:staged_user) { Fabricate(:staged, email: 'staged@account.com', active: true, username: 'staged1', name: 'Stage Name') }
     let(:params) { { email: 'staged@account.com', active: true, username: 'unstaged1', name: 'Foo Bar' } }
 
-    it "correctyl unstages a user" do
+    it "correctly unstages a user" do
       user = User.unstage(params)
 
       expect(user.id).to eq(staged_user.id)
@@ -1825,6 +1789,7 @@ describe User do
       expect(user.name).to eq('Foo Bar')
       expect(user.active).to eq(false)
       expect(user.email).to eq('staged@account.com')
+      expect(user.staged).to eq(false)
     end
 
     it "returns nil when the user cannot be unstaged" do
@@ -1834,13 +1799,14 @@ describe User do
     end
 
     it "removes all previous notifications during unstaging" do
-      Fabricate(:notification, user: user)
-      Fabricate(:private_message_notification, user: user)
-      user.reload
+      Fabricate(:notification, user: staged_user)
+      Fabricate(:private_message_notification, user: staged_user)
+      staged_user.reload
 
-      expect(user.total_unread_notifications).to eq(2)
+      expect(staged_user.total_unread_notifications).to eq(2)
       user = User.unstage(params)
       expect(user.total_unread_notifications).to eq(0)
+      expect(user.staged).to eq(false)
     end
 
     it "triggers an event" do
@@ -1858,6 +1824,12 @@ describe User do
     it 'confirms email token and activates user' do
       inactive.activate
       inactive.reload
+      expect(inactive.email_confirmed?).to eq(true)
+      expect(inactive.active).to eq(true)
+    end
+
+    it 'works without needing to reload the model' do
+      inactive.activate
       expect(inactive.email_confirmed?).to eq(true)
       expect(inactive.active).to eq(true)
     end
@@ -1985,11 +1957,35 @@ describe User do
       expect(user.user_profile.reload.badge_granted_title).to eq(false)
 
       badge.update!(allow_title: true)
+      user.badges.reload
       user.update!(title: badge.name)
       expect(user.user_profile.reload.badge_granted_title).to eq(true)
+      expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
 
       user.update!(title: nil)
       expect(user.user_profile.reload.badge_granted_title).to eq(false)
+      expect(user.user_profile.granted_title_badge_id).to eq(nil)
+    end
+
+    context 'when a custom badge name has been set and it matches the title' do
+      let(:customized_badge_name) { 'Merit Badge' }
+
+      before do
+        TranslationOverride.upsert!(I18n.locale, Badge.i18n_key(badge.name), customized_badge_name)
+      end
+
+      it 'sets badge_granted_title correctly' do
+        BadgeGranter.grant(badge, user)
+
+        badge.update!(allow_title: true)
+        user.update!(title: customized_badge_name)
+        expect(user.user_profile.reload.badge_granted_title).to eq(true)
+        expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
+      end
+
+      after do
+        TranslationOverride.revert!(I18n.locale, Badge.i18n_key(badge.name))
+      end
     end
   end
 
@@ -2155,6 +2151,49 @@ describe User do
         it "substitues {username} with the URL encoded username" do
           SiteSetting.external_system_avatars_url = "https://{hostname}/{username}.png"
           expect(User.system_avatar_template("बहुत")).to eq("https://#{Discourse.current_hostname}/%E0%A4%AC%E0%A4%B9%E0%A5%81%E0%A4%A4.png")
+        end
+      end
+    end
+  end
+
+  describe "Second-factor authenticators" do
+    describe "#totps" do
+      it "only includes enabled totp 2FA" do
+        enabled_totp_2fa = Fabricate(:user_second_factor_totp, user: user, name: 'Enabled TOTP', enabled: true)
+        disabled_totp_2fa = Fabricate(:user_second_factor_totp, user: user, name: 'Disabled TOTP', enabled: false)
+
+        expect(user.totps.map(&:id)).to eq([enabled_totp_2fa.id])
+      end
+    end
+
+    describe "#security_keys" do
+      it "only includes enabled security_key 2FA" do
+        enabled_security_key_2fa = Fabricate(:user_security_key_with_random_credential, user: user, name: 'Enabled YubiKey', enabled: true)
+        disabled_security_key_2fa = Fabricate(:user_security_key_with_random_credential, user: user, name: 'Disabled YubiKey', enabled: false)
+
+        expect(user.security_keys.map(&:id)).to eq([enabled_security_key_2fa.id])
+      end
+    end
+  end
+
+  describe 'Secure identifier for a user which is a string other than the ID used to identify the user in some cases e.g. security keys' do
+    describe '#create_or_fetch_secure_identifier' do
+      context 'if the user already has a secure identifier' do
+        let(:sec_ident) { SecureRandom.hex(20) }
+        before do
+          user.update(secure_identifier: sec_ident)
+        end
+
+        it 'returns the identifier' do
+          expect(user.create_or_fetch_secure_identifier).to eq(sec_ident)
+        end
+      end
+
+      context 'if the user already does not have a secure identifier' do
+        it 'creates one' do
+          expect(user.secure_identifier).to eq(nil)
+          user.create_or_fetch_secure_identifier
+          expect(user.reload.secure_identifier).not_to eq(nil)
         end
       end
     end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class ScheduleBackup < Jobs::Scheduled
+  class ScheduleBackup < ::Jobs::Scheduled
     daily at: 0.hours
     sidekiq_options retry: false
 
@@ -14,12 +14,12 @@ module Jobs
         return if (date + SiteSetting.backup_frequency.days) > Time.now.utc.to_date
       end
 
-      Jobs.cancel_scheduled_job(:create_backup)
+      ::Jobs.cancel_scheduled_job(:create_backup)
 
       time_of_day = Time.parse(SiteSetting.backup_time_of_day)
       seconds = time_of_day.hour.hours + time_of_day.min.minutes + rand(10.minutes)
 
-      Jobs.enqueue_in(seconds, :create_backup)
+      ::Jobs.enqueue_in(seconds, :create_backup)
     rescue => e
       notify_user(e)
       raise

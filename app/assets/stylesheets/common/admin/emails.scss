@@ -11,20 +11,16 @@
   .reply-key {
     display: block;
     font-size: $font-down-1;
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: $primary-medium;
   }
   .username div {
     max-width: 180px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
   }
   .addresses p {
     margin: 2px 0;
     max-width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
   }
 }
 
@@ -39,7 +35,7 @@
     margin: 5px 10px;
   }
   .error-description {
-    color: #919191;
+    color: $primary-medium;
     font-size: $font-down-1;
   }
   hr {
@@ -66,13 +62,22 @@
 
 .admin-list-item {
   width: 100%;
-  border-top: 1px solid #e9e9e9;
+  border-top: 1px solid $primary-low;
   padding: 0.25em 0;
+}
+
+.email-preview {
+  .digest-refresh-button {
+    margin: 0 0.5em;
+  }
 }
 
 .email-preview-digest {
   .controls {
-    margin-left: 20px;
+    margin: 1em 0.5em;
+    input[type="text"] {
+      margin-bottom: 0;
+    }
     label {
       display: inline;
     }

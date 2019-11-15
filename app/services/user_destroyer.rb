@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'ip_addr'
-
 # Responsible for destroying a User record
 class UserDestroyer
 
@@ -111,12 +109,12 @@ class UserDestroyer
           end
           StaffActionLogger.new(deleted_by).log_user_deletion(user, opts.slice(:context))
         end
-        MessageBus.publish "/file-change", ["refresh"], user_ids: [result.id]
+        MessageBus.publish "/logout", result.id, user_ids: [result.id]
       end
     end
 
     # After the user is deleted, remove the reviewable
-    if reviewable = Reviewable.pending.find_by(target: user)
+    if reviewable = ReviewableUser.pending.find_by(target: user)
       reviewable.perform(@actor, :reject_user_delete)
     end
 

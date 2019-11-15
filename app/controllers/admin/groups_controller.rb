@@ -135,6 +135,7 @@ class Admin::GroupsController < Admin::AdminController
       :mentionable_level,
       :messageable_level,
       :visibility_level,
+      :members_visibility_level,
       :automatic_membership_email_domains,
       :automatic_membership_retroactive,
       :title,
@@ -152,7 +153,8 @@ class Admin::GroupsController < Admin::AdminController
       :default_notification_level,
       :membership_request_template,
       :owner_usernames,
-      :usernames
+      :usernames,
+      :publish_read_state
     ]
     custom_fields = Group.editable_group_custom_fields
     permitted << { custom_fields: custom_fields } unless custom_fields.blank?

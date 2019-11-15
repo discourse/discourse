@@ -89,8 +89,12 @@ id:
       next_month: "Bulan Depan"
       placeholder: tanggal
     share:
+      topic_html: 'Topik: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
       close: "tutup"
+      twitter: "Bagikan tautan ke Twitter"
+      facebook: "Bagikan tautan ke Facebook"
+      email: "Bagikan tautan ke email"
     action_codes:
       public_topic: "membuat topik ini umum %{when}"
       private_topic: "Jadikan topik ini sebagai pesan pribadi"
@@ -100,6 +104,7 @@ id:
       user_left: "%{who}keluar dari percakapan ini%{when}"
       removed_user: "menghapus %{who} %{when}"
       removed_group: "%{who}dikeluarkan %{when}"
+      autobumped: "Otomatis dibenturkan %{when}"
       autoclosed:
         enabled: "ditutup %{when}"
         disabled: "dibuka %{when}"
@@ -118,10 +123,16 @@ id:
       visible:
         enabled: "terdaftar %{when}"
         disabled: "tidak terdaftar %{when}"
+      banner:
+        enabled: "Jadikan ini sebagai spanduk %{when}. Spanduk akan tampil di bagian atas di setiap halaman hingga diturunkan oleh pengguna."
+        disabled: "Hilangkan spanduk ini %{when}. Spanduk tidak akan lagi tampil pada bagian teratas di tiap halaman."
     topic_admin_menu: "topik aksi admin"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
+    bootstrap_mode_enabled: "Untuk lebih memudahkan peluncuran situs baru Anda, Anda berada di mode bootstrap. Semua pengguna baru akan mendapat level 1 dan mendapat ringkasan email harian diaktifkan. Hal ini akan otomatis dimatikan ketika pengguna %{min_users} sudah ikut."
+    bootstrap_mode_disabled: "Mode bootstrap akan dinonaktifkan dalam 24 jam."
     themes:
       default_description: "Asal"
+      broken_theme_alert: "Situs Anda mungkin tidak akan bekerja karena tema / komponen %{theme} memiliki masalah. Nonaktifkan pada %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -129,8 +140,11 @@ id:
         ap_south_1: "Asia Pasifik (Mumbai)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ca_central_1: "Kanada (Sentral)"
         cn_north_1: "Cina (Beijing)"
+        cn_northwest_1: "Cina (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
+        eu_north_1: "EU (Stockholm)"
         eu_west_1: "EU (Ireland)"
         eu_west_2: "Eropa (London)"
         us_east_1: "US East (N. Virginia)"
@@ -178,7 +192,7 @@ id:
       other: "{{count}} karakter"
     suggested_topics:
       title: "Topik Yang Disarankan"
-      pm_title: "Pesan Yang  Disarankan"
+      pm_title: "Pesan Yang Disarankan"
     about:
       simple_title: "Tentang"
       title: "Tentang %{title}"
@@ -230,6 +244,8 @@ id:
       title:
         placeholder: "tulis judul topik disini"
     review:
+      explain:
+        total: "Total"
       delete: "Hapus"
       settings:
         save_changes: "Simpan perubahan"
@@ -434,7 +450,7 @@ id:
       read_time: "waktu baca"
       topics_entered: "memasuki topik"
       post_count: "# post"
-      confirm_delete_other_accounts: "Apakah Anda yakin  untuk menghapus akun ini?"
+      confirm_delete_other_accounts: "Apakah Anda yakin untuk menghapus akun ini?"
     user_fields:
       none: "(memilih sebuah pilihan)"
     user:
@@ -467,7 +483,7 @@ id:
         perm_denied_expl: "Anda menolak izin untuk pemberitahuan. Izinkan pemberitahuan melalui pengaturan browser anda."
         disable: "Tidak membolehkan Notifikasi"
         enable: "Membolehkan Notifikasi"
-        each_browser_note: "Catatan : Anda  harus mengubah pengaturan ini pada setiap browser yang Anda gunakan."
+        each_browser_note: "Catatan : Anda harus mengubah pengaturan ini pada setiap browser yang Anda gunakan."
       dismiss: "Bubar"
       dismiss_notifications: "Bubarkan Semua"
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
@@ -503,7 +519,6 @@ id:
       users: "Pengguna"
       muted_users: "Diredam"
       muted_users_instructions: "Menekan semua pemberitahuan dari semua pengguna."
-      muted_topics_link: "Menampilkan topik yang diredam"
       apps: "Aplikasi"
       api_approved: "Disetujui:"
       theme: "Tema"
@@ -544,8 +559,12 @@ id:
         disable: "Nonaktifkan"
         enable: "Aktifkan"
       second_factor:
+        name: "Nama"
         label: "Kode"
         show_key_description: "Masukkan secara manual"
+        edit: "Ubah"
+        security_key:
+          delete: "Hapus"
       change_about:
         title: "Ganti Tentang Saya"
         error: "Ada kesalahan saat mengganti nilai ini"
@@ -566,11 +585,7 @@ id:
         uploaded_avatar: "Gambar kustom"
         uploaded_avatar_empty: "Tambah gambar kustom"
         upload_title: "Unggah gambar anda"
-        upload_picture: "Unggah Gambar"
         image_is_not_a_square: "Peringatan: kami telah memotong gambar anda; lebar dan tinggi tidak sama."
-      change_profile_background:
-        title: "Latar Belakang Profil"
-        instructions: "Latar belakang profil akan ditengahkan, dan mempunyai lebar standar 850px"
       change_card_background:
         title: "Latar Belakang Kartu Penguna"
         instructions: "Gambar latar belakang akan ditengahkan dan mempunyai lebar standar 590px"
@@ -581,6 +596,8 @@ id:
         authenticated: "Email anda sudah dikonfirmasi oleh {{provider}}"
         frequency:
           other: "Kami akan mengirimkan email kepada anda jika kami tidak melihat anda selama {{count}} menit."
+      associated_accounts:
+        cancel: "Batal"
       name:
         title: "Name"
         instructions: "Nama lengkap anda (opsional)"
@@ -725,6 +742,8 @@ id:
       title:
         title: "Judul"
         none: "(kosong)"
+      primary_group:
+        none: "(kosong)"
       filters:
         all: "Semua"
       stream:
@@ -790,6 +809,7 @@ id:
       button_help: "Bantuan"
     email_login:
       button_label: "dengan surel"
+      confirm_title: "Lanjut ke %{site_name}"
     login:
       title: "Log In"
       username: "Pengguna"
@@ -802,19 +822,14 @@ id:
       submit_new_email: "Perbarui Alamat Email"
       google_oauth2:
         title: "dengan Google"
-        message: "Autentikasi dengan Google (pastikan pop up blockers tidak dinyalakan)"
       twitter:
         title: "dengan Twitter"
-        message: "Autentikasi dengan Twitter (pastikan pop up blockers tidak dinyalakan)"
       instagram:
         title: "dengan Instagram"
-        message: "Autentikasi dengan Instagram (pastikan pop up blockers tidak dinyalakan)"
       facebook:
         title: "dengan Facebook"
-        message: "Autentikasi dengan Facebook (pastikan pop up blockers tidak dinyalakan)"
       github:
         title: "dengan GitHub"
-        message: "Autentikasi dengan GitHub (pastikan pop up blockers tidak dinyalakan)"
     invites:
       accept_title: "Undangan"
       welcome_to: "Selamat datang di %{site_name}!"
@@ -828,6 +843,9 @@ id:
       loading: Diproses...
     select_kit:
       filter_placeholder: Cari...
+    date_time_picker:
+      from: Dari
+      to: Kepada
     emoji_picker:
       filter_placeholder: Cari emoji
       objects: Objek
@@ -840,7 +858,6 @@ id:
         title_missing: "Judul harus ada"
         title_too_short: "Judul setidaknya {{min}} karakter"
         title_too_long: "Judul tidak boleh lebih dari {{max}} karakter"
-        post_missing: "Tulisan tidak boleh kosong"
         post_length: "Tulisan setidaknya harus {{min}} karakter"
         category_missing: "Anda harus memilih kategori"
       save_edit: "Simpah Ubahan"
@@ -854,7 +871,6 @@ id:
       users_placeholder: "Tambahkan pengguna"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
-      show_edit_reason: "(tambahkan alasan pengubahan)"
       topic_featured_link_placeholder: "Masukkan tautan yang terlihat dengan judul."
       remove_featured_link: "Hapus tautan dari topik"
       reply_placeholder: "Ketik disini. Gunakan Markdown, BBCode, atau HTML untuk memformat. Tarik atau tempel gambar."
@@ -882,7 +898,8 @@ id:
           label: "Topik Baru"
     notifications:
       empty: "Tidak ada pemberitahuan."
-      more: "lihat notifikasi sebelumnya"
+      titles:
+        watching_first_post: "topik baru"
     upload_selector:
       default_image_alt_text: gambar
     search:
@@ -915,7 +932,7 @@ id:
         other: "{{count}} topik baru"
       title: "Topik"
       invalid_access:
-        description: "Maaf,  kamu tidak berhak mengakses topik tersebut."
+        description: "Maaf, kamu tidak berhak mengakses topik tersebut."
       server_error:
         title: "Gagal membuka topik"
       not_found:
@@ -1098,6 +1115,10 @@ id:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "selalu"
+          never: "tidak pernah"
       dashboard:
         latest_version: "Terbaru"
         last_checked: "Terakhir dicek"
@@ -1117,12 +1138,9 @@ id:
             visibility_levels:
               title: "Siapa yang bisa melihat kelompok ini?"
               public: "Semua orang"
-              members: "Pemilik kelompok, anggota, dan admin"
               staff: "Pemilik kelompok dan staf"
-              owners: "Pemilik grup dan admin"
           membership:
             automatic: Otomatis
-            trust_level: Level Kepercayaan
             trust_levels_title: "Tingkat kepercayaan otomatis diberikan kepada anggota ketika mereka ditambahkan:"
             trust_levels_none: "Tidak ada"
         name_placeholder: "Nama grup, tidak boleh menggunakan spasi, sama seperti aturan username"
@@ -1134,6 +1152,8 @@ id:
         automatic: "Otomatis"
       api:
         user: "Pengguna"
+        created: Dibuat
+        show_details: Detil
       web_hooks:
         destroy: "Hapus"
         active: "Aktif"
@@ -1159,6 +1179,7 @@ id:
         new_style: "preview"
         delete: "Hapus"
         email_templates:
+          title: "Email"
           subject: "Judul"
           body: "Konten"
         theme:
@@ -1167,6 +1188,8 @@ id:
           edit: "Ubah"
           upload: "Unggah"
           about_theme: "Tentang"
+          enable: "Aktifkan"
+          disable: "Nonaktifkan"
           add: "Menambahkan"
       email:
         title: "Surel"
@@ -1220,7 +1243,6 @@ id:
       watched_words:
         form:
           add: "Menambahkan"
-          upload: "Unggah"
       users:
         title: "Pengguna"
         last_emailed: "Terakhir Surel Dikirimkan"
@@ -1274,6 +1296,8 @@ id:
           email: "Email"
           uncategorized: "Lainnya"
           groups: "Grup"
+        default_categories:
+          modal_yes: "Ya"
       badges:
         new_badge: Badge Baru
         new: Baru

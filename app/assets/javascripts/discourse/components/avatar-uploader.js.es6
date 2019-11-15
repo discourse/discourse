@@ -1,17 +1,11 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import UploadMixin from "discourse/mixins/upload";
 
-export default Ember.Component.extend(UploadMixin, {
+export default Component.extend(UploadMixin, {
   type: "avatar",
   tagName: "span",
   imageIsNotASquare: false,
-
-  @computed("uploading")
-  uploadButtonText(uploading) {
-    return uploading
-      ? I18n.t("uploading")
-      : I18n.t("user.change_avatar.upload_picture");
-  },
 
   validateUploadedFilesOptions() {
     return { imagesOnly: true };
@@ -27,7 +21,7 @@ export default Ember.Component.extend(UploadMixin, {
     this.done();
   },
 
-  @computed("user_id")
+  @discourseComputed("user_id")
   data(user_id) {
     return { user_id };
   }

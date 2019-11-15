@@ -21,6 +21,7 @@ export default function(topic, params) {
   let tags = topic.tags;
   let buffer = "";
   let tagsForUser = null;
+  let tagName;
   const isPrivateMessage = topic.get("isPrivateMessage");
 
   if (params) {
@@ -29,6 +30,9 @@ export default function(topic, params) {
     }
     if (params.tagsForUser) {
       tagsForUser = params.tagsForUser;
+    }
+    if (params.tagName) {
+      tagName = params.tagName;
     }
   }
 
@@ -50,7 +54,8 @@ export default function(topic, params) {
     buffer = "<div class='discourse-tags'>";
     if (tags) {
       for (let i = 0; i < tags.length; i++) {
-        buffer += renderTag(tags[i], { isPrivateMessage, tagsForUser }) + " ";
+        buffer +=
+          renderTag(tags[i], { isPrivateMessage, tagsForUser, tagName }) + " ";
       }
     }
 

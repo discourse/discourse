@@ -102,11 +102,13 @@ class Populate < Thor
   end
 
   def generate_sentence(num_words)
-    hipster_words.sample(num_words).join(' ').capitalize + '.'
+    sentence = hipster_words.sample(num_words).join(' ').capitalize + '.'
+    sentence.force_encoding('UTF-8')
   end
 
   def generate_email
-    hipster_words.sample.delete(' ') + '@' + hipster_words.sample.delete(' ') + '.com'
+    email = hipster_words.sample.delete(' ') + '@' + hipster_words.sample.delete(' ') + '.com'
+    email.delete("'").force_encoding('UTF-8')
   end
 
   def image_posts

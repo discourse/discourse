@@ -168,8 +168,8 @@ ar:
           zero: "بعد أقل من عام"
           one: "بعد عام واحدة"
           two: "بعد عامين"
-          few: "بعد %{count}  عام"
-          many: "بعد %{count}  عام"
+          few: "بعد %{count} عام"
+          many: "بعد %{count} عام"
           other: "بعد %{count} عام"
       previous_month: "الشهر الماضي"
       next_month: "الشهر القادم"
@@ -177,9 +177,9 @@ ar:
     share:
       post: "المنشور رقم %{postNumber}"
       close: "أغلق"
-      twitter: "شارك هذا الرابط على تويتر"
-      facebook: "شارك هذا الرابط على الفيسبوك"
-      email: "ارسل هذا الرابط بالبريد الالكتروني"
+      twitter: "شارك هذا رابط على تويتر"
+      facebook: "شارك هذا رابط على الفيسبوك"
+      email: "ارسل هذا رابط الى البريد الإليكتروني"
     action_codes:
       public_topic: "أجعل هذا الموضوع عامًّا %{when}"
       private_topic: "تحويل هذا الموضوع إلى رسالة شخصية %{when}"
@@ -273,6 +273,8 @@ ar:
     every_hour: "كل ساعة"
     daily: "يوميا"
     weekly: "أسبوعيا"
+    every_month: "كل شهر"
+    every_six_months: "كل ستة اشهر"
     max_of_count: "أقصى عدد هو {{count}}"
     alternation: "أو"
     character_count:
@@ -293,6 +295,7 @@ ar:
       stats: "إحصاءات الموقع "
       our_admins: "المدراء"
       our_moderators: "المشرفين"
+      moderators: "المشرفون"
       stat:
         all_time: "منذ التأسيس"
         last_7_days: "آخر 7"
@@ -351,7 +354,9 @@ ar:
       title:
         search: "ابحث في الرسائل باستخدام العنوان"
     review:
-      awaiting_approval: "بأنتضار الموافقة"
+      explain:
+        total: "مجموع"
+      awaiting_approval: "بأنتضار موافقة"
       delete: "أحذف"
       settings:
         saved: "تم حفظهُ"
@@ -372,6 +377,7 @@ ar:
       save: "احفظ"
       cancel: "ألغِ"
       filters:
+        all_categories: "(جميع الأقسام)"
         type:
           title: "النوع"
         refresh: "تحديث"
@@ -627,6 +633,7 @@ ar:
       private_messages: "الرسائل"
       user_notifications:
         ignore_duration_username: "اسم المستخدم"
+        ignore_duration_save: "تجاهل"
         mute_option: "مكتومة"
         normal_option: "عادي"
       activity_stream: "النّشاط"
@@ -661,7 +668,7 @@ ar:
       admin: "{{user}} هو مدير"
       moderator_tooltip: "هذا المستخدم مشرف"
       admin_tooltip: "هذا المستخدم مدير"
-      suspended_notice: "هذا المستخدم موقوف حتى تاريخ  {{date}}"
+      suspended_notice: "هذا المستخدم موقوف حتى تاريخ {{date}}"
       suspended_permanently: "هذا العضو موقوف."
       suspended_reason: "السبب:"
       github_profile: "Github"
@@ -701,9 +708,7 @@ ar:
       users: "الأعضاء"
       muted_users: "المكتومون"
       muted_users_instructions: "تجاهل الإشعارات من هؤلاء الأعضاء."
-      muted_topics_link: "أعرض الموضوعات المكتومة"
-      watched_topics_link: "أعرض الموضوعات المراقبة"
-      tracked_topics_link: "أعرض الموضوعات المتابعة"
+      tracked_topics_link: "إظهار"
       automatically_unpin_topics: "ألغِ تثبيت الموضوعات آليا عندما أصل إلى آخرها."
       apps: "تطبيقات"
       revoke_access: "سحب صلاحيات الوصول"
@@ -754,8 +759,16 @@ ar:
         copied_to_clipboard: "تم نسخه الى لوحة العمل"
         copy_to_clipboard_error: "خطأ في نسخ البيانات الى لوحة العمل"
       second_factor:
+        name: "الإسم"
         label: "كود"
+        disable_description: "يرجى ادخال رمز التوثيق من التطبيق الخاص بك"
         show_key_description: "أضف يدويا"
+        short_description: |
+          قم بحماية الحساب الخاص بك مع رمز الامان ذو الاستخدام الواحد.
+        oauth_enabled_warning: "يرجى الملاحظة ان تسجيل الدخول عن طريق حسابات مواقع التواصل الاجتماعي سيتم تعطيلها بمجرد تفعيل خاصية التوثيق بعاملين الحساب"
+        edit: "عدّل"
+        security_key:
+          delete: "أحذف"
       change_about:
         title: "تعديل عني"
         error: "حدث عطل أثناء تغيير هذه القيمة."
@@ -772,17 +785,13 @@ ar:
       change_avatar:
         title: "غيّر صورة الملفك الشخصي"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>، من"
-        gravatar_title: "غير صورتك الشخصية على موقع  Gravatar's."
+        gravatar_title: "غير صورتك الشخصية على موقع Gravatar's."
         refresh_gravatar_title: "حدث صورة Gravatar"
         letter_based: "صورة الملف الشخصي الافتراضية"
         uploaded_avatar: "صورة مخصصة"
         uploaded_avatar_empty: "اضافة صورة مخصصة"
         upload_title: "ارفع صورتك "
-        upload_picture: "ارفع صورة"
         image_is_not_a_square: "تحذير: لقد قصصنا صورتك، لأن عرضها وارتفاعها غير متساويان."
-      change_profile_background:
-        title: "خلفية الملف الشخصي"
-        instructions: "سيتم وضع خلفية الملف الشخصي في المنتصف بعرض افتراضي يصل الى 850px"
       change_card_background:
         title: "خلفية بطاقة العضو"
         instructions: "سيتم وضع صورة الخلفية في المنتصف بعرض 590px"
@@ -801,6 +810,7 @@ ar:
           other: "سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة."
       associated_accounts:
         revoke: "تعطيل"
+        cancel: "ألغِ"
       name:
         title: "الاسم"
         instructions: "اسمك الكامل (اختياريّ)"
@@ -854,6 +864,8 @@ ar:
         every_hour: "كل ساعة"
         daily: "يوميا"
         weekly: "أسبوعيا"
+        every_month: "كل شهر"
+        every_six_months: "كل ستة اشهر"
       email_level:
         title: "أرسل إليّ رسائل إلكترونية عندما يقتبس أحد كلامي، أو يرد على إحدى منشوراتي، أو يشير إلي @اسمي أو يدعوني إلى أحد الموضوعات"
         always: "دائما"
@@ -894,7 +906,7 @@ ar:
           two: "عرض الدعوتان الأولتان."
           few: "عرض الدعوات الأولية."
           many: "عرض الدعوات {{count}} الأولى."
-          other: "عرض الدعوات  {{count}} الأولى."
+          other: "عرض الدعوات {{count}} الأولى."
         redeemed: "دعوات محررة"
         redeemed_tab: "محررة"
         redeemed_tab_with_count: "({{count}}) محررة"
@@ -996,9 +1008,11 @@ ar:
         title: "عنوان IP التسجيل"
       avatar:
         title: "صورة الملف الشخصي"
-        header_title: "الملف الشخصي و  الرسائل و العلامات المرجعية و التفضيلات"
+        header_title: "الملف الشخصي و الرسائل و العلامات المرجعية و التفضيلات"
       title:
         title: "عنوان"
+      primary_group:
+        title: "المجموعة الأساسية"
       filters:
         all: "الكل"
       stream:
@@ -1105,6 +1119,7 @@ ar:
       button_label: "مع البريد الإلكتروني"
       complete_username_not_found: "لا يوجد حساب يطابق اسم المستخدم <b>%{username}</b>"
       complete_email_not_found: "لا حساب يطابق <b>%{email}</b>"
+      confirm_title: "تابع إلى %{site_name}"
     login:
       title: "تسجيل دخول"
       username: "اسم المستخدم"
@@ -1137,26 +1152,21 @@ ar:
       google_oauth2:
         name: "غوغل"
         title: "عبر Google "
-        message: "تسجيل الدخول عبر Google (تأكد من السماح للـ pop up)"
       twitter:
         name: "Twitter"
         title: "عبر Twitter"
-        message: "تسجيل الدخول عبر Twitter (تأكد من السماح للـ pop up)"
       instagram:
         title: "عبر Instagram"
-        message: "تسجيل الدخول عبر Instagram (تأكد من السماح للـ pop up)"
       facebook:
         title: "عبر Facebook"
-        message: "تسجيل الدخول عبر Facebook (تأكد من السماح للـ pop up)"
       github:
         title: "عبر GitHub"
-        message: "تسجيل الدخول عبر GitHub (تأكد من السماح للـ pop up)"
     invites:
       accept_title: "دعوة"
       welcome_to: "مرحباً بك في %{site_name}!"
       invited_by: "لقد دعاك:"
       social_login_available: "يمكنك أيضا تسجيل الدخول عبر أي شبكة اجتماعية مستخدما هذا البريد."
-      your_email: "البريد الالكتروني الخاص بحسابك هو  <b>%{email}</b>."
+      your_email: "البريد الالكتروني الخاص بحسابك هو <b>%{email}</b>."
       accept_invite: "قُبول الدعوة "
       success: "تم إنشاء حسابك و تسجيل دخولك للموقع"
       name_label: "الإسم"
@@ -1168,7 +1178,6 @@ ar:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1187,6 +1196,9 @@ ar:
       no_content: لا يوجد نتائج مطابقة
       filter_placeholder: بحث...
       filter_placeholder_with_any: ابحث أو أنشئً ...
+    date_time_picker:
+      from: من
+      to: إلى
     emoji_picker:
       filter_placeholder: بحث عن الرموز التعبيرية
       objects: اشياء
@@ -1228,7 +1240,6 @@ ar:
         title_missing: "العنوان مطلوب"
         title_too_short: "العنوان يجب أن يكون علي الاقل {{min}} حرف"
         title_too_long: "العنوان يجب أن لا يزيد عن {{max}} حرف"
-        post_missing: "لا يمكن أن يكون المنشور فارغ"
         post_length: "المنشور يجب أن يكون علي الاقل {{min}} حرف"
         category_missing: "يجب عليك إختيار احد الأقسام"
       save_edit: "أحفظ التعديل"
@@ -1243,7 +1254,6 @@ ar:
       title_placeholder: "بجملة واحدة، صف ما الذي تود المناقشة فية؟"
       title_or_link_placeholder: "اكتب عنوانًا أو ألصق رابطًا"
       edit_reason_placeholder: "لماذا تقوم بالتعديل؟"
-      show_edit_reason: "(أضف سبب التعديل)"
       topic_featured_link_placeholder: "ضع رابطاً يظهر مع العنوان"
       remove_featured_link: "حذف الرابط من الموضوع"
       reply_placeholder: "اكتب ما تريد هنا. استخدم Markdown، أو BBCode، أو HTML للتنسيق. اسحب الصور أو ألصقها."
@@ -1292,7 +1302,6 @@ ar:
       title: "إشعارات الإشارة إلى @اسمك، والردود على موضوعاتك و منشوراتك ، والرسائل، وغيرها"
       none: "تعذّر تحميل الإشعارات الآن."
       empty: "لا إشعارات."
-      more: "اعرض الإشعارات الأقدم من هذه"
       mentioned: "<span>{{username}}</span>{{description}}"
       group_mentioned: "<span>{{username}}</span>{{description}} "
       quoted: "<span>{{username}}</span>{{description}} "
@@ -1332,6 +1341,8 @@ ar:
         replied: 'ردّ {{username}} عليك في "{{topic}}" - {{site_title}}'
         posted: 'نشر {{username}} في "{{topic}}" - {{site_title}}'
         linked: '{{username}} وضع رابطا لمنشورك في "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "موضوع جديد"
     upload_selector:
       title: "أضف صورة"
       title_with_attachments: "أضف صورة أو ملفّ"
@@ -1489,6 +1500,8 @@ ar:
         help: "انقل الرسالة للبريد الوارد"
       edit_message:
         title: "تحرير رسالة"
+      defer:
+        title: "تأجيل"
       list: "الموضوعات"
       new: "موضوع جديد"
       unread: "غير مقروء"
@@ -1892,6 +1905,8 @@ ar:
         image_upload_not_allowed_for_new_user: "عذرا، لا يمكن للأعضاء الجدد رفع الصور."
         attachment_upload_not_allowed_for_new_user: "عذرا، لا يمكن للأعضاء الجدد رفع المرفقات."
         attachment_download_requires_login: "عذرا، عليك تسجيل الدخول لتحميل المرفقات."
+      abandon_edit:
+        no_value: "لا, إبقاء"
       abandon:
         confirm: "أمتأكد من التخلي عن المنشور؟"
         no_value: "لا، أبقه"
@@ -1998,7 +2013,7 @@ ar:
       none: "(غير مصنف)"
       all: "كل الأقسام"
       edit: "عدّل"
-      view: "أظهار المواضيع  في القسم"
+      view: "أظهار المواضيع في القسم"
       general: "عام"
       settings: "اعدادات"
       topic_template: "إطار الموضوع"
@@ -2068,8 +2083,10 @@ ar:
           title: "مكتومة"
           description: "لن يتم إشعارك بأي موضوعات جديدة في هذه الأقسام ولن يتم عرضها في قائمة الموضوعات المنشورة مؤخراً."
       search_priority:
+        label: "أولوية البحث"
         options:
           normal: "عادي"
+          ignore: "تجاهل"
       sort_options:
         default: "افترضى"
         likes: "الاعجابات"
@@ -2089,6 +2106,7 @@ ar:
         boxes_with_featured_topics: "مربعات مع الموضوعات المميزة"
       settings_sections:
         general: "عام"
+        appearance: "الظهور"
         email: "البريد الإلكتروني"
     flagging:
       title: "شكرا لمساعدتك في إبقاء مجتمعنا متحضرا."
@@ -2097,7 +2115,7 @@ ar:
       notify_action: "رسالة"
       official_warning: "تحذير رسمي"
       delete_spammer: "احذف ناشر السبام"
-      delete_confirm_MF: "{posts, plural,\n    zero {ليس للمستخدم أيّة مشاركات}\n    other {}\n}\n{topics, plural,\n    zero {\n        {posts, plural,\n            zero {أو مواضيع.}\n            other {ليس للمستخدم أيّة مواضيع.}\n        }\n    }\n    other {{posts, plural, zero{.} other{}}}\n}\nأنت على وشك\n{posts, plural,\n    zero {{topics, plural, zero {} other {حذف}}}\n    other {حذف}\n}\n{posts, plural,\n    zero {}\n    one {مشاركة واحدة}\n    two {مشاركتين}\n    few {# مشاركات}\n    many {# مشاركة}\n    other {# مشاركة}\n}\n{posts, plural, zero {} other {{topics, plural, zero {} other {و}}}}\n{topics, plural,\n    zero {}\n    one {موضوع واحد}\n    two {موضوعين}\n    few {# مواضيع}\n    many {# موضوعًا}\n    other {# موضوع}\n}\n{posts, plural,\n    zero {{topics, plural, zero {} other {له، و}}}\n    other {{topics, plural, zero {له، و} other {للمستخدم، و}}}\n}\nإزالة حسابه، ومنع التّسجيل من عنوان IP هذا <b>{ip_address}</b>، وإضافة عنوان البريد الإلكترونيّ <b>{email}</b> إلى قائمة منع دائم. أمتأكّد حقًّا من أنّ هذا المستخدم ناشر سخام؟"
+      delete_confirm_MF: "{posts, plural,\n zero {ليس للمستخدم أيّة مشاركات}\n other {}\n}\n{topics, plural,\n zero {\n {posts, plural,\n zero {أو مواضيع.}\n other {ليس للمستخدم أيّة مواضيع.}\n }\n }\n other {{posts, plural, zero{.} other{}}}\n}\nأنت على وشك\n{posts, plural,\n zero {{topics, plural, zero {} other {حذف}}}\n other {حذف}\n}\n{posts, plural,\n zero {}\n one {مشاركة واحدة}\n two {مشاركتين}\n few {# مشاركات}\n many {# مشاركة}\n other {# مشاركة}\n}\n{posts, plural, zero {} other {{topics, plural, zero {} other {و}}}}\n{topics, plural,\n zero {}\n one {موضوع واحد}\n two {موضوعين}\n few {# مواضيع}\n many {# موضوعًا}\n other {# موضوع}\n}\n{posts, plural,\n zero {{topics, plural, zero {} other {له، و}}}\n other {{topics, plural, zero {له، و} other {للمستخدم، و}}}\n}\nإزالة حسابه، ومنع التّسجيل من عنوان IP هذا <b>{ip_address}</b>، وإضافة عنوان البريد الإلكترونيّ <b>{email}</b> إلى قائمة منع دائم. أمتأكّد حقًّا من أنّ هذا المستخدم ناشر سخام؟"
       yes_delete_spammer: "نعم، احذف ناشر السبام"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفي)"
@@ -2461,7 +2479,7 @@ ar:
       cancel_delete_unused: "ألغِ"
       filters:
         without_category: "مواضيع %{tag} %{filter}"
-        with_category: "موضوعات %{filter}%{tag}  في %{category}"
+        with_category: "موضوعات %{filter}%{tag} في %{category}"
         untagged_without_category: "مواضيع %{filter} غير الموسومة"
         untagged_with_category: "الموضوعات%{filter} غير الموسومة في %{category}"
       notifications:
@@ -2517,6 +2535,10 @@ ar:
     admin:
       title: "مدير المجتمع"
       moderator: "مشرف"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "دائما"
+          never: "أبدا"
       dashboard:
         title: "لوحة التحكم"
         version: "الإصدار"
@@ -2560,8 +2582,6 @@ ar:
           view_table: "جدول"
           view_graph: "رسم بياني"
           refresh_report: "تحديث التقرير "
-          start_date: "تاريخ البدء"
-          end_date: "تاريخ الإنتهاء"
           groups: "كل المجموعات"
           filters:
             group:
@@ -2591,12 +2611,9 @@ ar:
             visibility_levels:
               title: "من يستطيع رؤية هذه المجموعة؟"
               public: "الكل"
-              members: "مالكي المجموعة و الأعضاء و المديرين"
               staff: "مالكي المجموعة و طاقم العمل"
-              owners: "مالكي المجموعة و المديرين"
           membership:
             automatic: تلقائي
-            trust_level: مستوى الثقة
             trust_levels_title: "مستوى الثقة الذي يُعطى للأعضاء آليا عندما يضافون:"
             trust_levels_none: "لا شيء"
             automatic_membership_email_domains: "المستخدمين الذين يمتلكون بريد الالكتروني عنوانه مطابق للعنوان الذي في القائمة سيتم تلقائيا اضافتهم للمجموعة."
@@ -2622,23 +2639,21 @@ ar:
         none_selected: "اختر مجموعة للبدء"
         no_custom_groups: "انشئ مجموعة جديدة مخصصة"
       api:
-        generate_master: "توليد مفتاح  API رئيسى"
+        generate_master: "توليد مفتاح API رئيسى"
         none: "لا مفاتيح API نشطة حاليًّا."
         user: "الاعضاء"
         title: "API"
-        key: "مفتاح API"
+        created: أُنشئ في
         generate: "إنشاء"
-        regenerate: "إعادة إنشاء"
         revoke: "الغاء"
-        confirm_regen: "أمتأكّد من استبدال مفتاح API هذا بواحد جديد؟"
-        confirm_revoke: "هل أنت متأكد من رغبتك في تعطيل هذا المفتاح؟"
-        info_html: "مفتاح API الخاص بك سيسمح لك بانشاء أو تعديل مواضيع باستخدام أليات رسائل JSON."
         all_users: "جميع الاعضاء"
-        note_html: "حافظ على <strong>سرية</strong> هذا المفتاح، اي شخص يحصل عليه يستطيع انشاء مواضيع باسم اي مستخدم اخر"
+        show_details: تفاصيل
+        description: الوصف
+        save: احفظ
       web_hooks:
         title: "Webhooks"
         none: "لا يوجد Webhooks حاليا."
-        instruction: "Webhooks تسمح للموقع باشعار خدمات خارجية عند حدوث حدث محدد في الموقع. عندما يتم تفعيل ال Webhooks سوف يتم ارسال  POST request لعنوان ال URL للخدمة."
+        instruction: "Webhooks تسمح للموقع باشعار خدمات خارجية عند حدوث حدث محدد في الموقع. عندما يتم تفعيل ال Webhooks سوف يتم ارسال POST request لعنوان ال URL للخدمة."
         detailed_instruction: "سيُرسل POST request إلى العنوان الURL للموفر عند حدوث الحدث المنشود."
         new: "Webhook جديد"
         create: "أنشئ"
@@ -2659,7 +2674,7 @@ ar:
         event_chooser: "اي احداي يجب ان تفعل هذا الwebhook؟"
         wildcard_event: "ارسل إلى كل شئ."
         individual_event: "حدد احداث مفردة."
-        verify_certificate: "تحقق من شهادة  TLS لعنوان الURL المستهدف"
+        verify_certificate: "تحقق من شهادة TLS لعنوان الURL المستهدف"
         active: "فعل"
         active_notice: "سوف يتم ارسال تفاصيل الحدث عند حدوثة."
         topic_event:
@@ -2787,7 +2802,7 @@ ar:
         copy_to_clipboard_error: "خطأ في نسخ البيانات الى لوحة العمل"
         theme_owner: "غير قابل للتعديل ، مملوك بواسطة : "
         email_templates:
-          title: "قالب البريد الالكتروني "
+          title: "البريد الإلكتروني"
           subject: "الموضوع"
           multiple_subjects: "قالب البريد الإلكتروني هذا لديه موضوعات متعددة."
           body: "المحتوى"
@@ -2828,6 +2843,8 @@ ar:
           install_popular: "نَشط"
           about_theme: "حول "
           license: "الرخصة"
+          enable: "فعل"
+          disable: "عطل"
           update_to_latest: "حدث لاحدث اصدار"
           check_for_updates: "تحقق من التحديثات"
           updating: "تحديث..."
@@ -2887,6 +2904,8 @@ ar:
           love:
             name: "إعجاب"
             description: "لون زر الإعجاب."
+        email_style:
+          css: "CSS"
       email:
         title: "البريد الالكتروني"
         settings: "إعدادات"
@@ -3032,7 +3051,7 @@ ar:
             allow: "سماح"
         screened_urls:
           title: "عناوين مواقع محجوبة"
-          description: "الروابط الالكترونية الموجودة هنا تم استخدامها في مشاركات  من قيل مستخدمين سبام "
+          description: "الروابط الالكترونية الموجودة هنا تم استخدامها في مشاركات من قيل مستخدمين سبام "
           url: "رابط"
           domain: "عنوان"
         screened_ips:
@@ -3066,6 +3085,8 @@ ar:
         search: "بحث"
         clear_filter: "امسح"
         show_words: "اظهر الكلمات"
+        download: حمل
+        clear_all: إلغ إختيار الكل
         actions:
           block: "احجب"
           censor: "راقب (ضلل)"
@@ -3079,8 +3100,10 @@ ar:
           placeholder_regexp: "تعبير اعتيادي"
           add: "اضف"
           success: "نجاح"
-          upload: "حمل"
           upload_successful: "تم الرفع بنجاح. تم اضافة الكلمات"
+        test:
+          button_label: "اختبار"
+          no_matches: "لا يوجد نتائج مطابقة"
       impersonate:
         title: "انتحال الشخصية"
         help: "استخدم هذه الأداة لانتحال شخصية حساب مستخدم لأغراض التصحيح. سيتم تسجيل خروجك عندما تنتهي."
@@ -3181,7 +3204,7 @@ ar:
         anonymize_failed: "حدثت مشكلة في تجهيل الحساب."
         delete: "احذف المستخدم"
         delete_forbidden_because_staff: "لا يمكن حذف المدراء والمشرفين."
-        delete_posts_forbidden_because_staff: "لا يمكن حذف جميع المشاركات للمدراء والمشرفين.  "
+        delete_posts_forbidden_because_staff: "لا يمكن حذف جميع المشاركات للمدراء والمشرفين. "
         delete_forbidden:
           zero: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الآن لا يمكن حذفها.)"
           one: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من يوم واحد لا يمكن حذفها.)"
@@ -3219,7 +3242,7 @@ ar:
         bounce_score: "سجل الترويج"
         reset_bounce_score:
           label: "اعادة تعيين"
-          title: "اعادة تعيين سجل الترويج  الى 0"
+          title: "اعادة تعيين سجل الترويج الى 0"
         deactivate_explanation: "المستخدم الغير نشط يحب أن يتأكد من البريد الالكتروني"
         suspended_explanation: "المستخدم الموقوف لايملك صلاحية تسجيل الدخول"
         staged_explanation: "العضو المنظم يمكنه فقط النشر عن طريق البريد الالكتروني في المواضيع المخصصه ."
@@ -3303,7 +3326,7 @@ ar:
       site_text:
         description: "يمكنك تخصيص أيّ من نصوص هذا المنتدى. يمكنك استكشاف ذلك أدناه:"
         search: "ابحث عن النص الذي تريد تعديله"
-        title: "محتوى النص"
+        title: "نص"
         edit: "تعديل"
         revert: "حفظ التعديلات"
         revert_confirm: "هل انت متاكد من انك تريد اعاده التغيرات؟ "
@@ -3352,6 +3375,8 @@ ar:
           search: "البحث"
           groups: "المجموعات"
           dashboard: "لوحة التحكم"
+        default_categories:
+          modal_yes: "نعم"
       badges:
         title: الشارات
         new_badge: شارة جديدة
@@ -3440,19 +3465,14 @@ ar:
         category: "انشر في قسم"
         add_host: "أضف مضيف"
         settings: "تضمين إعدادات"
-        feed_settings: "إعدادات التغذية "
-        feed_description: " توفير مغذي RSS/ATOM لموقعك سيطور قدرة Discourse على استيراد المحتوى الخاص بك."
         crawling_settings: "اعدادات الزاحف"
         crawling_description: "عندما ينشأ Discourse مواضيع لمشاركتك، إذا لم يتوفر مغذي RSS/ATOM سيحاول تحليل محتواك من HTML الخاص بك. أحيانا يمكن أن يكون تحديا استخراج محتواك، لذا نمنحك القدرة لتحديد قواعد CSS لجعل الاستخراج أسهل."
         embed_by_username: "اسم العضو للموضوع المنشأ"
         embed_post_limit: "أقصى عدد مشاركات مضمنة"
-        embed_username_key_from_feed: "مفتاح لسحب اسم عضو discourse من المغذي"
         embed_truncate: "بتر المشاركات المضمنة"
         embed_whitelist_selector: "منتقي CSS للعناصر التي تسمح في التضمينات."
         embed_blacklist_selector: "منتقي CSS للعناصر التي حذفت من التضمينات."
-        embed_classname_whitelist: "اسماء  اصناف المظاهر الجمالية المسموح بها"
-        feed_polling_enabled: "استورد المشاركات عبر RSS/ATOM"
-        feed_polling_url: "رابط مغذي RSS/ATOM للزحف"
+        embed_classname_whitelist: "اسماء اصناف المظاهر الجمالية المسموح بها"
         save: "أحفظ الإعدادات المضمنة"
       permalink:
         title: "الرابط الثابت"
@@ -3468,11 +3488,12 @@ ar:
         form:
           label: "جديد :"
           add: "أضف"
-          filter: "بحث  ( رابط داخلي أو خارجي )"
+          filter: "بحث ( رابط داخلي أو خارجي )"
       reseed:
         modal:
           categories: "التصنيفات"
           topics: "المواضيع"
+          replace: "غير"
   wizard_js:
     wizard:
       done: "انتهى"

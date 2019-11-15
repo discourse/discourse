@@ -1,14 +1,7 @@
+# coding: utf-8
 # frozen_string_literal: true
 require 'current_user'
 require 'canonical_url'
-require_dependency 'guardian'
-require_dependency 'unread'
-require_dependency 'age_words'
-require_dependency 'configurable_urls'
-require_dependency 'mobile_detection'
-require_dependency 'category_badge'
-require_dependency 'global_path'
-require_dependency 'emoji'
 
 module ApplicationHelper
   include CurrentUser
@@ -57,12 +50,17 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
+  def is_gzip_req?
+    request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
+  end
+
   def script_asset_path(script)
     path = asset_path("#{script}.js")
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
       if GlobalSetting.cdn_url
-        path = path.gsub(GlobalSetting.cdn_url, GlobalSetting.s3_cdn_url)
+        folder = ActionController::Base.config.relative_url_root || "/"
+        path = path.gsub(File.join(GlobalSetting.cdn_url, folder, "/"), File.join(GlobalSetting.s3_cdn_url, "/"))
       else
         # we must remove the subfolder path here, assets are uploaded to s3
         # without it getting involved
@@ -75,6 +73,8 @@ module ApplicationHelper
 
       if is_brotli_req?
         path = path.gsub(/\.([^.]+)$/, '.br.\1')
+      elsif is_gzip_req?
+        path = path.gsub(/\.([^.]+)$/, '.gz.\1')
       end
 
     elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req?
@@ -93,9 +93,14 @@ module ApplicationHelper
 
   def preload_script(script)
     path = script_asset_path(script)
+    preload_script_url(path)
+  end
 
-"<link rel='preload' href='#{path}' as='script'/>
-<script src='#{path}'></script>".html_safe
+  def preload_script_url(url)
+    <<~HTML.html_safe
+      <link rel="preload" href="#{url}" as="script">
+      <script src="#{url}"></script>
+    HTML
   end
 
   def discourse_csrf_tags
@@ -127,7 +132,7 @@ module ApplicationHelper
 
     if current_user.present? &&
         current_user.primary_group_id &&
-        primary_group_name = Group.where(id: current_user.primary_group_id).pluck(:name).first
+        primary_group_name = Group.where(id: current_user.primary_group_id).pluck_first(:name)
       result << "primary-group-#{primary_group_name.downcase}"
     end
 
@@ -183,10 +188,6 @@ module ApplicationHelper
 
   def guardian
     @guardian ||= Guardian.new(current_user)
-  end
-
-  def mini_profiler_enabled?
-    defined?(Rack::MiniProfiler) && admin?
   end
 
   def admin?
@@ -330,6 +331,12 @@ module ApplicationHelper
     current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_ios
   end
 
+  def ios_app_argument
+    # argument only makes sense for DiscourseHub app
+    SiteSetting.ios_app_id == "1173672076" ?
+      ", app-argument=discourse://new?siteUrl=#{Discourse.base_url}" : ""
+  end
+
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]
   end
@@ -370,7 +377,7 @@ module ApplicationHelper
     return "" if erbs.blank?
 
     result = +""
-    erbs.each { |erb| result << render(file: erb) }
+    erbs.each { |erb| result << render(inline: File.read(erb)) }
     result.html_safe
   end
 
@@ -423,17 +430,14 @@ module ApplicationHelper
 
   def theme_lookup(name)
     Theme.lookup_field(theme_ids, mobile_view? ? :mobile : :desktop, name)
-      &.html_safe
   end
 
   def theme_translations_lookup
     Theme.lookup_field(theme_ids, :translations, I18n.locale)
-      &.html_safe
   end
 
   def theme_js_lookup
     Theme.lookup_field(theme_ids, :extra_js, nil)
-      &.html_safe
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})
@@ -467,6 +471,7 @@ module ApplicationHelper
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path(theme_ids),
+      enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
     }
 
     if Rails.env.development?
@@ -498,5 +503,11 @@ module ApplicationHelper
       absolute_url = "#{Discourse.base_url_no_prefix}#{link}"
     end
     absolute_url
+  end
+
+  def can_sign_up?
+    SiteSetting.allow_new_registrations &&
+    !SiteSetting.invite_only &&
+    !SiteSetting.enable_sso
   end
 end

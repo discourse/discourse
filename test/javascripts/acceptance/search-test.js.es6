@@ -1,9 +1,9 @@
 import selectKit from "helpers/select-kit-helper";
-import { acceptance, logIn } from "helpers/qunit-helpers";
+import { acceptance } from "helpers/qunit-helpers";
 
 const emptySearchContextCallbacks = [];
 
-acceptance("Search", {
+let searchArgs = {
   pretend(server) {
     server.handledRequest = (verb, path, request) => {
       if (request.queryParams["search_context[type]"] === undefined) {
@@ -13,7 +13,9 @@ acceptance("Search", {
       }
     };
   }
-});
+};
+
+acceptance("Search", searchArgs);
 
 QUnit.test("search", async assert => {
   await visit("/");
@@ -48,6 +50,14 @@ QUnit.test("search for a tag", async assert => {
 });
 
 QUnit.test("search scope checkbox", async assert => {
+  await visit("/tags/important");
+  await click("#search-button");
+  assert.ok(
+    exists(".search-context input:checked"),
+    "scope to tag checkbox is checked"
+  );
+  await click("#search-button");
+
   await visit("/c/bug");
   await click("#search-button");
   assert.ok(
@@ -136,11 +146,11 @@ QUnit.test("Right filters are shown to anonymous users", async assert => {
   assert.notOk(exists(".search-advanced-options .in-seen"));
 });
 
+acceptance("Search", Object.assign({ loggedIn: true, searchArgs }));
+
 QUnit.test("Right filters are shown to logged-in users", async assert => {
   const inSelector = selectKit(".select-kit#in");
 
-  logIn();
-  Discourse.reset();
   await visit("/search?expanded=true");
 
   await inSelector.expand();
@@ -160,4 +170,28 @@ QUnit.test("Right filters are shown to logged-in users", async assert => {
   assert.ok(exists(".search-advanced-options .in-likes"));
   assert.ok(exists(".search-advanced-options .in-private"));
   assert.ok(exists(".search-advanced-options .in-seen"));
+});
+
+acceptance(
+  "Search - with tagging enabled",
+  Object.assign({
+    loggedIn: true,
+    searchArgs,
+    settings: { tagging_enabled: true }
+  })
+);
+
+QUnit.test("displays tags", async assert => {
+  await visit("/");
+
+  await click("#search-button");
+
+  await fillIn("#search-term", "dev");
+  await keyEvent("#search-term", "keyup", 16);
+
+  const tags = find(".search-menu .results ul li:eq(0) .discourse-tags")
+    .text()
+    .trim();
+
+  assert.equal(tags, "dev slow");
 });

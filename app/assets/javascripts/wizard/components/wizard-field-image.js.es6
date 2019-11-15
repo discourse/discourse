@@ -1,15 +1,17 @@
+import Component from "@ember/component";
 import getUrl from "discourse-common/lib/get-url";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { getToken } from "wizard/lib/ajax";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { dasherize } from "@ember/string";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["wizard-image-row"],
   uploading: false,
 
-  @computed("field.id")
+  @discourseComputed("field.id")
   previewComponent(id) {
-    const componentName = `image-preview-${Ember.String.dasherize(id)}`;
+    const componentName = `image-preview-${dasherize(id)}`;
     const exists = getOwner(this).lookup(`component:${componentName}`);
     return exists ? componentName : "wizard-image-preview";
   },
@@ -17,7 +19,7 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const $upload = this.$();
+    const $upload = $(this.element);
 
     const id = this.get("field.id");
 

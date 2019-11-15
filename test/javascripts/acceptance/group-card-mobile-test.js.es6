@@ -4,7 +4,7 @@ import DiscourseURL from "discourse/lib/url";
 acceptance("Group Card - Mobile", { mobileView: true });
 
 QUnit.skip("group card", async assert => {
-  await visit("/t/301/1");
+  await visit("/t/-/301/1");
   assert.ok(
     invisible("#group-card"),
     "mobile group card is invisible by default"

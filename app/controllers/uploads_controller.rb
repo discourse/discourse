@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 require "mini_mime"
-require_dependency 'upload_creator'
-require_dependency "file_store/local_store"
 
 class UploadsController < ApplicationController
   requires_login except: [:show, :show_short]
 
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short]
+  protect_from_forgery except: :show
 
   def create
     # capture current user for block later on
@@ -69,6 +68,9 @@ class UploadsController < ApplicationController
   end
 
   def show
+    # do not serve uploads requested via XHR to prevent XSS
+    return xhr_not_allowed if request.xhr?
+
     return render_404 if !RailsMultisite::ConnectionManagement.has_db?(params[:site])
 
     RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
@@ -88,6 +90,9 @@ class UploadsController < ApplicationController
   end
 
   def show_short
+    # do not serve uploads requested via XHR to prevent XSS
+    return xhr_not_allowed if request.xhr?
+
     if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
       return render_404
     end
@@ -98,7 +103,7 @@ class UploadsController < ApplicationController
       if Discourse.store.internal?
         send_file_local_upload(upload)
       else
-        redirect_to Discourse.store.url_for(upload)
+        redirect_to Discourse.store.url_for(upload, force_download: params[:dl] == "1")
       end
     else
       render_404
@@ -119,6 +124,10 @@ class UploadsController < ApplicationController
   end
 
   protected
+
+  def xhr_not_allowed
+    raise Discourse::InvalidParameters.new("XHR not allowed")
+  end
 
   def render_404
     raise Discourse::NotFound

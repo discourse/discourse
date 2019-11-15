@@ -16,15 +16,19 @@ if rails_master?
 else
   # until rubygems gives us optional dependencies we are stuck with this
   # bundle update actionmailer actionpack actionview activemodel activerecord activesupport railties
-  gem 'actionmailer', '5.2.3'
-  gem 'actionpack', '5.2.3'
-  gem 'actionview', '5.2.3'
-  gem 'activemodel', '5.2.3'
-  gem 'activerecord', '5.2.3'
-  gem 'activesupport', '5.2.3'
-  gem 'railties', '5.2.3'
+  gem 'actionmailer', '6.0.1'
+  gem 'actionpack', '6.0.1'
+  gem 'actionview', '6.0.1'
+  gem 'activemodel', '6.0.1'
+  gem 'activerecord', '6.0.1'
+  gem 'activesupport', '6.0.1'
+  gem 'railties', '6.0.1'
   gem 'sprockets-rails'
 end
+
+# this will eventually be added to rails,
+# allows us to precompile all our templates in the unicorn master
+gem 'actionview_precompiler', require: false
 
 gem 'seed-fu'
 
@@ -32,26 +36,17 @@ gem 'mail', require: false
 gem 'mini_mime'
 gem 'mini_suffix'
 
-gem 'hiredis'
-
-# holding off redis upgrade temporarily as it is having issues with our current
-# freedom patch, we will follow this up.
-#
-# FrozenError: can't modify frozen Hash
-# /var/www/discourse/vendor/bundle/ruby/2.5.0/gems/redis-4.1.0/lib/redis/client.rb:93:in `delete'
-# /var/www/discourse/vendor/bundle/ruby/2.5.0/gems/redis-4.1.0/lib/redis/client.rb:93:in `initialize'
-# /var/www/discourse/lib/freedom_patches/redis.rb:7:in `initialize'
-gem 'redis', '4.0.1', require:  ["redis", "redis/connection/hiredis"]
+gem 'redis', '4.1.3'
 gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.92'
+gem 'onebox', '1.9.22'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'discourse-ember-source', '~> 3.8.0'
+gem 'discourse-ember-source', '~> 3.10.0'
 gem 'ember-handlebars-template', '0.8.0'
 gem 'barber'
 
@@ -74,10 +69,12 @@ gem 'unf', require: false
 gem 'email_reply_trimmer', '~> 0.1'
 
 # Forked until https://github.com/toy/image_optim/pull/162 is merged
+# https://github.com/discourse/image_optim
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
+gem 'css_parser', require: false
 
 gem 'omniauth'
 gem 'omniauth-openid'
@@ -99,6 +96,7 @@ gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
 
 gem 'thor', require: false
+gem 'diffy', require: false
 gem 'rinku'
 gem 'sanitize'
 gem 'sidekiq'
@@ -111,6 +109,8 @@ gem 'execjs', require: false
 gem 'mini_racer'
 gem 'highline', '~> 1.7.0', require: false
 gem 'rack-protection' # security
+gem 'cbor', require: false
+gem 'cose', require: false
 
 # Gems used only for assets and not required in production environments by default.
 # Allow everywhere for now cause we are allowing asset debugging in production
@@ -137,7 +137,7 @@ group :test, :development do
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
-  gem 'rspec-rails', require: false
+  gem 'rspec-rails', '4.0.0.beta2', require: false
   gem 'shoulda-matchers', '~> 3.1', '>= 3.1.3', require: false
   gem 'rspec-html-matchers'
   gem 'pry-nav'
@@ -151,6 +151,7 @@ group :development do
   gem 'bullet', require: !!ENV['BULLET']
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'yaml-lint'
 
   # waiting on 2.7.5 per: https://github.com/ctran/annotate_models/pull/595
   if rails_master?
@@ -201,9 +202,12 @@ gem "sassc-rails"
 gem 'rotp'
 gem 'rqrcode'
 
+gem 'rubyzip', require: false
+
 gem 'sshkey', require: false
 
 gem 'rchardet', require: false
+gem 'lz4-ruby', require: false, platform: :mri
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'

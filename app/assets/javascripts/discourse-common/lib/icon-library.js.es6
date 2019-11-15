@@ -35,7 +35,8 @@ const REPLACEMENTS = {
   "notification.topic_reminder": "far-clock",
   "notification.watching_first_post": "far-dot-circle",
   "notification.group_message_summary": "users",
-  "notification.post_approved": "check"
+  "notification.post_approved": "check",
+  "notification.membership_request_accepted": "user-plus"
 };
 
 // TODO: use lib/svg_sprite/fa4-renames.json here
@@ -579,13 +580,9 @@ function warnIfMissing(id) {
 }
 
 function warnIfDeprecated(oldId, newId) {
-  if (
-    typeof Discourse !== "undefined" &&
-    Discourse.Environment === "development" &&
-    !Ember.testing
-  ) {
-    deprecated(`Icon "${oldId}" is now "${newId}".`);
-  }
+  deprecated(
+    `Please replace all occurrences of "${oldId}"" with "${newId}". FontAwesome 4.7 icon names are now deprecated and will be removed in the next release.`
+  );
 }
 
 function handleIconId(icon) {

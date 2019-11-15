@@ -260,6 +260,23 @@ describe UserApiKeysController do
       post "/user-api-key.json", params: args
       expect(response.status).to eq(302)
     end
+
+    it 'will keep query_params added in auth_redirect' do
+      SiteSetting.min_trust_level_for_user_api_key = 0
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
+
+      user = Fabricate(:user, trust_level: 0)
+      sign_in(user)
+
+      query_str = "/?param1=val1"
+      args[:auth_redirect] = args[:auth_redirect] + query_str
+
+      post "/user-api-key.json", params: args
+      expect(response.status).to eq(302)
+
+      uri = URI.parse(response.redirect_url)
+      expect(uri.to_s).to include(query_str)
+    end
   end
 
   context '#create-one-time-password' do

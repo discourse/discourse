@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'distributed_memoizer'
-require_dependency 'file_helper'
-
 class StaticController < ApplicationController
 
   skip_before_action :check_xhr, :redirect_to_login_if_required
@@ -54,6 +51,14 @@ class StaticController < ApplicationController
       return
     end
 
+    unless @title.present?
+      @title = if SiteSetting.short_site_description.present?
+        "#{SiteSetting.title} - #{SiteSetting.short_site_description}"
+      else
+        SiteSetting.title
+      end
+    end
+
     if I18n.exists?("static.#{@page}")
       render html: I18n.t("static.#{@page}"), layout: !request.xhr?, formats: [:html]
       return
@@ -89,17 +94,19 @@ class StaticController < ApplicationController
 
     destination = path("/")
 
-    if params[:redirect].present? && !params[:redirect].match(login_path)
+    redirect_location = params[:redirect]
+    if redirect_location.present? && !redirect_location.is_a?(String)
+      raise Discourse::InvalidParameters.new(:redirect)
+    elsif redirect_location.present? && !redirect_location.match(login_path)
       begin
         forum_uri = URI(Discourse.base_url)
-        uri = URI(params[:redirect])
+        uri = URI(redirect_location)
 
         if uri.path.present? &&
            (uri.host.blank? || uri.host == forum_uri.host) &&
            uri.path !~ /\./
 
-          destination = uri.path
-          destination = "#{uri.path}?#{uri.query}" if uri.path =~ /new-topic/ || uri.path =~ /new-message/ || uri.path =~ /user-api-key/
+          destination = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
         end
       rescue URI::Error
         # Do nothing if the URI is invalid
@@ -133,7 +140,7 @@ class StaticController < ApplicationController
         if Discourse.store.external?
           begin
             file = FileHelper.download(
-              UrlHelper.absolute(favicon.url),
+              Discourse.store.cdn_url(favicon.url),
               max_file_size: favicon.filesize,
               tmp_file_name: FAVICON,
               follow_redirect: true

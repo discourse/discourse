@@ -8,6 +8,11 @@ task 'posts:rebake' => :environment do
 end
 
 task 'posts:rebake_uncooked_posts' => :environment do
+  # rebaking uncooked posts can very quickly saturate sidekiq
+  # this provides an insurance policy so you can safely run and stop
+  # this rake task without worrying about your sidekiq imploding
+  Jobs.run_immediately!
+
   ENV['RAILS_DB'] ? rebake_uncooked_posts : rebake_uncooked_posts_all_sites
 end
 
@@ -24,8 +29,18 @@ def rebake_uncooked_posts
   rebaked = 0
   total = uncooked.count
 
-  uncooked.find_each do |post|
-    rebake_post(post)
+  ids = uncooked.pluck(:id)
+  # work randomly so you can run this job from lots of consoles if needed
+  ids.shuffle!
+
+  ids.each do |id|
+    # may have been cooked in interim
+    post = uncooked.where(id: id).first
+
+    if post
+      rebake_post(post)
+    end
+
     print_status(rebaked += 1, total)
   end
 
@@ -97,8 +112,8 @@ def rebake_posts(opts = {})
   puts "Rebaking post markdown for '#{RailsMultisite::ConnectionManagement.current_db}'"
 
   begin
-    disable_edit_notifications = SiteSetting.disable_edit_notifications
-    SiteSetting.disable_edit_notifications = true
+    disable_system_edit_notifications = SiteSetting.disable_system_edit_notifications
+    SiteSetting.disable_system_edit_notifications = true
 
     total = Post.count
     rebaked = 0
@@ -112,7 +127,7 @@ def rebake_posts(opts = {})
       end
     end
   ensure
-    SiteSetting.disable_edit_notifications = disable_edit_notifications
+    SiteSetting.disable_system_edit_notifications = disable_system_edit_notifications
   end
 
   puts "", "#{rebaked} posts done!", "-" * 50
@@ -262,26 +277,6 @@ task 'posts:delete_all_likes' => :environment do
   puts "", "#{likes_deleted} likes deleted!", ""
 end
 
-desc 'Defer all flags'
-task 'posts:defer_all_flags' => :environment do
-
-  active_flags = FlagQuery.flagged_post_actions('active')
-
-  flags_deferred = 0
-  total = active_flags.count
-
-  active_flags.each do |post_action|
-    begin
-      PostAction.defer_flags!(Post.find(post_action.post_id), Discourse.system_user)
-      print_status(flags_deferred += 1, total)
-    rescue
-      # skip
-    end
-  end
-
-  puts "", "#{flags_deferred} flags deferred!", ""
-end
-
 desc 'Refreshes each post that was received via email'
 task 'posts:refresh_emails', [:topic_id] => [:environment] do |_, args|
   posts = Post.where.not(raw_email: nil).where(via_email: true)
@@ -417,7 +412,6 @@ def missing_uploads
     next if sha1.present?
     puts "Fixing missing uploads: " if count_missing == 0
     count_missing += 1
-    print "."
 
     upload_id = nil
 
@@ -426,34 +420,37 @@ def missing_uploads
     public_path = "#{local_store.public_dir}#{path}"
     file_path = nil
 
-    if File.exists?(public_path)
+    if File.file?(public_path)
       file_path = public_path
     else
       tombstone_path = public_path.sub("/uploads/", "/uploads/tombstone/")
-      file_path = tombstone_path if File.exists?(tombstone_path)
+      file_path = tombstone_path if File.file?(tombstone_path)
     end
 
     if file_path.present?
-      tmp = Tempfile.new
-      tmp.write(File.read(file_path))
-      tmp.rewind
-
-      if upload = UploadCreator.new(tmp, File.basename(path)).create_for(Discourse.system_user.id)
+      if (upload = UploadCreator.new(File.open(file_path), File.basename(path)).create_for(Discourse.system_user.id)).persisted?
         upload_id = upload.id
-        DbHelper.remap(UrlHelper.absolute(src), upload.url)
 
         post.reload
-        post.raw.gsub!(src, upload.url)
-        post.cooked.gsub!(src, upload.url)
+        new_raw = post.raw.dup
+        new_raw = new_raw.gsub(path, upload.url)
 
-        if post.changed?
-          post.save!(validate: false)
-          post.rebake!
-        end
+        PostRevisor.new(post, Topic.with_deleted.find_by(id: post.topic_id)).revise!(
+          Discourse.system_user,
+          {
+            raw: new_raw
+          },
+          skip_validations: true,
+          force_new_version: true,
+          bypass_bump: true
+        )
+
+        print "🆗"
+      else
+        print "❌"
       end
-
-      FileUtils.rm(tmp, force: true)
     else
+      print "🚫"
       old_scheme_upload_count += 1
     end
 
@@ -471,7 +468,7 @@ def missing_uploads
       missing[:post_uploads].each do |id, uploads|
         post = Post.with_deleted.find_by(id: id)
         if post
-          puts "#{post.full_url} giving up on #{uploads.length} upload/s"
+          puts "#{post.full_url} giving up on #{uploads.length} upload(s)"
           PostCustomField.create!(post_id: post.id, name: Post::MISSING_UPLOADS_IGNORED, value: "t")
         else
           puts "could not find post #{id}"
@@ -504,8 +501,8 @@ def missing_uploads
 end
 
 desc 'Finds missing post upload records from cooked HTML content'
-task 'posts:missing_uploads', [:single_site] => :environment do |_, args|
-  if args[:single_site].to_s.downcase == "single_site"
+task 'posts:missing_uploads' => :environment do |_, args|
+  if ENV["RAILS_DB"]
     missing_uploads
   else
     RailsMultisite::ConnectionManagement.each_connection do
@@ -536,7 +533,7 @@ def recover_uploads_from_index(path)
 
   PostCustomField.where(name: Post::MISSING_UPLOADS).pluck(:post_id, :value).each do |post_id, uploads|
     uploads = JSON.parse(uploads)
-    raw = Post.where(id: post_id).pluck(:raw).first
+    raw = Post.where(id: post_id).pluck_first(:raw)
     uploads.map! do |upload|
       orig = upload
       if raw.scan(upload).length == 0
@@ -660,11 +657,25 @@ end
 
 desc "Coverts full upload URLs in `Post#raw` to short upload url"
 task 'posts:inline_uploads' => :environment do |_, args|
-  dry_run = (ENV["DRY_RUN"].nil? ? true : ENV["DRY_RUN"] != "false")
+  if ENV['RAILS_DB']
+    correct_inline_uploads
+  else
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      puts "Correcting #{db}..."
+      puts
+      correct_inline_uploads
+    end
+  end
+end
 
-  scope = Post.joins(:post_uploads)
-    .distinct("posts.id")
-    .where("raw LIKE '%class=\"attachment%' OR raw LIKE '%<img src=\"%'")
+def correct_inline_uploads
+  dry_run = (ENV["DRY_RUN"].nil? ? true : ENV["DRY_RUN"] != "false")
+  verbose = ENV["VERBOSE"]
+
+  scope = Post.joins(:post_uploads).distinct("posts.id")
+    .where(<<~SQL)
+    raw LIKE '%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/original/%'
+    SQL
 
   affected_posts_count = scope.count
   fixed_count = 0
@@ -681,26 +692,38 @@ task 'posts:inline_uploads' => :environment do |_, args|
       new_raw = InlineUploads.process(post.raw)
 
       if post.raw != new_raw
-        if dry_run
-          putc "🏃‍"
-        else
-          post.revise!(Discourse.system_user,
-            {
-              raw: new_raw
-            },
-            skip_validations: true,
-            force_new_version: true
-          )
+        if !dry_run
+          PostRevisor.new(post, Topic.with_deleted.find_by(id: post.topic_id))
+            .revise!(
+              Discourse.system_user,
+              {
+                raw: new_raw
+              },
+              skip_validations: true,
+              force_new_version: true,
+              bypass_bump: true
+            )
+        end
 
+        if verbose
+          require 'diffy'
+          Diffy::Diff.default_format = :color
+          puts "Cooked diff for Post #{post.id}"
+          puts Diffy::Diff.new(PrettyText.cook(post.raw), PrettyText.cook(new_raw), context: 1)
+          puts
+        elsif dry_run
+          putc "#"
+        else
           putc "."
         end
 
         fixed_count += 1
       else
+        putc "X"
         not_corrected_post_ids << post.id
       end
-    rescue => e
-      putc "X"
+    rescue
+      putc "!"
       failed_to_correct_post_ids << post.id
     end
   end

@@ -1,16 +1,17 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "",
 
-  @computed("composeState")
+  @discourseComputed("composeState")
   toggleTitle(composeState) {
     return composeState === "draft" || composeState === "saving"
       ? "composer.abandon"
       : "composer.collapse";
   },
 
-  @computed("composeState")
+  @discourseComputed("composeState")
   fullscreenTitle(composeState) {
     return composeState === "draft"
       ? "composer.open"
@@ -19,14 +20,14 @@ export default Ember.Component.extend({
       : "composer.enter_fullscreen";
   },
 
-  @computed("composeState")
+  @discourseComputed("composeState")
   toggleIcon(composeState) {
     return composeState === "draft" || composeState === "saving"
       ? "times"
       : "chevron-down";
   },
 
-  @computed("composeState")
+  @discourseComputed("composeState")
   fullscreenIcon(composeState) {
     return composeState === "draft"
       ? "chevron-up"

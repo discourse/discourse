@@ -105,6 +105,9 @@ sv:
     share:
       post: "inlägg #%{postNumber}"
       close: "stäng"
+      twitter: "Dela denna länk på Twitter"
+      facebook: "Dela denna länk på Facebook"
+      email: "Skicka denna länk i ett e-postmeddelande"
     action_codes:
       public_topic: "gjorde det här ämnet publikt %{when}"
       private_topic: "gjorde det här ämnet till ett personligt meddelande %{when}"
@@ -212,6 +215,7 @@ sv:
       stats: "Sitestatistik"
       our_admins: "Våra administratörer"
       our_moderators: "Våra moderatorer"
+      moderators: "Moderatorer"
       stat:
         all_time: "Alla dagar"
         last_7_days: "Senaste 7"
@@ -265,6 +269,9 @@ sv:
       title:
         placeholder: "skriv ämnets rubrik här"
     review:
+      in_reply_to: "som svar till"
+      explain:
+        total: "Totalt"
       delete: "Radera"
       settings:
         save_changes: "Spara ändringar"
@@ -285,6 +292,8 @@ sv:
           title: "Typ"
         refresh: "Uppdatera"
         category: "Kategori"
+        orders:
+          created_at: "Skapad den"
       scores:
         type: "Typ"
       statuses:
@@ -566,9 +575,7 @@ sv:
       users: "Användare"
       muted_users: "Tystat"
       muted_users_instructions: "Undanta alla notiser från dessa användare."
-      muted_topics_link: "Visa tystade ämnen"
-      watched_topics_link: "Visa bevakade ämnen"
-      tracked_topics_link: "Visa bevakade ämnen"
+      tracked_topics_link: "Visa"
       automatically_unpin_topics: "Avklistra automatiskt ämnen när jag når botten."
       apps: "Appar"
       revoke_access: "Återkalla åtkomst"
@@ -608,11 +615,17 @@ sv:
         action: "Skicka e-post för att återställa lösenord"
         set_password: "Ange lösenord"
         choose_new: "Välj ett nytt lösenord"
-        choose: "Välj ett  lösenord"
+        choose: "Välj ett lösenord"
       second_factor_backup:
         regenerate: "Regenerera"
         disable: "Inaktivera"
         enable: "Aktivera"
+      second_factor:
+        name: "Namn"
+        edit: "Redigera"
+        security_key:
+          register: "Registrera"
+          delete: "Radera"
       change_about:
         title: "Ändra Om Mig"
         error: "Ett fel inträffade vid ändringen av det här värdet."
@@ -634,11 +647,7 @@ sv:
         uploaded_avatar: "Anpassad bild"
         uploaded_avatar_empty: "Lägg till en anpassad bild"
         upload_title: "Ladda upp din bild"
-        upload_picture: "Ladda upp bild"
         image_is_not_a_square: "Varning: vi beskar din bild; bredden och höjden var inte samma."
-      change_profile_background:
-        title: "Profilbakgrund"
-        instructions: "Bakgrunderna är centrerade och har en förinställd bredd på 850px"
       change_card_background:
         title: "Användarkortets bakgrund"
         instructions: "Bakgrundsbilder kommer att vara centrerade och ha en standardbredd på 590 px."
@@ -654,6 +663,7 @@ sv:
           other: "Vi skickar bara e-post om du inte synts till de senaste {{count}} minuterna."
       associated_accounts:
         revoke: "Återkalla"
+        cancel: "Avbryt"
       name:
         title: "Namn"
         instructions: "ditt fullständiga namn (tillval)"
@@ -826,6 +836,9 @@ sv:
       title:
         title: "Titel"
         none: "(ingen)"
+      primary_group:
+        title: "Primär grupp"
+        none: "(ingen)"
       filters:
         all: "Alla"
       stream:
@@ -925,6 +938,7 @@ sv:
     email_login:
       complete_username_not_found: "Det finns inget konto som matchar användarnamnet <b>%{username}</b>"
       complete_email_not_found: "Det finns inget konto som matchar <b>%{email}</b>"
+      confirm_title: "Fortsätt till %{site_name}"
     login:
       title: "Logga in"
       username: "Användare"
@@ -958,20 +972,15 @@ sv:
       google_oauth2:
         name: "Google"
         title: "med Google"
-        message: "Autentiserar med Google (kolla så att pop up-blockare inte är aktiverade)"
       twitter:
         name: "Twitter"
         title: "med Twitter"
-        message: "Autentiserar med Twitter (kolla så att pop up-blockare inte är aktiverade)"
       instagram:
         title: "med Instagram"
-        message: "Autentisering med Instagram (se till att popup-blockeringar inte är aktiverade)"
       facebook:
         title: "med Facebook"
-        message: "Autentiserar med Facebook (kolla så att pop up-blockare inte är aktiverade)"
       github:
         title: "med GitHub"
-        message: "Autentiserar med GitHub (kolla så att pop up-blockare inte är aktiverade)"
     invites:
       accept_title: "Inbjudan"
       welcome_to: "Välkommen till %{site_name}!"
@@ -988,7 +997,6 @@ sv:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
     category_page_style:
       categories_only: "Endast kategorier"
@@ -1000,6 +1008,9 @@ sv:
       alt: "Alt"
     conditional_loading_section:
       loading: Laddar...
+    date_time_picker:
+      from: Från
+      to: Till
     emoji_picker:
       flags: Flaggor
     composer:
@@ -1026,7 +1037,6 @@ sv:
         title_missing: "Du måste ange en rubrik"
         title_too_short: "Rubriken måste vara minst {{min}} tecken lång."
         title_too_long: "Rubriken får inte vara längre än {{max}} tecken"
-        post_missing: "Inlägg får inte vara tomma"
         post_length: "Inlägg måste vara minst {{min}} tecken långa."
         category_missing: "Du måste välja en kategori"
       save_edit: "Spara ändring"
@@ -1041,7 +1051,6 @@ sv:
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
       edit_reason_placeholder: "varför redigerar du?"
-      show_edit_reason: "(lägg till anledningar för redigering)"
       topic_featured_link_placeholder: "Ange länken som visas med titeln"
       reply_placeholder: "Skriv här. Använd Markdown, BBCode eller HTML för formattering. Släpp eller klistra in bilder."
       view_new_post: "Visa ditt nya inlägg."
@@ -1089,7 +1098,6 @@ sv:
       title: "notiser från @namn-omnämnanden, svar på dina inlägg och ämnen, meddelanden, etc"
       none: "Kan inte ladda notiser just nu."
       empty: "Inga notifieringar hittades."
-      more: "visa äldre notifikationer"
       granted_badge: "Förtjänade '{{description}}'"
       popup:
         mentioned: '{{username}} nämnde dig i "{{topic}}" - {{site_title}}'
@@ -1098,6 +1106,8 @@ sv:
         replied: '{{username}} svarade dig i "{{topic}}" - {{site_title}}'
         posted: '{{username}} skrev i "{{topic}}" - {{site_title}}'
         linked: '{{username}} länkade till ett inlägg du gjort från "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "nytt ämne"
     upload_selector:
       title: "Lägg till en bild"
       title_with_attachments: "Lägg till en bild eller en fil"
@@ -1234,6 +1244,8 @@ sv:
       move_to_inbox:
         title: "Flytta till inkorgen"
         help: "Flytta tillbaka meddelandet till inkorgen"
+      defer:
+        title: "Skjut upp"
       list: "Ämnen"
       new: "nytt ämne"
       unread: "oläst"
@@ -1539,6 +1551,8 @@ sv:
         image_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte ladda upp bilder."
         attachment_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte bifoga filer."
         attachment_download_requires_login: "Tyvärr, du måste vara inloggad för att kunna ladda ned bifogade filer."
+      abandon_edit:
+        no_value: "nej, behåll"
       abandon:
         confirm: "Är du säker på att du vill avbryta ditt inlägg?"
         no_value: "nej, behåll"
@@ -1861,7 +1875,7 @@ sv:
         title: "Nya"
         title_with_count:
           one: "Ny (%{count})"
-          other: "Nya  ({{count}})"
+          other: "Nya ({{count}})"
         help: "ämnen skapade de senaste dagarna"
       posted:
         title: "Mina Inlägg"
@@ -2065,6 +2079,10 @@ sv:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "alltid"
+          never: "aldrig"
       dashboard:
         title: "Översiktspanel"
         version: "Version"
@@ -2107,8 +2125,6 @@ sv:
           view_table: "tabell"
           view_graph: "graf"
           refresh_report: "Uppdatera rapport"
-          start_date: "Startdatum"
-          end_date: "Slutdatum"
           groups: "Alla grupper"
           filters:
             group:
@@ -2134,7 +2150,6 @@ sv:
               public: "Alla"
           membership:
             automatic: Automatisk
-            trust_level: Förtroendenivå
             trust_levels_title: "Förtroendenivå som automatiskt beviljas användare när de läggs till:"
             trust_levels_none: "Inga"
             automatic_membership_email_domains: "Användare som registrerar sig med en e-post vars domän exakt matchar en domän i den här listan kommer automatiskt att bli tillagd i den här gruppen:"
@@ -2164,15 +2179,14 @@ sv:
         none: "Det finns inga aktiva API-nycklar just nu."
         user: "Användare"
         title: "API"
-        key: "API-nyckel"
+        key: "Key"
+        created: Skapad
         generate: "Generera"
-        regenerate: "Regenerera"
         revoke: "Återkalla"
-        confirm_regen: "Är du säker på att du vill ersätta den API-nyckeln med en ny?"
-        confirm_revoke: "Är du säker på att du vill återkalla den nyckeln?"
-        info_html: "Din API-nyckel kommer tillåta dig att skapa och uppdatera ämnen med hjälp av JSON-anrop."
         all_users: "Alla användare"
-        note_html: "Håll denna nyckel <strong>hemlig</strong>, alla användare som har den kan skapa godtyckliga inlägg som alla användare."
+        show_details: Detaljer
+        description: Beskrivning
+        save: Spara
       web_hooks:
         title: "Webhookar"
         none: "Det finns inga webhookar just nu."
@@ -2330,7 +2344,7 @@ sv:
         opacity: "Opacitet"
         copy: "Kopiera"
         email_templates:
-          title: "E-postmallar"
+          title: "E-post"
           subject: "Ämne"
           multiple_subjects: "Den här e-postmallen har flera ämnen."
           body: "Huvuddel"
@@ -2350,6 +2364,8 @@ sv:
           installed: "Installerad"
           install_popular: "Populära"
           about_theme: "Om"
+          enable: "Aktivera"
+          disable: "Inaktivera"
           add: "Lägg till"
           scss:
             text: "CSS"
@@ -2401,6 +2417,8 @@ sv:
           love:
             name: "älska"
             description: "Gillaknappens färg."
+        email_style:
+          css: "CSS"
       email:
         title: "E-post"
         settings: "Inställningar"
@@ -2567,12 +2585,13 @@ sv:
           title: "Felprotokoll"
       watched_words:
         clear_filter: "Rensa"
+        download: Ladda ner
+        clear_all: Rensa alla
         actions:
           block: "Blockera"
           flag: "Flagga"
         form:
           add: "Lägg till"
-          upload: "Ladda upp"
       impersonate:
         title: "Imitera"
         help: "Använd det här verktyget för att imitera ett användarkonto för avlusningssyften. Du kommer behöva logga ut när du är klar."
@@ -2773,7 +2792,7 @@ sv:
       site_text:
         description: "Du kan anpassa all text på ditt forum. Börja genom att söka nedanför:"
         search: "Sök efter texten som du vill redigera"
-        title: "Textinnehåll"
+        title: "Text"
         edit: "redigera"
         revert: "Ångra ändringarna"
         revert_confirm: "Är du säker på att du vill ångra dina ändringar?"
@@ -2821,6 +2840,8 @@ sv:
           search: "Sök"
           groups: "Grupper"
           dashboard: "Översiktspanel"
+        default_categories:
+          modal_yes: "Ja"
       badges:
         title: Utmärkelser
         new_badge: Ny utmärkelse
@@ -2906,20 +2927,15 @@ sv:
         category: "Inlägg till kategori"
         add_host: "Lägg till värd"
         settings: "Inbäddningsinställningar"
-        feed_settings: "Flödes-inställningar"
-        feed_description: "Tillhandahållande av RSS/ATOM-flöde på din webbplats kan förbättra Discourse möjlighet att importera ditt innehåll."
         crawling_settings: "Inställningar för sökrobotar"
         crawling_description: "När Discourse skapar ämnen för dina inlägg, om det inte finns något RSS/ATOM-flöde närvarande så kommer det att försöka parsa ditt innehåll från din HTML. Ibland är det utmanande att extrahera ditt innehåll, så vi tillhandahåller möjligheten att specifiera CSS-reglerna för att göra extraheringen enklare."
         embed_by_username: "Användarnamn för skapandet av ämne"
         embed_post_limit: "Högsta tillåtna antal inlägg att bädda in"
-        embed_username_key_from_feed: "Nyckel för att hämta discourse användarnamn från flöde"
         embed_title_scrubber: "Reguljära uttryck som används för att hitta och korrigera fel i inläggsrubriken"
         embed_truncate: "Trunkera de inbäddade inläggen"
         embed_whitelist_selector: "CSS-väljare för element som tillåts bäddas in"
         embed_blacklist_selector: "CSS-väljare för element som tas bort från inbäddningar"
         embed_classname_whitelist: "Tillåtna CSS klassnamn"
-        feed_polling_enabled: "Importera inlägg via RSS/ATOM"
-        feed_polling_url: "URL för RSS/ATOM-flöde att webbsöka"
         save: "Spara inbäddningsinställningar"
       permalink:
         title: "Permalänkar"

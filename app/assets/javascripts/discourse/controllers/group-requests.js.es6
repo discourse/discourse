@@ -1,13 +1,16 @@
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
-import debounce from "discourse/lib/debounce";
+} from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse/lib/debounce";
+import User from "discourse/models/user";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   queryParams: ["order", "desc", "filter"],
   order: "",
   desc: null,
@@ -16,10 +19,10 @@ export default Ember.Controller.extend({
   offset: null,
   filter: null,
   filterInput: null,
-  application: Ember.inject.controller(),
+  application: inject(),
 
   @observes("filterInput")
-  _setFilter: debounce(function() {
+  _setFilter: discourseDebounce(function() {
     this.set("filter", this.filterInput);
   }, 500),
 
@@ -53,7 +56,7 @@ export default Ember.Controller.extend({
       }
     ).then(result => {
       const requesters = (!force && this.get("model.requesters")) || [];
-      requesters.addObjects(result.members.map(m => Discourse.User.create(m)));
+      requesters.addObjects(result.members.map(m => User.create(m)));
       this.set("model.requesters", requesters);
 
       this.setProperties({
@@ -68,12 +71,12 @@ export default Ember.Controller.extend({
     });
   },
 
-  @computed("model.requesters")
+  @discourseComputed("model.requesters")
   hasRequesters(requesters) {
     return requesters && requesters.length > 0;
   },
 
-  @computed
+  @discourseComputed
   filterPlaceholder() {
     if (this.currentUser && this.currentUser.admin) {
       return "groups.members.filter_placeholder_admin";

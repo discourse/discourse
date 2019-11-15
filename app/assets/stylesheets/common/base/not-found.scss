@@ -1,12 +1,13 @@
 // Page not found styles
 
-h1.page-not-found {
-  font-size: $font-up-5;
-  line-height: $line-height-medium;
-}
-
 .page-not-found {
   margin: 0 0 40px 0;
+
+  h1.title {
+    font-size: $font-up-5;
+    line-height: $line-height-medium;
+  }
+
   &-search {
     margin-top: 20px;
   }

@@ -1,21 +1,22 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "button",
   attributeBindings: ["style", "title"],
   classNameBindings: [":colorpicker", "isUsed:used-color:unused-color"],
 
-  @computed("color", "usedColors")
+  @discourseComputed("color", "usedColors")
   isUsed(color, usedColors) {
     return (usedColors || []).indexOf(color.toUpperCase()) >= 0;
   },
 
-  @computed("isUsed")
+  @discourseComputed("isUsed")
   title(isUsed) {
     return isUsed ? I18n.t("category.already_used") : null;
   },
 
-  @computed("color")
+  @discourseComputed("color")
   style(color) {
     return `background-color: #${color};`.htmlSafe();
   },

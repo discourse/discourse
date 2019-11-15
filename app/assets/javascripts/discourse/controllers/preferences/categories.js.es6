@@ -1,8 +1,10 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { or } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend(PreferencesTabController, {
+export default Controller.extend(PreferencesTabController, {
   init() {
     this._super(...arguments);
 
@@ -14,7 +16,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
     ];
   },
 
-  @computed(
+  @discourseComputed(
     "model.watchedCategories",
     "model.watchedFirstPostCategories",
     "model.trackedCategories",
@@ -24,17 +26,17 @@ export default Ember.Controller.extend(PreferencesTabController, {
     return [].concat(watched, watchedFirst, tracked, muted).filter(t => t);
   },
 
-  @computed
+  @discourseComputed
   canSee() {
     return this.get("currentUser.id") === this.get("model.id");
   },
 
-  @computed("siteSettings.remove_muted_tags_from_latest")
+  @discourseComputed("siteSettings.remove_muted_tags_from_latest")
   hideMutedTags() {
     return this.siteSettings.remove_muted_tags_from_latest !== "never";
   },
 
-  canSave: Ember.computed.or("canSee", "currentUser.admin"),
+  canSave: or("canSee", "currentUser.admin"),
 
   actions: {
     save() {

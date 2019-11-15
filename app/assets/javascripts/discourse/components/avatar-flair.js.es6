@@ -1,4 +1,4 @@
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import MountWidget from "discourse/components/mount-widget";
 
 export default MountWidget.extend({

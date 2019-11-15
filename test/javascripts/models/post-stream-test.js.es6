@@ -1,6 +1,8 @@
-QUnit.module("model:post-stream");
-
+import Post from "discourse/models/post";
 import createStore from "helpers/create-store";
+import User from "discourse/models/user";
+
+QUnit.module("model:post-stream");
 
 const buildStream = function(id, stream) {
   const store = createStore();
@@ -173,7 +175,7 @@ QUnit.test("updateFromJson", assert => {
   });
 
   assert.equal(postStream.get("posts.length"), 1, "it loaded the posts");
-  assert.containsInstance(postStream.get("posts"), Discourse.Post);
+  assert.containsInstance(postStream.get("posts"), Post);
 
   assert.equal(postStream.get("extra_property"), 12);
 });
@@ -548,7 +550,7 @@ QUnit.test("staging and undoing a new post", assert => {
     "the original post is lastAppended"
   );
 
-  const user = Discourse.User.create({
+  const user = User.create({
     username: "eviltrout",
     name: "eviltrout",
     id: 321
@@ -649,7 +651,7 @@ QUnit.test("staging and committing a post", assert => {
     "the original post is lastAppended"
   );
 
-  const user = Discourse.User.create({
+  const user = User.create({
     username: "eviltrout",
     name: "eviltrout",
     id: 321
@@ -771,7 +773,7 @@ QUnit.test("comitting and triggerNewPostInStream race condition", assert => {
   const store = postStream.store;
 
   postStream.appendPost(store.createRecord("post", { id: 1, post_number: 1 }));
-  const user = Discourse.User.create({
+  const user = User.create({
     username: "eviltrout",
     name: "eviltrout",
     id: 321
@@ -797,6 +799,64 @@ QUnit.test("comitting and triggerNewPostInStream race condition", assert => {
     postStream.get("filteredPostsCount"),
     1,
     "it does not add the same post twice"
+  );
+});
+
+QUnit.test("triggerNewPostInStream for ignored posts", async assert => {
+  const postStream = buildStream(280, [1]);
+  const store = postStream.store;
+  User.resetCurrent(
+    User.create({
+      username: "eviltrout",
+      name: "eviltrout",
+      id: 321,
+      ignored_users: ["ignoreduser"]
+    })
+  );
+
+  postStream.appendPost(store.createRecord("post", { id: 1, post_number: 1 }));
+
+  const post2 = store.createRecord("post", {
+    id: 101,
+    post_number: 2,
+    username: "regularuser"
+  });
+
+  const post3 = store.createRecord("post", {
+    id: 102,
+    post_number: 3,
+    username: "ignoreduser"
+  });
+
+  var stub = sandbox
+    .stub(postStream, "findPostsByIds")
+    .returns(Promise.resolve([post2]));
+
+  await postStream.triggerNewPostInStream(101);
+  assert.equal(
+    postStream.posts.length,
+    2,
+    "it added the regular post to the posts"
+  );
+  assert.equal(
+    postStream.get("stream.length"),
+    2,
+    "it added the regular post to the stream"
+  );
+
+  stub.restore();
+  sandbox.stub(postStream, "findPostsByIds").returns(Promise.resolve([post3]));
+
+  await postStream.triggerNewPostInStream(102);
+  assert.equal(
+    postStream.posts.length,
+    2,
+    "it does not add the ignored post to the posts"
+  );
+  assert.equal(
+    postStream.stream.length,
+    2,
+    "it does not add the ignored post to the stream"
   );
 });
 

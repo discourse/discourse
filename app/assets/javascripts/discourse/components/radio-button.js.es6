@@ -1,6 +1,7 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "input",
   type: "radio",
   attributeBindings: [
@@ -12,14 +13,19 @@ export default Ember.Component.extend({
   ],
 
   click() {
-    const value = this.$().val();
-    if (this.selection === value) {
-      this.set("selection", undefined);
+    const value = $(this.element).val();
+
+    if (this.onChange) {
+      this.onChange(value);
+    } else {
+      if (this.selection === value) {
+        this.set("selection", undefined);
+      }
+      this.set("selection", value);
     }
-    this.set("selection", value);
   },
 
-  @computed("value", "selection")
+  @discourseComputed("value", "selection")
   checked(value, selection) {
     return value === selection;
   }

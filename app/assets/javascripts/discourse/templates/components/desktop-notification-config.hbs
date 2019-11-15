@@ -7,9 +7,7 @@
 {{else}}
   {{#if isEnabled}}
     {{d-button icon="far-bell-slash" class="btn-default"  label="user.desktop_notifications.disable" action=(action "turnoff")}}
-    {{i18n "user.desktop_notifications.currently_enabled"}}
   {{else}}
     {{d-button icon="far-bell" class="btn-default" label="user.desktop_notifications.enable" action=(action "turnon")}}
-    {{i18n "user.desktop_notifications.currently_disabled"}}
   {{/if}}
 {{/if}}

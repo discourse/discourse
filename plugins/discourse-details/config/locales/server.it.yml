@@ -7,4 +7,6 @@
 
 it:
   site_settings:
-    details_enabled: "Attiva la funzione dettagli. Se cambi questa impostazione, devi rielaborare tutti i Messaggi con \"rake posts:rebake\""
+    details_enabled: 'Attiva la funzione dettagli. Se cambi questa impostazione, devi rielaborare tutti i Messaggi con "rake posts:rebake"'
+  details:
+    excerpt_details: "(clicca per ulteriori dettagli)"

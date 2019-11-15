@@ -2,7 +2,7 @@
 
 require "demon/base"
 
-class Demon::Sidekiq < Demon::Base
+class Demon::Sidekiq < ::Demon::Base
 
   def self.prefix
     "sidekiq"

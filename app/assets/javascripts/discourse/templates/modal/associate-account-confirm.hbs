@@ -1,0 +1,26 @@
+{{#d-modal-body 
+    rawTitle=(
+      i18n "user.associated_accounts.confirm_modal_title" 
+      provider=(i18n (concat "login." model.provider_name ".name"))
+    )
+}}
+  {{#if model.error}}
+    <div class='alert alert-error'>
+      {{model.error}}
+    </div>
+  {{/if}}
+
+  {{#if model.account_description}}
+    {{i18n "user.associated_accounts.confirm_description.account_specific"
+        provider=(i18n (concat "login." model.provider_name ".name"))
+        account_description=model.account_description}}
+  {{else}}
+    {{i18n "user.associated_accounts.confirm_description.generic"
+        provider=(i18n (concat "login." model.provider_name ".name"))}}
+  {{/if}}
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button label="user.associated_accounts.connect" action=(action "finishConnect") class="btn-primary" icon="plug"}}
+  {{d-button label="user.associated_accounts.cancel" action=(action "closeModal")}}
+</div>

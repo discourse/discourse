@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class BotInput < Jobs::Base
+  class BotInput < ::Jobs::Base
 
     sidekiq_options queue: 'critical', retry: false
 

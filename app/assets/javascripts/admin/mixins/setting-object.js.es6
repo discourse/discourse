@@ -1,7 +1,8 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Mixin from "@ember/object/mixin";
 
-export default Ember.Mixin.create({
-  @computed("value", "default")
+export default Mixin.create({
+  @discourseComputed("value", "default")
   overridden(val, defaultVal) {
     if (val === null) val = "";
     if (defaultVal === null) defaultVal = "";
@@ -9,7 +10,7 @@ export default Ember.Mixin.create({
     return val.toString() !== defaultVal.toString();
   },
 
-  @computed("valid_values")
+  @discourseComputed("valid_values")
   validValues(validValues) {
     const vals = [],
       translateNames = this.translate_names;
@@ -24,7 +25,7 @@ export default Ember.Mixin.create({
     return vals;
   },
 
-  @computed("valid_values")
+  @discourseComputed("valid_values")
   allowsNone(validValues) {
     if (validValues && validValues.indexOf("") >= 0) {
       return "admin.settings.none";

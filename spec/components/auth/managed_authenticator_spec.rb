@@ -90,6 +90,11 @@ describe Auth::ManagedAuthenticator do
     end
 
     describe 'match by email' do
+      it 'downcases the email address from the authprovider' do
+        result = authenticator.after_authenticate(hash.deep_merge(info: { email: "HELLO@example.com" }))
+        expect(result.email).to eq('hello@example.com')
+      end
+
       it 'works normally' do
         user = Fabricate(:user)
         result = authenticator.after_authenticate(hash.deep_merge(info: { email: user.email }))
@@ -134,6 +139,17 @@ describe Auth::ManagedAuthenticator do
         user = Fabricate(:user, email: "awesome@example.com")
         result = authenticator.after_authenticate(hash)
         expect(result.user.id).to eq(user.id)
+      end
+
+      it 'works if there is no email' do
+        expect {
+          result = authenticator.after_authenticate(hash.deep_merge(info: { email: nil }))
+          expect(result.user).to eq(nil)
+          expect(result.username).to eq("IAmGroot")
+          expect(result.email).to eq(nil)
+        }.to change { UserAssociatedAccount.count }.by(1)
+        expect(UserAssociatedAccount.last.user).to eq(nil)
+        expect(UserAssociatedAccount.last.info["nickname"]).to eq("IAmGroot")
       end
     end
 

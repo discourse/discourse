@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'report'
-
 class Admin::ReportsController < Admin::AdminController
   def index
     reports_methods = ['page_view_total_reqs'] +

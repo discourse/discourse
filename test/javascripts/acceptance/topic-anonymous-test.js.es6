@@ -19,10 +19,7 @@ QUnit.test("Enter without an id", async assert => {
 QUnit.test("Enter a 404 topic", async assert => {
   await visit("/t/not-found/404");
   assert.ok(!exists("#topic"), "The topic was not rendered");
-  assert.ok(
-    find(".not-found").text() === "not found",
-    "it renders the error message"
-  );
+  assert.ok(exists(".topic-error"), "An error message is displayed");
 });
 
 QUnit.test("Enter without access", async assert => {

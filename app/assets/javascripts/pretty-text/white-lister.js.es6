@@ -1,7 +1,7 @@
 import {
-  INLINE_ONEBOX_CSS_CLASS,
-  INLINE_ONEBOX_LOADING_CSS_CLASS
-} from "pretty-text/inline-oneboxer";
+  INLINE_ONEBOX_LOADING_CSS_CLASS,
+  INLINE_ONEBOX_CSS_CLASS
+} from "pretty-text/context/inline-onebox-css-classes";
 
 // to match:
 // abcd
@@ -126,6 +126,7 @@ const DEFAULT_LIST = [
   "a[data-bbcode]",
   "a[name]",
   "a[rel=nofollow]",
+  "a[rel=ugc]",
   "a[target=_blank]",
   "a[title]",
   "abbr[title]",
@@ -167,6 +168,7 @@ const DEFAULT_LIST = [
   "iframe[marginheight]",
   "iframe[marginwidth]",
   "iframe[width]",
+  "iframe[allowfullscreen]",
   "img[alt]",
   "img[height]",
   "img[title]",

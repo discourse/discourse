@@ -1,8 +1,11 @@
-import debounce from "discourse/lib/debounce";
+import { isEmpty } from "@ember/utils";
+import { next } from "@ember/runloop";
+import Component from "@ember/component";
+import discourseDebounce from "discourse/lib/debounce";
 import { searchForTerm } from "discourse/lib/search";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   loading: null,
   noResults: null,
   topics: null,
@@ -30,14 +33,14 @@ export default Ember.Component.extend({
     this.set("loading", false);
   },
 
-  search: debounce(function(title) {
+  search: discourseDebounce(function(title) {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
     }
 
     const currentTopicId = this.currentTopicId;
 
-    if (Ember.isEmpty(title)) {
+    if (isEmpty(title)) {
       this.setProperties({ topics: null, loading: false });
       return;
     }
@@ -61,7 +64,7 @@ export default Ember.Component.extend({
   actions: {
     chooseTopic(topic) {
       this.set("selectedTopicId", topic.id);
-      Ember.run.next(() => {
+      next(() => {
         document.getElementById(`choose-topic-${topic.id}`).checked = true;
       });
       return false;

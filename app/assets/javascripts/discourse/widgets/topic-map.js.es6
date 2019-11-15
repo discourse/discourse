@@ -247,7 +247,7 @@ createWidget("topic-map-link", {
       "data-user-id": attrs.user_id,
       "data-ignore-post-id": "true",
       title: attrs.url,
-      rel: "nofollow noopener"
+      rel: "nofollow ugc noopener"
     };
   },
 

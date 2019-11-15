@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'enum_site_setting'
-
 class BackupLocationSiteSetting < EnumSiteSetting
   LOCAL ||= "local"
   S3 ||= "s3"

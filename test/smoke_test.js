@@ -16,8 +16,8 @@ const path = require("path");
 
 (async () => {
   const browser = await puppeteer.launch({
-    // when debugging localy setting headless to "false" can be very helpful
-    headless: true,
+    // when debugging localy setting the SHOW_BROWSER env variable can be very helpful
+    headless: process.env.SHOW_BROWSER === undefined,
     args: ["--disable-local-storage", "--no-sandbox"]
   });
   const page = await browser.newPage();
@@ -29,7 +29,7 @@ const path = require("path");
 
   const takeFailureScreenshot = function() {
     const screenshotPath = `${process.env.SMOKE_TEST_SCREENSHOT_PATH ||
-    "tmp/smoke-test-screenshots"}/smoke-test-${Date.now()}.png`;
+      "tmp/smoke-test-screenshots"}/smoke-test-${Date.now()}.png`;
     console.log(`Screenshot of failure taken at ${screenshotPath}`);
     return page.screenshot({ path: screenshotPath, fullPage: true });
   };
@@ -70,7 +70,7 @@ const path = require("path");
   page.on("console", msg => console.log(`PAGE LOG: ${msg.text()}`));
 
   page.on("response", resp => {
-    if (resp.status() !== 200) {
+    if (resp.status() !== 200 && resp.status() !== 302) {
       console.log(
         "FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status()
       );
@@ -80,13 +80,46 @@ const path = require("path");
 
   if (process.env.AUTH_USER && process.env.AUTH_PASSWORD) {
     await exec("basic authentication", () => {
-      return page.setExtraHTTPHeaders({
-        Authorization: `Basic ${new Buffer(
-          `${process.env.AUTH_USER}:${process.env.AUTH_PASSWORD}`
-        ).toString("base64")}`
+      return page.authenticate({
+        username: process.env.AUTH_USER,
+        password: process.env.AUTH_PASSWORD
       });
     });
   }
+
+  const login = async function() {
+    await exec("open login modal", () => {
+      return page.click(".login-button");
+    });
+
+    await exec("login modal is open", () => {
+      return page.waitForSelector(".login-modal", { visible: true });
+    });
+
+    await exec("type in credentials & log in", () => {
+      let promise = page.type(
+        "#login-account-name",
+        process.env.DISCOURSE_USERNAME || "smoke_user"
+      );
+
+      promise = promise.then(() => {
+        return page.type(
+          "#login-account-password",
+          process.env.DISCOURSE_PASSWORD || "P4ssw0rd"
+        );
+      });
+
+      promise = promise.then(() => {
+        return page.click(".login-modal .btn-primary");
+      });
+
+      return promise;
+    });
+
+    await exec("is logged in", () => {
+      return page.waitForSelector(".current-user", { visible: true });
+    });
+  };
 
   await exec("go to site", () => {
     return page.goto(url);
@@ -95,6 +128,10 @@ const path = require("path");
   await exec("expect a log in button in the header", () => {
     return page.waitForSelector("header .login-button", { visible: true });
   });
+
+  if (process.env.LOGIN_AT_BEGINNING) {
+    await login();
+  }
 
   await exec("go to latest page", () => {
     return page.goto(path.join(url, "latest"));
@@ -129,40 +166,18 @@ const path = require("path");
   });
 
   if (!process.env.READONLY_TESTS) {
-    await exec("open login modal", () => {
-      return page.click(".login-button");
-    });
+    if (!process.env.LOGIN_AT_BEGINNING) {
+      await login();
+    }
 
-    await exec("login modal is open", () => {
-      return page.waitForSelector(".login-modal", { visible: true });
-    });
-
-    await exec("type in credentials & log in", () => {
-      let promise = page.type(
-        "#login-account-name",
-        process.env.DISCOURSE_USERNAME || "smoke_user"
-      );
+    await exec("go home", () => {
+      let promise = page.waitForSelector("#site-logo, #site-text-logo", { visible: true });
 
       promise = promise.then(() => {
-        return page.type(
-          "#login-account-password",
-          process.env.DISCOURSE_PASSWORD || "P4ssw0rd"
-        );
-      });
-
-      promise = promise.then(() => {
-        return page.click(".login-modal .btn-primary");
+        return page.click("#site-logo, #site-text-logo");
       });
 
       return promise;
-    });
-
-    await exec("is logged in", () => {
-      return page.waitForSelector(".current-user", { visible: true });
-    });
-
-    await exec("go home", () => {
-      return page.click("#site-logo, #site-text-logo");
     });
 
     await exec("it shows a topic list", () => {
@@ -210,16 +225,18 @@ const path = require("path");
     });
 
     await exec("upload modal is open", () => {
-      let promise = page.waitForSelector("#filename-input", { visible: true });
+      return page.waitForSelector("#filename-input", { visible: true });
+    });
 
-      promise.then(() => {
-        return page.click(".d-modal-cancel");
+    await exec("upload modal closes", () => {
+      let promise = page.click(".d-modal-cancel");
+
+      promise = promise.then(() => {
+        return page.waitForSelector("#filename-input", { hidden: true });
       });
 
       return promise;
     });
-
-    await page.waitFor(1000);
 
     await exec("submit the topic", () => {
       return page.click(".submit-panel .create");
@@ -251,78 +268,102 @@ const path = require("path");
       );
     });
 
-    await page.waitFor(5000);
-
-    await exec("submit the topic", () => {
-      return page.click("#reply-control .create");
+    await exec("wait a little bit", () => {
+      return page.waitFor(5000);
     });
 
-    await assert(
-      "reply is created",
-      () => {
-        let promise = page.waitForSelector(".topic-post");
+    await exec("submit the reply", () => {
+      let promise = page.click("#reply-control .create");
 
-        promise = promise.then(() => {
-          return page.evaluate(() => {
-            return document.querySelectorAll(".topic-post").length;
-          });
+      promise = promise.then(() => {
+        return page.waitForSelector("#reply-control.closed", {
+          visible: false
         });
+      });
 
-        return promise;
-      },
-      output => {
-        return output === 2;
-      }
-    );
+      return promise;
+    });
 
-    await page.waitFor(1000);
+    await assert("reply is created", () => {
+      let promise = page.waitForSelector(
+        ".topic-post:not(.staged) #post_2 .cooked",
+        {
+          visible: true
+        }
+      );
+
+      promise = promise.then(() => {
+        return page.waitForFunction(
+          "document.querySelector('#post_2 .cooked').innerText.includes('I can even write a reply')"
+        );
+      });
+
+      return promise;
+    });
+
+    await exec("wait a little bit", () => {
+      return page.waitFor(5000);
+    });
 
     await exec("open composer to edit first post", () => {
-      return page.click(".post-controls:first-of-type .edit");
+      let promise = page.evaluate(() => {
+        window.scrollTo(0, 0);
+      });
+
+      promise = promise.then(() => {
+        return page.click("#post_1 .post-controls .edit");
+      });
+
+      promise = promise.then(() => {
+        return page.waitForSelector("#reply-control .d-editor-input", {
+          visible: true
+        });
+      });
+
+      return promise;
     });
 
     await exec("update post raw in composer", () => {
-      let promise = page.waitForSelector("#reply-control .d-editor-input", {
-        visible: true
-      });
-
-      promise = promise.then(() => page.waitFor(1000));
+      let promise = page.waitFor(5000);
 
       promise = promise.then(() => {
-        const post = `I edited this post`;
-        return page.type("#reply-control .d-editor-input", post);
+        return page.type(
+          "#reply-control .d-editor-input",
+          "\n\nI edited this post"
+        );
       });
 
       return promise;
     });
 
     await exec("submit the edit", () => {
-      return page.click("#reply-control .create");
-    });
+      let promise = page.click("#reply-control .create");
 
-    await assert(
-      "reply is created",
-      () => {
-        let promise = page.waitForSelector("#reply-control.closed", {
+      promise = promise.then(() => {
+        return page.waitForSelector("#reply-control.closed", {
           visible: false
         });
+      });
 
-        promise = promise.then(() => {
-          return page.waitForSelector("#post_1", { visible: true });
-        });
+      return promise;
+    });
 
-        promise = promise.then(() => {
-          return page.evaluate(() => {
-            return document.querySelector("#post_1 .cooked").textContent;
-          });
-        });
+    await assert("edit is successful", () => {
+      let promise = page.waitForSelector(
+        ".topic-post:not(.staged) #post_1 .cooked",
+        {
+          visible: true
+        }
+      );
 
-        return promise;
-      },
-      output => {
-        return output.includes(`I edited this post`);
-      }
-    );
+      promise = promise.then(() => {
+        return page.waitForFunction(
+          "document.querySelector('#post_1 .cooked').innerText.includes('I edited this post')"
+        );
+      });
+
+      return promise;
+    });
   }
 
   await exec("close browser", () => {

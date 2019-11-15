@@ -1,21 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'jobs/base'
-require_dependency 'email'
-require_dependency 'email_token'
-require_dependency 'email_validator'
-require_dependency 'trust_level'
-require_dependency 'pbkdf2'
-require_dependency 'discourse'
-require_dependency 'post_destroyer'
-require_dependency 'user_name_suggester'
-require_dependency 'pretty_text'
-require_dependency 'url_helper'
-require_dependency 'letter_avatar'
-require_dependency 'promotion'
-require_dependency 'password_validator'
-require_dependency 'notification_serializer'
-
 class User < ActiveRecord::Base
   include Searchable
   include Roleable
@@ -79,6 +63,10 @@ class User < ActiveRecord::Base
     where(method: UserSecondFactor.methods[:totp], enabled: true)
   }, class_name: "UserSecondFactor"
 
+  has_many :security_keys, -> {
+    where(enabled: true)
+  }, class_name: "UserSecurityKey"
+
   has_one :anonymous_user_master, class_name: 'AnonymousUser'
   has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser'
 
@@ -96,7 +84,7 @@ class User < ActiveRecord::Base
   has_many :muted_user_records, class_name: 'MutedUser'
   has_many :muted_users, through: :muted_user_records
 
-  has_one :api_key, dependent: :destroy
+  has_many :api_keys, dependent: :destroy
 
   has_many :push_subscriptions, dependent: :destroy
 
@@ -129,8 +117,10 @@ class User < ActiveRecord::Base
   after_create :set_random_avatar
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
+  after_create :set_default_tags_preferences
 
   after_update :trigger_user_updated_event, if: :saved_change_to_uploaded_avatar_id?
+  after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
 
   before_save :update_usernames
   before_save :ensure_password_is_hashed
@@ -144,6 +134,7 @@ class User < ActiveRecord::Base
   after_save :expire_old_email_tokens
   after_save :index_search
   after_save :check_site_contact_username
+
   after_commit :trigger_user_created_event, on: :create
   after_commit :trigger_user_destroyed_event, on: :destroy
 
@@ -209,7 +200,7 @@ class User < ActiveRecord::Base
   scope :filter_by_username_or_email, ->(filter) do
     if filter =~ /.+@.+/
       # probably an email so try the bypass
-      if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck(:user_id).first
+      if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck_first(:user_id)
         return where('users.id = ?', user_id)
       end
     end
@@ -233,6 +224,9 @@ class User < ActiveRecord::Base
     ALWAYS = -1
     LAST_VISIT = -2
   end
+
+  MAX_SELF_DELETE_POST_COUNT ||= 1
+  MAX_STAFF_DELETE_POST_COUNT ||= 5
 
   def self.max_password_length
     200
@@ -267,15 +261,29 @@ class User < ActiveRecord::Base
     @plugin_editable_user_custom_fields ||= {}
   end
 
-  def self.register_plugin_editable_user_custom_field(custom_field_name, plugin)
-    plugin_editable_user_custom_fields[custom_field_name] = plugin
+  def self.plugin_staff_editable_user_custom_fields
+    @plugin_staff_editable_user_custom_fields ||= {}
   end
 
-  def self.editable_user_custom_fields
+  def self.register_plugin_editable_user_custom_field(custom_field_name, plugin, staff_only: false)
+    if staff_only
+      plugin_staff_editable_user_custom_fields[custom_field_name] = plugin
+    else
+      plugin_editable_user_custom_fields[custom_field_name] = plugin
+    end
+  end
+
+  def self.editable_user_custom_fields(by_staff: false)
     fields = []
 
     plugin_editable_user_custom_fields.each do |k, v|
       fields << k if v.enabled?
+    end
+
+    if by_staff
+      plugin_staff_editable_user_custom_fields.each do |k, v|
+        fields << k if v.enabled?
+      end
     end
 
     fields.uniq
@@ -408,6 +416,19 @@ class User < ActiveRecord::Base
     Jobs.enqueue(:send_system_message, user_id: id, message_type: "welcome_tl1_user")
   end
 
+  def enqueue_staff_welcome_message(role)
+    return unless staff?
+
+    Jobs.enqueue(
+      :send_system_message,
+      user_id: id,
+      message_type: 'welcome_staff',
+      message_options: {
+        role: role
+      }
+    )
+  end
+
   def change_username(new_username, actor = nil)
     UsernameChanger.change(self, new_username, actor)
   end
@@ -432,25 +453,6 @@ class User < ActiveRecord::Base
 
   def should_validate_email_address?
     !skip_email_validation && !staged?
-  end
-
-  # Approve this user
-  def approve(approved_by, send_mail = true)
-    Discourse.deprecate("User#approve is deprecated. Please use the Reviewable API instead.", output_in_test: true, since: "2.3.0beta5", drop_from: "2.4")
-
-    # Backwards compatibility - in case plugins or something is using the old API which accepted
-    # either a Number or object. Probably should remove at some point
-    approved_by = User.find_by(id: approved_by) if approved_by.is_a?(Numeric)
-
-    if reviewable_user = ReviewableUser.find_by(target: self)
-      result = reviewable_user.perform(approved_by, :approve_user, send_email: send_mail)
-      if result.success?
-        Reviewable.set_approved_fields!(self, approved_by)
-        return true
-      end
-    end
-
-    false
   end
 
   def self.email_hash(email)
@@ -600,11 +602,6 @@ class User < ActiveRecord::Base
     }
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
-  end
-
-  # A selection of people to autocomplete on @mention
-  def self.mentionable_usernames
-    User.select(:username).order('last_posted_at desc').limit(20)
   end
 
   def password=(password)
@@ -911,16 +908,14 @@ class User < ActiveRecord::Base
   def email_confirmed?
     email_tokens.where(email: email, confirmed: true).present? ||
     email_tokens.empty? ||
-    single_sign_on_record&.external_email == email
+    single_sign_on_record&.external_email&.downcase == email
   end
 
   def activate
     if email_token = self.email_tokens.active.where(email: self.email).first
       user = EmailToken.confirm(email_token.token, skip_reviewable: true)
-      self.update!(active: true) if user.nil?
-    else
-      self.update!(active: true)
     end
+    self.update!(active: true)
     create_reviewable
   end
 
@@ -1018,7 +1013,11 @@ class User < ActiveRecord::Base
       .where.not(post_id: disagreed_flag_post_ids)
       .each do |tl|
 
-      message = I18n.t('flag_reason.spam_hosts', domain: tl.domain, base_path: Discourse.base_path)
+      message = I18n.t(
+        'flag_reason.spam_hosts',
+        base_path: Discourse.base_path,
+        locale: SiteSetting.default_locale
+      )
       results << PostActionCreator.create(Discourse.system_user, tl.post, :spam, message: message)
     end
 
@@ -1027,19 +1026,6 @@ class User < ActiveRecord::Base
 
   def has_uploaded_avatar
     uploaded_avatar.present?
-  end
-
-  def generate_api_key(created_by)
-    if api_key.present?
-      api_key.regenerate!(created_by)
-      api_key
-    else
-      ApiKey.create!(user: self, key: SecureRandom.hex(32), created_by: created_by)
-    end
-  end
-
-  def revoke_api_key
-    ApiKey.where(user_id: self.id).delete_all
   end
 
   def find_email
@@ -1229,11 +1215,11 @@ class User < ActiveRecord::Base
     group_titles_query = group_titles_query.order("groups.id = #{primary_group_id} DESC") if primary_group_id
     group_titles_query = group_titles_query.order("groups.primary_group DESC").limit(1)
 
-    if next_best_group_title = group_titles_query.pluck(:title).first
+    if next_best_group_title = group_titles_query.pluck_first(:title)
       return next_best_group_title
     end
 
-    next_best_badge_title = badges.where(allow_title: true).limit(1).pluck(:name).first
+    next_best_badge_title = badges.where(allow_title: true).pluck_first(:name)
     next_best_badge_title ? Badge.display_name(next_best_badge_title) : nil
   end
 
@@ -1242,6 +1228,50 @@ class User < ActiveRecord::Base
     return if approved?
 
     Jobs.enqueue(:create_user_reviewable, user_id: self.id)
+  end
+
+  def has_more_posts_than?(max_post_count)
+    return true if user_stat && (user_stat.topic_count + user_stat.post_count) > max_post_count
+
+    DB.query_single(<<~SQL, user_id: self.id).first > max_post_count
+      SELECT COUNT(1)
+      FROM (
+        SELECT 1
+        FROM posts p
+               JOIN topics t ON (p.topic_id = t.id)
+        WHERE p.user_id = :user_id AND
+          p.deleted_at IS NULL AND
+          t.deleted_at IS NULL AND
+          (
+            t.archetype <> 'private_message' OR
+              EXISTS(
+                  SELECT 1
+                  FROM topic_allowed_users a
+                  WHERE a.topic_id = t.id AND a.user_id > 0 AND a.user_id <> :user_id
+                ) OR
+              EXISTS(
+                  SELECT 1
+                  FROM topic_allowed_groups g
+                  WHERE g.topic_id = p.topic_id
+                )
+            )
+        LIMIT #{max_post_count + 1}
+      ) x
+    SQL
+  end
+
+  def create_or_fetch_secure_identifier
+    return secure_identifier if secure_identifier.present?
+    new_secure_identifier = SecureRandom.hex(20)
+    self.update(secure_identifier: new_secure_identifier)
+    new_secure_identifier
+  end
+
+  def second_factor_security_key_credential_ids
+    security_keys
+      .select(:credential_id)
+      .where(factor_type: UserSecurityKey.factor_types[:second_factor])
+      .pluck(:credential_id)
   end
 
   protected
@@ -1373,8 +1403,9 @@ class User < ActiveRecord::Base
     values = []
 
     %w{watching watching_first_post tracking muted}.each do |s|
-      category_ids = SiteSetting.get("default_categories_#{s}").split("|")
+      category_ids = SiteSetting.get("default_categories_#{s}").split("|").map(&:to_i)
       category_ids.each do |category_id|
+        next if category_id == 0
         values << "(#{self.id}, #{category_id}, #{CategoryUser.notification_levels[s.to_sym]})"
       end
     end
@@ -1382,6 +1413,23 @@ class User < ActiveRecord::Base
     if values.present?
       DB.exec("INSERT INTO category_users (user_id, category_id, notification_level) VALUES #{values.join(",")}")
     end
+  end
+
+  def set_default_tags_preferences
+    return if self.staged?
+
+    values = []
+
+    %w{watching watching_first_post tracking muted}.each do |s|
+      tag_names = SiteSetting.get("default_tags_#{s}").split("|")
+      now = Time.zone.now
+
+      Tag.where(name: tag_names).pluck(:id).each do |tag_id|
+        values << { user_id: self.id, tag_id: tag_id, notification_level: TagUser.notification_levels[s.to_sym], created_at: now, updated_at: now }
+      end
+    end
+
+    TagUser.insert_all!(values) if values.present?
   end
 
   def self.purge_unactivated
@@ -1409,12 +1457,19 @@ class User < ActiveRecord::Base
   def match_title_to_primary_group_changes
     return unless primary_group_id_changed?
 
-    if title == Group.where(id: primary_group_id_was).pluck(:title).first
+    if title == Group.where(id: primary_group_id_was).pluck_first(:title)
       self.title = primary_group&.title
     end
   end
 
   private
+
+  def trigger_user_automatic_group_refresh
+    if !staged
+      Group.user_trust_level_change!(id, trust_level)
+    end
+    true
+  end
 
   def trigger_user_updated_event
     DiscourseEvent.trigger(:user_updated, self)
@@ -1423,8 +1478,13 @@ class User < ActiveRecord::Base
 
   def check_if_title_is_badged_granted
     if title_changed? && !new_record? && user_profile
-      badge_granted_title = title.present? && badges.where(allow_title: true, name: title).exists?
-      user_profile.update_column(:badge_granted_title, badge_granted_title)
+      badge_matching_title = title && badges.find do |badge|
+        badge.allow_title? && (badge.display_name == title || badge.name == title)
+      end
+      user_profile.update(
+        badge_granted_title: badge_matching_title.present?,
+        granted_title_badge_id: badge_matching_title&.id
+      )
     end
   end
 
@@ -1520,6 +1580,7 @@ end
 #  silenced_till             :datetime
 #  group_locked_trust_level  :integer
 #  manual_locked_trust_level :integer
+#  secure_identifier         :string
 #
 # Indexes
 #
@@ -1527,6 +1588,7 @@ end
 #  idx_users_moderator                (id) WHERE moderator
 #  index_users_on_last_posted_at      (last_posted_at)
 #  index_users_on_last_seen_at        (last_seen_at)
+#  index_users_on_secure_identifier   (secure_identifier) UNIQUE
 #  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)
 #  index_users_on_username            (username) UNIQUE
 #  index_users_on_username_lower      (username_lower) UNIQUE

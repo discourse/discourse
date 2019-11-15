@@ -1,3 +1,4 @@
+{{plugin-outlet name="above-user-profile" tagName='' args=(hash model=model)}}
 <div class="container {{if viewingSelf 'viewing-self'}}">
   {{#d-section class="user-main"}}
 
@@ -97,7 +98,7 @@
             <div class="user-profile-website">
               {{d-icon "globe"}}
               {{#if linkWebsite}}
-                <a href={{model.website}} rel={{unless removeNoFollow 'nofollow noopener'}} target="_blank">{{model.website_name}}</a>
+                <a href={{model.website}} rel={{unless removeNoFollow 'nofollow ugc noopener'}} target="_blank">{{model.website_name}}</a>
               {{else}}
                 <span title={{model.website}}>{{model.website_name}}</span>
               {{/if}}
@@ -159,7 +160,9 @@
             {{#if model.last_seen_at}}
               <div><dt>{{i18n 'user.last_seen'}}</dt><dd>{{bound-date model.last_seen_at}}</dd></div>
             {{/if}}
-            <div><dt>{{i18n 'views'}}</dt><dd>{{model.profile_view_count}}</dd></div>
+            {{#if model.profile_view_count}}
+              <div><dt>{{i18n 'views'}}</dt><dd>{{model.profile_view_count}}</dd></div>
+            {{/if}}
             {{#if model.invited_by}}
               <div><dt class="invited-by">{{i18n 'user.invited_by'}}</dt><dd class="invited-by">{{#link-to 'user' model.invited_by}}{{model.invited_by.username}}{{/link-to}}</dd></div>
             {{/if}}

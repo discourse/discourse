@@ -1,14 +1,15 @@
+import Route from "@ember/routing/route";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { THEMES, COMPONENTS } from "admin/models/theme";
 
-export default Ember.Route.extend({
+export default Route.extend({
   serialize(model) {
     return { theme_id: model.get("id") };
   },
 
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
-    const model = all.findBy("id", parseInt(params.theme_id));
+    const model = all.findBy("id", parseInt(params.theme_id, 10));
     return model ? model : this.replaceWith("adminCustomizeTheme.index");
   },
 

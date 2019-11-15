@@ -199,6 +199,12 @@ describe CookedPostProcessor do
           RAW
         end
 
+        let(:staff_post) do
+          Fabricate(:post, user: Fabricate(:admin), raw: <<~RAW)
+          This is a #{url_with_path} topic
+          RAW
+        end
+
         before do
           urls.each do |url|
             stub_request(:get, url).to_return(
@@ -247,6 +253,14 @@ describe CookedPostProcessor do
             text: title,
             count: 1
           )
+
+          expect(html).to have_tag("a[rel='nofollow noopener']")
+        end
+
+        it 'removes nofollow if user is staff/tl3' do
+          cpp = CookedPostProcessor.new(staff_post, invalidate_oneboxes: true)
+          cpp.post_process
+          expect(cpp.html).to_not have_tag("a[rel='nofollow noopener']")
         end
       end
     end
@@ -287,7 +301,7 @@ describe CookedPostProcessor do
           )
 
           # Fake a loading image
-          optimized_image = OptimizedImage.create!(
+          _optimized_image = OptimizedImage.create!(
             url: '/uploads/default/10x10.png',
             width: CookedPostProcessor::LOADING_SIZE,
             height: CookedPostProcessor::LOADING_SIZE,
@@ -583,7 +597,38 @@ describe CookedPostProcessor do
 
       end
 
-      context "with title" do
+      context "with title and alt" do
+        fab!(:post) do
+          Fabricate(:post, raw: <<~HTML)
+          <img src="#{upload.url}" title="WAT" alt="RED">
+          HTML
+        end
+
+        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+
+        before do
+          SiteSetting.max_image_height = 2000
+          SiteSetting.create_thumbnails = true
+          FastImage.expects(:size).returns([1750, 2000])
+          OptimizedImage.expects(:resize).returns(true)
+          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+        end
+
+        it "generates overlay information using image title and ignores alt" do
+          cpp.post_process
+
+          expect(cpp.html).to match_html <<~HTML
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="WAT"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" title="WAT" alt="RED" width="690" height="788"><div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">WAT</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+            </div></a></div></p>
+          HTML
+
+          expect(cpp).to be_dirty
+        end
+
+      end
+
+      context "with title only" do
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}" title="WAT">
@@ -600,7 +645,7 @@ describe CookedPostProcessor do
           FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
         end
 
-        it "generates overlay information" do
+        it "generates overlay information using image title" do
           cpp.post_process
 
           expect(cpp.html).to match_html <<~HTML
@@ -614,9 +659,39 @@ describe CookedPostProcessor do
 
       end
 
+      context "with alt only" do
+        fab!(:post) do
+          Fabricate(:post, raw: <<~HTML)
+          <img src="#{upload.url}" alt="RED">
+          HTML
+        end
+
+        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+
+        before do
+          SiteSetting.max_image_height = 2000
+          SiteSetting.create_thumbnails = true
+          FastImage.expects(:size).returns([1750, 2000])
+          OptimizedImage.expects(:resize).returns(true)
+          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+        end
+
+        it "generates overlay information using image alt" do
+          cpp.post_process
+
+          expect(cpp.html).to match_html <<~HTML
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="RED"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" alt="RED" width="690" height="788"><div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">RED</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+            </div></a></div></p>
+          HTML
+
+          expect(cpp).to be_dirty
+        end
+
+      end
+
       context "topic image" do
-        let(:topic) { build(:topic, id: 1) }
-        let(:post) { Fabricate(:post_with_uploaded_image, topic: topic) }
+        let(:post) { Fabricate(:post_with_uploaded_image) }
         let(:cpp) { CookedPostProcessor.new(post) }
 
         it "adds a topic image if there's one in the first post" do
@@ -876,6 +951,27 @@ describe CookedPostProcessor do
     end
   end
 
+  context "#post_process_oneboxes removes nofollow if user is tl3" do
+    let(:post) { build(:post_with_youtube, id: 123) }
+    let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
+
+    before do
+      post.user.trust_level = TrustLevel[3]
+      post.user.save!
+      SiteSetting.add_rel_nofollow_to_user_content = true
+      SiteSetting.tl3_links_no_follow = false
+      Oneboxer.expects(:onebox)
+        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
+        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow noopener">GANGNAM STYLE</a></aside>')
+      cpp.post_process_oneboxes
+    end
+
+    it "removes nofollow noopener from links" do
+      expect(cpp).to be_dirty
+      expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0">GANGNAM STYLE</a></aside>'
+    end
+  end
+
   context "#post_process_oneboxes with oneboxed image" do
     let(:post) { build(:post_with_youtube, id: 123) }
     let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
@@ -1040,7 +1136,7 @@ describe CookedPostProcessor do
 
         expect(cpp.html).to match_html <<~HTML
           <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
-          <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" width="10" height="20"></p>
+          <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
         HTML
       end
 
@@ -1082,10 +1178,11 @@ describe CookedPostProcessor do
 
     before { cpp.stubs(:available_disk_space).returns(90) }
 
-    it "does not run when download_remote_images_to_local is disabled" do
+    it "runs even when download_remote_images_to_local is disabled" do
+      # We want to run it to pull hotlinked optimized images
       SiteSetting.download_remote_images_to_local = false
-      Jobs.expects(:cancel_scheduled_job).never
-      cpp.pull_hotlinked_images
+      expect { cpp.pull_hotlinked_images }.
+        to change { Jobs::PullHotlinkedImages.jobs.count }.by 1
     end
 
     context "when download_remote_images_to_local? is enabled" do
@@ -1093,10 +1190,10 @@ describe CookedPostProcessor do
         SiteSetting.download_remote_images_to_local = true
       end
 
-      it "does not run when there is not enough disk space" do
-        cpp.expects(:disable_if_low_on_disk_space).returns(true)
-        Jobs.expects(:cancel_scheduled_job).never
+      it "disables download_remote_images if there is not enough disk space" do
+        cpp.expects(:available_disk_space).returns(5)
         cpp.pull_hotlinked_images
+        expect(SiteSetting.download_remote_images_to_local).to eq(false)
       end
 
       context "and there is enough disk space" do
@@ -1135,11 +1232,14 @@ describe CookedPostProcessor do
     let(:post) { build(:post, created_at: 20.days.ago) }
     let(:cpp) { CookedPostProcessor.new(post) }
 
-    before { cpp.expects(:available_disk_space).returns(50) }
+    before do
+      SiteSetting.download_remote_images_to_local = true
+      cpp.expects(:available_disk_space).returns(50)
+    end
 
     it "does nothing when there's enough disk space" do
       SiteSetting.expects(:download_remote_images_threshold).returns(20)
-      SiteSetting.expects(:download_remote_images_to_local).never
+      SiteSetting.expects(:download_remote_images_to_local=).never
       expect(cpp.disable_if_low_on_disk_space).to eq(false)
     end
 
@@ -1152,6 +1252,14 @@ describe CookedPostProcessor do
         SystemMessage.expects(:create_from_system_user).with(Discourse.site_contact_user, :download_remote_images_disabled).once
         expect(cpp.disable_if_low_on_disk_space).to eq(true)
         expect(SiteSetting.download_remote_images_to_local).to eq(false)
+      end
+
+      it "doesn't disable download_remote_images_to_local if site uses S3" do
+        SiteSetting.s3_access_key_id = "s3-access-key-id"
+        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+        SiteSetting.enable_s3_uploads = true
+        expect(cpp.disable_if_low_on_disk_space).to eq(false)
+        expect(SiteSetting.download_remote_images_to_local).to eq(true)
       end
 
     end
@@ -1226,18 +1334,31 @@ describe CookedPostProcessor do
     end
 
     context "onebox" do
-      let(:post) { Fabricate(:post, raw: "onebox me:\n\nhttps://www.youtube.com/watch?v=Wji-BZ0oCwg\n") }
+      before do
+        Oneboxer.stubs(:onebox).with(anything, anything).returns(nil)
+        Oneboxer.stubs(:onebox).with('https://discourse.org', anything).returns("<aside class=\"onebox whitelistedgeneric\">the rest of the onebox</aside>")
+      end
 
-      before { Oneboxer.stubs(:onebox) }
-
-      it "awards a badge for using an onebox" do
+      it "awards the badge for using an onebox" do
+        post = Fabricate(:post, raw: "onebox me:\n\nhttps://discourse.org\n")
+        cpp = CookedPostProcessor.new(post)
         cpp.post_process_oneboxes
         cpp.grant_badges
         expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(true)
       end
 
-      it "doesn't award the badge when the badge is disabled" do
+      it "does not award the badge when link is not oneboxed" do
+        post = Fabricate(:post, raw: "onebox me:\n\nhttp://example.com\n")
+        cpp = CookedPostProcessor.new(post)
+        cpp.post_process_oneboxes
+        cpp.grant_badges
+        expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(false)
+      end
+
+      it "does not award the badge when the badge is disabled" do
         Badge.where(id: Badge::FirstOnebox).update_all(enabled: false)
+        post = Fabricate(:post, raw: "onebox me:\n\nhttps://discourse.org\n")
+        cpp = CookedPostProcessor.new(post)
         cpp.post_process_oneboxes
         cpp.grant_badges
         expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(false)

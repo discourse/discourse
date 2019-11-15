@@ -1,16 +1,10 @@
 # frozen_string_literal: true
 
 require "digest"
-require_dependency "new_post_manager"
-require_dependency "html_to_markdown"
-require_dependency "plain_text_to_markdown"
-require_dependency "upload_creator"
 
 module Email
 
   class Receiver
-    include ActionView::Helpers::NumberHelper
-
     # If you add a new error, you need to
     #   * add it to Email::Processor#handle_failure()
     #   * add text to server.en.yml (parent key: "emails.incoming.errors")
@@ -67,7 +61,8 @@ module Email
 
     def process!
       return if is_blacklisted?
-      DistributedMutex.synchronize(@message_id) do
+      id_hash = Digest::SHA1.hexdigest(@message_id)
+      DistributedMutex.synchronize("process_email_#{id_hash}") do
         begin
           return if IncomingEmail.exists?(message_id: @message_id)
           ensure_valid_address_lists
@@ -111,7 +106,7 @@ module Email
     def create_incoming_email
       IncomingEmail.create(
         message_id: @message_id,
-        raw: @raw_email,
+        raw: Email::Cleaner.new(@raw_email).execute,
         subject: subject,
         from_address: @from_email,
         to_addresses: @mail.to&.map(&:downcase)&.join(";"),
@@ -306,6 +301,8 @@ module Email
         @mail[:x_spam_flag].to_s[/YES/i]
       when 'X-Spam-Status'
         @mail[:x_spam_status].to_s[/^Yes, /i]
+      when 'X-SES-Spam-Verdict'
+        @mail[:x_ses_spam_verdict].to_s[/FAIL/i]
       else
         false
       end
@@ -660,7 +657,7 @@ module Email
     end
 
     def process_destination(destination, user, body, elided, hidden_reason_id)
-      return if SiteSetting.enable_forwarded_emails &&
+      return if SiteSetting.forwarded_emails_behaviour != "hide" &&
                 has_been_forwarded? &&
                 process_forwarded_email(destination, user)
 
@@ -800,27 +797,30 @@ module Email
 
     def process_forwarded_email(destination, user)
       user ||= stage_from_user
-      embedded = Mail.new(embedded_email_raw)
-      email, display_name = parse_from_field(embedded)
+      case SiteSetting.forwarded_emails_behaviour
+      when "create_replies"
+        forwarded_email_create_replies(destination, user)
+      when "quote"
+        forwarded_email_quote_forwarded(destination, user)
+      else
+        false
+      end
+    end
 
-      return false if email.blank? || !email["@"]
-
-      raw = try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s
-      title = embedded.subject.presence || subject
-
+    def forwarded_email_create_topic(destination: , user: , raw: , title: , date: nil, embedded_user: nil)
       case destination[:type]
       when :group
         group = destination[:obj]
-        embedded_user = find_or_create_user(email, display_name)
-        post = create_topic(user: embedded_user,
-                            raw: raw,
-                            title: title,
-                            archetype: Archetype.private_message,
-                            target_usernames: [user.username],
-                            target_group_names: [group.name],
-                            is_group_message: true,
-                            skip_validations: true,
-                            created_at: embedded.date)
+        topic_user = embedded_user&.call || user
+        create_topic(user: topic_user,
+                     raw: raw,
+                     title: title,
+                     archetype: Archetype.private_message,
+                     target_usernames: [user.username],
+                     target_group_names: [group.name],
+                     is_group_message: true,
+                     skip_validations: true,
+                     created_at: date)
 
       when :category
         category = destination[:obj]
@@ -828,16 +828,31 @@ module Email
         return false if user.staged? && !category.email_in_allow_strangers
         return false if !user.has_trust_level?(SiteSetting.email_in_min_trust)
 
-        embedded_user = find_or_create_user(email, display_name)
-        post = create_topic(user: embedded_user,
-                            raw: raw,
-                            title: title,
-                            category: category.id,
-                            skip_validations: embedded_user.staged?,
-                            created_at: embedded.date)
+        topic_user = embedded_user&.call || user
+        create_topic(user: topic_user,
+                     raw: raw,
+                     title: title,
+                     category: category.id,
+                     skip_validations: topic_user.staged?,
+                     created_at: date)
       else
-        return false
+        false
       end
+    end
+
+    def forwarded_email_create_replies(destination, user)
+      embedded = Mail.new(embedded_email_raw)
+      email, display_name = parse_from_field(embedded)
+
+      return false if email.blank? || !email["@"]
+
+      post = forwarded_email_create_topic(destination: destination,
+                                          user: user,
+                                          raw: try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s,
+                                          title: embedded.subject.presence || subject,
+                                          date: embedded.date,
+                                          embedded_user: lambda { find_or_create_user(email, display_name) })
+      return false unless post
 
       if post&.topic
         # mark post as seen for the forwarder
@@ -846,7 +861,7 @@ module Email
         # create reply when available
         if @before_embedded.present?
           post_type = Post.types[:regular]
-          post_type = Post.types[:whisper] if post.topic.private_message? && group.usernames[user.username]
+          post_type = Post.types[:whisper] if post.topic.private_message? && destination[:obj].usernames[user.username]
 
           create_reply(user: user,
                        raw: @before_embedded,
@@ -858,6 +873,19 @@ module Email
       end
 
       true
+    end
+
+    def forwarded_email_quote_forwarded(destination, user)
+      embedded = embedded_email_raw
+      raw = <<~EOF
+        #{@before_embedded}
+
+        [quote]
+        #{PlainTextToMarkdown.new(embedded).to_markdown}
+        [/quote]
+      EOF
+
+      return true if forwarded_email_create_topic(destination: destination, user: user, raw: raw, title: subject)
     end
 
     def self.reply_by_email_address_regex(extract_reply_key = true, include_verp = false)
@@ -1031,13 +1059,19 @@ module Email
             if attachment.content_type&.start_with?("image/")
               if raw[attachment.url]
                 raw.sub!(attachment.url, upload.url)
+
+                InlineUploads.match_img(raw) do |match, src, replacement, _|
+                  if src == upload.url
+                    raw = raw.sub(match, UploadMarkdown.new(upload).image_markdown)
+                  end
+                end
               elsif raw[/\[image:.*?\d+[^\]]*\]/i]
-                raw.sub!(/\[image:.*?\d+[^\]]*\]/i, attachment_markdown(upload))
+                raw.sub!(/\[image:.*?\d+[^\]]*\]/i, UploadMarkdown.new(upload).to_markdown)
               else
-                raw << "\n\n#{attachment_markdown(upload)}\n\n"
+                raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
               end
             else
-              raw << "\n\n#{attachment_markdown(upload)}\n\n"
+              raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
             end
           else
             rejected_attachments << upload
@@ -1070,14 +1104,6 @@ module Email
 
       client_message = RejectionMailer.send_rejection(:email_reject_attachment, message.from, template_args)
       Email::Sender.new(client_message, :email_reject_attachment).send
-    end
-
-    def attachment_markdown(upload)
-      if FileHelper.is_supported_image?(upload.original_filename)
-        "<img src='#{upload.url}' width='#{upload.width}' height='#{upload.height}'>"
-      else
-        "<a class='attachment' href='#{upload.url}'>#{upload.original_filename}</a> (#{number_to_human_size(upload.filesize)})"
-      end
     end
 
     def create_post(options = {})
@@ -1211,5 +1237,4 @@ module Email
       end
     end
   end
-
 end

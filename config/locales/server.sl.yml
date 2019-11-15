@@ -29,6 +29,7 @@ sl:
   posts: "prispevkov"
   loading: "Nalagam"
   powered_by_html: 'Uporablja tehnologijo <a href="https://www.discourse.org">Discourse</a>, za ogled te strani se priporoča omogočen JavaScript.'
+  sign_up: "Registracija"
   log_in: "Vpis"
   submit: "Pošlji"
   anonymous: "Anonimni"
@@ -82,7 +83,6 @@ sl:
     errors:
       <<: *errors
   invite:
-    not_found: "Vaša koda povabila ni pravilna. Kontaktirajte administatorja."
     not_found_template: |
       <p>Vaše povabilo na <a href="%{base_url}">%{site_name}</a> je bilo že sprejeto.</p>
 
@@ -99,6 +99,8 @@ sl:
     file_exists: "Datoteka, ki jo hočete naložiti, že obstaja."
   invalid_grant_badge_reason_link: "Zunanja ali neustrezna discourse povezava ni dovoljena kot razlog za značko"
   email_template_cant_be_modified: "Ta predloga e-sporočila se ne more spreminjati"
+  not_in_group:
+    join_group: "Pridruži se skupini"
   reading_time: "Čas branja"
   likes: "Všečki"
   too_many_replies:
@@ -124,6 +126,8 @@ sl:
       two: "%{count} odgovora"
       few: "%{count} odgovori"
       other: "%{count} odgovorov"
+    last_reply: "Zadnji odgovor"
+    created: "Ustvarjeno"
   no_mentions_allowed: "Ne morete omenjati drugih uporabnikov."
   too_many_mentions:
     one: "V prispevku lahko omenite samo %{count} uporabnika."
@@ -154,6 +158,8 @@ sl:
     two: "Novi uporabniki lahko v prispevek dodajo samo %{count} povezavi."
     few: "Novi uporabniki lahko v prispevek dodajo samo %{count} povezave."
     other: "Novi uporabniki lahko v prispevek dodajo samo %{count} povezav."
+  contains_blocked_word: "Vaš prispevek vsebuje prepovedano besedo: %{word}"
+  contains_blocked_words: "Vaš prispevek vsebuje prepovedane besede: %{words}"
   user_is_suspended: "Suspendirani uporabniki ne morejo objavljati."
   pm_reached_recipients_limit: "Ne morete imeti več kot %{recipients_limit} prejemnikov v sporočilu."
   removed_direct_reply_full_quotes: "Samodejno odstranjen citat celotnega prejšnega prispevka."
@@ -473,27 +479,27 @@ sl:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
       edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "neznan brskalnik"
     device:
       android: "Android naprava"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "Mobilna naprava"
-      mac: "Mac"
       linux: "GNU/Linux računalnik"
+      mac: "Mac"
+      mobile: "Mobilna naprava"
       windows: "Windows računalnik"
       unknown: "neznana naprava"
     os:
       android: "Android"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
   change_email:
@@ -608,6 +614,10 @@ sl:
       every_six_months: "vsakih 6 mesecev"
   user_api_key:
     otp_description: 'Hočete dovoliti "%{application_name}" da dostopa do te strani?'
+    otp_confirmation:
+      confirm_title: "Nadaljujte na %{site_name}"
+      logging_in_as: "Prijava kot %{username}"
+      confirm_button: Zaključi prijavo
   flags:
     errors:
       already_handled: "Prijava je bila že obdelana"
@@ -617,6 +627,7 @@ sl:
         count: Število
     post_edits:
       labels:
+        edited_at: Datum
         post: Prispevek
         editor: Urednik
         edit_reason: Razlog
@@ -728,8 +739,8 @@ sl:
   move_posts:
     new_topic_moderator_post:
       one: "%{count} prispevek je bil prestavljen v novo temo: %{topic_link}"
-      two: "%{count} prispevka sta bila prestavljena v novo temo:  %{topic_link}"
-      few: "%{count} prispevki so bili prestavljeni v novo temo:  %{topic_link}"
+      two: "%{count} prispevka sta bila prestavljena v novo temo: %{topic_link}"
+      few: "%{count} prispevki so bili prestavljeni v novo temo: %{topic_link}"
       other: "%{count} prispevkov je bilo prestavljeno v novo temo: %{topic_link}"
     new_message_moderator_post:
       one: "%{count} prispevek je bil prestavljen v novo sporočilo: %{topic_link}"
@@ -742,7 +753,7 @@ sl:
       few: "%{count} prispevki so bili združeni v obstoječo temo: %{topic_link}"
       other: "%{count} prispevkov je bilo združeno v obstoječo temo: %{topic_link}"
     existing_message_moderator_post:
-      one: "%{count} prispevek je bil združen v obstoječe sporočilo:  %{topic_link}"
+      one: "%{count} prispevek je bil združen v obstoječe sporočilo: %{topic_link}"
       two: "%{count} prispevka sta bila združena v obstoječe sporočilo: %{topic_link}"
       few: "%{count} prispevki so bili združeni v obstoječe sporočilo: %{topic_link}"
       other: "%{count} prispevkov je bilo združeno v obstoječe sporočilo: %{topic_link}"
@@ -833,8 +844,8 @@ sl:
     errors: "%{errors}"
     not_available: "Ni na voljo. Poskusite %{suggestion}?"
     something_already_taken: "Prišlo je do napake, mogoče je uporabniško ime ali e-naslov že registriran. Poskusite povezavo za pozabljeno geslo."
-    omniauth_error: "Prišlo je do napake pri preverjanju vašega računa. Mogoče niste potrdili avtorizacije?"
     omniauth_error_unknown: "Prišlo je do napake pri vaši prijavi, poskusite ponovno."
+    omniauth_confirm_button: "Nadaljuj"
     authenticator_error_no_valid_email: "E-naslov povezan z računom %{account} ni dovoljen. Morali boste uporabiti drug e-naslov."
     new_registrations_disabled: "Nove registracije uporabniških računov trenutno niso mogoče."
     password_too_long: "Geslo je omejeno na 200 znakov."
@@ -961,35 +972,9 @@ sl:
     post_hidden:
       title: "Prispevek skrit"
       subject_template: "Prispevek je bil skrit zaradi prijav iz skupnosti"
-      text_body_template: |
-        Pozdravljeni,
-
-        To je samodejno sporočilo od %{site_name} da je vaš prispevek skrit.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Več članov skupnosti je prijavilo vaš prispevek preden je bil skrit, zato premislite kako bi lahko prispevek spremenili, da bo upošteval njihove pripombe. **Če vaš prispevek uredite najkasneje %{edit_delay} minut po objavi, bo samodejno ponovno prikazan.**
-
-        Vendar, če bo prispevek ponovno skrit zaradi prijav članov skupnosti, potem bo skrit dokler ga ne pregleda član osebja foruma.
-
-        Za dodatne informacije preberite [pravila skupnosti](%{base_url}/guidelines).
     post_hidden_again:
       title: "Prispevek ponovno skrit"
       subject_template: "Prispevek je bil ponovno skrit zaradi prijav iz skupnosti zato smo obvestili osebje"
-      text_body_template: |
-        Pozdravljeni,
-
-        To je samodejno sporočilo od %{site_name} da je vaš prispevek skrit.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Več članov skupnosti je prijavilo vaš prispevek preden je bil skrit. **Ker je bil prispevek skrit večkrat, bo ostal skrit dokler ga ne pregleda član osebja foruma.**
-
-        Za dodatna informacije preberite [pravila skupnosti](%{base_url}/guidelines).
     flags_agreed_and_post_deleted:
       title: "Prijavljen prispevek odstranjen s strani osebja"
       subject_template: "Prijavljen prispevek odstranjen s strani osebja"
@@ -1033,7 +1018,7 @@ sl:
       title: "Dobrodošel povabljeni"
       subject_template: "Dobrodošli na %{site_name}!"
       text_body_template: |
-        Hvala da ste sprejeli povabilo na  %{site_name} -- dobrodošli!
+        Hvala da ste sprejeli povabilo na %{site_name} -- dobrodošli!
 
         - Naredili smo uporabniški račun **%{username}** za vas. Spremenite lahko ime ali geslo v [uporabniških nastavitvah][prefs].
 
@@ -1050,9 +1035,9 @@ sl:
       title: "Varnostna kopija uspela"
       subject_template: "Varnostna kopija uspela"
       text_body_template: |
-        Varnostna kopija uspela.
+        Varnostna kopija uspešno narejena.
 
-        Pojdite v [admin > backup section](%{base_url}/admin/backups) za prenos vaše nove varnostne kopije.
+        Pojdite v [Admin > Varnostne kopije](%{base_url}/admin/backups) za prenos vaše nove varnostne kopije.
 
         Tukaj je dnevnik:
 
@@ -1110,14 +1095,6 @@ sl:
     csv_export_succeeded:
       title: "CSV izvoz uspel"
       subject_template: "[%{export_title}] Izvoz podatkov končan"
-      text_body_template: |
-        Vaš izvoz podatkov je končan! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        Zgornja povezava za prenos bo aktivna naslednjih 48 ur.
-
-        Podatki so stisnjeni v gzip datoteki. Če se datoteka ne razširi samodejno, ko jo odprete, uporabite eno od navedenih orodij: https://www.gzip.org/#faq4
     csv_export_failed:
       title: "CSV izvoz ni uspel"
       subject_template: "Izvoz podatkov ni uspel"
@@ -1135,7 +1112,7 @@ sl:
       text_body_template: |
         Žal nam je, ampak vaše e-sporočilo poslano na %{destination} (z naslovom %{former_title}) ni bilo sprejeto.
 
-        Vaše sporočilo je bilo poslano na neznan e-naslov.  Poskusite poslati na drug e-naslov ali [kontaktirajte osebje](%{base_url}/about).
+        Vaše sporočilo je bilo poslano na neznan e-naslov. Poskusite poslati na drug e-naslov ali [kontaktirajte osebje](%{base_url}/about).
     email_reject_screened_email:
       title: "E-sporočilo zavrnjeno - nadzorovan e-naslov"
       subject_template: "[%{email_prefix}] Napaka e-pošte -- blokiran e-naslov"
@@ -1171,13 +1148,6 @@ sl:
         Žal nam je, ampak vaše e-sporočilo poslano na %{destination} (z naslovom %{former_title}) ni bilo sprejeto.
 
         Vaše e-sporočilo je bilo poslano iz drugega e-naslova, kot je bilo pričakovano, tako da nismo prepričani ali gre za istega uporabnika. Poskusite poslati iz drugega e-naslova ali [kontaktirajte osebje](%{base_url}/about).
-    email_reject_no_account:
-      title: "E-sporočilo zavrnjeno - ni računa"
-      subject_template: "[%{email_prefix}] Napaka e-pošte -- ni računa"
-      text_body_template: |
-        Žal nam je, ampak vaše e-sporočilo poslano na %{destination} (z naslovom %{former_title}) ni bilo sprejeto.
-
-        Ne najdemo nobenega uporabniškega računa s tem e-naslovom. Poskusite poslati iz drugega e-naslova ali [kontaktirajte osebje](%{base_url}/about).
     email_reject_empty:
       title: "E-sporočilo zavrnjeno - ni vsebine"
       subject_template: "[%{email_prefix}] Napaka e-pošte -- ni vsebine"
@@ -1309,14 +1279,6 @@ sl:
     ignored_users_summary:
       title: "Prezrti uporabnik je presegel prag"
       subject_template: "Uporabnik je prezrt s strani precej drugih uporabnikov"
-      text_body_template: |
-        Pozdravljeni,
-
-        To samodejno sporočilo od %{site_name} vas obvešča da je [uporabnik](%{base_url}/u/%{username}/summary) prezrt s strani %{ignores_threshold} uporabnikov. To je mogoče kaže na to, da imate problem v vaši skupnosti.
-
-        Mogoče bi bilo dobro pregledati zadnje objave tega uporabnika in mogoče tudi drugih uporabnikov v [poročilo prezrtih uporabnikov](%{base_url}/admin/reports/top_ignored_users).
-
-        Za dodatna informacije preberite [pravila skupnosti](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Preveč prijav kot neželeno"
       subject_template: "Nov uporabniški račun je na čakanju"
@@ -1347,7 +1309,7 @@ sl:
 
         To samodejno sporočilo iz %{site_name} vam sporoča da je bil vaš uporabniški račun zaradi preventivnega ukrepa začasno dan na čakanje.
 
-        Lahko še naprej brskate po forumu, vendar ne boste mogli odgovarjati na prispevke ali teme dokler [član osebja foruma](%{base_url}/about) ne pregleda vaše zadnje prispevke.  Opravičujemo se vam za neprijetnosti.
+        Lahko še naprej brskate po forumu, vendar ne boste mogli odgovarjati na prispevke ali teme dokler [član osebja foruma](%{base_url}/about) ne pregleda vaše zadnje prispevke. Opravičujemo se vam za neprijetnosti.
 
         Za dodatne informacije preberite [pravila skupnosti](%{base_url}/guidelines).
     user_automatically_silenced:
@@ -1399,17 +1361,13 @@ sl:
     dashboard_problems:
       title: "Težave nadzorne plošče"
       subject_template: "Nov nasvet na vaši nadzorni plošči"
-      text_body_template: |
-        Imate nove nasvete in priporočila za vas na podlagi vaših trenutnih nastavitev sistema..
-
-        [Obiščite nadzorno ploščo](%{base_url}/admin) da jih pregledate.
     new_user_of_the_month:
       title: "Vi ste nov uporabnik meseca!"
       subject_template: "Vi ste nov uporabnik meseca!"
       text_body_template: |
         Čestitamo, osvojili ste **Nov uporabnik meseca %{month_year}**. :trophy:
 
-        Ta nagrada je podeljena dvem novim uporabnikom vsak mesec in bo stalno vidna  na [seznamu značk](%{url}).
+        Ta nagrada je podeljena dvem novim uporabnikom vsak mesec in bo stalno vidna na [seznamu značk](%{url}).
 
         Hitro ste poslali pomemben član skupnosti. Hvala za sodelovanje in nadaljujte z dobrim delom!
     queued_posts_reminder:
@@ -1443,39 +1401,9 @@ sl:
     visit_link_to_respond_pm: "[Pojdi na sporočilo](%{base_url}%{url}) za odgovor %{participants}."
     posted_by: "Objavljeno od %{username}ob %{post_date}"
     pm_participants: "Sodelujoči: %{participants}"
-    invited_group_to_private_message_body: |
-      %{username} je povabil @%{group_name} da sodeluje v
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      na
-
-      > %{site_title} -- %{site_description}
-    invited_to_private_message_body: |
-      %{username} vas je povabil da sodelujete v
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      na
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} vas je povabil da sodelujete v
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      na
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       title: "Uporabnik je povabil skupino v ZS"
-      subject_template: "[%{email_prefix}] %{username} je povabil  @%{group_name} da sodelujete v '%{topic_title}'"
+      subject_template: "[%{email_prefix}] %{username} je povabil @%{group_name} da sodelujete v '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1647,7 +1575,7 @@ sl:
       title: "Račun že obstaja"
       subject_template: "[%{email_prefix}] Račun že obstaja"
       text_body_template: |
-        Poizkusili ste ustvariti račun na %{site_name} ali spremeniti e-naslov računa na  %{email}, vendar račun s tem naslovom že obstaja.
+        Poizkusili ste ustvariti račun na %{site_name} ali spremeniti e-naslov računa na %{email}, vendar račun s tem naslovom že obstaja.
 
         Če ste pozabili geslo [ga ponovno nastavite](%{base_url}/password-reset).
 
@@ -1824,7 +1752,6 @@ sl:
     edit_reason: "prenos slik v lokalno kopijo"
   flag_reason:
     sockpuppet: "Nov uporabnik je ustvaril temo in drugi novi uporabnik z enakim IP naslovom (%{ip_address}) je odgovoril. Preverite <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> nastavitev strani."
-    spam_hosts: "Ta novi uporabnik je poskusil ustvariti več prispevkov z povezavami na enako domeno (%{domain}). Preverite <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> nastavitev strani."
   edit_this_page: "Uredi to stran"
   csv_export:
     boolean_yes: "Da"
@@ -2088,7 +2015,7 @@ sl:
     title: "Oznake"
     forbidden:
       restricted_to:
-        one: '"%{tag_name}" oznaka je omejena za kategorijo  "%{category_names}"'
+        one: '"%{tag_name}" oznaka je omejena za kategorijo "%{category_names}"'
         two: '"%{tag_name}" oznaka je omejena samo za naslednji kategoriji: %{category_names}'
         few: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'
         other: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'
@@ -2136,6 +2063,8 @@ sl:
         title: "Organizacija"
       colors:
         title: "Videz"
+      themes_further_reading:
+        title: "Videzi"
       homepage:
         fields:
           homepage_style:
@@ -2189,7 +2118,6 @@ sl:
       new_topics_unless_trust_level: "Uporabniki na nizkih nivojih zaupanja potrebujejo odobritev teme s strani osebja. Glej `approve_new_topics_unless_trust_level`."
       fast_typer: "Nov uporabnik je svoj prvi prispevek natipkal sumljivo hitro zato sumimo bota ali spammerja. Glej `min_first_post_typing_time`."
       auto_silence_regexp: "Nov uporabnik katerega prvi prispevek ustreza `auto_silence_first_post_regex` nastavitvi."
-      watched_word: "Prispevek vsebuje nadzorovano besedo."
       staged: "Nove teme in prispevki prirejenih uporabnikov morajo biti odobreni s strani osebja. Glej `approve_unless_staged`."
       category: "Prispevki v tej kategoriji zahtevajo odobritev s strani osebja. Glej nastavitve kategorije."
       must_approve_users: "Vsi novi uporabniki morajo biti odobreni s strani osebja. Glej `must_approve_users`."

@@ -1,4 +1,5 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
 function b64EncodeUnicode(str) {
@@ -12,7 +13,7 @@ function b64EncodeUnicode(str) {
   );
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["backup-codes"],
   backupCodes: null,
 
@@ -25,16 +26,16 @@ export default Ember.Component.extend({
   didRender() {
     this._super(...arguments);
 
-    const $backupCodes = this.$("#backupCodes");
-    if ($backupCodes.length) {
-      $backupCodes.height($backupCodes[0].scrollHeight);
+    const backupCodes = this.element.querySelector("#backupCodes");
+    if (backupCodes) {
+      backupCodes.style.height = backupCodes.scrollHeight;
     }
   },
 
-  @computed("formattedBackupCodes")
+  @discourseComputed("formattedBackupCodes")
   base64BackupCode: b64EncodeUnicode,
 
-  @computed("backupCodes")
+  @discourseComputed("backupCodes")
   formattedBackupCodes(backupCodes) {
     if (!backupCodes) return null;
 
@@ -49,8 +50,8 @@ export default Ember.Component.extend({
   },
 
   _selectAllBackupCodes() {
-    const $textArea = this.$("#backupCodes");
-    $textArea[0].focus();
-    $textArea[0].setSelectionRange(0, this.formattedBackupCodes.length);
+    const textArea = this.element.querySelector("#backupCodes");
+    textArea.focus();
+    textArea.setSelectionRange(0, this.formattedBackupCodes.length);
   }
 });

@@ -20,8 +20,8 @@ lt:
       many: "Apklausa turi turėti mažiau nei %{count} variantų."
       other: "Apklausa turi turėti mažiau nei %{count} variantų."
     named_poll_must_have_less_options:
-      one: "Apklausa pavadinimu <strong>%{name}</strong> turi turėti bent jau  varianta."
-      few: "Apklausa pavadinimu <strong>%{name}</strong> turi turėti bent jau  varianta."
+      one: "Apklausa pavadinimu <strong>%{name}</strong> turi turėti bent jau varianta."
+      few: "Apklausa pavadinimu <strong>%{name}</strong> turi turėti bent jau varianta."
       many: "Poll named <strong>%{name}</strong> must have less than %{count} options."
       other: "Poll named <strong>%{name}</strong> must have less than %{count} options."
     default_poll_must_have_different_options: "Apklausa turi turėti skirtingus atsakymus."

@@ -33,10 +33,11 @@
 
   form {
     min-width: 300px;
+    max-width: 100%;
   }
 
   #modal-alert {
-    max-width: 500px;
+    max-width: 100%;
     padding: s(2 4);
   }
 
@@ -169,7 +170,7 @@
       margin-bottom: 5px;
       max-height: 475px;
       @media screen and (max-height: 768px) {
-        max-height: 60vh;
+        max-height: calc(60vh - 100px);
       }
       overflow-x: hidden;
       overflow-y: auto;
@@ -267,6 +268,7 @@
 }
 
 .password-reset,
+.email-login,
 .invites-show {
   .col-form {
     padding-left: 20px;
@@ -282,7 +284,8 @@
   }
 }
 
-.password-reset {
+.password-reset,
+.email-login {
   .col-form {
     padding-top: 40px;
   }

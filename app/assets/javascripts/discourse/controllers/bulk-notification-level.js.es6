@@ -1,12 +1,15 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { empty } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { topicLevels } from "discourse/lib/notification-levels";
 
 // Support for changing the notification level of various topics
-export default Ember.Controller.extend({
-  topicBulkActions: Ember.inject.controller(),
+export default Controller.extend({
+  topicBulkActions: inject(),
   notificationLevelId: null,
 
-  @computed
+  @discourseComputed
   notificationLevels() {
     return topicLevels.map(level => {
       return {
@@ -17,7 +20,7 @@ export default Ember.Controller.extend({
     });
   },
 
-  disabled: Ember.computed.empty("notificationLevelId"),
+  disabled: empty("notificationLevelId"),
 
   actions: {
     changeNotificationLevel() {

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class FixFeaturedLinkForTopics < Jobs::Onceoff
+  class FixFeaturedLinkForTopics < ::Jobs::Onceoff
     def execute_onceoff(args)
       Topic.where("featured_link IS NOT NULL").find_each do |topic|
         featured_link = topic.featured_link

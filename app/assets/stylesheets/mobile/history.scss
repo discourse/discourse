@@ -28,4 +28,18 @@
       word-wrap: break-word;
     }
   }
+
+  .modal-footer {
+    text-align: center;
+  }
+
+  #revision-controls {
+    margin-bottom: 5px;
+  }
+
+  #revision-footer-buttons {
+    button {
+      @extend .btn-small;
+    }
+  }
 }

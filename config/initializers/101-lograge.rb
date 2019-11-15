@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["ENABLE_LOGRAGE"]
+if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || (ENV["ENABLE_LOGRAGE"] == "1")
   require 'lograge'
 
   if Rails.configuration.multisite

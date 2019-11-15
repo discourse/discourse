@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
-require_dependency 'reviewable'
-
 class ReviewableFlaggedPost < Reviewable
+
+  # Penalties are handled by the modal after the action is performed
+  def self.action_aliases
+    { agree_and_keep_hidden: :agree_and_keep,
+      agree_and_silence: :agree_and_keep,
+      agree_and_suspend: :agree_and_keep,
+      disagree_and_restore: :disagree }
+  end
 
   def self.counts_for(posts)
     result = {}
@@ -36,7 +42,16 @@ class ReviewableFlaggedPost < Reviewable
 
     agree = actions.add_bundle("#{id}-agree", icon: 'thumbs-up', label: 'reviewables.actions.agree.title')
 
-    build_action(actions, :agree_and_keep, icon: 'thumbs-up', bundle: agree)
+    if !post.user_deleted? && !post.hidden?
+      build_action(actions, :agree_and_hide, icon: 'far-eye-slash', bundle: agree)
+    end
+
+    if post.hidden?
+      build_action(actions, :agree_and_keep_hidden, icon: 'thumbs-up', bundle: agree)
+    else
+      build_action(actions, :agree_and_keep, icon: 'thumbs-up', bundle: agree)
+    end
+
     if guardian.can_suspend?(target_created_by)
       build_action(actions, :agree_and_suspend, icon: 'ban', bundle: agree, client_action: 'suspend')
       build_action(actions, :agree_and_silence, icon: 'microphone-slash', bundle: agree, client_action: 'silence')
@@ -54,8 +69,6 @@ class ReviewableFlaggedPost < Reviewable
 
     if post.user_deleted?
       build_action(actions, :agree_and_restore, icon: 'far-eye', bundle: agree)
-    elsif !post.hidden?
-      build_action(actions, :agree_and_hide, icon: 'far-eye-slash', bundle: agree)
     end
 
     if post.hidden?
@@ -117,16 +130,7 @@ class ReviewableFlaggedPost < Reviewable
     end
   end
 
-  # Penalties are handled by the modal after the action is performed
   def perform_agree_and_keep(performed_by, args)
-    agree(performed_by, args)
-  end
-
-  def perform_agree_and_suspend(performed_by, args)
-    agree(performed_by, args)
-  end
-
-  def perform_agree_and_silence(performed_by, args)
     agree(performed_by, args)
   end
 
@@ -155,10 +159,6 @@ class ReviewableFlaggedPost < Reviewable
     agree(performed_by, args) do
       PostDestroyer.new(performed_by, post).recover
     end
-  end
-
-  def perform_disagree_and_restore(performed_by, args)
-    perform_disagree(performed_by, args)
   end
 
   def perform_disagree(performed_by, args)
@@ -196,6 +196,7 @@ class ReviewableFlaggedPost < Reviewable
 
     # Undo hide/silence if applicable
     if post&.hidden?
+      notify_poster(performed_by)
       post.unhide!
       UserSilencer.unsilence(post.user) if UserSilencer.was_silenced_for?(post)
     end
@@ -208,30 +209,26 @@ class ReviewableFlaggedPost < Reviewable
 
   def perform_delete_and_ignore(performed_by, args)
     result = perform_ignore(performed_by, args)
-    PostDestroyer.new(performed_by, post).destroy
+    destroyer(performed_by, post).destroy
     result
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
     result = perform_ignore(performed_by, args)
-
-    reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
-    replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post).destroy
-    replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
+    PostDestroyer.delete_with_replies(performed_by, post, self)
 
     result
   end
 
   def perform_delete_and_agree(performed_by, args)
     result = agree(performed_by, args)
-    PostDestroyer.new(performed_by, post).destroy
+    destroyer(performed_by, post).destroy
     result
   end
 
   def perform_delete_and_agree_replies(performed_by, args)
     result = agree(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post)
+    PostDestroyer.delete_with_replies(performed_by, post, self)
     result
   end
 
@@ -270,10 +267,11 @@ protected
     end
   end
 
-  def build_action(actions, id, icon:, bundle: nil, client_action: nil, confirm: false)
+  def build_action(actions, id, icon:, button_class: nil, bundle: nil, client_action: nil, confirm: false)
     actions.add(id, bundle: bundle) do |action|
       prefix = "reviewables.actions.#{id}"
       action.icon = icon
+      action.button_class = button_class
       action.label = "#{prefix}.title"
       action.description = "#{prefix}.description"
       action.client_action = client_action
@@ -281,6 +279,25 @@ protected
     end
   end
 
+private
+
+  def destroyer(performed_by, post)
+    PostDestroyer.new(performed_by, post, reviewable: self)
+  end
+
+  def notify_poster(performed_by)
+    return unless performed_by.human? && performed_by.staff?
+
+    Jobs.enqueue(
+      :send_system_message,
+      user_id: post.user_id,
+      message_type: :flags_disagreed,
+      message_options: {
+        flagged_post_raw_content: post.raw,
+        url: post.url
+      }
+    )
+  end
 end
 
 # == Schema Information

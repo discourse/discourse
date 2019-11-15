@@ -21,6 +21,7 @@ div.poll {
   li[data-poll-option-id] {
     color: $primary;
     padding: 0.5em 0;
+    word-break: break-word;
   }
 
   img {

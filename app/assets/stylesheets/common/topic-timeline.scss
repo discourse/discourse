@@ -40,6 +40,10 @@
         display: inherit;
       }
     }
+    .timeline-controls {
+      display: table-cell;
+      vertical-align: top;
+    }
   }
 
   &.timeline-fullscreen {

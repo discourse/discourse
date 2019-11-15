@@ -1,15 +1,8 @@
-<div class='row'>
-  <div class='content-list'>
-    <ul>
-      {{#each sortedTemplates as |et|}}
-        <li>
-          {{#link-to 'adminCustomizeEmailTemplates.edit' et}}{{et.title}}{{/link-to}}
-        </li>
-      {{/each}}
-    </ul>
-  </div>
+{{combo-box
+  content=sortedTemplates
+  valueAttribute="id"
+  nameProperty="title"
+  onSelect=(action "selectTemplate")
+}}
 
-  <div class='content-editor'>
-    {{outlet}}
-  </div>
-</div>
+{{outlet}}

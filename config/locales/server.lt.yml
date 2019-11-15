@@ -28,6 +28,7 @@ lt:
   posts: "žinutės"
   loading: "Kraunama"
   powered_by_html: 'Sukurta <a href="https://www.discourse.org">Discourse</a>, geriausias žiūrimumas su JavaScript igalinimu'
+  sign_up: "Registruotis"
   log_in: "Prisijungti"
   submit: "Pateikti"
   purge_reason: "Automatinis ištrynimas kaip atsisakyta, deaktyvuota sąskaita"
@@ -104,6 +105,7 @@ lt:
     loading: "Kraunama diskusija..."
     permalink: "Nuoroda"
     in_reply_to: "▶ %{username}"
+    created: "Sukurta"
   no_mentions_allowed: "Apgailestaujame, tačiau jūs negalite minėti kitų vartotojų."
   too_many_mentions:
     one: "Apgailestaujame, tačiau jūs galite paminėti tik vieną vartotoją įraše"
@@ -149,12 +151,6 @@ lt:
   too_late_to_edit: "Šis pranešimas buvo sukurtas jau labai senai, todėl jo negalima redaguoti ar ištrinti."
   excerpt_image: "paveikslėlis"
   groups:
-    success:
-      bulk_add:
-        one: "%{count} narys buvo pridėtas prie grupės"
-        few: "%{count}nariai buvo pridėti prie grupės"
-        many: "%{count}narių buvo pridėta prie grupės"
-        other: "%{count}nariai buvo pridėti prie grupės"
     default_names:
       everyone: "visi"
       admins: "administratoriai"
@@ -448,6 +444,8 @@ lt:
       weekly: "kas savaitę"
   user_api_key:
     read: "skaityti"
+    otp_confirmation:
+      confirm_title: "Tęsti į %{site_name}"
     scopes:
       message_bus: "Tiesioginiai atnaujinimai"
       read: "Skaityti viską"
@@ -457,6 +455,7 @@ lt:
         day: Diena
     post_edits:
       labels:
+        edited_at: Data
         post: Įrašai
         editor: Redaktorius
         author: Autorius
@@ -632,6 +631,7 @@ lt:
   login:
     admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
     errors: "%{errors}"
+    omniauth_confirm_button: "Tęsti"
     second_factor_title: "Dviejų veiksmų autentifikavimas"
   admin:
     email:
@@ -1019,6 +1019,8 @@ lt:
         title: "Organizacija"
       colors:
         title: "Tema"
+      themes_further_reading:
+        title: "Temos"
       logos:
         title: "Logotipas"
         fields:

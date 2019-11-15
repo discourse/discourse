@@ -1,3 +1,5 @@
+import Site from "discourse/models/site";
+
 export default function() {
   // Error page
   this.route("exception", { path: "/exception" });
@@ -27,7 +29,7 @@ export default function() {
     this.route("topCategory", { path: "/c/:parentSlug/:slug/l/top" });
 
     // top by periods
-    Discourse.Site.currentProp("periods").forEach(period => {
+    Site.currentProp("periods").forEach(period => {
       const top = "top" + period.capitalize();
       this.route(top, { path: "/top/" + period });
       this.route(top + "ParentCategory", { path: "/c/:slug/l/top/" + period });
@@ -40,7 +42,7 @@ export default function() {
     });
 
     // filters
-    Discourse.Site.currentProp("filters").forEach(filter => {
+    Site.currentProp("filters").forEach(filter => {
       this.route(filter, { path: "/" + filter });
       this.route(filter + "ParentCategory", { path: "/c/:slug/l/" + filter });
       this.route(filter + "CategoryNone", {
@@ -156,7 +158,6 @@ export default function() {
         this.route("email");
         this.route("second-factor");
         this.route("second-factor-backup");
-        this.route("about", { path: "/about-me" });
       });
 
       this.route(
@@ -177,6 +178,8 @@ export default function() {
   });
   this.route("signup", { path: "/signup" });
   this.route("login", { path: "/login" });
+  this.route("email-login", { path: "/session/email-login/:token" });
+  this.route("associate-account", { path: "/associate/:token" });
   this.route("login-preferences");
   this.route("forgot-password", { path: "/password-reset" });
   this.route("faq", { path: "/faq" });
@@ -198,16 +201,20 @@ export default function() {
   this.route("tags", { resetNamespace: true }, function() {
     this.route("show", { path: "/:tag_id" });
     this.route("showCategory", { path: "/c/:category/:tag_id" });
+    this.route("showCategoryNone", { path: "/c/:category/none/:tag_id" });
     this.route("showParentCategory", {
       path: "/c/:parent_category/:category/:tag_id"
     });
 
-    Discourse.Site.currentProp("filters").forEach(filter => {
+    Site.currentProp("filters").forEach(filter => {
       this.route("show" + filter.capitalize(), {
         path: "/:tag_id/l/" + filter
       });
       this.route("showCategory" + filter.capitalize(), {
         path: "/c/:category/:tag_id/l/" + filter
+      });
+      this.route("showCategoryNone" + filter.capitalize(), {
+        path: "/c/:category/none/:tag_id/l/" + filter
       });
       this.route("showParentCategory" + filter.capitalize(), {
         path: "/c/:parent_category/:category/:tag_id/l/" + filter
@@ -222,7 +229,8 @@ export default function() {
     "tagGroups",
     { path: "/tag_groups", resetNamespace: true },
     function() {
-      this.route("show", { path: "/:id" });
+      this.route("edit", { path: "/:id" });
+      this.route("new");
     }
   );
 

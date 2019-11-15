@@ -78,8 +78,12 @@
 
     &.is-disabled {
       .select-kit-header {
-        background: #e9e9e9;
-        border-color: #ddd;
+        background: $primary-low;
+        border-color: $primary-low-mid;
+        color: $primary-medium;
+        .d-icon {
+          color: $primary-medium;
+        }
       }
     }
 

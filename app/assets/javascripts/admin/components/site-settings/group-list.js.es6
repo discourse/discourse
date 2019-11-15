@@ -1,8 +1,11 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
-  @computed()
+export default Component.extend({
+  @discourseComputed()
   groupChoices() {
-    return this.site.get("groups").map(g => g.name);
+    return this.site.get("groups").map(g => {
+      return { name: g.name, id: g.id.toString() };
+    });
   }
 });

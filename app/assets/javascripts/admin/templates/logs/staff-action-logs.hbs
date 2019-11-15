@@ -39,70 +39,66 @@
 
 {{#staff-actions}}
 
-{{#load-more selector=".staff-logs tr" action=(action "loadMore")}}
-  {{#if showTable}}
-    <table class='table staff-logs grid'>
-
-      <thead>
-        <th>{{i18n 'admin.logs.staff_actions.staff_user'}}</th>
-        <th>{{i18n 'admin.logs.action'}}</th>
-        <th>{{i18n 'admin.logs.staff_actions.subject'}}</th>
-        <th>{{i18n 'admin.logs.staff_actions.when'}}</th>
-        <th>{{i18n 'admin.logs.staff_actions.details'}}</th>
-        <th>{{i18n 'admin.logs.staff_actions.context'}}</th>
-      </thead>
-
-      <tbody>
-        {{#each model as |item|}}
-          <tr class='admin-list-item'>
-            <td class="staff-users">
-              <div class="staff-user">
-                {{#if item.acting_user}}
-                  {{#link-to 'adminUser' item.acting_user}}{{avatar item.acting_user imageSize="tiny"}}{{/link-to}}
-                  <a {{action "filterByStaffUser" item.acting_user}}>{{item.acting_user.username}}</a>
-                {{else}}
-                  <span class="deleted-user" title="{{i18n 'admin.user.deleted'}}">
-                    {{d-icon "far-trash-alt"}}
-                  </span>
+  {{#load-more selector=".staff-logs tr" action=(action "loadMore")}}
+    {{#if model.content}}
+      <table class='table staff-logs grid'>
+        <thead>
+          <th>{{i18n 'admin.logs.staff_actions.staff_user'}}</th>
+          <th>{{i18n 'admin.logs.action'}}</th>
+          <th>{{i18n 'admin.logs.staff_actions.subject'}}</th>
+          <th>{{i18n 'admin.logs.staff_actions.when'}}</th>
+          <th>{{i18n 'admin.logs.staff_actions.details'}}</th>
+          <th>{{i18n 'admin.logs.staff_actions.context'}}</th>
+        </thead>
+        <tbody>
+          {{#each model.content as |item|}}
+            <tr class='admin-list-item'>
+              <td class="staff-users">
+                <div class="staff-user">
+                  {{#if item.acting_user}}
+                    {{#link-to 'adminUser' item.acting_user}}{{avatar item.acting_user imageSize="tiny"}}{{/link-to}}
+                    <a {{action "filterByStaffUser" item.acting_user}}>{{item.acting_user.username}}</a>
+                  {{else}}
+                    <span class="deleted-user" title="{{i18n 'admin.user.deleted'}}">
+                      {{d-icon "far-trash-alt"}}
+                    </span>
+                  {{/if}}
+                </div>
+              </td>
+              <td class="col value action">
+                <a {{action "filterByAction" item}}>{{item.actionName}}</a>
+              </td>
+              <td class="col value subject">
+                <div class="subject">
+                  {{#if item.target_user}}
+                    {{#link-to 'adminUser' item.target_user}}{{avatar item.target_user imageSize="tiny"}}{{/link-to}}
+                    <a {{action "filterByTargetUser" item.target_user}}>{{item.target_user.username}}</a>
+                  {{/if}}
+                  {{#if item.subject}}
+                    <a {{action "filterBySubject" item.subject}} title={{item.subject}}>{{item.subject}}</a>
+                  {{/if}}
+                </div>
+              </td>
+              <td class="col value created-at">{{age-with-tooltip item.created_at}}</td>
+              <td class="col value details">
+                {{{item.formattedDetails}}}
+                {{#if item.useCustomModalForDetails}}
+                  <a {{action "showCustomDetailsModal" item}}>{{d-icon "info-circle"}} {{i18n 'admin.logs.staff_actions.show'}}</a>
                 {{/if}}
-              </div>
-            </td>
-            <td class="col value action">
-              <a {{action "filterByAction" item}}>{{item.actionName}}</a>
-            </td>
-            <td class="col value subject">
-              <div class="subject">
-
-              {{#if item.target_user}}
-                {{#link-to 'adminUser' item.target_user}}{{avatar item.target_user imageSize="tiny"}}{{/link-to}}
-                <a {{action "filterByTargetUser" item.target_user}}>{{item.target_user.username}}</a>
-              {{/if}}
-              {{#if item.subject}}
-                <a {{action "filterBySubject" item.subject}} title={{item.subject}}>{{item.subject}}</a>
-              {{/if}}
-              </div>
-            </td>
-            <td class="col value created-at">{{age-with-tooltip item.created_at}}</td>
-            <td class="col value details">
-              {{{item.formattedDetails}}}
-              {{#if item.useCustomModalForDetails}}
-                <a {{action "showCustomDetailsModal" item}}>{{d-icon "info-circle"}} {{i18n 'admin.logs.staff_actions.show'}}</a>
-              {{/if}}
-              {{#if item.useModalForDetails}}
-                <a {{action "showDetailsModal" item}}>{{d-icon "info-circle"}} {{i18n 'admin.logs.staff_actions.show'}}</a>
-              {{/if}}
-            </td>
-            <td class="col value context">{{item.context}}</td>
-          </tr>
-        {{/each}}
-      </tbody>
-
-    </table>
-  {{else}}
-    {{i18n 'search.no_results'}}
-  {{/if}}
-
-  {{conditional-loading-spinner condition=loading}}
-{{/load-more}}
+                {{#if item.useModalForDetails}}
+                  <a {{action "showDetailsModal" item}}>{{d-icon "info-circle"}} {{i18n 'admin.logs.staff_actions.show'}}</a>
+                {{/if}}
+              </td>
+              <td class="col value context">{{item.context}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else if model.loadingMore}}
+      {{conditional-loading-spinner condition=model.loadingMore}}
+    {{else}}
+      {{i18n 'search.no_results'}}
+    {{/if}}
+  {{/load-more}}
 
 {{/staff-actions}}

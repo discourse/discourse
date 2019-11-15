@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReviewableActionSerializer < ApplicationSerializer
-  attributes :id, :icon, :label, :confirm_message, :description, :client_action
+  attributes :id, :icon, :button_class, :label, :confirm_message, :description, :client_action
 
   def label
     I18n.t(object.label)

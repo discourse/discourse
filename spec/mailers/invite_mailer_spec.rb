@@ -38,7 +38,12 @@ describe InviteMailer do
       end
 
       context "custom invite message" do
-        fab!(:invite) { Fabricate(:invite, custom_message: "Hey, you should join this forum!") }
+        fab!(:invite) {
+          Fabricate(
+            :invite,
+            custom_message: "Hey, you <b>should</b> join this forum!\n\nWelcome!"
+          )
+        }
 
         context "custom message includes invite link" do
           let(:custom_invite_mail) { InviteMailer.send_invite(invite) }
@@ -59,8 +64,8 @@ describe InviteMailer do
             expect(custom_invite_mail.body).to be_present
           end
 
-          it 'renders custom_message' do
-            expect(custom_invite_mail.body.encoded).to match("Hey, you should join this forum!")
+          it 'renders custom_message, stripping HTML' do
+            expect(custom_invite_mail.body.encoded).to match("Hey, you should join this forum! Welcome!")
           end
 
           it 'renders the inviter email' do

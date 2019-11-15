@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
 
@@ -20,7 +21,7 @@ componentTest("default", {
 
     this.set(
       "setting",
-      Ember.Object.create({
+      EmberObject.create({
         allowsNone: undefined,
         category: "foo",
         default: "",
@@ -32,7 +33,7 @@ componentTest("default", {
         setting: "foo_bar",
         type: "group_list",
         validValues: undefined,
-        value: "Donuts"
+        value: "1"
       })
     );
   },
@@ -42,16 +43,16 @@ componentTest("default", {
 
     assert.equal(
       subject.header().value(),
-      "Donuts",
+      "1",
       "it selects the setting's value"
     );
 
     await subject.expand();
-    await subject.selectRowByValue("Cheese cake");
+    await subject.selectRowByValue("2");
 
     assert.equal(
       subject.header().value(),
-      "Donuts,Cheese cake",
+      "1,2",
       "it allows to select a setting from the list of choices"
     );
   }

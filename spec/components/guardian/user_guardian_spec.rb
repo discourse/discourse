@@ -5,15 +5,15 @@ require 'rails_helper'
 describe UserGuardian do
 
   let :user do
-    Fabricate.build(:user, id: 1)
+    Fabricate(:user)
   end
 
   let :moderator do
-    Fabricate.build(:moderator, id: 2)
+    Fabricate(:moderator)
   end
 
   let :admin do
-    Fabricate.build(:admin, id: 3)
+    Fabricate(:admin)
   end
 
   let(:user_avatar) do
@@ -155,7 +155,7 @@ describe UserGuardian do
     end
 
     let :user2 do
-      Fabricate.build(:user, id: 4)
+      Fabricate(:user)
     end
 
     it "returns all fields for staff" do
@@ -177,6 +177,144 @@ describe UserGuardian do
       guardian = Guardian.new(user)
       expect(guardian.allowed_user_field_ids(user2)).to contain_exactly(*fields[2..5].map(&:id))
       expect(guardian.allowed_user_field_ids(user)).to contain_exactly(*fields.map(&:id))
+    end
+  end
+
+  describe "#can_delete_user?" do
+    shared_examples "can_delete_user examples" do
+      it "isn't allowed if user is an admin" do
+        another_admin = Fabricate(:admin)
+        expect(guardian.can_delete_user?(another_admin)).to eq(false)
+      end
+    end
+
+    shared_examples "can_delete_user staff examples" do
+      it "is allowed when user didn't create a post yet" do
+        expect(user.first_post_created_at).to be_nil
+        expect(guardian.can_delete_user?(user)).to eq(true)
+      end
+
+      context "when user created too many posts" do
+        before do
+          (User::MAX_STAFF_DELETE_POST_COUNT + 1).times { Fabricate(:post, user: user) }
+        end
+
+        it "is allowed when user created the first post within delete_user_max_post_age days" do
+          SiteSetting.delete_user_max_post_age = 2
+
+          user.user_stat = UserStat.new(new_since: 3.days.ago, first_post_created_at: 1.day.ago)
+          expect(guardian.can_delete_user?(user)).to eq(true)
+
+          user.user_stat = UserStat.new(new_since: 3.days.ago, first_post_created_at: 3.day.ago)
+          expect(guardian.can_delete_user?(user)).to eq(false)
+        end
+      end
+
+      context "when user didn't create many posts" do
+        before do
+          (User::MAX_STAFF_DELETE_POST_COUNT - 1).times { Fabricate(:post, user: user) }
+        end
+
+        it "is allowed when even when user created the first post before delete_user_max_post_age days" do
+          SiteSetting.delete_user_max_post_age = 2
+
+          user.user_stat = UserStat.new(new_since: 3.days.ago, first_post_created_at: 3.day.ago)
+          expect(guardian.can_delete_user?(user)).to eq(true)
+        end
+      end
+    end
+
+    context "delete myself" do
+      let(:guardian) { Guardian.new(user) }
+
+      include_examples "can_delete_user examples"
+
+      it "isn't allowed when SSO is enabled" do
+        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.enable_sso = true
+        expect(guardian.can_delete_user?(user)).to eq(false)
+      end
+
+      it "isn't allowed when user created too many posts" do
+        Fabricate(:post, user: user)
+        expect(guardian.can_delete_user?(user)).to eq(true)
+
+        Fabricate(:post, user: user)
+        expect(guardian.can_delete_user?(user)).to eq(false)
+      end
+
+      it "isn't allowed when user created too many posts in PM" do
+        topic = Fabricate(:private_message_topic, user: user)
+
+        Fabricate(:post, user: user, topic: topic)
+        expect(guardian.can_delete_user?(user)).to eq(true)
+
+        Fabricate(:post, user: user, topic: topic)
+        expect(guardian.can_delete_user?(user)).to eq(false)
+      end
+
+      it "is allowed when user responded to PM from system user" do
+        topic = Fabricate(:private_message_topic, user: Discourse.system_user, topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: Discourse.system_user),
+          Fabricate.build(:topic_allowed_user, user: user)
+        ])
+
+        Fabricate(:post, user: user, topic: topic)
+        expect(guardian.can_delete_user?(user)).to eq(true)
+
+        Fabricate(:post, user: user, topic: topic)
+        expect(guardian.can_delete_user?(user)).to eq(true)
+      end
+
+      it "is allowed when user created multiple posts in PMs to themself" do
+        topic = Fabricate(:private_message_topic, user: user, topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: user)
+        ])
+
+        Fabricate(:post, user: user, topic: topic)
+        Fabricate(:post, user: user, topic: topic)
+        expect(guardian.can_delete_user?(user)).to eq(true)
+      end
+
+      it "isn't allowed when user created multiple posts in PMs sent to other users" do
+        topic = Fabricate(:private_message_topic, user: user, topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: user),
+          Fabricate.build(:topic_allowed_user, user: Fabricate(:user))
+        ])
+
+        Fabricate(:post, user: user, topic: topic)
+        expect(guardian.can_delete_user?(user)).to eq(true)
+
+        Fabricate(:post, user: user, topic: topic)
+        expect(guardian.can_delete_user?(user)).to eq(false)
+      end
+
+      it "isn't allowed when user created multiple posts in PMs sent to groups" do
+        topic = Fabricate(:private_message_topic, user: user, topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: user)
+        ], topic_allowed_groups: [
+          Fabricate.build(:topic_allowed_group, group: Fabricate(:group)),
+          Fabricate.build(:topic_allowed_group, group: Fabricate(:group))
+        ])
+
+        Fabricate(:post, user: user, topic: topic)
+        expect(guardian.can_delete_user?(user)).to eq(true)
+
+        Fabricate(:post, user: user, topic: topic)
+        expect(guardian.can_delete_user?(user)).to eq(false)
+      end
+    end
+
+    context "for moderators" do
+      let(:guardian) { Guardian.new(moderator) }
+      include_examples "can_delete_user examples"
+      include_examples "can_delete_user staff examples"
+    end
+
+    context "for admins" do
+      let(:guardian) { Guardian.new(admin) }
+      include_examples "can_delete_user examples"
+      include_examples "can_delete_user staff examples"
     end
   end
 end

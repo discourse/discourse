@@ -191,8 +191,23 @@
     }
     span.topic {
       display: flex;
-      align-items: baseline;
-      flex-wrap: wrap;
+      flex-direction: column;
+
+      .first-line {
+        flex: 1;
+      }
+
+      .second-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+
+        .discourse-tags {
+          flex-wrap: wrap;
+          display: contents;
+          font-size: $font-down-1;
+        }
+      }
     }
   }
 }
@@ -226,6 +241,9 @@ a.toggle-preview {
     &.fullscreen {
       // important needed because of inline styles when height is changed manually with grippie
       height: 100vh !important;
+      @supports (--custom: property) {
+        height: calc(var(--composer-vh, 1vh) * 100) !important;
+      }
       z-index: z("header") + 1;
       .d-editor-preview-wrapper {
         margin-top: 1%;

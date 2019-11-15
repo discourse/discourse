@@ -1,19 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'slug'
-require_dependency 'avatar_lookup'
-require_dependency 'topic_view'
-require_dependency 'rate_limiter'
-require_dependency 'text_sentinel'
-require_dependency 'text_cleaner'
-require_dependency 'archetype'
-require_dependency 'html_prettify'
-require_dependency 'discourse_tagging'
-require_dependency 'search_indexer'
-require_dependency 'list_controller'
-require_dependency 'topic_posters_summary'
-require_dependency 'topic_featured_users'
-
 class Topic < ActiveRecord::Base
   class UserExists < StandardError; end
   include ActionView::Helpers::SanitizeHelper
@@ -47,6 +33,7 @@ class Topic < ActiveRecord::Base
     if deleted_at.nil?
       update_category_topic_count_by(-1)
       CategoryTagStat.topic_deleted(self) if self.tags.present?
+      DiscourseEvent.trigger(:topic_trashed, self)
     end
     super(trashed_by)
     self.topic_embed.trash! if has_topic_embed?
@@ -56,6 +43,7 @@ class Topic < ActiveRecord::Base
     unless deleted_at.nil?
       update_category_topic_count_by(1)
       CategoryTagStat.topic_recovered(self) if self.tags.present?
+      DiscourseEvent.trigger(:topic_recovered, self)
     end
 
     # Note parens are required because superclass doesn't take `recovered_by`
@@ -74,6 +62,7 @@ class Topic < ActiveRecord::Base
                     presence: true,
                     topic_title_length: true,
                     censored_words: true,
+                    watched_words: true,
                     quality_title: { unless: :private_message? },
                     max_emojis: true,
                     unique_among: { unless: Proc.new { |t| (SiteSetting.allow_duplicate_topic_titles? || t.private_message?) },
@@ -146,6 +135,7 @@ class Topic < ActiveRecord::Base
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
+  attr_accessor :category_user_data
 
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :participants
@@ -618,7 +608,7 @@ class Topic < ActiveRecord::Base
 
   # If a post is deleted we have to update our highest post counters
   def self.reset_highest(topic_id)
-    archetype = Topic.where(id: topic_id).pluck(:archetype).first
+    archetype = Topic.where(id: topic_id).pluck_first(:archetype)
 
     # ignore small_action replies for private messages
     post_type = archetype == Archetype.private_message ? " AND post_type <> #{Post.types[:small_action]}" : ''
@@ -821,9 +811,20 @@ class Topic < ActiveRecord::Base
 
       group_id = group.id
 
+      group.set_message_default_notification_levels!(self, ignore_existing: true)
+
       group.users.where(
-        "group_users.notification_level > ? AND user_id != ?",
-        NotificationLevels.all[:muted], user.id
+        "group_users.notification_level = :level",
+        level: NotificationLevels.all[:tracking],
+        id: user.id
+      ).find_each do |u|
+        PostAlerter.new.notify_group_summary(u, last_post)
+      end
+
+      group.users.where(
+        "group_users.notification_level in (:levels) AND user_id != :id",
+        levels: [NotificationLevels.all[:watching], NotificationLevels.all[:watching_first_post]],
+        id: user.id
       ).find_each do |u|
 
         u.notifications.create!(
@@ -836,6 +837,7 @@ class Topic < ActiveRecord::Base
             group_id: group_id
           }.to_json
         )
+
       end
     end
 
@@ -985,6 +987,15 @@ class Topic < ActiveRecord::Base
     end
 
     slug
+  end
+
+  def self.find_by_slug(slug)
+    if SiteSetting.slug_generation_method != "encoded"
+      Topic.find_by(slug: slug.downcase)
+    else
+      encoded_slug = CGI.escape(slug)
+      Topic.find_by(slug: encoded_slug)
+    end
   end
 
   def title=(t)
@@ -1307,8 +1318,8 @@ class Topic < ActiveRecord::Base
     builder.query_single.first.to_i
   end
 
-  def convert_to_public_topic(user)
-    public_topic = TopicConverter.new(self, user).convert_to_public_topic
+  def convert_to_public_topic(user, category_id: nil)
+    public_topic = TopicConverter.new(self, user).convert_to_public_topic(category_id)
     add_small_action(user, "public_topic") if public_topic
     public_topic
   end
@@ -1382,6 +1393,15 @@ class Topic < ActiveRecord::Base
         .where(['id = ?', category_id])
         .update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
     end
+  end
+
+  def access_topic_via_group
+    Group
+      .joins(:category_groups)
+      .where("category_groups.category_id = ?", self.category_id)
+      .where("groups.public_admission OR groups.allow_membership_requests")
+      .order(:allow_membership_requests)
+      .first
   end
 
   private
@@ -1525,6 +1545,7 @@ end
 #  index_topics_on_bumped_at               (bumped_at)
 #  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
+#  index_topics_on_id_filtered_banner      (id) UNIQUE WHERE (((archetype)::text = 'banner'::text) AND (deleted_at IS NULL))
 #  index_topics_on_lower_title             (lower((title)::text))
 #  index_topics_on_pinned_at               (pinned_at) WHERE (pinned_at IS NOT NULL)
 #  index_topics_on_pinned_globally         (pinned_globally) WHERE pinned_globally

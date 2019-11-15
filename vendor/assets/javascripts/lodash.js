@@ -1,8 +1,8 @@
 /**
  * @license
  * Lodash (Custom Build) <https://lodash.com/>
- * Build: `lodash include="each,filter,map,range,first,isEmpty,chain,extend,every,omit,merge,union,sortBy,uniq,intersection,reject,compact,reduce,debounce,throttle,values,pick,keys,flatten,min,max,isArray,delay,isString,isEqual,without,invoke,clone,findIndex,find,groupBy" minus="template" -d`
- * Copyright JS Foundation and other contributors <https://js.foundation/>
+ * Build: `lodash include="each,filter,map,range,first,isEmpty,chain,extend,every,omit,merge,union,sortBy,uniq,intersection,reject,compact,reduce,debounce,throttle,values,pick,keys,flatten,min,max,isArray,delay,isString,isEqual,without,invoke,clone,findIndex,find,groupBy" minus="template" -d -o node_modules/lodash.js`
+ * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
  * Released under MIT license <https://lodash.com/license>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -13,7 +13,7 @@
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.11';
+  var VERSION = '4.17.13';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
@@ -1971,16 +1971,10 @@
       value.forEach(function(subValue) {
         result.add(baseClone(subValue, bitmask, customizer, subValue, value, stack));
       });
-
-      return result;
-    }
-
-    if (isMap(value)) {
+    } else if (isMap(value)) {
       value.forEach(function(subValue, key) {
         result.set(key, baseClone(subValue, bitmask, customizer, key, value, stack));
       });
-
-      return result;
     }
 
     var keysFunc = isFull
@@ -2726,8 +2720,8 @@
       return;
     }
     baseFor(source, function(srcValue, key) {
+      stack || (stack = new Stack);
       if (isObject(srcValue)) {
-        stack || (stack = new Stack);
         baseMergeDeep(object, source, key, srcIndex, baseMerge, customizer, stack);
       }
       else {
@@ -4733,7 +4727,7 @@
   }
 
   /**
-   * Gets the value at `key`, unless `key` is "__proto__".
+   * Gets the value at `key`, unless `key` is "__proto__" or "constructor".
    *
    * @private
    * @param {Object} object The object to query.
@@ -4741,6 +4735,10 @@
    * @returns {*} Returns the property value.
    */
   function safeGet(object, key) {
+    if (key === 'constructor' && typeof object[key] === 'function') {
+      return;
+    }
+
     if (key == '__proto__') {
       return;
     }
@@ -6068,6 +6066,7 @@
         }
         if (maxing) {
           // Handle invocations in a tight loop.
+          clearTimeout(timerId);
           timerId = setTimeout(timerExpired, wait);
           return invokeFunc(lastCallTime);
         }
@@ -7948,10 +7947,11 @@
   baseForOwn(LazyWrapper.prototype, function(func, methodName) {
     var lodashFunc = lodash[methodName];
     if (lodashFunc) {
-      var key = (lodashFunc.name + ''),
-          names = realNames[key] || (realNames[key] = []);
-
-      names.push({ 'name': methodName, 'func': lodashFunc });
+      var key = lodashFunc.name + '';
+      if (!hasOwnProperty.call(realNames, key)) {
+        realNames[key] = [];
+      }
+      realNames[key].push({ 'name': methodName, 'func': lodashFunc });
     }
   });
 

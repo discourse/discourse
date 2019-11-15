@@ -4,11 +4,15 @@ import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
 import highlightText from "discourse/lib/highlight-text";
 
-const _decorators = [];
+let _decorators = [];
 
 // Don't call this directly: use `plugin-api/decorateCooked`
 export function addDecorator(cb) {
   _decorators.push(cb);
+}
+
+export function resetDecorators() {
+  _decorators = [];
 }
 
 export default class PostCooked {
@@ -161,7 +165,13 @@ export default class PostCooked {
 
       ajax(`/posts/by_number/${topicId}/${postId}`)
         .then(result => {
+          const post = this.decoratorHelper.getModel();
+          const quotedPosts = post.quoted || {};
+          quotedPosts[result.id] = result;
+          post.set("quoted", quotedPosts);
+
           const div = $("<div class='expanded-quote'></div>");
+          div.data("post-id", result.id);
           div.html(result.cooked);
           _decorators.forEach(cb => cb(div, this.decoratorHelper));
 

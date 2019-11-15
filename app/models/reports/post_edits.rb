@@ -8,6 +8,11 @@ Report.add_report('post_edits') do |report|
 
   report.labels = [
     {
+      type: :date,
+      property: :created_at,
+      title: I18n.t("reports.post_edits.labels.edited_at")
+    },
+    {
       type: :post,
       properties: {
         topic_id: :topic_id,
@@ -43,55 +48,49 @@ Report.add_report('post_edits') do |report|
 
   report.data = []
 
-  sql = <<~SQL
-  WITH period_revisions AS (
-  SELECT pr.user_id AS editor_id,
-  pr.number AS revision_version,
-  pr.created_at,
-  pr.post_id,
-  u.username AS editor_username,
-  u.uploaded_avatar_id as editor_avatar_id
+  builder = DB.build <<~SQL
+  SELECT
+    pr.user_id AS editor_id,
+    editor.username AS editor_username,
+    editor.uploaded_avatar_id AS editor_avatar_id,
+    p.user_id AS author_id,
+    author.username AS author_username,
+    author.uploaded_avatar_id AS author_avatar_id,
+    pr.number AS revision_version,
+    p.version AS post_version,
+    pr.post_id,
+    LEFT(p.raw, 40) AS post_raw,
+    p.topic_id,
+    p.post_number,
+    p.edit_reason,
+    pr.created_at
   FROM post_revisions pr
-  JOIN users u
-  ON u.id = pr.user_id
-  WHERE u.id > 0
-  AND pr.created_at >= '#{report.start_date}'
-  AND pr.created_at <= '#{report.end_date}'
-  ORDER BY pr.created_at DESC
-  LIMIT #{report.limit || 20}
-  )
-  SELECT pr.editor_id,
-  pr.editor_username,
-  pr.editor_avatar_id,
-  p.user_id AS author_id,
-  u.username AS author_username,
-  u.uploaded_avatar_id AS author_avatar_id,
-  pr.revision_version,
-  p.version AS post_version,
-  pr.post_id,
-  left(p.raw, 40) AS post_raw,
-  p.topic_id,
-  p.post_number,
-  p.edit_reason,
-  pr.created_at
-  FROM period_revisions pr
   JOIN posts p
-  ON p.id = pr.post_id
-  JOIN users u
-  ON u.id = p.user_id
+    ON p.id = pr.post_id
+  JOIN users author
+    ON author.id = p.user_id
+  JOIN users editor
+    ON editor.id = pr.user_id
+  /*join*/
+  /*where*/
+  ORDER BY pr.created_at ASC
+  /*limit*/
   SQL
 
   if category_filter
-    sql += <<~SQL
-    JOIN topics t
-    ON t.id = p.topic_id
-    WHERE p.user_id != editor_id AND t.category_id = ? OR t.category_id IN (SELECT id FROM categories WHERE categories.parent_category_id = ?)
-    SQL
-  else
-    sql += "WHERE p.user_id != editor_id"
+    builder.join "topics t ON t.id = p.topic_id"
+    builder.where("t.category_id = :category_id
+      OR t.category_id IN (
+        SELECT id FROM categories
+        WHERE categories.parent_category_id = :category_id
+      )", category_id: category_filter)
   end
 
-  result = category_filter ? DB.query(sql, category_filter, category_filter) : DB.query(sql)
+  builder.where("editor.id > 0 AND editor.id != author.id")
+  builder.where("pr.created_at >= :start_date", start_date: report.start_date)
+  builder.where("pr.created_at <= :end_date", end_date: report.end_date)
+
+  result = builder.query
 
   result.each do |r|
     revision = {}

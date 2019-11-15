@@ -1,3 +1,4 @@
 import Setting from "admin/mixins/setting-object";
+import EmberObject from "@ember/object";
 
-export default Discourse.Model.extend(Setting, {});
+export default EmberObject.extend(Setting, {});

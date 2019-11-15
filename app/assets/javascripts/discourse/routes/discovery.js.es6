@@ -2,16 +2,18 @@
   The parent route for all discovery routes.
   Handles the logic for showing the loading spinners.
 **/
+import DiscourseRoute from "discourse/routes/discourse";
 import OpenComposer from "discourse/mixins/open-composer";
 import { scrollTop } from "discourse/mixins/scroll-top";
+import User from "discourse/models/user";
 
-export default Discourse.Route.extend(OpenComposer, {
+export default DiscourseRoute.extend(OpenComposer, {
   redirect() {
     return this.redirectIfLoginRequired();
   },
 
   beforeModel(transition) {
-    const user = Discourse.User;
+    const user = User;
     const url = transition.intent.url;
 
     if (
@@ -60,12 +62,15 @@ export default Discourse.Route.extend(OpenComposer, {
     },
 
     dismissReadTopics(dismissTopics) {
-      var operationType = dismissTopics ? "topics" : "posts";
-      this.controllerFor("discovery/topics").send("dismissRead", operationType);
+      const operationType = dismissTopics ? "topics" : "posts";
+      this.send("dismissRead", operationType);
     },
 
     dismissRead(operationType) {
-      this.controllerFor("discovery/topics").send("dismissRead", operationType);
+      const controller = this.controllerFor("discovery/topics");
+      controller.send("dismissRead", operationType, {
+        includeSubcategories: !controller.noSubcategories
+      });
     }
   }
 });

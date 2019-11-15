@@ -14,7 +14,7 @@ module ActiveRecord
     module ClassMethods
       # this is for Rails 5
       def enforce_raw_sql_whitelist(*args)
-        return
+        nil
       end
 
       BLANK_ARRAY = [].freeze
@@ -23,7 +23,7 @@ module ActiveRecord
       def disallow_raw_sql!(args, permit: nil)
         # we may consider moving to https://github.com/rails/rails/pull/33330
         # once all frozen string hints are in place
-        return BLANK_ARRAY
+        BLANK_ARRAY
       end
     end
   end

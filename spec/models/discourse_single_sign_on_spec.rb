@@ -71,6 +71,34 @@ describe DiscourseSingleSignOn do
 
   let(:ip_address) { "127.0.0.1" }
 
+  it "bans bad external id" do
+    sso = DiscourseSingleSignOn.new
+    sso.username = "test"
+    sso.name = ""
+    sso.email = "test@test.com"
+    sso.suppress_welcome_message = true
+
+    sso.external_id = "    "
+
+    expect do
+      sso.lookup_or_create_user(ip_address)
+    end.to raise_error(DiscourseSingleSignOn::BlankExternalId)
+
+    sso.external_id = nil
+
+    expect do
+      sso.lookup_or_create_user(ip_address)
+    end.to raise_error(DiscourseSingleSignOn::BlankExternalId)
+
+    # going for slight duplication here so our intent is crystal clear
+    %w{none nil Blank null}.each do |word|
+      sso.external_id = word
+      expect do
+        sso.lookup_or_create_user(ip_address)
+      end.to raise_error(DiscourseSingleSignOn::BannedExternalId)
+    end
+  end
+
   it "can lookup or create user when name is blank" do
     sso = DiscourseSingleSignOn.new
     sso.username = "test"

@@ -2,7 +2,12 @@
 
 Fabricator(:category) do
   name { sequence(:name) { |n| "Amazing Category #{n}" } }
+  skip_category_definition true
   user
+end
+
+Fabricator(:category_with_definition, from: :category) do
+  skip_category_definition false
 end
 
 Fabricator(:diff_category, from: :category) do
@@ -28,6 +33,9 @@ Fabricator(:private_category, from: :category) do
   end
 end
 
+Fabricator(:private_category_with_definition, from: :private_category) do
+  skip_category_definition false
+end
 Fabricator(:link_category, from: :category) do
   before_validation { |category, transients| category.topic_featured_link_allowed = true }
 end

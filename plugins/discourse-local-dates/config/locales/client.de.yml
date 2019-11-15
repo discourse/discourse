@@ -12,6 +12,8 @@ de:
         today: Heute %{time}
         tomorrow: Morgen %{time}
         yesterday: Gestern %{time}
+        countdown:
+          passed: Datum liegt in der Vergangenheit
       title: Datum / Zeit einfügen
       create:
         form:

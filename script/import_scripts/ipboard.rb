@@ -81,7 +81,7 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
   # if site is made available, don't let it get indexed
   SiteSetting.allow_index_in_robots_txt = false
   # don't notify users when images in their posts get downloaded
-  SiteSetting.disable_edit_notifications = true
+  SiteSetting.disable_system_edit_notifications = true
   #  SiteSetting.force_hostname='forum.dev1dev.com'
   SiteSetting.title = "IPB Import"
 

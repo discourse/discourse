@@ -1,9 +1,11 @@
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   showSelector: true,
   shouldHide: false,
   defaultUsernameCount: 0,
@@ -12,14 +14,14 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     if (this.focusTarget === "usernames") {
-      this.$("input").putCursorAtEnd();
+      $(this.element.querySelector("input")).putCursorAtEnd();
     }
   },
 
   @observes("usernames")
   _checkWidth() {
     let width = 0;
-    const $acWrap = this.$().find(".ac-wrap");
+    const $acWrap = $(this.element).find(".ac-wrap");
     const limit = $acWrap.width();
     this.set("defaultUsernameCount", 0);
 
@@ -56,17 +58,17 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("usernames")
+  @discourseComputed("usernames")
   splitUsernames(usernames) {
     return usernames.split(",");
   },
 
-  @computed("splitUsernames", "defaultUsernameCount")
+  @discourseComputed("splitUsernames", "defaultUsernameCount")
   limitedUsernames(splitUsernames, count) {
     return splitUsernames.slice(0, count).join(", ");
   },
 
-  @computed("splitUsernames", "defaultUsernameCount")
+  @discourseComputed("splitUsernames", "defaultUsernameCount")
   hiddenUsersCount(splitUsernames, count) {
     return `${splitUsernames.length - count} ${I18n.t("more")}`;
   },
@@ -75,8 +77,8 @@ export default Ember.Component.extend({
     toggleSelector() {
       this.set("showSelector", true);
 
-      Ember.run.schedule("afterRender", () => {
-        this.$()
+      schedule("afterRender", () => {
+        $(this.element)
           .find("input")
           .focus();
       });
@@ -84,7 +86,7 @@ export default Ember.Component.extend({
 
     triggerResize() {
       this.appEvents.trigger("composer:resize");
-      const $this = this.$().find(".ac-wrap");
+      const $this = $(this.element).find(".ac-wrap");
       if ($this.height() >= 150) $this.scrollTop($this.height());
     }
   }

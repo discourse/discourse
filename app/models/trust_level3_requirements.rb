@@ -7,9 +7,14 @@ class TrustLevel3Requirements
   class PenaltyCounts
     attr_reader :silenced, :suspended
 
-    def initialize(row)
+    def initialize(user, row)
       @silenced = row['silence_count'] || 0
       @suspended = row['suspend_count'] || 0
+
+      # If penalty started more than 6 months ago and still continues, it will
+      # not be selected by the query from 'penalty_counts'.
+      @silenced += 1 if @silenced == 0 && user.silenced?
+      @suspended += 1 if @suspended == 0 && user.suspended?
     end
 
     def total
@@ -20,6 +25,7 @@ class TrustLevel3Requirements
   include ActiveModel::Serialization
 
   LOW_WATER_MARK = 0.9
+  FORGIVENESS_PERIOD = 6.months
 
   attr_accessor :days_visited, :min_days_visited,
                 :num_topics_replied_to, :min_topics_replied_to,
@@ -99,32 +105,21 @@ class TrustLevel3Requirements
     args = {
       user_id: @user.id,
       silence_user: UserHistory.actions[:silence_user],
-      unsilence_user: UserHistory.actions[:unsilence_user],
       suspend_user: UserHistory.actions[:suspend_user],
-      unsuspend_user: UserHistory.actions[:unsuspend_user]
+      since: FORGIVENESS_PERIOD.ago
     }
 
     sql = <<~SQL
-      SELECT SUM(
-          CASE
-            WHEN action = :silence_user THEN 1
-            WHEN action = :unsilence_user THEN -1
-            ELSE 0
-          END
-        ) AS silence_count,
-        SUM(
-          CASE
-            WHEN action = :suspend_user THEN 1
-            WHEN action = :unsuspend_user THEN -1
-            ELSE 0
-          END
-        ) AS suspend_count
+      SELECT
+        SUM(CASE WHEN action = :silence_user THEN 1 ELSE 0 END) AS silence_count,
+        SUM(CASE WHEN action = :suspend_user THEN 1 ELSE 0 END) AS suspend_count
       FROM user_histories AS uh
       WHERE uh.target_user_id = :user_id
-        AND uh.action IN (:silence_user, :unsilence_user, :suspend_user, :unsuspend_user)
+        AND uh.action IN (:silence_user, :suspend_user)
+        AND uh.created_at > :since
     SQL
 
-    PenaltyCounts.new(DB.query_hash(sql, args).first)
+    PenaltyCounts.new(@user, DB.query_hash(sql, args).first)
   end
 
   def min_days_visited

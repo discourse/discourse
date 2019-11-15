@@ -1,6 +1,7 @@
-import { observes } from "ember-addons/ember-computed-decorators";
+import Component from "@ember/component";
+import { observes } from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   init() {
     this._super(...arguments);
 
@@ -14,6 +15,13 @@ export default Ember.Component.extend({
     connectorClass.setupComponent.call(this, args, this);
 
     this.set("actions", connectorClass.actions);
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    const connectorClass = this.get("connector.connectorClass");
+    connectorClass.teardownComponent.call(this, this);
   },
 
   @observes("args")

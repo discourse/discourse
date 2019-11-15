@@ -10,3 +10,6 @@ if Rails.env == "production"
   # Micro bench shows for `User.first` this takes us from 3.3k/s to 3.5k/s
   ActiveSupport::Notifications.notifier.unsubscribe("sql.active_record")
 end
+
+# this hook can be used by plugins to amend the middleware stack or patch any initializer behavior
+DiscourseEvent.trigger(:after_initializers)

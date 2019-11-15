@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'search'
 
 describe Search do
   fab!(:admin) { Fabricate(:admin) }
@@ -13,7 +12,7 @@ describe Search do
 
   context 'post indexing observer' do
     before do
-      @category = Fabricate(:category, name: 'america')
+      @category = Fabricate(:category_with_definition, name: 'america')
       @topic = Fabricate(:topic, title: 'sam saffron test topic', category: @category)
       @post = Fabricate(:post, topic: @topic, raw: 'this <b>fun test</b> <img src="bla" title="my image">')
       @indexed = @post.post_search_data.search_data
@@ -48,7 +47,7 @@ describe Search do
 
   context 'category indexing observer' do
     before do
-      @category = Fabricate(:category, name: 'america')
+      @category = Fabricate(:category_with_definition, name: 'america')
       @indexed = @category.category_search_data.search_data
     end
 
@@ -236,6 +235,65 @@ describe Search do
 
     end
 
+    context 'personal-direct flag' do
+      let(:current) { Fabricate(:user, admin: true, username: "current_user") }
+      let(:participant) { Fabricate(:user, username: "participant_1") }
+      let(:participant_2) { Fabricate(:user, username: "participant_2") }
+
+      let(:group) do
+        group = Fabricate(:group, has_messages: true)
+        group.add(current)
+        group.add(participant)
+        group
+      end
+
+      def create_pm(users:, group: nil)
+        pm = Fabricate(:private_message_post_one_user, user: users.first).topic
+        users[1..-1].each do |u|
+          pm.invite(users.first, u.username)
+          Fabricate(:post, user: u, topic: pm)
+        end
+        if group
+          pm.invite_group(users.first, group)
+          group.users.each do |u|
+            Fabricate(:post, user: u, topic: pm)
+          end
+        end
+        pm.reload
+      end
+
+      it 'can find all direct PMs of the current user' do
+        pm = create_pm(users: [current, participant])
+        pm_2 = create_pm(users: [participant_2, participant])
+        pm_3 = create_pm(users: [participant, current])
+        pm_4 = create_pm(users: [participant_2, current])
+        results = Search.execute("in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(3)
+        expect(results.posts.map(&:topic_id)).to contain_exactly(pm.id, pm_3.id, pm_4.id)
+      end
+
+      it 'can filter direct PMs by @username' do
+        pm = create_pm(users: [current, participant])
+        pm_2 = create_pm(users: [participant, current])
+        pm_3 = create_pm(users: [participant_2, current])
+        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(2)
+        expect(results.posts.map(&:topic_id)).to contain_exactly(pm.id, pm_2.id)
+        expect(results.posts.map(&:user_id).uniq).to contain_exactly(participant.id)
+      end
+
+      it "doesn't include PMs that have more than 2 participants" do
+        pm = create_pm(users: [current, participant, participant_2])
+        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(0)
+      end
+
+      it "doesn't include PMs that have groups" do
+        pm = create_pm(users: [current, participant], group: group)
+        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(0)
+      end
+    end
   end
 
   context 'topics' do
@@ -338,7 +396,7 @@ describe Search do
       end
 
       it 'does not allow a post with repeated words to dominate the ranking' do
-        category = Fabricate(:category, name: "winter is coming")
+        category = Fabricate(:category_with_definition, name: "winter is coming")
 
         post = Fabricate(:post,
           raw: "I think winter will end soon",
@@ -358,6 +416,26 @@ describe Search do
         expect(result.posts.pluck(:id)).to eq([
           post.id, category.topic.first_post.id, post2.id
         ])
+      end
+
+      it 'applies a small penalty to closed topic when ranking' do
+        post = Fabricate(:post,
+          raw: "My weekly update",
+          topic: Fabricate(:topic,
+            title: "A topic that will be closed",
+            closed: true
+          )
+        )
+
+        post2 = Fabricate(:post,
+          raw: "My weekly update",
+          topic: Fabricate(:topic,
+            title: "A topic that will be open"
+          )
+        )
+
+        result = Search.execute('weekly update')
+        expect(result.posts.pluck(:id)).to eq([post2.id, post.id])
       end
     end
 
@@ -416,7 +494,7 @@ describe Search do
       end
 
       it 'secures results correctly' do
-        category = Fabricate(:category)
+        category = Fabricate(:category_with_definition)
 
         topic.category_id = category.id
         topic.save
@@ -453,12 +531,12 @@ describe Search do
   end
 
   context 'categories' do
-    let(:category) { Fabricate(:category, name: "monkey Category 2") }
+    let(:category) { Fabricate(:category_with_definition, name: "monkey Category 2") }
     let(:topic) { Fabricate(:topic, category: category) }
     let!(:post) { Fabricate(:post, topic: topic, raw: "snow monkey") }
 
     let!(:ignored_category) do
-      Fabricate(:category,
+      Fabricate(:category_with_definition,
         name: "monkey Category 1",
         slug: "test",
         search_priority: Searchable::PRIORITIES[:ignore]
@@ -481,7 +559,7 @@ describe Search do
 
     describe "with child categories" do
       let!(:child_of_ignored_category) do
-        Fabricate(:category,
+        Fabricate(:category_with_definition,
           name: "monkey Category 3",
           parent_category: ignored_category
         )
@@ -527,7 +605,7 @@ describe Search do
     end
 
     describe 'categories with different priorities' do
-      let(:category2) { Fabricate(:category) }
+      let(:category2) { Fabricate(:category_with_definition) }
 
       it "should return posts in the right order" do
         raw = "The pure genuine evian"
@@ -588,7 +666,7 @@ describe Search do
     let!(:tag) { Fabricate(:tag) }
     let!(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
     let(:tag_group) { Fabricate(:tag_group) }
-    let(:category) { Fabricate(:category) }
+    let(:category) { Fabricate(:category_with_definition) }
 
     context 'post searching' do
       it 'can find posts with tags' do
@@ -652,7 +730,7 @@ describe Search do
   context 'type_filter' do
 
     let!(:user) { Fabricate(:user, username: 'amazing', email: 'amazing@amazing.com') }
-    let!(:category) { Fabricate(:category, name: 'amazing category', user: user) }
+    let!(:category) { Fabricate(:category_with_definition, name: 'amazing category', user: user) }
 
     context 'user filter' do
       let(:results) { Search.execute('amazing', type_filter: 'user') }
@@ -694,7 +772,7 @@ describe Search do
     end
 
     it 'can use category as a search context' do
-      category = Fabricate(:category,
+      category = Fabricate(:category_with_definition,
         search_priority: Searchable::PRIORITIES[:ignore]
       )
 
@@ -702,16 +780,31 @@ describe Search do
       topic_no_cat = Fabricate(:topic)
 
       # includes subcategory in search
-      subcategory = Fabricate(:category, parent_category_id: category.id)
+      subcategory = Fabricate(:category_with_definition, parent_category_id: category.id)
       sub_topic = Fabricate(:topic, category: subcategory)
 
       post = Fabricate(:post, topic: topic, user: topic.user)
-      _another_post = Fabricate(:post, topic: topic_no_cat, user: topic.user)
+      Fabricate(:post, topic: topic_no_cat, user: topic.user)
       sub_post = Fabricate(:post, raw: 'I am saying hello from a subcategory', topic: sub_topic, user: topic.user)
 
       search = Search.execute('hello', search_context: category)
-      expect(search.posts.map(&:id).sort).to eq([post.id, sub_post.id].sort)
+      expect(search.posts.map(&:id)).to match_array([post.id, sub_post.id])
       expect(search.posts.length).to eq(2)
+    end
+
+    it 'can use tag as a search context' do
+      tag = Fabricate(:tag, name: 'important-stuff')
+
+      topic = Fabricate(:topic)
+      topic_no_tag = Fabricate(:topic)
+      Fabricate(:topic_tag, tag: tag, topic: topic)
+
+      post = Fabricate(:post, topic: topic, user: topic.user, raw: 'This is my hello')
+      Fabricate(:post, topic: topic_no_tag, user: topic.user)
+
+      search = Search.execute('hello', search_context: tag)
+      expect(search.posts.map(&:id)).to contain_exactly(post.id)
+      expect(search.posts.length).to eq(1)
     end
 
   end
@@ -965,7 +1058,7 @@ describe Search do
       today        = Date.today
       yesterday    = 1.day.ago
       two_days_ago = 2.days.ago
-      category = Fabricate(:category)
+      category = Fabricate(:category_with_definition)
 
       old_topic = Fabricate(:topic,
         title: 'First Topic, testing the created_at sort',
@@ -1019,7 +1112,7 @@ describe Search do
 
     it 'supports category slug and tags' do
       # main category
-      category = Fabricate(:category, name: 'category 24', slug: 'cateGory-24')
+      category = Fabricate(:category_with_definition, name: 'category 24', slug: 'cateGory-24')
       topic = Fabricate(:topic, created_at: 3.months.ago, category: category)
       post = Fabricate(:post, raw: 'Sams first post', topic: topic)
 
@@ -1027,7 +1120,7 @@ describe Search do
       expect(Search.execute("sams post category:#{category.id}").posts.length).to eq(1)
       expect(Search.execute('sams post #categoRy-25').posts.length).to eq(0)
 
-      sub_category = Fabricate(:category, name: 'sub category', slug: 'sub-category', parent_category_id: category.id)
+      sub_category = Fabricate(:category_with_definition, name: 'sub category', slug: 'sub-category', parent_category_id: category.id)
       second_topic = Fabricate(:topic, created_at: 3.months.ago, category: sub_category)
       Fabricate(:post, raw: 'sams second post', topic: second_topic)
 
@@ -1065,19 +1158,39 @@ describe Search do
     end
 
     context 'tags' do
-      let(:tag1) { Fabricate(:tag, name: 'lunch') }
-      let(:tag2) { Fabricate(:tag, name: 'eggs') }
-      let(:tag3) { Fabricate(:tag, name: 'sandwiches') }
-      let(:topic1) { Fabricate(:topic, tags: [tag2, Fabricate(:tag)]) }
-      let(:topic2) { Fabricate(:topic, tags: [tag2]) }
-      let(:topic3) { Fabricate(:topic, tags: [tag1, tag2]) }
-      let(:topic4) { Fabricate(:topic, tags: [tag1, tag2, tag3]) }
-      let(:topic5) { Fabricate(:topic, tags: [tag2, tag3]) }
-      let!(:post1) { Fabricate(:post, topic: topic1) }
-      let!(:post2) { Fabricate(:post, topic: topic2) }
-      let!(:post3) { Fabricate(:post, topic: topic3) }
-      let!(:post4) { Fabricate(:post, topic: topic4) }
-      let!(:post5) { Fabricate(:post, topic: topic5) }
+      fab!(:tag1) { Fabricate(:tag, name: 'lunch') }
+      fab!(:tag2) { Fabricate(:tag, name: 'eggs') }
+      fab!(:tag3) { Fabricate(:tag, name: 'sandwiches') }
+
+      fab!(:tag_group) do
+        group = TagGroup.create!(name: 'mid day')
+        TagGroupMembership.create!(tag_id: tag1.id, tag_group_id: group.id)
+        TagGroupMembership.create!(tag_id: tag3.id, tag_group_id: group.id)
+        group
+      end
+
+      fab!(:topic1) { Fabricate(:topic, tags: [tag2, Fabricate(:tag)]) }
+      fab!(:topic2) { Fabricate(:topic, tags: [tag2]) }
+      fab!(:topic3) { Fabricate(:topic, tags: [tag1, tag2]) }
+      fab!(:topic4) { Fabricate(:topic, tags: [tag1, tag2, tag3]) }
+      fab!(:topic5) { Fabricate(:topic, tags: [tag2, tag3]) }
+
+      def indexed_post(*args)
+        SearchIndexer.enable
+        Fabricate(:post, *args)
+      end
+
+      fab!(:post1) { indexed_post(topic: topic1) }
+      fab!(:post2) { indexed_post(topic: topic2) }
+      fab!(:post3) { indexed_post(topic: topic3) }
+      fab!(:post4) { indexed_post(topic: topic4) }
+      fab!(:post5) { indexed_post(topic: topic5) }
+
+      it 'can find posts by tag group' do
+        expect(Search.execute('#mid-day').posts.map(&:id)).to (
+          contain_exactly(post3.id, post4.id, post5.id)
+        )
+      end
 
       it 'can find posts with tag' do
         post4 = Fabricate(:post, topic: topic3, raw: "It probably doesn't help that they're green...")
@@ -1095,8 +1208,6 @@ describe Search do
       end
 
       it 'can find posts with any tag from multiple tags' do
-        Fabricate(:post)
-
         expect(Search.execute('tags:eggs,lunch').posts.map(&:id).sort).to eq([post1.id, post2.id, post3.id, post4.id, post5.id].sort)
       end
 
@@ -1117,7 +1228,7 @@ describe Search do
       end
 
       it 'orders posts correctly when combining tags with categories or terms' do
-        cat1 = Fabricate(:category, name: 'food')
+        cat1 = Fabricate(:category_with_definition, name: 'food')
         topic6 = Fabricate(:topic, tags: [tag1, tag2], category: cat1)
         topic7 = Fabricate(:topic, tags: [tag1, tag2, tag3], category: cat1)
         post7 = Fabricate(:post, topic: topic6, raw: "Wakey, wakey, eggs and bakey.", like_count: 5)

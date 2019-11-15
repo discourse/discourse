@@ -27,6 +27,7 @@ sv:
   topics: "Ämnen"
   posts: "inlägg"
   loading: "Laddar"
+  sign_up: "Registrera"
   log_in: "Logga in"
   submit: "Skicka"
   purge_reason: "Automatiskt borttaget som övergett, avaktiverat konto"
@@ -44,7 +45,6 @@ sv:
         auto_generated_email_error: "Händer när 'precedence'-rubriken är satt till: list, skräp, mass eller auto-reply, eller när någon annan rubrik innehåller: auto-submitted, auto-replied eller auto-generated."
         no_body_detected_error: "Händer när vi inte kunde extrahera någon huvuddel och det inte fanns några bilagor."
         inactive_user_error: "Händer när sändaren inte är aktiv."
-        bad_destination_address: "Händer när inga av e-postadresserna i Till/Cc/Bcc-fälten matchar en konfigurerad inkommande e-postadress."
         strangers_not_allowed_error: "Händer när en användare försöker skapa ett nytt ämne i en kategori som användare inte är en medlem av."
         insufficient_trust_level_error: "Händer när en användare försöker skapa ett nytt ämne i en kategori som användare saknar förtroendenivå för."
         reply_user_not_matching_error: "Händer när ett svar kommer in från en annan e-postadress än den notificieringen skickades till."
@@ -105,8 +105,6 @@ sv:
   activemodel:
     errors:
       <<: *errors
-  invite:
-    not_found: "Ert invitations lösenord är ogiltigt. Vänlig kontakta webbplatsens administratör."
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv format."
     error: "Det uppstod ett problem när filerna skulle laddas upp. Vad snäll och försök senare igen."
@@ -121,6 +119,8 @@ sv:
   not_found: "Den efterfrågade URL:en eller resursen kan inte hittas."
   invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
   read_only_mode_enabled: "Webbplatsen är i skrivskyddat läge. Interaktioner är inaktiverade."
+  not_in_group:
+    join_group: "Gå med i grupp"
   reading_time: "Lästid"
   likes: "Gillningar"
   too_many_replies:
@@ -140,6 +140,7 @@ sv:
     permalink: "Permalänk"
     imported_from: "Detta är ett kopplat diskussionsämne till det ursprungliga inlägget på %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Skapad"
   no_mentions_allowed: "Tyvärr, du kan inte omnämna andra användare."
   too_many_mentions:
     one: "Tyvärr, du kan bara omnämna en annan användare i ett inlägg."
@@ -508,6 +509,8 @@ sv:
     authorize: "Auktorisera"
     read: "läs"
     read_write: "läs/skriv"
+    otp_confirmation:
+      confirm_title: "Fortsätt till %{site_name}"
     no_trust_level: "Tyvärr har ni inte den nödvändiga förtroendenivån för att få tillgång till användar API"
     generic_error: "Ledsen, vi kan inte lämna ut API nycklar, denna funktion kan inaktiveras av administratören"
     scopes:
@@ -774,7 +777,7 @@ sv:
     summary_posts_required: "Minsta antal inlägg i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs"
     summary_likes_required: "Minsta antal gillningar i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs"
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
-    enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera via minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen oavsett  alltid kan skicka meddelanden. "
+    enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera via minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen oavsett alltid kan skicka meddelanden. "
     enable_long_polling: "Meddelande-buss som används för notifiering kan använda long polling"
     long_polling_base_url: "URL som används för long polling (när en CDN levererar dynamiskt innehåll, kontrollera att det här är inställt till origin pull) se: http://origin.site.com"
     long_polling_interval: "Tid som servern bör vänta innan den svarar på klienter när det inte finns någon data att skicka (endast loggad på användare)"
@@ -789,14 +792,13 @@ sv:
     tl4_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 4 (ledare) genom att multiplicera med det här numret"
     traditional_markdown_linebreaks: "Använd vanliga radmatningar i Markdown, vilka kräver 2 avslutande mellanslag för en radmatning."
     post_undo_action_window_mins: "Antal minuter som en användare tillåts att upphäva handlingar på ett inlägg som gjorts nyligen (gillning, flaggning osv)."
-    must_approve_users: "Personal måste godkänna alla nya användarkonton innan de tillåts använda webbplatsen. VARNING: om det tillåts när webbplatsen är live så kommer det att upphäva tillgång för alla existerande användare som inte är personal!"
     pending_users_reminder_delay: "Notifiera moderatorer om nya användare har väntat på godkännande längre än så här många timmar. Ange -1 för att inaktivera notifikationer. "
     maximum_session_age: "Användaren kommer fortsättningsvis att vara inloggad i n timmar sedan senaste besöket"
     moderators_create_categories: "Tillåt moderatorer att skapa nya kategorier"
     cors_origins: "Tillåtna ursprung för cross-ursprungsbegäran (CORS). Varje ursprung måste inkludera http:// eller https://. DISCOURSE_ENABLE_CORS env variabeln måste sättas till true för att aktivera CORS."
     use_admin_ip_whitelist: "Administratörer kan bara logga in om de är på en IP-adress definierad i listan över granskade IP-adresser (Admin > Loggar > Granskade IP-adresser)."
     top_menu: "Bestäm vilka objekt som visas i hemsidans navigation, och i vilken ordning. Exempel: latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Bestäm vilka objekt som visas i inläggsmenyn och i vilken ordning. Exempel:  like|edit|flag|delete|share|bookmark|reply"
+    post_menu: "Bestäm vilka objekt som visas i inläggsmenyn och i vilken ordning. Exempel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Standardinställning för vilka menyobjekt som döljs i inläggsmenyn om inte utvidgnings-ellipsen har klickats på."
     share_links: "Bestäm vilka objekt som syns i den delade dialogen, och i vilken ordning."
     site_contact_username: "Ett giltigt personalanvändarnamn att skicka alla automatiserade meddelanden ifrån. Om lämnad blank används det System-kontot."
@@ -813,7 +815,6 @@ sv:
     email_token_valid_hours: "Glömt lösenord / aktivera konto länkar är giltiga i (n) timmar."
     enable_badges: "Aktivera utmärkelsesystemet"
     enable_whispers: "Tiliåt privat kommunikation inom ämnena."
-    allow_index_in_robots_txt: "Specificera i robots.txt att den här webbplatsen tillåter att bli indexerad av sökmotorer. "
     email_domains_blacklist: "En pipe-avgränsad lista av alla e-postdomän som användare inte tillåts registrera konton med. Exempel: mailinator.com, trashmail.net"
     email_domains_whitelist: "En pipe-avgränsad lista av alla e-postdomän som användare MÅSTE registrera konton med. VARNING: Användare med e-postdomän som inte finns på listan kommer inte att tillåtas!"
     log_out_strict: "Vid utloggning, logga ut ALLA sessioner för den användaren på alla apparater"
@@ -985,7 +986,6 @@ sv:
     reset_bounce_score_after_days: "Nollställ studspoäng automatiskt efter X dagar."
     attachment_content_type_blacklist: "lista av fraser som används till att svartlista bilagor baserade på innehållstyper"
     attachment_filename_blacklist: "Lista över fraser som används till att svartlista bilagor baserade på filnamnet"
-    enable_forwarded_emails: "[BETA] Tillåt användare att skapa ett ämne genom att vidarebefordra ett email"
     always_show_trimmed_content: "Tillåt visning av trimmade delar av incomna emails. Varning: kan avslöja emailadresser."
     manual_polling_enabled: "Flytta emails med hjälp av API för email svar."
     pop3_polling_enabled: "Poll via POP3 för e-postsvar."
@@ -1021,7 +1021,7 @@ sv:
     enable_group_directory: "Förse en fil till grupper som surfar"
     allow_anonymous_posting: "Tillåt användare att växla till anonymt läge"
     anonymous_posting_min_trust_level: "Lägsta förtroendenivå som krävs för att aktivera anonyma inlägg"
-    anonymous_account_duration_minutes: "Skapa ett nytt anonymt konto var N minut för varje användare för att skydda anonymiteten. Exempel: om satt till 600: så snart som 600 minuter har gått sedan senaste inlägget OCH användaren väljer anon, så skapas ett nytt anonymt konto.  "
+    anonymous_account_duration_minutes: "Skapa ett nytt anonymt konto var N minut för varje användare för att skydda anonymiteten. Exempel: om satt till 600: så snart som 600 minuter har gått sedan senaste inlägget OCH användaren väljer anon, så skapas ett nytt anonymt konto. "
     hide_user_profiles_from_public: "Inaktivera användarkort, användarprofiler och användarförteckningar för anonyma användare."
     user_website_domains_whitelist: "Användare websidor kommer att verifieras mot dessa domäner. Pipe- avgränsad lista."
     allow_profile_backgrounds: "Tillåt användare att ladda upp profilbakgrunder."
@@ -1032,10 +1032,9 @@ sv:
     disable_avatar_education_message: "Inaktivera hjälpmeddelande för byte av avatar."
     suppress_uncategorized_badge: "Visa inte utmärkelsen för okategoriserade ämnen i ämneslistan."
     permalink_normalizations: "Applicera följande regex innan matchning av permalänkar, till exempel: /(topic.*)\\?.*/\\1 kommer att rensa bort söksträngar från ämnesvägen. Formatet är regex+sträng, använd \\1 osv. för att komma åt grupperingar."
-    disable_edit_notifications: "Inaktivera redigering av notifikationer av systemanvändaren när 'download_remote_images_to_local' är aktiverad."
+    disable_system_edit_notifications: "Inaktivera redigering av notifikationer av systemanvändaren när 'download_remote_images_to_local' är aktiverad."
     automatically_unpin_topics: "Avklistra automatiskt ämnen när användaren når botten."
     read_time_word_count: "Ordräknare per minut för att beräkna uppskattad lästid."
-    topic_page_title_includes_category: "Ämnestitel för sidan inkluderar kategorinamnet. "
     max_prints_per_hour_per_user: "Maximalt antal av /printade sidhänvisnigar ( satt till 0 för att inaktivera)"
     full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
     enable_names: "Visa användarens fullständiga namn på dess profil, användarkort och e-post. Inaktivera för att dölja det fullständiga namnet överallt."
@@ -1050,7 +1049,7 @@ sv:
     embed_post_limit: "Högsta antal inlägg att bädda in."
     embed_username_required: "Användarnamn krävs för skapade av ämne."
     show_create_topics_notice: "Visa en notis som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
-    delete_drafts_older_than_n_days: Ta bort utkast som är äldre än (n) dagar.
+    delete_drafts_older_than_n_days: "Ta bort utkast som är äldre än (n) dagar."
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
     prevent_anons_from_downloading_files: "Förhindra anonyma användare från att ladda ned bilagor. VARNING: det kommer att förhindra alla webbplatsens tillgångar som inte är bilder och som lagts upp som bilagor från att fungera."
     slug_generation_method: "Välj en genereringsmetod för etiketter. Ange 'none' för att inaktivera generering av etiketter. "
@@ -1108,8 +1107,8 @@ sv:
       invalid_string_min_max: "Måste vara mellan %{min} och %{max} tecken."
       invalid_string_min: "Måste vara minst %{min} tecken."
       invalid_string_max: "Måste vara högst %{max} tecken."
-      invalid_reply_by_email_address: "Värdet måste innehålla '%%{reply_key}' och vara annorlunda från e-postnotifieringen."
-      invalid_alternative_reply_by_email_addresses: "Alla värden måste innehålla '%%{reply_key}' och vara annorlunda från e-postnotifieringen."
+      invalid_reply_by_email_address: "Värdet måste innehålla '%{reply_key}' och vara annorlunda från e-postnotifieringen."
+      invalid_alternative_reply_by_email_addresses: "Alla värden måste innehålla '%{reply_key}' och vara annorlunda från e-postnotifieringen."
       pop3_polling_host_is_empty: "Du måste ställa in en 'pop3 polling host' innan du aktiverar POP3 polling."
       pop3_polling_username_is_empty: "Du måste ställa in ett 'pop3 polling username' innan du aktiverar POP3 polling."
       pop3_polling_password_is_empty: "Du måste ställa in ett 'pop3 polling password' innan du aktiverar POP3 polling."
@@ -1182,8 +1181,8 @@ sv:
     errors: "%{errors}"
     not_available: "Inte tillgänglig. Testa %{suggestion}?"
     something_already_taken: "Något gick fel. Kanske är användarnamnet eller e-postadressen redan registrerat. Testa glömt lösenord-länken."
-    omniauth_error: "Tyvärr uppstod ett fel vid aktiveringen av ditt konto. Har du godkänt autentiseringen?"
     omniauth_error_unknown: "Något gick fel med din inloggning, var god och försök igen."
+    omniauth_confirm_button: "Fortsätt"
     new_registrations_disabled: "Nya kontoregistreringar är för närvarande inte tillåtna."
     password_too_long: "Lösenord har en gräns på 200 tecken."
     email_too_long: "E-postadressen du tillhandahöll är för lång. E-postadresser kan på sin höjd vara 254 tecken och domännamn inte mer än 253 tecken."
@@ -1288,8 +1287,6 @@ sv:
         Kontot associerat till den här e-postadressen är inte aktiverat. Var god se till att ditt konto är aktiverat innan du skickar e-post.
     email_reject_reply_user_not_matching:
       title: "Emailet avslås användare hittas ej"
-    email_reject_no_account:
-      title: "Emailet avslås det finns inget konto"
     email_reject_empty:
       title: "Emailet avslås - tomt"
       text_body_template: |
@@ -1390,17 +1387,6 @@ sv:
     only_reply_by_email: "Besvara det här e-postmeddelandet för att ge din respons. "
     visit_link_to_respond: "[Besök ämnet](%{base_url}%{url}) för att ge din respons. "
     posted_by: "Postat av %{username} den %{post_date}"
-    invited_to_private_message_body: "%{username} bjöd in dit till ett meddelande\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nvid \n\n> %{site_title} -- %{site_description}\n"
-    invited_to_topic_body: |
-      %{username} bjöd in dig till en diskussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      vid
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       text_body_template: |
         %{header_instructions}
@@ -1606,7 +1592,6 @@ sv:
     missing: "Tyvärr, vi kunde inte hitta någon avatar associerad med den e-postadressen. Kan du försöka ladda upp den igen?"
   flag_reason:
     sockpuppet: "En ny användare skapade ett ämne, och en annan ny användare på samma IP-adress (%{ip_address}) svarade. Granska webbplatsinställningen <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Den här nya användaren försökte skapa flera inlägg med länkar till samma domän (%{domain}). Granska webbplatsinställningen <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "Översteg max_emails_per_day_per_user"
     exceeded_bounces_limit: "Översteg bounce_score_threshold"

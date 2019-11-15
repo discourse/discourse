@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'url_helper'
-
 class EmbeddableHost < ActiveRecord::Base
   validate :host_must_be_valid
   belongs_to :category
@@ -44,7 +42,7 @@ class EmbeddableHost < ActiveRecord::Base
 
   def self.url_allowed?(url)
     # Work around IFRAME reload on WebKit where the referer will be set to the Forum URL
-    return true if url&.starts_with?(Discourse.base_url)
+    return true if url&.starts_with?(Discourse.base_url) && EmbeddableHost.exists?
 
     uri = begin
       URI(UrlHelper.escape_uri(url))
@@ -63,7 +61,7 @@ class EmbeddableHost < ActiveRecord::Base
   end
 
   def host_must_be_valid
-    if host !~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}(:[0-9]{1,5})?(\/.*)?\Z/i &&
+    if host !~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i &&
        host !~ /\A(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(:[0-9]{1,5})?(\/.*)?\Z/ &&
        host !~ /\A([a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.)?localhost(\:[0-9]{1,5})?(\/.*)?\Z/i
       errors.add(:host, I18n.t('errors.messages.invalid'))

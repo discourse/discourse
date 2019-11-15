@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'new_post_manager'
-
 class CurrentUserSerializer < BasicUserSerializer
 
   attributes :name,
@@ -212,6 +210,6 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def second_factor_enabled
-    object.totp_enabled?
+    object.totp_enabled? || object.security_keys_enabled?
   end
 end

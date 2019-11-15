@@ -2,12 +2,18 @@
 
 desc "run chrome headless smoke tests on current build"
 task "smoke:test" do
-  unless system("command -v google-chrome >/dev/null;")
+  if RbConfig::CONFIG['host_os'][/darwin|mac os/]
+    google_chrome_cli = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+  else
+    google_chrome_cli = "google-chrome"
+  end
+
+  unless system("command -v \"#{google_chrome_cli}\" >/dev/null")
     abort "Chrome is not installed. Download from https://www.google.com/chrome/browser/desktop/index.html"
   end
 
-  if Gem::Version.new(`$(command -v google-chrome) --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
-    abort "Chrome 59 or higher is required to run smoke tests in headless mode."
+  if Gem::Version.new(`\"#{google_chrome_cli}\" --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
+    abort "Chrome 59 or higher is required to run tests in headless mode."
   end
 
   system("yarn install --dev")
@@ -62,7 +68,12 @@ task "smoke:test" do
 
   results = +""
 
-  IO.popen("node #{Rails.root}/test/smoke_test.js #{url}").each do |line|
+  node_arguments = []
+  node_arguments << '--inspect-brk' if ENV["DEBUG_NODE"]
+  node_arguments << "#{Rails.root}/test/smoke_test.js"
+  node_arguments << url
+
+  IO.popen("node #{node_arguments.join(' ')}").each do |line|
     puts line
     results << line
   end

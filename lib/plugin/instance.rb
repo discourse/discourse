@@ -19,6 +19,10 @@ class Plugin::CustomEmoji
     emojis[name] = url
   end
 
+  def self.unregister(name)
+    emojis.delete(name)
+  end
+
   def self.translations
     @@translations ||= {}
   end
@@ -90,18 +94,21 @@ class Plugin::Instance
 
   def add_to_serializer(serializer, attr, define_include_method = true, &block)
     reloadable_patch do |plugin|
-      klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
+      base = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
 
-      unless attr.to_s.start_with?("include_")
-        klass.attributes(attr)
+      # we have to work through descendants cause serializers may already be baked and cached
+      ([base] + base.descendants).each do |klass|
+        unless attr.to_s.start_with?("include_")
+          klass.attributes(attr)
 
-        if define_include_method
-          # Don't include serialized methods if the plugin is disabled
-          klass.public_send(:define_method, "include_#{attr}?") { plugin.enabled? }
+          if define_include_method
+            # Don't include serialized methods if the plugin is disabled
+            klass.public_send(:define_method, "include_#{attr}?") { plugin.enabled? }
+          end
         end
-      end
 
-      klass.public_send(:define_method, attr, &block)
+        klass.public_send(:define_method, attr, &block)
+      end
     end
   end
 
@@ -122,12 +129,6 @@ class Plugin::Instance
     end
   end
 
-  def whitelist_flag_post_custom_field(field)
-    reloadable_patch do |plugin|
-      ::FlagQuery.register_plugin_post_custom_field(field, plugin) # plugin.enabled? is checked at runtime
-    end
-  end
-
   def whitelist_staff_user_custom_field(field)
     reloadable_patch do |plugin|
       ::User.register_plugin_staff_custom_field(field, plugin) # plugin.enabled? is checked at runtime
@@ -140,9 +141,9 @@ class Plugin::Instance
     end
   end
 
-  def register_editable_user_custom_field(field)
+  def register_editable_user_custom_field(field, staff_only: false)
     reloadable_patch do |plugin|
-      ::User.register_plugin_editable_user_custom_field(field, plugin) # plugin.enabled? is checked at runtime
+      ::User.register_plugin_editable_user_custom_field(field, plugin, staff_only: staff_only) # plugin.enabled? is checked at runtime
     end
   end
 
@@ -265,7 +266,7 @@ class Plugin::Instance
     automatic_assets.each do |path, contents|
       write_asset(path, contents)
       paths << path
-      assets << [path]
+      assets << [path, nil, directory_name]
     end
 
     delete_extra_automatic_assets(paths)
@@ -370,6 +371,13 @@ class Plugin::Instance
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
+  def register_user_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      ::User.register_custom_field_type(name, type)
+    end
+  end
+
   def register_seedfu_fixtures(paths)
     paths = [paths] if !paths.kind_of?(Array)
     SeedFu.fixture_paths.concat(paths)
@@ -420,7 +428,7 @@ class Plugin::Instance
       full_path = File.dirname(path) << "/assets/" << file
     end
 
-    assets << [full_path, opts]
+    assets << [full_path, opts, directory_name]
   end
 
   def register_service_worker(file, opts = nil)
@@ -508,7 +516,7 @@ class Plugin::Instance
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
 
     # Automatically include migrations
-    migration_paths = Rails.configuration.paths["db/migrate"]
+    migration_paths = ActiveRecord::Migrator.migrations_paths
     migration_paths << File.dirname(path) + "/db/migrate"
 
     unless Discourse.skip_post_deployment_migrations?
@@ -524,6 +532,24 @@ class Plugin::Instance
       # TODO a cleaner way of registering and unregistering
       Discourse::Utils.execute_command('rm', '-f', target)
       Discourse::Utils.execute_command('ln', '-s', public_data, target)
+    end
+
+    ensure_directory(Plugin::Instance.js_path)
+
+    contents = []
+    handlebars_includes.each { |hb| contents << "require_asset('#{hb}')" }
+    javascript_includes.each { |js| contents << "require_asset('#{js}')" }
+
+    each_globbed_asset do |f, is_dir|
+      contents << (is_dir ? "depend_on('#{f}')" : "require_asset('#{f}')")
+    end
+
+    File.delete(js_file_path) if js_asset_exists?
+
+    if contents.present?
+      contents.insert(0, "<%")
+      contents << "%>"
+      write_asset(js_file_path, contents.join("\n"))
     end
   end
 
@@ -625,11 +651,31 @@ class Plugin::Instance
     end
   end
 
+  def directory_name
+    @directory_name ||= File.dirname(path).split("/").last
+  end
+
+  def css_asset_exists?(target = nil)
+    DiscoursePluginRegistry.stylesheets_exists?(directory_name, target)
+  end
+
+  def js_asset_exists?
+    File.exists?(js_file_path)
+  end
+
   protected
 
+  def self.js_path
+    File.expand_path "#{Rails.root}/app/assets/javascripts/plugins"
+  end
+
+  def js_file_path
+    @file_path ||= "#{Plugin::Instance.js_path}/#{directory_name}.js.erb"
+  end
+
   def register_assets!
-    assets.each do |asset, opts|
-      DiscoursePluginRegistry.register_asset(asset, opts)
+    assets.each do |asset, opts, plugin_directory_name|
+      DiscoursePluginRegistry.register_asset(asset, opts, plugin_directory_name)
     end
   end
 
@@ -675,6 +721,12 @@ class Plugin::Instance
           puts msg
         end
       end
+    end
+  end
+
+  def allow_new_queued_post_payload_attribute(attribute_name)
+    reloadable_patch do
+      NewPostManager.add_plugin_payload_attribute(attribute_name)
     end
   end
 

@@ -1,14 +1,17 @@
+import { isEmpty } from "@ember/utils";
+import { notEmpty, equal } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
 import Category from "discourse/models/category";
 import User from "discourse/models/user";
 import Topic from "discourse/models/topic";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import EmberObject from "@ember/object";
 
 const Group = RestModel.extend({
   limit: 50,
@@ -21,19 +24,19 @@ const Group = RestModel.extend({
     this.set("owners", []);
   },
 
-  hasOwners: Ember.computed.notEmpty("owners"),
+  hasOwners: notEmpty("owners"),
 
-  @computed("automatic_membership_email_domains")
+  @discourseComputed("automatic_membership_email_domains")
   emailDomains(value) {
-    return Ember.isEmpty(value) ? "" : value;
+    return isEmpty(value) ? "" : value;
   },
 
-  @computed("automatic")
+  @discourseComputed("automatic")
   type(automatic) {
     return automatic ? "automatic" : "custom";
   },
 
-  @computed("user_count")
+  @discourseComputed("user_count")
   userCountDisplay(userCount) {
     // don't display zero its ugly
     if (userCount > 0) {
@@ -42,7 +45,7 @@ const Group = RestModel.extend({
   },
 
   findMembers(params) {
-    if (Ember.isEmpty(this.name)) {
+    if (isEmpty(this.name) || !this.can_see_members) {
       return;
     }
 
@@ -116,30 +119,30 @@ const Group = RestModel.extend({
     return this.findMembers({ filter: response.usernames.join(",") });
   },
 
-  @computed("display_name", "name")
+  @discourseComputed("display_name", "name")
   displayName(groupDisplayName, name) {
     return groupDisplayName || name;
   },
 
-  @computed("flair_bg_color")
+  @discourseComputed("flair_bg_color")
   flairBackgroundHexColor(flairBgColor) {
     return flairBgColor
       ? flairBgColor.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
   },
 
-  @computed("flair_color")
+  @discourseComputed("flair_color")
   flairHexColor(flairColor) {
     return flairColor
       ? flairColor.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
   },
 
-  canEveryoneMention: Ember.computed.equal("mentionable_level", 99),
+  canEveryoneMention: equal("mentionable_level", 99),
 
-  @computed("visibility_level")
+  @discourseComputed("visibility_level")
   isPrivate(visibilityLevel) {
-    return visibilityLevel !== 0;
+    return visibilityLevel > 1;
   },
 
   @observes("isPrivate", "canEveryoneMention")
@@ -149,19 +152,13 @@ const Group = RestModel.extend({
     }
   },
 
-  @observes("visibility_level")
-  _updatePublic() {
-    if (this.isPrivate) {
-      this.setProperties({ public: false, allow_membership_requests: false });
-    }
-  },
-
   asJSON() {
     const attrs = {
       name: this.name,
       mentionable_level: this.mentionable_level,
       messageable_level: this.messageable_level,
       visibility_level: this.visibility_level,
+      members_visibility_level: this.members_visibility_level,
       automatic_membership_email_domains: this.emailDomains,
       automatic_membership_retroactive: !!this.automatic_membership_retroactive,
       title: this.title,
@@ -177,7 +174,8 @@ const Group = RestModel.extend({
       allow_membership_requests: this.allow_membership_requests,
       full_name: this.full_name,
       default_notification_level: this.default_notification_level,
-      membership_request_template: this.membership_request_template
+      membership_request_template: this.membership_request_template,
+      publish_read_state: this.publish_read_state
     };
 
     if (!this.id) {
@@ -221,7 +219,7 @@ const Group = RestModel.extend({
     return ajax(`/groups/${this.name}/logs.json`, {
       data: { offset, filters }
     }).then(results => {
-      return Ember.Object.create({
+      return EmberObject.create({
         logs: results["logs"].map(log => GroupHistory.create(log)),
         all_loaded: results["all_loaded"]
       });
@@ -238,7 +236,7 @@ const Group = RestModel.extend({
     }
 
     if (opts.categoryId) {
-      data.category_id = parseInt(opts.categoryId);
+      data.category_id = parseInt(opts.categoryId, 10);
     }
 
     return ajax(`/groups/${this.name}/${type}.json`, { data }).then(posts => {
@@ -246,7 +244,7 @@ const Group = RestModel.extend({
         p.user = User.create(p.user);
         p.topic = Topic.create(p.topic);
         p.category = Category.findById(p.category_id);
-        return Ember.Object.create(p);
+        return EmberObject.create(p);
       });
     });
   },

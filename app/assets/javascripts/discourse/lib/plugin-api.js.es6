@@ -42,9 +42,11 @@ import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1
 import Sharing from "discourse/lib/sharing";
 import { addComposerUploadHandler } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
+import { queryRegistry } from "discourse/widgets/widget";
+import Composer from "discourse/models/composer";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.31";
+const PLUGIN_API_VERSION = "0.8.36";
 
 class PluginApi {
   constructor(version, container) {
@@ -193,8 +195,14 @@ class PluginApi {
    * For example, to add a yellow background to all posts you could do this:
    *
    * ```
-   * api.decorateCooked($elem => $elem.css({ backgroundColor: 'yellow' }));
+   * api.decorateCooked(
+   *   $elem => $elem.css({ backgroundColor: 'yellow' }),
+   *   { id: 'yellow-decorator' }
+   * );
    * ```
+   *
+   * NOTE: To avoid memory leaks, it is highly recommended to pass a unique `id` parameter.
+   * You will receive a warning if you do not.
    **/
   decorateCooked(callback, opts) {
     opts = opts || {};
@@ -202,12 +210,13 @@ class PluginApi {
     addDecorator(callback);
 
     if (!opts.onlyStream) {
-      decorate(ComposerEditor, "previewRefreshed", callback);
-      decorate(DiscourseBanner, "didInsertElement", callback);
+      decorate(ComposerEditor, "previewRefreshed", callback, opts.id);
+      decorate(DiscourseBanner, "didInsertElement", callback, opts.id);
       decorate(
         this.container.factoryFor("component:user-stream").class,
         "didInsertElement",
-        callback
+        callback,
+        opts.id
       );
     }
   }
@@ -318,7 +327,9 @@ class PluginApi {
    * ```
    **/
   attachWidgetAction(widget, actionName, fn) {
-    const widgetClass = this.container.factoryFor(`widget:${widget}`).class;
+    const widgetClass =
+      queryRegistry(widget) ||
+      this.container.factoryFor(`widget:${widget}`).class;
     widgetClass.prototype[actionName] = fn;
   }
 
@@ -414,45 +425,45 @@ class PluginApi {
   }
 
   /**
-    Called whenever the "page" changes. This allows us to set up analytics
-    and other tracking.
+   Called whenever the "page" changes. This allows us to set up analytics
+   and other tracking.
 
-    To get notified when the page changes, you can install a hook like so:
+   To get notified when the page changes, you can install a hook like so:
 
-    ```javascript
-      api.onPageChange((url, title) => {
+   ```javascript
+   api.onPageChange((url, title) => {
         console.log('the page changed to: ' + url + ' and title ' + title);
       });
-    ```
-  **/
+   ```
+   **/
   onPageChange(fn) {
     this.onAppEvent("page:changed", data => fn(data.url, data.title));
   }
 
   /**
-    Listen for a triggered `AppEvent` from Discourse.
+   Listen for a triggered `AppEvent` from Discourse.
 
-    ```javascript
-      api.onAppEvent('inserted-custom-html', () => {
+   ```javascript
+   api.onAppEvent('inserted-custom-html', () => {
         console.log('a custom footer was rendered');
       });
-    ```
-  **/
+   ```
+   **/
   onAppEvent(name, fn) {
-    const appEvents = this._lookupContainer("app-events:main");
+    const appEvents = this._lookupContainer("service:app-events");
     appEvents && appEvents.on(name, fn);
   }
 
   /**
-    Registers a function to generate custom avatar CSS classes
-    for a particular user.
+   Registers a function to generate custom avatar CSS classes
+   for a particular user.
 
-    Takes a function that will accept a user as a parameter
-    and return an array of CSS classes to apply.
+   Takes a function that will accept a user as a parameter
+   and return an array of CSS classes to apply.
 
-    ```javascript
-    api.customUserAvatarClasses(user => {
-      if (Ember.get(user, 'primary_group_name') === 'managers') {
+   ```javascript
+   api.customUserAvatarClasses(user => {
+      if (get(user, 'primary_group_name') === 'managers') {
         return ['managers'];
       }
     });
@@ -519,7 +530,7 @@ class PluginApi {
 
   /**
    * Exposes the widget creating ability to plugins. Plugins can
-   * register their own plugins and attach them with decorators.
+   * register their own widgets and attach them with decorators.
    * See `createWidget` in `discourse/widgets/widget` for more info.
    **/
   createWidget(name, args) {
@@ -705,7 +716,7 @@ class PluginApi {
 
   /**
    *
-   * Adds a new item in the navigation bar.
+   * Adds a new item in the navigation bar. Returns the NavItem object created.
    *
    * Example:
    *
@@ -718,13 +729,20 @@ class PluginApi {
    * An optional `customFilter` callback can be included to not display the
    * nav item on certain routes
    *
+   * An optional `init` callback can be included to run custom code on menu
+   * init
+   *
    * Example:
    *
    * addNavigationBarItem({
    *   name: "link-to-bugs-category",
    *   displayName: "bugs"
    *   href: "/c/bugs",
-   *   customFilter: (category, args) => { category && category.get('name') !== 'bug' }
+   *   init: (navItem, category) => { if (category) { navItem.set("category", category)  } }
+   *   customFilter: (category, args, router) => { category && category.name !== 'bug' }
+   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') "/a-feature"; },
+   *   before: "top",
+   *   forceActive(category, args, router) => router.currentURL === "/a/b/c/d";
    * })
    */
   addNavigationBarItem(item) {
@@ -735,6 +753,38 @@ class PluginApi {
         item
       );
     } else {
+      const customHref = item.customHref;
+      if (customHref) {
+        const router = this.container.lookup("service:router");
+        item.customHref = function(category, args) {
+          return customHref(category, args, router);
+        };
+      }
+
+      const customFilter = item.customFilter;
+      if (customFilter) {
+        const router = this.container.lookup("service:router");
+        item.customFilter = function(category, args) {
+          return customFilter(category, args, router);
+        };
+      }
+
+      const forceActive = item.forceActive;
+      if (forceActive) {
+        const router = this.container.lookup("service:router");
+        item.forceActive = function(category, args) {
+          return forceActive(category, args, router);
+        };
+      }
+
+      const init = item.init;
+      if (init) {
+        const router = this.container.lookup("service:router");
+        item.init = function(navItem, category, args) {
+          init(navItem, category, args, router);
+        };
+      }
+
       addNavItem(item);
     }
   }
@@ -763,7 +813,7 @@ class PluginApi {
    *
    * Example:
    *
-   * modifySelectKit("topic-footer-mobile-dropdown").appendContent(() => [{
+   * api.modifySelectKit("topic-footer-mobile-dropdown").appendContent(() => [{
    *   name: "discourse",
    *   id: 1
    * }])
@@ -779,7 +829,7 @@ class PluginApi {
    *
    * Example:
    *
-   * addGTMPageChangedCallback( gtmData => gtmData.locale = I18n.currentLocale() )
+   * api.addGTMPageChangedCallback( gtmData => gtmData.locale = I18n.currentLocale() )
    *
    */
   addGTMPageChangedCallback(fn) {
@@ -793,7 +843,7 @@ class PluginApi {
    * Example:
    *
    * // read /discourse/lib/sharing.js.es6 for options
-   * addSharingSource(options)
+   * api.addSharingSource(options)
    *
    */
   addSharingSource(options) {
@@ -809,12 +859,41 @@ class PluginApi {
    *
    * Example:
    *
-   * addComposerUploadHandler(["mp4", "mov"], (file, editor) => {
-   *    console.log("Handling upload for", file.name);
+   * api.addComposerUploadHandler(["mp4", "mov"], (file, editor) => {
+   *   console.log("Handling upload for", file.name);
    * })
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
+  }
+
+  /**
+   * Registers a "beforeSave" function on the composer. This allows you to
+   * implement custom logic that will happen before the user makes a post.
+   *
+   * Example:
+   *
+   * api.composerBeforeSave(() => {
+   *   console.log("Before saving, do something!");
+   * })
+   */
+  composerBeforeSave(method) {
+    Composer.reopen({ beforeSave: method });
+  }
+
+  /**
+   * Adds a field to draft serializer
+   *
+   * Example:
+   *
+   * api.serializeToDraft('key_set_in_model', 'field_name_in_payload');
+   *
+   * to keep both of them same
+   * api.serializeToDraft('field_name');
+   *
+   */
+  serializeToDraft(fieldName, property) {
+    Composer.serializeToDraft(fieldName, property);
   }
 
   /**
@@ -930,10 +1009,29 @@ export function withPluginApi(version, apiCodeCallback, opts) {
 }
 
 let _decorateId = 0;
-function decorate(klass, evt, cb) {
+let _decorated = new WeakMap();
+
+function decorate(klass, evt, cb, id) {
+  if (!id) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      "`decorateCooked` should be supplied with an `id` option to avoid memory leaks."
+    );
+  } else {
+    if (!_decorated.has(klass)) {
+      _decorated.set(klass, new Set());
+    }
+    id = `${id}:${evt}`;
+    let set = _decorated.get(klass);
+    if (set.has(id)) {
+      return;
+    }
+    set.add(id);
+  }
+
   const mixin = {};
   mixin["_decorate_" + _decorateId++] = function($elem) {
-    $elem = $elem || this.$();
+    $elem = $elem || $(this.element);
     if ($elem) {
       cb($elem);
     }
@@ -943,11 +1041,4 @@ function decorate(klass, evt, cb) {
 
 export function resetPluginApi() {
   _pluginv01 = null;
-}
-
-export function decorateCooked() {
-  // eslint-disable-next-line no-console
-  console.warn(
-    "`decorateCooked` has been removed. Use `getPluginApi(version).decorateCooked` instead"
-  );
 }

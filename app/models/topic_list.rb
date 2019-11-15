@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'avatar_lookup'
-require_dependency 'primary_group_lookup'
-
 class TopicList
   include ActiveModel::Serialization
 
@@ -41,7 +38,8 @@ class TopicList
     :current_user,
     :tags,
     :shared_drafts,
-    :category
+    :category,
+    :publish_read_state
   )
 
   def initialize(filter, current_user, topics, opts = nil)
@@ -57,6 +55,8 @@ class TopicList
     if @opts[:tags]
       @tags = Tag.where(id: @opts[:tags]).all
     end
+
+    @publish_read_state = !!@opts[:publish_read_state]
   end
 
   def top_tags
@@ -83,6 +83,7 @@ class TopicList
 
     # Attach some data for serialization to each topic
     @topic_lookup = TopicUser.lookup_for(@current_user, @topics) if @current_user
+    @category_user_lookup = CategoryUser.lookup_for(@current_user, @topics.map(&:category_id).uniq) if @current_user
 
     post_action_type =
       if @current_user
@@ -114,6 +115,7 @@ class TopicList
 
     @topics.each do |ft|
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
+      ft.category_user_data = @category_user_lookup[ft.category_id] if @category_user_lookup.present?
 
       if ft.user_data && post_action_lookup && actions = post_action_lookup[ft.id]
         ft.user_data.post_action_data = { post_action_type => actions }

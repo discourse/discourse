@@ -65,6 +65,10 @@ describe EmbeddableHost do
     end
   end
 
+  it "doesn't allow forum own URL if no hosts exist" do
+    expect(EmbeddableHost.url_allowed?(Discourse.base_url)).to eq(false)
+  end
+
   describe "url_allowed?" do
     fab!(:host) { Fabricate(:embeddable_host) }
 
@@ -129,20 +133,14 @@ describe EmbeddableHost do
       host2 = Fabricate(:embeddable_host)
 
       SiteSetting.embed_post_limit = 300
-      SiteSetting.feed_polling_url = "http://test.com"
-      SiteSetting.feed_polling_enabled = true
 
       host2.destroy
 
       expect(SiteSetting.embed_post_limit).to eq(300)
-      expect(SiteSetting.feed_polling_url).to eq("http://test.com")
-      expect(SiteSetting.feed_polling_enabled).to eq(true)
 
       host.destroy
 
       expect(SiteSetting.embed_post_limit).to eq(SiteSetting.defaults[:embed_post_limit])
-      expect(SiteSetting.feed_polling_url).to eq(SiteSetting.defaults[:feed_polling_url])
-      expect(SiteSetting.feed_polling_enabled).to eq(SiteSetting.defaults[:feed_polling_enabled])
     end
   end
 end

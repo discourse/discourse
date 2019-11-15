@@ -11,10 +11,16 @@ function parseAttributes(tagInfo) {
   );
 }
 
+function camelCaseToDash(str) {
+  return str.replace(/([a-zA-Z])(?=[A-Z])/g, "$1-").toLowerCase();
+}
+
 function applyDataAttributes(token, state, attributes) {
   Object.keys(attributes).forEach(tag => {
     const value = state.md.utils.escapeHtml(attributes[tag]);
-    tag = state.md.utils.escapeHtml(tag.replace(/[^a-z0-9\-]/g, ""));
+    tag = camelCaseToDash(
+      state.md.utils.escapeHtml(tag.replace(/[^A-Za-z\-0-9]/g, ""))
+    );
 
     if (value && tag && tag.length > 1) {
       token.attrs.push([`data-${tag}`, value]);

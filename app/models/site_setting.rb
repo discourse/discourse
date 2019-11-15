@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'site_setting_extension'
-require_dependency 'global_path'
-require_dependency 'site_settings/yaml_loader'
-
 class SiteSetting < ActiveRecord::Base
   extend GlobalPath
   extend SiteSettingExtension
@@ -89,15 +85,6 @@ class SiteSetting < ActiveRecord::Base
     force_https? ? "https" : "http"
   end
 
-  def self.default_categories_selected
-    [
-      SiteSetting.default_categories_watching.split("|"),
-      SiteSetting.default_categories_tracking.split("|"),
-      SiteSetting.default_categories_muted.split("|"),
-      SiteSetting.default_categories_watching_first_post.split("|")
-    ].flatten.to_set
-  end
-
   def self.min_redirected_to_top_period(duration)
     ListController.best_period_with_topics_for(duration)
   end
@@ -111,6 +98,20 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
   end
 
+  WATCHED_SETTINGS ||= [
+    :default_locale,
+    :attachment_content_type_blacklist,
+    :attachment_filename_blacklist,
+    :unicode_username_character_whitelist,
+    :markdown_typographer_quotation_marks
+  ]
+
+  def self.reset_cached_settings!
+    @attachment_content_type_blacklist_regex = nil
+    @attachment_filename_blacklist_regex = nil
+    @unicode_username_whitelist_regex = nil
+  end
+
   def self.attachment_content_type_blacklist_regex
     @attachment_content_type_blacklist_regex ||= Regexp.union(SiteSetting.attachment_content_type_blacklist.split("|"))
   end
@@ -120,7 +121,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.unicode_username_character_whitelist_regex
-    @unicode_username_whitelist_regex = SiteSetting.unicode_username_character_whitelist.present? \
+    @unicode_username_whitelist_regex ||= SiteSetting.unicode_username_character_whitelist.present? \
       ? Regexp.new(SiteSetting.unicode_username_character_whitelist) : nil
   end
 

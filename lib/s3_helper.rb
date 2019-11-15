@@ -47,7 +47,7 @@ class S3Helper
       end
     end
 
-    return path, etag.gsub('"', '')
+    [path, etag.gsub('"', '')]
   end
 
   def remove(s3_filename, copy_to_tombstone = false)
@@ -71,7 +71,9 @@ class S3Helper
     if !Rails.configuration.multisite
       options[:copy_source] = File.join(@s3_bucket_name, source)
     else
-      if @s3_bucket_folder_path
+      if source.include?(multisite_upload_path) || source.include?(@tombstone_prefix)
+        options[:copy_source] = File.join(@s3_bucket_name, source)
+      elsif @s3_bucket_folder_path
         folder, filename = begin
           source.split("/".freeze, 2)
         end

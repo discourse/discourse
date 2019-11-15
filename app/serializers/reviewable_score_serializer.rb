@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'reviewable_score_type_serializer'
-
 class ReviewableScoreSerializer < ApplicationSerializer
 
   attributes :id, :score, :agree_stats, :status, :reason, :created_at, :reviewed_at

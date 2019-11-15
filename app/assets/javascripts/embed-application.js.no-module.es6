@@ -24,17 +24,20 @@
 
   window.onload = function() {
     // get state info from data attribute
-    var header = document.querySelector("header");
+    var embedState = document.querySelector("[data-embed-state]");
     var state = "unknown";
-    if (header) {
-      state = header.getAttribute("data-embed-state");
+    var embedId = null;
+    if (embedState) {
+      state = embedState.getAttribute("data-embed-state");
+      embedId = embedState.getAttribute("data-embed-id");
     }
 
     // Send a post message with our loaded height and state
     postUp({
       type: "discourse-resize",
       height: document["body"].offsetHeight,
-      state: state
+      state,
+      embedId
     });
 
     var postLinks = document.querySelectorAll("a[data-link-to-post]"),

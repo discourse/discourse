@@ -4,6 +4,10 @@ require 'rails_helper'
 describe ContentSecurityPolicy do
   before { ContentSecurityPolicy.base_url = nil }
 
+  after do
+    DiscoursePluginRegistry.reset!
+  end
+
   describe 'report-uri' do
     it 'is enabled by SiteSetting' do
       SiteSetting.content_security_policy_collect_reports = true

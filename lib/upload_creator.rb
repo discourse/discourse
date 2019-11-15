@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "fastimage"
-require_dependency "image_sizer"
 
 class UploadCreator
 
@@ -21,6 +20,7 @@ class UploadCreator
   #  - for_private_message (boolean)
   #  - pasted (boolean)
   #  - for_export (boolean)
+  #  - for_gravatar (boolean)
   def initialize(file, filename, opts = {})
     @file = file
     @filename = (filename || "").gsub(/[^[:print:]]/, "")
@@ -116,6 +116,7 @@ class UploadCreator
       @upload.for_theme           = true if @opts[:for_theme]
       @upload.for_export          = true if @opts[:for_export]
       @upload.for_site_setting    = true if @opts[:for_site_setting]
+      @upload.for_gravatar        = true if @opts[:for_gravatar]
 
       return @upload unless @upload.save
 
@@ -142,7 +143,9 @@ class UploadCreator
       @upload
     end
   ensure
-    @file&.close
+    if @file
+      @file.respond_to?(:close!) ? @file.close! : @file.close
+    end
   end
 
   def extract_image_info!
@@ -196,10 +199,11 @@ class UploadCreator
     keep_jpeg &&= (filesize - new_size) > MIN_CONVERT_TO_JPEG_BYTES_SAVED
 
     if keep_jpeg
+      @file.respond_to?(:close!) ? @file.close! : @file.close
       @file = jpeg_tempfile
       extract_image_info!
     else
-      jpeg_tempfile&.close
+      jpeg_tempfile.close!
     end
   end
 
@@ -226,16 +230,24 @@ class UploadCreator
   def downsize!
     3.times do
       original_size = filesize
-      downsized_pixels = [pixels, max_image_pixels].min / 2
+      down_tempfile = Tempfile.new(["down", ".#{@image_info.type}"])
+
+      from = @file.path
+      to = down_tempfile.path
+
+      OptimizedImage.ensure_safe_paths!(from, to)
 
       OptimizedImage.downsize(
-        @file.path,
-        @file.path,
-        "#{downsized_pixels}@",
+        from,
+        to,
+        "50%",
         filename: @filename,
         allow_animation: allow_animation,
         raise_on_error: true
       )
+
+      @file.respond_to?(:close!) ? @file.close! : @file.close
+      @file = down_tempfile
 
       extract_image_info!
 

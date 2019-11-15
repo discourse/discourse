@@ -3,6 +3,7 @@
 @import "./common/foundation/variables";
 @import "./common/foundation/colors";
 @import "./common/foundation/mixins";
+@import "./common/components/buttons";
 
 article.post {
   border-bottom: 1px solid #ddd;
@@ -174,4 +175,89 @@ aside.onebox {
 // either, unless we add one now
 div.lightbox-wrapper {
   margin-bottom: 20px;
+}
+
+.new-topic-btn {
+  margin: 0.5rem;
+
+  &:hover {
+    background: #006da3;
+  }
+
+  span {
+    display: inline-block;
+    vertical-align: middle;
+    padding-bottom: 2px;
+  }
+
+  .new-topic-btn__icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 2px;
+    background-image: svg-uri(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 448 512" fill="white"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg>'
+    );
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: top center;
+  }
+}
+
+.topics-list {
+  width: 100%;
+
+  .topic-list-item {
+    clear: both;
+
+    .main-link {
+      border-bottom: 1px solid $primary-low;
+      padding: 0.5rem;
+      width: 100%;
+
+      a {
+        color: $primary;
+      }
+
+      a:visited {
+        color: $primary-medium;
+      }
+    }
+
+    .topic-column-wrapper {
+      display: flex;
+
+      .topic-column.details-column {
+        flex-direction: column;
+        width: 80%;
+
+        .topic-last-posted-at,
+        .topic-author-avatar-timestamp,
+        .topic-stats {
+          padding-top: 5px;
+        }
+
+        .topic-author-avatar-timestamp img {
+          max-height: 20px;
+        }
+
+        .topic-created-at {
+          padding-left: 5px;
+          vertical-align: middle;
+        }
+
+        .topic-last-posted-at,
+        .topic-created-at,
+        .topic-stats {
+          color: $primary-medium;
+        }
+      }
+
+      .topic-column.featured-image-column {
+        .topic-featured-image img {
+          max-width: 200px;
+          max-height: 100px;
+        }
+      }
+    }
+  }
 }

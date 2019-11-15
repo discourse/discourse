@@ -47,15 +47,15 @@ class DiscoursePluginRegistry
     end
 
     def stylesheets
-      @stylesheets ||= Set.new
+      @stylesheets ||= Hash.new
     end
 
     def mobile_stylesheets
-      @mobile_stylesheets ||= Set.new
+      @mobile_stylesheets ||= Hash.new
     end
 
     def desktop_stylesheets
-      @desktop_stylesheets ||= Set.new
+      @desktop_stylesheets ||= Hash.new
     end
 
     def sass_variables
@@ -116,8 +116,9 @@ class DiscoursePluginRegistry
     self.svg_icons << icon
   end
 
-  def register_css(filename)
-    self.class.stylesheets << filename
+  def register_css(filename, plugin_directory_name)
+    self.class.stylesheets[plugin_directory_name] ||= Set.new
+    self.class.stylesheets[plugin_directory_name] << filename
   end
 
   def self.register_locale(locale, options = {})
@@ -153,7 +154,7 @@ class DiscoursePluginRegistry
   JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6|\.js\.no-module\.es6$/
   HANDLEBARS_REGEX = /\.hbs$|\.js\.handlebars$/
 
-  def self.register_asset(asset, opts = nil)
+  def self.register_asset(asset, opts = nil, plugin_directory_name = nil)
     if asset =~ JS_REGEX
       if opts == :admin
         self.admin_javascripts << asset
@@ -166,16 +167,30 @@ class DiscoursePluginRegistry
       end
     elsif asset =~ /\.css$|\.scss$/
       if opts == :mobile
-        self.mobile_stylesheets << asset
+        self.mobile_stylesheets[plugin_directory_name] ||= Set.new
+        self.mobile_stylesheets[plugin_directory_name] << asset
       elsif opts == :desktop
-        self.desktop_stylesheets << asset
+        self.desktop_stylesheets[plugin_directory_name] ||= Set.new
+        self.desktop_stylesheets[plugin_directory_name] << asset
       elsif opts == :variables
         self.sass_variables << asset
       else
-        self.stylesheets << asset
+        self.stylesheets[plugin_directory_name] ||= Set.new
+        self.stylesheets[plugin_directory_name] << asset
       end
     elsif asset =~ HANDLEBARS_REGEX
       self.handlebars << asset
+    end
+  end
+
+  def self.stylesheets_exists?(plugin_directory_name, target = nil)
+    case target
+    when :desktop
+      self.desktop_stylesheets[plugin_directory_name].present?
+    when :mobile
+      self.mobile_stylesheets[plugin_directory_name].present?
+    else
+      self.stylesheets[plugin_directory_name].present?
     end
   end
 

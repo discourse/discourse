@@ -6,6 +6,7 @@ import { h } from "virtual-dom";
 import highlightText from "discourse/lib/highlight-text";
 import { escapeExpression, formatUsername } from "discourse/lib/utilities";
 import { iconNode } from "discourse-common/lib/icon-library";
+import renderTag from "discourse/lib/render-tag";
 
 class Highlighted extends RawHtml {
   constructor(html, term) {
@@ -70,15 +71,7 @@ createSearchResult({
   linkField: "url",
   builder(t) {
     const tag = escapeExpression(t.id);
-    return h(
-      "span",
-      {
-        className: `tag-${tag} discourse-tag ${
-          Discourse.SiteSettings.tag_style
-        }`
-      },
-      tag
-    );
+    return new RawHtml({ html: renderTag(tag, { tagName: "span" }) });
   }
 });
 
@@ -149,13 +142,27 @@ createSearchResult({
   linkField: "url",
   builder(result, term) {
     const topic = result.topic;
-    const link = h("span.topic", [
+
+    const firstLine = [
       this.attach("topic-status", { topic, disableActions: true }),
-      h("span.topic-title", new Highlighted(topic.get("fancyTitle"), term)),
+      h("span.topic-title", new Highlighted(topic.fancyTitle, term))
+    ];
+
+    const secondLine = [
       this.attach("category-link", {
-        category: topic.get("category"),
+        category: topic.category,
         link: false
       })
+    ];
+    if (Discourse.SiteSettings.tagging_enabled) {
+      secondLine.push(
+        this.attach("discourse-tags", { topic, tagName: "span" })
+      );
+    }
+
+    const link = h("span.topic", [
+      h("div.first-line", firstLine),
+      h("div.second-line", secondLine)
     ]);
 
     return postResult.call(this, result, link, term);

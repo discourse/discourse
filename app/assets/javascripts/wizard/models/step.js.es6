@@ -1,14 +1,15 @@
-import computed from "ember-addons/ember-computed-decorators";
+import EmberObject from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 import ValidState from "wizard/mixins/valid-state";
 import { ajax } from "wizard/lib/ajax";
 
-export default Ember.Object.extend(ValidState, {
+export default EmberObject.extend(ValidState, {
   id: null,
 
-  @computed("index")
+  @discourseComputed("index")
   displayIndex: index => index + 1,
 
-  @computed("fields.[]")
+  @discourseComputed("fields.[]")
   fieldsById(fields) {
     const lookup = {};
     fields.forEach(field => (lookup[field.get("id")] = field));

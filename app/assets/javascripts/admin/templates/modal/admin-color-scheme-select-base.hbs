@@ -7,6 +7,10 @@
                    valueAttribute="base_scheme_id"}}
   {{/d-modal-body}}
   <div class="modal-footer">
-    <button class='btn btn-primary' {{action "selectBase"}}>{{d-icon 'plus'}}{{i18n 'admin.customize.new'}}</button>
+    {{d-button
+      class="btn-primary"
+      action=(action "selectBase")
+      icon="plus"
+      label="admin.customize.new"}}
   </div>
 </div>

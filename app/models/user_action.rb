@@ -46,7 +46,7 @@ class UserAction < ActiveRecord::Base
   def self.last_action_in_topic(user_id, topic_id)
     UserAction.where(user_id: user_id,
                      target_topic_id: topic_id,
-                     action_type: [RESPONSE, MENTION, QUOTE]).order('created_at DESC').pluck(:target_post_id).first
+                     action_type: [RESPONSE, MENTION, QUOTE]).order('created_at DESC').pluck_first(:target_post_id)
   end
 
   def self.stats(user_id, guardian)
@@ -302,7 +302,7 @@ class UserAction < ActiveRecord::Base
     end
   end
 
-  def self.synchronize_target_topic_ids(post_ids = nil)
+  def self.synchronize_target_topic_ids(post_ids = nil, limit: nil)
 
     # nuke all dupes, using magic
     builder = DB.build <<~SQL
@@ -318,6 +318,16 @@ class UserAction < ActiveRecord::Base
       user_actions.target_post_id > 0 AND
       user_actions.id > ua2.id
     SQL
+
+    if limit
+      builder.where(<<~SQL, limit: limit)
+        user_actions.target_post_id IN (
+          SELECT target_post_id
+          FROM user_actions
+          WHERE created_at > :limit
+        )
+      SQL
+    end
 
     if post_ids
       builder.where("user_actions.target_post_id in (:post_ids)", post_ids: post_ids)
@@ -336,11 +346,21 @@ class UserAction < ActiveRecord::Base
       builder.where("target_post_id in (:post_ids)", post_ids: post_ids)
     end
 
+    if limit
+      builder.where(<<~SQL, limit: limit)
+        target_post_id IN (
+          SELECT target_post_id
+          FROM user_actions
+          WHERE created_at > :limit
+        )
+      SQL
+    end
+
     builder.exec
   end
 
-  def self.ensure_consistency!
-    self.synchronize_target_topic_ids
+  def self.ensure_consistency!(limit = nil)
+    self.synchronize_target_topic_ids(nil, limit: limit)
   end
 
   def self.update_like_count(user_id, action_type, delta)

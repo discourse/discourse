@@ -1,5 +1,8 @@
+import { cancel } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
+import { later } from "@ember/runloop";
 import MountWidget from "discourse/components/mount-widget";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import Docking from "discourse/mixins/docking";
 import PanEvents, {
   SWIPE_VELOCITY,
@@ -8,10 +11,6 @@ import PanEvents, {
 } from "discourse/mixins/pan-events";
 
 const PANEL_BODY_MARGIN = 30;
-
-//android supports pulling in from the screen edges
-const SCREEN_EDGE_MARGIN = 20;
-const SCREEN_OFFSET = 300;
 
 const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   widget: "header",
@@ -42,7 +41,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   _animateClosing($panel, menuOrigin, windowWidth) {
     $panel.css(menuOrigin, -windowWidth);
     this._animate = true;
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       this.eventDispatched("dom:clean", "header");
       this._panMenuOffset = 0;
     });
@@ -66,7 +65,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
   _handlePanDone(offset, event) {
     const $window = $(window);
-    const windowWidth = parseInt($window.width());
+    const windowWidth = $window.width();
     const $menuPanels = $(".menu-panel");
     const menuOrigin = this._panMenuOrigin;
     this._shouldMenuClose(event, menuOrigin)
@@ -112,8 +111,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   panStart(e) {
     const center = e.center;
     const $centeredElement = $(document.elementFromPoint(center.x, center.y));
-    const $window = $(window);
-    const windowWidth = parseInt($window.width());
     if (
       ($centeredElement.hasClass("panel-body") ||
         $centeredElement.hasClass("header-cloak") ||
@@ -122,30 +119,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     ) {
       e.originalEvent.preventDefault();
       this._isPanning = true;
-    } else if (
-      center.x < SCREEN_EDGE_MARGIN &&
-      !this.$(".menu-panel").length &&
-      e.direction === "right"
-    ) {
-      this._animate = false;
-      this._panMenuOrigin = "left";
-      this._panMenuOffset = -SCREEN_OFFSET;
-      this._isPanning = true;
-      $("header.d-header").removeClass("scroll-down scroll-up");
-      this.eventDispatched(this._leftMenuAction(), "header");
-      window.requestAnimationFrame(() => this.panMove(e));
-    } else if (
-      windowWidth - center.x < SCREEN_EDGE_MARGIN &&
-      !this.$(".menu-panel").length &&
-      e.direction === "left"
-    ) {
-      this._animate = false;
-      this._panMenuOrigin = "right";
-      this._panMenuOffset = -SCREEN_OFFSET;
-      this._isPanning = true;
-      $("header.d-header").removeClass("scroll-down scroll-up");
-      this.eventDispatched(this._rightMenuAction(), "header");
-      window.requestAnimationFrame(() => this.panMove(e));
     } else {
       this._isPanning = false;
     }
@@ -224,7 +197,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
   didInsertElement() {
     this._super(...arguments);
-    const { isAndroid } = this.capabilities;
     $(window).on("resize.discourse-menu-panel", () => this.afterRender());
 
     this.appEvents.on("header:show-topic", this, "setTopic");
@@ -235,24 +207,17 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     this.dispatch("search-autocomplete:after-complete", "search-term");
 
     this.appEvents.on("dom:clean", this, "_cleanDom");
-
-    // Only add listeners for opening menus by swiping them in on Android devices
-    // iOS will respond to these events, but also does swiping for back/forward
-    if (isAndroid) {
-      this.addTouchListeners($("body"));
-    }
   },
 
   _cleanDom() {
     // For performance, only trigger a re-render if any menu panels are visible
-    if (this.$(".menu-panel").length) {
+    if (this.element.querySelector(".menu-panel")) {
       this.eventDispatched("dom:clean", "header");
     }
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    const { isAndroid } = this.capabilities;
     $("body").off("keydown.header");
     $(window).off("resize.discourse-menu-panel");
 
@@ -260,11 +225,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     this.appEvents.off("header:hide-topic", this, "setTopic");
     this.appEvents.off("dom:clean", this, "_cleanDom");
 
-    if (isAndroid) {
-      this.removeTouchListeners($("body"));
-    }
-
-    Ember.run.cancel(this._scheduledRemoveAnimate);
+    cancel(this._scheduledRemoveAnimate);
     window.cancelAnimationFrame(this._scheduledMovingAnimation);
   },
 
@@ -285,16 +246,16 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     }
 
     const $window = $(window);
-    const windowWidth = parseInt($window.width());
+    const windowWidth = $window.width();
 
     const headerWidth = $("#main-outlet .container").width() || 1100;
-    const remaining = parseInt((windowWidth - headerWidth) / 2);
+    const remaining = (windowWidth - headerWidth) / 2;
     const viewMode = remaining < 50 ? "slide-in" : "drop-down";
 
     $menuPanels.each((idx, panel) => {
       const $panel = $(panel);
       const $headerCloak = $(".header-cloak");
-      let width = parseInt($panel.attr("data-max-width") || 300);
+      let width = parseInt($panel.attr("data-max-width"), 10) || 300;
       if (windowWidth - width < 50) {
         width = windowWidth - 50;
       }
@@ -319,8 +280,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
       const $panelBody = $(".panel-body", $panel);
       // 2 pixel fudge allows for firefox subpixel sizing stuff causing scrollbar
-      let contentHeight =
-        parseInt($(".panel-body-contents", $panel).height()) + 2;
+      let contentHeight = $(".panel-body-contents", $panel).height() + 2;
 
       // We use a mutationObserver to check for style changes, so it's important
       // we don't set it if it doesn't change. Same goes for the $panelBody!
@@ -339,7 +299,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         }
 
         // adjust panel height
-        const fullHeight = parseInt($window.height());
+        const fullHeight = $window.height();
         const offsetTop = $panel.offset().top;
         const scrollTop = $window.scrollTop();
 
@@ -388,7 +348,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       if (this._animate) {
         $panel.addClass("animate");
         $headerCloak.addClass("animate");
-        this._scheduledRemoveAnimate = Ember.run.later(() => {
+        this._scheduledRemoveAnimate = later(() => {
           $panel.removeClass("animate");
           $headerCloak.removeClass("animate");
         }, 200);
@@ -404,16 +364,20 @@ export default SiteHeaderComponent;
 
 export function headerHeight() {
   const $header = $("header.d-header");
+
+  // Header may not exist in tests (e.g. in the user menu component test).
+  if ($header.length === 0) {
+    return 0;
+  }
+
   const headerOffset = $header.offset();
   const headerOffsetTop = headerOffset ? headerOffset.top : 0;
-  return parseInt(
-    $header.outerHeight() + headerOffsetTop - $(window).scrollTop()
-  );
+  return $header.outerHeight() + headerOffsetTop - $(window).scrollTop();
 }
 
 export function headerTop() {
   const $header = $("header.d-header");
   const headerOffset = $header.offset();
   const headerOffsetTop = headerOffset ? headerOffset.top : 0;
-  return parseInt(headerOffsetTop - $(window).scrollTop());
+  return headerOffsetTop - $(window).scrollTop();
 }

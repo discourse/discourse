@@ -1,10 +1,6 @@
 # -*- encoding : utf-8 -*-
 # frozen_string_literal: true
 
-require_dependency 'email'
-require_dependency 'enum'
-require_dependency 'user_name_suggester'
-
 class Users::OmniauthCallbacksController < ApplicationController
 
   skip_before_action :redirect_to_login_if_required
@@ -18,6 +14,11 @@ class Users::OmniauthCallbacksController < ApplicationController
   # will not have a CSRF token, however the payload is all validated so its safe
   skip_before_action :verify_authenticity_token, only: :complete
 
+  def confirm_request
+    self.class.find_authenticator(params[:provider])
+    render locals: { hide_auth_buttons: true }
+  end
+
   def complete
     auth = request.env["omniauth.auth"]
     raise Discourse::NotFound unless request.env["omniauth.auth"]
@@ -28,20 +29,13 @@ class Users::OmniauthCallbacksController < ApplicationController
     provider = DiscoursePluginRegistry.auth_providers.find { |p| p.name == params[:provider] }
 
     if session.delete(:auth_reconnect) && authenticator.can_connect_existing_user? && current_user
-      # If we're reconnecting, don't actually try and log the user in
-      @auth_result = authenticator.after_authenticate(auth, existing_account: current_user)
-      if provider&.full_screen_login || cookies['fsl']
-        cookies.delete('fsl')
-        return redirect_to Discourse.base_uri("/my/preferences/account")
-      else
-        @auth_result.authenticated = true
-        return respond_to do |format|
-          format.html
-          format.json { render json: @auth_result.to_client_hash }
-        end
-      end
+      # Save to redis, with a secret token, then redirect to confirmation screen
+      token = SecureRandom.hex
+      $redis.setex "#{Users::AssociateAccountsController::REDIS_PREFIX}_#{current_user.id}_#{token}", 10.minutes, auth.to_json
+      return redirect_to Discourse.base_uri("/associate/#{token}")
     else
       @auth_result = authenticator.after_authenticate(auth)
+      DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
     end
 
     preferred_origin = request.env['omniauth.origin']
@@ -77,23 +71,15 @@ class Users::OmniauthCallbacksController < ApplicationController
     else
       @auth_result.authenticator_name = authenticator.name
       complete_response_data
-
-      if provider&.full_screen_login || cookies['fsl']
-        cookies.delete('fsl')
-        cookies['_bypass_cache'] = true
-        cookies[:authentication_data] = @auth_result.to_client_hash.to_json
-        redirect_to @origin
-      else
-        respond_to do |format|
-          format.html
-          format.json { render json: @auth_result.to_client_hash }
-        end
-      end
+      cookies['_bypass_cache'] = true
+      cookies[:authentication_data] = @auth_result.to_client_hash.to_json
+      redirect_to @origin
     end
   end
 
   def failure
-    flash[:error] = I18n.t("login.omniauth_error")
+    error_key = params[:message].to_s.gsub(/[^\w-]/, "") || "generic"
+    flash[:error] = I18n.t("login.omniauth_error.#{error_key}", default: I18n.t("login.omniauth_error.generic"))
     render 'failure'
   end
 
@@ -128,14 +114,17 @@ class Users::OmniauthCallbacksController < ApplicationController
       user.unstage
       user.save
 
-      # ensure there is an active email token
-      unless EmailToken.where(email: user.email, confirmed: true).exists? ||
-        user.email_tokens.active.where(email: user.email).exists?
+      if !user.active || !user.email_confirmed?
+        user.update!(password: SecureRandom.hex)
 
-        user.email_tokens.create!(email: user.email)
+        # Ensure there is an active email token
+        unless EmailToken.where(email: user.email, confirmed: true).exists? ||
+          user.email_tokens.active.where(email: user.email).exists?
+          user.email_tokens.create!(email: user.email)
+        end
+
+        user.activate
       end
-
-      user.activate
       user.update!(registration_ip_address: request.remote_ip) if user.registration_ip_address.blank?
     end
 

@@ -12,6 +12,8 @@ ur:
         today: آج %{time}
         tomorrow: کل %{time}
         yesterday: گزرا کَل %{time}
+        countdown:
+          passed: تاریخ گزر چکی ہے
       title: تاریخ / وقت شامل کریں
       create:
         form:

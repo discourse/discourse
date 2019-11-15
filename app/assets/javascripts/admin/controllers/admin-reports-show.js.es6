@@ -1,12 +1,13 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   queryParams: ["start_date", "end_date", "filters"],
   start_date: null,
   end_date: null,
   filters: null,
 
-  @computed("model.type")
+  @discourseComputed("model.type")
   reportOptions(type) {
     let options = { table: { perPage: 50, limit: 50, formatNumbers: false } };
 

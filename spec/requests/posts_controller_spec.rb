@@ -313,8 +313,26 @@ describe PostsController do
         sign_in(user)
       end
 
-      it 'does not allow to update when edit time limit expired' do
+      it 'does not allow TL0 or TL1 to update when edit time limit expired' do
         SiteSetting.post_edit_time_limit = 5
+        SiteSetting.tl2_post_edit_time_limit = 30
+
+        post = Fabricate(:post, created_at: 10.minutes.ago, user: user)
+
+        user.update_columns(trust_level: 1)
+
+        put "/posts/#{post.id}.json", params: update_params
+
+        expect(response.status).to eq(422)
+        expect(JSON.parse(response.body)['errors']).to include(I18n.t('too_late_to_edit'))
+      end
+
+      it 'does not allow TL2 to update when edit time limit expired' do
+        SiteSetting.post_edit_time_limit = 12
+        SiteSetting.tl2_post_edit_time_limit = 8
+
+        user.update_columns(trust_level: 2)
+
         post = Fabricate(:post, created_at: 10.minutes.ago, user: user)
 
         put "/posts/#{post.id}.json", params: update_params
@@ -506,8 +524,8 @@ describe PostsController do
     end
 
     context "api" do
-      let(:api_key) { user.generate_api_key(user) }
-      let(:master_key) { ApiKey.create_master_key }
+      let(:api_key) { Fabricate(:api_key, user: user) }
+      let(:master_key) { Fabricate(:api_key, user: nil) }
 
       # choosing an arbitrarily easy to mock trusted activity
       it 'allows users with api key to bookmark posts' do
@@ -693,7 +711,7 @@ describe PostsController do
         raw = "this is a test post 123 #{SecureRandom.hash}"
         title = "this is a title #{SecureRandom.hash}"
 
-        master_key = ApiKey.create_master_key.key
+        master_key = Fabricate(:api_key).key
 
         post "/posts.json", params: {
           api_username: user.username,
@@ -722,7 +740,7 @@ describe PostsController do
         Jobs.run_immediately!
         NotificationEmailer.enable
         post_1 = Fabricate(:post)
-        master_key = ApiKey.create_master_key.key
+        master_key = Fabricate(:api_key).key
 
         post "/posts.json", params: {
           api_username: user.username,
@@ -778,7 +796,7 @@ describe PostsController do
 
       it 'will raise an error if specified category cannot be found' do
         user = Fabricate(:admin)
-        master_key = ApiKey.create_master_key.key
+        master_key = Fabricate(:api_key).key
 
         post "/posts.json", params: {
           api_username: user.username,
@@ -839,6 +857,23 @@ describe PostsController do
 
           user.reload
           expect(user).not_to be_silenced
+        end
+
+        it "doesn't enqueue posts when user first creates a topic" do
+          user.user_stat.update_column(:topic_count, 1)
+
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic',
+            composer_open_duration_msecs: 204,
+            typing_duration_msecs: 100,
+            topic_id: topic.id
+          }
+
+          expect(response.status).to eq(200)
+          parsed = ::JSON.parse(response.body)
+
+          expect(parsed["action"]).not_to be_present
         end
 
         it "doesn't enqueue replies when the topic is closed" do
@@ -964,6 +999,23 @@ describe PostsController do
         }
 
         expect(response.status).to eq(403)
+      end
+
+      it 'can not create a post with a tag that is restricted' do
+        SiteSetting.tagging_enabled = true
+        tag = Fabricate(:tag)
+        category.allowed_tags = [tag.name]
+        category.save!
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: 'this is the test title for the topic',
+          tags: [tag.name],
+        }
+
+        expect(response.status).to eq(422)
+        json = JSON.parse(response.body)
+        expect(json['errors']).to be_present
       end
 
       it 'creates the post' do
@@ -1787,6 +1839,29 @@ describe PostsController do
       expect(response.status).to eq(200)
       public_post.reload
       expect(public_post).not_to be_locked
+    end
+  end
+
+  describe "#notice" do
+    before do
+      sign_in(moderator)
+    end
+
+    it 'can create and remove notices' do
+      put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello *world*!\n\nhttps://github.com/discourse/discourse" }
+
+      expect(response.status).to eq(200)
+      public_post.reload
+      expect(public_post.custom_fields['notice_type']).to eq(Post.notices[:custom])
+      expect(public_post.custom_fields['notice_args']).to include('<p>Hello <em>world</em>!</p>')
+      expect(public_post.custom_fields['notice_args']).not_to include('onebox')
+
+      put "/posts/#{public_post.id}/notice.json", params: { notice: nil }
+
+      expect(response.status).to eq(200)
+      public_post.reload
+      expect(public_post.custom_fields['notice_type']).to eq(nil)
+      expect(public_post.custom_fields['notice_args']).to eq(nil)
     end
   end
 end

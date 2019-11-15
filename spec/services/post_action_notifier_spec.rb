@@ -82,7 +82,7 @@ describe PostActionNotifier do
 
     context "edit notifications are disabled" do
 
-      before { SiteSetting.disable_edit_notifications = true }
+      before { SiteSetting.disable_system_edit_notifications = true }
 
       it 'notifies a user of the revision made by another user' do
         expect {

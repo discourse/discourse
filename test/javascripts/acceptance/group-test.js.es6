@@ -1,7 +1,7 @@
 import selectKit from "helpers/select-kit-helper";
-import { acceptance, logIn } from "helpers/qunit-helpers";
+import { acceptance } from "helpers/qunit-helpers";
 
-acceptance("Group", {
+let groupArgs = {
   settings: {
     enable_group_directory: true
   },
@@ -12,7 +12,9 @@ acceptance("Group", {
       });
     });
   }
-});
+};
+
+acceptance("Group", groupArgs);
 
 const response = object => {
   return [200, { "Content-Type": "application/json" }, object];
@@ -90,10 +92,9 @@ QUnit.test("Anonymous Viewing Automatic Group", async assert => {
   );
 });
 
-QUnit.test("User Viewing Group", async assert => {
-  logIn();
-  Discourse.reset();
+acceptance("Group", Object.assign({ loggedIn: true }, groupArgs));
 
+QUnit.test("User Viewing Group", async assert => {
   await visit("/g");
   await click(".group-index-request");
 
@@ -138,11 +139,7 @@ QUnit.test(
       return response({ topic_list: { topics: [] } });
     });
 
-    logIn();
-    Discourse.reset();
-
     await visit("/g/discourse");
-
     await click(".nav-pills li a[title='Messages']");
 
     assert.equal(
@@ -238,9 +235,6 @@ QUnit.test("Admin viewing group messages", async assert => {
     });
   });
 
-  logIn();
-  Discourse.reset();
-
   await visit("/g/discourse");
   await click(".nav-pills li a[title='Messages']");
 
@@ -254,9 +248,6 @@ QUnit.test("Admin viewing group messages", async assert => {
 });
 
 QUnit.test("Admin Viewing Group", async assert => {
-  logIn();
-  Discourse.reset();
-
   await visit("/g/discourse");
 
   assert.ok(

@@ -270,7 +270,7 @@ end
 Badge.seed do |b|
   b.id = Badge::Anniversary
   b.name = "Anniversary"
-  b.default_icon = "fa-clock-o"
+  b.default_icon = "far-clock"
   b.badge_type_id = BadgeType::Silver
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.query = nil
@@ -427,7 +427,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-eye"
+    b.default_icon = "far-eye"
     b.badge_type_id = level
     b.query = BadgeQueries.consecutive_visits(days)
     b.default_badge_grouping_id = BadgeGrouping::Community

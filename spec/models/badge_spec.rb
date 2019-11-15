@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'badge'
 
 describe Badge do
   it { is_expected.to belong_to(:badge_type) }
@@ -93,6 +92,33 @@ describe Badge do
 
     it 'fallbacks to argument value when translation does not exist' do
       expect(Badge.display_name('Not In Translations')).to eq('Not In Translations')
+    end
+  end
+
+  describe '.find_system_badge_id_from_translation_key' do
+    let(:translation_key) { 'badges.regular.name' }
+
+    it 'uses a translation key to get a system badge id, mainly to find which badge a translation override corresponds to' do
+      expect(Badge.find_system_badge_id_from_translation_key(translation_key)).to eq(
+        Badge::Regular
+      )
+    end
+
+    context 'when the translation key is snake case' do
+      let(:translation_key) { 'badges.crazy_in_love.name' }
+
+      it 'works to get the badge' do
+        expect(Badge.find_system_badge_id_from_translation_key(translation_key)).to eq(
+          Badge::CrazyInLove
+        )
+      end
+    end
+
+    context 'when a translation key not for a badge is provided' do
+      let(:translation_key) { 'reports.flags.title' }
+      it 'returns nil' do
+        expect(Badge.find_system_badge_id_from_translation_key(translation_key)).to eq(nil)
+      end
     end
   end
 

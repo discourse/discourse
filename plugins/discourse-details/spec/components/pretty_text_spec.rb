@@ -41,4 +41,16 @@ describe PrettyText do
     expect(md).to eq(html)
   end
 
+  it 'escapes summary text' do
+    md = PrettyText.cook(<<~EOF)
+      <script>alert('hello')</script>
+      [details="<script>alert('hello')</script>"]
+      <script>alert('hello')</script>
+      [/details]
+    EOF
+    md = PrettyText.format_for_email(md, post)
+
+    expect(md).not_to include('<script>')
+  end
+
 end

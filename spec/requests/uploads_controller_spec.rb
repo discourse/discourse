@@ -261,8 +261,15 @@ describe UploadsController do
       get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
       expect(response.status).to eq(200)
 
-      # rails 6 adds UTF-8 filename to disposition
-      expect(response.headers["Content-Disposition"]).to include("attachment; filename=\"logo.png\"")
+      expect(response.headers["Content-Disposition"])
+        .to eq(%Q|attachment; filename="logo.png"; filename*=UTF-8''logo.png|)
+    end
+
+    it 'returns 200 when js file' do
+      ActionDispatch::FileHandler.any_instance.stubs(:match?).returns(false)
+      upload = upload_file("test.js", "themes")
+      get upload.url
+      expect(response.status).to eq(200)
     end
 
     it "handles image without extension" do
@@ -271,7 +278,8 @@ describe UploadsController do
 
       get "/uploads/#{site}/#{upload.sha1}.json"
       expect(response.status).to eq(200)
-      expect(response.headers["Content-Disposition"]).to include("attachment; filename=\"image_no_extension.png\"")
+      expect(response.headers["Content-Disposition"])
+        .to eq(%Q|attachment; filename="image_no_extension.png"; filename*=UTF-8''image_no_extension.png|)
     end
 
     it "handles file without extension" do
@@ -280,7 +288,8 @@ describe UploadsController do
 
       get "/uploads/#{site}/#{upload.sha1}.json"
       expect(response.status).to eq(200)
-      expect(response.headers["Content-Disposition"]).to include("attachment; filename=\"not_an_image\"")
+      expect(response.headers["Content-Disposition"])
+        .to eq(%Q|attachment; filename="not_an_image"; filename*=UTF-8''not_an_image|)
     end
 
     context "prevent anons from downloading files" do

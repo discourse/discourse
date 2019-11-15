@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import ComponentConnector from "discourse/widgets/component-connector";
 import { h } from "virtual-dom";
@@ -148,7 +149,8 @@ createWidget("timeline-scrollarea", {
     const postStream = topic.get("postStream");
     const total = postStream.get("filteredPostsCount");
 
-    const current = clamp(Math.floor(total * percentage) + 1, 1, total);
+    const scrollPosition = clamp(Math.floor(total * percentage), 0, total) + 1;
+    const current = clamp(scrollPosition, 1, total);
 
     const daysAgo = postStream.closestDaysAgoFor(current);
     let date;
@@ -168,6 +170,7 @@ createWidget("timeline-scrollarea", {
 
     const result = {
       current,
+      scrollPosition,
       total,
       date,
       lastRead: null,
@@ -183,9 +186,9 @@ createWidget("timeline-scrollarea", {
       result.lastReadPercentage = this._percentFor(topic, idx);
     }
 
-    if (this.state.position !== result.current) {
-      this.state.position = result.current;
-      this.sendWidgetAction("updatePosition", result.current);
+    if (this.state.position !== result.scrollPosition) {
+      this.state.position = result.scrollPosition;
+      this.sendWidgetAction("updatePosition", current);
     }
 
     return result;
@@ -259,7 +262,11 @@ createWidget("timeline-scrollarea", {
     const position = this.position();
     this.state.scrolledPost = position.current;
 
-    this.sendWidgetAction("jumpToIndex", position.current);
+    if (position.current === position.scrollPosition || this.site.mobileView) {
+      this.sendWidgetAction("jumpToIndex", position.current);
+    } else {
+      this.sendWidgetAction("jumpEnd");
+    }
   },
 
   topicCurrentPostScrolled(event) {
@@ -380,25 +387,24 @@ export default createWidget("topic-timeline", {
     return { position: null, excerpt: null };
   },
 
-  updatePosition(pos) {
+  updatePosition(scrollPosition) {
     if (!this.attrs.fullScreen) {
       return;
     }
 
-    this.state.position = pos;
+    this.state.position = scrollPosition;
     this.state.excerpt = "";
     const stream = this.attrs.topic.get("postStream");
 
     // a little debounce to avoid flashing
-    Ember.run.later(() => {
-      if (!this.state.position === pos) {
+    later(() => {
+      if (!this.state.position === scrollPosition) {
         return;
       }
 
       // we have an off by one, stream is zero based,
-      // pos is 1 based
-      stream.excerpt(pos - 1).then(info => {
-        if (info && this.state.position === pos) {
+      stream.excerpt(scrollPosition - 1).then(info => {
+        if (info && this.state.position === scrollPosition) {
           let excerpt = "";
 
           if (info.username) {

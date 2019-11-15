@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
 require "digest/sha1"
-require_dependency "file_helper"
-require_dependency "url_helper"
-require_dependency "db_helper"
-require_dependency "validators/upload_validator"
-require_dependency "file_store/local_store"
-require_dependency "base62"
 
 class Upload < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
@@ -29,11 +23,12 @@ class Upload < ActiveRecord::Base
   attr_accessor :for_private_message
   attr_accessor :for_export
   attr_accessor :for_site_setting
+  attr_accessor :for_gravatar
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
 
-  validates_with ::Validators::UploadValidator
+  validates_with UploadValidator
 
   after_destroy do
     User.where(uploaded_avatar_id: self.id).update_all(uploaded_avatar_id: nil)
@@ -358,10 +353,14 @@ class Upload < ActiveRecord::Base
     problems
   end
 
+  def self.reset_unknown_extensions!
+    Upload.where(extension: "unknown").update_all(extension: nil)
+  end
+
   private
 
   def short_url_basename
-    "#{Upload.base62_sha1(sha1)}.#{extension}"
+    "#{Upload.base62_sha1(sha1)}#{extension.present? ? ".#{extension}" : ""}"
   end
 
 end

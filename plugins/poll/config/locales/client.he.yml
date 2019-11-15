@@ -26,6 +26,8 @@ he:
           title: "התוצאות יופיעו לאחר <strong>ההצבעה</strong>."
         closed:
           title: "התוצאות יופיעו לאחר <strong>הסגירה</strong>."
+        staff:
+          title: "התוצאות זמינות לחברי <strong>סגל</strong> בלבד."
       multiple:
         help:
           at_least_min_options:
@@ -84,6 +86,7 @@ he:
           always: גלוי תמיד
           vote: בהליכי הצבעה
           closed: כאשר סגור
+          staff: סגל בלבד
         poll_config:
           max: מרבי
           min: מזערי

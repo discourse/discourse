@@ -1,11 +1,12 @@
+import Component from "@ember/component";
 import loadScript from "discourse/lib/load-script";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "canvas",
   type: "line",
 
   refreshChart() {
-    const ctx = this.$()[0].getContext("2d");
+    const ctx = this.element.getContext("2d");
     const model = this.model;
     const rawData = this.get("model.data");
 

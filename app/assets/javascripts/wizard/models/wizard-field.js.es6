@@ -1,6 +1,7 @@
+import EmberObject from "@ember/object";
 import ValidState from "wizard/mixins/valid-state";
 
-export default Ember.Object.extend(ValidState, {
+export default EmberObject.extend(ValidState, {
   id: null,
   type: null,
   value: null,

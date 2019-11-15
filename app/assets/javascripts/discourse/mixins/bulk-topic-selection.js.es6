@@ -1,11 +1,14 @@
+import { alias } from "@ember/object/computed";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
+import Mixin from "@ember/object/mixin";
+import Topic from "discourse/models/topic";
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   bulkSelectEnabled: false,
   selected: null,
 
-  canBulkSelect: Ember.computed.alias("currentUser.staff"),
+  canBulkSelect: alias("currentUser.staff"),
 
   @on("init")
   resetSelected() {
@@ -18,7 +21,7 @@ export default Ember.Mixin.create({
       this.selected.clear();
     },
 
-    dismissRead(operationType) {
+    dismissRead(operationType, categoryOptions) {
       let operation;
       if (operationType === "posts") {
         operation = { type: "dismiss_posts" };
@@ -31,12 +34,13 @@ export default Ember.Mixin.create({
 
       let promise;
       if (this.selected.length > 0) {
-        promise = Discourse.Topic.bulkOperation(this.selected, operation);
+        promise = Topic.bulkOperation(this.selected, operation);
       } else {
-        promise = Discourse.Topic.bulkOperationByFilter(
+        promise = Topic.bulkOperationByFilter(
           "unread",
           operation,
-          this.get("category.id")
+          this.get("category.id"),
+          categoryOptions
         );
       }
 

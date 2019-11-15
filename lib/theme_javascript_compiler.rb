@@ -64,7 +64,7 @@ class ThemeJavascriptCompiler
       }
 
       function manipulateNode(node) {
-        // Magically add theme id as the first param for each of these helpers
+        // Magically add theme id as the first param for each of these helpers)
         if (node.path.parts && ["theme-i18n", "theme-prefix", "theme-setting"].includes(node.path.parts[0])) {
           if(node.params.length === 1){
             node.params.unshift({
@@ -134,10 +134,16 @@ class ThemeJavascriptCompiler
 
     def discourse_extension
       <<~JS
-        Ember.HTMLBars.registerPlugin('ast', function(){
-          return { name: 'theme-template-manipulator',
-          visitor: { SubExpression: manipulateNode, MustacheStatement: manipulateNode, PathExpression: manipulatePath}
-        }});
+        Ember.HTMLBars.registerPlugin('ast', function() {
+          return {
+            name: 'theme-template-manipulator',
+            visitor: {
+              SubExpression: manipulateNode,
+              MustacheStatement: manipulateNode,
+              PathExpression: manipulatePath
+            }
+          }
+        });
       JS
     end
   end
@@ -202,8 +208,8 @@ class ThemeJavascriptCompiler
     @content << script + "\n"
   end
 
-  def append_module(script, name)
-    script.prepend theme_variables
+  def append_module(script, name, include_variables: true)
+    script = "#{theme_variables}#{script}" if include_variables
     template = Tilt::ES6ModuleTranspilerTemplate.new {}
     @content << template.module_transpile(script, "", name)
   rescue MiniRacer::RuntimeError => ex

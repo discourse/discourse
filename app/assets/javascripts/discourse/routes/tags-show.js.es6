@@ -1,15 +1,18 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import Composer from "discourse/models/composer";
 import showModal from "discourse/lib/show-modal";
-import { findTopicList } from "discourse/routes/build-topic-route";
+import {
+  filterQueryParams,
+  findTopicList
+} from "discourse/routes/build-topic-route";
+import { queryParams } from "discourse/controllers/discovery-sortable";
 import PermissionType from "discourse/models/permission-type";
+import Category from "discourse/models/category";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   navMode: "latest",
 
-  queryParams: {
-    ascending: { refreshModel: true },
-    order: { refreshModel: true }
-  },
+  queryParams,
 
   renderTemplate() {
     const controller = this.controllerFor("tags.show");
@@ -69,46 +72,37 @@ export default Discourse.Route.extend({
     const controller = this.controllerFor("tags.show");
     controller.set("loading", true);
 
-    const params = controller.getProperties("order", "ascending");
-    params.order = transition.to.queryParams.order || params.order;
-    params.ascending = transition.to.queryParams.ascending || params.ascending;
-
+    const params = filterQueryParams(transition.to.queryParams, {});
     const categorySlug = this.categorySlug;
     const parentCategorySlug = this.parentCategorySlug;
-    const filter = this.navMode;
+    const topicFilter = this.navMode;
     const tagId = tag ? tag.id.toLowerCase() : "none";
+    let filter;
 
     if (categorySlug) {
-      const category = Discourse.Category.findBySlug(
-        categorySlug,
-        parentCategorySlug
-      );
+      const category = Category.findBySlug(categorySlug, parentCategorySlug);
       if (parentCategorySlug) {
-        params.filter = `tags/c/${parentCategorySlug}/${categorySlug}/${tagId}/l/${filter}`;
+        filter = `tags/c/${parentCategorySlug}/${categorySlug}/${tagId}/l/${topicFilter}`;
+      } else if (this.noSubcategories) {
+        filter = `tags/c/${categorySlug}/none/${tagId}/l/${topicFilter}`;
       } else {
-        params.filter = `tags/c/${categorySlug}/${tagId}/l/${filter}`;
+        filter = `tags/c/${categorySlug}/${tagId}/l/${topicFilter}`;
       }
       if (category) {
         category.setupGroupsAndPermissions();
         this.set("category", category);
       }
     } else if (this.additionalTags) {
-      params.filter = `tags/intersection/${tagId}/${this.get(
-        "additionalTags"
-      ).join("/")}`;
+      filter = `tags/intersection/${tagId}/${this.additionalTags.join("/")}`;
       this.set("category", null);
     } else {
-      params.filter = `tags/${tagId}/l/${filter}`;
+      filter = `tags/${tagId}/l/${topicFilter}`;
       this.set("category", null);
     }
 
-    return findTopicList(
-      this.store,
-      this.topicTrackingState,
-      params.filter,
-      params,
-      { cached: true }
-    ).then(list => {
+    return findTopicList(this.store, this.topicTrackingState, filter, params, {
+      cached: true
+    }).then(list => {
       if (list.topic_list.tags && list.topic_list.tags.length === 1) {
         // Update name of tag (case might be different)
         tag.setProperties({
@@ -168,8 +162,15 @@ export default Discourse.Route.extend({
       category: this.category,
       filterMode: this.filterMode,
       navMode: this.navMode,
-      tagNotification: this.tagNotification
+      tagNotification: this.tagNotification,
+      noSubcategories: this.noSubcategories
     });
+    this.searchService.set("searchContext", model.get("searchContext"));
+  },
+
+  deactivate() {
+    this._super(...arguments);
+    this.searchService.set("searchContext", null);
   },
 
   actions: {

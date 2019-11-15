@@ -18,6 +18,7 @@ class Autospec::Manager
   def initialize(opts = {})
     @opts = opts
     @debug = opts[:debug]
+    @auto_run_all = ENV["AUTO_RUN_ALL"] != "0"
     @queue = []
     @mutex = Mutex.new
     @signal = ConditionVariable.new
@@ -42,12 +43,13 @@ class Autospec::Manager
       exit
     end
 
-    ensure_all_specs_will_run
+    ensure_all_specs_will_run if @auto_run_all
     start_runners
     start_service_queue
     listen_for_changes
 
     puts "Press [ENTER] to stop the current run"
+    puts "Press [ENTER] while stopped to run all specs" unless @auto_run_all
     while @runners.any?(&:running?)
       STDIN.gets
       process_queue
@@ -138,7 +140,7 @@ class Autospec::Manager
       has_failed = true
       if result > 0
         focus_on_failed_tests(current)
-        ensure_all_specs_will_run(runner)
+        ensure_all_specs_will_run(runner) if @auto_run_all
       end
     end
 
@@ -343,7 +345,7 @@ class Autospec::Manager
         end
 
         # push run all specs to end of queue in correct order
-        ensure_all_specs_will_run(runner)
+        ensure_all_specs_will_run(runner) if @auto_run_all
       end
       puts "@@@@@@@@@@@@ specs queued" if @debug
       puts "@@@@@@@@@@@@ #{@queue}" if @debug
@@ -364,8 +366,9 @@ class Autospec::Manager
       puts
       puts
       if specs.length == 0
-        puts "No specs have failed yet! "
+        puts "No specs have failed yet! Aborting anyway"
         puts
+        abort_runners
       else
         puts "The following specs have failed:"
         specs.each { |s| puts s }

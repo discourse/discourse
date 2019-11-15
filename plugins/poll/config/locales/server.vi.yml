@@ -8,7 +8,7 @@
 vi:
   site_settings:
     poll_enabled: "Cho phép bình chọn?"
-    poll_maximum_options: "Số lượng tối đa tùy chọn trong một cuộc thăm dò.  "
+    poll_maximum_options: "Số lượng tối đa tùy chọn trong một cuộc thăm dò. "
     poll_edit_window_mins: "Số phút tình từ lúc tạo bài viết mà người dùng có quyền sửa thăm dò."
   poll:
     multiple_polls_without_name: "Có nhiều cuộc thăm dò chưa được đặt tên. Sử dụng thuộc tính '<code>name</code>' để xác định cuộc thăm dò của bạn."

@@ -1,0 +1,40 @@
+<div class="fields">
+  {{#if nativePicker}}
+    {{input
+      class="field time"
+      type="time"
+      value=(concat _hours ":" _minutes)
+      change=(action "onChangeTime")
+    }}
+  {{else}}
+    {{input
+      class="field hours"
+      type="number"
+      title="Hours"
+      minlength=2
+      maxlength=2
+      max="23"
+      min="0"
+      placeholder="00"
+      value=_hours
+      input=(action "onInput" (hash prop="hours"))
+      focus-in=(action "onFocusIn")
+    }}
+
+    <div class="separator">:</div>
+
+    {{input
+      class="field minutes"
+      title="Minutes"
+      type="number"
+      minlength=2
+      maxlength=2
+      max="59"
+      min="0"
+      placeholder="00"
+      value=_minutes
+      input=(action "onInput" (hash prop="minutes"))
+      focus-in=(action "onFocusIn")
+    }}
+  {{/if}}
+</div>

@@ -12,6 +12,9 @@
 
   var setupData = document.getElementById("data-discourse-setup").dataset;
 
+  window.Logster = window.Logster || {};
+  window.Logster.enabled = setupData.enableJsErrorReporting === "true";
+
   Discourse.CDN = setupData.cdn;
   Discourse.BaseUrl = setupData.baseUrl;
   Discourse.BaseUri = setupData.baseUri;
@@ -24,13 +27,15 @@
   I18n.defaultLocale = setupData.defaultLocale;
   Discourse.start();
   Discourse.set("assetVersion", setupData.assetVersion);
-  Discourse.Session.currentProp(
+
+  let Session = require("discourse/models/session").default;
+  Session.currentProp(
     "disableCustomCSS",
     setupData.disableCustomCss === "true"
   );
 
   if (setupData.safeMode) {
-    Discourse.Session.currentProp("safe_mode", setupData.safeMode);
+    Session.currentProp("safe_mode", setupData.safeMode);
   }
 
   Discourse.HighlightJSPath = setupData.highlightJsPath;

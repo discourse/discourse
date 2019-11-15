@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe Report do
-  let(:c0) { Fabricate(:category, skip_category_definition: true) }  # id: 3
-  let(:c1) { Fabricate(:category, parent_category: c0, skip_category_definition: true) }  # id: 2
-  let(:c2) { Fabricate(:category, skip_category_definition: true) }  # id: 4
+  let(:c0) { Fabricate(:category) }  # id: 3
+  let(:c1) { Fabricate(:category, parent_category: c0) }  # id: 2
+  let(:c2) { Fabricate(:category) }  # id: 4
 
   shared_examples 'no data' do
     context "with no data" do

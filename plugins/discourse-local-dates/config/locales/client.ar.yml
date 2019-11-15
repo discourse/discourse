@@ -8,7 +8,30 @@
 ar:
   js:
     discourse_local_dates:
+      relative_dates:
+        today: اليوم %{time}
+        tomorrow: غداً %{time}
+        yesterday: أمس%{time}
+      title: أدخل التاريخ / الوقت
       create:
         form:
+          insert: ادخل
+          advanced_mode: الوضع المتقدم
+          simple_mode: الوضع البسيط
+          timezones_title: المناطق الزمنية لعرضها
+          recurring_title: تكرار
+          recurring_none: لا تكرار
           date_title: التاريخ
           time_title: الوقت
+          format_title: تنسيق التاريخ
+          timezone: المنطقة الزمنية
+          until: حتى...
+          recurring:
+            every_day: "كل يوم"
+            every_week: "كل اسبوع"
+            every_two_weeks: "كل أسبوعين"
+            every_month: "كل شهر"
+            every_two_months: "كل شهرين"
+            every_three_months: "كل ثلاثة أشهر"
+            every_six_months: "كل ستة اشهر"
+            every_year: "كل عام"

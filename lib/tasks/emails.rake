@@ -37,7 +37,7 @@ task "emails:import" => :environment do
 
     mails_left = 1
     pop3 = Net::POP3.new(address, port)
-    pop3.enable_ssl if ssl
+    pop3.enable_ssl(max_version: OpenSSL::SSL::TLS1_2_VERSION) if ssl
 
     while mails_left > 0
       pop3.start(username, password) do |pop|

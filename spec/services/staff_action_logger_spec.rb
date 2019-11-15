@@ -202,6 +202,33 @@ describe StaffActionLogger do
     end
   end
 
+  describe "log_theme_setting_change" do
+
+    it "raises an error when params are invalid" do
+      expect { logger.log_theme_setting_change(nil, nil, nil, nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    let! :theme do
+      Fabricate(:theme)
+    end
+
+    before do
+      theme.set_field(target: :settings, name: :yaml, value: "custom_setting: special")
+      theme.save!
+    end
+
+    it "raises an error when theme setting is invalid" do
+      expect { logger.log_theme_setting_change(:inexistent_setting, nil, nil, theme) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "logs theme setting changes" do
+      log_record = logger.log_theme_setting_change(:custom_setting, "special", "notsospecial", theme)
+      expect(log_record.subject).to eq("#{theme.name}: custom_setting")
+      expect(log_record.previous_value).to eq("special")
+      expect(log_record.new_value).to eq("notsospecial")
+    end
+  end
+
   describe "log_site_text_change" do
     it "raises an error when params are invalid" do
       expect { logger.log_site_text_change(nil, 'new text', 'old text') }.to raise_error(Discourse::InvalidParameters)

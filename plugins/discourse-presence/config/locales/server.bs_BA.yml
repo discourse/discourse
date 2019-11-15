@@ -7,5 +7,5 @@
 
 bs_BA:
   site_settings:
-    presence_enabled: 'Prikazuje korisnike koji trenutačno odgovaraju na trnenutnu temu, ili ispravljaju trenutnu objavu'
-    presence_max_users_shown: 'Maksimalan broj prikazanih korisnika'
+    presence_enabled: "Prikazuje korisnike koji trenutačno odgovaraju na trnenutnu temu, ili ispravljaju trenutnu objavu"
+    presence_max_users_shown: "Maksimalan broj prikazanih korisnika"

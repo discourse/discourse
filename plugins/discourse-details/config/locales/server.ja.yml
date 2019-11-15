@@ -7,4 +7,6 @@
 
 ja:
   site_settings:
-    details_enabled: "詳細機能を有効にします。これを変更した場合は、「rake posts：rebake」ですべての投稿を再作成する必要があります。"
+    details_enabled: '詳細機能を有効にします。これを変更した場合は、「rake posts：rebake」ですべての投稿を再作成する必要があります。'
+  details:
+    excerpt_details: "(詳細を見るためにクリック)"

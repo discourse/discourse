@@ -7,8 +7,7 @@
   .category-name {
     display: inline-block;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
     vertical-align: text-top;
     line-height: $line-height-medium;
   }
@@ -58,6 +57,7 @@
   }
 
   .category-box-inner {
+    box-sizing: border-box;
     width: 100%;
     padding: 0;
     display: flex;
@@ -108,8 +108,6 @@
     color: dark-light-choose($primary-medium, $secondary-high);
     .overflow {
       max-height: 6em;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
   }
 
@@ -121,7 +119,6 @@
     text-align: center;
     color: $primary;
     overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .subcategories {
@@ -130,14 +127,16 @@
     .subcategory {
       display: flex;
       align-items: center;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      @include ellipsis;
       margin-right: 1em;
       margin-bottom: 0.6em;
       .subcategory-image-placeholder {
         display: inline-block;
         margin-right: 0.6em;
+      }
+      .subcategory-link {
+        min-width: 0;
+        @include ellipsis;
       }
       .logo img {
         display: inline-block;
@@ -160,7 +159,6 @@
     font-size: $font-up-2;
     text-align: center;
     overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .category-box-heading {
@@ -186,7 +184,6 @@
       .overflow {
         max-height: 3em;
         overflow: hidden;
-        text-overflow: ellipsis;
       }
       .d-icon {
         margin-right: 0.15em;

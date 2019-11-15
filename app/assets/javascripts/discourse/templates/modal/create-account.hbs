@@ -1,5 +1,6 @@
 {{#create-account email=accountEmail disabled=submitDisabled action=(action "createAccount")}}
   {{#unless complete}}
+    {{plugin-outlet name="create-account-before-modal-body"}}
     {{#d-modal-body title="create_account.title" class=(concat (if hasAtLeastOneLoginButton "has-alt-auth") " " (if userFields "has-user-fields"))}}
 
       {{#unless hasAuthOptions}}
@@ -82,7 +83,7 @@
           <tr class="password-confirmation">
             <td><label for='new-account-password-confirmation'>{{i18n 'user.password_confirmation.title'}}</label></td>
             <td>
-              {{input type="password" value=accountPasswordConfirm id="new-account-confirmation" autocomplete="new-password"}}
+              {{honeypot-input id="new-account-confirmation" autocomplete="new-password" value=accountHoneypot}}
               {{input value=accountChallenge id="new-account-challenge"}}
             </td>
           </tr>
@@ -112,10 +113,14 @@
 
     {{#if showCreateForm}}
       <div class="modal-footer">
-        <button class='btn btn-large btn-primary' disabled={{submitDisabled}} {{action "createAccount"}}>{{i18n 'create_account.title'}}</button>
+        {{d-button
+          class="btn-large btn-primary"
+          action=(action "createAccount")
+          disabled=submitDisabled
+          label="create_account.title"}}
 
         {{#conditional-loading-spinner condition=formSubmitted size="small"}}
-          {{#d-button class="btn btn-large" id="login-link" action=(route-action "showLogin")}}
+          {{#d-button class="btn-large" id="login-link" action=(route-action "showLogin")}}
             {{i18n "log_in"}}
           {{/d-button}}
         {{/conditional-loading-spinner}}

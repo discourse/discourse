@@ -43,3 +43,14 @@ componentTest("form attribute", {
     assert.ok(exists("button[form=login-form]"), "it has the form attribute");
   }
 });
+
+componentTest("link-styled button", {
+  template: '{{d-button display="link"}}',
+
+  test(assert) {
+    assert.ok(
+      find("button.btn-link:not(.btn)").length,
+      "it has the right classes"
+    );
+  }
+});

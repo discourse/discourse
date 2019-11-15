@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class MigrateUrlSiteSettings < Jobs::Onceoff
+  class MigrateUrlSiteSettings < ::Jobs::Onceoff
     SETTINGS = [
       ['logo_url', 'logo'],
       ['logo_small_url', 'logo_small'],
@@ -17,6 +17,12 @@ module Jobs
 
     def execute_onceoff(args)
       SETTINGS.each do |old_setting, new_setting|
+
+        if (upload = SiteSetting.get(new_setting)) && upload.id >= Upload::SEEDED_ID_THRESHOLD
+          logger.warn("Skipping migration of the Site Setting #{new_setting} to url cause upload #{upload} already exists for it")
+          next
+        end
+
         old_url = DB.query_single(
           "SELECT value FROM site_settings WHERE name = '#{old_setting}'"
         ).first

@@ -8,9 +8,7 @@
   // some protection for text-only site titles
   .title {
     max-width: 75%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
     -webkit-animation: fadein 0.5s;
     animation: fadein 0.5s;
     // This acts as a placeholder if for some reason the small logo takes a while
@@ -38,8 +36,13 @@
       &:not(.two-rows) {
         min-height: 2.25em;
       }
-      h1 {
+      .header-title {
         font-size: $font-0;
+        margin: 0 0 0.35em 0;
+        .archetype-private_message & {
+          // PMs might have participant avatars in the header
+          margin: 0 0 0.15em 0;
+        }
       }
       .private-message-glyph-wrapper {
         float: left;

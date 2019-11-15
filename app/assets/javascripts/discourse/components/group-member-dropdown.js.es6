@@ -1,4 +1,4 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
 export default DropdownSelectBoxComponent.extend({
@@ -16,7 +16,7 @@ export default DropdownSelectBoxComponent.extend({
 
   autoHighlight() {},
 
-  @computed("member.owner")
+  @discourseComputed("member.owner")
   content(isOwner) {
     const items = [
       {

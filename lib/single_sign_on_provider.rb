@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
-require_dependency 'single_sign_on'
-
 class SingleSignOnProvider < SingleSignOn
+  class BlankSecret < RuntimeError; end
 
   def self.parse(payload, sso_secret = nil)
     set_return_sso_url(payload)
+    if sso_secret.blank? && self.sso_secret.blank?
+      host = URI.parse(@return_sso_url).host
+      Rails.logger.warn("SSO failed; website #{host} is not in the `sso_provider_secrets` site settings")
+      raise BlankSecret
+    end
 
     super
   end

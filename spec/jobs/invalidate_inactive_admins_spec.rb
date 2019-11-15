@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require_dependency 'jobs/scheduled/invalidate_inactive_admins'
-
 describe Jobs::InvalidateInactiveAdmins do
   fab!(:active_admin) { Fabricate(:admin, last_seen_at: 1.hour.ago) }
   before { active_admin.email_tokens.update_all(confirmed: true) }
@@ -47,6 +45,18 @@ describe Jobs::InvalidateInactiveAdmins do
           expect(GithubUserInfo.where(user_id: not_seen_admin.id).exists?).to eq(false)
           expect(UserAssociatedAccount.where(user_id: not_seen_admin.id).exists?).to eq(false)
         end
+      end
+
+      it "doesn't deactivate admins with recent posts" do
+        Fabricate(:post, user: not_seen_admin)
+        subject
+        expect(not_seen_admin.reload.active).to eq(true)
+      end
+
+      it "doesn't deactivate admins with recently used api keys" do
+        Fabricate(:api_key, user: not_seen_admin, last_used_at: 1.day.ago)
+        subject
+        expect(not_seen_admin.reload.active).to eq(true)
       end
     end
 

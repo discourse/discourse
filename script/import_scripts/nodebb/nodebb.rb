@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require_relative '../base.rb'
+require_relative '../base'
 require_relative './redis'
+require_relative './mongo'
 
 class ImportScripts::NodeBB < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
@@ -12,8 +13,10 @@ class ImportScripts::NodeBB < ImportScripts::Base
   def initialize
     super
 
-    adapter = NodeBB::Redis
+    # adapter = NodeBB::Mongo
+    # @client = adapter.new('mongodb://127.0.0.1:27017/nodebb')
 
+    adapter = NodeBB::Redis
     @client = adapter.new(
       host: "localhost",
       port: "6379",

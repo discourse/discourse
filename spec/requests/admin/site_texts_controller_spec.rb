@@ -91,6 +91,20 @@ RSpec.describe Admin::SiteTextsController do
         end
       end
 
+      it 'does not return overrides for keys that do not exist in English' do
+        SiteSetting.default_locale = :ru
+        TranslationOverride.create!(locale: :ru, translation_key: 'missing_plural_key.one', value: 'ONE')
+        TranslationOverride.create!(locale: :ru, translation_key: 'another_missing_key', value: 'foo')
+
+        get "/admin/customize/site_texts.json", params: { q: 'missing_plural_key' }
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)['site_texts']).to be_empty
+
+        get "/admin/customize/site_texts.json", params: { q: 'another_missing_key' }
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)['site_texts']).to be_empty
+      end
+
       context 'plural keys' do
         before do
           I18n.backend.store_translations(:en, colour: { one: '%{count} colour', other: '%{count} colours' })
@@ -172,9 +186,41 @@ RSpec.describe Admin::SiteTextsController do
         expect(site_text['value']).to eq(I18n.t("js.topic.list"))
       end
 
+      it 'returns a site text for a key with ampersand' do
+        get "/admin/customize/site_texts/js.emoji_picker.food_&_drink.json"
+        expect(response.status).to eq(200)
+
+        json = ::JSON.parse(response.body)
+
+        site_text = json['site_text']
+
+        expect(site_text['id']).to eq('js.emoji_picker.food_&_drink')
+        expect(site_text['value']).to eq(I18n.t("js.emoji_picker.food_&_drink"))
+      end
+
       it 'returns not found for missing keys' do
         get "/admin/customize/site_texts/made_up_no_key_exists.json"
         expect(response.status).to eq(404)
+      end
+
+      it 'returns overridden = true if there is a translation_overrides record for the key' do
+        key = 'js.topic.list'
+        put "/admin/customize/site_texts/#{key}.json", params: {
+          site_text: { value: I18n.t(key) }
+        }
+        expect(response.status).to eq(200)
+
+        get "/admin/customize/site_texts/#{key}.json"
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json['site_text']['overridden']).to eq(true)
+
+        TranslationOverride.destroy_all
+
+        get "/admin/customize/site_texts/#{key}.json"
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json['site_text']['overridden']).to eq(false)
       end
 
       context 'plural keys' do
@@ -243,8 +289,8 @@ RSpec.describe Admin::SiteTextsController do
         expect(json['error_type']).to eq('not_found')
       end
 
-      it "works as expectd with correct keys" do
-        put '/admin/customize/site_texts/login_required.welcome_message.json', params: {
+      it "works as expected with correct keys" do
+        put '/admin/customize/site_texts/js.emoji_picker.animals_%26_nature.json', params: {
           site_text: { value: 'foo' }
         }
 
@@ -253,7 +299,7 @@ RSpec.describe Admin::SiteTextsController do
         json = ::JSON.parse(response.body)
         site_text = json['site_text']
 
-        expect(site_text['id']).to eq('login_required.welcome_message')
+        expect(site_text['id']).to eq('js.emoji_picker.animals_&_nature')
         expect(site_text['value']).to eq('foo')
       end
 
@@ -368,6 +414,37 @@ RSpec.describe Admin::SiteTextsController do
         expect(response.status).to eq(200)
         json = ::JSON.parse(response.body)
         expect(json['site_text']['value']).to_not eq(ru_mf_text)
+      end
+
+      context 'when updating a translation override for a system badge' do
+        fab!(:user_with_badge_title) { Fabricate(:active_user) }
+        let(:badge) { Badge.find(Badge::Regular) }
+
+        before do
+          BadgeGranter.grant(badge, user_with_badge_title)
+          user_with_badge_title.update(title: 'Regular')
+        end
+
+        it 'updates matching user titles to the override text in a job' do
+          Jobs.expects(:enqueue).with(
+            :bulk_user_title_update,
+            new_title: 'Terminator',
+            granted_badge_id: badge.id,
+            action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
+          )
+          put '/admin/customize/site_texts/badges.regular.name.json', params: {
+            site_text: { value: 'Terminator' }
+          }
+
+          Jobs.expects(:enqueue).with(
+            :bulk_user_title_update,
+            granted_badge_id: badge.id,
+            action: Jobs::BulkUserTitleUpdate::RESET_ACTION
+          )
+
+          # Revert
+          delete "/admin/customize/site_texts/badges.regular.name.json"
+        end
       end
     end
 

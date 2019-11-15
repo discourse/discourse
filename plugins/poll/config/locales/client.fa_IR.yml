@@ -14,7 +14,7 @@ fa_IR:
       total_votes:
         one: "مجموع آرا"
         other: "مجموع آرا"
-      average_rating: "میانگین امتیاز:  <strong>%{average}</strong>."
+      average_rating: "میانگین امتیاز: <strong>%{average}</strong>."
       public:
         title: "آرا <strong>عمومی</strong> هستند."
       multiple:

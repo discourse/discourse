@@ -1,3 +1,4 @@
+import { scheduleOnce } from "@ember/runloop";
 function _clean() {
   if (window.MiniProfiler) {
     window.MiniProfiler.pageTransition();
@@ -30,10 +31,10 @@ function _clean() {
   }
 
   // TODO: Avoid container lookup here
-  const appEvents = Discourse.__container__.lookup("app-events:main");
+  const appEvents = Discourse.__container__.lookup("service:app-events");
   appEvents.trigger("dom:clean");
 }
 
 export function cleanDOM() {
-  Ember.run.scheduleOnce("afterRender", _clean);
+  scheduleOnce("afterRender", _clean);
 }

@@ -13,6 +13,7 @@ describe WatchedWord do
   let(:require_approval_word) { Fabricate(:watched_word, action: WatchedWord.actions[:require_approval]) }
   let(:flag_word) { Fabricate(:watched_word, action: WatchedWord.actions[:flag]) }
   let(:block_word) { Fabricate(:watched_word, action: WatchedWord.actions[:block]) }
+  let(:another_block_word) { Fabricate(:watched_word, action: WatchedWord.actions[:block]) }
 
   before_all do
     WordWatcher.clear_cache!
@@ -27,7 +28,7 @@ describe WatchedWord do
       expect {
         result = manager.perform
         expect(result).to_not be_success
-        expect(result.errors[:base]&.first).to eq(I18n.t('contains_blocked_words', word: block_word.word))
+        expect(result.errors[:base]&.first).to eq(I18n.t('contains_blocked_word', word: block_word.word))
       }.to_not change { Post.count }
     end
 
@@ -49,6 +50,15 @@ describe WatchedWord do
     it "should block the post from moderator" do
       manager = NewPostManager.new(moderator, raw: "Want some #{block_word.word} for cheap?", topic_id: topic.id)
       should_block_post(manager)
+    end
+
+    it "should block the post if it contains multiple blocked words" do
+      manager = NewPostManager.new(moderator, raw: "Want some #{block_word.word} #{another_block_word.word} for cheap?", topic_id: topic.id)
+      expect {
+        result = manager.perform
+        expect(result).to_not be_success
+        expect(result.errors[:base]&.first).to eq(I18n.t('contains_blocked_words', words: [block_word.word, another_block_word.word].sort.join(', ')))
+      }.to_not change { Post.count }
     end
 
     it "should block in a private message too" do
@@ -179,27 +189,6 @@ describe WatchedWord do
       expect {
         post.rebake!
       }.to_not change { PostAction.count }
-    end
-  end
-
-  describe 'upload' do
-    context 'logged in as admin' do
-      before do
-        sign_in(admin)
-      end
-
-      it 'creates the words from the file' do
-        post '/admin/logs/watched_words/upload.json', params: {
-          action_key: 'flag',
-          file: Rack::Test::UploadedFile.new(file_from_fixtures("words.csv", "csv"))
-        }
-        expect(response.status).to eq(200)
-        expect(WatchedWord.count).to eq(6)
-        expect(WatchedWord.pluck(:word)).to contain_exactly(
-          'thread', '线', 'धागा', '실', 'tråd', 'нить'
-        )
-        expect(WatchedWord.pluck(:action).uniq).to eq([WatchedWord.actions[:flag]])
-      end
     end
   end
 end

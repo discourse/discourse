@@ -1,12 +1,15 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { none } from "@ember/object/computed";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import BadgeGrouping from "discourse/models/badge-grouping";
 import RestModel from "discourse/models/rest";
-import computed from "ember-addons/ember-computed-decorators";
+import { Promise } from "rsvp";
 
 const Badge = RestModel.extend({
-  newBadge: Ember.computed.none("id"),
+  newBadge: none("id"),
 
-  @computed
+  @discourseComputed
   url() {
     return Discourse.getURL(`/badges/${this.id}/${this.slug}`);
   },
@@ -24,7 +27,7 @@ const Badge = RestModel.extend({
     }
   },
 
-  @computed("badge_type.name")
+  @discourseComputed("badge_type.name")
   badgeTypeClassName(type) {
     type = type || "";
     return `badge-type-${type.toLowerCase()}`;
@@ -51,7 +54,7 @@ const Badge = RestModel.extend({
   },
 
   destroy() {
-    if (this.newBadge) return Ember.RSVP.resolve();
+    if (this.newBadge) return Promise.resolve();
 
     return ajax(`/admin/badges/${this.id}`, {
       type: "DELETE"
@@ -66,7 +69,7 @@ Badge.reopenClass({
     if ("badge_types" in json) {
       json.badge_types.forEach(
         badgeTypeJson =>
-          (badgeTypes[badgeTypeJson.id] = Ember.Object.create(badgeTypeJson))
+          (badgeTypes[badgeTypeJson.id] = EmberObject.create(badgeTypeJson))
       );
     }
 

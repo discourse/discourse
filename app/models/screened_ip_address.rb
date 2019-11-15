@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_dependency 'screening_model'
-require_dependency 'ip_addr'
+require 'screening_model'
+require 'ip_addr'
 
 # A ScreenedIpAddress record represents an IP address or subnet that is being watched,
 # and possibly blocked from creating accounts.

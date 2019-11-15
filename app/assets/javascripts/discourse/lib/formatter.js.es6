@@ -195,11 +195,11 @@ export function durationTiny(distance, ageOpts) {
       const numYears = distanceInMinutes / 525600.0;
       const remainder = numYears % 1;
       if (remainder < 0.25) {
-        formatted = t("about_x_years", { count: parseInt(numYears) });
+        formatted = t("about_x_years", { count: Math.floor(numYears) });
       } else if (remainder < 0.75) {
-        formatted = t("over_x_years", { count: parseInt(numYears) });
+        formatted = t("over_x_years", { count: Math.floor(numYears) });
       } else {
-        formatted = t("almost_x_years", { count: parseInt(numYears) + 1 });
+        formatted = t("almost_x_years", { count: Math.floor(numYears) + 1 });
       }
 
       break;
@@ -262,7 +262,7 @@ function relativeAgeTinyShowsYear(relativeAgeString) {
   return relativeAgeString.match(/'[\d]{2}$/);
 }
 
-function relativeAgeMediumSpan(distance, leaveAgo) {
+export function relativeAgeMediumSpan(distance, leaveAgo) {
   let formatted;
   const distanceInMinutes = Math.round(distance / 60.0);
 
@@ -283,12 +283,22 @@ function relativeAgeMediumSpan(distance, leaveAgo) {
     case distanceInMinutes >= 90 && distanceInMinutes <= 1409:
       formatted = t("x_hours", { count: Math.round(distanceInMinutes / 60.0) });
       break;
-    case distanceInMinutes >= 1410 && distanceInMinutes <= 2159:
+    case distanceInMinutes >= 1410 && distanceInMinutes <= 2519:
       formatted = t("x_days", { count: 1 });
       break;
-    case distanceInMinutes >= 2160:
+    case distanceInMinutes >= 2520 && distanceInMinutes <= 129599:
       formatted = t("x_days", {
         count: Math.round((distanceInMinutes - 720.0) / 1440.0)
+      });
+      break;
+    case distanceInMinutes >= 129600 && distanceInMinutes <= 525599:
+      formatted = t("x_months", {
+        count: Math.round(distanceInMinutes / 43200.0)
+      });
+      break;
+    default:
+      formatted = t("x_years", {
+        count: Math.round(distanceInMinutes / 525600.0)
       });
       break;
   }

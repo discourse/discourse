@@ -1,30 +1,26 @@
-import { on, observes } from "ember-addons/ember-computed-decorators";
+import { inject as service } from "@ember/service";
+import Component from "@ember/component";
+import { on, observes } from "discourse-common/utils/decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor } from "discourse/lib/text";
-import KeyValueStore from "discourse/lib/key-value-store";
 import {
   extendedEmojiList,
   isSkinTonableEmoji,
   emojiSearch
 } from "pretty-text/emoji";
 import { safariHacksDisabled } from "discourse/lib/utilities";
+import ENV from "discourse-common/config/environment";
+
 const { run } = Ember;
 
-const keyValueStore = new KeyValueStore("discourse_emojis_");
-const EMOJI_USAGE = "emojiUsage";
-const EMOJI_SELECTED_DIVERSITY = "emojiSelectedDiversity";
 const PER_ROW = 11;
 const customEmojis = _.keys(extendedEmojiList()).map(code => {
   return { code, src: emojiUrlFor(code) };
 });
 
-export function resetCache() {
-  keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
-  keyValueStore.setObject({ key: EMOJI_SELECTED_DIVERSITY, value: 1 });
-}
-
-export default Ember.Component.extend({
+export default Component.extend({
   automaticPositioning: true,
+  emojiStore: service("emoji-store"),
 
   close() {
     this._unbindEvents();
@@ -46,11 +42,10 @@ export default Ember.Component.extend({
     this.$results = this.$picker.find(".results");
     this.$list = this.$picker.find(".list");
 
-    this.set(
-      "selectedDiversity",
-      keyValueStore.getObject(EMOJI_SELECTED_DIVERSITY) || 1
-    );
-    this.set("recentEmojis", keyValueStore.getObject(EMOJI_USAGE) || []);
+    this.setProperties({
+      selectedDiversity: this.emojiStore.diversity,
+      recentEmojis: this.emojiStore.favorites
+    });
 
     run.scheduleOnce("afterRender", this, function() {
       this._bindEvents();
@@ -86,20 +81,9 @@ export default Ember.Component.extend({
 
   @on("didInsertElement")
   _setup() {
-    this.$picker = this.$(".emoji-picker");
-    this.$modal = this.$(".emoji-picker-modal");
-
+    this.$picker = $(this.element.querySelector(".emoji-picker"));
+    this.$modal = $(this.element.querySelector(".emoji-picker-modal"));
     this.appEvents.on("emoji-picker:close", this, "_closeEmojiPicker");
-
-    if (!keyValueStore.getObject(EMOJI_USAGE)) {
-      keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
-    } else if (_.isPlainObject(keyValueStore.getObject(EMOJI_USAGE))) {
-      // handle legacy format
-      keyValueStore.setObject({
-        key: EMOJI_USAGE,
-        value: _.keys(keyValueStore.getObject(EMOJI_USAGE))
-      });
-    }
   },
 
   @on("didUpdateAttrs")
@@ -116,10 +100,7 @@ export default Ember.Component.extend({
 
   @observes("selectedDiversity")
   selectedDiversityChanged() {
-    keyValueStore.setObject({
-      key: EMOJI_SELECTED_DIVERSITY,
-      value: this.selectedDiversity
-    });
+    this.emojiStore.diversity = this.selectedDiversity;
 
     $.each(
       this.$list.find(".emoji[data-loaded='1'].diversity"),
@@ -228,8 +209,8 @@ export default Ember.Component.extend({
 
   @on("willDestroyElement")
   _unbindEvents() {
-    this.$().off();
-    this.$(window).off("resize");
+    $(this.element).off();
+    $(window).off("resize");
     clearInterval(this._refreshInterval);
     $("#reply-control").off("div-resizing");
     $("html").off("mouseup.emoji-picker");
@@ -312,7 +293,7 @@ export default Ember.Component.extend({
   },
 
   _bindResizing() {
-    this.$(window).on("resize", () => {
+    $(window).on("resize", () => {
       run.throttle(this, this._positionPicker, 16);
     });
 
@@ -326,7 +307,7 @@ export default Ember.Component.extend({
       ".section[data-section='recent'] .clear-recent"
     );
     $recent.on("click", () => {
-      keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
+      this.emojiStore.favorites = [];
       this.set("recentEmojis", []);
       this._scrollTo(0);
       return false;
@@ -461,14 +442,17 @@ export default Ember.Component.extend({
     );
     $diversityScales.on("click", event => {
       const $selectedDiversity = $(event.currentTarget);
-      this.set("selectedDiversity", parseInt($selectedDiversity.data("level")));
+      this.set(
+        "selectedDiversity",
+        parseInt($selectedDiversity.data("level"), 10)
+      );
       return false;
     });
   },
 
   _isReplyControlExpanded() {
     const verticalSpace =
-      this.$(window).height() -
+      $(window).height() -
       $(".d-header").height() -
       $("#reply-control").height();
 
@@ -480,7 +464,7 @@ export default Ember.Component.extend({
       return;
     }
 
-    let windowWidth = this.$(window).width();
+    let windowWidth = $(window).width();
 
     const desktopModalePositioning = options => {
       let attributes = {
@@ -529,7 +513,7 @@ export default Ember.Component.extend({
       this.$picker.css(_.merge(attributes, options));
     };
 
-    if (Ember.testing || !this.automaticPositioning) {
+    if (ENV.environment === "test" || !this.automaticPositioning) {
       desktopPositioning();
       return;
     }
@@ -565,7 +549,7 @@ export default Ember.Component.extend({
         } else {
           const previewInputOffset = $(".d-editor-input").offset();
 
-          const pickerHeight = $(".emoji-picker").height();
+          const pickerHeight = $(".d-editor .emoji-picker").height();
           const editorHeight = $(".d-editor-input").height();
           const windowBottom = $(window).scrollTop() + $(window).height();
 
@@ -608,12 +592,8 @@ export default Ember.Component.extend({
   },
 
   _trackEmojiUsage(code) {
-    let recent = keyValueStore.getObject(EMOJI_USAGE) || [];
-    recent = recent.filter(r => r !== code);
-    recent.unshift(code);
-    recent.length = Math.min(recent.length, PER_ROW);
-    keyValueStore.setObject({ key: EMOJI_USAGE, value: recent });
-    this.set("recentEmojis", recent);
+    this.emojiStore.track(code);
+    this.set("recentEmojis", this.emojiStore.favorites.slice(0, PER_ROW));
   },
 
   _scrollTo(y) {

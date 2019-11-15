@@ -1,32 +1,30 @@
+import { run } from "@ember/runloop";
 import createStore from "helpers/create-store";
+import NavItem from "discourse/models/nav-item";
+import Category from "discourse/models/category";
+import Site from "discourse/models/site";
 
-QUnit.module("Discourse.NavItem", {
+QUnit.module("NavItem", {
   beforeEach() {
-    Ember.run(function() {
-      const asianCategory = Discourse.Category.create({
+    run(function() {
+      const asianCategory = Category.create({
         name: "确实是这样",
         id: 343434
       });
-      Discourse.Site.currentProp("categories").addObject(asianCategory);
+      Site.currentProp("categories").addObject(asianCategory);
     });
   }
 });
 
 QUnit.test("href", assert => {
-  assert.expect(4);
+  assert.expect(2);
 
   function href(text, expected, label) {
-    assert.equal(
-      Discourse.NavItem.fromText(text, {}).get("href"),
-      expected,
-      label
-    );
+    assert.equal(NavItem.fromText(text, {}).get("href"), expected, label);
   }
 
   href("latest", "/latest", "latest");
   href("categories", "/categories", "categories");
-  href("category/bug", "/c/bug", "English category name");
-  href("category/确实是这样", "/c/343434-category", "Chinese category name");
 });
 
 QUnit.test("count", assert => {

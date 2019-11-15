@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 // Subscribes to user events on the message bus
 import {
   init as initDesktopNotifications,
@@ -10,6 +11,8 @@ import {
   unsubscribe as unsubscribePushNotifications,
   isPushNotificationsEnabled
 } from "discourse/lib/push-notifications";
+import { set } from "@ember/object";
+import ENV from "discourse-common/config/environment";
 
 export default {
   name: "subscribe-user-notifications",
@@ -18,7 +21,7 @@ export default {
   initialize(container) {
     const user = container.lookup("current-user:main");
     const bus = container.lookup("message-bus:main");
-    const appEvents = container.lookup("app-events:main");
+    const appEvents = container.lookup("service:app-events");
 
     if (user) {
       bus.subscribe("/reviewable_counts", data => {
@@ -82,7 +85,7 @@ export default {
               }
               oldNotifications.insertAt(
                 insertPosition,
-                Ember.Object.create(lastNotification)
+                EmberObject.create(lastNotification)
               );
             }
 
@@ -119,24 +122,19 @@ export default {
       });
 
       bus.subscribe("/client_settings", data =>
-        Ember.set(siteSettings, data.name, data.value)
+        set(siteSettings, data.name, data.value)
       );
       bus.subscribe("/refresh_client", data =>
         Discourse.set("assetVersion", data)
       );
 
-      if (!Ember.testing) {
+      if (ENV.environment !== "test") {
         bus.subscribe(alertChannel(user), data => onNotification(data, user));
         initDesktopNotifications(bus, appEvents);
 
         if (isPushNotificationsEnabled(user, site.mobileView)) {
           disableDesktopNotifications();
-          registerPushNotifications(
-            Discourse.User.current(),
-            site.mobileView,
-            router,
-            appEvents
-          );
+          registerPushNotifications(user, site.mobileView, router, appEvents);
         } else {
           unsubscribePushNotifications(user);
         }

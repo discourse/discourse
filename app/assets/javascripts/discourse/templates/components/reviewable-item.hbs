@@ -10,6 +10,9 @@
     <span class='status'>
       {{reviewable-status reviewable.status}}
     </span>
+    <a {{action "explainReviewable" reviewable}} class='explain' title={{i18n "review.explain.why"}}>
+      {{d-icon "question-circle"}}
+    </a>
   </div>
 
   <div class='reviewable-contents'>

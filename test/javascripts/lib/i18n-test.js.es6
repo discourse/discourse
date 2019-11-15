@@ -2,6 +2,8 @@ QUnit.module("lib:i18n", {
   _locale: I18n.locale,
   _fallbackLocale: I18n.fallbackLocale,
   _translations: I18n.translations,
+  _extras: I18n.extras,
+  _pluralizationRules: Object.assign({}, I18n.pluralizationRules),
 
   beforeEach() {
     I18n.locale = "fr";
@@ -34,6 +36,9 @@ QUnit.module("lib:i18n", {
             few: "{{count}} FEW",
             many: "{{count}} MANY",
             other: "{{count}} OTHER"
+          },
+          days: {
+            other: "%{count} jours"
           }
         }
       },
@@ -51,12 +56,18 @@ QUnit.module("lib:i18n", {
           word_count: {
             one: "1 word",
             other: "{{count}} words"
-          }
+          },
+          days: {
+            one: "%{count} day",
+            other: "%{count} days"
+          },
+          dollar_sign: "Hi {{description}}"
         }
       }
     };
 
     // fake pluralization rules
+    I18n.pluralizationRules = Object.assign({}, I18n.pluralizationRules);
     I18n.pluralizationRules.fr = function(n) {
       if (n === 0) return "zero";
       if (n === 1) return "one";
@@ -71,6 +82,8 @@ QUnit.module("lib:i18n", {
     I18n.locale = this._locale;
     I18n.fallbackLocale = this._fallbackLocale;
     I18n.translations = this._translations;
+    I18n.extras = this._extras;
+    I18n.pluralizationRules = this._pluralizationRules;
   }
 });
 
@@ -181,6 +194,17 @@ QUnit.test("pluralizations", assert => {
 });
 
 QUnit.test("fallback", assert => {
+  assert.equal(
+    I18n.t("days", { count: 1 }),
+    "1 day",
+    "uses fallback locale for missing plural key"
+  );
+  assert.equal(
+    I18n.t("days", { count: 200 }),
+    "200 jours",
+    "uses existing French plural key"
+  );
+
   I18n.locale = "fr_FOO";
   I18n.fallbackLocale = "fr";
 
@@ -198,5 +222,14 @@ QUnit.test("fallback", assert => {
     I18n.t("topic.reply.help"),
     "begin composing a reply to this topic",
     "falls back to English translations"
+  );
+});
+
+QUnit.test("Dollar signs are properly escaped", assert => {
+  assert.equal(
+    I18n.t("dollar_sign", {
+      description: "$& $&"
+    }),
+    "Hi $& $&"
   );
 });

@@ -53,7 +53,7 @@ widgetTest("staff menu", {
 
   beforeEach() {
     this.currentUser.setProperties({
-      staff: true,
+      moderator: true,
       reviewable_count: 3
     });
   },
@@ -70,7 +70,7 @@ widgetTest("staff menu - admin", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
-    this.currentUser.setProperties({ staff: true, admin: true });
+    this.currentUser.setProperties({ admin: true });
   },
 
   test(assert) {
@@ -83,7 +83,7 @@ widgetTest("reviewable content", {
 
   beforeEach() {
     this.currentUser.setProperties({
-      staff: true,
+      moderator: true,
       reviewable_count: 5
     });
   },

@@ -3,10 +3,6 @@
 # Post processing that we can do after a post has already been cooked.
 # For example, inserting the onebox content, or image sizes/thumbnails.
 
-require_dependency 'url_helper'
-require_dependency 'pretty_text'
-require_dependency 'quote_comparer'
-
 class CookedPostProcessor
   INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
   INLINE_ONEBOX_CSS_CLASS = "inline-onebox"
@@ -32,10 +28,11 @@ class CookedPostProcessor
     @size_cache = {}
 
     @disable_loading_image = !!opts[:disable_loading_image]
+    @omit_nofollow = post.omit_nofollow?
   end
 
   def post_process(bypass_bump: false, new_post: false)
-    DistributedMutex.synchronize("post_process_#{@post.id}") do
+    DistributedMutex.synchronize("post_process_#{@post.id}", validity: 10.minutes) do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
       remove_full_quote_on_direct_reply if new_post
       post_process_oneboxes
@@ -382,7 +379,7 @@ class CookedPostProcessor
     a = create_link_node("lightbox", img["src"])
     img.add_next_sibling(a)
 
-    if upload && Discourse.store.internal?
+    if upload
       a["data-download-href"] = Discourse.store.download_url(upload)
     end
 
@@ -429,7 +426,7 @@ class CookedPostProcessor
     informations = +"#{original_width}×#{original_height}"
     informations << " #{upload.human_filesize}" if upload
 
-    a["title"] = CGI.escapeHTML(img["title"] || filename)
+    a["title"] = CGI.escapeHTML(img["title"] || img["alt"] || filename)
 
     meta.add_child create_icon_node("far-image")
     meta.add_child create_span_node("filename", a["title"])
@@ -440,7 +437,7 @@ class CookedPostProcessor
   def get_filename(upload, src)
     return File.basename(src) unless upload
     return upload.original_filename unless upload.original_filename =~ /^blob(\.png)?$/i
-    return I18n.t("upload.pasted_image_filename")
+    I18n.t("upload.pasted_image_filename")
   end
 
   def create_node(tag_name, klass)
@@ -506,13 +503,14 @@ class CookedPostProcessor
       map[url] = true
 
       if is_onebox
-        @has_oneboxes = true
-
-        Oneboxer.onebox(url,
+        onebox = Oneboxer.onebox(url,
           invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
           user_id: @post&.user_id,
           category_id: @post&.topic&.category_id
         )
+
+        @has_oneboxes = true if onebox.present?
+        onebox
       else
         process_inline_onebox(element)
         false
@@ -583,7 +581,7 @@ class CookedPostProcessor
       end
     end
 
-    if @cooking_options[:omit_nofollow] || !SiteSetting.add_rel_nofollow_to_user_content
+    if @omit_nofollow || !SiteSetting.add_rel_nofollow_to_user_content
       @doc.css(".onebox-body a, .onebox a").each { |a| a.remove_attribute("rel") }
     end
   end
@@ -620,16 +618,14 @@ class CookedPostProcessor
   end
 
   def enforce_nofollow
-    if !@cooking_options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
+    if !@omit_nofollow && SiteSetting.add_rel_nofollow_to_user_content
       PrettyText.add_rel_nofollow_to_user_content(@doc)
     end
   end
 
   def pull_hotlinked_images(bypass_bump = false)
-    # is the job enabled?
-    return unless SiteSetting.download_remote_images_to_local?
     # have we enough disk space?
-    return if disable_if_low_on_disk_space
+    disable_if_low_on_disk_space # But still enqueue the job
     # don't download remote images for posts that are more than n days old
     return unless @post.created_at > (Date.today - SiteSetting.download_remote_images_max_days_old)
     # we only want to run the job whenever it's changed by a user
@@ -642,7 +638,9 @@ class CookedPostProcessor
   end
 
   def disable_if_low_on_disk_space
+    return false if !SiteSetting.download_remote_images_to_local
     return false if available_disk_space >= SiteSetting.download_remote_images_threshold
+    return false if Discourse.store.external?
 
     SiteSetting.download_remote_images_to_local = false
     # log the site setting change

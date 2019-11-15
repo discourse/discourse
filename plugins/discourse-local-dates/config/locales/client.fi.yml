@@ -12,6 +12,9 @@ fi:
         today: Tänään %{time}
         tomorrow: Huomenna %{time}
         yesterday: Eilen %{time}
+        countdown:
+          passed: päivämäärä on mennyt
+      title: Lisää päivämäärä / aika
       create:
         form:
           insert: Lisää
@@ -27,3 +30,14 @@ fi:
           date_title: Päivämäärä
           time_title: Aika
           format_title: Päiväysformaatti
+          timezone: Aikavyöhyke
+          until: Asti
+          recurring:
+            every_day: "Joka päivä"
+            every_week: "Joka viikko"
+            every_two_weeks: "Joka toinen viikko"
+            every_month: "Joka kuukausi"
+            every_two_months: "Joka toinen kuukausi"
+            every_three_months: "Joka kolmas kuukausi"
+            every_six_months: "Puolen vuoden välein"
+            every_year: "Kerran vuodessa"

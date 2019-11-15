@@ -31,7 +31,14 @@
 
 .tag-show-heading {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: hidden;
+  @include breakpoint(mobile-large) {
+    width: 100%;
+  }
   .d-icon {
     margin: 0 0.25em;
   }
@@ -64,9 +71,7 @@ $tag-color: $primary-medium;
 .discourse-tag {
   max-width: 14em;
   display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  @include ellipsis;
   vertical-align: middle;
 }
 
@@ -235,6 +240,9 @@ header .discourse-tag {
     }
     .btn {
       margin-right: 10px;
+    }
+    h1 input {
+      width: 100%;
     }
   }
   .group-tags-list .tag-chooser {

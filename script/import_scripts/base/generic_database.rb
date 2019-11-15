@@ -14,6 +14,7 @@ module ImportScripts
 
       configure_database
       create_category_table
+      create_like_table
       create_user_table
       create_topic_table
       create_post_table
@@ -34,37 +35,64 @@ module ImportScripts
       SQL
     end
 
+    def insert_like(like)
+      @db.execute(<<-SQL, prepare(like))
+        INSERT OR REPLACE INTO like (id, user_id, post_id, topic)
+        VALUES (:id, :user_id, :post_id, :topic)
+      SQL
+    end
+
     def insert_topic(topic)
+      like_user_ids = topic.delete(:like_user_ids)
       attachments = topic.delete(:attachments)
       topic[:upload_count] = attachments&.size || 0
 
-      @db.execute(<<-SQL, prepare(topic))
-        INSERT OR REPLACE INTO topic (id, title, raw, category_id, closed, user_id, created_at, url, upload_count)
-        VALUES (:id, :title, :raw, :category_id, :closed, :user_id, :created_at, :url, :upload_count)
-      SQL
-
-      attachments&.each do |attachment|
-        @db.execute(<<-SQL, topic_id: topic[:id], path: attachment)
-          INSERT OR REPLACE INTO topic_upload (topic_id, path)
-          VALUES (:topic_id, :path)
+      @db.transaction do
+        @db.execute(<<-SQL, prepare(topic))
+          INSERT OR REPLACE INTO topic (id, title, raw, category_id, closed, user_id, created_at, url, upload_count)
+          VALUES (:id, :title, :raw, :category_id, :closed, :user_id, :created_at, :url, :upload_count)
         SQL
+
+        attachments&.each do |attachment|
+          @db.execute(<<-SQL, topic_id: topic[:id], path: attachment)
+            INSERT OR REPLACE INTO topic_upload (topic_id, path)
+            VALUES (:topic_id, :path)
+          SQL
+        end
+
+        like_user_ids&.each do |user_id|
+          @db.execute(<<-SQL, topic_id: topic[:id], user_id: user_id)
+            INSERT OR REPLACE INTO like (topic_id, user_id)
+            VALUES (:topic_id, :user_id)
+          SQL
+        end
       end
     end
 
     def insert_post(post)
+      like_user_ids = post.delete(:like_user_ids)
       attachments = post.delete(:attachments)
       post[:upload_count] = attachments&.size || 0
 
-      @db.execute(<<-SQL, prepare(post))
-        INSERT OR REPLACE INTO post (id, raw, topic_id, user_id, created_at, reply_to_post_id, url, upload_count)
-        VALUES (:id, :raw, :topic_id, :user_id, :created_at, :reply_to_post_id, :url, :upload_count)
-      SQL
-
-      attachments&.each do |attachment|
-        @db.execute(<<-SQL, post_id: post[:id], path: attachment)
-          INSERT OR REPLACE INTO post_upload (post_id, path)
-          VALUES (:post_id, :path)
+      @db.transaction do
+        @db.execute(<<-SQL, prepare(post))
+          INSERT OR REPLACE INTO post (id, raw, topic_id, user_id, created_at, reply_to_post_id, url, upload_count)
+          VALUES (:id, :raw, :topic_id, :user_id, :created_at, :reply_to_post_id, :url, :upload_count)
         SQL
+
+        attachments&.each do |attachment|
+          @db.execute(<<-SQL, post_id: post[:id], path: attachment)
+            INSERT OR REPLACE INTO post_upload (post_id, path)
+            VALUES (:post_id, :path)
+          SQL
+        end
+
+        like_user_ids&.each do |user_id|
+          @db.execute(<<-SQL, post_id: post[:id], user_id: user_id)
+            INSERT OR REPLACE INTO like (post_id, user_id)
+            VALUES (:post_id, :user_id)
+          SQL
+        end
       end
     end
 
@@ -196,6 +224,25 @@ module ImportScripts
       SQL
     end
 
+    def count_likes
+      @db.get_first_value(<<-SQL)
+        SELECT COUNT(*)
+        FROM like
+      SQL
+    end
+
+    def fetch_likes(last_row_id)
+      rows = @db.execute(<<-SQL, last_row_id)
+        SELECT ROWID AS rowid, *
+        FROM like
+        WHERE ROWID > :last_row_id
+        ORDER BY ROWID
+        LIMIT #{@batch_size}
+      SQL
+
+      add_last_column_value(rows, 'rowid')
+    end
+
     def execute_sql(sql)
       @db.execute(sql)
     end
@@ -223,6 +270,16 @@ module ImportScripts
           description TEXT,
           position INTEGER,
           url TEXT
+        )
+      SQL
+    end
+
+    def create_like_table
+      @db.execute <<-SQL
+        CREATE TABLE IF NOT EXISTS like (
+          user_id #{key_data_type} NOT NULL,
+          topic_id #{key_data_type},
+          post_id #{key_data_type}
         )
       SQL
     end

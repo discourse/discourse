@@ -177,6 +177,14 @@ describe PlainTextToMarkdown do
       expect(to_markdown("foo https://www.example.com/foo.html bar https://www.example.com/foo.html baz"))
         .to eq("foo https://www.example.com/foo.html bar https://www.example.com/foo.html baz")
     end
+
+    it "does not explode with weird links" do
+      expect {
+        Timeout::timeout(0.25) {
+          to_markdown("https://www.discourse.org/?boom=#{"." * 20}")
+        }
+      }.not_to raise_error
+    end
   end
 
   context "code" do

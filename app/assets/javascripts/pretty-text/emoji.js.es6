@@ -21,11 +21,29 @@ export function extendedEmojiList() {
 
 const emojiHash = {};
 
-const unicodeRegexp = new RegExp(
-  Object.keys(replacements)
+export function buildReplacementsList(emojiReplacements) {
+  return Object.keys(emojiReplacements)
     .sort()
     .reverse()
-    .join("|") + "|\\B:[^\\s:]+(?::t\\d)?:?\\B",
+    .map(emoji => {
+      return emoji
+        .split("")
+        .map(chr => {
+          return (
+            "\\u" +
+            chr
+              .charCodeAt(0)
+              .toString(16)
+              .padStart(4, "0")
+          );
+        })
+        .join("");
+    })
+    .join("|");
+}
+
+const unicodeRegexp = new RegExp(
+  buildReplacementsList(replacements) + "|\\B:[^\\s:]+(?::t\\d)?:?\\B",
   "g"
 );
 

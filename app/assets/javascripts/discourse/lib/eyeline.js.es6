@@ -1,10 +1,12 @@
+import ENV from "discourse-common/config/environment";
+
 //  Track visible elemnts on the screen.
 const Eyeline = function Eyeline(selector) {
   this.selector = selector;
 };
 
 Eyeline.prototype.update = function() {
-  if (Ember.testing) {
+  if (ENV.environment === "test") {
     return;
   }
 
@@ -12,8 +14,7 @@ Eyeline.prototype.update = function() {
     windowHeight = $(window).height(),
     docViewBottom = docViewTop + windowHeight,
     $elements = $(this.selector),
-    bottomOffset = $elements.last().offset(),
-    self = this;
+    bottomOffset = $elements.last().offset();
 
   let atBottom = false;
   if (bottomOffset) {
@@ -21,7 +22,7 @@ Eyeline.prototype.update = function() {
       bottomOffset.top <= docViewBottom && bottomOffset.top >= docViewTop;
   }
 
-  return $elements.each(function(i, elem) {
+  return $elements.each((i, elem) => {
     const $elem = $(elem),
       elemTop = $elem.offset().top,
       elemBottom = elemTop + $elem.height();
@@ -45,30 +46,28 @@ Eyeline.prototype.update = function() {
 
     // If you hit the bottom we mark all the elements as seen. Otherwise, just the first one
     if (!atBottom) {
-      self.trigger("saw", { detail: $elem });
+      this.trigger("saw", { detail: $elem });
       if (i === 0) {
-        self.trigger("sawTop", { detail: $elem });
+        this.trigger("sawTop", { detail: $elem });
       }
       return false;
     }
     if (i === 0) {
-      self.trigger("sawTop", { detail: $elem });
+      this.trigger("sawTop", { detail: $elem });
     }
     if (i === $elements.length - 1) {
-      return self.trigger("sawBottom", { detail: $elem });
+      return this.trigger("sawBottom", { detail: $elem });
     }
   });
 };
 
 //  Call this when we know aren't loading any more elements. Mark the rest as seen
 Eyeline.prototype.flushRest = function() {
-  if (Ember.testing) {
+  if (ENV.environment === "test") {
     return;
   }
-  const self = this;
-  $(this.selector).each(function(i, elem) {
-    return self.trigger("saw", { detail: $(elem) });
-  });
+
+  $(this.selector).each((i, elem) => this.trigger("saw", { detail: $(elem) }));
 };
 
 RSVP.EventTarget.mixin(Eyeline.prototype);

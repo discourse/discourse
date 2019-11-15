@@ -42,7 +42,7 @@ describe EmbedController do
 
     context "with api key" do
 
-      let(:api_key) { ApiKey.create_master_key }
+      let(:api_key) { Fabricate(:api_key) }
 
       context "with valid embed url" do
         let(:topic_embed) { Fabricate(:topic_embed, embed_url: embed_url) }
@@ -67,6 +67,50 @@ describe EmbedController do
           expect(json["error_type"]).to eq("not_found")
         end
       end
+    end
+  end
+
+  context "#topics" do
+    it "raises an error when not enabled" do
+      get '/embed/topics?embed_id=de-1234'
+      expect(response.status).to eq(400)
+    end
+
+    context "when enabled" do
+      before do
+        SiteSetting.embed_topics_list = true
+      end
+
+      it "raises an error with a weird id" do
+        get '/embed/topics?discourse_embed_id=../asdf/-1234', headers: headers
+        expect(response.status).to eq(400)
+      end
+
+      it "returns a list of topics" do
+        topic = Fabricate(:topic)
+        get '/embed/topics?discourse_embed_id=de-1234', headers: {
+          'REFERER' => 'https://example.com/evil-trout'
+        }
+        expect(response.status).to eq(200)
+        expect(response.headers['X-Frame-Options']).to eq("ALLOWALL")
+        expect(response.body).to match("data-embed-id=\"de-1234\"")
+        expect(response.body).to match("data-topic-id=\"#{topic.id}\"")
+        expect(response.body).to match("data-referer=\"https://example.com/evil-trout\"")
+      end
+
+      it "returns no referer if not supplied" do
+        get '/embed/topics?discourse_embed_id=de-1234'
+        expect(response.status).to eq(200)
+        expect(response.body).to match("data-referer=\"\"")
+      end
+
+      it "returns * for the referer if `embed_any_origin` is set" do
+        SiteSetting.embed_any_origin = true
+        get '/embed/topics?discourse_embed_id=de-1234'
+        expect(response.status).to eq(200)
+        expect(response.body).to match("data-referer=\"\\*\"")
+      end
+
     end
   end
 

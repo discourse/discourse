@@ -1,3 +1,7 @@
+import { once } from "@ember/runloop";
+import { debounce } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 import {
   default as computed,
@@ -8,7 +12,7 @@ import {
 export const keepAliveDuration = 10000;
 export const bufferTime = 3000;
 
-export default Ember.Component.extend({
+export default Component.extend({
   // Passed in variables
   action: null,
   post: null,
@@ -25,12 +29,12 @@ export default Ember.Component.extend({
   @on("didInsertElement")
   composerOpened() {
     this._lastPublish = new Date();
-    Ember.run.once(this, "updateState");
+    once(this, "updateState");
   },
 
   @observes("action", "post.id", "topic.id")
   composerStateChanged() {
-    Ember.run.once(this, "updateState");
+    once(this, "updateState");
   },
 
   @observes("reply", "title")
@@ -43,8 +47,8 @@ export default Ember.Component.extend({
   @on("willDestroyElement")
   composerClosing() {
     this.publish({ previous: this.currentState });
-    Ember.run.cancel(this._pingTimer);
-    Ember.run.cancel(this._clearTimer);
+    cancel(this._pingTimer);
+    cancel(this._clearTimer);
   },
 
   updateState() {
@@ -93,7 +97,7 @@ export default Ember.Component.extend({
         r.messagebus_channel,
         message => {
           if (!this.isDestroyed) this.set("presenceUsers", message.users);
-          this._clearTimer = Ember.run.debounce(
+          this._clearTimer = debounce(
             this,
             "clear",
             keepAliveDuration + bufferTime

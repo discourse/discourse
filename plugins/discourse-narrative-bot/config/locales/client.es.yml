@@ -10,4 +10,4 @@ es:
     discourse_narrative_bot:
       welcome_post_type:
         new_user_track: "Inicia el tutorial de usuario nuevo para todos los usuarios nuevos"
-        welcome_message: "Envía a todos los usuarios nuevos un mensaje de bienvenida con una guía de inicio rápido"
+        welcome_message: "Envía a todos los usuarios nuevos un mensaje de bienvenida junto a una guía de inicio rápido"

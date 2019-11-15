@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class DestroyOldHiddenPosts < Jobs::Scheduled
+  class DestroyOldHiddenPosts < ::Jobs::Scheduled
     every 1.day
 
     def execute(args)

@@ -21,7 +21,7 @@ widgetTest("extendability", {
   beforeEach(store) {
     TopicStatusIcons.addObject([
       "has_accepted_answer",
-      "check-square-o",
+      "far-check-square",
       "solved"
     ]);
     this.set("args", {
@@ -32,6 +32,6 @@ widgetTest("extendability", {
     });
   },
   test(assert) {
-    assert.ok(find(".topic-status .d-icon-check-square-o").length);
+    assert.ok(find(".topic-status .d-icon-far-check-square").length);
   }
 });

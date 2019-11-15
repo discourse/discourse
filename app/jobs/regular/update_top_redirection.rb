@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class UpdateTopRedirection < Jobs::Base
+  class UpdateTopRedirection < ::Jobs::Base
 
     def execute(args)
       return if args[:user_id].blank? || args[:redirected_at].blank?

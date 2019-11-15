@@ -1,15 +1,17 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   categoryNameKey: null,
-  adminSiteSettings: Ember.inject.controller(),
+  adminSiteSettings: inject(),
 
-  @computed("adminSiteSettings.visibleSiteSettings", "categoryNameKey")
+  @discourseComputed("adminSiteSettings.visibleSiteSettings", "categoryNameKey")
   category(categories, nameKey) {
     return (categories || []).findBy("nameKey", nameKey);
   },
 
-  @computed("category")
+  @discourseComputed("category")
   filteredContent(category) {
     return category ? category.siteSettings : [];
   }

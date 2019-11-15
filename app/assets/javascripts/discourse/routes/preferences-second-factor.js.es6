@@ -13,6 +13,25 @@ export default RestrictedUserRoute.extend({
 
   setupController(controller, model) {
     controller.setProperties({ model, newUsername: model.get("username") });
+    controller.set("loading", true);
+
+    model
+      .loadSecondFactorCodes("")
+      .then(response => {
+        if (response.error) {
+          controller.set("errorMessage", response.error);
+        } else {
+          controller.setProperties({
+            errorMessage: null,
+            loaded: !response.password_required,
+            dirty: !!response.password_required,
+            totps: response.totps,
+            security_keys: response.security_keys
+          });
+        }
+      })
+      .catch(controller.popupAjaxError)
+      .finally(() => controller.set("loading", false));
   },
 
   actions: {
@@ -26,6 +45,7 @@ export default RestrictedUserRoute.extend({
       if (
         transition.targetName === "preferences.second-factor" ||
         !user ||
+        user.is_anonymous ||
         user.second_factor_enabled ||
         (settings.enforce_second_factor === "staff" && !user.staff) ||
         settings.enforce_second_factor === "no"

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'distributed_cache'
-
 module SvgSprite
   SVG_ICONS ||= Set.new([
     "adjust",
@@ -21,13 +19,16 @@ module SvgSprite
     "arrows-alt-h",
     "arrows-alt-v",
     "at",
+    "asterisk",
     "backward",
     "ban",
     "bars",
     "bed",
+    "bell",
     "bell-slash",
     "bold",
     "book",
+    "book-reader",
     "bookmark",
     "briefcase",
     "calendar-alt",
@@ -69,6 +70,7 @@ module SvgSprite
     "fab-android",
     "fab-apple",
     "fab-chrome",
+    "fab-discord",
     "fab-discourse",
     "fab-facebook-square",
     "fab-facebook",
@@ -164,6 +166,7 @@ module SvgSprite
     "signal",
     "step-backward",
     "step-forward",
+    "stream",
     "sync",
     "table",
     "tag",
@@ -236,7 +239,7 @@ module SvgSprite
 
   def self.version(theme_ids = [])
     get_set_cache("version_#{Theme.transform_ids(theme_ids).join(',')}") do
-      Digest::SHA1.hexdigest(all_icons(theme_ids).join('|'))
+      Digest::SHA1.hexdigest(bundle(theme_ids))
     end
   end
 
@@ -301,6 +304,19 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     end
 
     false
+  end
+
+  # For use in no_ember .html.erb layouts
+  def self.raw_svg(name)
+    get_set_cache("raw_svg_#{name}") do
+      symbol = search(name)
+      break "" unless symbol
+      symbol = Nokogiri::XML(symbol).children.first
+      symbol.name = "svg"
+      <<~HTML
+        <svg class="fa d-icon svg-icon svg-node" aria-hidden="true">#{symbol}</svg>
+      HTML
+    end.html_safe
   end
 
   def self.theme_sprite_variable_name

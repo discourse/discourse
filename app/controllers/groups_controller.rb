@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class GroupsController < ApplicationController
-  include ApplicationHelper
-
   requires_login only: [
     :set_notifications,
     :mentionable,
@@ -46,7 +44,7 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidAccess.new(:enable_group_directory)
     end
 
-    page_size = mobile_device? ? 15 : 36
+    page_size = MobileDetection.mobile_device?(request.user_agent) ? 15 : 36
     page = params[:page]&.to_i || 0
     order = %w{name user_count}.delete(params[:order])
     dir = params[:asc] ? 'ASC' : 'DESC'
@@ -159,6 +157,8 @@ class GroupsController < ApplicationController
 
   def posts
     group = find_group(:group_id)
+    guardian.ensure_can_see_group_members!(group)
+
     posts = group.posts_for(
       guardian,
       params.permit(:before_post_id, :category_id)
@@ -168,6 +168,8 @@ class GroupsController < ApplicationController
 
   def posts_feed
     group = find_group(:group_id)
+    guardian.ensure_can_see_group_members!(group)
+
     @posts = group.posts_for(
       guardian,
       params.permit(:before_post_id, :category_id)
@@ -204,10 +206,16 @@ class GroupsController < ApplicationController
   def members
     group = find_group(:group_id)
 
+    guardian.ensure_can_see_group_members!(group)
+
     limit = (params[:limit] || 20).to_i
     offset = params[:offset].to_i
 
     if limit < 0
+      raise Discourse::InvalidParameters.new(:limit)
+    end
+
+    if limit > 1000
       raise Discourse::InvalidParameters.new(:limit)
     end
 
@@ -347,7 +355,7 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new(:user_id) if user.blank?
 
       if params[:accept]
-        group.add(user)
+        group.add(user, notify: true)
         GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
       end
 
@@ -416,12 +424,18 @@ class GroupsController < ApplicationController
   end
 
   def request_membership
-    params.require(:reason)
+    params.require(:reason) if params[:topic_id].blank?
 
     group = find_group(:id)
 
+    if params[:topic_id] && topic = Topic.find_by_id(params[:topic_id])
+      reason = I18n.t("groups.view_hidden_topic_request_reason", group_name: group.name, topic_url: topic.url)
+    end
+
+    reason ||= params[:reason]
+
     begin
-      GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
+      GroupRequest.create!(group: group, user: current_user, reason: reason)
     rescue ActiveRecord::RecordNotUnique => e
       return render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")), status: 409
     end
@@ -433,20 +447,12 @@ class GroupsController < ApplicationController
         .pluck("users.username")
     )
 
-    raw = <<~EOF
-      #{params[:reason]}
-
-      ---
-      <a href="#{Discourse.base_uri}/g/#{group.name}/requests">
-        #{I18n.t('groups.request_membership_pm.handle')}
-      </a>
-    EOF
-
     post = PostCreator.new(current_user,
       title: I18n.t('groups.request_membership_pm.title', group_name: group.name),
-      raw: raw,
+      raw: params[:reason],
       archetype: Archetype.private_message,
       target_usernames: usernames.join(','),
+      custom_fields: { requested_group_id: group.id },
       skip_validations: true
     ).create!
 
@@ -540,10 +546,12 @@ class GroupsController < ApplicationController
             :incoming_email,
             :primary_group,
             :visibility_level,
+            :members_visibility_level,
             :name,
             :grant_trust_level,
             :automatic_membership_email_domains,
-            :automatic_membership_retroactive
+            :automatic_membership_retroactive,
+            :publish_read_state
           ])
 
           custom_fields = Group.editable_group_custom_fields

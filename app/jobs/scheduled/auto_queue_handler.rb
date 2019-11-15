@@ -3,7 +3,7 @@
 # This job will automatically act on records that have gone unhandled on a
 # queue for a long time.
 module Jobs
-  class AutoQueueHandler < Jobs::Scheduled
+  class AutoQueueHandler < ::Jobs::Scheduled
 
     every 1.day
 

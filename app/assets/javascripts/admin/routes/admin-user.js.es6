@@ -1,6 +1,8 @@
+import { get } from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
 import AdminUser from "admin/models/admin-user";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   serialize(model) {
     return {
       user_id: model.get("id"),
@@ -9,7 +11,7 @@ export default Discourse.Route.extend({
   },
 
   model(params) {
-    return AdminUser.find(Ember.get(params, "user_id"));
+    return AdminUser.find(get(params, "user_id"));
   },
 
   renderTemplate() {

@@ -65,6 +65,20 @@ describe PostActionCreator do
       result = PostActionCreator.new(user, nil, like_type_id).perform
       expect(result.failed?).to eq(true)
     end
+
+    it 'does not create a double like notification' do
+      PostActionNotifier.enable
+      post.user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:always])
+
+      expect(PostActionCreator.new(user, post, like_type_id).perform.success).to eq(true)
+      expect(PostActionDestroyer.new(user, post, like_type_id).perform.success).to eq(true)
+      expect(PostActionCreator.new(user, post, like_type_id).perform.success).to eq(true)
+
+      notification = Notification.last
+      notification_data = JSON.parse(notification.data)
+      expect(notification_data['display_username']).to eq(user.username)
+      expect(notification_data['username2']).to eq(nil)
+    end
   end
 
   context "flags" do

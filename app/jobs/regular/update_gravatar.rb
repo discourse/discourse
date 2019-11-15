@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-
-  class UpdateGravatar < Jobs::Base
+  class UpdateGravatar < ::Jobs::Base
 
     sidekiq_options queue: 'low'
 

@@ -61,9 +61,14 @@ module UserGuardian
   def can_delete_user?(user)
     return false if user.nil? || user.admin?
     if is_me?(user)
-      user.post_count <= 1
+      !SiteSetting.enable_sso &&
+      !user.has_more_posts_than?(User::MAX_SELF_DELETE_POST_COUNT)
     else
-      is_staff? && (user.first_post_created_at.nil? || user.post_count <= 5 || user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago)
+      is_staff? && (
+        user.first_post_created_at.nil? ||
+          !user.has_more_posts_than?(User::MAX_STAFF_DELETE_POST_COUNT) ||
+          user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago
+      )
     end
   end
 

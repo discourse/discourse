@@ -1,20 +1,15 @@
 # frozen_string_literal: true
 
-require_dependency 'rate_limiter'
-require_dependency 'single_sign_on'
-require_dependency 'single_sign_on_provider'
-require_dependency 'url_helper'
-
 class SessionController < ApplicationController
   class LocalLoginNotAllowed < StandardError; end
   rescue_from LocalLoginNotAllowed do
     render body: nil, status: 500
   end
 
-  before_action :check_local_login_allowed, only: %i(create forgot_password email_login)
+  before_action :check_local_login_allowed, only: %i(create forgot_password email_login email_login_info)
   before_action :rate_limit_login, only: %i(create email_login)
   skip_before_action :redirect_to_login_if_required
-  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy email_login one_time_password)
+  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy one_time_password)
 
   ACTIVATE_USER_KEY = "activate_user"
 
@@ -39,7 +34,7 @@ class SessionController < ApplicationController
       if SiteSetting.verbose_sso_logging
         Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
       end
-      redirect_to sso.to_url
+      redirect_to sso_url(sso)
     else
       render body: nil, status: 404
     end
@@ -49,7 +44,12 @@ class SessionController < ApplicationController
     payload ||= request.query_string
 
     if SiteSetting.enable_sso_provider
-      sso = SingleSignOnProvider.parse(payload)
+      begin
+        sso = SingleSignOnProvider.parse(payload)
+      rescue SingleSignOnProvider::BlankSecret
+        render plain: I18n.t("sso.missing_secret"), status: 400
+        return
+      end
 
       if sso.return_sso_url.blank?
         render plain: "return_sso_url is blank, it must be provided", status: 400
@@ -293,7 +293,18 @@ class SessionController < ApplicationController
     if payload = login_error_check(user)
       render json: payload
     else
-      if user.totp_enabled? && !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
+      if (params[:second_factor_token].blank?)
+        security_key_valid = ::Webauthn::SecurityKeyAuthenticationService.new(user, params[:security_key_credential],
+          challenge: secure_session["staged-webauthn-challenge-#{user.id}"],
+          rp_id: secure_session["staged-webauthn-rp-id-#{user.id}"],
+          origin: Discourse.base_url
+        ).authenticate_security_key
+        return invalid_security_key(user) if user.security_keys_enabled? && !security_key_valid
+      end
+
+      if user.totp_enabled? && \
+         !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i) &&
+         !params[:security_key_credential].present?
         return render json: failed_json.merge(
           error: I18n.t("login.invalid_second_factor_code"),
           reason: "invalid_second_factor",
@@ -303,56 +314,119 @@ class SessionController < ApplicationController
 
       (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
     end
+  rescue ::Webauthn::SecurityKeyError => err
+    invalid_security_key(user, err.message)
+  end
+
+  def invalid_security_key(user, err_message = nil)
+    stage_webauthn_security_key_challenge(user) if !params[:security_key_credential]
+    render json: failed_json.merge(
+      error: err_message || I18n.t("login.invalid_security_key"),
+      reason: "invalid_security_key",
+      backup_enabled: user.backup_codes_enabled?
+    ).merge(webauthn_security_key_challenge_and_allowed_credentials(user))
+  end
+
+  def email_login_info
+    raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
+
+    token = params[:token]
+    matched_token = EmailToken.confirmable(token)
+
+    if matched_token
+      response = {
+        can_login: true,
+        token: token,
+        token_email: matched_token.email
+      }
+
+      matched_user = matched_token.user
+      if matched_user&.totp_enabled?
+        response.merge!(
+          second_factor_required: true,
+          backup_codes_enabled: matched_user&.backup_codes_enabled?
+        )
+      end
+
+      if matched_user&.security_keys_enabled?
+        stage_webauthn_security_key_challenge(matched_user)
+        response.merge!(
+          webauthn_security_key_challenge_and_allowed_credentials(matched_user).merge(security_key_required: true)
+        )
+      end
+
+      render json: response
+    else
+      render json: {
+        can_login: false,
+        error: I18n.t('email_login.invalid_token')
+      }
+    end
   end
 
   def email_login
     raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
     second_factor_token = params[:second_factor_token]
     second_factor_method = params[:second_factor_method].to_i
+    security_key_credential = params[:security_key_credential]
     token = params[:token]
-    valid_token = !!EmailToken.valid_token_format?(token)
-    user = EmailToken.confirmable(token)&.user
+    matched_token = EmailToken.confirmable(token)
 
-    if valid_token && user&.totp_enabled?
-      if !second_factor_token.present?
-        @second_factor_required = true
-        @backup_codes_enabled = true if user&.backup_codes_enabled?
-        return render layout: 'no_ember'
-      elsif !user.authenticate_second_factor(second_factor_token, second_factor_method)
-        RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-        @error = I18n.t('login.invalid_second_factor_code')
-        return render layout: 'no_ember'
+    if security_key_credential.present?
+      if matched_token&.user&.security_keys_enabled?
+        security_key_valid = ::Webauthn::SecurityKeyAuthenticationService.new(matched_token&.user, params[:security_key_credential],
+          challenge: secure_session["staged-webauthn-challenge-#{matched_token&.user&.id}"],
+          rp_id: secure_session["staged-webauthn-rp-id-#{matched_token&.user&.id}"],
+          origin: Discourse.base_url
+        ).authenticate_security_key
+        return invalid_security_key(matched_token&.user) if !security_key_valid
+      end
+    else
+      if matched_token&.user&.totp_enabled?
+        if !second_factor_token.present?
+          return render json: { error: I18n.t('login.invalid_second_factor_code') }
+        elsif !matched_token.user.authenticate_second_factor(second_factor_token, second_factor_method)
+          RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+          return render json: { error: I18n.t('login.invalid_second_factor_code') }
+        end
       end
     end
 
     if user = EmailToken.confirm(token)
       if login_not_approved_for?(user)
-        @error = login_not_approved[:error]
+        return render json: login_not_approved
       elsif payload = login_error_check(user)
-        @error = payload[:error]
+        return render json: payload
       else
         log_on_user(user)
-        return redirect_to path("/")
+        return render json: success_json
       end
-    else
-      @error = I18n.t('email_login.invalid_token')
     end
 
-    render layout: 'no_ember'
+    render json: { error: I18n.t('email_login.invalid_token') }
+  rescue ::Webauthn::SecurityKeyError => err
+    invalid_security_key(user, err.message)
   end
 
   def one_time_password
-    otp_username = $redis.get "otp_#{params[:token]}"
+    @otp_username = otp_username = $redis.get "otp_#{params[:token]}"
 
     if otp_username && user = User.find_by_username(otp_username)
-      log_on_user(user)
-      $redis.del "otp_#{params[:token]}"
-      return redirect_to path("/")
+      if current_user&.username == otp_username
+        $redis.del "otp_#{params[:token]}"
+        return redirect_to path("/")
+      elsif request.post?
+        log_on_user(user)
+        $redis.del "otp_#{params[:token]}"
+        return redirect_to path("/")
+      else
+        # Display the form
+      end
     else
       @error = I18n.t('user_api_key.invalid_token')
     end
 
-    render layout: 'no_ember'
+    render layout: 'no_ember', locals: { hide_auth_buttons: true }
   end
 
   def forgot_password
@@ -494,5 +568,27 @@ class SessionController < ApplicationController
   def render_sso_error(status:, text:)
     @sso_error = text
     render status: status, layout: 'no_ember'
+  end
+
+  # extension to allow plugins to customize the SSO URL
+  def sso_url(sso)
+    sso.to_url
+  end
+
+  def stage_webauthn_security_key_challenge(user)
+    challenge = SecureRandom.hex(30)
+    secure_session["staged-webauthn-challenge-#{user.id}"] = challenge
+    secure_session["staged-webauthn-rp-id-#{user.id}"] = Discourse.current_hostname
+  end
+
+  def webauthn_security_key_challenge_and_allowed_credentials(user)
+    return {} if !user.security_keys_enabled?
+    credential_ids = user.security_keys.select(:credential_id)
+      .where(factor_type: UserSecurityKey.factor_types[:second_factor])
+      .pluck(:credential_id)
+    {
+      allowed_credential_ids: credential_ids,
+      challenge: secure_session["staged-webauthn-challenge-#{user.id}"]
+    }
   end
 end

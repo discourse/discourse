@@ -107,14 +107,14 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
       contents.push({
         action: "toggleWiki",
         label: "post.controls.unwiki",
-        icon: "pencil-square-o",
+        icon: "far-edit",
         className: "btn-default wiki wikied"
       });
     } else {
       contents.push({
         action: "toggleWiki",
         label: "post.controls.wiki",
-        icon: "pencil-square-o",
+        icon: "far-edit",
         className: "btn-default wiki"
       });
     }

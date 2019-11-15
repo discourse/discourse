@@ -40,7 +40,7 @@
       grid-template-columns: repeat(3, 32%);
       grid-column-gap: 2%;
     }
-    @include breakpoint("mobile") {
+    @include breakpoint("mobile-large") {
       grid-template-columns: 100%;
     }
   }
@@ -49,7 +49,7 @@
     // Flex and margin are for IE11
     flex: 1 1 24%;
     margin: 1%;
-    @include breakpoint("mobile") {
+    @include breakpoint("mobile-large") {
       margin: 0;
     }
     display: flex;

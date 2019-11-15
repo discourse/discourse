@@ -1,48 +1,50 @@
 # frozen_string_literal: true
 
 class UploadRecovery
-  def initialize(dry_run: false)
+  def initialize(dry_run: false, stop_on_error: false)
     @dry_run = dry_run
+    @stop_on_error = stop_on_error
   end
 
   def recover(posts = Post)
-    posts.have_uploads.find_each do |post|
+    posts.have_uploads.find_each { |post| recover_post post }
+  end
 
-      begin
-        analyzer = PostAnalyzer.new(post.raw, post.topic_id)
+  def recover_post(post)
+    begin
+      analyzer = PostAnalyzer.new(post.raw, post.topic_id)
 
-        analyzer.cooked_stripped.css("img", "a").each do |media|
-          if media.name == "img" && orig_src = media["data-orig-src"]
-            if dom_class = media["class"]
-              if (Post.white_listed_image_classes & dom_class.split).count > 0
-                next
-              end
+      analyzer.cooked_stripped.css("img", "a").each do |media|
+        if media.name == "img" && orig_src = media["data-orig-src"]
+          if dom_class = media["class"]
+            if (Post.white_listed_image_classes & dom_class.split).count > 0
+              next
             end
+          end
 
+          if @dry_run
+            puts "#{post.full_url} #{orig_src}"
+          else
+            recover_post_upload(post, Upload.sha1_from_short_url(orig_src))
+          end
+        elsif url = (media["href"] || media["src"])
+          data = Upload.extract_url(url)
+          next unless data
+
+          sha1 = data[2]
+
+          unless upload = Upload.get_from_url(url)
             if @dry_run
-              puts "#{post.full_url} #{orig_src}"
+              puts "#{post.full_url} #{url}"
             else
-              recover_post_upload(post, Upload.sha1_from_short_url(orig_src))
-            end
-          elsif url = (media["href"] || media["src"])
-            data = Upload.extract_url(url)
-            next unless data
-
-            sha1 = data[2]
-
-            unless upload = Upload.get_from_url(url)
-              if @dry_run
-                puts "#{post.full_url} #{url}"
-              else
-                recover_post_upload(post, sha1)
-              end
+              recover_post_upload(post, sha1)
             end
           end
         end
-      rescue => e
-        raise e unless @dry_run
-        puts "#{post.full_url} #{e.class}: #{e.message}"
       end
+    rescue => e
+      raise e if @stop_on_error
+      puts "#{post.full_url} #{e.class}: #{e.message}"
     end
   end
 
@@ -134,9 +136,16 @@ class UploadRecovery
     @object_keys ||= begin
       s3_helper = Discourse.store.s3_helper
 
-      s3_helper.list("original").map(&:key).concat(
-        s3_helper.list("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").map(&:key)
-      )
+      if Rails.configuration.multisite
+        current_db = RailsMultisite::ConnectionManagement.current_db
+        s3_helper.list("uploads/#{current_db}/original").map(&:key).concat(
+          s3_helper.list("uploads/#{FileStore::S3Store::TOMBSTONE_PREFIX}#{current_db}/original").map(&:key)
+        )
+      else
+        s3_helper.list("original").map(&:key).concat(
+          s3_helper.list("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").map(&:key)
+        )
+      end
     end
 
     @object_keys.each do |key|

@@ -1,6 +1,8 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { alias } from "@ember/object/computed";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "span",
   classNameBindings: [
     ":user-badge",
@@ -8,11 +10,11 @@ export default Ember.Component.extend({
     "badge.enabled::disabled"
   ],
 
-  @computed("badge.description")
+  @discourseComputed("badge.description")
   title(badgeDescription) {
     return $("<div>" + badgeDescription + "</div>").text();
   },
 
   attributeBindings: ["data-badge-name", "title"],
-  "data-badge-name": Ember.computed.alias("badge.name")
+  "data-badge-name": alias("badge.name")
 });

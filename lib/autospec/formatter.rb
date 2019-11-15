@@ -14,10 +14,6 @@ class Autospec::Formatter < RSpec::Core::Formatters::BaseTextFormatter
   def initialize(output)
     super
     FileUtils.mkdir_p("tmp") unless Dir.exists?("tmp")
-  end
-
-  def start(example_count)
-    super
     File.delete(RSPEC_RESULT) if File.exists?(RSPEC_RESULT)
     @fail_file = File.open(RSPEC_RESULT, "w")
   end
@@ -32,7 +28,7 @@ class Autospec::Formatter < RSpec::Core::Formatters::BaseTextFormatter
 
   def example_failed(notification)
     output.print RSpec::Core::Formatters::ConsoleCodes.wrap('F', :failure)
-    @fail_file.puts(notification.example.metadata[:location] + " ")
+    @fail_file.puts(notification.example.location + " ")
     @fail_file.flush
   end
 
@@ -45,18 +41,4 @@ class Autospec::Formatter < RSpec::Core::Formatters::BaseTextFormatter
     super(filename)
   end
 
-end
-
-class Autospec::ParallelFormatter < ParallelTests::RSpec::LoggerBase
-  RSpec::Core::Formatters.register self, :example_failed
-
-  def message(*args);end
-  def dump_failures(*args);end
-  def dump_summary(*args);end
-  def dump_pending(*args);end
-  def seed(*args);end
-
-  def example_failed(notification)
-    output.puts notification.example.metadata[:location] + " "
-  end
 end

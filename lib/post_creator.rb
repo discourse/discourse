@@ -2,11 +2,6 @@
 
 # Responsible for creating posts and topics
 #
-require_dependency 'rate_limiter'
-require_dependency 'topic_creator'
-require_dependency 'post_jobs_enqueuer'
-require_dependency 'distributed_mutex'
-require_dependency 'has_errors'
 
 class PostCreator
   include HasErrors
@@ -39,6 +34,7 @@ class PostCreator
   #                             dequeue before the commit finishes. If you do this, be sure to
   #                             call `enqueue_jobs` after the transaction is comitted.
   #   hidden_reason_id        - Reason for hiding the post (optional)
+  #   skip_validations        - Do not validate any of the content in the post
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -158,7 +154,7 @@ class PostCreator
     DiscourseEvent.trigger :before_create_post, @post
     DiscourseEvent.trigger :validate_post, @post
 
-    post_validator = Validators::PostValidator.new(skip_topic: true)
+    post_validator = PostValidator.new(skip_topic: true)
     post_validator.validate(@post)
 
     valid = @post.errors.blank?
@@ -302,7 +298,7 @@ class PostCreator
       sequence = DraftSequence.current(@user, draft_key)
       revisions = Draft.where(sequence: sequence,
                               user_id: @user.id,
-                              draft_key: draft_key).pluck(:revisions).first || 0
+                              draft_key: draft_key).pluck_first(:revisions) || 0
 
       @post.build_post_stat(
         drafts_saved: revisions,
@@ -530,7 +526,9 @@ class PostCreator
 
     @user.user_stat.save!
 
-    @user.update(last_posted_at: @post.created_at)
+    if !@topic.private_message? && @post.post_type != Post.types[:whisper]
+      @user.update(last_posted_at: @post.created_at)
+    end
   end
 
   def create_post_notice

@@ -2,7 +2,11 @@ import Quote from "discourse/lib/quote";
 import Post from "discourse/models/post";
 import { default as PrettyText, buildOptions } from "pretty-text/pretty-text";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/inline-oneboxer";
+import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/context/inline-onebox-css-classes";
+import {
+  applyCachedInlineOnebox,
+  deleteCachedInlineOnebox
+} from "pretty-text/inline-oneboxer";
 
 QUnit.module("lib:pretty-text");
 
@@ -17,7 +21,6 @@ const rawOpts = {
     enable_markdown_linkify: true,
     markdown_linkify_tlds: "com"
   },
-  censoredWords: "shucks|whiz|whizzer|a**le|badword*|shuck$|café|$uper",
   getURL: url => url
 };
 
@@ -196,11 +199,24 @@ QUnit.test("Links", assert => {
     "autolinks a URL"
   );
 
+  const link = "http://www.youtube.com/watch?v=1MrpeBRkM5A";
+
   assert.cooked(
-    "Youtube: http://www.youtube.com/watch?v=1MrpeBRkM5A",
-    `<p>Youtube: <a href="http://www.youtube.com/watch?v=1MrpeBRkM5A" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://www.youtube.com/watch?v=1MrpeBRkM5A</a></p>`,
+    `Youtube: ${link}`,
+    `<p>Youtube: <a href="${link}" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">${link}</a></p>`,
     "allows links to contain query params"
   );
+
+  try {
+    applyCachedInlineOnebox(link, {});
+
+    assert.cooked(
+      `Youtube: ${link}`,
+      `<p>Youtube: <a href="${link}">${link}</a></p>`
+    );
+  } finally {
+    deleteCachedInlineOnebox(link);
+  }
 
   assert.cooked(
     "Derpy: http://derp.com?__test=1",
@@ -957,89 +973,15 @@ QUnit.test("images", assert => {
 });
 
 QUnit.test("censoring", assert => {
-  assert.cooked(
-    "aw shucks, golly gee whiz.",
-    "<p>aw ■■■■■■, golly gee ■■■■.</p>",
-    "it censors words in the Site Settings"
-  );
-
-  assert.cooked(
-    "you are a whizzard! I love cheesewhiz. Whiz.",
-    "<p>you are a whizzard! I love cheesewhiz. ■■■■.</p>",
-    "it doesn't censor words unless they have boundaries."
-  );
-
-  assert.cooked(
-    "you are a whizzer! I love cheesewhiz. Whiz.",
-    "<p>you are a ■■■■■■■! I love cheesewhiz. ■■■■.</p>",
-    "it censors words even if previous partial matches exist."
-  );
-
-  assert.cooked(
-    "The link still works. [whiz](http://www.whiz.com)",
-    '<p>The link still works. <a href="http://www.whiz.com">■■■■</a></p>',
-    "it won't break links by censoring them."
-  );
-
-  assert.cooked(
-    "Call techapj the computer whiz at 555-555-1234 for free help.",
-    "<p>Call techapj the computer ■■■■ at 555-555-1234 for free help.</p>",
-    "uses both censored words and patterns from site settings"
-  );
-
-  assert.cooked(
-    "I have a pen, I have an a**le",
-    "<p>I have a pen, I have an ■■■■■</p>",
-    "it escapes regexp chars"
-  );
-
-  assert.cooked(
-    "Aw shuck$, I can't fix the problem with money",
-    "<p>Aw ■■■■■■, I can't fix the problem with money</p>",
-    "it works for words ending in non-word characters"
-  );
-
-  assert.cooked(
-    "Let's go to a café today",
-    "<p>Let's go to a ■■■■ today</p>",
-    "it works for words ending in accented characters"
-  );
-
-  assert.cooked(
-    "Discourse is $uper amazing",
-    "<p>Discourse is ■■■■■ amazing</p>",
-    "it works for words starting with non-word characters"
-  );
-
-  assert.cooked(
-    "No badword or apple here plz.",
-    "<p>No ■■■■■■■ or ■■■■■ here plz.</p>",
-    "it handles * as wildcard"
-  );
-
   assert.cookedOptions(
     "Pleased to meet you, but pleeeease call me later, xyz123",
     {
-      siteSettings: {
-        watched_words_regular_expressions: true
-      },
-      censoredWords: "xyz*|plee+ase"
+      censoredRegexp: "(xyz*|plee+ase)"
     },
-    "<p>Pleased to meet you, but ■■■■ call me later, ■■■■123</p>",
-    "supports words as regular expressions"
+    "<p>Pleased to meet you, but ■■■■■■■■■ call me later, ■■■123</p>",
+    "supports censoring"
   );
-
-  assert.cookedOptions(
-    "Meet downtown in your town at the townhouse on Main St.",
-    {
-      siteSettings: {
-        watched_words_regular_expressions: true
-      },
-      censoredWords: "\\btown\\b"
-    },
-    "<p>Meet downtown in your ■■■■ at the townhouse on Main St.</p>",
-    "supports words as regular expressions"
-  );
+  // More tests in pretty_text_spec.rb
 });
 
 QUnit.test("code blocks/spans hoisting", assert => {

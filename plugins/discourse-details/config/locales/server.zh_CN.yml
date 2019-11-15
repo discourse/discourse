@@ -7,4 +7,6 @@
 
 zh_CN:
   site_settings:
-    details_enabled: "启用细节功能。如果你改变了这个选项，必须通过此命令重新调制全部帖子：\"rake posts:rebake\"。"
+    details_enabled: '启用细节功能。如果你改变了这个选项，必须通过此命令重新调制全部帖子："rake posts:rebake"。'
+  details:
+    excerpt_details: "（点击显示详情）"

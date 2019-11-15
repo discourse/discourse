@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "import_export/category_exporter"
-require "import_export/category_structure_exporter"
-require "import_export/importer"
+require "import_export"
 
 describe ImportExport::Importer do
 
@@ -13,7 +11,7 @@ describe ImportExport::Importer do
 
   let(:import_data) do
     import_file = Rack::Test::UploadedFile.new(file_from_fixtures("import-export.json", "json"))
-    data = ActiveSupport::HashWithIndifferentAccess.new(JSON.parse(import_file.read))
+    ActiveSupport::HashWithIndifferentAccess.new(JSON.parse(import_file.read))
   end
 
   def import(data)

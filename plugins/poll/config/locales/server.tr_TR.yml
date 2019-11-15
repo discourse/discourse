@@ -7,7 +7,7 @@
 
 tr_TR:
   site_settings:
-    poll_enabled: "Anketlere izin ver?"
+    poll_enabled: "Anketlere izin ver ?"
     poll_maximum_options: "Bir ankette izin verilen en fazla seçenek sayısı."
     poll_edit_window_mins: "Gönderinin oluşturulmasından sonra anketin düzenlenebileceği dakika sayısı"
   poll:
@@ -19,8 +19,8 @@ tr_TR:
       one: "Ankette en az %{count} seçenek olmalı."
       other: "Ankette en az %{count} seçenek olmalı."
     named_poll_must_have_less_options:
-      one: "<strong>%{name}</strong> isimli ankette en az %{count}  seçenek olmalı."
-      other: "<strong>%{name}</strong> isimli ankette en az %{count}  seçenek olmalı."
+      one: "<strong>%{name}</strong> isimli ankette en az %{count} seçenek olmalı."
+      other: "<strong>%{name}</strong> isimli ankette en az %{count} seçenek olmalı."
     default_poll_must_have_different_options: "Anketin farklı seçenekleri olmalı."
     named_poll_must_have_different_options: "<strong>%{name}</strong> isimli anketin farklı seçenekleri olmalı."
     default_poll_with_multiple_choices_has_invalid_parameters: "Çoklu seçim seçeneği içeren anketinizde hatalar belirlendi."

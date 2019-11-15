@@ -2058,6 +2058,13 @@ export default {
           post_count: 4
         },
         {
+          id: 5,
+          username: "charlie",
+          uploaded_avatar_id: 5275,
+          avatar_template: "/images/avatar.png",
+          post_count: 1
+        },
+        {
           id: 3704,
           username: "mojzis",
           uploaded_avatar_id: 31201,

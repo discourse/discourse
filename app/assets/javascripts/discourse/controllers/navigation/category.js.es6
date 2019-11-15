@@ -1,8 +1,9 @@
+import { none, and } from "@ember/object/computed";
 import NavigationDefaultController from "discourse/controllers/navigation/default";
 
 export default NavigationDefaultController.extend({
-  showingParentCategory: Ember.computed.none("category.parentCategory"),
-  showingSubcategoryList: Ember.computed.and(
+  showingParentCategory: none("category.parentCategory"),
+  showingSubcategoryList: and(
     "category.show_subcategory_list",
     "showingParentCategory"
   )

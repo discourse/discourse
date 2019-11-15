@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'site_setting'
-require_dependency 'site_setting_extension'
 
 describe SiteSetting do
 
@@ -194,6 +192,16 @@ describe SiteSetting do
           original_settings
         )
       end
+    end
+  end
+
+  describe 'cached settings' do
+    it 'should recalcualte cached setting when dependent settings are changed' do
+      SiteSetting.attachment_filename_blacklist = 'foo'
+      expect(SiteSetting.attachment_filename_blacklist_regex).to eq(/foo/)
+
+      SiteSetting.attachment_filename_blacklist = 'foo|bar'
+      expect(SiteSetting.attachment_filename_blacklist_regex).to eq(/foo|bar/)
     end
   end
 end

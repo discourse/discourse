@@ -17,6 +17,7 @@
       {{/if}}
     </div>
 
+    {{!-- context is only provided when searching from mobile view --}}
     <div class="search-context">
       {{#if context}}
         <div class='fps-search-context'>
@@ -125,6 +126,12 @@
               {{#if searchActive}}
                 <h3>{{i18n "search.no_results"}}</h3>
 
+                {{#if model.grouped_search_result.error}}
+                  <div class="warning">
+                    {{model.grouped_search_result.error}}
+                  </div>
+                {{/if}}
+
                 {{#if showSuggestion}}
                   <div class="no-results-suggestion">
                     {{i18n "search.cant_find"}}
@@ -173,9 +180,11 @@
     {{/if}}
 
     {{#if site.mobileView}}
-      <button class="search-advanced-title btn" {{action "toggleAdvancedSearch"}}>
-        {{{searchAdvancedIcon}}} {{i18n "search.advanced.title"}}
-      </button>
+      {{d-button
+        class="search-advanced-title"
+        action=(action "toggleAdvancedSearch")
+        icon=(if expanded "caret-down" "caret-right")
+        label="search.advanced.title"}}
     {{else}}
       <span class="search-advanced-title">
         {{i18n "search.advanced.title"}}

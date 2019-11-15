@@ -1,17 +1,11 @@
 # frozen_string_literal: true
 
-require_dependency 'markdown_linker'
-require_dependency 'email/message_builder'
-require_dependency 'age_words'
-require_dependency 'rtl'
-require_dependency 'discourse_ip_info'
-require_dependency 'browser_detection'
-
 class UserNotifications < ActionMailer::Base
   include UserNotificationsHelper
   include ApplicationHelper
   helper :application, :email
   default charset: 'UTF-8'
+  layout 'email_template'
 
   include Email::BuildEmailHelper
 
@@ -230,8 +224,8 @@ class UserNotifications < ActionMailer::Base
         @counts << { label_key: 'user_notifications.digest.liked_received', value: value, href: "#{Discourse.base_url}/my/notifications" } if value > 0
       end
 
-      if @counts.size < 3
-        value = User.real.where(active: true, staged: false).not_suspended.where("created_at > ?", min_date).count
+      if @counts.size < 3 && user.user_option.digest_after_minutes >= 1440
+        value = summary_new_users_count(min_date)
         @counts << { label_key: 'user_notifications.digest.new_users', value: value, href: "#{Discourse.base_url}/about" } if value > 0
       end
 
@@ -362,11 +356,6 @@ class UserNotifications < ActionMailer::Base
     result
   end
 
-  class UserNotificationRenderer < ActionView::Base
-    include UserNotificationsHelper
-    include EmailHelper
-  end
-
   def self.get_context_posts(post, topic_user, user)
     if (user.user_option.email_previous_replies == UserOption.previous_replies_type[:never]) ||
        SiteSetting.private_email?
@@ -406,7 +395,7 @@ class UserNotifications < ActionMailer::Base
     user_name = notification_data[:original_username]
 
     if post && SiteSetting.enable_names && SiteSetting.display_name_on_email_from
-      name = User.where(id: post.user_id).pluck(:name).first
+      name = User.where(id: post.user_id).pluck_first(:name)
       user_name = name unless name.blank?
     end
 
@@ -487,7 +476,7 @@ class UserNotifications < ActionMailer::Base
 
       # subcategory case
       if !category.parent_category_id.nil?
-        show_category_in_subject = "#{Category.where(id: category.parent_category_id).pluck(:name).first}/#{show_category_in_subject}"
+        show_category_in_subject = "#{Category.where(id: category.parent_category_id).pluck_first(:name)}/#{show_category_in_subject}"
       end
     else
       show_category_in_subject = nil
@@ -569,7 +558,12 @@ class UserNotifications < ActionMailer::Base
         end
 
       topic_excerpt = post.excerpt.tr("\n", " ") if post.is_first_post? && post.excerpt
-      topic_excerpt = "" if SiteSetting.private_email?
+      topic_url = post.topic&.url
+
+      if SiteSetting.private_email?
+        topic_excerpt = ""
+        topic_url = ""
+      end
 
       message = I18n.t(invite_template,
         username: username,
@@ -577,18 +571,11 @@ class UserNotifications < ActionMailer::Base
         topic_title: gsub_emoji_to_unicode(title),
         topic_excerpt: topic_excerpt,
         site_title: SiteSetting.title,
-        site_description: SiteSetting.site_description
+        site_description: SiteSetting.site_description,
+        topic_url: topic_url
       )
 
-      unless translation_override_exists
-        html = UserNotificationRenderer.with_view_paths(Rails.configuration.paths["app/views"]).render(
-          template: 'email/invite',
-          format: :html,
-          locals: { message: PrettyText.cook(message, sanitize: false).html_safe,
-                    classes: Rtl.new(user).css_class
-          }
-        )
-      end
+      html = PrettyText.cook(message, sanitize: false).html_safe
     else
       reached_limit = SiteSetting.max_emails_per_day_per_user > 0
       reached_limit &&= (EmailLog.where(user_id: user.id)
@@ -608,8 +595,7 @@ class UserNotifications < ActionMailer::Base
       end
 
       unless translation_override_exists
-
-        html = UserNotificationRenderer.with_view_paths(Rails.configuration.paths["app/views"]).render(
+        html = UserNotificationRenderer.render(
           template: 'email/notification',
           format: :html,
           locals: { context_posts: context_posts,
@@ -651,7 +637,6 @@ class UserNotifications < ActionMailer::Base
       site_description: SiteSetting.site_description,
       site_title: SiteSetting.title,
       site_title_url_encoded: URI.encode(SiteSetting.title),
-      style: :notification,
       locale: locale
     }
 
@@ -689,13 +674,20 @@ class UserNotifications < ActionMailer::Base
     @anchor_color    = ColorScheme.hex_for_name('tertiary')
     @markdown_linker = MarkdownLinker.new(@base_url)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")
+    @disable_email_custom_styles = !SiteSetting.apply_custom_styles_to_digest
   end
 
-  def apply_notification_styles(email)
-    email.html_part.body = Email::Styles.new(email.html_part.body.to_s).tap do |styles|
-      styles.format_basic
-      styles.format_notification
-    end.to_html
-    email
+  def self.summary_new_users_count_key(min_date_str)
+    "summary-new-users:#{min_date_str}"
+  end
+
+  def summary_new_users_count(min_date)
+    min_date_str = min_date.is_a?(String) ? min_date : min_date.strftime('%Y-%m-%d')
+    key = self.class.summary_new_users_count_key(min_date_str)
+    ((count = $redis.get(key)) && count.to_i) || begin
+      count = User.real.where(active: true, staged: false).not_suspended.where("created_at > ?", min_date_str).count
+      $redis.setex(key, 1.day, count)
+      count
+    end
   end
 end

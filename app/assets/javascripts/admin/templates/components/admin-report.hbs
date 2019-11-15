@@ -130,9 +130,7 @@
             </span>
 
             <div class="input">
-              {{date-picker-past
-                value=startDate
-                defaultDate=startDate}}
+              {{date-input date=startDate onChange=(action "onChangeStartDate")}}
             </div>
           </div>
 
@@ -142,9 +140,7 @@
             </span>
 
             <div class="input">
-              {{date-picker-past
-                value=endDate
-                defaultDate=endDate}}
+              {{date-input date=endDate onChange=(action "onChangeEndDate")}}
             </div>
           </div>
         {{/if}}
@@ -164,7 +160,7 @@
           </div>
         {{/each}}
 
-        {{#if showExport}}
+        {{#if model.isTable}}
           <div class="control">
             <div class="input">
               {{d-button

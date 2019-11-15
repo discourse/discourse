@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'pinned_check'
-
 class WebHookTopicViewSerializer < TopicViewSerializer
   attributes :created_by,
              :last_poster
@@ -22,10 +20,15 @@ class WebHookTopicViewSerializer < TopicViewSerializer
     topic_timer
     private_topic_timer
     details
+    image_url
   }.each do |attr|
     define_method("include_#{attr}?") do
       false
     end
+  end
+
+  def include_show_read_indicator?
+    false
   end
 
   def created_by

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'discourse'
-
 class PostActionUsersController < ApplicationController
   def index
     params.require(:post_action_type_id)

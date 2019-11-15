@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { searchContextDescription } from "discourse/lib/search";
 import { h } from "virtual-dom";
 import { createWidget } from "discourse/widgets/widget";
@@ -19,7 +20,7 @@ createWidget("search-term", {
     return {
       type: "text",
       value: attrs.value || "",
-      autocomplete: "off",
+      autocomplete: "discourse",
       placeholder: attrs.contextEnabled ? "" : I18n.t("search.title")
     };
   },
@@ -52,8 +53,10 @@ createWidget("search-context", {
     const result = [];
     if (ctx) {
       const description = searchContextDescription(
-        Ember.get(ctx, "type"),
-        Ember.get(ctx, "user.username") || Ember.get(ctx, "category.name")
+        get(ctx, "type"),
+        get(ctx, "user.username") ||
+          get(ctx, "category.name") ||
+          get(ctx, "tag.id")
       );
       result.push(
         h("label", [

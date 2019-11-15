@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'post_destroyer'
 
 describe PostDestroyer do
 
@@ -343,6 +342,12 @@ describe PostDestroyer do
         DiscourseEvent.off(:topic_destroyed, &topic_destroyed)
         DiscourseEvent.off(:topic_recovered, &topic_recovered)
       end
+    end
+
+    it "maintains history when a user destroys a hidden post" do
+      post.hide!(PostActionType.types[:inappropriate])
+      PostDestroyer.new(post.user, post).destroy
+      expect(post.revisions[0].modifications['raw']).to be_present
     end
 
     it "when topic is destroyed, it updates user_stats correctly" do

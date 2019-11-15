@@ -1,29 +1,33 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import computed from "ember-addons/ember-computed-decorators";
 import Category from "discourse/models/category";
 import optionalService from "discourse/lib/optional-service";
+import showModal from "discourse/lib/show-modal";
+import { dasherize } from "@ember/string";
+import { set } from "@ember/object";
 
 let _components = {};
 
-export default Ember.Component.extend({
+export default Component.extend({
   adminTools: optionalService(),
   tagName: "",
   updating: null,
   editing: false,
   _updates: null,
 
-  @computed("reviewable.type")
+  @discourseComputed("reviewable.type")
   customClass(type) {
     return type.dasherize();
   },
 
-  @computed("siteSettings.reviewable_claiming", "reviewable.topic")
+  @discourseComputed("siteSettings.reviewable_claiming", "reviewable.topic")
   claimEnabled(claimMode, topic) {
     return claimMode !== "disabled" && !!topic;
   },
 
-  @computed(
+  @discourseComputed(
     "claimEnabled",
     "siteSettings.reviewable_claiming",
     "reviewable.claimed_by"
@@ -40,7 +44,10 @@ export default Ember.Component.extend({
     return claimMode !== "required";
   },
 
-  @computed("siteSettings.reviewable_claiming", "reviewable.claimed_by")
+  @discourseComputed(
+    "siteSettings.reviewable_claiming",
+    "reviewable.claimed_by"
+  )
   claimHelp(claimMode, claimedBy) {
     if (claimedBy) {
       return claimedBy.id === this.currentUser.id
@@ -57,13 +64,13 @@ export default Ember.Component.extend({
 
   // Find a component to render, if one exists. For example:
   // `ReviewableUser` will return `reviewable-user`
-  @computed("reviewable.type")
+  @discourseComputed("reviewable.type")
   reviewableComponent(type) {
     if (_components[type] !== undefined) {
       return _components[type];
     }
 
-    let dasherized = Ember.String.dasherize(type);
+    let dasherized = dasherize(type);
     let templatePath = `components/${dasherized}`;
     let template =
       Ember.TEMPLATES[`${templatePath}`] ||
@@ -92,7 +99,11 @@ export default Ember.Component.extend({
             this.currentUser.set("reviewable_count", result.reviewable_count);
           }
 
-          this.attrs.remove(performResult.remove_reviewable_ids);
+          if (this.attrs.remove) {
+            this.attrs.remove(performResult.remove_reviewable_ids);
+          } else {
+            return this.store.find("reviewable", reviewable.id);
+          }
         })
         .catch(popupAjaxError)
         .finally(() => this.set("updating", false));
@@ -136,6 +147,13 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    explainReviewable(reviewable) {
+      showModal("explain-reviewable", {
+        title: "review.explain.title",
+        model: reviewable
+      });
+    },
+
     edit() {
       this.set("editing", true);
       this._updates = { payload: {} };
@@ -172,7 +190,7 @@ export default Ember.Component.extend({
     },
 
     valueChanged(fieldId, event) {
-      Ember.set(this._updates, fieldId, event.target.value);
+      set(this._updates, fieldId, event.target.value);
     },
 
     perform(action) {

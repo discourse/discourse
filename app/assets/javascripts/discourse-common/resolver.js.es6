@@ -1,8 +1,7 @@
 import { findHelper } from "discourse-common/lib/helpers";
-
-/* global requirejs, require */
-var classify = Ember.String.classify;
-var get = Ember.get;
+import { get } from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
+import { classify, dasherize } from "@ember/string";
 
 const _options = {};
 
@@ -45,6 +44,14 @@ export function buildResolver(baseName) {
     },
 
     normalize(fullName) {
+      if (fullName === "app-events:main") {
+        deprecated(
+          "`app-events:main` has been replaced with `service:app-events`",
+          { since: "2.4.0" }
+        );
+        return "service:app-events";
+      }
+
       const split = fullName.split(":");
       if (split.length > 1) {
         const appBase = `${baseName}/${split[0]}s/`;
@@ -54,7 +61,7 @@ export function buildResolver(baseName) {
         split[1] = split[1].replace(".templates", "").replace("/templates", "");
 
         // Try slashes
-        let dashed = Ember.String.dasherize(split[1].replace(/\./g, "/"));
+        let dashed = dasherize(split[1].replace(/\./g, "/"));
         if (
           requirejs.entries[appBase + dashed] ||
           requirejs.entries[adminBase + dashed]
@@ -63,7 +70,7 @@ export function buildResolver(baseName) {
         }
 
         // Try with dashes instead of slashes
-        dashed = Ember.String.dasherize(split[1].replace(/\./g, "-"));
+        dashed = dasherize(split[1].replace(/\./g, "-"));
         if (
           requirejs.entries[appBase + dashed] ||
           requirejs.entries[adminBase + dashed]
@@ -77,7 +84,7 @@ export function buildResolver(baseName) {
     customResolve(parsedName) {
       // If we end with the name we want, use it. This allows us to define components within plugins.
       const suffix = parsedName.type + "s/" + parsedName.fullNameWithoutType,
-        dashed = Ember.String.dasherize(suffix),
+        dashed = dasherize(suffix),
         moduleName = Object.keys(requirejs.entries).find(function(e) {
           return (
             e.indexOf(suffix, e.length - suffix.length) !== -1 ||
@@ -132,6 +139,11 @@ export function buildResolver(baseName) {
     },
 
     resolveRoute(parsedName) {
+      if (parsedName.fullNameWithoutType === "basic") {
+        return requirejs("discourse/routes/discourse", null, null, true)
+          .default;
+      }
+
       return this.customResolve(parsedName) || this._super(parsedName);
     },
 

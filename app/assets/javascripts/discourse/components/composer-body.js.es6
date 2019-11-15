@@ -1,12 +1,19 @@
+import { throttle } from "@ember/runloop";
+import { run } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
+import { later } from "@ember/runloop";
+import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import Composer from "discourse/models/composer";
 import afterTransition from "discourse/lib/after-transition";
 import positioningWorkaround from "discourse/lib/safari-hacks";
 import { headerHeight } from "discourse/components/site-header";
 import KeyEnterEscape from "discourse/mixins/key-enter-escape";
+import { iOSWithVisualViewport } from "discourse/lib/utilities";
 
 const START_EVENTS = "touchstart mousedown";
 const DRAG_EVENTS = "touchmove mousemove";
@@ -19,7 +26,7 @@ function mouseYPos(e) {
   return e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY);
 }
 
-export default Ember.Component.extend(KeyEnterEscape, {
+export default Component.extend(KeyEnterEscape, {
   elementId: "reply-control",
 
   classNameBindings: [
@@ -35,12 +42,12 @@ export default Ember.Component.extend(KeyEnterEscape, {
     "currentUserPrimaryGroupClass"
   ],
 
-  @computed("currentUser.primary_group_name")
+  @discourseComputed("currentUser.primary_group_name")
   currentUserPrimaryGroupClass(primaryGroupName) {
     return primaryGroupName && `group-${primaryGroupName}`;
   },
 
-  @computed("composer.composeState")
+  @discourseComputed("composer.composeState")
   composeState(composeState) {
     return composeState || Composer.CLOSED;
   },
@@ -58,7 +65,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
     "composer.canEditTopicFeaturedLink"
   )
   resize() {
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       if (!this.element || this.isDestroying || this.isDestroyed) {
         return;
       }
@@ -76,8 +83,8 @@ export default Ember.Component.extend(KeyEnterEscape, {
 
     // One second from now, check to see if the last key was hit when
     // we recorded it. If it was, the user paused typing.
-    Ember.run.cancel(this._lastKeyTimeout);
-    this._lastKeyTimeout = Ember.run.later(() => {
+    cancel(this._lastKeyTimeout);
+    this._lastKeyTimeout = later(() => {
       if (lastKeyUp !== this._lastKeyUp) {
         return;
       }
@@ -93,9 +100,9 @@ export default Ember.Component.extend(KeyEnterEscape, {
   },
 
   setupComposerResizeEvents() {
-    const $composer = this.$();
-    const $grippie = this.$(".grippie");
-    const $document = Ember.$(document);
+    const $composer = $(this.element);
+    const $grippie = $(this.element.querySelector(".grippie"));
+    const $document = $(document);
     let origComposerSize = 0;
     let lastMousePos = 0;
 
@@ -105,7 +112,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
       const currentMousePos = mouseYPos(event);
       let size = origComposerSize + (lastMousePos - currentMousePos);
 
-      const winHeight = Ember.$(window).height();
+      const winHeight = $(window).height();
       size = Math.min(size, winHeight - headerHeight());
       size = Math.max(size, MIN_COMPOSER_SIZE);
       this.movePanels(size);
@@ -114,7 +121,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
 
     const throttledPerformDrag = (event => {
       event.preventDefault();
-      Ember.run.throttle(this, performDrag, event, THROTTLE_RATE);
+      throttle(this, performDrag, event, THROTTLE_RATE);
     }).bind(this);
 
     const endDrag = () => {
@@ -131,13 +138,27 @@ export default Ember.Component.extend(KeyEnterEscape, {
       $document.on(DRAG_EVENTS, throttledPerformDrag);
       $document.on(END_EVENTS, endDrag);
     });
+
+    if (iOSWithVisualViewport()) {
+      this.viewportResize();
+      window.visualViewport.addEventListener("resize", this.viewportResize);
+    }
+  },
+
+  viewportResize() {
+    const composerVH = window.visualViewport.height * 0.01;
+
+    document.documentElement.style.setProperty(
+      "--composer-vh",
+      `${composerVH}px`
+    );
   },
 
   didInsertElement() {
     this._super(...arguments);
     this.setupComposerResizeEvents();
 
-    const resize = () => Ember.run(() => this.resize());
+    const resize = () => run(() => this.resize());
     const triggerOpen = () => {
       if (this.get("composer.composeState") === Composer.OPEN) {
         this.appEvents.trigger("composer:opened");
@@ -145,16 +166,19 @@ export default Ember.Component.extend(KeyEnterEscape, {
     };
     triggerOpen();
 
-    afterTransition(this.$(), () => {
+    afterTransition($(this.element), () => {
       resize();
       triggerOpen();
     });
-    positioningWorkaround(this.$());
+    positioningWorkaround($(this.element));
   },
 
   willDestroyElement() {
     this._super(...arguments);
     this.appEvents.off("composer:resize", this, this.resize);
+    if (iOSWithVisualViewport()) {
+      window.visualViewport.removeEventListener("resize", this.viewportResize);
+    }
   },
 
   click() {

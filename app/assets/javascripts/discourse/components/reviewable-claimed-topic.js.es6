@@ -1,11 +1,12 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "",
 
-  @computed
+  @discourseComputed
   enabled() {
     return this.siteSettings.reviewable_claiming !== "disabled";
   },

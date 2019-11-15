@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'url_helper'
 
 describe UrlHelper do
 
@@ -117,6 +116,17 @@ describe UrlHelper do
     it "doesn't escape already escaped chars" do
       url = UrlHelper.escape_uri('http://example.com/foo%20bar/foo bar/')
       expect(url).to eq('http://example.com/foo%20bar/foo%20bar/')
+    end
+  end
+
+  describe "#local_cdn_url" do
+    let(:url) { "/uploads/default/1X/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png" }
+    let(:asset_host) { "//my.awesome.cdn" }
+
+    it "should return correct cdn url for local relative urls" do
+      set_cdn_url asset_host
+      cdn_url = UrlHelper.local_cdn_url(url)
+      expect(cdn_url).to eq("#{asset_host}#{url}")
     end
   end
 

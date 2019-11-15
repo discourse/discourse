@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import EmberObject from "@ember/object";
 
 const GENERAL_ATTRIBUTES = [
   "updated_at",
@@ -6,7 +7,7 @@ const GENERAL_ATTRIBUTES = [
   "release_notes_link"
 ];
 
-const AdminDashboard = Discourse.Model.extend({});
+const AdminDashboard = EmberObject.extend({});
 
 AdminDashboard.reopenClass({
   fetch() {

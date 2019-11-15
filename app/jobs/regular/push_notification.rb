@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class PushNotification < Jobs::Base
+  class PushNotification < ::Jobs::Base
     def execute(args)
       notification = args["payload"]
       notification["url"] = UrlHelper.absolute_without_cdn(notification["post_url"])
@@ -19,6 +19,8 @@ module Jobs
         notifications = group.map do |client_id, _|
           notification.merge(client_id: client_id)
         end
+
+        next unless push_url.present?
 
         result = Excon.post(push_url,
           body: payload.merge(notifications: notifications).to_json,

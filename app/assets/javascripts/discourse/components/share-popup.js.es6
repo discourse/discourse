@@ -1,21 +1,28 @@
+import { isEmpty } from "@ember/utils";
+import { bind } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { longDateNoYear } from "discourse/lib/formatter";
-import computed from "ember-addons/ember-computed-decorators";
+import {
+  default as discourseComputed,
+  on
+} from "discourse-common/utils/decorators";
 import Sharing from "discourse/lib/sharing";
 import { nativeShare } from "discourse/lib/pwa-utils";
 
-export default Ember.Component.extend({
+export default Component.extend({
   elementId: "share-link",
   classNameBindings: ["visible"],
   link: null,
   visible: null,
 
-  @computed
+  @discourseComputed
   sources() {
     return Sharing.activeSources(this.siteSettings.share_links);
   },
 
-  @computed("type", "postNumber")
+  @discourseComputed("type", "postNumber")
   shareTitle(type, postNumber) {
     if (type === "topic") {
       return I18n.t("share.topic");
@@ -26,7 +33,7 @@ export default Ember.Component.extend({
     return I18n.t("share.topic");
   },
 
-  @computed("date")
+  @discourseComputed("date")
   displayDate(date) {
     return longDateNoYear(new Date(date));
   },
@@ -51,9 +58,9 @@ export default Ember.Component.extend({
 
   _showUrl($target, url) {
     const $currentTargetOffset = $target.offset();
-    const $this = this.$();
+    const $this = $(this.element);
 
-    if (Ember.isEmpty(url)) {
+    if (isEmpty(url)) {
       return;
     }
 
@@ -82,10 +89,10 @@ export default Ember.Component.extend({
     if (!this.site.mobileView) {
       $this.css({ left: "" + x + "px" });
     }
-    this.set("link", encodeURI(url));
+    this.set("link", url);
     this.set("visible", true);
 
-    Ember.run.scheduleOnce("afterRender", this, this._focusUrl);
+    scheduleOnce("afterRender", this, this._focusUrl);
   },
 
   _mouseDownHandler(event) {
@@ -148,32 +155,37 @@ export default Ember.Component.extend({
     this._showUrl($target, url);
   },
 
+  @on("init")
+  _setupHandlers() {
+    this._boundMouseDownHandler = bind(this, this._mouseDownHandler);
+    this._boundClickHandler = bind(this, this._clickHandler);
+    this._boundKeydownHandler = bind(this, this._keydownHandler);
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
-    const $html = $("html");
-    $html.on("mousedown.outside-share-link", this._mouseDownHandler.bind(this));
+    $("html")
+      .on("mousedown.outside-share-link", this._boundMouseDownHandler)
+      .on(
+        "click.discourse-share-link",
+        "button[data-share-url], .post-info .post-date[data-share-url]",
+        this._boundClickHandler
+      )
+      .on("keydown.share-view", this._boundKeydownHandler);
 
-    $html.on(
-      "click.discourse-share-link",
-      "button[data-share-url], .post-info .post-date[data-share-url]",
-      this._clickHandler.bind(this)
-    );
-
-    $html.on("keydown.share-view", this._keydownHandler);
-
-    this.appEvents.on("share:url", this._shareUrlHandler);
+    this.appEvents.on("share:url", this, "_shareUrlHandler");
   },
 
   willDestroyElement() {
     this._super(...arguments);
 
     $("html")
-      .off("click.discourse-share-link", this._clickHandler)
-      .off("mousedown.outside-share-link", this._mouseDownHandler)
-      .off("keydown.share-view", this._keydownHandler);
+      .off("click.discourse-share-link", this._boundClickHandler)
+      .off("mousedown.outside-share-link", this._boundMouseDownHandler)
+      .off("keydown.share-view", this._boundKeydownHandler);
 
-    this.appEvents.off("share:url", this._shareUrlHandler);
+    this.appEvents.off("share:url", this, "_shareUrlHandler");
   },
 
   actions: {

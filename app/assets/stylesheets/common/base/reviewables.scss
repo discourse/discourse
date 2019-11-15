@@ -20,6 +20,9 @@
       }
     }
   }
+  .explain {
+    margin-left: 0.5em;
+  }
 
   .nav-pills {
     margin-bottom: 1em;
@@ -259,10 +262,6 @@
     .reviewable-action,
     .reviewable-action-dropdown {
       margin-right: 0.5em;
-
-      &.delete-user {
-        @extend .btn-danger;
-      }
     }
   }
   padding-bottom: 1em;
@@ -285,7 +284,6 @@
   .reviewed-by {
     display: flex;
     align-items: center;
-    white-space: nowrap;
   }
 
   .user-flag-percentage {
@@ -310,8 +308,7 @@
       &.user a,
       &.reviewed-by a {
         max-width: 150px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
       }
     }
 
@@ -327,9 +324,8 @@
       &:not(:empty) {
         padding: 0.5em 1em 0.5em 0;
       }
-      @include breakpoint("mobile") {
-        overflow: hidden;
-        text-overflow: ellipsis;
+      @include breakpoint("mobile-large") {
+        @include ellipsis;
         padding-right: 0.5em;
       }
     }
@@ -364,13 +360,17 @@
 }
 
 .reviewable-item {
+  .show-raw-email {
+    color: $primary-medium;
+    font-size: $font-down-2;
+  }
   .post-title {
     background-color: yellow;
   }
   .created-by {
     margin-right: 1em;
     padding-top: 0.35em;
-    @include breakpoint("mobile") {
+    @include breakpoint("mobile-large") {
       float: left;
       margin-bottom: 1em;
     }
@@ -385,7 +385,7 @@
     margin-top: 1em;
     min-width: 275px;
     word-break: break-word;
-    @include breakpoint("mobile", min-width) {
+    @include breakpoint("mobile-large", min-width) {
       display: flex;
     }
   }
@@ -495,7 +495,7 @@
   }
 }
 
-@include breakpoint("mobile") {
+@include breakpoint("mobile-large") {
   tr.reviewable-score {
     grid-template-columns: auto auto auto;
   }

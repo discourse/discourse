@@ -2,9 +2,15 @@
 
 class Auth::ManagedAuthenticator < Auth::Authenticator
   def description_for_user(user)
-    info = UserAssociatedAccount.find_by(provider_name: name, user_id: user.id)&.info
-    return "" if info.nil?
-    info["email"] || info["nickname"] || info["name"] || I18n.t("associated_accounts.connected")
+    associated_account = UserAssociatedAccount.find_by(provider_name: name, user_id: user.id)
+    return "" if associated_account.nil?
+    description_for_auth_hash(associated_account) || I18n.t("associated_accounts.connected")
+  end
+
+  def description_for_auth_hash(auth_token)
+    return if auth_token&.info.nil?
+    info = auth_token.info
+    info["email"] || info["nickname"] || info["name"]
   end
 
   # These three methods are designed to be overriden by child classes
@@ -85,7 +91,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     result = Auth::Result.new
     info = auth_token[:info]
     result.email = info[:email]
-    result.name = "#{info[:first_name]} #{info[:last_name]}"
+    result.name = (info[:first_name] && info[:last_name]) ? "#{info[:first_name]} #{info[:last_name]}" : info[:name]
     result.username = info[:nickname]
     result.email_valid = primary_email_verified?(auth_token) if result.email
     result.extra_data = {

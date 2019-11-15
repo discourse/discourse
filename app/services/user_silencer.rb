@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'staff_message_format'
-
 class UserSilencer
 
   attr_reader :user_history

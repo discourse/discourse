@@ -40,6 +40,29 @@ RSpec.describe Admin::EmailTemplatesController do
       json = ::JSON.parse(response.body)
       expect(json['email_templates']).to be_present
     end
+
+    it 'returns overridden = true if subject or body has translation_overrides record' do
+      sign_in(admin)
+
+      put '/admin/customize/email_templates/user_notifications.admin_login', params: {
+        email_template: { subject: original_subject, body: original_body }
+      }, headers: headers
+      expect(response.status).to eq(200)
+
+      get '/admin/customize/email_templates.json'
+      expect(response.status).to eq(200)
+      templates = JSON.parse(response.body)['email_templates']
+      template = templates.find { |t| t['id'] == 'user_notifications.admin_login' }
+      expect(template['can_revert']).to eq(true)
+
+      TranslationOverride.destroy_all
+
+      get '/admin/customize/email_templates.json'
+      expect(response.status).to eq(200)
+      templates = JSON.parse(response.body)['email_templates']
+      template = templates.find { |t| t['id'] == 'user_notifications.admin_login' }
+      expect(template['can_revert']).to eq(false)
+    end
   end
 
   context "#update" do
@@ -142,7 +165,7 @@ RSpec.describe Admin::EmailTemplatesController do
         include_examples "invalid email template"
       end
 
-      context "when subject and body are invalid invalid" do
+      context "when subject and body are invalid" do
         let(:email_subject) { 'Subject with %{invalid} interpolation key' }
         let(:email_body) { 'Body with some invalid interpolation keys: %{invalid}' }
 

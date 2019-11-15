@@ -69,7 +69,7 @@ $.fn.caretPosition = function(options) {
   clone = $("<div><p></p></div>").appendTo("body");
   p = clone.find("p");
 
-  const isRTL = $("html").hasClass("rtl");
+  var isRTL = $("html").hasClass("rtl");
   clone.css({
     border: "1px solid black",
     padding: important("padding"),

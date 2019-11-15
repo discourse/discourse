@@ -1,9 +1,11 @@
 import UserTopicListRoute from "discourse/routes/user-topic-list";
+import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
+import UserAction from "discourse/models/user-action";
 
 // A helper to build a user topic list route
 export default (viewName, path, channel) => {
   return UserTopicListRoute.extend({
-    userActionType: Discourse.UserAction.TYPES.messages_received,
+    userActionType: UserAction.TYPES.messages_received,
 
     titleToken() {
       const key = viewName === "index" ? "inbox" : viewName;
@@ -18,10 +20,12 @@ export default (viewName, path, channel) => {
     },
 
     model() {
-      return this.store.findFiltered("topicList", {
-        filter:
-          "topics/" + path + "/" + this.modelFor("user").get("username_lower")
-      });
+      const filter =
+        "topics/" + path + "/" + this.modelFor("user").get("username_lower");
+      const lastTopicList = findOrResetCachedTopicList(this.session, filter);
+      return lastTopicList
+        ? lastTopicList
+        : this.store.findFiltered("topicList", { filter });
     },
 
     setupController() {

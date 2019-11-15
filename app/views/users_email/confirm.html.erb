@@ -8,21 +8,26 @@
     <br>
     <a class="btn" href="/"><%= t('change_email.please_continue', site_name: SiteSetting.title) %></a>
   <% elsif @update_result == :invalid_second_factor%>
-    <div id="primary-second-factor-form">
-      <h2><%= t('login.second_factor_title') %></h2>
-      <br>
-      <%=form_tag({}, method: :put) do %>
-        <%= label_tag(:second_factor_token, t('login.second_factor_description')) %>
-        <div><%= render 'common/second_factor_text_field' %></div>
-        <% if @show_invalid_second_factor_error %>
-          <div class='alert alert-error'><%= t('login.invalid_second_factor_code') %></div>
+    <% if !params[:show_backup] || params[:show_backup] == "false" %>
+      <div id="primary-second-factor-form">
+        <h2><%= t('login.second_factor_title') %></h2>
+        <br>
+        <%=form_tag({}, method: :put) do %>
+          <%= label_tag(:second_factor_token, t('login.second_factor_description')) %>
+          <div><%= render 'common/second_factor_text_field' %></div>
+          <% if @show_invalid_second_factor_error %>
+            <div class='alert alert-error'><%= t('login.invalid_second_factor_code') %></div>
+          <% end %>
+          <%= submit_tag t('submit'), class: "btn btn-primary" %>
         <% end %>
-        <%= submit_tag t('submit'), class: "btn btn-primary" %>
+      </div>
+      <% if @backup_codes_enabled %>
+        <%= link_to t("login.second_factor_toggle.backup_code"), show_backup: "true" %>
       <% end %>
-    </div>
+    <% end %>
 
-    <%if @backup_codes_enabled %>
-      <div id="backup-second-factor-form" style="display: none">
+    <% if @backup_codes_enabled && params[:show_backup] == "true" %>
+      <div id="backup-second-factor-form" style="">
         <h2><%= t('login.second_factor_backup_title') %></h2>
         <br>
         <%= form_tag({}, method: :put) do%>
@@ -32,8 +37,7 @@
         <%end%>
 
       </div>
-      <a href id="toggle-form"><%=t "login.second_factor_backup" %></a>
-      <%= render 'common/second_factor_form_script' %>
+      <%= link_to t("login.second_factor_toggle.totp"), show_backup: "false" %>
     <%end%>
   <% else %>
     <div class='alert alert-error'>

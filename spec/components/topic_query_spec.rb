@@ -19,7 +19,7 @@ describe TopicQuery do
 
   context 'secure category' do
     it "filters categories out correctly" do
-      category = Fabricate(:category)
+      category = Fabricate(:category_with_definition)
       group = Fabricate(:group)
       category.set_permissions(group => :full)
       category.save
@@ -133,9 +133,8 @@ describe TopicQuery do
   end
 
   context 'category filter' do
-    let(:category) { Fabricate(:category) }
-
-    let(:diff_category) { Fabricate(:diff_category) }
+    let(:category) { Fabricate(:category_with_definition) }
+    let(:diff_category) { Fabricate(:category_with_definition, name: "Different Category") }
 
     it "returns topics in the category when we filter to it" do
       expect(TopicQuery.new(moderator).list_latest.topics.size).to eq(0)
@@ -153,7 +152,7 @@ describe TopicQuery do
     end
 
     context 'subcategories' do
-      let!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
+      let!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
 
       it "works with subcategories" do
         expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(1)
@@ -214,8 +213,8 @@ describe TopicQuery do
     end
 
     context "and categories too" do
-      let(:category1) { Fabricate(:category) }
-      let(:category2) { Fabricate(:category) }
+      let(:category1) { Fabricate(:category_with_definition) }
+      let(:category2) { Fabricate(:category_with_definition) }
 
       it "returns topics in the given category with the given tag" do
         tagged_topic1 = Fabricate(:topic, category: category1, tags: [tag])
@@ -231,13 +230,59 @@ describe TopicQuery do
 
   context 'muted categories' do
     it 'is removed from new and latest lists' do
-      category = Fabricate(:category)
+      category = Fabricate(:category_with_definition)
       topic = Fabricate(:topic, category: category)
       CategoryUser.create!(user_id: user.id,
                            category_id: category.id,
                            notification_level: CategoryUser.notification_levels[:muted])
       expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
       expect(topic_query.list_latest.topics.map(&:id)).not_to include(topic.id)
+    end
+  end
+
+  context 'mute_all_categories_by_default' do
+    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
+
+    before do
+      SiteSetting.mute_all_categories_by_default = true
+    end
+
+    it 'should remove all topics from new and latest lists by default' do
+      expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
+      expect(topic_query.list_latest.topics.map(&:id)).not_to include(topic.id)
+    end
+
+    it 'should include tracked category topics in new and latest lists' do
+      topic = Fabricate(:topic, category: category)
+      CategoryUser.create!(user_id: user.id,
+                           category_id: category.id,
+                           notification_level: CategoryUser.notification_levels[:tracking])
+      expect(topic_query.list_new.topics.map(&:id)).to include(topic.id)
+      expect(topic_query.list_latest.topics.map(&:id)).to include(topic.id)
+    end
+
+    it 'should include default watched category topics in latest list for anonymous users' do
+      SiteSetting.default_categories_watching = category.id.to_s
+      expect(TopicQuery.new.list_latest.topics.map(&:id)).to include(topic.id)
+    end
+
+    it 'should include topics when filtered by category' do
+      topic_query = TopicQuery.new(user, category: topic.category_id)
+      expect(topic_query.list_latest.topics.map(&:id)).to include(topic.id)
+    end
+  end
+
+  context 'already seen categories' do
+    it 'is removed from new and visible on latest lists' do
+      category = Fabricate(:category_with_definition)
+      topic = Fabricate(:topic, category: category)
+      CategoryUser.create!(user_id: user.id,
+                           category_id: category.id,
+                           last_seen_at: topic.created_at
+                          )
+      expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
+      expect(topic_query.list_latest.topics.map(&:id)).to include(topic.id)
     end
   end
 
@@ -430,7 +475,7 @@ describe TopicQuery do
   end
 
   context 'categorized' do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category) { Fabricate(:category_with_definition) }
     let(:topic_category) { category.topic }
     fab!(:topic_no_cat) { Fabricate(:topic) }
     fab!(:topic_in_cat1) { Fabricate(:topic, category: category,
@@ -948,12 +993,12 @@ describe TopicQuery do
     fab!(:user3) { Fabricate(:user) }
 
     fab!(:private_category) do
-      Fabricate(:private_category, group: group)
+      Fabricate(:private_category_with_definition, group: group)
     end
 
     let!(:private_message_topic) { Fabricate(:private_message_post, user: user).topic }
     let!(:topic1) { Fabricate(:topic, user: user) }
-    let!(:topic2) { Fabricate(:topic, user: user, category: Fabricate(:category)) }
+    let!(:topic2) { Fabricate(:topic, user: user, category: Fabricate(:category_with_definition)) }
     let!(:topic3) { Fabricate(:topic, user: user, category: private_category) }
     let!(:topic4) { Fabricate(:topic) }
     let!(:topic5) { Fabricate(:topic, user: user, visible: false) }
@@ -1021,11 +1066,29 @@ describe TopicQuery do
 
       expect(topics).to eq([])
     end
+
+    context "Calculating minimum unread count for a topic" do
+      before { group.update!(publish_read_state: true) }
+
+      let(:listed_message) do
+        TopicQuery.new(nil, group_name: group.name)
+          .list_private_messages_group(creator)
+          .topics.first
+      end
+
+      it 'returns the last read post number' do
+        topic_group = TopicGroup.create!(
+          topic: group_message, group: group, last_read_post_number: 10
+        )
+
+        expect(listed_message.last_read_post_number).to eq(topic_group.last_read_post_number)
+      end
+    end
   end
 
   context "shared drafts" do
-    fab!(:category) { Fabricate(:category) }
-    fab!(:shared_drafts_category) { Fabricate(:category) }
+    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:shared_drafts_category) { Fabricate(:category_with_definition) }
     fab!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
     fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
     fab!(:admin) { Fabricate(:admin) }

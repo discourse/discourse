@@ -407,4 +407,34 @@ describe NewPostManager do
       end
     end
   end
+
+  context "via email" do
+    let(:manager) do
+      NewPostManager.new(
+        topic.user,
+        raw: 'this is emailed content',
+        topic_id: topic.id,
+        via_email: true,
+        raw_email: 'raw email contents'
+      )
+    end
+
+      before do
+        SiteSetting.approve_post_count = 100
+        topic.user.trust_level = 0
+      end
+
+    it "will store via_email and raw_email in the enqueued post" do
+      result = manager.perform
+      expect(result.action).to eq(:enqueued)
+      expect(result.reviewable).to be_present
+      expect(result.reviewable.payload['via_email']).to eq(true)
+      expect(result.reviewable.payload['raw_email']).to eq('raw email contents')
+
+      post = result.reviewable.perform(Discourse.system_user, :approve_post).created_post
+      expect(post.via_email).to eq(true)
+      expect(post.raw_email).to eq("raw email contents")
+    end
+  end
+
 end

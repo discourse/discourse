@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'rate_limiter'
-
 class InvitesController < ApplicationController
 
   requires_login only: [
@@ -35,7 +33,7 @@ class InvitesController < ApplicationController
         render layout: 'no_ember'
       end
     else
-      flash.now[:error] = I18n.t('invite.not_found')
+      flash.now[:error] = I18n.t('invite.not_found', base_url: Discourse.base_url)
       render layout: 'no_ember'
     end
   end
@@ -70,7 +68,7 @@ class InvitesController < ApplicationController
         }
       end
     else
-      render json: { success: false, message: I18n.t('invite.not_found') }
+      render json: { success: false, message: I18n.t('invite.not_found_json') }
     end
   end
 
@@ -170,26 +168,30 @@ class InvitesController < ApplicationController
   end
 
   def upload_csv
+    require 'csv'
+
     guardian.ensure_can_bulk_invite_to_forum!(current_user)
 
     hijack do
       begin
         file = params[:file] || params[:files].first
 
-        if File.read(file.tempfile).scan(/\n/).count.to_i > 50000
-          return render json: failed_json.merge(errors: [I18n.t("bulk_invite.max_rows")]), status: 422
+        count = 0
+        invites = []
+        max_bulk_invites = SiteSetting.max_bulk_invites
+        CSV.foreach(file.tempfile) do |row|
+          count += 1
+          invites.push(email: row[0], groups: row[1], topic_id: row[2]) if row[0].present?
+          break if count >= max_bulk_invites
         end
 
-        invites = []
-        CSV.foreach(file.tempfile) do |row|
-          invite_hash = { email: row[0], groups: row[1], topic_id: row[2] }
-          if invite_hash[:email].present?
-            invites.push(invite_hash)
-          end
-        end
         if invites.present?
           Jobs.enqueue(:bulk_invite, invites: invites, current_user_id: current_user.id)
-          render json: success_json
+          if count >= max_bulk_invites
+            render json: failed_json.merge(errors: [I18n.t("bulk_invite.max_rows", max_bulk_invites: max_bulk_invites)]), status: 422
+          else
+            render json: success_json
+          end
         else
           render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]), status: 422
         end

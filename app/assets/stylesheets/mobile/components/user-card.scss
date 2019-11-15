@@ -28,9 +28,7 @@ $avatar_width: 120px;
           border-left: 0.5em solid transparent;
         }
         button {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          @include ellipsis;
         }
       }
     }

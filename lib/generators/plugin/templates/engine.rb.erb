@@ -1,0 +1,12 @@
+module <%= classified_name %>
+  class Engine < ::Rails::Engine
+    engine_name "<%= classified_name %>".freeze
+    isolate_namespace <%= classified_name %>
+
+    config.after_initialize do
+      Discourse::Application.routes.append do
+        mount ::<%= classified_name %>::Engine, at: "/<%= dasherized_name %>"
+      end
+    end
+  end
+end

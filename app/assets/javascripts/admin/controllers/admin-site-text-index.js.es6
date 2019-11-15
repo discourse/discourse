@@ -1,6 +1,8 @@
+import { debounce } from "@ember/runloop";
+import Controller from "@ember/controller";
 let lastSearch;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   searching: false,
   siteTexts: null,
   preferred: false,
@@ -26,14 +28,14 @@ export default Ember.Controller.extend({
     toggleOverridden() {
       this.toggleProperty("overridden");
       this.set("searching", true);
-      Ember.run.debounce(this, this._performSearch, 400);
+      debounce(this, this._performSearch, 400);
     },
 
     search() {
       const q = this.q;
       if (q !== lastSearch) {
         this.set("searching", true);
-        Ember.run.debounce(this, this._performSearch, 400);
+        debounce(this, this._performSearch, 400);
         lastSearch = q;
       }
     }

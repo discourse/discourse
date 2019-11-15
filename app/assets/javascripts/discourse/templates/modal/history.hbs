@@ -1,23 +1,30 @@
 {{#d-modal-body title="history" maxHeight="70%"}}
   <div id="revision">
-    <div id="revision-controls">
-      {{d-button class="btn-default" action=(action "loadFirstVersion") icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
-      {{d-button class="btn-default" action=(action "loadPreviousVersion") icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
-      <div id="revision-numbers" class="{{unless displayRevisions 'invisible'}}">
-        {{#conditional-loading-spinner condition=loading size="small"}}
-          {{{revisionsText}}}
-        {{/conditional-loading-spinner}}
-      </div>
-      {{d-button class="btn-default" action=(action "loadNextVersion") icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}
-      {{d-button class="btn-default" action=(action "loadLastVersion") icon="fast-forward" title="post.revisions.controls.last" disabled=loadLastDisabled}}
+    <div id="revision-details">
+      {{d-icon "pencil-alt"}}
+      {{#link-to 'user' model.username}}
+        {{bound-avatar-template model.avatar_template "small"}} {{model.username}}
+      {{/link-to}}
+      <span class="date">{{bound-date model.created_at}}</span>
+      {{#if model.edit_reason}}
+        &mdash; <span class="edit-reason">{{model.edit_reason}}</span>
+      {{/if}}
+      {{#unless site.mobileView}}
+        {{#if model.user_changes}}
+          &mdash; {{bound-avatar-template model.user_changes.previous.avatar_template "small"}} {{model.user_changes.previous.username}}
+          &rarr; {{bound-avatar-template model.user_changes.current.avatar_template "small"}} {{model.user_changes.current.username}}
+        {{/if}}
+        {{#if model.wiki_changes}}
+          &mdash; {{disabled-icon icon="pencil-square-o" disabled=wikiDisabled}}
+        {{/if}}
+        {{#if model.post_type_changes}}
+          &mdash; {{disabled-icon icon="shield-alt" disabled=postTypeDisabled}}
+        {{/if}}
+        {{#if model.category_id_changes}}
+          &mdash; {{{previousCategory}}} &rarr; {{{currentCategory}}}
+        {{/if}}
+      {{/unless}}
     </div>
-
-    {{#if displayEdit}}
-      {{d-button action=(action "editPost")
-          class="btn-default"
-          icon="pencil-alt"
-          label=editButtonLabel}}
-    {{/if}}
 
     <div id="display-modes">
       {{d-button action=(action "displayInline")
@@ -39,31 +46,6 @@
             class=sideBySideMarkdownClass}}
       {{/unless}}
     </div>
-  </div>
-  <div id="revision-details">
-    {{d-icon "pencil-alt"}}
-    {{#link-to 'user' model.username}}
-      {{bound-avatar-template model.avatar_template "small"}} {{model.username}}
-    {{/link-to}}
-    <span class="date">{{bound-date model.created_at}}</span>
-    {{#if model.edit_reason}}
-      &mdash; <span class="edit-reason">{{model.edit_reason}}</span>
-    {{/if}}
-    {{#unless site.mobileView}}
-      {{#if model.user_changes}}
-        &mdash; {{bound-avatar-template model.user_changes.previous.avatar_template "small"}} {{model.user_changes.previous.username}}
-        &rarr; {{bound-avatar-template model.user_changes.current.avatar_template "small"}} {{model.user_changes.current.username}}
-      {{/if}}
-      {{#if model.wiki_changes}}
-        &mdash; {{disabled-icon icon="pencil-square-o" disabled=wikiDisabled}}
-      {{/if}}
-      {{#if model.post_type_changes}}
-        &mdash; {{disabled-icon icon="shield-alt" disabled=postTypeDisabled}}
-      {{/if}}
-      {{#if model.category_id_changes}}
-        &mdash; {{{previousCategory}}} &rarr; {{{currentCategory}}}
-      {{/if}}
-    {{/unless}}
   </div>
   <div id="revisions" data-post-id="{{model.post_id}}" class={{hiddenClasses}}>
     {{#if model.title_changes}}
@@ -124,6 +106,26 @@
 {{/d-modal-body}}
 {{#if topicController}}
   <div class="modal-footer">
+    <div id="revision-controls">
+      {{d-button class="btn-default" action=(action "loadFirstVersion") icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
+      {{d-button class="btn-default" action=(action "loadPreviousVersion") icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
+      <div id="revision-numbers" class="{{unless displayRevisions 'invisible'}}">
+        {{#conditional-loading-spinner condition=loading size="small"}}
+          {{{revisionsText}}}
+        {{/conditional-loading-spinner}}
+      </div>
+      {{d-button class="btn-default" action=(action "loadNextVersion") icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}
+      {{d-button class="btn-default" action=(action "loadLastVersion") icon="fast-forward" title="post.revisions.controls.last" disabled=loadLastDisabled}}
+    </div>
+
+    <div id="revision-footer-buttons">
+      {{#if displayEdit}}
+        {{d-button action=(action "editPost")
+            icon="pencil-alt"
+            class="btn-default"
+            label=editButtonLabel}}
+      {{/if}}
+
       {{#if displayRevert}}
         {{d-button action=(action "revertToVersion") icon="undo" label="post.revisions.controls.revert" class="btn-danger" disabled=loading}}
       {{/if}}
@@ -135,12 +137,6 @@
       {{#if displayShow}}
         {{d-button action=(action "showVersion") icon="far-eye" label="post.revisions.controls.show" class="btn-default" disabled=loading}}
       {{/if}}
-
-      {{#if displayEdit}}
-        {{d-button action=(action "editPost")
-            icon="pencil-alt"
-            class="btn-default"
-            label=editButtonLabel}}
-      {{/if}}
+    </div>
   </div>
 {{/if}}

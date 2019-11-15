@@ -1,0 +1,27 @@
+.mobile-view {
+  .admin-badges {
+    .badges {
+      margin: 0 0.25em;
+      .content-list {
+        flex: 0 0 100%;
+        .admin-badge-list {
+          max-height: 40vh;
+          margin-right: 0;
+        }
+      }
+    }
+    .badge-intro {
+      flex: 0 1 75%;
+    }
+    .current-badge {
+      margin: 20px 0;
+      width: 100%;
+      textarea {
+        width: 100%;
+      }
+    }
+    input[type="text"] {
+      width: 100%;
+    }
+  }
+}

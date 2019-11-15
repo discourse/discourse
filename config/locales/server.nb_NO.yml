@@ -28,6 +28,7 @@ nb_NO:
   posts: "innlegg"
   loading: "Laster"
   powered_by_html: 'Drives av <a href="https://www.discourse.org">Discourse</a>, og ser best ut med JavaScript aktivert'
+  sign_up: "Registrer deg"
   log_in: "Logg inn"
   submit: "Send"
   purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
@@ -74,7 +75,6 @@ nb_NO:
         from_reply_by_address_error: "Skjer når avsender i meldingshodet er identisk med den konfigurerte adressen for svar via e-post."
         inactive_user_error: "Skjer når senderen ikke er aktiv."
         silenced_user_error: "Skjer når senderen er dempet."
-        bad_destination_address: "Skjer når ingen av adressene i To-, Cc- eller Bcc-feltene passer med en konfigurert innkommende e-postadresse."
         strangers_not_allowed_error: "Skjer når en bruker har forsøkt å opprette et nytt emne i en kategori som vedkommende ikke er medlem av."
         insufficient_trust_level_error: "Skjer når en bruker har forsøkt å opprette et nytt emne i en kategori som vedkommende ikke har påkrevet tillitsnivå for."
         reply_user_not_matching_error: "Skjer når et innkommende svar kommer fra en annen e-postadresse enn varselet var sendt til."
@@ -146,7 +146,6 @@ nb_NO:
     errors:
       <<: *errors
   invite:
-    not_found: "Ditt invitasjonssymbol er ugyldig. Kontakt sidens administrator."
     not_found_template: |
       <p>Invitasjonen din til <a href="%{base_url}">%{site_name}</a> er allerede brukt.</p>
 
@@ -173,6 +172,8 @@ nb_NO:
   provider_not_enabled: "Du har ikke tillatelse til å lese denne ressursen. Autentiseringsmetoden er ikke aktivert. "
   provider_not_found: "Du har ikke tillatelse til å lese denne ressursen. Autentiseringsmetoden eksisterer ikke."
   read_only_mode_enabled: "Siden er i skrivebeskyttet modus. Alle interaksjoner er utilgjengelige."
+  not_in_group:
+    join_group: "Bli medlem av gruppe"
   reading_time: "Lesetid"
   likes: "Likes"
   too_many_replies:
@@ -192,6 +193,7 @@ nb_NO:
     permalink: "Permalink"
     imported_from: "Dette er en relatert diskusjon ved siden av det originale innlegget ved %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Opprettet"
   no_mentions_allowed: "Beklager, du kan ikke nevne andre brukere."
   too_many_mentions:
     one: "Beklager, du kan bare nevne en bruker i et innlegg. "
@@ -214,7 +216,7 @@ nb_NO:
   too_many_links:
     one: "Beklager, nye brukere kan bare legge til én lenke i et innlegg."
     other: "Beklager, nye brukere kan bare legge til %{count} lenker i et innlegg."
-  contains_blocked_words: "Innlegget ditt inneholder et ord som ikke er tillatt: %{word}"
+  contains_blocked_word: "Innlegget ditt inneholder et ord som ikke er tillatt: %{word}"
   spamming_host: "Beklager, du kan ikke lenke til det domenet."
   user_is_suspended: "Utestengte brukere kan ikke skrive innlegg."
   topic_not_found: "Noe gikk galt. Kanskje emnet ble lukket eller slettet mens du leste det?"
@@ -256,10 +258,6 @@ nb_NO:
   revert_version_same: "Den gjeldende versjonen er den samme som den du prøver å rulle tilbake til."
   excerpt_image: "bilde"
   groups:
-    success:
-      bulk_add:
-        one: "%{count} bruker ble lagt til i gruppen."
-        other: "%{count} brukere ble lagt til i gruppen."
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' er ikke et gyldig tillitsnivå."
       can_not_modify_automatic: "Du kan ikke modifisere en automatisk gruppe"
@@ -555,7 +553,7 @@ nb_NO:
         other: "omtrent %{count} år siden"
       over_x_years:
         one: "over et år siden"
-        other: "over  %{count} år siden"
+        other: "over %{count} år siden"
       almost_x_years:
         one: "nesten %{count} år siden"
         other: "nesten %{count} år siden"
@@ -593,7 +591,6 @@ nb_NO:
     activated: "Beklager, denne kontoen er allerede aktivert."
     admin_confirm:
       title: "Bekreft admin-konto"
-      description: "Er du sikker på at du ønsker at <b>%{target_username}</b> skal være en administrator?"
       grant: "Tildel admin-tilgang"
       complete: "<b>%{target_username}</b> er nå en administrator."
       back_to: "Gå tilbake til %{title}"
@@ -700,12 +697,16 @@ nb_NO:
       every_hour: "hver time"
       daily: "daglig"
       weekly: "ukentlig"
+      every_month: "hver måned"
+      every_six_months: "hver sjette måned"
   user_api_key:
     title: "Autoriser tilgang fra applikasjon"
     authorize: "Autoriser"
     read: "les"
     read_write: "les/skriv"
     description: '"%{application_name}" ber om følgende tilgang til kontoen din:'
+    otp_confirmation:
+      confirm_title: "Fortsett til %{site_name}"
     no_trust_level: "Beklager, du har ikke det nødvendige tillitsnivået for tilgang til API for brukere"
     generic_error: "Beklager, vi kan ikke utstede API nøkler for brukere, denne funksjonen kan være deaktivert av administratoren"
     scopes:
@@ -723,6 +724,7 @@ nb_NO:
         day: Dag
     post_edits:
       labels:
+        edited_at: Dato
         post: Innlegg
         editor: Tekstbehandler
         author: Forfatter
@@ -1034,6 +1036,7 @@ nb_NO:
     num_tl3_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges av num_tl3_users_to_silence_new_user forskjellige brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges num_tl3_flags_to_silence_new_user ganger fra dette antallet brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     notify_mods_when_user_silenced: "Hvis en bruker har blitt automatisk dempet, send en melding til alle moderatorene."
+    must_approve_users: "Stab må godkjenne alle nye brukere før de får lov til å ta i bruk siden."
     moderators_create_categories: "Tillat moderatorer å opprette nye kategorier"
     send_welcome_message: "Send alle nye brukere en velkomstmelding med en rask startveileder."
     topics_per_period_in_top_summary: "Antall emner som vises i standard oppsummering av mest populære emner."
@@ -1136,6 +1139,7 @@ nb_NO:
     not_available: "Ikke mulig. Prøv %{suggestion}?"
     something_already_taken: "Noe gikk galt, kanskje brukernavn eller email er allerede i bruk? Prøv 'glemt passord' linken."
     omniauth_error_unknown: "Noe gikk galt under innloggingsprosessen, prøv igjen."
+    omniauth_confirm_button: "Fortsett"
     new_registrations_disabled: "Nye kontoregistreringer tillates ikke per nå."
     password_too_long: "Passord er begrenset til 200 tegn."
     reserved_username: "Det brukernavnet tillates ikke."
@@ -1288,10 +1292,10 @@ nb_NO:
 
       Alle opplysningene vi samler fra deg, kan bli brukt på en av følgende måter:
 
-      *   For å gjøre opplevelsen din mer personlig. Opplysningene dine hjelper oss å svare bedre på dine individuelle behov.
-      *   For å forbedre nettstedet vårt. Vi jobber konstant for å forbedre nettstedets tilbud basert på opplysningene og tilbakemeldingene vi mottar fra deg.
-      *   For å forbedre vår kundeservice. Dine opplysninger hjelper oss å svare mer effektivt på dine forespørsler sendt til kundeservice eller behov om støtte.
-      *   For å sende periodiske e-poster. E-postadressen du oppgir, kan bli brukt til å sende deg informasjon, påminnelser som du ber om ved endringer av emner eller ved svar til brukernavnet ditt, til henvendelser, og/eller andre forspørsler eller andre spørsmål.
+      * For å gjøre opplevelsen din mer personlig. Opplysningene dine hjelper oss å svare bedre på dine individuelle behov.
+      * For å forbedre nettstedet vårt. Vi jobber konstant for å forbedre nettstedets tilbud basert på opplysningene og tilbakemeldingene vi mottar fra deg.
+      * For å forbedre vår kundeservice. Dine opplysninger hjelper oss å svare mer effektivt på dine forespørsler sendt til kundeservice eller behov om støtte.
+      * For å sende periodiske e-poster. E-postadressen du oppgir, kan bli brukt til å sende deg informasjon, påminnelser som du ber om ved endringer av emner eller ved svar til brukernavnet ditt, til henvendelser, og/eller andre forspørsler eller andre spørsmål.
 
       <a name="sikre"></a>
 
@@ -1305,8 +1309,8 @@ nb_NO:
 
       Vi vil forsøke i god tro å:
 
-      *   Ikke oppbevare tjener-logger som inneholder IP-adressen til alle forespørslene til denne tjeneren i lenger enn i 90 dager.
-      *   Ikke oppbevare IP-adressene forbundet med registrerte brukere og deres innlegg lenger enn i 5 år.
+      * Ikke oppbevare tjener-logger som inneholder IP-adressen til alle forespørslene til denne tjeneren i lenger enn i 90 dager.
+      * Ikke oppbevare IP-adressene forbundet med registrerte brukere og deres innlegg lenger enn i 5 år.
 
       <a name="informasjonskapsler"></a>
 
@@ -1332,7 +1336,7 @@ nb_NO:
 
       ## [Overensstemmelse med Children's Online Privacy Protection Act](#coppa)
 
-      Nettstedet, produktene og tjenestene våre er rettet mot folk som er minst 13 år gamle. Dersom denne tjeneren er i USA, og du er under 13 år i henhold til kravene i  COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), ikke bruk dette nettstedet.
+      Nettstedet, produktene og tjenestene våre er rettet mot folk som er minst 13 år gamle. Dersom denne tjeneren er i USA, og du er under 13 år i henhold til kravene i COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), ikke bruk dette nettstedet.
 
       <a name="nett"></a>
 
@@ -1474,6 +1478,8 @@ nb_NO:
         title: "Organisasjon"
       colors:
         title: "Drakt"
+      themes_further_reading:
+        title: "Drakter"
       logos:
         title: "Logoer"
         fields:

@@ -29,7 +29,7 @@ export function buildOptions(state) {
     lookupUploadUrls,
     previewing,
     linkify,
-    censoredWords,
+    censoredRegexp,
     disableEmojis
   } = state;
 
@@ -67,7 +67,7 @@ export function buildOptions(state) {
     formatUsername,
     emojiUnicodeReplacer,
     lookupUploadUrls,
-    censoredWords,
+    censoredRegexp,
     allowedHrefSchemes: siteSettings.allowed_href_schemes
       ? siteSettings.allowed_href_schemes.split("|")
       : null,

@@ -1,3 +1,4 @@
+import { scheduleOnce } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import { formatUsername } from "discourse/lib/utilities";
@@ -10,9 +11,7 @@ function replaceSpan($e, username, opts) {
 
   if (opts && opts.group) {
     if (opts.mentionable) {
-      extra = `data-name='${username}' data-mentionable-user-count='${
-        opts.mentionable.user_count
-      }' data-max-mentions='${maxGroupMention}'`;
+      extra = `data-name='${username}' data-mentionable-user-count='${opts.mentionable.user_count}' data-max-mentions='${maxGroupMention}'`;
       extraClass = "notify";
     }
     $e.replaceWith(
@@ -41,7 +40,7 @@ const checked = {};
 const cannotSee = [];
 
 function updateFound($mentions, usernames) {
-  Ember.run.scheduleOnce("afterRender", function() {
+  scheduleOnce("afterRender", function() {
     $mentions.each((i, e) => {
       const $e = $(e);
       const username = usernames[i];

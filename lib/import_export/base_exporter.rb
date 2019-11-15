@@ -2,7 +2,6 @@
 
 module ImportExport
   class BaseExporter
-
     attr_reader :export_data, :categories
 
     CATEGORY_ATTRS = [:id, :name, :color, :created_at, :user_id, :slug, :description, :text_color,

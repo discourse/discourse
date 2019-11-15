@@ -10,7 +10,7 @@ nb_NO:
     number:
       format:
         separator: ","
-        delimiter: " "
+        delimiter: " "
       human:
         storage_units:
           format: "%n %u"
@@ -31,14 +31,14 @@ nb_NO:
       long_no_year: "D MMM LT"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D. MMMM"
-      long_with_year: "D MMM, YYYY LT"
-      long_with_year_no_time: "D MMM, YYYY"
-      full_with_year_no_time: "D. MMMM, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
+      long_with_year: "D MMM YYYY LT"
+      long_with_year_no_time: "D MMM YYYY"
+      full_with_year_no_time: "D. MMMM YYYY"
+      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
+      long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D. MMM, 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "D. MMM 'YY <br/>LT"
       wrap_ago: "%{date} siden"
       tiny:
         half_a_minute: "< 1m"
@@ -109,8 +109,12 @@ nb_NO:
       next_month: "Neste måned"
       placeholder: dato
     share:
+      topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "innlegg #%{postNumber}"
       close: "lukk"
+      twitter: "Del denne lenka på Twitter"
+      facebook: "Del denne lenka på Facebook"
+      email: "Send denne lenka i en e-post"
     action_codes:
       public_topic: "gjorde dette emnet offentlig %{when}"
       private_topic: "gjorde dette emnet om til en personlig melding %{when}"
@@ -173,6 +177,7 @@ nb_NO:
     submit: "Utfør"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
+    go_ahead: "Fortsett"
     sign_up: "Registrer deg"
     log_in: "Logg inn"
     age: "Alder"
@@ -189,6 +194,7 @@ nb_NO:
     privacy_policy: "Personvernerklæring"
     privacy: "Personvern"
     tos: "Bruksvilkår"
+    rules: "Regler"
     mobile_view: "Mobilvisning"
     desktop_view: "Skrivebordsvisning"
     you: "Du"
@@ -202,11 +208,16 @@ nb_NO:
     every_hour: "hver time"
     daily: "daglig"
     weekly: "ukentlig"
+    every_month: "hver måned"
+    every_six_months: "hver sjette måned"
     max_of_count: "maksimum av {{count}}"
     alternation: "eller"
     character_count:
       one: "{{count}} tegn"
       other: "{{count}} tegn"
+    related_messages:
+      title: "Relaterte meldinger"
+      see_all: 'se <a href="%{path}">alle meldinger</a> fra @%{username} …'
     suggested_topics:
       title: "Anbefalte emner"
       pm_title: "Anbefalte meldinger"
@@ -216,6 +227,7 @@ nb_NO:
       stats: "Nettstedsstatistikk"
       our_admins: "Våre administratorer"
       our_moderators: "Våre moderatorer"
+      moderators: "Moderatorer"
       stat:
         all_time: "Gjennom tidene"
         last_7_days: "Siste 7"
@@ -235,6 +247,7 @@ nb_NO:
         unbookmark: "Klikk for å fjerne alle bokmerker i dette emnet"
     bookmarks:
       created: "du har bokmerket dette innlegget"
+      not_bookmarked: "bokmerk dette innlegget"
       remove: "Fjern bokmerke"
     drafts:
       resume: "Fortsett"
@@ -261,6 +274,8 @@ nb_NO:
     saved: "Lagret!"
     upload: "Last opp"
     uploading: "Laster opp…"
+    uploading_filename: "Laster opp {{filename}}"
+    clipboard: "utklippstavle"
     uploaded: "Lastet opp!"
     pasting: "Limer inn…"
     enable: "Aktiver"
@@ -274,37 +289,75 @@ nb_NO:
     banner:
       close: "Fjern dette banneret."
       edit: "Endre dette banneret >>"
+    pwa:
+      install_banner: "Ønsker du å <a href>installere %{title} på denne enheten</a>?"
     choose_topic:
       none_found: "Ingen emner funnet."
       title:
         placeholder: "skriv tittelen på emnet her"
+    choose_message:
+      none_found: "Ingen meldinger funnet."
+      title:
+        placeholder: "skriv meldingstittelen her"
     review:
+      order_by: "Sorter etter"
+      in_reply_to: "i svar til"
+      explain:
+        total: "Total"
+      awaiting_approval: "Venter på godkjenning"
       delete: "Slett"
       settings:
+        saved: "Lagret"
         save_changes: "Lagre endringer"
         title: "Innstillinger"
       moderation_history: "Moderatorhistorikk"
+      view_all: "Vis alle"
+      grouped_by_topic: "Gruppert etter emne"
+      view_pending: "vis ventende"
+      topic_has_pending:
+        one: "Dette emnet har <b>%{count}</b> post som venter på godkjenning"
+        other: "Dette emnet har <b>{{count}}</b> poster som venter på godkjenning"
       topic: "Emne:"
       filtered_user: "Bruker"
+      show_all_topics: "vis alle emner"
+      deleted_post: "(post slettet)"
+      deleted_user: "(bruker slettet)"
       user:
         username: "Brukernavn"
         email: "E-post"
         name: "Navn"
+        fields: "Felter"
       topics:
         topic: "Emne"
         reviewable_count: "Antall"
+        reported_by: "Rapporter av"
+        deleted: "[Emne slettet]"
+        original: "(opprinnelig emne)"
         details: "detaljer"
+        unique_users:
+          one: "%{count} bruker"
+          other: "{{count}} brukere"
+      replies:
+        one: "%{count} svar"
+        other: "{{count}} svar"
       edit: "Rediger"
       save: "Lagre"
       cancel: "Avbryt"
       filters:
+        all_categories: "(alle kategorier)"
         type:
           title: "Type"
+          all: "(alle typer)"
         refresh: "Last inn på nytt"
+        status: "Status"
         category: "Kategori"
+        orders:
+          priority: "Prioritet"
+          priority_asc: "Prioritet (motsatt)"
       scores:
         date: "Dato"
         type: "Type"
+        status: "Status"
       statuses:
         pending:
           title: "På vent"
@@ -364,7 +417,9 @@ nb_NO:
         description: "Endre medlemskapet i denne gruppen"
         usernames: "Brukernavn"
       requests:
+        title: "Forespørsler"
         reason: "Begrunnelse"
+        accept: "Godta"
         accepted: "godtatt"
       manage:
         title: "Behandle"
@@ -423,6 +478,7 @@ nb_NO:
         all: "Alle grupper"
         empty: "Det finnes ingen synlige grupper"
         filter: "Filtrer etter gruppetype"
+        owner_groups: "Grupper jeg eier"
         close_groups: "Lukkede grupper"
         automatic_groups: "Automatiske grupper"
         automatic: "Automatisk"
@@ -451,6 +507,7 @@ nb_NO:
         remove_owner: "Fjern som eier"
         remove_owner_description: "Fjern <b>%{username}</b> som eier av denne gruppen"
         owner: "Eier"
+        forbidden: "Du har ikke tillatelse til å vise medlemmene."
       topics: "Emner"
       posts: "Innlegg"
       mentions: "Omtalelser"
@@ -463,6 +520,7 @@ nb_NO:
         only_admins: "Kun administratorer"
         mods_and_admins: "Kun moderatorer og administratorer"
         members_mods_and_admins: "Kun gruppemedlemmer, moderatorer og administratorer"
+        owners_mods_and_admins: "Bare gruppeeiere, moderatorer og administratorer"
         everyone: "Alle"
       notifications:
         watching:
@@ -555,6 +613,7 @@ nb_NO:
       user_notifications:
         ignore_duration_username: "Brukernavn"
         ignore_duration_save: "Ignorer"
+        add_ignored_user: "Legg til …"
         mute_option: "Ignorert"
         normal_option: "Normal"
       activity_stream: "Aktivitet"
@@ -632,9 +691,7 @@ nb_NO:
       users: "Brukere"
       muted_users: "Ignorert"
       muted_users_instructions: "Skjul alle varsler fra denne brukeren"
-      muted_topics_link: "Vis ignorerte emner"
-      watched_topics_link: "Vis fulgte emner"
-      tracked_topics_link: "Vis overvåkede emner"
+      tracked_topics_link: "Vis"
       automatically_unpin_topics: "Fjern feste for et emne automatisk når jeg når bunnen."
       apps: "Programmer"
       revoke_access: "Trekk tilbake tilgang"
@@ -685,7 +742,6 @@ nb_NO:
         disable: "Deaktiver"
         enable: "Aktiver"
         enable_long: "Aktiver reservekoder"
-        manage: "Behandle reservekoder"
         copied_to_clipboard: "Kopiert til utklippstavlen"
         copy_to_clipboard_error: "Feil ved kopiering til utklippstavlen"
         remaining_codes: "Du har <strong>{{count}}</strong> reservekoder igjen."
@@ -695,10 +751,15 @@ nb_NO:
       second_factor:
         title: "Totrinnsverifisering"
         confirm_password_description: "Bekreft passordet ditt for å fortsette"
+        name: "Navn"
         label: "Kode"
         disable_description: "Vennligst oppgi autentiseringskoden fra appen"
         show_key_description: "Skriv inn manuelt"
         oauth_enabled_warning: "Vær oppmerksom på at sosiale login-metoder deaktiveres når tofaktor autentisering er aktivert på kontoen din."
+        edit: "Rediger"
+        security_key:
+          register: "Registrer"
+          delete: "Slett"
       change_about:
         title: "Rediger om meg"
         error: "Det oppstod en feil ved endring av denne verdien."
@@ -722,11 +783,7 @@ nb_NO:
         uploaded_avatar: "Egendefinert bilde"
         uploaded_avatar_empty: "Legg til egendefinert bilde"
         upload_title: "Last opp bilde"
-        upload_picture: "Last opp bilde"
         image_is_not_a_square: "Vi har beskåret bildet ditt, høyde og bredde er ikke lik"
-      change_profile_background:
-        title: "Profilbakgrunn"
-        instructions: "Profilbakgrunner vil bli sentrert med en forvalgt bredde på 850 piksler."
       change_card_background:
         title: "Brukerkort bakgrunn"
         instructions: "Bakgrunnsbilder vil bli sentrert og ha en forvalgt bredde på 590 piksler."
@@ -742,11 +799,12 @@ nb_NO:
         frequency_immediately: "Vi sender deg umiddelbart en e-post hvis du ikke har lest det vi sender e-post om."
         frequency:
           one: "Vi sender deg bare e-post hvis vi ikke har sett deg deg det siste minuttet."
-          other: "Vi sender deg bare e-post hvis vi ikke har sett deg de siste {{count}}  minuttene."
+          other: "Vi sender deg bare e-post hvis vi ikke har sett deg de siste {{count}} minuttene."
       associated_accounts:
         title: "Tilknyttede kontoer"
         connect: "Koble til"
         revoke: "Trekk tilbake"
+        cancel: "Avbryt"
         not_connected: "(ikke tilkoblet)"
       name:
         title: "Navn"
@@ -801,6 +859,8 @@ nb_NO:
         every_hour: "hver time"
         daily: "daglig"
         weekly: "ukentlig"
+        every_month: "hver måned"
+        every_six_months: "hver sjette måned"
       email_level:
         title: "Send meg en e-post når noen siterer meg, svarer på innlegget mitt, nevner @brukernavnet mitt eller inviterer meg til et emne"
         always: "alltid"
@@ -933,6 +993,9 @@ nb_NO:
       title:
         title: "Tittel"
         none: "(ingen)"
+      primary_group:
+        title: "Primærgruppe"
+        none: "(ingen)"
       filters:
         all: "Alle"
       stream:
@@ -968,9 +1031,6 @@ nb_NO:
       enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne å lese, men du kan ikke svare, gi likes eller utføre andre handlinger som er slått av."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
-    too_few_topics_and_posts_notice: "La oss <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner and <strong>%{currentPosts} / %{requiredPosts}</strong> innlegg. Nye besøkende trenger noen samtaler de kan lese og svare på."
-    too_few_topics_notice: "La oss<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner. Nye besøkende trenger noen samtaler de kan lese og svare på."
-    too_few_posts_notice: "La oss <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentPosts} / %{requiredPosts}</strong> innlegg. Nye besøkende trenger noen samtaler de kan lese og svare på."
     learn_more: "lær mer…"
     all_time: "totalt"
     all_time_desc: "totalt antall emner opprettet"
@@ -1047,16 +1107,15 @@ nb_NO:
       complete_email_found: "Vi fant en konto som matcher <b>%{email}</b>, du vil snart motta en e-post med lenke for innlogging."
       complete_username_not_found: "Ingen konto har med brukernavnet <b>%{username}</b> er registrert"
       complete_email_not_found: "Ingen konto med e-postadressen <b>%{email}</b> er registrert"
+      confirm_title: "Fortsett til %{site_name}"
     login:
       title: "Logg Inn"
       username: "Bruker"
       password: "Passord"
       second_factor_title: "Totrinnsverifisering"
       second_factor_description: "Skriv inn verifiseringskoden fra din app:"
-      second_factor_backup: "<a href>Logg inn med en reservekode</a>"
       second_factor_backup_title: "Tofaktor sikkerhetskode"
       second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
-      second_factor: "<a href>Logg inn med Authenticator-appen</a>"
       email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
       error: "Ukjent feil"
@@ -1087,23 +1146,18 @@ nb_NO:
       google_oauth2:
         name: "Google"
         title: "med Google"
-        message: "Autentiserer med Google (sørg for at du tillater pop-up vindu)"
       twitter:
         name: "Twitter"
         title: "med Twitter"
-        message: "Autentiserer med Twitter (sørg for at du tillater oppsprettsvindu)"
       instagram:
         name: "Instagram"
         title: "med Instagram"
-        message: "Logger inn med Instagram. Sørg for at du ikke har programvare som blokkerer forgrunnsvinduer."
       facebook:
         name: "Facebook"
         title: "med Facebook"
-        message: "Autentiserer med Facebook (sørg for at du tillater oppsprettsvindu)"
       github:
         name: "GitHub"
         title: "med GitHub"
-        message: "Autentiserer med GitHub (sørg for at du tillater oppsprettsvindu)"
     invites:
       accept_title: "Invitasjon"
       welcome_to: "Velkommen til %{site_name}!"
@@ -1121,7 +1175,6 @@ nb_NO:
       apple_international: "Apple/Internasjonalt"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Klassisk Google"
       facebook_messenger: "Facebook Meldingstjeneste"
@@ -1147,6 +1200,9 @@ nb_NO:
       min_content_not_reached:
         one: "Velg minst {{count}} element."
         other: "Velg minst {{count}} elementer."
+    date_time_picker:
+      from: Fra
+      to: Til
     emoji_picker:
       filter_placeholder: Søk etter emoji
       objects: Objekter
@@ -1192,7 +1248,6 @@ nb_NO:
         title_missing: "Tittel er påkrevd"
         title_too_short: "Tittel må være på minst {{min}} tegn"
         title_too_long: "Tittel kan ikke være mer enn {{max}} tegn"
-        post_missing: "Innlegget kan ikke være tomt"
         post_length: "Innlegget må være på minst {{min}} tegn"
         try_like: "Har du prøvd {{heart}}-knappen?"
         category_missing: "Du må velge en kategori"
@@ -1212,7 +1267,6 @@ nb_NO:
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
       edit_reason_placeholder: "hvorfor endrer du?"
-      show_edit_reason: "(legg till endringsbegrunnelse)"
       topic_featured_link_placeholder: "Skriv inn lenke vist med tittel."
       remove_featured_link: "Fjern lenke fra emnet."
       reply_placeholder: "Skriv her. Bruk Markdown, BBCode eller HTML for å formatere innholdet. Dra bilder hit eller lim dem inn."
@@ -1293,7 +1347,6 @@ nb_NO:
       title: "varsler om at @navnet ditt blir nevnt, svar på dine innlegg og emner, meldinger, osv"
       none: "Notifikasjoner er ikke tilgjengelig for øyeblikket."
       empty: "Ingen varsler funnet."
-      more: "se gamle varsler"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1328,6 +1381,9 @@ nb_NO:
         linked: '{{username}} lenket til innlegget ditt i "{{topic}}" - {{site_title}}'
         confirm_title: "Varslinger aktivert - %{site_title}"
         confirm_body: "Suksess! Varslinger er nå aktivert."
+      titles:
+        watching_first_post: "nytt emne"
+        post_approved: "innlegg godkjent"
     upload_selector:
       title: "Legg til bilde"
       title_with_attachments: "Legg til et bilde eller en fil"
@@ -1491,6 +1547,8 @@ nb_NO:
       edit_message:
         help: "Rediger første innlegg i meldingen"
         title: "Rediger melding"
+      defer:
+        title: "Utsett"
       list: "Emner"
       new: "nytt emne"
       unread: "ulest"
@@ -1843,6 +1901,8 @@ nb_NO:
         image_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp bilder"
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp vedlegg."
         attachment_download_requires_login: "Beklager, du må være innlogget for å laste ned vedlegg."
+      abandon_edit:
+        no_value: "Nei"
       abandon:
         confirm: "Er du sikker på at du vil forlate innlegget ditt?"
         no_value: "Nei"
@@ -2437,6 +2497,10 @@ nb_NO:
     admin:
       title: "Discourse-admin"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "alltid"
+          never: "aldri"
       reports:
         title: "Liste over tilgjengelige rapporter"
       dashboard:
@@ -2494,8 +2558,6 @@ nb_NO:
           view_table: "tabell"
           view_graph: "graf"
           refresh_report: "Refresh Rapport"
-          start_date: "Startdato"
-          end_date: "Sluttdato"
           groups: "Alle grupper"
           disabled: "Denne rapporten er deaktivert"
           totals_for_sample: "Totalt for tidsrom"
@@ -2538,12 +2600,9 @@ nb_NO:
             visibility_levels:
               title: "Hvem kan se denne gruppen?"
               public: "Alle"
-              members: "Gruppeeiere, medlemmer og administratorer"
               staff: "Gruppeeiere og stab"
-              owners: "Gruppeeiere og administratorer"
           membership:
             automatic: Automatisk
-            trust_level: Tillitsnivå
             trust_levels_title: "Tillitsnivå som automatisk gis til nye medlemmer når de legges til:"
             trust_levels_none: "Ingen"
             automatic_membership_email_domains: "Brukere som registreres med et e-postdomene identisk med et fra denne listen vil automatisk legges til i denne gruppen:"
@@ -2575,15 +2634,13 @@ nb_NO:
         none: "Det finnes ingen aktive API-nøkler akkurat nå."
         user: "Bruker"
         title: "API"
-        key: "Nøkkel"
+        created: Opprettet
         generate: "Generer API-nøkkel"
-        regenerate: "Regenerer API-nøkkel"
         revoke: "Trekk tilbake"
-        confirm_regen: "Er du sikker på at du vil erstatte den API-nøkkelen med en ny?"
-        confirm_revoke: "Er du sikker på at du vil trekke tilbake den nøkkelen?"
-        info_html: "API-nøkkelen din vil tillate deg å lage og oppdatere emner ved å bruke JSON-kall."
         all_users: "Alle brukere"
-        note_html: "Hold denne nøkkelen <strong>hemmelig</strong>, alle brukere som har den, vil kunne opprette vilkårlige innlegg som hvilken som helst bruker. "
+        show_details: Detaljer
+        description: Beskrivelse
+        save: Lagre
       web_hooks:
         title: "Webhooker"
         none: "Det finnes ingen webhooker for tiden."
@@ -2738,7 +2795,7 @@ nb_NO:
             confirm: "Er du sikker på at du vil gjenopprette databasen til den tidligere fungerende tilstanden?"
       export_csv:
         success: "Eksportering iverksatt. Du vil bli varslet med en melding når prosessen er fullført."
-        failed: "Eksporteringen mislyktes.  Undersøk loggene."
+        failed: "Eksporteringen mislyktes. Undersøk loggene."
         button_text: "Eksporter"
         button_title:
           user: "Eksporter full medlemsliste i CSV format."
@@ -2768,7 +2825,7 @@ nb_NO:
         copy_to_clipboard_error: "Feil ved kopiering av data til utklippstavle"
         theme_owner: "Kan ikke endres, eid av:"
         email_templates:
-          title: "E-postmaler"
+          title: "E-post"
           subject: "Emne"
           multiple_subjects: "Denne e-postmalen har flere emner."
           body: "Meldingstekst"
@@ -2818,6 +2875,8 @@ nb_NO:
           install_popular: "Populært"
           about_theme: "Om"
           license: "Lisens"
+          enable: "Aktiver"
+          disable: "Deaktiver"
           update_to_latest: "Oppdater til seneste"
           check_for_updates: "Se etter oppdateringer"
           updating: "Oppdaterer…"
@@ -2888,6 +2947,8 @@ nb_NO:
           love:
             name: "liker"
             description: "Fargen til Liker-knappen."
+        email_style:
+          css: "CSS"
       email:
         title: "E-poster"
         settings: "Instillinger"
@@ -3099,6 +3160,8 @@ nb_NO:
         search: "søk"
         clear_filter: "Tøm"
         show_words: "vis ord"
+        download: Last ned
+        clear_all: Fjern alle
         word_count:
           one: "ett ord"
           other: "%{count} ord"
@@ -3119,8 +3182,10 @@ nb_NO:
           add: "Legg til"
           success: "Suksess"
           exists: "Eksisterer fra før"
-          upload: "Last opp"
           upload_successful: "Opplastet. Ord lagt til."
+        test:
+          button_label: "Test"
+          no_matches: "Ingen treff funnet"
       impersonate:
         title: "Fremstå som"
         help: "Bruk dette verktøyet for å fremstå som en annen bruker for feilsøking. Du må logge ut når du er ferdig."
@@ -3309,8 +3374,6 @@ nb_NO:
           likes_received: "Likes mottatt"
           likes_received_days: "Likes mottatt: Unike dager"
           likes_received_users: "Likes mottatt: Unike brukere"
-          suspended: "Suspenderte (gjennom tidene)"
-          silenced: "Dempet (gjennom tidene)"
           qualifies: "Kvalifiserer til tillitsnivå 3."
           does_not_qualify: "Kvalifiserer ikke til tillitsnivå 3."
           will_be_promoted: "Vil snart forfremmes."
@@ -3362,7 +3425,7 @@ nb_NO:
       site_text:
         description: "Du kan skreddersy all tekst på forumet ditt. Start ved å søke nedenfor:"
         search: "Søk etter tekst du ønsker å endre"
-        title: "Tekstinnhold"
+        title: "Tekst"
         edit: "rediger"
         revert: "Tilbakestill endringer"
         revert_confirm: "Er du sikker på at du ønsker å tilbakestille dine endringer?"
@@ -3416,6 +3479,8 @@ nb_NO:
           search: "Søk"
           groups: "Grupper"
           dashboard: "Dashbord"
+        default_categories:
+          modal_yes: "Ja"
       badges:
         title: Merker
         new_badge: Nytt merke
@@ -3452,7 +3517,6 @@ nb_NO:
         enabled: Aktiver merke
         icon: Ikon
         image: Bilde
-        icon_help: "Bruk en Font Awesome-klasse"
         image_help: "Oppgi URL for bildet (overstyrer ikonfeltet hvis begge er satt)"
         query: Spørring for merke (SQL)
         target_posts: Spørring har innlegg som mål
@@ -3504,21 +3568,15 @@ nb_NO:
         category: "Legg til innlegg i kategori"
         add_host: "Legg til vert"
         settings: "Innbyggingsinnstillinger"
-        feed_settings: "Informasjonskanals-innstillinger"
-        feed_description: "Å tilby en RSS/ATOM-strøm for nettstedet ditt kan forbedre Discourses evne til å importere innholdet ditt."
         crawling_settings: "Innstillinger for søkeroboter"
         crawling_description: "Dersom Discourse oppretter emner for innleggene dine og ingen RSS/ATOM-informasjonskanal finnes, vil det prøve å tolke innholdet ditt ut fra HTML-koden din. Noen ganger kan det være utfordrende å hente ut innhold, så muligheten til å oppgi CSS-regler er der for å gjøre uthentingen enklere."
         embed_by_username: "Brukernavn for opprettelse av emne"
         embed_post_limit: "Maksimalt antall innlegg å bygge inn"
-        embed_username_key_from_feed: "Nøkkel for å hente Discourse-brukernavn fra informasjonskanal"
         embed_title_scrubber: "Regulære uttrykk brukt til å finne og korrigere feil i titler"
         embed_truncate: "Forkort de innebygde innleggene"
         embed_whitelist_selector: "CSS-velger for elementer som tillates i innbygginger"
         embed_blacklist_selector: "CSS-velger for element som fjernes fra innbygginger"
         embed_classname_whitelist: "Tillatte navn for CSS-klasser"
-        feed_polling_enabled: "Importer innlegg via RSS/ATOM"
-        feed_polling_url: "Nettadresse for RSS/ATOM-informasjonskanal å gjennomgangssøke"
-        feed_polling_frequency_mins: "Frekvens for strømspørring (i minutter)"
         save: "Lagre innbyggingsinnstillinger"
       permalink:
         title: "Permalenker"

@@ -54,10 +54,10 @@ describe PostAction do
       expect(topic_user_ids).to include(mod.id)
 
       expect(topic.topic_users.where(user_id: mod.id)
-              .pluck(:notification_level).first).to eq(TopicUser.notification_levels[:tracking])
+              .pluck_first(:notification_level)).to eq(TopicUser.notification_levels[:tracking])
 
       expect(topic.topic_users.where(user_id: codinghorror.id)
-              .pluck(:notification_level).first).to eq(TopicUser.notification_levels[:watching])
+              .pluck_first(:notification_level)).to eq(TopicUser.notification_levels[:watching])
 
       # reply to PM should not clear flag
       PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags").create
@@ -545,6 +545,19 @@ describe PostAction do
       expect(post.hidden_at).to be_present
     end
 
+    it "will not trigger auto hide on like" do
+      mod = Fabricate(:moderator)
+      post = Fabricate(:post, user: mod)
+
+      result = PostActionCreator.spam(eviltrout, post)
+      result.reviewable.update!(score: 1000.0)
+      PostActionCreator.like(Fabricate(:admin), post)
+
+      post.reload
+
+      expect(post.hidden).to eq(false)
+    end
+
     it 'should follow the rules for automatic hiding workflow' do
       post = create_post
       walterwhite = Fabricate(:walter_white)
@@ -608,7 +621,6 @@ describe PostAction do
       post.reload
       expect(post.hidden).to eq(true)
     end
-
     it "hide tl0 posts that are flagged as spam by a tl3 user" do
       newuser = Fabricate(:newuser)
       post = create_post(user: newuser)
@@ -622,41 +634,6 @@ describe PostAction do
       expect(post.hidden).to eq(true)
       expect(post.hidden_at).to be_present
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flagged_by_tl3_user])
-    end
-
-    it "hide non-tl4 posts that are flagged by a tl4 user" do
-      SiteSetting.site_contact_username = admin.username
-
-      tl4_user = Fabricate(:trust_level_4)
-      user = Fabricate(:leader)
-      post = create_post(user: user)
-
-      PostActionCreator.spam(tl4_user, post)
-
-      post.reload
-
-      expect(post.hidden).to be_truthy
-      expect(post.hidden_at).to be_present
-      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flagged_by_tl4_user])
-
-      post = create_post(user: user)
-      PostActionCreator.spam(Fabricate(:leader), post)
-      post.reload
-
-      expect(post.hidden).to be_falsey
-
-      post = create_post(user: user)
-      PostActionCreator.spam(Fabricate(:moderator), post)
-      post.reload
-
-      expect(post.hidden).to be_falsey
-
-      user = Fabricate(:trust_level_4)
-      post = create_post(user: user)
-      PostActionCreator.spam(tl4_user, post)
-      post.reload
-
-      expect(post.hidden).to be_falsey
     end
 
     it "can flag the topic instead of a post" do
@@ -718,6 +695,8 @@ describe PostAction do
       end
 
       it "will automatically pause a topic due to large community flagging" do
+        skip "heisentest"
+
         # reaching `num_flaggers_to_close_topic` isn't enough
         [flagger1, flagger2].each do |flagger|
           PostActionCreator.inappropriate(flagger, post1)

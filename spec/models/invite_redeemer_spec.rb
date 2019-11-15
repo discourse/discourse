@@ -47,6 +47,15 @@ describe InviteRedeemer do
       expect(user.email).to eq('staged@account.com')
       expect(user.approved).to eq(true)
     end
+
+    it "should not activate user invited via links" do
+      user = InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'walter.white@email.com', emailed_status: Invite.emailed_status_types[:not_required]), 'walter', 'Walter White')
+      expect(user.username).to eq('walter')
+      expect(user.name).to eq('Walter White')
+      expect(user.email).to eq('walter.white@email.com')
+      expect(user.approved).to eq(true)
+      expect(user.active).to eq(false)
+    end
   end
 
   describe "#redeem" do

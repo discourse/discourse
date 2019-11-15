@@ -1,8 +1,8 @@
 import SelectKitComponent from "select-kit/components/select-kit";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 const { get, isNone, isEmpty, isPresent, run, makeArray } = Ember;
 
 import {
@@ -115,7 +115,7 @@ export default SelectKitComponent.extend({
     return content;
   },
 
-  @computed("computedAsyncContent.[]", "computedValue")
+  @discourseComputed("computedAsyncContent.[]", "computedValue")
   filteredAsyncComputedContent(computedAsyncContent, computedValue) {
     computedAsyncContent = (computedAsyncContent || []).filter(c => {
       return computedValue !== get(c, "value");
@@ -128,7 +128,12 @@ export default SelectKitComponent.extend({
     return computedAsyncContent;
   },
 
-  @computed("computedContent.[]", "computedValue", "filter", "shouldFilter")
+  @discourseComputed(
+    "computedContent.[]",
+    "computedValue",
+    "filter",
+    "shouldFilter"
+  )
   filteredComputedContent(
     computedContent,
     computedValue,
@@ -150,17 +155,17 @@ export default SelectKitComponent.extend({
     return computedContent;
   },
 
-  @computed("computedValue", "computedContent.[]")
+  @discourseComputed("computedValue", "computedContent.[]")
   selection(computedValue, computedContent) {
     return computedContent.findBy("value", computedValue);
   },
 
-  @computed("selection")
+  @discourseComputed("selection")
   hasSelection(selection) {
     return selection !== this.noneRowComputedContent && !isNone(selection);
   },
 
-  @computed(
+  @discourseComputed(
     "computedValue",
     "filter",
     "collectionComputedContent.[]",

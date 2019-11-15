@@ -74,6 +74,7 @@ describe UsersEmailController do
 
       context 'second factor required' do
         fab!(:second_factor) { Fabricate(:user_second_factor_totp, user: user) }
+        fab!(:backup_code) { Fabricate(:user_second_factor_backup, user: user) }
 
         it 'requires a second factor token' do
           get "/u/authorize-email/#{user.email_tokens.last.token}"
@@ -84,6 +85,16 @@ describe UsersEmailController do
 
           expect(response_body).to include(I18n.t("login.second_factor_title"))
           expect(response_body).not_to include(I18n.t("login.invalid_second_factor_code"))
+        end
+
+        it 'requires a backup token' do
+          get "/u/authorize-email/#{user.email_tokens.last.token}?show_backup=true"
+
+          expect(response.status).to eq(200)
+
+          response_body = response.body
+
+          expect(response_body).to include(I18n.t("login.second_factor_backup_title"))
         end
 
         it 'adds an error on a second factor attempt' do

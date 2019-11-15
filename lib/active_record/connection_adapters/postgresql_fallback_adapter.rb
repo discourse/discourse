@@ -32,19 +32,21 @@ class PostgreSQLFallbackHandler
   end
 
   def verify_master
-    synchronize { return if @thread && @thread.alive? }
+    synchronize do
+      return if @thread && @thread.alive?
 
-    @thread = Thread.new do
-      while true do
-        thread = Thread.new { initiate_fallback_to_master }
-        thread.abort_on_exception = true
-        thread.join
-        break if synchronize { @masters_down.hash.empty? }
-        sleep 5
+      @thread = Thread.new do
+        while true do
+          thread = Thread.new { initiate_fallback_to_master }
+          thread.abort_on_exception = true
+          thread.join
+          break if synchronize { @masters_down.hash.empty? }
+          sleep 5
+        end
       end
-    end
 
-    @thread.abort_on_exception = true
+      @thread.abort_on_exception = true
+    end
   end
 
   def master_down?

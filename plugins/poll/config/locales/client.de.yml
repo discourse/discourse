@@ -22,6 +22,8 @@ de:
           title: "Ergebnisse werden <strong>nach Stimmabgabe</strong> angezeigt."
         closed:
           title: "Ergebnisse werden angezeigt <strong>nach Ende der Abstimmung</strong>."
+        staff:
+          title: "Ergebnisse werden nur <strong>Team</strong> Mitgliedern angezeigt."
       multiple:
         help:
           at_least_min_options:
@@ -74,6 +76,7 @@ de:
           always: Immer sichtbar
           vote: Nach Stimmabgabe
           closed: Nach Ende der Abstimmung
+          staff: Nur Teammitglieder
         poll_config:
           max: max.
           min: min.

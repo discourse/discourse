@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 require 'rails_helper'
@@ -5,13 +6,20 @@ require 'rails_helper'
 describe ApplicationHelper do
 
   describe "preload_script" do
+    def preload_link(url)
+      <<~HTML
+          <link rel="preload" href="#{url}" as="script">
+          <script src="#{url}"></script>
+      HTML
+    end
+
     it "provides brotli links to brotli cdn" do
       set_cdn_url "https://awesome.com"
 
       helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
       link = helper.preload_script('application')
 
-      expect(link).to eq("<link rel='preload' href='https://awesome.com/brotli_asset/application.js' as='script'/>\n<script src='https://awesome.com/brotli_asset/application.js'></script>")
+      expect(link).to eq(preload_link("https://awesome.com/brotli_asset/application.js"))
     end
 
     context "with s3 CDN" do
@@ -32,25 +40,38 @@ describe ApplicationHelper do
         expect(helper.preload_script("application")).to include('https://s3cdn.com/assets/application.js')
       end
 
+      it "replaces cdn URLs with s3 cdn subfolder paths" do
+        global_setting :s3_cdn_url, 'https://s3cdn.com/s3_subpath'
+        set_cdn_url "https://awesome.com"
+        ActionController::Base.config.relative_url_root = "/community"
+        expect(helper.preload_script("application")).to include('https://s3cdn.com/s3_subpath/assets/application.js')
+      end
+
       it "returns magic brotli mangling for brotli requests" do
 
         helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
         link = helper.preload_script('application')
 
-        expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.br.js' as='script'/>\n<script src='https://s3cdn.com/assets/application.br.js'></script>")
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.br.js"))
       end
 
       it "gives s3 cdn if asset host is not set" do
         link = helper.preload_script('application')
 
-        expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.js' as='script'/>\n<script src='https://s3cdn.com/assets/application.js'></script>")
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.js"))
+      end
+
+      it "can fall back to gzip compression" do
+        helper.request.env["HTTP_ACCEPT_ENCODING"] = 'gzip'
+        link = helper.preload_script('application')
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.gz.js"))
       end
 
       it "gives s3 cdn even if asset host is set" do
         set_cdn_url "https://awesome.com"
         link = helper.preload_script('application')
 
-        expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.js' as='script'/>\n<script src='https://s3cdn.com/assets/application.js'></script>")
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.js"))
       end
     end
   end

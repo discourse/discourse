@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'has_errors'
-
 class NewPostResult
   include HasErrors
 

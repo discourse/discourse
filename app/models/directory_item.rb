@@ -65,7 +65,8 @@ class DirectoryItem < ActiveRecord::Base
                     0
                 FROM users u
                 LEFT JOIN directory_items di ON di.user_id = u.id AND di.period_type = :period_type
-                WHERE di.id IS NULL AND u.id > 0 AND u.silenced_till IS NULL and u.active
+                WHERE di.id IS NULL AND u.id > 0 AND u.silenced_till IS NULL AND u.active
+                #{SiteSetting.must_approve_users ? 'AND u.approved' : ''}
       ", period_type: period_types[period_type]
 
       # Calculate new values and update records

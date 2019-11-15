@@ -20,12 +20,14 @@
               </div>
                    {{#if c.subcategories}}
               <div class='subcategories'>
-                {{#each c.subcategories as |s|}}
-                  <span class='subcategory'>
-                    {{category-title-before category=s}}
-                    {{category-link s hideParent="true"}}
-                    {{category-unread category=s}}
-                  </span>
+                {{#each c.subcategories as |subcategory|}}
+                  {{#unless subcategory.isMuted}}
+                    <span class='subcategory'>
+                      {{category-title-before category=subcategory}}
+                      {{category-link subcategory hideParent="true"}}
+                      {{category-unread category=subcategory}}
+                    </span>
+                  {{/unless}}
                 {{/each}}
               </div>
             {{/if}}

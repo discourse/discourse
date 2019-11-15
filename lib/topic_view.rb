@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'guardian'
-require_dependency 'topic_query'
-require_dependency 'filter_best_posts'
-require_dependency 'gaps'
-
 class TopicView
   MEGA_TOPIC_POSTS_COUNT = 10000
+  MIN_POST_READ_TIME = 4.0
 
   attr_reader(
     :topic,
@@ -39,7 +35,7 @@ class TopicView
   end
 
   def self.default_post_custom_fields
-    @default_post_custom_fields ||= ["action_code_who", "notice_type", "notice_args"]
+    @default_post_custom_fields ||= ["action_code_who", "notice_type", "notice_args", "requested_group_id"]
   end
 
   def self.post_custom_fields_whitelisters
@@ -106,6 +102,14 @@ class TopicView
     @can_review_topic = @guardian.can_review_topic?(@topic)
     @queued_posts_enabled = NewPostManager.queue_enabled?
     @personal_message = @topic.private_message?
+  end
+
+  def show_read_indicator?
+    return false unless @user || topic.private_message?
+
+    topic.allowed_groups.any? do |group|
+      group.publish_read_state? && group.users.include?(@user)
+    end
   end
 
   def canonical_path
@@ -208,7 +212,13 @@ class TopicView
 
   def read_time
     return nil if @post_number > 1 # only show for topic URLs
-    (@topic.word_count / SiteSetting.read_time_word_count).floor if @topic.word_count
+
+    if @topic.word_count && SiteSetting.read_time_word_count > 0
+      [
+        @topic.word_count / SiteSetting.read_time_word_count,
+        @topic.posts_count * MIN_POST_READ_TIME / 60
+      ].max.ceil
+    end
   end
 
   def like_count
@@ -419,19 +429,34 @@ class TopicView
   end
 
   def reviewable_counts
-    if @reviewable_counts.blank?
+    if @reviewable_counts.nil?
 
-      # Create a hash with counts by post so we can quickly look up whether there is reviewable content.
+      post_ids = @posts.map(&:id)
+
+      sql = <<~SQL
+        SELECT target_id,
+          MAX(r.id) reviewable_id,
+          COUNT(*) total,
+          SUM(CASE WHEN s.status = :pending THEN 1 ELSE 0 END) pending
+        FROM reviewables r
+        JOIN reviewable_scores s ON reviewable_id = r.id
+        WHERE r.target_id IN (:post_ids) AND
+          r.target_type = 'Post'
+        GROUP BY target_id
+      SQL
+
       @reviewable_counts = {}
-      Reviewable.
-        where(target_type: 'Post', target_id: @posts.map(&:id)).
-        includes(:reviewable_scores).each do |r|
 
-        for_post = (@reviewable_counts[r.target_id] ||= { total: 0, pending: 0, reviewable_id: r.id })
-        r.reviewable_scores.each do |s|
-          for_post[:total] += 1
-          for_post[:pending] += 1 if s.pending?
-        end
+      DB.query(
+        sql,
+        pending: ReviewableScore.statuses[:pending],
+        post_ids: post_ids
+      ).each do |row|
+        @reviewable_counts[row.target_id] = {
+          total: row.total,
+          pending: row.pending,
+          reviewable_id: row.reviewable_id
+        }
       end
     end
 
@@ -541,7 +566,7 @@ class TopicView
   end
 
   def filtered_post_id(post_number)
-    @filtered_posts.where(post_number: post_number).pluck(:id).first
+    @filtered_posts.where(post_number: post_number).pluck_first(:id)
   end
 
   def is_mega_topic?
@@ -549,11 +574,11 @@ class TopicView
   end
 
   def first_post_id
-    @filtered_posts.order(sort_order: :asc).limit(1).pluck(:id).first
+    @filtered_posts.order(sort_order: :asc).pluck_first(:id)
   end
 
   def last_post_id
-    @filtered_posts.order(sort_order: :desc).limit(1).pluck(:id).first
+    @filtered_posts.order(sort_order: :desc).pluck_first(:id)
   end
 
   def current_post_number

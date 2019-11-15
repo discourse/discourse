@@ -7,9 +7,9 @@
 
 sv:
   site_settings:
-    discourse_narrative_bot_enabled: 'Aktivera Discourse digitala hjälpreda (discobot)'
-    disable_discourse_narrative_bot_welcome_post: "Avaktivera introduktionsmeddelandet från Discourse  digitala hjälpreda "
-    discourse_narrative_bot_ignored_usernames: "Användarnamn som Discourse  digitala hjälpreda bör ignorera"
+    discourse_narrative_bot_enabled: "Aktivera Discourse digitala hjälpreda (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "Avaktivera introduktionsmeddelandet från Discourse digitala hjälpreda "
+    discourse_narrative_bot_ignored_usernames: "Användarnamn som Discourse digitala hjälpreda bör ignorera"
     discourse_narrative_bot_disable_public_replies: "Inaktivera publika svar från Discourse digitala hjälpreda "
     discourse_narrative_bot_welcome_post_type: "Vilken typ av välkomstmeddelande Discourse digitala hjälpreda bör skicka"
     discourse_narrative_bot_welcome_post_delay: "Avvakta (n) sekunder innan Discourse digitala hjälpreda skickar välkomstmeddelande "
@@ -44,7 +44,7 @@ sv:
       not_enough_dice: |-
         Jag har endast summan . [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), Jag vet!
       out_of_range: |-
-        Visste du att  [max antal sidor](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) för en mattematiskt rättvis tärning är 120?
+        Visste du att [max antal sidor](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) för en mattematiskt rättvis tärning är 120?
       results: |-
         > :game_die: %{results}
     quote:
@@ -106,12 +106,12 @@ sv:
           Bra jobbat!— din _detaljkännedom_ är avundsvärd!
       end:
         message: |-
-          Du blåste verkligen igenom  detta sm en _avancerad användare_ :bow:
+          Du blåste verkligen igenom detta som en _avancerad användare_ :bow:
 
           %{certificate}
 
           Det är allt jag har för dig idag
 
-          Farväl! Om du vill tala med mig igen, skicka mig ett meddelande när somhelst :sunglasses:
+          Farväl! Om du vill tala med mig igen, skicka mig ett meddelande när som helst :sunglasses:
       certificate:
-        alt: 'Diplom för genomförande av avancerad användargenomgång'
+        alt: "Diplom för genomförande av avancerad användargenomgång"

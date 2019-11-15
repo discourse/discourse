@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'letter_avatar'
-
 class UserAvatarsController < ApplicationController
 
   skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter, :show_proxy_letter]
@@ -37,7 +35,7 @@ class UserAvatarsController < ApplicationController
   def show_proxy_letter
     is_asset_path
 
-    if SiteSetting.external_system_avatars_url !~ /^\/letter(_avatar)?_proxy/
+    if SiteSetting.external_system_avatars_url !~ /^\/letter_avatar_proxy/
       raise Discourse::NotFound
     end
 
@@ -162,6 +160,9 @@ class UserAvatarsController < ApplicationController
         follow_redirect: true,
         read_timeout: 10
       )
+
+      return render_blank if tmp.nil?
+
       FileUtils.mv tmp.path, path
     end
 

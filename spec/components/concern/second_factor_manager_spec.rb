@@ -15,11 +15,11 @@ RSpec.describe SecondFactorManager do
       totp = nil
 
       expect do
-        totp = another_user.totp
+        totp = another_user.create_totp(enabled: true)
       end.to change { UserSecondFactor.count }.by(1)
 
-      expect(totp.issuer).to eq(SiteSetting.title)
-      expect(totp.secret).to eq(another_user.reload.user_second_factors.totp.data)
+      expect(totp.get_totp_object.issuer).to eq(SiteSetting.title)
+      expect(totp.get_totp_object.secret).to eq(another_user.reload.user_second_factors.totps.first.data)
     end
   end
 
@@ -31,17 +31,11 @@ RSpec.describe SecondFactorManager do
       expect(second_factor.data).to be_present
       expect(second_factor.enabled).to eq(true)
     end
-
-    describe 'when user has a second factor' do
-      it 'should return nil' do
-        expect(user.create_totp).to eq(nil)
-      end
-    end
   end
 
   describe '#totp_provisioning_uri' do
     it 'should return the right uri' do
-      expect(user.totp_provisioning_uri).to eq(
+      expect(user.user_second_factors.totps.first.totp_provisioning_uri).to eq(
         "otpauth://totp/#{SiteSetting.title}:#{user.email}?secret=#{user_second_factor_totp.data}&issuer=#{SiteSetting.title}"
       )
     end
@@ -50,12 +44,12 @@ RSpec.describe SecondFactorManager do
   describe '#authenticate_totp' do
     it 'should be able to authenticate a token' do
       freeze_time do
-        expect(user.user_second_factors.totp.last_used).to eq(nil)
+        expect(user.user_second_factors.totps.first.last_used).to eq(nil)
 
-        token = user.totp.now
+        token = user.user_second_factors.totps.first.get_totp_object.now
 
         expect(user.authenticate_totp(token)).to eq(true)
-        expect(user.user_second_factors.totp.last_used).to eq_time(DateTime.now)
+        expect(user.user_second_factors.totps.first.last_used).to eq_time(DateTime.now)
         expect(user.authenticate_totp(token)).to eq(false)
       end
     end
@@ -63,14 +57,14 @@ RSpec.describe SecondFactorManager do
     describe 'when token is blank' do
       it 'should be false' do
         expect(user.authenticate_totp(nil)).to eq(false)
-        expect(user.user_second_factors.totp.last_used).to eq(nil)
+        expect(user.user_second_factors.totps.first.last_used).to eq(nil)
       end
     end
 
     describe 'when token is invalid' do
       it 'should be false' do
         expect(user.authenticate_totp('111111')).to eq(false)
-        expect(user.user_second_factors.totp.last_used).to eq(nil)
+        expect(user.user_second_factors.totps.first.last_used).to eq(nil)
       end
     end
   end
@@ -84,7 +78,7 @@ RSpec.describe SecondFactorManager do
 
     describe "when user's second factor record is disabled" do
       it 'should return false' do
-        user.user_second_factors.totp.update!(enabled: false)
+        user.user_second_factors.totps.first.update!(enabled: false)
         expect(user.totp_enabled?).to eq(false)
       end
     end
