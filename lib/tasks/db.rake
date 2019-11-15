@@ -50,6 +50,13 @@ end
 
 begin
   Rake::Task["db:migrate"].clear
+  Rake::Task["db:rollback"].clear
+end
+
+task 'db:rollback' => ['environment', 'set_locale'] do |_, args|
+  step = ENV["STEP"] ? ENV["STEP"].to_i : 1
+  ActiveRecord::Base.connection.migration_context.rollback(step)
+  Rake::Task['db:_dump'].invoke
 end
 
 # we need to run seed_fu every time we run rake db:migrate
