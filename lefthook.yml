@@ -2,23 +2,23 @@ pre-commit:
   parallel: true
   commands:
     rubocop:
-      glob: '*.rb'
+      glob: "*.rb"
       run: bundle exec rubocop {staged_files}
     eslint:
-      glob: '*.{js,es6}'
+      glob: "*.{js,es6}"
       run: yarn eslint --ext .es6 -f compact {staged_files}
     yaml-syntax:
-      glob: '*.{yaml,yml}'
+      glob: "*.{yaml,yml}"
       run: bundle exec yaml-lint {staged_files}
 
 commands: &commands
   bundle-install:
     files: git diff --name-only HEAD master
-    glob: '{Gemfile,Gemfile.lock,*.gemspec}'
+    glob: "{Gemfile,Gemfile.lock,*.gemspec}"
     run: bundle install
   yarn-install:
     files: git diff --name-only HEAD master
-    glob: '{package.json,yarn.lock}'
+    glob: "{package.json,yarn.lock}"
     run: yarn install
 
 post-checkout:
@@ -36,7 +36,8 @@ lints:
     rubocop:
       run: bundle exec rubocop --parallel
     prettier:
-      run: yarn prettier --list-different app/assets/stylesheets/**/*.scss app/assets/javascripts/**/*.es6 test/javascripts/**/*.es6
+      glob: "{app/assets/stylesheets/**/*.scss,app/assets/javascripts/**/*.es6,test/javascripts/**/*.es6}"
+      run: yarn prettier --list-different {all_files}
     eslint-assets:
       run: yarn eslint --ext .es6 app/assets/javascripts
     eslint-test:
