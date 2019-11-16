@@ -14,7 +14,10 @@ export default Controller.extend({
   votePollResult: "on_vote",
   closedPollResult: "on_close",
   staffPollResult: "staff_only",
-  pollChartTypes: [{ name: "Bar", value: "bar"}, { name: "Pie", value: "pie"}],
+  pollChartTypes: [
+    { name: "Bar", value: "bar" },
+    { name: "Pie", value: "pie" }
+  ],
 
   init() {
     this._super(...arguments);

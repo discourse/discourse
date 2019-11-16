@@ -220,31 +220,6 @@ after_initialize do
         result
       end
 
-      def grouped_serialized_voters(poll, user_custom_field)
-        poll_votes = PollVote.where(poll: poll)
-        user_ids = poll_votes.map(&:user_id).uniq
-
-        users = User.where(id: user_ids).to_a
-        fields = User.preload_custom_fields(users, ["user_field_#{user_custom_field.id}"])
-        user_fields = {}
-        fields.each { |f| user_fields["#{f[0]}"] = f[2] }
-
-        # puts "%%%%%%%%%%%"
-        # puts user_fields
-        # puts "%%%%%%%%%%%"
-
-        votes_with_field = poll_votes.map do |vote|
-          v = vote.attributes
-          puts v.inspect
-
-          v["field_value"] = user_fields[v["user_id"].to_s]
-          return v
-        end
-
-        puts '$$$$$$$$$$$$$$'
-        puts votes_with_field
-      end
-
       def voters(post_id, poll_name, user, opts = {})
         post = Post.find_by(id: post_id)
         raise Discourse::InvalidParameters.new("post_id is invalid") unless post
@@ -255,16 +230,50 @@ after_initialize do
         serialized_voters(poll, opts)
       end
 
-      def grouped_voters(post_id, poll_name, user_custom_field_id, user)
+      def grouped_poll_results(post_id, poll_name, user_custom_field_id, user)
         post = Post.find_by(id: post_id)
         raise Discourse::InvalidParameters.new("post_id is invalid") unless post
 
         poll = Poll.find_by(post_id: post_id, name: poll_name)
         raise Discourse::InvalidParameters.new("poll_name is invalid") unless poll&.can_see_voters?(user)
 
-        user_custom_field = UserCustomField.find_by(id: user_custom_field_id)
+        user_custom_field = UserField.find_by(id: user_custom_field_id)
         raise Discourse::InvalidParameters.new("user_custom_field is invalid") unless user_custom_field
-        grouped_serialized_voters(poll, user_custom_field)
+
+        poll_votes = PollVote.where(poll: poll)
+        user_ids = poll_votes.map(&:user_id).uniq
+
+        field_type = user_custom_field.field_type
+        user_fields = UserCustomField.where(user_id: user_ids, name: "user_field_#{user_custom_field.id}")
+
+        user_field_map = {}
+        user_fields.each do |f|
+          user_field_map[f.user_id.to_s] = f.value
+        end
+
+        votes_with_field = poll_votes.map do |vote|
+          v = vote.attributes
+          v[:field_value] = user_field_map[vote.user_id.to_s]
+          v
+        end
+
+        options = {}
+        PollOption.where(poll_id: poll.id).each do |option|
+          options[option.id.to_s] = { html: option.html, digest: option.digest }
+        end
+
+        chart = []
+        grouped_votes = votes_with_field.group_by { |vote| vote[:field_value] }.each do |field_answer, votes|
+          group_name = field_type == "confirm" ? (field_answer == "" ? "Not #{user_custom_field.name}" : user_custom_field.name) : field_answer
+          grouped_selected_options = []
+
+          votes.group_by { |v| v["poll_option_id"] }.each do |option_id, votes_for_option|
+            grouped_selected_options << { digest: options[option_id.to_s][:digest], html: options[option_id.to_s][:html], votes: votes_for_option.length }
+          end
+
+          chart << { group: group_name, options: grouped_selected_options }
+        end
+        chart
       end
 
       def schedule_jobs(post)
@@ -341,7 +350,7 @@ after_initialize do
   class DiscoursePoll::PollsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
-    before_action :ensure_logged_in, except: [:voters, :grouped_voters]
+    before_action :ensure_logged_in, except: [:voters, :grouped_poll_results]
 
     def vote
       post_id   = params.require(:post_id)
@@ -382,16 +391,20 @@ after_initialize do
       end
     end
 
-    def grouped_voters
+    def grouped_poll_results
       post_id   = params.require(:post_id)
       poll_name = params.require(:poll_name)
       field = params.require(:field)
 
       begin
-        render json: { voters: DiscoursePoll::Poll.grouped_voters(post_id, poll_name, field, current_user) }
+        render json: { grouped_results: DiscoursePoll::Poll.grouped_poll_results(post_id, poll_name, field, current_user) }
       rescue StandardError => e
         render_json_error e.message
       end
+    end
+
+    def groupable_user_fields
+      render json: { fields: ::UserField.where.not(field_type: "text").select(:name, :id) }
     end
   end
 
@@ -399,7 +412,8 @@ after_initialize do
     put "/vote" => "polls#vote"
     put "/toggle_status" => "polls#toggle_status"
     get "/voters" => 'polls#voters'
-    get "/grouped_voters" => 'polls#grouped_voters'
+    get "/grouped_poll_results" => 'polls#grouped_poll_results'
+    get "/groupable_user_fields" => 'polls#groupable_user_fields'
   end
 
   Discourse::Application.routes.append do

@@ -433,7 +433,17 @@ createWidget("discourse-poll-pie-canvas", {
 });
 
 function fetchGroupedVoters(data) {
-  return ajax("/polls/grouped_voters.json", { data }).catch(error => {
+  return ajax("/polls/grouped_poll_results.json", { data }).catch(error => {
+    if (error) {
+      popupAjaxError(error);
+    } else {
+      bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
+    }
+  });
+}
+
+function fetchGroupableUserFields() {
+  return ajax("/polls/groupable_user_fields.json").catch(error => {
     if (error) {
       popupAjaxError(error);
     } else {
@@ -444,18 +454,93 @@ function fetchGroupedVoters(data) {
 
 createWidget("discourse-poll-grouped-pies", {
   tagName: "div.poll-grouped-pies",
+  buildAttributes(attrs) {
+    return {
+      id: `poll-results-grouped-pie-charts-${attrs.id}`
+    };
+  },
+
   html(attrs) {
-    later(() => {
+    fetchGroupableUserFields().then(response => {
+      attrs.groupedBy = attrs.groupedBy || response.fields[0].id;
+      let fields = response.fields;
+      let parent = document.getElementById(
+        `poll-results-grouped-pie-charts-${attrs.id}`
+      );
+      let fieldSelectId = `field-select-${attrs.id}`;
+
+      let existingSel = document.getElementById(fieldSelectId);
+      if (existingSel) return;
+
+      let sel = document.createElement("select");
+      sel.id = fieldSelectId;
+      parent.appendChild(sel);
+
+      for (var i = 0; i < fields.length; i++) {
+        let opt = document.createElement("option");
+        opt.innerHTML = fields[i].name;
+        opt.value = fields[i].id;
+        sel.appendChild(opt);
+        $(sel).val(attrs.groupedBy);
+      }
       fetchGroupedVoters({
         post_id: attrs.post.id,
         poll_name: attrs.poll.name,
-        field: 1
+        field: attrs.groupedBy
       }).then(result => {
-        // eslint-disable-next-line
-        console.log(result);
+        for (
+          let chartIdx = 0;
+          chartIdx < result.grouped_results.length;
+          chartIdx++
+        ) {
+          let data = result.grouped_results[chartIdx].options.map(o => o.votes);
+          let labels = result.grouped_results[chartIdx].options.map(
+            o => o.html
+          );
+          let canvasId = `pie-${attrs.id}-${chartIdx}`;
+          let existingChart = document.querySelector(
+            `#pie-${attrs.id}-${chartIdx}`
+          );
+          if (!existingChart) {
+            let h3 = document.createElement("h3");
+            h3.textContent = result.grouped_results[chartIdx].group;
+            let canvas = document.createElement("canvas");
+            canvas.classList.add(`poll-grouped-pie-${attrs.id}`);
+            canvas.id = canvasId;
+            parent.appendChild(h3);
+            parent.appendChild(canvas);
+            let el = document.querySelector(`#pie-${attrs.id}-${chartIdx}`);
+            if (!el.$chartjs) {
+              let config = {
+                type: "pie",
+                data: {
+                  datasets: [
+                    {
+                      data: data,
+                      backgroundColor: getColors(data.length)
+                    }
+                  ],
+                  labels: labels
+                },
+                options: {
+                  responsive: true
+                }
+              };
+              // eslint-disable-next-line
+              new Chart(el.getContext("2d"), config);
+            }
+          }
+        }
       });
-    }, 100);
+    });
     return "";
+  },
+
+  click(e) {
+    let select = $(e.target).closest("select");
+    if (select.length !== 0) {
+      this.sendWidgetAction("refreshCharts", Number(select[0].value));
+    }
   }
 });
 
@@ -505,13 +590,13 @@ createWidget("discourse-poll-pie-chart", {
             new Chart(el.getContext("2d"), config);
           }
         });
-      }, 500);
+      });
       contents.push(this.attach("discourse-poll-pie-canvas", attrs));
     }
 
     const text = attrs.showAdvanced
-      ? "Combined Responses"
-      : "Grouped Responses";
+      ? "Show combined responses"
+      : "Show grouped responses";
     contents.push(new RawHtml({ html: `<a>${text}</a>` }));
     return contents;
   },
@@ -864,5 +949,13 @@ export default createWidget("discourse-poll", {
 
   showAdvancedPieCharts() {
     this.attrs.showAdvanced = !this.attrs.showAdvanced;
+  },
+
+  refreshCharts(newGroupedByValue) {
+    let el = document.getElementById(
+      `poll-results-grouped-pie-charts-${this.attrs.id}`
+    );
+    el.innerHTML = "";
+    this.attrs.groupedBy = newGroupedByValue;
   }
 });
