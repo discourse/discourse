@@ -38,7 +38,7 @@ const Group = RestModel.extend({
 
   findMembers(params, refresh) {
     if (isEmpty(this.name) || !this.can_see_members) {
-      return;
+      return Ember.RSVP.Promise.reject();
     }
 
     if (refresh) {
@@ -73,7 +73,7 @@ const Group = RestModel.extend({
 
   findRequesters(params, refresh) {
     if (isEmpty(this.name) || !this.can_see_members) {
-      return;
+      return Ember.RSVP.Promise.reject();
     }
 
     if (refresh) {
