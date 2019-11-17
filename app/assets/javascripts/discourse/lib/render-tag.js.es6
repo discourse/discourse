@@ -14,7 +14,7 @@ function defaultRenderTag(tag, params) {
   const tagName = params.tagName || "a";
   let path;
   if (tagName === "a" && !params.noHref) {
-    if (params.isPrivateMessage && User.current()) {
+    if ((params.isPrivateMessage || params.pmOnly) && User.current()) {
       const username = params.tagsForUser
         ? params.tagsForUser
         : User.current().username;
