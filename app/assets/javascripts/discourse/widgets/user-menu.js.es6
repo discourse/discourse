@@ -115,10 +115,7 @@ createWidget("user-menu-links", {
 
     return h("ul.menu-links-row", [
       links.map(l => h("li.user", this.linkHtml(l))),
-      h(
-        "li.glyphs",
-        glyphs.map(l => this.glyphHtml(l))
-      )
+      h("li.glyphs", glyphs.map(l => this.glyphHtml(l)))
     ]);
   },
 
