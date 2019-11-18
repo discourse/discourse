@@ -47,7 +47,7 @@
     "install-peerdeps": "^1.10.2",
     "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
     "pretender": "^1.6",
-    "prettier": "1.19.1",
+    "prettier": "^1.18.2",
     "puppeteer": "1.20",
     "qunit": "2.8.0",
     "route-recognizer": "^0.3.3",
