@@ -183,29 +183,8 @@ module Discourse
   end
 
   def self.activate_plugins!
-    all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
-
-    if Rails.env.development?
-      plugin_hash = Digest::SHA1.hexdigest(all_plugins.map { |p| p.path }.sort.join('|'))
-      hash_file = "#{Rails.root}/tmp/plugin-hash"
-
-      old_hash = begin
-        File.read(hash_file)
-      rescue Errno::ENOENT
-      end
-
-      if old_hash && old_hash != plugin_hash
-        puts "WARNING: It looks like your discourse plugins have recently changed."
-        puts "It is highly recommended to remove your `tmp` directory, otherwise"
-        puts "plugins might not work."
-        puts
-      else
-        File.write(hash_file, plugin_hash)
-      end
-    end
-
     @plugins = []
-    all_plugins.each do |p|
+    Plugin::Instance.find_all("#{Rails.root}/plugins").each do |p|
       v = p.metadata.required_version || Discourse::VERSION::STRING
       if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
         p.activate!
