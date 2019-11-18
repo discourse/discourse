@@ -109,7 +109,7 @@ createWidget("user-menu-links", {
     glyphs.push(this.notificationsGlyph());
     glyphs.push(this.bookmarksGlyph());
 
-    if (this.siteSettings.enable_personal_messages) {
+    if (this.siteSettings.enable_personal_messages || this.currentUser.staff) {
       glyphs.push(this.messagesGlyph());
     }
 
