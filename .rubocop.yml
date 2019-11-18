@@ -1,3 +1,6 @@
+require:
+  - rubocop-discourse
+
 AllCops:
   TargetRubyVersion: 2.4
   DisabledByDefault: true
@@ -128,3 +131,8 @@ Style/Semicolon:
 
 Style/RedundantReturn:
   Enabled: true
+
+DiscourseCops/NoChdir:	
+  Enabled: true	
+  Exclude:	
+    - 'spec/**/*' # Specs are run sequentially, so chdir can be used	
