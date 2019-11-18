@@ -8,6 +8,8 @@ class UploadsController < ApplicationController
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :show_secure]
   protect_from_forgery except: :show
 
+  before_action :is_asset_path, only: [:show, :show_short, :show_secure]
+
   def create
     # capture current user for block later on
     me = current_user
