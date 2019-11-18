@@ -136,3 +136,4 @@ DiscourseCops/NoChdir:
   Enabled: true	
   Exclude:	
     - 'spec/**/*' # Specs are run sequentially, so chdir can be used	
+    - 'plugins/*/spec/**/*'
