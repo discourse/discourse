@@ -58,9 +58,7 @@ class Admin::SiteSettingsController < Admin::AdminController
           notification_level = NotificationLevels.all[:watching_first_post]
         end
 
-        (previous_category_ids - new_category_ids).each do |category_id|
-          CategoryUser.where(category_id: category_id, notification_level: notification_level).delete_all
-        end
+        CategoryUser.where(category_id: (previous_category_ids - new_category_ids), notification_level: notification_level).delete_all
 
         (new_category_ids - previous_category_ids).each do |category_id|
           skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
@@ -87,9 +85,7 @@ class Admin::SiteSettingsController < Admin::AdminController
           notification_level = NotificationLevels.all[:watching_first_post]
         end
 
-        (previous_tag_ids - new_tag_ids).each do |tag_id|
-          TagUser.where(tag_id: tag_id, notification_level: notification_level).delete_all
-        end
+        TagUser.where(tag_id: (previous_tag_ids - new_tag_ids), notification_level: notification_level).delete_all
 
         (new_tag_ids - previous_tag_ids).each do |tag_id|
           skip_user_ids = TagUser.where(tag_id: tag_id).pluck(:user_id)
