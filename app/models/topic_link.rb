@@ -176,7 +176,7 @@ class TopicLink < ActiveRecord::Base
     if upload = Upload.get_from_url(url)
       internal = Discourse.store.internal?
       # Store the same URL that will be used in the cooked version of the post
-      url = UrlHelper.cook_url(upload.url)
+      url = UrlHelper.cook_url(upload.url, secure: upload.secure?)
     elsif route = Discourse.route_for(parsed)
       internal = true
 

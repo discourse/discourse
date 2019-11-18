@@ -64,13 +64,15 @@ module PrettyText
           reverse_map[value] << key
         end
 
-        Upload.where(sha1: map.values).pluck(:sha1, :url, :extension).each do |row|
-          sha1, url, extension = row
+        Upload.where(sha1: map.values).pluck(:sha1, :url, :extension, :original_filename, :secure).each do |row|
+          sha1, url, extension, original_filename, secure = row
 
           if short_urls = reverse_map[sha1]
+            secure_media = FileHelper.is_supported_media?(original_filename) && SiteSetting.secure_media? && secure
+
             short_urls.each do |short_url|
               result[short_url] = {
-                url: Discourse.store.cdn_url(url),
+                url: secure_media ? secure_media_url(url) : Discourse.store.cdn_url(url),
                 short_path: Upload.short_path(sha1: sha1, extension: extension),
                 base62_sha1: Upload.base62_sha1(sha1)
               }
@@ -80,6 +82,10 @@ module PrettyText
       end
 
       result
+    end
+
+    def secure_media_url(url)
+      url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
     end
 
     def get_topic_info(topic_id)

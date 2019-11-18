@@ -30,9 +30,9 @@ class TopicConverter
       )
 
       update_user_stats
+      update_post_uploads_secure_status
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
-
       watch_topic(topic)
     end
     @topic
@@ -49,6 +49,7 @@ class TopicConverter
       )
 
       add_allowed_users
+      update_post_uploads_secure_status
 
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
@@ -97,4 +98,11 @@ class TopicConverter
     end
   end
 
+  def update_post_uploads_secure_status
+    @topic.posts.each do |post|
+      next if post.uploads.empty?
+      post.update_uploads_secure_status
+      post.rebake!
+    end
+  end
 end

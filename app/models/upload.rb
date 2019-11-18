@@ -140,11 +140,6 @@ class Upload < ActiveRecord::Base
     !(url =~ /^(https?:)?\/\//)
   end
 
-  def private?
-    return false if self.for_theme || self.for_site_setting
-    SiteSetting.prevent_anons_from_downloading_files && !FileHelper.is_supported_image?(self.original_filename)
-  end
-
   def fix_dimensions!
     return if !FileHelper.is_supported_image?("image.#{extension}")
 
@@ -233,6 +228,34 @@ class Upload < ActiveRecord::Base
 
   def rebake_posts_on_old_scheme
     self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
+  end
+
+  def update_secure_status
+    return false if self.for_theme || self.for_site_setting
+    mark_secure = should_be_secure?
+
+    self.update_column("secure", mark_secure)
+    Discourse.store.update_upload_ACL(self) if Discourse.store.external?
+  end
+
+  def should_be_secure?
+    mark_secure = false
+    if FileHelper.is_supported_media?(self.original_filename)
+      if SiteSetting.secure_media?
+        mark_secure = true if SiteSetting.login_required?
+        unless SiteSetting.login_required?
+          # first post associated with upload determines secure status
+          # i.e. an already public upload will stay public even if added to a new PM
+          first_post_with_upload = self.posts.order(sort_order: :asc).first
+          mark_secure = first_post_with_upload ? first_post_with_upload.with_secure_media? : false
+        end
+      else
+        mark_secure = false
+      end
+    else
+      mark_secure = SiteSetting.prevent_anons_from_downloading_files?
+    end
+    mark_secure
   end
 
   def self.migrate_to_new_scheme(limit: nil)
@@ -385,6 +408,7 @@ end
 #  thumbnail_width   :integer
 #  thumbnail_height  :integer
 #  etag              :string
+#  secure            :boolean          default(FALSE), not null
 #
 # Indexes
 #

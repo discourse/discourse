@@ -5,7 +5,7 @@ require "mini_mime"
 class UploadsController < ApplicationController
   requires_login except: [:show, :show_short]
 
-  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short]
+  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :show_secure]
   protect_from_forgery except: :show
 
   def create
@@ -105,6 +105,17 @@ class UploadsController < ApplicationController
       else
         redirect_to Discourse.store.url_for(upload, force_download: params[:dl] == "1")
       end
+    else
+      render_404
+    end
+  end
+
+  def show_secure
+    # do not serve uploads requested via XHR to prevent XSS
+    return xhr_not_allowed if request.xhr?
+
+    if SiteSetting.secure_media?
+      redirect_to Discourse.store.signed_url_for_path("#{params[:path]}.#{params[:extension]}")
     else
       render_404
     end

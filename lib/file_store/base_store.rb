@@ -54,6 +54,10 @@ module FileStore
       not_implemented
     end
 
+    def s3_upload_host
+      not_implemented
+    end
+
     def external?
       not_implemented
     end
@@ -77,7 +81,11 @@ module FileStore
 
         if !file
           max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
-          url = Discourse.store.cdn_url(upload.url)
+
+          url = upload.secure? ?
+            Discourse.store.signed_url_for_path(upload.url) :
+            Discourse.store.cdn_url(upload.url)
+
           url = SiteSetting.scheme + ":" + url if url =~ /^\/\//
           file = FileHelper.download(
             url,

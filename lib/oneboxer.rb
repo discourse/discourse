@@ -178,7 +178,15 @@ module Oneboxer
   def self.local_upload_html(url)
     case File.extname(URI(url).path || "")
     when VIDEO_REGEX
-      "<video width='100%' height='100%' controls><source src='#{url}'><a href='#{url}'>#{url}</a></video>"
+      <<~HTML
+        <div class="onebox video-onebox">
+          <video width="100%" height="100%" controls="">
+            <source src='#{url}'>
+              <a href='#{url}'>#{url}</a>
+            </source>
+          </video>
+        </div>
+      HTML
     when AUDIO_REGEX
       "<audio controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
     end

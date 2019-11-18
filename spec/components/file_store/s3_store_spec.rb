@@ -43,16 +43,16 @@ describe FileStore::S3Store do
     let(:s3_object) { stub }
     let(:etag) { "etag" }
 
-    before do
-      s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
-    end
-
     describe "#store_upload" do
       it "returns an absolute schemaless url" do
         store.expects(:get_depth_for).with(upload.id).returns(0)
         s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-
         s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_object.expects(:put).with(
+          acl: "public-read",
+          cache_control: "max-age=31556952, public, immutable",
+          content_type: "image/png",
+          body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
         expect(store.store_upload(uploaded_file, upload)).to eq(
           "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
@@ -62,6 +62,7 @@ describe FileStore::S3Store do
 
       describe "when s3_upload_bucket includes folders path" do
         before do
+          s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
           SiteSetting.s3_upload_bucket = "s3-upload-bucket/discourse-uploads"
         end
 
@@ -78,28 +79,36 @@ describe FileStore::S3Store do
         end
       end
 
-      describe "when private uploads are enabled" do
-        it "returns signed URL for eligible private upload" do
+      describe "when secure uploads are enabled" do
+        it "saves secure attachment using private ACL" do
           SiteSetting.prevent_anons_from_downloading_files = true
           SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
-          upload.update!(original_filename: "small.pdf", extension: "pdf")
+          upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
 
-          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object).at_least_once
-          s3_object.expects(:presigned_url).with(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
+          s3_helper.expects(:s3_bucket).returns(s3_bucket)
+          s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
+          s3_object.expects(:put).with(
+            acl: "private",
+            cache_control: "max-age=31556952, public, immutable",
+            content_type: "application/pdf",
+            content_disposition: "attachment; filename=\"#{upload.original_filename}\"",
+            body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
           expect(store.store_upload(uploaded_file, upload)).to eq(
             "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.pdf"
           )
-
-          expect(store.url_for(upload)).not_to eq(upload.url)
         end
 
-        it "returns regular URL for ineligible private upload" do
+        it "saves image upload using public ACL" do
           SiteSetting.prevent_anons_from_downloading_files = true
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object).at_least_once
+          s3_object.expects(:put).with(
+            acl: "public-read",
+            cache_control: "max-age=31556952, public, immutable",
+            content_type: "image/png",
+            body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
           expect(store.store_upload(uploaded_file, upload)).to eq(
             "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
@@ -111,6 +120,10 @@ describe FileStore::S3Store do
     end
 
     describe "#store_optimized_image" do
+      before do
+        s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+      end
+
       it "returns an absolute schemaless url" do
         store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
@@ -355,23 +368,27 @@ describe FileStore::S3Store do
     include_context "s3 helpers"
     let(:s3_object) { stub }
 
+    before do
+      SiteSetting.authorized_extensions = "pdf|png"
+    end
+
     describe ".update_upload_ACL" do
-      it "sets acl to private when private uploads are enabled" do
-        SiteSetting.prevent_anons_from_downloading_files = true
+      it "sets acl to public by default" do
+        upload.update!(original_filename: "small.pdf", extension: "pdf")
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
         s3_object.expects(:acl).returns(s3_object)
-        s3_object.expects(:put).with(acl: "private").returns(s3_object)
+        s3_object.expects(:put).with(acl: "public-read").returns(s3_object)
 
         expect(store.update_upload_ACL(upload)).to be_truthy
       end
 
-      it "sets acl to public when private uploads are disabled" do
-        SiteSetting.prevent_anons_from_downloading_files = false
+      it "sets acl to private when upload is marked secure" do
+        upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
         s3_object.expects(:acl).returns(s3_object)
-        s3_object.expects(:put).with(acl: "public-read").returns(s3_object)
+        s3_object.expects(:put).with(acl: "private").returns(s3_object)
 
         expect(store.update_upload_ACL(upload)).to be_truthy
       end
@@ -418,6 +435,23 @@ describe FileStore::S3Store do
       s3_object.expects(:presigned_url).with(:get, opts)
 
       expect(store.url_for(upload, force_download: true)).not_to eq(upload.url)
+    end
+  end
+
+  describe ".signed_url_for_path" do
+    include_context "s3 helpers"
+    let(:s3_object) { stub }
+
+    it "returns signed URL for a given path" do
+      s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+      s3_bucket.expects(:object).with("special/optimized/file.png").returns(s3_object)
+      opts = {
+        expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
+      }
+
+      s3_object.expects(:presigned_url).with(:get, opts)
+
+      expect(store.signed_url_for_path("special/optimized/file.png")).not_to eq(upload.url)
     end
   end
 

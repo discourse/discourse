@@ -381,9 +381,19 @@ module PrettyText
     end
   end
 
+  def self.strip_secure_media(doc)
+    doc.css("a[href]").each do |a|
+      if a["href"].include?("/secure-media-uploads/") && FileHelper.is_supported_media?(a["href"])
+        target = %w(video audio).include?(a&.parent&.parent&.name) ? a.parent.parent : a
+        target.replace "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
+      end
+    end
+  end
+
   def self.format_for_email(html, post = nil)
     doc = Nokogiri::HTML.fragment(html)
     DiscourseEvent.trigger(:reduce_cooked, doc, post)
+    strip_secure_media(doc) if post&.with_secure_media?
     strip_image_wrapping(doc)
     convert_vimeo_iframes(doc)
     make_all_links_absolute(doc)
