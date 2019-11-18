@@ -275,7 +275,6 @@ class ImportScripts::DiscuzX < ImportScripts::Base
         description: row['description'],
         position: row['position'].to_i + max_position,
         color: color,
-        suppress_from_latest: (row['status'] == (0) || row['status'] == (3)),
         post_create_action: lambda do |category|
           if slug = @category_slug[row['id']]
             category.update(slug: slug)
@@ -294,6 +293,10 @@ class ImportScripts::DiscuzX < ImportScripts::Base
               category.color = Miro::DominantColors.new(File.join('/shared', upload.url)).to_hex.first[1, 6] if !color
               category.save!
             end
+          end
+
+          if row['status'] == (0) || row['status'] == (3)
+            SiteSetting.default_categories_muted = [SiteSetting.default_categories_muted, category.id].reject(&:blank?).join("|")
           end
           category
         end

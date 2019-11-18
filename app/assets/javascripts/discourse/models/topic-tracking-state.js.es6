@@ -5,11 +5,9 @@ import {
   default as discourseComputed,
   on
 } from "discourse-common/utils/decorators";
-import { defaultHomepage } from "discourse/lib/utilities";
 import PreloadStore from "preload-store";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
-import Site from "discourse/models/site";
 import User from "discourse/models/user";
 
 function isNew(topic) {
@@ -139,18 +137,6 @@ const TopicTrackingState = EmberObject.extend({
       if (
         !category ||
         category.get("parentCategory.id") !== filterCategory.get("id")
-      ) {
-        return;
-      }
-    }
-
-    if (filter === defaultHomepage()) {
-      const suppressed_from_latest_category_ids = Site.currentProp(
-        "suppressed_from_latest_category_ids"
-      );
-      if (
-        suppressed_from_latest_category_ids &&
-        suppressed_from_latest_category_ids.includes(data.payload.category_id)
       ) {
         return;
       }

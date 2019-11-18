@@ -132,7 +132,6 @@ const Category = RestModel.extend({
         allow_badges: this.allow_badges,
         custom_fields: this.custom_fields,
         topic_template: this.topic_template,
-        suppress_from_latest: this.suppress_from_latest,
         all_topics_wiki: this.all_topics_wiki,
         allowed_tags: this.allowed_tags,
         allowed_tag_groups: this.allowed_tag_groups,

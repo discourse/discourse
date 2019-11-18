@@ -8,18 +8,6 @@ describe CategoriesController do
 
   context 'index' do
 
-    it 'suppresses categories correctly' do
-      post = create_post(title: 'super AMAZING AMAZING post')
-
-      get "/categories"
-      expect(response.body).to include('AMAZING AMAZING')
-
-      post.topic.category.update_columns(suppress_from_latest: true)
-
-      get "/categories"
-      expect(response.body).not_to include('AMAZING AMAZING')
-    end
-
     it 'web crawler view has correct urls for subfolder install' do
       set_subfolder "/forum"
       get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }

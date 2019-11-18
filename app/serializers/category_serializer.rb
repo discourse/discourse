@@ -11,7 +11,6 @@ class CategorySerializer < SiteCategorySerializer
              :email_in,
              :email_in_allow_strangers,
              :mailinglist_mirror,
-             :suppress_from_latest,
              :all_topics_wiki,
              :can_delete,
              :cannot_delete_reason,
@@ -79,10 +78,6 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def include_email_in_allow_strangers?
-    scope && scope.can_edit?(object)
-  end
-
-  def include_suppress_from_latest?
     scope && scope.can_edit?(object)
   end
 

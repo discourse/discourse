@@ -3,6 +3,7 @@
 class Category < ActiveRecord::Base
   self.ignored_columns = %w{
     uploaded_meta_id
+    suppress_from_latest
   }
 
   include Searchable
@@ -72,7 +73,6 @@ class Category < ActiveRecord::Base
   after_save :clear_url_cache
   after_save :index_search
   after_save :update_reviewables
-  after_save :clear_featured_cache
 
   after_destroy :reset_topic_ids_cache
   after_destroy :publish_category_deletion
@@ -654,10 +654,6 @@ class Category < ActiveRecord::Base
 
   def clear_url_cache
     @@url_cache.clear
-  end
-
-  def clear_featured_cache
-    CategoryFeaturedTopic.clear_exclude_category_ids
   end
 
   def full_slug(separator = "-")
