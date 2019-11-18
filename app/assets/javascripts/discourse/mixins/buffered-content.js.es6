@@ -1,6 +1,6 @@
 import EmberObjectProxy from "@ember/object/proxy";
 import Mixin from "@ember/object/mixin";
-import computed from "@ember/object/computed";
+import { computed } from "@ember/object";
 
 /* global BufferedProxy: true */
 export function bufferedProperty(property) {

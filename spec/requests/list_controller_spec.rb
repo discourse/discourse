@@ -339,8 +339,7 @@ RSpec.describe ListController do
     end
 
     it 'renders links correctly with subfolder' do
-      GlobalSetting.stubs(:relative_url_root).returns('/forum')
-      Discourse.stubs(:base_uri).returns("/forum")
+      set_subfolder "/forum"
       post = Fabricate(:post, topic: topic, user: user)
       get "/latest.rss"
       expect(response.status).to eq(200)
@@ -458,8 +457,7 @@ RSpec.describe ListController do
         end
 
         it "renders RSS in subfolder correctly" do
-          GlobalSetting.stubs(:relative_url_root).returns('/forum')
-          Discourse.stubs(:base_uri).returns("/forum")
+          set_subfolder "/forum"
           get "/c/#{category.slug}.rss"
           expect(response.status).to eq(200)
           expect(response.body).to_not include("/forum/forum")

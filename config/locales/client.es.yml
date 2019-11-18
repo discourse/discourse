@@ -951,7 +951,7 @@ es:
         upload_title: "Sube tu foto"
         image_is_not_a_square: "Advertencia: hemos recortado tu imagen porque la anchura y la altura no eran iguales."
       change_profile_background:
-        title: "Encabezado del perfil"
+        title: "Encabezado de perfil"
         instructions: "Por defecto, los encabezados de perfil estarán centrados y tendrán una anchura de 1110px."
       change_card_background:
         title: "Fondo de tarjeta de usuario"
@@ -2381,12 +2381,12 @@ es:
       tags_allowed_tags: "Restringir estas etiquetas a esta categoría:"
       tags_allowed_tag_groups: "Restringir estos grupos de etiquetas a esta categoría:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
-      tags_tab_description: "Las etiquetas y grupos de etiquetas arriba especificadas solo estarán disponibles en esta categoría y en las otras categorías que igualmente lo especifiquen. No se permitirá su uso en otras categorías."
+      tags_tab_description: "Las etiquetas y grupos de etiquetas arriba especificados solo estarán disponibles en esta categoría y en las otras categorías que igualmente lo especifiquen. No se permitirá su uso en otras categorías."
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       manage_tag_groups_link: "Gestiona los grupos de etiquetas aquí."
       allow_global_tags_label: "Permitir también otras etiquetas"
       tag_group_selector_placeholder: "(Opcional) Grupo de etiquetas"
-      required_tag_group_description: "Requiere temas nuevos para tener etiquetas de un grupo de etiquetas:"
+      required_tag_group_description: "Requerir que los nuevos temas tengan etiquetas de un grupo de etiquetas:"
       min_tags_from_required_group_label: "Número de etiquetas:"
       required_tag_group_label: "Grupo de etiquetas:"
       topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"
@@ -2854,7 +2854,7 @@ es:
         parent_tag_description: "Las etiquetas de este grupo no se pueden utilizar a menos que la etiqueta primaria esté presente. "
         one_per_topic_label: "Limitar las etiquetas de este grupo a utilizarse solo una vez por tema"
         new_name: "Nuevo grupo de etiquetas"
-        name_placeholder: "Nombre del grupo de etiquetas:"
+        name_placeholder: "Nombre del grupo de etiquetas"
         save: "Guardar"
         delete: "Eliminar"
         confirm_delete: "¿Estás seguro de que quieres eliminar este grupo de etiquetas?"
@@ -3055,16 +3055,30 @@ es:
         none: "No hay ninguna clave de API activa en este momento."
         user: "Usuario"
         title: "API"
+        key: "Clave"
         created: Creado
         updated: Actualizado
         last_used: Usada por última vez
         never_used: (nunca)
         generate: "Generar clave de API"
+        undo_revoke: "Deshacer revocación"
         revoke: "Revocar"
         all_users: "Todos los usuarios"
+        active_keys: "Claves de API activas"
+        manage_keys: Gestionar clave
         show_details: Detalles
         description: Descripción
+        no_description: (sin descripción)
+        all_api_keys: Todas las claves de API
+        user_mode: Nivel de usuario
+        impersonate_all_users: Suplantar cualquier usuari
+        single_user: "Un usuari"
+        user_placeholder: Introducir nombre de usuario
+        description_placeholder: "¿Para qué se usará esta clave?"
         save: Guardar
+        new_key: Nueva clave de API
+        revoked: Revocada
+        delete: Eliminar permanentemente
       web_hooks:
         title: "Webhooks"
         none: "Ahora mismo no hay webhooks."
@@ -3647,6 +3661,11 @@ es:
             change_theme_setting: "cambiar la configuración del tema"
             disable_theme_component: "deshabilitar componente de tema"
             enable_theme_component: "habilitar componente de tema"
+            revoke_title: "revocar título"
+            change_title: "cambiar título"
+            api_key_create: "crear clave API"
+            api_key_update: "actualizar clave API"
+            api_key_destroy: "destruir clave API"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos se revisarán y el registro se bloqueará, o se realizará alguna otra acción."

@@ -1,4 +1,5 @@
 import Post from "discourse/models/post";
+import User from "discourse/models/user";
 
 QUnit.module("model: Post");
 
@@ -56,7 +57,7 @@ QUnit.test("updateFromPost", assert => {
 });
 
 QUnit.test("destroy by staff", assert => {
-  var user = Discourse.User.create({ username: "staff", moderator: true }),
+  var user = User.create({ username: "staff", moderator: true }),
     post = buildPost({ user: user });
 
   post.destroy(user);
@@ -81,7 +82,7 @@ QUnit.test("destroy by staff", assert => {
 
 QUnit.test("destroy by non-staff", assert => {
   var originalCooked = "this is the original cooked value",
-    user = Discourse.User.create({ username: "evil trout" }),
+    user = User.create({ username: "evil trout" }),
     post = buildPost({ user: user, cooked: originalCooked });
 
   return post.destroy(user).then(() => {

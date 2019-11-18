@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import computed from "@ember/object/computed";
+import { computed } from "@ember/object";
 
 export default Component.extend({
   classNames: ["d-date-time-input"],
@@ -7,11 +7,11 @@ export default Component.extend({
   showTime: true,
 
   _hours: computed("date", function() {
-    return this.date ? this.date.getHours() : null;
+    return this.date && this.showTime ? this.date.getHours() : null;
   }),
 
   _minutes: computed("date", function() {
-    return this.date ? this.date.getMinutes() : null;
+    return this.date && this.showTime ? this.date.getMinutes() : null;
   }),
 
   actions: {

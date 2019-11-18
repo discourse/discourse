@@ -34,7 +34,10 @@ export default MultiSelectComponent.extend({
   },
 
   mutateValues(values) {
-    this.set("categories", values.map(v => Category.findById(v)));
+    this.set(
+      "categories",
+      values.map(v => Category.findById(v))
+    );
   },
 
   filterComputedContent(computedContent, computedValues, filter) {

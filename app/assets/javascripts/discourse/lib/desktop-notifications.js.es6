@@ -3,6 +3,8 @@ import DiscourseURL from "discourse/lib/url";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { formatUsername } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -21,7 +23,7 @@ function init(messageBus, appEvents) {
   liveEnabled = false;
   mbClientId = messageBus.clientId;
 
-  if (!Discourse.User.current()) {
+  if (!User.current()) {
     return;
   }
 
@@ -213,7 +215,7 @@ function requestPermission() {
 function i18nKey(notification_type) {
   return (
     "notifications.popup." +
-    Discourse.Site.current().get("notificationLookup")[notification_type]
+    Site.current().get("notificationLookup")[notification_type]
   );
 }
 

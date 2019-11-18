@@ -2,6 +2,7 @@ import EmberObject from "@ember/object";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
+import User from "discourse/models/user";
 
 QUnit.module("model:topic");
 
@@ -108,7 +109,7 @@ QUnit.test("updateFromJson", assert => {
 });
 
 QUnit.test("destroy", assert => {
-  const user = Discourse.User.create({ username: "eviltrout" });
+  const user = User.create({ username: "eviltrout" });
   const topic = Topic.create({ id: 1234 });
 
   topic.destroy(user);
@@ -117,7 +118,7 @@ QUnit.test("destroy", assert => {
 });
 
 QUnit.test("recover", assert => {
-  const user = Discourse.User.create({ username: "eviltrout" });
+  const user = User.create({ username: "eviltrout" });
   const topic = Topic.create({
     id: 1234,
     deleted_at: new Date(),

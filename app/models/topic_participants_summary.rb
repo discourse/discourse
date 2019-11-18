@@ -3,6 +3,7 @@
 # This is used on a topic page
 class TopicParticipantsSummary
   attr_reader :topic, :options
+  PARTICIPANT_COUNT = 5 # should match maxUserCount in topic list
 
   def initialize(topic, options = {})
     @topic = topic
@@ -26,7 +27,7 @@ class TopicParticipantsSummary
   end
 
   def top_participants
-    user_ids.map { |id| avatar_lookup[id] }.compact.uniq.take(4)
+    user_ids.map { |id| avatar_lookup[id] }.compact.uniq.take(PARTICIPANT_COUNT)
   end
 
   def user_ids

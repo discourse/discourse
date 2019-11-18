@@ -3,6 +3,8 @@ import { emojiUnescape } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("name")
@@ -18,7 +20,7 @@ const NavItem = EmberObject.extend({
 
     if (
       name === "latest" &&
-      (!Discourse.Site.currentProp("mobileView") || this.tagId !== undefined)
+      (!Site.currentProp("mobileView") || this.tagId !== undefined)
     ) {
       count = 0;
     }
@@ -31,8 +33,8 @@ const NavItem = EmberObject.extend({
     );
   },
 
-  @discourseComputed("filterMode")
-  href(filterMode) {
+  @discourseComputed("name", "category", "noSubcategories", "tagId")
+  href(filterMode, category, noSubcategories, tagId) {
     let customHref = null;
 
     NavItem.customNavItemHrefs.forEach(function(cb) {
@@ -46,7 +48,8 @@ const NavItem = EmberObject.extend({
       return customHref;
     }
 
-    return Discourse.getURL("/") + filterMode;
+    const context = { category, noSubcategories, tagId };
+    return NavItem.pathFor(filterMode, context);
   },
 
   @discourseComputed("name", "category", "noSubcategories")
@@ -95,30 +98,65 @@ const ExtraNavItem = NavItem.extend({
 NavItem.reopenClass({
   extraArgsCallbacks: [],
   customNavItemHrefs: [],
-  extraNavItems: [],
+  extraNavItemDescriptors: [],
 
-  // create a nav item from the text, will return null if there is not valid nav item for this particular text
-  fromText(text, opts) {
-    var split = text.split(","),
-      name = split[0],
-      testName = name.split("/")[0],
-      anonymous = !Discourse.User.current();
+  pathFor(filterType, context) {
+    let path = Discourse.getURL("");
+    let includesCategoryContext = false;
+    let includesTagContext = false;
+
+    if (filterType === "categories") {
+      path += "/categories";
+      return path;
+    }
+
+    if (context.tagId && Site.currentProp("filters").includes(filterType)) {
+      includesTagContext = true;
+      path += "/tags";
+    }
+
+    if (context.category) {
+      includesCategoryContext = true;
+      path += `/c/${Category.slugFor(context.category)}`;
+
+      if (context.noSubcategories) {
+        path += "/none";
+      }
+    }
+
+    if (includesTagContext) {
+      path += `/${context.tagId}`;
+    }
+
+    if (includesTagContext || includesCategoryContext) {
+      path += "/l";
+    }
+
+    path += `/${filterType}`;
+
+    // In the case of top, the nav item doesn't include a period because the
+    // period has its own selector just below
+
+    return path;
+  },
+
+  // Create a nav item given a filterType. It returns null if there is not
+  // valid nav item. The name is a historical artifact.
+  fromText(filterType, opts) {
+    const anonymous = !User.current();
 
     opts = opts || {};
 
     if (
       anonymous &&
-      !Discourse.Site.currentProp("anonymous_top_menu_items").includes(testName)
+      !Site.currentProp("anonymous_top_menu_items").includes(filterType)
     )
       return null;
 
-    if (!Category.list() && testName === "categories") return null;
-    if (!Discourse.Site.currentProp("top_menu_items").includes(testName))
-      return null;
+    if (!Category.list() && filterType === "categories") return null;
+    if (!Site.currentProp("top_menu_items").includes(filterType)) return null;
 
-    var args = { name: name, hasIcon: name === "unread" },
-      extra = null,
-      self = this;
+    var args = { name: filterType, hasIcon: filterType === "unread" };
     if (opts.category) {
       args.category = opts.category;
     }
@@ -131,10 +169,9 @@ NavItem.reopenClass({
     if (opts.noSubcategories) {
       args.noSubcategories = true;
     }
-    NavItem.extraArgsCallbacks.forEach(cb => {
-      extra = cb.call(self, text, opts);
-      _.merge(args, extra);
-    });
+    NavItem.extraArgsCallbacks.forEach(cb =>
+      _.merge(args, cb.call(this, filterType, opts))
+    );
 
     const store = Discourse.__container__.lookup("service:store");
     return store.createRecord("nav-item", args);
@@ -149,11 +186,10 @@ NavItem.reopenClass({
 
     let items = Discourse.SiteSettings.top_menu.split("|");
 
-    if (
-      args.filterMode &&
-      !items.some(i => i.indexOf(args.filterMode) !== -1)
-    ) {
-      items.push(args.filterMode);
+    const filterType = (args.filterMode || "").split("/").pop();
+
+    if (!items.some(i => filterType === i)) {
+      items.push(filterType);
     }
 
     items = items
@@ -162,16 +198,24 @@ NavItem.reopenClass({
         i => i !== null && !(category && i.get("name").indexOf("categor") === 0)
       );
 
-    const extraItems = NavItem.extraNavItems.filter(item => {
-      if (!item.customFilter) return true;
-      return item.customFilter.call(this, category, args);
-    });
+    const context = {
+      category: args.category,
+      tagId: args.tagId,
+      noSubcategories: args.noSubcategories
+    };
+
+    const extraItems = NavItem.extraNavItemDescriptors
+      .map(descriptor => ExtraNavItem.create(_.merge({}, context, descriptor)))
+      .filter(item => {
+        if (!item.customFilter) return true;
+        return item.customFilter(category, args);
+      });
 
     let forceActive = false;
 
     extraItems.forEach(item => {
       if (item.init) {
-        item.init.call(this, item, category, args);
+        item.init(item, category, args);
       }
 
       const before = item.before;
@@ -187,11 +231,11 @@ NavItem.reopenClass({
         items.push(item);
       }
 
-      if (!item.customHref) return;
+      if (item.customHref) {
+        item.set("href", item.customHref(category, args));
+      }
 
-      item.set("href", item.customHref.call(this, category, args));
-
-      if (item.forceActive && item.forceActive.call(this, category, args)) {
+      if (item.forceActive && item.forceActive(category, args)) {
         item.active = true;
         forceActive = true;
       } else {
@@ -221,9 +265,7 @@ export function customNavItemHref(cb) {
 }
 
 export function addNavItem(item) {
-  const navItem = ExtraNavItem.create(item);
-  NavItem.extraNavItems.push(navItem);
-  return navItem;
+  NavItem.extraNavItemDescriptors.push(item);
 }
 
 Object.defineProperty(Discourse, "NavItem", {

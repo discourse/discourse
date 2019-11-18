@@ -225,8 +225,7 @@ describe UserNotifications do
       end
 
       it "supports subfolder" do
-        GlobalSetting.stubs(:relative_url_root).returns('/forum')
-        Discourse.stubs(:base_uri).returns("/forum")
+        set_subfolder "/forum"
         html = subject.html_part.body.to_s
         text = subject.text_part.body.to_s
         expect(html).to be_present

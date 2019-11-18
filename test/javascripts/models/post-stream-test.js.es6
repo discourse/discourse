@@ -1,5 +1,6 @@
 import Post from "discourse/models/post";
 import createStore from "helpers/create-store";
+import User from "discourse/models/user";
 
 QUnit.module("model:post-stream");
 
@@ -140,7 +141,11 @@ QUnit.test("closestPostNumberFor", assert => {
 
 QUnit.test("closestDaysAgoFor", assert => {
   const postStream = buildStream(1231);
-  postStream.set("timelineLookup", [[1, 10], [3, 8], [5, 1]]);
+  postStream.set("timelineLookup", [
+    [1, 10],
+    [3, 8],
+    [5, 1]
+  ]);
 
   assert.equal(postStream.closestDaysAgoFor(1), 10);
   assert.equal(postStream.closestDaysAgoFor(2), 10);
@@ -549,7 +554,7 @@ QUnit.test("staging and undoing a new post", assert => {
     "the original post is lastAppended"
   );
 
-  const user = Discourse.User.create({
+  const user = User.create({
     username: "eviltrout",
     name: "eviltrout",
     id: 321
@@ -650,7 +655,7 @@ QUnit.test("staging and committing a post", assert => {
     "the original post is lastAppended"
   );
 
-  const user = Discourse.User.create({
+  const user = User.create({
     username: "eviltrout",
     name: "eviltrout",
     id: 321
@@ -772,7 +777,7 @@ QUnit.test("comitting and triggerNewPostInStream race condition", assert => {
   const store = postStream.store;
 
   postStream.appendPost(store.createRecord("post", { id: 1, post_number: 1 }));
-  const user = Discourse.User.create({
+  const user = User.create({
     username: "eviltrout",
     name: "eviltrout",
     id: 321
@@ -804,8 +809,8 @@ QUnit.test("comitting and triggerNewPostInStream race condition", assert => {
 QUnit.test("triggerNewPostInStream for ignored posts", async assert => {
   const postStream = buildStream(280, [1]);
   const store = postStream.store;
-  Discourse.User.resetCurrent(
-    Discourse.User.create({
+  User.resetCurrent(
+    User.create({
       username: "eviltrout",
       name: "eviltrout",
       id: 321,

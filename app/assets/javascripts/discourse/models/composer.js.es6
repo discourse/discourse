@@ -19,6 +19,8 @@ import { propertyNotEqual } from "discourse/lib/computed";
 import { throttle } from "@ember/runloop";
 import { Promise } from "rsvp";
 import { set } from "@ember/object";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
@@ -650,10 +652,7 @@ const Composer = RestModel.extend({
     const replyBlank = isEmpty(this.reply);
 
     const composer = this;
-    if (
-      !replyBlank &&
-      ((opts.reply || isEdit(opts.action)) && this.replyDirty)
-    ) {
+    if (!replyBlank && (opts.reply || isEdit(opts.action)) && this.replyDirty) {
       return;
     }
 
@@ -1145,8 +1144,8 @@ Composer.reopenClass({
   // TODO: Replace with injection
   create(args) {
     args = args || {};
-    args.user = args.user || Discourse.User.current();
-    args.site = args.site || Discourse.Site.current();
+    args.user = args.user || User.current();
+    args.site = args.site || Site.current();
     args.siteSettings = args.siteSettings || Discourse.SiteSettings;
     return this._super(args);
   },

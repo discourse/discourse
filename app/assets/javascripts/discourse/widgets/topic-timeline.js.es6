@@ -211,7 +211,8 @@ createWidget("timeline-scrollarea", {
       position.lastRead > 3 &&
       Math.abs(position.lastRead - position.current) > 3 &&
       Math.abs(position.lastRead - position.total) > 1 &&
-      (position.lastRead && position.lastRead !== position.total);
+      position.lastRead &&
+      position.lastRead !== position.total;
 
     if (hasBackPosition) {
       const lastReadTop = Math.round(
@@ -262,7 +263,7 @@ createWidget("timeline-scrollarea", {
     const position = this.position();
     this.state.scrolledPost = position.current;
 
-    if (position.current === position.scrollPosition) {
+    if (position.current === position.scrollPosition || this.site.mobileView) {
       this.sendWidgetAction("jumpToIndex", position.current);
     } else {
       this.sendWidgetAction("jumpEnd");

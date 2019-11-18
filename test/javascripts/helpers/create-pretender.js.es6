@@ -1,3 +1,5 @@
+import User from "discourse/models/user";
+
 export function parsePostData(query) {
   const result = {};
   query.split("&").forEach(function(part) {
@@ -29,7 +31,7 @@ export function success() {
   return response({ success: true });
 }
 
-const loggedIn = () => !!Discourse.User.current();
+const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
 export let fixturesByUrl;
 

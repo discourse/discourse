@@ -145,7 +145,8 @@ export function searchForTerm(term, opts) {
   if (opts.searchContext) {
     data.search_context = {
       type: opts.searchContext.type,
-      id: opts.searchContext.id
+      id: opts.searchContext.id,
+      name: opts.searchContext.name
     };
   }
 
@@ -167,6 +168,8 @@ export function searchContextDescription(type, name) {
         return I18n.t("search.context.user", { username: name });
       case "category":
         return I18n.t("search.context.category", { category: name });
+      case "tag":
+        return I18n.t("search.context.tag", { tag: name });
       case "private_messages":
         return I18n.t("search.context.private_messages");
     }

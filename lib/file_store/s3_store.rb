@@ -55,7 +55,7 @@ module FileStore
       path, etag = @s3_helper.upload(file, path, options)
 
       # return the upload url and etag
-      return File.join(absolute_base_url, path), etag
+      [File.join(absolute_base_url, path), etag]
     end
 
     def remove_file(url, path)

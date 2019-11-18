@@ -1,11 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import {
-  default as computed,
-  and,
-  or,
-  alias,
-  reads
-} from "@ember/object/computed";
+import { and, or, alias, reads } from "@ember/object/computed";
 import { debounce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
@@ -20,18 +14,17 @@ import {
   on
 } from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { escapeExpression, safariHacksDisabled } from "discourse/lib/utilities";
 import {
-  escapeExpression,
-  uploadIcon,
   authorizesOneOrMoreExtensions,
-  safariHacksDisabled
-} from "discourse/lib/utilities";
+  uploadIcon
+} from "discourse/lib/uploads";
 import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
 import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
 import ENV from "discourse-common/config/environment";
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -328,11 +321,13 @@ export default Controller.extend({
 
   @discourseComputed
   allowUpload() {
-    return authorizesOneOrMoreExtensions();
+    return authorizesOneOrMoreExtensions(this.currentUser.staff);
   },
 
   @discourseComputed()
-  uploadIcon: () => uploadIcon(),
+  uploadIcon() {
+    return uploadIcon(this.currentUser.staff);
+  },
 
   actions: {
     togglePreview() {

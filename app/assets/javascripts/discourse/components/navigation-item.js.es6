@@ -34,7 +34,7 @@ export default Component.extend(
 
       // Include the category id if the option is present
       if (content.get("includeCategoryId")) {
-        let categoryId = this.get("category.id");
+        let categoryId = this.get("content.category.id");
         if (categoryId) {
           queryParams.push(`category_id=${categoryId}`);
         }

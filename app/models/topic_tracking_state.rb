@@ -159,7 +159,6 @@ class TopicTrackingState
   end
 
   def self.report(user, topic_id = nil)
-
     # Sam: this is a hairy report, in particular I need custom joins and fancy conditions
     #  Dropping to sql_builder so I can make sense of it.
     #
@@ -173,7 +172,8 @@ class TopicTrackingState
       skip_unread: true,
       skip_order: true,
       staff: user.staff?,
-      admin: user.admin?
+      admin: user.admin?,
+      user: user
     )
 
     sql << "\nUNION ALL\n\n"
@@ -184,7 +184,8 @@ class TopicTrackingState
       skip_order: true,
       staff: user.staff?,
       filter_old_unread: true,
-      admin: user.admin?
+      admin: user.admin?,
+      user: user
     )
 
     DB.query(
@@ -221,7 +222,8 @@ class TopicTrackingState
         "1=0"
       else
         TopicQuery.new_filter(Topic, "xxx").where_clause.send(:predicates).join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause) +
-          " AND topics.created_at > :min_new_topic_date"
+          " AND topics.created_at > :min_new_topic_date" +
+          " AND (category_users.last_seen_at IS NULL OR topics.created_at > category_users.last_seen_at)"
       end
 
     select = (opts[:select]) || "
@@ -240,7 +242,7 @@ class TopicTrackingState
         append = "OR u.admin" if !opts.key?(:admin)
         <<~SQL
           (
-           NOT c.read_restricted #{append} OR category_id IN (
+           NOT c.read_restricted #{append} OR c.id IN (
               SELECT c2.id FROM categories c2
               JOIN category_groups cg ON cg.category_id = c2.id
               JOIN group_users gu ON gu.user_id = :user_id AND cg.group_id = gu.group_id
@@ -265,6 +267,7 @@ class TopicTrackingState
     JOIN user_options AS uo ON uo.user_id = u.id
     JOIN categories c ON c.id = topics.category_id
     LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
+    LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{opts[:user].id}
     WHERE u.id = :user_id AND
           #{filter_old_unread}
           topics.archetype <> 'private_message' AND
@@ -272,12 +275,9 @@ class TopicTrackingState
           #{visibility_filter}
           topics.deleted_at IS NULL AND
           #{category_filter}
-          NOT EXISTS( SELECT 1 FROM category_users cu
-                          WHERE last_read_post_number IS NULL AND
-                               cu.user_id = :user_id AND
-                               cu.category_id = topics.category_id AND
-                               cu.notification_level = #{CategoryUser.notification_levels[:muted]})
-
+          (category_users.id IS NULL OR
+          last_read_post_number IS NOT NULL OR
+          category_users.notification_level <> #{CategoryUser.notification_levels[:muted]})
 SQL
 
     if opts[:topic_id]

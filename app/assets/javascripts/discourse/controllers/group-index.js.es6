@@ -8,6 +8,7 @@ import {
   observes
 } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse/lib/debounce";
+import User from "discourse/models/user";
 
 export default Controller.extend({
   queryParams: ["order", "desc", "filter"],
@@ -112,7 +113,7 @@ export default Controller.extend({
         { order: this.order, desc: this.desc }
       ).then(result => {
         this.get("model.members").addObjects(
-          result.members.map(member => Discourse.User.create(member))
+          result.members.map(member => User.create(member))
         );
         this.setProperties({
           loading: false,

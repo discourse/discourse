@@ -1,3 +1,5 @@
+import Site from "discourse/models/site";
+
 export default function() {
   // Error page
   this.route("exception", { path: "/exception" });
@@ -27,7 +29,7 @@ export default function() {
     this.route("topCategory", { path: "/c/:parentSlug/:slug/l/top" });
 
     // top by periods
-    Discourse.Site.currentProp("periods").forEach(period => {
+    Site.currentProp("periods").forEach(period => {
       const top = "top" + period.capitalize();
       this.route(top, { path: "/top/" + period });
       this.route(top + "ParentCategory", { path: "/c/:slug/l/top/" + period });
@@ -40,7 +42,7 @@ export default function() {
     });
 
     // filters
-    Discourse.Site.currentProp("filters").forEach(filter => {
+    Site.currentProp("filters").forEach(filter => {
       this.route(filter, { path: "/" + filter });
       this.route(filter + "ParentCategory", { path: "/c/:slug/l/" + filter });
       this.route(filter + "CategoryNone", {
@@ -204,7 +206,7 @@ export default function() {
       path: "/c/:parent_category/:category/:tag_id"
     });
 
-    Discourse.Site.currentProp("filters").forEach(filter => {
+    Site.currentProp("filters").forEach(filter => {
       this.route("show" + filter.capitalize(), {
         path: "/:tag_id/l/" + filter
       });

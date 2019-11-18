@@ -16,7 +16,7 @@ export default Component.extend({
   toPanelActive: equal("currentPanel", "to"),
 
   _valid(state) {
-    if (state.to < state.from) {
+    if (state.to && state.from && state.to < state.from) {
       return I18n.t("date_time_picker.errors.to_before_from");
     }
 

@@ -74,6 +74,8 @@ Discourse::Application.routes.draw do
       collection do
         get "category/:id" => "site_settings#index"
       end
+
+      put "user_count" => "site_settings#user_count"
     end
 
     get "reports" => "reports#index"

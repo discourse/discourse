@@ -273,6 +273,19 @@ describe TopicQuery do
     end
   end
 
+  context 'already seen categories' do
+    it 'is removed from new and visible on latest lists' do
+      category = Fabricate(:category_with_definition)
+      topic = Fabricate(:topic, category: category)
+      CategoryUser.create!(user_id: user.id,
+                           category_id: category.id,
+                           last_seen_at: topic.created_at
+                          )
+      expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
+      expect(topic_query.list_latest.topics.map(&:id)).to include(topic.id)
+    end
+  end
+
   context 'muted tags' do
     it 'is removed from new and latest lists' do
       SiteSetting.tagging_enabled = true

@@ -101,7 +101,10 @@ test("pollMinOptions", function(assert) {
 
   assert.deepEqual(
     controller.get("pollMinOptions"),
-    [{ name: 1, value: 1 }, { name: 2, value: 2 }],
+    [
+      { name: 1, value: 1 },
+      { name: 2, value: 2 }
+    ],
     "it should return the right options"
   );
 
@@ -110,7 +113,10 @@ test("pollMinOptions", function(assert) {
 
   assert.deepEqual(
     controller.get("pollMinOptions"),
-    [{ name: 1, value: 1 }, { name: 2, value: 2 }],
+    [
+      { name: 1, value: 1 },
+      { name: 2, value: 2 }
+    ],
     "it should return the right options"
   );
 });
@@ -177,7 +183,11 @@ test("pollStepOptions", function(assert) {
 
   assert.deepEqual(
     controller.get("pollStepOptions"),
-    [{ name: 1, value: 1 }, { name: 2, value: 2 }, { name: 3, value: 3 }],
+    [
+      { name: 1, value: 1 },
+      { name: 2, value: 2 },
+      { name: 3, value: 3 }
+    ],
     "it should return the right options"
   );
 });

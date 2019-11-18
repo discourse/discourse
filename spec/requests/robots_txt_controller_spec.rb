@@ -49,7 +49,8 @@ RSpec.describe RobotsTxtController do
 
     context 'subfolder' do
       it 'prefixes the rules with the directory' do
-        Discourse.stubs(:base_uri).returns('/forum')
+        set_subfolder "/forum"
+
         get '/robots.txt'
         expect(response.body).to include("\nDisallow: /forum/admin")
       end

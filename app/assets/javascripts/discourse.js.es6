@@ -4,7 +4,7 @@ import {
   default as discourseComputed,
   observes
 } from "discourse-common/utils/decorators";
-import computed from "@ember/object/computed";
+import { computed } from "@ember/object";
 import FocusEvent from "discourse-common/mixins/focus-event";
 import EmberObject from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
@@ -61,8 +61,9 @@ const Discourse = Ember.Application.extend(FocusEvent, {
       $("title").text(title);
     }
 
-    var displayCount = this.displayCount;
-    if (displayCount > 0 && !Discourse.User.currentProp("dynamic_favicon")) {
+    let displayCount = this.displayCount;
+    let dynamicFavicon = this.currentUser && this.currentUser.dynamic_favicon;
+    if (displayCount > 0 && !dynamicFavicon) {
       title = `(${displayCount}) ${title}`;
     }
 
@@ -71,15 +72,15 @@ const Discourse = Ember.Application.extend(FocusEvent, {
 
   @discourseComputed("contextCount", "notificationCount")
   displayCount() {
-    return Discourse.User.current() &&
-      Discourse.User.currentProp("title_count_mode") === "notifications"
+    return this.currentUser &&
+      this.currentUser.get("title_count_mode") === "notifications"
       ? this.notificationCount
       : this.contextCount;
   },
 
   @observes("contextCount", "notificationCount")
   faviconChanged() {
-    if (Discourse.User.currentProp("dynamic_favicon")) {
+    if (this.currentUser && this.currentUser.get("dynamic_favicon")) {
       let url = Discourse.SiteSettings.site_favicon_url;
 
       // Since the favicon is cached on the browser for a really long time, we

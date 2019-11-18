@@ -268,7 +268,7 @@ after_initialize do
           PollOption.create!(
             poll: created_poll,
             digest: option["id"].presence,
-            html: option["html"].presence.strip
+            html: option["html"].presence&.strip
           )
         end
       end

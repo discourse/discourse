@@ -248,6 +248,7 @@ es:
       other: "%{count} me gusta"
     last_reply: "Última respuesta"
     created: "Creado"
+    new_topic: "Crear tema nuevo"
   no_mentions_allowed: "Lo sentimos, no puedes mencionar a otros usuarios."
   too_many_mentions:
     one: "Lo sentimos, solo puedes mencionar a un usuario en un post."
@@ -735,6 +736,7 @@ es:
     activated: "Disculpa, esta cuenta ya fue activada."
     admin_confirm:
       title: "Confirmar cuenta de administrador"
+      description: "¿Estás seguro de que querer convertir a <b>%{target_username} (%{target_email})</b> en un administrador?"
       grant: "Conceder acceso de administrador"
       complete: "<b>%{target_username}</b> ahora es un administrador."
       back_to: "Volver al %{title}"
@@ -1238,6 +1240,8 @@ es:
       other: "El polling por correo electrónico ha generado %{count} errores en las últimas 24 horas. Revisa <a href='%{base_path}/logs' target='_blank'>los registros</a> para más detalles."
     missing_mailgun_api_key: "El servidor está configurado para enviar correos electrónicos a través de Mailgun pero no has proporcionado una clave API que se utiliza para verificar los mensajes de webhook."
     bad_favicon_url: "El favicon está produciendo errores en el proceso de carga. Revisa la opción favicon en los <a href='%{base_path}/admin/site_settings'>ajustes del sitio</a>."
+    deprecated_api_usage: "Hemos detectado una solicitud a la API usando un método de autentificación deprecado. Por favor, actualízalo para usar <a href='https://meta.discourse.org/t/discourse-api-documentation/22706'>autentificación basada en encabezados</a>."
+    update_mail_receiver: "Hemos detectado una versión antigua de mail-receiver. Por favor, conéctate con SSH al servidor y ejecuta `/var/discourse/launcher rebuild mail-receiver`."
     poll_pop3_timeout: "La conexión al servidor POP3 está superando el tiempo de espera. No se pudieron recuperar los correos electrónicos entrantes. Por favor, revisa los <a href='%{base_path}/admin/site_settings/category/email'>ajustes de POP3</a> y tu proveedor de servicio."
     poll_pop3_auth_error: "La conexión al servidor POP3 está fallando debido a un error de autenticación. Por favor, revisa los <a href='%{base_path}/admin/site_settings/category/email'>ajustes POP3</a>."
     force_https_warning: "Tu sitio web está usando SSL. Pero «<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>» no está habilitado todavía en la configuración de tu sitio."
@@ -1381,7 +1385,6 @@ es:
     content_security_policy: "Activar la política de seguridad de contenido (CSP)"
     content_security_policy_report_only: "Activar solo el informe de la política de seguridad de contenido (CPS)"
     content_security_policy_collect_reports: "Habilitar la recolección de reportes de violación de CSP en /csp_reports"
-    content_security_policy_script_src: "Fuentes adicionales de script en la lista blanca. El host actual y CDN se incluyen por defecto."
     invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
     top_menu: "Determinar los elementos que aparecen en el menú de navegación de la página de inicio y su orden. Ejemplo últimos|nuevos|no leídos|categorías|destacados|leídos|publicados|marcadores"
     post_menu: "Determinar los elementos que aparecen en el menú de publicación  y su orden. Ejemplo: me gusta|editar|reportar|eliminar|compartir|guardar en marcadores|responder"
@@ -1834,6 +1837,7 @@ es:
     default_title_count_mode: "Modo por defecto para el contador del título"
     retain_web_hook_events_period_days: "Número de días para retener registros de eventos de web hook."
     retry_web_hook_events: "Reintentar automáticamente 4 veces los eventos del web hook fallidos. Los intervalos de tiempo entre los reintentos son 1, 5, 25 y 125 minutos."
+    revoke_api_keys_days: "Número de días antes de que una clave de API sin usar sea revocada automáticamente (0 para nunca)"
     allow_user_api_keys: "Permitir que se generen claves de API de usuario"
     allow_user_api_key_scopes: "Lista de ámbitos permitidos para las claves API de usuario"
     max_api_keys_per_user: "Número máximo de claves API de usuario por usuario"
@@ -2200,6 +2204,10 @@ es:
   admin_confirmation_mailer:
     title: "Confirmación de administrador"
     subject_template: "[%{email_prefix}] Confirma nueva cuenta de administrador"
+    text_body_template: |
+      Por favor, confirma que quieres añadir **%{target_username} (%{target_email})** como un administrador en tu foro.
+
+      [Confirmar cuenta de administrador](%{admin_confirm_url})
   test_mailer:
     title: "Correo electrónico de prueba"
     subject_template: "[%{email_prefix}] Prueba de envío de correo electrónico"
@@ -2382,6 +2390,15 @@ es:
         Hola. Hemos visto que has estado leyendo, lo cual nos parece fantástico, ¡por lo que te hemos subido tu [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
         Nos alegramos de ver que estés pasando tiempo con nosotros, y nos gustaría saber más sobre ti. Cuando puedas, [rellena tu perfil](%{base_url}/my/preferences/profile) o [crea un nuevo tema](%{base_url}/categories).
+    welcome_staff:
+      title: "Te damos la bienvenida al equipo del foro"
+      subject_template: "Felicidades, ¡te han hecho %{role}!"
+      text_body_template: |
+        ¡Felicidades! Un miembro del equipo del foro te ha hecho %{role}.
+
+        Como %{role}, ahora tienes acceso a la <a href='%{base_url}/admin' target='_blank'>interfaz de administración</a>.
+
+        Con un gran poder viene una gran responsabilidad. Si no tienes experiencia moderando, por favor, revisa la [Guía de moderación](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Bienvenida al invitado"
       subject_template: "¡Bienvenido a %{site_name}!"
@@ -4095,6 +4112,12 @@ es:
     user_merged: "%{username} se ha unido en esta cuenta"
     user_delete_self: "Eliminado a sí mismo de %{url}"
     webhook_deactivation_reason: "Tu webhook ha sido desactivado automáticamente. Recibimos varias respuestas «%{status}» HTTP error de status."
+    api_key:
+      automatic_revoked:
+        one: "Revocada automáticamente, última actividad hace más de %{count} día."
+        other: "Revocada automáticamente, última actividad hace más de %{count} días."
+      revoked: Revocada
+      restored: Restaurada
   reviewables:
     priorities:
       low: "Bajo"

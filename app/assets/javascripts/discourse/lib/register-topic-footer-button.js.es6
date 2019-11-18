@@ -1,5 +1,5 @@
 import error from "@ember/error";
-import computed from "@ember/object/computed";
+import { computed } from "@ember/object";
 
 let _topicFooterButtons = {};
 

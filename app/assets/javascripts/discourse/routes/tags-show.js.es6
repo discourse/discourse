@@ -165,6 +165,12 @@ export default DiscourseRoute.extend({
       tagNotification: this.tagNotification,
       noSubcategories: this.noSubcategories
     });
+    this.searchService.set("searchContext", model.get("searchContext"));
+  },
+
+  deactivate() {
+    this._super(...arguments);
+    this.searchService.set("searchContext", null);
   },
 
   actions: {

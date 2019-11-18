@@ -2,6 +2,7 @@ import { run } from "@ember/runloop";
 import createStore from "helpers/create-store";
 import NavItem from "discourse/models/nav-item";
 import Category from "discourse/models/category";
+import Site from "discourse/models/site";
 
 QUnit.module("NavItem", {
   beforeEach() {
@@ -10,7 +11,7 @@ QUnit.module("NavItem", {
         name: "确实是这样",
         id: 343434
       });
-      Discourse.Site.currentProp("categories").addObject(asianCategory);
+      Site.currentProp("categories").addObject(asianCategory);
     });
   }
 });

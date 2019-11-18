@@ -4,6 +4,7 @@ import { setting } from "discourse/lib/computed";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 import EmberObject from "@ember/object";
+import User from "discourse/models/user";
 
 export default Mixin.create({
   uniqueUsernameValidation: null,
@@ -13,7 +14,7 @@ export default Mixin.create({
   minUsernameLength: setting("min_username_length"),
 
   fetchExistingUsername: discourseDebounce(function() {
-    Discourse.User.checkUsername(null, this.accountEmail).then(result => {
+    User.checkUsername(null, this.accountEmail).then(result => {
       if (
         result.suggestion &&
         (isEmpty(this.accountUsername) ||
@@ -76,44 +77,43 @@ export default Mixin.create({
 
   checkUsernameAvailability: discourseDebounce(function() {
     if (this.shouldCheckUsernameAvailability()) {
-      return Discourse.User.checkUsername(
-        this.accountUsername,
-        this.accountEmail
-      ).then(result => {
-        this.set("isDeveloper", false);
-        if (result.available) {
-          if (result.is_developer) {
-            this.set("isDeveloper", true);
-          }
-          return this.set(
-            "uniqueUsernameValidation",
-            EmberObject.create({
-              ok: true,
-              reason: I18n.t("user.username.available")
-            })
-          );
-        } else {
-          if (result.suggestion) {
+      return User.checkUsername(this.accountUsername, this.accountEmail).then(
+        result => {
+          this.set("isDeveloper", false);
+          if (result.available) {
+            if (result.is_developer) {
+              this.set("isDeveloper", true);
+            }
             return this.set(
               "uniqueUsernameValidation",
               EmberObject.create({
-                failed: true,
-                reason: I18n.t("user.username.not_available", result)
+                ok: true,
+                reason: I18n.t("user.username.available")
               })
             );
           } else {
-            return this.set(
-              "uniqueUsernameValidation",
-              EmberObject.create({
-                failed: true,
-                reason: result.errors
-                  ? result.errors.join(" ")
-                  : I18n.t("user.username.not_available_no_suggestion")
-              })
-            );
+            if (result.suggestion) {
+              return this.set(
+                "uniqueUsernameValidation",
+                EmberObject.create({
+                  failed: true,
+                  reason: I18n.t("user.username.not_available", result)
+                })
+              );
+            } else {
+              return this.set(
+                "uniqueUsernameValidation",
+                EmberObject.create({
+                  failed: true,
+                  reason: result.errors
+                    ? result.errors.join(" ")
+                    : I18n.t("user.username.not_available_no_suggestion")
+                })
+              );
+            }
           }
         }
-      });
+      );
     }
   }, 500),
 

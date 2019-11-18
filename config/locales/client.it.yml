@@ -332,7 +332,7 @@ it:
           name: "ha preso provvedimenti"
           title: "Quando un membro dello staff sceglie intervenire, la segnalazione riceve un bonus."
         user_accuracy_bonus:
-          name: "precisione dell&#39;utente"
+          name: "precisione dell'utente"
           title: "Agli utenti le cui segnalazioni sono state storicamente accettate viene concesso un bonus."
         trust_level_bonus:
           name: "livello di esperienza"
@@ -902,7 +902,7 @@ it:
         extended_description: |
           L'autenticazione a due fattori aggiunge ulteriore sicurezza al tuo account attraverso la richiesta di un token usa e getta oltre alla tua password. I token possono essere generati su dispositivi <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
         oauth_enabled_warning: "Tieni presente che gli accessi ai social network saranno disabilitati dopo aver attivato l'autenticazione a due fattori nel tuo account."
-        use: "Usa l&#39;app Authenticator"
+        use: "Usa l'app Authenticator"
         enforced_notice: "E' obbligatorio abilitare l'autenticazione a due fattori per accedere a questo sito."
         disable: "disabilita"
         disable_title: "Disabilita Secondo Fattore"
@@ -978,8 +978,8 @@ it:
         not_connected: "(non connesso)"
         confirm_modal_title: "Collega un account %{provider} "
         confirm_description:
-          account_specific: "Il tuo account %{provider} &#39;%{account_description}&#39; verrà utilizzato per l&#39;autenticazione."
-          generic: "Il tuo account %{provider} verrà utilizzato per l&#39;autenticazione."
+          account_specific: "Il tuo account %{provider} '%{account_description}' verrà utilizzato per l'autenticazione."
+          generic: "Il tuo account %{provider} verrà utilizzato per l'autenticazione."
       name:
         title: "Nome"
         instructions: "il tuo nome completo (opzionale)"
@@ -1330,8 +1330,10 @@ it:
       second_factor_backup: "Accedi utilizzando un codice di backup"
       second_factor_backup_title: "Backup Due Fattori"
       second_factor_backup_description: "Per favore, inserisci uno dei tuoi codici di backup:"
-      second_factor: "Accedi utilizzando l&#39;app Authenticator"
+      second_factor: "Accedi utilizzando l'app Authenticator"
       security_key_description: "Quando hai preparato la chiave di sicurezza fisica, premi il pulsante Autentica con Security Key qui sotto."
+      security_key_authenticate: "Autentica con Security Key"
+      security_key_not_allowed_error: "Il processo di autenticazione con Security Key è scaduto o è stato annullato."
       email_placeholder: "email o nome utente"
       caps_lock_warning: "Il Blocco Maiuscole è attivo"
       error: "Errore sconosciuto"
@@ -1398,6 +1400,7 @@ it:
       apple_international: "Apple/Internazionale"
       google: "Google"
       twitter: "Twitter"
+      emoji_one: "JoyPixels (precedentemente EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2213,10 +2216,14 @@ it:
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
         attachment_download_requires_login: "Spiacenti, devi essere connesso per poter scaricare gli allegati."
       abandon_edit:
+        confirm: "Sei sicuro di voler annullare le modifiche?"
         no_value: "No, mantieni"
+        no_save_draft: "No, salva in bozza"
+        yes_value: "Sì, scarta le modifiche"
       abandon:
         confirm: "Sicuro di voler abbandonare il tuo messaggio?"
         no_value: "No, mantienilo"
+        no_save_draft: "No, salva in bozza"
         yes_value: "Si, abbandona"
       via_email: "questo messaggio è arrivato via email"
       via_auto_generated_email: "questo messaggio è arrivato tramite una email auto generata"
@@ -2230,6 +2237,7 @@ it:
         reply: "inizia a comporre una risposta a questo messaggio"
         like: "metti \"Mi piace\" al messaggio"
         has_liked: "ti è piaciuto questo messaggio"
+        read_indicator: "utenti che leggono questo messaggio"
         undo_like: "rimuovi il \"Mi piace\""
         edit: "modifica questo messaggio"
         edit_action: "Modifica"
@@ -2266,6 +2274,7 @@ it:
         delete_topic: "elimina argomento"
         add_post_notice: "Aggiungi Note Staff"
         remove_post_notice: "Rimuovi Note Staff"
+        remove_timer: "rimuovi il timer"
       actions:
         flag: "Segnala"
         defer_flags:
@@ -2352,9 +2361,14 @@ it:
       tags_allowed_tags: "Limita queste Etichette a questa Categoria:"
       tags_allowed_tag_groups: "Limita questi gruppi di Etichette a questa Categoria:"
       tags_placeholder: "Elenco (opzionale) delle etichette permesse"
+      tags_tab_description: "Le etichette e i gruppi di etichette sopra specificati saranno disponibili solo in questa categoria, e nelle altre categorie che li specificano. Non saranno disponibili per l'uso in altre categorie."
       tag_groups_placeholder: "Elenco (opzionale) dei gruppi di etichette permessi"
       manage_tag_groups_link: "Gestisci qui i gruppi di Etichette."
       allow_global_tags_label: "Consenti anche ulteriori Etichette"
+      tag_group_selector_placeholder: "(Facoltativo) Gruppo di Etichette"
+      required_tag_group_description: "Rendi obbligatorio per i nuovi argomenti avere un'Etichetta da un Gruppo di Etichette:"
+      min_tags_from_required_group_label: "Numero Etichette:"
+      required_tag_group_label: "Gruppo di Etichette:"
       topic_featured_link_allowed: "Consenti collegamenti in primo piano in questa categoria"
       delete: "Elimina Categoria"
       create: "Crea Categoria"
@@ -2384,6 +2398,7 @@ it:
       special_warning: "Attenzione: questa è una categoria predefinita e le impostazioni di sicurezza ne vietano la modifica. Se non vuoi usare questa categoria, cancellala invece di modificarla."
       uncategorized_security_warning: "Questa è una Categoria speciale. È utilizzata come area di parcheggio per gli Argomenti senza Categoria. Non può avere impostazioni di sicurezza."
       uncategorized_general_warning: 'Questa è una Categoria speciale. È usata come Categoria predefinita per i nuovi Argomenti senza una Categoria selezionata. Se vuoi prevenire questo comportamento e forzare la scelta di una Categoria, <a href="%{settingLink}">per favore disabilita l''impostazione qui</a>. Se vuoi cambiare il nome o la descrizione, vai a <a href="%{customizeLink}">Personalizza / Contenuto Testuale</a>.'
+      pending_permission_change_alert: "Non hai aggiunto %{group} a questa categoria; fai clic su questo pulsante per aggiungerli."
       images: "Immagini"
       email_in: "Indirizzo email personalizzato:"
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
@@ -2531,6 +2546,8 @@ it:
         help: "Questo argomento è per te appuntato; verrà mostrato con l'ordinamento di default"
       unlisted:
         help: "Questo argomento è invisibile; non verrà mostrato nella liste di argomenti ed è possibile accedervi solo tramite collegamento diretto"
+      personal_message:
+        title: "Questo Argomento è un Messaggio Personale"
     posts: "Messaggi"
     posts_long: "ci sono {{number}} messaggi in questo argomento"
     posts_likes_MF: |
@@ -2804,11 +2821,13 @@ it:
         about: "Aggiungi etichette a gruppi per poterle gestire più facilmente."
         new: "Nuovo Gruppo"
         tags_label: "Etichette in questo gruppo:"
+        tags_placeholder: "etichette"
         parent_tag_label: "Etichetta padre:"
         parent_tag_placeholder: "Opzionale"
         parent_tag_description: "Le etichette di questo gruppo non possono essere usate finché è presente l'etichetta padre."
         one_per_topic_label: "Limita ad una sola etichetta per argomento in questo gruppo"
         new_name: "Nuovo Gruppo Etichette"
+        name_placeholder: "Nome Gruppo Etichette"
         save: "Salva"
         delete: "Elimina"
         confirm_delete: "Sicuro di voler cancellare questo gruppo di etichette?"

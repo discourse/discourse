@@ -56,6 +56,7 @@ nl:
       component_no_default: "Themaonderdelen kunnen geen standaardthema zijn"
       component_no_color_scheme: "Themaonderdelen kunnen geen kleurenpaletten bevatten"
       no_multilevels_components: "Thema's met onderliggende thema's kunnen zelf geen onderliggend thema zijn"
+      optimized_link: Geoptimaliseerde afbeeldingskoppelingen zijn kortstondig en dienen niet in broncode van thema's te worden opgenomen.
     settings_errors:
       invalid_yaml: "Opgegeven YAML is ongeldig."
       data_type_not_a_number: "Type van instelling `%{name}` wordt niet ondersteund. Ondersteunde typen zijn `integer`, `bool`, `list` en `enum`."
@@ -1240,6 +1241,8 @@ nl:
       other: "E-mailpolling heeft de afgelopen 24 uur %{count} fouten gegenereerd. Bekijk <a href='%{base_path}/logs' target='_blank'>de logboeken</a> voor meer details."
     missing_mailgun_api_key: "De server is geconfigureerd om e-mails via Mailgun te verzenden, maar u hebt geen API-sleutel opgegeven voor verificatie van de webhookberichten."
     bad_favicon_url: "De favicon wordt niet geladen. Controleer uw favicon-instelling in de <a href='%{base_path}/admin/site_settings'>Website-instellingen</a>."
+    deprecated_api_usage: "We hebben een API-aanvraag via een verouderde authenticatiemethode gedetecteerd. Werk deze bij zodat <a href='https://meta.discourse.org/t/discourse-api-documentation/22706'>op koptekst gebaseerde authenticatie</a> wordt gebruikt."
+    update_mail_receiver: "We hebben een verouderde versie van mail-receiver gedetecteerd. Meld u aan bij deze server via ssh en voer `/var/discourse/launcher rebuild mail-receiver` uit."
     poll_pop3_timeout: "Time-out voor verbinding met de POP3-server. Binnenkomende e-mail kon niet worden opgehaald. Controleer uw <a href='%{base_path}/admin/site_settings/category/email'>POP3-instellingen</a> en serviceprovider."
     poll_pop3_auth_error: "Verbinding met de POP3-server is mislukt met een authenticatiefout. Controleer uw <a href='%{base_path}/admin/site_settings/category/email'>POP3-instellingen</a>."
     force_https_warning: "Uw website gebruikt SSL, maar `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is nog niet ingeschakeld in uw website-instellingen."
@@ -1383,7 +1386,7 @@ nl:
     content_security_policy: "Content-Security-Policy inschakelen"
     content_security_policy_report_only: "Content-Security-Policy-Report-Only inschakelen"
     content_security_policy_collect_reports: "Rapportverzameling voor CSP-schendingen inschakelen via /csp_reports"
-    content_security_policy_script_src: "Aanvullende toegestane scriptbronnen. De huidige host en CDN zijn standaard opgenomen."
+    content_security_policy_script_src: "Aanvullende scriptbronnen op de whitelist. De huidige host en CDN zijn standaard inbegrepen. Zie <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy</a>."
     invalidate_inactive_admin_email_after_days: "Beheerdersaccounts die de website dit aantal dagen niet hebben bezocht, dienen hun e-mailadres voor het aanmelden opnieuw te valideren. Stel dit in op 0 om uit te schakelen."
     top_menu: "Bepalen welke items in het hoofdnavigatiemenu verschijnen, en in welke volgorde. Voorbeeld: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Bepalen welke items in het berichtmenu verschijnen, en in welke volgorde. Voorbeeld: like|edit|flag|delete|share|bookmark|reply"
@@ -1828,6 +1831,7 @@ nl:
     default_categories_tracking: "Lijst van categorieën die standaard worden gevolgd."
     default_categories_muted: "Lijst van categorieën die standaard worden gedempt."
     default_categories_watching_first_post: "Lijst van categorieën waarin het eerste bericht in elk nieuw topic standaard in de gaten wordt gehouden."
+    mute_all_categories_by_default: "Het standaard meldingsniveau van alle categorieën instellen op gedempt. Gebruikers moeten zich bij categorieën aanmelden om deze in de pagina's 'nieuwste' en 'categorieën' te laten verschijnen. Als u de standaardwaarden voor anonieme gebruikers wilt wijzigen, stel dan de instellingen voor 'default_categories_' in."
     default_tags_watching: "Lijst van tags die standaard in de gaten worden gehouden."
     default_tags_tracking: "Lijst van tags die standaard worden gevolgd."
     default_tags_muted: "Lijst van tags die standaard worden gedempt."

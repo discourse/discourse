@@ -269,12 +269,8 @@ describe PrettyText do
       fab!(:user) { Fabricate(:user) }
 
       context "subfolder" do
-        before do
-          GlobalSetting.stubs(:relative_url_root).returns("/forum")
-          Discourse.stubs(:base_uri).returns("/forum")
-        end
-
         it "should have correct avatar url" do
+          set_subfolder "/forum"
           md = <<~MD
             [quote="#{user.username}, post:123, topic:456, full:true"]
             ddd
@@ -331,12 +327,9 @@ describe PrettyText do
     end
 
     context 'subfolder' do
-      before do
-        GlobalSetting.stubs(:relative_url_root).returns('/forum')
-        Discourse.stubs(:base_uri).returns("/forum")
-      end
-
       it "handles user and group mentions correctly" do
+        set_subfolder "/forum"
+
         Fabricate(:user, username: 'user1')
         Fabricate(:group, name: 'groupA', mentionable_level: Group::ALIAS_LEVELS[:everyone])
 

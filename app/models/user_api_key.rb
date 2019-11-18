@@ -67,9 +67,9 @@ class UserApiKey < ActiveRecord::Base
   end
 
   def self.invalid_auth_redirect?(auth_redirect)
-    return SiteSetting.allowed_user_api_auth_redirects
-        .split('|')
-        .none? { |u| WildcardUrlChecker.check_url(u, auth_redirect) }
+    SiteSetting.allowed_user_api_auth_redirects
+      .split('|')
+      .none? { |u| WildcardUrlChecker.check_url(u, auth_redirect) }
   end
 end
 

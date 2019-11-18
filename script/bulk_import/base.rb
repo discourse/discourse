@@ -778,7 +778,7 @@ class BulkImport::Base
 
   def normalize_charset(text)
     return text if @encoding == Encoding::UTF_8
-    return text && text.encode(@encoding).force_encoding(Encoding::UTF_8)
+    text && text.encode(@encoding).force_encoding(Encoding::UTF_8)
   end
 
 end

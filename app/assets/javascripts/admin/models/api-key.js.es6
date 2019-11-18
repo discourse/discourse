@@ -2,7 +2,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import AdminUser from "admin/models/admin-user";
 import RestModel from "discourse/models/rest";
 import { ajax } from "discourse/lib/ajax";
-import computed from "@ember/object/computed";
+import { computed } from "@ember/object";
 
 const ApiKey = RestModel.extend({
   user: computed("_user", {

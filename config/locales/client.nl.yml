@@ -310,7 +310,7 @@ nl:
     choose_topic:
       none_found: "Geen topics gevonden."
       title:
-        search: "Zoeken naar een topic op naam, url of id:"
+        search: "Zoeken naar een topic op naam, URL of ID:"
         placeholder: "typ hier de titel van het topic"
     choose_message:
       none_found: "Geen berichten gevonden."
@@ -3661,6 +3661,8 @@ nl:
             change_theme_setting: "thema-instelling wijzigen"
             disable_theme_component: "themaonderdeel uitschakelen"
             enable_theme_component: "themaonderdeel inschakelen"
+            revoke_title: "titel intrekken"
+            change_title: "titel wijzigen"
             api_key_create: "api-sleutel maken"
             api_key_update: "api-sleutel bijwerken"
             api_key_destroy: "api-sleutel verwijderen"

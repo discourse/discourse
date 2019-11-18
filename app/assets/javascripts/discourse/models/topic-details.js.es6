@@ -1,7 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-
+import User from "discourse/models/user";
 /**
   A model representing a Topic's details that aren't always present, such as a list of participants.
   When showing topics in lists and such this information should not be required.
@@ -17,7 +17,7 @@ const TopicDetails = RestModel.extend({
 
     if (details.allowed_users) {
       details.allowed_users = details.allowed_users.map(function(u) {
-        return Discourse.User.create(u);
+        return User.create(u);
       });
     }
 
@@ -48,13 +48,13 @@ const TopicDetails = RestModel.extend({
     }
 
     if (
-      Discourse.User.currentProp("mailing_list_mode") &&
+      User.currentProp("mailing_list_mode") &&
       level > NotificationLevels.MUTED
     ) {
       return I18n.t("topic.notifications.reasons.mailing_list_mode");
     } else {
       return I18n.t(localeString, {
-        username: Discourse.User.currentProp("username_lower"),
+        username: User.currentProp("username_lower"),
         basePath: Discourse.BaseUri
       });
     }

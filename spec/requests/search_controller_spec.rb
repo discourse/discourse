@@ -251,6 +251,23 @@ describe SearchController do
       end
     end
 
+    context "with a tag" do
+      it "raises an error if the tag does not exist" do
+        get "/search/query.json", params: {
+          term: 'test', search_context: { type: 'tag', id: 'important-tag', name: 'important-tag' }
+        }
+        expect(response).to be_forbidden
+      end
+
+      it 'performs the query with a search context' do
+        Fabricate(:tag, name: 'important-tag')
+        get "/search/query.json", params: {
+          term: 'test', search_context: { type: 'tag', id: 'important-tag', name: 'important-tag' }
+        }
+
+        expect(response.status).to eq(200)
+      end
+    end
   end
 
   context "#click" do

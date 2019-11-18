@@ -558,14 +558,12 @@ describe CookedPostProcessor do
         end
 
         let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
-        let(:base_url) { "http://test.localhost/subfolder" }
-        let(:base_uri) { "/subfolder" }
 
         before do
+          set_subfolder "/subfolder"
+
           SiteSetting.max_image_height = 2000
           SiteSetting.create_thumbnails = true
-          Discourse.stubs(:base_url).returns(base_url)
-          Discourse.stubs(:base_uri).returns(base_uri)
           FastImage.expects(:size).returns([1750, 2000])
           OptimizedImage.expects(:resize).returns(true)
 
