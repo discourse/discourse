@@ -186,7 +186,8 @@ module Discourse
     all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
 
     if Rails.env.development?
-      plugin_hash = Digest::SHA1.hexdigest(all_plugins.map { |p| p.path }.sort.join('|'))
+      core_git_sha = `git rev-parse HEAD`
+      supersha_hash = Digest::SHA1.hexdigest((all_plugins.map { |p| p.path }.sort + [core_git_sha]).join('|'))
       hash_file = "#{Rails.root}/tmp/plugin-hash"
 
       old_hash = begin
@@ -194,14 +195,14 @@ module Discourse
       rescue Errno::ENOENT
       end
 
-      if old_hash && old_hash != plugin_hash
-        puts "WARNING: It looks like your discourse plugins have recently changed."
-        puts "It is highly recommended to remove your `tmp` directory, otherwise"
-        puts "plugins might not work."
+      if old_hash && old_hash != supersha_hash
+        puts "WARNING: It looks like your discourse plugins or core version have recently changed."
+        puts "The tmp/cache directory will be wiped to avoid development issues."
+        `rm -rf #{Rails.root}/tmp/cache`
         puts
-      else
-        File.write(hash_file, plugin_hash)
       end
+
+      File.write(hash_file, supersha_hash)
     end
 
     @plugins = []
