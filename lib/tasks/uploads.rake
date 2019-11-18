@@ -909,6 +909,10 @@ task "uploads:recover" => :environment do
   end
 end
 
+##
+# Run this task whenever the secure_media or login_required
+# settings are changed for a Discourse instance to update
+# the upload secure flag and S3 upload ACLs.
 task "uploads:ensure_correct_acl" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|
     unless Discourse.store.external?
@@ -921,8 +925,7 @@ task "uploads:ensure_correct_acl" => :environment do
     Upload.transaction do
       mark_secure_in_loop_because_no_login_required = false
 
-      # First of all only get relevant uploads (e.g. supported media), no point
-      # looping through image uploads as they are irrelevant
+      # First of all only get relevant uploads (supported media).
       #
       # Also only get uploads that are not for a theme or a site setting, so only
       # get post related uploads.
