@@ -132,7 +132,7 @@ class PostRevisor
 
     # always reset edit_reason unless provided, do not set to nil else
     # previous reasons are lost
-    @fields.delete(:edit_reason) unless @fields[:edit_reason].present?
+    @fields.delete(:edit_reason) if @fields[:edit_reason].blank?
 
     return false unless should_revise?
 
