@@ -78,7 +78,10 @@
       .find(".relative-time")
       .text(formatedDateTime);
 
-    this.timeout = setTimeout(() => processElement($element, options), 10000);
+    this.timeout = setTimeout(
+      () => processElement($element, options),
+      60 * 1000
+    );
   }
 
   function _formatTimezone(timezone) {
