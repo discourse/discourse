@@ -28,8 +28,7 @@ class TopicQuery
       {
         max_posts: zero_up_to_max_int,
         min_posts: zero_up_to_max_int,
-        page: zero_up_to_max_int,
-        exclude_category_ids: array_int_or_int
+        page: zero_up_to_max_int
       }
     end
   end
@@ -49,7 +48,6 @@ class TopicQuery
          before
          bumped_before
          topic_ids
-         exclude_category_ids
          category
          order
          ascending
@@ -755,10 +753,6 @@ class TopicQuery
 
     result = apply_ordering(result, options)
     result = result.listable_topics
-
-    if options[:exclude_category_ids] && options[:exclude_category_ids].is_a?(Array) && options[:exclude_category_ids].size > 0
-      result = result.where("categories.id NOT IN (?)", options[:exclude_category_ids].map(&:to_i)).references(:categories)
-    end
 
     # Don't include the category topics if excluded
     if options[:no_definitions]

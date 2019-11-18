@@ -52,15 +52,7 @@ class ListController < ApplicationController
       list_opts = build_topic_list_options
       list_opts.merge!(options) if options
       user = list_target_user
-
-      if params[:category].blank?
-        if filter == :latest
-          list_opts[:no_definitions] = true
-        end
-        if [:latest, :categories].include?(filter) && list_opts[:exclude_category_ids].blank?
-          list_opts[:exclude_category_ids] = get_excluded_category_ids(list_opts[:category])
-        end
-      end
+      list_opts[:no_definitions] = true if params[:category].blank? && filter == :latest
 
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
 
@@ -246,10 +238,6 @@ class ListController < ApplicationController
       top_options.merge!(options) if options
       top_options[:per_page] = SiteSetting.topics_per_period_in_top_page
 
-      if "top".freeze == current_homepage && top_options[:exclude_category_ids].blank?
-        top_options[:exclude_category_ids] = get_excluded_category_ids(top_options[:category])
-      end
-
       user = list_target_user
       list = TopicQuery.new(user, top_options).list_top_for(period)
       list.for_period = period
@@ -391,12 +379,6 @@ class ListController < ApplicationController
     opts.delete(:category) if page_params.include?(:category_slug_path_with_id)
 
     public_send(method, opts.merge(page_params)).sub('.json?', '?')
-  end
-
-  def get_excluded_category_ids(current_category = nil)
-    exclude_category_ids = Category.where(suppress_from_latest: true)
-    exclude_category_ids = exclude_category_ids.where.not(id: current_category) if current_category
-    exclude_category_ids.pluck(:id)
   end
 
   def self.best_period_for(previous_visit_at, category_id = nil)
