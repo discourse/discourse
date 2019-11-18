@@ -130,8 +130,9 @@ class PostRevisor
     @fields[:user_id] = @fields[:user_id].to_i if @fields.has_key?(:user_id)
     @fields[:category_id] = @fields[:category_id].to_i if @fields.has_key?(:category_id)
 
-    # always reset edit_reason unless provided
-    @fields[:edit_reason] = nil unless @fields[:edit_reason].present?
+    # always reset edit_reason unless provided, do not set to nil else
+    # previous reasons are lost
+    @fields.delete(:edit_reason) if @fields[:edit_reason].blank?
 
     return false unless should_revise?
 
@@ -244,7 +245,11 @@ class PostRevisor
 
   def should_create_new_version?
     return false if @skip_revision
-    edited_by_another_user? || !ninja_edit? || owner_changed? || force_new_version?
+    edited_by_another_user? || !ninja_edit? || owner_changed? || force_new_version? || edit_reason_specified?
+  end
+
+  def edit_reason_specified?
+    @fields[:edit_reason].present? && @fields[:edit_reason] != @post.edit_reason
   end
 
   def edited_by_another_user?
