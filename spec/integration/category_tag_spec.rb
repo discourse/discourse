@@ -21,6 +21,7 @@ describe "category tag restrictions" do
   fab!(:tag2) { Fabricate(:tag, name: 'tag2') }
   fab!(:tag3) { Fabricate(:tag, name: 'tag3') }
   fab!(:tag4) { Fabricate(:tag, name: 'tag4') }
+  let(:tag_with_colon) { Fabricate(:tag, name: 'with:colon') }
 
   fab!(:user)  { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
@@ -56,6 +57,11 @@ describe "category tag restrictions" do
       expect_same_tag_names(filter_allowed_tags(for_input: true, category: other_category), [tag3, tag4])
       expect_same_tag_names(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name]), [tag4])
       expect_same_tag_names(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name], term: 'tag'), [tag4])
+    end
+
+    it "search can handle colons in tag names" do
+      tag_with_colon
+      expect_same_tag_names(filter_allowed_tags(for_input: true, term: 'with:c'), [tag_with_colon])
     end
 
     it "can't create new tags in a restricted category" do
@@ -155,6 +161,11 @@ describe "category tag restrictions" do
     it "enforces restrictions when creating a topic" do
       post = create_post(category: category, tags: [tag1.name, "newtag"])
       expect(post.topic.tags.map(&:name)).to eq([tag1.name])
+    end
+
+    it "handles colons" do
+      tag_with_colon
+      expect_same_tag_names(filter_allowed_tags(for_input: true, term: 'with:c'), [tag_with_colon])
     end
 
     context 'required tags from tag group' do
@@ -326,7 +337,7 @@ describe "category tag restrictions" do
         car_category.allowed_tag_groups = [makes.name, honda_group.name, ford_group.name]
       end
 
-      it "handles all those rules", :focus do
+      it "handles all those rules" do
         # car tags can't be used outside of car category:
         expect_same_tag_names(filter_allowed_tags(for_input: true), [tag1, tag2, tag3, tag4])
         expect_same_tag_names(filter_allowed_tags(for_input: true, category: other_category), [tag1, tag2, tag3, tag4])

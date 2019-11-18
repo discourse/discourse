@@ -203,12 +203,10 @@ class TagsController < ::ApplicationController
       filter_params[:category] = Category.find_by_id(params[:categoryId])
     end
 
-    if params[:q]
+    if !params[:q].blank?
       clean_name = DiscourseTagging.clean_tag(params[:q])
       filter_params[:term] = clean_name
-      filter_params[:order] = Tag.sanitize_sql_for_order(
-        ["lower(name) = lower(?) DESC, topic_count DESC", clean_name]
-      )
+      filter_params[:order_search_results] = true
     else
       filter_params[:order] = "topic_count DESC"
     end

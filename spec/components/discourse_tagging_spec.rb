@@ -45,6 +45,35 @@ describe DiscourseTagging do
         expect(tags).to contain_exactly(tag1.name, tag3.name)
       end
 
+      context 'tag with colon' do
+        fab!(:tag_with_colon) { Fabricate(:tag, name: 'with:colon') }
+
+        it "can use it as selected tag" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
+            selected_tags: [tag_with_colon.name],
+            for_input: true
+          ).map(&:name)
+          expect(tags).to contain_exactly(tag1.name, tag2.name, tag3.name)
+        end
+
+        it "can search for tags with colons" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
+            for_input: true,
+            term: 'with:c',
+            order_search_results: true
+          ).map(&:name)
+          expect(tags).to contain_exactly(tag_with_colon.name)
+        end
+
+        it "can limit results to the tag" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
+            for_topic: true,
+            only_tag_names: [tag_with_colon.name]
+          ).map(&:name)
+          expect(tags).to contain_exactly(tag_with_colon.name)
+        end
+      end
+
       context 'with tags visible only to staff' do
         fab!(:hidden_tag) { Fabricate(:tag) }
         let!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }

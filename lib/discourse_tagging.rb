@@ -227,15 +227,13 @@ module DiscourseTagging
 
     builder = DB.build(sql)
 
-    builder.limit(opts[:limit]) if opts[:limit]
-    builder.order_by(opts[:order]) if opts[:order]
-
     if !opts[:for_topic] && builder_params[:selected_tag_ids]
       builder.where("id NOT IN (:selected_tag_ids)")
     end
 
     if opts[:only_tag_names]
-      builder.where("LOWER(name) IN (?)", opts[:only_tag_names].map(&:downcase))
+      builder.where("LOWER(name) IN (:only_tag_names)")
+      builder_params[:only_tag_names] = opts[:only_tag_names].map(&:downcase)
     end
 
     # parent tag requirements
@@ -268,6 +266,7 @@ module DiscourseTagging
       clean_tag(term)
       term.downcase!
       builder.where("LOWER(name) LIKE :term")
+      builder_params[:cleaned_term] = term
       builder_params[:term] = "%#{term}%"
       sql.gsub!("/*and_name_like*/", "AND LOWER(t.name) LIKE :term")
     else
@@ -306,6 +305,13 @@ module DiscourseTagging
           one_tag_per_group_ids
         )
       end
+    end
+
+    builder.limit(opts[:limit]) if opts[:limit]
+    if opts[:order]
+      builder.order_by(opts[:order])
+    elsif opts[:order_search_results] && !term.blank?
+      builder.order_by("lower(name) = lower(:cleaned_term) DESC, topic_count DESC")
     end
 
     result = builder.query(builder_params).uniq { |t| t.id }
