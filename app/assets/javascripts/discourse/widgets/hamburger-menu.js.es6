@@ -309,7 +309,7 @@ export default createWidget("hamburger-menu", {
 
     if (this.settings.showCategories) {
       results.push(this.listCategories());
-      results.push(h("hr"));
+      results.push(h("hr.categories-separator"));
     }
 
     results.push(
