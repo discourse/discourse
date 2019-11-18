@@ -198,6 +198,35 @@ describe PostRevisor do
       end
     end
 
+    describe 'edit reasons' do
+      it "does create a new version if an edit reason is provided" do
+        post = Fabricate(:post, raw: 'hello world')
+        revisor = PostRevisor.new(post)
+        revisor.revise!(post.user, { raw: 'hello world123456789', edit_reason: 'this is my reason' }, revised_at: post.updated_at + 1.second)
+        post.reload
+        expect(post.version).to eq(2)
+        expect(post.revisions.count).to eq(1)
+      end
+
+      it "does not create a new version if an edit reason is provided and its the same as the current edit reason" do
+        post = Fabricate(:post, raw: 'hello world', edit_reason: 'this is my reason')
+        revisor = PostRevisor.new(post)
+        revisor.revise!(post.user, { raw: 'hello world123456789', edit_reason: 'this is my reason' }, revised_at: post.updated_at + 1.second)
+        post.reload
+        expect(post.version).to eq(1)
+        expect(post.revisions.count).to eq(0)
+      end
+
+      it "does not clobber the existing edit reason for a revision if it is not provided in a subsequent revision" do
+        post = Fabricate(:post, raw: 'hello world')
+        revisor = PostRevisor.new(post)
+        revisor.revise!(post.user, { raw: 'hello world123456789', edit_reason: 'this is my reason' }, revised_at: post.updated_at + 1.second)
+        post.reload
+        revisor.revise!(post.user, { raw: 'hello some other thing' }, revised_at: post.updated_at + 1.second)
+        expect(post.revisions.first.modifications[:edit_reason]).to eq([nil, 'this is my reason'])
+      end
+    end
+
     describe 'revision much later' do
 
       let!(:revised_at) { post.updated_at + 2.minutes }
