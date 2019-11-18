@@ -13,19 +13,18 @@ import {
   observes,
   on
 } from "discourse-common/utils/decorators";
-import InputValidation from "discourse/models/input-validation";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { escapeExpression, safariHacksDisabled } from "discourse/lib/utilities";
 import {
-  escapeExpression,
-  uploadIcon,
   authorizesOneOrMoreExtensions,
-  safariHacksDisabled
-} from "discourse/lib/utilities";
+  uploadIcon
+} from "discourse/lib/uploads";
 import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
 import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
 import ENV from "discourse-common/config/environment";
+import EmberObject, { computed } from "@ember/object";
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -158,7 +157,7 @@ export default Controller.extend({
     return "title";
   },
 
-  showToolbar: Ember.computed({
+  showToolbar: computed({
     get() {
       const keyValueStore = getOwner(this).lookup("key-value-store:main");
       const storedVal = keyValueStore.get("toolbar-enabled");
@@ -322,11 +321,13 @@ export default Controller.extend({
 
   @discourseComputed
   allowUpload() {
-    return authorizesOneOrMoreExtensions();
+    return authorizesOneOrMoreExtensions(this.currentUser.staff);
   },
 
   @discourseComputed()
-  uploadIcon: () => uploadIcon(),
+  uploadIcon() {
+    return uploadIcon(this.currentUser.staff);
+  },
 
   actions: {
     togglePreview() {
@@ -696,7 +697,7 @@ export default Controller.extend({
 
         if (this.get("model.editingPost")) {
           this.appEvents.trigger("post-stream:refresh", {
-            id: parseInt(result.responseJson.id)
+            id: parseInt(result.responseJson.id, 10)
           });
           if (result.responseJson.post.post_number === 1) {
             this.appEvents.trigger("header:update-topic", composer.topic);
@@ -1057,7 +1058,7 @@ export default Controller.extend({
   @discourseComputed("model.categoryId", "lastValidatedAt")
   categoryValidation(categoryId, lastValidatedAt) {
     if (!this.siteSettings.allow_uncategorized_topics && !categoryId) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("composer.error.category_missing"),
         lastShownAt: lastValidatedAt
@@ -1073,7 +1074,7 @@ export default Controller.extend({
       category &&
       category.minimum_required_tags > tagsArray.length
     ) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("composer.error.tags_missing", {
           count: category.minimum_required_tags

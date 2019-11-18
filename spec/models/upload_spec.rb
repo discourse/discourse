@@ -288,6 +288,84 @@ describe Upload do
     end
   end
 
+  describe '.update_secure_status' do
+    it 'marks a local upload as not secure with default settings' do
+      upload.update!(secure: true)
+      expect { upload.update_secure_status }
+        .to change { upload.secure }
+
+      expect(upload.secure).to eq(false)
+    end
+
+    it 'marks a local attachment as secure if prevent_anons_from_downloading_files is enabled' do
+      SiteSetting.prevent_anons_from_downloading_files = true
+      SiteSetting.authorized_extensions = "pdf"
+      upload.update!(original_filename: "small.pdf", extension: "pdf")
+
+      expect { upload.update_secure_status }
+        .to change { upload.secure }
+
+      expect(upload.secure).to eq(true)
+    end
+
+    it 'marks a local attachment as not secure if prevent_anons_from_downloading_files is disabled' do
+      SiteSetting.prevent_anons_from_downloading_files = false
+      SiteSetting.authorized_extensions = "pdf"
+      upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
+
+      expect { upload.update_secure_status }
+        .to change { upload.secure }
+
+      expect(upload.secure).to eq(false)
+    end
+
+    it 'does not change secure status of a non-attachment when prevent_anons_from_downloading_files is enabled' do
+      SiteSetting.prevent_anons_from_downloading_files = true
+      SiteSetting.authorized_extensions = "mp4"
+      upload.update!(original_filename: "small.mp4", extension: "mp4")
+
+      expect { upload.update_secure_status }
+        .not_to change { upload.secure }
+
+      expect(upload.secure).to eq(false)
+    end
+
+    context "secure media enabled" do
+      before do
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "some key"
+        SiteSetting.s3_secret_access_key = "some secret key"
+        SiteSetting.secure_media = true
+
+        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+        stub_request(
+          :put,
+          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{upload.sha1}.#{upload.extension}?acl"
+        )
+      end
+
+      it 'marks an image upload as not secure when not associated with a post' do
+        upload.update!(secure: true)
+        expect { upload.update_secure_status }
+          .to change { upload.secure }
+
+        expect(upload.secure).to eq(false)
+      end
+
+      it 'marks an image upload as secure if login_required is enabled' do
+        SiteSetting.login_required = true
+        upload.update!(secure: false)
+
+        expect { upload.update_secure_status }
+          .to change { upload.secure }
+
+        expect(upload.secure).to eq(true)
+      end
+    end
+  end
+
   describe '.reset_unknown_extensions!' do
     it 'should reset the extension of uploads when it is "unknown"' do
       upload1 = Fabricate(:upload, extension: "unknown")

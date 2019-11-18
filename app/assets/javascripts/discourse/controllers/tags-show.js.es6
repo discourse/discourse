@@ -6,50 +6,7 @@ import {
   observes
 } from "discourse-common/utils/decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
-import {
-  default as NavItem,
-  extraNavItemProperties,
-  customNavItemHref
-} from "discourse/models/nav-item";
-
-if (extraNavItemProperties) {
-  extraNavItemProperties(function(text, opts) {
-    if (opts && opts.tagId) {
-      return { tagId: opts.tagId };
-    } else {
-      return {};
-    }
-  });
-}
-
-if (customNavItemHref) {
-  customNavItemHref(function(navItem) {
-    if (navItem.get("tagId")) {
-      const name = navItem.get("name");
-
-      if (!Discourse.Site.currentProp("filters").includes(name)) {
-        return null;
-      }
-
-      let path = "/tags/";
-      const category = navItem.get("category");
-
-      if (category) {
-        path += "c/";
-        path += Discourse.Category.slugFor(category);
-        if (navItem.get("noSubcategories")) {
-          path += "/none";
-        }
-        path += "/";
-      }
-
-      path += `${navItem.get("tagId")}/l/`;
-      return `${path}${name.replace(" ", "-")}`;
-    } else {
-      return null;
-    }
-  });
-}
+import { default as NavItem } from "discourse/models/nav-item";
 
 export default Controller.extend(BulkTopicSelection, {
   application: inject(),
@@ -108,11 +65,12 @@ export default Controller.extend(BulkTopicSelection, {
     "q"
   ],
 
-  @discourseComputed("category", "tag.id", "filterMode")
-  navItems(category, tagId, filterMode) {
+  @discourseComputed("category", "tag.id", "filterMode", "noSubcategories")
+  navItems(category, tagId, filterMode, noSubcategories) {
     return NavItem.buildList(category, {
       tagId,
-      filterMode
+      filterMode,
+      noSubcategories
     });
   },
 

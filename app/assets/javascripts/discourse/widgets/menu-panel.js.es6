@@ -19,7 +19,10 @@ createWidget("menu-links", {
 
     const result = [];
     result.push(
-      h("ul.menu-links.columned", links.map(l => h("li", liOpts, l)))
+      h(
+        "ul.menu-links.columned",
+        links.map(l => h("li", liOpts, l))
+      )
     );
 
     result.push(h("div.clearfix"));

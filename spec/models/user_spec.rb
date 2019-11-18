@@ -1957,11 +1957,35 @@ describe User do
       expect(user.user_profile.reload.badge_granted_title).to eq(false)
 
       badge.update!(allow_title: true)
+      user.badges.reload
       user.update!(title: badge.name)
       expect(user.user_profile.reload.badge_granted_title).to eq(true)
+      expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
 
       user.update!(title: nil)
       expect(user.user_profile.reload.badge_granted_title).to eq(false)
+      expect(user.user_profile.granted_title_badge_id).to eq(nil)
+    end
+
+    context 'when a custom badge name has been set and it matches the title' do
+      let(:customized_badge_name) { 'Merit Badge' }
+
+      before do
+        TranslationOverride.upsert!(I18n.locale, Badge.i18n_key(badge.name), customized_badge_name)
+      end
+
+      it 'sets badge_granted_title correctly' do
+        BadgeGranter.grant(badge, user)
+
+        badge.update!(allow_title: true)
+        user.update!(title: customized_badge_name)
+        expect(user.user_profile.reload.badge_granted_title).to eq(true)
+        expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
+      end
+
+      after do
+        TranslationOverride.revert!(I18n.locale, Badge.i18n_key(badge.name))
+      end
     end
   end
 

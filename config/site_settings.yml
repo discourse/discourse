@@ -1127,6 +1127,9 @@ files:
   prevent_anons_from_downloading_files:
     default: false
     client: true
+  secure_media:
+    default: false
+    client: true
   enable_s3_uploads:
     default: false
     client: true
@@ -1368,7 +1371,7 @@ security:
     list_type: compact
   blacklisted_crawler_user_agents:
     type: list
-    default: "mauibot|semrushbot|ahrefsbot|blexbot"
+    default: "mauibot|semrushbot|ahrefsbot|blexbot|seo spider"
     list_type: compact
   slow_down_crawler_user_agents:
     type: list
@@ -1581,23 +1584,9 @@ developer:
     client: true
 
 embedding:
-  feed_polling_enabled:
-    default: false
-    hidden: true
-  feed_polling_url:
-    default: ""
-    hidden: true
-  feed_polling_frequency_mins:
-    min: 5
-    max: 180
-    default: 60
-    hidden: true
   embed_by_username:
     default: ""
     type: username
-    hidden: true
-  embed_username_key_from_feed:
-    default: ""
     hidden: true
   embed_post_limit:
     default: 100
@@ -2022,6 +2011,9 @@ user_preferences:
   default_categories_watching_first_post:
     type: category_list
     default: ""
+  mute_all_categories_by_default:
+    default: false
+    client: true
 
   default_tags_watching:
     type: tag_list

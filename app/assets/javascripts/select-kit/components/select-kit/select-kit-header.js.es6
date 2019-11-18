@@ -1,3 +1,4 @@
+import { alias, none, or } from "@ember/object/computed";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 
@@ -16,13 +17,13 @@ export default Component.extend({
     "name:data-name"
   ],
 
-  forceEscape: Ember.computed.alias("options.forceEscape"),
+  forceEscape: alias("options.forceEscape"),
 
-  isNone: Ember.computed.none("computedContent.value"),
+  isNone: none("computedContent.value"),
 
   ariaHasPopup: "true",
 
-  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "sanitizedTitle"),
+  ariaLabel: or("computedContent.ariaLabel", "sanitizedTitle"),
 
   @discourseComputed("computedContent.title", "name")
   title(computedContentTitle, name) {
@@ -39,11 +40,11 @@ export default Component.extend({
     return String(title).replace("&hellip;", "");
   },
 
-  label: Ember.computed.or("computedContent.label", "title", "name"),
+  label: or("computedContent.label", "title", "name"),
 
-  name: Ember.computed.alias("computedContent.name"),
+  name: alias("computedContent.name"),
 
-  value: Ember.computed.alias("computedContent.value"),
+  value: alias("computedContent.value"),
 
   @discourseComputed("computedContent.icon", "computedContent.icons")
   icons(icon, icons) {

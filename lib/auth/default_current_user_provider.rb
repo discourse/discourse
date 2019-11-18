@@ -283,9 +283,16 @@ class Auth::DefaultCurrentUserProvider
   def lookup_api_user(api_key_value, request)
     if api_key = ApiKey.active.where(key: api_key_value).includes(:user).first
       api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
+
+      # Check for deprecated api auth
       if !header_api_key?
-        # Notify admins of deprecated auth method
-        AdminDashboardData.add_problem_message('dashboard.deprecated_api_usage', 1.day)
+        if request.path == "/admin/email/handle_mail"
+          # Notify admins that the mail receiver is still using query auth and to update
+          AdminDashboardData.add_problem_message('dashboard.update_mail_receiver', 1.day)
+        else
+          # Notify admins of deprecated auth method
+          AdminDashboardData.add_problem_message('dashboard.deprecated_api_usage', 1.day)
+        end
       end
 
       if api_key.allowed_ips.present? && !api_key.allowed_ips.any? { |ip| ip.include?(request.ip) }

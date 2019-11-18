@@ -8,6 +8,10 @@ require 'discourse_tagging'
 
 describe DiscourseTagging do
 
+  def sorted_tag_names(tag_records)
+    tag_records.map(&:name).sort
+  end
+
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user)  { Fabricate(:user) }
   let(:guardian) { Guardian.new(user) }
@@ -25,7 +29,7 @@ describe DiscourseTagging do
   describe 'filter_allowed_tags' do
     context 'for input fields' do
       it "doesn't return selected tags if there's a search term" do
-        tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user),
+        tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
           selected_tags: [tag2.name],
           for_input: true,
           term: 'fun'
@@ -34,7 +38,7 @@ describe DiscourseTagging do
       end
 
       it "doesn't return selected tags if there's no search term" do
-        tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user),
+        tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
           selected_tags: [tag2.name],
           for_input: true
         ).map(&:name)
@@ -46,15 +50,13 @@ describe DiscourseTagging do
         let!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
         it 'should return all tags to staff' do
-          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(admin)).to_a
-          expect(tags).to contain_exactly(tag1, tag2, tag3, hidden_tag)
-          expect(tags.size).to eq(4)
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(admin)).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3, hidden_tag]))
         end
 
         it 'should not return hidden tag to non-staff' do
-          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user)).to_a
-          expect(tags).to contain_exactly(tag1, tag2, tag3)
-          expect(tags.size).to eq(3)
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user)).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
         end
       end
 
@@ -63,42 +65,42 @@ describe DiscourseTagging do
         fab!(:category) { Fabricate(:category, required_tag_group: tag_group, min_tags_from_required_group: 1) }
 
         it "returns the required tags if none have been selected" do
-          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user),
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
             for_input: true,
             category: category,
             term: 'fun'
           ).to_a
-          expect(tags).to contain_exactly(tag1, tag2)
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2]))
         end
 
         it "returns all allowed tags if a required tag is selected" do
-          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user),
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
             for_input: true,
             category: category,
             selected_tags: [tag1.name],
             term: 'fun'
           ).to_a
-          expect(tags).to contain_exactly(tag2, tag3)
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag2, tag3]))
         end
 
         it "returns required tags if not enough are selected" do
           category.update!(min_tags_from_required_group: 2)
-          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user),
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
             for_input: true,
             category: category,
             selected_tags: [tag1.name],
             term: 'fun'
           ).to_a
-          expect(tags).to contain_exactly(tag2)
+          expect(sorted_tag_names(tags)).to contain_exactly(tag2.name)
         end
 
         it "let's staff ignore the requirement" do
-          tags = DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(admin),
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(admin),
             for_input: true,
             category: category,
             term: 'fun'
           ).to_a
-          expect(tags).to contain_exactly(tag1, tag2, tag3)
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
         end
       end
     end

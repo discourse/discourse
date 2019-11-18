@@ -4,8 +4,8 @@ import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { on } from "@ember/object/evented";
 import Mixin from "@ember/object/mixin";
 import showModal from "discourse/lib/show-modal";
-import AboutRoute from "discourse/routes/about";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
 
 const CUSTOM_TYPES = [
   "bool",
@@ -125,7 +125,6 @@ export default Mixin.create({
         "default_email_messages_level",
         "default_email_mailing_list_mode",
         "default_email_mailing_list_mode_frequency",
-        "disable_mailing_list_mode",
         "default_email_previous_replies",
         "default_email_in_reply_to",
         "default_other_new_topic_duration_minutes",
@@ -151,12 +150,19 @@ export default Mixin.create({
       const key = this.buffered.get("setting");
 
       if (defaultUserPreferences.includes(key)) {
-        AboutRoute.create()
-          .model()
-          .then(result => {
+        const data = {};
+        data[key] = this.buffered.get("value");
+
+        ajax(`/admin/site_settings/${key}/user_count.json`, {
+          type: "PUT",
+          data
+        }).then(result => {
+          const count = result.user_count;
+
+          if (count > 0) {
             const controller = showModal("site-setting-default-categories", {
               model: {
-                count: result.stats.user_count,
+                count: result.user_count,
                 key: key.replace(/_/g, " ")
               },
               admin: true
@@ -166,7 +172,10 @@ export default Mixin.create({
               this.updateExistingUsers = controller.updateExistingUsers;
               this.send("save");
             });
-          });
+          } else {
+            this.send("save");
+          }
+        });
       } else {
         this.send("save");
       }

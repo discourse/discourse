@@ -6,6 +6,7 @@ import Component from "@ember/component";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { on, observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Category from "discourse/models/category";
 
 export default Component.extend(bufferedProperty("host"), {
   editToggled: false,
@@ -50,7 +51,7 @@ export default Component.extend(bufferedProperty("host"), {
       host
         .save(props)
         .then(() => {
-          host.set("category", Discourse.Category.findById(this.categoryId));
+          host.set("category", Category.findById(this.categoryId));
           this.set("editToggled", false);
         })
         .catch(popupAjaxError);

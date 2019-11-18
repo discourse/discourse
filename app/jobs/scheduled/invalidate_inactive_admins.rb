@@ -8,10 +8,14 @@ module Jobs
     def execute(_)
       return if SiteSetting.invalidate_inactive_admin_email_after_days == 0
 
+      timestamp = SiteSetting.invalidate_inactive_admin_email_after_days.days.ago
+
       User.human_users
         .where(admin: true)
         .where(active: true)
-        .where('last_seen_at < ?', SiteSetting.invalidate_inactive_admin_email_after_days.days.ago)
+        .where('last_seen_at < ?', timestamp)
+        .where("NOT EXISTS ( SELECT 1 from api_keys WHERE api_keys.user_id = users.id AND COALESCE(last_used_at, updated_at) > ? )", timestamp)
+        .where("NOT EXISTS ( SELECT 1 from posts WHERE posts.user_id = users.id AND created_at > ?)", timestamp)
         .each do |user|
 
         User.transaction do

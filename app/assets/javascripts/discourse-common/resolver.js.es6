@@ -139,6 +139,11 @@ export function buildResolver(baseName) {
     },
 
     resolveRoute(parsedName) {
+      if (parsedName.fullNameWithoutType === "basic") {
+        return requirejs("discourse/routes/discourse", null, null, true)
+          .default;
+      }
+
       return this.customResolve(parsedName) || this._super(parsedName);
     },
 

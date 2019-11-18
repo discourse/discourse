@@ -169,6 +169,9 @@ QUnit.test("it skips a search depending on punctuations", async assert => {
   // 6 + email
   assert.equal(results.length, 7);
 
+  results = await userSearch({ term: "sam+test@sam.com", allowEmails: true });
+  assert.equal(results.length, 7);
+
   results = await userSearch({ term: "sam@sam.com" });
   assert.equal(results.length, 0);
 

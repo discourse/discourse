@@ -74,6 +74,8 @@ Discourse::Application.routes.draw do
       collection do
         get "category/:id" => "site_settings#index"
       end
+
+      put "user_count" => "site_settings#user_count"
     end
 
     get "reports" => "reports#index"
@@ -500,6 +502,7 @@ Discourse::Application.routes.draw do
   get "uploads/:site/original/:tree:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, tree: /([a-z0-9]+\/)+/i, sha: /\h{40}/, extension: /[a-z0-9\.]+/i }
   # used to download attachments (old route)
   get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /\h{16}/, format: /.*/ }
+  get "secure-media-uploads/*path(.:extension)" => "uploads#show_secure", constraints: { extension: /[a-z0-9\.]+/i }
 
   get "posts" => "posts#latest", id: "latest_posts", constraints: { format: /(json|rss)/ }
   get "private-posts" => "posts#latest", id: "private_posts", constraints: { format: /(json|rss)/ }

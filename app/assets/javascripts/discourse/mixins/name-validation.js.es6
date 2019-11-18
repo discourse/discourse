@@ -1,7 +1,7 @@
 import { isEmpty } from "@ember/utils";
-import InputValidation from "discourse/models/input-validation";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
+import EmberObject from "@ember/object";
 
 export default Mixin.create({
   @discourseComputed()
@@ -17,9 +17,9 @@ export default Mixin.create({
   @discourseComputed("accountName")
   nameValidation() {
     if (this.siteSettings.full_name_required && isEmpty(this.accountName)) {
-      return InputValidation.create({ failed: true });
+      return EmberObject.create({ failed: true });
     }
 
-    return InputValidation.create({ ok: true });
+    return EmberObject.create({ ok: true });
   }
 });

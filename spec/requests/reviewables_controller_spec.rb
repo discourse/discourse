@@ -168,6 +168,30 @@ describe ReviewablesController do
         expect(json_review['id']).to eq(reviewable.id)
         expect(json_review['user_id']).to eq(user.id)
       end
+
+      context "supports filtering by range" do
+        let(:from) { 3.days.ago.strftime('%F') }
+        let(:to) { 1.day.ago.strftime('%F') }
+
+        let(:reviewables) { ::JSON.parse(response.body)['reviewables'] }
+
+        it 'returns an empty array when no reviewable matches the date range' do
+          reviewable = Fabricate(:reviewable)
+
+          get "/review.json?from_date=#{from}&to_date=#{to}"
+
+          expect(reviewables).to eq([])
+        end
+
+        it 'returns reviewable content that matches the date range' do
+          reviewable = Fabricate(:reviewable, created_at: 2.day.ago)
+
+          get "/review.json?from_date=#{from}&to_date=#{to}"
+
+          json_review = reviewables.first
+          expect(json_review['id']).to eq(reviewable.id)
+        end
+      end
     end
 
     context "#show" do

@@ -36,6 +36,6 @@ class SiteSettingsTask
         counts[:not_found] += 1
       end
     end
-    return log, counts
+    [log, counts]
   end
 end

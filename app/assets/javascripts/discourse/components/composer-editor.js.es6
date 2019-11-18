@@ -26,19 +26,22 @@ import Composer from "discourse/models/composer";
 import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
 import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
 import { ajax } from "discourse/lib/ajax";
-import InputValidation from "discourse/models/input-validation";
+import EmberObject from "@ember/object";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import {
   tinyAvatar,
-  displayErrorForUpload,
-  getUploadMarkdown,
-  validateUploadedFiles,
-  authorizesOneOrMoreImageExtensions,
   formatUsername,
   clipboardData,
   safariHacksDisabled
 } from "discourse/lib/utilities";
+import {
+  validateUploadedFiles,
+  authorizesOneOrMoreImageExtensions,
+  getUploadMarkdown,
+  displayErrorForUpload
+} from "discourse/lib/uploads";
+
 import {
   cacheShortUploadUrl,
   resolveAllShortUrls
@@ -82,7 +85,7 @@ export default Component.extend({
     if (requiredCategoryMissing) {
       return "composer.reply_placeholder_choose_category";
     } else {
-      const key = authorizesOneOrMoreImageExtensions()
+      const key = authorizesOneOrMoreImageExtensions(this.currentUser.staff)
         ? "reply_placeholder"
         : "reply_placeholder_no_images";
       return `composer.${key}`;
@@ -246,7 +249,7 @@ export default Component.extend({
     }
 
     if (reason) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason,
         lastShownAt: lastValidatedAt
@@ -273,7 +276,7 @@ export default Component.extend({
       const lastMatch = matchingPlaceholder[matchingPlaceholder.length - 1];
       const regex = new RegExp(regexString);
       const orderNr = regex.exec(lastMatch)[1]
-        ? parseInt(regex.exec(lastMatch)[1]) + 1
+        ? parseInt(regex.exec(lastMatch)[1], 10) + 1
         : 1;
       data.orderNr = orderNr;
       const filenameWithOrderNr = `${filename}(${orderNr})`;
@@ -700,6 +703,7 @@ export default Component.extend({
       if (this._pasted) data.formData.pasted = true;
 
       const opts = {
+        user: this.currentUser,
         isPrivateMessage,
         allowStaffToUploadAnyFileInPm: this.siteSettings
           .allow_staff_to_upload_any_file_in_pm
@@ -770,59 +774,26 @@ export default Component.extend({
     }
   },
 
-  _appendImageScaleButtons($images, imageScaleRegex) {
-    const buttonScales = [100, 75, 50];
-    const imageWrapperTemplate = `<div class="image-wrapper"></div>`;
-    const buttonWrapperTemplate = `<div class="button-wrapper"></div>`;
-    const scaleButtonTemplate = `<span class="scale-btn"></a>`;
+  _registerImageScaleButtonClick($preview) {
+    // original string `![image|690x220, 50%](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
+    // group 1 `image`
+    // group 2 `690x220`
+    // group 3 `, 50%`
+    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png'
+    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
 
-    $images.each((i, e) => {
-      const $e = $(e);
+    // Notes:
+    // Group 3 is optional. group 4 can match images with or without a markdown title.
+    // All matches are whitespace tolerant as long it's still valid markdown.
+    // If the image is inside a code block, we'll ignore it `(?!(.*`))`.
+    const imageScaleRegex = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?\]\((upload:\/\/.*?)\)(?!(.*`))/g;
 
-      const matches = this.get("composer.reply").match(imageScaleRegex);
-
-      // ignore previewed upload markdown in codeblock
-      if (!matches || $e.hasClass("codeblock-image")) return;
-
-      if (!$e.parent().hasClass("image-wrapper")) {
-        const match = matches[i];
-        const matchingPlaceholder = imageScaleRegex.exec(match);
-
-        if (!matchingPlaceholder) return;
-
-        const currentScale = matchingPlaceholder[2] || 100;
-
-        $e.data("index", i).wrap(imageWrapperTemplate);
-        $e.parent().append(
-          $(buttonWrapperTemplate).attr("data-image-index", i)
-        );
-
-        buttonScales.forEach((buttonScale, buttonIndex) => {
-          const activeClass =
-            parseInt(currentScale, 10) === buttonScale ? "active" : "";
-
-          const $scaleButton = $(scaleButtonTemplate)
-            .addClass(activeClass)
-            .attr("data-scale", buttonScale)
-            .text(`${buttonScale}%`);
-
-          const $buttonWrapper = $e.parent().find(".button-wrapper");
-          $buttonWrapper.append($scaleButton);
-
-          if (buttonIndex !== buttonScales.length - 1) {
-            $buttonWrapper.append(`<span class="separator"> • </span>`);
-          }
-        });
-      }
-    });
-  },
-
-  _registerImageScaleButtonClick($preview, imageScaleRegex) {
     $preview.off("click", ".scale-btn").on("click", ".scale-btn", e => {
       const index = parseInt(
         $(e.target)
           .parent()
-          .attr("data-image-index")
+          .attr("data-image-index"),
+        10
       );
 
       const scale = e.target.attributes["data-scale"].value;
@@ -849,45 +820,6 @@ export default Component.extend({
         );
       }
     });
-  },
-
-  _placeImageScaleButtons($preview) {
-    // regex matches only upload placeholders with size defined,
-    // which is required for resizing
-
-    // original string `![image|690x220, 50%](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
-    // group 1 `image`
-    // group 2 `690x220`
-    // group 3 `, 50%`
-    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png'
-    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
-
-    // Notes:
-    // Group 3 is optional. group 4 can match images with or without a markdown title.
-    // All matches are whitespace tolerant as long it's still valid markdown
-
-    const imageScaleRegex = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?\]\((upload:\/\/.*?)\)/g;
-
-    // wraps previewed upload markdown in a codeblock in its own class to keep a track
-    // of indexes later on to replace the correct upload placeholder in the composer
-    if ($preview.find(".codeblock-image").length === 0) {
-      $(this.element)
-        .find(".d-editor-preview *")
-        .contents()
-        .each(function() {
-          if (this.nodeType !== 3) return; // TEXT_NODE
-          const $this = $(this);
-
-          if ($this.text().match(imageScaleRegex)) {
-            $this.wrap("<span class='codeblock-image'></span>");
-          }
-        });
-    }
-
-    const $images = $preview.find("img.resizable, span.codeblock-image");
-
-    this._appendImageScaleButtons($images, imageScaleRegex);
-    this._registerImageScaleButtonClick($preview, imageScaleRegex);
   },
 
   @on("willDestroyElement")
@@ -1078,7 +1010,7 @@ export default Component.extend({
         );
       }
 
-      this._placeImageScaleButtons($preview);
+      this._registerImageScaleButtonClick($preview);
 
       this.trigger("previewRefreshed", $preview);
       this.afterRefresh($preview);

@@ -47,7 +47,7 @@ class S3Helper
       end
     end
 
-    return path, etag.gsub('"', '')
+    [path, etag.gsub('"', '')]
   end
 
   def remove(s3_filename, copy_to_tombstone = false)

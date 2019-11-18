@@ -115,7 +115,10 @@ createWidget("user-menu-links", {
 
     return h("ul.menu-links-row", [
       links.map(l => h("li.user", this.linkHtml(l))),
-      h("li.glyphs", glyphs.map(l => this.glyphHtml(l)))
+      h(
+        "li.glyphs",
+        glyphs.map(l => this.glyphHtml(l))
+      )
     ]);
   },
 
@@ -221,7 +224,7 @@ export default createWidget("user-menu", {
       this.sendWidgetAction("toggleUserMenu");
     } else {
       const $window = $(window);
-      const windowWidth = parseInt($window.width(), 10);
+      const windowWidth = $window.width();
       const $panel = $(".menu-panel");
       $panel.addClass("animate");
       $panel.css("right", -windowWidth);

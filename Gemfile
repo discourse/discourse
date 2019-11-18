@@ -16,13 +16,13 @@ if rails_master?
 else
   # until rubygems gives us optional dependencies we are stuck with this
   # bundle update actionmailer actionpack actionview activemodel activerecord activesupport railties
-  gem 'actionmailer', '6.0.0'
-  gem 'actionpack', '6.0.0'
-  gem 'actionview', '6.0.0'
-  gem 'activemodel', '6.0.0'
-  gem 'activerecord', '6.0.0'
-  gem 'activesupport', '6.0.0'
-  gem 'railties', '6.0.0'
+  gem 'actionmailer', '6.0.1'
+  gem 'actionpack', '6.0.1'
+  gem 'actionview', '6.0.1'
+  gem 'activemodel', '6.0.1'
+  gem 'activerecord', '6.0.1'
+  gem 'activesupport', '6.0.1'
+  gem 'railties', '6.0.1'
   gem 'sprockets-rails'
 end
 

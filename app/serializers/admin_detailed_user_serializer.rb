@@ -39,7 +39,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
 
   def second_factor_enabled
-    object.totp_enabled?
+    object.totp_enabled? || object.security_keys_enabled?
   end
 
   def can_disable_second_factor

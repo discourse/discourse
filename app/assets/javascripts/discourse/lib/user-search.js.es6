@@ -1,4 +1,4 @@
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
@@ -79,7 +79,7 @@ function performSearch(
     });
 }
 
-var debouncedSearch = debounce(performSearch, 300);
+var debouncedSearch = discourseDebounce(performSearch, 300);
 
 function organizeResults(r, options) {
   if (r === CANCELLED_STATUS) {
@@ -136,7 +136,7 @@ function organizeResults(r, options) {
 // will not find me, which is a reasonable compromise
 //
 // we also ignore if we notice a double space or a string that is only a space
-const ignoreRegex = /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\/:;<=>?\[\]^`{|}~])|\s\s|^\s$/;
+const ignoreRegex = /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*,\/:;<=>?\[\]^`{|}~])|\s\s|^\s$|^[^+]*\+[^@]*$/;
 
 function skipSearch(term, allowEmails) {
   if (term.indexOf("@") > -1 && !allowEmails) {

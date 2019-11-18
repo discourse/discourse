@@ -1,10 +1,11 @@
+import { empty } from "@ember/object/computed";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["toolbar-popup-menu-options"],
   classNames: ["toolbar-popup-menu-options"],
-  isHidden: Ember.computed.empty("computedContent"),
+  isHidden: empty("computedContent"),
   showFullTitle: false,
 
   @discourseComputed("title")

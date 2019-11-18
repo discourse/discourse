@@ -1945,7 +1945,6 @@ th:
         category: "โพสไปยังหมวดหมู่"
         add_host: "เพิ่มโฮส"
         settings: "การตั้งการการฝั่ง"
-        feed_settings: "การตั้งค่าฟีด"
         save: "บันทึกการตั้งค่าการฝั่ง"
       permalink:
         title: "ลิงค์ถาวร"

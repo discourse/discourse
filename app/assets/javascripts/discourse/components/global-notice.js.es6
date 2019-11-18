@@ -75,9 +75,7 @@ export default Component.extend(
         buffer.push(
           notices
             .map(n => {
-              var html = `<div class='row'><div class='alert alert-info ${
-                n[1]
-              }'>`;
+              var html = `<div class='row'><div class='alert alert-info ${n[1]}'>`;
               if (n[2]) html += n[2];
               html += `${n[0]}</div></div>`;
               return html;

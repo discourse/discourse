@@ -1,7 +1,8 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
+import EmberObject from "@ember/object";
 
-const VersionCheck = Discourse.Model.extend({
+const VersionCheck = EmberObject.extend({
   @discourseComputed("updated_at")
   noCheckPerformed(updatedAt) {
     return updatedAt === null;

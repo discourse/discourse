@@ -121,6 +121,10 @@ module SiteSettings::Validations
     validate_error :s3_upload_bucket_is_required if new_val == "t" && SiteSetting.s3_upload_bucket.blank?
   end
 
+  def validate_secure_media(new_val)
+    validate_error :secure_media_requirements if new_val == "t" && !SiteSetting.enable_s3_uploads?
+  end
+
   def validate_enable_s3_inventory(new_val)
     validate_error :enable_s3_uploads_is_required if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
   end
@@ -141,6 +145,17 @@ module SiteSettings::Validations
 
   def validate_s3_backup_bucket(new_val)
     validate_bucket_setting("s3_backup_bucket", SiteSetting.s3_upload_bucket, new_val)
+  end
+
+  def validate_enforce_second_factor(new_val)
+    return if SiteSetting.enable_local_logins
+    validate_error :second_factor_cannot_be_enforced_with_disabled_local_login
+  end
+
+  def validate_enable_local_logins(new_val)
+    return if new_val == "t"
+    return if SiteSetting.enforce_second_factor == "no"
+    validate_error :local_login_cannot_be_disabled_if_second_factor_enforced
   end
 
   private

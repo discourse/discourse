@@ -2,7 +2,7 @@ import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { searchForTerm } from "discourse/lib/search";
 import { observes } from "discourse-common/utils/decorators";
 
@@ -30,7 +30,7 @@ export default Component.extend({
     this.set("loading", false);
   },
 
-  search: debounce(function(title) {
+  search: discourseDebounce(function(title) {
     const currentTopicId = this.currentTopicId;
 
     if (isEmpty(title)) {

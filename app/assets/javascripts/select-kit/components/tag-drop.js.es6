@@ -1,3 +1,4 @@
+import { alias, or } from "@ember/object/computed";
 import { makeArray } from "discourse-common/lib/helpers";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
@@ -10,14 +11,14 @@ export default ComboBoxComponent.extend(TagsMixin, {
   classNameBindings: ["categoryStyle", "tagClass"],
   classNames: "tag-drop",
   verticalOffset: 3,
-  value: Ember.computed.alias("tagId"),
+  value: alias("tagId"),
   headerComponent: "tag-drop/tag-drop-header",
   allowAutoSelectFirst: false,
   tagName: "li",
-  showFilterByTag: Ember.computed.alias("siteSettings.show_filter_by_tag"),
-  currentCategory: Ember.computed.or("secondCategory", "firstCategory"),
+  showFilterByTag: alias("siteSettings.show_filter_by_tag"),
+  currentCategory: or("secondCategory", "firstCategory"),
   tagId: null,
-  categoryStyle: Ember.computed.alias("siteSettings.category_style"),
+  categoryStyle: alias("siteSettings.category_style"),
   mutateAttributes() {},
   fullWidthOnMobile: true,
   caretDownIcon: "caret-right",

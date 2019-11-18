@@ -457,7 +457,7 @@ class ImportScripts::FMGP < ImportScripts::Base
     end
     # FIXME: import G+ "+1" as "like" if F+MG+E feature request implemented
 
-    return mapped
+    mapped
   end
 
   def parse_title(post, created_at)
@@ -524,7 +524,7 @@ class ImportScripts::FMGP < ImportScripts::Base
         words << fragment[1]
       end
     end
-    return words
+    words
   end
 
   def formatted_message(post)
@@ -588,10 +588,10 @@ class ImportScripts::FMGP < ImportScripts::Base
         return text
       end
     elsif fragment[0] == 1
-      return "\n"
+      "\n"
     elsif fragment[0] == 2
       urls_seen.add(fragment[2])
-      return formatted_link_text(fragment[2], fragment[1])
+      formatted_link_text(fragment[2], fragment[1])
     elsif fragment[0] == 3
       # reference to a user
       if @usermap.include?(fragment[2].to_s)
@@ -619,7 +619,7 @@ class ImportScripts::FMGP < ImportScripts::Base
       end
     elsif fragment[0] == 4
       # hashtag, the octothorpe is included
-      return fragment[1]
+      fragment[1]
     else
       raise RuntimeError.new("message code #{fragment[0]} not recognized!")
     end

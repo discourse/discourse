@@ -2,7 +2,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
-import { allowsImages } from "discourse/lib/utilities";
+import { allowsImages } from "discourse/lib/uploads";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, {
@@ -42,7 +42,10 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed()
   allowAvatarUpload() {
-    return this.siteSettings.allow_uploaded_avatars && allowsImages();
+    return (
+      this.siteSettings.allow_uploaded_avatars &&
+      allowsImages(this.currentUser.staff)
+    );
   },
 
   actions: {

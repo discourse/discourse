@@ -24,7 +24,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   _jumpToIndex(postsCounts, postNumber) {
-    const where = Math.min(postsCounts, Math.max(1, parseInt(postNumber)));
+    const where = Math.min(postsCounts, Math.max(1, parseInt(postNumber, 10)));
     this.jumpToIndex(where);
     this._close();
   },

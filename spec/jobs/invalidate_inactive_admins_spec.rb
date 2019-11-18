@@ -46,6 +46,18 @@ describe Jobs::InvalidateInactiveAdmins do
           expect(UserAssociatedAccount.where(user_id: not_seen_admin.id).exists?).to eq(false)
         end
       end
+
+      it "doesn't deactivate admins with recent posts" do
+        Fabricate(:post, user: not_seen_admin)
+        subject
+        expect(not_seen_admin.reload.active).to eq(true)
+      end
+
+      it "doesn't deactivate admins with recently used api keys" do
+        Fabricate(:api_key, user: not_seen_admin, last_used_at: 1.day.ago)
+        subject
+        expect(not_seen_admin.reload.active).to eq(true)
+      end
     end
 
     context 'invalidate_inactive_admin_email_after_days = 0 to disable this feature' do

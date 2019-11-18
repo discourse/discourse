@@ -44,6 +44,7 @@ describe Admin::ThemesController do
       theme = Fabricate(:theme, name: "Awesome Theme")
       theme.set_field(target: :common, name: :scss, value: '.body{color: black;}')
       theme.set_field(target: :desktop, name: :after_header, value: '<b>test</b>')
+      theme.set_field(target: :extra_js, name: "discourse/controller/blah", value: 'console.log("test");')
       theme.save!
 
       get "/admin/customize/themes/#{theme.id}/export"
@@ -64,7 +65,7 @@ describe Admin::ThemesController do
       json = ::JSON.parse(response.body)
 
       expect(json["theme"]["name"]).to eq("Awesome Theme")
-      expect(json["theme"]["theme_fields"].length).to eq(2)
+      expect(json["theme"]["theme_fields"].length).to eq(3)
     end
   end
 

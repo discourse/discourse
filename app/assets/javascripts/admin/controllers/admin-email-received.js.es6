@@ -1,9 +1,9 @@
 import AdminEmailLogsController from "admin/controllers/admin-email-logs";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import IncomingEmail from "admin/models/incoming-email";
 
 export default AdminEmailLogsController.extend({
-  filterIncomingEmails: debounce(function() {
+  filterIncomingEmails: discourseDebounce(function() {
     this.loadLogs(IncomingEmail);
   }, 250).observes("filter.{status,from,to,subject}"),
 

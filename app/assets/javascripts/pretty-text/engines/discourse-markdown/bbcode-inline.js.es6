@@ -185,7 +185,10 @@ export function setup(helper) {
         if (simpleUrlRegex.test(url)) {
           startToken.type = "link_open";
           startToken.tag = "a";
-          startToken.attrs = [["href", url], ["data-bbcode", "true"]];
+          startToken.attrs = [
+            ["href", url],
+            ["data-bbcode", "true"]
+          ];
           startToken.content = "";
           startToken.nesting = 1;
 
@@ -214,7 +217,10 @@ export function setup(helper) {
         let email = tagInfo.attrs["_default"] || content;
 
         token = state.push("link_open", "a", 1);
-        token.attrs = [["href", "mailto:" + email], ["data-bbcode", "true"]];
+        token.attrs = [
+          ["href", "mailto:" + email],
+          ["data-bbcode", "true"]
+        ];
 
         token = state.push("text", "", 0);
         token.content = content;
@@ -228,7 +234,10 @@ export function setup(helper) {
       tag: "img",
       replace: function(state, tagInfo, content) {
         let token = state.push("image", "img", 0);
-        token.attrs = [["src", content], ["alt", ""]];
+        token.attrs = [
+          ["src", content],
+          ["alt", ""]
+        ];
         token.children = [];
         return true;
       }

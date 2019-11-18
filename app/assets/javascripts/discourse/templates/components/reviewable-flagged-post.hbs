@@ -20,6 +20,7 @@
         {{{reviewable.cooked}}}
       {{/if}}
     </div>
+    {{plugin-outlet name="after-reviewable-flagged-post-body" args=(hash model=reviewable)}}
     {{yield}}
   </div>
 </div>

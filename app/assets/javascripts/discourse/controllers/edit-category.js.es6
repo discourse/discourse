@@ -8,6 +8,7 @@ import {
   on,
   observes
 } from "discourse-common/utils/decorators";
+import Category from "discourse/models/category";
 
 export default Controller.extend(ModalFunctionality, {
   selectedTab: null,
@@ -106,7 +107,7 @@ export default Controller.extend(ModalFunctionality, {
             slug: result.category.slug,
             id: result.category.id
           });
-          DiscourseURL.redirectTo("/c/" + Discourse.Category.slugFor(model));
+          DiscourseURL.redirectTo("/c/" + Category.slugFor(model));
         })
         .catch(error => {
           this.flash(extractError(error), "error");

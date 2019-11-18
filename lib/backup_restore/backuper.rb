@@ -245,12 +245,11 @@ module BackupRestore
       Discourse::Utils.execute_command('tar', '--create', '--file', tar_filename, '--files-from', '/dev/null')
 
       log "Archiving data dump..."
-      FileUtils.cd(File.dirname(@dump_filename)) do
-        Discourse::Utils.execute_command(
-          'tar', '--append', '--dereference', '--file', tar_filename, File.basename(@dump_filename),
-          failure_message: "Failed to archive data dump."
-        )
-      end
+      Discourse::Utils.execute_command(
+        'tar', '--append', '--dereference', '--file', tar_filename, File.basename(@dump_filename),
+        failure_message: "Failed to archive data dump.",
+        chdir: File.dirname(@dump_filename)
+      )
 
       add_local_uploads_to_archive(tar_filename)
       add_remote_uploads_to_archive(tar_filename) if SiteSetting.Upload.enable_s3_uploads
@@ -268,17 +267,16 @@ module BackupRestore
       log "Archiving uploads..."
       upload_directory = "uploads/" + @current_db
 
-      FileUtils.cd(File.join(Rails.root, "public")) do
-        if File.directory?(upload_directory)
-          exclude_optimized = SiteSetting.include_thumbnails_in_backups ? '' : "--exclude=#{upload_directory}/optimized"
+      if File.directory?(File.join(Rails.root, "public", upload_directory))
+        exclude_optimized = SiteSetting.include_thumbnails_in_backups ? '' : "--exclude=#{upload_directory}/optimized"
 
-          Discourse::Utils.execute_command(
-            'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, upload_directory,
-            failure_message: "Failed to archive uploads.", success_status_codes: [0, 1]
-          )
-        else
-          log "No local uploads found. Skipping archiving of local uploads..."
-        end
+        Discourse::Utils.execute_command(
+          'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, upload_directory,
+          failure_message: "Failed to archive uploads.", success_status_codes: [0, 1],
+          chdir: File.join(Rails.root, "public")
+        )
+      else
+        log "No local uploads found. Skipping archiving of local uploads..."
       end
     end
 
@@ -294,30 +292,29 @@ module BackupRestore
       upload_directory = File.join("uploads", @current_db)
       count = 0
 
-      FileUtils.cd(@tmp_directory) do
-        Upload.find_each do |upload|
-          next if upload.local?
-          filename = File.join(@tmp_directory, upload_directory, store.get_path_for_upload(upload))
+      Upload.find_each do |upload|
+        next if upload.local?
+        filename = File.join(@tmp_directory, upload_directory, store.get_path_for_upload(upload))
 
-          begin
-            FileUtils.mkdir_p(File.dirname(filename))
-            store.download_file(upload, filename)
-          rescue StandardError => ex
-            log "Failed to download file with upload ID #{upload.id} from S3", ex
-          end
-
-          if File.exists?(filename)
-            Discourse::Utils.execute_command(
-              'tar', '--append', '--file', tar_filename, upload_directory,
-              failure_message: "Failed to add #{upload.original_filename} to archive.", success_status_codes: [0, 1]
-            )
-
-            File.delete(filename)
-          end
-
-          count += 1
-          log "#{count} files have already been downloaded. Still downloading..." if count % 500 == 0
+        begin
+          FileUtils.mkdir_p(File.dirname(filename))
+          store.download_file(upload, filename)
+        rescue StandardError => ex
+          log "Failed to download file with upload ID #{upload.id} from S3", ex
         end
+
+        if File.exists?(filename)
+          Discourse::Utils.execute_command(
+            'tar', '--append', '--file', tar_filename, upload_directory,
+            failure_message: "Failed to add #{upload.original_filename} to archive.", success_status_codes: [0, 1],
+            chdir: @tmp_directory
+          )
+
+          File.delete(filename)
+        end
+
+        count += 1
+        log "#{count} files have already been downloaded. Still downloading..." if count % 500 == 0
       end
 
       log "No uploads found on S3. Skipping archiving of uploads stored on S3..." if count == 0

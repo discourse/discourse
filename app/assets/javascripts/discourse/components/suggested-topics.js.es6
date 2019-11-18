@@ -3,6 +3,7 @@ import { get } from "@ember/object";
 import Component from "@ember/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import Site from "discourse/models/site";
 
 export default Component.extend({
   elementId: "suggested-topics",
@@ -36,8 +37,7 @@ export default Component.extend({
 
     if (
       category &&
-      get(category, "id") ===
-        Discourse.Site.currentProp("uncategorized_category_id")
+      get(category, "id") === Site.currentProp("uncategorized_category_id")
     ) {
       category = null;
     }

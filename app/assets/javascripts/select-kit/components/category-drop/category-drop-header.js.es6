@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import ComboBoxSelectBoxHeaderComponent from "select-kit/components/combo-box/combo-box-header";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -9,7 +10,7 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
   classNames: "category-drop-header",
 
   classNameBindings: ["categoryStyleClass"],
-  categoryStyleClass: Ember.computed.alias("site.category_style"),
+  categoryStyleClass: alias("site.category_style"),
 
   @discourseComputed("computedContent.value", "computedContent.name")
   category(value, name) {

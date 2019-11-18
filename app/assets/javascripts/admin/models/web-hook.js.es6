@@ -6,6 +6,7 @@ import {
   default as discourseComputed,
   observes
 } from "discourse-common/utils/decorators";
+import Site from "discourse/models/site";
 
 export default RestModel.extend({
   content_type: 1, // json
@@ -36,7 +37,7 @@ export default RestModel.extend({
     const groupIds = this.group_ids;
     this.set(
       "groupsFilterInName",
-      Discourse.Site.currentProp("groups").reduce((groupNames, g) => {
+      Site.currentProp("groups").reduce((groupNames, g) => {
         if (groupIds.includes(g.id)) {
           groupNames.push(g.name);
         }
@@ -87,7 +88,7 @@ export default RestModel.extend({
       group_ids:
         isEmpty(groupNames) || isEmpty(groupNames[0])
           ? [null]
-          : Discourse.Site.currentProp("groups").reduce((groupIds, g) => {
+          : Site.currentProp("groups").reduce((groupIds, g) => {
               if (groupNames.includes(g.name)) {
                 groupIds.push(g.id);
               }

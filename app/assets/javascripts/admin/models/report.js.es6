@@ -17,7 +17,7 @@ import { renderAvatar } from "discourse/helpers/user-avatar";
 // and you want to ensure cache is reset
 export const SCHEMA_VERSION = 4;
 
-const Report = Discourse.Model.extend({
+const Report = EmberObject.extend({
   average: false,
   percent: false,
   higher_is_better: true,

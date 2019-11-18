@@ -1,5 +1,7 @@
+import { or, alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
+import { computed } from "@ember/object";
 
 export default Component.extend({
   attributeBindings: [
@@ -21,7 +23,7 @@ export default Component.extend({
     return Ember.guidFor(computedContent);
   },
 
-  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title"),
+  ariaLabel: or("computedContent.ariaLabel", "title"),
 
   @discourseComputed("computedContent.title", "name")
   title(computedContentTitle, name) {
@@ -31,13 +33,13 @@ export default Component.extend({
     return null;
   },
 
-  label: Ember.computed.or("computedContent.label", "title", "name"),
+  label: or("computedContent.label", "title", "name"),
 
-  name: Ember.computed.alias("computedContent.name"),
+  name: alias("computedContent.name"),
 
-  value: Ember.computed.alias("computedContent.value"),
+  value: alias("computedContent.value"),
 
-  isLocked: Ember.computed("computedContent.locked", function() {
+  isLocked: computed("computedContent.locked", function() {
     return this.getWithDefault("computedContent.locked", false);
   }),
 

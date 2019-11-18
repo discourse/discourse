@@ -416,6 +416,7 @@ be:
       half_a_minute: "толькі што"
       less_than_x_seconds: "толькі што"
   password_reset:
+    choose_new: "Абярыце новы пароль"
     title: "скінуць пароль"
   user_auth_tokens:
     browser:
@@ -978,7 +979,6 @@ be:
     content_security_policy: "Ўключыць Content-Security-Policy"
     content_security_policy_report_only: "Ўключыць Content-Security-Policy-Report-Only"
     content_security_policy_collect_reports: "Ўключыць CSP збор справаздач парушэнні ў"
-    content_security_policy_script_src: "Дадатковыя крыніцы белага спісу сцэнараў. У цяперашні час гаспадар і CDN ўключаны па змаўчанні."
     invalidate_inactive_admin_email_after_days: "Адміністратар рахункаў, якія не наведвалі сайт у гэтым колькасць дзён трэба будзе паўторна праверыць іх адрасы электроннай пошты перад уваходам у сістэму. Усталюйце 0, каб адключыць."
     top_menu: "Вызначце, якія з'яўляюцца элементы хатняй старонкі навігацыі, і ў якім парадку. Прыклад апошнія | Новыя | непрачытаныя | катэгорыя | топ | прачытаныя | Адпраўленыя | закладкі"
     post_menu: "Вызначце, якія элементы з'яўляюцца ў меню пасля, і ў якім парадку. Прыклад як | рэдагаваць | сцяг | выдаліць | Share | закладкі | адказаць"
@@ -2434,6 +2434,8 @@ be:
     user_delete_self: "Выдаленая сябе ад% {URL}"
     webhook_deactivation_reason: "Ваш webhook быў аўтаматычна адключаны. Мы атрымалі некалькі «% {стану}» HTTP адказаў адмовы статусу."
   reviewables:
+    sensitivity:
+      disabled: "Адключана"
     missing_version: "Вам трэба будзе падаць параметр версіі"
     conflict: "Быў абнаўленне канфлікт перашкаджае вам рабіць гэта."
     reasons:

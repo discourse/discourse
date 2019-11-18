@@ -1,4 +1,5 @@
 import discourseComputed from "discourse-common/utils/decorators";
+import NavItem from "discourse/models/nav-item";
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 
@@ -30,7 +31,7 @@ export default Component.extend({
   navItems(filterMode, category, noSubcategories) {
     // we don't want to show the period in the navigation bar since it's in a dropdown
     if (filterMode.indexOf("top/") === 0) {
-      filterMode = filterMode.replace("top/", "");
+      filterMode = "top";
     }
 
     let params;
@@ -47,7 +48,7 @@ export default Component.extend({
       }, {});
     }
 
-    return Discourse.NavItem.buildList(category, {
+    return NavItem.buildList(category, {
       filterMode,
       noSubcategories,
       persistedQueryParams: params

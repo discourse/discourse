@@ -1,20 +1,22 @@
+import { bool } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
 import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { isNone } from "@ember/utils";
 
 export default SelectKitRowComponent.extend({
   layoutName: "select-kit/templates/components/category-row",
   classNames: "category-row",
 
-  hideParentCategory: Ember.computed.bool("options.hideParentCategory"),
-  allowUncategorized: Ember.computed.bool("options.allowUncategorized"),
-  categoryLink: Ember.computed.bool("options.categoryLink"),
+  hideParentCategory: bool("options.hideParentCategory"),
+  allowUncategorized: bool("options.allowUncategorized"),
+  categoryLink: bool("options.categoryLink"),
 
   @discourseComputed("options.displayCategoryDescription")
   displayCategoryDescription(displayCategoryDescription) {
-    if (Ember.isNone(displayCategoryDescription)) {
+    if (isNone(displayCategoryDescription)) {
       return true;
     }
 
@@ -62,7 +64,7 @@ export default SelectKitRowComponent.extend({
 
   @discourseComputed("parentCategoryid")
   hasParentCategory(parentCategoryid) {
-    return !Ember.isNone(parentCategoryid);
+    return !isNone(parentCategoryid);
   },
 
   @discourseComputed("category")

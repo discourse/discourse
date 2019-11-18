@@ -19,7 +19,7 @@ export default RestModel.extend({
 
   @discourseComputed("filter")
   filterParam(filter) {
-    if (filter === Discourse.UserAction.TYPES.replies) {
+    if (filter === UserAction.TYPES.replies) {
       return [UserAction.TYPES.replies, UserAction.TYPES.quotes].join(",");
     }
 

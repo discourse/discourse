@@ -1,7 +1,7 @@
 import { equal } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 
 export default Controller.extend({
   application: inject(),
@@ -15,7 +15,7 @@ export default Controller.extend({
 
   showTimeRead: equal("period", "all"),
 
-  _setName: debounce(function() {
+  _setName: discourseDebounce(function() {
     this.set("name", this.nameInput);
   }, 500).observes("nameInput"),
 

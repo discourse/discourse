@@ -7,7 +7,8 @@ import {
   default as discourseComputed,
   observes
 } from "discourse-common/utils/decorators";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
+import User from "discourse/models/user";
 
 export default Controller.extend({
   queryParams: ["order", "desc", "filter"],
@@ -21,7 +22,7 @@ export default Controller.extend({
   application: inject(),
 
   @observes("filterInput")
-  _setFilter: debounce(function() {
+  _setFilter: discourseDebounce(function() {
     this.set("filter", this.filterInput);
   }, 500),
 
@@ -55,7 +56,7 @@ export default Controller.extend({
       }
     ).then(result => {
       const requesters = (!force && this.get("model.requesters")) || [];
-      requesters.addObjects(result.members.map(m => Discourse.User.create(m)));
+      requesters.addObjects(result.members.map(m => User.create(m)));
       this.set("model.requesters", requesters);
 
       this.setProperties({

@@ -187,7 +187,7 @@ export default class {
         // Save unique topic IDs up to a max
         let topicIds = storage.get("anon-topic-ids");
         if (topicIds) {
-          topicIds = topicIds.split(",").map(e => parseInt(e));
+          topicIds = topicIds.split(",").map(e => parseInt(e, 10));
         } else {
           topicIds = [];
         }

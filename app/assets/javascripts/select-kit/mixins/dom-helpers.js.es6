@@ -187,7 +187,7 @@ export default Mixin.create({
     const offsetBottom = this.element.getBoundingClientRect().bottom;
     const windowWidth = $(window).width();
 
-    if (this.fullWidthOnMobile && (this.site && this.site.isMobileDevice)) {
+    if (this.fullWidthOnMobile && this.site && this.site.isMobileDevice) {
       const margin = 10;
       const relativeLeft =
         $(this.element).offset().left - $(window).scrollLeft();

@@ -7,8 +7,8 @@ module Jobs
       return if !SiteSetting.enable_s3_uploads
 
       Upload.find_each do |upload|
-        if !FileHelper.is_supported_image?(upload.original_filename)
-          Discourse.store.update_upload_ACL(upload)
+        if !FileHelper.is_supported_media?(upload.original_filename)
+          upload.update_secure_status
         end
       end
     end

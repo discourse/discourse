@@ -12,6 +12,7 @@ nl:
     poll_edit_window_mins: "Aantal minuten na het aanmaken van een bericht waarin polls kunnen worden bewerkt."
     poll_minimum_trust_level_to_create: "Het minimale vertrouwensniveau dat nodig is om polls aan te maken."
   poll:
+    poll: "poll"
     invalid_argument: "Ongeldige waarde '%{value}' voor argument '%{argument}'."
     multiple_polls_without_name: "Er zijn meerdere polls zonder naam. Gebruik het attribuut '<code>naam</code>' om uw polls uniek te identificeren."
     multiple_polls_with_same_name: "Er zijn meerdere polls met dezelfde naam : <strong>%{name}</strong>. Gebruik het attribuut '<code>naam</code>' om uw polls uniek te identificeren."

@@ -937,7 +937,7 @@ pt_BR:
         not_connected: "(não conectado)"
         confirm_modal_title: "Conecte-se à conta %{provider}"
         confirm_description:
-          account_specific: "Sua conta %{provider} &#39;%{account_description}&#39; será usada para autenticação."
+          account_specific: "Sua conta %{provider} '%{account_description}' será usada para autenticação."
           generic: "Sua conta %{provider} será usada para autenticação."
       name:
         title: "Nome"
@@ -1575,7 +1575,7 @@ pt_BR:
       granted_badge: "Ganhou '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Novo Tópico</span> {{description}}"
-      membership_request_accepted: "Afiliação aceita em &#39;{{group_name}}&#39;"
+      membership_request_accepted: "Afiliação aceita em '{{group_name}}'"
       group_message_summary:
         one: "{{count}} mensagem na caixa de entrada de {{group_name}}"
         other: "{{count}} mensagens na caixa de entrada de {{group_name}}"
@@ -3646,7 +3646,7 @@ pt_BR:
           upload_successful: "Upload successful. Words have been added."
         test:
           button_label: "Testar"
-          modal_title: "Teste &#39;%{action}&#39; palavras assistidas"
+          modal_title: "Teste '%{action}' palavras assistidas"
           description: "Digite o texto abaixo para verificar as correspondências com palavras observadas"
           found_matches: "Encontros encontrados:"
           no_matches: "Nenhuma correspondência encontrada"
@@ -3994,7 +3994,7 @@ pt_BR:
         enabled: Habilitar emblema
         icon: Ícone
         image: Imagem
-        icon_help: "Digite um nome de ícone do tipo Font Awesome (use o prefixo &#39;far-&#39; para ícones regulares e &#39;fab-&#39; para ícones de marca)"
+        icon_help: "Digite um nome de ícone do tipo Font Awesome (use o prefixo 'far-' para ícones regulares e 'fab-' para ícones de marca)"
         image_help: "Digite o URL da imagem (substitui o campo de ícone se ambos estiverem configurados)"
         query: Badge Query (SQL)
         target_posts: Consultar respostas selecionadas
@@ -4050,21 +4050,15 @@ pt_BR:
         category: "Postar na Categoria"
         add_host: "Adicionar Host"
         settings: "Configurações de Incorporação"
-        feed_settings: "Configurações de Feed"
-        feed_description: "Prover um feed de RSS/ATOM de seu site pode melhorar a habilidade do Discourse para importar seu conteúdo."
         crawling_settings: "Configurações de Crawler"
         crawling_description: "Quando Discourse cria tópicos para suas postagens, se nenhum feed RSS/ATOM estiver presente ele tentar recuperar o conteúdo do seu HTML. Algumas vezes isto pode sem um desafio, então provemos a habilidade de prover as regras específicas de CSS para fazer a extração mais fácil."
         embed_by_username: "Nome de usuário para criação do tópico"
         embed_post_limit: "Número máximo de postagens para incorporar"
-        embed_username_key_from_feed: "Chave para obter o nome de usuário no discourse do feed"
         embed_title_scrubber: "Expressão regular usada para higienizar o título das publicações"
         embed_truncate: "Truncar as postagens incorporadas"
         embed_whitelist_selector: "Seletor de CSS para elementos que são permitidos na incorporação"
         embed_blacklist_selector: "Seletor de CSS para elementos que são removidos da incorporação"
         embed_classname_whitelist: "Nomes de classes CSS permitidas"
-        feed_polling_enabled: "Importar postagens via RSS/ATOM"
-        feed_polling_url: "URL do feed RSS/ATOM para pesquisar"
-        feed_polling_frequency_mins: "Frequência de pesquisa de feeds (em minutos)"
         save: "Salvar Configurações de Incorporação"
       permalink:
         title: "Links permanentes"

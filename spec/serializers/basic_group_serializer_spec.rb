@@ -26,7 +26,7 @@ describe BasicGroupSerializer do
   end
 
   describe '#bio_raw' do
-    fab!(:group) { Fabricate(:group, bio_raw: 'testing') }
+    fab!(:group) { Fabricate(:group, bio_raw: 'testing :slightly_smiling_face:') }
 
     subject do
       described_class.new(group, scope: guardian, root: false, owner_group_ids: [group.id])
@@ -34,7 +34,8 @@ describe BasicGroupSerializer do
 
     describe 'group owner' do
       it 'should include bio_raw' do
-        expect(subject.as_json[:bio_raw]).to eq('testing')
+        expect(subject.as_json[:bio_raw]).to eq('testing :slightly_smiling_face:')
+        expect(subject.as_json[:bio_excerpt]).to start_with('testing <img')
       end
     end
   end

@@ -12,7 +12,7 @@ import Post from "discourse/models/post";
 import Quote from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import Topic from "discourse/models/topic";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -447,9 +447,7 @@ export default Controller.extend(bufferedProperty("model"), {
         : "/";
       ajax("/t/" + topic.get("id") + "/timings.json?last=1", { type: "DELETE" })
         .then(() => {
-          const highestSeenByTopic = Discourse.Session.currentProp(
-            "highestSeenByTopic"
-          );
+          const highestSeenByTopic = this.session.get("highestSeenByTopic");
           highestSeenByTopic[topic.get("id")] = null;
           DiscourseURL.routeTo(goToPath);
         })
@@ -1401,7 +1399,7 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  _scrollToPost: debounce(function(postNumber) {
+  _scrollToPost: discourseDebounce(function(postNumber) {
     const $post = $(`.topic-post article#post_${postNumber}`);
 
     if ($post.length === 0 || isElementInViewport($post)) return;

@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
@@ -5,7 +6,7 @@ import { default as discourseComputed } from "discourse-common/utils/decorators"
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["group-dropdown"],
   classNames: "group-dropdown",
-  content: Ember.computed.alias("groups"),
+  content: alias("groups"),
   tagName: "li",
   caretDownIcon: "caret-right",
   caretUpIcon: "caret-down",

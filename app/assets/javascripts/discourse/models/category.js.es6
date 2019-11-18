@@ -5,6 +5,8 @@ import RestModel from "discourse/models/rest";
 import { on } from "discourse-common/utils/decorators";
 import PermissionType from "discourse/models/permission-type";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import deprecated from "discourse-common/lib/deprecated";
+import Site from "discourse/models/site";
 
 const Category = RestModel.extend({
   permissions: null,
@@ -212,7 +214,7 @@ const Category = RestModel.extend({
 
   @discourseComputed("id")
   isUncategorizedCategory(id) {
-    return id === Discourse.Site.currentProp("uncategorized_category_id");
+    return id === Site.currentProp("uncategorized_category_id");
   }
 });
 
@@ -224,7 +226,7 @@ Category.reopenClass({
       _uncategorized ||
       Category.list().findBy(
         "id",
-        Discourse.Site.currentProp("uncategorized_category_id")
+        Site.currentProp("uncategorized_category_id")
       );
     return _uncategorized;
   },
@@ -248,15 +250,15 @@ Category.reopenClass({
   },
 
   list() {
-    return Discourse.Site.currentProp("categoriesList");
+    return Site.currentProp("categoriesList");
   },
 
   listByActivity() {
-    return Discourse.Site.currentProp("sortedCategories");
+    return Site.currentProp("sortedCategories");
   },
 
-  idMap() {
-    return Discourse.Site.currentProp("categoriesById");
+  _idMap() {
+    return Site.currentProp("categoriesById");
   },
 
   findSingleBySlug(slug) {
@@ -271,7 +273,7 @@ Category.reopenClass({
     if (!id) {
       return;
     }
-    return Category.idMap()[id];
+    return Category._idMap()[id];
   },
 
   findByIds(ids = []) {
@@ -403,6 +405,16 @@ Category.reopenClass({
     return _.sortBy(data, category => {
       return category.get("read_restricted");
     });
+  }
+});
+
+Object.defineProperty(Discourse, "Category", {
+  get() {
+    deprecated(
+      "Import the Category class instead of using Discourse.Category",
+      { since: "2.4.0", dropFrom: "2.5.0" }
+    );
+    return Category;
   }
 });
 

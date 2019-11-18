@@ -7,9 +7,12 @@ import { propertyGreaterThan, propertyLessThan } from "discourse/lib/computed";
 import { on, observes } from "discourse-common/utils/decorators";
 import { sanitizeAsync } from "discourse/lib/text";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import Post from "discourse/models/post";
+import Category from "discourse/models/category";
+import { computed } from "@ember/object";
 
 function customTagArray(fieldName) {
-  return Ember.computed(fieldName, function() {
+  return computed(fieldName, function() {
     var val = this.get(fieldName);
     if (!val) {
       return val;
@@ -59,19 +62,19 @@ export default Controller.extend(ModalFunctionality, {
   refresh(postId, postVersion) {
     this.set("loading", true);
 
-    Discourse.Post.loadRevision(postId, postVersion).then(result => {
+    Post.loadRevision(postId, postVersion).then(result => {
       this.setProperties({ loading: false, model: result });
     });
   },
 
   hide(postId, postVersion) {
-    Discourse.Post.hideRevision(postId, postVersion).then(() =>
+    Post.hideRevision(postId, postVersion).then(() =>
       this.refresh(postId, postVersion)
     );
   },
 
   show(postId, postVersion) {
-    Discourse.Post.showRevision(postId, postVersion).then(() =>
+    Post.showRevision(postId, postVersion).then(() =>
       this.refresh(postId, postVersion)
     );
   },
@@ -87,10 +90,7 @@ export default Controller.extend(ModalFunctionality, {
           post.set("topic.fancy_title", result.topic.fancy_title);
         }
         if (result.category_id) {
-          post.set(
-            "topic.category",
-            Discourse.Category.findById(result.category_id)
-          );
+          post.set("topic.category", Category.findById(result.category_id));
         }
         this.send("closeModal");
       })
@@ -218,7 +218,7 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("model.category_id_changes")
   previousCategory(changes) {
     if (changes) {
-      var category = Discourse.Category.findById(changes["previous"]);
+      var category = Category.findById(changes["previous"]);
       return categoryBadgeHTML(category, { allowUncategorized: true });
     }
   },
@@ -226,7 +226,7 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("model.category_id_changes")
   currentCategory(changes) {
     if (changes) {
-      var category = Discourse.Category.findById(changes["current"]);
+      var category = Category.findById(changes["current"]);
       return categoryBadgeHTML(category, { allowUncategorized: true });
     }
   },

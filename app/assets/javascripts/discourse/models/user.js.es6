@@ -1,6 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import { gt, equal, or } from "@ember/object/computed";
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
@@ -25,6 +25,8 @@ import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { Promise } from "rsvp";
 import { getProperties } from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
+import Site from "discourse/models/site";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -63,7 +65,7 @@ const User = RestModel.extend({
     return UserDraftsStream.create({ user: this });
   },
 
-  staff: Ember.computed("admin", "moderator", {
+  staff: computed("admin", "moderator", {
     get() {
       return this.admin || this.moderator;
     },
@@ -199,7 +201,7 @@ const User = RestModel.extend({
 
   @discourseComputed("trust_level")
   trustLevel(trustLevel) {
-    return Discourse.Site.currentProp("trustLevels").findBy(
+    return Site.currentProp("trustLevels").findBy(
       "id",
       parseInt(trustLevel, 10)
     );
@@ -247,7 +249,7 @@ const User = RestModel.extend({
   },
 
   copy() {
-    return Discourse.User.create(this.getProperties(Object.keys(this)));
+    return User.create(this.getProperties(Object.keys(this)));
   },
 
   save(fields) {
@@ -359,7 +361,7 @@ const User = RestModel.extend({
           "external_links_in_new_tab",
           "dynamic_favicon"
         );
-        Discourse.User.current().setProperties(userProps);
+        User.current().setProperties(userProps);
         this.setProperties(updatedState);
       })
       .finally(() => {
@@ -539,7 +541,7 @@ const User = RestModel.extend({
       return ajax(userPath(`${user.get("username")}.json`), { data: options });
     }).then(json => {
       if (!isEmpty(json.user.stats)) {
-        json.user.stats = Discourse.User.groupStats(
+        json.user.stats = User.groupStats(
           json.user.stats.map(s => {
             if (s.count) s.count = parseInt(s.count, 10);
             return UserActionStat.create(s);
@@ -560,7 +562,7 @@ const User = RestModel.extend({
       }
 
       if (json.user.invited_by) {
-        json.user.invited_by = Discourse.User.create(json.user.invited_by);
+        json.user.invited_by = User.create(json.user.invited_by);
       }
 
       if (!isEmpty(json.user.featured_user_badge_ids)) {
@@ -583,7 +585,7 @@ const User = RestModel.extend({
   },
 
   findStaffInfo() {
-    if (!Discourse.User.currentProp("staff")) {
+    if (!User.currentProp("staff")) {
       return Promise.resolve(null);
     }
     return ajax(userPath(`${this.username_lower}/staff-info.json`)).then(
@@ -631,17 +633,14 @@ const User = RestModel.extend({
 
   @observes("muted_category_ids")
   updateMutedCategories() {
-    this.set(
-      "mutedCategories",
-      Discourse.Category.findByIds(this.muted_category_ids)
-    );
+    this.set("mutedCategories", Category.findByIds(this.muted_category_ids));
   },
 
   @observes("tracked_category_ids")
   updateTrackedCategories() {
     this.set(
       "trackedCategories",
-      Discourse.Category.findByIds(this.tracked_category_ids)
+      Category.findByIds(this.tracked_category_ids)
     );
   },
 
@@ -649,7 +648,7 @@ const User = RestModel.extend({
   updateWatchedCategories() {
     this.set(
       "watchedCategories",
-      Discourse.Category.findByIds(this.watched_category_ids)
+      Category.findByIds(this.watched_category_ids)
     );
   },
 
@@ -657,7 +656,7 @@ const User = RestModel.extend({
   updateWatchedFirstPostCategories() {
     this.set(
       "watchedFirstPostCategories",
-      Discourse.Category.findByIds(this.watched_first_post_category_ids)
+      Category.findByIds(this.watched_first_post_category_ids)
     );
   },
 
@@ -682,7 +681,7 @@ const User = RestModel.extend({
       type: "PUT",
       data: { notification_level: level, expiring_at: expiringAt }
     }).then(() => {
-      const currentUser = Discourse.User.current();
+      const currentUser = User.current();
       if (currentUser) {
         if (level === "normal" || level === "mute") {
           currentUser.ignored_users.removeObject(this.username);
@@ -828,7 +827,7 @@ const User = RestModel.extend({
 });
 
 User.reopenClass(Singleton, {
-  // Find a `Discourse.User` for a given username.
+  // Find a `User` for a given username.
   findByUsername(username, options) {
     const user = User.create({ username: username });
     return user.findDetails(options);
@@ -852,6 +851,11 @@ User.reopenClass(Singleton, {
       return store.createRecord("user", userJson);
     }
     return null;
+  },
+
+  resetCurrent(user) {
+    this._super(user);
+    Discourse.currentUser = user;
   },
 
   checkUsername(username, email, for_user_id) {
@@ -901,6 +905,20 @@ User.reopenClass(Singleton, {
       },
       type: "POST"
     });
+  }
+});
+
+let warned = false;
+Object.defineProperty(Discourse, "User", {
+  get() {
+    if (!warned) {
+      deprecated("Import the User class instead of using User", {
+        since: "2.4.0",
+        dropFrom: "2.6.0"
+      });
+      warned = true;
+    }
+    return User;
   }
 });
 

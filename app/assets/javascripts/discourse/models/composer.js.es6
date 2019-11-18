@@ -16,9 +16,11 @@ import {
 } from "discourse-common/utils/decorators";
 import { escapeExpression, tinyAvatar } from "discourse/lib/utilities";
 import { propertyNotEqual } from "discourse/lib/computed";
-import throttle from "discourse/lib/throttle";
+import { throttle } from "@ember/runloop";
 import { Promise } from "rsvp";
 import { set } from "@ember/object";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
@@ -226,15 +228,18 @@ const Composer = RestModel.extend({
     return this.set("metaData", EmberObject.create());
   },
 
-  // view detected user is typing
-  typing: throttle(
-    function() {
-      const typingTime = this.typingTime || 0;
-      this.set("typingTime", typingTime + 100);
-    },
-    100,
-    false
-  ),
+  // called whenever the user types to update the typing time
+  typing() {
+    throttle(
+      this,
+      function() {
+        const typingTime = this.typingTime || 0;
+        this.set("typingTime", typingTime + 100);
+      },
+      100,
+      false
+    );
+  },
 
   editingFirstPost: and("editingPost", "post.firstPost"),
 
@@ -647,10 +652,7 @@ const Composer = RestModel.extend({
     const replyBlank = isEmpty(this.reply);
 
     const composer = this;
-    if (
-      !replyBlank &&
-      ((opts.reply || isEdit(opts.action)) && this.replyDirty)
-    ) {
+    if (!replyBlank && (opts.reply || isEdit(opts.action)) && this.replyDirty) {
       return;
     }
 
@@ -1142,8 +1144,8 @@ Composer.reopenClass({
   // TODO: Replace with injection
   create(args) {
     args = args || {};
-    args.user = args.user || Discourse.User.current();
-    args.site = args.site || Discourse.Site.current();
+    args.user = args.user || User.current();
+    args.site = args.site || Site.current();
     args.siteSettings = args.siteSettings || Discourse.SiteSettings;
     return this._super(args);
   },

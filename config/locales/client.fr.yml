@@ -963,8 +963,8 @@ fr:
         not_connected: "(non connecté)"
         confirm_modal_title: "Connectez le compte %{provider}"
         confirm_description:
-          account_specific: "Votre compte %{provider} &#39;%{account_description}&#39; sera utilisé pour l&#39;authentification."
-          generic: "Votre compte %{provider} sera utilisé pour l&#39;authentification."
+          account_specific: "Votre compte %{provider} '%{account_description}' sera utilisé pour l'authentification."
+          generic: "Votre compte %{provider} sera utilisé pour l'authentification."
       name:
         title: "Nom d'utilisateur"
         instructions: "votre nom complet (facultatif)"
@@ -2399,7 +2399,7 @@ fr:
       special_warning: "Avertissement : cette catégorie est une catégorie pré-remplie et les réglages de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas utiliser cette catégorie, supprimez là au lieu de détourner sa fonction."
       uncategorized_security_warning: "Cette catégorie est spéciale. Elle sert de zone d'attente pour les sujets qui n'ont pas de catégorie ; vous ne pouvez pas changer ses paramètres de sécurité."
       uncategorized_general_warning: 'Cette catégorie est spéciale. Elle sert de catégorie par défaut pour les nouveaux sujets qui ne sont pas liés à une catégorie. Si vous souhaitez changer cela et forcer la sélection de catégorie, <a href="%{settingLink}">veuillez désactiver ce paramètre</a>. Si vous voulez modifier son nom ou sa description, allez dans <a href="%{customizeLink}">Personnaliser / Contenu</a>.'
-      pending_permission_change_alert: "Vous n&#39;avez pas ajouté %{group} à cette catégorie; cliquez sur ce bouton pour les ajouter."
+      pending_permission_change_alert: "Vous n'avez pas ajouté %{group} à cette catégorie; cliquez sur ce bouton pour les ajouter."
       images: "Images"
       email_in: "Adresse de courriel entrant personnalisée :"
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
@@ -3122,7 +3122,7 @@ fr:
           details: "Quand un nouvel élément est prêt à être vérifié et quand son état est mis à jour."
         notification_event:
           name: "Notification d'Événement"
-          details: "Lorsqu&#39;un utilisateur reçoit une notification dans son flux."
+          details: "Lorsqu'un utilisateur reçoit une notification dans son flux."
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"
@@ -4126,21 +4126,15 @@ fr:
         category: "Écrire dans la catégorie"
         add_host: "Ajouter un hôte"
         settings: "Paramètres d'intégration externe"
-        feed_settings: "Paramètres de flux RSS/ATOM"
-        feed_description: "Fournir un flux RSS/ATOM pour votre site peut améliorer la capacité de Discourse à importer votre contenu."
         crawling_settings: "Paramètres de robot"
         crawling_description: "Quand Discourse crée des sujets pour vos messages, si aucun flux RSS/ATOM n'est présent, il essayera d'extraire le contenu à partir du HTML. Parfois, cette extraction peut être difficile alors nous donnons la possibilité de définir des règles CSS pour faciliter l'extraction."
         embed_by_username: "Pseudo pour création de sujet"
         embed_post_limit: "Le nombre maximum de messages à intégrer"
-        embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
         embed_title_scrubber: "Expression régulière utilisée pour nettoyer le titre des messages"
         embed_truncate: "Tronquer les messages intégrés"
         embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus intégrés"
         embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus intégrés"
         embed_classname_whitelist: "Classes CSS autorisées"
-        feed_polling_enabled: "Importer les messages via flux RSS/ATOM"
-        feed_polling_url: "URL du flux RSS/ATOM à importer"
-        feed_polling_frequency_mins: "Fréquence de rafraichissement du flux (en minutes)"
         save: "Sauvegarder les paramètres d'intégration"
       permalink:
         title: "Permaliens"

@@ -2,6 +2,7 @@ import { empty, alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import Topic from "discourse/models/topic";
+import Category from "discourse/models/category";
 
 const _buttons = [];
 
@@ -80,7 +81,10 @@ export default Controller.extend(ModalFunctionality, {
     const topics = this.get("model.topics");
     // const relistButtonIndex = _buttons.findIndex(b => b.action === 'relistTopics');
 
-    this.set("buttons", _buttons.filter(b => b.buttonVisible(topics)));
+    this.set(
+      "buttons",
+      _buttons.filter(b => b.buttonVisible(topics))
+    );
     this.set("modal.modalClass", "topic-bulk-actions-modal small");
     this.send("changeBulkTemplate", "modal/bulk-actions-buttons");
   },
@@ -175,7 +179,7 @@ export default Controller.extend(ModalFunctionality, {
 
     changeCategory() {
       const categoryId = parseInt(this.newCategoryId, 10) || 0;
-      const category = Discourse.Category.findById(categoryId);
+      const category = Category.findById(categoryId);
 
       this.perform({ type: "change_category", category_id: categoryId }).then(
         topics => {

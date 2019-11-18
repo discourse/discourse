@@ -192,16 +192,9 @@ describe UserBadgesController do
     end
 
     describe 'with relative_url_root' do
-      before do
-        @orig_relative_url_root = ActionController::Base.config.relative_url_root
-        ActionController::Base.config.relative_url_root = "/discuss"
-      end
-
-      after do
-        ActionController::Base.config.relative_url_root = @orig_relative_url_root
-      end
-
       it 'grants badge when valid post/topic link is given in reason' do
+        set_subfolder "/discuss"
+
         admin = Fabricate(:admin)
         post = create_post
 

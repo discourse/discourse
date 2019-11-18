@@ -118,7 +118,7 @@ bs_BA:
           Hej, hvala za odgovor!
 
           Nažalost, kako sam programiran ograničenim mogućnostima, ne mogu jasno razumjeti na što ste mislili. :frowning:
-        track_response: Možete pokušati ponovo, ili ako želite preskočiti ovaj korak, recite `%{skip_trigger}`. Inače, za početak, recite &#39;%{reset_trigger}&#39;.
+        track_response: Možete pokušati ponovo, ili ako želite preskočiti ovaj korak, recite `%{skip_trigger}`. Inače, za početak, recite '%{reset_trigger}'.
         second_response: |-
           Žao mi je. Još uvek ne shvatam. : anguished: Ja sam samo bot, ali ako želite doći do prave osobe, pogledajte [našu kontakt stranicu] (%{base_path} / about). U međuvremenu, neću vam smetati.
     new_user_narrative:
@@ -179,7 +179,7 @@ bs_BA:
         reply: |-
           _Da li je netko rekao moje ime !? _: raise_hand: Vjerujem da jeste! : wave: Pa, evo me! Hvala što si me spomenuo. : ok_hand: \ t
         not_found: |-
-          Ne vidim svoje ime tamo negdje: namršteno: Možete li pokušati spomenuti mene kao &#39;@ %{discobot_username}` opet? (I da, moje korisničko ime je napisano _disco_, kao u plesnoj ludosti sedamdesetih godina. Ja [volim noćni život!] (Https://www.youtube.com/watch?v=B_wGI3_sGf8): plesač :)
+          Ne vidim svoje ime tamo negdje: namršteno: Možete li pokušati spomenuti mene kao `@ %{discobot_username}` opet? (I da, moje korisničko ime je napisano _disco_, kao u plesnoj ludosti sedamdesetih godina. Ja [volim noćni život!] (Https://www.youtube.com/watch?v=B_wGI3_sGf8): plesač :)
       flag:
         instructions: |-
           Mi volimo naše diskusije prijateljske, i potrebna nam je vaša pomoć da [održimo civilizovane stvari] (%{guidelines_url}). Ako vidite problem, označite da privatno pustite autora, ili [naše korisno osoblje] (%{about_url}), da znate za njega. Napisao sam nešto ružno ovdje, pretpostavljam da znaš šta da radiš. Naprijed i ** označite ovaj post ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kao neprikladno!
@@ -189,7 +189,7 @@ bs_BA:
           Oh ne, moj gadan post još nije označen. : worried: Možete li označiti kao neprikladan pomoću ** zastavice ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ? Ne zaboravite da koristite dugme show more <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> da otkrije više akcija za svaki post.
       search:
         instructions: |-
-          _psst_… Sakrio sam iznenađenje u ovoj temi. Ako ste spremni za izazov, ** odaberite ikonu za pretraživanje ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> gore desno ↗ da ga potražite. Pokušajte tražiti pojam &quot;capy bara&quot; u ovoj temi
+          _psst_… Sakrio sam iznenađenje u ovoj temi. Ako ste spremni za izazov, ** odaberite ikonu za pretraživanje ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> gore desno ↗ da ga potražite. Pokušajte tražiti pojam "capy&#8203;bara" u ovoj temi
         reply: |-
           Yay ste ga pronašli: tada: - Za detaljnije pretrage, pređite na [full search page] (%{search_url}). - Da biste skočili bilo gdje u dugoj diskusiji, pokušajte kontrolirati vremensku liniju teme desno (i na dnu, na mobitelu). - Ako imate fizičku tipkovnicu: pritisnite <kbd>?</kbd> da biste videli naše korisne prečice na tastaturi.
         not_found: |-
@@ -230,14 +230,14 @@ bs_BA:
           Uf, to je bilo blizu! Hvala za popravku da: wink: Imajte na umu da imate samo %{deletion_after} sat (e) da povratite post.
       category_hashtag:
         instructions: |-
-          Da li ste znali da možete koristiti kategorije i oznake u svom postu? Na primjer, jeste li vidjeli kategoriju %{category}? Upišite &quot;#&quot; u sredinu rečenice i odaberite bilo koju kategoriju ili oznaku.
+          Da li ste znali da možete koristiti kategorije i oznake u svom postu? Na primjer, jeste li vidjeli kategoriju %{category}? Upišite `#` u sredinu rečenice i odaberite bilo koju kategoriju ili oznaku.
         not_found: |-
           Hmm, tamo ne vidim nijednu kategoriju. Imajte na umu da `#` ne može biti prvi znak. Možete li ovo kopirati u sljedećem odgovoru? `` `tekst Mogu kreirati link za kategoriju preko #` ``
         reply: |-
           Odlično! Zapamtite ovo radi za obje kategorije _i_ oznake, ako su oznake omogućene.
       change_topic_notification_level:
         instructions: |-
-          Svaka tema ima nivo obaveštenja. Počinje na &#39;normalnom&#39;, što znači da ćete obično biti obaviješteni samo kada netko govori izravno vama. Podrazumevano, nivo obaveštenja za privatnu poruku postavljen je na najviši nivo &quot;gledanja&quot;, što znači da ćete biti obaviješteni o svakom novom odgovoru. Ali možete pregaziti nivo obavijesti za _any_ temu da biste &#39;gledali&#39;, &#39;pratili&#39; ili &#39;isključili&#39;. Pokušajmo da promenimo nivo obaveštenja za ovu temu. Na dnu teme naći ćete dugme koje pokazuje da ** gledate ** ovu temu. Možete li promijeniti nivo obavijesti na ** praćenje **?
+          Svaka tema ima nivo obaveštenja. Počinje na 'normalnom', što znači da ćete obično biti obaviješteni samo kada netko govori izravno vama. Podrazumevano, nivo obaveštenja za privatnu poruku postavljen je na najviši nivo 'gledanja', što znači da ćete biti obaviješteni o svakom novom odgovoru. Ali možete pregaziti nivo obavijesti za _any_ temu da biste 'gledali', 'pratili' ili 'isključili'. Pokušajmo da promenimo nivo obaveštenja za ovu temu. Na dnu teme naći ćete dugme koje pokazuje da ** gledate ** ovu temu. Možete li promijeniti nivo obavijesti na ** praćenje **?
         not_found: |-
           Izgleda da i dalje gledate: oči: ova tema! Ako imate problema sa pronalaženjem, dugme nivoa obaveštenja nalazi se na dnu teme.
         reply: |-
@@ -251,7 +251,7 @@ bs_BA:
           Hej, lepa anketa! Kako sam te naučio? [anketa] *: +1: *: -1: [/ poll]
       details:
         instructions: |-
-          Ponekad možete poželeti da ** sakrijete detalje ** u odgovorima: - Kada raspravljate o točkama filma ili TV emisije koje bi se smatrale spojlerom. - Kada je vašoj poruci potrebno puno neobaveznih detalja koji mogu biti neodoljivi kada se pročitaju odjednom. [details = Izaberite ovo da vidite kako radi!] 1. Izaberite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opremu u uredniku. 2. Izaberite &quot;Sakrij detalje&quot;. 3. Uredite sažetak detalja i dodajte svoj sadržaj. Možete li koristiti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opremite u uredniku da dodate sledeći odeljak detaljima?
+          Ponekad možete poželeti da ** sakrijete detalje ** u odgovorima: - Kada raspravljate o točkama filma ili TV emisije koje bi se smatrale spojlerom. - Kada je vašoj poruci potrebno puno neobaveznih detalja koji mogu biti neodoljivi kada se pročitaju odjednom. [details = Izaberite ovo da vidite kako radi!] 1. Izaberite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opremu u uredniku. 2. Izaberite "Sakrij detalje". 3. Uredite sažetak detalja i dodajte svoj sadržaj. Možete li koristiti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opremite u uredniku da dodate sledeći odeljak detaljima?
         not_found: |-
           Imate problema sa kreiranjem widgeta detalja? Pokušajte uključiti sljedeće u sljedećem odgovoru: `` `tekst [detalji = Izaberite me za detalje] Ovdje su detalji [/ details]` ``
         reply: |-

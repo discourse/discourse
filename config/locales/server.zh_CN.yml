@@ -1334,7 +1334,6 @@ zh_CN:
     content_security_policy: "启用内容安全策略"
     content_security_policy_report_only: "只启用内容安全报告策略"
     content_security_policy_collect_reports: "在/csp_reports上启用内容安全策略违规报告收集"
-    content_security_policy_script_src: "其他列入白名单的脚本来源。默认包含当前主机和CDN。"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问过网站的管理员帐户需要在登录前重新验证邮件地址。设置为0禁用。"
     top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
@@ -2278,6 +2277,8 @@ zh_CN:
         嘿。我们看到你一直在忙着阅读，这太棒了，所以我们已经提升你了[信任等级！](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 
         我们很高兴你和我们共度时光，我们很想知道更多关于你的事情。花一点时间[填写你的个人资料](%{base_url}/我的/设置/个人信息)，或随时[开始一个新主题](%{base_url}/categories)。
+    welcome_staff:
+      subject_template: "恭喜，你已获得%{role}身份！"
     welcome_invite:
       title: "欢迎邀请"
       subject_template: "欢迎来到 %{site_name}！"
@@ -3973,6 +3974,9 @@ zh_CN:
     user_merged: "%{username}已合并到此账户"
     user_delete_self: "已从%{url}自行删除"
     webhook_deactivation_reason: "你的webhook已被自动停用。我们收到多个“%{status}”HTTP失败状态响应。"
+    api_key:
+      revoked: 已撤销
+      restored: 已恢复
   reviewables:
     priorities:
       low: "低"

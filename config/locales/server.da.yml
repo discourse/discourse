@@ -297,10 +297,10 @@ da:
         one: "%{count} bruger er føjet til gruppen."
         other: "%{count} brugere er blevet føjet til gruppen."
     errors:
-      grant_trust_level_not_valid: "&#39;%{trust_level}&#39; er ikke et gyldigt tillidsniveau."
+      grant_trust_level_not_valid: "'%{trust_level}' er ikke et gyldigt tillidsniveau."
       can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
       member_already_exist:
-        one: "&#39;%{username}&#39; er allerede medlem af denne gruppe."
+        one: "'%{username}' er allerede medlem af denne gruppe."
         other: "Følgende brugere er allerede medlemmer af denne gruppe: %{username}"
       invalid_domain: "'%{domain}' er ikke et gyldigt domæne."
       invalid_incoming_email: "'%{email}' er ikke en gyldig email adresse."

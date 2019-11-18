@@ -195,7 +195,8 @@ class TagsController < ::ApplicationController
   def search
     filter_params = {
       for_input: params[:filterForInput],
-      selected_tags: params[:selected_tags]
+      selected_tags: params[:selected_tags],
+      limit: params[:limit]
     }
 
     if params[:categoryId]
@@ -205,19 +206,14 @@ class TagsController < ::ApplicationController
     if params[:q]
       clean_name = DiscourseTagging.clean_tag(params[:q])
       filter_params[:term] = clean_name
-
-      # Prioritize exact matches when ordering
-      order_query = Tag.sanitize_sql_for_order(
+      filter_params[:order] = Tag.sanitize_sql_for_order(
         ["lower(name) = lower(?) DESC, topic_count DESC", clean_name]
       )
-
-      tag_query = Tag.order(order_query).limit(params[:limit])
     else
-      tag_query = Tag.limit(params[:limit])
+      filter_params[:order] = "topic_count DESC"
     end
 
     tags_with_counts = DiscourseTagging.filter_allowed_tags(
-      tag_query,
       guardian,
       filter_params
     )

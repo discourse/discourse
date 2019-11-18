@@ -3,8 +3,9 @@ import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import UserAction from "discourse/models/user-action";
 import { Promise } from "rsvp";
+import EmberObject from "@ember/object";
 
-export default Discourse.Model.extend({
+export default EmberObject.extend({
   loaded: false,
 
   @on("init")

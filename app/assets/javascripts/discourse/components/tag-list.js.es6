@@ -1,6 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { sort } from "@ember/object/computed";
 import Component from "@ember/component";
+import Category from "discourse/models/category";
 
 export default Component.extend({
   classNameBindings: [":tag-list", "categoryClass", "tagGroupNameClass"],
@@ -15,7 +16,7 @@ export default Component.extend({
 
   @discourseComputed("categoryId")
   category(categoryId) {
-    return categoryId && Discourse.Category.findById(categoryId);
+    return categoryId && Category.findById(categoryId);
   },
 
   @discourseComputed("category.fullSlug")

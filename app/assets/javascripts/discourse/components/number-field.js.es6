@@ -6,10 +6,10 @@ export default Ember.TextField.extend({
   @discourseComputed("number")
   value: {
     get(number) {
-      return parseInt(number);
+      return parseInt(number, 10);
     },
     set(value) {
-      const num = parseInt(value);
+      const num = parseInt(value, 10);
       if (isNaN(num)) {
         this.set("invalid", true);
         return value;

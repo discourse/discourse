@@ -54,6 +54,10 @@ module FileStore
       not_implemented
     end
 
+    def s3_upload_host
+      not_implemented
+    end
+
     def external?
       not_implemented
     end
@@ -77,7 +81,11 @@ module FileStore
 
         if !file
           max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
-          url = Discourse.store.cdn_url(upload.url)
+
+          url = upload.secure? ?
+            Discourse.store.signed_url_for_path(upload.url) :
+            Discourse.store.cdn_url(upload.url)
+
           url = SiteSetting.scheme + ":" + url if url =~ /^\/\//
           file = FileHelper.download(
             url,
@@ -139,7 +147,13 @@ module FileStore
       FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
       FileUtils.cp(file.path, path)
       # keep latest 500 files
-      `ls -tr #{CACHE_DIR} | head -n -#{CACHE_MAXIMUM_SIZE} | awk '$0="#{CACHE_DIR}"$0' | xargs rm -f`
+      processes = Open3.pipeline(
+        "ls -t #{CACHE_DIR}",
+        "tail -n +#{CACHE_MAXIMUM_SIZE + 1}",
+        "awk '$0=\"#{CACHE_DIR}\"$0'",
+        "xargs rm -f"
+      )
+      raise "Error clearing old cache" if !processes.all?(&:success?)
     end
 
     private

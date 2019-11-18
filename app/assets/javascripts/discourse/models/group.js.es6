@@ -236,7 +236,7 @@ const Group = RestModel.extend({
     }
 
     if (opts.categoryId) {
-      data.category_id = parseInt(opts.categoryId);
+      data.category_id = parseInt(opts.categoryId, 10);
     }
 
     return ajax(`/groups/${this.name}/${type}.json`, { data }).then(posts => {

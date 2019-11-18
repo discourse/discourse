@@ -8,6 +8,7 @@ class PostReadersController < ApplicationController
     ensure_can_see_readers!(post)
 
     readers = User
+      .real
       .where(staged: false)
       .where.not(id: post.user_id)
       .joins(:topic_users)

@@ -126,6 +126,7 @@ class PostMover
     move_incoming_emails
     move_notifications
     update_reply_counts
+    update_quotes
     move_first_post_replies
     delete_post_replies
     copy_first_post_timings
@@ -253,6 +254,18 @@ class PostMover
         GROUP BY r.post_id, mp.new_topic_id
       ) x
       WHERE x.post_id = p.id AND x.new_topic_id <> p.topic_id
+    SQL
+  end
+
+  def update_quotes
+    DB.exec <<~SQL
+      UPDATE posts p
+      SET raw = REPLACE(p.raw,
+                        ', post:' || mp.old_post_number || ', topic:' || mp.old_topic_id,
+                        ', post:' || mp.new_post_number || ', topic:' || mp.new_topic_id),
+          baked_version = NULL
+      FROM moved_posts mp, quoted_posts qp
+      WHERE p.id = qp.post_id AND mp.old_post_id = qp.quoted_post_id
     SQL
   end
 

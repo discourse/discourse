@@ -1,3 +1,4 @@
+import { alias } from "@ember/object/computed";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import TagsMixin from "select-kit/mixins/tags";
 import renderTag from "discourse/lib/render-tag";
@@ -15,7 +16,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
   blacklist: null,
   attributeBindings: ["categoryId"],
   allowCreate: null,
-  allowAny: Ember.computed.alias("allowCreate"),
+  allowAny: alias("allowCreate"),
 
   init() {
     this._super(...arguments);
@@ -45,14 +46,18 @@ export default MultiSelectComponent.extend(TagsMixin, {
         parseInt(
           this.limit ||
             this.maximum ||
-            this.get("siteSettings.max_tags_per_topic")
+            this.get("siteSettings.max_tags_per_topic"),
+          10
         )
       );
     }
   },
 
   mutateValues(values) {
-    this.set("tags", values.filter(v => v));
+    this.set(
+      "tags",
+      values.filter(v => v)
+    );
   },
 
   @discourseComputed("tags")

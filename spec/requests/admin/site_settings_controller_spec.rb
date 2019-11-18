@@ -163,6 +163,51 @@ describe Admin::SiteSettingsController do
         end
       end
 
+      describe '#user_count' do
+        let(:user) { Fabricate(:user) }
+        let(:tracking) { NotificationLevels.all[:tracking] }
+
+        it 'should return correct user count for default categories change' do
+          category_id = Fabricate(:category).id
+
+          put "/admin/site_settings/default_categories_watching/user_count.json", params: {
+            default_categories_watching: category_id
+          }
+
+          expect(JSON.parse(response.body)["user_count"]).to eq(User.count)
+
+          CategoryUser.create!(category_id: category_id, notification_level: tracking, user: user)
+
+          put "/admin/site_settings/default_categories_watching/user_count.json", params: {
+            default_categories_watching: category_id
+          }
+
+          expect(JSON.parse(response.body)["user_count"]).to eq(User.count - 1)
+
+          SiteSetting.setting(:default_categories_watching, "")
+        end
+
+        it 'should return correct user count for default tags change' do
+          tag = Fabricate(:tag)
+
+          put "/admin/site_settings/default_tags_watching/user_count.json", params: {
+            default_tags_watching: tag.name
+          }
+
+          expect(JSON.parse(response.body)["user_count"]).to eq(User.count)
+
+          TagUser.create!(tag_id: tag.id, notification_level: tracking, user: user)
+
+          put "/admin/site_settings/default_tags_watching/user_count.json", params: {
+            default_tags_watching: tag.name
+          }
+
+          expect(JSON.parse(response.body)["user_count"]).to eq(User.count - 1)
+
+          SiteSetting.setting(:default_tags_watching, "")
+        end
+      end
+
       describe 'upload site settings' do
         it 'can remove the site setting' do
           SiteSetting.test_upload = Fabricate(:upload)

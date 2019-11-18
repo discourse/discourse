@@ -18,6 +18,11 @@ import {
   observes,
   on
 } from "discourse-common/utils/decorators";
+import Category from "discourse/models/category";
+import Session from "discourse/models/session";
+import { Promise } from "rsvp";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 export function loadTopicView(topic, args) {
   const data = _.merge({}, args);
@@ -65,8 +70,8 @@ const Topic = RestModel.extend({
     return user || this.creator;
   },
 
-  @discourseComputed("posters.[]", "participants.[]")
-  featuredUsers(posters, participants) {
+  @discourseComputed("posters.[]", "participants.[]", "allowed_user_count")
+  featuredUsers(posters, participants, allowedUserCount) {
     let users = posters;
     const maxUserCount = 5;
     const posterCount = users.length;
@@ -92,6 +97,13 @@ const Topic = RestModel.extend({
       });
     }
 
+    if (this.isPrivateMessage && allowedUserCount > maxUserCount) {
+      users.splice(maxUserCount - 2, 1); // remove second-last avatar
+      users.push({
+        moreCount: `+${allowedUserCount - maxUserCount + 1}`
+      });
+    }
+
     return users;
   },
 
@@ -99,7 +111,7 @@ const Topic = RestModel.extend({
   fancyTitle(title) {
     let fancyTitle = censor(
       emojiUnescape(title || ""),
-      Discourse.Site.currentProp("censored_regexp")
+      Site.currentProp("censored_regexp")
     );
 
     if (Discourse.SiteSettings.support_mixed_text_direction) {
@@ -208,7 +220,7 @@ const Topic = RestModel.extend({
   @on("init")
   @observes("category_id")
   _categoryIdChanged() {
-    this.set("category", Discourse.Category.findById(this.category_id));
+    this.set("category", Category.findById(this.category_id));
   },
 
   @observes("categoryName")
@@ -230,7 +242,7 @@ const Topic = RestModel.extend({
 
   @discourseComputed("url")
   shareUrl(url) {
-    const user = Discourse.User.current();
+    const user = User.current();
     const userQueryString = user ? `?u=${user.get("username_lower")}` : "";
     return `${url}${userQueryString}`;
   },
@@ -305,7 +317,7 @@ const Topic = RestModel.extend({
   // So take what the browser has seen into consideration.
   @discourseComputed("new_posts", "id")
   displayNewPosts(newPosts, id) {
-    const highestSeen = Discourse.Session.currentProp("highestSeenByTopic")[id];
+    const highestSeen = Session.currentProp("highestSeenByTopic")[id];
     if (highestSeen) {
       const delta = highestSeen - this.last_read_post_number;
       if (delta > 0) {
@@ -335,7 +347,7 @@ const Topic = RestModel.extend({
 
   @discourseComputed("archetype")
   archetypeObject(archetype) {
-    return Discourse.Site.currentProp("archetypes").findBy("id", archetype);
+    return Site.currentProp("archetypes").findBy("id", archetype);
   },
 
   isPrivateMessage: equal("archetype", "private_message"),
@@ -638,7 +650,7 @@ Topic.reopenClass({
       const lookup = EmberObject.create();
       result.actions_summary = result.actions_summary.map(a => {
         a.post = result;
-        a.actionType = Discourse.Site.current().postActionTypeById(a.id);
+        a.actionType = Site.current().postActionTypeById(a.id);
         const actionSummary = ActionSummary.create(a);
         lookup.set(a.actionType.get("name_key"), actionSummary);
         return actionSummary;
@@ -760,8 +772,11 @@ Topic.reopenClass({
     });
   },
 
-  resetNew() {
-    return ajax("/topics/reset-new", { type: "PUT" });
+  resetNew(category, include_subcategories) {
+    const data = category
+      ? { category_id: category.id, include_subcategories }
+      : {};
+    return ajax("/topics/reset-new", { type: "PUT", data });
   },
 
   idForSlug(slug) {

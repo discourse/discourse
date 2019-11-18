@@ -5,6 +5,7 @@ import ResultSet from "discourse/models/result-set";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { underscore } from "@ember/string";
 import { set } from "@ember/object";
+import Category from "discourse/models/category";
 
 let _identityMap;
 
@@ -218,6 +219,13 @@ export default EmberObject.extend({
   _resultSet(type, result, findArgs) {
     const adapter = this.adapterFor(type);
     const typeName = underscore(this.pluralize(adapter.apiNameFor(type)));
+
+    if (!result[typeName]) {
+      // eslint-disable-next-line no-console
+      console.error(`JSON response is missing \`${typeName}\` key`, result);
+      return;
+    }
+
     const content = result[typeName].map(obj =>
       this._hydrate(type, obj, result)
     );
@@ -272,7 +280,7 @@ export default EmberObject.extend({
     // to category. That should either respect this or be
     // removed.
     if (subType === "category" && type !== "topic") {
-      return Discourse.Category.findById(id);
+      return Category.findById(id);
     }
 
     if (root.meta && root.meta.types) {

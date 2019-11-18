@@ -1,5 +1,5 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { get } from "@ember/object";
+import { computed, get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { equal, and, or, not } from "@ember/object/computed";
 import EmberObject from "@ember/object";
@@ -14,10 +14,12 @@ import { cookAsync } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { Promise } from "rsvp";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 const Post = RestModel.extend({
   // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
-  siteSettings: Ember.computed({
+  siteSettings: computed({
     get() {
       return Discourse.SiteSettings;
     },
@@ -30,7 +32,7 @@ const Post = RestModel.extend({
 
   @discourseComputed("url")
   shareUrl(url) {
-    const user = Discourse.User.current();
+    const user = User.current();
     const userSuffix = user ? `?u=${user.username_lower}` : "";
 
     if (this.firstPost) {
@@ -320,7 +322,7 @@ const Post = RestModel.extend({
 
     // need to wait to hear back from server (stuff may not be loaded)
 
-    return Discourse.Post.updateBookmark(this.id, this.bookmarked)
+    return Post.updateBookmark(this.id, this.bookmarked)
       .then(result => {
         this.set("topic.bookmarked", result.topic_bookmarked);
         this.appEvents.trigger("page:bookmark-post-toggled", this);
@@ -355,7 +357,7 @@ Post.reopenClass({
 
       // this area should be optimized, it is creating way too many objects per post
       json.actions_summary = json.actions_summary.map(a => {
-        a.actionType = Discourse.Site.current().postActionTypeById(a.id);
+        a.actionType = Site.current().postActionTypeById(a.id);
         a.count = a.count || 0;
         const actionSummary = ActionSummary.create(a);
         lookup[a.actionType.name_key] = actionSummary;
@@ -370,7 +372,7 @@ Post.reopenClass({
     }
 
     if (json && json.reply_to_user) {
-      json.reply_to_user = Discourse.User.create(json.reply_to_user);
+      json.reply_to_user = User.create(json.reply_to_user);
     }
 
     return json;
@@ -417,7 +419,7 @@ Post.reopenClass({
 
   loadQuote(postId) {
     return ajax(`/posts/${postId}.json`).then(result => {
-      const post = Discourse.Post.create(result);
+      const post = Post.create(result);
       return Quote.build(post, post.raw, { raw: true, full: true });
     });
   },
