@@ -264,7 +264,7 @@ after_initialize do
 
         chart = []
         grouped_votes = votes_with_field.group_by { |vote| vote[:field_value] }.each do |field_answer, votes|
-          group_name = field_type == "confirm" ? (field_answer == "" ? "Not #{user_custom_field.name}" : user_custom_field.name) : field_answer
+          group_name = field_type == "confirm" ? (field_answer.blank? ? "Not #{user_custom_field.name}" : user_custom_field.name) : field_answer
           grouped_selected_options = []
 
           votes.group_by { |v| v["poll_option_id"] }.each do |option_id, votes_for_option|

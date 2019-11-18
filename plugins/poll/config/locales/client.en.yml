@@ -63,6 +63,14 @@ en:
         title: "Back to your votes"
         label: "Hide results"
 
+      group-results:
+        title: "Show votes in grouped by user field"
+        label: "Show breakdown"
+
+      ungroup-results:
+        title: "Show all votes combined"
+        label: "Hide breakdown"
+
       open:
         title: "Open the poll"
         label: "Open"

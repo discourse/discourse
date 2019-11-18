@@ -463,21 +463,22 @@ createWidget("discourse-poll-grouped-pies", {
   html(attrs) {
     fetchGroupableUserFields().then(response => {
       attrs.groupedBy = attrs.groupedBy || response.fields[0].id;
-      let fields = response.fields;
-      let parent = document.getElementById(
+      const fields = response.fields;
+      const parent = document.getElementById(
         `poll-results-grouped-pie-charts-${attrs.id}`
       );
-      let fieldSelectId = `field-select-${attrs.id}`;
+      const fieldSelectId = `field-select-${attrs.id}`;
 
-      let existingSel = document.getElementById(fieldSelectId);
+      const existingSel = document.getElementById(fieldSelectId);
       if (existingSel) return;
 
-      let sel = document.createElement("select");
+      const sel = document.createElement("select");
+      sel.classList.add("poll-group-by-selector");
       sel.id = fieldSelectId;
       parent.appendChild(sel);
 
       for (var i = 0; i < fields.length; i++) {
-        let opt = document.createElement("option");
+        const opt = document.createElement("option");
         opt.innerHTML = fields[i].name;
         opt.value = fields[i].id;
         sel.appendChild(opt);
@@ -493,22 +494,32 @@ createWidget("discourse-poll-grouped-pies", {
           chartIdx < result.grouped_results.length;
           chartIdx++
         ) {
-          let data = result.grouped_results[chartIdx].options.map(o => o.votes);
-          let labels = result.grouped_results[chartIdx].options.map(
+          const data = result.grouped_results[chartIdx].options.map(
+            o => o.votes
+          );
+          const labels = result.grouped_results[chartIdx].options.map(
             o => o.html
           );
-          let canvasId = `pie-${attrs.id}-${chartIdx}`;
-          let existingChart = document.querySelector(
+          const canvasId = `pie-${attrs.id}-${chartIdx}`;
+          const existingChart = document.querySelector(
             `#pie-${attrs.id}-${chartIdx}`
           );
           if (!existingChart) {
-            let h3 = document.createElement("h3");
-            h3.textContent = result.grouped_results[chartIdx].group;
-            let canvas = document.createElement("canvas");
+            const container = document.createElement("div");
+            container.classList.add("poll-grouped-pie-container");
+
+            const label = document.createElement("label");
+            label.classList.add("poll-pie-label");
+            label.textContent = result.grouped_results[chartIdx].group;
+
+            const canvas = document.createElement("canvas");
             canvas.classList.add(`poll-grouped-pie-${attrs.id}`);
             canvas.id = canvasId;
-            parent.appendChild(h3);
-            parent.appendChild(canvas);
+
+            container.appendChild(label);
+            container.appendChild(canvas);
+            parent.appendChild(container);
+
             let el = document.querySelector(`#pie-${attrs.id}-${chartIdx}`);
             if (!el.$chartjs) {
               let config = {
@@ -523,7 +534,8 @@ createWidget("discourse-poll-grouped-pies", {
                   labels: labels
                 },
                 options: {
-                  responsive: true
+                  responsive: true,
+                  aspectRatio: 1.2
                 }
               };
               // eslint-disable-next-line
@@ -559,19 +571,37 @@ createWidget("discourse-poll-pie-chart", {
       return contents;
     }
 
-    if (attrs.showAdvanced) {
+    let btn;
+    let chart;
+    if (attrs.groupResults) {
+      btn = h("div", [
+        this.attach("button", {
+          className: "btn btn-default poll-group-by-toggle",
+          label: "poll.ungroup-results.label",
+          title: "poll.ungroup-results.title",
+          icon: "far-eye-slash",
+          action: "toggleGroupedPieCharts"
+        })
+      ]);
+      chart = this.attach("discourse-poll-grouped-pies", attrs);
       clearPieChart(this.attrs.id);
-      contents.push(this.attach("discourse-poll-grouped-pies", attrs));
     } else {
-      let data = attrs.poll.get("options").map(o => o.votes);
-      let labels = attrs.poll.get("options").map(o => o.html);
+      btn = this.attach("button", {
+        className: "btn btn-default poll-group-by-toggle",
+        label: "poll.group-results.label",
+        title: "poll.group-results.title",
+        icon: "far-eye",
+        action: "toggleGroupedPieCharts"
+      });
+      const data = attrs.poll.get("options").map(o => o.votes);
+      const labels = attrs.poll.get("options").map(o => o.html);
       loadScript("/javascripts/Chart.min.js").then(() => {
         later(() => {
-          let el = document.querySelector(
+          const el = document.querySelector(
             `#poll-results-chart-${this.attrs.id}`
           );
           if (!el.$chartjs) {
-            let config = {
+            const config = {
               type: "pie",
               data: {
                 datasets: [
@@ -591,20 +621,11 @@ createWidget("discourse-poll-pie-chart", {
           }
         });
       });
-      contents.push(this.attach("discourse-poll-pie-canvas", attrs));
+      chart = this.attach("discourse-poll-pie-canvas", attrs);
     }
-
-    const text = attrs.showAdvanced
-      ? "Show combined responses"
-      : "Show grouped responses";
-    contents.push(new RawHtml({ html: `<a>${text}</a>` }));
+    contents.push(btn);
+    contents.push(chart);
     return contents;
-  },
-
-  click(e) {
-    if ($(e.target).closest("a").length !== 0) {
-      this.sendWidgetAction("showAdvancedPieCharts", e.target);
-    }
   }
 });
 
@@ -947,8 +968,8 @@ export default createWidget("discourse-poll", {
       });
   },
 
-  showAdvancedPieCharts() {
-    this.attrs.showAdvanced = !this.attrs.showAdvanced;
+  toggleGroupedPieCharts() {
+    this.attrs.groupResults = !this.attrs.groupResults;
   },
 
   refreshCharts(newGroupedByValue) {

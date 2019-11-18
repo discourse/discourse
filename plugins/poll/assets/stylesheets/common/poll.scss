@@ -119,6 +119,25 @@ div.poll {
       margin-right: 0.25em;
     }
   }
+
+  .poll-group-by-toggle {
+    margin: 2px 0 6px;
+  }
+
+  .poll-group-by-selector {
+    display: block;
+  }
+
+  .poll-grouped-pie-container {
+    display: inline-block;
+    width: 50%;
+    padding: 15px 0;
+
+    .poll-pie-label {
+      display: block;
+      text-align: center;
+    }
+  }
 }
 
 // hides 0 vote count in crawler and print view
