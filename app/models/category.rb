@@ -559,7 +559,7 @@ class Category < ActiveRecord::Base
   end
 
   def required_tag_group_name=(group_name)
-    self.required_tag_group = group_name ? TagGroup.where(name: group_name).first : nil
+    self.required_tag_group = group_name.blank? ? nil : TagGroup.where(name: group_name).first
   end
 
   def downcase_email
