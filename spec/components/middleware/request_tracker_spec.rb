@@ -129,7 +129,8 @@ describe Middleware::RequestTracker do
       Middleware::RequestTracker.new(app)
     end
 
-    it "does nothing by default" do
+    it "does nothing if configured to do nothing" do
+      global_setting :max_reqs_per_ip_mode, "none"
       global_setting :max_reqs_per_ip_per_10_seconds, 1
 
       status, _ = middleware.call(env)
