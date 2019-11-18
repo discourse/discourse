@@ -1,0 +1,21 @@
+=> [[32m#<Plugin::Instance:0x000055a41b5ce350[0m
+  @idx[32m=[0m[1;34m0[0m,
+  @metadata[32m=[0m[32m#<Plugin::Metadata:0x000055a41b5cf3e0[0m @about[32m=[0m[31m[1;31m"[0m[31mHTML5.1 Details polyfill for Discourse[1;31m"[0m[31m[0m, @authors[32m=[0m[31m[1;31m"[0m[31mRégis Hanol[1;31m"[0m[31m[0m, @name[32m=[0m[31m[1;31m"[0m[31mdiscourse-details[1;31m"[0m[31m[0m, @url[32m=[0m[31m[1;31m"[0m[31mhttps://github.com/discourse/discourse/tree/master/plugins/discourse-details[1;31m"[0m[31m[0m, @version[32m=[0m[31m[1;31m"[0m[31m0.4[1;31m"[0m[31m[0m[32m>[0m,
+  @path[32m=[0m[31m[1;31m"[0m[31m/home/martin/repos/discourse/plugins/discourse-details/plugin.rb[1;31m"[0m[31m[0m[32m>[0m,
+ [32m#<Plugin::Instance:0x000055a41b5cd5b8[0m @idx[32m=[0m[1;34m0[0m, @metadata[32m=[0m[32m#<Plugin::Metadata:0x000055a41b5ce2b0[0m @about[32m=[0m[31m[1;31m"[0m[31mDisplay a date in your local timezone[1;31m"[0m[31m[0m, @name[32m=[0m[31m[1;31m"[0m[31mdiscourse-local-dates[1;31m"[0m[31m[0m, @version[32m=[0m[31m[1;31m"[0m[31m0.1[1;31m"[0m[31m[0m[32m>[0m, @path[32m=[0m[31m[1;31m"[0m[31m/home/martin/repos/discourse/plugins/discourse-local-dates/plugin.rb[1;31m"[0m[31m[0m[32m>[0m,
+ [32m#<Plugin::Instance:0x000055a41b5cc438[0m
+  @idx[32m=[0m[1;34m0[0m,
+  @metadata[32m=[0m[32m#<Plugin::Metadata:0x000055a41b5cd518[0m @about[32m=[0m[31m[1;31m"[0m[31mIntroduces staff to Discourse[1;31m"[0m[31m[0m, @authors[32m=[0m[31m[1;31m"[0m[31mNick Sahler, Alan Tan[1;31m"[0m[31m[0m, @name[32m=[0m[31m[1;31m"[0m[31mdiscourse-narrative-bot[1;31m"[0m[31m[0m, @url[32m=[0m[31m[1;31m"[0m[31mhttps://github.com/discourse/discourse/tree/master/plugins/discourse-narrative-bot[1;31m"[0m[31m[0m, @version[32m=[0m[31m[1;31m"[0m[31m1.0[1;31m"[0m[31m[0m[32m>[0m,
+  @path[32m=[0m[31m[1;31m"[0m[31m/home/martin/repos/discourse/plugins/discourse-narrative-bot/plugin.rb[1;31m"[0m[31m[0m[32m>[0m,
+ [32m#<Plugin::Instance:0x000055a41b5d3238[0m
+  @idx[32m=[0m[1;34m0[0m,
+  @metadata[32m=[0m[32m#<Plugin::Metadata:0x000055a41b5cc398[0m @about[32m=[0m[31m[1;31m"[0m[31mShow which users are writing a reply to a topic[1;31m"[0m[31m[0m, @authors[32m=[0m[31m[1;31m"[0m[31mAndré Pereira, David Taylor[1;31m"[0m[31m[0m, @name[32m=[0m[31m[1;31m"[0m[31mdiscourse-presence[1;31m"[0m[31m[0m, @url[32m=[0m[31m[1;31m"[0m[31mhttps://github.com/discourse/discourse/tree/master/plugins/discourse-presence[1;31m"[0m[31m[0m, @version[32m=[0m[31m[1;31m"[0m[31m1.0[1;31m"[0m[31m[0m[32m>[0m,
+  @path[32m=[0m[31m[1;31m"[0m[31m/home/martin/repos/discourse/plugins/discourse-presence/plugin.rb[1;31m"[0m[31m[0m[32m>[0m,
+ [32m#<Plugin::Instance:0x000055a41b5d2130[0m
+  @idx[32m=[0m[1;34m0[0m,
+  @metadata[32m=[0m[32m#<Plugin::Metadata:0x000055a41b5d3198[0m @about[32m=[0m[31m[1;31m"[0m[31mUses the lazyYT plugin to lazy load Youtube videos[1;31m"[0m[31m[0m, @authors[32m=[0m[31m[1;31m"[0m[31mArpit Jalan[1;31m"[0m[31m[0m, @name[32m=[0m[31m[1;31m"[0m[31mlazy-yt[1;31m"[0m[31m[0m, @url[32m=[0m[31m[1;31m"[0m[31mhttps://github.com/discourse/discourse/tree/master/plugins/lazy-yt[1;31m"[0m[31m[0m, @version[32m=[0m[31m[1;31m"[0m[31m1.0.1[1;31m"[0m[31m[0m[32m>[0m,
+  @path[32m=[0m[31m[1;31m"[0m[31m/home/martin/repos/discourse/plugins/lazy-yt/plugin.rb[1;31m"[0m[31m[0m[32m>[0m,
+ [32m#<Plugin::Instance:0x000055a41b5d0fb0[0m
+  @idx[32m=[0m[1;34m0[0m,
+  @metadata[32m=[0m[32m#<Plugin::Metadata:0x000055a41b5d2090[0m @about[32m=[0m[31m[1;31m"[0m[31mOfficial poll plugin for Discourse[1;31m"[0m[31m[0m, @authors[32m=[0m[31m[1;31m"[0m[31mVikhyat Korrapati (vikhyat), Régis Hanol (zogstrip)[1;31m"[0m[31m[0m, @name[32m=[0m[31m[1;31m"[0m[31mpoll[1;31m"[0m[31m[0m, @url[32m=[0m[31m[1;31m"[0m[31mhttps://github.com/discourse/discourse/tree/master/plugins/poll[1;31m"[0m[31m[0m, @version[32m=[0m[31m[1;31m"[0m[31m1.0[1;31m"[0m[31m[0m[32m>[0m,
+  @path[32m=[0m[31m[1;31m"[0m[31m/home/martin/repos/discourse/plugins/poll/plugin.rb[1;31m"[0m[31m[0m[32m>[0m]

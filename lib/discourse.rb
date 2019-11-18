@@ -187,7 +187,10 @@ module Discourse
 
     if Rails.env.development?
       core_git_sha = `git rev-parse HEAD`
-      supersha_hash = Digest::SHA1.hexdigest((all_plugins.map { |p| p.path }.sort + [core_git_sha]).join('|'))
+      sorted_plugin_shas = all_plugins.map do |p|
+        "#{p.path}_" + `git ls-files -s #{File.dirname(p.path)} | git hash-object --stdin`
+      end.sort
+      supersha_hash = Digest::SHA1.hexdigest((sorted_plugin_shas + [core_git_sha]).join('|'))
       hash_file = "#{Rails.root}/tmp/plugin-hash"
 
       old_hash = begin
