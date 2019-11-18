@@ -810,6 +810,50 @@ describe PrettyText do
       html = "<p>Check out this video – <iframe src='https://player.vimeo.com/video/329875646' data-original-href='https://vimeo.com/329875646/> <script>alert(1)</script>'></iframe>.</p>"
       expect(PrettyText.format_for_email(html, post)).to match(Regexp.escape("https://vimeo.com/329875646/%3E%20%3Cscript%3Ealert(1)%3C/script%3E"))
     end
+
+    describe "#strip_secure_media" do
+      before do
+        SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
+        SiteSetting.s3_access_key_id = "s3-access-key-id"
+        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+        SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.secure_media = true
+        SiteSetting.login_required = true
+      end
+
+      it "replaces secure video content" do
+        html = <<~HTML
+          <video width="100%" height="100%" controls="">
+            <source src="#{base_url}/secure-media-uploads/original/1X/some-video.mp4">
+              <a href="#{base_url}/secure-media-uploads/original/1X/some-video.mp4">Video label</a>
+            </source>
+          </video>
+        HTML
+
+        md = PrettyText.format_for_email(html, post)
+
+        expect(md).not_to include('<video')
+        expect(md.to_s).to match(I18n.t("emails.secure_media_placeholder"))
+        expect(md.to_s).not_to match(SiteSetting.Upload.s3_cdn_url)
+      end
+
+      it "replaces secure audio content" do
+        html = <<~HTML
+          <audio controls>
+            <source src="#{base_url}/secure-media-uploads/original/1X/some-audio.mp3">
+              <a href="#{base_url}/secure-media-uploads/original/1X/some-audio.mp3">Audio label</a>
+            </source>
+          </audio>
+        HTML
+
+        md = PrettyText.format_for_email(html, post)
+
+        expect(md).not_to include('<video')
+        expect(md.to_s).to match(I18n.t("emails.secure_media_placeholder"))
+        expect(md.to_s).not_to match(SiteSetting.Upload.s3_cdn_url)
+      end
+    end
   end
 
   it 'Is smart about linebreaks and IMG tags' do

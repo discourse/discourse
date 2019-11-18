@@ -242,7 +242,6 @@ export function getUploadMarkdown(upload) {
       upload.thumbnail_height
     }](${upload.short_url || upload.url})`;
   } else if (
-    !Discourse.SiteSettings.prevent_anons_from_downloading_files &&
     /\.(mov|mp4|webm|ogv|mp3|ogg|wav|m4a)$/i.test(upload.original_filename)
   ) {
     return uploadLocation(upload.url);

@@ -1245,7 +1245,7 @@ describe Post do
     expect(post.revisions.pluck(:number)).to eq([1, 2])
   end
 
-  describe '#link_post_uploads' do
+  describe 'uploads' do
     fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
     fab!(:image_upload) { Fabricate(:upload) }
     fab!(:audio_upload) { Fabricate(:upload, extension: "ogg") }
@@ -1257,7 +1257,7 @@ describe Post do
     let(:video_url) { "#{base_url}#{video_upload.url}" }
     let(:audio_url) { "#{base_url}#{audio_upload.url}" }
 
-    let(:raw) do
+    let(:raw_multiple) do
       <<~RAW
       <a href="#{attachment_upload.url}">Link</a>
       [test|attachment](#{attachment_upload_2.short_url})
@@ -1276,36 +1276,121 @@ describe Post do
       RAW
     end
 
-    let(:post) { Fabricate(:post, raw: raw) }
+    let(:post) { Fabricate(:post, raw: raw_multiple) }
 
-    it "finds all the uploads in the post" do
-      post.custom_fields[Post::DOWNLOADED_IMAGES] = {
-        "/uploads/default/original/1X/1/1234567890123456.csv": attachment_upload.id
-      }
+    context "#link_post_uploads" do
+      it "finds all the uploads in the post" do
+        post.custom_fields[Post::DOWNLOADED_IMAGES] = {
+          "/uploads/default/original/1X/1/1234567890123456.csv": attachment_upload.id
+        }
 
-      post.save_custom_fields
-      post.link_post_uploads
+        post.save_custom_fields
+        post.link_post_uploads
 
-      expect(PostUpload.where(post: post).pluck(:upload_id)).to contain_exactly(
-        video_upload.id,
-        image_upload.id,
-        audio_upload.id,
-        attachment_upload.id,
-        attachment_upload_2.id,
-        attachment_upload_3.id
-      )
+        expect(PostUpload.where(post: post).pluck(:upload_id)).to contain_exactly(
+          video_upload.id,
+          image_upload.id,
+          audio_upload.id,
+          attachment_upload.id,
+          attachment_upload_2.id,
+          attachment_upload_3.id
+        )
+      end
+
+      it "cleans the reverse index up for the current post" do
+        post.link_post_uploads
+
+        post_uploads_ids = post.post_uploads.pluck(:id)
+
+        post.link_post_uploads
+
+        expect(post.reload.post_uploads.pluck(:id)).to_not contain_exactly(
+          post_uploads_ids
+        )
+      end
     end
 
-    it "cleans the reverse index up for the current post" do
-      post.link_post_uploads
+    context '#update_uploads_secure_status' do
+      fab!(:user) { Fabricate(:user, trust_level: 0) }
 
-      post_uploads_ids = post.post_uploads.pluck(:id)
+      let(:raw) do
+        <<~RAW
+        <a href="#{attachment_upload.url}">Link</a>
+        <img src="#{image_upload.url}">
+        RAW
+      end
 
-      post.link_post_uploads
+      before do
+        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "some key"
+        SiteSetting.s3_secret_access_key = "some secret key"
+        SiteSetting.secure_media = true
+        attachment_upload.update!(original_filename: "hello.csv")
 
-      expect(post.reload.post_uploads.pluck(:id)).to_not contain_exactly(
-        post_uploads_ids
-      )
+        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+        stub_request(
+          :put,
+          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{attachment_upload.sha1}.#{attachment_upload.extension}?acl"
+        )
+
+        stub_request(
+          :put,
+          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
+        )
+      end
+
+      it "marks image uploads as secure in PMs when secure_media is ON" do
+        post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
+        post.link_post_uploads
+        post.update_uploads_secure_status
+
+        expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+          [attachment_upload.id, false],
+          [image_upload.id, true]
+        )
+      end
+
+      it "marks image uploads as not secure in PMs when when secure_media is ON" do
+        SiteSetting.secure_media = false
+        post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
+        post.link_post_uploads
+        post.update_uploads_secure_status
+
+        expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+          [attachment_upload.id, false],
+          [image_upload.id, false]
+        )
+      end
+
+      it "marks attachments as secure when relevant setting is enabled" do
+        SiteSetting.prevent_anons_from_downloading_files = true
+        post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user))
+        post.link_post_uploads
+        post.update_uploads_secure_status
+
+        expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+          [attachment_upload.id, true],
+          [image_upload.id, false]
+        )
+      end
+
+      it "does not mark an upload as secure if it has already been used in a public topic" do
+        post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user))
+        post.link_post_uploads
+        post.update_uploads_secure_status
+
+        pm = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
+        pm.link_post_uploads
+        pm.update_uploads_secure_status
+
+        expect(PostUpload.where(post: pm).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+          [attachment_upload.id, false],
+          [image_upload.id, false]
+        )
+      end
     end
   end
 

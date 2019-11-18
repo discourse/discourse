@@ -170,7 +170,7 @@ RSpec.describe UploadCreator do
       end
     end
 
-    describe 'private uploads' do
+    describe 'secure attachments' do
       let(:filename) { "small.pdf" }
       let(:file) { file_from_fixtures(filename, "pdf") }
 
@@ -179,31 +179,31 @@ RSpec.describe UploadCreator do
         SiteSetting.authorized_extensions = 'pdf|svg|jpg'
       end
 
-      it 'should mark uploads as private' do
+      it 'should mark attachments as secure' do
         upload = UploadCreator.new(file, filename).create_for(user.id)
         stored_upload = Upload.last
 
-        expect(stored_upload.private?).to eq(true)
+        expect(stored_upload.secure?).to eq(true)
       end
 
-      it 'should not mark theme uploads as private' do
+      it 'should not mark theme uploads as secure' do
         fname = "custom-theme-icon-sprite.svg"
         upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
 
-        expect(upload.private?).to eq(false)
+        expect(upload.secure?).to eq(false)
       end
 
-      it 'should not mark image uploads as private' do
+      it 'should not apply prevent_anons_from_downloading_files to image uploads' do
         fname = "logo.jpg"
         upload = UploadCreator.new(file_from_fixtures(fname), fname).create_for(user.id)
         stored_upload = Upload.last
 
         expect(stored_upload.original_filename).to eq(fname)
-        expect(stored_upload.private?).to eq(false)
+        expect(stored_upload.secure?).to eq(false)
       end
     end
 
-    describe 'uploading to s3' do
+    context 'uploading to s3' do
       let(:filename) { "should_be_jpeg.png" }
       let(:file) { file_from_fixtures(filename) }
       let(:pdf_filename) { "small.pdf" }
@@ -233,7 +233,7 @@ RSpec.describe UploadCreator do
         expect(upload.etag).to eq('ETag')
       end
 
-      it 'should return signed URL for private uploads in S3' do
+      it 'should return signed URL for secure attachments in S3' do
         SiteSetting.prevent_anons_from_downloading_files = true
         SiteSetting.authorized_extensions = 'pdf'
 
@@ -241,7 +241,7 @@ RSpec.describe UploadCreator do
         stored_upload = Upload.last
         signed_url = Discourse.store.url_for(stored_upload)
 
-        expect(stored_upload.private?).to eq(true)
+        expect(stored_upload.secure?).to eq(true)
         expect(stored_upload.url).not_to eq(signed_url)
         expect(signed_url).to match(/Amz-Credential/)
       end

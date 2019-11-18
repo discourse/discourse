@@ -199,4 +199,19 @@ describe Email::Styles do
     end
   end
 
+  context "replace_relative_urls" do
+    it "replaces secure media within a link with a placeholder" do
+      frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>")
+      expect(frag.at('p.secure-media-notice')).to be_present
+      expect(frag.at('img')).not_to be_present
+      expect(frag.at('a')).not_to be_present
+    end
+
+    it "replaces secure images with a placeholder" do
+      frag = html_fragment("<img src=\"/secure-media-uploads/original/1X/testimage.png\">")
+      expect(frag.at('p.secure-media-notice')).to be_present
+      expect(frag.at('img')).not_to be_present
+    end
+  end
+
 end

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-def print_status_with_label(label, current, max)
-  print "\r%s%9d / %d (%5.1f%%)" % [label, current, max, ((current.to_f / max.to_f) * 100).round(1)]
-end
+require_dependency "rake_helpers"
 
 def close_old_topics(category)
   topics = Topic.where(closed: false, category_id: category.id)
@@ -23,7 +21,7 @@ def close_old_topics(category)
 
   topics.find_each do |topic|
     topic.update_status("closed", true, Discourse.system_user)
-    print_status_with_label("    closing old topics: ", topics_closed += 1, total)
+    RakeHelpers.print_status_with_label("    closing old topics: ", topics_closed += 1, total)
   end
 end
 
@@ -49,7 +47,7 @@ def apply_auto_close(category)
 
   topics.find_each do |topic|
     topic.inherit_auto_close_from_category
-    print_status_with_label("    applying auto-close to topics: ", topics_closed += 1, total)
+    RakeHelpers.print_status_with_label("    applying auto-close to topics: ", topics_closed += 1, total)
   end
 end
 
@@ -77,7 +75,7 @@ task "topics:watch_all_replied_topics" => :environment do
     t.topic_users.where(posted: true).find_each do |tp|
       tp.update!(notification_level: TopicUser.notification_levels[:watching], notifications_reason_id: TopicUser.notification_reasons[:created_post])
     end
-    print_status(count += 1, total)
+    RakeHelpers.print_status(count += 1, total)
   end
 
   puts "", "Done"
@@ -96,12 +94,8 @@ task "topics:update_fancy_titles" => :environment do
 
   Topic.find_each do |topic|
     topic.fancy_title
-    print_status(count += 1, total)
+    RakeHelpers.print_status(count += 1, total)
   end
 
   puts "", "Done"
-end
-
-def print_status(current, max)
-  print "\r%9d / %d (%5.1f%%)" % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
 end

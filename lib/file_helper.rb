@@ -17,6 +17,10 @@ class FileHelper
     filename =~ supported_images_regexp
   end
 
+  def self.is_supported_media?(filename)
+    filename =~ supported_media_regexp
+  end
+
   class FakeIO
     attr_accessor :status
   end
@@ -132,8 +136,20 @@ class FileHelper
     @@supported_images ||= Set.new %w{jpg jpeg png gif svg ico}
   end
 
+  def self.supported_audio
+    @@supported_audio ||= Set.new %w{mp3 ogg wav m4a}
+  end
+
+  def self.supported_video
+    @@supported_video ||= Set.new %w{mov mp4 webm ogv}
+  end
+
   def self.supported_images_regexp
     @@supported_images_regexp ||= /\.(#{supported_images.to_a.join("|")})$/i
   end
 
+  def self.supported_media_regexp
+    media = supported_images | supported_audio | supported_video
+    @@supported_media_regexp ||= /\.(#{media.to_a.join("|")})$/i
+  end
 end

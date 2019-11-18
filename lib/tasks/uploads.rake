@@ -8,6 +8,8 @@ require "base62"
 #                                    gather                                    #
 ################################################################################
 
+require_dependency "rake_helpers"
+
 task "uploads:gather" => :environment do
   ENV["RAILS_DB"] ? gather_uploads : gather_uploads_for_all_sites
 end
@@ -426,7 +428,7 @@ def migrate_to_s3
           %Q{attachment; filename="#{upload.original_filename}"}
       end
 
-      if upload&.private?
+      if upload.secure
         options[:acl] = "private"
       end
     end
@@ -905,6 +907,108 @@ task "uploads:recover" => :environment do
       UploadRecovery.new(dry_run: dry_run, stop_on_error: stop_on_error).recover
     end
   end
+end
+
+##
+# Run this task whenever the secure_media or login_required
+# settings are changed for a Discourse instance to update
+# the upload secure flag and S3 upload ACLs.
+task "uploads:ensure_correct_acl" => :environment do
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    unless Discourse.store.external?
+      puts "This task only works for external storage."
+      exit 1
+    end
+
+    puts "Ensuring correct ACL for uploads in #{db}...", ""
+
+    Upload.transaction do
+      mark_secure_in_loop_because_no_login_required = false
+
+      # First of all only get relevant uploads (supported media).
+      #
+      # Also only get uploads that are not for a theme or a site setting, so only
+      # get post related uploads.
+      uploads_with_supported_media = Upload.includes(:posts, :optimized_images).where(
+        "LOWER(original_filename) SIMILAR TO '%\.(jpg|jpeg|png|gif|svg|ico|mp3|ogg|wav|m4a|mov|mp4|webm|ogv)'"
+      ).joins(:post_uploads)
+
+      puts "There are #{uploads_with_supported_media.count} upload(s) with supported media that could be marked secure.", ""
+
+      # Simply mark all these uploads as secure if login_required because no anons will be able to access them
+      if SiteSetting.login_required?
+        mark_all_as_secure_login_required(uploads_with_supported_media)
+      else
+
+        # If NOT login_required, then we have to go for the other slower flow, where in the loop
+        # we mark the upload as secure if the first post it is used in is with_secure_media?
+        mark_secure_in_loop_because_no_login_required = true
+        puts "Marking posts as secure in the next step because login_required is false."
+      end
+
+      puts "", "Rebaking #{uploads_with_supported_media.count} upload posts and updating ACLs in S3.", ""
+
+      upload_ids_to_mark_as_secure, uploads_skipped_because_of_error = update_acls_and_rebake_upload_posts(
+        uploads_with_supported_media, mark_secure_in_loop_because_no_login_required
+      )
+
+      log_rebake_errors(uploads_skipped_because_of_error)
+      mark_specific_uploads_as_secure_no_login_required(upload_ids_to_mark_as_secure)
+    end
+  end
+  puts "", "Done"
+end
+
+def mark_all_as_secure_login_required(uploads_with_supported_media)
+  puts "Marking #{uploads_with_supported_media.count} upload(s) as secure because login_required is true.", ""
+  uploads_with_supported_media.update_all(secure: true)
+  puts "Finished marking upload(s) as secure."
+end
+
+def log_rebake_errors(uploads_skipped_because_of_error)
+  return if uploads_skipped_because_of_error.empty?
+  puts "Skipped the following uploads due to error:", ""
+  uploads_skipped_because_of_error.each do |message|
+    puts message
+  end
+end
+
+def mark_specific_uploads_as_secure_no_login_required(upload_ids_to_mark_as_secure)
+  return if upload_ids_to_mark_as_secure.empty?
+  puts "Marking #{upload_ids_to_mark_as_secure.length} uploads as secure because their first post contains secure media."
+  Upload.where(id: upload_ids_to_mark_as_secure).update_all(secure: true)
+  puts "Finished marking uploads as secure."
+end
+
+def update_acls_and_rebake_upload_posts(uploads_with_supported_media, mark_secure_in_loop_because_no_login_required)
+  upload_ids_to_mark_as_secure = []
+  uploads_skipped_because_of_error = []
+
+  i = 0
+  uploads_with_supported_media.find_each(batch_size: 50) do |upload_with_supported_media|
+    RakeHelpers.print_status_with_label("Updating ACL for upload.......", i, uploads_with_supported_media.count)
+
+    Discourse.store.update_upload_ACL(upload_with_supported_media)
+
+    RakeHelpers.print_status_with_label("Rebaking posts for upload.....", i, uploads_with_supported_media.count)
+    begin
+      upload_with_supported_media.posts.each { |post| post.rebake! }
+
+      if mark_secure_in_loop_because_no_login_required
+        first_post_with_upload = upload_with_supported_media.posts.order(sort_order: :asc).first
+        mark_secure = first_post_with_upload ? first_post_with_upload.with_secure_media? : false
+        upload_ids_to_mark_as_secure << upload_with_supported_media.id if mark_secure
+      end
+    rescue => e
+      uploads_skipped_because_of_error << "#{upload_with_supported_media.original_filename} (#{upload_with_supported_media.url}) #{e.message}"
+    end
+
+    i += 1
+  end
+  RakeHelpers.print_status_with_label("Rebaking complete!            ", i, uploads_with_supported_media.count)
+  puts ""
+
+  [upload_ids_to_mark_as_secure, uploads_skipped_because_of_error]
 end
 
 def inline_uploads(post)

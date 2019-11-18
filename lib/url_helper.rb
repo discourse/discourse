@@ -38,6 +38,11 @@ class UrlHelper
     url.sub(/^http:/i, "")
   end
 
+  def self.secure_proxy_without_cdn(url)
+    url = url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
+    self.absolute(url, nil)
+  end
+
   DOUBLE_ESCAPED_REGEXP ||= /%25([0-9a-f]{2})/i
 
   # Prevents double URL encode
@@ -48,16 +53,16 @@ class UrlHelper
     encoded
   end
 
-  def self.cook_url(url)
+  def self.cook_url(url, secure: false)
     return url unless is_local(url)
 
     uri = URI.parse(url)
     filename = File.basename(uri.path)
-    is_attachment = !FileHelper.is_supported_image?(filename)
+    is_attachment = !FileHelper.is_supported_media?(filename)
 
     no_cdn = SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
 
-    url = absolute_without_cdn(url)
+    url = secure ? secure_proxy_without_cdn(url) : absolute_without_cdn(url)
 
     unless is_attachment && no_cdn
       url = Discourse.store.cdn_url(url)
