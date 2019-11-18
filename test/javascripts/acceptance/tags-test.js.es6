@@ -25,7 +25,10 @@ QUnit.test("list the tags in groups", async assert => {
       200,
       { "Content-Type": "application/json" },
       {
-        tags: [{ id: "planned", text: "planned", count: 7, pm_count: 0 }],
+        tags: [
+          { id: "planned", text: "planned", count: 7, pm_count: 0 },
+          { id: "private", text: "private", count: 0, pm_count: 7 }
+        ],
         extras: {
           tag_groups: [
             {
@@ -90,6 +93,11 @@ QUnit.test("list the tags in groups", async assert => {
       }),
     ["/tags/focus", "/tags/escort"],
     "always uses lowercase URLs for mixed case tags"
+  );
+  assert.equal(
+    $("a[data-tag-name='private']").attr("href"),
+    "/u/eviltrout/messages/tags/private",
+    "links to private messages"
   );
 });
 
