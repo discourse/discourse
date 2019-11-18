@@ -18,6 +18,6 @@ export default DiscourseRoute.extend({
       filterInput: this._params.filter
     });
 
-    controller.refreshRequesters(true);
+    controller.findRequesters(true);
   }
 });

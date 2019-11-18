@@ -21,10 +21,17 @@ export default Controller.extend({
   @discourseComputed(
     "showMessages",
     "model.user_count",
+    "model.request_count",
     "canManageGroup",
     "model.allow_membership_requests"
   )
-  tabs(showMessages, userCount, canManageGroup, allowMembershipRequests) {
+  tabs(
+    showMessages,
+    userCount,
+    requestCount,
+    canManageGroup,
+    allowMembershipRequests
+  ) {
     const membersTab = Tab.create({
       name: "members",
       route: "group.index",
@@ -41,7 +48,8 @@ export default Controller.extend({
         Tab.create({
           name: "requests",
           i18nKey: "requests.title",
-          icon: "user-plus"
+          icon: "user-plus",
+          count: requestCount
         })
       );
     }

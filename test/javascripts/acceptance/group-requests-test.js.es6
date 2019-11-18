@@ -37,6 +37,7 @@ acceptance("Group Requests", {
           is_group_user: true,
           is_group_owner: true,
           is_group_owner_display: true,
+          can_see_members: true,
           mentionable: false,
           messageable: false
         },

@@ -1,27 +1,25 @@
+import Controller, { inject } from "@ember/controller";
 import { alias } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import Group from "discourse/models/group";
 import {
   default as discourseComputed,
   observes
 } from "discourse-common/utils/decorators";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import User from "discourse/models/user";
 
 export default Controller.extend({
+  application: inject(),
+
   queryParams: ["order", "desc", "filter"],
+
   order: "",
   desc: null,
-  loading: false,
-  limit: null,
-  offset: null,
-  isOwner: alias("model.is_group_owner"),
-  showActions: false,
   filter: null,
   filterInput: null,
-  application: inject(),
+
+  loading: false,
+  isOwner: alias("model.is_group_owner"),
+  showActions: false,
 
   @observes("filterInput")
   _setFilter: discourseDebounce(function() {
@@ -29,19 +27,33 @@ export default Controller.extend({
   }, 500),
 
   @observes("order", "desc", "filter")
-  refreshMembers() {
-    this.set("loading", true);
-    const model = this.model;
+  _filtersChanged() {
+    this.findMembers(true);
+  },
 
-    if (model && model.can_see_members) {
-      model.findMembers(this.memberParams).finally(() => {
-        this.set(
-          "application.showFooter",
-          model.members.length >= model.user_count
-        );
-        this.set("loading", false);
-      });
+  findMembers(refresh) {
+    if (this.loading) {
+      return;
     }
+
+    const model = this.model;
+    if (!model) {
+      return;
+    }
+
+    if (!refresh && model.members.length >= model.user_count) {
+      this.set("application.showFooter", true);
+      return;
+    }
+
+    this.set("loading", true);
+    model.findMembers(this.memberParams, refresh).finally(() => {
+      this.set(
+        "application.showFooter",
+        model.members.length >= model.user_count
+      );
+      this.set("loading", false);
+    });
   },
 
   @discourseComputed("order", "desc", "filter")
@@ -49,7 +61,7 @@ export default Controller.extend({
     return { order, desc, filter };
   },
 
-  @discourseComputed("model.members")
+  @discourseComputed("model.members.[]")
   hasMembers(members) {
     return members && members.length > 0;
   },
@@ -69,6 +81,10 @@ export default Controller.extend({
   },
 
   actions: {
+    loadMore() {
+      this.findMembers();
+    },
+
     toggleActions() {
       this.toggleProperty("showActions");
     },
@@ -93,38 +109,6 @@ export default Controller.extend({
           .then(() => this.set("usernames", []))
           .catch(popupAjaxError);
       }
-    },
-
-    loadMore() {
-      if (this.loading) {
-        return;
-      }
-      if (this.get("model.members.length") >= this.get("model.user_count")) {
-        this.set("application.showFooter", true);
-        return;
-      }
-
-      this.set("loading", true);
-
-      Group.loadMembers(
-        this.get("model.name"),
-        this.get("model.members.length"),
-        this.limit,
-        { order: this.order, desc: this.desc }
-      ).then(result => {
-        this.get("model.members").addObjects(
-          result.members.map(member => User.create(member))
-        );
-        this.setProperties({
-          loading: false,
-          user_count: result.meta.total,
-          limit: result.meta.limit,
-          offset: Math.min(
-            result.meta.offset + result.meta.limit,
-            result.meta.total
-          )
-        });
-      });
     }
   }
 });
