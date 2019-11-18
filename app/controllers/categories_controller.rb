@@ -281,6 +281,7 @@ class CategoriesController < ApplicationController
       if SiteSetting.tagging_enabled
         params[:allowed_tags] ||= []
         params[:allowed_tag_groups] ||= []
+        params[:required_tag_group_name] ||= ''
       end
 
       result = params.permit(
