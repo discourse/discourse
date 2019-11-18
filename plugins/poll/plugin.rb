@@ -230,24 +230,28 @@ after_initialize do
         serialized_voters(poll, opts)
       end
 
-      def grouped_poll_results(post_id, poll_name, user_custom_field_id, user)
+      def grouped_poll_results(post_id, poll_name, custom_field_name, user)
         post = Post.find_by(id: post_id)
         raise Discourse::InvalidParameters.new("post_id is invalid") unless post
 
         poll = Poll.find_by(post_id: post_id, name: poll_name)
         raise Discourse::InvalidParameters.new("poll_name is invalid") unless poll&.can_see_voters?(user)
 
-        user_custom_field = UserField.find_by(id: user_custom_field_id)
-        raise Discourse::InvalidParameters.new("user_custom_field is invalid") unless user_custom_field
+        raise Discourse::InvalidParameters.new("user_custom_field is invalid") unless SiteSetting.poll_groupable_user_fields.split('|').include?(custom_field_name)
 
         poll_votes = PollVote.where(poll: poll)
-        user_ids = poll_votes.map(&:user_id).uniq
 
-        field_type = user_custom_field.field_type
-        user_fields = UserCustomField.where(user_id: user_ids, name: "user_field_#{user_custom_field.id}")
+        poll_options = {}
+        PollOption.where(poll_id: poll.id).each do |option|
+          poll_options[option.id.to_s] = { html: option.html, digest: option.digest }
+        end
+
+        user_ids = poll_votes.map(&:user_id).uniq
+        user_fields = UserCustomField.where(user_id: user_ids, name: custom_field_name)
 
         user_field_map = {}
         user_fields.each do |f|
+          # Build hash, so we can quickly look up field values for each user.
           user_field_map[f.user_id.to_s] = f.value
         end
 
@@ -257,23 +261,21 @@ after_initialize do
           v
         end
 
-        options = {}
-        PollOption.where(poll_id: poll.id).each do |option|
-          options[option.id.to_s] = { html: option.html, digest: option.digest }
-        end
-
-        chart = []
+        chart_data = []
         grouped_votes = votes_with_field.group_by { |vote| vote[:field_value] }.each do |field_answer, votes|
-          group_name = field_type == "confirm" ? (field_answer.blank? ? "Not #{user_custom_field.name}" : user_custom_field.name) : field_answer
           grouped_selected_options = []
 
           votes.group_by { |v| v["poll_option_id"] }.each do |option_id, votes_for_option|
-            grouped_selected_options << { digest: options[option_id.to_s][:digest], html: options[option_id.to_s][:html], votes: votes_for_option.length }
+            grouped_selected_options << {
+              digest: poll_options[option_id.to_s][:digest],
+              html: poll_options[option_id.to_s][:html],
+              votes: votes_for_option.length
+            }
           end
 
-          chart << { group: group_name, options: grouped_selected_options }
+          chart_data << { group: (field_answer || I18n.t("poll.user_field.empty")) , options: grouped_selected_options }
         end
-        chart
+        chart_data
       end
 
       def schedule_jobs(post)
@@ -394,17 +396,23 @@ after_initialize do
     def grouped_poll_results
       post_id   = params.require(:post_id)
       poll_name = params.require(:poll_name)
-      field = params.require(:field)
+      custom_field_name = params.require(:custom_field_name)
 
       begin
-        render json: { grouped_results: DiscoursePoll::Poll.grouped_poll_results(post_id, poll_name, field, current_user) }
+        render json: {
+          grouped_results: DiscoursePoll::Poll.grouped_poll_results(post_id, poll_name, custom_field_name, current_user)
+        }
       rescue StandardError => e
         render_json_error e.message
       end
     end
 
     def groupable_user_fields
-      render json: { fields: ::UserField.where.not(field_type: "text").select(:name, :id) }
+      render json: {
+        fields: SiteSetting.poll_groupable_user_fields.split('|').map do |field|
+          { name: field.humanize.capitalize, value: field }
+        end
+      }
     end
   end
 

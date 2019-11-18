@@ -14,3 +14,8 @@ plugins:
     default: 1
     client: true
     enum: 'TrustLevelSetting'
+  poll_groupable_user_fields:
+    default: ""
+    type: list
+    client: true
+
