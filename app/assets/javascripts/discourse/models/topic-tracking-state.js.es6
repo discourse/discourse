@@ -8,7 +8,6 @@ import {
 import PreloadStore from "preload-store";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
-import Site from "discourse/models/site";
 import User from "discourse/models/user";
 
 function isNew(topic) {
