@@ -5,6 +5,7 @@ import { default as discourseComputed } from "discourse-common/utils/decorators"
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
 import { groupPath } from "discourse/lib/url";
+import { Promise } from "rsvp";
 
 const maxMembersToDisplay = 10;
 
@@ -55,8 +56,9 @@ export default Component.extend(CardContentsBase, CleansUp, {
         if (!group.flair_url && !group.flair_bg_color) {
           group.set("flair_url", "fa-users");
         }
-        group.set("limit", maxMembersToDisplay);
-        return group.findMembers();
+        return group.members.length < maxMembersToDisplay
+          ? group.findMembers({ limit: maxMembersToDisplay }, true)
+          : Promise.resolve();
       })
       .catch(() => this._close())
       .finally(() => this.set("loading", null));

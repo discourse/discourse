@@ -1,30 +1,30 @@
+import EmberObject from "@ember/object";
+import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
-import { notEmpty, equal } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
 import {
   default as discourseComputed,
   observes
 } from "discourse-common/utils/decorators";
+import { ajax } from "discourse/lib/ajax";
+import Category from "discourse/models/category";
 import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
-import Category from "discourse/models/category";
-import User from "discourse/models/user";
 import Topic from "discourse/models/topic";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import EmberObject from "@ember/object";
+import User from "discourse/models/user";
 
 const Group = RestModel.extend({
-  limit: 50,
-  offset: 0,
   user_count: 0,
+  limit: null,
+  offset: null,
+
+  request_count: 0,
+  requestersLimit: null,
+  requestersOffset: null,
 
   init() {
     this._super(...arguments);
-
-    this.set("owners", []);
+    this.setProperties({ members: [], requesters: [] });
   },
-
-  hasOwners: notEmpty("owners"),
 
   @discourseComputed("automatic_membership_email_domains")
   emailDomains(value) {
@@ -36,50 +36,76 @@ const Group = RestModel.extend({
     return automatic ? "automatic" : "custom";
   },
 
-  @discourseComputed("user_count")
-  userCountDisplay(userCount) {
-    // don't display zero its ugly
-    if (userCount > 0) {
-      return userCount;
+  findMembers(params, refresh) {
+    if (isEmpty(this.name) || !this.can_see_members) {
+      return Ember.RSVP.Promise.reject();
     }
+
+    if (refresh) {
+      this.setProperties({ limit: null, offset: null });
+    }
+
+    params = Object.assign(
+      { offset: (this.offset || 0) + (this.limit || 0) },
+      params
+    );
+
+    return Group.loadMembers(this.name, params).then(result => {
+      const ownerIds = new Set();
+      result.owners.forEach(owner => ownerIds.add(owner.id));
+
+      const members = refresh ? [] : this.members;
+      members.pushObjects(
+        result.members.map(member => {
+          member.owner = ownerIds.has(member.id);
+          return User.create(member);
+        })
+      );
+
+      this.setProperties({
+        members,
+        user_count: result.meta.total,
+        limit: result.meta.limit,
+        offset: result.meta.offset
+      });
+    });
   },
 
-  findMembers(params) {
+  findRequesters(params, refresh) {
     if (isEmpty(this.name) || !this.can_see_members) {
-      return;
+      return Ember.RSVP.Promise.reject();
     }
 
-    const offset = Math.min(this.user_count, Math.max(this.offset, 0));
+    if (refresh) {
+      this.setProperties({ requestersOffset: null, requestersLimit: null });
+    }
 
-    return Group.loadMembers(this.name, offset, this.limit, params).then(
-      result => {
-        const ownerIds = {};
-        result.owners.forEach(owner => (ownerIds[owner.id] = true));
-
-        this.setProperties({
-          user_count: result.meta.total,
-          limit: result.meta.limit,
-          offset: result.meta.offset,
-          members: result.members.map(member => {
-            if (ownerIds[member.id]) {
-              member.owner = true;
-            }
-            return User.create(member);
-          }),
-          owners: result.owners.map(owner => User.create(owner))
-        });
-      }
+    params = Object.assign(
+      {
+        offset: (this.requestersOffset || 0) + (this.requestersLimit || 0),
+        requesters: true
+      },
+      params
     );
+
+    return Group.loadMembers(this.name, params).then(result => {
+      const requesters = refresh ? [] : this.requesters;
+      requesters.pushObjects(result.members.map(m => User.create(m)));
+
+      this.setProperties({
+        requesters,
+        request_count: result.meta.total,
+        requestersLimit: result.meta.limit,
+        requestersOffset: result.meta.offset
+      });
+    });
   },
 
   removeOwner(member) {
     return ajax(`/admin/groups/${this.id}/owners.json`, {
       type: "DELETE",
       data: { user_id: member.id }
-    }).then(() => {
-      // reload member list
-      this.findMembers();
-    });
+    }).then(() => this.findMembers());
   },
 
   removeMember(member, params) {
@@ -272,16 +298,8 @@ Group.reopenClass({
     );
   },
 
-  loadMembers(name, offset, limit, params) {
-    return ajax(`/groups/${name}/members.json`, {
-      data: Object.assign(
-        {
-          limit: limit || 50,
-          offset: offset || 0
-        },
-        params || {}
-      )
-    });
+  loadMembers(name, opts) {
+    return ajax(`/groups/${name}/members.json`, { data: opts });
   },
 
   mentionable(name) {
@@ -293,9 +311,7 @@ Group.reopenClass({
   },
 
   checkName(name) {
-    return ajax("/groups/check-name", {
-      data: { group_name: name }
-    }).catch(popupAjaxError);
+    return ajax("/groups/check-name", { data: { group_name: name } });
   }
 });
 
