@@ -425,6 +425,7 @@ createWidget("discourse-poll-buttons", {
     const closed = attrs.isClosed;
     const staffOnly = poll.results === "staff_only";
     const isStaff = this.currentUser && this.currentUser.staff;
+    const dataExplorerEnabled = this.siteSettings.data_explorer_enabled === true;
     const hideResultsDisabled = !staffOnly && (closed || topicArchived);
 
     if (attrs.isMultiple && !hideResultsDisabled) {
@@ -473,6 +474,19 @@ createWidget("discourse-poll-buttons", {
           })
         );
       }
+    }
+
+    if (isStaff && dataExplorerEnabled && poll.get("voters") > 0) {
+      contents.push(
+        this.attach("button", {
+          className: "btn btn-default toggle-results",
+          label: "poll.export-results.label",
+          title: "poll.export-results.title",
+          icon: "download",
+          disabled: poll.get("voters") === 0,
+          action: "exportResults"
+        })
+      );
     }
 
     if (poll.get("close")) {
@@ -683,6 +697,32 @@ export default createWidget("discourse-poll", {
 
   toggleResults() {
     this.state.showResults = !this.state.showResults;
+  },
+
+  exportResults() {
+    const { attrs } = this;
+
+    // This uses the Data Explorer plugin export as CSV route
+    // There is detection to check if the plugin is enabled before showing the button
+    ajax("/admin/plugins/explorer/queries/-16/run.csv", {
+      type: "POST",
+      data: {
+        params: JSON.stringify({ // needed for data-explorer route compatibility
+          poll_name: attrs.poll.get("name"),
+          post_id: attrs.post.id.toString() // needed for data-explorer route compatibility
+        }),
+        explain: false,
+        limit: 1000000,
+        download: 1
+      }
+    }).then(( csvContent ) => {
+      const pom = document.createElement('a');
+      const blob = new Blob([csvContent],{type: 'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      pom.href = url;
+      pom.setAttribute('download', 'poll.csv');
+      pom.click();
+    });
   },
 
   showLogin() {
