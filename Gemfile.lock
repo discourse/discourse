@@ -348,6 +348,8 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
+    rubocop-discourse (1.0.1)
+      rubocop (>= 0.69.0)
     ruby-openid (2.7.0)
     ruby-prof (0.17.0)
     ruby-progressbar (1.10.0)
@@ -524,6 +526,7 @@ DEPENDENCIES
   rspec-rails (= 4.0.0.beta2)
   rtlit
   rubocop
+  rubocop-discourse
   ruby-prof
   ruby-readability
   rubyzip
