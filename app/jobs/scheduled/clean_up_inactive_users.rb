@@ -30,7 +30,8 @@ module Jobs
       User.transaction do
         ids.each do |id|
           begin
-            user = User.find(id)
+            user = User.find_by(id: id)
+            next unless user
             destroyer.destroy(user, transaction: false, context: I18n.t("user.destroy_reasons.inactive_user"))
           rescue => e
             Discourse.handle_job_exception(e,
