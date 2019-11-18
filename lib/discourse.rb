@@ -183,33 +183,8 @@ module Discourse
   end
 
   def self.activate_plugins!
-    all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
-
-    if Rails.env.development?
-      core_git_sha = `git rev-parse HEAD`
-      sorted_plugin_shas = all_plugins.map do |p|
-        "#{p.path}_" + `git ls-files -s #{File.dirname(p.path)} | git hash-object --stdin`
-      end.sort
-      supersha_hash = Digest::SHA1.hexdigest((sorted_plugin_shas + [core_git_sha]).join('|'))
-      hash_file = "#{Rails.root}/tmp/plugin-hash"
-
-      old_hash = begin
-        File.read(hash_file)
-      rescue Errno::ENOENT
-      end
-
-      if old_hash && old_hash != supersha_hash
-        puts "WARNING: It looks like your discourse plugins or core version have recently changed."
-        puts "The tmp/cache directory will be wiped to avoid development issues."
-        `rm -rf #{Rails.root}/tmp/cache`
-        puts
-      end
-
-      File.write(hash_file, supersha_hash)
-    end
-
     @plugins = []
-    all_plugins.each do |p|
+    Plugin::Instance.find_all("#{Rails.root}/plugins").each do |p|
       v = p.metadata.required_version || Discourse::VERSION::STRING
       if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
         p.activate!
