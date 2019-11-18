@@ -194,9 +194,9 @@
     const type = parts[1];
     const diff = moment().diff(dateTime, type);
     const add = Math.ceil(diff + count);
-    const wasDST = moment(dateTime.format()).isDST();
+    const wasDST = dateTime.isDST();
     let dateTimeWithRecurrence = dateTime.add(add, type);
-    const isDST = moment(dateTimeWithRecurrence.format()).isDST();
+    const isDST = dateTimeWithRecurrence.isDST();
 
     if (!wasDST && isDST) {
       dateTimeWithRecurrence.subtract(1, "hour");
