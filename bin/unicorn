@@ -30,6 +30,7 @@ def ensure_cache_clean!
     puts
   end
 
+  FileUtils.mkdir_p(RAILS_ROOT + "/tmp")
   File.write(hash_file, supersha_hash)
 end
 
