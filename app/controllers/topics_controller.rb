@@ -847,22 +847,23 @@ class TopicsController < ApplicationController
   end
 
   def reset_new
+    last_seen_at = Time.zone.now
     if params[:category_id].present?
       category_ids = [params[:category_id]]
-
       if params[:include_subcategories] == 'true'
         category_ids = category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
       end
-
       category_ids.each do |category_id|
         current_user
           .category_users
           .where(category_id: category_id)
           .first_or_initialize
-          .update!(last_seen_at: Time.zone.now)
+          .update!(last_seen_at: last_seen_at)
+        TopicTrackingState.publish_dismiss_category(category_id, last_seen_at, current_user.id)
       end
     else
-      current_user.user_stat.update_column(:new_since, Time.now)
+      current_user.user_stat.update_column(:new_since, last_seen_at)
+      TopicTrackingState.publish_dismiss_new(last_seen_at, current_user.id)
     end
     render body: nil
   end
