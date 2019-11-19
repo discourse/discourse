@@ -47,6 +47,8 @@ div.poll {
   }
 
   .poll-container {
+    height: 300px;
+    max-height: 300px;
     vertical-align: middle;
     padding: 0.5em 1em;
 
@@ -120,16 +122,28 @@ div.poll {
     }
   }
 
+  .poll-results-chart {
+    height: 300px;
+    overflow: auto;
+  }
+
   .poll-group-by-toggle {
-    margin: 2px 0 6px;
+    float: left;
+    margin-bottom: 10px;
   }
 
   .poll-group-by-selector {
-    display: block;
+    float: right;
+    height: 30px;
+  }
+
+  .clear-both {
+    clear: both;
   }
 
   .poll-grouped-pie-container {
     display: inline-block;
+    position: relative;
     width: 50%;
     padding: 15px 0;
 

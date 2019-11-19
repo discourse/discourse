@@ -432,14 +432,9 @@ function fetchGroupedVoters(data) {
   });
 }
 
-function fetchGroupableUserFields() {
-  return ajax("/polls/groupable_user_fields.json").catch(error => {
-    if (error) {
-      popupAjaxError(error);
-    } else {
-      bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
-    }
-  });
+function transformUserFieldToLabel(fieldName) {
+  let newName = fieldName;
+  return newName.replace(/_/g, " ");
 }
 
 createWidget("discourse-poll-grouped-pies", {
@@ -451,9 +446,9 @@ createWidget("discourse-poll-grouped-pies", {
   },
 
   html(attrs) {
-    fetchGroupableUserFields().then(response => {
-      attrs.groupedBy = attrs.groupedBy || response.fields[0].value;
-      const fields = response.fields;
+    const fields = Object.assign({}, attrs.groupableUserFields);
+    later(() => {
+      attrs.groupedBy = attrs.groupedBy || fields[0];
       const parent = document.getElementById(
         `poll-results-grouped-pie-charts-${attrs.id}`
       );
@@ -467,12 +462,17 @@ createWidget("discourse-poll-grouped-pies", {
       const sel = document.createElement("select");
       sel.classList.add("poll-group-by-selector");
       sel.id = fieldSelectId;
-      parent.prepend(sel);
 
-      for (var i = 0; i < fields.length; i++) {
+      const clearFix = document.createElement("div");
+      clearFix.classList.add("clear-both");
+
+      parent.prepend(sel);
+      parent.append(clearFix);
+
+      for (var i = 0; i < attrs.groupableUserFields.length; i++) {
         const opt = document.createElement("option");
-        opt.innerHTML = fields[i].name;
-        opt.value = fields[i].value;
+        opt.innerHTML = transformUserFieldToLabel(fields[i]);
+        opt.value = fields[i];
         sel.appendChild(opt);
         $(sel).val(attrs.groupedBy);
       }
@@ -515,7 +515,7 @@ createWidget("discourse-poll-grouped-pies", {
           } else {
             // eslint-disable-next-line
             Chart.helpers.each(Chart.instances, function(instance) {
-              if (instance.chart.canvas.id === canvasId) {
+              if (instance.chart.canvas.id === canvasId && el.$chartjs) {
                 instance.destroy();
                 // eslint-disable-next-line
                 new Chart(el.getContext("2d"), chartConfig);
