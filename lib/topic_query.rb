@@ -895,6 +895,11 @@ class TopicQuery
                regular: CategoryUser.notification_levels[:regular],
                tracking: TopicUser.notification_levels[:tracking],
                category_id: category_id || -1)
+    else
+      category_ids = SiteSetting.default_categories_muted.split("|").map(&:to_i)
+      category_ids -= [category_id] if category_id.present? && category_ids.include?(category_id)
+
+      list = list.where("topics.category_id NOT IN (?)", category_ids) if category_ids.present?
     end
 
     list
