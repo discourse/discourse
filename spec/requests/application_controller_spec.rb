@@ -44,6 +44,46 @@ RSpec.describe ApplicationController do
       get "/"
       expect(response).to redirect_to("/login")
     end
+
+    context "with omniauth in test mode" do
+      before do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2,
+          info: OmniAuth::AuthHash::InfoHash.new(
+            email: "address@example.com",
+          ),
+          extra: {
+            raw_info: OmniAuth::AuthHash.new(
+              email_verified: true,
+              email: "address@example.com",
+            )
+          }
+        )
+        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+      end
+
+      after do
+        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2] = nil
+        OmniAuth.config.test_mode = false
+      end
+
+      it "should not redirect to authenticator if registration in progress" do
+        SiteSetting.enable_local_logins = false
+        SiteSetting.enable_google_oauth2_logins = true
+
+        get "/"
+        expect(response).to redirect_to("/auth/google_oauth2")
+
+        expect(cookies[:authentication_data]).to eq(nil)
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response).to redirect_to("/")
+        expect(cookies[:authentication_data]).not_to eq(nil)
+
+        get "/"
+        expect(response).to redirect_to("/login")
+      end
+    end
   end
 
   describe '#redirect_to_second_factor_if_required' do
