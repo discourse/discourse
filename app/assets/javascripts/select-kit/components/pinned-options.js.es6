@@ -1,5 +1,5 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default DropdownSelectBoxComponent.extend({

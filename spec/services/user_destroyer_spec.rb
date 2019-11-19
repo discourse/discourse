@@ -127,7 +127,7 @@ describe UserDestroyer do
     end
 
     context "with a draft" do
-      let!(:draft) { Draft.set(user, 'test', 1, 'test') }
+      let!(:draft) { Draft.set(user, 'test', 0, 'test') }
 
       it "removed the draft" do
         UserDestroyer.new(admin).destroy(user)

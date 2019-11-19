@@ -1,8 +1,9 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend(PreferencesTabController, {
+export default Controller.extend(PreferencesTabController, {
   init() {
     this._super(...arguments);
 
@@ -14,7 +15,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
     ];
   },
 
-  @computed(
+  @discourseComputed(
     "model.watched_tags.[]",
     "model.watching_first_post_tags.[]",
     "model.tracked_tags.[]",

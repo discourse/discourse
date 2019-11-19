@@ -1,15 +1,17 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { alias, notEmpty } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import showModal from "discourse/lib/show-modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   sortedByCount: true,
   sortedByName: false,
 
-  canAdminTags: Ember.computed.alias("currentUser.staff"),
-  groupedByCategory: Ember.computed.notEmpty("model.extras.categories"),
-  groupedByTagGroup: Ember.computed.notEmpty("model.extras.tag_groups"),
+  canAdminTags: alias("currentUser.staff"),
+  groupedByCategory: notEmpty("model.extras.categories"),
+  groupedByTagGroup: notEmpty("model.extras.tag_groups"),
 
   init() {
     this._super(...arguments);
@@ -17,7 +19,7 @@ export default Ember.Controller.extend({
     this.sortProperties = ["totalCount:desc", "id"];
   },
 
-  @computed("groupedByCategory", "groupedByTagGroup")
+  @discourseComputed("groupedByCategory", "groupedByTagGroup")
   otherTagsTitleKey(groupedByCategory, groupedByTagGroup) {
     if (!groupedByCategory && !groupedByTagGroup) {
       return "tagging.all_tags";
@@ -26,7 +28,7 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed
+  @discourseComputed
   actionsMapping() {
     return {
       manageGroups: () => this.send("showTagGroups"),

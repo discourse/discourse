@@ -282,7 +282,7 @@ module Jobs
   end
 
   def self.enqueue(job_name, opts = {})
-    klass = "Jobs::#{job_name.to_s.camelcase}".constantize
+    klass = "::Jobs::#{job_name.to_s.camelcase}".constantize
 
     # Unless we want to work on all sites
     unless opts.delete(:all_sites)

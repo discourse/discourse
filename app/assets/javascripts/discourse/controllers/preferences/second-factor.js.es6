@@ -1,4 +1,6 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { alias, and } from "@ember/object/computed";
+import Controller from "@ember/controller";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { default as DiscourseURL, userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -6,7 +8,7 @@ import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import showModal from "discourse/lib/show-modal";
 
-export default Ember.Controller.extend(CanCheckEmails, {
+export default Controller.extend(CanCheckEmails, {
   loading: false,
   dirty: false,
   resetPasswordLoading: false,
@@ -14,23 +16,23 @@ export default Ember.Controller.extend(CanCheckEmails, {
   password: null,
   errorMessage: null,
   newUsername: null,
-  backupEnabled: Ember.computed.alias("model.second_factor_backup_enabled"),
+  backupEnabled: alias("model.second_factor_backup_enabled"),
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
   totps: null,
 
-  loaded: Ember.computed.and("secondFactorImage", "secondFactorKey"),
+  loaded: and("secondFactorImage", "secondFactorKey"),
 
   init() {
     this._super(...arguments);
     this.set("totps", []);
   },
 
-  @computed
+  @discourseComputed
   displayOAuthWarning() {
     return findAll().length > 0;
   },
 
-  @computed("currentUser")
+  @discourseComputed("currentUser")
   showEnforcedNotice(user) {
     return user && user.enforcedSecondFactor;
   },

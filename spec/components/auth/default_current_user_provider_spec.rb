@@ -65,6 +65,24 @@ describe Auth::DefaultCurrentUserProvider do
       expect(key.last_used_at).to eq(nil)
     end
 
+    it "raises for a revoked key" do
+      user = Fabricate(:user)
+      key = ApiKey.create!(key: "hello")
+      expect(
+        provider("/?api_key=hello&api_username=#{user.username.downcase}").current_user.id
+      ).to eq(user.id)
+
+      key.reload.update(revoked_at: Time.zone.now, last_used_at: nil)
+      expect(key.reload.last_used_at).to eq(nil)
+
+      expect {
+        provider("/?api_key=hello&api_username=#{user.username.downcase}").current_user
+      }.to raise_error(Discourse::InvalidAccess)
+
+      key.reload
+      expect(key.last_used_at).to eq(nil)
+    end
+
     it "raises for a user with a mismatching ip" do
       user = Fabricate(:user)
       ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1, allowed_ips: ['10.0.0.0/24'])

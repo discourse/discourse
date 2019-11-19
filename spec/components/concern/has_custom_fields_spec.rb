@@ -313,6 +313,30 @@ describe HasCustomFields do
         expect(test_item.custom_fields['hello']).to eq('world')
         expect(test_item.custom_fields['abc']).to eq('ghi')
       end
+
+      it 'allows upsert to use keywords' do
+        test_item = CustomFieldsTestItem.create
+        test_item.upsert_custom_fields(hello: 'world', abc: 'def')
+
+        # In memory
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('def')
+
+        # Persisted
+        test_item.reload
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('def')
+
+        # In memory
+        test_item.upsert_custom_fields('abc' => 'ghi')
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('ghi')
+
+        # Persisted
+        test_item.reload
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('ghi')
+      end
     end
   end
 end

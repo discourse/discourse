@@ -93,9 +93,14 @@ module ApplicationHelper
 
   def preload_script(script)
     path = script_asset_path(script)
+    preload_script_url(path)
+  end
 
-"<link rel='preload' href='#{path}' as='script'/>
-<script src='#{path}'></script>".html_safe
+  def preload_script_url(url)
+    <<~HTML.html_safe
+      <link rel="preload" href="#{url}" as="script">
+      <script src="#{url}"></script>
+    HTML
   end
 
   def discourse_csrf_tags
@@ -127,7 +132,7 @@ module ApplicationHelper
 
     if current_user.present? &&
         current_user.primary_group_id &&
-        primary_group_name = Group.where(id: current_user.primary_group_id).pluck(:name).first
+        primary_group_name = Group.where(id: current_user.primary_group_id).pluck_first(:name)
       result << "primary-group-#{primary_group_name.downcase}"
     end
 

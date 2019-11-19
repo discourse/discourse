@@ -160,11 +160,6 @@ QUnit.test("username", async assert => {
   assert.ok(exists("#change_username"), "it has the input element");
 });
 
-QUnit.test("about me", async assert => {
-  await visit("/u/eviltrout/preferences/about-me");
-  assert.ok(exists(".raw-bio"), "it has the input element");
-});
-
 QUnit.test("email", async assert => {
   await visit("/u/eviltrout/preferences/email");
 

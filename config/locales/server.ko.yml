@@ -61,7 +61,6 @@ ko:
         auto_generated_email_error: "'precedence'헤더가 list, junk, bulk, auto_reply로 설정되어 있거나 다른 헤더에 auto-submitted, auto-replied, auto-generated가 있을 때 발생합니다."
         no_body_detected_error: "body를 추출할 수 없거나 첨부파일이 없을 때 발생합니다."
         inactive_user_error: "발신자(sender)가 비활성상태일 때 발생합니다."
-        bad_destination_address: "수신/참조/비밀참조 필드에 있는 이메일 주소가 설정된 수신 이메일 주소와 하나도 매칭되지 않을 때 발생합니다."
         strangers_not_allowed_error: "사용자가 자신이 속하지 않은 카테고리에 토픽 생성을 시도할 때 발생합니다."
         insufficient_trust_level_error: "사용자가 더 높은 신뢰 레벨이 필요한 카테고리에 토픽 생성을 시도할 때 발생합니다."
         reply_user_not_matching_error: "발신한 알림에 대하여 서로 다른 이메일로 답장이 올 때 발생합니다."
@@ -529,7 +528,6 @@ ko:
     activated: "죄송합니다. 이 계정은 이미 활성화되었습니다."
     admin_confirm:
       title: "관리자 계정 확정하기"
-      description: "<b>%{target_username}</b>님을 관리자로 설정하고 싶은 것이 확실합니까?"
       grant: "관리자 권한 부여"
       complete: "<b>%{target_username}</b> 님은 이제 관리자입니다."
       back_to: "%{title}로 돌아가기"
@@ -1240,7 +1238,7 @@ ko:
     embed_post_limit: "글 개수가 최대치입니다."
     embed_username_required: "토픽 생성을 위한 사용자명이 필요합니다."
     show_create_topics_notice: "이 사이트에 5개 이하의 공개 글타래가 있으면, 관리자에게 글타래 좀 만들라고 알려줍니다."
-    delete_drafts_older_than_n_days: (n) 일지난 임시 보관글 삭제하기
+    delete_drafts_older_than_n_days: "(n) 일지난 임시 보관글 삭제하기"
     prevent_anons_from_downloading_files: "익명 사용자가 다운로드를 받지 못하게 합니다. 경고: 이미지 파일 외 모든 첨부파일이 다운로드 받지 못하게 됩니다."
     slug_generation_method: "slug 생성 방식. 'encoded'는 퍼센트 기호로 인코딩해서 생성합니다. 'none'은 slug 자체를 비활성화합니다.."
     enable_emoji: "emoji 활성화"

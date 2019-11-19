@@ -225,7 +225,7 @@
           max-height: 150px;
           width: 90%;
           overflow-y: auto;
-          > a {
+          > .search-link {
             padding: 6px;
             border-bottom: 1px solid $primary-low;
             cursor: pointer;
@@ -233,6 +233,14 @@
             &:hover,
             &:focus {
               background-color: $highlight-medium;
+            }
+            .search-category {
+              display: flex;
+              align-items: center;
+            }
+            .discourse-tags {
+              display: inline-block;
+              font-size: $font-down-1;
             }
           }
         }
@@ -260,11 +268,14 @@
   section.field {
     padding: 0.25em 0;
     margin-bottom: 5px;
-  }
-
-  section.field .field-item {
-    display: inline-block;
-    margin-right: 10px;
+    &.with-items {
+      display: flex;
+      align-items: flex-start;
+    }
+    .field-item {
+      display: inline-block;
+      margin-right: 10px;
+    }
   }
 
   // password reset modal
@@ -437,6 +448,9 @@
         }
       }
     }
+  }
+  #category-min-tags-from-group {
+    width: 100px;
   }
 }
 

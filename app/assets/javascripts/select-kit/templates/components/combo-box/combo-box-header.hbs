@@ -9,9 +9,10 @@
 </span>
 
 {{#if shouldDisplayClearableButton}}
-  <button class="btn-clear" {{action onClearSelection bubbles=false}}>
-    {{d-icon 'times'}}
-  </button>
+  {{d-button
+    class="btn-clear"
+    action=(action onClearSelection bubbles=false)
+    icon="times"}}
 {{/if}}
 
 {{d-icon caretIcon class="caret-icon"}}

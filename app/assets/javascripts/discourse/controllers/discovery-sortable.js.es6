@@ -1,3 +1,6 @@
+import { alias } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import DiscourseNavigation from "discourse/components/d-navigation";
 
 // Just add query params here to have them automatically passed to topic list filters.
@@ -16,23 +19,23 @@ export const queryParams = {
 
 // Basic controller options
 const controllerOpts = {
-  discoveryTopics: Ember.inject.controller("discovery/topics"),
+  discoveryTopics: inject("discovery/topics"),
   queryParams: Object.keys(queryParams)
 };
 
 // Aliases for the values
 controllerOpts.queryParams.forEach(
-  p => (controllerOpts[p] = Ember.computed.alias(`discoveryTopics.${p}`))
+  p => (controllerOpts[p] = alias(`discoveryTopics.${p}`))
 );
 
-const Controller = Ember.Controller.extend(controllerOpts);
+const SortableController = Controller.extend(controllerOpts);
 
 export const addDiscoveryQueryParam = function(p, opts) {
   queryParams[p] = opts;
   const cOpts = {};
-  cOpts[p] = Ember.computed.alias(`discoveryTopics.${p}`);
+  cOpts[p] = alias(`discoveryTopics.${p}`);
   cOpts["queryParams"] = Object.keys(queryParams);
-  Controller.reopen(cOpts);
+  SortableController.reopen(cOpts);
 
   if (opts && opts.persisted) {
     DiscourseNavigation.reopen({
@@ -41,4 +44,4 @@ export const addDiscoveryQueryParam = function(p, opts) {
   }
 };
 
-export default Controller;
+export default SortableController;

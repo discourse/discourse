@@ -1,3 +1,4 @@
+import { debounce } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import transformPost from "discourse/lib/transform-post";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
@@ -39,7 +40,7 @@ export function cloak(post, component) {
   _heights[post.id] = $post.outerHeight();
 
   component.dirtyKeys.keyDirty(`post-${post.id}`);
-  Ember.run.debounce(component, "queueRerender", 1000);
+  debounce(component, "queueRerender", 1000);
 }
 
 export function uncloak(post, component) {

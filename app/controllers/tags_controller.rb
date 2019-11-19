@@ -193,28 +193,40 @@ class TagsController < ::ApplicationController
   end
 
   def search
-    clean_name = DiscourseTagging.clean_tag(params[:q])
-    category = params[:categoryId] ? Category.find_by_id(params[:categoryId]) : nil
+    filter_params = {
+      for_input: params[:filterForInput],
+      selected_tags: params[:selected_tags]
+    }
 
-    # Prioritize exact matches when ordering
-    order_query = Tag.sanitize_sql_for_order(
-      ["lower(name) = lower(?) DESC, topic_count DESC", clean_name]
-    )
+    if params[:categoryId]
+      filter_params[:category] = Category.find_by_id(params[:categoryId])
+    end
+
+    if params[:q]
+      clean_name = DiscourseTagging.clean_tag(params[:q])
+      filter_params[:term] = clean_name
+
+      # Prioritize exact matches when ordering
+      order_query = Tag.sanitize_sql_for_order(
+        ["lower(name) = lower(?) DESC, topic_count DESC", clean_name]
+      )
+
+      tag_query = Tag.order(order_query).limit(params[:limit])
+    else
+      tag_query = Tag.limit(params[:limit])
+    end
 
     tags_with_counts = DiscourseTagging.filter_allowed_tags(
-      Tag.order(order_query).limit(params[:limit]),
+      tag_query,
       guardian,
-      for_input: params[:filterForInput],
-      term: clean_name,
-      category: category,
-      selected_tags: params[:selected_tags]
+      filter_params
     )
 
     tags = self.class.tag_counts_json(tags_with_counts)
 
     json_response = { results: tags }
 
-    if !tags.find { |h| h[:id].downcase == clean_name.downcase } && tag = Tag.where_name(clean_name).first
+    if clean_name && !tags.find { |h| h[:id].downcase == clean_name.downcase } && tag = Tag.where_name(clean_name).first
       # filter_allowed_tags determined that the tag entered is not allowed
       json_response[:forbidden] = params[:q]
 
@@ -281,22 +293,31 @@ class TagsController < ::ApplicationController
   end
 
   def set_category_from_params
-    slug_or_id = params[:category]
-    return true if slug_or_id.nil?
+    if request.path_parameters.include?(:category_slug_path_with_id)
+      parts = params[:category_slug_path_with_id].split('/')
 
-    if slug_or_id == 'none' && params[:parent_category]
-      @filter_on_category = Category.query_category(params[:parent_category], nil)
-      params[:no_subcategories] = 'true'
-    else
-      parent_slug_or_id = params[:parent_category]
-
-      parent_category_id = nil
-      if parent_slug_or_id.present?
-        parent_category_id = Category.query_parent_category(parent_slug_or_id)
-        category_redirect_or_not_found && (return) if parent_category_id.blank?
+      if !parts.empty? && parts.last =~ /\A\d+\Z/
+        id = parts.pop.to_i
       end
+      slug_path = parts unless parts.empty?
 
-      @filter_on_category = Category.query_category(slug_or_id, parent_category_id)
+      if id.present?
+        @filter_on_category = Category.find_by_id(id)
+      elsif slug_path.present?
+        if (1..2).include?(slug_path.size)
+          @filter_on_category = Category.find_by_slug(*slug_path.reverse)
+        end
+
+        # Legacy paths
+        if @filter_on_category.nil? && parts.last =~ /\A\d+-/
+          @filter_on_category = Category.find_by_id(parts.last.to_i)
+        end
+      end
+    else
+      slug_or_id = params[:category]
+      return true if slug_or_id.nil?
+
+      @filter_on_category = Category.query_category(slug_or_id, nil)
     end
 
     category_redirect_or_not_found && (return) if !@filter_on_category
@@ -304,27 +325,33 @@ class TagsController < ::ApplicationController
     guardian.ensure_can_see!(@filter_on_category)
   end
 
-  # TODO: this is duplication of ListController
-  def page_params(opts = nil)
-    opts ||= {}
+  def page_params
     route_params = { format: 'json' }
-    route_params[:category]        = @filter_on_category.slug_for_url                 if @filter_on_category
-    route_params[:parent_category] = @filter_on_category.parent_category.slug_for_url if @filter_on_category && @filter_on_category.parent_category
-    route_params[:order]           = opts[:order]      if opts[:order].present?
-    route_params[:ascending]       = opts[:ascending]  if opts[:ascending].present?
+
+    if @filter_on_category
+      if request.path_parameters.include?(:category_slug_path_with_id)
+        slug_path = @filter_on_category.slug_path
+
+        route_params[:category_slug_path_with_id] =
+          (slug_path + [@filter_on_category.id.to_s]).join("/")
+      else
+        route_params[:category] = @filter_on_category.slug_for_url
+      end
+    end
+
     route_params
   end
 
-  def next_page_params(opts = nil)
-    page_params(opts).merge(page: params[:page].to_i + 1)
+  def next_page_params
+    page_params.merge(page: params[:page].to_i + 1)
   end
 
-  def prev_page_params(opts = nil)
+  def prev_page_params
     pg = params[:page].to_i
     if pg > 1
-      page_params(opts).merge(page: pg - 1)
+      page_params.merge(page: pg - 1)
     else
-      page_params(opts).merge(page: nil)
+      page_params.merge(page: nil)
     end
   end
 
@@ -341,15 +368,27 @@ class TagsController < ::ApplicationController
   def construct_url_with(action, opts)
     method = url_method(opts)
 
-    begin
-      url = if action == :prev
-        public_send(method, opts.merge(prev_page_params(opts)))
-      else # :next
-        public_send(method, opts.merge(next_page_params(opts)))
+    page_params =
+      case action
+      when :prev
+        prev_page_params
+      when :next
+        next_page_params
+      else
+        raise "unreachable"
       end
+
+    if page_params.include?(:category_slug_path_with_id)
+      opts = opts.dup
+      opts.delete(:category)
+    end
+
+    begin
+      url = public_send(method, opts.merge(page_params))
     rescue ActionController::UrlGenerationError
       raise Discourse::NotFound
     end
+
     url.sub('.json?', '?')
   end
 

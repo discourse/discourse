@@ -1,4 +1,6 @@
-export default Ember.Component.extend({
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
+export default Component.extend({
   classNames: ["modal-body"],
   fixed: false,
   dismissable: true,
@@ -13,7 +15,7 @@ export default Ember.Component.extend({
       fixedParent.modal("show");
     }
 
-    Ember.run.scheduleOnce("afterRender", this, this._afterFirstRender);
+    scheduleOnce("afterRender", this, this._afterFirstRender);
     this.appEvents.on("modal-body:flash", this, "_flash");
     this.appEvents.on("modal-body:clearFlash", this, "_clearFlash");
   },

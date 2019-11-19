@@ -249,6 +249,31 @@ describe UserUpdater do
       end
     end
 
+    context 'when updating primary group' do
+      let(:new_group) { Group.create(name: 'new_group') }
+      let(:user) { Fabricate(:user) }
+
+      it 'updates when setting is enabled' do
+        SiteSetting.user_selected_primary_groups = true
+        user.groups << new_group
+        user.update(primary_group_id: nil)
+        UserUpdater.new(acting_user, user).update(primary_group_id: new_group.id)
+
+        user.reload
+        expect(user.primary_group_id).to eq new_group.id
+      end
+
+      it 'does not update when setting is disabled' do
+        SiteSetting.user_selected_primary_groups = false
+        user.groups << new_group
+        user.update(primary_group_id: nil)
+        UserUpdater.new(acting_user, user).update(primary_group_id: new_group.id)
+
+        user.reload
+        expect(user.primary_group_id).to eq nil
+      end
+    end
+
     context 'when update fails' do
       it 'returns false' do
         user = Fabricate(:user)

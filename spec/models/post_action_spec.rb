@@ -54,10 +54,10 @@ describe PostAction do
       expect(topic_user_ids).to include(mod.id)
 
       expect(topic.topic_users.where(user_id: mod.id)
-              .pluck(:notification_level).first).to eq(TopicUser.notification_levels[:tracking])
+              .pluck_first(:notification_level)).to eq(TopicUser.notification_levels[:tracking])
 
       expect(topic.topic_users.where(user_id: codinghorror.id)
-              .pluck(:notification_level).first).to eq(TopicUser.notification_levels[:watching])
+              .pluck_first(:notification_level)).to eq(TopicUser.notification_levels[:watching])
 
       # reply to PM should not clear flag
       PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags").create

@@ -1,7 +1,8 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import Badge from "discourse/models/badge";
 import PreloadStore from "preload-store";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   model() {
     if (PreloadStore.get("badges")) {
       return PreloadStore.getAndRemove("badges").then(json =>

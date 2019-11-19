@@ -195,14 +195,36 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     user_badge = UserBadge.find_by(id: params[:user_badge_id])
+    previous_title = user.title
     if user_badge && user_badge.user == user && user_badge.badge.allow_title?
       user.title = user_badge.badge.display_name
-      user.user_profile.badge_granted_title = true
       user.save!
-      user.user_profile.save!
+
+      log_params = {
+        details: "title matching badge id #{user_badge.badge.id}",
+        previous_value: previous_title,
+        new_value: user.title
+      }
+
+      if current_user.staff? && current_user != user
+        StaffActionLogger.new(current_user).log_title_change(user, log_params)
+      else
+        UserHistory.create!(log_params.merge(target_user_id: user.id, action: UserHistory.actions[:change_title]))
+      end
     else
       user.title = ''
       user.save!
+
+      log_params = {
+        revoke_reason: 'user title was same as revoked badge name or custom badge name',
+        previous_value: previous_title
+      }
+
+      if current_user.staff? && current_user != user
+        StaffActionLogger.new(current_user).log_title_revoke(user, log_params)
+      else
+        UserHistory.create!(log_params.merge(target_user_id: user.id, action: UserHistory.actions[:revoke_title]))
+      end
     end
 
     render body: nil
@@ -414,6 +436,9 @@ class UsersController < ApplicationController
       authentication.finish
       activation.finish
 
+      secure_session[HONEYPOT_KEY] = nil
+      secure_session[CHALLENGE_KEY] = nil
+
       # save user email in session, to show on account-created page
       session["user_created_message"] = activation.message
       session[SessionController::ACTIVATE_USER_KEY] = user.id
@@ -467,7 +492,14 @@ class UsersController < ApplicationController
   end
 
   def get_honeypot_value
-    render json: { value: honeypot_value, challenge: challenge_value }
+    secure_session.set(HONEYPOT_KEY, honeypot_value, expires: 1.hour)
+    secure_session.set(CHALLENGE_KEY, challenge_value, expires: 1.hour)
+
+    render json: {
+      value: honeypot_value,
+      challenge: challenge_value,
+      expires_in: SecureSession.expiry
+    }
   end
 
   def password_reset
@@ -660,7 +692,6 @@ class UsersController < ApplicationController
         security_keys_enabled = email_token_user&.security_keys_enabled?
         second_factor_token = params[:second_factor_token]
         second_factor_method = params[:second_factor_method].to_i
-        security_key_credential = params[:security_key_credential]
         confirm_email = false
         @security_key_required = security_keys_enabled
 
@@ -912,8 +943,7 @@ class UsersController < ApplicationController
     topic_id = params[:topic_id]
     topic_id = topic_id.to_i if topic_id
 
-    category_id = params[:category_id]
-    category_id = category_id.to_i if category_id
+    category_id = params[:category_id].to_i if category_id.present?
 
     topic_allowed_users = params[:topic_allowed_users] || false
 
@@ -1368,21 +1398,20 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
-  private
+  HONEYPOT_KEY ||= 'HONEYPOT_KEY'
+  CHALLENGE_KEY ||= 'CHALLENGE_KEY'
+
+  protected
 
   def honeypot_value
-    Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{GlobalSetting.safe_secret_key_base}")[0, 15]
+    secure_session[HONEYPOT_KEY] ||= SecureRandom.hex
   end
 
   def challenge_value
-    challenge = $redis.get('SECRET_CHALLENGE')
-    unless challenge && challenge.length == 16 * 2
-      challenge = SecureRandom.hex(16)
-      $redis.set('SECRET_CHALLENGE', challenge)
-    end
-
-    challenge
+    secure_session[CHALLENGE_KEY] ||= SecureRandom.hex
   end
+
+  private
 
   def respond_to_suspicious_request
     if suspicious?(params)
@@ -1422,7 +1451,8 @@ class UsersController < ApplicationController
       :website,
       :dismissed_banner_key,
       :profile_background_upload_url,
-      :card_background_upload_url
+      :card_background_upload_url,
+      :primary_group_id
     ]
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))

@@ -40,6 +40,11 @@ Discourse::Application.configure do
 
   BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
 
+  if defined?(Unicorn) && ENV["UNICORN_WORKERS"].to_i != 1
+    # BetterErrors doesn't work with multiple unicorn workers. Disable it to avoid confusion
+    Rails.configuration.middleware.delete BetterErrors::Middleware
+  end
+
   config.load_mini_profiler = true
   if hosts = ENV['DISCOURSE_DEV_HOSTS']
     config.hosts.concat(hosts.split(","))

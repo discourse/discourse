@@ -12,6 +12,7 @@ class Category < ActiveRecord::Base
   include AnonCacheInvalidator
   include HasDestroyedWebHook
 
+  MAX_NESTING = 2 # category + subcategory
   REQUIRE_TOPIC_APPROVAL = 'require_topic_approval'
   REQUIRE_REPLY_APPROVAL = 'require_reply_approval'
   NUM_AUTO_BUMP_DAILY = 'num_auto_bump_daily'
@@ -50,6 +51,7 @@ class Category < ActiveRecord::Base
 
   validates :num_featured_topics, numericality: { only_integer: true, greater_than: 0 }
   validates :search_priority, inclusion: { in: Searchable::PRIORITIES.values }
+  validates :min_tags_from_required_group, numericality: { only_integer: true, greater_than: 0 }
 
   validate :parent_category_validator
   validate :email_in_validator
@@ -92,6 +94,8 @@ class Category < ActiveRecord::Base
   has_many :tags, through: :category_tags
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
+  belongs_to :required_tag_group, class_name: 'TagGroup'
+
   belongs_to :reviewable_by_group, class_name: 'Group'
 
   scope :latest, -> { order('topic_count DESC') }
@@ -283,7 +287,9 @@ class Category < ActiveRecord::Base
     self.name.strip!
 
     if slug.present?
-      # santized custom slug
+      # if we don't unescape it first we strip the % from the encoded version
+      slug = SiteSetting.slug_generation_method == 'encoded' ? CGI.unescape(self.slug) : self.slug
+      # sanitize the custom slug
       self.slug = Slug.sanitize(slug)
       errors.add(:slug, 'is already in use') if duplicate_slug?
     else
@@ -291,10 +297,11 @@ class Category < ActiveRecord::Base
       self.slug = Slug.for(name, '')
       self.slug = '' if duplicate_slug?
     end
-    # only allow to use category itself id. new_record doesn't have a id.
-    unless new_record?
-      match_id = /^(\d+)-category/.match(self.slug)
-      errors.add(:slug, :invalid) if match_id && match_id[1] && match_id[1] != self.id.to_s
+
+    # only allow to use category itself id.
+    match_id = /^(\d+)-/.match(self.slug)
+    if match_id.present?
+      errors.add(:slug, :invalid) if new_record? || (match_id[1] != self.id.to_s)
     end
   end
 
@@ -320,13 +327,70 @@ class Category < ActiveRecord::Base
     MessageBus.publish('/categories', deleted_categories: [self.id])
   end
 
+  # This is used in a validation so has to produce accurate results before the
+  # record has been saved
+  def height_of_ancestors(max_height = MAX_NESTING)
+    parent_id = self.parent_category_id
+
+    return max_height if parent_id == id
+
+    DB.query(<<~SQL, id: id, parent_id: parent_id, max_height: max_height)[0].max
+      WITH RECURSIVE ancestors(parent_category_id, height) AS (
+        SELECT :parent_id :: integer, 0
+
+        UNION ALL
+
+        SELECT
+          categories.parent_category_id,
+          CASE
+            WHEN categories.parent_category_id = :id THEN :max_height
+            ELSE ancestors.height + 1
+          END
+        FROM categories, ancestors
+        WHERE categories.id = ancestors.parent_category_id
+        AND ancestors.height < :max_height
+      )
+
+      SELECT max(height) FROM ancestors
+    SQL
+  end
+
+  # This is used in a validation so has to produce accurate results before the
+  # record has been saved
+  def depth_of_descendants(max_depth = MAX_NESTING)
+    parent_id = self.parent_category_id
+
+    return max_depth if parent_id == id
+
+    DB.query(<<~SQL, id: id, parent_id: parent_id, max_depth: max_depth)[0].max
+      WITH RECURSIVE descendants(id, depth) AS (
+        SELECT :id :: integer, 0
+
+        UNION ALL
+
+        SELECT
+          categories.id,
+          CASE
+            WHEN categories.id = :parent_id THEN :max_depth
+            ELSE descendants.depth + 1
+          END
+        FROM categories, descendants
+        WHERE categories.parent_category_id = descendants.id
+        AND descendants.depth < :max_depth
+      )
+
+      SELECT max(depth) FROM descendants
+    SQL
+  end
+
   def parent_category_validator
     if parent_category_id
-      errors.add(:base, I18n.t("category.errors.self_parent")) if parent_category_id == id
       errors.add(:base, I18n.t("category.errors.uncategorized_parent")) if uncategorized?
 
-      grandfather_id = Category.where(id: parent_category_id).pluck(:parent_category_id).first
-      errors.add(:base, I18n.t("category.errors.depth")) if grandfather_id
+      errors.add(:base, I18n.t("category.errors.self_parent")) if parent_category_id == id
+
+      total_depth = height_of_ancestors + 1 + depth_of_descendants
+      errors.add(:base, I18n.t("category.errors.depth")) if total_depth > MAX_NESTING
     end
   end
 
@@ -494,6 +558,10 @@ class Category < ActiveRecord::Base
     self.tag_groups = TagGroup.where(name: group_names).all.to_a
   end
 
+  def required_tag_group_name=(group_name)
+    self.required_tag_group = group_name ? TagGroup.where(name: group_name).first : nil
+  end
+
   def downcase_email
     self.email_in = (email_in || "").strip.downcase.presence
   end
@@ -549,12 +617,14 @@ class Category < ActiveRecord::Base
   end
 
   def self.query_parent_category(parent_slug)
-    self.where(slug: parent_slug, parent_category_id: nil).pluck(:id).first ||
-    self.where(id: parent_slug.to_i).pluck(:id).first
+    encoded_parent_slug = CGI.escape(parent_slug) if SiteSetting.slug_generation_method == 'encoded'
+    self.where(slug: (encoded_parent_slug || parent_slug), parent_category_id: nil).pluck_first(:id) ||
+    self.where(id: parent_slug.to_i).pluck_first(:id)
   end
 
   def self.query_category(slug_or_id, parent_category_id)
-    self.where(slug: slug_or_id, parent_category_id: parent_category_id).first ||
+    encoded_slug_or_id = CGI.escape(slug_or_id) if SiteSetting.slug_generation_method == 'encoded'
+    self.where(slug: (encoded_slug_or_id || slug_or_id), parent_category_id: parent_category_id).first ||
     self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).first
   end
 
@@ -569,6 +639,15 @@ class Category < ActiveRecord::Base
 
   def uncategorized?
     id == SiteSetting.uncategorized_category_id
+  end
+
+  def seeded?
+    [
+      SiteSetting.lounge_category_id,
+      SiteSetting.meta_category_id,
+      SiteSetting.staff_category_id,
+      SiteSetting.uncategorized_category_id,
+    ].include? id
   end
 
   @@url_cache = DistributedCache.new('category_url')
@@ -590,8 +669,8 @@ class Category < ActiveRecord::Base
     url = @@url_cache[self.id]
     unless url
       url = +"#{Discourse.base_uri}/c"
-      url << "/#{parent_category.slug}" if parent_category_id
-      url << "/#{slug}"
+      url << "/#{parent_category.slug_for_url}" if parent_category_id
+      url << "/#{slug_for_url}"
       @@url_cache[self.id] = -url
     end
 
@@ -650,8 +729,17 @@ class Category < ActiveRecord::Base
   end
 
   def self.find_by_slug(category_slug, parent_category_slug = nil)
+
+    return nil if category_slug.nil?
+
+    if SiteSetting.slug_generation_method == "encoded"
+      parent_category_slug = CGI.escape(parent_category_slug) unless parent_category_slug.nil?
+      category_slug = CGI.escape(category_slug)
+    end
+
     if parent_category_slug
-      parent_category_id = self.where(slug: parent_category_slug, parent_category_id: nil).pluck(:id).first
+      parent_category_id = self.where(slug: parent_category_slug, parent_category_id: nil).select(:id)
+
       self.where(slug: category_slug, parent_category_id: parent_category_id).first
     else
       self.where(slug: category_slug, parent_category_id: nil).first
@@ -727,6 +815,16 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def slug_path
+    if self.parent_category_id.present?
+      slug_path = self.parent_category.slug_path
+      slug_path.push(self.slug_for_url)
+      slug_path
+    else
+      [self.slug_for_url]
+    end
+  end
+
   private
 
   def check_permissions_compatibility(parent_permissions, child_permissions)
@@ -744,10 +842,27 @@ class Category < ActiveRecord::Base
   end
 
   def subcategories_permissions
-    CategoryGroup.joins(:category)
-      .where(['categories.parent_category_id = ?', self.id])
-      .pluck(:group_id, :permission_type)
-      .uniq
+    everyone = Group[:everyone].id
+    full = CategoryGroup.permission_types[:full]
+
+    result =
+      DB.query(<<-SQL, id: id, everyone: everyone, full: full)
+        SELECT category_groups.group_id, category_groups.permission_type
+        FROM categories, category_groups
+        WHERE categories.parent_category_id = :id
+        AND categories.id = category_groups.category_id
+        UNION
+        SELECT :everyone, :full
+        FROM categories
+        WHERE categories.parent_category_id = :id
+        AND (
+          SELECT DISTINCT 1
+          FROM category_groups
+          WHERE category_groups.category_id = categories.id
+        ) IS NULL
+      SQL
+
+    result.map { |row| [row.group_id, row.permission_type] }
   end
 end
 
@@ -813,5 +928,6 @@ end
 #  index_categories_on_reviewable_by_group_id  (reviewable_by_group_id)
 #  index_categories_on_search_priority         (search_priority)
 #  index_categories_on_topic_count             (topic_count)
-#  unique_index_categories_on_name             (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
+#  unique_index_categories_on_name             ((COALESCE(parent_category_id, '-1'::integer)), name) UNIQUE
+#  unique_index_categories_on_slug             ((COALESCE(parent_category_id, '-1'::integer)), slug) UNIQUE WHERE ((slug)::text <> ''::text)
 #

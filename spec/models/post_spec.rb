@@ -1367,6 +1367,7 @@ describe Post do
       upload1 = Fabricate(:upload)
       upload2 = Fabricate(:upload)
       upload3 = Fabricate(:video_upload)
+      upload4 = Fabricate(:upload)
 
       set_cdn_url "https://awesome.com/somepath"
 
@@ -1375,7 +1376,7 @@ describe Post do
 
       ![](#{upload1.short_url})
 
-      "#{GlobalSetting.cdn_url}#{upload1.url}"
+      "#{GlobalSetting.cdn_url}#{upload4.url}"
 
       <a href='#{Discourse.base_url}#{upload2.url}'>Link to upload</a>
       ![](http://example.com/external.png)
@@ -1392,15 +1393,15 @@ describe Post do
       end
 
       expect(urls).to contain_exactly(
-        upload1.url,
         "#{GlobalSetting.cdn_url}#{upload1.url}",
+        "#{GlobalSetting.cdn_url}#{upload4.url}",
         "#{Discourse.base_url}#{upload2.url}",
         "#{Discourse.base_url}#{upload3.short_path}"
       )
 
       expect(paths).to contain_exactly(
         upload1.url,
-        upload1.url,
+        upload4.url,
         upload2.url,
         nil
       )

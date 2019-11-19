@@ -1,3 +1,5 @@
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import { default as loadScript, loadCSS } from "discourse/lib/load-script";
 
 /**
@@ -7,7 +9,7 @@ import { default as loadScript, loadCSS } from "discourse/lib/load-script";
   @param brightnessValue is a number from 0 to 255 representing the brightness of the color. See ColorSchemeColor.
   @params valid is a boolean indicating if the input field is a valid color.
 **/
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["color-picker"],
   hexValueChanged: function() {
     var hex = this.hexValue;
@@ -36,7 +38,7 @@ export default Ember.Component.extend({
   didInsertElement() {
     loadScript("/javascripts/spectrum.js").then(() => {
       loadCSS("/javascripts/spectrum.css").then(() => {
-        Ember.run.schedule("afterRender", () => {
+        schedule("afterRender", () => {
           $(this.element.querySelector(".picker"))
             .spectrum({ color: "#" + this.hexValue })
             .on("change.spectrum", (me, color) => {
@@ -46,7 +48,7 @@ export default Ember.Component.extend({
         });
       });
     });
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       this.hexValueChanged();
     });
   }

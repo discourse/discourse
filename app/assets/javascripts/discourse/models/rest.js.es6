@@ -1,6 +1,10 @@
-const RestModel = Ember.Object.extend({
-  isNew: Ember.computed.equal("__state", "new"),
-  isCreated: Ember.computed.equal("__state", "created"),
+import { equal } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import { Promise } from "rsvp";
+
+const RestModel = EmberObject.extend({
+  isNew: equal("__state", "new"),
+  isCreated: equal("__state", "created"),
   isSaving: false,
 
   beforeCreate() {},
@@ -8,7 +12,7 @@ const RestModel = Ember.Object.extend({
 
   update(props) {
     if (this.isSaving) {
-      return Ember.RSVP.reject();
+      return Promise.reject();
     }
 
     props = props || this.updateProperties();
@@ -36,7 +40,7 @@ const RestModel = Ember.Object.extend({
 
   _saveNew(props) {
     if (this.isSaving) {
-      return Ember.RSVP.reject();
+      return Promise.reject();
     }
 
     props = props || this.createProperties();

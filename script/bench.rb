@@ -184,7 +184,7 @@ puts "Populating Profile DB"
 run("bundle exec ruby script/profile_db_generator.rb")
 
 puts "Getting api key"
-api_key = `bundle exec rake api_key:get`.split("\n")[-1]
+api_key = `bundle exec rake api_key:get_or_create_master[bench]`.split("\n")[-1]
 
 def bench(path, name)
   puts "Running apache bench warmup"

@@ -9,6 +9,10 @@ module Slug
   def self.for(string, default = 'topic', max_length = MAX_LENGTH)
     string = string.gsub(/:([\w\-+]+(?::t\d)?):/, '') if string.present? # strip emoji strings
 
+    if SiteSetting.slug_generation_method == 'encoded'
+      max_length = 9999 # do not truncate encoded slugs
+    end
+
     slug =
       case (SiteSetting.slug_generation_method || :ascii).to_sym
       when :ascii then self.ascii_generator(string)

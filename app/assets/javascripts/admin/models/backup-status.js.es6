@@ -1,9 +1,11 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { not } from "@ember/object/computed";
+import EmberObject from "@ember/object";
 
-export default Discourse.Model.extend({
-  restoreDisabled: Ember.computed.not("restoreEnabled"),
+export default EmberObject.extend({
+  restoreDisabled: not("restoreEnabled"),
 
-  @computed("allowRestore", "isOperationRunning")
+  @discourseComputed("allowRestore", "isOperationRunning")
   restoreEnabled(allowRestore, isOperationRunning) {
     return allowRestore && !isOperationRunning;
   }

@@ -1,10 +1,12 @@
-import debounce from "discourse/lib/debounce";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
+import discourseDebounce from "discourse/lib/debounce";
 import { renderSpinner } from "discourse/helpers/loading-spinner";
 import { escapeExpression } from "discourse/lib/utilities";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
-import { observes, on } from "ember-addons/ember-computed-decorators";
+import { observes, on } from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     classNames: ["admin-backups-logs"],
 
@@ -33,7 +35,7 @@ export default Ember.Component.extend(
 
     @on("init")
     @observes("logs.[]")
-    _updateFormattedLogs: debounce(function() {
+    _updateFormattedLogs: discourseDebounce(function() {
       const logs = this.logs;
       if (logs.length === 0) return;
 
@@ -52,7 +54,7 @@ export default Ember.Component.extend(
       // force rerender
       this.rerenderBuffer();
 
-      Ember.run.scheduleOnce("afterRender", this, this._scrollDown);
+      scheduleOnce("afterRender", this, this._scrollDown);
     }, 150),
 
     buildBuffer(buffer) {

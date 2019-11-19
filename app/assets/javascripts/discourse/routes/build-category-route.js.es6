@@ -1,3 +1,4 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import {
   filterQueryParams,
   findTopicList
@@ -7,10 +8,12 @@ import TopicList from "discourse/models/topic-list";
 import PermissionType from "discourse/models/permission-type";
 import CategoryList from "discourse/models/category-list";
 import Category from "discourse/models/category";
+import { Promise, all } from "rsvp";
+import { isNone } from "@ember/utils";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
-  return Discourse.Route.extend({
+  return DiscourseRoute.extend({
     queryParams,
 
     model(modelParams) {
@@ -49,7 +52,7 @@ export default (filterArg, params) => {
       }
 
       this._setupNavigation(model.category);
-      return Ember.RSVP.all([
+      return all([
         this._createSubcategoryList(model.category),
         this._retrieveTopicList(model.category, transition)
       ]);
@@ -63,7 +66,7 @@ export default (filterArg, params) => {
 
     _setupNavigation(category) {
       const noSubcategories = params && !!params.no_subcategories,
-        filterMode = `c/${Discourse.Category.slugFor(category)}${
+        filterMode = `c/${Category.slugFor(category)}${
           noSubcategories ? "/none" : ""
         }/l/${this.filter(category)}`;
 
@@ -77,7 +80,7 @@ export default (filterArg, params) => {
     _createSubcategoryList(category) {
       this._categoryList = null;
       if (
-        Ember.isNone(category.get("parentCategory")) &&
+        isNone(category.get("parentCategory")) &&
         category.get("show_subcategory_list")
       ) {
         return CategoryList.listForParent(this.store, category).then(
@@ -86,13 +89,13 @@ export default (filterArg, params) => {
       }
 
       // If we're not loading a subcategory list just resolve
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     },
 
     _retrieveTopicList(category, transition) {
-      const listFilter = `c/${Discourse.Category.slugFor(
+      const listFilter = `c/${Category.slugFor(category)}/l/${this.filter(
           category
-        )}/l/${this.filter(category)}`,
+        )}`,
         findOpts = filterQueryParams(transition.to.queryParams, params),
         extras = { cached: this.isPoppedState(transition) };
 

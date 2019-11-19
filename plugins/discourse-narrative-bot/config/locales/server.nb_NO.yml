@@ -111,15 +111,6 @@ nb_NO:
       random_mention:
         reply: |-
           Hei! Finn ut hva jeg kan gjøre, si `@%{discobot_username} %{help_trigger}`.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Utfør gode gjerninger, uten forventning om belønning, trygg i vissheten om at noen en dag kanskje vil gjøre det samme for deg_ &mdash; Prinsesse Diana
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Du kan stole på det
       do_not_understand:
         first_response: |-
           Hei, takk for svaret!
@@ -244,12 +235,6 @@ nb_NO:
           _psst_ ... jeg har gjemt en overraskelse et sted i dette emnet. Hvis du tar utfordringen, **trykk på søkeikonet** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> øverst til høyre &#8599; for å lete etter den.
 
           Prøv å søke etter ordet "capy&#8203;bara" i dette emnet
-        hidden_message: |-
-          Hvordan kunne du gå glipp av denne capybaraen? :wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          La du merke til at du er tilbake ved starten? Gi denne sultne capybaraen litt å spise ved å **svare med `:herb:` emojien**, da blir du automatisk tatt tilbake til slutten.
         reply: |-
           Hurra! Du fant den :tada:
 

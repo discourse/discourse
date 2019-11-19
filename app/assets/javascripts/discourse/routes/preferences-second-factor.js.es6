@@ -45,7 +45,7 @@ export default RestrictedUserRoute.extend({
       if (
         transition.targetName === "preferences.second-factor" ||
         !user ||
-        (settings.allow_anonymous_posting && user.is_anonymous) ||
+        user.is_anonymous ||
         user.second_factor_enabled ||
         (settings.enforce_second_factor === "staff" && !user.staff) ||
         settings.enforce_second_factor === "no"

@@ -204,26 +204,5 @@ describe "translate accelerator" do
       override_translation('en', 'fish', 'fake fish')
       expect(Fish.model_name.human).to eq('Fish')
     end
-
-    describe "client json" do
-      it "is empty by default" do
-        expect(I18n.client_overrides_json('en')).to eq('{}')
-      end
-
-      it "doesn't return server overrides" do
-        override_translation('en', 'foo', 'bar')
-        expect(I18n.client_overrides_json('en')).to eq('{}')
-      end
-
-      it "returns client overrides" do
-        override_translation('en', 'js.foo', 'bar')
-        override_translation('en', 'admin_js.beep', 'boop')
-        json = ::JSON.parse(I18n.client_overrides_json('en'))
-
-        expect(json).to be_present
-        expect(json['js.foo']).to eq('bar')
-        expect(json['admin_js.beep']).to eq('boop')
-      end
-    end
   end
 end

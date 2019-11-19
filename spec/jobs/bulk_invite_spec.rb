@@ -9,8 +9,9 @@ describe Jobs::BulkInvite do
     fab!(:group1) { Fabricate(:group, name: 'group1') }
     fab!(:group2) { Fabricate(:group, name: 'group2') }
     fab!(:topic) { Fabricate(:topic) }
+    let(:staged_user) { Fabricate(:user, staged: true, active: false) }
     let(:email) { "test@discourse.org" }
-    let(:invites) { [{ email: 'test2@discourse.org' }, { email: 'test@discourse.org', groups: 'GROUP1;group2', topic_id: topic.id }] }
+    let(:invites) { [{ email: staged_user.email }, { email: 'test2@discourse.org' }, { email: 'test@discourse.org', groups: 'GROUP1;group2', topic_id: topic.id }] }
 
     it 'raises an error when the invites array is missing' do
       expect { Jobs::BulkInvite.new.execute(current_user_id: user.id) }
@@ -28,15 +29,14 @@ describe Jobs::BulkInvite do
         invites: invites
       )
 
-      invite = Invite.last
-
-      expect(invite.email).to eq(email)
+      expect(Invite.exists?(email: staged_user.email)).to eq(true)
       expect(Invite.exists?(email: "test2@discourse.org")).to eq(true)
 
+      invite = Invite.last
+      expect(invite.email).to eq(email)
       expect(invite.invited_groups.pluck(:group_id)).to contain_exactly(
         group1.id, group2.id
       )
-
       expect(invite.topic_invites.pluck(:topic_id)).to contain_exactly(topic.id)
     end
 
@@ -84,8 +84,9 @@ describe Jobs::BulkInvite do
           current_user_id: admin.id,
           invites: invites
         )
-      end.to change { Invite.count }.by(1)
+      end.to change { Invite.count }.by(2)
 
+      expect(Invite.exists?(email: staged_user.email)).to eq(true)
       expect(Invite.exists?(email: "test2@discourse.org")).to eq(true)
       expect(existing_user.reload.groups).to eq([group1])
     end

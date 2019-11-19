@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import loadScript from "discourse/lib/load-script";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "canvas",
   type: "line",
 

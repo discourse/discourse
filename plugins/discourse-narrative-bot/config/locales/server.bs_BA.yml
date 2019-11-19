@@ -113,15 +113,6 @@ bs_BA:
       random_mention:
         reply: |-
           Pozdrav! Kako bi saznali šta sve mogu raditi, recite `@%{discobot_username} %{help_trigger}`.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Pružite različit akt dobrote, bez očekivanja nagrade, znajući da će jednoga dana neko isto tako nešto moći uraditi za vas_ &mdash; Princeza Diana
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Možeš na to osloniti
       do_not_understand:
         first_response: |-
           Hej, hvala za odgovor!
@@ -199,8 +190,6 @@ bs_BA:
       search:
         instructions: |-
           _psst_… Sakrio sam iznenađenje u ovoj temi. Ako ste spremni za izazov, ** odaberite ikonu za pretraživanje ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> gore desno ↗ da ga potražite. Pokušajte tražiti pojam &quot;capy bara&quot; u ovoj temi
-        hidden_message: |-
-          Kako ti nedostaje ova kapybara? : wink: \ t <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/> Da li ste primetili da ste se vratili na početak? Nahranite ovu siromašnu gladnu capybaru ** odgovorom sa `: herb:` emoji ** i automatski ćete se prebaciti na kraj.
         reply: |-
           Yay ste ga pronašli: tada: - Za detaljnije pretrage, pređite na [full search page] (%{search_url}). - Da biste skočili bilo gdje u dugoj diskusiji, pokušajte kontrolirati vremensku liniju teme desno (i na dnu, na mobitelu). - Ako imate fizičku tipkovnicu: pritisnite <kbd>?</kbd> da biste videli naše korisne prečice na tastaturi.
         not_found: |-

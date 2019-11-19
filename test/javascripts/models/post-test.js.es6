@@ -1,7 +1,9 @@
-QUnit.module("Discourse.Post");
+import Post from "discourse/models/post";
+
+QUnit.module("model: Post");
 
 var buildPost = function(args) {
-  return Discourse.Post.create(
+  return Post.create(
     _.merge(
       {
         id: 1,
@@ -14,13 +16,13 @@ var buildPost = function(args) {
 };
 
 QUnit.test("defaults", assert => {
-  var post = Discourse.Post.create({ id: 1 });
+  var post = Post.create({ id: 1 });
   assert.blank(post.get("deleted_at"), "it has no deleted_at by default");
   assert.blank(post.get("deleted_by"), "there is no deleted_by by default");
 });
 
 QUnit.test("new_user", assert => {
-  var post = Discourse.Post.create({ trust_level: 0 });
+  var post = Post.create({ trust_level: 0 });
   assert.ok(post.get("new_user"), "post is from a new user");
 
   post.set("trust_level", 1);
@@ -28,7 +30,7 @@ QUnit.test("new_user", assert => {
 });
 
 QUnit.test("firstPost", assert => {
-  var post = Discourse.Post.create({ post_number: 1 });
+  var post = Post.create({ post_number: 1 });
   assert.ok(post.get("firstPost"), "it's the first post");
 
   post.set("post_number", 10);
@@ -36,13 +38,13 @@ QUnit.test("firstPost", assert => {
 });
 
 QUnit.test("updateFromPost", assert => {
-  var post = Discourse.Post.create({
+  var post = Post.create({
     post_number: 1,
     raw: "hello world"
   });
 
   post.updateFromPost(
-    Discourse.Post.create({
+    Post.create({
       raw: "different raw",
       wat: function() {
         return 123;

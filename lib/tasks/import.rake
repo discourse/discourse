@@ -384,14 +384,15 @@ end
 def update_users
   log "Updating users..."
 
-  DB.exec <<-SQL
+  DB.exec(<<~SQL, Archetype.private_message)
     WITH X AS (
-        SELECT user_id
-             , MIN(created_at) min_created_at
-             , MAX(created_at) max_created_at
-          FROM posts
-         WHERE deleted_at IS NULL
-      GROUP BY user_id
+        SELECT p.user_id
+             , MIN(p.created_at) min_created_at
+             , MAX(p.created_at) max_created_at
+          FROM posts p
+          JOIN topics t ON t.id = p.topic_id AND t.archetype <> ?
+         WHERE p.deleted_at IS NULL
+      GROUP BY p.user_id
     )
     UPDATE users
        SET first_seen_at  = X.min_created_at
@@ -507,7 +508,7 @@ end
 
 desc 'Import existing exported file'
 task 'import:file', [:file_name] => [:environment] do |_, args|
-  require "import_export/import_export"
+  require "import_export"
 
   ImportExport.import(args[:file_name])
   puts "", "Done", ""

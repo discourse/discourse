@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import showModal from "discourse/lib/show-modal";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["bulk-select-container"],
 
   actions: {

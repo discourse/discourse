@@ -94,7 +94,8 @@ class PostRevisor
         tc.record_change('tags', prev_tags, tags)
         DB.after_commit do
           post = tc.topic.ordered_posts.first
-          Jobs.enqueue(:notify_tag_change, post_id: post.id)
+          notified_user_ids = [post.user_id, post.last_editor_id].uniq
+          Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids: notified_user_ids)
         end
       end
     end
@@ -522,14 +523,17 @@ class PostRevisor
   end
 
   def only_hidden_tags_changed?
+    return false if (hidden_tag_names = DiscourseTagging.hidden_tag_names).blank?
+
     modifications = post_changes.merge(@topic_changes.diff)
-    if modifications.keys.size == 1 && tags_diff = modifications["tags"]
+    if modifications.keys.size == 1 && (tags_diff = modifications["tags"]).present?
       a, b = tags_diff[0] || [], tags_diff[1] || []
       changed_tags = ((a + b) - (a & b)).map(&:presence).compact
-      if (changed_tags - DiscourseTagging.hidden_tag_names(nil)).empty?
+      if (changed_tags - hidden_tag_names).empty?
         return true
       end
     end
+
     false
   end
 

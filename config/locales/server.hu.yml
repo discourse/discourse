@@ -85,7 +85,6 @@ hu:
         empty_email_error: "Akkor fordul elő, ha üres volt a kapott nyers e-mail."
         no_message_id_error: "Akkor történik, ha a levélnek nincs „Message-Id” fejléce."
         inactive_user_error: "Akkor fordul elő, ha a feladó nem aktív."
-        bad_destination_address: "Akkor fordul elő, ha a Címzett/Másolatot kap/Vakmásolatot kap mezőkben lévő email címek egyike sem illeszkedik a beállított beérkező e-mail címhez."
         strangers_not_allowed_error: "Akkor fordul elő, ha a felhasználó új témát akar létrehozni egy olyan kategóriában, amelynek nem tagja."
       unrecognized_error: "Ismeretlen hiba"
   errors: &errors

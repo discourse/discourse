@@ -1,7 +1,9 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Mixin from "@ember/object/mixin";
+import { Promise } from "rsvp";
 
-export default Ember.Mixin.create(ModalFunctionality, {
+export default Mixin.create(ModalFunctionality, {
   reason: null,
   message: null,
   postEdit: null,
@@ -25,7 +27,7 @@ export default Ember.Mixin.create(ModalFunctionality, {
 
   penalize(cb) {
     let before = this.before;
-    let promise = before ? before() : Ember.RSVP.resolve();
+    let promise = before ? before() : Promise.resolve();
 
     return promise
       .then(() => cb())

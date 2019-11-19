@@ -1,3 +1,5 @@
+import Helper from "@ember/component/helper";
+
 function postActionTitle([id, nameKey]) {
   let title = I18n.t(`admin.flags.short_names.${nameKey}`, {
     defaultValue: null
@@ -11,4 +13,4 @@ function postActionTitle([id, nameKey]) {
   return title;
 }
 
-export default Ember.Helper.helper(postActionTitle);
+export default Helper.helper(postActionTitle);

@@ -22,7 +22,7 @@ export default createWidget("quick-access-panel", {
   },
 
   markReadRequest() {
-    return Ember.RSVP.Promise.resolve();
+    return Promise.resolve();
   },
 
   hasUnread() {
@@ -38,7 +38,7 @@ export default createWidget("quick-access-panel", {
   },
 
   findNewItems() {
-    return Ember.RSVP.Promise.resolve([]);
+    return Promise.resolve([]);
   },
 
   newItemsLoaded() {},

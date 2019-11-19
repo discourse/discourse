@@ -21,18 +21,26 @@ end
 # Table name: user_security_keys
 #
 #  id            :bigint           not null, primary key
-#  user_id       :integer          not null
-#  factor_type   :integer          not null
-#  credential_id :string           not null, UNIQUE
+#  user_id       :bigint           not null
+#  credential_id :string           not null
 #  public_key    :string           not null
-#  enabled       :boolean          default(FALSE), not null
+#  factor_type   :integer          default(0), not null
+#  enabled       :boolean          default(TRUE), not null
+#  name          :string           not null
 #  last_used     :datetime
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  name          :string           not null
 #
 # Indexes
 #
-#  index_user_security_keys_on_credential_id  (credential_id) (UNIQUE)
-#  index_user_security_keys_on_factor_type    (factor_type)
+#  index_user_security_keys_on_credential_id            (credential_id) UNIQUE
+#  index_user_security_keys_on_factor_type              (factor_type)
+#  index_user_security_keys_on_factor_type_and_enabled  (factor_type,enabled)
+#  index_user_security_keys_on_last_used                (last_used)
+#  index_user_security_keys_on_public_key               (public_key)
+#  index_user_security_keys_on_user_id                  (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
 #

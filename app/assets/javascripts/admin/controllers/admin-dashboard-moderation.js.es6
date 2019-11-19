@@ -1,8 +1,9 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
 import PeriodComputationMixin from "admin/mixins/period-computation";
 
-export default Ember.Controller.extend(PeriodComputationMixin, {
-  @computed
+export default Controller.extend(PeriodComputationMixin, {
+  @discourseComputed
   flagsStatusOptions() {
     return {
       table: {
@@ -12,7 +13,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
     };
   },
 
-  @computed
+  @discourseComputed
   userFlaggingRatioOptions() {
     return {
       table: {
@@ -22,12 +23,12 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
     };
   },
 
-  @computed("startDate", "endDate")
+  @discourseComputed("startDate", "endDate")
   filters(startDate, endDate) {
     return { startDate, endDate };
   },
 
-  @computed("lastWeek", "endDate")
+  @discourseComputed("lastWeek", "endDate")
   lastWeekfilters(startDate, endDate) {
     return { startDate, endDate };
   },

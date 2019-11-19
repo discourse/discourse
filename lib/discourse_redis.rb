@@ -155,7 +155,7 @@ class DiscourseRedis
 
   def initialize(config = nil, namespace: true)
     @config = config || DiscourseRedis.config
-    @redis = DiscourseRedis.raw_connection(@config)
+    @redis = DiscourseRedis.raw_connection(@config.dup)
     @namespace = namespace
   end
 

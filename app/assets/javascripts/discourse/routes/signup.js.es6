@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import buildStaticRoute from "discourse/routes/build-static-route";
 
 const SignupRoute = buildStaticRoute("signup");
@@ -9,13 +10,13 @@ SignupRoute.reopen({
     if (!this.siteSettings.login_required) {
       this.replaceWith("discovery.latest").then(e => {
         if (canSignUp) {
-          Ember.run.next(() => e.send("showCreateAccount"));
+          next(() => e.send("showCreateAccount"));
         }
       });
     } else {
       this.replaceWith("login").then(e => {
         if (canSignUp) {
-          Ember.run.next(() => e.send("showCreateAccount"));
+          next(() => e.send("showCreateAccount"));
         }
       });
     }

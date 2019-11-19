@@ -1,10 +1,14 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { cancel } from "@ember/runloop";
+import { later } from "@ember/runloop";
+import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import Category from "discourse/models/category";
-import computed from "ember-addons/ember-computed-decorators";
 import { REMINDER_TYPE } from "discourse/controllers/edit-topic-timer";
+import ENV from "discourse-common/config/environment";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     classNames: ["topic-status-info"],
     _delayedRerender: null,
@@ -18,7 +22,7 @@ export default Ember.Component.extend(
       "categoryId"
     ],
 
-    @computed("statusType")
+    @discourseComputed("statusType")
     canRemoveTimer(type) {
       if (type === REMINDER_TYPE) return true;
       return this.currentUser && this.currentUser.get("canManageTopic");
@@ -83,12 +87,8 @@ export default Ember.Component.extend(
         buffer.push("</h3>");
 
         // TODO Sam: concerned this can cause a heavy rerender loop
-        if (!Ember.testing) {
-          this._delayedRerender = Ember.run.later(
-            this,
-            this.rerender,
-            rerenderDelay
-          );
+        if (ENV.environment !== "test") {
+          this._delayedRerender = later(this, this.rerender, rerenderDelay);
         }
       }
     },
@@ -109,7 +109,7 @@ export default Ember.Component.extend(
       $(this.element).off("click.topic-timer-remove", this.removeTopicTimer);
 
       if (this._delayedRerender) {
-        Ember.run.cancel(this._delayedRerender);
+        cancel(this._delayedRerender);
       }
     },
 

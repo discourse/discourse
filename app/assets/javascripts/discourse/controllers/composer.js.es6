@@ -1,13 +1,24 @@
+import { isEmpty } from "@ember/utils";
+import {
+  default as computed,
+  and,
+  or,
+  alias,
+  reads
+} from "@ember/object/computed";
+import { debounce } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import Quote from "discourse/lib/quote";
 import Draft from "discourse/models/draft";
 import Composer from "discourse/models/composer";
 import {
-  default as computed,
+  default as discourseComputed,
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
-import InputValidation from "discourse/models/input-validation";
+} from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
 import {
   escapeExpression,
@@ -18,6 +29,9 @@ import {
 import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
 import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
+import { Promise } from "rsvp";
+import ENV from "discourse-common/config/environment";
+import EmberObject from "@ember/object";
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -60,7 +74,7 @@ function loadDraft(store, opts) {
 
 const _popupMenuOptionsCallbacks = [];
 
-let _checkDraftPopup = !Ember.testing;
+let _checkDraftPopup = !ENV.environment === "test";
 
 export function toggleCheckDraftPopup(enabled) {
   _checkDraftPopup = enabled;
@@ -74,18 +88,10 @@ export function addPopupMenuOptionsCallback(callback) {
   _popupMenuOptionsCallbacks.push(callback);
 }
 
-export default Ember.Controller.extend({
-  topicController: Ember.inject.controller("topic"),
-  router: Ember.inject.service(),
+export default Controller.extend({
+  topicController: inject("topic"),
+  router: service(),
 
-  replyAsNewTopicDraft: Ember.computed.equal(
-    "model.draftKey",
-    Composer.REPLY_AS_NEW_TOPIC_KEY
-  ),
-  replyAsNewPrivateMessageDraft: Ember.computed.equal(
-    "model.draftKey",
-    Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY
-  ),
   checkedMessages: false,
   messageCount: null,
   showEditReason: false,
@@ -98,9 +104,9 @@ export default Ember.Controller.extend({
   topic: null,
   linkLookup: null,
   showPreview: true,
-  forcePreview: Ember.computed.and("site.mobileView", "showPreview"),
-  whisperOrUnlistTopic: Ember.computed.or("isWhispering", "model.unlistTopic"),
-  categories: Ember.computed.alias("site.categoriesList"),
+  forcePreview: and("site.mobileView", "showPreview"),
+  whisperOrUnlistTopic: or("isWhispering", "model.unlistTopic"),
+  categories: alias("site.categoriesList"),
 
   @on("init")
   _setupPreview() {
@@ -110,7 +116,7 @@ export default Ember.Controller.extend({
     this.set("showPreview", val === "true");
   },
 
-  @computed("showPreview")
+  @discourseComputed("showPreview")
   toggleText(showPreview) {
     return showPreview
       ? I18n.t("composer.hide_preview")
@@ -127,7 +133,7 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed(
+  @discourseComputed(
     "model.replyingToTopic",
     "model.creatingPrivateMessage",
     "model.targetUsernames",
@@ -158,7 +164,7 @@ export default Ember.Controller.extend({
     return "title";
   },
 
-  showToolbar: Ember.computed({
+  showToolbar: computed({
     get() {
       const keyValueStore = getOwner(this).lookup("key-value-store:main");
       const storedVal = keyValueStore.get("toolbar-enabled");
@@ -182,9 +188,9 @@ export default Ember.Controller.extend({
     }
   }),
 
-  topicModel: Ember.computed.alias("topicController.model"),
+  topicModel: alias("topicController.model"),
 
-  @computed("model.canEditTitle", "model.creatingPrivateMessage")
+  @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
     return (
       this.site.can_tag_topics &&
@@ -194,32 +200,42 @@ export default Ember.Controller.extend({
     );
   },
 
-  isStaffUser: Ember.computed.reads("currentUser.staff"),
+  @discourseComputed("model.editingPost", "model.topic.details.can_edit")
+  disableCategoryChooser(editingPost, canEditTopic) {
+    return editingPost && !canEditTopic;
+  },
 
-  canUnlistTopic: Ember.computed.and("model.creatingTopic", "isStaffUser"),
+  @discourseComputed("model.editingPost", "model.topic.canEditTags")
+  disableTagsChooser(editingPost, canEditTags) {
+    return editingPost && !canEditTags;
+  },
 
-  @computed("canWhisper", "replyingToWhisper")
+  isStaffUser: reads("currentUser.staff"),
+
+  canUnlistTopic: and("model.creatingTopic", "isStaffUser"),
+
+  @discourseComputed("canWhisper", "replyingToWhisper")
   showWhisperToggle(canWhisper, replyingToWhisper) {
     return canWhisper && !replyingToWhisper;
   },
 
-  @computed("model.post")
+  @discourseComputed("model.post")
   replyingToWhisper(repliedToPost) {
     return (
       repliedToPost && repliedToPost.post_type === this.site.post_types.whisper
     );
   },
 
-  isWhispering: Ember.computed.or("replyingToWhisper", "model.whisper"),
+  isWhispering: or("replyingToWhisper", "model.whisper"),
 
-  @computed("model.action", "isWhispering")
+  @discourseComputed("model.action", "isWhispering")
   saveIcon(action, isWhispering) {
     if (isWhispering) return "far-eye-slash";
 
     return SAVE_ICONS[action];
   },
 
-  @computed("model.action", "isWhispering", "model.editConflict")
+  @discourseComputed("model.action", "isWhispering", "model.editConflict")
   saveLabel(action, isWhispering, editConflict) {
     if (editConflict) return "composer.overwrite_edit";
     else if (isWhispering) return "composer.create_whisper";
@@ -227,7 +243,7 @@ export default Ember.Controller.extend({
     return SAVE_LABELS[action];
   },
 
-  @computed("isStaffUser", "model.action")
+  @discourseComputed("isStaffUser", "model.action")
   canWhisper(isStaffUser, action) {
     return (
       this.siteSettings.enable_whispers &&
@@ -250,7 +266,7 @@ export default Ember.Controller.extend({
     return option;
   },
 
-  @computed("model.composeState", "model.creatingTopic", "model.post")
+  @discourseComputed("model.composeState", "model.creatingTopic", "model.post")
   popupMenuOptions(composeState) {
     if (composeState === "open" || composeState === "fullscreen") {
       const options = [];
@@ -285,7 +301,7 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("model.creatingPrivateMessage", "model.targetUsernames")
+  @discourseComputed("model.creatingPrivateMessage", "model.targetUsernames")
   showWarning(creatingPrivateMessage, usernames) {
     if (!this.get("currentUser.staff")) {
       return false;
@@ -295,7 +311,7 @@ export default Ember.Controller.extend({
 
     // We need exactly one user to issue a warning
     if (
-      Ember.isEmpty(usernames) ||
+      isEmpty(usernames) ||
       usernames.split(",").length !== 1 ||
       hasTargetGroups
     ) {
@@ -305,17 +321,17 @@ export default Ember.Controller.extend({
     return creatingPrivateMessage;
   },
 
-  @computed("model.topic.title")
+  @discourseComputed("model.topic.title")
   draftTitle(topicTitle) {
     return emojiUnescape(escapeExpression(topicTitle));
   },
 
-  @computed
+  @discourseComputed
   allowUpload() {
     return authorizesOneOrMoreExtensions();
   },
 
-  @computed()
+  @discourseComputed()
   uploadIcon: () => uploadIcon(),
 
   actions: {
@@ -434,8 +450,8 @@ export default Ember.Controller.extend({
       this.closeAutocomplete();
 
       if (
-        Ember.isEmpty(this.get("model.reply")) &&
-        Ember.isEmpty(this.get("model.title"))
+        isEmpty(this.get("model.reply")) &&
+        isEmpty(this.get("model.title"))
       ) {
         this.close();
       } else {
@@ -584,7 +600,7 @@ export default Ember.Controller.extend({
     }
   },
 
-  disableSubmit: Ember.computed.or("model.loading", "isUploading"),
+  disableSubmit: or("model.loading", "isUploading"),
 
   save(force) {
     if (this.disableSubmit) return;
@@ -677,23 +693,16 @@ export default Ember.Controller.extend({
             }
           }
 
-          this.destroyDraft();
-          this.close();
-          this.appEvents.trigger("post-stream:refresh");
-          return result;
+          return this.destroyDraft().then(() => {
+            this.close();
+            this.appEvents.trigger("post-stream:refresh");
+            return result;
+          });
         }
 
-        // If user "created a new topic/post" or "replied as a new topic" successfully, remove the draft.
-        if (
-          result.responseJson.action === "create_post" ||
-          this.replyAsNewTopicDraft ||
-          this.replyAsNewPrivateMessageDraft
-        ) {
-          this.destroyDraft();
-        }
         if (this.get("model.editingPost")) {
           this.appEvents.trigger("post-stream:refresh", {
-            id: parseInt(result.responseJson.id)
+            id: parseInt(result.responseJson.id, 10)
           });
           if (result.responseJson.post.post_number === 1) {
             this.appEvents.trigger("header:update-topic", composer.topic);
@@ -721,7 +730,9 @@ export default Ember.Controller.extend({
       })
       .catch(error => {
         composer.set("disableDrafts", false);
-        this.appEvents.one("composer:will-open", () => bootbox.alert(error));
+        if (error) {
+          this.appEvents.one("composer:will-open", () => bootbox.alert(error));
+        }
       });
 
     if (
@@ -742,7 +753,7 @@ export default Ember.Controller.extend({
   // Notify the composer messages controller that a reply has been typed. Some
   // messages only appear after typing.
   checkReplyLength() {
-    if (!Ember.isEmpty("model.reply")) {
+    if (!isEmpty("model.reply")) {
       this.appEvents.trigger("composer:typed-reply");
     }
   },
@@ -753,8 +764,8 @@ export default Ember.Controller.extend({
    @method open
    @param {Object} opts Options for creating a post
    @param {String} opts.action The action we're performing: edit, reply or createTopic
-   @param {Discourse.Post} [opts.post] The post we're replying to
-   @param {Discourse.Topic} [opts.topic] The topic we're replying to
+   @param {Post} [opts.post] The post we're replying to
+   @param {Topic} [opts.topic] The topic we're replying to
    @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
    **/
   open(opts) {
@@ -781,11 +792,7 @@ export default Ember.Controller.extend({
     });
 
     // Scope the categories drop down to the category we opened the composer with.
-    if (
-      opts.categoryId &&
-      opts.draftKey !== "reply_as_new_topic" &&
-      !opts.disableScopedCategory
-    ) {
+    if (opts.categoryId && !opts.disableScopedCategory) {
       const category = this.site.categories.findBy("id", opts.categoryId);
       if (category) {
         this.set("scopedCategoryId", opts.categoryId);
@@ -802,7 +809,7 @@ export default Ember.Controller.extend({
       composerModel = null;
     }
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       if (composerModel && composerModel.replyDirty) {
         // If we're already open, we don't have to do anything
         if (
@@ -845,7 +852,6 @@ export default Ember.Controller.extend({
               data.draft = undefined;
               return data;
             }
-
             return this.confirmDraftAbandon(data);
           })
           .then(data => {
@@ -860,7 +866,9 @@ export default Ember.Controller.extend({
       // otherwise, do the draft check async
       else if (!opts.draft && !opts.skipDraftCheck) {
         Draft.get(opts.draftKey)
-          .then(data => this.confirmDraftAbandon(data))
+          .then(data => {
+            return this.confirmDraftAbandon(data);
+          })
           .then(data => {
             if (data.draft) {
               opts.draft = data.draft;
@@ -941,9 +949,11 @@ export default Ember.Controller.extend({
         this.send("clearTopicDraft");
       }
 
-      Draft.clear(key, this.get("model.draftSequence")).then(() =>
+      return Draft.clear(key, this.get("model.draftSequence")).then(() =>
         this.appEvents.trigger("draft:destroyed", key)
       );
+    } else {
+      return Promise.resolve();
     }
   },
 
@@ -960,7 +970,7 @@ export default Ember.Controller.extend({
     }
 
     if (_checkDraftPopup) {
-      return new Ember.RSVP.Promise(resolve => {
+      return new Promise(resolve => {
         bootbox.dialog(I18n.t("drafts.abandon.confirm"), [
           {
             label: I18n.t("drafts.abandon.no_value"),
@@ -983,13 +993,16 @@ export default Ember.Controller.extend({
   },
 
   cancelComposer(differentDraft = false) {
-    return new Ember.RSVP.Promise(resolve => {
+    const keyPrefix =
+      this.model.action === "edit" ? "post.abandon_edit" : "post.abandon";
+
+    return new Promise(resolve => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        bootbox.dialog(I18n.t("post.abandon.confirm"), [
+        bootbox.dialog(I18n.t(keyPrefix + ".confirm"), [
           {
             label: differentDraft
-              ? I18n.t("post.abandon.no_save_draft")
-              : I18n.t("post.abandon.no_value"),
+              ? I18n.t(keyPrefix + ".no_save_draft")
+              : I18n.t(keyPrefix + ".no_value"),
             callback: () => {
               // cancel composer without destroying draft on new draft context
               if (differentDraft) {
@@ -1000,24 +1013,26 @@ export default Ember.Controller.extend({
             }
           },
           {
-            label: I18n.t("post.abandon.yes_value"),
+            label: I18n.t(keyPrefix + ".yes_value"),
             class: "btn-danger",
             callback: result => {
               if (result) {
-                this.destroyDraft();
-                this.model.clearState();
-                this.close();
-                resolve();
+                this.destroyDraft().then(() => {
+                  this.model.clearState();
+                  this.close();
+                  resolve();
+                });
               }
             }
           }
         ]);
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
-        this.destroyDraft();
-        this.model.clearState();
-        this.close();
-        resolve();
+        this.destroyDraft().then(() => {
+          this.model.clearState();
+          this.close();
+          resolve();
+        });
       }
     });
   },
@@ -1042,13 +1057,13 @@ export default Ember.Controller.extend({
 
   @observes("model.reply", "model.title")
   _shouldSaveDraft() {
-    Ember.run.debounce(this, this._saveDraft, 2000);
+    debounce(this, this._saveDraft, 2000);
   },
 
-  @computed("model.categoryId", "lastValidatedAt")
+  @discourseComputed("model.categoryId", "lastValidatedAt")
   categoryValidation(categoryId, lastValidatedAt) {
     if (!this.siteSettings.allow_uncategorized_topics && !categoryId) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("composer.error.category_missing"),
         lastShownAt: lastValidatedAt
@@ -1056,7 +1071,7 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("model.category", "model.tags", "lastValidatedAt")
+  @discourseComputed("model.category", "model.tags", "lastValidatedAt")
   tagValidation(category, tags, lastValidatedAt) {
     const tagsArray = tags || [];
     if (
@@ -1064,7 +1079,7 @@ export default Ember.Controller.extend({
       category &&
       category.minimum_required_tags > tagsArray.length
     ) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("composer.error.tags_missing", {
           count: category.minimum_required_tags
@@ -1103,12 +1118,12 @@ export default Ember.Controller.extend({
     $(".d-editor-input").autocomplete({ cancel: true });
   },
 
-  @computed("model.action")
+  @discourseComputed("model.action")
   canEdit(action) {
     return action === "edit" && this.currentUser.can_edit;
   },
 
-  @computed("model.composeState")
+  @discourseComputed("model.composeState")
   visible(state) {
     return state && state !== "closed";
   }

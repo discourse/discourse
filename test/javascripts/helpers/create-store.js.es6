@@ -5,7 +5,7 @@ import TopicListAdapter from "discourse/adapters/topic-list";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import { buildResolver } from "discourse-common/resolver";
 
-export default function() {
+export default function(customLookup = () => {}) {
   const resolver = buildResolver("discourse").create();
 
   return Store.create({
@@ -34,6 +34,7 @@ export default function() {
           this._settings = this._settings || Discourse.SiteSettings;
           return this._settings;
         }
+        return customLookup(type);
       },
 
       lookupFactory(type) {

@@ -13,6 +13,7 @@ module Jobs
       Draft.cleanup!
       UserAuthToken.cleanup!
       Upload.reset_unknown_extensions!
+      Email::Cleaner.delete_rejected!
     end
   end
 end

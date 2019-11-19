@@ -1,10 +1,10 @@
+import { get } from "@ember/object";
 import { registerUnbound } from "discourse-common/lib/helpers";
 import { isRTL } from "discourse/lib/text-direction";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import Category from "discourse/models/category";
 
-var get = Ember.get,
-  escapeExpression = Handlebars.Utils.escapeExpression;
-
+let escapeExpression = Handlebars.Utils.escapeExpression;
 let _renderer = defaultCategoryLinkRenderer;
 
 export function replaceCategoryLinkRenderer(fn) {
@@ -32,7 +32,7 @@ export function categoryBadgeHTML(category, opts) {
   if (
     !category ||
     (!opts.allowUncategorized &&
-      Ember.get(category, "id") ===
+      get(category, "id") ===
         Discourse.Site.currentProp("uncategorized_category_id") &&
       Discourse.SiteSettings.suppress_uncategorized_badge)
   )
@@ -79,7 +79,7 @@ function defaultCategoryLinkRenderer(category, opts) {
   let restricted = get(category, "read_restricted");
   let url = opts.url
     ? opts.url
-    : Discourse.getURL("/c/") + Discourse.Category.slugFor(category);
+    : Discourse.getURL("/c/") + Category.slugFor(category);
   let href = opts.link === false ? "" : url;
   let tagName = opts.link === false || opts.link === "false" ? "span" : "a";
   let extraClasses = opts.extraClasses ? " " + opts.extraClasses : "";
@@ -89,9 +89,7 @@ function defaultCategoryLinkRenderer(category, opts) {
   let categoryDir = "";
 
   if (!opts.hideParent) {
-    parentCat = Discourse.Category.findById(
-      get(category, "parent_category_id")
-    );
+    parentCat = Category.findById(get(category, "parent_category_id"));
   }
 
   const categoryStyle =

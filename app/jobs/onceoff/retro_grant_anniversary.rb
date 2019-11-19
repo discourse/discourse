@@ -8,7 +8,7 @@ module Jobs
 
       # Fill in the years of anniversary badges we missed
       (2..3).each do |year|
-        Jobs::GrantAnniversaryBadges.new.execute(start_date: year.years.ago)
+        ::Jobs::GrantAnniversaryBadges.new.execute(start_date: year.years.ago)
       end
     end
   end

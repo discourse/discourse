@@ -1,19 +1,20 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseURL from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   lockImageUrl: Discourse.getURL("/images/lock.svg"),
 
-  @computed("model")
+  @discourseComputed("model")
   secondFactorRequired(model) {
     return model.security_key_required || model.second_factor_required;
   },
 
-  @computed("model")
+  @discourseComputed("model")
   secondFactorMethod(model) {
     return model.security_key_required
       ? SECOND_FACTOR_METHODS.SECURITY_KEY

@@ -1,26 +1,29 @@
+import { alias } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
-import debounce from "discourse/lib/debounce";
+} from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse/lib/debounce";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   queryParams: ["order", "desc", "filter"],
   order: "",
   desc: null,
   loading: false,
   limit: null,
   offset: null,
-  isOwner: Ember.computed.alias("model.is_group_owner"),
+  isOwner: alias("model.is_group_owner"),
   showActions: false,
   filter: null,
   filterInput: null,
-  application: Ember.inject.controller(),
+  application: inject(),
 
   @observes("filterInput")
-  _setFilter: debounce(function() {
+  _setFilter: discourseDebounce(function() {
     this.set("filter", this.filterInput);
   }, 500),
 
@@ -40,22 +43,22 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("order", "desc", "filter")
+  @discourseComputed("order", "desc", "filter")
   memberParams(order, desc, filter) {
     return { order, desc, filter };
   },
 
-  @computed("model.members")
+  @discourseComputed("model.members")
   hasMembers(members) {
     return members && members.length > 0;
   },
 
-  @computed("model")
+  @discourseComputed("model")
   canManageGroup(model) {
     return this.currentUser && this.currentUser.canManageGroup(model);
   },
 
-  @computed
+  @discourseComputed
   filterPlaceholder() {
     if (this.currentUser && this.currentUser.admin) {
       return "groups.members.filter_placeholder_admin";

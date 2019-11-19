@@ -25,7 +25,7 @@ module Jobs
       process_invites(invites)
 
       if @total_invites > Invite::BULK_INVITE_EMAIL_LIMIT
-        Jobs.enqueue(:process_bulk_invite_emails)
+        ::Jobs.enqueue(:process_bulk_invite_emails)
       end
     ensure
       notify_user
@@ -93,7 +93,7 @@ module Jobs
       topic = get_topic(invite[:topic_id])
 
       begin
-        if user = User.find_by_email(email)
+        if user = Invite.find_user_by_email(email)
           if groups.present?
             Group.transaction do
               groups.each do |group|

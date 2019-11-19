@@ -6,6 +6,8 @@ Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
 
 module Oneboxer
   ONEBOX_CSS_CLASS = "onebox"
+  AUDIO_REGEX = /^\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)$/i
+  VIDEO_REGEX = /^\.(mov|mp4|m4v|webm|ogv|3gp)$/i
 
   # keep reloaders happy
   unless defined? Oneboxer::Result
@@ -26,6 +28,10 @@ module Oneboxer
 
   def self.force_get_hosts
     @force_get_hosts ||= ['http://us.battle.net']
+  end
+
+  def self.force_custom_user_agent_hosts
+    @force_custom_user_agent_hosts ||= ['http://codepen.io']
   end
 
   def self.allowed_post_types
@@ -171,9 +177,9 @@ module Oneboxer
 
   def self.local_upload_html(url)
     case File.extname(URI(url).path || "")
-    when /^\.(mov|mp4|webm|ogv)$/i
+    when VIDEO_REGEX
       "<video width='100%' height='100%' controls><source src='#{url}'><a href='#{url}'>#{url}</a></video>"
-    when /^\.(mp3|ogg|wav|m4a)$/i
+    when AUDIO_REGEX
       "<audio controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
     end
   end
@@ -268,21 +274,21 @@ module Oneboxer
 
   def self.external_onebox(url)
     Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-      fd = FinalDestination.new(url, ignore_redirects: ignore_redirects, ignore_hostnames: blacklisted_domains, force_get_hosts: force_get_hosts, preserve_fragment_url_hosts: preserve_fragment_url_hosts)
+      fd = FinalDestination.new(url,
+                              ignore_redirects: ignore_redirects,
+                              ignore_hostnames: blacklisted_domains,
+                              force_get_hosts: force_get_hosts,
+                              force_custom_user_agent_hosts: force_custom_user_agent_hosts,
+                              preserve_fragment_url_hosts: preserve_fragment_url_hosts)
       uri = fd.resolve
       return blank_onebox if uri.blank? || blacklisted_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
 
       options = {
-        cache: {},
         max_width: 695,
         sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX
       }
 
       options[:cookie] = fd.cookie if fd.cookie
-
-      if Rails.env.development? && SiteSetting.port.to_i > 0
-        Onebox.options = { allowed_ports: [80, 443, SiteSetting.port.to_i] }
-      end
 
       r = Onebox.preview(uri.to_s, options)
 

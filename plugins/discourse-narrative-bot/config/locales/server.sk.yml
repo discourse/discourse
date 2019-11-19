@@ -110,15 +110,6 @@ sk:
       random_mention:
         reply: |-
           Ahoj! Ak chcete zistiť, čo dokážem urobiť, povedzte `@%{discobot_username} %{help_trigger}`.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Vykonaj náhodný milosrdný skutok, bez akýchkoľvek očakávaní, a buď si istý, že jedného dňa niekto může urobiť to isté pre Teba_ &mdash; Princezná Diana
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Na to sa môžeš spoľahnúť
       do_not_understand:
         first_response: |-
           Hej, ďakujem za odpoveď!

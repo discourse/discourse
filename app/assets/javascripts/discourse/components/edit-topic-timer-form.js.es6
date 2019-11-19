@@ -1,9 +1,12 @@
+import { isEmpty } from "@ember/utils";
+import { alias, equal, or } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
-
+} from "discourse-common/utils/decorators";
 import {
   PUBLISH_TO_CATEGORY_STATUS_TYPE,
   OPEN_STATUS_TYPE,
@@ -13,25 +16,17 @@ import {
   BUMP_TYPE
 } from "discourse/controllers/edit-topic-timer";
 
-export default Ember.Component.extend({
-  selection: Ember.computed.alias("topicTimer.status_type"),
-  autoOpen: Ember.computed.equal("selection", OPEN_STATUS_TYPE),
-  autoClose: Ember.computed.equal("selection", CLOSE_STATUS_TYPE),
-  autoDelete: Ember.computed.equal("selection", DELETE_STATUS_TYPE),
-  autoBump: Ember.computed.equal("selection", BUMP_TYPE),
-  publishToCategory: Ember.computed.equal(
-    "selection",
-    PUBLISH_TO_CATEGORY_STATUS_TYPE
-  ),
-  reminder: Ember.computed.equal("selection", REMINDER_TYPE),
-  showTimeOnly: Ember.computed.or(
-    "autoOpen",
-    "autoDelete",
-    "reminder",
-    "autoBump"
-  ),
+export default Component.extend({
+  selection: alias("topicTimer.status_type"),
+  autoOpen: equal("selection", OPEN_STATUS_TYPE),
+  autoClose: equal("selection", CLOSE_STATUS_TYPE),
+  autoDelete: equal("selection", DELETE_STATUS_TYPE),
+  autoBump: equal("selection", BUMP_TYPE),
+  publishToCategory: equal("selection", PUBLISH_TO_CATEGORY_STATUS_TYPE),
+  reminder: equal("selection", REMINDER_TYPE),
+  showTimeOnly: or("autoOpen", "autoDelete", "reminder", "autoBump"),
 
-  @computed(
+  @discourseComputed(
     "topicTimer.updateTime",
     "loading",
     "publishToCategory",
@@ -39,13 +34,13 @@ export default Ember.Component.extend({
   )
   saveDisabled(updateTime, loading, publishToCategory, topicTimerCategoryId) {
     return (
-      Ember.isEmpty(updateTime) ||
+      isEmpty(updateTime) ||
       loading ||
       (publishToCategory && !topicTimerCategoryId)
     );
   },
 
-  @computed("topic.visible")
+  @discourseComputed("topic.visible")
   excludeCategoryId(visible) {
     if (visible) return this.get("topic.category_id");
   },
@@ -72,7 +67,7 @@ export default Ember.Component.extend({
   @observes("selection")
   _updateBasedOnLastPost() {
     if (!this.autoClose) {
-      Ember.run.schedule("afterRender", () => {
+      schedule("afterRender", () => {
         this.set("topicTimer.based_on_last_post", false);
       });
     }

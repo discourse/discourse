@@ -126,6 +126,7 @@ const DEFAULT_LIST = [
   "a[data-bbcode]",
   "a[name]",
   "a[rel=nofollow]",
+  "a[rel=ugc]",
   "a[target=_blank]",
   "a[title]",
   "abbr[title]",

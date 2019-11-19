@@ -18,7 +18,7 @@ class CategoriesController < ApplicationController
 
     @description = SiteSetting.site_description
 
-    parent_category = Category.find_by(slug: params[:parent_category_id]) || Category.find_by(id: params[:parent_category_id].to_i)
+    parent_category = Category.find_by_slug(params[:parent_category_id]) || Category.find_by(id: params[:parent_category_id].to_i)
 
     category_options = {
       is_homepage: current_homepage == "categories".freeze,
@@ -206,6 +206,9 @@ class CategoriesController < ApplicationController
   def find_by_slug
     params.require(:category_slug)
     @category = Category.find_by_slug(params[:category_slug], params[:parent_category_slug])
+
+    raise Discourse::NotFound unless @category.present?
+
     if !guardian.can_see?(@category)
       if SiteSetting.detailed_404 && group = @category.access_category_via_group
         raise Discourse::InvalidAccess.new(
@@ -310,6 +313,8 @@ class CategoriesController < ApplicationController
         :navigate_to_first_post_after_read,
         :search_priority,
         :allow_global_tags,
+        :required_tag_group_name,
+        :min_tags_from_required_group,
         custom_fields: [params[:custom_fields].try(:keys)],
         permissions: [*p.try(:keys)],
         allowed_tags: [],
@@ -324,7 +329,7 @@ class CategoriesController < ApplicationController
   end
 
   def fetch_category
-    @category = Category.find_by(slug: params[:id]) || Category.find_by(id: params[:id].to_i)
+    @category = Category.find_by_slug(params[:id]) || Category.find_by(id: params[:id].to_i)
   end
 
   def initialize_staff_action_logger

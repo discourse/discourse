@@ -321,7 +321,8 @@ export class Tag {
         if (msoListClasses.includes(attrs.class)) {
           try {
             const level = parseInt(
-              attrs.style.match(/level./)[0].replace("level", "")
+              attrs.style.match(/level./)[0].replace("level", ""),
+              10
             );
             indent = Array(level).join("\t") + indent;
           } finally {
@@ -448,7 +449,7 @@ export class Tag {
         const bullet = text.match(/\n\t*\*/)[0];
 
         for (
-          let i = parseInt(this.element.attributes.start || 1);
+          let i = parseInt(this.element.attributes.start || 1, 10);
           text.includes(bullet);
           i++
         ) {

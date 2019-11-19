@@ -1,7 +1,7 @@
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default DropdownSelectBox.extend({
   classNames: ["user-notifications", "user-notifications-dropdown"],
@@ -36,7 +36,7 @@ export default DropdownSelectBox.extend({
     return content;
   },
 
-  @computed("value")
+  @discourseComputed("value")
   headerIcon(value) {
     return this.computeContent().find(row => row.id === value).icon;
   },
@@ -53,7 +53,7 @@ export default DropdownSelectBox.extend({
     });
   },
 
-  @computed("user.ignored", "user.muted")
+  @discourseComputed("user.ignored", "user.muted")
   value() {
     if (this.get("user.ignored")) {
       return "changeToIgnored";

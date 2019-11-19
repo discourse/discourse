@@ -1,4 +1,6 @@
-export default Discourse.Route.extend({
+import DiscourseRoute from "discourse/routes/discourse";
+
+export default DiscourseRoute.extend({
   queryParams: {
     period: { refreshModel: true },
     order: { refreshModel: true },

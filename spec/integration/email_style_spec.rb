@@ -6,6 +6,7 @@ describe EmailStyle do
   before do
     SiteSetting.email_custom_template = "<body><h1>FOR YOU</h1><div>%{email_content}</div></body>"
     SiteSetting.email_custom_css = 'h1 { color: red; } div.body { color: #FAB; }'
+    SiteSetting.email_custom_css_compiled = SiteSetting.email_custom_css
   end
 
   after do
@@ -20,6 +21,12 @@ describe EmailStyle do
     subject(:mail_html) { Email::Renderer.new(invite_mail).html }
 
     it 'applies customizations' do
+      expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
+      expect(mail_html).to match("#{Discourse.base_url}/invites/#{invite.invite_key}")
+    end
+
+    it 'applies customizations if compiled is missing' do
+      SiteSetting.remove_override!(:email_custom_css_compiled)
       expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
       expect(mail_html).to match("#{Discourse.base_url}/invites/#{invite.invite_key}")
     end
@@ -93,6 +100,7 @@ describe EmailStyle do
     context 'with some bad css' do
       before do
         SiteSetting.email_custom_css = '@import "nope.css"; h1 {{{ size: really big; '
+        SiteSetting.email_custom_css_compiled = SiteSetting.email_custom_css
       end
 
       it "can render the html" do

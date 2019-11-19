@@ -7,5 +7,5 @@
 
 de:
   site_settings:
-    presence_enabled: 'Benutzer anzeigen, die gerade im aktuellen Thema antworten, oder den aktuellen Beitrag bearbeiten?'
-    presence_max_users_shown: 'Maximale Anzahl an angezeigten Benutzern.'
+    presence_enabled: "Benutzer anzeigen, die gerade im aktuellen Thema antworten, oder den aktuellen Beitrag bearbeiten?"
+    presence_max_users_shown: "Maximale Anzahl an angezeigten Benutzern."

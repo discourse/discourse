@@ -160,6 +160,9 @@ class UserAvatarsController < ApplicationController
         follow_redirect: true,
         read_timeout: 10
       )
+
+      return render_blank if tmp.nil?
+
       FileUtils.mv tmp.path, path
     end
 

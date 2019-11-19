@@ -1,8 +1,9 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
-import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend(
+export default Component.extend(
   bufferedRender({
     tagName: "th",
     classNames: ["sortable"],
@@ -10,7 +11,7 @@ export default Ember.Component.extend(
     rerenderTriggers: ["order", "asc"],
     labelKey: null,
 
-    @computed("field", "labelKey")
+    @discourseComputed("field", "labelKey")
     title(field, labelKey) {
       if (!labelKey) {
         labelKey = `directory.${this.field}`;

@@ -1,7 +1,8 @@
+import { throttle } from "@ember/runloop";
 import MountWidget from "discourse/components/mount-widget";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
 import Scrolling from "discourse/mixins/scrolling";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 150;
@@ -78,7 +79,7 @@ const FooterNavComponent = MountWidget.extend(
 
       const offset = window.pageYOffset || $("html").scrollTop();
 
-      Ember.run.throttle(
+      throttle(
         this,
         this.calculateDirection,
         offset,

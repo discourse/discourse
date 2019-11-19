@@ -1,14 +1,17 @@
+import { sort } from "@ember/object/computed";
+import EmberObjectProxy from "@ember/object/proxy";
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 const BufferedProxy = window.BufferedProxy; // import BufferedProxy from 'ember-buffered-proxy/proxy';
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   on,
-  default as computed
-} from "ember-addons/ember-computed-decorators";
+  default as discourseComputed
+} from "discourse-common/utils/decorators";
 import Ember from "ember";
 
-export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
+export default Controller.extend(ModalFunctionality, Ember.Evented, {
   init() {
     this._super(...arguments);
 
@@ -20,18 +23,15 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     this.fixIndices();
   },
 
-  @computed("site.categories")
+  @discourseComputed("site.categories")
   categoriesBuffered(categories) {
-    const bufProxy = Ember.ObjectProxy.extend(BufferedProxy);
+    const bufProxy = EmberObjectProxy.extend(BufferedProxy);
     return categories.map(c => bufProxy.create({ content: c }));
   },
 
-  categoriesOrdered: Ember.computed.sort(
-    "categoriesBuffered",
-    "categoriesSorting"
-  ),
+  categoriesOrdered: sort("categoriesBuffered", "categoriesSorting"),
 
-  @computed("categoriesBuffered.@each.hasBufferedChanges")
+  @discourseComputed("categoriesBuffered.@each.hasBufferedChanges")
   showApplyAll() {
     let anyChanged = false;
     this.categoriesBuffered.forEach(bc => {
@@ -115,7 +115,7 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
 
   actions: {
     change(cat, e) {
-      let position = parseInt($(e.target).val());
+      let position = parseInt($(e.target).val(), 10);
       let amount = Math.min(
         Math.max(position, 0),
         this.categoriesOrdered.length - 1

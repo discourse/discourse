@@ -189,7 +189,7 @@ module Jobs
       when Net::SMTPServerBusy
         1.hour + (rand(30) * (count + 1))
       else
-        Jobs::UserEmail.seconds_to_delay(count)
+        ::Jobs::UserEmail.seconds_to_delay(count)
       end
     end
 

@@ -111,15 +111,6 @@ ar:
       random_mention:
         reply: |-
           مرحباً, لتكتشف ما استطيع ان افعلة, قل `@%{discobot_username} %{help_trigger}`.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3.6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :speech_balloon: _قم بعمل الخير دون انتظار الأجر, و آمن انه يوما ما سيقوم احدهم برد هذا الخير لك_ &mdash; الأميرة ديانا
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: يمكنك الاعتماد علية
       do_not_understand:
         first_response: |-
           مرحباً, شكرا علي الرد!

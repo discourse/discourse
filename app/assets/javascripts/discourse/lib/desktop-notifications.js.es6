@@ -1,6 +1,8 @@
+import { later } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { formatUsername } from "discourse/lib/utilities";
+import { Promise } from "rsvp";
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -26,14 +28,16 @@ function init(messageBus, appEvents) {
   try {
     keyValueStore.getItem(focusTrackerKey);
   } catch (e) {
-    Ember.Logger.info(
+    // eslint-disable-next-line no-console
+    console.info(
       "Discourse desktop notifications are disabled - localStorage denied."
     );
     return;
   }
 
   if (!("Notification" in window)) {
-    Ember.Logger.info(
+    // eslint-disable-next-line no-console
+    console.info(
       "Discourse desktop notifications are disabled - not supported by browser"
     );
     return;
@@ -47,7 +51,8 @@ function init(messageBus, appEvents) {
       return;
     }
   } catch (e) {
-    Ember.Logger.warn(
+    // eslint-disable-next-line no-console
+    console.warn(
       "Unexpected error, Notification is defined on window but not a responding correctly " +
         e
     );
@@ -58,7 +63,8 @@ function init(messageBus, appEvents) {
     // Preliminary checks passed, continue with setup
     setupNotifications(appEvents);
   } catch (e) {
-    Ember.Logger.error(e);
+    // eslint-disable-next-line no-console
+    console.error(e);
   }
 }
 
@@ -79,7 +85,7 @@ function confirmNotification() {
   const clickEventHandler = () => notification.close();
 
   notification.addEventListener("click", clickEventHandler);
-  Ember.run.later(() => {
+  later(() => {
     notification.close();
     notification.removeEventListener("click", clickEventHandler);
   }, 10 * 1000);
@@ -177,7 +183,7 @@ function onNotification(data) {
     }
 
     notification.addEventListener("click", clickEventHandler);
-    Ember.run.later(() => {
+    later(() => {
       notification.close();
       notification.removeEventListener("click", clickEventHandler);
     }, 10 * 1000);
@@ -188,11 +194,11 @@ function onNotification(data) {
 // Wraps Notification.requestPermission in a Promise
 function requestPermission() {
   if (havePermission === true) {
-    return Ember.RSVP.resolve();
+    return Promise.resolve();
   } else if (havePermission === false) {
-    return Ember.RSVP.reject();
+    return Promise.reject();
   } else {
-    return new Ember.RSVP.Promise(function(resolve, reject) {
+    return new Promise(function(resolve, reject) {
       Notification.requestPermission(function(status) {
         if (status === "granted") {
           resolve();

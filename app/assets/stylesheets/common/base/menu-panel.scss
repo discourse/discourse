@@ -51,6 +51,7 @@
     touch-action: pan-y pinch-zoom;
     overflow-y: auto;
     overflow-x: hidden;
+    max-height: 100vh;
   }
 
   .badge-notification {
@@ -114,8 +115,6 @@
       line-height: $line-height-large;
     }
     .badge-wrapper {
-      overflow: hidden;
-      text-overflow: ellipsis;
       &.bar,
       &.bullet {
         color: $primary;
@@ -142,8 +141,6 @@
 
   span.badge-category {
     max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   div.discourse-tags {
@@ -340,9 +337,7 @@ div.menu-links-header {
     span.d-label {
       display: block;
       max-width: 130px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      @include ellipsis;
     }
 
     @include breakpoint(mobile-medium) {

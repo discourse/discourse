@@ -49,7 +49,7 @@ describe ONPDiff do
       expect(ONPDiff.new("abc", "acd").paragraph_diff).to eq([["a", :common], ["b", :delete], ["c", :common], ["d", :add]])
     end
 
-    it "pairs as many elements as possible", :focus do
+    it "pairs as many elements as possible" do
       expect(ONPDiff.new("abcd", "abef").paragraph_diff).to eq([
         ["a", :common], ["b", :common],
         ["e", :add], ["c", :delete],

@@ -80,30 +80,37 @@ after_initialize do
       requires_login
 
       def generate
-        unless params[:user_id]&.present?
-          raise Discourse::InvalidParameters.new('user_id must be present')
+        immutable_for(24.hours)
+
+        %i[date user_id].each do |key|
+          raise Discourse::InvalidParameters.new("#{key} must be present") unless params[key]&.present?
         end
+
+        rate_limiter = RateLimiter.new(current_user, 'svg_certificate', 3, 1.minute)
+        rate_limiter.performed! unless current_user.staff?
 
         user = User.find_by(id: params[:user_id])
         raise Discourse::NotFound if user.blank?
+        cdn_avatar_url = fetch_avatar_url(user)
 
-        unless params[:date]&.present?
-          raise Discourse::InvalidParameters.new('date must be present')
-        end
+        hijack do
+          generator = CertificateGenerator.new(user, params[:date], cdn_avatar_url)
 
-        generator = CertificateGenerator.new(user, params[:date])
+          svg = params[:type] == 'advanced' ? generator.advanced_user_track : generator.new_user_track
 
-        svg =
-          case params[:type]
-          when 'advanced'
-            generator.advanced_user_track
-          else
-            generator.new_user_track
+          respond_to do |format|
+            format.svg { render inline: svg }
           end
-
-        respond_to do |format|
-          format.svg { render inline: svg }
         end
+      end
+
+      private
+
+      def fetch_avatar_url(user)
+        avatar_url = UrlHelper.absolute(Discourse.base_uri + user.avatar_template.gsub('{size}', '250'))
+        URI(avatar_url).open('rb', redirect: true, allow_redirections: :all).read
+      rescue OpenURI::HTTPError
+        # Ignore if fetching image returns a non 200 response
       end
     end
   end

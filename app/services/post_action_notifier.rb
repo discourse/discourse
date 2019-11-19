@@ -76,7 +76,7 @@ class PostActionNotifier
     return unless post_action.is_like?
 
     post = post_action.post
-    return if post_action.user.blank?
+    return if post_action.user.blank? || post.blank?
 
     alerter.create_notification(
       post.user,

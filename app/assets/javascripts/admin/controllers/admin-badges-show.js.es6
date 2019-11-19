@@ -1,24 +1,25 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { alias } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyNotEqual } from "discourse/lib/computed";
-import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Controller.extend(bufferedProperty("model"), {
-  adminBadges: Ember.inject.controller(),
+export default Controller.extend(bufferedProperty("model"), {
+  adminBadges: inject(),
   saving: false,
   savingStatus: "",
 
-  badgeTypes: Ember.computed.alias("adminBadges.badgeTypes"),
-  badgeGroupings: Ember.computed.alias("adminBadges.badgeGroupings"),
-  badgeTriggers: Ember.computed.alias("adminBadges.badgeTriggers"),
-  protectedSystemFields: Ember.computed.alias(
-    "adminBadges.protectedSystemFields"
-  ),
+  badgeTypes: alias("adminBadges.badgeTypes"),
+  badgeGroupings: alias("adminBadges.badgeGroupings"),
+  badgeTriggers: alias("adminBadges.badgeTriggers"),
+  protectedSystemFields: alias("adminBadges.protectedSystemFields"),
 
-  readOnly: Ember.computed.alias("buffered.system"),
+  readOnly: alias("buffered.system"),
   showDisplayName: propertyNotEqual("name", "displayName"),
 
-  @computed("model.query", "buffered.query")
+  @discourseComputed("model.query", "buffered.query")
   hasQuery(modelQuery, bufferedQuery) {
     if (bufferedQuery) {
       return bufferedQuery.trim().length > 0;

@@ -1,7 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
 import Setting from "admin/mixins/setting-object";
+import EmberObject from "@ember/object";
 
-const SiteSetting = Discourse.Model.extend(Setting, {});
+const SiteSetting = EmberObject.extend(Setting, {});
 
 SiteSetting.reopenClass({
   findAll() {
@@ -25,9 +26,14 @@ SiteSetting.reopenClass({
     });
   },
 
-  update(key, value) {
+  update(key, value, opts = {}) {
     const data = {};
     data[key] = value;
+
+    if (opts["updateExistingUsers"] === true) {
+      data["updateExistingUsers"] = true;
+    }
+
     return ajax(`/admin/site_settings/${key}`, { type: "PUT", data });
   }
 });

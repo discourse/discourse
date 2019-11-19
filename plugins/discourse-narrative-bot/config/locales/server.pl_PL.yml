@@ -120,14 +120,14 @@ pl_PL:
           > Zaczyna interaktywny samouczek. `{name-of-tutorial}` może być jednym z: `
           %{tracks}`.
         bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
+          `@ %{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
 
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Wykonuje losowy akt życzliwości, nie oczekując nagrody, wiedząc, że pewnego dnia ktoś może zrobić to samo dla Ciebie._ &mdash; Princess Diana
+          ` @ %{discobot_username} %{quote_trigger}`
+          %{quote_sample} `
 
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Możesz na niej polegać
+          `@%{discobot_username} %{magic_8_ball_trigger}
+          >:kryształowa_kula: Możesz na tym polegać
       do_not_understand:
         first_response: |-
           Hej! Dzięki za odpowiedź!
@@ -277,11 +277,11 @@ pl_PL:
 
           Spróbuj wyszukać frazę „kapibara” w tym wątku.
         hidden_message: |-
-          Jak udało Ci się pominąć tę kapibarę? :wink:
+          Jak tęskniłeś za tą kapibarą? :Puść oczko:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Zauważyłeś, że powróciliśmy na początek wątku? Nakarm tę biedną, głodną kapibarę, **odpowiadając z emoji :herb:**, a zostaniesz automatycznie przeniesiony na koniec wątku.
+          Zauważyłeś, że wróciłeś na początek? Nakarm tę biedną głodną kapibarę **, odpowiadając emoji `%{search_answer}` **, a zostaniesz automatycznie zabrany do końca.
         reply: |-
           Yay, udało Ci się to odnaleźć :tada:
 

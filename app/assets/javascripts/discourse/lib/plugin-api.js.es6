@@ -46,7 +46,7 @@ import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.33";
+const PLUGIN_API_VERSION = "0.8.36";
 
 class PluginApi {
   constructor(version, container) {
@@ -463,7 +463,7 @@ class PluginApi {
 
    ```javascript
    api.customUserAvatarClasses(user => {
-      if (Ember.get(user, 'primary_group_name') === 'managers') {
+      if (get(user, 'primary_group_name') === 'managers') {
         return ['managers'];
       }
     });
@@ -716,7 +716,7 @@ class PluginApi {
 
   /**
    *
-   * Adds a new item in the navigation bar.
+   * Adds a new item in the navigation bar. Returns the NavItem object created.
    *
    * Example:
    *
@@ -729,14 +729,20 @@ class PluginApi {
    * An optional `customFilter` callback can be included to not display the
    * nav item on certain routes
    *
+   * An optional `init` callback can be included to run custom code on menu
+   * init
+   *
    * Example:
    *
    * addNavigationBarItem({
    *   name: "link-to-bugs-category",
    *   displayName: "bugs"
    *   href: "/c/bugs",
+   *   init: (navItem, category) => { if (category) { navItem.set("category", category)  } }
    *   customFilter: (category, args, router) => { category && category.name !== 'bug' }
-   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') "/a-feature"; }
+   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') "/a-feature"; },
+   *   before: "top",
+   *   forceActive(category, args, router) => router.currentURL === "/a/b/c/d";
    * })
    */
   addNavigationBarItem(item) {
@@ -763,7 +769,23 @@ class PluginApi {
         };
       }
 
-      addNavItem(item);
+      const forceActive = item.forceActive;
+      if (forceActive) {
+        const router = this.container.lookup("service:router");
+        item.forceActive = function(category, args) {
+          return forceActive(category, args, router);
+        };
+      }
+
+      const init = item.init;
+      if (init) {
+        const router = this.container.lookup("service:router");
+        item.init = function(navItem, category, args) {
+          init(navItem, category, args, router);
+        };
+      }
+
+      return addNavItem(item);
     }
   }
 
@@ -791,7 +813,7 @@ class PluginApi {
    *
    * Example:
    *
-   * modifySelectKit("topic-footer-mobile-dropdown").appendContent(() => [{
+   * api.modifySelectKit("topic-footer-mobile-dropdown").appendContent(() => [{
    *   name: "discourse",
    *   id: 1
    * }])
@@ -807,7 +829,7 @@ class PluginApi {
    *
    * Example:
    *
-   * addGTMPageChangedCallback( gtmData => gtmData.locale = I18n.currentLocale() )
+   * api.addGTMPageChangedCallback( gtmData => gtmData.locale = I18n.currentLocale() )
    *
    */
   addGTMPageChangedCallback(fn) {
@@ -821,7 +843,7 @@ class PluginApi {
    * Example:
    *
    * // read /discourse/lib/sharing.js.es6 for options
-   * addSharingSource(options)
+   * api.addSharingSource(options)
    *
    */
   addSharingSource(options) {
@@ -837,12 +859,26 @@ class PluginApi {
    *
    * Example:
    *
-   * addComposerUploadHandler(["mp4", "mov"], (file, editor) => {
-   *    console.log("Handling upload for", file.name);
+   * api.addComposerUploadHandler(["mp4", "mov"], (file, editor) => {
+   *   console.log("Handling upload for", file.name);
    * })
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
+  }
+
+  /**
+   * Registers a "beforeSave" function on the composer. This allows you to
+   * implement custom logic that will happen before the user makes a post.
+   *
+   * Example:
+   *
+   * api.composerBeforeSave(() => {
+   *   console.log("Before saving, do something!");
+   * })
+   */
+  composerBeforeSave(method) {
+    Composer.reopen({ beforeSave: method });
   }
 
   /**

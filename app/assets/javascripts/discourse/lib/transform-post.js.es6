@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { userPath } from "discourse/lib/url";
 
 const _additionalAttributes = [];
@@ -48,7 +49,7 @@ export function transformBasicPost(post) {
     showFlagDelete: false,
     canRecover: post.can_recover,
     canEdit: post.can_edit,
-    canFlag: !Ember.isEmpty(post.get("flagsAvailable")),
+    canFlag: !isEmpty(post.get("flagsAvailable")),
     canReviewTopic: false,
     reviewableId: post.reviewable_id,
     reviewableScoreCount: post.reviewable_score_count,

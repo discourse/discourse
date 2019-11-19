@@ -258,7 +258,7 @@ sr:
     autohighlight_all_code: "Forsiraj primenu označavanja koda za sve preformatirane blokove koda i kada nije eksplicitno naveden jezik."
     embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
     show_create_topics_notice: "Ako sajt ima manje od 5 javnih tema, prikaži poruku koja sugeriše administratorima da kreiraju neke teme."
-    delete_drafts_older_than_n_days: Izbriši radne verzije poruka starije od (n) dana
+    delete_drafts_older_than_n_days: "Izbriši radne verzije poruka starije od (n) dana"
     enable_emoji: "Omogući emotikone"
     emoji_set: "Koliko bi ste želeli vas emoji?"
     auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori (0 da se isključi)"

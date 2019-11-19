@@ -106,7 +106,7 @@ module Email
     def create_incoming_email
       IncomingEmail.create(
         message_id: @message_id,
-        raw: @raw_email,
+        raw: Email::Cleaner.new(@raw_email).execute,
         subject: subject,
         from_address: @from_email,
         to_addresses: @mail.to&.map(&:downcase)&.join(";"),
@@ -301,6 +301,8 @@ module Email
         @mail[:x_spam_flag].to_s[/YES/i]
       when 'X-Spam-Status'
         @mail[:x_spam_status].to_s[/^Yes, /i]
+      when 'X-SES-Spam-Verdict'
+        @mail[:x_ses_spam_verdict].to_s[/FAIL/i]
       else
         false
       end
@@ -1235,5 +1237,4 @@ module Email
       end
     end
   end
-
 end

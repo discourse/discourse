@@ -20,7 +20,7 @@ class TopicConverter
           Category.where(read_restricted: false)
             .where.not(id: SiteSetting.uncategorized_category_id)
             .order('id asc')
-            .pluck(:id).first
+            .pluck_first(:id)
         end
 
       PostRevisor.new(@topic.first_post, @topic).revise!(

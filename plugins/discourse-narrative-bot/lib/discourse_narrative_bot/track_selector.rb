@@ -178,6 +178,7 @@ module DiscourseNarrativeBot
         discobot_username: discobot_username,
         dice_trigger: self.class.dice_trigger,
         quote_trigger: self.class.quote_trigger,
+        quote_sample: DiscourseNarrativeBot::QuoteGenerator.generate(@user),
         magic_8_ball_trigger: self.class.magic_8_ball_trigger
       )}"
     end

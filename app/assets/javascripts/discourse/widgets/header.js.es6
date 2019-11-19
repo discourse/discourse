@@ -1,3 +1,5 @@
+import { get } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { avatarImg } from "discourse/widgets/post";
@@ -419,7 +421,7 @@ export default createWidget("header", {
     this.updateHighlight();
 
     if (this.state.searchVisible) {
-      Ember.run.schedule("afterRender", () => {
+      schedule("afterRender", () => {
         const $searchInput = $("#search-term");
         $searchInput.focus().select();
 
@@ -557,7 +559,7 @@ export default createWidget("header", {
     if (service) {
       const ctx = service.get("searchContext");
       if (ctx) {
-        return Ember.get(ctx, "type");
+        return get(ctx, "type");
       }
     }
   }

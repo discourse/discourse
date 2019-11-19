@@ -1,4 +1,6 @@
-<div class="container">
+{{plugin-outlet name="advanced-search-options-above" args=(hash searchedTerms=searchedTerms) tagName=""}}
+
+<div class="container advanced-search-posted-by-group">
   <div class="control-group pull-left">
     <label class="control-label" for="search-posted-by">{{i18n "search.advanced.posted_by.label"}}</label>
     <div class="controls">
@@ -36,7 +38,7 @@
 -->
 
 {{#if siteSettings.tagging_enabled}}
-  <div class="container">
+  <div class="container advanced-search-tag-group">
     <div class="control-group">
       <label class="control-label" for="search-with-tags">{{i18n "search.advanced.with_tags.label"}}</label>
       <div class="controls">
@@ -54,7 +56,7 @@
   </div>
 {{/if}}
 
-<div class="container">
+<div class="container advanced-search-topics-posts-group">
   <div class="control-group pull-left">
     <label class="control-label" for="search-in-options">{{i18n "search.advanced.filters.label"}}</label>
     <div class="controls">
@@ -77,7 +79,7 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container advanced-search-date-count-group">
   <div class="control-group pull-left">
     <label class="control-label" for="search-post-date">{{i18n "search.advanced.post.time.label"}}</label>
     <div class="controls full-search-dates">
@@ -92,3 +94,5 @@
     </div>
   </div>
 </div>
+
+{{plugin-outlet name="advanced-search-options-below" args=(hash searchedTerms=searchedTerms) tagName=""}}

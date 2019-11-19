@@ -1,6 +1,9 @@
-import { on } from "ember-addons/ember-computed-decorators";
+import { isEmpty } from "@ember/utils";
+import Component from "@ember/component";
+import { on } from "discourse-common/utils/decorators";
+import { set } from "@ember/object";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [":value-list", ":secret-value-list"],
   inputDelimiter: null,
   collection: null,
@@ -42,7 +45,7 @@ export default Ember.Component.extend({
   _checkInvalidInput(inputs) {
     this.set("validationMessage", null);
     for (let input of inputs) {
-      if (Ember.isEmpty(input) || input.includes("|")) {
+      if (isEmpty(input) || input.includes("|")) {
         this.set(
           "validationMessage",
           I18n.t("admin.site_settings.secret_list.invalid_input")
@@ -65,7 +68,7 @@ export default Ember.Component.extend({
 
   _replaceValue(index, newValue, keyName) {
     let item = this.collection[index];
-    Ember.set(item, keyName, newValue);
+    set(item, keyName, newValue);
 
     this._saveValues();
   },

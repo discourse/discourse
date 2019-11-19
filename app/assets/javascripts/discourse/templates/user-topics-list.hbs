@@ -7,7 +7,9 @@
                      hasIncoming=hasIncoming
                      incomingCount=incomingCount
                      showInserted=(action "showInserted")
-                     tagsForUser=tagsForUser}}
+                     tagsForUser=tagsForUser
+                     onScroll=saveScrollPosition
+                     scrollOnLoad=true}}
 
   {{conditional-loading-spinner condition=model.loadingMore}}
 {{/load-more}}

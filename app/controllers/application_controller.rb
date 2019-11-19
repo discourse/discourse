@@ -520,7 +520,6 @@ class ApplicationController < ActionController::Base
     store_preloaded("customHTML", custom_html_json)
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
-    store_preloaded("translationOverrides", I18n.client_overrides_json(I18n.locale))
   end
 
   def preload_current_user_data
@@ -734,7 +733,7 @@ class ApplicationController < ActionController::Base
     check_totp = current_user &&
       !request.format.json? &&
       !is_api? &&
-      !(SiteSetting.allow_anonymous_posting && current_user.anonymous?) &&
+      !current_user.anonymous? &&
       ((SiteSetting.enforce_second_factor == 'staff' && current_user.staff?) ||
         SiteSetting.enforce_second_factor == 'all') &&
       !current_user.totp_enabled?

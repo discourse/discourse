@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 // Subscribes to user events on the message bus
 import {
   init as initDesktopNotifications,
@@ -10,6 +11,8 @@ import {
   unsubscribe as unsubscribePushNotifications,
   isPushNotificationsEnabled
 } from "discourse/lib/push-notifications";
+import { set } from "@ember/object";
+import ENV from "discourse-common/config/environment";
 
 export default {
   name: "subscribe-user-notifications",
@@ -82,7 +85,7 @@ export default {
               }
               oldNotifications.insertAt(
                 insertPosition,
-                Ember.Object.create(lastNotification)
+                EmberObject.create(lastNotification)
               );
             }
 
@@ -119,13 +122,13 @@ export default {
       });
 
       bus.subscribe("/client_settings", data =>
-        Ember.set(siteSettings, data.name, data.value)
+        set(siteSettings, data.name, data.value)
       );
       bus.subscribe("/refresh_client", data =>
         Discourse.set("assetVersion", data)
       );
 
-      if (!Ember.testing) {
+      if (ENV.environment !== "test") {
         bus.subscribe(alertChannel(user), data => onNotification(data, user));
         initDesktopNotifications(bus, appEvents);
 

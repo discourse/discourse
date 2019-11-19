@@ -1,9 +1,12 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { isEmpty } from "@ember/utils";
+import EmberObject from "@ember/object";
+import Controller from "@ember/controller";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cookAsync } from "discourse/lib/text";
 
-export default Ember.Controller.extend(PreferencesTabController, {
+export default Controller.extend(PreferencesTabController, {
   init() {
     this._super(...arguments);
 
@@ -19,10 +22,10 @@ export default Ember.Controller.extend(PreferencesTabController, {
     ];
   },
 
-  @computed("model.user_fields.@each.value")
+  @discourseComputed("model.user_fields.@each.value")
   userFields() {
     let siteUserFields = this.site.get("user_fields");
-    if (!Ember.isEmpty(siteUserFields)) {
+    if (!isEmpty(siteUserFields)) {
       const userFields = this.get("model.user_fields");
 
       // Staff can edit fields that are not `editable`
@@ -33,12 +36,12 @@ export default Ember.Controller.extend(PreferencesTabController, {
         const value = userFields
           ? userFields[field.get("id").toString()]
           : null;
-        return Ember.Object.create({ value, field });
+        return EmberObject.create({ value, field });
       });
     }
   },
 
-  @computed("model.can_change_bio")
+  @discourseComputed("model.can_change_bio")
   canChangeBio(canChangeBio) {
     return canChangeBio;
   },
@@ -51,9 +54,9 @@ export default Ember.Controller.extend(PreferencesTabController, {
         userFields = this.userFields;
 
       // Update the user fields
-      if (!Ember.isEmpty(userFields)) {
+      if (!isEmpty(userFields)) {
         const modelFields = model.get("user_fields");
-        if (!Ember.isEmpty(modelFields)) {
+        if (!isEmpty(modelFields)) {
           userFields.forEach(function(uf) {
             modelFields[uf.get("field.id").toString()] = uf.get("value");
           });

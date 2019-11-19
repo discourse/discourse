@@ -42,7 +42,7 @@ describe EmbedController do
 
     context "with api key" do
 
-      let(:api_key) { ApiKey.create_master_key }
+      let(:api_key) { Fabricate(:api_key) }
 
       context "with valid embed url" do
         let(:topic_embed) { Fabricate(:topic_embed, embed_url: embed_url) }

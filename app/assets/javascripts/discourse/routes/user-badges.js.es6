@@ -1,7 +1,8 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import ViewingActionType from "discourse/mixins/viewing-action-type";
 import UserBadge from "discourse/models/user-badge";
 
-export default Discourse.Route.extend(ViewingActionType, {
+export default DiscourseRoute.extend(ViewingActionType, {
   model() {
     return UserBadge.findByUsername(
       this.modelFor("user").get("username_lower"),

@@ -1,7 +1,8 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import Invite from "discourse/models/invite";
 import showModal from "discourse/lib/show-modal";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   model(params) {
     Invite.findInvitedCount(this.modelFor("user")).then(result =>
       this.set("invitesCount", result)

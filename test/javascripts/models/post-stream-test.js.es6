@@ -1,6 +1,7 @@
-QUnit.module("model:post-stream");
-
+import Post from "discourse/models/post";
 import createStore from "helpers/create-store";
+
+QUnit.module("model:post-stream");
 
 const buildStream = function(id, stream) {
   const store = createStore();
@@ -173,7 +174,7 @@ QUnit.test("updateFromJson", assert => {
   });
 
   assert.equal(postStream.get("posts.length"), 1, "it loaded the posts");
-  assert.containsInstance(postStream.get("posts"), Discourse.Post);
+  assert.containsInstance(postStream.get("posts"), Post);
 
   assert.equal(postStream.get("extra_property"), 12);
 });

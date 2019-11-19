@@ -249,6 +249,15 @@ class Guardian
     true
   end
 
+  def can_see_groups_members?(groups)
+    return false if groups.blank?
+
+    requested_group_ids = groups.map(&:id) # Can't use pluck, groups could be a regular array
+    matching_groups = Group.where(id: requested_group_ids).members_visible_groups(user)
+
+    matching_groups.pluck(:id).sort == requested_group_ids.sort
+  end
+
   # Can we impersonate this user?
   def can_impersonate?(target)
     target &&
@@ -305,6 +314,14 @@ class Guardian
     return false if user != @user
     return true if user.badges.where(name: title, allow_title: true).exists?
     user.groups.where(title: title).exists?
+  end
+
+  def can_use_primary_group?(user, group_id = nil)
+    return false if !user || !group_id
+    group = Group.find_by(id: group_id.to_i)
+
+    user.group_ids.include?(group_id.to_i) &&
+    (group ? !group.automatic : false)
   end
 
   def can_change_primary_group?(user)

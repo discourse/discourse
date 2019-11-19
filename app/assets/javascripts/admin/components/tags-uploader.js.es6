@@ -1,9 +1,11 @@
+import { alias } from "@ember/object/computed";
+import Component from "@ember/component";
 import UploadMixin from "discourse/mixins/upload";
 
-export default Ember.Component.extend(UploadMixin, {
+export default Component.extend(UploadMixin, {
   type: "csv",
   uploadUrl: "/tags/upload",
-  addDisabled: Ember.computed.alias("uploading"),
+  addDisabled: alias("uploading"),
   elementId: "tag-uploader",
 
   validateUploadedFilesOptions() {

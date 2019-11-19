@@ -20,7 +20,7 @@ module Jobs
           notification.merge(client_id: client_id)
         end
 
-        next unless push_url
+        next unless push_url.present?
 
         result = Excon.post(push_url,
           body: payload.merge(notifications: notifications).to_json,

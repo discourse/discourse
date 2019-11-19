@@ -1,4 +1,7 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { makeArray } from "discourse-common/lib/helpers";
+import { empty, notEmpty, match } from "@ember/object/computed";
+import Controller from "@ember/controller";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { url } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
@@ -7,13 +10,13 @@ import { THEMES, COMPONENTS } from "admin/models/theme";
 
 const THEME_UPLOAD_VAR = 2;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   downloadUrl: url("model.id", "/admin/customize/themes/%@/export"),
   previewUrl: url("model.id", "/admin/themes/%@/preview"),
-  addButtonDisabled: Ember.computed.empty("selectedChildThemeId"),
+  addButtonDisabled: empty("selectedChildThemeId"),
   editRouteName: "adminCustomizeThemes.edit",
 
-  @computed("model.editedFields")
+  @discourseComputed("model.editedFields")
   editedFieldsFormatted() {
     const descriptions = [];
     ["common", "desktop", "mobile"].forEach(target => {
@@ -31,13 +34,13 @@ export default Ember.Controller.extend({
     return descriptions;
   },
 
-  @computed("colorSchemeId", "model.color_scheme_id")
+  @discourseComputed("colorSchemeId", "model.color_scheme_id")
   colorSchemeChanged(colorSchemeId, existingId) {
-    colorSchemeId = colorSchemeId === null ? null : parseInt(colorSchemeId);
+    colorSchemeId = colorSchemeId === null ? null : parseInt(colorSchemeId, 10);
     return colorSchemeId !== existingId;
   },
 
-  @computed("availableChildThemes", "model.childThemes.[]", "model")
+  @discourseComputed("availableChildThemes", "model.childThemes.[]", "model")
   selectableChildThemes(available, childThemes) {
     if (available) {
       const themes = !childThemes
@@ -47,7 +50,7 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("allThemes", "model.component", "model")
+  @discourseComputed("allThemes", "model.component", "model")
   availableChildThemes(allThemes) {
     if (!this.get("model.component")) {
       const themeId = this.get("model.id");
@@ -57,38 +60,38 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("model.component")
+  @discourseComputed("model.component")
   convertKey(component) {
     const type = component ? "component" : "theme";
     return `admin.customize.theme.convert_${type}`;
   },
 
-  @computed("model.component")
+  @discourseComputed("model.component")
   convertIcon(component) {
     return component ? "cube" : "";
   },
 
-  @computed("model.component")
+  @discourseComputed("model.component")
   convertTooltip(component) {
     const type = component ? "component" : "theme";
     return `admin.customize.theme.convert_${type}_tooltip`;
   },
 
-  @computed("model.settings")
+  @discourseComputed("model.settings")
   settings(settings) {
     return settings.map(setting => ThemeSettings.create(setting));
   },
 
-  hasSettings: Ember.computed.notEmpty("settings"),
+  hasSettings: notEmpty("settings"),
 
-  @computed("model.translations")
+  @discourseComputed("model.translations")
   translations(translations) {
     return translations.map(setting => ThemeSettings.create(setting));
   },
 
-  hasTranslations: Ember.computed.notEmpty("translations"),
+  hasTranslations: notEmpty("translations"),
 
-  @computed("model.remoteError", "updatingRemote")
+  @discourseComputed("model.remoteError", "updatingRemote")
   showRemoteError(errorMessage, updating) {
     return errorMessage && !updating;
   },
@@ -124,8 +127,8 @@ export default Ember.Controller.extend({
         });
 
         this.get("parentController.model.content").forEach(theme => {
-          const children = Ember.makeArray(theme.get("childThemes"));
-          const rawChildren = Ember.makeArray(theme.get("child_themes"));
+          const children = makeArray(theme.get("childThemes"));
+          const rawChildren = makeArray(theme.get("child_themes"));
           const index = children ? children.indexOf(model) : -1;
           if (index > -1) {
             children.splice(index, 1);
@@ -147,10 +150,7 @@ export default Ember.Controller.extend({
       "scss"
     );
   },
-  sourceIsHttp: Ember.computed.match(
-    "model.remote_theme.remote_url",
-    /^http(s)?:\/\//
-  ),
+  sourceIsHttp: match("model.remote_theme.remote_url", /^http(s)?:\/\//),
   actions: {
     updateToLatest() {
       this.set("updatingRemote", true);
@@ -189,7 +189,7 @@ export default Ember.Controller.extend({
       let schemeId = this.colorSchemeId;
       this.set(
         "model.color_scheme_id",
-        schemeId === null ? null : parseInt(schemeId)
+        schemeId === null ? null : parseInt(schemeId, 10)
       );
       this.model.saveChanges("color_scheme_id");
     },
@@ -239,7 +239,7 @@ export default Ember.Controller.extend({
     },
 
     addChildTheme() {
-      let themeId = parseInt(this.selectedChildThemeId);
+      let themeId = parseInt(this.selectedChildThemeId, 10);
       let theme = this.allThemes.findBy("id", themeId);
       this.model.addChildTheme(theme);
     },

@@ -1,4 +1,6 @@
-import debounce from "discourse/lib/debounce";
+import { scheduleOnce } from "@ember/runloop";
+import discourseDebounce from "discourse/lib/debounce";
+import Mixin from "@ember/object/mixin";
 
 /**
   This object provides the DOM methods we need for our Mixin to bind to scrolling
@@ -23,7 +25,7 @@ const ScrollingDOMMethods = {
   }
 };
 
-const Scrolling = Ember.Mixin.create({
+const Scrolling = Mixin.create({
   // Begin watching for scroll events. By default they will be called at max every 100ms.
   // call with {debounce: N} for a diff time
   bindScrolling(opts) {
@@ -37,11 +39,11 @@ const Scrolling = Ember.Mixin.create({
       if (router.activeTransition) {
         return;
       }
-      return Ember.run.scheduleOnce("afterRender", this, "scrolled");
+      return scheduleOnce("afterRender", this, "scrolled");
     };
 
     if (opts.debounce) {
-      onScrollMethod = debounce(onScrollMethod, opts.debounce);
+      onScrollMethod = discourseDebounce(onScrollMethod, opts.debounce);
     }
 
     ScrollingDOMMethods.bindOnScroll(onScrollMethod, opts.name);

@@ -1,4 +1,4 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export const States = {
   UNCHECKED: 0,
@@ -15,13 +15,13 @@ export default {
     this.set("_validState", States.UNCHECKED);
   },
 
-  @computed("_validState")
+  @discourseComputed("_validState")
   valid: state => state === States.VALID,
 
-  @computed("_validState")
+  @discourseComputed("_validState")
   invalid: state => state === States.INVALID,
 
-  @computed("_validState")
+  @discourseComputed("_validState")
   unchecked: state => state === States.UNCHECKED,
 
   setValid(valid, description) {

@@ -6,6 +6,7 @@ import { h } from "virtual-dom";
 import highlightText from "discourse/lib/highlight-text";
 import { escapeExpression, formatUsername } from "discourse/lib/utilities";
 import { iconNode } from "discourse-common/lib/icon-library";
+import renderTag from "discourse/lib/render-tag";
 
 class Highlighted extends RawHtml {
   constructor(html, term) {
@@ -70,13 +71,7 @@ createSearchResult({
   linkField: "url",
   builder(t) {
     const tag = escapeExpression(t.id);
-    return h(
-      "span",
-      {
-        className: `tag-${tag} discourse-tag ${Discourse.SiteSettings.tag_style}`
-      },
-      tag
-    );
+    return new RawHtml({ html: renderTag(tag, { tagName: "span" }) });
   }
 });
 

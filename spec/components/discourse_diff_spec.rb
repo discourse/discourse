@@ -76,7 +76,7 @@ describe DiscourseDiff do
       expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"revision-content\"><p>this is a paragraph</p></div><div class=\"revision-content\"><p>this is a <ins>great </ins>paragraph</p></div>")
     end
 
-    it "adds <ins> and <del> tags on consecutive paragraphs", :focus do
+    it "adds <ins> and <del> tags on consecutive paragraphs" do
       before = "<p>this is one paragraph</p><p>here is yet another</p>"
       after = "<p>this is one great paragraph</p><p>here is another</p>"
       got = DiscourseDiff.new(before, after).side_by_side_html

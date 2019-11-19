@@ -187,6 +187,10 @@ class ColorScheme < ActiveRecord::Base
     @base_color_scheme
   end
 
+  def self.is_base?(scheme_name)
+    base_color_scheme_colors.map { |c| c[:id] }.include?(scheme_name)
+  end
+
   # create_from_base will create a new ColorScheme that overrides Discourse's base color scheme with the given colors.
   def self.create_from_base(params)
     new_color_scheme = new(name: params[:name])

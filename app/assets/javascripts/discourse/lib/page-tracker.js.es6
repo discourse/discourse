@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 let _started = false;
 let cache = {};
 let transitionCount = 0;
@@ -31,7 +32,7 @@ export function startPageTracking(router, appEvents) {
 
     // Refreshing the title is debounced, so we need to trigger this in the
     // next runloop to have the correct title.
-    Ember.run.next(() => {
+    next(() => {
       let title = Discourse.get("_docTitle");
 
       appEvents.trigger("page:changed", {

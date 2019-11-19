@@ -124,7 +124,7 @@ en:
           > :game_die: 3, 6
 
           `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Carry out a random act of kindness, with no expectation of reward, safe in the knowledge that one day someone might do the same for you_ &mdash; Princess Diana
+          %{quote_sample}
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: You may rely on it
@@ -293,7 +293,7 @@ en:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Did you notice you’re now back at the beginning? Feed this poor hungry capybara by **replying with the `:herb:` emoji** and you’ll be automatically taken to the end.
+          Did you notice you’re now back at the beginning? Feed this poor hungry capybara by **replying with the `%{search_answer}` emoji** and you’ll be automatically taken to the end.
         reply: |-
           Yay you found it :tada:
 

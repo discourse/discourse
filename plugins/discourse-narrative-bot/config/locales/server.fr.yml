@@ -118,15 +118,6 @@ fr:
 
           `@%{discobot_username} %{reset_trigger} {nom-du-tutoriel}`
           > Débute un tutoriel interactif. `{nom-du-tutoriel}` est l'une des options suivantes : `%{tracks}`.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Les accolades peuvent faire beaucoup de bien... surtout pour les enfants._ &mdash; Princess Diana
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Vous pouvez compter dessus
       do_not_understand:
         first_response: |-
           Hey, merci pour la réponse !
@@ -275,12 +266,6 @@ fr:
           _psst_ … J'ai caché une surprise dans ce sujet. Si vous aimez les challenges, sélectionnez **l’icône de recherche** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> en haut à droite &#8599; pour la trouver.
 
           Essayer de chercher le terme "capy​&#8203;bara" dans ce sujet.
-        hidden_message: |-
-          Comment avez-vous pu rater le capy​bara ? :wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          Avez-vous remarqué que nous sommes maintenant revenu au début ? Nourrissez ce pauvre capybara en **répondant avec l'emoji `:herb:`** et vous serez automatiquement amené à la fin.
         reply: |-
           Vous l'avez trouvé :tada:
 

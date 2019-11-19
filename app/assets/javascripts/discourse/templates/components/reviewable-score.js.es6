@@ -1,11 +1,13 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { gt } from "@ember/object/computed";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "",
 
-  showStatus: Ember.computed.gt("rs.status", 0),
+  showStatus: gt("rs.status", 0),
 
-  @computed("rs.score_type.title", "reviewable.target_created_by")
+  @discourseComputed("rs.score_type.title", "reviewable.target_created_by")
   title(title, targetCreatedBy) {
     if (title && targetCreatedBy) {
       return title.replace("{{username}}", targetCreatedBy.username);

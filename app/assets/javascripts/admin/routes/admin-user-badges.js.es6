@@ -1,7 +1,8 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import UserBadge from "discourse/models/user-badge";
 import Badge from "discourse/models/badge";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   model() {
     const username = this.modelFor("adminUser").get("username");
     return UserBadge.findByUsername(username);

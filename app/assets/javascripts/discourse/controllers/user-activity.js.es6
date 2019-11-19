@@ -1,12 +1,16 @@
+import { alias } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { exportUserArchive } from "discourse/lib/export-csv";
 
-export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
-  router: Ember.inject.service(),
-  user: Ember.inject.controller(),
+export default Controller.extend({
+  application: inject(),
+  router: service(),
+  user: inject(),
   userActionType: null,
 
-  canDownloadPosts: Ember.computed.alias("user.viewingSelf"),
+  canDownloadPosts: alias("user.viewingSelf"),
 
   _showFooter: function() {
     var showFooter;

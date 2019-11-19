@@ -84,7 +84,7 @@ class User < ActiveRecord::Base
   has_many :muted_user_records, class_name: 'MutedUser'
   has_many :muted_users, through: :muted_user_records
 
-  has_one :api_key, dependent: :destroy
+  has_many :api_keys, dependent: :destroy
 
   has_many :push_subscriptions, dependent: :destroy
 
@@ -117,6 +117,7 @@ class User < ActiveRecord::Base
   after_create :set_random_avatar
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
+  after_create :set_default_tags_preferences
 
   after_update :trigger_user_updated_event, if: :saved_change_to_uploaded_avatar_id?
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
@@ -199,7 +200,7 @@ class User < ActiveRecord::Base
   scope :filter_by_username_or_email, ->(filter) do
     if filter =~ /.+@.+/
       # probably an email so try the bypass
-      if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck(:user_id).first
+      if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck_first(:user_id)
         return where('users.id = ?', user_id)
       end
     end
@@ -415,6 +416,19 @@ class User < ActiveRecord::Base
     Jobs.enqueue(:send_system_message, user_id: id, message_type: "welcome_tl1_user")
   end
 
+  def enqueue_staff_welcome_message(role)
+    return unless staff?
+
+    Jobs.enqueue(
+      :send_system_message,
+      user_id: id,
+      message_type: 'welcome_staff',
+      message_options: {
+        role: role
+      }
+    )
+  end
+
   def change_username(new_username, actor = nil)
     UsernameChanger.change(self, new_username, actor)
   end
@@ -588,11 +602,6 @@ class User < ActiveRecord::Base
     }
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
-  end
-
-  # A selection of people to autocomplete on @mention
-  def self.mentionable_usernames
-    User.select(:username).order('last_posted_at desc').limit(20)
   end
 
   def password=(password)
@@ -899,7 +908,7 @@ class User < ActiveRecord::Base
   def email_confirmed?
     email_tokens.where(email: email, confirmed: true).present? ||
     email_tokens.empty? ||
-    single_sign_on_record&.external_email == email
+    single_sign_on_record&.external_email&.downcase == email
   end
 
   def activate
@@ -1006,7 +1015,6 @@ class User < ActiveRecord::Base
 
       message = I18n.t(
         'flag_reason.spam_hosts',
-        domain: tl.domain,
         base_path: Discourse.base_path,
         locale: SiteSetting.default_locale
       )
@@ -1018,19 +1026,6 @@ class User < ActiveRecord::Base
 
   def has_uploaded_avatar
     uploaded_avatar.present?
-  end
-
-  def generate_api_key(created_by)
-    if api_key.present?
-      api_key.regenerate!(created_by)
-      api_key
-    else
-      ApiKey.create!(user: self, key: SecureRandom.hex(32), created_by: created_by)
-    end
-  end
-
-  def revoke_api_key
-    ApiKey.where(user_id: self.id).delete_all
   end
 
   def find_email
@@ -1220,11 +1215,11 @@ class User < ActiveRecord::Base
     group_titles_query = group_titles_query.order("groups.id = #{primary_group_id} DESC") if primary_group_id
     group_titles_query = group_titles_query.order("groups.primary_group DESC").limit(1)
 
-    if next_best_group_title = group_titles_query.pluck(:title).first
+    if next_best_group_title = group_titles_query.pluck_first(:title)
       return next_best_group_title
     end
 
-    next_best_badge_title = badges.where(allow_title: true).limit(1).pluck(:name).first
+    next_best_badge_title = badges.where(allow_title: true).pluck_first(:name)
     next_best_badge_title ? Badge.display_name(next_best_badge_title) : nil
   end
 
@@ -1420,6 +1415,23 @@ class User < ActiveRecord::Base
     end
   end
 
+  def set_default_tags_preferences
+    return if self.staged?
+
+    values = []
+
+    %w{watching watching_first_post tracking muted}.each do |s|
+      tag_names = SiteSetting.get("default_tags_#{s}").split("|")
+      now = Time.zone.now
+
+      Tag.where(name: tag_names).pluck(:id).each do |tag_id|
+        values << { user_id: self.id, tag_id: tag_id, notification_level: TagUser.notification_levels[s.to_sym], created_at: now, updated_at: now }
+      end
+    end
+
+    TagUser.insert_all!(values) if values.present?
+  end
+
   def self.purge_unactivated
     return [] if SiteSetting.purge_unactivated_users_grace_period_days <= 0
 
@@ -1445,7 +1457,7 @@ class User < ActiveRecord::Base
   def match_title_to_primary_group_changes
     return unless primary_group_id_changed?
 
-    if title == Group.where(id: primary_group_id_was).pluck(:title).first
+    if title == Group.where(id: primary_group_id_was).pluck_first(:title)
       self.title = primary_group&.title
     end
   end
@@ -1466,8 +1478,13 @@ class User < ActiveRecord::Base
 
   def check_if_title_is_badged_granted
     if title_changed? && !new_record? && user_profile
-      badge_granted_title = title.present? && badges.where(allow_title: true, name: title).exists?
-      user_profile.update_column(:badge_granted_title, badge_granted_title)
+      badge_matching_title = title && badges.find do |badge|
+        badge.allow_title? && (badge.display_name == title || badge.name == title)
+      end
+      user_profile.update(
+        badge_granted_title: badge_matching_title.present?,
+        granted_title_badge_id: badge_matching_title&.id
+      )
     end
   end
 
@@ -1563,6 +1580,7 @@ end
 #  silenced_till             :datetime
 #  group_locked_trust_level  :integer
 #  manual_locked_trust_level :integer
+#  secure_identifier         :string
 #
 # Indexes
 #
@@ -1570,6 +1588,7 @@ end
 #  idx_users_moderator                (id) WHERE moderator
 #  index_users_on_last_posted_at      (last_posted_at)
 #  index_users_on_last_seen_at        (last_seen_at)
+#  index_users_on_secure_identifier   (secure_identifier) UNIQUE
 #  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)
 #  index_users_on_username            (username) UNIQUE
 #  index_users_on_username_lower      (username_lower) UNIQUE

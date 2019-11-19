@@ -21,7 +21,8 @@ export default RestrictedUserRoute.extend({
     controller.setProperties({
       model: user,
       newNameInput: user.get("name"),
-      newTitleInput: user.get("title")
+      newTitleInput: user.get("title"),
+      newPrimaryGroupInput: user.get("primary_group_id")
     });
   },
 

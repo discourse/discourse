@@ -193,7 +193,7 @@ module HasCustomFields
       if row_count == 0
         _custom_fields.create!(name: k, value: v)
       end
-      custom_fields[k] = v
+      custom_fields[k.to_s] = v # We normalize custom_fields as strings
     end
   end
 

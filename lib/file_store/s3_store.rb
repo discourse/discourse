@@ -197,7 +197,7 @@ module FileStore
         verified_ids = []
 
         files.each do |f|
-          id = model.where("url LIKE '%#{f.key}' AND etag = '#{f.etag}'").pluck(:id).first
+          id = model.where("url LIKE '%#{f.key}' AND etag = '#{f.etag}'").pluck_first(:id)
           verified_ids << id if id.present?
           marker = f.key
         end

@@ -165,7 +165,7 @@ class Invite < ActiveRecord::Base
   end
 
   def self.find_user_by_email(email)
-    User.with_email(email).where(staged: false).first
+    User.with_email(Email.downcase(email)).where(staged: false).first
   end
 
   def self.get_group_ids(group_names)
@@ -233,7 +233,7 @@ class Invite < ActiveRecord::Base
   end
 
   def resend_invite
-    self.update_columns(created_at: Time.zone.now, updated_at: Time.zone.now)
+    self.update_columns(updated_at: Time.zone.now)
     Jobs.enqueue(:invite_email, invite_id: self.id)
   end
 

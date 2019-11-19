@@ -7,5 +7,5 @@
 
 sk:
   site_settings:
-    presence_enabled: 'Chcete zobraziť používateľov, ktorí momentálne odpovedajú na aktuálnu tému, alebo upravujú aktuálny príspevok?'
-    presence_max_users_shown: 'Mazimálny počet zobrazených používateľov.'
+    presence_enabled: "Chcete zobraziť používateľov, ktorí momentálne odpovedajú na aktuálnu tému, alebo upravujú aktuálny príspevok?"
+    presence_max_users_shown: "Mazimálny počet zobrazených používateľov."

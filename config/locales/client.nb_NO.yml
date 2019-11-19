@@ -759,7 +759,7 @@ nb_NO:
         edit: "Rediger"
         security_key:
           register: "Registrer"
-          delete: 'Slett'
+          delete: "Slett"
       change_about:
         title: "Rediger om meg"
         error: "Det oppstod en feil ved endring av denne verdien."
@@ -784,9 +784,6 @@ nb_NO:
         uploaded_avatar_empty: "Legg til egendefinert bilde"
         upload_title: "Last opp bilde"
         image_is_not_a_square: "Vi har beskåret bildet ditt, høyde og bredde er ikke lik"
-      change_profile_background:
-        title: "Profilbakgrunn"
-        instructions: "Profilbakgrunner vil bli sentrert med en forvalgt bredde på 850 piksler."
       change_card_background:
         title: "Brukerkort bakgrunn"
         instructions: "Bakgrunnsbilder vil bli sentrert og ha en forvalgt bredde på 590 piksler."
@@ -995,6 +992,9 @@ nb_NO:
         header_title: "Profil, meldinger, bokmerker og innstillinger"
       title:
         title: "Tittel"
+        none: "(ingen)"
+      primary_group:
+        title: "Primærgruppe"
         none: "(ingen)"
       filters:
         all: "Alle"
@@ -1901,6 +1901,8 @@ nb_NO:
         image_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp bilder"
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp vedlegg."
         attachment_download_requires_login: "Beklager, du må være innlogget for å laste ned vedlegg."
+      abandon_edit:
+        no_value: "Nei"
       abandon:
         confirm: "Er du sikker på at du vil forlate innlegget ditt?"
         no_value: "Nei"
@@ -2601,7 +2603,6 @@ nb_NO:
               staff: "Gruppeeiere og stab"
           membership:
             automatic: Automatisk
-            trust_level: Tillitsnivå
             trust_levels_title: "Tillitsnivå som automatisk gis til nye medlemmer når de legges til:"
             trust_levels_none: "Ingen"
             automatic_membership_email_domains: "Brukere som registreres med et e-postdomene identisk med et fra denne listen vil automatisk legges til i denne gruppen:"
@@ -2633,16 +2634,13 @@ nb_NO:
         none: "Det finnes ingen aktive API-nøkler akkurat nå."
         user: "Bruker"
         title: "API"
-        key: "Nøkkel"
         created: Opprettet
         generate: "Generer API-nøkkel"
-        regenerate: "Regenerer API-nøkkel"
         revoke: "Trekk tilbake"
-        confirm_regen: "Er du sikker på at du vil erstatte den API-nøkkelen med en ny?"
-        confirm_revoke: "Er du sikker på at du vil trekke tilbake den nøkkelen?"
-        info_html: "API-nøkkelen din vil tillate deg å lage og oppdatere emner ved å bruke JSON-kall."
         all_users: "Alle brukere"
-        note_html: "Hold denne nøkkelen <strong>hemmelig</strong>, alle brukere som har den, vil kunne opprette vilkårlige innlegg som hvilken som helst bruker. "
+        show_details: Detaljer
+        description: Beskrivelse
+        save: Lagre
       web_hooks:
         title: "Webhooker"
         none: "Det finnes ingen webhooker for tiden."
@@ -3481,6 +3479,8 @@ nb_NO:
           search: "Søk"
           groups: "Grupper"
           dashboard: "Dashbord"
+        default_categories:
+          modal_yes: "Ja"
       badges:
         title: Merker
         new_badge: Nytt merke
@@ -3568,21 +3568,15 @@ nb_NO:
         category: "Legg til innlegg i kategori"
         add_host: "Legg til vert"
         settings: "Innbyggingsinnstillinger"
-        feed_settings: "Informasjonskanals-innstillinger"
-        feed_description: "Å tilby en RSS/ATOM-strøm for nettstedet ditt kan forbedre Discourses evne til å importere innholdet ditt."
         crawling_settings: "Innstillinger for søkeroboter"
         crawling_description: "Dersom Discourse oppretter emner for innleggene dine og ingen RSS/ATOM-informasjonskanal finnes, vil det prøve å tolke innholdet ditt ut fra HTML-koden din. Noen ganger kan det være utfordrende å hente ut innhold, så muligheten til å oppgi CSS-regler er der for å gjøre uthentingen enklere."
         embed_by_username: "Brukernavn for opprettelse av emne"
         embed_post_limit: "Maksimalt antall innlegg å bygge inn"
-        embed_username_key_from_feed: "Nøkkel for å hente Discourse-brukernavn fra informasjonskanal"
         embed_title_scrubber: "Regulære uttrykk brukt til å finne og korrigere feil i titler"
         embed_truncate: "Forkort de innebygde innleggene"
         embed_whitelist_selector: "CSS-velger for elementer som tillates i innbygginger"
         embed_blacklist_selector: "CSS-velger for element som fjernes fra innbygginger"
         embed_classname_whitelist: "Tillatte navn for CSS-klasser"
-        feed_polling_enabled: "Importer innlegg via RSS/ATOM"
-        feed_polling_url: "Nettadresse for RSS/ATOM-informasjonskanal å gjennomgangssøke"
-        feed_polling_frequency_mins: "Frekvens for strømspørring (i minutter)"
         save: "Lagre innbyggingsinnstillinger"
       permalink:
         title: "Permalenker"

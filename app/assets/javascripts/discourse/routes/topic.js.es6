@@ -1,3 +1,9 @@
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { cancel } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
+import { later } from "@ember/runloop";
+import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
 
@@ -9,7 +15,7 @@ const SCROLL_DELAY = 500;
 
 import showModal from "discourse/lib/show-modal";
 
-const TopicRoute = Discourse.Route.extend({
+const TopicRoute = DiscourseRoute.extend({
   redirect() {
     return this.redirectIfLoginRequired();
   },
@@ -167,9 +173,9 @@ const TopicRoute = Discourse.Route.extend({
           postUrl += "/" + currentPost;
         }
 
-        Ember.run.cancel(scheduledReplace);
+        cancel(scheduledReplace);
         lastScrollPos = parseInt($(document).scrollTop(), 10);
-        scheduledReplace = Ember.run.later(
+        scheduledReplace = later(
           this,
           "_replaceUnlessScrolling",
           postUrl,
@@ -185,7 +191,7 @@ const TopicRoute = Discourse.Route.extend({
 
     willTransition() {
       this._super(...arguments);
-      Ember.run.cancel(scheduledReplace);
+      cancel(scheduledReplace);
       isTransitioning = true;
       return true;
     }
@@ -200,7 +206,7 @@ const TopicRoute = Discourse.Route.extend({
       return;
     }
     lastScrollPos = currentPos;
-    scheduledReplace = Ember.run.later(
+    scheduledReplace = later(
       this,
       "_replaceUnlessScrolling",
       url,
@@ -210,13 +216,13 @@ const TopicRoute = Discourse.Route.extend({
 
   setupParams(topic, params) {
     const postStream = topic.get("postStream");
-    postStream.set("summary", Ember.get(params, "filter") === "summary");
+    postStream.set("summary", get(params, "filter") === "summary");
 
-    const usernames = Ember.get(params, "username_filters"),
+    const usernames = get(params, "username_filters"),
       userFilters = postStream.get("userFilters");
 
     userFilters.clear();
-    if (!Ember.isEmpty(usernames) && usernames !== "undefined") {
+    if (!isEmpty(usernames) && usernames !== "undefined") {
       userFilters.addObjects(usernames.split(","));
     }
 
@@ -301,7 +307,7 @@ const TopicRoute = Discourse.Route.extend({
     // We reset screen tracking every time a topic is entered
     this.screenTrack.start(model.get("id"), controller);
 
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       this.appEvents.trigger("header:update-topic", model);
     });
   }

@@ -1,3 +1,4 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import {
   translateResults,
@@ -8,7 +9,7 @@ import PreloadStore from "preload-store";
 import { getTransient, setTransient } from "discourse/lib/page-tracker";
 import { escapeExpression } from "discourse/lib/utilities";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   queryParams: {
     q: {},
     expanded: false,

@@ -24,3 +24,23 @@
 <section class='field'>
   {{i18n 'category.tags_tab_description'}}
 </section>
+
+<section class="field">
+  {{i18n 'category.required_tag_group_description'}}
+</section>
+
+<section class="field with-items">
+  <section class="field-item">
+    <label>{{i18n 'category.min_tags_from_required_group_label'}}</label>
+    {{text-field value=category.min_tags_from_required_group id="category-min-tags-from-group" type="number" min="1"}}
+  </section>
+  <section class="field-item">
+    <label>{{i18n 'category.required_tag_group_label'}}</label>
+    {{tag-group-chooser
+      id="category-required-tag-group"
+      tagGroups=category.required_tag_groups
+      maximum=1
+      filterPlaceholder="category.tag_group_selector_placeholder"
+    }}
+  </section>
+</section>

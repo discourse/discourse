@@ -39,7 +39,8 @@ class TopicViewSerializer < ApplicationSerializer
     :featured_link_root_domain,
     :pinned_globally,
     :pinned_at,
-    :pinned_until
+    :pinned_until,
+    :image_url
   )
 
   attributes(

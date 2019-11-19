@@ -6,6 +6,10 @@ module DiscourseNarrativeBot
   class QuoteGenerator
     API_ENDPOINT = 'http://api.forismatic.com/api/1.0/'.freeze
 
+    def self.format_quote(quote, author)
+      I18n.t('discourse_narrative_bot.quote.results', quote: quote, author: author)
+    end
+
     def self.generate(user)
       quote, author =
         if !user.effective_locale.start_with?('en')
@@ -23,7 +27,7 @@ module DiscourseNarrativeBot
           [response_body["quoteText"].strip, response_body["quoteAuthor"].strip]
         end
 
-      I18n.t('discourse_narrative_bot.quote.results', quote: quote, author: author)
+      format_quote(quote, author)
     end
   end
 end

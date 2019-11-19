@@ -1,18 +1,20 @@
+import { next } from "@ember/runloop";
+import Component from "@ember/component";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["date-picker-wrapper"],
   _picker: null,
   value: null,
 
-  @computed("site.mobileView")
+  @discourseComputed("site.mobileView")
   inputType(mobileView) {
     return mobileView ? "date" : "text";
   },
@@ -29,7 +31,7 @@ export default Ember.Component.extend({
 
   _loadPikadayPicker(container) {
     loadScript("/javascripts/pikaday.js").then(() => {
-      Ember.run.next(() => {
+      next(() => {
         const options = {
           field: this.element.querySelector(".date-picker"),
           container: container || null,
@@ -81,7 +83,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed()
+  @discourseComputed()
   placeholder() {
     return I18n.t("dates.placeholder");
   },

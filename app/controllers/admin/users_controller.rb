@@ -19,8 +19,6 @@ class Admin::UsersController < Admin::AdminController
                                     :add_group,
                                     :remove_group,
                                     :primary_group,
-                                    :generate_api_key,
-                                    :revoke_api_key,
                                     :anonymize,
                                     :reset_bounce_score,
                                     :disable_second_factor,
@@ -102,7 +100,6 @@ class Admin::UsersController < Admin::AdminController
 
     User.transaction do
       @user.save!
-      @user.revoke_api_key
 
       user_history = StaffActionLogger.new(current_user).log_user_suspend(
         @user,
@@ -137,7 +134,6 @@ class Admin::UsersController < Admin::AdminController
 
     render_json_dump(
       suspension: {
-        suspended: true,
         suspend_reason: params[:reason],
         full_suspend_reason: user_history.try(:details),
         suspended_till: @user.suspended_till,
@@ -157,7 +153,8 @@ class Admin::UsersController < Admin::AdminController
 
     render_json_dump(
       suspension: {
-        suspended: false
+        suspended_till: nil,
+        suspended_at: nil
       }
     )
   end
@@ -176,16 +173,6 @@ class Admin::UsersController < Admin::AdminController
     guardian.ensure_can_revoke_admin!(@user)
     @user.revoke_admin!
     StaffActionLogger.new(current_user).log_revoke_admin(@user)
-    render body: nil
-  end
-
-  def generate_api_key
-    api_key = @user.generate_api_key(current_user)
-    render_serialized(api_key, ApiKeySerializer)
-  end
-
-  def revoke_api_key
-    @user.revoke_api_key
     render body: nil
   end
 

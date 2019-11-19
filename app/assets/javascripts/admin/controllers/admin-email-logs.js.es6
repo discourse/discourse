@@ -1,6 +1,7 @@
+import Controller from "@ember/controller";
 import EmailLog from "admin/models/email-log";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   loading: false,
 
   loadLogs(sourceModel, loadMore) {

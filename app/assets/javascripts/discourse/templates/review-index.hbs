@@ -23,6 +23,9 @@
     </div>
 
     {{#if filtersExpanded}}
+
+      {{plugin-outlet name="above-review-filters" args=(hash model=model)}}
+
       <div class='reviewable-filter'>
         <label class='filter-label'>{{i18n "review.filters.type.title"}}</label>
         {{combo-box value=filterType content=allTypes none="review.filters.type.all"}}

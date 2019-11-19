@@ -1,9 +1,16 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { reads } from "@ember/object/computed";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
-  editorId: Ember.computed.reads("fieldName"),
+export default Component.extend({
+  editorId: reads("fieldName"),
 
-  @computed("fieldName", "styles.html", "styles.css")
+  @discourseComputed("fieldName")
+  currentEditorMode(fieldName) {
+    return fieldName === "css" ? "scss" : fieldName;
+  },
+
+  @discourseComputed("fieldName", "styles.html", "styles.css")
   resetDisabled(fieldName) {
     return (
       this.get(`styles.${fieldName}`) ===
@@ -11,7 +18,7 @@ export default Ember.Component.extend({
     );
   },
 
-  @computed("styles", "fieldName")
+  @discourseComputed("styles", "fieldName")
   editorContents: {
     get(styles, fieldName) {
       return styles[fieldName];

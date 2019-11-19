@@ -42,6 +42,15 @@ class EmbedController < ApplicationController
 
     list_options = build_topic_list_options
     list_options[:per_page] = params[:per_page].to_i if params.has_key?(:per_page)
+
+    if params[:allow_create]
+      @allow_create = true
+      create_url_params = {}
+      create_url_params[:category_id] = params[:category] if params[:category].present?
+      create_url_params[:tags] = params[:tags] if params[:tags].present?
+      @create_url = "#{Discourse.base_url}/new-topic?#{create_url_params.to_query}"
+    end
+
     topic_query = TopicQuery.new(current_user, list_options)
     @list = topic_query.list_latest
   end

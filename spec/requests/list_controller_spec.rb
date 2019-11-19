@@ -195,19 +195,34 @@ RSpec.describe ListController do
       user
     end
 
-    let!(:topic) do
-      Fabricate(:private_message_topic,
-        allowed_groups: [group],
-      )
+    describe 'with unicode_usernames' do
+      before { SiteSetting.unicode_usernames = false }
+
+      it 'should return the right response' do
+        group.add(user)
+        topic = Fabricate(:private_message_topic, allowed_groups: [group])
+        get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+
+        expect(response.status).to eq(200)
+
+        expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
+          .to eq(topic.id)
+      end
     end
 
-    it 'should return the right response' do
-      get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+    describe 'with unicode_usernames' do
+      before { SiteSetting.unicode_usernames = true }
 
-      expect(response.status).to eq(200)
+      it 'Returns a 200 with unicode group name' do
+        unicode_group = Fabricate(:group, name: '群群组')
+        unicode_group.add(user)
+        topic = Fabricate(:private_message_topic, allowed_groups: [unicode_group])
+        get "/topics/private-messages-group/#{user.username}/#{URI.escape(unicode_group.name)}.json"
+        expect(response.status).to eq(200)
 
-      expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
-        .to eq(topic.id)
+        expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
+          .to eq(topic.id)
+      end
     end
   end
 
@@ -380,19 +395,15 @@ RSpec.describe ListController do
         let(:child_category) { Fabricate(:category_with_definition, parent_category: category) }
 
         context "with valid slug" do
-          it "redirects to the child category" do
-            get "/c/#{category.slug}/#{child_category.slug}/l/latest", params: {
-              id: child_category.id
-            }
-            expect(response).to redirect_to(child_category.url)
+          it "succeeds" do
+            get "/c/#{category.slug}/#{child_category.slug}/#{child_category.id}/l/latest"
+            expect(response.status).to eq(200)
           end
         end
 
         context "with invalid slug" do
-          it "redirects to child category" do
-            get "/c/random_slug/another_random_slug/l/latest", params: {
-              id: child_category.id
-            }
+          xit "redirects" do
+            get "/c/random_slug/another_random_slug/#{child_category.id}/l/latest"
             expect(response).to redirect_to(child_category.url)
           end
         end
@@ -400,7 +411,17 @@ RSpec.describe ListController do
 
       context 'another category exists with a number at the beginning of its name' do
         # One category has another category's id at the beginning of its name
-        let!(:other_category) { Fabricate(:category_with_definition, name: "#{category.id} name") }
+        let!(:other_category) {
+          # Our validations don't allow this to happen now, but did historically
+          Fabricate(:category_with_definition, name: "#{category.id} name", slug: '-').tap { |c|
+            DB.exec <<~SQL
+              UPDATE categories
+              SET slug = '#{category.id}-name'
+              WHERE id = #{c.id}
+            SQL
+            c.reload
+          }
+        }
 
         it 'uses the correct category' do
           get "/c/#{other_category.slug}/l/latest.json"

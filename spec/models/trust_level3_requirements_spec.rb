@@ -78,6 +78,18 @@ describe TrustLevel3Requirements do
         expect(tl3_requirements.penalty_counts.suspended).to eq(1)
         expect(tl3_requirements.penalty_counts.total).to eq(2)
       end
+
+      it "does return if the user has been silenced or suspended over 6 months ago and continues" do
+        freeze_time 1.year.ago do
+          UserSilencer.new(user, moderator, silenced_till: 10.years.from_now).silence
+          UserHistory.create!(target_user_id: user.id, action: UserHistory.actions[:suspend_user])
+          user.update(suspended_till: 10.years.from_now)
+        end
+
+        expect(tl3_requirements.penalty_counts.silenced).to eq(1)
+        expect(tl3_requirements.penalty_counts.suspended).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(2)
+      end
     end
 
     it "time_period uses site setting" do

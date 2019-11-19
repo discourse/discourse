@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
 
@@ -20,7 +21,7 @@ componentTest("default", {
 
     this.set(
       "setting",
-      Ember.Object.create({
+      EmberObject.create({
         allowsNone: undefined,
         category: "foo",
         default: "",

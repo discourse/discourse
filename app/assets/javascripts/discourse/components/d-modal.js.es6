@@ -1,6 +1,8 @@
-import { on } from "ember-addons/ember-computed-decorators";
+import { next } from "@ember/runloop";
+import { on } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [
     ":modal",
     ":d-modal",
@@ -31,11 +33,11 @@ export default Ember.Component.extend({
   setUp() {
     $("html").on("keydown.discourse-modal", e => {
       if (e.which === 27 && this.dismissable) {
-        Ember.run.next(() => $(".modal-header a.close").click());
+        next(() => $(".modal-header button.modal-close").click());
       }
 
       if (e.which === 13 && this.triggerClickOnEnter(e)) {
-        Ember.run.next(() => $(".modal-footer .btn-primary").click());
+        next(() => $(".modal-footer .btn-primary").click());
       }
     });
 
@@ -72,7 +74,7 @@ export default Ember.Component.extend({
       // Delegate click to modal close if clicked outside.
       // We do this because some CSS of ours seems to cover
       // the backdrop and makes it unclickable.
-      $(".modal-header a.close").click();
+      $(".modal-header button.modal-close").click();
     }
   },
 

@@ -4,59 +4,79 @@ require 'rails_helper'
 
 describe UserSearch do
 
-  let(:topic)     { Fabricate :topic }
-  let(:topic2)    { Fabricate :topic }
-  let(:topic3)    { Fabricate :topic }
-  let(:topic4)    { Fabricate :topic }
-  let(:user1)     { Fabricate :user, username: "mrb", name: "Michael Madsen", last_seen_at: 10.days.ago }
-  let(:user2)     { Fabricate :user, username: "mrblue",   name: "Eddie Code", last_seen_at: 9.days.ago }
-  let(:user3)     { Fabricate :user, username: "mrorange", name: "Tim Roth", last_seen_at: 8.days.ago }
-  let(:user4)     { Fabricate :user, username: "mrpink",   name: "Steve Buscemi",  last_seen_at: 7.days.ago }
-  let(:user5)     { Fabricate :user, username: "mrbrown",  name: "Quentin Tarantino", last_seen_at: 6.days.ago }
-  let(:user6)     { Fabricate :user, username: "mrwhite",  name: "Harvey Keitel",  last_seen_at: 5.days.ago }
-  let!(:inactive) { Fabricate :user, username: "Ghost", active: false }
-  let(:admin)     { Fabricate :admin, username: "theadmin" }
-  let(:moderator) { Fabricate :moderator, username: "themod" }
-  let(:staged)    { Fabricate :staged }
+  before_all { SearchIndexer.enable } # Enable for prefabrication
+  before { SearchIndexer.enable } # Enable for each test
 
-  before do
-    SearchIndexer.enable
-  end
+  fab!(:topic)     { Fabricate :topic }
+  fab!(:topic2)    { Fabricate :topic }
+  fab!(:topic3)    { Fabricate :topic }
+  fab!(:topic4)    { Fabricate :topic }
+  fab!(:user1)     { Fabricate :user, username: "mrb", name: "Michael Madsen", last_seen_at: 10.days.ago }
+  fab!(:user2)     { Fabricate :user, username: "mrblue",   name: "Eddie Code", last_seen_at: 9.days.ago }
+  fab!(:user3)     { Fabricate :user, username: "mrorange", name: "Tim Roth", last_seen_at: 8.days.ago }
+  fab!(:user4)     { Fabricate :user, username: "mrpink",   name: "Steve Buscemi",  last_seen_at: 7.days.ago }
+  fab!(:user5)     { Fabricate :user, username: "mrbrown",  name: "Quentin Tarantino", last_seen_at: 6.days.ago }
+  fab!(:user6)     { Fabricate :user, username: "mrwhite",  name: "Harvey Keitel",  last_seen_at: 5.days.ago }
+  fab!(:inactive) { Fabricate :user, username: "Ghost", active: false }
+  fab!(:admin)     { Fabricate :admin, username: "theadmin" }
+  fab!(:moderator) { Fabricate :moderator, username: "themod" }
+  fab!(:staged)    { Fabricate :staged }
 
   def search_for(*args)
     UserSearch.new(*args).search
   end
 
-  it 'finds users in secure category' do
-    group = Fabricate(:group)
-    user = Fabricate(:user)
-    group.add(user)
-    group.save
+  context 'with a secure category' do
+    fab!(:group) { Fabricate :group }
+    fab!(:user) { Fabricate :user }
+    fab!(:searching_user) { Fabricate :user }
+    before_all do
+      group.add(user)
+      group.add(searching_user)
+      group.save
+    end
+    fab!(:category) { Fabricate(:category,
+                        read_restricted: true,
+                        user: user)
+    }
+    before_all { Fabricate(:category_group, category: category, group: group) }
 
-    category =
-      Fabricate(
-        :category,
-        read_restricted: true,
-        user: user
+    it 'autocompletes with people in the category' do
+      results = search_for("", searching_user: searching_user, category_id: category.id)
+
+      expect(user.username).to eq(results[0].username)
+      expect(results.length).to eq(1)
+    end
+
+    it 'will lookup the category from the topic id' do
+      topic = Fabricate(:topic, category: category)
+      _post = Fabricate(:post, user: topic.user, topic: topic)
+
+      results = search_for("", searching_user: searching_user, topic_id: topic.id)
+
+      expect(results.length).to eq(2)
+
+      expect(results.map(&:username)).to contain_exactly(
+        user.username, topic.user.username
       )
+    end
 
-    Fabricate(:category_group, category: category, group: group)
+    it 'will raise an error if the user cannot see the category' do
+      expect do
+        search_for("", searching_user: Fabricate(:user), category_id: category.id)
+      end.to raise_error(Discourse::InvalidAccess)
+    end
 
-    results = search_for("", category_id: category.id)
+    it 'will respect the group member visibility setting' do
+      group.update(members_visibility_level: Group.visibility_levels[:owners])
+      results = search_for("", searching_user: searching_user, category_id: category.id)
+      expect(results.length).to eq(0)
 
-    expect(user.username).to eq(results[0].username)
-    expect(results.length).to eq(1)
+      group.add_owner(searching_user)
+      results = search_for("", searching_user: searching_user, category_id: category.id)
+      expect(results.length).to eq(1)
+    end
 
-    topic = Fabricate(:topic, category: category)
-    _post = Fabricate(:post, user: topic.user, topic: topic)
-
-    results = search_for("", topic_id: topic.id)
-
-    expect(results.length).to eq(2)
-
-    expect(results.map(&:username)).to contain_exactly(
-      user.username, topic.user.username
-    )
   end
 
   it 'allows for correct underscore searching' do
@@ -90,23 +110,17 @@ describe UserSearch do
   end
 
   context "with seed data" do
+    fab!(:post1) { Fabricate :post, user: user1, topic: topic }
+    fab!(:post2) { Fabricate :post, user: user2, topic: topic2 }
+    fab!(:post3) { Fabricate :post, user: user3, topic: topic }
+    fab!(:post4) { Fabricate :post, user: user4, topic: topic }
+    fab!(:post5) { Fabricate :post, user: user5, topic: topic3 }
+    fab!(:post6) { Fabricate :post, user: user6, topic: topic }
+    fab!(:post7) { Fabricate :post, user: staged, topic: topic4 }
 
-    before do
+    before { user6.update(suspended_at: 1.day.ago, suspended_till: 1.year.from_now) }
 
-      Fabricate :post, user: user1, topic: topic
-      Fabricate :post, user: user2, topic: topic2
-      Fabricate :post, user: user3, topic: topic
-      Fabricate :post, user: user4, topic: topic
-      Fabricate :post, user: user5, topic: topic3
-      Fabricate :post, user: user6, topic: topic
-      Fabricate :post, user: staged, topic: topic4
-
-      user6.update(suspended_at: 1.day.ago, suspended_till: 1.year.from_now)
-    end
-
-    # this is a seriously expensive integration test,
-    # re-creating this entire test db is too expensive reuse
-    it "operates correctly" do
+    it "can search by name and username" do
       # normal search
       results = search_for(user1.name.split(" ").first)
       expect(results.size).to eq(1)
@@ -126,7 +140,9 @@ describe UserSearch do
       results = search_for(user4.username.upcase)
       expect(results.size).to eq(1)
       expect(results.first).to eq(user4)
+    end
 
+    it "handles substring search correctly" do
       # substrings
       # only staff members see suspended users in results
       results = search_for("mr")
@@ -147,7 +163,9 @@ describe UserSearch do
 
       results = search_for("MRB", searching_user: admin, limit: 2)
       expect(results.size).to eq(2)
+    end
 
+    it "prioritises topic participants" do
       # topic priority
       results = search_for(user1.username, topic_id: topic.id)
       expect(results.first).to eq(user1)
@@ -157,7 +175,28 @@ describe UserSearch do
 
       results = search_for(user1.username, topic_id: topic3.id)
       expect(results[1]).to eq(user5)
+    end
 
+    it "only reveals topic participants to people with permission" do
+      pm_topic = Fabricate(:private_message_post).topic
+
+      # Anonymous, does not have access
+      expect do
+        search_for("", topic_id: pm_topic.id)
+      end.to raise_error(Discourse::InvalidAccess)
+
+      # Random user, does not have access
+      expect do
+        search_for("", topic_id: pm_topic.id, searching_user: user1)
+      end.to raise_error(Discourse::InvalidAccess)
+
+      pm_topic.invite(pm_topic.user, user1.username)
+      results = search_for("", topic_id: pm_topic.id, searching_user: user1)
+      expect(results.length).to eq(1)
+      expect(results[0]).to eq(pm_topic.user)
+    end
+
+    it "only searches by name when enabled" do
       # When searching by name is enabled, it returns the record
       SiteSetting.enable_names = true
       results = search_for("Tarantino")
@@ -173,11 +212,15 @@ describe UserSearch do
       SiteSetting.enable_names = false
       results = search_for("Tarantino")
       expect(results.size).to eq(0)
+    end
 
+    it "prioritises exact matches" do
       # find an exact match first
       results = search_for("mrB")
       expect(results.first.username).to eq(user1.username)
+    end
 
+    it "does not include self, staged or inactive" do
       # don't return inactive users
       results = search_for(inactive.username)
       expect(results).to be_blank

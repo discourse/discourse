@@ -3,9 +3,12 @@
     <%= discourse_stylesheet_link_tag :wizard, theme_ids: nil %>
     <%= preload_script 'ember_jquery' %>
     <%= preload_script "locales/#{I18n.locale}" %>
+    <%- if ExtraLocalesController.client_overrides_exist? %>
+      <%= preload_script_url ExtraLocalesController.url('overrides') %>
+    <%- end %>
     <%= preload_script 'wizard-vendor' %>
     <%= preload_script 'wizard-application' %>
-    <script src="<%= ExtraLocalesController.url("wizard") %>"></script>
+    <%= preload_script_url ExtraLocalesController.url('wizard') %>
     <%= csrf_meta_tags %>
 
     <%= render partial: "layouts/head" %>

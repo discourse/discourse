@@ -16,13 +16,13 @@ if rails_master?
 else
   # until rubygems gives us optional dependencies we are stuck with this
   # bundle update actionmailer actionpack actionview activemodel activerecord activesupport railties
-  gem 'actionmailer', '6.0.0'
-  gem 'actionpack', '6.0.0'
-  gem 'actionview', '6.0.0'
-  gem 'activemodel', '6.0.0'
-  gem 'activerecord', '6.0.0'
-  gem 'activesupport', '6.0.0'
-  gem 'railties', '6.0.0'
+  gem 'actionmailer', '6.0.1'
+  gem 'actionpack', '6.0.1'
+  gem 'actionview', '6.0.1'
+  gem 'activemodel', '6.0.1'
+  gem 'activerecord', '6.0.1'
+  gem 'activesupport', '6.0.1'
+  gem 'railties', '6.0.1'
   gem 'sprockets-rails'
 end
 
@@ -36,21 +36,12 @@ gem 'mail', require: false
 gem 'mini_mime'
 gem 'mini_suffix'
 
-gem 'hiredis'
-
-# holding off redis upgrade temporarily as it is having issues with our current
-# freedom patch, we will follow this up.
-#
-# FrozenError: can't modify frozen Hash
-# /var/www/discourse/vendor/bundle/ruby/2.5.0/gems/redis-4.1.0/lib/redis/client.rb:93:in `delete'
-# /var/www/discourse/vendor/bundle/ruby/2.5.0/gems/redis-4.1.0/lib/redis/client.rb:93:in `initialize'
-# /var/www/discourse/lib/freedom_patches/redis.rb:7:in `initialize'
-gem 'redis', '4.0.1', require:  ["redis", "redis/connection/hiredis"]
+gem 'redis', '4.1.3'
 gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.9.17'
+gem 'onebox', '1.9.22'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 

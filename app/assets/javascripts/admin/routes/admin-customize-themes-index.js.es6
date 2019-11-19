@@ -1,3 +1,4 @@
+import Route from "@ember/routing/route";
 import { emojiUrlFor } from "discourse/lib/text";
 
 const externalResources = [
@@ -18,7 +19,7 @@ const externalResources = [
   }
 ];
 
-export default Ember.Route.extend({
+export default Route.extend({
   setupController(controller) {
     this._super(...arguments);
     this.controllerFor("adminCustomizeThemes").set("editingTheme", false);

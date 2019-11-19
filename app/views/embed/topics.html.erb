@@ -1,4 +1,12 @@
 <%- if @list && @list.topics.present? %>
+  <%- if @allow_create %>
+    <%= link_to @create_url, target: "_blank" do |link| %>
+      <button class="new-topic-btn btn btn-primary">
+        <span class="new-topic-btn__icon"></span>
+        <span class="new-topic-btn__text"><%= I18n.t('embed.new_topic') %></span>
+      </button>
+    <%- end %>
+  <%- end %>
   <div class='topics-list' data-embed-state='loaded' <%- if @embed_id %>data-embed-id="<%= @embed_id %>"<%- end %>>
     <%- @list.topics.each do |t| %>
       <div class='topic-list-item'>

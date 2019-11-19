@@ -1,6 +1,7 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import showModal from "discourse/lib/show-modal";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   titleToken() {
     return I18n.t("groups.members.title");
   },

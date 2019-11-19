@@ -7,4 +7,4 @@
 
 sr:
   site_settings:
-    presence_enabled: 'Prikaži da korisnici trenutno kucaju odgovor ili menjaju poruku'
+    presence_enabled: "Prikaži da korisnici trenutno kucaju odgovor ili menjaju poruku"

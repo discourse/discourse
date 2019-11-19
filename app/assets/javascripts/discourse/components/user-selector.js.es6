@@ -1,4 +1,5 @@
-import { on, observes } from "ember-addons/ember-computed-decorators";
+import { isEmpty } from "@ember/utils";
+import { on, observes } from "discourse-common/utils/decorators";
 import TextField from "discourse/components/text-field";
 import userSearch from "discourse/lib/user-search";
 import { findRawTemplate } from "discourse/lib/raw-templates";
@@ -130,7 +131,7 @@ export default TextField.extend({
   // THIS IS A HUGE HACK TO SUPPORT CLEARING THE INPUT
   @observes("usernames")
   _clearInput() {
-    if (arguments.length > 1 && Ember.isEmpty(this.usernames)) {
+    if (arguments.length > 1 && isEmpty(this.usernames)) {
       $(this.element)
         .parent()
         .find("a")

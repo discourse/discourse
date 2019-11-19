@@ -1,5 +1,6 @@
+import Component from "@ember/component";
 import KeyEnterEscape from "discourse/mixins/key-enter-escape";
 
-export default Ember.Component.extend(KeyEnterEscape, {
+export default Component.extend(KeyEnterEscape, {
   elementId: "topic-title"
 });

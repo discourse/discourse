@@ -1,4 +1,5 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
 function b64EncodeUnicode(str) {
@@ -12,7 +13,7 @@ function b64EncodeUnicode(str) {
   );
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["backup-codes"],
   backupCodes: null,
 
@@ -31,10 +32,10 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("formattedBackupCodes")
+  @discourseComputed("formattedBackupCodes")
   base64BackupCode: b64EncodeUnicode,
 
-  @computed("backupCodes")
+  @discourseComputed("backupCodes")
   formattedBackupCodes(backupCodes) {
     if (!backupCodes) return null;
 

@@ -116,6 +116,7 @@ end
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  reason                :string
+#  user_accuracy_bonus   :float            default(0.0), not null
 #
 # Indexes
 #

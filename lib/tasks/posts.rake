@@ -533,7 +533,7 @@ def recover_uploads_from_index(path)
 
   PostCustomField.where(name: Post::MISSING_UPLOADS).pluck(:post_id, :value).each do |post_id, uploads|
     uploads = JSON.parse(uploads)
-    raw = Post.where(id: post_id).pluck(:raw).first
+    raw = Post.where(id: post_id).pluck_first(:raw)
     uploads.map! do |upload|
       orig = upload
       if raw.scan(upload).length == 0

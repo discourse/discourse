@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { formatUsername } from "discourse/lib/utilities";
@@ -220,14 +221,14 @@ export default createWidget("user-menu", {
       this.sendWidgetAction("toggleUserMenu");
     } else {
       const $window = $(window);
-      const windowWidth = parseInt($window.width(), 10);
+      const windowWidth = $window.width();
       const $panel = $(".menu-panel");
       $panel.addClass("animate");
       $panel.css("right", -windowWidth);
       const $headerCloak = $(".header-cloak");
       $headerCloak.addClass("animate");
       $headerCloak.css("opacity", 0);
-      Ember.run.later(() => this.sendWidgetAction("toggleUserMenu"), 200);
+      later(() => this.sendWidgetAction("toggleUserMenu"), 200);
     }
   },
 

@@ -1,4 +1,6 @@
-export default Ember.Component.extend({
+import { equal } from "@ember/object/computed";
+import Component from "@ember/component";
+export default Component.extend({
   classNames: ["d-date-time-input-range"],
 
   from: null,
@@ -10,8 +12,8 @@ export default Ember.Component.extend({
   showToTime: true,
   error: null,
 
-  fromPanelActive: Ember.computed.equal("currentPanel", "from"),
-  toPanelActive: Ember.computed.equal("currentPanel", "to"),
+  fromPanelActive: equal("currentPanel", "from"),
+  toPanelActive: equal("currentPanel", "to"),
 
   _valid(state) {
     if (state.to < state.from) {

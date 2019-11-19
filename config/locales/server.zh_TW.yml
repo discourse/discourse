@@ -89,7 +89,6 @@ zh_TW:
         from_reply_by_address_error: "當「來自」標頭的 email 與回覆的 email 相符時會發生。"
         inactive_user_error: "當寄件者處於非啟動狀態時發生。"
         silenced_user_error: "當寄件者被禁言時會發生。"
-        bad_destination_address: "發至/抄送/密送欄中的所有郵件都不匹配進站郵件地址。"
         strangers_not_allowed_error: "當使用者試圖在尚未晉身為成員之一的分類中新建討論話題時發生。"
         insufficient_trust_level_error: "使用者嘗試在使用者等級不滿足分類要求時發帖。"
         reply_user_not_matching_error: "回覆郵箱地址與通知發送至的郵件地址不同。"
@@ -666,7 +665,6 @@ zh_TW:
     activated: "抱歉，這個帳號已被啟用。"
     admin_confirm:
       title: "確認管理員帳號"
-      description: "您是否確定要讓<b>%{target_username}</b>成為管理員？"
       grant: "授予管理員存取權"
       complete: "<b>%{target_username}</b>現在是管理員了"
       back_to: "回到%{title}"
@@ -1654,7 +1652,7 @@ zh_TW:
     embed_username_required: "創建主題需要使用者名。"
     notify_about_flags_after: "如果有投訴沒有在設定的時數內處理，將私訊給版主。設為 0 將禁用。"
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
-    delete_drafts_older_than_n_days: 刪除超過 n 天得草稿。
+    delete_drafts_older_than_n_days: "刪除超過 n 天得草稿。"
     bootstrap_mode_min_users: "禁用摘要模式的使用者數下限（0 為禁用）。"
     prevent_anons_from_downloading_files: "禁止匿名使用者下載附件。警告：這將禁止他們訪問任何發表在貼文中的非圖片資源。"
     slug_generation_method: "選擇一個連結生成方式。“encoded”將生成以百分號編碼的連結。“none”將禁用自定義連結，只生成預設連結。"
@@ -2021,10 +2019,6 @@ zh_TW:
   admin_confirmation_mailer:
     title: "管理員確認"
     subject_template: "[%{email_prefix}] 確認新的管理員帳號"
-    text_body_template: |
-      請確認您要將 **%{target_username}** 作為 Discourse 論壇的管理員
-
-      [確認管理員帳戶](%{admin_confirm_url})
   test_mailer:
     title: "測試 Mailer"
     subject_template: "[%{email_prefix}] 電子郵件發送測試"
@@ -2559,27 +2553,6 @@ zh_TW:
     visit_link_to_respond_pm: "[查看訊息](%{base_url}%{url}) 以回應%{participants}。"
     posted_by: "由 %{username} 張貼於 %{post_date}"
     pm_participants: "參與者：%{participants}"
-    invited_group_to_private_message_body: "%{username}邀請@%{group_name}收訊息\n\n> ** %{topic_title}** \n>\n> %{topic_excerpt} \n\n在\n \n> %{site_title} - %{site_description}\n"
-    invited_to_private_message_body: |
-      %{username} 邀請你至消息交流：
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      論壇：
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username}邀請你參與
-
-      > %{site_title}－%{site_description}
-
-      的討論話題
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
     user_invited_to_private_message_pm_group:
       title: "使用者邀請群組至私人訊息"
       subject_template: "[%{email_prefix}] %{username} 邀請 @%{group_name} 參與討論「%{topic_title}」"
@@ -2925,7 +2898,6 @@ zh_TW:
     missing: "抱歉，我們沒法找到與你郵件地址關聯的頭像。你能再上傳一次試試嗎？"
   flag_reason:
     sockpuppet: "新使用者創建了主題，而另一個新使用者以同一個 IP 在該主題回覆。查看站點設置的 <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>。"
-    spam_hosts: "新使用者試圖在多個創建貼文中發錶鏈接到同一個域名的內容。查看站點設置的 <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>。"
   skipped_email_log:
     exceeded_emails_limit: "超過 max_emails_per_day_per_user"
     exceeded_bounces_limit: "超過 bounce_score_threshold"

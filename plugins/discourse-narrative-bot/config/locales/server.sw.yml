@@ -108,15 +108,6 @@ sw:
       random_mention:
         reply: |-
           Habari! kujua ninachoweza kufanya andika `@%{discobot_username}%{help_trigger}`.
-        bot_actions: |-
-          `@%{discobot_username}%{dice_trigger} 2d6`
-          > :game_die: 3 ,6
-
-          `@%{discobot_username}%{quote_trigger}`
-          > :left_speech_bubble:_Fanya vitendo vya huruma na upendo, bila kutegemea tuzo, ukijua kuwa siku moja mtu atakufanyia hivyo pia_&mdash; Princess Diana
-
-          `@%{discobot_username}%{magic_8_ball_trigger}`
-          >mpira_fuwele: Unaweza ukautegemea
       do_not_understand:
         first_response: |-
           Habari, asante kwa jibu lako!
@@ -246,12 +237,6 @@ sw:
           _psst_ ...Nimeficha kitu kwenye hii mada. Kama unapenda kujua, **chagua ikoni ya utafiti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> upande wa juu mkono wako wa kulia &#8599; kukitafuta hicho kitu
 
           Jaribu kutafuta neno "capy&#8203;bara" kwenye hii mada
-        hidden_message: |-
-          Umepitwa vipi na capybara? :wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          Umegundua umerudi ulipoanza? Shibisha capybara mwenye njaa kwa **kuandika `:herb` ishara** na utapelekwa mwisho.
         reply: |-
           Nina furaha kuwa umeiona :tada:
 

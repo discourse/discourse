@@ -625,7 +625,7 @@ sv:
         edit: "Redigera"
         security_key:
           register: "Registrera"
-          delete: 'Radera'
+          delete: "Radera"
       change_about:
         title: "Ändra Om Mig"
         error: "Ett fel inträffade vid ändringen av det här värdet."
@@ -648,9 +648,6 @@ sv:
         uploaded_avatar_empty: "Lägg till en anpassad bild"
         upload_title: "Ladda upp din bild"
         image_is_not_a_square: "Varning: vi beskar din bild; bredden och höjden var inte samma."
-      change_profile_background:
-        title: "Profilbakgrund"
-        instructions: "Bakgrunderna är centrerade och har en förinställd bredd på 850px"
       change_card_background:
         title: "Användarkortets bakgrund"
         instructions: "Bakgrundsbilder kommer att vara centrerade och ha en standardbredd på 590 px."
@@ -838,6 +835,9 @@ sv:
         header_title: "profil, meddelanden, bokmärken och inställningar"
       title:
         title: "Titel"
+        none: "(ingen)"
+      primary_group:
+        title: "Primär grupp"
         none: "(ingen)"
       filters:
         all: "Alla"
@@ -1551,6 +1551,8 @@ sv:
         image_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte ladda upp bilder."
         attachment_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte bifoga filer."
         attachment_download_requires_login: "Tyvärr, du måste vara inloggad för att kunna ladda ned bifogade filer."
+      abandon_edit:
+        no_value: "nej, behåll"
       abandon:
         confirm: "Är du säker på att du vill avbryta ditt inlägg?"
         no_value: "nej, behåll"
@@ -2148,7 +2150,6 @@ sv:
               public: "Alla"
           membership:
             automatic: Automatisk
-            trust_level: Förtroendenivå
             trust_levels_title: "Förtroendenivå som automatiskt beviljas användare när de läggs till:"
             trust_levels_none: "Inga"
             automatic_membership_email_domains: "Användare som registrerar sig med en e-post vars domän exakt matchar en domän i den här listan kommer automatiskt att bli tillagd i den här gruppen:"
@@ -2178,16 +2179,14 @@ sv:
         none: "Det finns inga aktiva API-nycklar just nu."
         user: "Användare"
         title: "API"
-        key: "API-nyckel"
+        key: "Key"
         created: Skapad
         generate: "Generera"
-        regenerate: "Regenerera"
         revoke: "Återkalla"
-        confirm_regen: "Är du säker på att du vill ersätta den API-nyckeln med en ny?"
-        confirm_revoke: "Är du säker på att du vill återkalla den nyckeln?"
-        info_html: "Din API-nyckel kommer tillåta dig att skapa och uppdatera ämnen med hjälp av JSON-anrop."
         all_users: "Alla användare"
-        note_html: "Håll denna nyckel <strong>hemlig</strong>, alla användare som har den kan skapa godtyckliga inlägg som alla användare."
+        show_details: Detaljer
+        description: Beskrivning
+        save: Spara
       web_hooks:
         title: "Webhookar"
         none: "Det finns inga webhookar just nu."
@@ -2841,6 +2840,8 @@ sv:
           search: "Sök"
           groups: "Grupper"
           dashboard: "Översiktspanel"
+        default_categories:
+          modal_yes: "Ja"
       badges:
         title: Utmärkelser
         new_badge: Ny utmärkelse
@@ -2926,20 +2927,15 @@ sv:
         category: "Inlägg till kategori"
         add_host: "Lägg till värd"
         settings: "Inbäddningsinställningar"
-        feed_settings: "Flödes-inställningar"
-        feed_description: "Tillhandahållande av RSS/ATOM-flöde på din webbplats kan förbättra Discourse möjlighet att importera ditt innehåll."
         crawling_settings: "Inställningar för sökrobotar"
         crawling_description: "När Discourse skapar ämnen för dina inlägg, om det inte finns något RSS/ATOM-flöde närvarande så kommer det att försöka parsa ditt innehåll från din HTML. Ibland är det utmanande att extrahera ditt innehåll, så vi tillhandahåller möjligheten att specifiera CSS-reglerna för att göra extraheringen enklare."
         embed_by_username: "Användarnamn för skapandet av ämne"
         embed_post_limit: "Högsta tillåtna antal inlägg att bädda in"
-        embed_username_key_from_feed: "Nyckel för att hämta discourse användarnamn från flöde"
         embed_title_scrubber: "Reguljära uttryck som används för att hitta och korrigera fel i inläggsrubriken"
         embed_truncate: "Trunkera de inbäddade inläggen"
         embed_whitelist_selector: "CSS-väljare för element som tillåts bäddas in"
         embed_blacklist_selector: "CSS-väljare för element som tas bort från inbäddningar"
         embed_classname_whitelist: "Tillåtna CSS klassnamn"
-        feed_polling_enabled: "Importera inlägg via RSS/ATOM"
-        feed_polling_url: "URL för RSS/ATOM-flöde att webbsöka"
         save: "Spara inbäddningsinställningar"
       permalink:
         title: "Permalänkar"

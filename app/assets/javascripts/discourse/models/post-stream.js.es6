@@ -1,9 +1,13 @@
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { or, not, and } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseURL from "discourse/lib/url";
 import RestModel from "discourse/models/rest";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { loadTopicView } from "discourse/models/topic";
+import { Promise } from "rsvp";
 
 export default RestModel.extend({
   _identityMap: null,
@@ -43,41 +47,32 @@ export default RestModel.extend({
     });
   },
 
-  loading: Ember.computed.or(
-    "loadingAbove",
-    "loadingBelow",
-    "loadingFilter",
-    "stagingPost"
-  ),
-  notLoading: Ember.computed.not("loading"),
+  loading: or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost"),
+  notLoading: not("loading"),
 
-  @computed("isMegaTopic", "stream.length", "topic.highest_post_number")
+  @discourseComputed(
+    "isMegaTopic",
+    "stream.length",
+    "topic.highest_post_number"
+  )
   filteredPostsCount(isMegaTopic, streamLength, topicHighestPostNumber) {
     return isMegaTopic ? topicHighestPostNumber : streamLength;
   },
 
-  @computed("posts.[]")
+  @discourseComputed("posts.[]")
   hasPosts() {
     return this.get("posts.length") > 0;
   },
 
-  @computed("hasPosts", "filteredPostsCount")
+  @discourseComputed("hasPosts", "filteredPostsCount")
   hasLoadedData(hasPosts, filteredPostsCount) {
     return hasPosts && filteredPostsCount > 0;
   },
 
-  canAppendMore: Ember.computed.and(
-    "notLoading",
-    "hasPosts",
-    "lastPostNotLoaded"
-  ),
-  canPrependMore: Ember.computed.and(
-    "notLoading",
-    "hasPosts",
-    "firstPostNotLoaded"
-  ),
+  canAppendMore: and("notLoading", "hasPosts", "lastPostNotLoaded"),
+  canPrependMore: and("notLoading", "hasPosts", "firstPostNotLoaded"),
 
-  @computed("hasLoadedData", "firstPostId", "posts.[]")
+  @discourseComputed("hasLoadedData", "firstPostId", "posts.[]")
   firstPostPresent(hasLoadedData, firstPostId) {
     if (!hasLoadedData) {
       return false;
@@ -85,22 +80,22 @@ export default RestModel.extend({
     return !!this.posts.findBy("id", firstPostId);
   },
 
-  firstPostNotLoaded: Ember.computed.not("firstPostPresent"),
+  firstPostNotLoaded: not("firstPostPresent"),
 
   firstId: null,
   lastId: null,
 
-  @computed("isMegaTopic", "stream.firstObject", "firstId")
+  @discourseComputed("isMegaTopic", "stream.firstObject", "firstId")
   firstPostId(isMegaTopic, streamFirstId, firstId) {
     return isMegaTopic ? firstId : streamFirstId;
   },
 
-  @computed("isMegaTopic", "stream.lastObject", "lastId")
+  @discourseComputed("isMegaTopic", "stream.lastObject", "lastId")
   lastPostId(isMegaTopic, streamLastId, lastId) {
     return isMegaTopic ? lastId : streamLastId;
   },
 
-  @computed("hasLoadedData", "lastPostId", "posts.@each.id")
+  @discourseComputed("hasLoadedData", "lastPostId", "posts.@each.id")
   loadedAllPosts(hasLoadedData, lastPostId) {
     if (!hasLoadedData) {
       return false;
@@ -112,13 +107,13 @@ export default RestModel.extend({
     return !!this.posts.findBy("id", lastPostId);
   },
 
-  lastPostNotLoaded: Ember.computed.not("loadedAllPosts"),
+  lastPostNotLoaded: not("loadedAllPosts"),
 
   /**
     Returns a JS Object of current stream filter options. It should match the query
     params for the stream.
   **/
-  @computed("summary", "userFilters.[]")
+  @discourseComputed("summary", "userFilters.[]")
   streamFilters(summary) {
     const result = {};
     if (summary) {
@@ -126,14 +121,14 @@ export default RestModel.extend({
     }
 
     const userFilters = this.userFilters;
-    if (!Ember.isEmpty(userFilters)) {
+    if (!isEmpty(userFilters)) {
       result.username_filters = userFilters.join(",");
     }
 
     return result;
   },
 
-  @computed("streamFilters.[]", "topic.posts_count", "posts.length")
+  @discourseComputed("streamFilters.[]", "topic.posts_count", "posts.length")
   hasNoFilters() {
     const streamFilters = this.streamFilters;
     return !(
@@ -146,7 +141,7 @@ export default RestModel.extend({
     Returns the window of posts above the current set in the stream, bound to the top of the stream.
     This is the collection we'll ask for when scrolling upwards.
   **/
-  @computed("posts.[]", "stream.[]")
+  @discourseComputed("posts.[]", "stream.[]")
   previousWindow() {
     // If we can't find the last post loaded, bail
     const firstPost = _.first(this.posts);
@@ -172,7 +167,7 @@ export default RestModel.extend({
     Returns the window of posts below the current set in the stream, bound by the bottom of the
     stream. This is the collection we use when scrolling downwards.
   **/
-  @computed("posts.lastObject", "stream.[]")
+  @discourseComputed("posts.lastObject", "stream.[]")
   nextWindow(lastLoadedPost) {
     // If we can't find the last post loaded, bail
     if (!lastLoadedPost) {
@@ -265,7 +260,7 @@ export default RestModel.extend({
     } else {
       const postWeWant = this.posts.findBy("post_number", opts.nearPost);
       if (postWeWant) {
-        return Ember.RSVP.resolve();
+        return Promise.resolve();
       }
     }
 
@@ -327,7 +322,7 @@ export default RestModel.extend({
         });
       }
     }
-    return Ember.RSVP.resolve();
+    return Promise.resolve();
   },
 
   // Fill in a gap of posts after a particular post
@@ -343,14 +338,14 @@ export default RestModel.extend({
         this.stream.arrayContentDidChange();
       });
     }
-    return Ember.RSVP.resolve();
+    return Promise.resolve();
   },
 
   // Appends the next window of posts to the stream. Call it when scrolling downwards.
   appendMore() {
     // Make sure we can append more posts
     if (!this.canAppendMore) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     const postsWithPlaceholders = this.postsWithPlaceholders;
@@ -373,7 +368,7 @@ export default RestModel.extend({
       });
     } else {
       const postIds = this.nextWindow;
-      if (Ember.isEmpty(postIds)) return Ember.RSVP.resolve();
+      if (isEmpty(postIds)) return Promise.resolve();
       this.set("loadingBelow", true);
       postsWithPlaceholders.appending(postIds);
 
@@ -393,7 +388,7 @@ export default RestModel.extend({
   prependMore() {
     // Make sure we can append more posts
     if (!this.canPrependMore) {
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     }
 
     if (this.isMegaTopic) {
@@ -414,7 +409,7 @@ export default RestModel.extend({
       });
     } else {
       const postIds = this.previousWindow;
-      if (Ember.isEmpty(postIds)) return Ember.RSVP.resolve();
+      if (isEmpty(postIds)) return Promise.resolve();
       this.set("loadingAbove", true);
 
       return this.findPostsByIds(postIds.reverse())
@@ -532,7 +527,7 @@ export default RestModel.extend({
   },
 
   removePosts(posts) {
-    if (Ember.isEmpty(posts)) {
+    if (isEmpty(posts)) {
       return;
     }
 
@@ -590,7 +585,7 @@ export default RestModel.extend({
     have no filters.
   **/
   triggerNewPostInStream(postId) {
-    const resolved = Ember.RSVP.Promise.resolve();
+    const resolved = Promise.resolve();
 
     if (!postId) {
       return resolved;
@@ -690,13 +685,13 @@ export default RestModel.extend({
           this.removePosts([existing]);
         });
     }
-    return Ember.RSVP.Promise.resolve();
+    return Promise.resolve();
   },
 
   triggerChangedPost(postId, updatedAt, opts) {
     opts = opts || {};
 
-    const resolved = Ember.RSVP.Promise.resolve();
+    const resolved = Promise.resolve();
     if (!postId) {
       return resolved;
     }
@@ -717,7 +712,7 @@ export default RestModel.extend({
   },
 
   triggerReadPost(postId, readersCount) {
-    const resolved = Ember.RSVP.Promise.resolve();
+    const resolved = Promise.resolve();
     resolved.then(() => {
       const post = this.findLoadedPost(postId);
       if (post && readersCount > post.readers_count) {
@@ -893,12 +888,12 @@ export default RestModel.extend({
     than you supplied if the post has already been loaded.
   **/
   storePost(post) {
-    // Calling `Ember.get(undefined)` raises an error
+    // Calling `get(undefined)` raises an error
     if (!post) {
       return;
     }
 
-    const postId = Ember.get(post, "id");
+    const postId = get(post, "id");
     if (postId) {
       const existing = this._identityMap[post.get("id")];
 
@@ -942,7 +937,7 @@ export default RestModel.extend({
         this.set("topic.suggested_topics", result.suggested_topics);
       }
 
-      const posts = Ember.get(result, "post_stream.posts");
+      const posts = get(result, "post_stream.posts");
 
       if (posts) {
         posts.forEach(p => {
@@ -967,8 +962,8 @@ export default RestModel.extend({
   },
 
   loadIntoIdentityMap(postIds) {
-    if (Ember.isEmpty(postIds)) {
-      return Ember.RSVP.resolve([]);
+    if (isEmpty(postIds)) {
+      return Promise.resolve([]);
     }
 
     let includeSuggested = !this.get("topic.suggested_topics");
@@ -982,7 +977,7 @@ export default RestModel.extend({
         this.set("topic.suggested_topics", result.suggested_topics);
       }
 
-      const posts = Ember.get(result, "post_stream.posts");
+      const posts = get(result, "post_stream.posts");
 
       if (posts) {
         posts.forEach(p => this.storePost(store.createRecord("post", p)));
@@ -1039,12 +1034,12 @@ export default RestModel.extend({
 
   excerpt(streamPosition) {
     if (this.isMegaTopic) {
-      return new Ember.RSVP.Promise(resolve => resolve(""));
+      return new Promise(resolve => resolve(""));
     }
 
     const stream = this.stream;
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let excerpt = this._excerpts && this._excerpts[stream[streamPosition]];
 
       if (excerpt) {

@@ -1,3 +1,4 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import StaticPage from "discourse/models/static-page";
 import { default as DiscourseURL, jumpToElement } from "discourse/lib/url";
 
@@ -8,7 +9,7 @@ const configs = {
 };
 
 export default function(page) {
-  return Discourse.Route.extend({
+  return DiscourseRoute.extend({
     renderTemplate() {
       this.render("static");
     },

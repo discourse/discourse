@@ -118,15 +118,6 @@ it:
 
           `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
           > Inizia un tutorial interattivo. `{name-of-tutorial}` può essere uno di: `%{tracks}`.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Fare un atto di gentilezza casuale, senza nessuna aspettativa di ricompensa, con la certezza che un giorno qualcuno potrebbe fare lo stesso per te_ &mdash; Principessa Diana
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Ci puoi contare
       do_not_understand:
         first_response: |-
           Hey, grazie per la risposta!
@@ -274,12 +265,6 @@ it:
           _psst_ … Ho nascosto una sorpresa in questo argomento. Se sei pronto alla sfida, **seleziona l'icona cerca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> in alto a destra &#8599; per trovarla.
 
           Prova a cercare il termine "capi&#8203;bara" in questo argomento
-        hidden_message: |-
-          Come hai fatto a perderti questo capibara? :wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          Hai notato che sei tornato all'inizio dell'argomento? Dai da mangiare a questo povero capibara affamato **rispondendo con la emoji `:herb:`** e tornerai automaticamente in fondo alla discussione.
         reply: |-
           Hey l'hai trovato :tada:
 

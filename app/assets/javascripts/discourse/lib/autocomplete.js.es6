@@ -1,3 +1,5 @@
+import { cancel } from "@ember/runloop";
+import { later } from "@ember/runloop";
 /**
   This is a jQuery plugin to support autocompleting values in our text fields.
 
@@ -43,7 +45,7 @@ export default function(options) {
   if (this.length === 0) return;
 
   if (options === "destroy" || options.updateData) {
-    Ember.run.cancel(inputTimeout);
+    cancel(inputTimeout);
 
     $(this)
       .off("keyup.autocomplete")
@@ -402,7 +404,7 @@ export default function(options) {
   $(this).on("click.autocomplete", () => closeAutocomplete());
 
   $(this).on("paste.autocomplete", () => {
-    Ember.run.later(() => me.trigger("keydown"), 50);
+    later(() => me.trigger("keydown"), 50);
   });
 
   function checkTriggerRule(opts) {
@@ -455,8 +457,8 @@ export default function(options) {
     if (options.allowAny) {
       // saves us wiring up a change event as well
 
-      Ember.run.cancel(inputTimeout);
-      inputTimeout = Ember.run.later(function() {
+      cancel(inputTimeout);
+      inputTimeout = later(function() {
         if (inputSelectedItems.length === 0) {
           inputSelectedItems.push("");
         }

@@ -1,7 +1,9 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { later } from "@ember/runloop";
+import Controller from "@ember/controller";
 
-export default Ember.Controller.extend({
-  @computed("model.colors", "onlyOverridden")
+export default Controller.extend({
+  @discourseComputed("model.colors", "onlyOverridden")
   colors(allColors, onlyOverridden) {
     if (onlyOverridden) {
       return allColors.filter(color => color.get("overridden"));
@@ -40,7 +42,7 @@ export default Ember.Controller.extend({
         );
       }
 
-      Ember.run.later(() => {
+      later(() => {
         this.set("model.savingStatus", null);
       }, 2000);
 

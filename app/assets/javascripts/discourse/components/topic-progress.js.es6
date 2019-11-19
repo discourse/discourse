@@ -1,22 +1,25 @@
+import { alias } from "@ember/object/computed";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   elementId: "topic-progress-wrapper",
   classNameBindings: ["docked"],
   docked: false,
   progressPosition: null,
-  postStream: Ember.computed.alias("topic.postStream"),
+  postStream: alias("topic.postStream"),
   _streamPercentage: null,
 
-  @computed("progressPosition")
+  @discourseComputed("progressPosition")
   jumpTopDisabled(progressPosition) {
     return progressPosition <= 3;
   },
 
-  @computed(
+  @discourseComputed(
     "postStream.filteredPostsCount",
     "topic.highest_post_number",
     "progressPosition"
@@ -28,7 +31,7 @@ export default Ember.Component.extend({
     );
   },
 
-  @computed(
+  @discourseComputed(
     "postStream.loaded",
     "topic.currentPost",
     "postStream.filteredPostsCount"
@@ -41,14 +44,14 @@ export default Ember.Component.extend({
     );
   },
 
-  @computed("postStream.filteredPostsCount")
+  @discourseComputed("postStream.filteredPostsCount")
   hugeNumberOfPosts(filteredPostsCount) {
     return (
       filteredPostsCount >= this.siteSettings.short_progress_text_threshold
     );
   },
 
-  @computed("hugeNumberOfPosts", "topic.highest_post_number")
+  @discourseComputed("hugeNumberOfPosts", "topic.highest_post_number")
   jumpToBottomTitle(hugeNumberOfPosts, highestPostNumber) {
     if (hugeNumberOfPosts) {
       return I18n.t("topic.progress.jump_bottom_with_number", {
@@ -59,7 +62,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("progressPosition", "topic.last_read_post_id")
+  @discourseComputed("progressPosition", "topic.last_read_post_id")
   showBackButton(position, lastReadId) {
     if (!lastReadId) {
       return;
@@ -72,7 +75,7 @@ export default Ember.Component.extend({
 
   @observes("postStream.stream.[]")
   _updateBar() {
-    Ember.run.scheduleOnce("afterRender", this, this._updateProgressBar);
+    scheduleOnce("afterRender", this, this._updateProgressBar);
   },
 
   _topicScrolled(event) {
@@ -99,16 +102,11 @@ export default Ember.Component.extend({
 
     const prevEvent = this.prevEvent;
     if (prevEvent) {
-      Ember.run.scheduleOnce(
-        "afterRender",
-        this,
-        this._topicScrolled,
-        prevEvent
-      );
+      scheduleOnce("afterRender", this, this._topicScrolled, prevEvent);
     } else {
-      Ember.run.scheduleOnce("afterRender", this, this._updateProgressBar);
+      scheduleOnce("afterRender", this, this._updateProgressBar);
     }
-    Ember.run.scheduleOnce("afterRender", this, this._dock);
+    scheduleOnce("afterRender", this, this._dock);
   },
 
   willDestroyElement() {

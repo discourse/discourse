@@ -79,6 +79,8 @@ input[type="file"] {
 
 select {
   width: 220px;
+  background: $secondary;
+
   &[multiple],
   &[size] {
     height: auto;

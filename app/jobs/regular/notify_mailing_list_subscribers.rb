@@ -16,7 +16,7 @@ module Jobs
       when SocketError
         RETRY_TIMES[count]
       else
-        Jobs::UserEmail.seconds_to_delay(count)
+        ::Jobs::UserEmail.seconds_to_delay(count)
       end
     end
 

@@ -128,6 +128,12 @@ describe Notification do
       Fabricate(:notification)
     end
 
+    it 'works for partial model instances' do
+      NotificationEmailer.disable
+      partial_user = User.select(:id).find_by(id: Fabricate(:user).id)
+      partial_user.notifications.create!(notification_type: Notification.types[:mentioned], data: '{}')
+    end
+
     context 'destroy' do
       let!(:notification) { Fabricate(:notification) }
 

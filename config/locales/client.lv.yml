@@ -649,7 +649,7 @@ lv:
         name: "Vārds"
         edit: "Labot"
         security_key:
-          delete: 'Dzēst'
+          delete: "Dzēst"
       change_about:
         title: "Mainīt aprakstu par mani"
         error: "Mainot šo vērtību, notika kļūda."
@@ -672,9 +672,6 @@ lv:
         uploaded_avatar_empty: "Pievienot savu attēlu"
         upload_title: "Augšupielādēt savu attēlu"
         image_is_not_a_square: "Uzmanību: mēs apgriezām jūsu attēlu; platums un augstums nebija vienādi."
-      change_profile_background:
-        title: "Profila fons"
-        instructions: "Profila fons būs centrēts un ar noklusējuma platumu 850px."
       change_card_background:
         title: "Lietotāja kartiņas fons"
         instructions: "Fona attēli būs centrēti un ar noklusējuma platumu 590px."
@@ -869,6 +866,9 @@ lv:
         header_title: "profils, ziņas, grāmatzīmes un iestatījumi"
       title:
         title: "Virsraksts"
+        none: "(neviens)"
+      primary_group:
+        title: "Galvenā grupa"
         none: "(neviens)"
       filters:
         all: "Visi"
@@ -1642,6 +1642,8 @@ lv:
         image_upload_not_allowed_for_new_user: "Atvainojiet, jaunie lietotāji nevar augšuplādēt attēlus."
         attachment_upload_not_allowed_for_new_user: "Atvainojiet, jaunie lietotāji nevar augšuplādēt pielikumus."
         attachment_download_requires_login: "Atvainojiet, jums jābūt ienākušam forumā, lai varētu lejuplādēt pielikumus."
+      abandon_edit:
+        no_value: "Nē, paturēt"
       abandon:
         confirm: "Vai esat drošs, ka vēlaties atteikties no sava ieraksta?"
         no_value: "Nē, paturēt"
@@ -2253,7 +2255,6 @@ lv:
               staff: "Grupu īpašnieki un personāls"
           membership:
             automatic: Automātiski
-            trust_level: Uzticības līmenis
             trust_levels_title: "Uzticamības līmenis, ko automātiski piešķir visiem dalībniekiem pievienošanas brīdī:"
             trust_levels_none: "Nav"
             automatic_membership_email_domains: "Lietotāji, kas reģistrējas ar e-pasta domēnu, kas precīzi sakrīt ar kādu no šī saraksta, tiks automātiski pievienoti šai grupai:"
@@ -2282,16 +2283,13 @@ lv:
         none: "Šobrīd nav aktīvu API atslēgu."
         user: "Lietotājs"
         title: "API"
-        key: "API atslēga"
         created: Radīts
         generate: "Radīt"
-        regenerate: "Atkārtoti radīt"
         revoke: "Atsaukt"
-        confirm_regen: "Vai jūs esat drošs, ka vēlaties aizstāt šo API atslēgu ar jaunu?"
-        confirm_revoke: "Vai jūs esat drošs, ka vēlaties atsaukt šo atslēgu?"
-        info_html: "Jūsu API atslēga ļaus jums izveidot un atjaunināt tēmas, izmantojot JSON izsaukumus."
         all_users: "Visi lietotāji"
-        note_html: "Saglabājiet šo atslēgu <strong>slepenu</strong>, jo ikviens lietotājs, kam tā ir zināma, var izveidot jebkādus ierakstus ar jebkuru lietotāju kā autoru."
+        show_details: Detaļas
+        description: Apraksts
+        save: Saglabāt
       web_hooks:
         detailed_instruction: "Ja būs signāls par izvēlēto notikumu, uz norādīto URL tiks nosūtīts POST pieprasījums."
         create: "Izveidot"
@@ -2929,6 +2927,8 @@ lv:
           search: "Meklēt"
           groups: "Grupas"
           dashboard: "Administrācijas panelis"
+        default_categories:
+          modal_yes: "Jā"
       badges:
         title: Žetoni
         new_badge: Jauns Žetons
@@ -3016,21 +3016,15 @@ lv:
         category: "Ieraksti kategorijā"
         add_host: "Pievienot lietotāju"
         settings: "Ierakstu iestatījumi"
-        feed_settings: "Ierakstu iestatījumi"
-        feed_description: "(Providing an RSS/ATOM feed for your site can improve Discourse's ability to import your content.)"
         crawling_settings: "(Crawler Settings)"
         crawling_description: "(Kad diskurss rada tēmas par savu amatu, ja nav RSS / ATOM padeves ir klāt tā mēģinās parsēt jūsu saturu no jūsu HTML. Dažreiz tas var būt grūti, lai iegūtu savu saturu, tāpēc mēs piedāvājam iespēju noteikt CSS noteikumus, lai padarītu ieguve vieglāk.)"
         embed_by_username: "Lietotājvārds tēmas radīšanai"
         embed_post_limit: "Maksimālais iegulto ierakstu skaits"
-        embed_username_key_from_feed: "(Key to pull discourse username from feed)"
         embed_title_scrubber: "(Regular expression used to scrub the title of posts)"
         embed_truncate: "Saīsināt iegultos ierakstus"
         embed_whitelist_selector: "(CSS selector for elements that are allowed in embeds)"
         embed_blacklist_selector: "(CSS selector for elements that are removed from embeds)"
         embed_classname_whitelist: "Atļautie CSS nosaukumi (Allowed CSS class names)"
-        feed_polling_enabled: "Importēt ierakstus ar RSS/ATOM"
-        feed_polling_url: "(URL of RSS/ATOM feed to crawl)"
-        feed_polling_frequency_mins: "Aptauju biežums (minūtēs)"
         save: "Saglabāt iegulšanas iestatījumus"
       permalink:
         title: "Patstāvīgā saite"

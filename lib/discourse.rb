@@ -23,19 +23,51 @@ module Discourse
   end
 
   class Utils
-    def self.execute_command(*command, failure_message: "", success_status_codes: [0], chdir: ".")
-      stdout, stderr, status = Open3.capture3(*command, chdir: chdir)
+    # Usage:
+    #   Discourse::Utils.execute_command("pwd", chdir: 'mydirectory')
+    # or with a block
+    #   Discourse::Utils.execute_command(chdir: 'mydirectory') do |runner|
+    #     runner.exec("pwd")
+    #   end
+    def self.execute_command(*command, **args)
+      runner = CommandRunner.new(**args)
 
-      if !status.exited? || !success_status_codes.include?(status.exitstatus)
-        failure_message = "#{failure_message}\n" if !failure_message.blank?
-        raise "#{caller[0]}: #{failure_message}#{stderr}"
+      if block_given?
+        raise RuntimeError.new("Cannot pass command and block to execute_command") if command.present?
+        yield runner
+      else
+        runner.exec(*command)
       end
-
-      stdout
     end
 
     def self.pretty_logs(logs)
       logs.join("\n".freeze)
+    end
+
+    private
+
+    class CommandRunner
+      def initialize(**init_params)
+        @init_params = init_params
+      end
+
+      def exec(*command, **exec_params)
+        raise RuntimeError.new("Cannot specify same parameters at block and command level") if (@init_params.keys & exec_params.keys).present?
+        execute_command(*command, **@init_params.merge(exec_params))
+      end
+
+      private
+
+      def execute_command(*command, failure_message: "", success_status_codes: [0], chdir: ".")
+        stdout, stderr, status = Open3.capture3(*command, chdir: chdir)
+
+        if !status.exited? || !success_status_codes.include?(status.exitstatus)
+          failure_message = "#{failure_message}\n" if !failure_message.blank?
+          raise "#{caller[0]}: #{failure_message}#{stderr}"
+        end
+
+        stdout
+      end
     end
   end
 
@@ -128,11 +160,11 @@ module Discourse
   end
 
   def self.top_menu_items
-    @top_menu_items ||= Discourse.filters + [:category, :categories, :top]
+    @top_menu_items ||= Discourse.filters + [:categories, :top]
   end
 
   def self.anonymous_top_menu_items
-    @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:category, :categories, :top]
+    @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:categories, :top]
   end
 
   PIXEL_RATIOS ||= [1, 1.5, 2, 3]
@@ -216,7 +248,7 @@ module Discourse
     plugins.select do |plugin|
       next if args[:include_official] == false && plugin.metadata.official?
       next if args[:include_unofficial] == false && !plugin.metadata.official?
-      next if args[:include_disabled] == false && !plugin.enabled?
+      next if !args[:include_disabled] && !plugin.enabled?
 
       true
     end
@@ -536,7 +568,9 @@ module Discourse
   SYSTEM_USER_ID ||= -1
 
   def self.system_user
-    @system_user ||= User.find_by(id: SYSTEM_USER_ID)
+    @system_users ||= {}
+    current_db = RailsMultisite::ConnectionManagement.current_db
+    @system_users[current_db] ||= User.find_by(id: SYSTEM_USER_ID)
   end
 
   def self.store
