@@ -236,10 +236,12 @@ end
 #  id                 :integer          not null, primary key
 #  category_id        :integer          not null
 #  user_id            :integer          not null
-#  notification_level :integer          not null
+#  notification_level :integer
+#  last_seen_at       :datetime
 #
 # Indexes
 #
-#  idx_category_users_category_id_user_id  (category_id,user_id) UNIQUE
-#  idx_category_users_user_id_category_id  (user_id,category_id) UNIQUE
+#  idx_category_users_category_id_user_id            (category_id,user_id) UNIQUE
+#  idx_category_users_user_id_category_id            (user_id,category_id) UNIQUE
+#  index_category_users_on_user_id_and_last_seen_at  (user_id,last_seen_at)
 #

@@ -162,18 +162,18 @@ end
 #  views                        :integer          default(0), not null
 #  profile_background_upload_id :integer
 #  card_background_upload_id    :integer
-#  granted_title_badge_id       :integer
+#  granted_title_badge_id       :bigint
 #
 # Indexes
 #
-#  index_user_profiles_on_bio_cooked_version  (bio_cooked_version)
-#  index_user_profiles_on_card_background     (card_background)
-#  index_user_profiles_on_profile_background  (profile_background)
-#  index_user_profiles_on_granted_title_badge_id (granted_title_badge)
+#  index_user_profiles_on_bio_cooked_version      (bio_cooked_version)
+#  index_user_profiles_on_card_background         (card_background)
+#  index_user_profiles_on_granted_title_badge_id  (granted_title_badge_id)
+#  index_user_profiles_on_profile_background      (profile_background)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (card_background_upload_id => uploads.id)
-#  fk_rails_...  (profile_background_upload_id => uploads.id)
 #  fk_rails_...  (granted_title_badge_id => badges.id)
+#  fk_rails_...  (profile_background_upload_id => uploads.id)
 #
