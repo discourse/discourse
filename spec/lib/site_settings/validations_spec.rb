@@ -197,5 +197,53 @@ describe SiteSettings::Validations do
         end
       end
     end
+
+    describe "#validate_enable_s3_uploads" do
+      let(:error_message) { I18n.t("errors.site_settings.cannot_enable_s3_uploads_when_s3_enabled_globally") }
+
+      context "when the new value is true" do
+        context "when s3 uploads are already globally enabled" do
+          before do
+            GlobalSetting.stubs(:use_s3?).returns(true)
+          end
+
+          it "is not ok" do
+            expect { subject.validate_enable_s3_uploads("t") }.to raise_error(Discourse::InvalidParameters, error_message)
+          end
+        end
+
+        context "when s3 uploads are not already globally enabled" do
+          before do
+            GlobalSetting.stubs(:use_s3?).returns(false)
+          end
+
+          it "should be ok" do
+            expect { subject.validate_enable_s3_uploads("t") }.not_to raise_error
+          end
+        end
+
+        context "when the s3_upload_bucket is blank" do
+          let(:error_message) { I18n.t("errors.site_settings.s3_upload_bucket_is_required") }
+
+          before do
+            SiteSetting.s3_upload_bucket = nil
+          end
+
+          it "is not ok" do
+            expect { subject.validate_enable_s3_uploads("t") }.to raise_error(Discourse::InvalidParameters, error_message)
+          end
+        end
+
+        context "when the s3_upload_bucket is not blank" do
+          before do
+            SiteSetting.s3_upload_bucket = "some-bucket"
+          end
+
+          it "should be ok" do
+            expect { subject.validate_enable_s3_uploads("t") }.not_to raise_error
+          end
+        end
+      end
+    end
   end
 end

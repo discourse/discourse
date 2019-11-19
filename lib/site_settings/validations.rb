@@ -118,7 +118,9 @@ module SiteSettings::Validations
   end
 
   def validate_enable_s3_uploads(new_val)
-    validate_error :s3_upload_bucket_is_required if new_val == "t" && SiteSetting.s3_upload_bucket.blank?
+    return if new_val == "f"
+    validate_error :cannot_enable_s3_uploads_when_s3_enabled_globally if GlobalSetting.use_s3?
+    validate_error :s3_upload_bucket_is_required if SiteSetting.s3_upload_bucket.blank?
   end
 
   def validate_secure_media(new_val)
