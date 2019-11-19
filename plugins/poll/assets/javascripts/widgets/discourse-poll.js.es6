@@ -479,7 +479,7 @@ createWidget("discourse-poll-grouped-pies", {
       fetchGroupedVoters({
         post_id: attrs.post.id,
         poll_name: attrs.poll.name,
-        custom_field_name: attrs.groupedBy
+        user_field_name: attrs.groupedBy
       }).then(result => {
         for (
           let chartIdx = 0;

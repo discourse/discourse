@@ -230,14 +230,14 @@ after_initialize do
         serialized_voters(poll, opts)
       end
 
-      def grouped_poll_results(post_id, poll_name, custom_field_name, user)
+      def grouped_poll_results(post_id, poll_name, user_field_name, user)
         post = Post.find_by(id: post_id)
         raise Discourse::InvalidParameters.new("post_id is invalid") unless post
 
         poll = Poll.find_by(post_id: post_id, name: poll_name)
         raise Discourse::InvalidParameters.new("poll_name is invalid") unless poll&.can_see_voters?(user)
 
-        raise Discourse::InvalidParameters.new("user_custom_field is invalid") unless SiteSetting.poll_groupable_user_fields.split('|').include?(custom_field_name)
+        raise Discourse::InvalidParameters.new("user_field_name is invalid") unless SiteSetting.poll_groupable_user_fields.split('|').include?(user_field_name)
 
         poll_votes = PollVote.where(poll: poll)
 
@@ -247,7 +247,7 @@ after_initialize do
         end
 
         user_ids = poll_votes.map(&:user_id).uniq
-        user_fields = UserCustomField.where(user_id: user_ids, name: custom_field_name)
+        user_fields = UserCustomField.where(user_id: user_ids, name: user_field_name)
 
         user_field_map = {}
         user_fields.each do |f|
@@ -396,11 +396,11 @@ after_initialize do
     def grouped_poll_results
       post_id   = params.require(:post_id)
       poll_name = params.require(:poll_name)
-      custom_field_name = params.require(:custom_field_name)
+      user_field_name = params.require(:user_field_name)
 
       begin
         render json: {
-          grouped_results: DiscoursePoll::Poll.grouped_poll_results(post_id, poll_name, custom_field_name, current_user)
+          grouped_results: DiscoursePoll::Poll.grouped_poll_results(post_id, poll_name, user_field_name, current_user)
         }
       rescue StandardError => e
         render_json_error e.message
