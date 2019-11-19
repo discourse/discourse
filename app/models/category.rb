@@ -532,6 +532,7 @@ class Category < ActiveRecord::Base
     topic = relation
       .visible
       .listable_topics
+      .exclude_scheduled_bump_topics
       .where(category_id: self.id)
       .where('id <> ?', self.topic_id)
       .where('bumped_at < ?', 1.day.ago)
