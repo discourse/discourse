@@ -6,6 +6,7 @@ import { getRegister } from "discourse-common/lib/get-owner";
 import { underscore } from "@ember/string";
 import { set } from "@ember/object";
 import Category from "discourse/models/category";
+import { Promise } from "rsvp";
 
 let _identityMap;
 

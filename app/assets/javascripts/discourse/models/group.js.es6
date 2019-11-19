@@ -11,6 +11,7 @@ import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
+import { Promise } from "rsvp";
 
 const Group = RestModel.extend({
   user_count: 0,
@@ -38,7 +39,7 @@ const Group = RestModel.extend({
 
   findMembers(params, refresh) {
     if (isEmpty(this.name) || !this.can_see_members) {
-      return Ember.RSVP.Promise.reject();
+      return Promise.reject();
     }
 
     if (refresh) {
@@ -73,7 +74,7 @@ const Group = RestModel.extend({
 
   findRequesters(params, refresh) {
     if (isEmpty(this.name) || !this.can_see_members) {
-      return Ember.RSVP.Promise.reject();
+      return Promise.reject();
     }
 
     if (refresh) {

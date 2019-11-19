@@ -16,6 +16,7 @@ import {
 import hbs from "discourse/widgets/hbs-compiler";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { Promise } from "rsvp";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
