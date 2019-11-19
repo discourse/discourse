@@ -911,12 +911,13 @@ end
 #  subcategory_list_style            :string(50)       default("rows_with_featured_topics")
 #  default_top_period                :string(20)       default("all")
 #  mailinglist_mirror                :boolean          default(FALSE), not null
-#  suppress_from_latest              :boolean          default(FALSE)
 #  minimum_required_tags             :integer          default(0), not null
 #  navigate_to_first_post_after_read :boolean          default(FALSE), not null
 #  search_priority                   :integer          default(0)
 #  allow_global_tags                 :boolean          default(FALSE), not null
 #  reviewable_by_group_id            :integer
+#  required_tag_group_id             :integer
+#  min_tags_from_required_group      :integer          default(1), not null
 #
 # Indexes
 #

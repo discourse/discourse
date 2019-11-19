@@ -57,9 +57,11 @@ end
 #  allowed_ips   :inet             is an Array
 #  hidden        :boolean          default(FALSE), not null
 #  last_used_at  :datetime
+#  revoked_at    :datetime
+#  description   :text
 #
 # Indexes
 #
 #  index_api_keys_on_key      (key)
-#  index_api_keys_on_user_id  (user_id) UNIQUE
+#  index_api_keys_on_user_id  (user_id)
 #
