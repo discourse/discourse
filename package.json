@@ -10,7 +10,7 @@
     "ace-builds": "1.4.2",
     "bootbox": "3.2.0",
     "bootstrap": "v3.4.1",
-    "chart.js": "2.7.3",
+    "chart.js": "2.9.3",
     "favcount": "https://github.com/chrishunt/favcount",
     "handlebars": "^4.1.2",
     "highlight.js": "https://github.com/highlightjs/highlight.js",
