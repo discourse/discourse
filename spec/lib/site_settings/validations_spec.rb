@@ -125,7 +125,7 @@ describe SiteSettings::Validations do
         end
 
         it "should be ok" do
-          expect { subject.validate_enforce_second_factor("t") }.not_to raise_error(Discourse::InvalidParameters, error_message)
+          expect { subject.validate_enforce_second_factor("t") }.not_to raise_error
         end
       end
     end
@@ -150,14 +150,50 @@ describe SiteSettings::Validations do
           end
 
           it "should be ok" do
-            expect { subject.validate_enable_local_logins("f") }.not_to raise_error(Discourse::InvalidParameters, error_message)
+            expect { subject.validate_enable_local_logins("f") }.not_to raise_error
           end
         end
       end
 
       context "when the new value is true" do
         it "should be ok" do
-          expect { subject.validate_enable_local_logins("t") }.not_to raise_error(Discourse::InvalidParameters, error_message)
+          expect { subject.validate_enable_local_logins("t") }.not_to raise_error
+        end
+      end
+    end
+
+    describe "#validate_secure_media" do
+      let(:error_message) { I18n.t("errors.site_settings.secure_media_requirements") }
+
+      context "when the new value is true" do
+        context 'if site setting for enable_s3_uploads is enabled' do
+          before do
+            SiteSetting.enable_s3_uploads = true
+          end
+
+          it "should be ok" do
+            expect { subject.validate_secure_media("t") }.not_to raise_error
+          end
+        end
+
+        context 'if site setting for enable_s3_uploads is not enabled' do
+          before do
+            SiteSetting.enable_s3_uploads = false
+          end
+
+          it "is not ok" do
+            expect { subject.validate_secure_media("t") }.to raise_error(Discourse::InvalidParameters, error_message)
+          end
+
+          context "if global s3 setting is enabled" do
+            before do
+              GlobalSetting.stubs(:use_s3?).returns(true)
+            end
+
+            it "should be ok" do
+              expect { subject.validate_secure_media("t") }.not_to raise_error
+            end
+          end
         end
       end
     end
