@@ -1,5 +1,6 @@
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidgetFrom } from "discourse/widgets/widget";
+import { Promise } from "rsvp";
 
 createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
   buildKey: () => "quick-access-profile",

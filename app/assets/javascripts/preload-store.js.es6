@@ -21,14 +21,14 @@ export default {
   **/
   getAndRemove(key, finder) {
     if (this.data[key]) {
-      var promise = Promise.resolve(this.data[key]);
+      let promise = Promise.resolve(this.data[key]);
       delete this.data[key];
       return promise;
     }
 
     if (finder) {
       return new Promise(function(resolve, reject) {
-        var result = finder();
+        let result = finder();
 
         // If the finder returns a promise, we support that too
         if (result && result.then) {
