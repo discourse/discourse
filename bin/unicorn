@@ -14,16 +14,14 @@ dev_mode = false
 
 def ensure_cache_clean!
   all_plugin_directories = Pathname.new(RAILS_ROOT + '/plugins').children.select(&:directory?)
-  core_git_sha = `git rev-parse HEAD`
-  sorted_plugin_shas = all_plugin_directories.map do |plugin_dir|
-    "#{plugin_dir}:" + `git ls-files -s #{plugin_dir} | git hash-object --stdin`
-  end.sort
-  supersha_hash = Digest::SHA1.hexdigest((sorted_plugin_shas + [core_git_sha]).join('|'))
+  core_git_sha = `git rev-parse HEAD`.strip
+  plugins_combined_git_sha = `git ls-files -s plugins | git hash-object --stdin`.strip
+  super_sha = Digest::SHA1.hexdigest(core_git_sha + plugins_combined_git_sha)
   hash_file = "#{RAILS_ROOT}/tmp/plugin-hash"
 
   old_hash = File.exists?(hash_file) ? File.read(hash_file) : nil
 
-  if old_hash && old_hash != supersha_hash
+  if old_hash && old_hash != super_sha
     puts "WARNING: It looks like your discourse plugins or core version have recently changed."
     puts "The tmp/cache directory will be wiped to avoid development issues."
     `rm -rf #{RAILS_ROOT}/tmp/cache`
@@ -31,7 +29,7 @@ def ensure_cache_clean!
   end
 
   FileUtils.mkdir_p(RAILS_ROOT + "/tmp")
-  File.write(hash_file, supersha_hash)
+  File.write(hash_file, super_sha)
 end
 
 # in development do some fussing around, to automate config
