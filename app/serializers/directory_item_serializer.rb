@@ -24,11 +24,19 @@ class DirectoryItemSerializer < ApplicationSerializer
     object.period_type == DirectoryItem.period_types[:all]
   end
 
-  def user
+  def self.user_serializer
     if SiteSetting.user_directory_includes_profile
-      UserSerializer.new(object.user, scope: scope, root: 'user')
+      ::UserSerializer
     else
-      DirectoryItemUserSerializer.new(object.user, scope: scope, root: false)
+      DirectoryItemUserSerializer
+    end
+  end
+
+  def user
+    if self.class.user_serializer == ::UserSerializer
+      self.class.user_serializer.new(object.user, scope: scope, root: 'user')
+    else
+      self.class.user_serializer.new(object.user, scope: scope, root: false)
     end
   end
 
