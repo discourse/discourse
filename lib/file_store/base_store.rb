@@ -31,7 +31,9 @@ module FileStore
     end
 
     def upload_path
-      return File.join("uploads", RailsMultisite::ConnectionManagement.current_db) unless ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
+      if  ENV['RAILS_ENV'] != "test" || !ENV['TEST_ENV_NUMBER']
+           return File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
+      end
 
       # Parallel spec system
       if ENV['TEST_ENV_NUMBER'] == ''
