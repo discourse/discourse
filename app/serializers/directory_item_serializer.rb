@@ -2,7 +2,7 @@
 
 class DirectoryItemSerializer < ApplicationSerializer
 
-  class UserSerializer < UserNameSerializer
+  class DirectoryItemUserSerializer < UserNameSerializer
     include UserPrimaryGroupMixin
   end
 
@@ -26,9 +26,9 @@ class DirectoryItemSerializer < ApplicationSerializer
 
   def user
     if SiteSetting.user_directory_includes_profile
-      ::UserSerializer.new(object.user, scope: scope, root: 'user')
+      UserSerializer.new(object.user, scope: scope, root: 'user')
     else
-      UserSerializer.new(object.user, scope: scope, root: false)
+      DirectoryItemUserSerializer.new(object.user, scope: scope, root: false)
     end
   end
 
