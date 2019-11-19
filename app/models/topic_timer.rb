@@ -17,7 +17,7 @@ class TopicTimer < ActiveRecord::Base
 
   validate :ensure_update_will_happen
 
-  scope :scheduled_bump_topics, -> { where(status_type: 6, deleted_at: nil).pluck(:topic_id) }
+  scope :scheduled_bump_topics, -> { where(status_type: TopicTimer.types[:bump], deleted_at: nil).pluck(:topic_id) }
 
   before_save do
     self.created_at ||= Time.zone.now if execute_at
