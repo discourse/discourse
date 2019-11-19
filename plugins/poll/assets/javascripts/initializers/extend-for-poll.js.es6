@@ -92,7 +92,8 @@ function initializePolls(api) {
           id: `${pollName}-${post.id}`,
           post,
           poll,
-          vote
+          vote,
+          groupableUserFields: api.container.lookup("site-settings:main").poll_groupable_user_fields.split('|').filter(f => f)
         };
         const glue = new WidgetGlue("discourse-poll", register, attrs);
         glue.appendTo(pollElem);

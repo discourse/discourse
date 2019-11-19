@@ -563,7 +563,7 @@ createWidget("discourse-poll-pie-chart", {
 
     let btn;
     let chart;
-    if (attrs.groupResults) {
+    if (attrs.groupResults && attrs.groupableUserFields.length > 0) {
       btn = h("div", [
         this.attach("button", {
           className: "btn btn-default poll-group-by-toggle",
@@ -576,13 +576,15 @@ createWidget("discourse-poll-pie-chart", {
       chart = this.attach("discourse-poll-grouped-pies", attrs);
       clearPieChart(this.attrs.id);
     } else {
-      btn = this.attach("button", {
-        className: "btn btn-default poll-group-by-toggle",
-        label: "poll.group-results.label",
-        title: "poll.group-results.title",
-        icon: "far-eye",
-        action: "toggleGroupedPieCharts"
-      });
+      if (attrs.groupableUserFields.length > 0) {
+        btn = this.attach("button", {
+          className: "btn btn-default poll-group-by-toggle",
+          label: "poll.group-results.label",
+          title: "poll.group-results.title",
+          icon: "far-eye",
+          action: "toggleGroupedPieCharts"
+        });
+      }
       const data = attrs.poll.get("options").map(o => o.votes);
       const labels = attrs.poll.get("options").map(o => o.html);
       loadScript("/javascripts/Chart.min.js").then(() => {
