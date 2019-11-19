@@ -144,23 +144,11 @@ class TopicTrackingState
     MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 
-  def self.publish_dismiss_category(category_id, last_seen_at, user_id)
-    message = {
-      message_type: "dismiss_category",
-      payload: {
-        category_id: category_id,
-        last_seen_at: last_seen_at
-      }
-    }
-    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
-  end
-
-  def self.publish_dismiss_new(last_seen_at, user_id)
+  def self.publish_dismiss_new(user_id, category_id = nil)
+    payload = category_id ? { category_id: category_id } : {}
     message = {
       message_type: "dismiss_new",
-      payload: {
-        last_seen_at: last_seen_at
-      }
+      payload: payload
     }
     MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end

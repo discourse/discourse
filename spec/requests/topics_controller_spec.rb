@@ -2342,7 +2342,7 @@ RSpec.describe TopicsController do
 
       user.user_stat.update_column(:new_since, old_date)
 
-      TopicTrackingState.expects(:publish_dismiss_new)
+      TopicTrackingState.expects(:publish_dismiss_new).with(user.id)
 
       put "/topics/reset-new.json"
       expect(response.status).to eq(200)
@@ -2359,7 +2359,7 @@ RSpec.describe TopicsController do
         category_user = CategoryUser.create!(category_id: category.id, user_id: user.id)
         subcategory_user = CategoryUser.create!(category_id: subcategory.id, user_id: user.id)
 
-        TopicTrackingState.expects(:publish_dismiss_category)
+        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, category.id.to_s)
 
         put "/topics/reset-new.json?category_id=#{category.id}"
 

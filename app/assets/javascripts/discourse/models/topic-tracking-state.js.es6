@@ -28,7 +28,7 @@ function isUnread(topic) {
 }
 
 function isUnseen(topic) {
-  return !topic.last_seen_at || topic.last_seen_at < topic.created_at;
+  return !topic.is_seen;
 }
 
 const TopicTrackingState = EmberObject.extend({
@@ -73,7 +73,7 @@ const TopicTrackingState = EmberObject.extend({
         tracker.notify(data);
       }
 
-      if (["dismiss_category", "dismiss_new"].includes(data.message_type)) {
+      if (data.message_type === "dismiss_new") {
         Object.keys(tracker.states).forEach(k => {
           const topic = tracker.states[k];
           if (
@@ -81,7 +81,7 @@ const TopicTrackingState = EmberObject.extend({
             topic.category_id === parseInt(data.payload.category_id, 0)
           ) {
             tracker.states[k] = Object.assign({}, topic, {
-              last_seen_at: data.payload.last_seen_at
+              is_seen: true
             });
           }
         });
@@ -236,10 +236,10 @@ const TopicTrackingState = EmberObject.extend({
 
       if (state) {
         const lastRead = t.get("last_read_post_number");
-        const lastSeenAt = t.get("last_seen_at");
+        const isSeen = t.get("is_seen");
         if (
           lastRead !== state.last_read_post_number ||
-          lastSeenAt !== state.last_seen_at
+          isSeen !== state.is_seen
         ) {
           const postsCount = t.get("posts_count");
           let newPosts = postsCount - state.highest_post_number,
@@ -260,7 +260,7 @@ const TopicTrackingState = EmberObject.extend({
             last_read_post_number: state.last_read_post_number,
             new_posts: newPosts,
             unread: unread,
-            last_seen_at: state.last_seen_at,
+            is_seen: state.is_seen,
             unseen: !state.last_read_post_number && isUnseen(state)
           });
         }
