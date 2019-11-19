@@ -158,6 +158,8 @@ class Topic < ActiveRecord::Base
 
   scope :created_since, lambda { |time_ago| where('topics.created_at > ?', time_ago) }
 
+  scope :exclude_scheduled_bump_topics, -> { where.not(id: TopicTimer.scheduled_bump_topics) }
+
   scope :secured, lambda { |guardian = nil|
     ids = guardian.secure_category_ids if guardian
 
