@@ -864,37 +864,28 @@ class TopicQuery
   def remove_muted_categories(list, user, opts = nil)
     category_id = get_category_id(opts[:exclude]) if opts
 
-    if SiteSetting.mute_all_categories_by_default
-      if user
-        list = list
-          .references("cu")
-          .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
-          .where("topics.category_id = :category_id
-                 OR COALESCE(category_users.notification_level, :muted) <> :muted
-                 OR tu.notification_level > :regular",
-                 muted: CategoryUser.notification_levels[:muted],
-                 regular: TopicUser.notification_levels[:regular],
-                 category_id: category_id || -1)
-      else
-        category_ids = [
-          SiteSetting.default_categories_watching.split("|"),
-          SiteSetting.default_categories_tracking.split("|"),
-          SiteSetting.default_categories_watching_first_post.split("|")
-        ].flatten.map(&:to_i)
-        category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
+    if user
+      default_notification_level = SiteSetting.mute_all_categories_by_default ? CategoryUser.notification_levels[:muted] : CategoryUser.notification_levels[:regular]
 
-        list = list.where("topics.category_id IN (?)", category_ids) if category_ids.present?
-      end
-    elsif user
       list = list
         .references("cu")
         .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
-        .where("COALESCE(category_users.notification_level, :regular) <> :muted
-               OR category_users.category_id = :category_id OR tu.notification_level >= :tracking",
-               muted: CategoryUser.notification_levels[:muted],
-               regular: CategoryUser.notification_levels[:regular],
-               tracking: TopicUser.notification_levels[:tracking],
-               category_id: category_id || -1)
+        .where("topics.category_id = :category_id
+                OR COALESCE(category_users.notification_level, :default) <> :muted
+                OR tu.notification_level > :regular",
+                category_id: category_id || -1,
+                default: default_notification_level,
+                muted: CategoryUser.notification_levels[:muted],
+                regular: TopicUser.notification_levels[:regular])
+    elsif SiteSetting.mute_all_categories_by_default
+      category_ids = [
+        SiteSetting.default_categories_watching.split("|"),
+        SiteSetting.default_categories_tracking.split("|"),
+        SiteSetting.default_categories_watching_first_post.split("|")
+      ].flatten.map(&:to_i)
+      category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
+
+      list = list.where("topics.category_id IN (?)", category_ids) if category_ids.present?
     else
       category_ids = SiteSetting.default_categories_muted.split("|").map(&:to_i)
       category_ids -= [category_id] if category_id.present? && category_ids.include?(category_id)
