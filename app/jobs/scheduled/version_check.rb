@@ -17,8 +17,7 @@ module Jobs
           DiscourseUpdates.updated_at = Time.zone.now
           DiscourseUpdates.missing_versions = json['versions']
 
-          if  GlobalSetting.new_version_emails &&
-              SiteSetting.new_version_emails &&
+          if SiteSetting.new_version_emails &&
               json['missingVersionsCount'] > (0) &&
               prev_missing_versions_count < (json['missingVersionsCount'].to_i)
 
