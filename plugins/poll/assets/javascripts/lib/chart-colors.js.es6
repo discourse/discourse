@@ -1,6 +1,6 @@
 export function getColors(count, palette) {
   palette = palette || "cool";
-  var gradient;
+  let gradient;
 
   switch (palette) {
     case "cool":
@@ -33,33 +33,34 @@ export function getColors(count, palette) {
   }
 
   //Get a sorted array of the gradient keys
-  var gradientKeys = Object.keys(gradient);
+  let gradientKeys = Object.keys(gradient);
   gradientKeys.sort(function(a, b) {
     return +a - +b;
   });
 
   //Calculate colors
-  var colors = [];
+  let colors = [];
   for (let i = 0; i < count; i++) {
-    var gradientIndex = (i + 1) * (100 / (count + 1)); //Find where to get a color from the gradient
+    let gradientIndex = (i + 1) * (100 / (count + 1)); //Find where to get a color from the gradient
     for (let j = 0; j < gradientKeys.length; j++) {
-      var gradientKey = gradientKeys[j];
+      let gradientKey = gradientKeys[j];
       if (gradientIndex === +gradientKey) {
         //Exact match with a gradient key - just get that color
         colors[i] = "rgba(" + gradient[gradientKey].toString() + ")";
         break;
       } else if (gradientIndex < +gradientKey) {
         //It's somewhere between this gradient key and the previous
-        var prevKey = gradientKeys[j - 1];
-        var gradientPartIndex =
+        let prevKey = gradientKeys[j - 1];
+        let gradientPartIndex =
           (gradientIndex - prevKey) / (gradientKey - prevKey); //Calculate where
-        var color = [];
+        let color = [];
         for (let k = 0; k < 4; k++) {
           //Loop through Red, Green, Blue and Alpha and calculate the correct color and opacity
-          color[k] =
+          color.push(
             gradient[prevKey][k] -
-            (gradient[prevKey][k] - gradient[gradientKey][k]) *
-              gradientPartIndex;
+              (gradient[prevKey][k] - gradient[gradientKey][k]) *
+                gradientPartIndex
+          );
           if (k < 3) color[k] = Math.round(color[k]);
         }
         colors[i] = "rgba(" + color.toString() + ")";

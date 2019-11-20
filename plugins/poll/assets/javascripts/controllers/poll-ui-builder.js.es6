@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import {
   default as computed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 
 export default Controller.extend({

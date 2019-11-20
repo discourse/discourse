@@ -230,14 +230,19 @@ after_initialize do
         serialized_voters(poll, opts)
       end
 
+      def transform_for_user_field_override(custom_user_field)
+        existing_field = UserField.find_by(name: custom_user_field)
+        existing_field ? "user_field_#{existing_field.id}" : custom_user_field
+      end
+
       def grouped_poll_results(post_id, poll_name, user_field_name, user)
         post = Post.find_by(id: post_id)
         raise Discourse::InvalidParameters.new("post_id is invalid") unless post
 
         poll = Poll.find_by(post_id: post_id, name: poll_name)
-        raise Discourse::InvalidParameters.new("poll_name is invalid") unless poll&.can_see_voters?(user)
+        raise Discourse::InvalidParameters.new("poll_name is invalid") unless poll
 
-        raise Discourse::InvalidParameters.new("user_field_name is invalid") unless SiteSetting.poll_groupable_user_fields.split('|').include?(user_field_name)
+        raisr Discourse::InvalidParameters.new("user_field_name is invalid") unless SiteSetting.poll_groupable_user_fields.split('|').include?(user_field_name)
 
         poll_votes = PollVote.where(poll: poll)
 
@@ -247,7 +252,7 @@ after_initialize do
         end
 
         user_ids = poll_votes.map(&:user_id).uniq
-        user_fields = UserCustomField.where(user_id: user_ids, name: user_field_name)
+        user_fields = UserCustomField.where(user_id: user_ids, name: transform_for_user_field_override(user_field_name))
 
         user_field_map = {}
         user_fields.each do |f|
@@ -262,18 +267,25 @@ after_initialize do
         end
 
         chart_data = []
-        grouped_votes = votes_with_field.group_by { |vote| vote[:field_value] }.each do |field_answer, votes|
-          grouped_selected_options = []
+        votes_with_field.group_by { |vote| vote[:field_value] }.each do |field_answer, votes|
+          grouped_selected_options = {}
 
-          votes.group_by { |v| v["poll_option_id"] }.each do |option_id, votes_for_option|
-            grouped_selected_options << {
-              digest: poll_options[option_id.to_s][:digest],
-              html: poll_options[option_id.to_s][:html],
-              votes: votes_for_option.length
+          # Create all the options with 0 votes. This ensures all the charts will have the same order of options, and same colors per option.
+          poll_options.each do |id, option|
+            grouped_selected_options[id] = {
+              digest: option[:digest],
+              html: option[:html],
+              votes: 0
             }
           end
 
-          chart_data << { group: (field_answer || I18n.t("poll.user_field.empty")) , options: grouped_selected_options }
+          # Now go back and update the vote counts. Using hashes so we dont have n^2
+          votes.group_by { |v| v["poll_option_id"] }.each do |option_id, votes_for_option|
+            grouped_selected_options[option_id.to_s][:votes] = votes_for_option.length
+          end
+
+          group_label = field_answer ? field_answer.titleize : I18n.t("poll.user_field.no_data")
+          chart_data << { group: group_label, options: grouped_selected_options.values }
         end
         chart_data
       end

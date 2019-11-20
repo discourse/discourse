@@ -69,4 +69,4 @@ en:
       link_to_poll: "Click to view the poll."
 
     user_field:
-      empty: "Empty"
+      no_data: "No Data"

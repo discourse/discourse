@@ -327,7 +327,7 @@ createWidget("discourse-poll-container", {
     if (attrs.showResults) {
       const type = poll.get("type") === "number" ? "number" : "standard";
       const resultsWidget =
-        type === "number" || attrs.poll.get("chart") !== "pie"
+        type === "number" || attrs.poll.chart !== "pie"
           ? `discourse-poll-${type}-results`
           : "discourse-poll-pie-chart";
       return this.attach(resultsWidget, attrs);
@@ -433,8 +433,10 @@ function fetchGroupedVoters(data) {
 }
 
 function transformUserFieldToLabel(fieldName) {
-  let newName = fieldName;
-  return newName.replace(/_/g, " ");
+  let transformed = fieldName.split("_");
+  transformed[0] =
+    transformed[0].charAt(0).toUpperCase() + transformed[0].slice(1);
+  return transformed.join(" ");
 }
 
 createWidget("discourse-poll-grouped-pies", {
@@ -459,23 +461,23 @@ createWidget("discourse-poll-grouped-pies", {
         existingSel.parentNode.removeChild(existingSel);
       }
 
-      const sel = document.createElement("select");
-      sel.classList.add("poll-group-by-selector");
-      sel.id = fieldSelectId;
+      const groupBySelect = document.createElement("select");
+      groupBySelect.classList.add("poll-group-by-selector");
+      groupBySelect.id = fieldSelectId;
 
       const clearFix = document.createElement("div");
       clearFix.classList.add("clear-both");
 
-      parent.prepend(sel);
+      parent.prepend(groupBySelect);
       parent.append(clearFix);
 
       for (var i = 0; i < attrs.groupableUserFields.length; i++) {
         const opt = document.createElement("option");
         opt.innerHTML = transformUserFieldToLabel(fields[i]);
         opt.value = fields[i];
-        sel.appendChild(opt);
-        $(sel).val(attrs.groupedBy);
+        groupBySelect.appendChild(opt);
       }
+      groupBySelect.value = attrs.groupedBy;
       fetchGroupedVoters({
         post_id: attrs.post.id,
         poll_name: attrs.poll.name,
@@ -530,7 +532,7 @@ createWidget("discourse-poll-grouped-pies", {
 
   click(e) {
     let select = $(e.target).closest("select");
-    if (select.length !== 0) {
+    if (select.length) {
       this.sendWidgetAction("refreshCharts", select[0].value);
     }
   }
@@ -538,7 +540,7 @@ createWidget("discourse-poll-grouped-pies", {
 
 function clearPieChart(id) {
   let el = document.querySelector(`#poll-results-chart-${id}`);
-  if (el) el.parentNode.removeChild(el);
+  el && el.parentNode.removeChild(el);
 }
 
 createWidget("discourse-poll-pie-canvas", {
@@ -585,8 +587,8 @@ createWidget("discourse-poll-pie-chart", {
           action: "toggleGroupedPieCharts"
         });
       }
-      const data = attrs.poll.get("options").map(o => o.votes);
-      const labels = attrs.poll.get("options").map(o => o.html);
+      const data = attrs.poll.options.map(o => o.votes);
+      const labels = attrs.poll.options.map(o => o.html);
       loadScript("/javascripts/Chart.min.js").then(() => {
         later(() => {
           const el = document.querySelector(
@@ -605,22 +607,21 @@ createWidget("discourse-poll-pie-chart", {
   }
 });
 
-function pieChartConfig(data, labels, aspectRatio) {
-  aspectRatio = aspectRatio || 2.0;
+function pieChartConfig(data, labels, aspectRatio = 2.0) {
   return {
     type: "pie",
     data: {
       datasets: [
         {
-          data: data,
+          data,
           backgroundColor: getColors(data.length)
         }
       ],
-      labels: labels
+      labels
     },
     options: {
       responsive: true,
-      aspectRatio: aspectRatio,
+      aspectRatio,
       animation: { duration: 400 }
     }
   };
@@ -743,11 +744,14 @@ createWidget("discourse-poll-buttons", {
 });
 
 export default createWidget("discourse-poll", {
-  tagName: "div.poll",
+  tagName: "div",
   buildKey: attrs => `poll-${attrs.id}`,
 
   buildAttributes(attrs) {
+    let cssClasses = "poll";
+    if (attrs.poll.chart === "pie") cssClasses += " pie";
     return {
+      class: cssClasses,
       "data-poll-name": attrs.poll.get("name"),
       "data-poll-type": attrs.poll.get("type")
     };
