@@ -28,7 +28,8 @@ module DiscourseNarrativeBot
       else
         PostCreator.create!(self.discobot_user, {
           post_alert_options: defaut_post_alert_opts,
-          raw: raw
+          raw: raw,
+          skip_validations: true
         }.merge(opts))
       end
     end
