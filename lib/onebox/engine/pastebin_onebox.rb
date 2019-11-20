@@ -52,7 +52,7 @@ module Onebox
 
         nil
       rescue
-        return nil
+        nil
       end
     end
   end

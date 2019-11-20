@@ -132,7 +132,7 @@ module Onebox
         end
       end
       ndx = 7
-      return "#{'%.2f' % (size / (scale**(ndx - 1)))} #{conv[ndx - 1]}"
+      "#{'%.2f' % (size / (scale**(ndx - 1)))} #{conv[ndx - 1]}"
     end
 
     def self.click_to_scroll_div(width = 690, height = 400)
