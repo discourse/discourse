@@ -242,7 +242,7 @@ after_initialize do
         poll = Poll.find_by(post_id: post_id, name: poll_name)
         raise Discourse::InvalidParameters.new("poll_name is invalid") unless poll
 
-        raisr Discourse::InvalidParameters.new("user_field_name is invalid") unless SiteSetting.poll_groupable_user_fields.split('|').include?(user_field_name)
+        raise Discourse::InvalidParameters.new("user_field_name is invalid") unless SiteSetting.poll_groupable_user_fields.split('|').include?(user_field_name)
 
         poll_votes = PollVote.where(poll: poll)
 

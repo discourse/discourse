@@ -167,9 +167,9 @@ describe "DiscoursePoll endpoints" do
       expect(response.status).to eq(200)
       expect(JSON.parse(response.body).deep_symbolize_keys).to eq(
         grouped_results: [
-          { group: "value0", options: [{ digest: option_a, html: "A", votes: 1 }] },
-          { group: "value1", options: [{ digest: option_a, html: "A", votes: 2 }, { digest: option_b, html: "B", votes: 1 }] },
-          { group: "value2", options: [{ digest: option_b, html: "B", votes: 1 }] },
+          { group: "Value0", options: [{ digest: option_a, html: "A", votes: 1 }, { digest: option_b, html: "B", votes: 0 }] },
+          { group: "Value1", options: [{ digest: option_a, html: "A", votes: 2 }, { digest: option_b, html: "B", votes: 1 }] },
+          { group: "Value2", options: [{ digest: option_a, html: "A", votes: 0 }, { digest: option_b, html: "B", votes: 1 }] },
         ]
       )
     end

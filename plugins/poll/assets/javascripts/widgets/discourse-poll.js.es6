@@ -422,7 +422,7 @@ createWidget("discourse-poll-info", {
   }
 });
 
-function fetchGroupedVoters(data) {
+function fetchGroupedResults(data) {
   return ajax("/polls/grouped_poll_results.json", { data }).catch(error => {
     if (error) {
       popupAjaxError(error);
@@ -478,7 +478,7 @@ createWidget("discourse-poll-grouped-pies", {
         groupBySelect.appendChild(opt);
       }
       groupBySelect.value = attrs.groupedBy;
-      fetchGroupedVoters({
+      fetchGroupedResults({
         post_id: attrs.post.id,
         poll_name: attrs.poll.name,
         user_field_name: attrs.groupedBy
@@ -568,7 +568,7 @@ createWidget("discourse-poll-pie-chart", {
     if (attrs.groupResults && attrs.groupableUserFields.length > 0) {
       btn = h("div", [
         this.attach("button", {
-          className: "btn btn-default poll-group-by-toggle",
+          className: "btn-default poll-group-by-toggle",
           label: "poll.ungroup-results.label",
           title: "poll.ungroup-results.title",
           icon: "far-eye-slash",
@@ -580,7 +580,7 @@ createWidget("discourse-poll-pie-chart", {
     } else {
       if (attrs.groupableUserFields.length > 0) {
         btn = this.attach("button", {
-          className: "btn btn-default poll-group-by-toggle",
+          className: "btn-default poll-group-by-toggle",
           label: "poll.group-results.label",
           title: "poll.group-results.title",
           icon: "far-eye",
@@ -643,7 +643,7 @@ createWidget("discourse-poll-buttons", {
       const castVotesDisabled = !attrs.canCastVotes;
       contents.push(
         this.attach("button", {
-          className: `btn cast-votes ${
+          className: `cast-votes ${
             castVotesDisabled ? "btn-default" : "btn-primary"
           }`,
           label: "poll.cast-votes.label",
@@ -658,7 +658,7 @@ createWidget("discourse-poll-buttons", {
     if (attrs.showResults || hideResultsDisabled) {
       contents.push(
         this.attach("button", {
-          className: "btn btn-default toggle-results",
+          className: "btn-default toggle-results",
           label: "poll.hide-results.label",
           title: "poll.hide-results.title",
           icon: "far-eye-slash",
@@ -676,7 +676,7 @@ createWidget("discourse-poll-buttons", {
       } else {
         contents.push(
           this.attach("button", {
-            className: "btn btn-default toggle-results",
+            className: "btn-default toggle-results",
             label: "poll.show-results.label",
             title: "poll.show-results.title",
             icon: "far-eye",
@@ -718,7 +718,7 @@ createWidget("discourse-poll-buttons", {
         if (!attrs.isAutomaticallyClosed) {
           contents.push(
             this.attach("button", {
-              className: "btn btn-default toggle-status",
+              className: "btn-default toggle-status",
               label: "poll.open.label",
               title: "poll.open.title",
               icon: "unlock-alt",
@@ -729,7 +729,7 @@ createWidget("discourse-poll-buttons", {
       } else {
         contents.push(
           this.attach("button", {
-            className: "btn toggle-status btn-danger",
+            className: "toggle-status btn-danger",
             label: "poll.close.label",
             title: "poll.close.title",
             icon: "lock",
