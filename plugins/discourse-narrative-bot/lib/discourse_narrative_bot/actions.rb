@@ -18,7 +18,8 @@ module DiscourseNarrativeBot
           raw: raw,
           topic_id: post.topic_id,
           reply_to_post_number: post.post_number,
-          post_alert_options: defaut_post_alert_opts
+          post_alert_options: defaut_post_alert_opts,
+          skip_validations: true
         }
 
         new_post = PostCreator.create!(self.discobot_user, default_opts.merge(opts))
