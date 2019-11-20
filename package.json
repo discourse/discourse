@@ -55,6 +55,6 @@
   },
   "scripts": {
     "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\"",
-    "postinstall": "install-peerdeps --dev eslint-config-discourse -Y --extra-args \"--ignore-scripts\""
+    "postinstall": "install-peerdeps --dev eslint-config-discourse@1.0.6 -Y --extra-args \"--ignore-scripts\""
   }
 }
