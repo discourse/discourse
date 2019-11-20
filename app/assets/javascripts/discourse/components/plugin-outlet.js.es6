@@ -30,7 +30,7 @@ import Component from "@ember/component";
    The list of disabled plugins is returned via the `Site` singleton.
 
 **/
-import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
+import { renderedConnectorsFor, buildArgsWithDeprecations } from "discourse/lib/plugin-connectors";
 
 export default Component.extend({
   tagName: "span",
@@ -46,7 +46,7 @@ export default Component.extend({
     this._super(...arguments);
     const name = this.name;
     if (name) {
-      const args = this.args;
+      const args = buildArgsWithDeprecations(this.args || {}, this.deprecatedArgs || {});
       this.set("connectors", renderedConnectorsFor(name, args, this));
     }
   }
