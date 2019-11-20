@@ -2862,7 +2862,7 @@ it:
       text_body_template: |
         Conferma il tuo nuovo indirizzo email su %{site_name} cliccando il seguente collegamento:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Conferma Vecchia Email"
       subject_template: "[%{email_prefix}] Conferma il tuo attuale indirizzo email"
@@ -2873,7 +2873,7 @@ it:
 
         Conferma il tuo attuale indirizzo email su %{site_name} cliccando il seguente collegamento:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Notifica Vecchia Email"
       subject_template: "[%{email_prefix}] Il tuo indirizzo email è stato cambiato"

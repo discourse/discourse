@@ -2701,7 +2701,7 @@ hy:
       text_body_template: |
         Հաստատեք Ձեր նոր էլ. հասցեն %{site_name} -ի համար՝ սեղմելով հետևյալ հղումը.
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Հաստատել Հին Էլ. Հասցեն"
       subject_template: "[%{email_prefix}] Հաստատել Ձեր ընթացիկ էլ. հասցեն"
