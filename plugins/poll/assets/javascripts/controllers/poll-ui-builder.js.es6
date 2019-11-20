@@ -42,6 +42,11 @@ export default Controller.extend({
     ];
   },
 
+  @computed("chartType", "pollType", "numberPollType")
+  isPie(chartType, pollType, numberPollType) {
+    return pollType !== numberPollType && chartType === "pie";
+  },
+
   @computed(
     "alwaysPollResult",
     "votePollResult",
