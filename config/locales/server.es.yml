@@ -3144,7 +3144,7 @@ es:
       text_body_template: |
         Confirma tu nueva dirección de correo electrónico para %{site_name} haciendo clic en el siguiente enlace:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Confirmar correo electrónico antiguo"
       subject_template: "[%{email_prefix}] Confirma tu dirección actual de correo electrónico"
@@ -3155,7 +3155,7 @@ es:
 
         Confirma tu correo electrónico actual para %{site_name} haciendo clic en el siguiente enlace:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     notify_old_email:
       title: "Antiguo correo electrónico de notificaciones"
       subject_template: "[%{email_prefix}] Tu dirección de correo electrónico ha sido cambiada"

@@ -2084,7 +2084,7 @@ el:
 
         Επικυρώστε την νέα σας διεύθυνση email στην %{site_name} κάνοντας κλικ στον παρακάτω σύνδεσμο:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Επιβεβαίωση παλιάς διεύθυνσης email"
       subject_template: "[%{email_prefix}] Επικυρώστε την νέα σας διεύθυνση email"
@@ -2098,7 +2098,7 @@ el:
 
         Επιβεβαιώστε την τρέχουσα διεύθυνση email στην%{site_name} κάνοντας κλικ στον παρακάτω σύνδεσμο:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Ειδοποίηση παλιάς διεύθυνσης email"
       subject_template: "[%{email_prefix}] Η διεύθυνση email σας έχει αλλαχθεί"

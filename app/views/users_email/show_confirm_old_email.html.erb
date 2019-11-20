@@ -1,0 +1,27 @@
+<div id="simple-container">
+  <% if @almost_done %>
+    <h2><%= t 'change_email.authorizing_old.almost_done_title' %></h2>
+    <p>
+      <%= t 'change_email.authorizing_old.almost_done_description' %>
+    </p>
+  <% elsif @error %>
+    <div class='alert alert-error'>
+      <%= @error %>
+    </div>
+  <% else %>
+    <h2><%= t 'change_email.authorizing_old.title' %></h2>
+    <p>
+      <%= t 'change_email.authorizing_old.description' %>
+      <br>
+      <br>
+      <%= t 'change_email.authorizing_old.old_email', email: @from_email %>
+      <br>
+      <%= t 'change_email.authorizing_old.new_email', email: @to_email %>
+    </p>
+
+    <%=form_tag(u_confirm_old_email_path, method: :put) do %>
+      <%= hidden_field_tag 'token', @token.token %>
+      <%= submit_tag t('change_email.confirm'), class: "btn btn-primary" %>
+    <% end %>
+  <% end %>
+</div>

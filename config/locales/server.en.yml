@@ -805,14 +805,25 @@ en:
       unknown: "unknown operating system"
 
   change_email:
+    wrong_account_error: "You are logged in the wrong account, please log out and try again."
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
     error_staged: "There was an error changing your email address. The address is already in use by a staged user."
     already_done: "Sorry, this confirmation link is no longer valid. Perhaps your email was already changed?"
+    confirm: "Confirm"
+
+    authorizing_new:
+      title: "Confirm your new email"
+      description: "Please confirm you would like your new email address changed to:"
+
     authorizing_old:
-      title: "Thanks for confirming your current email address"
-      description: "We're now emailing your new address for confirmation."
+      title: "Change your email address"
+      description: "Please confirm your email address change"
+      old_email: "Old email: %{email}"
+      new_email: "New email: %{email}"
+      almost_done_title: "Confirming new email address"
+      almost_done_description: "We have sent an email to your new email address to confirm the change!"
 
   associated_accounts:
     revoke_failed: "Failed to revoke your account with %{provider_name}."
@@ -3545,7 +3556,7 @@ en:
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
 
     confirm_old_email:
       title: "Confirm Old Email"
@@ -3557,7 +3568,7 @@ en:
 
         Confirm your current email address for %{site_name} by clicking on the following link:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
 
     notify_old_email:
       title: "Notify Old Email"

@@ -2217,7 +2217,7 @@ ru:
       text_body_template: |
         Подтвердите ваш новый адрес e-mail почты для %{site_name} нажав на следующую ссылку:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       text_body_template: |
         Прежде чем мы сможем изменить ваш адрес электронной почты, нам нужно, чтобы вы подтвердили, что вы контролируете
@@ -2226,7 +2226,7 @@ ru:
 
         Подтвердите свой текущий адрес e-mail почты для %{site_name} нажав на следующую ссылку:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     signup_after_approval:
       title: "Регистрация После Утверждения"
       subject_template: "Ваша учетная запись на сайте %{site_name} одобрена!"

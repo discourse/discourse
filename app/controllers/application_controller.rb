@@ -687,6 +687,25 @@ class ApplicationController < ActionController::Base
     request.original_url unless request.original_url =~ /uploads/
   end
 
+  def redirect_to_login
+    dont_cache_page
+
+    if SiteSetting.enable_sso?
+      # save original URL in a session so we can redirect after login
+      session[:destination_url] = destination_url
+      redirect_to path('/session/sso')
+    elsif !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
+      # Only one authentication provider, direct straight to it.
+      # If authentication_data is present, then we are halfway though registration. Don't redirect offsite
+      cookies[:destination_url] = destination_url
+      redirect_to path("/auth/#{Discourse.enabled_authenticators.first.name}")
+    else
+      # save original URL in a cookie (javascript redirects after login in this case)
+      cookies[:destination_url] = destination_url
+      redirect_to path("/login")
+    end
+  end
+
   def redirect_to_login_if_required
     return if request.format.json? && is_api?
 
@@ -715,24 +734,8 @@ class ApplicationController < ActionController::Base
 
     if !current_user && SiteSetting.login_required?
       flash.keep
-      dont_cache_page
-
-      if SiteSetting.enable_sso?
-        # save original URL in a session so we can redirect after login
-        session[:destination_url] = destination_url
-        redirect_to path('/session/sso')
-        return
-      elsif !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
-        # Only one authentication provider, direct straight to it.
-        # If authentication_data is present, then we are halfway though registration. Don't redirect offsite
-        cookies[:destination_url] = destination_url
-        redirect_to path("/auth/#{Discourse.enabled_authenticators.first.name}")
-      else
-        # save original URL in a cookie (javascript redirects after login in this case)
-        cookies[:destination_url] = destination_url
-        redirect_to path("/login")
-        return
-      end
+      redirect_to_login
+      return
     end
 
     check_totp = current_user &&

@@ -1659,7 +1659,7 @@ sl:
       text_body_template: |
         Potrdite vaš nov e-naslov pri %{site_name} tako da sledite povezavi:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Potrdite star e-naslov"
       subject_template: "[%{email_prefix}] Potrdite vaš trenutni e-naslov"
@@ -1668,7 +1668,7 @@ sl:
 
         Potrdite vaš trenutni e-naslov pri %{site_name} tako da sledite povezavi:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Obvesti stari e-naslov"
       subject_template: "[%{email_prefix}] Vaš e-naslov je bil spremenjen"

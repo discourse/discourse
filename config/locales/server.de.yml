@@ -3019,7 +3019,7 @@ de:
       text_body_template: |
         Bestätige deine neue E-Mail-Adresse für %{site_name}, indem du dem diesem Link folgst:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "E-Mail-Adresse bestätigen (an alte)"
       subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
@@ -3028,7 +3028,7 @@ de:
 
         Bestätige deine aktuelle E-Mail-Adresse für %{site_name}, indem du diesem Link folgst:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Benachrichtigung an alte E-Mail-Adresse"
       subject_template: "[%{email_prefix}] Deine E-Mail-Adresse wurde geändert"

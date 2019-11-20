@@ -3013,7 +3013,7 @@ zh_CN:
       text_body_template: |
         点击下面的链接来确认你在%{site_name}上的新电子邮箱地址：
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "确认旧邮箱"
       subject_template: "[%{email_prefix}] 确认你现在的电子邮箱地址"
@@ -3022,7 +3022,7 @@ zh_CN:
 
         点击下面的链接来确认你在%{site_name}正使用的邮件：
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "通知旧邮箱"
       subject_template: "[%{email_prefix}] 你的邮箱已经修改成功"

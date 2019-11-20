@@ -1,0 +1,51 @@
+<div id="simple-container">
+  <% if @done %>
+    <h2>
+      <%= t 'change_email.confirmed' %>
+    </h2>
+    <p>
+    <a class="btn" href="<%= path "/" %>"><%= t('change_email.please_continue', site_name: SiteSetting.title) %></a>
+    </p>
+  <% elsif @error %>
+    <div class='alert alert-error'>
+      <%= @error %>
+    </div>
+  <% else %>
+    <h2><%= t 'change_email.authorizing_new.title' %></h2>
+    <p>
+      <%= t 'change_email.authorizing_new.description' %>
+    </p>
+    <p>
+      <%= @to_email %>
+    </p>
+
+    <%=form_tag(u_confirm_new_email_path, method: :put) do %>
+      <%= hidden_field_tag 'token', @token.token %>
+
+      <% if @show_backup_codes %>
+        <div id="backup-second-factor-form" style="">
+          <h3><%= t('login.second_factor_backup_title') %></h3>
+            <%= label_tag(:second_factor_token, t("login.second_factor_backup_description")) %>
+            <div><%= render 'common/second_factor_backup_input' %></div>
+            <%= submit_tag(t("submit"), class: "btn btn-primary") %>
+        </div>
+        <%= link_to t("login.second_factor_toggle.totp"), show_backup: "false" %>
+      <% elsif @show_second_factor %>
+        <div id="primary-second-factor-form">
+          <h3><%= t('login.second_factor_title') %></h3>
+          <%= label_tag(:second_factor_token, t('login.second_factor_description')) %>
+          <div><%= render 'common/second_factor_text_field' %></div>
+          <% if @show_invalid_second_factor_error %>
+            <div class='alert alert-error'><%= t('login.invalid_second_factor_code') %></div>
+          <% end %>
+          <%= submit_tag t('submit'), class: "btn btn-primary" %>
+        </div>
+        <% if @backup_codes_enabled %>
+          <%= link_to t("login.second_factor_toggle.backup_code"), show_backup: "true" %>
+        <% end %>
+      <% else %>
+        <%= submit_tag t('change_email.confirm'), class: "btn btn-primary" %>
+      <% end %>
+    <%end%>
+  <% end%>
+</div>
