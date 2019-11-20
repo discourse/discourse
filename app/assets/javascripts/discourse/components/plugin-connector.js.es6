@@ -1,5 +1,7 @@
 import Component from "@ember/component";
-import { observes } from "discourse-common/utils/decorators";
+import { defineProperty, computed } from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
+import { buildArgsWithDeprecations } from "discourse/lib/plugin-connectors";
 
 export default Component.extend({
   init() {
@@ -9,10 +11,30 @@ export default Component.extend({
     this.set("layoutName", connector.templateName);
 
     const args = this.args || {};
-    Object.keys(args).forEach(key => this.set(key, args[key]));
+    Object.keys(args).forEach(key => {
+      defineProperty(
+        this,
+        key,
+        computed("args", () => (this.args || {})[key])
+      );
+    });
+
+    const deprecatedArgs = this.deprecatedArgs || {};
+    Object.keys(deprecatedArgs).forEach(key => {
+      defineProperty(
+        this,
+        key,
+        computed("deprecatedArgs", () => {
+          deprecated(`The ${key} property is deprecated, but is being used in ${this.layoutName}`);
+
+          return (this.deprecatedArgs || {})[key];
+        })
+      );
+    });
 
     const connectorClass = this.get("connector.connectorClass");
-    connectorClass.setupComponent.call(this, args, this);
+    const merged = buildArgsWithDeprecations(args, deprecatedArgs);
+    connectorClass.setupComponent.call(this, merged, this);
 
     this.set("actions", connectorClass.actions);
   },
@@ -22,12 +44,6 @@ export default Component.extend({
 
     const connectorClass = this.get("connector.connectorClass");
     connectorClass.teardownComponent.call(this, this);
-  },
-
-  @observes("args")
-  _argsChanged() {
-    const args = this.args || {};
-    Object.keys(args).forEach(key => this.set(key, args[key]));
   },
 
   send(name, ...args) {

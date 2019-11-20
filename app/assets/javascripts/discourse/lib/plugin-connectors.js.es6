@@ -1,4 +1,5 @@
 import Site from "discourse/models/site";
+import deprecated from "discourse-common/lib/deprecated";
 
 let _connectorCache;
 let _rawConnectorCache;
@@ -108,4 +109,24 @@ export function rawConnectorsFor(outletName) {
     buildRawConnectorCache();
   }
   return _rawConnectorCache[outletName] || [];
+}
+
+export function buildArgsWithDeprecations(args, deprecatedArgs) {
+  const output = {};
+
+  Object.keys(args).forEach(key => {
+    Object.defineProperty(output, key, { value: args[key] });
+  });
+
+  Object.keys(deprecatedArgs).forEach(key => {
+    Object.defineProperty(output, key, {
+      get() {
+        deprecated(`${key} is deprecated`);
+
+        return deprecatedArgs[key];
+      }
+    });
+  });
+
+  return output;
 }
