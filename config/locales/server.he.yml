@@ -3259,7 +3259,7 @@ he:
       text_body_template: |
         אשרו את כתובת המייל החדשה שלכם עבור %{site_name} על ידי לחיצה על הקישור הבא:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "אישור מייל ישן"
       subject_template: "[%{email_prefix}] אשרו את כתובת המייל הנוכחית שלכם"
@@ -3269,7 +3269,7 @@ he:
 
         אשרו את כתובת המייל הנוכחית עבור %{site_name} על ידי לחיצה על הקישור הבא:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "התראת דוא״ל ישן"
       subject_template: "[%{email_prefix}] כתובת הדוא״ל שלך הוחלפה"

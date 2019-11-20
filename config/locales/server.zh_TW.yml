@@ -2810,7 +2810,7 @@ zh_TW:
       text_body_template: |
         點擊以下連結，確認你 %{site_name} 的新郵件地址：
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "確認原郵件地址"
       subject_template: "[%{email_prefix}] 確認你的現行郵件地址"
@@ -2820,7 +2820,7 @@ zh_TW:
 
         點擊下面的連結，以確認你當前在 %{site_name} 的郵件地址：
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "通知原郵件地址"
       subject_template: "[%{email_prefix}] 已變更你的郵件地址"

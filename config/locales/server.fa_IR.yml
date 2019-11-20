@@ -1896,7 +1896,7 @@ fa_IR:
       text_body_template: |
         ایمیل جدید خود را برای %{site_name} با کلیک روی لینک زیر تایید کنید:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "تایید ایمیل قبلی"
       subject_template: "[%{email_prefix}] ایمیل فعلی خود را تایید کنید"
@@ -1907,7 +1907,7 @@ fa_IR:
 
         ایمیل فعلی خود در سایت %{site_name} را با کلیکل روی لینک زیر تعیید کنید:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "اعلام ایمیل قبلی"
       subject_template: "[%{email_prefix}] ایمیل شما تغییر کرده است"

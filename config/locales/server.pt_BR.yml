@@ -2925,11 +2925,11 @@ pt_BR:
       text_body_template: |
         Confirme seu novo endereço de e-mail para %{site_name} clicando no seguinte link:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Confirmar Antigo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"
-      text_body_template: "Antes que possamos alterar seu endereço de e-mail, precisamos que você confirme que você controla a conta de e-mail atual. \nDepois de concluir esta etapa, você terá que confirmar\no novo endereço de e-mail.\n\nConfirme seu endereço de e-mail atual para %{site_name} clicando no seguinte link:\n\n%{base_url}/u/authorize-email/%{email_token}\n"
+      text_body_template: "Antes que possamos alterar seu endereço de e-mail, precisamos que você confirme que você controla a conta de e-mail atual. \nDepois de concluir esta etapa, você terá que confirmar\no novo endereço de e-mail.\n\nConfirme seu endereço de e-mail atual para %{site_name} clicando no seguinte link:\n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
     notify_old_email:
       title: "Notificar e-mail antigo"
       subject_template: "[%{email_prefix}] Seu endereço de e-mail foi alterado"
