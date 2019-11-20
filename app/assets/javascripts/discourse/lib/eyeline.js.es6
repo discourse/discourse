@@ -1,4 +1,5 @@
 import ENV from "discourse-common/config/environment";
+import { EventTarget } from "rsvp";
 
 //  Track visible elemnts on the screen.
 const Eyeline = function Eyeline(selector) {
@@ -70,6 +71,6 @@ Eyeline.prototype.flushRest = function() {
   $(this.selector).each((i, elem) => this.trigger("saw", { detail: $(elem) }));
 };
 
-RSVP.EventTarget.mixin(Eyeline.prototype);
+EventTarget.mixin(Eyeline.prototype);
 
 export default Eyeline;

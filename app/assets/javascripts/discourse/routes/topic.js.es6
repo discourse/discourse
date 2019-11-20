@@ -6,6 +6,7 @@ import { later } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
+import { EventTarget } from "rsvp";
 
 let isTransitioning = false,
   scheduledReplace = null,
@@ -313,5 +314,5 @@ const TopicRoute = DiscourseRoute.extend({
   }
 });
 
-RSVP.EventTarget.mixin(TopicRoute);
+EventTarget.mixin(TopicRoute);
 export default TopicRoute;
