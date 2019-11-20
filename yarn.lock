@@ -886,10 +886,10 @@ escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
-eslint-config-discourse@1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-1.0.7.tgz#6e4a67fee63b7eb0f97c14fbf67d6fc5f84896bb"
-  integrity sha512-KPP/sfGWAfn7Wnx/lP9x6eMCmC2ag42NK5Dgj5EsOypQGe1Ct4KA2z0fEGuIqGxDoh5xEZB2Nf6qD/lv0gRg7w==
+eslint-config-discourse@1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-1.0.6.tgz#cfd23c7d7b92ca9c416cbc30272be197a823cbe3"
+  integrity sha512-JOTncJzusPnYC97rXRQLewk5CxToL31spw7dzDbVk9XkZpnmRenbWmRawW2OEkbbXow3AdcKj/ousmo9PttwbA==
 
 eslint-scope@3.7.1:
   version "3.7.1"
