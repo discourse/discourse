@@ -248,7 +248,7 @@ class Admin::ThemesController < Admin::AdminController
     headers['Content-Length'] = File.size(file_path).to_s
     send_data File.read(file_path),
       filename: File.basename(file_path),
-      content_type: "application/x-gzip"
+      content_type: "application/zip"
   ensure
     exporter.cleanup!
   end
