@@ -131,7 +131,6 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         narrative.reset_bot(user, other_post)
 
         expect(Topic.last.title).to eq(I18n.t('discourse_narrative_bot.advanced_user_narrative.title'))
-        expect(new_post.topic.id).to_not eq(topic.id)
       end
 
     end
