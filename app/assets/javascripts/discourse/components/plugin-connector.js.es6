@@ -25,7 +25,9 @@ export default Component.extend({
         this,
         key,
         computed("deprecatedArgs", () => {
-          deprecated(`The ${key} property is deprecated, but is being used in ${this.layoutName}`);
+          deprecated(
+            `The ${key} property is deprecated, but is being used in ${this.layoutName}`
+          );
 
           return (this.deprecatedArgs || {})[key];
         })
