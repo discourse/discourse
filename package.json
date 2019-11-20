@@ -43,7 +43,7 @@
     "chrome-launcher": "^0.12.0",
     "chrome-remote-interface": "^0.25",
     "eslint": "^4.19",
-    "eslint-config-discourse": "1.0.6",
+    "eslint-config-discourse": "1.0.7",
     "install-peerdeps": "^1.10.2",
     "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
     "pretender": "^1.6",
