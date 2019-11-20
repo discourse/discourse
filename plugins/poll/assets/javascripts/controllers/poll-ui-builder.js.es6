@@ -219,7 +219,7 @@ export default Controller.extend({
     if (pollMax) pollHeader += ` max=${pollMax}`;
     if (isNumber) pollHeader += ` step=${step}`;
     if (publicPoll) pollHeader += ` public=true`;
-    if (chartType) pollHeader += ` chart=${chartType}`;
+    if (chartType && pollType !== "number") pollHeader += ` chart=${chartType}`;
     if (autoClose) {
       let closeDate = moment(
         date + " " + time,
