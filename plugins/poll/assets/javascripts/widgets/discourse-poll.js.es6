@@ -716,12 +716,13 @@ export default createWidget("discourse-poll", {
         download: 1
       }
     }).then(csvContent => {
-      const pom = document.createElement('a');
+      const downloadLink = document.createElement('a');
       const blob = new Blob([csvContent],{type: 'text/csv;charset=utf-8;'});
       const url = URL.createObjectURL(blob);
-      pom.href = url;
-      pom.setAttribute("download", "poll.csv");
-      pom.click();
+      downloadLink.href = url;
+      downloadLink.setAttribute("download", `poll-export-${attrs.poll.name}-${attrs.post.id}.csv`);
+      downloadLink.click();
+      downloadLink.remove();
     });
   },
 
