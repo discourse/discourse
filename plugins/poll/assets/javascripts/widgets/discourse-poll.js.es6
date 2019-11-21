@@ -483,7 +483,7 @@ createWidget("discourse-poll-buttons", {
           label: "poll.export-results.label",
           title: "poll.export-results.title",
           icon: "download",
-          disabled: poll.get("voters") === 0,
+          disabled: poll.voters === 0,
           action: "exportResults"
         })
       );
