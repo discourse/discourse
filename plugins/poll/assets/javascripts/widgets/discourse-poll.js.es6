@@ -715,7 +715,7 @@ export default createWidget("discourse-poll", {
         limit: 1000000,
         download: 1
       }
-    }).then(( csvContent ) => {
+    }).then(csvContent => {
       const pom = document.createElement('a');
       const blob = new Blob([csvContent],{type: 'text/csv;charset=utf-8;'});
       const url = URL.createObjectURL(blob);
