@@ -327,7 +327,7 @@ createWidget("discourse-poll-container", {
     if (attrs.showResults) {
       const type = poll.get("type") === "number" ? "number" : "standard";
       const resultsWidget =
-        type === "number" || attrs.poll.chart !== "pie"
+        type === "number" || attrs.poll.chart_type !== "pie"
           ? `discourse-poll-${type}-results`
           : "discourse-poll-pie-chart";
       return this.attach(resultsWidget, attrs);
@@ -471,12 +471,12 @@ createWidget("discourse-poll-grouped-pies", {
       parent.prepend(groupBySelect);
       parent.append(clearFix);
 
-      for (var i = 0; i < attrs.groupableUserFields.length; i++) {
+      attrs.groupableUserFields.forEach(field => {
         const opt = document.createElement("option");
-        opt.innerHTML = transformUserFieldToLabel(fields[i]);
-        opt.value = fields[i];
+        opt.innerHTML = transformUserFieldToLabel(field);
+        opt.value = field;
         groupBySelect.appendChild(opt);
-      }
+      });
       groupBySelect.value = attrs.groupedBy;
       fetchGroupedResults({
         post_id: attrs.post.id,
@@ -527,7 +527,6 @@ createWidget("discourse-poll-grouped-pies", {
         }
       });
     });
-    return "";
   },
 
   click(e) {
@@ -749,7 +748,7 @@ export default createWidget("discourse-poll", {
 
   buildAttributes(attrs) {
     let cssClasses = "poll";
-    if (attrs.poll.chart === "pie") cssClasses += " pie";
+    if (attrs.poll.chart_type === "pie") cssClasses += " pie";
     return {
       class: cssClasses,
       "data-poll-name": attrs.poll.get("name"),

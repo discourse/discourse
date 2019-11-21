@@ -122,6 +122,7 @@ div.poll {
 
   .poll-results-chart {
     height: 310px;
+    overflow-y: auto;
   }
 
   .poll-group-by-toggle {

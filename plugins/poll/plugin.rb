@@ -175,7 +175,7 @@ after_initialize do
         elsif option_digest.present?
           poll_option = PollOption.find_by(poll: poll, digest: option_digest)
 
-          raise Discourse::InvalidParameters.new("option_id is invalid") unless poll_option
+          raise Discourse::InvalidParameters.new(:option_id) unless poll_option
 
           user_ids = PollVote
             .where(poll: poll, poll_option: poll_option)
@@ -222,10 +222,10 @@ after_initialize do
 
       def voters(post_id, poll_name, user, opts = {})
         post = Post.find_by(id: post_id)
-        raise Discourse::InvalidParameters.new("post_id is invalid") unless post
+        raise Discourse::InvalidParameters.new(:post_id) unless post
 
         poll = Poll.find_by(post_id: post_id, name: poll_name)
-        raise Discourse::InvalidParameters.new("poll_name is invalid") unless poll&.can_see_voters?(user)
+        raise Discourse::InvalidParameters.new(:poll_name) unless poll&.can_see_voters?(user)
 
         serialized_voters(poll, opts)
       end
@@ -237,17 +237,17 @@ after_initialize do
 
       def grouped_poll_results(post_id, poll_name, user_field_name, user)
         post = Post.find_by(id: post_id)
-        raise Discourse::InvalidParameters.new("post_id is invalid") unless post
+        raise Discourse::InvalidParameters.new(:post_id) unless post
 
-        poll = Poll.find_by(post_id: post_id, name: poll_name)
-        raise Discourse::InvalidParameters.new("poll_name is invalid") unless poll
+        poll = Poll.includes(:poll_options).includes(:poll_votes).find_by(post_id: post_id, name: poll_name)
+        raise Discourse::InvalidParameters.new(:poll_name) unless poll
 
-        raise Discourse::InvalidParameters.new("user_field_name is invalid") unless SiteSetting.poll_groupable_user_fields.split('|').include?(user_field_name)
+        raise Discourse::InvalidParameters.new(:user_field_name) unless SiteSetting.poll_groupable_user_fields.split('|').include?(user_field_name)
 
-        poll_votes = PollVote.where(poll: poll)
+        poll_votes = poll.poll_votes
 
         poll_options = {}
-        PollOption.where(poll_id: poll.id).each do |option|
+        poll.poll_options.each do |option|
           poll_options[option.id.to_s] = { html: option.html, digest: option.digest }
         end
 
@@ -257,12 +257,12 @@ after_initialize do
         user_field_map = {}
         user_fields.each do |f|
           # Build hash, so we can quickly look up field values for each user.
-          user_field_map[f.user_id.to_s] = f.value
+          user_field_map[f.user_id] = f.value
         end
 
         votes_with_field = poll_votes.map do |vote|
           v = vote.attributes
-          v[:field_value] = user_field_map[vote.user_id.to_s]
+          v[:field_value] = user_field_map[vote.user_id]
           v
         end
 
@@ -322,7 +322,7 @@ after_initialize do
           min: poll["min"],
           max: poll["max"],
           step: poll["step"],
-          chart: poll["chart"] || "bar"
+          chart_type: poll["charttype"] || "bar"
         )
 
         poll["options"].each do |option|

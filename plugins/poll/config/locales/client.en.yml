@@ -64,11 +64,11 @@ en:
         label: "Hide results"
 
       group-results:
-        title: "Show votes in grouped by user field"
+        title: "Group votes by user field"
         label: "Show breakdown"
 
       ungroup-results:
-        title: "Show all votes combined"
+        title: "Combine all votes"
         label: "Hide breakdown"
 
       open:

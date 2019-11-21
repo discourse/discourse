@@ -32,7 +32,7 @@ class Poll < ActiveRecord::Base
     everyone: 1,
   }
 
-  enum chart: {
+  enum chart_type: {
     bar: 0,
     pie: 1
   }

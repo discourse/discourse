@@ -73,7 +73,7 @@ describe "DiscoursePoll endpoints" do
           poll_name: DiscoursePoll::DEFAULT_POLL_NAME
         }
         expect(response.status).to eq(422)
-        expect(response.body).to include('post_id is invalid')
+        expect(response.body).to include('post_id')
       end
     end
 
@@ -88,7 +88,7 @@ describe "DiscoursePoll endpoints" do
       it 'should raise the right error' do
         get "/polls/voters.json", params: { post_id: post.id, poll_name: 'wrongpoll' }
         expect(response.status).to eq(422)
-        expect(response.body).to include('poll_name is invalid')
+        expect(response.body).to include('poll_name')
       end
     end
 
@@ -121,11 +121,11 @@ describe "DiscoursePoll endpoints" do
   end
 
   describe "#grouped_poll_results" do
-    let(:user1) { Fabricate(:user) }
-    let(:user2) { Fabricate(:user) }
-    let(:user3) { Fabricate(:user) }
-    let(:user4) { Fabricate(:user) }
-    let(:post) { Fabricate(:post, raw: "[poll public=true]\n- A\n- B\n[/poll]") }
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+    fab!(:user3) { Fabricate(:user) }
+    fab!(:user4) { Fabricate(:user) }
+    fab!(:post) { Fabricate(:post, raw: "[poll public=true]\n- A\n- B\n[/poll]") }
     let(:option_a) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:option_b) { "e89dec30bbd9bf50fabf6a05b4324edf" }
 
@@ -183,7 +183,7 @@ describe "DiscoursePoll endpoints" do
       }
 
       expect(response.status).to eq(422)
-      expect(response.body).to include('user_field_name is invalid')
+      expect(response.body).to include('user_field_name')
     end
   end
 end
