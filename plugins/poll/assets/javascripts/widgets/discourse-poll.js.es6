@@ -479,7 +479,7 @@ createWidget("discourse-poll-buttons", {
     if (isStaff && dataExplorerEnabled && poll.voters > 0) {
       contents.push(
         this.attach("button", {
-          className: "btn btn-default toggle-results",
+          className: "btn btn-default export-results",
           label: "poll.export-results.label",
           title: "poll.export-results.title",
           icon: "download",

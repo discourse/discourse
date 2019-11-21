@@ -36,6 +36,10 @@ div.poll {
       line-height: 2em;
     }
 
+    :not(:first-child):not(:last-child) {
+      margin-left: 1em;
+    }
+
     .toggle-status {
       float: right;
     }
