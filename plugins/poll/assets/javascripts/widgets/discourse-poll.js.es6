@@ -476,7 +476,7 @@ createWidget("discourse-poll-buttons", {
       }
     }
 
-    if (isStaff && dataExplorerEnabled && poll.get("voters") > 0) {
+    if (isStaff && dataExplorerEnabled && poll.voters > 0) {
       contents.push(
         this.attach("button", {
           className: "btn btn-default toggle-results",
