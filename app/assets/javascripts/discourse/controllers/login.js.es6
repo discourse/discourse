@@ -123,7 +123,7 @@ export default Controller.extend(ModalFunctionality, {
           second_factor_token: this.secondFactorToken,
           second_factor_method: this.secondFactorMethod,
           security_key_credential: this.securityKeyCredential,
-          timezone_guess: moment.tz.guess()
+          timezone: moment.tz.guess()
         }
       }).then(
         result => {

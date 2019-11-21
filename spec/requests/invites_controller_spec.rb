@@ -293,7 +293,7 @@ describe InvitesController do
 
           context "if a timezone guess is provided" do
             it "sets the timezone of the user in user_options" do
-              put "/invites/show/#{invite.invite_key}.json", params: { timezone_guess: "Australia/Melbourne" }
+              put "/invites/show/#{invite.invite_key}.json", params: { timezone: "Australia/Melbourne" }
               expect(response.status).to eq(200)
               invite.reload
               user = User.find(invite.user_id)

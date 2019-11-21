@@ -1049,10 +1049,10 @@ RSpec.describe SessionController do
           expect(UserAuthToken.hash_token(cookies[:_t])).to eq(user.user_auth_tokens.first.auth_token)
         end
 
-        context "when timezone_guess param is provided" do
+        context "when timezone param is provided" do
           it "sets the user_option timezone for the user" do
             post "/session.json", params: {
-              login: user.username, password: 'myawesomepassword', timezone_guess: "Australia/Melbourne"
+              login: user.username, password: 'myawesomepassword', timezone: "Australia/Melbourne"
             }
             expect(response.status).to eq(200)
             expect(user.reload.user_option.timezone).to eq("Australia/Melbourne")

@@ -921,8 +921,8 @@ describe User do
     let(:timezone) { nil }
 
     it "does nothing if timezone is nil" do
-      UserOption.expects(:select).never
       user.update_timezone_if_missing(timezone)
+      expect(user.reload.user_option.timezone).to eq(nil)
     end
 
     context "if timezone is provided" do

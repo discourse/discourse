@@ -675,9 +675,8 @@ class User < ActiveRecord::Base
 
     # we only want to update the user's timezone if they have not set it themselves
     UserOption
-      .select(:user_id, :timezone)
-      .find_by(user_id: self.id, timezone: nil)
-      &.update_attribute(:timezone, timezone)
+      .where(user_id: self.id, timezone: nil)
+      .update_all(timezone: timezone)
   end
 
   def update_posts_read!(num_posts, opts = {})

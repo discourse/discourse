@@ -2,7 +2,7 @@
 
 class AddTimezoneToUserOptions < ActiveRecord::Migration[6.0]
   def up
-    add_column :user_options, :timezone, :string, index: true
+    add_column :user_options, :timezone, :string
     execute(
       <<-SQL
         UPDATE user_options
