@@ -224,6 +224,7 @@ end
 #  email_messages_level             :integer          default(0), not null
 #  title_count_mode_key             :integer          default(0), not null
 #  enable_defer                     :boolean          default(FALSE), not null
+#  timezone                         :string
 #
 # Indexes
 #
