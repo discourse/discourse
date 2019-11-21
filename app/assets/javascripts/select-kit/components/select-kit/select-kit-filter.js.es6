@@ -11,7 +11,7 @@ export default Component.extend({
   isHidden: not("shouldDisplayFilter"),
 
   @discourseComputed("placeholder")
-  discourseComputedPlaceholder(placeholder) {
+  computedPlaceholder(placeholder) {
     return isEmpty(placeholder) ? "" : I18n.t(placeholder);
   }
 });
