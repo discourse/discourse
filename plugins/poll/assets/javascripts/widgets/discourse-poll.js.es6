@@ -708,7 +708,7 @@ export default createWidget("discourse-poll", {
       type: "POST",
       data: {
         params: JSON.stringify({ // needed for data-explorer route compatibility
-          poll_name: attrs.poll.get("name"),
+          poll_name: attrs.poll.name,
           post_id: attrs.post.id.toString() // needed for data-explorer route compatibility
         }),
         explain: false,
