@@ -17,15 +17,12 @@ export default Component.extend(
     hidden: false,
     rerenderTriggers: ["content.count"],
 
-    @discourseComputed("content.filterMode", "filterMode", "content.active")
-    active(contentFilterMode, filterMode, active) {
+    @discourseComputed("content.filterType", "filterType", "content.active")
+    active(contentFilterType, filterType, active) {
       if (active !== undefined) {
         return active;
       }
-      return (
-        contentFilterMode === filterMode ||
-        filterMode.indexOf(contentFilterMode) === 0
-      );
+      return contentFilterType === filterType;
     },
 
     buildBuffer(buffer) {

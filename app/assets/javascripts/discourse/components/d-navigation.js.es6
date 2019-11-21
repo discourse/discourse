@@ -28,17 +28,8 @@ export default Component.extend(FilterModeMixin, {
   @discourseComputed("category.can_edit")
   showCategoryEdit: canEdit => canEdit,
 
-  @discourseComputed("filterMode", "category", "noSubcategories")
-  navItems(filterMode, category, noSubcategories) {
-    const filterModeParts = filterMode.split("/");
-    if (
-      filterModeParts.length >= 2 &&
-      filterModeParts[filterModeParts.length - 2] === "top"
-    ) {
-      filterModeParts.pop();
-      filterMode = filterModeParts.join("/");
-    }
-
+  @discourseComputed("filterType", "category", "noSubcategories")
+  navItems(filterType, category, noSubcategories) {
     let params;
     const currentRouteQueryParams = this.get("router.currentRoute.queryParams");
     if (this.persistedQueryParams && currentRouteQueryParams) {
@@ -54,7 +45,7 @@ export default Component.extend(FilterModeMixin, {
     }
 
     return NavItem.buildList(category, {
-      filterMode,
+      filterType,
       noSubcategories,
       persistedQueryParams: params
     });

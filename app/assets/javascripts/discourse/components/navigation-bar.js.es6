@@ -18,21 +18,11 @@ export default Component.extend(FilterModeMixin, {
     this.set("connectors", renderedConnectorsFor("extra-nav-item", null, this));
   },
 
-  @discourseComputed("filterMode", "navItems")
-  selectedNavItem(filterMode, navItems) {
-    const filterModeParts = filterMode.split("/");
-    if (
-      filterModeParts.length >= 2 &&
-      filterModeParts[filterModeParts.length - 2] === "top"
-    ) {
-      filterModeParts.pop();
-      filterMode = filterModeParts.join("/");
-    }
-
+  @discourseComputed("filterType", "navItems")
+  selectedNavItem(filterType, navItems) {
     let item = navItems.find(i => i.active === true);
 
-    item =
-      item || navItems.find(i => i.get("filterMode").indexOf(filterMode) === 0);
+    item = item || navItems.find(i => i.get("filterType") === filterType);
 
     if (!item) {
       let connectors = this.connectors;
@@ -45,7 +35,7 @@ export default Component.extend(FilterModeMixin, {
             typeof (c.connectorClass.displayName === "function")
           ) {
             let path = c.connectorClass.path(category);
-            if (path.indexOf(filterMode) > 0) {
+            if (path.indexOf(filterType) > 0) {
               item = {
                 displayName: c.connectorClass.displayName()
               };
