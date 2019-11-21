@@ -720,7 +720,7 @@ export default createWidget("discourse-poll", {
       const blob = new Blob([csvContent],{type: 'text/csv;charset=utf-8;'});
       const url = URL.createObjectURL(blob);
       pom.href = url;
-      pom.setAttribute('download', 'poll.csv');
+      pom.setAttribute("download", "poll.csv");
       pom.click();
     });
   },
