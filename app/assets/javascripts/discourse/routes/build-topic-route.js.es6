@@ -80,7 +80,10 @@ export default function(filter, extras) {
       queryParams,
 
       beforeModel() {
-        this.controllerFor("navigation/default").set("filterMode", filter);
+        this.controllerFor("navigation/default").set(
+          "filterType",
+          filter.split("/")[0]
+        );
       },
 
       model(data, transition) {

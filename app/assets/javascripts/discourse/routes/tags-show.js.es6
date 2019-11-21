@@ -24,8 +24,6 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     const tag = this.store.createRecord("tag", {
       id: Handlebars.Utils.escapeExpression(params.tag_id)
     });
-    let f = "";
-
     if (params.additional_tags) {
       this.set(
         "additionalTags",
@@ -39,15 +37,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       this.set("additionalTags", null);
     }
 
-    if (params.category) {
-      f = "c/";
-      if (params.parent_category) {
-        f += `${params.parent_category}/`;
-      }
-      f += `${params.category}/l/`;
-    }
-    f += this.navMode;
-    this.set("filterMode", f);
+    this.set("filterType", this.navMode.split("/")[0]);
 
     if (params.category) {
       this.set("categorySlug", params.category);
@@ -161,7 +151,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       tag: model,
       additionalTags: this.additionalTags,
       category: this.category,
-      filterMode: this.filterMode,
+      filterType: this.filterType,
       navMode: this.navMode,
       tagNotification: this.tagNotification,
       noSubcategories: this.noSubcategories
