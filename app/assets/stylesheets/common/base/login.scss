@@ -168,3 +168,20 @@ button#new-account-link {
   background: transparent;
   color: $primary-high;
 }
+
+#security-key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  button {
+    margin-right: 1.5em;
+  }
+  p {
+    margin: 0;
+    font-size: $font-0;
+  }
+  a {
+    padding: 0.5em 0.5em 0.5em 0;
+    color: $tertiary;
+  }
+}
