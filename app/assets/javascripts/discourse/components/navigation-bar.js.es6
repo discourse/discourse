@@ -6,8 +6,9 @@ import {
 } from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
+import FilterModeMixin from "discourse/mixins/filter-mode";
 
-export default Component.extend({
+export default Component.extend(FilterModeMixin, {
   tagName: "ul",
   classNameBindings: [":nav", ":nav-pills"],
   elementId: "navigation-bar",

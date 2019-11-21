@@ -1,8 +1,10 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
+import FilterModeMixin from "discourse/mixins/filter-mode";
 
 export default Component.extend(
+  FilterModeMixin,
   bufferedRender({
     tagName: "li",
     classNameBindings: [

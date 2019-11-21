@@ -8,8 +8,9 @@ import {
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
+import FilterModeMixin from "discourse/mixins/filter-mode";
 
-export default DiscourseRoute.extend({
+export default DiscourseRoute.extend(FilterModeMixin, {
   navMode: "latest",
 
   queryParams,
