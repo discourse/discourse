@@ -6,7 +6,10 @@ require 'webauthn/security_key_authentication_service'
 module Webauthn
   ACCEPTABLE_REGISTRATION_TYPE = "webauthn.create".freeze
   ACCEPTABLE_AUTHENTICATION_TYPE = "webauthn.get".freeze
-  SUPPORTED_ALGORITHMS = [-7].freeze
+
+  # -7   - ES256
+  # -257 - RS256 (Windows Hello supported alg.)
+  SUPPORTED_ALGORITHMS = [-7, -257].freeze
   VALID_ATTESTATION_FORMATS = ['none', 'packed', 'fido-u2f'].freeze
 
   class SecurityKeyError < StandardError; end
