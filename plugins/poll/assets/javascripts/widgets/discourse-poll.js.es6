@@ -425,7 +425,7 @@ createWidget("discourse-poll-buttons", {
     const closed = attrs.isClosed;
     const staffOnly = poll.results === "staff_only";
     const isStaff = this.currentUser && this.currentUser.staff;
-    const dataExplorerEnabled = this.siteSettings.data_explorer_enabled === true;
+    const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
     const hideResultsDisabled = !staffOnly && (closed || topicArchived);
     const exportQueryID = this.siteSettings.poll_export_data_explorer_query_id;
 
