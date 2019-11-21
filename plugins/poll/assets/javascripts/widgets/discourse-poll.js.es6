@@ -427,6 +427,7 @@ createWidget("discourse-poll-buttons", {
     const isStaff = this.currentUser && this.currentUser.staff;
     const dataExplorerEnabled = this.siteSettings.data_explorer_enabled === true;
     const hideResultsDisabled = !staffOnly && (closed || topicArchived);
+    const exportQueryID = this.siteSettings.poll_export_data_explorer_query_id;
 
     if (attrs.isMultiple && !hideResultsDisabled) {
       const castVotesDisabled = !attrs.canCastVotes;
@@ -476,7 +477,7 @@ createWidget("discourse-poll-buttons", {
       }
     }
 
-    if (isStaff && dataExplorerEnabled && poll.voters > 0) {
+    if (isStaff && dataExplorerEnabled && poll.voters > 0 && exportQueryID !== 0) {
       contents.push(
         this.attach("button", {
           className: "btn btn-default export-results",
@@ -701,10 +702,11 @@ export default createWidget("discourse-poll", {
 
   exportResults() {
     const { attrs } = this;
+    const queryID = this.siteSettings.poll_export_data_explorer_query_id;
 
     // This uses the Data Explorer plugin export as CSV route
     // There is detection to check if the plugin is enabled before showing the button
-    ajax("/admin/plugins/explorer/queries/-16/run.csv", {
+    ajax(`/admin/plugins/explorer/queries/${queryID}/run.csv`, {
       type: "POST",
       data: {
         params: JSON.stringify({ // needed for data-explorer route compatibility
@@ -723,6 +725,12 @@ export default createWidget("discourse-poll", {
       downloadLink.setAttribute("download", `poll-export-${attrs.poll.name}-${attrs.post.id}.csv`);
       downloadLink.click();
       downloadLink.remove();
+    }).catch(error => {
+      if (error) {
+        popupAjaxError(error);
+      } else {
+        bootbox.alert(I18n.t("poll.error_while_exporting_results"));
+      }
     });
   },
 
