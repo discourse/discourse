@@ -29,9 +29,13 @@ export default Component.extend({
 
   @discourseComputed("filterMode", "category", "noSubcategories")
   navItems(filterMode, category, noSubcategories) {
-    // we don't want to show the period in the navigation bar since it's in a dropdown
-    if (filterMode.indexOf("top/") === 0) {
-      filterMode = "top";
+    const filterModeParts = filterMode.split("/");
+    if (
+      filterModeParts.length >= 2 &&
+      filterModeParts[filterModeParts.length - 2] === "top"
+    ) {
+      filterModeParts.pop();
+      filterMode = filterModeParts.join("/");
     }
 
     let params;

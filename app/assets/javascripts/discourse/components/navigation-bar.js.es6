@@ -19,9 +19,15 @@ export default Component.extend({
 
   @discourseComputed("filterMode", "navItems")
   selectedNavItem(filterMode, navItems) {
-    if (filterMode.indexOf("top/") === 0) {
-      filterMode = "top";
+    const filterModeParts = filterMode.split("/");
+    if (
+      filterModeParts.length >= 2 &&
+      filterModeParts[filterModeParts.length - 2] === "top"
+    ) {
+      filterModeParts.pop();
+      filterMode = filterModeParts.join("/");
     }
+
     let item = navItems.find(i => i.active === true);
 
     item =
