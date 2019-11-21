@@ -9,15 +9,15 @@ export default Mixin.create({
     "category",
     "noSubcategories",
     function() {
-      const rawFilterMode = this.get("rawFilterMode");
+      const rawFilterMode = this.rawFilterMode;
       if (rawFilterMode) {
         return rawFilterMode;
       } else {
-        const category = this.get("category");
-        const filterType = this.get("filterType");
+        const category = this.category;
+        const filterType = this.filterType;
 
         if (category) {
-          const noSubcategories = this.get("noSubcategories");
+          const noSubcategories = this.noSubcategories;
 
           return `c/${Category.slugFor(category)}${
             noSubcategories ? "/none" : ""
@@ -31,7 +31,7 @@ export default Mixin.create({
 
   filterMode: computed("filterModeInternal", {
     get() {
-      return this.get("filterModeInternal");
+      return this.filterModeInternal;
     },
 
     set(key, value) {
