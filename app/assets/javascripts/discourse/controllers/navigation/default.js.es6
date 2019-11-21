@@ -1,8 +1,9 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
+import FilterModeMixin from "discourse/mixins/filter-mode";
 
-export default Controller.extend({
+export default Controller.extend(FilterModeMixin, {
   discovery: inject(),
   discoveryTopics: inject("discovery/topics"),
 

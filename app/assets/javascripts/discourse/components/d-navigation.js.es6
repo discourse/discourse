@@ -2,8 +2,9 @@ import discourseComputed from "discourse-common/utils/decorators";
 import NavItem from "discourse/models/nav-item";
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
+import FilterModeMixin from "discourse/mixins/filter-mode";
 
-export default Component.extend({
+export default Component.extend(FilterModeMixin, {
   router: service(),
   persistedQueryParams: null,
 
