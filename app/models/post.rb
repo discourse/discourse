@@ -898,7 +898,7 @@ class Post < ActiveRecord::Base
     upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
 
     disallowed_uploads = []
-    if SiteSetting.secure_media? && !topic&.private_message?
+    if SiteSetting.secure_media? && !self.with_secure_media?
       disallowed_uploads = Upload.where(id: upload_ids, secure: true).pluck(:original_filename)
     end
     return disallowed_uploads if disallowed_uploads.count > 0

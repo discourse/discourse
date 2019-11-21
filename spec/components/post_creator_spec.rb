@@ -1445,6 +1445,18 @@ describe PostCreator do
       expect(public_post.errors.full_messages).to include(I18n.t('secure_upload_not_allowed_in_public_topic', upload_filenames: video_upload.original_filename))
     end
 
+    it "allows an existing upload to be used again in nonPM topics in login_required sites" do
+      SiteSetting.login_required = true
+
+      public_post = PostCreator.create(
+        user,
+        topic_id: public_topic.id,
+        raw: "Reusing this image on a public topic in a login_required site:\n![](#{image_upload.short_path})"
+      )
+
+      expect(public_post.errors.count).to be(0)
+    end
+
   end
 
 end
