@@ -261,6 +261,7 @@ var define, requirejs;
   }
 
   requirejs = require = function(name) {
+    name = transformForAliases(this.name);
     if (EMBER_MODULES[name]) {
       return EMBER_MODULES[name];
     }
