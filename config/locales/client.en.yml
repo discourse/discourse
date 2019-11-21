@@ -1461,7 +1461,7 @@ en:
       second_factor_backup_description: "Please enter one of your backup codes:"
       second_factor: "Log in using Authenticator app"
       security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
-      security_key_alternative: "Can't find your security key or want to use another method?"
+      security_key_alternative: "Try another way"
       security_key_authenticate: "Authenticate with Security Key"
       security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
       security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."

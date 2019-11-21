@@ -84,6 +84,7 @@ var define, requirejs;
       },
       rsvp: {
         default: Ember.RSVP,
+        EventTarget: Ember.RSVP.EventTarget,
         Promise: Ember.RSVP.Promise,
         hash: Ember.RSVP.hash,
         all: Ember.RSVP.all
@@ -262,6 +263,7 @@ var define, requirejs;
 
   requirejs = require = function(name) {
     name = transformForAliases(name);
+    
     if (EMBER_MODULES[name]) {
       return EMBER_MODULES[name];
     }
@@ -313,6 +315,7 @@ var define, requirejs;
     ) {
       obj["default"] = obj;
     }
+265
 
     return (seen[name] = obj);
   };

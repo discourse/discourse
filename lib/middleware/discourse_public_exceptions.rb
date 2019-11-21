@@ -29,7 +29,15 @@ module Middleware
         begin
           fake_controller = ApplicationController.new
           fake_controller.response = response
-          fake_controller.request = ActionDispatch::Request.new(env)
+          fake_controller.request = request = ActionDispatch::Request.new(env)
+
+          begin
+            request.format
+          rescue Mime::Type::InvalidMimeType
+            # got to do something here, we can not ship invalid format
+            # to the exception handler cause it will explode
+            request.format = "html"
+          end
 
           if ApplicationController.rescue_with_handler(exception, object: fake_controller)
             body = response.body

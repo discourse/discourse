@@ -3033,7 +3033,7 @@ ur:
       text_body_template: |
         %{site_name} پر اپنے نئے ای میل ایڈریس کی تصدیق کرنے کیلئے مندرجہ ذیل لِنک پر کلِک کریں:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "پرانی ای میل تصدیق"
       subject_template: "[%{email_prefix}] اپنا موجودہ ای میل ایڈریس تصدیق کریں"
@@ -3044,7 +3044,7 @@ ur:
 
         %{site_name} پر اپنے موجودہ ای میل ایڈریس کی تصدیق کرنے کیلئے مندرجہ ذیل لِنک پر کلک کریں:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "پرانا ای میل مطلع"
       subject_template: "[%{email_prefix}] آپ کا ای میل ایڈریس تبدیل ہوگیا ہے"

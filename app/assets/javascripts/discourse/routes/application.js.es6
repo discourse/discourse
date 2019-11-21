@@ -12,6 +12,7 @@ import { findAll } from "discourse/models/login-method";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
+import { EventTarget } from "rsvp";
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -288,5 +289,5 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   }
 });
 
-RSVP.EventTarget.mixin(ApplicationRoute);
+EventTarget.mixin(ApplicationRoute);
 export default ApplicationRoute;

@@ -2879,7 +2879,7 @@ fi:
       text_body_template: |
         Vahvista uusi sähköpostiosoitteesi sivustolla %{site_name} klikkaamalla linkkiä:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Vahvista vanha sähköpostiosoite"
       subject_template: "[%{email_prefix}] Vahvista nykyinen sähköpostiosoitteesi"
@@ -2888,7 +2888,7 @@ fi:
 
         Vahvista nykyinen sähköpostiosoitteesi sivustolla %{site_name} klikkaamalla linkkiä:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Ilmoita vanhaan sähköpostiosoitteeseen"
       subject_template: "[%{email_prefix}] Sähköpostiosoitteesi on vaihdettu"

@@ -2,8 +2,9 @@ import discourseComputed from "discourse-common/utils/decorators";
 import NavItem from "discourse/models/nav-item";
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
+import FilterModeMixin from "discourse/mixins/filter-mode";
 
-export default Component.extend({
+export default Component.extend(FilterModeMixin, {
   router: service(),
   persistedQueryParams: null,
 
@@ -27,13 +28,8 @@ export default Component.extend({
   @discourseComputed("category.can_edit")
   showCategoryEdit: canEdit => canEdit,
 
-  @discourseComputed("filterMode", "category", "noSubcategories")
-  navItems(filterMode, category, noSubcategories) {
-    // we don't want to show the period in the navigation bar since it's in a dropdown
-    if (filterMode.indexOf("top/") === 0) {
-      filterMode = "top";
-    }
-
+  @discourseComputed("filterType", "category", "noSubcategories")
+  navItems(filterType, category, noSubcategories) {
     let params;
     const currentRouteQueryParams = this.get("router.currentRoute.queryParams");
     if (this.persistedQueryParams && currentRouteQueryParams) {
@@ -49,7 +45,7 @@ export default Component.extend({
     }
 
     return NavItem.buildList(category, {
-      filterMode,
+      filterType,
       noSubcategories,
       persistedQueryParams: params
     });

@@ -13,10 +13,12 @@ function addLocalDate(buffer, matches, state) {
     countdown: null
   };
 
+  const matchString = matches[1].replace(/„|“/g, '"');
+
   let parsed = parseBBCodeTag(
-    "[date date" + matches[1] + "]",
+    "[date date" + matchString + "]",
     0,
-    matches[1].length + 11
+    matchString.length + 11
   );
 
   config.date = parsed.attrs.date;

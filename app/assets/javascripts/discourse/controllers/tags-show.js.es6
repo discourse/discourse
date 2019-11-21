@@ -7,15 +7,15 @@ import {
 } from "discourse-common/utils/decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import { default as NavItem } from "discourse/models/nav-item";
+import FilterModeMixin from "discourse/mixins/filter-mode";
 
-export default Controller.extend(BulkTopicSelection, {
+export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
   application: inject(),
 
   tag: null,
   additionalTags: null,
   list: null,
   canAdminTag: alias("currentUser.staff"),
-  filterMode: null,
   navMode: "latest",
   loading: false,
   canCreateTopic: false,
@@ -65,11 +65,11 @@ export default Controller.extend(BulkTopicSelection, {
     "q"
   ],
 
-  @discourseComputed("category", "tag.id", "filterMode", "noSubcategories")
-  navItems(category, tagId, filterMode, noSubcategories) {
+  @discourseComputed("category", "tag.id", "filterType", "noSubcategories")
+  navItems(category, tagId, filterType, noSubcategories) {
     return NavItem.buildList(category, {
       tagId,
-      filterMode,
+      filterType,
       noSubcategories
     });
   },

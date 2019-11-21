@@ -66,14 +66,12 @@ export default (filterArg, params) => {
 
     _setupNavigation(category) {
       const noSubcategories = params && !!params.no_subcategories,
-        filterMode = `c/${Category.slugFor(category)}${
-          noSubcategories ? "/none" : ""
-        }/l/${this.filter(category)}`;
+        filterType = this.filter(category).split("/")[0];
 
       this.controllerFor("navigation/category").setProperties({
         category,
-        filterMode: filterMode,
-        noSubcategories: params && params.no_subcategories
+        filterType,
+        noSubcategories
       });
     },
 

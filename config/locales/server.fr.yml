@@ -3009,7 +3009,7 @@ fr:
       text_body_template: |
         Confirmez votre nouvelle adresse email pour %{site_name} en cliquant sur le lien suivant :
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Confirmez votre ancienne adresse email"
       subject_template: "[%{email_prefix}] Confirmez votre adresse email actuelle"
@@ -3018,7 +3018,7 @@ fr:
 
         Confirmez votre adresse email actuelle pour %{site_name} en cliquant sur le lien suivant :
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Notifier l'ancienne adresse courriel"
       subject_template: "[%{email_prefix}] Votre adresse email a été modifié"
