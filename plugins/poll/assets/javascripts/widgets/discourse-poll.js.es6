@@ -11,6 +11,7 @@ import { relativeAge } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
 import { getColors } from "../lib/chart-colors";
 import { later, schedule } from "@ember/runloop";
+import { classify } from "@ember/string";
 
 function optionHtml(option) {
   const $node = $(`<span>${option.html}</span>`);
@@ -424,8 +425,7 @@ createWidget("discourse-poll-info", {
 
 function transformUserFieldToLabel(fieldName) {
   let transformed = fieldName.split("_").filter(Boolean);
-  transformed[0] =
-    transformed[0].charAt(0).toUpperCase() + transformed[0].slice(1);
+  transformed[0] = classify(transformed[0]);
   return transformed.join(" ");
 }
 
@@ -439,30 +439,31 @@ createWidget("discourse-poll-grouped-pies", {
 
   html(attrs) {
     const fields = Object.assign({}, attrs.groupableUserFields);
-    attrs.groupedBy = attrs.groupedBy || fields[0];
     const fieldSelectId = `field-select-${attrs.id}`;
+    attrs.groupedBy = attrs.groupedBy || fields[0];
 
     let contents = [];
 
-    let selectInnerHtml = "";
-    attrs.groupableUserFields.forEach(field => {
-      selectInnerHtml += `<option value='${field}' ${
-        attrs.groupedBy === field ? "selected" : ""
-      } >${transformUserFieldToLabel(field)}</option>`;
-    });
     contents.push(
-      new RawHtml({
-        html: `<select id='${fieldSelectId}' class='poll-group-by-selector'>${selectInnerHtml}</select>`
-      })
+      h(
+        `select#${fieldSelectId}.poll-group-by-selector`,
+        { value: attrs.groupBy },
+        attrs.groupableUserFields.map(field => {
+          return h(
+            "option",
+            { value: field },
+            transformUserFieldToLabel(field)
+          );
+        })
+      )
     );
 
-    contents.push(
-      new RawHtml({
-        html: "<div class='clear-both'></div>"
-      })
-    );
+    contents.push(h("div.clearfix"));
 
     schedule("afterRender", () => {
+      // Set the value of the select. Cannot be done with h helper
+      document.getElementById(fieldSelectId).value = attrs.groupedBy;
+
       const parent = document.getElementById(
         `poll-results-grouped-pie-charts-${attrs.id}`
       );

@@ -9,19 +9,25 @@ export default Controller.extend({
   regularPollType: "regular",
   numberPollType: "number",
   multiplePollType: "multiple",
+  pieTypeIdentifier: "pie",
+  barTypeIdentifier: "bar",
 
   alwaysPollResult: "always",
   votePollResult: "on_vote",
   closedPollResult: "on_close",
   staffPollResult: "staff_only",
-  pollChartTypes: [
-    { name: "Bar", value: "bar" },
-    { name: "Pie", value: "pie" }
-  ],
 
   init() {
     this._super(...arguments);
     this._setupPoll();
+  },
+
+  @computed("barTypeIdentifier", "pieTypeIdentifier")
+  pollChartTypes(barTypeIdentifier, pieTypeIdentifier) {
+    return [
+      { name: barTypeIdentifier.capitalize(), value: barTypeIdentifier },
+      { name: pieTypeIdentifier.capitalize(), value: pieTypeIdentifier }
+    ];
   },
 
   @computed("regularPollType", "numberPollType", "multiplePollType")
@@ -42,9 +48,9 @@ export default Controller.extend({
     ];
   },
 
-  @computed("chartType", "pollType", "numberPollType")
-  isPie(chartType, pollType, numberPollType) {
-    return pollType !== numberPollType && chartType === "pie";
+  @computed("chartType", "pollType", "numberPollType", "pieTypeIdentifier")
+  isPie(chartType, pollType, numberPollType, pieTypeIdentifier) {
+    return pollType !== numberPollType && chartType === pieTypeIdentifier;
   },
 
   @computed(
