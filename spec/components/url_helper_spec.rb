@@ -167,6 +167,10 @@ describe UrlHelper do
         )
       end
     end
+
+    after do
+      Rails.configuration.action_controller.asset_host = nil
+    end
   end
 
 end
