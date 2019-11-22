@@ -435,4 +435,29 @@ RSpec.describe Reviewable, type: :model do
       expect(Reviewable.min_score_for_priority).to eq(45.6)
     end
   end
+
+  context "custom filters" do
+    after do
+      Reviewable.clear_custom_filters!
+    end
+
+    it 'correctly add a new filter' do
+      Reviewable.add_custom_filter([:assigned_to, Proc.new { |results, value| results }])
+
+      expect(Reviewable.custom_filters.size).to eq(1)
+    end
+
+    it 'applies the custom filter' do
+      admin = Fabricate(:admin)
+      first_reviewable = Fabricate(:reviewable)
+      second_reviewable = Fabricate(:reviewable)
+      custom_filter = [:target_id, Proc.new { |results, value| results.where(target_id: value) }]
+      Reviewable.add_custom_filter(custom_filter)
+
+      results = Reviewable.list_for(admin, additional_filters: { target_id: first_reviewable.target_id })
+
+      expect(results.size).to eq(1)
+      expect(results.first).to eq first_reviewable
+    end
+  end
 end
