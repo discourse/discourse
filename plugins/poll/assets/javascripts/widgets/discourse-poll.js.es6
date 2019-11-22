@@ -709,7 +709,8 @@ export default createWidget("discourse-poll", {
     ajax(`/admin/plugins/explorer/queries/${queryID}/run.csv`, {
       type: "POST",
       data: {
-        params: JSON.stringify({ // needed for data-explorer route compatibility
+        // needed for data-explorer route compatibility
+        params: JSON.stringify({
           poll_name: attrs.poll.name,
           post_id: attrs.post.id.toString() // needed for data-explorer route compatibility
         }),
@@ -717,21 +718,27 @@ export default createWidget("discourse-poll", {
         limit: 1000000,
         download: 1
       }
-    }).then(csvContent => {
-      const downloadLink = document.createElement('a');
-      const blob = new Blob([csvContent],{type: 'text/csv;charset=utf-8;'});
-      const url = URL.createObjectURL(blob);
-      downloadLink.href = url;
-      downloadLink.setAttribute("download", `poll-export-${attrs.poll.name}-${attrs.post.id}.csv`);
-      downloadLink.click();
-      downloadLink.remove();
-    }).catch(error => {
-      if (error) {
-        popupAjaxError(error);
-      } else {
-        bootbox.alert(I18n.t("poll.error_while_exporting_results"));
-      }
-    });
+    })
+      .then(csvContent => {
+        const downloadLink = document.createElement("a");
+        const blob = new Blob([csvContent], {
+          type: "text/csv;charset=utf-8;"
+        });
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.setAttribute(
+          "download",
+          `poll-export-${attrs.poll.name}-${attrs.post.id}.csv`
+        );
+        downloadLink.click();
+        downloadLink.remove();
+      })
+      .catch(error => {
+        if (error) {
+          popupAjaxError(error);
+        } else {
+          bootbox.alert(I18n.t("poll.error_while_exporting_results"));
+        }
+      });
   },
 
   showLogin() {
