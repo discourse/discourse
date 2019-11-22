@@ -125,6 +125,10 @@
   }
 
   function _isEqualZones(timezoneA, timezoneB) {
+    if ((timezoneA || timezoneB) && (!timezoneA || !timezoneB)) {
+      return false;
+    }
+
     if (timezoneA.includes(timezoneB) || timezoneB.includes(timezoneA)) {
       return true;
     }
@@ -250,7 +254,7 @@
       timezones.unshift(options.timezone);
     }
 
-    timezones.filter(Boolean).forEach(timezone => {
+    Array.from(new Set(timezones.filter(Boolean))).forEach(timezone => {
       if (_isEqualZones(timezone, displayedTimezone)) {
         return;
       }
