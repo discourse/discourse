@@ -10,7 +10,7 @@ import round from "discourse/lib/round";
 import { relativeAge } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
 import { getColors } from "../lib/chart-colors";
-import { later, schedule } from "@ember/runloop";
+import { later } from "@ember/runloop";
 import { classify } from "@ember/string";
 
 function optionHtml(option) {
@@ -460,13 +460,9 @@ createWidget("discourse-poll-grouped-pies", {
 
     contents.push(h("div.clearfix"));
 
-    schedule("afterRender", () => {
+		later(() => {
       // Set the value of the select. Cannot be done with h helper
-      document.getElementById(fieldSelectId).value = attrs.groupedBy;
-
-      const parent = document.getElementById(
-        `poll-results-grouped-pie-charts-${attrs.id}`
-      );
+			document.getElementById(fieldSelectId).value = attrs.groupedBy;
 
       ajax("/polls/grouped_poll_results.json", {
         data: {
@@ -483,6 +479,9 @@ createWidget("discourse-poll-grouped-pies", {
           }
         })
         .then(result => {
+					const parent = document.getElementById(
+						`poll-results-grouped-pie-charts-${attrs.id}`
+					);
           for (
             let chartIdx = 0;
             chartIdx < result.grouped_results.length;

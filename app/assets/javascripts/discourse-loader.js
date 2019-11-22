@@ -93,8 +93,7 @@ var define, requirejs;
         dasherize: Ember.String.dasherize,
         classify: Ember.String.classify,
         underscore: Ember.String.underscore,
-        camelize: Ember.String.camelize,
-        capitalize: Ember.String.capitalize
+        camelize: Ember.String.camelize
       },
       "@ember/template": {
         htmlSafe: Ember.String.htmlSafe
