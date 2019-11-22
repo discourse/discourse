@@ -477,7 +477,7 @@ createWidget("discourse-poll-buttons", {
       }
     }
 
-    if (isStaff && dataExplorerEnabled && poll.voters > 0 && exportQueryID !== 0) {
+    if (isStaff && dataExplorerEnabled && poll.voters > 0 && exportQueryID) {
       contents.push(
         this.attach("button", {
           className: "btn btn-default export-results",
