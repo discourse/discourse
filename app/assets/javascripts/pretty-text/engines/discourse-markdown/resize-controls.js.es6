@@ -15,7 +15,7 @@ function buildToken(state, type, tag, klass, nesting) {
 
 function wrapImage(tokens, index, state, imgNumber) {
   const imgToken = tokens[index];
-  const selectedScale = imgToken.content
+  let selectedScale = imgToken.content
     .split(",")
     .pop()
     .trim();
@@ -38,6 +38,9 @@ function wrapImage(tokens, index, state, imgNumber) {
 
   const minimumScale = 50;
   const scales = [100, 75, minimumScale];
+  const overwriteScale = !scales.find(scale => `${scale}%` === selectedScale);
+  if (overwriteScale) selectedScale = "100%";
+
   scales.forEach(scale => {
     const scaleText = `${scale}%`;
 
