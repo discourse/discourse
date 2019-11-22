@@ -702,6 +702,22 @@ describe UsersController do
         post_user
         expect(User.find_by(username: @user.username).locale).to eq('fr')
       end
+
+      context "when timezone is provided as a guess on signup" do
+        let(:post_user_params) do
+          { name: @user.name,
+            username: @user.username,
+            password: "strongpassword",
+            email: @user.email,
+            timezone: "Australia/Brisbane" }
+        end
+
+        it "sets the timezone" do
+          post_user
+          expect(response.status).to eq(200)
+          expect(User.find_by(username: @user.username).user_option.timezone).to eq("Australia/Brisbane")
+        end
+      end
     end
 
     context 'when creating a non active user (unconfirmed email)' do
