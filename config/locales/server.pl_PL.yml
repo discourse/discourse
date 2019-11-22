@@ -2313,7 +2313,7 @@ pl_PL:
       text_body_template: |
         Potwierdź swój nowy adres email dla %{site_name} poprzez kliknięcia na następujący link:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Potwierdź stary email"
       subject_template: "[%{site_name}] Potwierdź aktualny adres email"
@@ -2322,7 +2322,7 @@ pl_PL:
 
         Potwierdź obecny adres email dla %{site_name}poprzez naciśnięcie na następujący link:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Powiadom Stary Email"
       subject_template: "[%{site_name}] Twój adres email został zmieniony"

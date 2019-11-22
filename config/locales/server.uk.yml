@@ -2434,7 +2434,7 @@ uk:
       text_body_template: |
         Підтвердіть свою нову електронну адресу для %{site_name} натиснувши наступне посилання:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Підтвердіть стару електронну пошту"
       subject_template: "[%{email_prefix}] Підтвердіть свою поточну адресу електроної пошти"

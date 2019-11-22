@@ -21,7 +21,8 @@ var define, requirejs;
         getProperties: Ember.getProperties,
         set: Ember.set,
         setProperties: Ember.setProperties,
-        computed: Ember.computed
+        computed: Ember.computed,
+        defineProperty: Ember.defineProperty
       },
       "@ember/object/computed": {
         alias: Ember.computed.alias,
@@ -83,6 +84,7 @@ var define, requirejs;
       },
       rsvp: {
         default: Ember.RSVP,
+        EventTarget: Ember.RSVP.EventTarget,
         Promise: Ember.RSVP.Promise,
         hash: Ember.RSVP.hash,
         all: Ember.RSVP.all
@@ -260,6 +262,7 @@ var define, requirejs;
   }
 
   requirejs = require = function(name) {
+    name = transformForAliases(name);
     if (EMBER_MODULES[name]) {
       return EMBER_MODULES[name];
     }

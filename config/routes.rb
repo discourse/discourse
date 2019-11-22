@@ -408,8 +408,13 @@ Discourse::Application.routes.draw do
     put "#{root_path}/password-reset/:token" => "users#password_reset"
     get "#{root_path}/activate-account/:token" => "users#activate_account"
     put({ "#{root_path}/activate-account/:token" => "users#perform_account_activation" }.merge(index == 1 ? { as: 'perform_activate_account' } : {}))
-    get "#{root_path}/authorize-email/:token" => "users_email#confirm"
-    put "#{root_path}/authorize-email/:token" => "users_email#confirm"
+
+    get "#{root_path}/confirm-old-email/:token" => "users_email#show_confirm_old_email"
+    put "#{root_path}/confirm-old-email" => "users_email#confirm_old_email"
+
+    get "#{root_path}/confirm-new-email/:token" => "users_email#show_confirm_new_email"
+    put "#{root_path}/confirm-new-email" => "users_email#confirm_new_email"
+
     get({
       "#{root_path}/confirm-admin/:token" => "users#confirm_admin",
       constraints: { token: /[0-9a-f]+/ }

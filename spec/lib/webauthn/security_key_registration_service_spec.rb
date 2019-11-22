@@ -87,7 +87,7 @@ describe Webauthn::SecurityKeyRegistrationService do
     before do
       @original_supported_alg_value = Webauthn::SUPPORTED_ALGORITHMS
       silence_warnings do
-        Webauthn::SUPPORTED_ALGORITHMS = [-257]
+        Webauthn::SUPPORTED_ALGORITHMS = [-999]
       end
     end
 
