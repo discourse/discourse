@@ -62,4 +62,3 @@ widgetTest("multi, selected", {
     assert.ok(find("li .d-icon-far-check-square:eq(0)").length === 1);
   }
 });
-

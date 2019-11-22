@@ -460,9 +460,9 @@ createWidget("discourse-poll-grouped-pies", {
 
     contents.push(h("div.clearfix"));
 
-		later(() => {
+    later(() => {
       // Set the value of the select. Cannot be done with h helper
-			document.getElementById(fieldSelectId).value = attrs.groupedBy;
+      document.getElementById(fieldSelectId).value = attrs.groupedBy;
 
       ajax("/polls/grouped_poll_results.json", {
         data: {
@@ -479,9 +479,9 @@ createWidget("discourse-poll-grouped-pies", {
           }
         })
         .then(result => {
-					const parent = document.getElementById(
-						`poll-results-grouped-pie-charts-${attrs.id}`
-					);
+          const parent = document.getElementById(
+            `poll-results-grouped-pie-charts-${attrs.id}`
+          );
           for (
             let chartIdx = 0;
             chartIdx < result.grouped_results.length;
