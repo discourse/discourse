@@ -10,7 +10,7 @@ import round from "discourse/lib/round";
 import { relativeAge } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
 import { getColors } from "../lib/chart-colors";
-import { later } from "@ember/runloop";
+import { later, schedule } from "@ember/runloop";
 
 function optionHtml(option) {
   const $node = $(`<span>${option.html}</span>`);
@@ -433,7 +433,7 @@ function fetchGroupedResults(data) {
 }
 
 function transformUserFieldToLabel(fieldName) {
-  let transformed = fieldName.split("_");
+  let transformed = fieldName.split("_").filter(Boolean);
   transformed[0] =
     transformed[0].charAt(0).toUpperCase() + transformed[0].slice(1);
   return transformed.join(" ");
@@ -449,7 +449,7 @@ createWidget("discourse-poll-grouped-pies", {
 
   html(attrs) {
     const fields = Object.assign({}, attrs.groupableUserFields);
-    later(() => {
+    schedule("afterRender", () => {
       attrs.groupedBy = attrs.groupedBy || fields[0];
       const parent = document.getElementById(
         `poll-results-grouped-pie-charts-${attrs.id}`
@@ -472,11 +472,12 @@ createWidget("discourse-poll-grouped-pies", {
       parent.append(clearFix);
 
       attrs.groupableUserFields.forEach(field => {
-        const opt = document.createElement("option");
-        opt.innerHTML = transformUserFieldToLabel(field);
-        opt.value = field;
-        groupBySelect.appendChild(opt);
+        const selectOption = document.createElement("option");
+        selectOption.innerHTML = transformUserFieldToLabel(field);
+        selectOption.value = field;
+        groupBySelect.appendChild(selectOption);
       });
+
       groupBySelect.value = attrs.groupedBy;
       fetchGroupedResults({
         post_id: attrs.post.id,
@@ -488,12 +489,8 @@ createWidget("discourse-poll-grouped-pies", {
           chartIdx < result.grouped_results.length;
           chartIdx++
         ) {
-          const data = result.grouped_results[chartIdx].options.map(
-            o => o.votes
-          );
-          const labels = result.grouped_results[chartIdx].options.map(
-            o => o.html
-          );
+          const data = result.grouped_results[chartIdx].options.mapBy("votes");
+          const labels = result.grouped_results[chartIdx].options.mapBy("html");
           const chartConfig = pieChartConfig(data, labels, 1.2);
           const canvasId = `pie-${attrs.id}-${chartIdx}`;
           let el = document.querySelector(`#${canvasId}`);
@@ -577,7 +574,7 @@ createWidget("discourse-poll-pie-chart", {
       chart = this.attach("discourse-poll-grouped-pies", attrs);
       clearPieChart(this.attrs.id);
     } else {
-      if (attrs.groupableUserFields.length > 0) {
+      if (attrs.groupableUserFields.length) {
         btn = this.attach("button", {
           className: "btn-default poll-group-by-toggle",
           label: "poll.group-results.label",
@@ -586,8 +583,8 @@ createWidget("discourse-poll-pie-chart", {
           action: "toggleGroupedPieCharts"
         });
       }
-      const data = attrs.poll.options.map(o => o.votes);
-      const labels = attrs.poll.options.map(o => o.html);
+      const data = attrs.poll.options.mapBy("votes");
+      const labels = attrs.poll.options.mapBy("html");
       loadScript("/javascripts/Chart.min.js").then(() => {
         later(() => {
           const el = document.querySelector(
