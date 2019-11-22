@@ -42,6 +42,7 @@ class UserOption < ActiveRecord::Base
   validates :text_size_key, inclusion: { in: UserOption.text_sizes.values }
   validates :email_level, inclusion: { in: UserOption.email_level_types.values }
   validates :email_messages_level, inclusion: { in: UserOption.email_level_types.values }
+  validates :timezone, timezone: true
 
   def set_defaults
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode

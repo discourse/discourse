@@ -163,6 +163,7 @@ en:
       inclusion: is not included in the list
       invalid: is invalid
       is_invalid: "seems unclear, is it a complete sentence?"
+      invalid_timezone: "'%{tz}' is not a valid timezone"
       contains_censored_words: "contains the following censored words: %{censored_words}"
       less_than: must be less than %{count}
       less_than_or_equal_to: must be less than or equal to %{count}

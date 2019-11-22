@@ -671,7 +671,7 @@ class User < ActiveRecord::Base
   end
 
   def update_timezone_if_missing(timezone)
-    return if timezone.blank?
+    return if timezone.blank? || !TimezoneValidator.valid?(timezone)
 
     # we only want to update the user's timezone if they have not set it themselves
     UserOption

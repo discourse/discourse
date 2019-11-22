@@ -128,7 +128,7 @@ class UsersController < ApplicationController
       end
     end
 
-    json_result(user, serializer: UserSerializer, additional_errors: [:user_profile]) do |u|
+    json_result(user, serializer: UserSerializer, additional_errors: [:user_profile, :user_option]) do |u|
       updater = UserUpdater.new(current_user, user)
       updater.update(attributes.permit!)
     end

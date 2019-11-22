@@ -926,12 +926,23 @@ describe User do
     end
 
     context "if timezone is provided" do
-      let(:timezone) { "Australia/Melbourne" }
+      context "if the timezone is valid" do
+        let(:timezone) { "Australia/Melbourne" }
+        context "if no timezone exists on user option" do
+          it "sets the timezone for the user" do
+            user.update_timezone_if_missing(timezone)
+            expect(user.reload.user_option.timezone).to eq(timezone)
+          end
+        end
+      end
 
-      context "if no timezone exists on user option" do
-        it "sets the timezone for the user" do
-          user.update_timezone_if_missing(timezone)
-          expect(user.reload.user_option.timezone).to eq(timezone)
+      context "if the timezone is not valid" do
+        let(:timezone) { "Jupiter" }
+        context "if no timezone exists on user option" do
+          it "does not set the timezone for the user" do
+            user.update_timezone_if_missing(timezone)
+            expect(user.reload.user_option.timezone).to eq(nil)
+          end
         end
       end
 
