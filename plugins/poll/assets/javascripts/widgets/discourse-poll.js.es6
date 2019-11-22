@@ -425,7 +425,9 @@ createWidget("discourse-poll-buttons", {
     const closed = attrs.isClosed;
     const staffOnly = poll.results === "staff_only";
     const isStaff = this.currentUser && this.currentUser.staff;
+    const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
     const hideResultsDisabled = !staffOnly && (closed || topicArchived);
+    const exportQueryID = this.siteSettings.poll_export_data_explorer_query_id;
 
     if (attrs.isMultiple && !hideResultsDisabled) {
       const castVotesDisabled = !attrs.canCastVotes;
@@ -473,6 +475,19 @@ createWidget("discourse-poll-buttons", {
           })
         );
       }
+    }
+
+    if (isStaff && dataExplorerEnabled && poll.voters > 0 && exportQueryID) {
+      contents.push(
+        this.attach("button", {
+          className: "btn btn-default export-results",
+          label: "poll.export-results.label",
+          title: "poll.export-results.title",
+          icon: "download",
+          disabled: poll.voters === 0,
+          action: "exportResults"
+        })
+      );
     }
 
     if (poll.get("close")) {
@@ -683,6 +698,47 @@ export default createWidget("discourse-poll", {
 
   toggleResults() {
     this.state.showResults = !this.state.showResults;
+  },
+
+  exportResults() {
+    const { attrs } = this;
+    const queryID = this.siteSettings.poll_export_data_explorer_query_id;
+
+    // This uses the Data Explorer plugin export as CSV route
+    // There is detection to check if the plugin is enabled before showing the button
+    ajax(`/admin/plugins/explorer/queries/${queryID}/run.csv`, {
+      type: "POST",
+      data: {
+        // needed for data-explorer route compatibility
+        params: JSON.stringify({
+          poll_name: attrs.poll.name,
+          post_id: attrs.post.id.toString() // needed for data-explorer route compatibility
+        }),
+        explain: false,
+        limit: 1000000,
+        download: 1
+      }
+    })
+      .then(csvContent => {
+        const downloadLink = document.createElement("a");
+        const blob = new Blob([csvContent], {
+          type: "text/csv;charset=utf-8;"
+        });
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.setAttribute(
+          "download",
+          `poll-export-${attrs.poll.name}-${attrs.post.id}.csv`
+        );
+        downloadLink.click();
+        downloadLink.remove();
+      })
+      .catch(error => {
+        if (error) {
+          popupAjaxError(error);
+        } else {
+          bootbox.alert(I18n.t("poll.error_while_exporting_results"));
+        }
+      });
   },
 
   showLogin() {
