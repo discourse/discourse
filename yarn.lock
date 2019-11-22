@@ -727,9 +727,10 @@ escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
-"eslint-config-discourse@https://github.com/pmusaraj/eslint-config-discourse.git":
-  version "1.0.7"
-  resolved "https://github.com/pmusaraj/eslint-config-discourse.git#40f6c5b14e73e68ac06dba6c6c6873972dca6a9e"
+eslint-config-discourse@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-1.1.0.tgz#1f2b1ffd6064c579bc74eca63420bd3cd5732950"
+  integrity sha512-y2osWnbIi/CS2hDm61K6vdYA5vEuFJRetI2UFlEo8rQCx2t46XUd+FkgAvBy0nzLSm7ELBKru5qYKveKFF6eAg==
   dependencies:
     babel-eslint "^8.2"
     eslint "^4.19"
