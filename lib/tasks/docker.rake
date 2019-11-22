@@ -191,7 +191,8 @@ task 'docker:test' do
           if ENV["SINGLE_PLUGIN"]
             @good &&= run_or_fail("bundle exec rake plugin:spec['#{ENV["SINGLE_PLUGIN"]}']")
           else
-            @good &&= run_or_fail("RSPEC_FAILFAST=1 bundle exec rake plugin:spec")
+            fail_fast = "RSPEC_FAILFAST=1" unless ENV["SKIP_FAILFAST"]
+            @good &&= run_or_fail("#{fail_fast} bundle exec rake plugin:spec")
           end
         end
         puts "travis_fold:end:ruby_tests" if ENV["TRAVIS"]
