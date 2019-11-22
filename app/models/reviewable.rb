@@ -98,6 +98,18 @@ class Reviewable < ActiveRecord::Base
     %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser]
   end
 
+  def self.custom_filters
+    @reviewable_filters ||= []
+  end
+
+  def self.add_custom_filter(new_filter)
+    custom_filters << new_filter
+  end
+
+  def self.clear_custom_filters!
+    @reviewable_filters = []
+  end
+
   def created_new!
     self.created_new = true
     self.topic = target.topic if topic.blank? && target.is_a?(Post)
@@ -408,7 +420,8 @@ class Reviewable < ActiveRecord::Base
     username: nil,
     sort_order: nil,
     from_date: nil,
-    to_date: nil
+    to_date: nil,
+    additional_filters: {}
   )
     min_score = Reviewable.min_score_for_priority(priority)
 
@@ -438,6 +451,16 @@ class Reviewable < ActiveRecord::Base
     result = result.where("score >= ?", min_score) if min_score > 0
     result = result.where("created_at >= ?", from_date) if from_date
     result = result.where("created_at <= ?", to_date) if to_date
+
+    if !custom_filters.empty?
+      result = custom_filters.reduce(result) do |memo, filter|
+        key = filter.first
+        filter_query = filter.last
+
+        next(memo) unless additional_filters[key]
+        filter_query.call(result, additional_filters[key])
+      end
+    end
 
     # If a reviewable doesn't have a target, allow us to filter on who created that reviewable.
     if user_id

@@ -11,7 +11,8 @@ export default Controller.extend({
     "username",
     "from_date",
     "to_date",
-    "sort_order"
+    "sort_order",
+    "additional_filters"
   ],
   type: null,
   status: "pending",
@@ -24,6 +25,7 @@ export default Controller.extend({
   from_date: null,
   to_date: null,
   sort_order: "priority",
+  additional_filters: null,
 
   init(...args) {
     this._super(...args);
@@ -118,8 +120,10 @@ export default Controller.extend({
         username: this.filterUsername,
         from_date: this.filterFromDate,
         to_date: this.filterToDate,
-        sort_order: this.filterSortOrder
+        sort_order: this.filterSortOrder,
+        additional_filters: JSON.stringify(this.additionalFilters)
       });
+
       this.send("refreshRoute");
     },
 

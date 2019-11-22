@@ -18,4 +18,7 @@ plugins:
     default: ""
     type: list
     client: true
-
+  poll_export_data_explorer_query_id:
+    default: -16
+    min: -9999
+    client: true

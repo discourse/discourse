@@ -20,17 +20,18 @@ class ReviewablesController < ApplicationController
     topic_id = params[:topic_id] ? params[:topic_id].to_i : nil
     category_id = params[:category_id] ? params[:category_id].to_i : nil
 
+    custom_keys = Reviewable.custom_filters.map(&:first)
+    additional_filters = JSON.parse(params.fetch(:additional_filters, {}), symbolize_names: true).slice(*custom_keys)
     filters = {
       status: status,
       category_id: category_id,
       topic_id: topic_id,
-      priority: params[:priority],
-      username: params[:username],
-      from_date: params[:from_date],
-      to_date: params[:to_date],
-      type: params[:type],
-      sort_order: params[:sort_order]
+      additional_filters: additional_filters.reject { |_, v| v.blank? }
     }
+
+    %i[priority username from_date to_date type sort_order].each do |filter_key|
+      filters[filter_key] = params[filter_key]
+    end
 
     total_rows = Reviewable.list_for(current_user, filters).count
     reviewables = Reviewable.list_for(current_user, filters.merge(limit: PER_PAGE, offset: offset)).to_a
