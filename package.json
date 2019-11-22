@@ -39,22 +39,17 @@
   },
   "devDependencies": {
     "@arkweid/lefthook": "^0.6.3",
-    "babel-eslint": "^8.2",
     "chrome-launcher": "^0.12.0",
     "chrome-remote-interface": "^0.25",
-    "eslint": "^4.19",
-    "eslint-config-discourse": "1.0.7",
-    "install-peerdeps": "^1.10.2",
+    "eslint-config-discourse": "1.1.0",
     "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
     "pretender": "^1.6",
-    "prettier": "^1.19.1",
     "puppeteer": "1.20",
     "qunit": "2.8.0",
     "route-recognizer": "^0.3.3",
     "sinon": "^7.2.5"
   },
   "scripts": {
-    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\"",
-    "postinstall": "install-peerdeps --dev eslint-config-discourse@1.0.6 -Y --extra-args \"--ignore-scripts\""
+    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\""
   }
 }
