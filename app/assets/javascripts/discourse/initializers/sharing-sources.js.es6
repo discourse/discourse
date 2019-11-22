@@ -22,7 +22,7 @@ export default {
 
     Sharing.addSource({
       id: "facebook",
-      icon: "fab-facebook-square",
+      icon: "fab-facebook",
       title: I18n.t("share.facebook"),
       generateUrl: function(link, title) {
         return (
