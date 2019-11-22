@@ -422,16 +422,6 @@ createWidget("discourse-poll-info", {
   }
 });
 
-function fetchGroupedResults(data) {
-  return ajax("/polls/grouped_poll_results.json", { data }).catch(error => {
-    if (error) {
-      popupAjaxError(error);
-    } else {
-      bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
-    }
-  });
-}
-
 function transformUserFieldToLabel(fieldName) {
   let transformed = fieldName.split("_").filter(Boolean);
   transformed[0] =
@@ -449,81 +439,94 @@ createWidget("discourse-poll-grouped-pies", {
 
   html(attrs) {
     const fields = Object.assign({}, attrs.groupableUserFields);
+    attrs.groupedBy = attrs.groupedBy || fields[0];
+    const fieldSelectId = `field-select-${attrs.id}`;
+
+    let contents = [];
+
+    let selectInnerHtml = "";
+    attrs.groupableUserFields.forEach(field => {
+      selectInnerHtml += `<option value='${field}' ${
+        attrs.groupedBy === field ? "selected" : ""
+      } >${transformUserFieldToLabel(field)}</option>`;
+    });
+    contents.push(
+      new RawHtml({
+        html: `<select id='${fieldSelectId}' class='poll-group-by-selector'>${selectInnerHtml}</select>`
+      })
+    );
+
+    contents.push(
+      new RawHtml({
+        html: "<div class='clear-both'></div>"
+      })
+    );
+
     schedule("afterRender", () => {
-      attrs.groupedBy = attrs.groupedBy || fields[0];
       const parent = document.getElementById(
         `poll-results-grouped-pie-charts-${attrs.id}`
       );
-      const fieldSelectId = `field-select-${attrs.id}`;
 
-      const existingSel = document.getElementById(fieldSelectId);
-      if (existingSel) {
-        existingSel.parentNode.removeChild(existingSel);
-      }
-
-      const groupBySelect = document.createElement("select");
-      groupBySelect.classList.add("poll-group-by-selector");
-      groupBySelect.id = fieldSelectId;
-
-      const clearFix = document.createElement("div");
-      clearFix.classList.add("clear-both");
-
-      parent.prepend(groupBySelect);
-      parent.append(clearFix);
-
-      attrs.groupableUserFields.forEach(field => {
-        const selectOption = document.createElement("option");
-        selectOption.innerHTML = transformUserFieldToLabel(field);
-        selectOption.value = field;
-        groupBySelect.appendChild(selectOption);
-      });
-
-      groupBySelect.value = attrs.groupedBy;
-      fetchGroupedResults({
-        post_id: attrs.post.id,
-        poll_name: attrs.poll.name,
-        user_field_name: attrs.groupedBy
-      }).then(result => {
-        for (
-          let chartIdx = 0;
-          chartIdx < result.grouped_results.length;
-          chartIdx++
-        ) {
-          const data = result.grouped_results[chartIdx].options.mapBy("votes");
-          const labels = result.grouped_results[chartIdx].options.mapBy("html");
-          const chartConfig = pieChartConfig(data, labels, 1.2);
-          const canvasId = `pie-${attrs.id}-${chartIdx}`;
-          let el = document.querySelector(`#${canvasId}`);
-          if (!el) {
-            const container = document.createElement("div");
-            container.classList.add("poll-grouped-pie-container");
-
-            const label = document.createElement("label");
-            label.classList.add("poll-pie-label");
-            label.textContent = result.grouped_results[chartIdx].group;
-
-            const canvas = document.createElement("canvas");
-            canvas.classList.add(`poll-grouped-pie-${attrs.id}`);
-            canvas.id = canvasId;
-
-            container.appendChild(label);
-            container.appendChild(canvas);
-            parent.appendChild(container);
-            // eslint-disable-next-line
-            new Chart(canvas.getContext("2d"), chartConfig);
-          } else {
-            // eslint-disable-next-line
-            Chart.helpers.each(Chart.instances, function(instance) {
-              if (instance.chart.canvas.id === canvasId && el.$chartjs) {
-                instance.destroy();
-                // eslint-disable-next-line
-                new Chart(el.getContext("2d"), chartConfig);
-              }
-            });
-          }
+      ajax("/polls/grouped_poll_results.json", {
+        data: {
+          post_id: attrs.post.id,
+          poll_name: attrs.poll.name,
+          user_field_name: attrs.groupedBy
         }
-      });
+      })
+        .catch(error => {
+          if (error) {
+            popupAjaxError(error);
+          } else {
+            bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
+          }
+        })
+        .then(result => {
+          for (
+            let chartIdx = 0;
+            chartIdx < result.grouped_results.length;
+            chartIdx++
+          ) {
+            const data = result.grouped_results[chartIdx].options.mapBy(
+              "votes"
+            );
+            const labels = result.grouped_results[chartIdx].options.mapBy(
+              "html"
+            );
+            const chartConfig = pieChartConfig(data, labels, 1.2);
+            const canvasId = `pie-${attrs.id}-${chartIdx}`;
+            let el = document.querySelector(`#${canvasId}`);
+            if (!el) {
+              const container = document.createElement("div");
+              container.classList.add("poll-grouped-pie-container");
+
+              const label = document.createElement("label");
+              label.classList.add("poll-pie-label");
+              label.textContent = result.grouped_results[chartIdx].group;
+
+              const canvas = document.createElement("canvas");
+              canvas.classList.add(`poll-grouped-pie-${attrs.id}`);
+              canvas.id = canvasId;
+
+              container.appendChild(label);
+              container.appendChild(canvas);
+              parent.appendChild(container);
+              // eslint-disable-next-line
+              new Chart(canvas.getContext("2d"), chartConfig);
+            } else {
+              // eslint-disable-next-line
+              Chart.helpers.each(Chart.instances, function(instance) {
+                if (instance.chart.canvas.id === canvasId && el.$chartjs) {
+                  instance.destroy();
+                  // eslint-disable-next-line
+                  new Chart(el.getContext("2d"), chartConfig);
+                }
+              });
+            }
+          }
+        });
     });
+    return contents;
   },
 
   click(e) {
@@ -973,7 +976,11 @@ export default createWidget("discourse-poll", {
     let el = document.getElementById(
       `poll-results-grouped-pie-charts-${this.attrs.id}`
     );
-    el.innerHTML = "";
+    Array.from(el.getElementsByClassName("poll-grouped-pie-container")).forEach(
+      container => {
+        el.removeChild(container);
+      }
+    );
     this.attrs.groupedBy = newGroupedByValue;
   }
 });
