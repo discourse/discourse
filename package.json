@@ -6,7 +6,7 @@
   "author": "Discourse",
   "license": "MIT",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "5.7.2",
+    "@fortawesome/fontawesome-free": "5.11.2",
     "ace-builds": "1.4.2",
     "bootbox": "3.2.0",
     "bootstrap": "v3.4.1",

@@ -92,10 +92,10 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@fortawesome/fontawesome-free@5.7.2":
-  version "5.7.2"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.7.2.tgz#1498c3eb78ee7c78c5488418707de90aaf58d5d7"
-  integrity sha512-Ha4HshKdCVKgu4TVCtG8XyPPYdzTzNW4/fvPnn+LT7AosRABryhlRv4cc4+o84dgpvVJN9reN7jo/c+nYujFug==
+"@fortawesome/fontawesome-free@5.11.2":
+  version "5.11.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.11.2.tgz#8644bc25b19475779a7b7c1fc104bc0a794f4465"
+  integrity sha512-XiUPoS79r1G7PcpnNtq85TJ7inJWe0v+b5oZJZKb0pGHNIV6+UiNeQWiFGmuQ0aj7GEhnD/v9iqxIsjuRKtEnQ==
 
 "@sinonjs/commons@^1", "@sinonjs/commons@^1.0.2", "@sinonjs/commons@^1.3.0":
   version "1.3.0"
