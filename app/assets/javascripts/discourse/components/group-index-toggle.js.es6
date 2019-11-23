@@ -2,8 +2,8 @@ import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Component.extend({
-  tagName: 'th',
-  classNames: ['sortable'],
+  tagName: "th",
+  classNames: ["sortable"],
   chevronIcon: null,
   toggleProperties() {
     if (this.order === this.field) {
@@ -15,9 +15,9 @@ export default Component.extend({
   toggleChevron() {
     if (this.order === this.field) {
       let chevron = iconHTML(this.desc ? "chevron-down" : "chevron-up");
-      this.set('chevronIcon', `${chevron}`.htmlSafe());
+      this.set("chevronIcon", `${chevron}`.htmlSafe());
     } else {
-      this.set('chevronIcon', null);
+      this.set("chevronIcon", null);
     }
   },
   click() {
