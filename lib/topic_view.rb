@@ -35,7 +35,7 @@ class TopicView
   end
 
   def self.default_post_custom_fields
-    @default_post_custom_fields ||= ["action_code_who", "notice_type", "notice_args", "requested_group_id"]
+    @default_post_custom_fields ||= [Post::NOTICE_TYPE, Post::NOTICE_ARGS, "action_code_who", "requested_group_id"]
   end
 
   def self.post_custom_fields_whitelisters

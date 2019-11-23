@@ -910,7 +910,10 @@ a.mention-group {
   background-color: $tertiary-low;
   border-top: 1px solid $primary-low;
   display: flex;
-  max-width: calc(#{$topic-body-width} + #{$topic-avatar-width} - 0.1em);
+  max-width: calc(
+    #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
+      (0.8em * 2)
+  );
   padding: 0.8em;
 
   &.old {

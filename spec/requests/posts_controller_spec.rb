@@ -1852,16 +1852,16 @@ describe PostsController do
 
       expect(response.status).to eq(200)
       public_post.reload
-      expect(public_post.custom_fields['notice_type']).to eq(Post.notices[:custom])
-      expect(public_post.custom_fields['notice_args']).to include('<p>Hello <em>world</em>!</p>')
-      expect(public_post.custom_fields['notice_args']).not_to include('onebox')
+      expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:custom])
+      expect(public_post.custom_fields[Post::NOTICE_ARGS]).to include('<p>Hello <em>world</em>!</p>')
+      expect(public_post.custom_fields[Post::NOTICE_ARGS]).not_to include('onebox')
 
       put "/posts/#{public_post.id}/notice.json", params: { notice: nil }
 
       expect(response.status).to eq(200)
       public_post.reload
-      expect(public_post.custom_fields['notice_type']).to eq(nil)
-      expect(public_post.custom_fields['notice_args']).to eq(nil)
+      expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+      expect(public_post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
     end
   end
 end
