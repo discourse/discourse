@@ -144,6 +144,15 @@ class TopicTrackingState
     MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 
+  def self.publish_dismiss_new(user_id, category_id = nil)
+    payload = category_id ? { category_id: category_id } : {}
+    message = {
+      message_type: "dismiss_new",
+      payload: payload
+    }
+    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+  end
+
   def self.treat_as_new_topic_clause
     User.where("GREATEST(CASE
                   WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :always THEN u.created_at
