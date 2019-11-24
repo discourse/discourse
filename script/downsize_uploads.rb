@@ -58,11 +58,11 @@ def downsize_upload(upload, path, max_image_pixels)
   upload.height = h
   upload.thumbnail_width = ww
   upload.thumbnail_height = hh
-  return unless upload.save!
+  upload.save!
 
   if new_file
     return unless url = Discourse.store.store_upload(File.new(path), upload)
-    return unless upload.update!(url: url)
+    upload.update!(url: url)
   end
 
   upload.posts.each do |post|
