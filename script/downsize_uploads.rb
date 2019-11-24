@@ -48,6 +48,7 @@ def downsize_upload(upload, path, max_image_pixels)
   new_file = true
 
   if existing_upload = Upload.find_by(sha1: sha1)
+    obsolete_upload = upload
     upload = existing_upload
     new_file = false
   end
@@ -68,6 +69,14 @@ def downsize_upload(upload, path, max_image_pixels)
   upload.posts.each do |post|
     post.update!(raw: post.raw.gsub(previous_short_url, upload.short_url))
     Jobs.enqueue(:process_post, post_id: post.id, bypass_bump: true, cook: true)
+  end
+
+  if obsolete_upload
+    User.where(uploaded_avatar_id: obsolete_upload.id).update_all(uploaded_avatar_id: upload.id)
+    UserAvatar.where(gravatar_upload_id: obsolete_upload.id).update_all(gravatar_upload_id: upload.id)
+    UserAvatar.where(custom_upload_id: obsolete_upload.id).update_all(custom_upload_id: upload.id)
+
+    obsolete_upload.destroy!
   end
 end
 
