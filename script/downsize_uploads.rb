@@ -45,7 +45,7 @@ Upload
   print "\r%8d".freeze % count
 
   next unless source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
-  next unless size = (FastImage.size(source) rescue nil)
+  next unless size = FastImage.size(source)
 
   if size.reduce(:*) < max_image_pixels
     ww, hh = ImageSizer.resize(*size)
