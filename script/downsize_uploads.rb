@@ -36,6 +36,41 @@ puts "", "Downsizing images to no more than #{max_image_pixels} pixels"
 
 count = 0
 
+def downsize_upload(upload, path, max_image_pixels)
+  OptimizedImage.downsize(path, path, "#{max_image_pixels}@", filename: upload.original_filename)
+
+  previous_short_url = upload.short_url
+
+  sha1 = Upload.generate_digest(path)
+  w, h = FastImage.size(path)
+  ww, hh = ImageSizer.resize(w, h)
+
+  new_file = true
+
+  if existing_upload = Upload.find_by(sha1: sha1)
+    upload = existing_upload
+    new_file = false
+  end
+
+  upload.filesize = File.size(path)
+  upload.sha1 = sha1
+  upload.width = w
+  upload.height = h
+  upload.thumbnail_width = ww
+  upload.thumbnail_height = hh
+  return unless upload.save!
+
+  if new_file
+    return unless url = Discourse.store.store_upload(File.new(path), upload)
+    return unless upload.update!(url: url)
+  end
+
+  upload.posts.each do |post|
+    post.update!(raw: post.raw.gsub(previous_short_url, upload.short_url)) if new_file
+    Jobs.enqueue(:process_post, post_id: post.id, bypass_bump: true, cook: true)
+  end
+end
+
 Upload
   .where("LOWER(extension) IN ('jpg', 'jpeg', 'gif', 'png')")
   .where("width * height > ?", max_image_pixels)
@@ -62,38 +97,7 @@ Upload
 
   next unless path = upload.local? ? source : (Discourse.store.download(upload) rescue nil)&.path
 
-  OptimizedImage.downsize(path, path, "#{max_image_pixels}@", filename: upload.original_filename)
-
-  previous_short_url = upload.short_url
-
-  sha1 = Upload.generate_digest(path)
-  w, h = FastImage.size(path)
-  ww, hh = ImageSizer.resize(w, h)
-
-  new_file = true
-
-  if existing_upload = Upload.find_by(sha1: sha1)
-    upload = existing_upload
-    new_file = false
-  end
-
-  upload.filesize = File.size(path)
-  upload.sha1 = sha1
-  upload.width = w
-  upload.height = h
-  upload.thumbnail_width = ww
-  upload.thumbnail_height = hh
-  next unless upload.save!
-
-  if new_file
-    next unless url = Discourse.store.store_upload(File.new(path), upload)
-    next unless upload.update!(url: url)
-  end
-
-  upload.posts.each do |post|
-    post.update!(raw: post.raw.gsub(previous_short_url, upload.short_url)) if new_file
-    Jobs.enqueue(:process_post, post_id: post.id, bypass_bump: true, cook: true)
-  end
+  downsize_upload(upload, path, max_image_pixels)
 end
 
 puts "", "Done"
