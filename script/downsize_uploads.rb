@@ -5,33 +5,6 @@ require File.expand_path("../../config/environment", __FILE__)
 # no less than 1 megapixel
 max_image_pixels = [ARGV[0].to_i, 1_000_000].max
 
-puts "", "Fixing all images dimensions in the database", ""
-
-count = 0
-
-Upload
-  .where("LOWER(extension) IN ('jpg', 'jpeg', 'gif', 'png')")
-  .where("COALESCE(width, 0) = 0 OR COALESCE(height, 0) = 0 OR COALESCE(thumbnail_width, 0) = 0 OR COALESCE(thumbnail_height, 0) = 0")
-  .find_each do |upload|
-
-  count += 1
-  print "\r%8d".freeze % count
-
-  next unless source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
-
-  w, h = FastImage.size(source)
-  ww, hh = ImageSizer.resize(w, h)
-
-  next if w == 0 || h == 0 || ww == 0 || hh == 0
-
-  upload.update!(
-    width: w,
-    height: h,
-    thumbnail_width: ww,
-    thumbnail_height: hh,
-  )
-end
-
 puts "", "Downsizing images to no more than #{max_image_pixels} pixels"
 
 count = 0
@@ -85,28 +58,27 @@ end
 
 Upload
   .where("LOWER(extension) IN ('jpg', 'jpeg', 'gif', 'png')")
-  .where("width * height > ?", max_image_pixels)
+  .where("COALESCE(width, 0) = 0 OR COALESCE(height, 0) = 0 OR COALESCE(thumbnail_width, 0) = 0 OR COALESCE(thumbnail_height, 0) = 0 OR width * height > ?", max_image_pixels)
   .find_each do |upload|
 
   count += 1
   print "\r%8d".freeze % count
 
   next unless source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
-  next unless size = FastImage.size(source)
 
-  if size.reduce(:*) < max_image_pixels
-    ww, hh = ImageSizer.resize(*size)
+  w, h = FastImage.size(source)
+  ww, hh = ImageSizer.resize(w, h)
 
-    upload.update!(
-      width: size[0],
-      height: size[1],
-      thumbnail_width: ww,
-      thumbnail_height: hh,
-    )
+  next if w == 0 || h == 0 || ww == 0 || hh == 0
 
-    next
-  end
+  upload.update!(
+    width: w,
+    height: h,
+    thumbnail_width: ww,
+    thumbnail_height: hh,
+  )
 
+  next if w * h < max_image_pixels
   next unless path = upload.local? ? source : (Discourse.store.download(upload) rescue nil)&.path
 
   downsize_upload(upload, path, max_image_pixels)
