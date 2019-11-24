@@ -67,7 +67,7 @@ export default class LockOn {
         previousTop = top;
       }
 
-      // Commit suicide after a little while
+      // Stop after a little while
       if (new Date().getTime() - startedAt > LOCK_DURATION_MS) {
         return this.clearLock(interval);
       }
