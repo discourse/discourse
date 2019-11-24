@@ -14,7 +14,8 @@ function isNew(topic) {
   return (
     topic.last_read_post_number === null &&
     ((topic.notification_level !== 0 && !topic.notification_level) ||
-      topic.notification_level >= NotificationLevels.TRACKING)
+      topic.notification_level >= NotificationLevels.TRACKING) &&
+    isUnseen(topic)
   );
 }
 
@@ -24,6 +25,10 @@ function isUnread(topic) {
     topic.last_read_post_number < topic.highest_post_number &&
     topic.notification_level >= NotificationLevels.TRACKING
   );
+}
+
+function isUnseen(topic) {
+  return !topic.is_seen;
 }
 
 const TopicTrackingState = EmberObject.extend({
@@ -66,6 +71,22 @@ const TopicTrackingState = EmberObject.extend({
 
       if (data.message_type === "latest") {
         tracker.notify(data);
+      }
+
+      if (data.message_type === "dismiss_new") {
+        Object.keys(tracker.states).forEach(k => {
+          const topic = tracker.states[k];
+          if (
+            !data.payload.category_id ||
+            topic.category_id === parseInt(data.payload.category_id, 0)
+          ) {
+            tracker.states[k] = Object.assign({}, topic, {
+              is_seen: true
+            });
+          }
+        });
+        tracker.notifyPropertyChange("states");
+        tracker.incrementMessageCount();
       }
 
       if (["new_topic", "unread", "read"].includes(data.message_type)) {
@@ -215,7 +236,11 @@ const TopicTrackingState = EmberObject.extend({
 
       if (state) {
         const lastRead = t.get("last_read_post_number");
-        if (lastRead !== state.last_read_post_number) {
+        const isSeen = t.get("is_seen");
+        if (
+          lastRead !== state.last_read_post_number ||
+          isSeen !== state.is_seen
+        ) {
           const postsCount = t.get("posts_count");
           let newPosts = postsCount - state.highest_post_number,
             unread = postsCount - state.last_read_post_number;
@@ -235,7 +260,8 @@ const TopicTrackingState = EmberObject.extend({
             last_read_post_number: state.last_read_post_number,
             new_posts: newPosts,
             unread: unread,
-            unseen: !state.last_read_post_number
+            is_seen: state.is_seen,
+            unseen: !state.last_read_post_number && isUnseen(state)
           });
         }
       }
