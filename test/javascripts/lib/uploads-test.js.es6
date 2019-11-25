@@ -198,7 +198,7 @@ QUnit.test("getUploadMarkdown", assert => {
   );
   assert.equal(
     testUploadMarkdown("[foo|bar].png"),
-    "![%5Bfoo%7Cbar%5D|100x200](/uploads/123/abcdef.ext)"
+    "![foobar|100x200](/uploads/123/abcdef.ext)"
   );
   assert.equal(
     testUploadMarkdown("file name with space.png"),
