@@ -460,72 +460,68 @@ createWidget("discourse-poll-grouped-pies", {
 
     contents.push(h("div.clearfix"));
 
-    later(() => {
-      // Set the value of the select. Cannot be done with h helper
-      document.getElementById(fieldSelectId).value = attrs.groupedBy;
-
-      ajax("/polls/grouped_poll_results.json", {
-        data: {
-          post_id: attrs.post.id,
-          poll_name: attrs.poll.name,
-          user_field_name: attrs.groupedBy
+    ajax("/polls/grouped_poll_results.json", {
+      data: {
+        post_id: attrs.post.id,
+        poll_name: attrs.poll.name,
+        user_field_name: attrs.groupedBy
+      }
+    })
+      .catch(error => {
+        if (error) {
+          popupAjaxError(error);
+        } else {
+          bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
         }
       })
-        .catch(error => {
-          if (error) {
-            popupAjaxError(error);
+      .then(result => {
+        let groupBySelect = document.getElementById(fieldSelectId);
+        if (!groupBySelect) return;
+
+        groupBySelect.value = attrs.groupedBy;
+        const parent = document.getElementById(
+          `poll-results-grouped-pie-charts-${attrs.id}`
+        );
+
+        for (
+          let chartIdx = 0;
+          chartIdx < result.grouped_results.length;
+          chartIdx++
+        ) {
+          const data = result.grouped_results[chartIdx].options.mapBy("votes");
+          const labels = result.grouped_results[chartIdx].options.mapBy("html");
+          const chartConfig = pieChartConfig(data, labels, 1.2);
+          const canvasId = `pie-${attrs.id}-${chartIdx}`;
+          let el = document.querySelector(`#${canvasId}`);
+          if (!el) {
+            const container = document.createElement("div");
+            container.classList.add("poll-grouped-pie-container");
+
+            const label = document.createElement("label");
+            label.classList.add("poll-pie-label");
+            label.textContent = result.grouped_results[chartIdx].group;
+
+            const canvas = document.createElement("canvas");
+            canvas.classList.add(`poll-grouped-pie-${attrs.id}`);
+            canvas.id = canvasId;
+
+            container.appendChild(label);
+            container.appendChild(canvas);
+            parent.appendChild(container);
+            // eslint-disable-next-line
+            new Chart(canvas.getContext("2d"), chartConfig);
           } else {
-            bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
+            // eslint-disable-next-line
+            Chart.helpers.each(Chart.instances, function(instance) {
+              if (instance.chart.canvas.id === canvasId && el.$chartjs) {
+                instance.destroy();
+                // eslint-disable-next-line
+                new Chart(el.getContext("2d"), chartConfig);
+              }
+            });
           }
-        })
-        .then(result => {
-          const parent = document.getElementById(
-            `poll-results-grouped-pie-charts-${attrs.id}`
-          );
-          for (
-            let chartIdx = 0;
-            chartIdx < result.grouped_results.length;
-            chartIdx++
-          ) {
-            const data = result.grouped_results[chartIdx].options.mapBy(
-              "votes"
-            );
-            const labels = result.grouped_results[chartIdx].options.mapBy(
-              "html"
-            );
-            const chartConfig = pieChartConfig(data, labels, 1.2);
-            const canvasId = `pie-${attrs.id}-${chartIdx}`;
-            let el = document.querySelector(`#${canvasId}`);
-            if (!el) {
-              const container = document.createElement("div");
-              container.classList.add("poll-grouped-pie-container");
-
-              const label = document.createElement("label");
-              label.classList.add("poll-pie-label");
-              label.textContent = result.grouped_results[chartIdx].group;
-
-              const canvas = document.createElement("canvas");
-              canvas.classList.add(`poll-grouped-pie-${attrs.id}`);
-              canvas.id = canvasId;
-
-              container.appendChild(label);
-              container.appendChild(canvas);
-              parent.appendChild(container);
-              // eslint-disable-next-line
-              new Chart(canvas.getContext("2d"), chartConfig);
-            } else {
-              // eslint-disable-next-line
-              Chart.helpers.each(Chart.instances, function(instance) {
-                if (instance.chart.canvas.id === canvasId && el.$chartjs) {
-                  instance.destroy();
-                  // eslint-disable-next-line
-                  new Chart(el.getContext("2d"), chartConfig);
-                }
-              });
-            }
-          }
-        });
-    });
+        }
+      });
     return contents;
   },
 

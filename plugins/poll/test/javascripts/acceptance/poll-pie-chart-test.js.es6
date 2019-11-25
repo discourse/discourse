@@ -9,29 +9,53 @@ acceptance("Rendering polls with pie charts - desktop", {
   },
   pretend(server, helper) {
     server.get("/polls/grouped_poll_results.json", () => {
-      return helper.response({
-        grouped_results: [
-          {
-            group: "Male",
-            options: [
+      return new Promise(resolve => {
+        resolve(
+          helper.response({
+            grouped_results: [
               {
-                digest: "687a1ccf3c6a260f9aeeb7f68a1d463c",
-                html: "This Is",
-                votes: 0
+                group: "Engineering",
+                options: [
+                  {
+                    digest: "687a1ccf3c6a260f9aeeb7f68a1d463c",
+                    html: "This Is",
+                    votes: 1
+                  },
+                  {
+                    digest: "9377906763a1221d31d656ea0c4a4495",
+                    html: "A test for sure",
+                    votes: 1
+                  },
+                  {
+                    digest: "ecf47c65a85a0bb20029072b1b721977",
+                    html: "Why not give it some more",
+                    votes: 1
+                  }
+                ]
               },
               {
-                digest: "9377906763a1221d31d656ea0c4a4495",
-                html: "A test for sure",
-                votes: 1
-              },
-              {
-                digest: "ecf47c65a85a0bb20029072b1b721977",
-                html: "Why not give it some more",
-                votes: 1
+                group: "Marketing",
+                options: [
+                  {
+                    digest: "687a1ccf3c6a260f9aeeb7f68a1d463c",
+                    html: "This Is",
+                    votes: 1
+                  },
+                  {
+                    digest: "9377906763a1221d31d656ea0c4a4495",
+                    html: "A test for sure",
+                    votes: 1
+                  },
+                  {
+                    digest: "ecf47c65a85a0bb20029072b1b721977",
+                    html: "Why not give it some more",
+                    votes: 1
+                  }
+                ]
               }
             ]
-          }
-        ]
+          })
+        );
       });
     });
   }
@@ -44,13 +68,13 @@ test("Polls", async assert => {
 
   assert.equal(
     find(".info-number", poll)[0].innerHTML,
-    "1",
+    "2",
     "it should display the right number of voters"
   );
 
   assert.equal(
     find(".info-number", poll)[1].innerHTML,
-    "2",
+    "5",
     "it should display the right number of votes"
   );
 
@@ -81,12 +105,18 @@ test("Polls", async assert => {
   );
 
   // Double click to make sure the state toggles back to combined view
-  await click(".poll-group-by-toggle:first");
-  await click(".poll-group-by-toggle:first");
+  await click(".toggle-results:first");
+  await click(".toggle-results:first");
 
   assert.equal(
     find(".poll-group-by-toggle").text(),
     "Hide breakdown",
     "Returns to the grouped view, after toggling results shown"
+  );
+
+  assert.equal(
+    find(".poll-grouped-pie-container").length,
+    2,
+    "Renders a chart for each of the groups in group_results response"
   );
 });

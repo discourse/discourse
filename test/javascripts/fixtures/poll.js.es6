@@ -563,10 +563,10 @@ export default {
           reply_to_post_number: null,
           quote_count: 0,
           incoming_link_count: 0,
-          reads: 1,
-          readers_count: 0,
-          score: 0,
-          yours: true,
+          reads: 2,
+          readers_count: 1,
+          score: 0.2,
+          yours: false,
           topic_id: 256,
           topic_slug: "14-the-title-must-be-longer-i-guess",
           display_username: "",
@@ -575,16 +575,18 @@ export default {
           primary_group_flair_bg_color: "",
           primary_group_flair_color: "",
           version: 1,
-          can_edit: true,
+          can_edit: false,
           can_delete: false,
-          can_recover: null,
-          can_wiki: true,
+          can_recover: false,
+          can_wiki: false,
           read: true,
           user_title: "You are a member of the team",
           actions_summary: [
+            { id: 2, can_act: true },
             { id: 3, can_act: true },
             { id: 4, can_act: true },
             { id: 8, can_act: true },
+            { id: 6, can_act: true },
             { id: 7, can_act: true }
           ],
           moderator: true,
@@ -599,9 +601,6 @@ export default {
           can_view_edit_history: true,
           wiki: false,
           user_custom_fields: { team: "Engineering", votes: [247, 251, 248] },
-          reviewable_id: 0,
-          reviewable_score_count: 0,
-          reviewable_score_pending_count: 0,
           can_accept_answer: false,
           can_unaccept_answer: false,
           accepted_answer: false,
@@ -619,12 +618,12 @@ export default {
                 {
                   id: "687a1ccf3c6a260f9aeeb7f68a1d463c",
                   html: "This Is",
-                  votes: 0
+                  votes: 2
                 },
                 {
                   id: "9377906763a1221d31d656ea0c4a4495",
                   html: "A test for sure",
-                  votes: 1
+                  votes: 2
                 },
                 {
                   id: "ecf47c65a85a0bb20029072b1b721977",
@@ -632,13 +631,13 @@ export default {
                   votes: 1
                 }
               ],
-              voters: 1,
+              voters: 2,
               chart_type: "pie"
             }
           ],
           polls_votes: {
             poll: [
-              "ecf47c65a85a0bb20029072b1b721977",
+              "687a1ccf3c6a260f9aeeb7f68a1d463c",
               "9377906763a1221d31d656ea0c4a4495"
             ]
           }
@@ -646,14 +645,15 @@ export default {
       ],
       stream: [294]
     },
-    timeline_lookup: [[1, 0]],
+    timeline_lookup: [[1, 2]],
+    suggested_topics: [],
     tags: [],
     id: 256,
     title: "14 the title must be longer i guess",
     fancy_title: "14 the title must be longer i guess",
     posts_count: 1,
     created_at: "2019-11-22T18:55:41.259Z",
-    views: 1,
+    views: 3,
     reply_count: 0,
     like_count: 0,
     last_posted_at: "2019-11-22T18:55:41.439Z",
@@ -674,8 +674,8 @@ export default {
     image_url: null,
     draft: null,
     draft_key: "topic_256",
-    draft_sequence: 1,
-    posted: true,
+    draft_sequence: 0,
+    posted: false,
     unpinned: null,
     pinned: false,
     current_post_number: 1,
@@ -683,7 +683,6 @@ export default {
     last_read_post_number: 1,
     last_read_post_id: 294,
     deleted_by: null,
-    has_deleted: false,
     actions_summary: [
       { id: 4, count: 0, hidden: false, can_act: true },
       { id: 8, count: 0, hidden: false, can_act: true },
@@ -700,20 +699,11 @@ export default {
     vote_count: 0,
     user_voted: false,
     details: {
-      notification_level: 3,
-      notifications_reason_id: 1,
-      can_move_posts: true,
-      can_edit: true,
-      can_delete: true,
-      can_remove_allowed_users: true,
-      can_invite_to: true,
-      can_invite_via_email: true,
+      notification_level: 1,
+      notifications_reason_id: null,
       can_create_post: true,
       can_reply_as_new_topic: true,
       can_flag_topic: true,
-      can_convert_topic: true,
-      can_review_topic: true,
-      can_remove_self_id: 1,
       participants: [
         {
           id: 1,
