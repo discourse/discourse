@@ -155,6 +155,41 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe '#preload_json' do
+    before { Fabricate(:admin) } # Skip wizard
+    it 'works successfully' do
+      user = Fabricate(:user)
+
+      now = Time.zone.now
+      UserAuthToken.insert_all((1..(UserAuthToken::MAX_SESSION_COUNT + 2)).to_a.map do |i|
+        {
+          user_id: user.id,
+          created_at: now - i.seconds,
+          updated_at: now - i.seconds,
+          rotated_at: now - i.seconds,
+          prev_auth_token: "abc#{i}",
+          auth_token: "abc#{i}"
+        }
+      end)
+
+      sign_in(user)
+      get "/"
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+        destroyedSessions = JSON.parse(json["destroyedSessions"])
+        expect(destroyedSessions["count"]).to eq(3)
+        expect(destroyedSessions["limit"]).to eq(UserAuthToken::MAX_SESSION_COUNT)
+      end
+
+      # Doesn't appear on subsequent requests
+      get "/"
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+        expect(json["destroyedSessions"]).to eq(nil)
+      end
+    end
+  end
+
   describe 'invalid request params' do
     before do
       @old_logger = Rails.logger

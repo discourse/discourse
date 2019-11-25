@@ -586,6 +586,38 @@ describe Auth::DefaultCurrentUserProvider do
     expect(UserAuthToken.where(user_id: user.id).count).to eq(2)
   end
 
+  it "logging on user cleans up old sessions" do
+    user = Fabricate(:user)
+
+    yesterday = Time.zone.now - 1.day
+
+    UserAuthToken.insert_all((1..(UserAuthToken::MAX_SESSION_COUNT + 2)).to_a.map do |i|
+      {
+        user_id: user.id,
+        created_at: yesterday + i.seconds,
+        updated_at: yesterday + i.seconds,
+        rotated_at: yesterday + i.seconds,
+        prev_auth_token: "abc#{i}",
+        auth_token: "abc#{i}"
+      }
+    end)
+
+    # Has 2 more sessions than allowed
+    expect(UserAuthToken.where(user_id: user.id).count).to eq(UserAuthToken::MAX_SESSION_COUNT + 2)
+
+    # Check the oldest 3 still exist
+    expect(UserAuthToken.where(auth_token: (1..3).map { |i| "abc#{i}" }).count).to eq(3)
+
+    # On next login, gets fixed
+    session = {}
+    provider('/').log_on_user(user, session, {})
+    expect(UserAuthToken.where(user_id: user.id).count).to eq(UserAuthToken::MAX_SESSION_COUNT)
+    expect(session[:destroyed_session_count]).to eq(3)
+
+    # Oldest sessions are 1, 2, 3. They should now be deleted
+    expect(UserAuthToken.where(auth_token: (1..3).map { |i| "abc#{i}" }).count).to eq(0)
+  end
+
   it "sets secure, same site lax cookies" do
     SiteSetting.force_https = false
     SiteSetting.same_site_cookies = "Lax"

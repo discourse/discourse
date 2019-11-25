@@ -527,6 +527,9 @@ class ApplicationController < ActionController::Base
     report = TopicTrackingState.report(current_user)
     serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
     store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
+    if count = session.delete(:destroyed_session_count)
+      store_preloaded("destroyedSessions", MultiJson.dump(count: count, limit: UserAuthToken::MAX_SESSION_COUNT))
+    end
   end
 
   def custom_html_json
