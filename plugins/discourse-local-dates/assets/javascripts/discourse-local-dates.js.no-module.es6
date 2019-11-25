@@ -206,7 +206,7 @@
     const diff = moment().diff(dateTime, type);
     const add = Math.ceil(diff + count);
 
-    // we create new moment object object from format
+    // we create new moment object from format
     // to ensure it's created in user context
     const wasDST = moment(dateTime.format()).isDST();
     let dateTimeWithRecurrence = moment(dateTime).add(add, type);
