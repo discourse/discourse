@@ -16,7 +16,9 @@ def downsize_upload(upload, path, max_image_pixels)
   original_upload = Upload.find(upload.id)
 
   sha1 = Upload.generate_digest(path)
-  w, h = FastImage.size(path)
+  w, h = FastImage.size(path, timeout: 10, raise_on_failure: true)
+  return if !w || !h
+
   ww, hh = ImageSizer.resize(w, h)
 
   new_file = true
@@ -66,7 +68,9 @@ Upload
 
   next unless source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
 
-  w, h = FastImage.size(source)
+  w, h = FastImage.size(source, timeout: 10)
+  next if !w || !h
+
   ww, hh = ImageSizer.resize(w, h)
 
   next if w == 0 || h == 0 || ww == 0 || hh == 0
