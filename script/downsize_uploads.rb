@@ -7,7 +7,8 @@ max_image_pixels = [ARGV[0].to_i, 1_000_000].max
 
 puts "", "Downsizing images to no more than #{max_image_pixels} pixels"
 
-count = 0
+dimensions_count = 0
+downsized_count = 0
 
 def downsize_upload(upload, path, max_image_pixels)
   OptimizedImage.downsize(path, path, "#{max_image_pixels}@", filename: upload.original_filename)
@@ -60,15 +61,16 @@ def downsize_upload(upload, path, max_image_pixels)
 
     original_upload.destroy!
   end
+
+  true
 end
 
-Upload
-  .where("LOWER(extension) IN ('jpg', 'jpeg', 'gif', 'png')")
-  .where("COALESCE(width, 0) = 0 OR COALESCE(height, 0) = 0 OR COALESCE(thumbnail_width, 0) = 0 OR COALESCE(thumbnail_height, 0) = 0 OR width * height > ?", max_image_pixels)
-  .find_each do |upload|
+scope = Upload.where("LOWER(extension) IN ('jpg', 'jpeg', 'gif', 'png')").where("COALESCE(width, 0) = 0 OR COALESCE(height, 0) = 0 OR COALESCE(thumbnail_width, 0) = 0 OR COALESCE(thumbnail_height, 0) = 0 OR width * height > ?", max_image_pixels);
 
-  count += 1
-  print "\r%8d".freeze % count
+puts "Uploads to process: #{scope.count}"
+
+scope.find_each do |upload|
+  print "\rFixed dimensions: %8d        Downsized: %8d (upload id: #{upload.id})".freeze % [dimensions_count, downsized_count]
 
   next unless source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
 
@@ -79,17 +81,21 @@ Upload
 
   next if w == 0 || h == 0 || ww == 0 || hh == 0
 
-  upload.update!(
-    width: w,
-    height: h,
-    thumbnail_width: ww,
-    thumbnail_height: hh,
-  )
+  if upload.read_attribute(:width) != w || upload.read_attribute(:height) != h || upload.read_attribute(:thumbnail_width) != ww || upload.read_attribute(:thumbnail_height) != hh
+    dimensions_count += 1
+
+    upload.update!(
+      width: w,
+      height: h,
+      thumbnail_width: ww,
+      thumbnail_height: hh,
+    )
+  end
 
   next if w * h < max_image_pixels
   next unless path = upload.local? ? source : (Discourse.store.download(upload) rescue nil)&.path
 
-  downsize_upload(upload, path, max_image_pixels)
+  downsized_count += 1 if downsize_upload(upload, path, max_image_pixels)
 end
 
 puts "", "Done"
