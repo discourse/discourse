@@ -119,6 +119,53 @@ div.poll {
       margin-right: 0.25em;
     }
   }
+
+  .poll-grouped-pies-controls {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .poll-results-chart {
+    height: 310px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .poll-group-by-toggle {
+    margin-bottom: 10px;
+  }
+
+  .poll-group-by-selector {
+    height: 30px;
+  }
+
+  .poll-grouped-pie-container {
+    display: inline-block;
+    position: relative;
+    padding: 15px 0;
+
+    .poll-pie-label {
+      display: block;
+      text-align: center;
+    }
+  }
+}
+
+div.poll.pie {
+  .poll-container {
+    display: inline-block;
+    height: 310px;
+    max-height: 310px;
+    overflow-y: auto;
+
+    .poll-grouped-pie-container {
+      width: 50%;
+    }
+  }
+  .poll-info {
+    display: inline-block;
+    width: 150px;
+  }
 }
 
 // hides 0 vote count in crawler and print view

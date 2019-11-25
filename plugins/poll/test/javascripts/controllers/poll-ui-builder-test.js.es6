@@ -101,10 +101,7 @@ test("pollMinOptions", function(assert) {
 
   assert.deepEqual(
     controller.get("pollMinOptions"),
-    [
-      { name: 1, value: 1 },
-      { name: 2, value: 2 }
-    ],
+    [{ name: 1, value: 1 }, { name: 2, value: 2 }],
     "it should return the right options"
   );
 
@@ -113,10 +110,7 @@ test("pollMinOptions", function(assert) {
 
   assert.deepEqual(
     controller.get("pollMinOptions"),
-    [
-      { name: 1, value: 1 },
-      { name: 2, value: 2 }
-    ],
+    [{ name: 1, value: 1 }, { name: 2, value: 2 }],
     "it should return the right options"
   );
 });
@@ -183,11 +177,7 @@ test("pollStepOptions", function(assert) {
 
   assert.deepEqual(
     controller.get("pollStepOptions"),
-    [
-      { name: 1, value: 1 },
-      { name: 2, value: 2 },
-      { name: 3, value: 3 }
-    ],
+    [{ name: 1, value: 1 }, { name: 2, value: 2 }, { name: 3, value: 3 }],
     "it should return the right options"
   );
 });
@@ -272,7 +262,7 @@ test("regular pollOutput", function(assert) {
 
   assert.equal(
     controller.get("pollOutput"),
-    "[poll type=regular]\n* 1\n* 2\n[/poll]\n",
+    "[poll type=regular chartType=bar]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
 
@@ -280,7 +270,7 @@ test("regular pollOutput", function(assert) {
 
   assert.equal(
     controller.get("pollOutput"),
-    "[poll type=regular public=true]\n* 1\n* 2\n[/poll]\n",
+    "[poll type=regular public=true chartType=bar]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
 });
@@ -299,7 +289,7 @@ test("multiple pollOutput", function(assert) {
 
   assert.equal(
     controller.get("pollOutput"),
-    "[poll type=multiple min=1 max=2]\n* 1\n* 2\n[/poll]\n",
+    "[poll type=multiple min=1 max=2 chartType=bar]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
 
@@ -307,7 +297,7 @@ test("multiple pollOutput", function(assert) {
 
   assert.equal(
     controller.get("pollOutput"),
-    "[poll type=multiple min=1 max=2 public=true]\n* 1\n* 2\n[/poll]\n",
+    "[poll type=multiple min=1 max=2 public=true chartType=bar]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
 });

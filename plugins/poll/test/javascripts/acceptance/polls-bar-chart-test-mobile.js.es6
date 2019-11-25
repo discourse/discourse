@@ -1,7 +1,7 @@
 import { acceptance } from "helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 
-acceptance("Rendering polls - mobile", {
+acceptance("Rendering polls with bar charts - mobile", {
   loggedIn: true,
   mobileView: true,
   settings: { poll_enabled: true },
