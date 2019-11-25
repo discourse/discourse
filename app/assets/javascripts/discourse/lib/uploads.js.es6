@@ -15,8 +15,6 @@ function imageNameFromFileName(fileName) {
   }
 
   return name.replace(/\[|\]|\|/g, "");
-
-  // return encodeURIComponent(name).replace(/%20/g, " ");
 }
 
 export function validateUploadedFiles(files, opts) {
