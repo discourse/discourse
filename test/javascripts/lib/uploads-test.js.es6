@@ -200,6 +200,10 @@ QUnit.test("getUploadMarkdown", assert => {
     testUploadMarkdown("[foo|bar].png"),
     "![%5Bfoo%7Cbar%5D|100x200](/uploads/123/abcdef.ext)"
   );
+  assert.equal(
+    testUploadMarkdown("file name with space.png"),
+    "![file name with space|100x200](/uploads/123/abcdef.ext)"
+  );
 
   const short_url = "uploads://asdaasd.ext";
 
