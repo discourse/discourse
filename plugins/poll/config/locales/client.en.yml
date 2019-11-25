@@ -61,7 +61,7 @@ en:
 
       hide-results:
         title: "Back to your votes"
-        label: "Hide results"
+        label: "Show vote"
 
       export-results:
         title: "Export the poll results"
