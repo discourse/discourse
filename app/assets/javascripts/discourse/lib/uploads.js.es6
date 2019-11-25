@@ -14,7 +14,7 @@ function imageNameFromFileName(fileName) {
     name = I18n.t("upload_selector.default_image_alt_text");
   }
 
-  return encodeURIComponent(name);
+  return encodeURIComponent(name).replace(/%20/g, " ");
 }
 
 export function validateUploadedFiles(files, opts) {
