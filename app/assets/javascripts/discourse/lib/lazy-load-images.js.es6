@@ -56,16 +56,34 @@ function show(image) {
     copyImg.className = imageData.className;
 
     let inOnebox = false;
+    let inQuote = false;
     for (let element = image; element; element = element.parentElement) {
+      if (element.tagName === "ARTICLE") {
+        break;
+      }
       if (element.classList.contains("onebox")) {
         inOnebox = true;
-        break;
+      }
+      if (element.tagName === "BLOCKQUOTE") {
+        inQuote = true;
       }
     }
 
     if (!inOnebox) {
       copyImg.style.width = `${imageData.width}px`;
       copyImg.style.height = `${imageData.height}px`;
+    }
+
+    if (inQuote && imageData.width && imageData.height) {
+      const computedStyle = window.getComputedStyle(image);
+      const width = parseInt(computedStyle.width, 10);
+      const height = width * (imageData.height / imageData.width);
+
+      image.width = width;
+      image.height = height;
+
+      copyImg.style.width = `${width}px`;
+      copyImg.style.height = `${height}px`;
     }
 
     image.parentNode.insertBefore(copyImg, image);
