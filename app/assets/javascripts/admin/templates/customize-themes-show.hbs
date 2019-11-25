@@ -65,7 +65,7 @@
       {{/if}}
     {{/if}}
     {{#if model.remote_theme.about_url}}
-    <a class="url about-url" href="{{model.remote_theme.about_url}}">{{i18n "admin.customize.theme.about_theme"}} {{d-icon "link"}}</a>
+      <a class="url about-url" href="{{model.remote_theme.about_url}}">{{i18n "admin.customize.theme.about_theme"}} {{d-icon "link"}}</a>
     {{/if}}
     {{#if model.remote_theme.license_url}}
       <a class="url license-url" href="{{model.remote_theme.license_url}}">{{i18n "admin.customize.theme.license"}} {{d-icon "link"}}</a>
@@ -153,6 +153,17 @@
           <li>{{#link-to 'adminCustomizeThemes.show' theme replace=true}}{{theme.name}}{{/link-to}}</li>
         {{/each}}
       </ul>
+    </div>
+  {{/if}}
+
+  {{#if model.component }}
+    <div class="control-unit">
+      <div class="mini-title">{{i18n "admin.customize.theme.title"}}</div>
+      {{#d-section class="form-horizontal theme settings"}}
+        <div class="row setting">
+          {{ theme-setting-relatives-selector setting=relativesSelectorSettings model=model class="theme-setting"}}
+        </div>
+      {{/d-section}}
     </div>
   {{/if}}
 

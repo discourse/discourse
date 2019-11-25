@@ -321,6 +321,16 @@ describe Admin::ThemesController do
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
+    it 'updates a child theme' do
+      child_theme = Fabricate(:theme, component: true)
+      put "/admin/themes/#{child_theme.id}.json", params: {
+        theme: {
+          parent_theme_ids: [theme.id],
+        }
+      }
+      expect(child_theme.parent_themes).to eq([theme])
+    end
+
     it 'can update translations' do
       theme.set_field(target: :translations, name: :en, value: { en: { somegroup: { somestring: "defaultstring" } } }.deep_stringify_keys.to_yaml)
       theme.save!

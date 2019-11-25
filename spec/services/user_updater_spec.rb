@@ -225,7 +225,7 @@ describe UserUpdater do
 
       theme = Fabricate(:theme)
       child = Fabricate(:theme, component: true)
-      theme.add_child_theme!(child)
+      theme.add_relative_theme!(:child, child)
       theme.set_default!
 
       updater.update(theme_ids: [theme.id.to_s, child.id.to_s, "", nil])

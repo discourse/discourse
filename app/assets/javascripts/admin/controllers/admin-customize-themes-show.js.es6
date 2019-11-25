@@ -50,6 +50,24 @@ export default Controller.extend({
     }
   },
 
+  @discourseComputed("model.parentThemes.[]")
+  relativesSelectorSettings() {
+    return Ember.Object.create({
+      list_type: "compact",
+      type: "list",
+      preview: null,
+      anyValue: false,
+      setting: "parent_theme_ids",
+      label: I18n.t("admin.customize.theme.component_on_themes"),
+      choices: this.availableThemesNames,
+      default: this.parentThemesNames.join("|"),
+      value: this.parentThemesNames.join("|"),
+      defaultValues: this.availableThemesNames.join("|"),
+      allThemes: this.allThemes,
+      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all_themes")
+    });
+  },
+
   @discourseComputed("allThemes", "model.component", "model")
   availableChildThemes(allThemes) {
     if (!this.get("model.component")) {
@@ -58,6 +76,21 @@ export default Controller.extend({
         theme => theme.get("id") !== themeId && theme.get("component")
       );
     }
+  },
+
+  @discourseComputed("model.parentThemes.[]")
+  parentThemesNames(parentThemes) {
+    return parentThemes.map(theme => theme.name);
+  },
+
+  @discourseComputed("allThemes")
+  availableParentThemes(allThemes) {
+    return allThemes.filter(theme => !theme.get("component"));
+  },
+
+  @discourseComputed("availableParentThemes")
+  availableThemesNames(availableParentThemes) {
+    return availableParentThemes.map(theme => theme.name);
   },
 
   @discourseComputed("model.component")
@@ -241,7 +274,7 @@ export default Controller.extend({
     addChildTheme() {
       let themeId = parseInt(this.selectedChildThemeId, 10);
       let theme = this.allThemes.findBy("id", themeId);
-      this.model.addChildTheme(theme);
+      this.model.addChildTheme(theme).then(() => this.store.findAll("theme"));
     },
 
     removeUpload(upload) {
@@ -258,7 +291,9 @@ export default Controller.extend({
     },
 
     removeChildTheme(theme) {
-      this.model.removeChildTheme(theme);
+      this.model
+        .removeChildTheme(theme)
+        .then(() => this.store.findAll("theme"));
     },
 
     destroy() {
