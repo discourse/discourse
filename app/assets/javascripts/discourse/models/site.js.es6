@@ -87,7 +87,7 @@ const Site = RestModel.extend({
   },
 
   // Returns it in the correct order, by setting
-  @discourseComputed
+  @discourseComputed("categories.[]")
   categoriesList() {
     return this.siteSettings.fixed_category_positions
       ? this.categories
@@ -123,11 +123,13 @@ const Site = RestModel.extend({
 
     if (existingCategory) {
       existingCategory.setProperties(newCategory);
+      return existingCategory;
     } else {
       // TODO insert in right order?
       newCategory = this.store.createRecord("category", newCategory);
       categories.pushObject(newCategory);
       this.categoriesById[categoryId] = newCategory;
+      return newCategory;
     }
   }
 });
