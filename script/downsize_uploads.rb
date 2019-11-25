@@ -34,8 +34,7 @@ def downsize_upload(upload, path, max_image_pixels)
 
   before = upload.filesize
   upload.filesize = File.size(path)
-  delta = upload.filesize - before
-  return if delta > 0
+  return if upload.filesize > before
 
   upload.sha1 = sha1
   upload.width = w
