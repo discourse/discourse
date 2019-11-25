@@ -846,10 +846,6 @@
         "diversity": true
       },
       {
-        "name": "blonde_woman",
-        "diversity": true
-      },
-      {
         "name": "woman_red_haired",
         "diversity": false
       },
@@ -864,6 +860,10 @@
       {
         "name": "woman_bald",
         "diversity": false
+      },
+      {
+        "name": "blonde_woman",
+        "diversity": true
       },
       {
         "name": "older_adult",
