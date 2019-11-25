@@ -663,6 +663,15 @@ class Plugin::Instance
     File.exists?(js_file_path)
   end
 
+  # Receives an array with two elements:
+  # 1. A symbol that represents the name of the value to filter.
+  # 2. A Proc that takes the existing ActiveRecord::Relation and the value received from the front-end.
+  def add_custom_reviewable_filter(filter)
+    reloadable_patch do
+      Reviewable.add_custom_filter(filter)
+    end
+  end
+
   protected
 
   def self.js_path

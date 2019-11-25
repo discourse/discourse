@@ -21,10 +21,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     let style =
       !this.site.mobileView && this.siteSettings.desktop_category_page_style;
 
-    let parentCategory = this.get("model.parentCategory");
-    if (parentCategory) {
-      return CategoryList.listForParent(this.store, parentCategory);
-    } else if (style === "categories_and_latest_topics") {
+    if (style === "categories_and_latest_topics") {
       return this._findCategoriesAndTopics("latest");
     } else if (style === "categories_and_top_topics") {
       return this._findCategoriesAndTopics("top");

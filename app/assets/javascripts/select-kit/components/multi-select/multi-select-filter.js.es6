@@ -7,7 +7,7 @@ export default SelectKitFilterComponent.extend({
   classNames: ["multi-select-filter"],
 
   @discourseComputed("placeholder", "hasSelection")
-  discourseComputedPlaceholder(placeholder, hasSelection) {
+  computedPlaceholder(placeholder, hasSelection) {
     if (hasSelection) return "";
     return isEmpty(placeholder) ? "" : I18n.t(placeholder);
   }

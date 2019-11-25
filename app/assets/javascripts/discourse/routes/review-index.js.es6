@@ -25,7 +25,8 @@ export default DiscourseRoute.extend({
       filterUsername: meta.username,
       filterFromDate: meta.from_date,
       filterToDate: meta.to_date,
-      filterSortOrder: meta.sort_order
+      filterSortOrder: meta.sort_order,
+      additionalFilters: meta.additional_filters || {}
     });
   },
 

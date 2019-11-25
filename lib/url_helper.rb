@@ -64,6 +64,11 @@ class UrlHelper
 
     url = secure ? secure_proxy_without_cdn(url) : absolute_without_cdn(url)
 
+    # we always want secure media to come from
+    # Discourse.base_url_no_prefix/secure-media-uploads
+    # to avoid asset_host mixups
+    return schemaless(url) if secure
+
     unless is_attachment && no_cdn
       url = Discourse.store.cdn_url(url)
       url = local_cdn_url(url) if Discourse.store.external?
