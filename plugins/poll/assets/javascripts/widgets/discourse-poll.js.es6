@@ -445,30 +445,21 @@ createWidget("discourse-poll-grouped-pies", {
 
     let contents = [];
 
-    contents.push(
-      h("div.poll-grouped-pies-controls", [
-        this.attach("button", {
-          className: "btn-default poll-group-by-toggle",
-          label: "poll.ungroup-results.label",
-          title: "poll.ungroup-results.title",
-          icon: "far-eye-slash",
-          action: "toggleGroupedPieCharts"
-        }),
-        h(
-          `select#${fieldSelectId}.poll-group-by-selector`,
-          { value: attrs.groupBy },
-          attrs.groupableUserFields.map(field => {
-            return h(
-              "option",
-              { value: field },
-              transformUserFieldToLabel(field)
-            );
-          })
-        )
-      ])
+    const btn = this.attach("button", {
+      className: "btn-default poll-group-by-toggle",
+      label: "poll.ungroup-results.label",
+      title: "poll.ungroup-results.title",
+      icon: "far-eye-slash",
+      action: "toggleGroupedPieCharts"
+    });
+    const select = h(
+      `select#${fieldSelectId}.poll-group-by-selector`,
+      { value: attrs.groupBy },
+      attrs.groupableUserFields.map(field => {
+        return h("option", { value: field }, transformUserFieldToLabel(field));
+      })
     );
-
-    contents.push(h("div.clearfix"));
+    contents.push(h("div.poll-grouped-pies-controls", [btn, select]));
 
     ajax("/polls/grouped_poll_results.json", {
       data: {
