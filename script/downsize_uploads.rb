@@ -78,7 +78,6 @@ scope.find_each do |upload|
   next if !w || !h
 
   ww, hh = ImageSizer.resize(w, h)
-
   next if w == 0 || h == 0 || ww == 0 || hh == 0
 
   if upload.read_attribute(:width) != w || upload.read_attribute(:height) != h || upload.read_attribute(:thumbnail_width) != ww || upload.read_attribute(:thumbnail_height) != hh
