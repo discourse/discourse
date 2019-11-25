@@ -54,11 +54,13 @@ class Post < ActiveRecord::Base
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check, :skip_validation
 
-  LARGE_IMAGES      ||= "large_images".freeze
-  BROKEN_IMAGES     ||= "broken_images".freeze
-  DOWNLOADED_IMAGES ||= "downloaded_images".freeze
-  MISSING_UPLOADS ||= "missing uploads".freeze
-  MISSING_UPLOADS_IGNORED ||= "missing uploads ignored".freeze
+  LARGE_IMAGES            ||= "large_images"
+  BROKEN_IMAGES           ||= "broken_images"
+  DOWNLOADED_IMAGES       ||= "downloaded_images"
+  MISSING_UPLOADS         ||= "missing uploads"
+  MISSING_UPLOADS_IGNORED ||= "missing uploads ignored"
+  NOTICE_TYPE             ||= "notice_type"
+  NOTICE_ARGS             ||= "notice_args"
 
   SHORT_POST_CHARS ||= 1200
 
@@ -422,8 +424,8 @@ class Post < ActiveRecord::Base
   end
 
   def delete_post_notices
-    self.custom_fields.delete("notice_type")
-    self.custom_fields.delete("notice_args")
+    self.custom_fields.delete(Post::NOTICE_TYPE)
+    self.custom_fields.delete(Post::NOTICE_ARGS)
     self.save_custom_fields
   end
 
