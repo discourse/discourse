@@ -199,10 +199,7 @@
     return dateTime;
   }
 
-  function _applyRecurrence(
-    dateTime,
-    { recurring, timezone }
-  ) {
+  function _applyRecurrence(dateTime, { recurring, timezone }) {
     const parts = recurring.split(".");
     const count = parseInt(parts[0], 10);
     const type = parts[1];
@@ -226,7 +223,7 @@
     // we remove the DST offset present when the date was created,
     // and add current DST offset
     if (!wasDST && isDST) {
-      dateTimeWithRecurrence.add(-withDSTOffset+noDSTOffset, "minutes");
+      dateTimeWithRecurrence.add(-withDSTOffset + noDSTOffset, "minutes");
     }
 
     // we add the DST offset present when the date was created,
