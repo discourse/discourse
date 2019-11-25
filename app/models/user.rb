@@ -670,6 +670,15 @@ class User < ActiveRecord::Base
     create_visit_record!(date) unless visit_record_for(date)
   end
 
+  def update_timezone_if_missing(timezone)
+    return if timezone.blank? || !TimezoneValidator.valid?(timezone)
+
+    # we only want to update the user's timezone if they have not set it themselves
+    UserOption
+      .where(user_id: self.id, timezone: nil)
+      .update_all(timezone: timezone)
+  end
+
   def update_posts_read!(num_posts, opts = {})
     now = opts[:at] || Time.zone.now
     _retry = opts[:retry] || false

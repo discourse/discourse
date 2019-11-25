@@ -917,6 +917,48 @@ describe User do
     end
   end
 
+  describe "update_timezone_if_missing" do
+    let(:timezone) { nil }
+
+    it "does nothing if timezone is nil" do
+      user.update_timezone_if_missing(timezone)
+      expect(user.reload.user_option.timezone).to eq(nil)
+    end
+
+    context "if timezone is provided" do
+      context "if the timezone is valid" do
+        let(:timezone) { "Australia/Melbourne" }
+        context "if no timezone exists on user option" do
+          it "sets the timezone for the user" do
+            user.update_timezone_if_missing(timezone)
+            expect(user.reload.user_option.timezone).to eq(timezone)
+          end
+        end
+      end
+
+      context "if the timezone is not valid" do
+        let(:timezone) { "Jupiter" }
+        context "if no timezone exists on user option" do
+          it "does not set the timezone for the user" do
+            user.update_timezone_if_missing(timezone)
+            expect(user.reload.user_option.timezone).to eq(nil)
+          end
+        end
+      end
+
+      context "if a timezone already exists on user option" do
+        before do
+          user.user_option.update_attribute(:timezone, "America/Denver")
+        end
+
+        it "does not update the timezone" do
+          user.update_timezone_if_missing(timezone)
+          expect(user.reload.user_option.timezone).to eq("America/Denver")
+        end
+      end
+    end
+  end
+
   describe "last_seen_at" do
     fab!(:user) { Fabricate(:user) }
 

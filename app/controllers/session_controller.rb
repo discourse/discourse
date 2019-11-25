@@ -540,6 +540,7 @@ class SessionController < ApplicationController
 
   def login(user)
     session.delete(ACTIVATE_USER_KEY)
+    user.update_timezone_if_missing(params[:timezone])
     log_on_user(user)
 
     if payload = cookies.delete(:sso_payload)

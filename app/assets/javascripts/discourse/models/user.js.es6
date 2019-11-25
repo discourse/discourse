@@ -302,7 +302,8 @@ const User = RestModel.extend({
       "homepage_id",
       "hide_profile_and_presence",
       "text_size",
-      "title_count_mode"
+      "title_count_mode",
+      "timezone"
     ];
 
     if (fields) {
@@ -901,7 +902,8 @@ User.reopenClass(Singleton, {
         username: attrs.accountUsername,
         password_confirmation: attrs.accountPasswordConfirm,
         challenge: attrs.accountChallenge,
-        user_fields: attrs.userFields
+        user_fields: attrs.userFields,
+        timezone: moment.tz.guess()
       },
       type: "POST"
     });

@@ -40,7 +40,7 @@ class InvitesController < ApplicationController
 
   def perform_accept_invitation
     params.require(:id)
-    params.permit(:username, :name, :password, user_custom_fields: {})
+    params.permit(:username, :name, :password, :timezone, user_custom_fields: {})
     invite = Invite.find_by(invite_key: params[:id])
 
     if invite.present?
@@ -48,6 +48,7 @@ class InvitesController < ApplicationController
         user = invite.redeem(username: params[:username], name: params[:name], password: params[:password], user_custom_fields: params[:user_custom_fields], ip_address: request.remote_ip)
         if user.present?
           log_on_user(user) if user.active?
+          user.update_timezone_if_missing(params[:timezone])
           post_process_invite(user)
         end
 

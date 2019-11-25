@@ -128,7 +128,7 @@ class UsersController < ApplicationController
       end
     end
 
-    json_result(user, serializer: UserSerializer, additional_errors: [:user_profile]) do |u|
+    json_result(user, serializer: UserSerializer, additional_errors: [:user_profile, :user_option]) do |u|
       updater = UserUpdater.new(current_user, user)
       updater.update(attributes.permit!)
     end
@@ -387,7 +387,7 @@ class UsersController < ApplicationController
 
     params[:locale] ||= I18n.locale unless current_user
 
-    new_user_params = user_params
+    new_user_params = user_params.except(:timezone)
     user = User.unstage(new_user_params)
     user = User.new(new_user_params) if user.nil?
 
@@ -435,6 +435,7 @@ class UsersController < ApplicationController
     if user.save
       authentication.finish
       activation.finish
+      user.update_timezone_if_missing(params[:timezone])
 
       secure_session[HONEYPOT_KEY] = nil
       secure_session[CHALLENGE_KEY] = nil

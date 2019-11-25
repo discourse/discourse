@@ -269,7 +269,7 @@ class GroupsController < ApplicationController
       end
     end
 
-    users = users.select('users.*, group_users.created_at as added_at')
+    users = users.joins(:user_option).select('users.*, user_options.timezone, group_users.created_at as added_at')
 
     members = users
       .order('NOT group_users.owner')
