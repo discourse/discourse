@@ -21,28 +21,9 @@ export default (filterArg, params) => {
         modelParams.slug,
         modelParams.parentSlug
       );
-      if (!category) {
-        return Category.reloadBySlug(
-          modelParams.slug,
-          modelParams.parentSlug
-        ).then(atts => {
-          if (modelParams.parentSlug) {
-            atts.category.parentCategory = Category.findBySlug(
-              modelParams.parentSlug
-            );
-          }
-          const record = this.store.createRecord("category", atts.category);
-          record.setupGroupsAndPermissions();
-          this.site.updateCategory(record);
-          return {
-            category: Category.findBySlug(
-              modelParams.slug,
-              modelParams.parentSlug
-            )
-          };
-        });
+      if (category) {
+        return { category };
       }
-      return { category };
     },
 
     afterModel(model, transition) {
