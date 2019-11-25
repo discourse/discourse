@@ -821,6 +821,7 @@ en:
       collapse_profile: "Collapse"
       bookmarks: "Bookmarks"
       bio: "About me"
+      timezone: "Timezone"
       invited_by: "Invited By"
       trust_level: "Trust Level"
       notifications: "Notifications"

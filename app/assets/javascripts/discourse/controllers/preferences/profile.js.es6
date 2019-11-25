@@ -18,7 +18,8 @@ export default Controller.extend(PreferencesTabController, {
       "user_fields",
       "profile_background_upload_url",
       "card_background_upload_url",
-      "date_of_birth"
+      "date_of_birth",
+      "timezone"
     ];
   },
 
