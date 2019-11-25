@@ -5,29 +5,26 @@ import {
 } from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 
+export const BAR_CHART_TYPE = "bar";
+export const PIE_CHART_TYPE = "pie";
+
 export default Controller.extend({
   regularPollType: "regular",
   numberPollType: "number",
   multiplePollType: "multiple",
-  pieTypeIdentifier: "pie",
-  barTypeIdentifier: "bar",
 
   alwaysPollResult: "always",
   votePollResult: "on_vote",
   closedPollResult: "on_close",
   staffPollResult: "staff_only",
+  pollChartTypes: [
+    { name: BAR_CHART_TYPE.capitalize(), value: BAR_CHART_TYPE },
+    { name: PIE_CHART_TYPE.capitalize(), value: PIE_CHART_TYPE }
+  ],
 
   init() {
     this._super(...arguments);
     this._setupPoll();
-  },
-
-  @computed("barTypeIdentifier", "pieTypeIdentifier")
-  pollChartTypes(barTypeIdentifier, pieTypeIdentifier) {
-    return [
-      { name: barTypeIdentifier.capitalize(), value: barTypeIdentifier },
-      { name: pieTypeIdentifier.capitalize(), value: pieTypeIdentifier }
-    ];
   },
 
   @computed("regularPollType", "numberPollType", "multiplePollType")
@@ -48,9 +45,9 @@ export default Controller.extend({
     ];
   },
 
-  @computed("chartType", "pollType", "numberPollType", "pieTypeIdentifier")
-  isPie(chartType, pollType, numberPollType, pieTypeIdentifier) {
-    return pollType !== numberPollType && chartType === pieTypeIdentifier;
+  @computed("chartType", "pollType", "numberPollType")
+  isPie(chartType, pollType, numberPollType) {
+    return pollType !== numberPollType && chartType === PIE_CHART_TYPE;
   },
 
   @computed(
@@ -325,7 +322,7 @@ export default Controller.extend({
       pollMax: null,
       pollStep: 1,
       autoClose: false,
-      chartType: "bar",
+      chartType: BAR_CHART_TYPE,
       date: moment()
         .add(1, "day")
         .format("YYYY-MM-DD"),

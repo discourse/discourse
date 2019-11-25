@@ -12,6 +12,7 @@ import loadScript from "discourse/lib/load-script";
 import { getColors } from "../lib/chart-colors";
 import { later } from "@ember/runloop";
 import { classify } from "@ember/string";
+import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
 
 function optionHtml(option) {
   const $node = $(`<span>${option.html}</span>`);
@@ -328,7 +329,7 @@ createWidget("discourse-poll-container", {
     if (attrs.showResults) {
       const type = poll.get("type") === "number" ? "number" : "standard";
       const resultsWidget =
-        type === "number" || attrs.poll.chart_type !== "pie"
+        type === "number" || attrs.poll.chart_type !== PIE_CHART_TYPE
           ? `discourse-poll-${type}-results`
           : "discourse-poll-pie-chart";
       return this.attach(resultsWidget, attrs);
@@ -445,17 +446,26 @@ createWidget("discourse-poll-grouped-pies", {
     let contents = [];
 
     contents.push(
-      h(
-        `select#${fieldSelectId}.poll-group-by-selector`,
-        { value: attrs.groupBy },
-        attrs.groupableUserFields.map(field => {
-          return h(
-            "option",
-            { value: field },
-            transformUserFieldToLabel(field)
-          );
-        })
-      )
+      h("div.poll-grouped-pies-controls", [
+        this.attach("button", {
+          className: "btn-default poll-group-by-toggle",
+          label: "poll.ungroup-results.label",
+          title: "poll.ungroup-results.title",
+          icon: "far-eye-slash",
+          action: "toggleGroupedPieCharts"
+        }),
+        h(
+          `select#${fieldSelectId}.poll-group-by-selector`,
+          { value: attrs.groupBy },
+          attrs.groupableUserFields.map(field => {
+            return h(
+              "option",
+              { value: field },
+              transformUserFieldToLabel(field)
+            );
+          })
+        )
+      ])
     );
 
     contents.push(h("div.clearfix"));
@@ -561,15 +571,6 @@ createWidget("discourse-poll-pie-chart", {
     let btn;
     let chart;
     if (attrs.groupResults && attrs.groupableUserFields.length > 0) {
-      btn = h("div", [
-        this.attach("button", {
-          className: "btn-default poll-group-by-toggle",
-          label: "poll.ungroup-results.label",
-          title: "poll.ungroup-results.title",
-          icon: "far-eye-slash",
-          action: "toggleGroupedPieCharts"
-        })
-      ]);
       chart = this.attach("discourse-poll-grouped-pies", attrs);
       clearPieChart(this.attrs.id);
     } else {
@@ -604,7 +605,7 @@ createWidget("discourse-poll-pie-chart", {
 
 function pieChartConfig(data, labels, aspectRatio = 2.0) {
   return {
-    type: "pie",
+    type: PIE_CHART_TYPE,
     data: {
       datasets: [
         {
@@ -759,7 +760,7 @@ export default createWidget("discourse-poll", {
 
   buildAttributes(attrs) {
     let cssClasses = "poll";
-    if (attrs.poll.chart_type === "pie") cssClasses += " pie";
+    if (attrs.poll.chart_type === PIE_CHART_TYPE) cssClasses += " pie";
     return {
       class: cssClasses,
       "data-poll-name": attrs.poll.get("name"),

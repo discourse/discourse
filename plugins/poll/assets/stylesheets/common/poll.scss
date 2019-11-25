@@ -120,18 +120,22 @@ div.poll {
     }
   }
 
+  .poll-grouped-pies-controls {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .poll-results-chart {
     height: 310px;
     overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .poll-group-by-toggle {
-    float: left;
     margin-bottom: 10px;
   }
 
   .poll-group-by-selector {
-    float: right;
     height: 30px;
   }
 
