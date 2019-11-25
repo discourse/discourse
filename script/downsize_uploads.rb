@@ -11,6 +11,9 @@ dimensions_count = 0
 downsized_count = 0
 
 def downsize_upload(upload, path, max_image_pixels)
+  # Make sure the filesize is up to date
+  upload.filesize = File.size(path)
+
   OptimizedImage.downsize(path, path, "#{max_image_pixels}@", filename: upload.original_filename)
 
   # Neither #dup or #clone provide a complete copy
