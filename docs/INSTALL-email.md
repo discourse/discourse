@@ -19,6 +19,7 @@ Enter these values when prompted by `./discourse-setup` per the [install guide](
     SMTP server address? smtp.sendgrid.net
     SMTP user name?      apikey
     SMTP password?       [SendGrid API Key]
+    SMTP port?           2525
 
 We recommend creating an [API Key][sg2] instead of using your SendGrid username and password.
 
