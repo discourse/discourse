@@ -1,5 +1,6 @@
 import { acceptance } from "helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { Promise } from "rsvp";
 
 acceptance("Rendering polls with pie charts - desktop", {
   loggedIn: true,
@@ -118,5 +119,10 @@ test("Polls", async assert => {
     find(".poll-grouped-pie-container").length,
     2,
     "Renders a chart for each of the groups in group_results response"
+  );
+
+  assert.ok(
+    find(".poll-grouped-pie-container > canvas")[0].$chartjs,
+    "$chartjs is defined on the pie charts"
   );
 });
