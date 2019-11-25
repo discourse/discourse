@@ -138,8 +138,8 @@ describe Post do
     context 'a post with notices' do
       let(:post) {
         post = Fabricate(:post, post_args)
-        post.custom_fields["notice_type"] = Post.notices[:returning_user]
-        post.custom_fields["notice_args"] = 1.day.ago
+        post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:returning_user]
+        post.custom_fields[Post::NOTICE_ARGS] = 1.day.ago
         post.save_custom_fields
         post
       }

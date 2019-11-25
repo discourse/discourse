@@ -1358,10 +1358,10 @@ describe PostCreator do
 
     it "generates post notices for new users" do
       post = PostCreator.create!(user, title: "one of my first topics", raw: "one of my first posts")
-      expect(post.custom_fields["notice_type"]).to eq("new_user")
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:new_user])
 
       post = PostCreator.create!(user, title: "another one of my first topics", raw: "another one of my first posts")
-      expect(post.custom_fields["notice_type"]).to eq(nil)
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
     end
 
     it "generates post notices for returning users" do
@@ -1369,12 +1369,12 @@ describe PostCreator do
       old_post = Fabricate(:post, user: user, created_at: 31.days.ago)
 
       post = PostCreator.create!(user, title: "this is a returning topic", raw: "this is a post")
-      expect(post.custom_fields["notice_type"]).to eq(Post.notices[:returning_user])
-      expect(post.custom_fields["notice_args"]).to eq(old_post.created_at.iso8601)
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:returning_user])
+      expect(post.custom_fields[Post::NOTICE_ARGS]).to eq(old_post.created_at.iso8601)
 
       post = PostCreator.create!(user, title: "this is another topic", raw: "this is my another post")
-      expect(post.custom_fields["notice_type"]).to eq(nil)
-      expect(post.custom_fields["notice_args"]).to eq(nil)
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+      expect(post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
     end
 
     it "does not generate for non-human, staged or anonymous users" do
@@ -1383,8 +1383,8 @@ describe PostCreator do
       [anonymous, Discourse.system_user, staged].each do |user|
         expect(user.posts.size).to eq(0)
         post = PostCreator.create!(user, title: "#{user.username}'s first topic", raw: "#{user.name}'s first post")
-        expect(post.custom_fields["notice_type"]).to eq(nil)
-        expect(post.custom_fields["notice_args"]).to eq(nil)
+        expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+        expect(post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
       end
     end
   end
