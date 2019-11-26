@@ -96,3 +96,18 @@ button.ru {
     margin-left: 10px;
   }
 }
+
+.backup-options {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  button {
+    margin-right: 0.5em;
+  }
+  .backup-message {
+    margin-left: auto;
+    @include breakpoint(mobile-extra-large) {
+      margin: 1.25em 0 0;
+    }
+  }
+}
