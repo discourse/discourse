@@ -547,12 +547,9 @@ createWidget("discourse-poll-pie-canvas", {
       const labels = attrs.poll.options.mapBy("html");
       const config = pieChartConfig(data, labels);
 
-
-        const el = document.getElementById(
-          `poll-results-chart-${attrs.id}`
-        );
-        // eslint-disable-next-line
-        new Chart(el.getContext("2d"), config);
+      const el = document.getElementById(`poll-results-chart-${attrs.id}`);
+      // eslint-disable-next-line
+      new Chart(el.getContext("2d"), config);
     });
   },
 
