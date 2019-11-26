@@ -1021,6 +1021,19 @@ describe Email::Receiver do
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
     end
 
+    it "creates hidden topic for failed Authentication-Results header" do
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:dmarc_fail) }.to change { Topic.count }.by(1) # Topic created
+
+      topic = Topic.last
+      expect(topic.visible).to eq(false)
+
+      post = Post.last
+      expect(post.hidden).to eq(true)
+      expect(post.hidden_at).not_to eq(nil)
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_authentication_result_header])
+    end
+
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
 
