@@ -3137,8 +3137,8 @@ en:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
     too_many_sessions:
-      one: You were logged in to more than %{limit} devices. The oldest %{count} session has been logged out. Review recently used devices in your <a href="%{url}">account preferences</a>.
-      other: You were logged in to more than %{limit} devices. The oldest %{count} sessions have been logged out. Review recently used devices in your <a href="%{url}">account preferences</a>.
+      one: You were logged in to more than %{limit} devices. The oldest session has been logged out. You can review your recently used devices in your <a href="%{url}">account preferences</a>.
+      other: You were logged in to more than %{limit} devices. The oldest %{count} sessions have been logged out. You can review your recently used devices in your <a href="%{url}">account preferences</a>.
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

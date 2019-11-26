@@ -602,9 +602,6 @@ describe Auth::DefaultCurrentUserProvider do
       }
     end)
 
-    # Has 2 more sessions than allowed
-    expect(UserAuthToken.where(user_id: user.id).count).to eq(UserAuthToken::MAX_SESSION_COUNT + 2)
-
     # Check the oldest 3 still exist
     expect(UserAuthToken.where(auth_token: (1..3).map { |i| "abc#{i}" }).count).to eq(3)
 

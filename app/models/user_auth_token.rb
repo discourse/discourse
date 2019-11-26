@@ -228,9 +228,7 @@ class UserAuthToken < ActiveRecord::Base
       where('rotated_at > ?', SiteSetting.maximum_session_age.hours.ago).
       order("rotated_at DESC").offset(MAX_SESSION_COUNT)
 
-    count = tokens_to_destroy.delete_all # Returns the number of deleted rows
-
-    count
+    tokens_to_destroy.delete_all # Returns the number of deleted rows
   end
 end
 
