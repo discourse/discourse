@@ -547,13 +547,12 @@ createWidget("discourse-poll-pie-canvas", {
       const labels = attrs.poll.options.mapBy("html");
       const config = pieChartConfig(data, labels);
 
-      Ember.run.schedule("afterRender", () => {
+
         const el = document.getElementById(
           `poll-results-chart-${attrs.id}`
         );
         // eslint-disable-next-line
         new Chart(el.getContext("2d"), config);
-      });
     });
   },
 
