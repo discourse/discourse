@@ -23,10 +23,25 @@ class Admin::ThemesController < Admin::AdminController
         if upload.errors.count > 0
           render_json_error upload
         else
+          if upload.secure?
+            if params[:mark_upload_insecure].blank?
+              return render json: { upload_id: upload.id, prompt_mark_insecure: true }, status: :accepted
+            else
+              mark_upload_insecure(upload)
+            end
+          end
           render json: { upload_id: upload.id }, status: :created
         end
       end
     end
+  end
+
+  def mark_upload_insecure(upload)
+    upload.update_secure_status(secure_override: false)
+    StaffActionLogger.new(current_user).log_change_upload_secure_status(
+      upload_id: upload.id,
+      new_value: false
+    )
   end
 
   def generate_key_pair

@@ -37,6 +37,42 @@ describe Admin::ThemesController do
       expect(upload.id).not_to be_nil
       expect(JSON.parse(response.body)["upload_id"]).to eq(upload.id)
     end
+
+    context "when trying to upload an existing file" do
+      let(:uploaded_file) { Upload.find_by(original_filename: "fake.woff2") }
+      let(:response_json) { JSON.parse(response.body) }
+
+      before do
+        post "/admin/themes/upload_asset.json", params: { file: upload }
+        expect(response.status).to eq(201)
+      end
+
+      context "if the file is secure media" do
+        before do
+          uploaded_file.update_secure_status(secure_override: true)
+          upload.rewind
+        end
+
+        context "when mark_upload_insecure param is blank" do
+          it "returns a response with prompt_mark_insecure" do
+            post "/admin/themes/upload_asset.json", params: { file: upload }
+            expect(response.status).to eq(202)
+            expect(response_json["upload_id"]).to eq(uploaded_file.id)
+            expect(response_json["prompt_mark_insecure"]).to eq(true)
+          end
+        end
+
+        context "when mark_upload_insecure param is true" do
+          it "marks the upload as not secure" do
+            post "/admin/themes/upload_asset.json", params: { file: upload, mark_upload_insecure: true }
+            expect(response.status).to eq(201)
+            expect(response_json["upload_id"]).to eq(uploaded_file.id)
+            uploaded_file.reload
+            expect(uploaded_file.secure).to eq(false)
+          end
+        end
+      end
+    end
   end
 
   describe '#export' do

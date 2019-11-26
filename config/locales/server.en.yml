@@ -971,6 +971,9 @@ en:
     topic_description: "To re-subscribe to %{link}, use the notification control at the bottom or right of the topic."
     private_topic_description: "To re-subscribe, use the notification control at the bottom or right of the topic."
 
+  uploads:
+    marked_insecure_from_theme_component_reason: "upload used in theme component"
+
   unsubscribe:
     title: "Unsubscribe"
     stop_watching_topic: "Stop watching this topic, %{link}"
