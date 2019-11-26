@@ -586,10 +586,10 @@ describe Auth::DefaultCurrentUserProvider do
     expect(UserAuthToken.where(user_id: user.id).count).to eq(2)
   end
 
-  it "logging on user cleans up old sessions" do
+  it "cleans up old sessions when a user logs in" do
     user = Fabricate(:user)
 
-    yesterday = Time.zone.now - 1.day
+    yesterday = 1.day.ago
 
     UserAuthToken.insert_all((1..(UserAuthToken::MAX_SESSION_COUNT + 2)).to_a.map do |i|
       {
