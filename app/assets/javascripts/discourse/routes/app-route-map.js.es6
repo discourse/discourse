@@ -22,44 +22,55 @@ export default function() {
   this.route("topicBySlugOrId", { path: "/t/:slugOrId", resetNamespace: true });
 
   this.route("discovery", { path: "/", resetNamespace: true }, function() {
+    // legacy route
+    this.route("topParentCategory", { path: "/c/:slug/l/top" });
+
     // top
     this.route("top");
-    this.route("topParentCategory", { path: "/c/:slug/l/top" });
-    this.route("topCategoryNone", { path: "/c/:slug/none/l/top" });
-    this.route("topCategory", { path: "/c/:parentSlug/:slug/l/top" });
+    this.route("topCategoryNone", {
+      path: "/c/*categorySlugPathWithID/none/l/top"
+    });
+    this.route("topCategory", { path: "/c/*categorySlugPathWithID/l/top" });
 
     // top by periods
     Site.currentProp("periods").forEach(period => {
       const top = "top" + period.capitalize();
-      this.route(top, { path: "/top/" + period });
+
+      // legacy route
       this.route(top + "ParentCategory", { path: "/c/:slug/l/top/" + period });
+
+      this.route(top, { path: "/top/" + period });
       this.route(top + "CategoryNone", {
-        path: "/c/:slug/none/l/top/" + period
+        path: "/c/*categorySlugPathWithID/none/l/top/" + period
       });
       this.route(top + "Category", {
-        path: "/c/:parentSlug/:slug/l/top/" + period
+        path: "/c/*categorySlugPathWithID/l/top/" + period
       });
     });
 
     // filters
     Site.currentProp("filters").forEach(filter => {
-      this.route(filter, { path: "/" + filter });
+      // legacy route
       this.route(filter + "ParentCategory", { path: "/c/:slug/l/" + filter });
+
+      this.route(filter, { path: "/" + filter });
       this.route(filter + "CategoryNone", {
-        path: "/c/:slug/none/l/" + filter
+        path: "/c/*categorySlugPathWithID/none/l/" + filter
       });
       this.route(filter + "Category", {
-        path: "/c/:parentSlug/:slug/l/" + filter
+        path: "/c/*categorySlugPathWithID/l/" + filter
       });
     });
 
     this.route("categories");
 
-    // default filter for a category
+    // legacy routes
     this.route("parentCategory", { path: "/c/:slug" });
-    this.route("categoryNone", { path: "/c/:slug/none" });
-    this.route("category", { path: "/c/:parentSlug/:slug" });
     this.route("categoryWithID", { path: "/c/:parentSlug/:slug/:id" });
+
+    // default filter for a category
+    this.route("categoryNone", { path: "/c/*categorySlugPathWithID/none" });
+    this.route("category", { path: "/c/*categorySlugPathWithID" });
   });
 
   this.route("groups", { resetNamespace: true, path: "/g" }, function() {
