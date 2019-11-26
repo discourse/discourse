@@ -10,7 +10,6 @@ import round from "discourse/lib/round";
 import { relativeAge } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
 import { getColors } from "../lib/chart-colors";
-import { later } from "@ember/runloop";
 import { classify } from "@ember/string";
 import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
 
@@ -542,6 +541,18 @@ function clearPieChart(id) {
 createWidget("discourse-poll-pie-canvas", {
   tagName: "canvas.poll-results-canvas",
 
+  init(attrs) {
+    loadScript("/javascripts/Chart.min.js").then(() => {
+      const data = attrs.poll.options.mapBy("votes");
+      const labels = attrs.poll.options.mapBy("html");
+      const config = pieChartConfig(data, labels);
+
+      const el = document.getElementById(`poll-results-chart-${attrs.id}`);
+      // eslint-disable-next-line
+      new Chart(el.getContext("2d"), config);
+    });
+  },
+
   buildAttributes(attrs) {
     return {
       id: `poll-results-chart-${attrs.id}`
@@ -555,7 +566,7 @@ createWidget("discourse-poll-pie-chart", {
     const contents = [];
 
     if (!attrs.showResults) {
-      clearPieChart(this.attrs.id);
+      clearPieChart(attrs.id);
       return contents;
     }
 
@@ -563,7 +574,7 @@ createWidget("discourse-poll-pie-chart", {
     let chart;
     if (attrs.groupResults && attrs.groupableUserFields.length > 0) {
       chart = this.attach("discourse-poll-grouped-pies", attrs);
-      clearPieChart(this.attrs.id);
+      clearPieChart(attrs.id);
     } else {
       if (attrs.groupableUserFields.length) {
         btn = this.attach("button", {
@@ -574,18 +585,7 @@ createWidget("discourse-poll-pie-chart", {
           action: "toggleGroupedPieCharts"
         });
       }
-      const data = attrs.poll.options.mapBy("votes");
-      const labels = attrs.poll.options.mapBy("html");
-      loadScript("/javascripts/Chart.min.js").then(() => {
-        later(() => {
-          const el = document.querySelector(
-            `#poll-results-chart-${this.attrs.id}`
-          );
-          const config = pieChartConfig(data, labels);
-          // eslint-disable-next-line
-          new Chart(el.getContext("2d"), config);
-        });
-      });
+
       chart = this.attach("discourse-poll-pie-canvas", attrs);
     }
     contents.push(btn);
