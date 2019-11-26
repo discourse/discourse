@@ -35,6 +35,7 @@ class PostCreator
   #                             call `enqueue_jobs` after the transaction is comitted.
   #   hidden_reason_id        - Reason for hiding the post (optional)
   #   skip_validations        - Do not validate any of the content in the post
+  #   draft_key               - the key of the draft we are creating (will be deleted on success)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -180,7 +181,9 @@ class PostCreator
         update_uploads_secure_status
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message
-        @post.advance_draft_sequence unless @opts[:import_mode]
+        if !@opts[:import_mode]
+          DraftSequence.next!(@user, draft_key)
+        end
         @post.save_reply_relationships
       end
     end
@@ -292,10 +295,13 @@ class PostCreator
 
   protected
 
+  def draft_key
+    @draft_key ||= @opts[:draft_key]
+    @draft_key ||= @topic ? "topic_#{@topic.id}" : "new_topic"
+  end
+
   def build_post_stats
     if PostCreator.track_post_stats
-      draft_key = @topic ? "topic_#{@topic.id}" : "new_topic"
-
       sequence = DraftSequence.current(@user, draft_key)
       revisions = Draft.where(sequence: sequence,
                               user_id: @user.id,

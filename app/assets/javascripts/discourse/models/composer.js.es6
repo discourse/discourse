@@ -57,7 +57,8 @@ const CLOSED = "closed",
     tags: "tags",
     featured_link: "featuredLink",
     shared_draft: "sharedDraft",
-    no_bump: "noBump"
+    no_bump: "noBump",
+    draft_key: "draftKey"
   },
   _edit_topic_serializer = {
     title: "topic.title",
