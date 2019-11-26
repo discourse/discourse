@@ -1,4 +1,3 @@
-import { isEmpty } from "@ember/utils";
 import { not, or, gt } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { iconHTML } from "discourse-common/lib/icon-library";
@@ -11,6 +10,7 @@ import showModal from "discourse/lib/show-modal";
 import { findAll } from "discourse/models/login-method";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
+import logout from "discourse/lib/logout";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
@@ -240,14 +240,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
         }
       )
         .then(() => {
-          if (!token) {
-            const redirect = this.siteSettings.logout_redirect;
-            if (isEmpty(redirect)) {
-              window.location = Discourse.getURL("/");
-            } else {
-              window.location.href = redirect;
-            }
-          }
+          if (!token) logout(); // All sessions revoked
         })
         .catch(popupAjaxError);
     },
