@@ -1374,7 +1374,8 @@ class Topic < ActiveRecord::Base
       post_type: Post.types[:regular]
     ).last || first_post
 
-    update!(bumped_at: post.created_at)
+    self.bumped_at = post.created_at
+    self.save(validate: false)
   end
 
   def auto_close_threshold_reached?
