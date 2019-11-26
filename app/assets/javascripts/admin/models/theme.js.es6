@@ -275,8 +275,7 @@ const Theme = RestModel.extend({
       parentThemes = [];
       this.set("parentThemes", parentThemes);
     }
-    parentThemes.removeObject(theme);
-    parentThemes.pushObject(theme);
+    parentThemes.addObject(theme);
   },
 
   @discourseComputed("name", "default")
