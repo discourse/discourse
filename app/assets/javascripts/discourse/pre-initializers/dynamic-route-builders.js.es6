@@ -20,6 +20,7 @@ export default {
     app.DiscoveryCategoryNoneRoute = buildCategoryRoute("default", {
       no_subcategories: true
     });
+    app.DiscoveryCategoryWithIDRoute = buildCategoryRoute("default");
 
     const site = Site.current();
     site.get("filters").forEach(filter => {

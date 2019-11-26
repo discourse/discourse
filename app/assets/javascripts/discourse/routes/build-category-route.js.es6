@@ -16,11 +16,46 @@ export default (filterArg, params) => {
   return DiscourseRoute.extend({
     queryParams,
 
+    serialize(modelParams) {
+      if (!modelParams.categorySlugPathWithID) {
+        modelParams.categorySlugPathWithID = [
+          modelParams.parentSlug,
+          modelParams.slug,
+          modelParams.id
+        ]
+          .filter(x => x)
+          .join("/");
+      }
+
+      return modelParams;
+    },
+
     model(modelParams) {
-      const category = Category.findBySlug(
-        modelParams.slug,
-        modelParams.parentSlug
-      );
+      modelParams = this.serialize(modelParams);
+
+      const parts = modelParams.categorySlugPathWithID.split("/");
+      let category = null;
+
+      if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
+        const id = parseInt(parts.pop(), 10);
+
+        category = Category.findByID(id);
+      } else {
+        const [slug, parentSlug] = [...parts].reverse();
+
+        category = Category.findBySlug(slug, parentSlug);
+
+        if (
+          !category &&
+          parts.length > 0 &&
+          parts[parts.length - 1].match(/^\d+-/)
+        ) {
+          const id = parseInt(parts.pop(), 10);
+
+          category = Category.findByID(id);
+        }
+      }
+
       if (category) {
         return { category };
       }
