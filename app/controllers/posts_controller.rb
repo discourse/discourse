@@ -671,7 +671,8 @@ class PostsController < ApplicationController
       :auto_track,
       :typing_duration_msecs,
       :composer_open_duration_msecs,
-      :visible
+      :visible,
+      :draft_key
     ]
 
     Post.plugin_permitted_create_params.each do |key, plugin|
