@@ -42,6 +42,7 @@ class Admin::ThemesController < Admin::AdminController
       upload_id: upload.id,
       new_value: false
     )
+    Jobs.enqueue(:rebake_posts_for_upload, id: upload.id)
   end
 
   def generate_key_pair

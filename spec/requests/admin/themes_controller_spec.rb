@@ -70,6 +70,12 @@ describe Admin::ThemesController do
             uploaded_file.reload
             expect(uploaded_file.secure).to eq(false)
           end
+
+          it "enqueues a job to rebake the posts for the upload" do
+            Jobs.expects(:enqueue).with(:rebake_posts_for_upload, id: uploaded_file.id)
+            post "/admin/themes/upload_asset.json", params: { file: upload, mark_upload_insecure: true }
+            expect(response.status).to eq(201)
+          end
         end
       end
     end
