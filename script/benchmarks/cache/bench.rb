@@ -79,3 +79,17 @@ end
 # redis get string marshal:    12789.2 i/s - same-ish: difference falls within error
 # Rails read cache string:    10486.4 i/s - 1.25x  slower
 # Discourse read cache string:    10457.1 i/s - 1.26x  slower
+#
+# After Cache re-write
+#
+# Comparison:
+#   redis setex string:    13390.9 i/s
+# redis setex marshal string:    13202.0 i/s - same-ish: difference falls within error
+# Discourse cache string:    12406.5 i/s - same-ish: difference falls within error
+#   Rails cache string:    12289.2 i/s - same-ish: difference falls within error
+#
+# Comparison:
+#     redis get string:    13589.6 i/s
+# redis get string marshal:    13118.3 i/s - same-ish: difference falls within error
+# Rails read cache string:    12482.2 i/s - same-ish: difference falls within error
+# Discourse read cache string:    12296.8 i/s - same-ish: difference falls within error
