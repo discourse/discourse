@@ -136,6 +136,14 @@ module Oneboxer
     Onebox::Matcher.new(url).oneboxed
   end
 
+  def self.recently_failed?(url)
+    Discourse.cache.read(onebox_failed_cache_key(url)).present?
+  end
+
+  def self.cache_failed!(url)
+    Discourse.cache.write(onebox_failed_cache_key(url), true, expires_in: 1.hour)
+  end
+
   private
 
   def self.preview_key(user_id)
@@ -148,6 +156,10 @@ module Oneboxer
 
   def self.onebox_cache_key(url)
     "onebox__#{url}"
+  end
+
+  def self.onebox_failed_cache_key(url)
+    "onebox_failed__#{url}"
   end
 
   def self.onebox_raw(url, opts = {})
