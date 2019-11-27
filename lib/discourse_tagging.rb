@@ -336,7 +336,7 @@ module DiscourseTagging
   end
 
   def self.staff_tag_names
-    tag_names = Discourse.cache.read(TAGS_STAFF_CACHE_KEY, tag_names)
+    tag_names = Discourse.cache.read(TAGS_STAFF_CACHE_KEY)
 
     if !tag_names
       tag_names = Tag.joins(tag_groups: :tag_group_permissions)

@@ -23,7 +23,7 @@ module Oneboxer
   end
 
   def self.ignore_redirects
-    @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', Discourse.base_url]
+    @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', 'http://vimeo.com', Discourse.base_url]
   end
 
   def self.force_get_hosts
@@ -51,7 +51,7 @@ module Oneboxer
   end
 
   def self.cached_onebox(url)
-    if c = Rails.cache.read(onebox_cache_key(url))
+    if c = Discourse.cache.read(onebox_cache_key(url))
       c[:onebox]
     end
   rescue => e
@@ -61,7 +61,7 @@ module Oneboxer
   end
 
   def self.cached_preview(url)
-    if c = Rails.cache.read(onebox_cache_key(url))
+    if c = Discourse.cache.read(onebox_cache_key(url))
       c[:preview]
     end
   rescue => e
@@ -71,7 +71,7 @@ module Oneboxer
   end
 
   def self.invalidate(url)
-    Rails.cache.delete(onebox_cache_key(url))
+    Discourse.cache.delete(onebox_cache_key(url))
   end
 
   # Parse URLs out of HTML, returning the document when finished.
@@ -281,7 +281,7 @@ module Oneboxer
   end
 
   def self.external_onebox(url)
-    Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
+    Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
       fd = FinalDestination.new(url,
                               ignore_redirects: ignore_redirects,
                               ignore_hostnames: blacklisted_domains,

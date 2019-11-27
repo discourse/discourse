@@ -800,7 +800,7 @@ describe SiteSettingExtension do
 
     it 'expires the cache' do
       settings.default_locale = 'zh_CN'
-      expect(Rails.cache.exist?(SiteSettingExtension.client_settings_cache_key)).to be_falsey
+      expect(Discourse.cache.exist?(SiteSettingExtension.client_settings_cache_key)).to be_falsey
     end
 
     it 'refreshes the client' do

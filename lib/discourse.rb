@@ -591,6 +591,7 @@ module Discourse
     SiteSetting.after_fork
     $redis._client.reconnect
     Rails.cache.reconnect
+    Discourse.cache.reconnect
     Logster.store.redis.reconnect
     # shuts down all connections in the pool
     Sidekiq.redis_pool.shutdown { |c| nil }

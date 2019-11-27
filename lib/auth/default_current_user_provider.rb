@@ -164,6 +164,9 @@ class Auth::DefaultCurrentUserProvider
     unstage_user(user)
     make_developer_admin(user)
     enable_bootstrap_mode(user)
+
+    UserAuthToken.enforce_session_count_limit!(user.id)
+
     @env[CURRENT_USER_KEY] = user
   end
 

@@ -9,6 +9,17 @@ describe Cache do
     Cache.new
   end
 
+  it "supports exist?" do
+    cache.write("testing", 1.1)
+    expect(cache.exist?("testing")).to eq(true)
+    expect(cache.exist?(SecureRandom.hex)).to eq(false)
+  end
+
+  it "supports float" do
+    cache.write("float", 1.1)
+    expect(cache.read("float")).to eq(1.1)
+  end
+
   it "supports fixnum" do
     cache.write("num", 1)
     expect(cache.read("num")).to eq(1)
@@ -31,9 +42,13 @@ describe Cache do
   end
 
   it "can delete correctly" do
+    cache.delete("key")
+
     cache.fetch("key", expires_in: 1.minute) do
       "test"
     end
+
+    expect(cache.fetch("key")).to eq("test")
 
     cache.delete("key")
     expect(cache.fetch("key")).to eq(nil)
@@ -64,6 +79,7 @@ describe Cache do
     r = cache.fetch "key" do
       "bob"
     end
+
     expect(r).to eq("bob")
   end
 
