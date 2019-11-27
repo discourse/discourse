@@ -80,17 +80,17 @@ export default Controller.extend({
 
   @discourseComputed("model.parentThemes.[]")
   parentThemesNames(parentThemes) {
-    return parentThemes.map(theme => theme.name);
+    return parentThemes.mapBy("name");
   },
 
-  @discourseComputed("allThemes")
+  @discourseComputed("allThemes.[]")
   availableParentThemes(allThemes) {
-    return allThemes.filter(theme => !theme.get("component"));
+    return allThemes.filterBy("component", false);
   },
 
   @discourseComputed("availableParentThemes")
   availableThemesNames(availableParentThemes) {
-    return availableParentThemes.map(theme => theme.name);
+    return availableParentThemes.mapBy("name");
   },
 
   @discourseComputed("model.component")
