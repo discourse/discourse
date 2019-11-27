@@ -16,11 +16,11 @@ export default function logout(siteSettings, keyValueStore) {
     return;
   }
 
-  const isSso = siteSettings.enable_sso;
-  const isOneAuthenticator =
+  const sso = siteSettings.enable_sso;
+  const oneAuthenticator =
     !siteSettings.enable_local_logins && findAll().length === 1;
 
-  if (siteSettings.login_required && (isSso || isOneAuthenticator)) {
+  if (siteSettings.login_required && (sso || oneAuthenticator)) {
     // In this situation visiting most URLs will start the auth process again
     // Go to the `/login` page to avoid an immediate redirect
     window.location.href = Discourse.getURL("/login");
