@@ -165,8 +165,7 @@ class Auth::DefaultCurrentUserProvider
     make_developer_admin(user)
     enable_bootstrap_mode(user)
 
-    destroyed_sessions = UserAuthToken.enforce_session_count_limit!(user.id)
-    session[:destroyed_session_count] = destroyed_sessions if destroyed_sessions > 0
+    UserAuthToken.enforce_session_count_limit!(user.id)
 
     @env[CURRENT_USER_KEY] = user
   end

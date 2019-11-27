@@ -8,7 +8,7 @@ class UserAuthToken < ActiveRecord::Base
   # used when token did not arrive at client
   URGENT_ROTATE_TIME = 1.minute
 
-  MAX_SESSION_COUNT = 100
+  MAX_SESSION_COUNT = 60
 
   USER_ACTIONS = ['generate']
 

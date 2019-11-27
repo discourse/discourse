@@ -606,10 +606,8 @@ describe Auth::DefaultCurrentUserProvider do
     expect(UserAuthToken.where(auth_token: (1..3).map { |i| "abc#{i}" }).count).to eq(3)
 
     # On next login, gets fixed
-    session = {}
-    provider('/').log_on_user(user, session, {})
+    provider('/').log_on_user(user, {}, {})
     expect(UserAuthToken.where(user_id: user.id).count).to eq(UserAuthToken::MAX_SESSION_COUNT)
-    expect(session[:destroyed_session_count]).to eq(3)
 
     # Oldest sessions are 1, 2, 3. They should now be deleted
     expect(UserAuthToken.where(auth_token: (1..3).map { |i| "abc#{i}" }).count).to eq(0)
