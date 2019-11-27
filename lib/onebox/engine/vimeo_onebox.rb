@@ -13,7 +13,6 @@ module Onebox
       HEIGHT ||= 360
 
       def placeholder_html
-        video_src = oembed_data[:video_id]
         ::Onebox::Helpers.video_placeholder_html
       end
 
