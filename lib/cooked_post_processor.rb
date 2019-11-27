@@ -38,6 +38,7 @@ class CookedPostProcessor
       post_process_oneboxes
       post_process_images
       post_process_quotes
+      update_uploads_secure_status
       optimize_urls
       remove_user_ids
       update_post_image
@@ -47,6 +48,12 @@ class CookedPostProcessor
       @post.link_post_uploads(fragments: @doc)
       DiscourseEvent.trigger(:post_process_cooked, @doc, @post)
       nil
+    end
+  end
+
+  def update_uploads_secure_status
+    if SiteSetting.secure_media? || SiteSetting.prevent_anons_from_downloading_files?
+      @post.update_uploads_secure_status
     end
   end
 
