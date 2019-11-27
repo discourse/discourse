@@ -6,24 +6,24 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      # only match private Vimeo video links
-      matches_regexp(/^https?:\/\/(www\.)?vimeo\.com\/\d+\/[^\/]+?$/)
+      matches_regexp(/^https?:\/\/(www\.)?vimeo\.com\/\d+/)
       always_https
 
       WIDTH  ||= 640
       HEIGHT ||= 360
 
       def placeholder_html
-        image_src = og_data.image_secure_url || og_data.image_url
-        "<img src='#{image_src}' width='#{WIDTH}' height='#{HEIGHT}' #{og_data.title_attr}>"
+        video_src = oembed_data[:video_id]
+        ::Onebox::Helpers.video_placeholder_html
       end
 
       def to_html
-        video_src = og_data.video_secure_url || og_data.video_url
-        if video_src.nil?
-          id = uri.path[/\/(\d+)/, 1]
-          video_src = "https://player.vimeo.com/video/#{id}"
+        video_id = oembed_data[:video_id]
+        if video_id.nil?
+          # for private videos
+          video_id = uri.path[/\/(\d+)/, 1]
         end
+        video_src = "https://player.vimeo.com/video/#{video_id}"
         video_src = video_src.gsub('autoplay=1', '').chomp("?")
         <<-HTML
           <iframe width="#{WIDTH}"
@@ -37,6 +37,13 @@ module Onebox
       end
 
       private
+
+      def oembed_data
+        response = Onebox::Helpers.fetch_response("https://vimeo.com/api/oembed.json?url=#{url}")
+        @oembed_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(response))
+      rescue
+        "{}"
+      end
 
       def og_data
         @og_data = get_opengraph
