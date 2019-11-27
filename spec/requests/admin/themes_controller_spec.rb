@@ -37,6 +37,37 @@ describe Admin::ThemesController do
       expect(upload.id).not_to be_nil
       expect(JSON.parse(response.body)["upload_id"]).to eq(upload.id)
     end
+
+    context "when trying to upload an existing file" do
+      let(:uploaded_file) { Upload.find_by(original_filename: "fake.woff2") }
+      let(:response_json) { JSON.parse(response.body) }
+
+      before do
+        post "/admin/themes/upload_asset.json", params: { file: upload }
+        expect(response.status).to eq(201)
+      end
+
+      context "if the file is secure media" do
+        before do
+          uploaded_file.update_secure_status(secure_override_value: true)
+          upload.rewind
+        end
+
+        it "marks the upload as not secure" do
+          post "/admin/themes/upload_asset.json", params: { file: upload }
+          expect(response.status).to eq(201)
+          expect(response_json["upload_id"]).to eq(uploaded_file.id)
+          uploaded_file.reload
+          expect(uploaded_file.secure).to eq(false)
+        end
+
+        it "enqueues a job to rebake the posts for the upload" do
+          Jobs.expects(:enqueue).with(:rebake_posts_for_upload, id: uploaded_file.id)
+          post "/admin/themes/upload_asset.json", params: { file: upload }
+          expect(response.status).to eq(201)
+        end
+      end
+    end
   end
 
   describe '#export' do

@@ -23,10 +23,22 @@ class Admin::ThemesController < Admin::AdminController
         if upload.errors.count > 0
           render_json_error upload
         else
+          # we assume a user intends to make some media public
+          # if they are uploading it to a theme component
+          mark_upload_insecure(upload) if upload.secure?
           render json: { upload_id: upload.id }, status: :created
         end
       end
     end
+  end
+
+  def mark_upload_insecure(upload)
+    upload.update_secure_status(secure_override_value: false)
+    StaffActionLogger.new(current_user).log_change_upload_secure_status(
+      upload_id: upload.id,
+      new_value: false
+    )
+    Jobs.enqueue(:rebake_posts_for_upload, id: upload.id)
   end
 
   def generate_key_pair
