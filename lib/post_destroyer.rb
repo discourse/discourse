@@ -39,11 +39,11 @@ class PostDestroyer
     end
   end
 
-  def self.delete_with_replies(performed_by, post, reviewable = nil)
+  def self.delete_with_replies(performed_by, post, reviewable = nil, defer_reply_flags: true)
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
     PostDestroyer.new(performed_by, post, reviewable: reviewable).destroy
-    replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
+    replies.each { |reply| PostDestroyer.new(performed_by, reply, defer_flags: defer_reply_flags).destroy }
   end
 
   def initialize(user, post, opts = {})
