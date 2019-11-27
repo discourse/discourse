@@ -56,7 +56,7 @@ describe OneboxController do
       stub_request(:get, url).to_return(status: 200, body: html).then.to_raise
 
       bypass_limiting
-      Rails.cache.delete("onebox__#{url}")
+      Discourse.cache.delete("onebox__#{url}")
       get "/onebox.json", params: { url: url }
       expect(response.status).to eq(200)
       expect(response.body).to include("Onebox1")

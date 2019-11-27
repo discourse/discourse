@@ -47,7 +47,7 @@ module Oneboxer
   end
 
   def self.cached_onebox(url)
-    if c = Rails.cache.read(onebox_cache_key(url))
+    if c = Discourse.cache.read(onebox_cache_key(url))
       c[:onebox]
     end
   rescue => e
@@ -57,7 +57,7 @@ module Oneboxer
   end
 
   def self.cached_preview(url)
-    if c = Rails.cache.read(onebox_cache_key(url))
+    if c = Discourse.cache.read(onebox_cache_key(url))
       c[:preview]
     end
   rescue => e
@@ -67,7 +67,7 @@ module Oneboxer
   end
 
   def self.invalidate(url)
-    Rails.cache.delete(onebox_cache_key(url))
+    Discourse.cache.delete(onebox_cache_key(url))
   end
 
   # Parse URLs out of HTML, returning the document when finished.
@@ -269,7 +269,7 @@ module Oneboxer
   end
 
   def self.external_onebox(url)
-    Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
+    Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
       fd = FinalDestination.new(url, ignore_redirects: ignore_redirects, ignore_hostnames: blacklisted_domains, force_get_hosts: force_get_hosts, preserve_fragment_url_hosts: preserve_fragment_url_hosts)
       uri = fd.resolve
       return blank_onebox if uri.blank? || blacklisted_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
