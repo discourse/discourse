@@ -112,7 +112,7 @@ class EmailController < ApplicationController
     else
 
       key = "unsub_#{SecureRandom.hex}"
-      $redis.setex key, 1.hour, user.email
+      Discourse.cache.write key, user.email, expires_in: 1.hour
 
       url = path("/email/unsubscribed?key=#{key}")
       if topic
@@ -125,7 +125,7 @@ class EmailController < ApplicationController
   end
 
   def unsubscribed
-    @email = $redis.get(params[:key])
+    @email = Discourse.cache.read(params[:key])
     @topic_id = params[:topic_id]
     user = User.find_by_email(@email)
     raise Discourse::NotFound unless user
