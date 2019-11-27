@@ -19,6 +19,7 @@ QUnit.test("load - failed onebox", async assert => {
   let element = document.createElement("A");
   element.setAttribute("href", "http://somebadurl.com");
 
+  // prettier-ignore
   server.get("/onebox", () => { //eslint-disable-line
     return [404, {}, {}];
   });
@@ -53,6 +54,7 @@ QUnit.test("load - successful onebox", async assert => {
     </aside>
   `;
 
+  // prettier-ignore
   server.get("/onebox", () => { //eslint-disable-line
     return [200, {}, html];
   });
