@@ -289,6 +289,18 @@ describe Upload do
   end
 
   describe '.update_secure_status' do
+    it "respects the secure_override_value parameter if provided" do
+      upload.update!(secure: true)
+
+      upload.update_secure_status(secure_override_value: true)
+
+      expect(upload.secure).to eq(true)
+
+      upload.update_secure_status(secure_override_value: false)
+
+      expect(upload.secure).to eq(false)
+    end
+
     it 'marks a local upload as not secure with default settings' do
       upload.update!(secure: true)
       expect { upload.update_secure_status }

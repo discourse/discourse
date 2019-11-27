@@ -3936,6 +3936,7 @@ en:
             api_key_create: "api key create"
             api_key_update: "api key update"
             api_key_destroy: "api key destroy"
+            override_upload_secure_status: "override upload secure status"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

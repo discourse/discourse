@@ -230,9 +230,9 @@ class Upload < ActiveRecord::Base
     self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
   end
 
-  def update_secure_status
+  def update_secure_status(secure_override_value: nil)
     return false if self.for_theme || self.for_site_setting
-    mark_secure = should_be_secure?
+    mark_secure = secure_override_value.nil? ? should_be_secure? : secure_override_value
 
     self.update_column("secure", mark_secure)
     Discourse.store.update_upload_ACL(self) if Discourse.store.external?
