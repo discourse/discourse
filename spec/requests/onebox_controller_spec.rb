@@ -4,6 +4,10 @@ require 'rails_helper'
 
 describe OneboxController do
 
+  before do
+    Discourse.cache.delete(Oneboxer.onebox_failed_cache_key(url))
+  end
+
   let(:url) { "http://google.com" }
 
   it "requires the user to be logged in" do
@@ -112,18 +116,33 @@ describe OneboxController do
     end
 
     describe "missing onebox" do
-      it "returns 404 if the onebox is nil" do
+      def stub_request_to_onebox_url(response_body)
         stub_request(:head, url)
-        stub_request(:get, url).to_return(body: nil).then.to_raise
+        stub_request(:get, url).to_return(body: response_body).then.to_raise
+      end
+
+      it "returns 404 if the onebox is nil" do
+        stub_request_to_onebox_url(nil)
         get "/onebox.json", params: { url: url, refresh: "true" }
         expect(response.response_code).to eq(404)
       end
 
       it "returns 404 if the onebox is an empty string" do
-        stub_request(:head, url)
-        stub_request(:get, url).to_return(body: " \t ").then.to_raise
+        stub_request_to_onebox_url(" \t ")
         get "/onebox.json", params: { url: url, refresh: "true" }
         expect(response.response_code).to eq(404)
+      end
+
+      it "cases missing onebox URLs so we do not attempt to preview again" do
+        stub_request_to_onebox_url(nil)
+        get "/onebox.json", params: { url: url, refresh: "true" }
+        expect(response.response_code).to eq(404)
+        Oneboxer.expects(:preview_onebox!).never
+        get "/onebox.json", params: { url: url, refresh: "true" }
+        expect(response.response_code).to eq(404)
+        expect(
+          Discourse.cache.read(Oneboxer.onebox_failed_cache_key(url))
+        ).not_to eq(nil)
       end
     end
 
