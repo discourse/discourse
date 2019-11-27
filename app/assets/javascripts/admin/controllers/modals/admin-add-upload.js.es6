@@ -4,7 +4,6 @@ import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
-import showModal from "discourse/lib/show-modal";
 import {
   default as discourseComputed,
   observes
@@ -127,24 +126,13 @@ export default Controller.extend(ModalFunctionality, {
       };
 
       options.data.append("file", file);
-      this.send("postUpload", options);
-    },
-
-    postUpload(options, markUploadInsecure = false) {
-      if (markUploadInsecure) {
-        options.data.append("mark_upload_insecure", true);
-      }
 
       ajax(this.uploadUrl, options)
         .then(result => {
-          if (result.prompt_mark_insecure) {
-            return this.send("promptMarkUploadInsecure", options);
-          }
-
           const upload = {
             upload_id: result.upload_id,
             name: this.name,
-            original_filename: options.data.get("file").name
+            original_filename: file.name
           };
           this.adminCustomizeThemesShow.send("addUpload", upload);
           this.send("closeModal");
@@ -152,21 +140,6 @@ export default Controller.extend(ModalFunctionality, {
         .catch(e => {
           popupAjaxError(e);
         });
-    },
-
-    promptMarkUploadInsecure(uploadAjaxOptions) {
-      this.send("closeModal");
-      return bootbox.confirm(
-        I18n.t("uploads.prompt_mark_insecure"),
-        I18n.t("uploads.no_leave_secure"),
-        I18n.t("uploads.yes_mark_insecure"),
-        result => {
-          if (result) {
-            return this.send("postUpload", uploadAjaxOptions, true);
-          }
-          showModal("admin-add-upload", { admin: true, name: "" });
-        }
-      );
     }
   }
 });

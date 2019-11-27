@@ -2396,11 +2396,6 @@ en:
         one: "(topic withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(topic withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
 
-    uploads:
-      prompt_mark_insecure: "This media file was already uploaded in a secure context. Would you like to mark the media as not secure? This will enable public access to the file if the URL for the file is known."
-      yes_mark_insecure: "Yes, mark upload as not secure"
-      no_leave_secure: "No, leave upload secure"
-
     post:
       quote_reply: "Quote"
       edit_reason: "Reason: "

@@ -53,29 +53,18 @@ describe Admin::ThemesController do
           upload.rewind
         end
 
-        context "when mark_upload_insecure param is blank" do
-          it "returns a response with prompt_mark_insecure" do
-            post "/admin/themes/upload_asset.json", params: { file: upload }
-            expect(response.status).to eq(202)
-            expect(response_json["upload_id"]).to eq(uploaded_file.id)
-            expect(response_json["prompt_mark_insecure"]).to eq(true)
-          end
+        it "marks the upload as not secure" do
+          post "/admin/themes/upload_asset.json", params: { file: upload }
+          expect(response.status).to eq(201)
+          expect(response_json["upload_id"]).to eq(uploaded_file.id)
+          uploaded_file.reload
+          expect(uploaded_file.secure).to eq(false)
         end
 
-        context "when mark_upload_insecure param is true" do
-          it "marks the upload as not secure" do
-            post "/admin/themes/upload_asset.json", params: { file: upload, mark_upload_insecure: true }
-            expect(response.status).to eq(201)
-            expect(response_json["upload_id"]).to eq(uploaded_file.id)
-            uploaded_file.reload
-            expect(uploaded_file.secure).to eq(false)
-          end
-
-          it "enqueues a job to rebake the posts for the upload" do
-            Jobs.expects(:enqueue).with(:rebake_posts_for_upload, id: uploaded_file.id)
-            post "/admin/themes/upload_asset.json", params: { file: upload, mark_upload_insecure: true }
-            expect(response.status).to eq(201)
-          end
+        it "enqueues a job to rebake the posts for the upload" do
+          Jobs.expects(:enqueue).with(:rebake_posts_for_upload, id: uploaded_file.id)
+          post "/admin/themes/upload_asset.json", params: { file: upload }
+          expect(response.status).to eq(201)
         end
       end
     end

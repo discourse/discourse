@@ -23,13 +23,9 @@ class Admin::ThemesController < Admin::AdminController
         if upload.errors.count > 0
           render_json_error upload
         else
-          if upload.secure?
-            if params[:mark_upload_insecure].blank?
-              return render json: { upload_id: upload.id, prompt_mark_insecure: true }, status: :accepted
-            else
-              mark_upload_insecure(upload)
-            end
-          end
+          # we assume a user intends to make some media public
+          # if they are uploading it to a theme component
+          mark_upload_insecure(upload) if upload.secure?
           render json: { upload_id: upload.id }, status: :created
         end
       end
