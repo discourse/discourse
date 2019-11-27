@@ -12,6 +12,17 @@ describe Oneboxer do
     expect(Oneboxer.onebox("http://boom.com")).to eq("")
   end
 
+  describe "#invalidate" do
+    let(:url) { "http://test.com" }
+    it "clears the cached preview for the onebox URL and the failed URL cache" do
+      Discourse.cache.write(Oneboxer.onebox_cache_key(url), "test")
+      Discourse.cache.write(Oneboxer.onebox_failed_cache_key(url), true)
+      Oneboxer.invalidate(url)
+      expect(Discourse.cache.read(Oneboxer.onebox_cache_key(url))).to eq(nil)
+      expect(Discourse.cache.read(Oneboxer.onebox_failed_cache_key(url))).to eq(nil)
+    end
+  end
+
   context "local oneboxes" do
 
     def link(url)

@@ -72,6 +72,7 @@ module Oneboxer
 
   def self.invalidate(url)
     Discourse.cache.delete(onebox_cache_key(url))
+    Discourse.cache.delete(onebox_failed_cache_key(url))
   end
 
   # Parse URLs out of HTML, returning the document when finished.
