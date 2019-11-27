@@ -389,12 +389,12 @@ login:
   enable_discord_logins:
     default: false
   discord_client_id:
-    default: ''
+    default: ""
   discord_secret:
-    default: ''
+    default: ""
     secret: true
   discord_trusted_guilds:
-    default: ''
+    default: ""
     type: list
   enable_sso:
     client: true
@@ -1344,7 +1344,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse"
     type: list
     list_type: compact
   crawler_check_bypass_agents:
@@ -2050,7 +2050,7 @@ api:
     default: 30
   retry_web_hook_events:
     default: false
-  api_key_last_used_epoch: 
+  api_key_last_used_epoch:
     default: "" # Value is added in a migration
     hidden: true
   revoke_api_keys_days:
