@@ -1,5 +1,11 @@
 import { makeArray } from "discourse-common/lib/helpers";
-import { empty, notEmpty, match } from "@ember/object/computed";
+import {
+  empty,
+  filterBy,
+  match,
+  mapBy,
+  notEmpty
+} from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { url } from "discourse/lib/computed";
@@ -15,6 +21,9 @@ export default Controller.extend({
   previewUrl: url("model.id", "/admin/themes/%@/preview"),
   addButtonDisabled: empty("selectedChildThemeId"),
   editRouteName: "adminCustomizeThemes.edit",
+  parentThemesNames: mapBy("model.parentThemes", "name"),
+  availableParentThemes: filterBy("allThemes", "component", false),
+  availableThemesNames: mapBy("availableParentThemes", "name"),
 
   @discourseComputed("model.editedFields")
   editedFieldsFormatted() {
@@ -76,21 +85,6 @@ export default Controller.extend({
         theme => theme.get("id") !== themeId && theme.get("component")
       );
     }
-  },
-
-  @discourseComputed("model.parentThemes.[]")
-  parentThemesNames(parentThemes) {
-    return parentThemes.mapBy("name");
-  },
-
-  @discourseComputed("allThemes.[]")
-  availableParentThemes(allThemes) {
-    return allThemes.filterBy("component", false);
-  },
-
-  @discourseComputed("availableParentThemes")
-  availableThemesNames(availableParentThemes) {
-    return availableParentThemes.mapBy("name");
   },
 
   @discourseComputed("model.component")
