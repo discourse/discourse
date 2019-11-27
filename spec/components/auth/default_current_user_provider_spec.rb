@@ -586,6 +586,33 @@ describe Auth::DefaultCurrentUserProvider do
     expect(UserAuthToken.where(user_id: user.id).count).to eq(2)
   end
 
+  it "cleans up old sessions when a user logs in" do
+    user = Fabricate(:user)
+
+    yesterday = 1.day.ago
+
+    UserAuthToken.insert_all((1..(UserAuthToken::MAX_SESSION_COUNT + 2)).to_a.map do |i|
+      {
+        user_id: user.id,
+        created_at: yesterday + i.seconds,
+        updated_at: yesterday + i.seconds,
+        rotated_at: yesterday + i.seconds,
+        prev_auth_token: "abc#{i}",
+        auth_token: "abc#{i}"
+      }
+    end)
+
+    # Check the oldest 3 still exist
+    expect(UserAuthToken.where(auth_token: (1..3).map { |i| "abc#{i}" }).count).to eq(3)
+
+    # On next login, gets fixed
+    provider('/').log_on_user(user, {}, {})
+    expect(UserAuthToken.where(user_id: user.id).count).to eq(UserAuthToken::MAX_SESSION_COUNT)
+
+    # Oldest sessions are 1, 2, 3. They should now be deleted
+    expect(UserAuthToken.where(auth_token: (1..3).map { |i| "abc#{i}" }).count).to eq(0)
+  end
+
   it "sets secure, same site lax cookies" do
     SiteSetting.force_https = false
     SiteSetting.same_site_cookies = "Lax"
