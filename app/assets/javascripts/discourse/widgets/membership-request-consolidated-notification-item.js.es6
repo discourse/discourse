@@ -13,13 +13,10 @@ createWidgetFrom(
     },
 
     text(notificationName, data) {
-      return I18n.t(
-        "notifications.membership_request_consolidated",
-        {
-          group_name: data.group_name,
-          count: parseInt(data.count, 10)
-        }
-      );
+      return I18n.t("notifications.membership_request_consolidated", {
+        group_name: data.group_name,
+        count: parseInt(data.count, 10)
+      });
     }
   }
 );
