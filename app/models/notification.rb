@@ -26,12 +26,8 @@ class Notification < ActiveRecord::Base
   after_commit :refresh_notification_count, on: [:create, :update, :destroy]
 
   after_commit(on: :create) do
-    consolidated = consolidate_membership_requests
-
-    unless consolidated
-      DiscourseEvent.trigger(:notification_created, self)
-      send_email
-    end
+    DiscourseEvent.trigger(:notification_created, self)
+    send_email unless consolidate_membership_requests
   end
 
   def self.ensure_consistency!
