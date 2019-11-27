@@ -1782,6 +1782,7 @@ en:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>New Topic</span> {{description}}"
       membership_request_accepted: "Membership accepted in '{{group_name}}'"
+      membership_request_consolidated: "{{count}} open membership requests for '{{group_name}}'"
 
       group_message_summary:
         one: "{{count}} message in your {{group_name}} inbox"
@@ -1820,6 +1821,7 @@ en:
         topic_reminder: "topic reminder"
         liked_consolidated: "new likes"
         post_approved: "post approved"
+        membership_request_consolidated: "new membership requests"
 
     upload_selector:
       title: "Add an image"

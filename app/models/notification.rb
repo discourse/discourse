@@ -4,6 +4,9 @@ class Notification < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
 
+  MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS = 24
+  MEMBERSHIP_REQUEST_CONSOLIDATION_THRESHOLD = 3
+
   validates_presence_of :data
   validates_presence_of :notification_type
 
@@ -20,11 +23,15 @@ class Notification < ActiveRecord::Base
 
   attr_accessor :skip_send_email
 
-  after_commit :send_email, on: :create
   after_commit :refresh_notification_count, on: [:create, :update, :destroy]
 
   after_commit(on: :create) do
-    DiscourseEvent.trigger(:notification_created, self)
+    consolidated = consolidate_membership_requests
+
+    unless consolidated
+      DiscourseEvent.trigger(:notification_created, self)
+      send_email
+    end
   end
 
   def self.ensure_consistency!
@@ -66,7 +73,8 @@ class Notification < ActiveRecord::Base
                         liked_consolidated: 19,
                         post_approved: 20,
                         code_review_commit_approved: 21,
-                        membership_request_accepted: 22
+                        membership_request_accepted: 22,
+                        membership_request_consolidated: 23
                        )
   end
 
@@ -224,6 +232,70 @@ class Notification < ActiveRecord::Base
 
   def send_email
     NotificationEmailer.process_notification(self) if !skip_send_email
+  end
+
+  private
+
+  def consolidate_membership_requests
+    return unless unread_pm?
+
+    post_id = data_hash[:original_post_id]
+    return if post_id.blank?
+
+    custom_field = PostCustomField.select(:value).find_by(post_id: post_id, name: "requested_group_id")
+    return if custom_field.blank?
+
+    group_id = custom_field.value.to_i
+    group_name = Group.select(:name).find_by(id: group_id)&.name
+    return if group_name.blank?
+
+    consolidation_window = MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS.hours.ago
+    timestamp = Time.zone.now
+    unread = user.notifications.unread
+
+    consolidated_notification = unread
+      .where("created_at > ? AND data::json ->> 'group_name' = ?", consolidation_window, group_name)
+      .find_by(notification_type: Notification.types[:membership_request_consolidated])
+
+    if consolidated_notification.present?
+      data = consolidated_notification.data_hash
+      data["count"] += 1
+
+      Notification.transaction do
+        consolidated_notification.update!(
+          data: data.to_json,
+          read: false,
+          updated_at: timestamp
+        )
+
+        destroy!
+      end
+
+      return true
+    end
+
+    notifications = unread
+      .where(notification_type: Notification.types[:private_message])
+      .where("created_at > ? AND data::json ->> 'topic_title' = ?", consolidation_window, data_hash[:topic_title])
+
+    return if notifications.count < MEMBERSHIP_REQUEST_CONSOLIDATION_THRESHOLD
+
+    Notification.transaction do
+      Notification.create!(
+        notification_type: Notification.types[:membership_request_consolidated],
+        user_id: user_id,
+        data: {
+          group_name: group_name,
+          count: notifications.count
+        }.to_json,
+        updated_at: timestamp,
+        created_at: timestamp
+      )
+
+      notifications.destroy_all
+    end
+
+    true
   end
 
 end

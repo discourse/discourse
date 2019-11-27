@@ -355,5 +355,49 @@ describe Notification do
         expect(Notification.recent_report(user)).to contain_exactly(notification)
       end
     end
+
+    describe '#consolidate_membership_requests' do
+      fab!(:group) { Fabricate(:group, name: "XXsssssddd") }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:post) { Fabricate(:post) }
+
+      def create_membership_request_notification
+        Notification.create(
+          notification_type: Notification.types[:private_message],
+          user_id: user.id,
+          data: {
+            topic_title: I18n.t('groups.request_membership_pm.title', group_name: group.name),
+            original_post_id: post.id
+          }.to_json,
+          updated_at: Time.zone.now,
+          created_at: Time.zone.now
+        )
+      end
+
+      before do
+        PostCustomField.create!(post_id: post.id, name: "requested_group_id", value: group.id)
+        create_membership_request_notification
+      end
+
+      it 'should consolidate membership requests to a new notification' do
+        notification = create_membership_request_notification
+        notification.reload
+
+        notification = create_membership_request_notification
+        expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+        notification = Notification.last
+        expect(notification.notification_type).to eq(Notification.types[:membership_request_consolidated])
+
+        data = notification.data_hash
+        expect(data[:group_name]).to eq(group.name)
+        expect(data[:count]).to eq(3)
+
+        notification = create_membership_request_notification
+        expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+        expect(Notification.last.data_hash[:count]).to eq(4)
+      end
+    end
   end
 end
