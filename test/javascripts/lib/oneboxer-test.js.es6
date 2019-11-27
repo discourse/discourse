@@ -1,6 +1,7 @@
 import { load } from "pretty-text/oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import { failedCache, localCache } from "pretty-text/oneboxer-cache";
+import { stringToHTML } from "helpers/html-helper";
 
 function loadOnebox(element) {
   return load({
@@ -42,11 +43,11 @@ QUnit.test("load - successful onebox", async assert => {
   const html = `
     <aside class="onebox whitelistedgeneric">
       <header class="source">
-          <a href="https://fibery.io/anxiety" target="_blank">fibery.io</a>
+          <a href="http://test.com/somepage" target="_blank">test.com</a>
       </header>
       <article class="onebox-body">
-      <div class="aspect-image" style="--aspect-ratio:690/362;"><img src="https://dev.discourse.org/secure-media-uploads/dev/original/3X/b/7/b70e7e81d5c283b8510df29536cbbcf2b01d06a4.png" class="thumbnail"></div>
-      <h3><a href="https://fibery.io/anxiety" target="_blank">Fibery</a></h3>
+      <div class="aspect-image" style="--aspect-ratio:690/362;"><img src="https://test.com/image.png" class="thumbnail"></div>
+      <h3><a href="http://test.com/somepage" target="_blank">Test Page</a></h3>
       <p>Yet another collaboration tool</p>
       </article>
       <div class="onebox-metadata"></div>
@@ -65,13 +66,13 @@ QUnit.test("load - successful onebox", async assert => {
   await loadOnebox(element);
 
   assert.equal(
-    localCache["http://somegoodurl.com"].html(),
-    $(html).html(),
+    localCache["http://somegoodurl.com"].prop("outerHTML"),
+    stringToHTML(html).outerHTML,
     "stores the html of the onebox in a local cache"
   );
   assert.equal(
     loadOnebox(element),
-    $(html)[0].outerHTML,
+    stringToHTML(html).outerHTML,
     "it returns the html from the cache"
   );
 });
