@@ -58,7 +58,7 @@ function show(image) {
     let inOnebox = false;
     let inQuote = false;
     for (let element = image; element; element = element.parentElement) {
-      if (element.tagName === "ARTICLE") {
+      if (element.tagName === "ARTICLE" && element.dataset.postId) {
         break;
       }
       if (element.classList.contains("onebox")) {
