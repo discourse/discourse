@@ -798,4 +798,28 @@ describe PostDestroyer do
     end
   end
 
+  describe '#delete_with_replies' do
+    let(:reporter) { Discourse.system_user }
+    fab!(:post) { Fabricate(:post) }
+
+    before do
+      reply = Fabricate(:post, topic: post.topic)
+      post.update(replies: [reply])
+      PostActionCreator.off_topic(reporter, post)
+
+      @reviewable_reply = PostActionCreator.off_topic(reporter, reply).reviewable
+    end
+
+    it 'ignores flagged replies' do
+      PostDestroyer.delete_with_replies(reporter, post)
+
+      expect(@reviewable_reply.reload.status).to eq Reviewable.statuses[:ignored]
+    end
+
+    it 'approves flagged replies' do
+      PostDestroyer.delete_with_replies(reporter, post, defer_reply_flags: false)
+
+      expect(@reviewable_reply.reload.status).to eq Reviewable.statuses[:approved]
+    end
+  end
 end
