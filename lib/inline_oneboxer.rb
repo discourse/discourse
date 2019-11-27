@@ -14,11 +14,11 @@ class InlineOneboxer
   end
 
   def self.purge(url)
-    Rails.cache.delete(cache_key(url))
+    Discourse.cache.delete(cache_key(url))
   end
 
   def self.cache_lookup(url)
-    Rails.cache.read(cache_key(url))
+    Discourse.cache.read(cache_key(url))
   end
 
   def self.lookup(url, opts = nil)
@@ -70,7 +70,7 @@ class InlineOneboxer
       title: title && Emoji.gsub_emoji_to_unicode(title)
     }
     unless opts[:skip_cache]
-      Rails.cache.write(cache_key(url), onebox, expires_in: 1.day)
+      Discourse.cache.write(cache_key(url), onebox, expires_in: 1.day)
     end
 
     onebox

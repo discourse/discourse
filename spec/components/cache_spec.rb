@@ -9,6 +9,11 @@ describe Cache do
     Cache.new
   end
 
+  it "supports float" do
+    cache.write("float", 1.1)
+    expect(cache.read("float")).to eq(1.1)
+  end
+
   it "supports fixnum" do
     cache.write("num", 1)
     expect(cache.read("num")).to eq(1)

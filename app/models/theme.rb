@@ -418,7 +418,7 @@ class Theme < ActiveRecord::Base
   end
 
   def cached_settings
-    Rails.cache.fetch("settings_for_theme_#{self.id}", expires_in: 30.minutes) do
+    Discourse.cache.fetch("settings_for_theme_#{self.id}", expires_in: 30.minutes) do
       hash = {}
       self.settings.each do |setting|
         hash[setting.name] = setting.value
@@ -438,7 +438,7 @@ class Theme < ActiveRecord::Base
   end
 
   def clear_cached_settings!
-    Rails.cache.delete("settings_for_theme_#{self.id}")
+    Discourse.cache.delete("settings_for_theme_#{self.id}")
   end
 
   def included_settings

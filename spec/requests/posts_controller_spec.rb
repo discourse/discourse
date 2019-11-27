@@ -862,18 +862,25 @@ describe PostsController do
         it "doesn't enqueue posts when user first creates a topic" do
           user.user_stat.update_column(:topic_count, 1)
 
+          Draft.set(user, "should_clear", 0, "{'a' : 'b'}")
+
           post "/posts.json", params: {
             raw: 'this is the test content',
             title: 'this is the test title for the topic',
             composer_open_duration_msecs: 204,
             typing_duration_msecs: 100,
-            topic_id: topic.id
+            topic_id: topic.id,
+            draft_key: "should_clear"
           }
 
           expect(response.status).to eq(200)
           parsed = ::JSON.parse(response.body)
 
           expect(parsed["action"]).not_to be_present
+
+          expect {
+            Draft.get(user, "should_clear", 0)
+          }.to raise_error(Draft::OutOfSequence)
         end
 
         it "doesn't enqueue replies when the topic is closed" do

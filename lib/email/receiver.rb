@@ -196,7 +196,14 @@ module Email
     end
 
     def hidden_reason_id
-      @hidden_reason_id ||= is_spam? ? Post.hidden_reasons[:email_spam_header_found] : nil
+      @hidden_reason_id ||=
+        if is_spam?
+          Post.hidden_reasons[:email_spam_header_found]
+        elsif auth_res_action == :hide
+          Post.hidden_reasons[:email_authentication_result_header]
+        else
+          nil
+        end
     end
 
     def log_and_validate_user(user)
@@ -306,6 +313,10 @@ module Email
       else
         false
       end
+    end
+
+    def auth_res_action
+      @auth_res_action ||= AuthenticationResults.new(@mail.header[:authentication_results]).action
     end
 
     def select_body

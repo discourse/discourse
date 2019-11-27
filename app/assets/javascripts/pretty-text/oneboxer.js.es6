@@ -86,7 +86,7 @@ function loadNext(ajax) {
           removeLoading = false;
           loadingQueue.unshift({ url, refresh, $elem, categoryId, topicId });
         } else {
-          setFailedCache[normalize(url)] = true;
+          setFailedCache(normalize(url), true);
         }
       }
     )
