@@ -49,7 +49,7 @@ describe Admin::ThemesController do
 
       context "if the file is secure media" do
         before do
-          uploaded_file.update_secure_status(secure_override: true)
+          uploaded_file.update_secure_status(secure_override_value: true)
           upload.rewind
         end
 

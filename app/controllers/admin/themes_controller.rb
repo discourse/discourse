@@ -33,7 +33,7 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def mark_upload_insecure(upload)
-    upload.update_secure_status(secure_override: false)
+    upload.update_secure_status(secure_override_value: false)
     StaffActionLogger.new(current_user).log_change_upload_secure_status(
       upload_id: upload.id,
       new_value: false

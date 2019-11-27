@@ -289,14 +289,14 @@ describe Upload do
   end
 
   describe '.update_secure_status' do
-    it "respects the secure_override parameter if provided" do
+    it "respects the secure_override_value parameter if provided" do
       upload.update!(secure: true)
 
-      upload.update_secure_status(secure_override: true)
+      upload.update_secure_status(secure_override_value: true)
 
       expect(upload.secure).to eq(true)
 
-      upload.update_secure_status(secure_override: false)
+      upload.update_secure_status(secure_override_value: false)
 
       expect(upload.secure).to eq(false)
     end
