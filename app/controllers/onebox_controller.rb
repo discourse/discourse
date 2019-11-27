@@ -19,7 +19,7 @@ class OneboxController < ApplicationController
     invalidate = params[:refresh] == 'true'
     url = params[:url]
 
-    return render(body: nil, status: 429) if Oneboxer.recently_failed?(url)
+    return render(body: nil, status: 404) if Oneboxer.recently_failed?(url)
 
     hijack do
       Oneboxer.preview_onebox!(user_id)

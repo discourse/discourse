@@ -137,8 +137,9 @@ describe OneboxController do
         stub_request_to_onebox_url(nil)
         get "/onebox.json", params: { url: url, refresh: "true" }
         expect(response.response_code).to eq(404)
+        Oneboxer.expects(:preview_onebox!).never
         get "/onebox.json", params: { url: url, refresh: "true" }
-        expect(response.response_code).to eq(429)
+        expect(response.response_code).to eq(404)
         expect(
           Discourse.cache.read(Oneboxer.onebox_failed_cache_key(url))
         ).not_to eq(nil)
