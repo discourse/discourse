@@ -1,6 +1,5 @@
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { escapeExpression } from "discourse/lib/utilities";
 
 export default Component.extend({
   classNames: ["watched-word"],
@@ -9,7 +8,7 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    this.set("watchedWord", `${escapeExpression(this.get("word.word"))}`);
+    this.set("watchedWord", this.get("word.word"));
   },
 
   click() {
