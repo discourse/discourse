@@ -269,6 +269,15 @@ const Theme = RestModel.extend({
     return this.saveChanges("child_theme_ids");
   },
 
+  addParentTheme(theme) {
+    let parentThemes = this.parentThemes;
+    if (!parentThemes) {
+      parentThemes = [];
+      this.set("parentThemes", parentThemes);
+    }
+    parentThemes.addObject(theme);
+  },
+
   @discourseComputed("name", "default")
   description: function(name, isDefault) {
     if (isDefault) {

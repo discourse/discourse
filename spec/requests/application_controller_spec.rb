@@ -374,7 +374,7 @@ RSpec.describe ApplicationController do
       expect(controller.theme_ids).to eq([theme2.id])
 
       theme2.update!(user_selectable: false, component: true)
-      theme.add_child_theme!(theme2)
+      theme.add_relative_theme!(:child, theme2)
       cookies['theme_ids'] = "#{theme.id},#{theme2.id}|#{user.user_option.theme_key_seq}"
 
       get "/"
