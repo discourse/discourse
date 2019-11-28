@@ -234,7 +234,7 @@ describe DiscourseTagging do
       category.update!(allow_global_tags: true)
       result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag.name, other_tag.name, 'hello'])
       expect(result).to eq(true)
-      expect(topic.tags.pluck(:name)).to contain_exactly(tag.name, 'hello') # failed
+      expect(topic.tags.pluck(:name)).to contain_exactly(tag.name, 'hello')
     end
 
     it 'raises an error if no tags could be updated' do
