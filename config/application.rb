@@ -243,7 +243,7 @@ module Discourse
     require 'logster/redis_store'
     # Use redis for our cache
     config.cache_store = DiscourseRedis.new_redis_store
-    Discourse.redis = DiscourseRedis.new
+    $redis = DiscourseRedis.new
     Logster.store = Logster::RedisStore.new(DiscourseRedis.new)
 
     # we configure rack cache on demand in an initializer

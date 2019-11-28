@@ -36,10 +36,6 @@ class Cache
     $redis
   end
 
-  def redis=(discourse_redis)
-    $redis ||= discourse_redis
-  end
-
   def reconnect
     redis.reconnect
   end
