@@ -709,6 +709,18 @@ export default Controller.extend({
         if (result.responseJson.action === "create_post") {
           this.appEvents.trigger("post:highlight", result.payload.post_number);
         }
+
+        if (result.responseJson.route_to) {
+          return this.destroyDraft().then(() => {
+            if (result.responseJson.message) {
+              return bootbox.alert(result.responseJson.message, () => {
+                DiscourseURL.routeTo(result.responseJson.route_to);
+              });
+            }
+            DiscourseURL.routeTo(result.responseJson.route_to);
+          });
+        }
+
         this.close();
 
         const currentUser = this.currentUser;
