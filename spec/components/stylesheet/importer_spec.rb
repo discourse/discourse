@@ -74,7 +74,7 @@ describe Stylesheet::Importer do
       t.component = true
       t.set_field(target: :extra_scss, name: "my_files/moremagic", value: child_scss)
       t.save!
-      theme.add_child_theme!(t)
+      theme.add_relative_theme!(:child, t)
     }}
 
     let(:importer) { described_class.new(theme: theme) }

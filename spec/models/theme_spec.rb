@@ -53,10 +53,15 @@ describe Theme do
 
     parent.save!
 
-    parent.add_child_theme!(child)
+    parent.add_relative_theme!(:child, child)
 
     expect(Theme.lookup_field(parent.id, :mobile, "header")).to eq("Common Parent\nMobile Parent\nWorldie\nMobile")
 
+  end
+
+  it 'can support parent themes' do
+    child.add_relative_theme!(:parent, theme)
+    expect(child.parent_themes).to eq([theme])
   end
 
   it "can automatically disable for mismatching version" do
@@ -74,7 +79,7 @@ describe Theme do
   end
 
   it '#transform_ids filters out disabled components' do
-    theme.add_child_theme!(child)
+    theme.add_relative_theme!(:child, child)
     expect(Theme.transform_ids([theme.id], extend: true)).to eq([theme.id, child.id])
     child.update!(enabled: false)
     expect(Theme.transform_ids([theme.id], extend: true)).to eq([theme.id])
@@ -85,11 +90,11 @@ describe Theme do
     grandparent = Fabricate(:theme, user: user)
 
     expect do
-      child.add_child_theme!(grandchild)
+      child.add_relative_theme!(:child, grandchild)
     end.to raise_error(Discourse::InvalidParameters, I18n.t("themes.errors.no_multilevels_components"))
 
     expect do
-      grandparent.add_child_theme!(theme)
+      grandparent.add_relative_theme!(:child, theme)
     end.to raise_error(Discourse::InvalidParameters, I18n.t("themes.errors.no_multilevels_components"))
   end
 
@@ -198,7 +203,7 @@ HTML
 
   describe "#switch_to_component!" do
     it "correctly converts a theme to component" do
-      theme.add_child_theme!(child)
+      theme.add_relative_theme!(:child, child)
       scheme = ColorScheme.create!(name: 'test')
       theme.update!(color_scheme_id: scheme.id, user_selectable: true)
       theme.set_default!
@@ -216,7 +221,7 @@ HTML
 
   describe "#switch_to_theme!" do
     it "correctly converts a component to theme" do
-      theme.add_child_theme!(child)
+      theme.add_relative_theme!(:child, child)
 
       child.switch_to_theme!
       theme.reload
@@ -236,8 +241,8 @@ HTML
     let!(:orphan4) { Fabricate(:theme, component: true) }
 
     before do
-      theme.add_child_theme!(child)
-      theme.add_child_theme!(child2)
+      theme.add_relative_theme!(:child, child)
+      theme.add_relative_theme!(:child, child2)
     end
 
     it "returns an empty array if no ids are passed" do
@@ -575,7 +580,7 @@ HTML
     child.set_field(target: :settings, name: "yaml", value: "integer_setting: 54")
 
     child.save!
-    theme.add_child_theme!(child)
+    theme.add_relative_theme!(:child, child)
 
     json = cached_settings(theme.id)
     expect(json).to match(/\"boolean_setting\":false/)

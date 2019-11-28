@@ -1,8 +1,11 @@
 <div class='setting-label'>
    <h3>{{unbound settingName}}</h3>
+   {{#if setting.defaultValues }}
+     <a onClick={{action 'setDefaultValues'}}>{{setting.setDefaultValuesLabel}}</a>
+   {{/if}}
 </div>
 <div class="setting-value">
-  {{component componentName setting=setting value=buffered.value validationMessage=validationMessage preview=preview isSecret=isSecret}}
+  {{component componentName setting=setting value=buffered.value validationMessage=validationMessage preview=preview isSecret=isSecret allowAny=allowAny}}
 </div>
 {{#if dirty}}
   <div class='setting-controls'>

@@ -138,7 +138,7 @@ describe SvgSprite do
     theme.update(component: true)
     theme.save!
     parent_theme = Fabricate(:theme)
-    parent_theme.add_child_theme!(theme)
+    parent_theme.add_relative_theme!(:child, theme)
     expect(SvgSprite.all_icons([parent_theme.id])).to include("dragon")
   end
 

@@ -176,19 +176,11 @@ class Admin::ThemesController < Admin::AdminController
     end
 
     if theme_params.key?(:child_theme_ids)
-      expected = theme_params[:child_theme_ids].map(&:to_i)
+      add_relative_themes!(:child, theme_params[:child_theme_ids])
+    end
 
-      @theme.child_theme_relation.to_a.each do |child|
-        if expected.include?(child.child_theme_id)
-          expected.reject! { |id| id == child.child_theme_id }
-        else
-          child.destroy
-        end
-      end
-
-      Theme.where(id: expected).each do |theme|
-        @theme.add_child_theme!(theme)
-      end
+    if theme_params.key?(:parent_theme_ids)
+      add_relative_themes!(:parent, theme_params[:parent_theme_ids])
     end
 
     set_fields
@@ -294,6 +286,26 @@ class Admin::ThemesController < Admin::AdminController
 
   private
 
+  def add_relative_themes!(kind, ids)
+    expected = ids.map(&:to_i)
+
+    relation = kind == :child ? @theme.child_theme_relation : @theme.parent_theme_relation
+
+    relation.to_a.each do |relative|
+      if kind == :child && expected.include?(relative.child_theme_id)
+        expected.reject! { |id| id == relative.child_theme_id }
+      elsif kind == :parent && expected.include?(relative.parent_theme_id)
+        expected.reject! { |id| id == relative.parent_theme_id }
+      else
+        relative.destroy
+      end
+    end
+
+    Theme.where(id: expected).each do |theme|
+      @theme.add_relative_theme!(kind, theme)
+    end
+  end
+
   def update_default_theme
     if theme_params.key?(:default)
       is_default = theme_params[:default].to_s == "true"
@@ -310,6 +322,7 @@ class Admin::ThemesController < Admin::AdminController
       begin
         # deep munge is a train wreck, work around it for now
         params[:theme][:child_theme_ids] ||= [] if params[:theme].key?(:child_theme_ids)
+        params[:theme][:parent_theme_ids] ||= [] if params[:theme].key?(:parent_theme_ids)
 
         params.require(:theme).permit(
           :name,
@@ -321,7 +334,8 @@ class Admin::ThemesController < Admin::AdminController
           settings: {},
           translations: {},
           theme_fields: [:name, :target, :value, :upload_id, :type_id],
-          child_theme_ids: []
+          child_theme_ids: [],
+          parent_theme_ids: []
         )
       end
   end
