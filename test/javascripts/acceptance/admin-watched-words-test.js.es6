@@ -32,12 +32,6 @@ QUnit.test("list words in groups", async assert => {
     "Always show the words when checkbox is checked."
   );
 
-  assert.equal(
-    $(find(".watched-words-list .watched-word")[2]).text(),
-    '<img src="x">',
-    "it should escape watched words"
-  );
-
   await click(".nav-stacked .censor a");
 
   assert.ok(exists(".watched-words-list"));
