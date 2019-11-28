@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Style/GlobalVars
 
 require 'cache'
 require 'open3'
@@ -491,7 +492,7 @@ module Discourse
       begin
         git_cmd = 'git rev-parse HEAD'
         self.try_git(git_cmd, Discourse::VERSION::STRING)
-      end
+      end # rubocop:disable Style/GlobalVars
   end
 
   def self.git_branch
@@ -837,3 +838,5 @@ module Discourse
     $redis
   end
 end
+
+# rubocop:enable Style/GlobalVars
