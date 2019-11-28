@@ -25,7 +25,13 @@ class MetadataController < ApplicationController
   private
 
   def default_manifest
-    display = Regexp.new(SiteSetting.pwa_display_browser_regex).match(request.user_agent) ? 'browser' : 'standalone'
+    display = "standalone"
+    if request.user_agent
+      regex = Regexp.new(SiteSetting.pwa_display_browser_regex)
+      if regex.match(request.user_agent)
+        display = "browser"
+      end
+    end
 
     manifest = {
       name: SiteSetting.title,
