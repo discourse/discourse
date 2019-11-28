@@ -33,28 +33,9 @@ export default (filterArg, params) => {
     model(modelParams) {
       modelParams = this.serialize(modelParams);
 
-      const parts = modelParams.category_slug_path_with_id.split("/");
-      let category = null;
-
-      if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
-        const id = parseInt(parts.pop(), 10);
-
-        category = Category.findById(id);
-      } else {
-        const [slug, parentSlug] = [...parts].reverse();
-
-        category = Category.findBySlug(slug, parentSlug);
-
-        if (
-          !category &&
-          parts.length > 0 &&
-          parts[parts.length - 1].match(/^\d+-/)
-        ) {
-          const id = parseInt(parts.pop(), 10);
-
-          category = Category.findById(id);
-        }
-      }
+      const category = Category.findBySlugPathWithID(
+        modelParams.category_slug_path_with_id
+      );
 
       if (category) {
         return { category };

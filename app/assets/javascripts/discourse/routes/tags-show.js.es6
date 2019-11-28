@@ -39,12 +39,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
 
     this.set("filterType", this.navMode.split("/")[0]);
 
-    if (params.category) {
-      this.set("categorySlug", params.category);
-    }
-    if (params.parent_category) {
-      this.set("parentCategorySlug", params.parent_category);
-    }
+    this.set("categorySlugPathWithID", params.category_slug_path_with_id);
 
     if (tag && tag.get("id") !== "none" && this.currentUser) {
       // If logged in, we should get the tag's user settings
@@ -64,31 +59,29 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     controller.set("loading", true);
 
     const params = filterQueryParams(transition.to.queryParams, {});
-    const categorySlug = this.categorySlug;
-    const parentCategorySlug = this.parentCategorySlug;
+    const category = this.categorySlugPathWithID
+      ? Category.findBySlugPathWithID(this.categorySlugPathWithID)
+      : null;
     const topicFilter = this.navMode;
     const tagId = tag ? tag.id.toLowerCase() : "none";
     let filter;
 
-    if (categorySlug) {
-      const category = Category.findBySlug(categorySlug, parentCategorySlug);
-      if (parentCategorySlug) {
-        filter = `tags/c/${parentCategorySlug}/${categorySlug}/${tagId}/l/${topicFilter}`;
-      } else if (this.noSubcategories) {
-        filter = `tags/c/${categorySlug}/none/${tagId}/l/${topicFilter}`;
-      } else {
-        filter = `tags/c/${categorySlug}/${tagId}/l/${topicFilter}`;
+    if (category) {
+      category.setupGroupsAndPermissions();
+      this.set("category", category);
+      filter = `tags/c/${Category.slugFor(category)}`;
+
+      if (this.noSubcategories) {
+        filter += "/none";
       }
-      if (category) {
-        category.setupGroupsAndPermissions();
-        this.set("category", category);
-      }
+
+      filter += `/${tagId}/l/${topicFilter}`;
     } else if (this.additionalTags) {
+      this.set("category", null);
       filter = `tags/intersection/${tagId}/${this.additionalTags.join("/")}`;
-      this.set("category", null);
     } else {
-      filter = `tags/${tagId}/l/${topicFilter}`;
       this.set("category", null);
+      filter = `tags/${tagId}/l/${topicFilter}`;
     }
 
     return findTopicList(this.store, this.topicTrackingState, filter, params, {
