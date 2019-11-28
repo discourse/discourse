@@ -28,9 +28,9 @@ export default function() {
     // top
     this.route("top");
     this.route("topCategoryNone", {
-      path: "/c/*categorySlugPathWithID/none/l/top"
+      path: "/c/*category_slug_path_with_id/none/l/top"
     });
-    this.route("topCategory", { path: "/c/*categorySlugPathWithID/l/top" });
+    this.route("topCategory", { path: "/c/*category_slug_path_with_id/l/top" });
 
     // top by periods
     Site.currentProp("periods").forEach(period => {
@@ -41,10 +41,10 @@ export default function() {
 
       this.route(top, { path: "/top/" + period });
       this.route(top + "CategoryNone", {
-        path: "/c/*categorySlugPathWithID/none/l/top/" + period
+        path: "/c/*category_slug_path_with_id/none/l/top/" + period
       });
       this.route(top + "Category", {
-        path: "/c/*categorySlugPathWithID/l/top/" + period
+        path: "/c/*category_slug_path_with_id/l/top/" + period
       });
     });
 
@@ -55,10 +55,10 @@ export default function() {
 
       this.route(filter, { path: "/" + filter });
       this.route(filter + "CategoryNone", {
-        path: "/c/*categorySlugPathWithID/none/l/" + filter
+        path: "/c/*category_slug_path_with_id/none/l/" + filter
       });
       this.route(filter + "Category", {
-        path: "/c/*categorySlugPathWithID/l/" + filter
+        path: "/c/*category_slug_path_with_id/l/" + filter
       });
     });
 
@@ -69,8 +69,8 @@ export default function() {
     this.route("categoryWithID", { path: "/c/:parentSlug/:slug/:id" });
 
     // default filter for a category
-    this.route("categoryNone", { path: "/c/*categorySlugPathWithID/none" });
-    this.route("category", { path: "/c/*categorySlugPathWithID" });
+    this.route("categoryNone", { path: "/c/*category_slug_path_with_id/none" });
+    this.route("category", { path: "/c/*category_slug_path_with_id" });
   });
 
   this.route("groups", { resetNamespace: true, path: "/g" }, function() {
