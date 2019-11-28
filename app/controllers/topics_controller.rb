@@ -449,7 +449,7 @@ class TopicsController < ApplicationController
     topic_status_update = topic.set_or_create_timer(
       status_type,
       params[:time],
-      options
+      **options
     )
 
     if topic.save

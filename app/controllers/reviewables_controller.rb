@@ -33,8 +33,8 @@ class ReviewablesController < ApplicationController
       filters[filter_key] = params[filter_key]
     end
 
-    total_rows = Reviewable.list_for(current_user, filters).count
-    reviewables = Reviewable.list_for(current_user, filters.merge(limit: PER_PAGE, offset: offset)).to_a
+    total_rows = Reviewable.list_for(current_user, **filters).count
+    reviewables = Reviewable.list_for(current_user, **filters.merge(limit: PER_PAGE, offset: offset)).to_a
 
     claimed_topics = ReviewableClaimedTopic.claimed_hash(reviewables.map { |r| r.topic_id }.uniq)
 

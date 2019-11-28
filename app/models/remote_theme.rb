@@ -146,7 +146,7 @@ class RemoteTheme < ActiveRecord::Base
     importer.all_files.each do |filename|
       next unless opts = ThemeField.opts_from_file_path(filename)
       value = importer[filename]
-      updated_fields << theme.set_field(opts.merge(value: value))
+      updated_fields << theme.set_field(**opts.merge(value: value))
     end
 
     # Destroy fields that no longer exist in the remote theme
