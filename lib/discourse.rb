@@ -832,4 +832,8 @@ module Discourse
   ensure
     @preloaded_rails = true
   end
+
+  def self.redis
+    $redis
+  end
 end
