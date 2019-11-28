@@ -17,8 +17,8 @@ export default (filterArg, params) => {
     queryParams,
 
     serialize(modelParams) {
-      if (!modelParams.categorySlugPathWithID) {
-        modelParams.categorySlugPathWithID = [
+      if (!modelParams.category_slug_path_with_id) {
+        modelParams.category_slug_path_with_id = [
           modelParams.parentSlug,
           modelParams.slug,
           modelParams.id
@@ -33,7 +33,7 @@ export default (filterArg, params) => {
     model(modelParams) {
       modelParams = this.serialize(modelParams);
 
-      const parts = modelParams.categorySlugPathWithID.split("/");
+      const parts = modelParams.category_slug_path_with_id.split("/");
       let category = null;
 
       if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
