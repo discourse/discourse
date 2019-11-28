@@ -39,7 +39,7 @@ export default (filterArg, params) => {
       if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
         const id = parseInt(parts.pop(), 10);
 
-        category = Category.findByID(id);
+        category = Category.findById(id);
       } else {
         const [slug, parentSlug] = [...parts].reverse();
 
@@ -52,7 +52,7 @@ export default (filterArg, params) => {
         ) {
           const id = parseInt(parts.pop(), 10);
 
-          category = Category.findByID(id);
+          category = Category.findById(id);
         }
       }
 
