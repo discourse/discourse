@@ -16,23 +16,23 @@ class SecureSession
 
   def set(key, val, expires: nil)
     expires ||= SecureSession.expiry
-    $redis.setex(prefixed_key(key), expires.to_i, val.to_s)
+    Discourse.redis.setex(prefixed_key(key), expires.to_i, val.to_s)
     true
   end
 
   def ttl(key)
-    $redis.ttl(prefixed_key(key))
+    Discourse.redis.ttl(prefixed_key(key))
   end
 
   def [](key)
-    $redis.get(prefixed_key(key))
+    Discourse.redis.get(prefixed_key(key))
   end
 
   def []=(key, val)
     if val == nil
-      $redis.del(prefixed_key(key))
+      Discourse.redis.del(prefixed_key(key))
     else
-      $redis.setex(prefixed_key(key), SecureSession.expiry.to_i, val.to_s)
+      Discourse.redis.setex(prefixed_key(key), SecureSession.expiry.to_i, val.to_s)
     end
     val
   end

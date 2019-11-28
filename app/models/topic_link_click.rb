@@ -102,8 +102,8 @@ class TopicLinkClick < ActiveRecord::Base
 
     # Rate limit the click counts to once in 24 hours
     rate_key = "link-clicks:#{link.id}:#{args[:user_id] || args[:ip]}"
-    if $redis.setnx(rate_key, "1")
-      $redis.expire(rate_key, 1.day.to_i)
+    if Discourse.redis.setnx(rate_key, "1")
+      Discourse.redis.expire(rate_key, 1.day.to_i)
       args[:ip] = nil if args[:user_id]
       create!(topic_link_id: link.id, user_id: args[:user_id], ip_address: args[:ip])
     end

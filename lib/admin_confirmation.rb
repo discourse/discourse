@@ -15,13 +15,13 @@ class AdminConfirmation
     guardian.ensure_can_grant_admin!(@target_user)
 
     @token = SecureRandom.hex
-    $redis.setex("admin-confirmation:#{@target_user.id}", 3.hours.to_i, @token)
+    Discourse.redis.setex("admin-confirmation:#{@target_user.id}", 3.hours.to_i, @token)
 
     payload = {
       target_user_id: @target_user.id,
       performed_by: @performed_by.id
     }
-    $redis.setex("admin-confirmation-token:#{@token}", 3.hours.to_i, payload.to_json)
+    Discourse.redis.setex("admin-confirmation-token:#{@token}", 3.hours.to_i, payload.to_json)
 
     Jobs.enqueue(
       :admin_confirmation_email,
@@ -38,16 +38,16 @@ class AdminConfirmation
 
     @target_user.grant_admin!
     StaffActionLogger.new(@performed_by).log_grant_admin(@target_user)
-    $redis.del "admin-confirmation:#{@target_user.id}"
-    $redis.del "admin-confirmation-token:#{@token}"
+    Discourse.redis.del "admin-confirmation:#{@target_user.id}"
+    Discourse.redis.del "admin-confirmation-token:#{@token}"
   end
 
   def self.exists_for?(user_id)
-    $redis.exists "admin-confirmation:#{user_id}"
+    Discourse.redis.exists "admin-confirmation:#{user_id}"
   end
 
   def self.find_by_code(token)
-    json = $redis.get("admin-confirmation-token:#{token}")
+    json = Discourse.redis.get("admin-confirmation-token:#{token}")
     return nil unless json
 
     parsed = JSON.parse(json)

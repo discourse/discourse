@@ -16,8 +16,8 @@ class WebCrawlerRequest < ActiveRecord::Base
 
   def self.increment!(user_agent, opts = nil)
     ua_list_key = user_agent_list_key
-    $redis.sadd(ua_list_key, user_agent)
-    $redis.expire(ua_list_key, 259200) # 3.days
+    Discourse.redis.sadd(ua_list_key, user_agent)
+    Discourse.redis.expire(ua_list_key, 259200) # 3.days
 
     perform_increment!(redis_key(user_agent), opts)
   end
@@ -34,7 +34,7 @@ class WebCrawlerRequest < ActiveRecord::Base
     date = date.to_date
     ua_list_key = user_agent_list_key(date)
 
-    while user_agent = $redis.spop(ua_list_key)
+    while user_agent = Discourse.redis.spop(ua_list_key)
       val = get_and_reset(redis_key(user_agent, date))
 
       next if val == 0
@@ -55,11 +55,11 @@ class WebCrawlerRequest < ActiveRecord::Base
 
     ua_list_key = user_agent_list_key(date)
 
-    while user_agent = $redis.spop(ua_list_key)
-      $redis.del redis_key(user_agent, date)
+    while user_agent = Discourse.redis.spop(ua_list_key)
+      Discourse.redis.del redis_key(user_agent, date)
     end
 
-    $redis.del(ua_list_key)
+    Discourse.redis.del(ua_list_key)
   end
 
   protected

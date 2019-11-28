@@ -40,9 +40,9 @@ class RandomTopicSelector
     key = cache_key(category)
 
     if results.present?
-      $redis.multi do
-        $redis.rpush(key, results)
-        $redis.expire(key, 2.days)
+      Discourse.redis.multi do
+        Discourse.redis.rpush(key, results)
+        Discourse.redis.expire(key, 2.days)
       end
     end
 
@@ -56,13 +56,13 @@ class RandomTopicSelector
 
     return results if count < 1
 
-    results = $redis.multi do
-      $redis.lrange(key, 0, count - 1)
-      $redis.ltrim(key, count, -1)
+    results = Discourse.redis.multi do
+      Discourse.redis.lrange(key, 0, count - 1)
+      Discourse.redis.ltrim(key, count, -1)
     end
 
     if !results.is_a?(Array) # Redis is in readonly mode
-      results = $redis.lrange(key, 0, count - 1)
+      results = Discourse.redis.lrange(key, 0, count - 1)
     else
       results = results[0]
     end
@@ -80,7 +80,7 @@ class RandomTopicSelector
       results = results[0...count]
     end
 
-    if !backfilled && $redis.llen(key) < BACKFILL_LOW_WATER_MARK
+    if !backfilled && Discourse.redis.llen(key) < BACKFILL_LOW_WATER_MARK
       Scheduler::Defer.later("backfill") do
         backfill(category)
       end
@@ -94,7 +94,7 @@ class RandomTopicSelector
   end
 
   def self.clear_cache!
-    $redis.delete_prefixed(cache_key)
+    Discourse.redis.delete_prefixed(cache_key)
   end
 
 end

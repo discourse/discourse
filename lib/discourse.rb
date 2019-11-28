@@ -378,9 +378,9 @@ module Discourse
 
   def self.enable_readonly_mode(key = READONLY_MODE_KEY)
     if key == USER_READONLY_MODE_KEY
-      $redis.set(key, 1)
+      Discourse.redis.set(key, 1)
     else
-      $redis.setex(key, READONLY_MODE_KEY_TTL, 1)
+      Discourse.redis.setex(key, READONLY_MODE_KEY_TTL, 1)
       keep_readonly_mode(key) if !Rails.env.test?
     end
 
@@ -406,7 +406,7 @@ module Discourse
             @mutex.synchronize do
               @dbs.each do |db|
                 RailsMultisite::ConnectionManagement.with_connection(db) do
-                  if !$redis.expire(key, READONLY_MODE_KEY_TTL)
+                  if !Discourse.redis.expire(key, READONLY_MODE_KEY_TTL)
                     @dbs.delete(db)
                   end
                 end
@@ -419,18 +419,18 @@ module Discourse
   end
 
   def self.disable_readonly_mode(key = READONLY_MODE_KEY)
-    $redis.del(key)
+    Discourse.redis.del(key)
     MessageBus.publish(readonly_channel, false)
     Site.clear_anon_cache!
     true
   end
 
   def self.readonly_mode?(keys = READONLY_KEYS)
-    recently_readonly? || $redis.mget(*keys).compact.present?
+    recently_readonly? || Discourse.redis.mget(*keys).compact.present?
   end
 
   def self.pg_readonly_mode?
-    $redis.get(PG_READONLY_MODE_KEY).present?
+    Discourse.redis.get(PG_READONLY_MODE_KEY).present?
   end
 
   # Shared between processes
@@ -444,23 +444,23 @@ module Discourse
   end
 
   def self.recently_readonly?
-    postgres_read_only = postgres_last_read_only[$redis.namespace]
-    redis_read_only = redis_last_read_only[$redis.namespace]
+    postgres_read_only = postgres_last_read_only[Discourse.redis.namespace]
+    redis_read_only = redis_last_read_only[Discourse.redis.namespace]
 
     (redis_read_only.present? && redis_read_only > 15.seconds.ago) ||
       (postgres_read_only.present? && postgres_read_only > 15.seconds.ago)
   end
 
   def self.received_postgres_readonly!
-    postgres_last_read_only[$redis.namespace] = Time.zone.now
+    postgres_last_read_only[Discourse.redis.namespace] = Time.zone.now
   end
 
   def self.received_redis_readonly!
-    redis_last_read_only[$redis.namespace] = Time.zone.now
+    redis_last_read_only[Discourse.redis.namespace] = Time.zone.now
   end
 
   def self.clear_readonly!
-    postgres_last_read_only[$redis.namespace] = redis_last_read_only[$redis.namespace] = nil
+    postgres_last_read_only[Discourse.redis.namespace] = redis_last_read_only[Discourse.redis.namespace] = nil
     Site.clear_anon_cache!
     true
   end
@@ -589,7 +589,7 @@ module Discourse
     # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     MessageBus.after_fork
     SiteSetting.after_fork
-    $redis._client.reconnect
+    Discourse.redis._client.reconnect
     Rails.cache.reconnect
     Discourse.cache.reconnect
     Logster.store.redis.reconnect
@@ -737,10 +737,10 @@ module Discourse
     digest = Digest::MD5.hexdigest(warning)
     redis_key = "deprecate-notice-#{digest}"
 
-    if !$redis.without_namespace.get(redis_key)
+    if !Discourse.redis.without_namespace.get(redis_key)
       Rails.logger.warn(warning)
       begin
-        $redis.without_namespace.setex(redis_key, 3600, "x")
+        Discourse.redis.without_namespace.setex(redis_key, 3600, "x")
       rescue Redis::CommandError => e
         raise unless e.message =~ /READONLY/
       end

@@ -24,7 +24,7 @@ end
 
 MiniScheduler.configure do |config|
 
-  config.redis = $redis
+  config.redis = Discourse.redis
 
   config.job_exception_handler do |ex, context|
     Discourse.handle_job_exception(ex, context)

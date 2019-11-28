@@ -697,9 +697,9 @@ class UserNotifications < ActionMailer::Base
   def summary_new_users_count(min_date)
     min_date_str = min_date.is_a?(String) ? min_date : min_date.strftime('%Y-%m-%d')
     key = self.class.summary_new_users_count_key(min_date_str)
-    ((count = $redis.get(key)) && count.to_i) || begin
+    ((count = Discourse.redis.get(key)) && count.to_i) || begin
       count = User.real.where(active: true, staged: false).not_suspended.where("created_at > ?", min_date_str).count
-      $redis.setex(key, 1.day, count)
+      Discourse.redis.setex(key, 1.day, count)
       count
     end
   end

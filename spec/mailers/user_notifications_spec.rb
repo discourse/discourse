@@ -108,7 +108,7 @@ describe UserNotifications do
     subject { UserNotifications.digest(user) }
 
     after do
-      $redis.keys('summary-new-users:*').each { |key| $redis.del(key) }
+      Discourse.redis.keys('summary-new-users:*').each { |key| Discourse.redis.del(key) }
     end
 
     context "without new topics" do

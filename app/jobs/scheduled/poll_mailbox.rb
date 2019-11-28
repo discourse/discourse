@@ -43,15 +43,15 @@ module Jobs
         end
       end
     rescue Net::OpenTimeout => e
-      count = $redis.incr(POLL_MAILBOX_TIMEOUT_ERROR_KEY).to_i
+      count = Discourse.redis.incr(POLL_MAILBOX_TIMEOUT_ERROR_KEY).to_i
 
-      $redis.expire(
+      Discourse.redis.expire(
         POLL_MAILBOX_TIMEOUT_ERROR_KEY,
         SiteSetting.pop3_polling_period_mins.minutes * 3
       ) if count == 1
 
       if count > 3
-        $redis.del(POLL_MAILBOX_TIMEOUT_ERROR_KEY)
+        Discourse.redis.del(POLL_MAILBOX_TIMEOUT_ERROR_KEY)
         mark_as_errored!
         add_admin_dashboard_problem_message('dashboard.poll_pop3_timeout')
         Discourse.handle_job_exception(e, error_context(@args, "Connecting to '#{SiteSetting.pop3_polling_host}' for polling emails."))
@@ -65,13 +65,13 @@ module Jobs
     POLL_MAILBOX_ERRORS_KEY ||= "poll_mailbox_errors".freeze
 
     def self.errors_in_past_24_hours
-      $redis.zremrangebyscore(POLL_MAILBOX_ERRORS_KEY, 0, 24.hours.ago.to_i)
-      $redis.zcard(POLL_MAILBOX_ERRORS_KEY).to_i
+      Discourse.redis.zremrangebyscore(POLL_MAILBOX_ERRORS_KEY, 0, 24.hours.ago.to_i)
+      Discourse.redis.zcard(POLL_MAILBOX_ERRORS_KEY).to_i
     end
 
     def mark_as_errored!
       now = Time.now.to_i
-      $redis.zadd(POLL_MAILBOX_ERRORS_KEY, now, now.to_s)
+      Discourse.redis.zadd(POLL_MAILBOX_ERRORS_KEY, now, now.to_s)
     end
 
     def add_admin_dashboard_problem_message(i18n_key)

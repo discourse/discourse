@@ -50,11 +50,11 @@ module Jobs
     end
 
     def previous_newest_username
-      $redis.get previous_newest_username_cache_key
+      Discourse.redis.get previous_newest_username_cache_key
     end
 
     def previous_newest_username=(username)
-      $redis.setex previous_newest_username_cache_key, 7.days, username
+      Discourse.redis.setex previous_newest_username_cache_key, 7.days, username
     end
 
     def previous_newest_username_cache_key

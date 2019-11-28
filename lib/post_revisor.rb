@@ -265,11 +265,11 @@ class PostRevisor
   end
 
   def cached_original_raw
-    @cached_original_raw ||= $redis.get(original_raw_key)
+    @cached_original_raw ||= Discourse.redis.get(original_raw_key)
   end
 
   def cached_original_cooked
-    @cached_original_cooked ||= $redis.get(original_cooked_key)
+    @cached_original_cooked ||= Discourse.redis.get(original_cooked_key)
   end
 
   def original_raw
@@ -278,12 +278,12 @@ class PostRevisor
 
   def original_raw=(val)
     @cached_original_raw = val
-    $redis.setex(original_raw_key, SiteSetting.editing_grace_period + 1, val)
+    Discourse.redis.setex(original_raw_key, SiteSetting.editing_grace_period + 1, val)
   end
 
   def original_cooked=(val)
     @cached_original_cooked = val
-    $redis.setex(original_cooked_key, SiteSetting.editing_grace_period + 1, val)
+    Discourse.redis.setex(original_cooked_key, SiteSetting.editing_grace_period + 1, val)
   end
 
   def diff_size(before, after)

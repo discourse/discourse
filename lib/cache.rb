@@ -5,7 +5,7 @@
 # This is a bottom up implementation of ActiveSupport::Cache::Store
 # this allows us to cleanly implement without using cache entries and version
 # support which we do not use, in tern this makes the cache as fast as simply
-# using `$redis.setex` with a more convenient API
+# using `Discourse.redis.setex` with a more convenient API
 #
 # It only implements a subset of ActiveSupport::Cache::Store as we make no use
 # of large parts of the interface.
@@ -33,7 +33,7 @@ class Cache
   end
 
   def redis
-    $redis
+    Discourse.redis
   end
 
   def reconnect

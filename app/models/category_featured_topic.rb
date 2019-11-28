@@ -16,7 +16,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
 
     batch_size ||= DEFAULT_BATCH_SIZE
 
-    next_category_id = batched ? $redis.get(NEXT_CATEGORY_ID_KEY).to_i : 0
+    next_category_id = batched ? Discourse.redis.get(NEXT_CATEGORY_ID_KEY).to_i : 0
 
     categories = Category.select(:id, :topic_id, :num_featured_topics)
       .where('id >= ?', next_category_id)
@@ -27,7 +27,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
     if batched
       if categories.length == batch_size
         next_id = Category.where('id > ?', categories.last.id).order('id asc').limit(1).pluck(:id)[0]
-        next_id ? $redis.setex(NEXT_CATEGORY_ID_KEY, 1.day, next_id) : clear_batch!
+        next_id ? Discourse.redis.setex(NEXT_CATEGORY_ID_KEY, 1.day, next_id) : clear_batch!
       else
         clear_batch!
       end
@@ -39,7 +39,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
   end
 
   def self.clear_batch!
-    $redis.del(NEXT_CATEGORY_ID_KEY)
+    Discourse.redis.del(NEXT_CATEGORY_ID_KEY)
   end
 
   def self.feature_topics_for(c, existing = nil)

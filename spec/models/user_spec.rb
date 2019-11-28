@@ -979,7 +979,7 @@ describe User do
       end
 
       after do
-        $redis.flushall
+        Discourse.redis.flushall
       end
 
       it "updates last_seen_at" do

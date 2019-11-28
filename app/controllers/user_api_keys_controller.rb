@@ -205,7 +205,7 @@ class UserApiKeysController < ApplicationController
     raise Discourse::InvalidAccess unless UserApiKey.allowed_scopes.superset?(Set.new(["one_time_password"]))
 
     otp = SecureRandom.hex
-    $redis.setex "otp_#{otp}", 10.minutes, username
+    Discourse.redis.setex "otp_#{otp}", 10.minutes, username
 
     Base64.encode64(public_key.public_encrypt(otp))
   end
