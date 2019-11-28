@@ -73,15 +73,17 @@ $meta-element-margin: 6px;
   margin: auto;
 }
 
-@if is-light-color-scheme() {
-  a.lightbox {
-    -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-  }
+.discourse-no-touch {
+  @if is-light-color-scheme() {
+    a.lightbox {
+      -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+      transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
 
-  a.lightbox:hover {
-    border-radius: 5px;
-    box-shadow: 0 2px 5px 0 rgba($primary, 0.2),
-      0 2px 10px 0 rgba($primary, 0.2);
+    a.lightbox:hover {
+      border-radius: 5px;
+      box-shadow: 0 2px 5px 0 rgba($primary, 0.2),
+        0 2px 10px 0 rgba($primary, 0.2);
+    }
   }
 }
