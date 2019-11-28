@@ -34,7 +34,7 @@ QUnit.test("list words in groups", async assert => {
 
   assert.equal(
     $(find(".watched-words-list .watched-word")[2]).text(),
-    ' <img src="x">',
+    '<img src="x">',
     "it should escape watched words"
   );
 
