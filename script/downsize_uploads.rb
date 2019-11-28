@@ -57,6 +57,8 @@ def downsize_upload(upload, path, max_image_pixels)
   if new_file
     Discourse.store.remove_upload(original_upload)
   else
+    PostUpload.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
+
     User.where(uploaded_avatar_id: original_upload.id).update_all(uploaded_avatar_id: upload.id)
     UserAvatar.where(gravatar_upload_id: original_upload.id).update_all(gravatar_upload_id: upload.id)
     UserAvatar.where(custom_upload_id: original_upload.id).update_all(custom_upload_id: upload.id)
@@ -67,7 +69,9 @@ def downsize_upload(upload, path, max_image_pixels)
   true
 end
 
-scope = Upload.where("LOWER(extension) IN ('jpg', 'jpeg', 'gif', 'png')").where("COALESCE(width, 0) = 0 OR COALESCE(height, 0) = 0 OR COALESCE(thumbnail_width, 0) = 0 OR COALESCE(thumbnail_height, 0) = 0 OR width * height > ?", max_image_pixels);
+scope = Upload
+  .where("LOWER(extension) IN ('jpg', 'jpeg', 'gif', 'png')")
+  .where("COALESCE(width, 0) = 0 OR COALESCE(height, 0) = 0 OR COALESCE(thumbnail_width, 0) = 0 OR COALESCE(thumbnail_height, 0) = 0 OR width * height > ?", max_image_pixels)
 
 puts "Uploads to process: #{scope.count}"
 
