@@ -699,18 +699,15 @@ class TopicQuery
       end
     end
 
-    # ALL TAGS: something like this?
-    # Topic.joins(:tags).where('tags.name in (?)', @options[:tags]).group('topic_id').having('count(*)=?', @options[:tags].size).select('topic_id')
-
     if SiteSetting.tagging_enabled
       result = result.preload(:tags)
 
-      tags = @options[:tags]
+      tags_arg = @options[:tags]
 
-      if tags && tags.size > 0
-        tags = tags.split if String === tags
+      if tags_arg && tags_arg.size > 0
+        tags_arg = tags_arg.split if String === tags_arg
 
-        tags = tags.map do |t|
+        tags_arg = tags_arg.map do |t|
           if String === t
             t.downcase
           else
@@ -718,12 +715,12 @@ class TopicQuery
           end
         end
 
+        tags_query = tags_arg[0].is_a?(String) ? Tag.where_name(tags_arg) : Tag.where(id: tags_arg)
+        tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
+
         if @options[:match_all_tags]
           # ALL of the given tags:
-          tags_count = tags.length
-          tags = Tag.where_name(tags).pluck(:id) unless Integer === tags[0]
-
-          if tags_count == tags.length
+          if tags_arg.length == tags.length
             tags.each_with_index do |tag, index|
               sql_alias = ['t', index].join
               result = result.joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}")
@@ -733,12 +730,7 @@ class TopicQuery
           end
         else
           # ANY of the given tags:
-          result = result.joins(:tags)
-          if Integer === tags[0]
-            result = result.where("tags.id in (?)", tags)
-          else
-            result = result.where("lower(tags.name) in (?)", tags)
-          end
+          result = result.joins(:tags).where("tags.id in (?)", tags)
         end
 
         # TODO: this is very side-effecty and should be changed

@@ -79,6 +79,12 @@ describe TagsController do
       expect(response.status).to eq(404)
     end
 
+    it "should handle synonyms" do
+      synonym = Fabricate(:tag, target_tag: tag)
+      get "/tags/#{synonym.name}"
+      expect(response.status).to eq(200)
+    end
+
     it "does not show staff-only tags" do
       tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
 
@@ -472,6 +478,31 @@ describe TagsController do
         end
       end
 
+      context 'with synonyms' do
+        fab!(:tag) { Fabricate(:tag, name: 'plant') }
+        fab!(:synonym) { Fabricate(:tag, name: 'plants', target_tag: tag) }
+
+        it "can return synonyms" do
+          get "/tags/filter/search.json", params: { q: 'plant' }
+          expect(response.status).to eq(200)
+          expect(json['results'].map { |j| j['id'] }).to contain_exactly('plant', 'plants')
+        end
+
+        it "can omit synonyms" do
+          get "/tags/filter/search.json", params: { q: 'plant', excludeSynonyms: 'true' }
+          expect(response.status).to eq(200)
+          expect(json['results'].map { |j| j['id'] }).to contain_exactly('plant')
+        end
+
+        it "can return a message about synonyms not being allowed" do
+          get "/tags/filter/search.json", params: { q: 'plants', excludeSynonyms: 'true' }
+          expect(response.status).to eq(200)
+          expect(json["results"].map { |j| j["id"] }.sort).to eq([])
+          expect(json["forbidden"]).to be_present
+          expect(json["forbidden_message"]).to eq(I18n.t("tags.forbidden.synonym", tag_name: tag.name))
+        end
+      end
+
       it "matches tags after sanitizing input" do
         yup, nope = Fabricate(:tag, name: 'yup'), Fabricate(:tag, name: 'nope')
         get "/tags/filter/search.json", params: { q: 'N/ope' }
@@ -609,6 +640,92 @@ describe TagsController do
           post "/tags/upload.json", params: { file: invalid_file, name: filename }
           expect(response.status).to eq(422)
         end.not_to change { [Tag.count, TagGroup.count] }
+      end
+    end
+  end
+
+  describe '#create_synonyms' do
+    fab!(:tag) { Fabricate(:tag) }
+
+    it 'fails if not logged in' do
+      post "/tags/#{tag.name}/synonyms.json", params: { synonyms: ['synonym1'] }
+      expect(response.status).to eq(403)
+    end
+
+    it 'fails if not staff user' do
+      sign_in(user)
+      post "/tags/#{tag.name}/synonyms.json", params: { synonyms: ['synonym1'] }
+      expect(response.status).to eq(403)
+    end
+
+    context 'signed in as admin' do
+      before { sign_in(admin) }
+
+      it 'can make a tag a synonym of another tag' do
+        tag2 = Fabricate(:tag)
+        expect {
+          post "/tags/#{tag.name}/synonyms.json", params: { synonyms: [tag2.name] }
+        }.to_not change { Tag.count }
+        expect(response.status).to eq(200)
+        expect(tag2.reload.target_tag).to eq(tag)
+      end
+
+      it 'can create new tags at the same time' do
+        expect {
+          post "/tags/#{tag.name}/synonyms.json", params: { synonyms: ['synonym'] }
+        }.to change { Tag.count }.by(1)
+        expect(response.status).to eq(200)
+        expect(Tag.find_by_name('synonym')&.target_tag).to eq(tag)
+      end
+
+      it 'can return errors' do
+        tag2 = Fabricate(:tag, target_tag: tag)
+        tag3 = Fabricate(:tag)
+        post "/tags/#{tag3.name}/synonyms.json", params: { synonyms: [tag.name] }
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json['failed']).to be_present
+        expect(json.dig('failed_tags', tag.name)).to be_present
+      end
+    end
+  end
+
+  describe '#destroy_synonym' do
+    fab!(:tag) { Fabricate(:tag) }
+    fab!(:synonym) { Fabricate(:tag, target_tag: tag, name: 'synonym') }
+    subject { delete("/tags/#{tag.name}/synonyms/#{synonym.name}.json") }
+
+    it 'fails if not logged in' do
+      subject
+      expect(response.status).to eq(403)
+    end
+
+    it 'fails if not staff user' do
+      sign_in(user)
+      subject
+      expect(response.status).to eq(403)
+    end
+
+    context 'signed in as admin' do
+      before { sign_in(admin) }
+
+      it "can remove a synonym from a tag" do
+        synonym2 = Fabricate(:tag, target_tag: tag, name: 'synonym2')
+        expect { subject }.to_not change { Tag.count }
+        expect_same_tag_names(tag.reload.synonyms, [synonym2])
+        expect(synonym.reload).to_not be_synonym
+      end
+
+      it "returns error if tag isn't a synonym" do
+        delete "/tags/#{Fabricate(:tag).name}/synonyms/#{synonym.name}.json"
+        expect(response.status).to eq(400)
+        expect_same_tag_names(tag.reload.synonyms, [synonym])
+      end
+
+      it "returns error if synonym not found" do
+        delete "/tags/#{Fabricate(:tag).name}/synonyms/nope.json"
+        expect(response.status).to eq(404)
+        expect_same_tag_names(tag.reload.synonyms, [synonym])
       end
     end
   end

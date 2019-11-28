@@ -8,6 +8,7 @@ export default Component.extend({
 
   isPrivateMessage: false,
   sortedTags: sort("tags", "sortProperties"),
+  tagTagName: "a",
 
   @discourseComputed("titleKey")
   title(titleKey) {
