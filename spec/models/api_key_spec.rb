@@ -8,7 +8,6 @@ describe ApiKey do
 
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to :created_by }
-  it { is_expected.to validate_presence_of :key }
 
   it 'generates a key when saving' do
     key = ApiKey.new
@@ -20,6 +19,21 @@ describe ApiKey do
     key.description = "My description here"
     key.save!
     expect(key.reload.key).to eq(initial_key)
+  end
+
+  it 'does not have the key when loading later from the database' do
+    key = ApiKey.create!
+    expect(key.key_available?).to eq(true)
+    expect(key.key.length).to eq(64)
+
+    key = ApiKey.find(key.id)
+    expect(key.key_available?).to eq(false)
+    expect { key.key }.to raise_error(ApiKey::KeyAccessError)
+  end
+
+  it "can lookup keys based on their hash" do
+    key = ApiKey.create!.key
+    expect(ApiKey.with_key(key).length).to eq(1)
   end
 
   it "can calculate the epoch correctly" do

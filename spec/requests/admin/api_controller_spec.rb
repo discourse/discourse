@@ -10,8 +10,8 @@ describe Admin::ApiController do
 
   fab!(:admin) { Fabricate(:admin) }
 
-  fab!(:key1) { Fabricate(:api_key, description: "my key") }
-  fab!(:key2) { Fabricate(:api_key, user: admin) }
+  fab!(:key1, refind: false) { Fabricate(:api_key, description: "my key") }
+  fab!(:key2, refind: false) { Fabricate(:api_key, user: admin) }
 
   context "as an admin" do
     before do
@@ -32,7 +32,8 @@ describe Admin::ApiController do
         expect(response.status).to eq(200)
         data = JSON.parse(response.body)["key"]
         expect(data["id"]).to eq(key1.id)
-        expect(data["key"]).to eq(key1.key)
+        expect(data["key"]).to eq(nil)
+        expect(data["truncated_key"]).to eq(key1.key[0..3])
         expect(data["description"]).to eq("my key")
       end
     end
