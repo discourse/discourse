@@ -84,7 +84,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
     let url = "/tags";
 
     if (currentCategory) {
-      url += `/c/${Category.slugFor(currentCategory)}`;
+      url += `/c/${Category.slugFor(currentCategory)}/${currentCategory.id}`;
     }
 
     return Discourse.getURL(`${url}/none`);
@@ -162,7 +162,9 @@ export default ComboBoxComponent.extend(TagsMixin, {
         url = "/tags";
 
         if (this.currentCategory) {
-          url += `/c/${Category.slugFor(this.currentCategory)}`;
+          url += `/c/${Category.slugFor(this.currentCategory)}/${
+            this.currentCategory.id
+          }`;
         }
 
         url = Discourse.getURL(`${url}/${tagId.toLowerCase()}`);

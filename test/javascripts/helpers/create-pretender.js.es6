@@ -64,8 +64,8 @@ export default function() {
       return response(json);
     });
 
-    this.get("/c/bug/l/latest.json", () => {
-      const json = fixturesByUrl["/c/bug/l/latest.json"];
+    this.get("/c/bug/1/l/latest.json", () => {
+      const json = fixturesByUrl["/c/bug/1/l/latest.json"];
 
       if (loggedIn()) {
         // Stuff to let us post

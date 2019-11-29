@@ -23,13 +23,13 @@ export default Controller.extend({
   showMoreUrl(period) {
     let url = "",
       category = this.category;
+
     if (category) {
-      url =
-        "/c/" +
-        Category.slugFor(category) +
-        (this.noSubcategories ? "/none" : "") +
-        "/l";
+      url = `/c/${Category.slugFor(category)}/${category.id}${
+        this.noSubcategories ? "/none" : ""
+      }/l`;
     }
+
     url += "/top/" + period;
     return url;
   },

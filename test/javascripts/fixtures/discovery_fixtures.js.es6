@@ -2683,7 +2683,7 @@ export default {
       ]
     }
   },
-  "/c/bug/l/latest.json": {
+  "/c/bug/1/l/latest.json": {
     users: [
       { id: 1, username: "sam", avatar_template: "/images/avatar.png" },
       {
@@ -3863,7 +3863,7 @@ export default {
       ]
     }
   },
-  "/c/feature/l/latest.json": {
+  "/c/feature/2/l/latest.json": {
     users: [
       { id: 1, username: "sam", avatar_template: "/images/avatar.png" },
       {
@@ -4935,7 +4935,7 @@ export default {
       ]
     }
   },
-  "/c/dev/l/latest.json": {
+  "/c/dev/7/l/latest.json": {
     users: [
       { id: 1, username: "sam", avatar_template: "/images/avatar.png" },
       {

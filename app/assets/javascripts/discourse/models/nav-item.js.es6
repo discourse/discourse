@@ -120,7 +120,7 @@ NavItem.reopenClass({
 
     if (context.category) {
       includesCategoryContext = true;
-      path += `/c/${Category.slugFor(context.category)}`;
+      path += `/c/${Category.slugFor(context.category)}/${context.category.id}`;
 
       if (context.noSubcategories) {
         path += "/none";
