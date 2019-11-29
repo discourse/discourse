@@ -711,14 +711,13 @@ export default Controller.extend({
         }
 
         if (result.responseJson.route_to) {
-          return this.destroyDraft().then(() => {
-            if (result.responseJson.message) {
-              return bootbox.alert(result.responseJson.message, () => {
-                DiscourseURL.routeTo(result.responseJson.route_to);
-              });
-            }
-            DiscourseURL.routeTo(result.responseJson.route_to);
-          });
+          this.destroyDraft();
+          if (result.responseJson.message) {
+            return bootbox.alert(result.responseJson.message, () => {
+              DiscourseURL.routeTo(result.responseJson.route_to);
+            });
+          }
+          return DiscourseURL.routeTo(result.responseJson.route_to);
         }
 
         this.close();
