@@ -5,6 +5,7 @@ import DiscourseURL from "discourse/lib/url";
 import TagsMixin from "select-kit/mixins/tags";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 const { isEmpty, run } = Ember;
+import Category from "discourse/models/category";
 
 export default ComboBoxComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-drop"],
@@ -78,12 +79,14 @@ export default ComboBoxComponent.extend(TagsMixin, {
     }
   },
 
-  @discourseComputed("firstCategory", "secondCategory")
-  noTagsUrl() {
-    var url = "/tags";
-    if (this.currentCategory) {
-      url += this.get("currentCategory.url");
+  @discourseComputed("currentCategory")
+  noTagsUrl(currentCategory) {
+    let url = "/tags";
+
+    if (currentCategory) {
+      url += `/c/${Category.slugFor(currentCategory)}`;
     }
+
     return Discourse.getURL(`${url}/none`);
   },
 
@@ -157,9 +160,11 @@ export default ComboBoxComponent.extend(TagsMixin, {
         url = Discourse.getURL(this.noTagsUrl);
       } else {
         url = "/tags";
+
         if (this.currentCategory) {
-          url += this.get("currentCategory.url");
+          url += `/c/${Category.slugFor(this.currentCategory)}`;
         }
+
         url = Discourse.getURL(`${url}/${tagId.toLowerCase()}`);
       }
 
