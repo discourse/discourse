@@ -18,13 +18,27 @@ export default (filterArg, params) => {
 
     serialize(modelParams) {
       if (!modelParams.category_slug_path_with_id) {
-        modelParams.category_slug_path_with_id = [
-          modelParams.parentSlug,
-          modelParams.slug,
-          modelParams.id
-        ]
-          .filter(x => x)
-          .join("/");
+        if (modelParams.id === "none") {
+          const category_slug_path_with_id = [
+            modelParams.parentSlug,
+            modelParams.slug
+          ].join("/");
+          const category = Category.findBySlugPathWithID(
+            category_slug_path_with_id
+          );
+          this.replaceWith("discovery.categoryNone", {
+            category,
+            category_slug_path_with_id
+          });
+        } else {
+          modelParams.category_slug_path_with_id = [
+            modelParams.parentSlug,
+            modelParams.slug,
+            modelParams.id
+          ]
+            .filter(x => x)
+            .join("/");
+        }
       }
 
       return modelParams;
