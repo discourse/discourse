@@ -34,6 +34,12 @@ class AddHashedApiKey < ActiveRecord::Migration[6.0]
     change_column_null :api_keys, :truncated_key, false
 
     add_index :api_keys, :key_hash
+
+    # The key column will be dropped in a post_deploy migration
+    # But allow it to be null in the meantime
+    Migration::SafeMigrate.disable!
+    change_column_null :api_keys, :key, true
+    Migration::SafeMigrate.enable!
   end
 
   def down
