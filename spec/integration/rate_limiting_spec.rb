@@ -56,7 +56,7 @@ describe 'rate limiter integration' do
     #request.set_header("action_dispatch.show_exceptions", true)
 
     admin = Fabricate(:admin)
-    api_key = Fabricate(:api_key, key: SecureRandom.hex, user: admin)
+    api_key = Fabricate(:api_key, user: admin)
 
     global_setting :max_admin_api_reqs_per_key_per_minute, 1
 
