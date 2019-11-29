@@ -210,7 +210,6 @@ describe UserAnonymizer do
       expect(user.user_associated_accounts).to be_empty
       expect(user.single_sign_on_record).to eq(nil)
       expect(user.oauth2_user_infos).to be_empty
-      expect(user.instagram_user_info).to eq(nil)
       expect(user.user_open_ids.count).to eq(0)
     end
 
