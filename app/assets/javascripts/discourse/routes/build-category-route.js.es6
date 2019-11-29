@@ -102,9 +102,9 @@ export default (filterArg, params) => {
     },
 
     _retrieveTopicList(category, transition) {
-      const listFilter = `c/${Category.slugFor(category)}/l/${this.filter(
-          category
-        )}`,
+      const listFilter = `c/${Category.slugFor(category)}/${
+          category.id
+        }/l/${this.filter(category)}`,
         findOpts = filterQueryParams(transition.to.queryParams, params),
         extras = { cached: this.isPoppedState(transition) };
 

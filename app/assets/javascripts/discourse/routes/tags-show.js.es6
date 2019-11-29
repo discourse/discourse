@@ -69,7 +69,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     if (category) {
       category.setupGroupsAndPermissions();
       this.set("category", category);
-      filter = `tags/c/${Category.slugFor(category)}`;
+      filter = `tags/c/${Category.slugFor(category)}/${category.id}`;
 
       if (this.noSubcategories) {
         filter += "/none";
