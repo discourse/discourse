@@ -497,6 +497,15 @@ export default function() {
         });
       }
 
+      if (data.raw === "custom message") {
+        return response(200, {
+          success: true,
+          action: "custom",
+          message: "This is a custom response",
+          route_to: "/faq"
+        });
+      }
+
       return response(200, {
         success: true,
         action: "create_post",
