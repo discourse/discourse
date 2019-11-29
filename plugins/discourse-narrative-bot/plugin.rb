@@ -257,10 +257,12 @@ after_initialize do
       args[:old_trust_level] == TrustLevel[1]
 
     if SiteSetting.discourse_narrative_bot_enabled && promoted_from_tl1
-      # NOTE: since the `user_promoted` event is triggered from inside a transaction
-      #       we have to delay the job otherwise it might run before the transaction
-      #       is commited and the user will be invisible to the job
-      Jobs.enqueue_in(1.minute, :send_advanced_tutorial_message, user_id: args[:user_id])
+      # The event 'user_promoted' is sometimes called from inside a transaction.
+      # Use this helper to ensure the job is enqueued after commit to prevent
+      # any race conditions.
+      DB.after_commit do
+        Jobs.enqueue(:send_advanced_tutorial_message, user_id: args[:user_id])
+      end
     end
   end
 end
