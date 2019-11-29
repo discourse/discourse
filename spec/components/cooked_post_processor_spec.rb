@@ -872,6 +872,40 @@ describe CookedPostProcessor do
 
   end
 
+  context "#convert_to_link" do
+    fab!(:thumbnail) { Fabricate(:optimized_image, upload: upload, width: 512, height: 384) }
+
+    before do
+      CookedPostProcessor.any_instance.stubs(:get_size).with(upload.url).returns([1024, 768])
+    end
+
+    it "adds lightbox and optimizes images" do
+      post = Fabricate(:post, raw: "![image|1024x768, 50%](#{upload.short_url})")
+
+      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp.post_process
+
+      doc = Nokogiri::HTML::fragment(cpp.html)
+      expect(doc.css('.lightbox-wrapper').size).to eq(1)
+      expect(doc.css('img').first['srcset']).to_not eq(nil)
+    end
+
+    it "optimizes images in quotes" do
+      post = Fabricate(:post, raw: <<~MD)
+        [quote]
+        ![image|1024x768, 50%](#{upload.short_url})
+        [/quote]
+      MD
+
+      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp.post_process
+
+      doc = Nokogiri::HTML::fragment(cpp.html)
+      expect(doc.css('.lightbox-wrapper').size).to eq(0)
+      expect(doc.css('img').first['srcset']).to_not eq(nil)
+    end
+  end
+
   context "#post_process_oneboxes" do
     let(:post) { build(:post_with_youtube, id: 123) }
     let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
