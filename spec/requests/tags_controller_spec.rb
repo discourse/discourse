@@ -23,10 +23,9 @@ describe TagsController do
 
   describe '#index' do
 
-    before do
-      Fabricate(:tag, name: 'test')
-      Fabricate(:tag, name: 'topic-test', topic_count: 1)
-    end
+    fab!(:test_tag) { Fabricate(:tag, name: 'test') }
+    fab!(:topic_tag) { Fabricate(:tag, name: 'topic-test', topic_count: 1) }
+    fab!(:synonym) { Fabricate(:tag, name: 'synonym', target_tag: topic_tag) }
 
     shared_examples "successfully retrieve tags with topic_count > 0" do
       it "should return the right response" do
@@ -43,6 +42,19 @@ describe TagsController do
     context "with tags_listed_by_group enabled" do
       before { SiteSetting.tags_listed_by_group = true }
       include_examples "successfully retrieve tags with topic_count > 0"
+
+      it "works for tags in groups" do
+        tag_group = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
+        get "/tags.json"
+        expect(response.status).to eq(200)
+
+        tags = json["tags"]
+        expect(tags.length).to eq(0)
+        group = json.dig('extras', 'tag_groups')&.first
+        expect(group).to be_present
+        expect(group['tags'].length).to eq(2)
+        expect(group['tags'].map { |t| t['id'] }).to contain_exactly(test_tag.name, topic_tag.name)
+      end
     end
 
     context "with tags_listed_by_group disabled" do

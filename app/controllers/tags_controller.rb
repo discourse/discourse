@@ -35,21 +35,21 @@ class TagsController < ::ApplicationController
       ungrouped_tags = ungrouped_tags.where("tags.topic_count > 0") unless show_all_tags
 
       grouped_tag_counts = TagGroup.visible(guardian).order('name ASC').includes(:tags).map do |tag_group|
-        { id: tag_group.id, name: tag_group.name, tags: self.class.tag_counts_json(tag_group.tags) }
+        { id: tag_group.id, name: tag_group.name, tags: self.class.tag_counts_json(tag_group.tags.where(target_tag_id: nil)) }
       end
 
       @tags = self.class.tag_counts_json(ungrouped_tags)
       @extras = { tag_groups: grouped_tag_counts }
     else
       tags = show_all_tags ? Tag.all : Tag.where("tags.topic_count > 0")
-      unrestricted_tags = DiscourseTagging.filter_visible(tags, guardian)
+      unrestricted_tags = DiscourseTagging.filter_visible(tags.where(target_tag_id: nil), guardian)
 
       categories = Category.where("id IN (SELECT category_id FROM category_tags)")
         .where("id IN (?)", guardian.allowed_category_ids)
         .includes(:tags)
 
       category_tag_counts = categories.map do |c|
-        { id: c.id, tags: self.class.tag_counts_json(c.tags) }
+        { id: c.id, tags: self.class.tag_counts_json(c.tags.where(target_tag_id: nil)) }
       end
 
       @tags = self.class.tag_counts_json(unrestricted_tags)
