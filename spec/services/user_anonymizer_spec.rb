@@ -215,7 +215,7 @@ describe UserAnonymizer do
     end
 
     it "removes api key" do
-      ApiKey.create(user_id: user.id, key: "123123123")
+      ApiKey.create(user_id: user.id)
       expect { make_anonymous }.to change { ApiKey.count }.by(-1)
       user.reload
       expect(user.api_keys).to be_empty
