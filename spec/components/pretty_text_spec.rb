@@ -1450,7 +1450,7 @@ HTML
 
       cooked = <<~HTML
       <p><img src="/images/transparent.png" alt="upload" data-orig-src="upload://abcABC.png"></p>
-      <p><a href="/404" data-orig-href="upload://abcdefg.png">some attachment|attachment</a></p>
+      <p><a class="attachment" href="/404" data-orig-href="upload://abcdefg.png">some attachment</a></p>
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
