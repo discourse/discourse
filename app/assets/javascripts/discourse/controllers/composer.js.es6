@@ -910,12 +910,12 @@ export default Controller.extend({
       isWarning: false
     });
 
-    if (!this.get("model.targetRecipients")) {
+    if (!this.model.targetRecipients) {
       if (opts.usernames) {
         deprecated("`usernames` is deprecated, use `recipients` instead.");
-        this.set("model.targetRecipients", opts.usernames);
+        this.model.set("targetRecipients", opts.usernames);
       } else if (opts.recipients) {
-        this.set("model.targetRecipients", opts.recipients);
+        this.model.set("targetRecipients", opts.recipients);
       }
     }
 
@@ -923,11 +923,11 @@ export default Controller.extend({
       opts.topicTitle &&
       opts.topicTitle.length <= this.siteSettings.max_topic_title_length
     ) {
-      this.set("model.title", opts.topicTitle);
+      this.model.set("title", opts.topicTitle);
     }
 
     if (opts.topicCategoryId) {
-      this.set("model.categoryId", opts.topicCategoryId);
+      this.model.set("categoryId", opts.topicCategoryId);
     }
 
     if (opts.topicTags && !this.site.mobileView && this.site.can_tag_topics) {
@@ -940,11 +940,11 @@ export default Controller.extend({
           (array[index] = tag.substring(0, this.siteSettings.max_tag_length))
       );
 
-      this.set("model.tags", tags);
+      this.model.set("tags", tags);
     }
 
     if (opts.topicBody) {
-      this.set("model.reply", opts.topicBody);
+      this.model.set("reply", opts.topicBody);
     }
   },
 
