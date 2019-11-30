@@ -25,6 +25,7 @@ import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
 import ENV from "discourse-common/config/environment";
 import EmberObject, { computed } from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -909,8 +910,13 @@ export default Controller.extend({
       isWarning: false
     });
 
-    if (opts.usernames && !this.get("model.targetRecipients")) {
-      this.set("model.targetRecipients", opts.usernames);
+    if (!this.get("model.targetRecipients")) {
+      if (opts.usernames) {
+        deprecated("`usernames` is deprecated, use `recipients` instead.");
+        this.set("model.targetRecipients", opts.usernames);
+      } else if (opts.recipients) {
+        this.set("model.targetRecipients", opts.recipients);
+      }
     }
 
     if (

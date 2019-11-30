@@ -78,7 +78,9 @@ const CLOSED = "closed",
     composerTime: "composerTime",
     typingTime: "typingTime",
     postId: "post.id",
-    usernames: "targetRecipients"
+    // TODO remove together with 'targetUsername' deprecations
+    usernames: "targetUsernames",
+    recipients: "targetRecipients"
   },
   _add_draft_fields = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
@@ -679,13 +681,17 @@ const Composer = RestModel.extend({
       throw new Error("draft sequence is required");
     }
 
+    if (opts.usernames) {
+      deprecated("`usernames` is deprecated, use `recipients` instead.");
+    }
+
     this.setProperties({
       draftKey: opts.draftKey,
       draftSequence: opts.draftSequence,
       composeState: opts.composerState || OPEN,
       action: opts.action,
       topic: opts.topic,
-      targetRecipients: opts.usernames,
+      targetRecipients: opts.usernames || opts.recipients,
       composerTotalOpened: opts.composerTime,
       typingTime: opts.typingTime,
       whisper: opts.whisper,
