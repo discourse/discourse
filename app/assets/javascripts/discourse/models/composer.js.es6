@@ -21,6 +21,7 @@ import { Promise } from "rsvp";
 import { set } from "@ember/object";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import deprecated from "discourse-common/lib/deprecated";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
@@ -51,7 +52,7 @@ const CLOSED = "closed",
     is_warning: "isWarning",
     whisper: "whisper",
     archetype: "archetypeId",
-    target_usernames: "targetUsernames",
+    target_usernames: "targetRecipients",
     typing_duration_msecs: "typingTime",
     composer_open_duration_msecs: "composerTime",
     tags: "tags",
@@ -77,7 +78,7 @@ const CLOSED = "closed",
     composerTime: "composerTime",
     typingTime: "typingTime",
     postId: "post.id",
-    usernames: "targetUsernames"
+    usernames: "targetRecipients"
   },
   _add_draft_fields = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
@@ -340,11 +341,24 @@ const Composer = RestModel.extend({
     return options;
   },
 
+  @discourseComputed("targetRecipients")
+  targetUsernames(targetRecipients) {
+    deprecated(
+      "`targetUsernames` is deprecated, use `targetRecipients` instead."
+    );
+    return targetRecipients;
+  },
+
+  @discourseComputed("targetRecipients")
+  targetRecipientsArray(targetRecipients) {
+    return targetRecipients ? targetRecipients.split(",") : [];
+  },
+
   @discourseComputed(
     "loading",
     "canEditTitle",
     "titleLength",
-    "targetUsernames",
+    "targetRecipientsArray",
     "replyLength",
     "categoryId",
     "missingReplyCharacters",
@@ -357,7 +371,7 @@ const Composer = RestModel.extend({
     loading,
     canEditTitle,
     titleLength,
-    targetUsernames,
+    targetRecipientsArray,
     replyLength,
     categoryId,
     missingReplyCharacters,
@@ -402,9 +416,7 @@ const Composer = RestModel.extend({
 
     if (this.privateMessage) {
       // need at least one user when sending a PM
-      return (
-        targetUsernames && (targetUsernames.trim() + ",").indexOf(",") === 0
-      );
+      return targetRecipientsArray.length === 0;
     } else {
       // has a category? (when needed)
       return this.requiredCategoryMissing;
@@ -673,7 +685,7 @@ const Composer = RestModel.extend({
       composeState: opts.composerState || OPEN,
       action: opts.action,
       topic: opts.topic,
-      targetUsernames: opts.usernames,
+      targetRecipients: opts.usernames,
       composerTotalOpened: opts.composerTime,
       typingTime: opts.typingTime,
       whisper: opts.whisper,

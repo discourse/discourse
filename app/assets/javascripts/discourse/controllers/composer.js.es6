@@ -129,7 +129,7 @@ export default Controller.extend({
   @discourseComputed(
     "model.replyingToTopic",
     "model.creatingPrivateMessage",
-    "model.targetUsernames",
+    "model.targetRecipients",
     "model.composeState"
   )
   focusTarget(replyingToTopic, creatingPM, usernames, composeState) {
@@ -294,7 +294,7 @@ export default Controller.extend({
     }
   },
 
-  @discourseComputed("model.creatingPrivateMessage", "model.targetUsernames")
+  @discourseComputed("model.creatingPrivateMessage", "model.targetRecipients")
   showWarning(creatingPrivateMessage, usernames) {
     if (!this.get("currentUser.staff")) {
       return false;
@@ -909,8 +909,8 @@ export default Controller.extend({
       isWarning: false
     });
 
-    if (opts.usernames && !this.get("model.targetUsernames")) {
-      this.set("model.targetUsernames", opts.usernames);
+    if (opts.usernames && !this.get("model.targetRecipients")) {
+      this.set("model.targetRecipients", opts.usernames);
     }
 
     if (
