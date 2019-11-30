@@ -145,7 +145,7 @@ function renderImage(tokens, idx, options, env, slf) {
   const alt = slf.renderInlineAsText(token.children, options, env);
 
   const split = alt.split("|");
-  const alt_split = [];
+  const altSplit = [];
 
   for (let i = 0, match, data; i < split.length; ++i) {
     if ((match = split[i].match(IMG_SIZE_REGEX)) && match[1] && match[2]) {
@@ -186,11 +186,11 @@ function renderImage(tokens, idx, options, env, slf) {
     } else if ((data = extractDataAttribute(split[i]))) {
       token.attrs.push(data);
     } else {
-      alt_split.push(split[i]);
+      altSplit.push(split[i]);
     }
   }
 
-  token.attrs[token.attrIndex("alt")][1] = alt_split.join("|");
+  token.attrs[token.attrIndex("alt")][1] = altSplit.join("|");
   return slf.renderToken(tokens, idx, options);
 }
 
@@ -203,7 +203,7 @@ function renderAttachment(tokens, idx, options, env, slf) {
   const textToken = tokens[idx + 1];
 
   const split = textToken.content.split("|");
-  const content_split = [];
+  const contentSplit = [];
 
   for (let i = 0, data; i < split.length; ++i) {
     if (split[i] === ATTACHMENT_CSS_CLASS) {
@@ -211,12 +211,12 @@ function renderAttachment(tokens, idx, options, env, slf) {
     } else if ((data = extractDataAttribute(split[i]))) {
       linkToken.attrs.push(data);
     } else {
-      content_split.push(split[i]);
+      contentSplit.push(split[i]);
     }
   }
 
-  if (content_split.length > 0) {
-    textToken.content = content_split.join("|");
+  if (contentSplit.length > 0) {
+    textToken.content = contentSplit.join("|");
   }
 
   return slf.renderToken(tokens, idx, options);
