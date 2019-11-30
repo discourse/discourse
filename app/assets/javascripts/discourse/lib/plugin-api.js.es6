@@ -40,7 +40,10 @@ import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import Sharing from "discourse/lib/sharing";
-import { addComposerUploadHandler } from "discourse/components/composer-editor";
+import {
+  addComposerUploadHandler,
+  addComposerUploadMarkdownGetter
+} from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
@@ -865,6 +868,19 @@ class PluginApi {
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
+  }
+
+  /**
+   * Registers a function to generate Markdown after a file has been uploaded.
+   *
+   * Example:
+   *
+   * api.addComposerUploadMarkdownGetter(upload => {
+   *   return `_uploaded ${upload.original_filename}_`;
+   * })
+   */
+  addComposerUploadMarkdownGetter(getter) {
+    addComposerUploadMarkdownGetter(getter);
   }
 
   /**
