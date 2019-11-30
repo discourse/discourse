@@ -99,6 +99,7 @@ class Toolbar {
         id: "link",
         group: "insertions",
         shortcut: "K",
+        trimLeading: true,
         sendAction: event => this.context.send("showLinkModal", event)
       });
     }
@@ -956,15 +957,14 @@ export default Component.extend({
       }
 
       let linkText = "";
-      this._lastSel = this._getSelected();
+      this._lastSel = toolbarEvent.selected;
 
       if (this._lastSel) {
-        linkText = this._lastSel.value.trim();
+        linkText = this._lastSel.value;
       }
 
       showModal("insert-hyperlink").setProperties({
-        linkText: linkText,
-        _lastSel: this._lastSel,
+        linkText,
         toolbarEvent
       });
     },
