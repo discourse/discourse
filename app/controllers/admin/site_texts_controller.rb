@@ -20,11 +20,15 @@ class Admin::SiteTextsController < Admin::AdminController
     extras = {}
 
     query = params[:q] || ""
+
+    locale = params[:locale] || I18n.locale
+    raise Discourse::InvalidParameters.new(:locale) if !I18n.locale_available?(locale)
+
     if query.blank? && !overridden
       extras[:recommended] = true
-      results = self.class.preferred_keys.map { |k| record_for(k) }
+      results = I18n.with_locale(locale) { self.class.preferred_keys.map { |k| record_for(k) } }
     else
-      results = find_translations(query, overridden)
+      results = I18n.with_locale(locale) { find_translations(query, overridden) }
 
       if results.any?
         extras[:regex] = I18n::Backend::DiscourseI18n.create_search_regexp(query, as_string: true)
@@ -41,8 +45,15 @@ class Admin::SiteTextsController < Admin::AdminController
       end
     end
 
-    extras[:has_more] = true if results.size > 50
-    render_serialized(results[0..49], SiteTextSerializer, root: 'site_texts', rest_serializer: true, extras: extras, overridden_keys: overridden_keys)
+    page = params[:page].to_i
+    raise Discourse::InvalidParameters.new(:page) if page < 0
+
+    per_page = 50
+    first = page * per_page
+    last = first + per_page
+
+    extras[:has_more] = true if results.size > last
+    render_serialized(results[first..last - 1], SiteTextSerializer, root: 'site_texts', rest_serializer: true, extras: extras, overridden_keys: overridden_keys)
   end
 
   def show
