@@ -675,7 +675,9 @@ class PostsController < ApplicationController
       :topic_id,
       :archetype,
       :category,
+      # TODO remove together with 'targetUsername' deprecations
       :target_usernames,
+      :target_recipients,
       :reply_to_post_number,
       :auto_track,
       :typing_duration_msecs,
@@ -749,13 +751,19 @@ class PostsController < ApplicationController
     result[:user_agent] = request.user_agent
     result[:referrer] = request.env["HTTP_REFERER"]
 
-    if usernames = result[:target_usernames]
-      usernames = usernames.split(",")
-      groups = Group.messageable(current_user).where('name in (?)', usernames).pluck('name')
-      usernames -= groups
-      emails = usernames.select { |user| user.match(/@/) }
-      usernames -= emails
-      result[:target_usernames] = usernames.join(",")
+    if recipients = result[:target_usernames]
+      Discourse.deprecate("`target_usernames` is deprecated, use `target_recipients` instead.", output_in_test: true)
+    else
+      recipients = result[:target_recipients]
+    end
+
+    if recipients
+      recipients = recipients.split(",")
+      groups = Group.messageable(current_user).where('name in (?)', recipients).pluck('name')
+      recipients -= groups
+      emails = recipients.select { |user| user.match(/@/) }
+      recipients -= emails
+      result[:target_usernames] = recipients.join(",")
       result[:target_emails] = emails.join(",")
       result[:target_group_names] = groups.join(",")
     end
