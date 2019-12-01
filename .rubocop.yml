@@ -141,3 +141,8 @@ DiscourseCops/NoChdir:
 Style/GlobalVars:
   Enabled: true
   Severity: warning
+  Exclude:
+    - 'lib/tasks/**/*.rb'
+    - 'script/**/*.rb'
+    - 'spec/**/*.rb'
+    - 'plugins/*/spec/**/*'
