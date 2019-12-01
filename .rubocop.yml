@@ -142,7 +142,7 @@ Style/GlobalVars:
   Enabled: true
   Severity: warning
   Exclude:
-    - 'lib/tasks/**/*.rb'
-    - 'script/**/*.rb'
+    - 'lib/tasks/**/*'
+    - 'script/**/*'
     - 'spec/**/*.rb'
     - 'plugins/*/spec/**/*'
