@@ -100,6 +100,11 @@ export default Mixin.create({
     return settingDefault !== bufferedValue;
   },
 
+  @discourseComputed("setting.defaultValues", "buffered.value")
+  defaultIsAvailable(defaultValues, bufferedValue) {
+    return defaultValues && !bufferedValue.includes(defaultValues);
+  },
+
   _watchEnterKey: on("didInsertElement", function() {
     $(this.element).on("keydown.setting-enter", ".input-setting-string", e => {
       if (e.keyCode === 13) {

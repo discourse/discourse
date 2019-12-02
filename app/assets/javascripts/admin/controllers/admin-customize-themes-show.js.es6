@@ -24,6 +24,10 @@ export default Controller.extend({
   parentThemesNames: mapBy("model.parentThemes", "name"),
   availableParentThemes: filterBy("allThemes", "component", false),
   availableThemesNames: mapBy("availableParentThemes", "name"),
+  availableActiveChildThemes: filterBy("availableChildThemes", "hasParents"),
+  availableComponentsNames: mapBy("availableChildThemes", "name"),
+  availableActiveComponentsNames: mapBy("availableActiveChildThemes", "name"),
+  childThemesNames: mapBy("model.childThemes", "name"),
 
   @discourseComputed("model.editedFields")
   editedFieldsFormatted() {
@@ -60,7 +64,7 @@ export default Controller.extend({
   },
 
   @discourseComputed("model.parentThemes.[]")
-  relativesSelectorSettings() {
+  relativesSelectorSettingsForComponent() {
     return Ember.Object.create({
       list_type: "compact",
       type: "list",
@@ -74,6 +78,24 @@ export default Controller.extend({
       defaultValues: this.availableThemesNames.join("|"),
       allThemes: this.allThemes,
       setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all_themes")
+    });
+  },
+
+  @discourseComputed("model.parentThemes.[]")
+  relativesSelectorSettingsForTheme() {
+    return Ember.Object.create({
+      list_type: "compact",
+      type: "list",
+      preview: null,
+      anyValue: false,
+      setting: "child_theme_ids",
+      label: I18n.t("admin.customize.theme.included_components"),
+      choices: this.availableComponentsNames,
+      default: this.childThemesNames.join("|"),
+      value: this.childThemesNames.join("|"),
+      defaultValues: this.availableActiveComponentsNames.join("|"),
+      allThemes: this.allThemes,
+      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all")
     });
   },
 
