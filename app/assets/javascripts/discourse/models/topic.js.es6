@@ -110,7 +110,7 @@ const Topic = RestModel.extend({
   @discourseComputed("fancy_title")
   fancyTitle(title) {
     let fancyTitle = censor(
-      emojiUnescape(title || ""),
+      emojiUnescape(title) || "",
       Site.currentProp("censored_regexp")
     );
 
