@@ -490,7 +490,10 @@ createWidget("discourse-poll-grouped-pies", {
         ) {
           const data = result.grouped_results[chartIdx].options.mapBy("votes");
           const labels = result.grouped_results[chartIdx].options.mapBy("html");
-          const chartConfig = pieChartConfig(data, labels, 1.2);
+          const chartConfig = pieChartConfig(data, labels, {
+            aspectRatio: 1.2,
+            displayLegend: false
+          });
           const canvasId = `pie-${attrs.id}-${chartIdx}`;
           let el = document.querySelector(`#${canvasId}`);
           if (!el) {
@@ -594,7 +597,9 @@ createWidget("discourse-poll-pie-chart", {
   }
 });
 
-function pieChartConfig(data, labels, aspectRatio = 2.0) {
+function pieChartConfig(data, labels, opts = {}) {
+  const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.0;
+  const displayLegend = "displayLegend" in opts ? opts.displayLegend : true;
   return {
     type: PIE_CHART_TYPE,
     data: {
@@ -609,7 +614,8 @@ function pieChartConfig(data, labels, aspectRatio = 2.0) {
     options: {
       responsive: true,
       aspectRatio,
-      animation: { duration: 400 }
+      animation: { duration: 400 },
+      legend: { display: displayLegend }
     }
   };
 }
