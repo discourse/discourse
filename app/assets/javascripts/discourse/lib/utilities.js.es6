@@ -410,5 +410,44 @@ export function rescueThemeError(name, error, api) {
   document.body.prepend(alertDiv);
 }
 
+const CODE_BLOCKS_RULES = [
+  { rule: /`(?:[^`\n]+?\n?)+?`/gm, end: "`" },
+  { rule: /^```[^]*?^```/gm, end: "\n```" },
+  { rule: /\[code\][^]*?\[\/code\]/gm, end: "\n[/code]" }
+];
+
+export function getCodeBlocks(value) {
+  const blocks = [];
+
+  CODE_BLOCKS_RULES.forEach(entry => {
+    const { rule, end } = entry;
+
+    let match;
+    while ((match = rule.exec(value)) != null) {
+      blocks.push([match.index, match.index + match[0].length]);
+    }
+
+    // Try to end block and see if other code blocks are found
+    if (end) {
+      while ((match = rule.exec(value + end)) != null) {
+        // Save only positions that were not found before (which end past the
+        // end of the original value).
+        if (
+          match.index < value.length &&
+          match.index + match[0].length > value.length
+        ) {
+          blocks.push([match.index, value.length]);
+        }
+      }
+    }
+  });
+
+  return blocks;
+}
+
+export function inCodeBlock(value, pos) {
+  return getCodeBlocks(value).any(([start, end]) => start <= pos && pos <= end);
+}
+
 // This prevents a mini racer crash
 export default {};
