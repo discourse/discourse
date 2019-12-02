@@ -912,7 +912,11 @@ export default Component.extend({
       const captures = selected.pre.match(/\B:(\w*)$/);
 
       if (_.isEmpty(captures)) {
-        this._addText(selected, `:${code}:`);
+        if (selected.pre.match(/\S$/)) {
+          this._addText(selected, ` :${code}:`);
+        } else {
+          this._addText(selected, `:${code}:`);
+        }
       } else {
         let numOfRemovedChars = selected.pre.length - captures[1].length;
         selected.pre = selected.pre.slice(
