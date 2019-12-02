@@ -1,4 +1,5 @@
-import { alias, or } from "@ember/object/computed";
+import { computed } from "@ember/object";
+import { alias } from "@ember/object/computed";
 import { makeArray } from "discourse-common/lib/helpers";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
@@ -6,6 +7,7 @@ import TagsMixin from "select-kit/mixins/tags";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 const { isEmpty, run } = Ember;
 import Category from "discourse/models/category";
+import deprecated from "discourse-common/lib/deprecated";
 
 export default ComboBoxComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-drop"],
@@ -17,7 +19,6 @@ export default ComboBoxComponent.extend(TagsMixin, {
   allowAutoSelectFirst: false,
   tagName: "li",
   showFilterByTag: alias("siteSettings.show_filter_by_tag"),
-  currentCategory: or("secondCategory", "firstCategory"),
   tagId: null,
   categoryStyle: alias("siteSettings.category_style"),
   mutateAttributes() {},
@@ -26,6 +27,27 @@ export default ComboBoxComponent.extend(TagsMixin, {
   caretUpIcon: "caret-down",
   allowContentReplacement: true,
   isAsync: true,
+
+  currentCategory: computed("secondCategory", "firstCategory", {
+    set(key, value) {
+      this.currentCategoryRaw = value;
+      return value;
+    },
+
+    get() {
+      if (this.currentCategoryRaw) {
+        return this.currentCategoryRaw;
+      }
+
+      const result = this.secondCategory || this.firstCategory;
+      if (result) {
+        deprecated(
+          "Setting firstCategory and secondCategory on tag-drop directly is deprecated. Please use currentCategory instead."
+        );
+        return result;
+      }
+    }
+  }),
 
   @discourseComputed("tagId")
   noTagsSelected() {
@@ -70,7 +92,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
     return tagId ? `tag-${tagId}` : "tag_all";
   },
 
-  @discourseComputed("firstCategory", "secondCategory")
+  @discourseComputed("currentCategory")
   allTagsUrl() {
     if (this.currentCategory) {
       return Discourse.getURL(this.get("currentCategory.url") + "?allTags=1");
