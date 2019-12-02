@@ -9,7 +9,7 @@ acceptance("EmojiPicker", {
   }
 });
 
-QUnit.skip("emoji picker can be opened/closed", async assert => {
+QUnit.test("emoji picker can be opened/closed", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
 
@@ -32,7 +32,7 @@ QUnit.skip("emoji picker can be opened/closed", async assert => {
   );
 });
 
-QUnit.skip("emojis can be hovered to display info", async assert => {
+QUnit.test("emojis can be hovered to display info", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
 
@@ -47,7 +47,7 @@ QUnit.skip("emojis can be hovered to display info", async assert => {
   );
 });
 
-QUnit.skip("emoji picker triggers event when picking emoji", async assert => {
+QUnit.test("emoji picker triggers event when picking emoji", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
   await click("button.emoji.btn");
@@ -90,7 +90,7 @@ QUnit.test(
   }
 );
 
-QUnit.skip("emoji picker has a list of recently used emojis", async assert => {
+QUnit.test("emoji picker has a list of recently used emojis", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
   await click("button.emoji.btn");
@@ -136,7 +136,7 @@ QUnit.skip("emoji picker has a list of recently used emojis", async assert => {
   );
 });
 
-QUnit.skip(
+QUnit.test(
   "emoji picker correctly orders recently used emojis",
   async assert => {
     await visit("/t/internationalization-localization/280");
@@ -164,7 +164,7 @@ QUnit.skip(
   }
 );
 
-QUnit.skip("emoji picker lazy loads emojis", async assert => {
+QUnit.test("emoji picker lazy loads emojis", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
 
@@ -177,7 +177,7 @@ QUnit.skip("emoji picker lazy loads emojis", async assert => {
   );
 });
 
-QUnit.skip("emoji picker persists state", async assert => {
+QUnit.test("emoji picker persists state", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
 
