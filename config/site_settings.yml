@@ -1347,6 +1347,7 @@ security:
     default: 365
     min: 0
     max: 2000
+  hide_discourse_version: false
 
 onebox:
   enable_flash_video_onebox: false
