@@ -9,9 +9,7 @@ import {
   setDefaultHomepage,
   caretRowCol,
   setCaretPosition,
-  fillMissingDates,
-  getCodeBlocks,
-  inCodeBlock
+  fillMissingDates
 } from "discourse/lib/utilities";
 
 QUnit.module("lib:utilities");
@@ -187,51 +185,4 @@ QUnit.test("fillMissingDates", assert => {
     31,
     "it returns a JSON array with 31 dates"
   );
-});
-
-QUnit.test("getCodeBlocks - works with [code]", assert => {
-  assert.deepEqual(
-    getCodeBlocks("[code]\nfoo\n[/code]\n\nbar\n\n[code]\nbaz"),
-    [
-      [0, 18],
-      [25, 35]
-    ]
-  );
-});
-
-QUnit.test("getCodeBlocks - works with backticks", assert => {
-  assert.deepEqual(getCodeBlocks("foo `bar\nbar`! `baz"), [
-    [4, 13],
-    [15, 19]
-  ]);
-});
-
-QUnit.test("getCodeBlocks - works with triple backticks", assert => {
-  assert.deepEqual(getCodeBlocks("```\nfoo\n```\n\nbar\n\n```\nbaz"), [
-    [0, 11],
-    [18, 25]
-  ]);
-});
-
-QUnit.test("inCodeBlock", assert => {
-  const raw =
-    "bar\n\n```\nfoo\n```\n\nbar\n\n`foo\nfoo`\n\nbar\n\n[code]\nfoo\n[/code]\n\nbar`foo";
-
-  assert.notOk(inCodeBlock(raw, 4));
-  assert.ok(inCodeBlock(raw, 5));
-  assert.ok(inCodeBlock(raw, 16));
-  assert.notOk(inCodeBlock(raw, 17));
-
-  assert.notOk(inCodeBlock(raw, 22));
-  assert.ok(inCodeBlock(raw, 23));
-  assert.ok(inCodeBlock(raw, 32));
-  assert.notOk(inCodeBlock(raw, 33));
-
-  assert.notOk(inCodeBlock(raw, 38));
-  assert.ok(inCodeBlock(raw, 39));
-  assert.ok(inCodeBlock(raw, 57));
-  assert.notOk(inCodeBlock(raw, 58));
-
-  assert.notOk(inCodeBlock(raw, 61));
-  assert.ok(inCodeBlock(raw, 62));
 });

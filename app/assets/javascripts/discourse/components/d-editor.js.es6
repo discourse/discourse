@@ -20,9 +20,7 @@ import { siteDir } from "discourse/lib/text-direction";
 import {
   determinePostReplaceSelection,
   clipboardData,
-  safariHacksDisabled,
-  caretPosition,
-  inCodeBlock
+  safariHacksDisabled
 } from "discourse/lib/utilities";
 import toMarkdown from "discourse/lib/to-markdown";
 import deprecated from "discourse-common/lib/deprecated";
@@ -422,10 +420,6 @@ export default Component.extend({
       },
 
       onKeyUp: (text, cp) => {
-        if (inCodeBlock(text, cp)) {
-          return false;
-        }
-
         const matches = /(?:^|[^a-z])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
           text.substring(0, cp)
         );
@@ -517,10 +511,7 @@ export default Component.extend({
             }
             return list;
           });
-      },
-
-      triggerRule: textarea =>
-        !inCodeBlock(textarea.value, caretPosition(textarea))
+      }
     });
   },
 
