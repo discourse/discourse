@@ -377,8 +377,7 @@ class CookedPostProcessor
 
     thumbnail = upload.thumbnail(w, h)
     if thumbnail && thumbnail.filesize.to_i < upload.filesize
-      cooked_url = UrlHelper.cook_url(thumbnail.url, secure: upload.secure?)
-      img["src"] = cooked_url
+      img["src"] = UrlHelper.cook_url(thumbnail.url, secure: upload.secure?)
 
       srcset = +""
 
@@ -397,13 +396,11 @@ class CookedPostProcessor
         img["srcset"] = "#{UrlHelper.cook_url(img["src"], secure: upload.secure?)}#{srcset}" if srcset.present?
       end
     else
-      cooked_url = UrlHelper.cook_url(upload.url, secure: upload.secure?)
-      img["src"] = cooked_url
+      img["src"] = UrlHelper.cook_url(upload.url, secure: upload.secure?)
     end
 
     if small_upload = loading_image(upload)
-      cooked_url = UrlHelper.cook_url(small_upload.url, secure: upload.secure?)
-      img["data-small-upload"] = cook_url
+      img["data-small-upload"] = UrlHelper.cook_url(small_upload.url, secure: upload.secure?)
     end
   end
 
