@@ -409,15 +409,15 @@ class SessionController < ApplicationController
   end
 
   def one_time_password
-    @otp_username = otp_username = $redis.get "otp_#{params[:token]}"
+    @otp_username = otp_username = Discourse.redis.get "otp_#{params[:token]}"
 
     if otp_username && user = User.find_by_username(otp_username)
       if current_user&.username == otp_username
-        $redis.del "otp_#{params[:token]}"
+        Discourse.redis.del "otp_#{params[:token]}"
         return redirect_to path("/")
       elsif request.post?
         log_on_user(user)
-        $redis.del "otp_#{params[:token]}"
+        Discourse.redis.del "otp_#{params[:token]}"
         return redirect_to path("/")
       else
         # Display the form

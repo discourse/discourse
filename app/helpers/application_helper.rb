@@ -41,7 +41,7 @@ module ApplicationHelper
       return request.env[sk] if request.env[sk]
 
       request.env[sk] = key = (session[sk] ||= SecureRandom.hex)
-      $redis.setex "#{sk}_#{key}", 7.days, current_user.id.to_s
+      Discourse.redis.setex "#{sk}_#{key}", 7.days, current_user.id.to_s
       key
     end
   end

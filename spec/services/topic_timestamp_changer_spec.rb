@@ -64,13 +64,13 @@ describe TopicTimestampChanger do
     end
 
     it 'deletes the stats cache' do
-      $redis.set AdminDashboardData.stats_cache_key, "X"
-      $redis.set About.stats_cache_key, "X"
+      Discourse.redis.set AdminDashboardData.stats_cache_key, "X"
+      Discourse.redis.set About.stats_cache_key, "X"
 
       TopicTimestampChanger.new(topic: topic, timestamp: Time.zone.now.to_f).change!
 
-      expect($redis.get(AdminDashboardData.stats_cache_key)).to eq(nil)
-      expect($redis.get(About.stats_cache_key)).to eq(nil)
+      expect(Discourse.redis.get(AdminDashboardData.stats_cache_key)).to eq(nil)
+      expect(Discourse.redis.get(About.stats_cache_key)).to eq(nil)
     end
   end
 end

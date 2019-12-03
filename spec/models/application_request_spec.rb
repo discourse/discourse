@@ -5,7 +5,7 @@ require 'rails_helper'
 describe ApplicationRequest do
   before do
     ApplicationRequest.last_flush = Time.now.utc
-    $redis.flushall
+    Discourse.redis.flushall
   end
 
   after do
@@ -28,15 +28,15 @@ describe ApplicationRequest do
       inc(:http_total)
       inc(:http_total)
 
-      $redis.without_namespace.stubs(:incr).raises(Redis::CommandError.new("READONLY"))
-      $redis.without_namespace.stubs(:eval).raises(Redis::CommandError.new("READONLY"))
+      Discourse.redis.without_namespace.stubs(:incr).raises(Redis::CommandError.new("READONLY"))
+      Discourse.redis.without_namespace.stubs(:eval).raises(Redis::CommandError.new("READONLY"))
 
       # flush will be deferred no error raised
       inc(:http_total, autoflush: 3)
       ApplicationRequest.write_cache!
 
-      $redis.without_namespace.unstub(:incr)
-      $redis.without_namespace.unstub(:eval)
+      Discourse.redis.without_namespace.unstub(:incr)
+      Discourse.redis.without_namespace.unstub(:eval)
 
       inc(:http_total, autoflush: 3)
       expect(ApplicationRequest.http_total.first.count).to eq(3)

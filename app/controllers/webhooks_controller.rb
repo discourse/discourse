@@ -119,8 +119,8 @@ class WebhooksController < ActionController::Base
 
     # prevent replay attacks
     key = "mailgun_token_#{token}"
-    return false unless $redis.setnx(key, 1)
-    $redis.expire(key, 10.minutes)
+    return false unless Discourse.redis.setnx(key, 1)
+    Discourse.redis.expire(key, 10.minutes)
 
     # ensure timestamp isn't too far from current time
     return false if (Time.at(timestamp.to_i) - Time.now).abs > 12.hours.to_i

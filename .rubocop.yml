@@ -132,8 +132,17 @@ Style/Semicolon:
 Style/RedundantReturn:
   Enabled: true
 
-DiscourseCops/NoChdir:	
-  Enabled: true	
-  Exclude:	
-    - 'spec/**/*' # Specs are run sequentially, so chdir can be used	
+DiscourseCops/NoChdir:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*' # Specs are run sequentially, so chdir can be used
+    - 'plugins/*/spec/**/*'
+
+Style/GlobalVars:
+  Enabled: true
+  Severity: warning
+  Exclude:
+    - 'lib/tasks/**/*'
+    - 'script/**/*'
+    - 'spec/**/*.rb'
     - 'plugins/*/spec/**/*'

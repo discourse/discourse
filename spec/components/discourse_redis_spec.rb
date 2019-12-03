@@ -101,12 +101,12 @@ describe DiscourseRedis do
     it 'should check the status of the master server' do
       begin
         fallback_handler.master = false
-        $redis.without_namespace.expects(:set).raises(Redis::CommandError.new("READONLY"))
+        Discourse.redis.without_namespace.expects(:set).raises(Redis::CommandError.new("READONLY"))
         fallback_handler.expects(:verify_master).once
-        $redis.set('test', '1')
+        Discourse.redis.set('test', '1')
       ensure
         fallback_handler.master = true
-        $redis.del('test')
+        Discourse.redis.del('test')
       end
     end
   end

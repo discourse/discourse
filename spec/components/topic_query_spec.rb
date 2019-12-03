@@ -767,7 +767,7 @@ describe TopicQuery do
 
   context 'suggested_for' do
     def clear_cache!
-      $redis.keys('random_topic_cache*').each { |k| $redis.del k }
+      Discourse.redis.keys('random_topic_cache*').each { |k| Discourse.redis.del k }
     end
 
     before do

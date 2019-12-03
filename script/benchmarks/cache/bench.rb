@@ -7,14 +7,14 @@ Benchmark.ips do |x|
 
   x.report("redis setex string") do |times|
     while times > 0
-      $redis.setex("test_key", 60, "test")
+      Discourse.redis.setex("test_key", 60, "test")
       times -= 1
     end
   end
 
   x.report("redis setex marshal string") do |times|
     while times > 0
-      $redis.setex("test_keym", 60, Marshal.dump("test"))
+      Discourse.redis.setex("test_keym", 60, Marshal.dump("test"))
       times -= 1
     end
   end
@@ -39,14 +39,14 @@ end
 Benchmark.ips do |x|
   x.report("redis get string") do |times|
     while times > 0
-      $redis.get("test_key")
+      Discourse.redis.get("test_key")
       times -= 1
     end
   end
 
   x.report("redis get string marshal") do |times|
     while times > 0
-      Marshal.load($redis.get("test_keym"))
+      Marshal.load(Discourse.redis.get("test_keym"))
       times -= 1
     end
   end

@@ -18,8 +18,8 @@ class TopicViewItem < ActiveRecord::Base
       redis_key << ":ip-#{ip}"
     end
 
-    if skip_redis || $redis.setnx(redis_key, "1")
-      skip_redis || $redis.expire(redis_key, SiteSetting.topic_view_duration_hours.hours)
+    if skip_redis || Discourse.redis.setnx(redis_key, "1")
+      skip_redis || Discourse.redis.expire(redis_key, SiteSetting.topic_view_duration_hours.hours)
 
       TopicViewItem.transaction do
         # this is called real frequently, working hard to avoid exceptions

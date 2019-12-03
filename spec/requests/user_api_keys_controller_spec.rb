@@ -213,7 +213,7 @@ describe UserApiKeysController do
       parsed_otp = key.private_decrypt(encrypted_otp)
       redis_key = "otp_#{parsed_otp}"
 
-      expect($redis.get(redis_key)).to eq(user.username)
+      expect(Discourse.redis.get(redis_key)).to eq(user.username)
     end
 
     it "will just show the payload if no redirect" do
@@ -349,7 +349,7 @@ describe UserApiKeysController do
 
       parsed = key.private_decrypt(encrypted)
 
-      expect($redis.get("otp_#{parsed}")).to eq(user.username)
+      expect(Discourse.redis.get("otp_#{parsed}")).to eq(user.username)
     end
   end
 end

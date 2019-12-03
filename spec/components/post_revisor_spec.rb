@@ -91,7 +91,7 @@ describe PostRevisor do
     before do
       # There used to be a bug where wiki changes were considered posting "too similar"
       # so this is enabled and checked
-      $redis.delete_prefixed('unique-post')
+      Discourse.redis.delete_prefixed('unique-post')
       SiteSetting.unique_posts_mins = 10
     end
 

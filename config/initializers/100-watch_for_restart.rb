@@ -29,7 +29,7 @@ Thread.new do
 
         if old_time != time
           Rails.logger.info "attempting to reload #{$$} #{$PROGRAM_NAME} in #{wait_seconds} seconds"
-          $shutdown = true
+          $shutdown = true # rubocop:disable Style/GlobalVars
           sleep wait_seconds
           Rails.logger.info "restarting #{$$}"
           Process.kill("USR2", $$)

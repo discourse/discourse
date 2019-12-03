@@ -17,7 +17,7 @@ class DistributedMutex
   def initialize(key, redis: nil, validity: DEFAULT_VALIDITY)
     @key = key
     @using_global_redis = true if !redis
-    @redis = redis || $redis
+    @redis = redis || Discourse.redis
     @mutex = Mutex.new
     @validity = validity
   end

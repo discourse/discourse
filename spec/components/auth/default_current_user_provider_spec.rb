@@ -399,7 +399,7 @@ describe Auth::DefaultCurrentUserProvider do
     end
 
     after do
-      $redis.flushall
+      Discourse.redis.flushall
     end
 
     it "should not update last seen for suspended users" do
@@ -416,7 +416,7 @@ describe Auth::DefaultCurrentUserProvider do
       u.suspended_till = 1.year.from_now
       u.save!
 
-      $redis.del("user:#{user.id}:#{Time.now.to_date}")
+      Discourse.redis.del("user:#{user.id}:#{Time.now.to_date}")
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
       expect(provider2.current_user).to eq(nil)
 

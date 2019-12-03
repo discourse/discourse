@@ -2,7 +2,7 @@
 
 require File.expand_path("../../config/environment", __FILE__)
 
-@redis = $redis.without_namespace
+@redis = Discourse.redis.without_namespace
 
 stats = {}
 

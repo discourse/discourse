@@ -711,9 +711,9 @@ class User < ActiveRecord::Base
     now_date = now.to_date
     # Only update last seen once every minute
     redis_key = "user:#{id}:#{now_date}"
-    return unless $redis.setnx(redis_key, "1")
+    return unless Discourse.redis.setnx(redis_key, "1")
 
-    $redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
+    Discourse.redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
     update_previous_visit(now)
     # using update_column to avoid the AR transaction
     update_column(:last_seen_at, now)

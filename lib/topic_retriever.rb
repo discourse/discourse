@@ -24,8 +24,8 @@ class TopicRetriever
 
     # Throttle other users to once every 60 seconds
     retrieved_key = "retrieved_topic"
-    if $redis.setnx(retrieved_key, "1")
-      $redis.expire(retrieved_key, 60)
+    if Discourse.redis.setnx(retrieved_key, "1")
+      Discourse.redis.expire(retrieved_key, 60)
       return false
     end
 
