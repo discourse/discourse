@@ -68,7 +68,8 @@ function emojiOptions() {
   return {
     getURL: Discourse.getURLWithCDN,
     emojiSet: Discourse.SiteSettings.emoji_set,
-    enableEmojiShortcuts: Discourse.SiteSettings.enable_emoji_shortcuts
+    enableEmojiShortcuts: Discourse.SiteSettings.enable_emoji_shortcuts,
+    inlineEmoji: Discourse.SiteSettings.enable_inline_emoji_translation
   };
 }
 

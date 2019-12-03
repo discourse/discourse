@@ -120,7 +120,8 @@ const rule = {
             title = performEmojiUnescape(topicInfo.title, {
               getURL: options.getURL,
               emojiSet: options.emojiSet,
-              enableEmojiShortcuts: options.enableEmojiShortcuts
+              enableEmojiShortcuts: options.enableEmojiShortcuts,
+              inlineEmoji: options.inlineEmoji
             });
           }
 
@@ -156,6 +157,7 @@ export function setup(helper) {
     opts.enableEmoji = siteSettings.enable_emoji;
     opts.emojiSet = siteSettings.emoji_set;
     opts.enableEmojiShortcuts = siteSettings.enable_emoji_shortcuts;
+    opts.inlineEmoji = siteSettings.enable_inline_emoji_translation;
   });
 
   helper.registerPlugin(md => {
