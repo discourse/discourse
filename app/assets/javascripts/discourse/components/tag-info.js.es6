@@ -83,10 +83,17 @@ export default Component.extend({
     },
 
     deleteSynonym(tag) {
-      tag
-        .destroyRecord()
-        .then(() => this.tagInfo.synonyms.removeObject(tag))
-        .catch(() => bootbox.alert(I18n.t("generic_error")));
+      bootbox.confirm(
+        I18n.t("tagging.delete_synonym_confirm", { tag_name: tag.text }),
+        result => {
+          if (!result) return;
+
+          tag
+            .destroyRecord()
+            .then(() => this.tagInfo.synonyms.removeObject(tag))
+            .catch(() => bootbox.alert(I18n.t("generic_error")));
+        }
+      );
     },
 
     addSynonyms() {

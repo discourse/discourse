@@ -3057,6 +3057,7 @@ en:
       add_synonyms: "Add"
       add_synonyms_failed: "The following tags couldn't be added as synonyms: <b>%{tag_names}</b>. Ensure they don't have synonyms and aren't synonyms of another tag."
       remove_synonym: "Remove Synonym"
+      delete_synonym_confirm: 'Are you sure you want to delete the synonym "%{tag_name}"?'
       delete_tag: "Delete Tag"
       delete_confirm:
         one: "Are you sure you want to delete this tag and remove it from %{count} topic it is assigned to?"
