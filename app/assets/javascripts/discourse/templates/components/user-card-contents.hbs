@@ -140,6 +140,15 @@
         </div>
       {{/if}}
 
+      {{#if featuredTopic}}
+        <div class="card-row third-row">
+          <div class="featured-topic">
+            <span class="desc">{{i18n 'user.featured_topic'}}</span>
+            {{#link-to 'topic' featuredTopic.id}}{{featuredTopic.fancy_title}}{{/link-to}}
+          </div>
+        </div>
+      {{/if}}
+
       {{#if hasLocationOrWebsite}}
         <div class="card-row third-row">
           <div class="location-and-website">

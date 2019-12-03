@@ -58,5 +58,15 @@ export default Component.extend({
 
   @discourseComputed("topic.message_archived")
   archiveLabel: archived =>
-    archived ? "topic.move_to_inbox.title" : "topic.archive_message.title"
+    archived ? "topic.move_to_inbox.title" : "topic.archive_message.title",
+
+  @discourseComputed("topic.id", "currentUser.featured_topic")
+  topicFeaturedOnCard(topicId, featuredTopic) {
+    return featuredTopic && featuredTopic.id === topicId;
+  },
+
+  @discourseComputed("topic.user_id", "topic.isPrivateMessage")
+  showToggleFeatureOnCardButton(user_id, isPm) {
+    return !isPm && user_id === this.currentUser.get("id");
+  }
 });

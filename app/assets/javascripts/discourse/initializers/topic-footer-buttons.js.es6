@@ -166,5 +166,48 @@ export default {
         return this.site.mobileView;
       }
     });
+
+    registerTopicFooterButton({
+      id: "feature-on-card",
+      icon: "id-card",
+      priority: 300,
+      label: "topic.feature_on_card.title",
+      title: "topic.feature_on_card.help",
+      action: "toggleFeaturedOnCard",
+      displayed() {
+        return this.showFeatureOnCardButton;
+      }
+    });
+
+    registerTopicFooterButton({
+      dependentKeys: ["currentUser.featured_topic"],
+      id: "remove-feature-on-card",
+      icon: "id-card",
+      priority: 300,
+      label: this.featureOnCardLabel,
+      title: this.featureOnCardTitle,
+      label() {
+        return this.topicFeaturedOnCard
+          ? "topic.remove_from_card.title"
+          : "topic.feature_on_card.title";
+      },
+      title() {
+        return this.topicFeaturedOnCard
+          ? "topic.remove_from_card.help"
+          : "topic.feature_on_card.help";
+      },
+      classNames() {
+        return this.topicFeaturedOnCard
+          ? ["feature-on-card", "featured-on-card"]
+          : ["feature-on-card"];
+      },
+      action: "toggleFeaturedOnCard",
+      displayed() {
+        return this.showToggleFeatureOnCardButton;
+      },
+      dropdown() {
+        return this.site.mobileView;
+      }
+    });
   }
 };

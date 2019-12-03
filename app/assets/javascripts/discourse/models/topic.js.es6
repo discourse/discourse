@@ -444,6 +444,19 @@ const Topic = RestModel.extend({
     });
   },
 
+  toggleFeaturedOnCard(user) {
+    const removing = user.featured_topic && this.id === user.featured_topic.id;
+    const path = removing ? "remove-from-card" : "feature-on-card";
+    return ajax(`/t/${this.id}/${path}`, { type: "PUT" })
+      .then(() => {
+        const newFeaturedTopic = removing ? null : this;
+        user.set("featured_topic", newFeaturedTopic);
+        return;
+      })
+      .catch(popupAjaxError)
+      .finally();
+  },
+
   createGroupInvite(group) {
     return ajax(`/t/${this.id}/invite-group`, {
       type: "POST",

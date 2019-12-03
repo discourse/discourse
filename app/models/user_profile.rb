@@ -10,6 +10,7 @@ class UserProfile < ActiveRecord::Base
   belongs_to :card_background_upload, class_name: "Upload"
   belongs_to :profile_background_upload, class_name: "Upload"
   belongs_to :granted_title_badge, class_name: "Badge"
+  belongs_to :featured_topic, class_name: 'Topic'
 
   validates :bio_raw, length: { maximum: 3000 }
   validates :website, url: true, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }

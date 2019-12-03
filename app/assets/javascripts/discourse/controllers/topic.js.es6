@@ -679,6 +679,22 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
+    toggleFeaturedOnCard() {
+      if (!this.currentUser) return;
+      const toggle = () => {
+        this.model.toggleFeaturedOnCard(this.currentUser).catch(popupAjaxError);
+      };
+
+      if (
+        this.currentUser.featured_topic &&
+        this.currentUser.featured_topic.id !== this.model.id
+      ) {
+        bootbox.confirm(I18n.t("topic.remove_from_card.warning"), result => {
+          if (result) return toggle();
+        });
+      } else return toggle();
+    },
+
     jumpToIndex(index) {
       this._jumpToIndex(index);
     },

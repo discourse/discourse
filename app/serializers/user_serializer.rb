@@ -83,7 +83,8 @@ class UserSerializer < BasicUserSerializer
              :second_factor_remaining_backup_codes,
              :associated_accounts,
              :profile_background_upload_url,
-             :card_background_upload_url
+             :card_background_upload_url,
+             :featured_topic
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -484,4 +485,7 @@ class UserSerializer < BasicUserSerializer
     object.card_background_upload&.url
   end
 
+  def featured_topic
+    object.user_profile.featured_topic
+  end
 end

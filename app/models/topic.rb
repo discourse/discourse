@@ -127,6 +127,7 @@ class Topic < ActiveRecord::Base
   has_many :invites, through: :topic_invites, source: :invite
   has_many :topic_timers, dependent: :destroy
   has_many :reviewables
+  has_many :user_profiles
 
   has_one :user_warning
   has_one :first_post, -> { where post_number: 1 }, class_name: 'Post'

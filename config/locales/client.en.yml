@@ -848,6 +848,7 @@ en:
       enable_quoting: "Enable quote reply for highlighted text"
       enable_defer: "Enable defer to mark topics unread"
       change: "change"
+      featured_topic: "Featured Topic"
       moderator: "{{user}} is a moderator"
       admin: "{{user}} is an admin"
       moderator_tooltip: "This user is a moderator"
@@ -1998,6 +1999,14 @@ en:
       defer:
         help: "Mark as unread"
         title: "Defer"
+      feature_on_card:
+        help: "Add a link to this topic on your user card"
+        title: "Feature On Card"
+      remove_from_card:
+        warning: "You already have a topic featured on your card. If you continue, this topic will replace the existing topic."
+        help: "Remove the link to this topic on your user card"
+        title: "Remove From Card"
+
       list: "Topics"
       new: "new topic"
       unread: "unread"

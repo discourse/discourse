@@ -5,5 +5,10 @@
         color: $tertiary;
       }
     }
+    &.featured-on-card {
+      .d-icon {
+        color: $tertiary;
+      }
+    }
   }
 }

@@ -27,6 +27,8 @@ class TopicsController < ApplicationController
     :move_to_inbox,
     :convert_topic,
     :bookmark,
+    :feature_on_card,
+    :remove_from_card,
     :publish,
     :reset_bump_date
   ]
@@ -546,6 +548,23 @@ class TopicsController < ApplicationController
     result = PostActionCreator.create(current_user, first_post, :bookmark)
     return render_json_error(result) if result.failed?
 
+    render body: nil
+  end
+
+  def feature_on_card
+    topic = Topic.find(params[:topic_id].to_i)
+
+    raise Discourse::NotFound unless topic && topic.user_id == current_user.id
+    current_user.user_profile.update(featured_topic_id: topic.id)
+
+    render body: nil
+  end
+
+  def remove_from_card
+    topic = Topic.find(params[:topic_id].to_i)
+
+    raise Discourse::NotFound unless topic
+    current_user.user_profile.update(featured_topic_id: nil)
     render body: nil
   end
 

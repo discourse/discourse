@@ -46,6 +46,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :ignored_users,
              :title_count_mode,
              :timezone
+             :featured_topic
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name.downcase } }
@@ -216,5 +217,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def second_factor_enabled
     object.totp_enabled? || object.security_keys_enabled?
+  end
+
+  def featured_topic
+    object.user_profile.featured_topic
   end
 end

@@ -30,6 +30,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   showBadges: setting("enable_badges"),
 
   postStream: alias("topic.postStream"),
+  featuredTopic: alias("user.featured_topic"),
   enoughPostsForFiltering: gte("topicPostCount", 2),
   showFilter: and(
     "viewingTopic",

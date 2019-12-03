@@ -2329,6 +2329,13 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe '#feature_on_card' do
+    it 'needs you to be logged in' do
+      put "/t/#{topic.id}/feature-on-card.json"
+      expect(response.status).to eq(403)
+    end
+  end
+
   describe '#reset_new' do
     it 'needs you to be logged in' do
       put "/topics/reset-new.json"
