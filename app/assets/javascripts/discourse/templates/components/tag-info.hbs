@@ -4,10 +4,10 @@
       <div class="tag-name">
         {{discourse-tag tagInfo.name tagName="div" size="large"}}
         {{#if canAdminTag}}
-          {{d-button class="btn-default" action=(action "renameTag") icon="pencil-alt" label="tagging.rename_tag"}}
-          {{d-button class="btn-default" action=(action "toggleEditControls") icon="cog" label="tagging.edit_synonyms"}}
+          {{d-button class="btn-default" action=(action "renameTag") icon="pencil-alt" label="tagging.rename_tag" id="rename-tag"}}
+          {{d-button class="btn-default" action=(action "toggleEditControls") icon="cog" label="tagging.edit_synonyms" id="edit-synonyms"}}
           {{#if deleteAction}}
-            {{d-button class="btn-danger delete-tag" action=(action "deleteTag") icon="far-trash-alt" label="tagging.delete_tag"}}
+            {{d-button class="btn-danger delete-tag" action=(action "deleteTag") icon="far-trash-alt" label="tagging.delete_tag" id="delete-tag"}}
           {{/if}}
         {{/if}}
       </div>
@@ -32,10 +32,10 @@
               <div class='tag-box'>
                 {{discourse-tag tag.id pmOnly=tag.pmOnly tagName="div"}}
                 {{#if editSynonymsMode}}
-                  <a {{action "unlinkSynonym" tag}}>
+                  <a {{action "unlinkSynonym" tag}} class="unlink-synonym">
                     {{d-icon "unlink" title="tagging.remove_synonym"}}
                   </a>
-                  <a {{action "deleteSynonym" tag}}>
+                  <a {{action "deleteSynonym" tag}} class="delete-synonym">
                     {{d-icon "far-trash-alt" title="tagging.delete_tag"}}
                   </a>
                 {{/if}}
