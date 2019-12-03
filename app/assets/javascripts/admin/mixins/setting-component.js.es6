@@ -100,9 +100,22 @@ export default Mixin.create({
     return settingDefault !== bufferedValue;
   },
 
-  @discourseComputed("setting.defaultValues", "buffered.value")
-  defaultIsAvailable(defaultValues, bufferedValue) {
-    return defaultValues && !bufferedValue.includes(defaultValues);
+  @discourseComputed("buffered.value")
+  bufferedValues(bufferedValuesString) {
+    return bufferedValuesString && bufferedValuesString.split("|");
+  },
+
+  @discourseComputed("setting.defaultValues")
+  defaultValues(defaultValuesString) {
+    return defaultValuesString && defaultValuesString.split("|");
+  },
+
+  @discourseComputed("defaultValues", "bufferedValues")
+  defaultIsAvailable(defaultValues, bufferedValues) {
+    return (
+      defaultValues &&
+      !defaultValues.every(value => bufferedValues.includes(value))
+    );
   },
 
   _watchEnterKey: on("didInsertElement", function() {
@@ -221,12 +234,10 @@ export default Mixin.create({
     },
 
     setDefaultValues() {
-      const buffered_values = this.get("buffered.value").split("|");
-      const default_values = this.get("setting.defaultValues").split("|");
       this.set(
         "buffered.value",
-        buffered_values
-          .concat(default_values)
+        this.bufferedValues
+          .concat(this.defaultValues)
           .uniq()
           .join("|")
       );
