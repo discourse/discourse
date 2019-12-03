@@ -94,8 +94,8 @@ class UserOption < ActiveRecord::Base
     delay = SiteSetting.active_user_rate_limit_secs
 
     # only update last_redirected_to_top_at once every minute
-    return unless $redis.setnx(key, "1")
-    $redis.expire(key, delay)
+    return unless Discourse.redis.setnx(key, "1")
+    Discourse.redis.expire(key, delay)
 
     # delay the update
     Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.user_id, redirected_at: Time.zone.now)

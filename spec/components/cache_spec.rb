@@ -32,12 +32,12 @@ describe Cache do
   end
 
   it "can be cleared" do
-    $redis.set("boo", "boo")
+    Discourse.redis.set("boo", "boo")
     cache.write("hello0", "world")
     cache.write("hello1", "world")
     cache.clear
 
-    expect($redis.get("boo")).to eq("boo")
+    expect(Discourse.redis.get("boo")).to eq("boo")
     expect(cache.read("hello0")).to eq(nil)
   end
 
@@ -64,13 +64,13 @@ describe Cache do
       "bob"
     end
 
-    expect($redis.ttl(key)).to be_within(2.seconds).of(1.minute)
+    expect(Discourse.redis.ttl(key)).to be_within(2.seconds).of(1.minute)
 
     # we always expire withing a day
     cache.fetch("bla") { "hi" }
 
     key = cache.normalize_key("bla")
-    expect($redis.ttl(key)).to be_within(2.seconds).of(1.day)
+    expect(Discourse.redis.ttl(key)).to be_within(2.seconds).of(1.day)
   end
 
   it "can store and fetch correctly" do

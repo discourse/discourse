@@ -63,11 +63,11 @@ describe RateLimiter do
 
     context 'handles readonly' do
       before do
-        $redis.without_namespace.slaveof '10.0.0.1', '99999'
+        Discourse.redis.without_namespace.slaveof '10.0.0.1', '99999'
       end
 
       after do
-        $redis.without_namespace.slaveof 'no', 'one'
+        Discourse.redis.without_namespace.slaveof 'no', 'one'
       end
 
       it 'does not explode' do

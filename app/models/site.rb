@@ -102,7 +102,7 @@ class Site
     if guardian.anonymous?
       seq = MessageBus.last_id('/site_json')
 
-      cached_json, cached_seq, cached_version = $redis.mget('site_json', 'site_json_seq', 'site_json_version')
+      cached_json, cached_seq, cached_version = Discourse.redis.mget('site_json', 'site_json_seq', 'site_json_version')
 
       if cached_json && seq == cached_seq.to_i && Discourse.git_version == cached_version
         return cached_json
@@ -114,10 +114,10 @@ class Site
     json = MultiJson.dump(SiteSerializer.new(site, root: false, scope: guardian))
 
     if guardian.anonymous?
-      $redis.multi do
-        $redis.setex 'site_json', 1800, json
-        $redis.set 'site_json_seq', seq
-        $redis.set 'site_json_version', Discourse.git_version
+      Discourse.redis.multi do
+        Discourse.redis.setex 'site_json', 1800, json
+        Discourse.redis.set 'site_json_seq', seq
+        Discourse.redis.set 'site_json_version', Discourse.git_version
       end
     end
 

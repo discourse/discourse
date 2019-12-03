@@ -243,8 +243,8 @@ class TrustLevel3Requirements
   end
 
   def self.clear_cache
-    $redis.del NUM_TOPICS_KEY
-    $redis.del NUM_POSTS_KEY
+    Discourse.redis.del NUM_TOPICS_KEY
+    Discourse.redis.del NUM_POSTS_KEY
   end
 
   CACHE_DURATION = 1.day.seconds - 60
@@ -252,17 +252,17 @@ class TrustLevel3Requirements
   NUM_POSTS_KEY  = "tl3_num_posts"
 
   def self.num_topics_in_time_period
-    $redis.get(NUM_TOPICS_KEY) || begin
+    Discourse.redis.get(NUM_TOPICS_KEY) || begin
       count = Topic.listable_topics.visible.created_since(SiteSetting.tl3_time_period.days.ago).count
-      $redis.setex NUM_TOPICS_KEY, CACHE_DURATION, count
+      Discourse.redis.setex NUM_TOPICS_KEY, CACHE_DURATION, count
       count
     end
   end
 
   def self.num_posts_in_time_period
-    $redis.get(NUM_POSTS_KEY) || begin
+    Discourse.redis.get(NUM_POSTS_KEY) || begin
       count = Post.public_posts.visible.created_since(SiteSetting.tl3_time_period.days.ago).count
-      $redis.setex NUM_POSTS_KEY, CACHE_DURATION, count
+      Discourse.redis.setex NUM_POSTS_KEY, CACHE_DURATION, count
       count
     end
   end

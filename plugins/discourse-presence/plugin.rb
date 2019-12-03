@@ -36,20 +36,20 @@ after_initialize do
     # return true if a key was added
     def self.add(type, id, user_id)
       key = get_redis_key(type, id)
-      result = $redis.hset(key, user_id, Time.zone.now)
-      $redis.expire(key, MAX_BACKLOG_AGE)
+      result = Discourse.redis.hset(key, user_id, Time.zone.now)
+      Discourse.redis.expire(key, MAX_BACKLOG_AGE)
       result
     end
 
     # return true if a key was deleted
     def self.remove(type, id, user_id)
       key = get_redis_key(type, id)
-      $redis.expire(key, MAX_BACKLOG_AGE)
-      $redis.hdel(key, user_id) > 0
+      Discourse.redis.expire(key, MAX_BACKLOG_AGE)
+      Discourse.redis.hdel(key, user_id) > 0
     end
 
     def self.get_users(type, id)
-      user_ids = $redis.hkeys(get_redis_key(type, id)).map(&:to_i)
+      user_ids = Discourse.redis.hkeys(get_redis_key(type, id)).map(&:to_i)
       User.where(id: user_ids)
     end
 
@@ -88,7 +88,7 @@ after_initialize do
       has_changed = false
 
       # Delete entries older than 20 seconds
-      hash = $redis.hgetall(get_redis_key(type, id))
+      hash = Discourse.redis.hgetall(get_redis_key(type, id))
       hash.each do |user_id, time|
         if Time.zone.now - Time.parse(time) >= 20
           has_changed |= remove(type, id, user_id)

@@ -163,11 +163,11 @@ class UserStat < ActiveRecord::Base
   end
 
   def self.last_seen_cached(id)
-    $redis.get(last_seen_key(id))
+    Discourse.redis.get(last_seen_key(id))
   end
 
   def self.cache_last_seen(id, val)
-    $redis.setex(last_seen_key(id), MAX_TIME_READ_DIFF, val)
+    Discourse.redis.setex(last_seen_key(id), MAX_TIME_READ_DIFF, val)
   end
 
   protected

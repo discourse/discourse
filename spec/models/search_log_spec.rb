@@ -128,7 +128,7 @@ RSpec.describe SearchLog, type: :model do
         expect(action).to eq(:created)
 
         freeze_time(10.minutes.from_now)
-        $redis.del(SearchLog.redis_key(ip_address: '192.168.0.1', user_id: user.id))
+        Discourse.redis.del(SearchLog.redis_key(ip_address: '192.168.0.1', user_id: user.id))
 
         action, _ = SearchLog.log(
           term: 'hello',

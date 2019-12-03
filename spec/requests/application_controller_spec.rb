@@ -302,7 +302,7 @@ RSpec.describe ApplicationController do
 
         it 'should handle 404 to a css file' do
 
-          $redis.del("page_not_found_topics")
+          Discourse.redis.del("page_not_found_topics")
 
           topic1 = Fabricate(:topic)
           get '/stylesheets/mobile_1_4cd559272273fe6d3c7db620c617d596a5fdf240.css', headers: { 'HTTP_ACCEPT' => 'text/css,*/*,q=0.1' }
@@ -323,7 +323,7 @@ RSpec.describe ApplicationController do
       end
 
       it 'should cache results' do
-        $redis.del("page_not_found_topics")
+        Discourse.redis.del("page_not_found_topics")
 
         topic1 = Fabricate(:topic)
         get '/t/nope-nope/99999999'

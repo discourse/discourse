@@ -51,15 +51,15 @@ module DiscourseNarrativeBot
 
       key = "#{DiscourseNarrativeBot::PLUGIN_NAME}:reset-rate-limit:#{post.topic_id}:#{data['state']}"
 
-      if !(count = $redis.get(key))
+      if !(count = Discourse.redis.get(key))
         count = 0
-        $redis.setex(key, duration, count)
+        Discourse.redis.setex(key, duration, count)
       end
 
       if count.to_i < 2
         post.default_rate_limiter.rollback!
         post.limit_posts_per_day&.rollback!
-        $redis.incr(key)
+        Discourse.redis.incr(key)
       end
     end
 

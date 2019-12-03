@@ -122,15 +122,15 @@ module Oneboxer
   end
 
   def self.is_previewing?(user_id)
-    $redis.get(preview_key(user_id)) == "1"
+    Discourse.redis.get(preview_key(user_id)) == "1"
   end
 
   def self.preview_onebox!(user_id)
-    $redis.setex(preview_key(user_id), 1.minute, "1")
+    Discourse.redis.setex(preview_key(user_id), 1.minute, "1")
   end
 
   def self.onebox_previewed!(user_id)
-    $redis.del(preview_key(user_id))
+    Discourse.redis.del(preview_key(user_id))
   end
 
   def self.engine(url)
