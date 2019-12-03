@@ -1,0 +1,38 @@
+{{#d-modal-body}}
+  {{#conditional-loading-spinner condition=loading}}
+    {{#if errorMessage}}
+    <div class="control-group">
+      <div class="controls">
+        <div class='alert alert-error'>{{errorMessage}}</div>
+      </div>
+    </div>
+    {{/if}}
+
+    <div class="control-group">
+      <label class="control-label" for="name">
+        {{i18n 'post.bookmarks.name'}}
+      </label>
+
+      {{input value=model.name name="name" class="bookmark-name" placeholder=(i18n "post.bookmarks.name_placeholder")}}
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" for="set_reminder">
+        {{i18n 'post.bookmarks.set_reminder'}}
+      </label>
+
+      <div class="tap-tile-grid">
+        {{#if usingMobileDevice}}
+          {{tap-tile icon="desktop" text="Next time I'm at my desktop"}}
+        {{/if}}
+
+        {{tap-tile icon="far-moon" text="Later today 6:00pm"}}
+        {{tap-tile icon="briefcase" text="Next business day"}}
+        {{tap-tile icon="far-sun" text="Tomorrow Sat 8:00am"}}
+        {{tap-tile icon="far-clock" text="Next week Oct 25th, 8:00am"}}
+        {{tap-tile icon="far-calendar-plus" text="Next month Nov 18th, 8:00am"}}
+        {{tap-tile icon="calendar-alt" text="Custom date and time"}}
+      </div>
+    </div>
+  {{/conditional-loading-spinner}}
+{{/d-modal-body}}

@@ -16,6 +16,7 @@ import Composer from "discourse/models/composer";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import showModal from "discourse/lib/show-modal";
 
 const Post = RestModel.extend({
   // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
@@ -334,6 +335,15 @@ const Post = RestModel.extend({
         }
         throw new Error(error);
       });
+  },
+
+  toggleUltraBookmark() {
+    // const bookmarkController =
+    showModal("bookmark", {
+      model: this.model,
+      title: "post.bookmarks.create",
+      modalClass: "bookmark-with-reminder"
+    });
   },
 
   updateActionsSummary(json) {

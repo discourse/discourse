@@ -2594,6 +2594,12 @@ en:
           html_part:
             title: "Show the html part of the email"
             button: "HTML"
+      
+      bookmarks:
+        create: "Create bookmark"
+        name: "Name"
+        name_placeholder: "Name the bookmark to help jog your memory"
+        set_reminder: "Set a reminder"
 
     category:
       can: "can&hellip; "

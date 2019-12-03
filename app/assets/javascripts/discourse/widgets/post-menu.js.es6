@@ -301,6 +301,26 @@ registerButton("bookmark", attrs => {
   };
 });
 
+registerButton("ultraBookmark", attrs => {
+  if (!attrs.canBookmark) {
+    return;
+  }
+
+  let className = "bookmark";
+
+  if (attrs.bookmarked) {
+    className += " bookmarked";
+  }
+
+  return {
+    id: attrs.bookmarked ? "unbookmark" : "bookmark",
+    action: "toggleUltraBookmark",
+    title: attrs.bookmarked ? "bookmarks.created" : "bookmarks.not_bookmarked",
+    className,
+    icon: "rocket"
+  };
+});
+
 registerButton("admin", attrs => {
   if (!attrs.canManage && !attrs.canWiki) {
     return;

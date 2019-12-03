@@ -679,6 +679,24 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
+    toggleUltraBookmark(post) {
+      if (!this.currentUser) {
+        return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
+      } else if (post) {
+        return post.toggleUltraBookmark();
+      } else {
+        return this.model.toggleUltraBookmark();
+        // return this.model.toggleUltraBookmark().then(changedIds => {
+        //   if (!changedIds) {
+        //     return;
+        //   }
+        //   changedIds.forEach(id =>
+        //     this.appEvents.trigger("post-stream:refresh", { id })
+        //   );
+        // });
+      }
+    },
+
     jumpToIndex(index) {
       this._jumpToIndex(index);
     },

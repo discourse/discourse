@@ -1,0 +1,29 @@
+.tap-tile-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .tap-tile {
+    padding: 10px 5px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    border: 2px solid #c7d2db;
+    margin: 0 0 20px;
+    width: 28%;
+    font-size: 14px;
+
+    .svg-icon, .svg-icon-title {
+      width: 2.5em;
+      height: 2.5em;
+      margin-bottom: 10px;
+    }
+  }
+
+  &::after {
+    content: "";
+    width: 31%;
+  }
+}
