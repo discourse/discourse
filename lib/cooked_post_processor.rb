@@ -396,11 +396,13 @@ class CookedPostProcessor
         img["srcset"] = "#{UrlHelper.cook_url(img["src"], secure: upload.secure?)}#{srcset}" if srcset.present?
       end
     else
-      img["src"] = upload.url
+      cooked_url = UrlHelper.cook_url(upload.url, secure: upload.secure?)
+      img["src"] = cooked_url
     end
 
     if small_upload = loading_image(upload)
-      img["data-small-upload"] = small_upload.url
+      cooked_url = UrlHelper.cook_url(small_upload.url, secure: upload.secure?)
+      img["data-small-upload"] = cook_url
     end
   end
 
