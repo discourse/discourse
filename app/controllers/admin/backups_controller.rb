@@ -204,7 +204,7 @@ class Admin::BackupsController < Admin::AdminController
     begin
       upload_url = store.generate_upload_url(filename)
     rescue BackupRestore::BackupStore::BackupFileExists
-      return render_json_error(I18n("backup.file_exists"))
+      return render_json_error(I18n.t("backup.file_exists"))
     rescue BackupRestore::BackupStore::StorageError => e
       return render_json_error(e)
     end
