@@ -185,21 +185,21 @@ describe Discourse do
     let(:user_readonly_mode_key) { Discourse::USER_READONLY_MODE_KEY }
 
     after do
-      $redis.del(readonly_mode_key)
-      $redis.del(user_readonly_mode_key)
+      Discourse.redis.del(readonly_mode_key)
+      Discourse.redis.del(user_readonly_mode_key)
     end
 
     def assert_readonly_mode(message, key, ttl = -1)
       expect(message.channel).to eq(Discourse.readonly_channel)
       expect(message.data).to eq(true)
-      expect($redis.get(key)).to eq("1")
-      expect($redis.ttl(key)).to eq(ttl)
+      expect(Discourse.redis.get(key)).to eq("1")
+      expect(Discourse.redis.ttl(key)).to eq(ttl)
     end
 
     def assert_readonly_mode_disabled(message, key)
       expect(message.channel).to eq(Discourse.readonly_channel)
       expect(message.data).to eq(false)
-      expect($redis.get(key)).to eq(nil)
+      expect(Discourse.redis.get(key)).to eq(nil)
     end
 
     def get_readonly_message
@@ -217,14 +217,14 @@ describe Discourse do
 
     describe ".enable_readonly_mode" do
       it "adds a key in redis and publish a message through the message bus" do
-        expect($redis.get(readonly_mode_key)).to eq(nil)
+        expect(Discourse.redis.get(readonly_mode_key)).to eq(nil)
         message = get_readonly_message { Discourse.enable_readonly_mode }
         assert_readonly_mode(message, readonly_mode_key, readonly_mode_ttl)
       end
 
       context 'user enabled readonly mode' do
         it "adds a key in redis and publish a message through the message bus" do
-          expect($redis.get(user_readonly_mode_key)).to eq(nil)
+          expect(Discourse.redis.get(user_readonly_mode_key)).to eq(nil)
           message = get_readonly_message { Discourse.enable_readonly_mode(user_readonly_mode_key) }
           assert_readonly_mode(message, user_readonly_mode_key)
         end
@@ -252,7 +252,7 @@ describe Discourse do
       end
 
       it "returns true when the key is present in redis" do
-        $redis.set(readonly_mode_key, 1)
+        Discourse.redis.set(readonly_mode_key, 1)
         expect(Discourse.readonly_mode?).to eq(true)
       end
 

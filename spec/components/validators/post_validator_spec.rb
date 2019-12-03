@@ -198,7 +198,7 @@ describe PostValidator do
     end
 
     after do
-      $redis.del(@key)
+      Discourse.redis.del(@key)
     end
 
     context "post is unique" do

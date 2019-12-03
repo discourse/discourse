@@ -16,7 +16,7 @@ class Jobs::Onceoff < ::Jobs::Base
   # Pass `force: true` to force it happen again
   def execute(args)
     job_name = self.class.name_for(self.class)
-    has_lock = $redis.setnx(running_key_name, Time.now.to_i)
+    has_lock = Discourse.redis.setnx(running_key_name, Time.now.to_i)
 
     # If we can't get a lock, just noop
     if args[:force] || has_lock
@@ -25,7 +25,7 @@ class Jobs::Onceoff < ::Jobs::Base
         execute_onceoff(args)
         OnceoffLog.create!(job_name: job_name)
       ensure
-        $redis.del(running_key_name) if has_lock
+        Discourse.redis.del(running_key_name) if has_lock
       end
     end
 

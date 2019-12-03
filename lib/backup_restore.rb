@@ -36,21 +36,21 @@ module BackupRestore
   end
 
   def self.mark_as_running!
-    $redis.setex(running_key, 60, "1")
+    Discourse.redis.setex(running_key, 60, "1")
     save_start_logs_message_id
     keep_it_running
   end
 
   def self.is_operation_running?
-    !!$redis.get(running_key)
+    !!Discourse.redis.get(running_key)
   end
 
   def self.mark_as_not_running!
-    $redis.del(running_key)
+    Discourse.redis.del(running_key)
   end
 
   def self.should_shutdown?
-    !!$redis.get(shutdown_signal_key)
+    !!Discourse.redis.get(shutdown_signal_key)
   end
 
   def self.can_rollback?
@@ -128,7 +128,7 @@ module BackupRestore
     Thread.new do
       # this thread will be killed when the fork dies
       while true
-        $redis.expire(running_key, 1.minute)
+        Discourse.redis.expire(running_key, 1.minute)
         sleep 30.seconds
       end
     end
@@ -139,20 +139,20 @@ module BackupRestore
   end
 
   def self.set_shutdown_signal!
-    $redis.set(shutdown_signal_key, "1")
+    Discourse.redis.set(shutdown_signal_key, "1")
   end
 
   def self.clear_shutdown_signal!
-    $redis.del(shutdown_signal_key)
+    Discourse.redis.del(shutdown_signal_key)
   end
 
   def self.save_start_logs_message_id
     id = MessageBus.last_id(LOGS_CHANNEL)
-    $redis.set(start_logs_message_id_key, id)
+    Discourse.redis.set(start_logs_message_id_key, id)
   end
 
   def self.start_logs_message_id
-    $redis.get(start_logs_message_id_key).to_i
+    Discourse.redis.get(start_logs_message_id_key).to_i
   end
 
   def self.start_logs_message_id_key

@@ -7,18 +7,18 @@ describe RandomTopicSelector do
   it 'can correctly use cache' do
     key = RandomTopicSelector.cache_key
 
-    $redis.del key
+    Discourse.redis.del key
 
     4.times do |t|
-      $redis.rpush key, t
+      Discourse.redis.rpush key, t
     end
 
     expect(RandomTopicSelector.next(0)).to eq([])
     expect(RandomTopicSelector.next(2)).to eq([0, 1])
 
-    $redis.expects(:multi).returns(Discourse.received_redis_readonly!)
+    Discourse.redis.expects(:multi).returns(Discourse.received_redis_readonly!)
     expect(RandomTopicSelector.next(2)).to eq([2, 3])
-    $redis.unstub(:multi)
+    Discourse.redis.unstub(:multi)
 
     expect(RandomTopicSelector.next(2)).to eq([2, 3])
     expect(RandomTopicSelector.next(2)).to eq([])

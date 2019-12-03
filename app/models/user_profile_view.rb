@@ -16,8 +16,8 @@ class UserProfileView < ActiveRecord::Base
       redis_key << ":ip-#{ip}"
     end
 
-    if skip_redis || $redis.setnx(redis_key, '1')
-      skip_redis || $redis.expire(redis_key, SiteSetting.user_profile_view_duration_hours.hours)
+    if skip_redis || Discourse.redis.setnx(redis_key, '1')
+      skip_redis || Discourse.redis.expire(redis_key, SiteSetting.user_profile_view_duration_hours.hours)
 
       self.transaction do
         sql = "INSERT INTO user_profile_views (user_profile_id, ip_address, viewed_at, user_id)

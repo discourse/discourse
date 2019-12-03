@@ -33,7 +33,7 @@ describe Topic do
 
       describe 'censored words' do
         after do
-          $redis.flushall
+          Discourse.redis.flushall
         end
 
         describe 'when title contains censored words' do

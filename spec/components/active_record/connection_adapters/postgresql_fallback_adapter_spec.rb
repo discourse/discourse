@@ -41,7 +41,7 @@ describe ActiveRecord::ConnectionHandling do
     ActiveRecord::Base.clear_all_connections!
     ActiveRecord::Base.establish_connection
 
-    $redis.flushall
+    Discourse.redis.flushall
   end
 
   describe "#postgresql_fallback_connection" do
