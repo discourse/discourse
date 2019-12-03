@@ -7,10 +7,40 @@ require_dependency "guardian"
 module Middleware
   class AnonymousCache
 
+    def self.cache_key_segments
+      @@cache_key_segments ||= {
+        m: 'key_is_mobile?',
+        c: 'key_is_crawler?',
+        b: 'key_has_brotli?',
+        t: 'key_cache_theme_ids',
+        ca: 'key_compress_anon'
+      }
+    end
+
+    # Compile a string builder method that will be called to create
+    # an anonymous cache key
+    def self.compile_key_builder
+      method = +"def self.__compiled_key_builder(h)\n  \""
+      cache_key_segments.each do |k, v|
+        raise "Invalid key name" unless k =~ /^[a-z]+$/
+        raise "Invalid method name" unless v =~ /^key_[a-z_\?]+$/
+        method << "|#{k}=#\{h.#{v}}"
+      end
+      method << "\"\nend"
+      eval(method)
+      @@compiled = true
+    end
+
+    def self.build_cache_key(helper)
+      compile_key_builder unless defined?(@@compiled)
+      __compiled_key_builder(helper)
+    end
+
     def self.anon_cache(env, duration)
       env["ANON_CACHE_DURATION"] = duration
     end
 
+    # This gives us an API to insert anonymous cache segments
     class Helper
       RACK_SESSION     = "rack.session"
       USER_AGENT       = "HTTP_USER_AGENT"
@@ -36,7 +66,7 @@ module Middleware
         @is_mobile = val ? :true : :false
       end
 
-      def is_mobile?
+      def key_is_mobile?
         @is_mobile ||=
           begin
             session = @env[RACK_SESSION]
@@ -50,7 +80,7 @@ module Middleware
         @is_mobile == :true
       end
 
-      def has_brotli?
+      def key_has_brotli?
         @has_brotli ||=
           begin
             @env[ACCEPT_ENCODING].to_s =~ /br/ ? :true : :false
@@ -58,7 +88,7 @@ module Middleware
         @has_brotli == :true
       end
 
-      def is_crawler?
+      def key_is_crawler?
         @is_crawler ||=
           begin
             user_agent = @env[USER_AGENT]
@@ -73,7 +103,19 @@ module Middleware
       end
 
       def cache_key
-        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_ids.join(",")}#{GlobalSetting.compress_anon_cache}"
+        return @cache_key if defined?(@cache_key)
+
+        @cache_key = +"ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
+        @cache_key << AnonymousCache.build_cache_key(self)
+        @cache_key
+      end
+
+      def key_cache_theme_ids
+        theme_ids.join(',')
+      end
+
+      def key_compress_anon
+        GlobalSetting.compress_anon_cache
       end
 
       def theme_ids
