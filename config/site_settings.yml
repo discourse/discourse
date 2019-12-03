@@ -1389,6 +1389,9 @@ security:
   content_security_policy_script_src:
     type: list
     default: ""
+  content_security_policy_allow_unsafe_eval:
+    default: true
+    hidden: true
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
