@@ -1,4 +1,4 @@
-import { alias, filter, or } from "@ember/object/computed";
+import { filter } from "@ember/object/computed";
 import Component from "@ember/component";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 import deprecated from "discourse-common/lib/deprecated";
