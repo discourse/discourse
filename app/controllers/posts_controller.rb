@@ -335,7 +335,7 @@ class PostsController < ApplicationController
     params.require(:post_ids)
     agree_with_first_reply_flag = (params[:agree_with_first_reply_flag] || true).to_s == "true"
 
-    posts = Post.where(id: post_ids_including_replies)
+    posts = Post.where(id: post_ids_including_replies).order(:id)
     raise Discourse::InvalidParameters.new(:post_ids) if posts.blank?
 
     # Make sure we can delete the posts
