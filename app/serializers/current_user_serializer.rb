@@ -44,7 +44,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :groups,
              :second_factor_enabled,
              :ignored_users,
-             :title_count_mode
+             :title_count_mode,
+             :timezone
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name.downcase } }
@@ -104,6 +105,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def redirected_to_top
     object.user_option.redirected_to_top
+  end
+
+  def timezone
+    object.user_option.timezone
   end
 
   def can_send_private_email_messages
