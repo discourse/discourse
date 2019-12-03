@@ -285,6 +285,15 @@ module ApplicationHelper
     content_tag(:script, MultiJson.dump(json).html_safe, type: 'application/ld+json'.freeze)
   end
 
+  def discourse_generator_tag
+    if SiteSetting.hide_discourse_version
+      version_content = "Discourse"
+    else
+      version_content = "Discourse #{Discourse::VERSION::STRING} - https://github.com/discourse/discourse version #{Discourse.git_version}"
+    end
+    tag(:meta, name: 'generator', content: version_content)
+  end
+
   def gsub_emoji_to_unicode(str)
     Emoji.gsub_emoji_to_unicode(str)
   end

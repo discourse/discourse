@@ -318,4 +318,19 @@ describe ApplicationHelper do
       end
     end
   end
+
+  describe 'discourse_generator_tag' do
+    context 'default' do
+      it 'includes version information' do
+        expect(helper.discourse_generator_tag).to match(/content="Discourse #{Discourse::VERSION::STRING}/)
+      end
+    end
+
+    context 'hide version information' do
+      it 'doesnt include version information' do
+        SiteSetting.hide_discourse_version = true
+        expect(helper.discourse_generator_tag).to match(/content="Discourse"/)
+      end
+    end
+  end
 end
