@@ -346,10 +346,8 @@ class CookedPostProcessor
       end
     end
 
-    cooked_upload_url = UrlHelper.cook_url(upload.url, secure: upload.secure?)
-
-    add_lightbox!(img, original_width, original_height, upload, cooked_upload_url, cropped: crop) if img.ancestors('.quote').blank?
-    optimize_image!(img, upload, cooked_upload_url, cropped: crop) if upload
+    add_lightbox!(img, original_width, original_height, upload, cropped: crop) if img.ancestors('.quote').blank?
+    optimize_image!(img, upload, cropped: crop) if upload
   end
 
   def loading_image(upload)
@@ -374,7 +372,7 @@ class CookedPostProcessor
       .each { |r| yield r if r > 1 }
   end
 
-  def optimize_image!(img, upload, cooked_upload_url, cropped: false)
+  def optimize_image!(img, upload, cropped: false)
     w, h = img["width"].to_i, img["height"].to_i
 
     thumbnail = upload.thumbnail(w, h)
@@ -388,7 +386,8 @@ class CookedPostProcessor
         resized_h = (h * ratio).to_i
 
         if !cropped && upload.width && resized_w > upload.width
-          srcset << ", #{cooked_upload_url} #{ratio.to_s.sub(/\.0$/, "")}x"
+          cooked_url = UrlHelper.cook_url(upload.url, secure: upload.secure?)
+          srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
         elsif t = upload.thumbnail(resized_w, resized_h)
           cooked_url = UrlHelper.cook_url(t.url, secure: upload.secure?)
           srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
@@ -397,7 +396,7 @@ class CookedPostProcessor
         img["srcset"] = "#{UrlHelper.cook_url(img["src"], secure: upload.secure?)}#{srcset}" if srcset.present?
       end
     else
-      img["src"] = cooked_upload_url
+      img["src"] = UrlHelper.cook_url(upload.url, secure: upload.secure?)
     end
 
     if small_upload = loading_image(upload)
@@ -405,14 +404,15 @@ class CookedPostProcessor
     end
   end
 
-  def add_lightbox!(img, original_width, original_height, upload, cooked_upload_url, cropped: false)
+  def add_lightbox!(img, original_width, original_height, upload, cropped: false)
     # first, create a div to hold our lightbox
     lightbox = create_node("div", LIGHTBOX_WRAPPER_CSS_CLASS)
     img.add_next_sibling(lightbox)
     lightbox.add_child(img)
 
     # then, the link to our larger image
-    a = create_link_node("lightbox", cooked_upload_url)
+    src = UrlHelper.cook_url(upload.url, secure: upload.secure?)
+    a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
 
     if upload
