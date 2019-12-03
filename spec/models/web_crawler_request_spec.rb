@@ -31,14 +31,14 @@ describe WebCrawlerRequest do
     inc('Googlebot')
     inc('Googlebot')
 
-    $redis.without_namespace.stubs(:incr).raises(Redis::CommandError.new("READONLY"))
-    $redis.without_namespace.stubs(:eval).raises(Redis::CommandError.new("READONLY"))
+    Discourse.redis.without_namespace.stubs(:incr).raises(Redis::CommandError.new("READONLY"))
+    Discourse.redis.without_namespace.stubs(:eval).raises(Redis::CommandError.new("READONLY"))
 
     inc('Googlebot', autoflush: 3)
     WebCrawlerRequest.write_cache!
 
-    $redis.without_namespace.unstub(:incr)
-    $redis.without_namespace.unstub(:eval)
+    Discourse.redis.without_namespace.unstub(:incr)
+    Discourse.redis.without_namespace.unstub(:eval)
 
     inc('Googlebot', autoflush: 3)
     expect(web_crawler_request('Googlebot').count).to eq(3)

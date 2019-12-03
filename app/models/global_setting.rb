@@ -26,9 +26,9 @@ class GlobalSetting
 
     if @safe_secret_key_base && @token_in_redis && (@token_last_validated + REDIS_VALIDATE_SECONDS) < Time.now
       @token_last_validated = Time.now
-      token = $redis.without_namespace.get(REDIS_SECRET_KEY)
+      token = Discourse.redis.without_namespace.get(REDIS_SECRET_KEY)
       if token.nil?
-        $redis.without_namespace.set(REDIS_SECRET_KEY, @safe_secret_key_base)
+        Discourse.redis.without_namespace.set(REDIS_SECRET_KEY, @safe_secret_key_base)
       end
     end
 
@@ -39,10 +39,10 @@ class GlobalSetting
         @token_in_redis = true
         @token_last_validated = Time.now
 
-        token = $redis.without_namespace.get(REDIS_SECRET_KEY)
+        token = Discourse.redis.without_namespace.get(REDIS_SECRET_KEY)
         unless token && token =~ VALID_SECRET_KEY
           token = SecureRandom.hex(64)
-          $redis.without_namespace.set(REDIS_SECRET_KEY, token)
+          Discourse.redis.without_namespace.set(REDIS_SECRET_KEY, token)
         end
       end
       if !secret_key_base.blank? && token != secret_key_base

@@ -6,9 +6,9 @@ require_dependency 'distributed_memoizer'
 describe DistributedMemoizer do
 
   before do
-    $redis.del(DistributedMemoizer.redis_key("hello"))
-    $redis.del(DistributedMemoizer.redis_lock_key("hello"))
-    $redis.unwatch
+    Discourse.redis.del(DistributedMemoizer.redis_key("hello"))
+    Discourse.redis.del(DistributedMemoizer.redis_lock_key("hello"))
+    Discourse.redis.unwatch
   end
 
   # NOTE we could use a mock redis here, but I think it makes sense to test the real thing

@@ -235,7 +235,7 @@ module Discourse
     require 'freedom_patches/redis'
     # Use redis for our cache
     config.cache_store = DiscourseRedis.new_redis_store
-    $redis = DiscourseRedis.new
+    $redis = DiscourseRedis.new # rubocop:disable Style/GlobalVars
     Logster.store = Logster::RedisStore.new(DiscourseRedis.new)
 
     # we configure rack cache on demand in an initializer

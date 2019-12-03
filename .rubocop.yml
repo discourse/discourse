@@ -125,3 +125,12 @@ Style/SingleLineMethods:
 Style/Semicolon:
   Enabled: true
   AllowAsExpressionSeparator: true
+
+Style/GlobalVars:
+  Enabled: true
+  Severity: warning
+  Exclude:
+    - 'lib/tasks/**/*'
+    - 'script/**/*'
+    - 'spec/**/*.rb'
+    - 'plugins/*/spec/**/*'

@@ -7,14 +7,14 @@ class SecureSession
   end
 
   def [](key)
-    $redis.get("#{@prefix}#{key}")
+    Discourse.redis.get("#{@prefix}#{key}")
   end
 
   def []=(key, val)
     if val == nil
-      $redis.del("#{@prefix}#{key}")
+      Discourse.redis.del("#{@prefix}#{key}")
     else
-      $redis.setex("#{@prefix}#{key}", 1.hour, val.to_s)
+      Discourse.redis.setex("#{@prefix}#{key}", 1.hour, val.to_s)
     end
   end
 end

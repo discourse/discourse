@@ -18,18 +18,18 @@ class CreateDigestUnsubscribeKeys < ActiveRecord::Migration[4.2]
   def migrate_redis_keys
     return if Rails.env.test?
 
-    temp_keys = $redis.keys('temporary_key:*')
+    temp_keys = Discourse.redis.keys('temporary_key:*')
     if temp_keys.present?
       temp_keys.map! do |key|
-        user_id = $redis.get(key).to_i
-        ttl = $redis.ttl(key).to_i
+        user_id = Discourse.redis.get(key).to_i
+        ttl = Discourse.redis.ttl(key).to_i
 
         if ttl > 0
           ttl = "'#{ttl.seconds.ago.strftime('%Y-%m-%d %H:%M:%S')}'"
         else
           ttl = "CURRENT_TIMESTAMP"
         end
-        $redis.del(key)
+        Discourse.redis.del(key)
         key.gsub!('temporary_key:', '')
         user_id ? "('#{key}', #{user_id}, #{ttl}, #{ttl})" : nil
       end

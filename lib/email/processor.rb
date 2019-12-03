@@ -119,8 +119,8 @@ module Email
 
       key = "rejection_email:#{email}:#{type}:#{Date.today}"
 
-      if $redis.setnx(key, "1")
-        $redis.expire(key, 25.hours)
+      if Discourse.redis.setnx(key, "1")
+        Discourse.redis.expire(key, 25.hours)
         true
       else
         false

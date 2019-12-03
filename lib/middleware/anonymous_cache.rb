@@ -153,8 +153,8 @@ module Middleware
       end
 
       def cached
-        if body = $redis.get(cache_key_body)
-          if other = $redis.get(cache_key_other)
+        if body = Discourse.redis.get(cache_key_body)
+          if other = Discourse.redis.get(cache_key_other)
             other = JSON.parse(other)
             [other[0], other[1], [body]]
           end
@@ -179,8 +179,8 @@ module Middleware
             parts << part
           end
 
-          $redis.setex(cache_key_body,  cache_duration, parts.join)
-          $redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
+          Discourse.redis.setex(cache_key_body,  cache_duration, parts.join)
+          Discourse.redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
         else
           parts = response
         end
@@ -189,8 +189,8 @@ module Middleware
       end
 
       def clear_cache
-        $redis.del(cache_key_body)
-        $redis.del(cache_key_other)
+        Discourse.redis.del(cache_key_body)
+        Discourse.redis.del(cache_key_other)
       end
 
     end

@@ -52,7 +52,7 @@ class ApplicationRequest < ActiveRecord::Base
 
     req_types.each do |req_type, _|
       key = redis_key(req_type, date)
-      $redis.del key
+      Discourse.redis.del key
     end
   end
 

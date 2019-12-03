@@ -33,11 +33,11 @@ module Jobs
     end
 
     def last_notified_id
-      (i = $redis.get(self.class.last_notified_key)) && i.to_i
+      (i = Discourse.redis.get(self.class.last_notified_key)) && i.to_i
     end
 
     def last_notified_id=(arg)
-      $redis.set(self.class.last_notified_key, arg)
+      Discourse.redis.set(self.class.last_notified_key, arg)
     end
 
     def self.last_notified_key

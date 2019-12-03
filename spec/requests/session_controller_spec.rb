@@ -1378,7 +1378,7 @@ RSpec.describe SessionController do
       context 'when token is valid' do
         it "should display the form for GET" do
           token = SecureRandom.hex
-          $redis.setex "otp_#{token}", 10.minutes, user.username
+          Discourse.redis.setex "otp_#{token}", 10.minutes, user.username
 
           get "/session/otp/#{token}"
 
@@ -1386,7 +1386,7 @@ RSpec.describe SessionController do
           expect(response.body).to include(
             I18n.t("user_api_key.otp_confirmation.logging_in_as", username: user.username)
           )
-          expect($redis.get("otp_#{token}")).to eq(user.username)
+          expect(Discourse.redis.get("otp_#{token}")).to eq(user.username)
 
           expect(session[:current_user_id]).to eq(nil)
         end
@@ -1394,12 +1394,12 @@ RSpec.describe SessionController do
         it "should redirect on GET if already logged in" do
           sign_in(user)
           token = SecureRandom.hex
-          $redis.setex "otp_#{token}", 10.minutes, user.username
+          Discourse.redis.setex "otp_#{token}", 10.minutes, user.username
 
           get "/session/otp/#{token}"
           expect(response.status).to eq(302)
 
-          expect($redis.get("otp_#{token}")).to eq(nil)
+          expect(Discourse.redis.get("otp_#{token}")).to eq(nil)
           expect(session[:current_user_id]).to eq(user.id)
         end
 
@@ -1410,13 +1410,13 @@ RSpec.describe SessionController do
           expect(response.status).to eq(404)
 
           token = SecureRandom.hex
-          $redis.setex "otp_#{token}", 10.minutes, user.username
+          Discourse.redis.setex "otp_#{token}", 10.minutes, user.username
 
           post "/session/otp/#{token}"
 
           expect(response.status).to eq(302)
           expect(response).to redirect_to("/")
-          expect($redis.get("otp_#{token}")).to eq(nil)
+          expect(Discourse.redis.get("otp_#{token}")).to eq(nil)
 
           get "/session/current.json"
           expect(response.status).to eq(200)

@@ -19,13 +19,13 @@ module CachedCounting
 
   class_methods do
     def perform_increment!(key, opts = nil)
-      val = $redis.incr(key).to_i
+      val = Discourse.redis.incr(key).to_i
 
       # readonly mode it is going to be 0, skip
       return if val == 0
 
       # 3.days, see: https://github.com/rails/rails/issues/21296
-      $redis.expire(key, 259200)
+      Discourse.redis.expire(key, 259200)
 
       autoflush = (opts && opts[:autoflush]) || self.autoflush
       if autoflush > 0 && val >= autoflush
@@ -51,9 +51,9 @@ module CachedCounting
     # this may seem a bit fancy but in so it allows
     # for concurrent calls without double counting
     def get_and_reset(key)
-      namespaced_key = $redis.namespace_key(key)
-      val = $redis.without_namespace.eval(GET_AND_RESET, keys: [namespaced_key]).to_i
-      $redis.expire(key, 259200) # SET removes expiry, so set it again
+      namespaced_key = Discourse.redis.namespace_key(key)
+      val = Discourse.redis.without_namespace.eval(GET_AND_RESET, keys: [namespaced_key]).to_i
+      Discourse.redis.expire(key, 259200) # SET removes expiry, so set it again
       val
     end
 

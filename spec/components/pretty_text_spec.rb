@@ -463,7 +463,7 @@ describe PrettyText do
         ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
         expect(PrettyText.cook("# banana")).not_to include('banana')
       ensure
-        $redis.flushall
+        Discourse.redis.flushall
       end
     end
   end
@@ -1050,7 +1050,7 @@ HTML
       expect(PrettyText.cook("# banana")).not_to include('banana')
       expect(PrettyText.cook("# banana")).to include("\u25a0\u25a0")
     ensure
-      $redis.flushall
+      Discourse.redis.flushall
     end
   end
 
