@@ -23,7 +23,9 @@ export default Controller.extend({
   editRouteName: "adminCustomizeThemes.edit",
   parentThemesNames: mapBy("model.parentThemes", "name"),
   availableParentThemes: filterBy("allThemes", "component", false),
+  availableActiveParentThemes: filterBy("availableParentThemes", "isActive"),
   availableThemesNames: mapBy("availableParentThemes", "name"),
+  availableActiveThemesNames: mapBy("availableActiveParentThemes", "name"),
   availableActiveChildThemes: filterBy("availableChildThemes", "hasParents"),
   availableComponentsNames: mapBy("availableChildThemes", "name"),
   availableActiveComponentsNames: mapBy("availableActiveChildThemes", "name"),
@@ -75,7 +77,7 @@ export default Controller.extend({
       choices: this.availableThemesNames,
       default: this.parentThemesNames.join("|"),
       value: this.parentThemesNames.join("|"),
-      defaultValues: this.availableThemesNames.join("|"),
+      defaultValues: this.availableActiveThemesNames.join("|"),
       allThemes: this.allThemes,
       setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all_themes")
     });
