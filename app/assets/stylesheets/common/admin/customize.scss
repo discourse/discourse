@@ -319,7 +319,9 @@
   }
 
   .theme.settings {
-    .theme-setting,
+    .theme-setting {
+      min-height: 35px;
+    }
     .theme-translation {
       padding-bottom: 0;
       margin-top: 18px;

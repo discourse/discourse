@@ -221,7 +221,15 @@ export default Mixin.create({
     },
 
     setDefaultValues() {
-      this.set("buffered.value", this.get("setting.defaultValues"));
+      const buffered_values = this.get("buffered.value").split("|");
+      const default_values = this.get("setting.defaultValues").split("|");
+      this.set(
+        "buffered.value",
+        buffered_values
+          .concat(default_values)
+          .uniq()
+          .join("|")
+      );
     }
   }
 });
