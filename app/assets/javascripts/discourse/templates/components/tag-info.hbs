@@ -11,6 +11,18 @@
           {{/if}}
         {{/if}}
       </div>
+      <div class="tag-associations">
+        {{#if tagInfo.tag_group_names}}
+          {{tagGroupsInfo}}
+        {{/if}}
+        {{#if tagInfo.categories}}
+          {{categoriesInfo}}
+          <br/>
+          {{#each tagInfo.categories as |category|}}
+            {{category-link category}}
+          {{/each}}
+        {{/if}}
+      </div>
       {{#if tagInfo.synonyms}}
         <div class="synonyms-list">
           <h3>{{i18n "tagging.synonyms"}}</h3>

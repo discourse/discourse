@@ -176,6 +176,79 @@ describe TagsController do
     end
   end
 
+  describe '#info' do
+    fab!(:tag) { Fabricate(:tag, name: 'test') }
+    let(:synonym) { Fabricate(:tag, name: 'synonym', target_tag: tag) }
+
+    it "returns 404 if tag not found" do
+      get "/tags/nope/info.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "can handle tag with no synonyms" do
+      get "/tags/#{tag.name}/info.json"
+      expect(response.status).to eq(200)
+      expect(json.dig('tag_info', 'name')).to eq(tag.name)
+      expect(json.dig('tag_info', 'synonyms')).to be_empty
+      expect(json.dig('tag_info', 'category_ids')).to be_empty
+    end
+
+    it "can handle a synonym" do
+      get "/tags/#{synonym.name}/info.json"
+      expect(response.status).to eq(200)
+      expect(json.dig('tag_info', 'name')).to eq(synonym.name)
+      expect(json.dig('tag_info', 'synonyms')).to be_empty
+      expect(json.dig('tag_info', 'category_ids')).to be_empty
+    end
+
+    it "can return a tag's synonyms" do
+      synonym
+      get "/tags/#{tag.name}/info.json"
+      expect(response.status).to eq(200)
+      expect(json.dig('tag_info', 'synonyms').map { |t| t['text'] }).to eq([synonym.name])
+    end
+
+    it "returns 404 if tag is staff-only" do
+      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+      get "/tags/test/info.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "staff-only tags can be retrieved for staff user" do
+      sign_in(admin)
+      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+      get "/tags/test/info.json"
+      expect(response.status).to eq(200)
+    end
+
+    it "can return category restrictions" do
+      category.update!(tags: [tag])
+      category2 = Fabricate(:category)
+      tag_group = Fabricate(:tag_group, tags: [tag])
+      category2.update!(tag_groups: [tag_group])
+      staff_category = Fabricate(:private_category, group: Fabricate(:group), tags: [tag])
+      get "/tags/#{tag.name}/info.json"
+      expect(json.dig('tag_info', 'category_ids')).to contain_exactly(category.id, category2.id)
+      expect(json['categories']).to be_present
+    end
+
+    context 'tag belongs to a tag group' do
+      fab!(:tag_group) { Fabricate(:tag_group, tags: [tag]) }
+
+      it "returns tag groups if tag groups are visible" do
+        SiteSetting.tags_listed_by_group = true
+        get "/tags/#{tag.name}/info.json"
+        expect(json.dig('tag_info', 'tag_group_names')).to eq([tag_group.name])
+      end
+
+      it "doesn't return tag groups if tag groups aren't visible" do
+        SiteSetting.tags_listed_by_group = false
+        get "/tags/#{tag.name}/info.json"
+        expect(json['tag_info'].has_key?('tag_group_names')).to eq(false)
+      end
+    end
+  end
+
   describe '#check_hashtag' do
     fab!(:tag) { Fabricate(:tag) }
 

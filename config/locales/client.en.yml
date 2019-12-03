@@ -3046,6 +3046,12 @@ en:
       info: "Info"
       synonyms: "Synonyms"
       synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
+      tag_groups_info:
+        one: 'This tag belongs to the group "{{tag_groups}}".'
+        other: "This tag belongs to these groups: {{tag_groups}}."
+      category_restrictions:
+        one: "It can only be used in this category:"
+        other: "It can only be used in these categories:"
       edit_synonyms: "Manage Synonyms"
       add_synonyms_label: "Add synonyms:"
       add_synonyms: "Add"

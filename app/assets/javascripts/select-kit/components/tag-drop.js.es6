@@ -194,9 +194,9 @@ export default ComboBoxComponent.extend(TagsMixin, {
         }
 
         if (tag && tag.targetTagId) {
-          url += `/${tag.targetTagId}`;
+          url += `/${tag.targetTagId.toLowerCase()}`;
         } else {
-          url += `/${tagId}`;
+          url += `/${tagId.toLowerCase()}`;
         }
         url = Discourse.getURL(url);
       }

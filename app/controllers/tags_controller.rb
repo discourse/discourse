@@ -22,7 +22,7 @@ class TagsController < ::ApplicationController
   before_action :set_category_from_params, except: [:index, :update, :destroy,
     :tag_feed, :search, :notifications, :update_notifications, :personal_messages, :info]
 
-  before_action :fetch_tag, only: [:create_synonyms, :destroy_synonym]
+  before_action :fetch_tag, only: [:info, :create_synonyms, :destroy_synonym]
 
   def index
     @description_meta = I18n.t("tags.title")
@@ -106,10 +106,7 @@ class TagsController < ::ApplicationController
   end
 
   def info
-    tag_id = params[:tag_id].force_encoding("UTF-8")
-    tag = Tag.where_name(tag_id).first
-    raise Discourse::NotFound.new("tag not found", check_permalinks: true) if tag.nil?
-    render_serialized(tag, DetailedTagSerializer, root: :tag_info)
+    render_serialized(@tag, DetailedTagSerializer, root: :tag_info)
   end
 
   def update
@@ -320,7 +317,7 @@ class TagsController < ::ApplicationController
   private
 
   def fetch_tag
-    @tag = Tag.find_by_name(params[:tag_id])
+    @tag = Tag.find_by_name(params[:tag_id].force_encoding("UTF-8"))
     raise Discourse::NotFound unless @tag
   end
 

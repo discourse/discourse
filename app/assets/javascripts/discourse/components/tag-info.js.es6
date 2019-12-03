@@ -1,9 +1,13 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import { observes } from "discourse-common/utils/decorators";
+import {
+  default as discourseComputed,
+  observes
+} from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { reads, and } from "@ember/object/computed";
+import Category from "discourse/models/category";
 
 export default Component.extend({
   tagName: "",
@@ -13,6 +17,21 @@ export default Component.extend({
   showEditControls: false,
   canAdminTag: reads("currentUser.staff"),
   editSynonymsMode: and("canAdminTag", "showEditControls"),
+
+  @discourseComputed("tagInfo.tag_group_names")
+  tagGroupsInfo(tagGroupNames) {
+    return I18n.t("tagging.tag_groups_info", {
+      count: tagGroupNames.length,
+      tag_groups: tagGroupNames.join(", ")
+    });
+  },
+
+  @discourseComputed("tagInfo.categories")
+  categoriesInfo(categories) {
+    return I18n.t("tagging.category_restrictions", {
+      count: categories.length
+    });
+  },
 
   @observes("expanded")
   toggleExpanded() {
@@ -32,9 +51,11 @@ export default Component.extend({
         this.set("tagInfo", result);
         this.set(
           "tagInfo.synonyms",
-          result.synonyms.map(s => {
-            return this.store.createRecord("tag", s);
-          })
+          result.synonyms.map(s => this.store.createRecord("tag", s))
+        );
+        this.set(
+          "tagInfo.categories",
+          result.category_ids.map(id => Category.findById(id))
         );
       })
       .finally(() => this.set("loading", false));
