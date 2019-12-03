@@ -15,7 +15,7 @@ class PostReadersController < ApplicationController
       .where.not(topic_users: { last_read_post_number: nil })
       .where('topic_users.topic_id = ? AND topic_users.last_read_post_number >= ?', post.topic_id, post.post_number)
 
-    readers = readers.where('admin = true OR moderator = true') if post.whisper?
+    readers = readers.where('admin OR moderator') if post.whisper?
 
     readers = readers.map do |r|
       {
