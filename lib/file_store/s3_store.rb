@@ -72,6 +72,8 @@ module FileStore
     def has_been_uploaded?(url)
       return false if url.blank?
 
+      return true if url.starts_with?("/secure-media-uploads/")
+
       base_hostname = URI.parse(absolute_base_url).hostname
       return true if url[base_hostname]
 
