@@ -55,6 +55,11 @@ const Category = RestModel.extend({
     return { type: "category", id, category: this };
   },
 
+  @discourseComputed("parentCategory.ancestors")
+  ancestors(parentAncestors) {
+    return [...(parentAncestors || []), this];
+  },
+
   @discourseComputed("notification_level")
   isMuted(notificationLevel) {
     return notificationLevel === NotificationLevels.MUTED;
