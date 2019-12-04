@@ -1,6 +1,6 @@
 <div class='setting-label'>
    <h3>{{unbound settingName}}</h3>
-   {{#if setting.defaultValues }}
+   {{#if defaultIsAvailable}}
      <a onClick={{action 'setDefaultValues'}}>{{setting.setDefaultValuesLabel}}</a>
    {{/if}}
 </div>

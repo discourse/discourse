@@ -3624,6 +3624,8 @@ en:
           edit_css_html_help: "You have not edited any CSS or HTML"
           delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
           component_on_themes: "Include component on these themes"
+          included_components: "Included components"
+          add_all: "Add all"
           import_web_tip: "Repository containing theme"
           import_web_advanced: "Advanced..."
           import_file_tip: ".tar.gz, .zip, or .dcstyle.json file containing theme"
