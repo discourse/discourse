@@ -22,6 +22,9 @@
             {{category-link category}}
           {{/each}}
         {{/if}}
+        {{#if nothingToShow}}
+          {{i18n "tagging.default_info"}}
+        {{/if}}
       </div>
       {{#if tagInfo.synonyms}}
         <div class="synonyms-list">

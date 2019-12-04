@@ -7,6 +7,7 @@ import {
 } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { reads, and } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
 import Category from "discourse/models/category";
 
 export default Component.extend({
@@ -31,6 +32,15 @@ export default Component.extend({
     return I18n.t("tagging.category_restrictions", {
       count: categories.length
     });
+  },
+
+  @discourseComputed(
+    "tagInfo.tag_group_names",
+    "tagInfo.categories",
+    "tagInfo.synonyms"
+  )
+  nothingToShow(tagGroupNames, categories, synonyms) {
+    return isEmpty(tagGroupNames) && isEmpty(categories) && isEmpty(synonyms);
   },
 
   @observes("expanded")
