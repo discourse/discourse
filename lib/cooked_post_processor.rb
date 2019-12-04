@@ -375,6 +375,7 @@ class CookedPostProcessor
   def optimize_image!(img, upload, cropped: false)
     w, h = img["width"].to_i, img["height"].to_i
 
+    # note: optimize_urls cooks the src and data-small-upload further after this
     thumbnail = upload.thumbnail(w, h)
     if thumbnail && thumbnail.filesize.to_i < upload.filesize
       img["src"] = thumbnail.url
@@ -386,14 +387,14 @@ class CookedPostProcessor
         resized_h = (h * ratio).to_i
 
         if !cropped && upload.width && resized_w > upload.width
-          cooked_url = UrlHelper.cook_url(upload.url, secure: upload.secure?)
+          cooked_url = UrlHelper.cook_url(upload.url, secure: @post.with_secure_media?)
           srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
         elsif t = upload.thumbnail(resized_w, resized_h)
-          cooked_url = UrlHelper.cook_url(t.url, secure: upload.secure?)
+          cooked_url = UrlHelper.cook_url(t.url, secure: @post.with_secure_media?)
           srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
         end
 
-        img["srcset"] = "#{UrlHelper.cook_url(img["src"], secure: upload.secure?)}#{srcset}" if srcset.present?
+        img["srcset"] = "#{UrlHelper.cook_url(img["src"], secure: @post.with_secure_media?)}#{srcset}" if srcset.present?
       end
     else
       img["src"] = upload.url
@@ -411,7 +412,8 @@ class CookedPostProcessor
     lightbox.add_child(img)
 
     # then, the link to our larger image
-    a = create_link_node("lightbox", img["src"])
+    src = UrlHelper.cook_url(img["src"], secure: @post.with_secure_media?)
+    a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
 
     if upload
