@@ -26,6 +26,14 @@ const CUSTOM_TYPES = [
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
 
+function splitPipes(str) {
+  if (typeof str === "string") {
+    return str.split("|").filter(Boolean);
+  } else {
+    return [];
+  }
+}
+
 export default Mixin.create({
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   content: alias("setting"),
@@ -101,23 +109,16 @@ export default Mixin.create({
   },
 
   @discourseComputed("buffered.value")
-  bufferedValues(bufferedValuesString) {
-    return (
-      bufferedValuesString && bufferedValuesString.split("|").filter(Boolean)
-    );
-  },
+  bufferedValues: splitPipes,
 
   @discourseComputed("setting.defaultValues")
-  defaultValues(defaultValuesString) {
-    return (
-      defaultValuesString && defaultValuesString.split("|").filter(Boolean)
-    );
-  },
+  defaultValues: splitPipes,
 
   @discourseComputed("defaultValues", "bufferedValues")
   defaultIsAvailable(defaultValues, bufferedValues) {
     return (
       defaultValues &&
+      defaultValues.length > 0 &&
       !defaultValues.every(value => bufferedValues.includes(value))
     );
   },
