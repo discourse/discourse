@@ -49,14 +49,13 @@ export default class LockOn {
   }
 
   lock() {
-    let previousTop = this.elementTop();
     const startedAt = new Date().getTime();
-
-    $(window).scrollTop(previousTop);
+    let previousTop = this.elementTop();
 
     const interval = setInterval(() => {
       if (!previousTop) {
         previousTop = this.elementTop();
+        previousTop && $(window).scrollTop(previousTop);
       } else {
         const top = Math.max(0, this.elementTop());
         const scrollTop = $(window).scrollTop();
