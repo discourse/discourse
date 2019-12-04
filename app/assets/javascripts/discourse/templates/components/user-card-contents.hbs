@@ -10,13 +10,13 @@
       <div class="card-row second-row">
         <div class="animated-placeholder placeholder-animation"></div>
       </div>
-      <div class="card-row third-row">
+      <div class="card-row">
         <div class="animated-placeholder placeholder-animation"></div>
       </div>
-      <div class="card-row fourth-row">
+      <div class="card-row">
         <div class="animated-placeholder placeholder-animation"></div>
       </div>
-      <div class="card-row sixth-row">
+      <div class="card-row">
         <div class="animated-placeholder placeholder-animation"></div>
       </div>
     {{else}}
@@ -150,7 +150,7 @@
       {{/if}}
 
       {{#if hasLocationOrWebsite}}
-        <div class="card-row third-row">
+        <div class="card-row">
           <div class="location-and-website">
             {{#if user.location}}
               <span class='location'>{{d-icon "map-marker-alt"}}
@@ -172,7 +172,7 @@
         </div>
       {{/if}}
 
-      <div class="card-row fourth-row">
+      <div class="card-row">
         {{#unless user.profile_hidden}}
           <div class="metadata">
             {{#if user.last_posted_at}}
@@ -212,7 +212,7 @@
       </div>
 
       {{#if publicUserFields}}
-        <div class="card-row fifth-row">
+        <div class="card-row">
           <div class="public-user-fields">
             {{#each publicUserFields as |uf|}}
               {{#if uf.value}}
@@ -229,7 +229,7 @@
       {{plugin-outlet name="user-card-before-badges" args=(hash user=user)}}
 
       {{#if showBadges}}
-        <div class="card-row sixth-row">
+        <div class="card-row">
           {{#if user.featured_user_badges}}
             <div class="badge-section">
               {{#each user.featured_user_badges as |ub|}}
