@@ -23,6 +23,9 @@
 // Import all component-specific files
 @import "desktop/components/*";
 
+// Import custom Glo theme styles
+@import "../../../themes/glo/common/common";
+
 /* These files doesn't actually exist, they are injected by Stylesheet::Compiler. */
 
 @import "category_backgrounds";
