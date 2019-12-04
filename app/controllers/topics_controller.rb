@@ -551,23 +551,6 @@ class TopicsController < ApplicationController
     render body: nil
   end
 
-  def feature_on_card
-    topic = Topic.find(params[:topic_id].to_i)
-
-    raise Discourse::NotFound unless topic && topic.user_id == current_user.id
-    current_user.user_profile.update(featured_topic_id: topic.id)
-
-    render body: nil
-  end
-
-  def remove_from_card
-    topic = Topic.find(params[:topic_id].to_i)
-
-    raise Discourse::NotFound unless topic
-    current_user.user_profile.update(featured_topic_id: nil)
-    render body: nil
-  end
-
   def destroy
     topic = Topic.find_by(id: params[:id])
     guardian.ensure_can_delete!(topic)

@@ -3829,4 +3829,61 @@ describe UsersController do
       end
     end
   end
+
+  describe '#feature_topic' do
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:other_user) { Fabricate(:user) }
+
+    it 'requires the user to be logged in' do
+      put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
+      expect(response.status).to eq(403)
+    end
+
+    it 'returns an error if the the current user does not have access' do
+      sign_in(user)
+      topic.update(user_id: other_user.id)
+      put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
+      expect(response.status).to eq(404)
+    end
+
+    it 'returns an error if the user did not create the topic' do
+      sign_in(user)
+      topic.update(user_id: other_user.id)
+      put "/u/#{other_user.username}/feature-topic.json", params: { topic_id: topic.id }
+      expect(response.status).to eq(403)
+    end
+
+    it 'sets the user_profiles featured_topic correctly' do
+      sign_in(user)
+      topic.update(user_id: user.id)
+      put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
+      expect(response.status).to eq(200)
+      expect(user.user_profile.featured_topic).to eq topic
+    end
+  end
+
+  describe '#clear_featured_topic' do
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:other_user) { Fabricate(:user) }
+
+    it 'requires the user to be logged in' do
+      put "/u/#{user.username}/clear-featured-topic.json"
+      expect(response.status).to eq(403)
+    end
+
+    it 'returns an error if the the current user does not have access' do
+      sign_in(user)
+      topic.update(user_id: other_user.id)
+      put "/u/#{other_user.username}/clear-featured-topic.json"
+      expect(response.status).to eq(403)
+    end
+
+    it 'clears the user_profiles featured_topic correctly' do
+      sign_in(user)
+      topic.update(user: user)
+      put "/u/#{user.username}/clear-featured-topic.json"
+      expect(response.status).to eq(200)
+      expect(user.user_profile.featured_topic).to eq nil
+    end
+  end
 end

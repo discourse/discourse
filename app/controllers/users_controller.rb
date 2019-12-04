@@ -11,13 +11,14 @@ class UsersController < ApplicationController
     :enable_second_factor_totp, :disable_second_factor, :list_second_factors,
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
-    :create_second_factor_security_key
+    :create_second_factor_security_key, :feature_topic, :clear_featured_topic
   ]
 
   skip_before_action :check_xhr, only: [
     :show, :badges, :password_reset, :update, :account_created,
     :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar,
-    :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary
+    :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary,
+    :feature_topic, :clear_featured_topic
   ]
 
   before_action :second_factor_check_confirmed_password, only: [
@@ -1399,6 +1400,24 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
+  def feature_topic
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+    topic = Topic.find(params[:topic_id].to_i)
+
+    raise Discourse::NotFound unless topic && topic.user_id == user.id
+    user.user_profile.update(featured_topic_id: topic.id)
+
+    render body: nil
+  end
+
+  def clear_featured_topic
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+    user.user_profile.update(featured_topic_id: nil)
+    render body: nil
+  end
+
   HONEYPOT_KEY ||= 'HONEYPOT_KEY'
   CHALLENGE_KEY ||= 'CHALLENGE_KEY'
 
@@ -1453,7 +1472,8 @@ class UsersController < ApplicationController
       :dismissed_banner_key,
       :profile_background_upload_url,
       :card_background_upload_url,
-      :primary_group_id
+      :primary_group_id,
+      :featured_topic_id
     ]
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
@@ -1528,4 +1548,5 @@ class UsersController < ApplicationController
       challenge: secure_session["staged-webauthn-challenge-#{user.id}"]
     }
   end
+
 end

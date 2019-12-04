@@ -45,7 +45,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :second_factor_enabled,
              :ignored_users,
              :title_count_mode,
-             :timezone
+             :timezone,
              :featured_topic
 
   def groups
