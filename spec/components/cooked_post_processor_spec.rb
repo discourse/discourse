@@ -4,6 +4,17 @@ require "rails_helper"
 require "cooked_post_processor"
 require "file_store/s3_store"
 
+def s3_setup
+  Rails.configuration.action_controller.stubs(:asset_host).returns("https://local.cdn.com")
+
+  SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
+  SiteSetting.s3_access_key_id = "s3-access-key-id"
+  SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+  SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+  SiteSetting.enable_s3_uploads = true
+  SiteSetting.authorized_extensions = "png|jpg|gif|mov|ogg|"
+end
+
 describe CookedPostProcessor do
   fab!(:upload) { Fabricate(:upload) }
 
@@ -491,6 +502,37 @@ describe CookedPostProcessor do
           end
         end
 
+        context "s3_uploads" do
+          before do
+            s3_setup
+            stored_path = Discourse.store.get_path_for_upload(upload)
+            upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
+
+            stub_request(:any, /some-bucket-on-s3\.s3\.amazonaws\.com/)
+
+            OptimizedImage.expects(:resize).returns(true)
+            FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+            Discourse.store.class.any_instance.expects(:has_been_uploaded?).at_least_once.returns(true)
+
+            SiteSetting.login_required = true
+            SiteSetting.secure_media = true
+            upload.update_column(:secure, true)
+          end
+
+          let(:post) do
+            Fabricate(:post, raw: "![large.png|600x500](#{upload.short_url})")
+          end
+
+          it "handles secure images with the correct lightbox link href" do
+            cpp.post_process
+
+            expect(cpp.html).to match_html <<~HTML
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-media-uploads/original/1X/#{upload.sha1}.png" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">large.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+            </div></a></div></p>
+            HTML
+          end
+        end
       end
 
       context "with tall images" do
@@ -1140,14 +1182,8 @@ describe CookedPostProcessor do
 
       context "s3_uploads" do
         before do
-          Rails.configuration.action_controller.stubs(:asset_host).returns("https://local.cdn.com")
+          s3_setup
 
-          SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
-          SiteSetting.s3_access_key_id = "s3-access-key-id"
-          SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-          SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-          SiteSetting.enable_s3_uploads = true
-          SiteSetting.authorized_extensions = "png|jpg|gif|mov|ogg|"
           uploaded_file = file_from_fixtures("smallest.png")
           upload_sha1 = Digest::SHA1.hexdigest(File.read(uploaded_file))
 
