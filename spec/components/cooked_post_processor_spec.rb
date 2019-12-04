@@ -527,7 +527,7 @@ describe CookedPostProcessor do
             cpp.post_process
 
             expect(cpp.html).to match_html <<~HTML
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-media-uploads/original/1X/b6589fc6ab0dc82cf12099d1c2d40ab994e8410c.png" data-download-href="//test.localhost/uploads/short-url/q16M6GR110R47Z9p9Dk3PMXOJoE.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="q16M6GR110R47Z9p9Dk3PMXOJoE" width="600" height="500"><div class="meta">
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-media-uploads/original/1X/#{upload.sha1}.png" data-download-href="//test.localhost/uploads/short-url/q16M6GR110R47Z9p9Dk3PMXOJoE.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
             <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">large.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
             </div></a></div></p>
             HTML
