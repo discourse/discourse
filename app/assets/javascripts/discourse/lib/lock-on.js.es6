@@ -51,23 +51,25 @@ export default class LockOn {
   lock() {
     const startedAt = new Date().getTime();
     let previousTop = this.elementTop();
+    previousTop && $(window).scrollTop(previousTop);
 
     const interval = setInterval(() => {
-      if (!previousTop) {
-        previousTop = this.elementTop();
-        previousTop && $(window).scrollTop(previousTop);
-      } else {
-        const top = Math.max(0, this.elementTop());
-        const scrollTop = $(window).scrollTop();
+      const elementTop = this.elementTop();
+      if (!previousTop && !elementTop) {
+        // we can't find the element yet, wait a little bit more
+        return;
+      }
 
-        if (typeof top === "undefined" || isNaN(top)) {
-          return this.clearLock(interval);
-        }
+      const top = Math.max(0, elementTop);
+      const scrollTop = $(window).scrollTop();
 
-        if (!within(4, top, previousTop) || !within(4, scrollTop, top)) {
-          $(window).scrollTop(top);
-          previousTop = top;
-        }
+      if (typeof top === "undefined" || isNaN(top)) {
+        return this.clearLock(interval);
+      }
+
+      if (!within(4, top, previousTop) || !within(4, scrollTop, top)) {
+        $(window).scrollTop(top);
+        previousTop = top;
       }
 
       // Commit suicide after a little while
