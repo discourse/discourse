@@ -375,9 +375,10 @@ class CookedPostProcessor
   def optimize_image!(img, upload, cropped: false)
     w, h = img["width"].to_i, img["height"].to_i
 
+    # note: optimize_urls cooks the src and data-small-upload further after this
     thumbnail = upload.thumbnail(w, h)
     if thumbnail && thumbnail.filesize.to_i < upload.filesize
-      img["src"] = UrlHelper.cook_url(thumbnail.url, secure: upload.secure?)
+      img["src"] = thumbnail.url
 
       srcset = +""
 
@@ -396,11 +397,11 @@ class CookedPostProcessor
         img["srcset"] = "#{UrlHelper.cook_url(img["src"], secure: upload.secure?)}#{srcset}" if srcset.present?
       end
     else
-      img["src"] = UrlHelper.cook_url(upload.url, secure: upload.secure?)
+      img["src"] = upload.url
     end
 
     if small_upload = loading_image(upload)
-      img["data-small-upload"] = UrlHelper.cook_url(small_upload.url, secure: upload.secure?)
+      img["data-small-upload"] = small_upload.url
     end
   end
 

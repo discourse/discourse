@@ -512,6 +512,7 @@ describe CookedPostProcessor do
 
             OptimizedImage.expects(:resize).returns(true)
             FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+            Discourse.store.class.any_instance.expects(:has_been_uploaded?).at_least_once.returns(true)
 
             SiteSetting.secure_media = true
             upload.update_column(:secure, true)
@@ -521,11 +522,13 @@ describe CookedPostProcessor do
             Fabricate(:post, raw: "![large.png|600x500](#{upload.short_url})")
           end
 
-          pending "handles secure images" do
+          it "handles secure images with the correct lightbox link href" do
             cpp.post_process
 
             expect(cpp.html).to match_html <<~HTML
-              TODO
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-media-uploads/original/1X/b6589fc6ab0dc82cf12099d1c2d40ab994e8410c.png" data-download-href="https://local.cdn.com/uploads/short-url/q16M6GR110R47Z9p9Dk3PMXOJoE.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="q16M6GR110R47Z9p9Dk3PMXOJoE" width="600" height="500"><div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">large.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+            </div></a></div></p>
             HTML
           end
         end
