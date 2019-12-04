@@ -182,15 +182,13 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     }
   }
   // featured topic
-  .third-row {
-    .featured-topic {
-      .desc {
-        color: $primary-high;
-      }
-      a {
-        color: $primary;
-        text-decoration: underline;
-      }
+  .featured-topic {
+    .desc {
+      color: $primary-high;
+    }
+    a {
+      color: $primary;
+      text-decoration: underline;
     }
   }
 

@@ -141,10 +141,10 @@
       {{/if}}
 
       {{#if featuredTopic}}
-        <div class="card-row third-row">
+        <div class="card-row">
           <div class="featured-topic">
             <span class="desc">{{i18n 'user.featured_topic'}}</span>
-            {{#link-to 'topic' featuredTopic.id}}{{featuredTopic.fancy_title}}{{/link-to}}
+            {{#link-to 'topicBySlugOrId' featuredTopic.id}}{{featuredTopic.fancy_title}}{{/link-to}}
           </div>
         </div>
       {{/if}}
