@@ -67,7 +67,7 @@ const Category = RestModel.extend({
 
   @discourseComputed("name")
   url() {
-    return Discourse.getURL("/c/") + Category.slugFor(this);
+    return Discourse.getURL(`/c/${Category.slugFor(this)}/${this.id}`);
   },
 
   @discourseComputed
