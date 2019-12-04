@@ -1,0 +1,31 @@
+{
+  "name": "Glo Theme",
+  "component": false,
+  "license_url": null,
+  "about_url": null,
+  "authors": null,
+  "theme_version": null,
+  "minimum_discourse_version": null,
+  "maximum_discourse_version": null,
+  "assets": {
+    "blue-banner": "assets/blue-banner.jpg",
+    "teal-banner": "assets/teal-banner.jpg",
+    "violet-banner": "assets/violet-banner.jpg",
+    "community-bg": "assets/community-bg.jpg"
+  },
+  "color_schemes": {
+    "Glo Color Palette": {
+      "primary": "1e1e28",
+      "secondary": "faf9f7",
+      "tertiary": "70a6fc",
+      "quaternary": "1e1e28",
+      "header_background": "faf9f7",
+      "header_primary": "1e1e28",
+      "highlight": "d9d6ff",
+      "danger": "e86046",
+      "success": "55c791",
+      "love": "d9d6ff"
+    }
+  },
+  "learn_more": "https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
+}
