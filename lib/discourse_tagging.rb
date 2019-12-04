@@ -17,6 +17,12 @@ module DiscourseTagging
     if guardian.can_tag?(topic)
       tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, guardian) || []
 
+      if !tag_names.empty?
+        Tag.where_name(tag_names).joins(:target_tag).includes(:target_tag).each do |tag|
+          tag_names[tag_names.index(tag.name)] = tag.target_tag.name
+        end
+      end
+
       old_tag_names = topic.tags.pluck(:name) || []
       new_tag_names = tag_names - old_tag_names
       removed_tag_names = old_tag_names - tag_names
@@ -190,6 +196,7 @@ module DiscourseTagging
   #   for_topic: results are for tagging a topic
   #   selected_tags: an array of tag names that are in the current selection
   #   only_tag_names: limit results to tags with these names
+  #   exclude_synonyms: exclude synonyms from results
   def self.filter_allowed_tags(guardian, opts = {})
     selected_tag_ids = opts[:selected_tags] ? Tag.where_name(opts[:selected_tags]).pluck(:id) : []
     category = opts[:category]
@@ -215,7 +222,7 @@ module DiscourseTagging
     sql << <<~SQL
       SELECT t.id, t.name, t.topic_count, t.pm_topic_count,
         tgr.tgm_id as tgm_id, tgr.tag_group_id as tag_group_id, tgr.parent_tag_id as parent_tag_id,
-        tgr.one_per_topic as one_per_topic
+        tgr.one_per_topic as one_per_topic, t.target_tag_id
       FROM tags t
       INNER JOIN tag_group_restrictions tgr ON tgr.tag_id = t.id
       #{outer_join ? "LEFT OUTER" : "INNER"}
@@ -307,6 +314,14 @@ module DiscourseTagging
       end
     end
 
+    if opts[:exclude_synonyms]
+      builder.where("target_tag_id IS NULL")
+    end
+
+    if opts[:exclude_has_synonyms]
+      builder.where("id NOT IN (SELECT target_tag_id FROM tags WHERE target_tag_id IS NOT NULL)")
+    end
+
     builder.limit(opts[:limit]) if opts[:limit]
     if opts[:order]
       builder.order_by(opts[:order])
@@ -383,13 +398,26 @@ module DiscourseTagging
     tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user), opts) || []
     if taggable.tags.pluck(:name).sort != tag_names.sort
       taggable.tags = Tag.where_name(tag_names).all
-      if taggable.tags.size < tag_names.size
-        new_tag_names = tag_names - taggable.tags.map(&:name)
-        new_tag_names.each do |name|
-          taggable.tags << Tag.create(name: name)
-        end
+      new_tag_names = taggable.tags.size < tag_names.size ? tag_names - taggable.tags.map(&:name) : []
+      taggable.tags << Tag.where(target_tag_id: taggable.tags.map(&:id)).all
+      new_tag_names.each do |name|
+        taggable.tags << Tag.create(name: name)
       end
     end
+  end
+
+  # Returns true if all were added successfully, or an Array of the
+  # tags that failed to be added, with errors on each Tag.
+  def self.add_or_create_synonyms_by_name(target_tag, synonym_names)
+    tag_names = DiscourseTagging.tags_for_saving(synonym_names, Guardian.new(Discourse.system_user)) || []
+    existing = Tag.where_name(tag_names).all
+    target_tag.synonyms << existing
+    (tag_names - target_tag.synonyms.map(&:name)).each do |name|
+      target_tag.synonyms << Tag.create(name: name)
+    end
+    successful = existing.select { |t| !t.errors.present? }
+    TopicTag.where(tag_id: successful.map(&:id)).update_all(tag_id: target_tag.id)
+    (existing - successful).presence || true
   end
 
   def self.muted_tags(user)

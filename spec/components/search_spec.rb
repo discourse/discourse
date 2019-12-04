@@ -669,13 +669,15 @@ describe Search do
     let(:category) { Fabricate(:category_with_definition) }
 
     context 'post searching' do
-      it 'can find posts with tags' do
+      before do
         SiteSetting.tagging_enabled = true
-
-        post = Fabricate(:post, raw: 'I am special post')
         DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Fabricate.build(:admin)), [tag.name, uppercase_tag.name])
         post.topic.save
+      end
 
+      let(:post) { Fabricate(:post, raw: 'I am special post') }
+
+      it 'can find posts with tags' do
         # we got to make this index (it is deferred)
         Jobs::ReindexSearch.new.rebuild_problem_posts
 
@@ -689,6 +691,13 @@ describe Search do
 
         result = Search.execute(tag.name)
         expect(result.posts.length).to eq(0)
+      end
+
+      it 'can find posts with tag synonyms' do
+        synonym = Fabricate(:tag, name: 'synonym', target_tag: tag)
+        Jobs::ReindexSearch.new.rebuild_problem_posts
+        result = Search.execute(synonym.name)
+        expect(result.posts.length).to eq(1)
       end
     end
 

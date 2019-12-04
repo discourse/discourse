@@ -60,6 +60,11 @@ const Category = RestModel.extend({
     return [...(parentAncestors || []), this];
   },
 
+  @discourseComputed("parentCategory.level")
+  level(parentLevel) {
+    return (parentLevel || -1) + 1;
+  },
+
   @discourseComputed("notification_level")
   isMuted(notificationLevel) {
     return notificationLevel === NotificationLevels.MUTED;
@@ -67,7 +72,7 @@ const Category = RestModel.extend({
 
   @discourseComputed("name")
   url() {
-    return Discourse.getURL("/c/") + Category.slugFor(this);
+    return Discourse.getURL(`/c/${Category.slugFor(this)}/${this.id}`);
   },
 
   @discourseComputed

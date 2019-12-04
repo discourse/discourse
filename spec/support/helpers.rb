@@ -120,6 +120,14 @@ module Helpers
     end
   end
 
+  def sorted_tag_names(tag_records)
+    tag_records.map { |t| t.is_a?(String) ? t : t.name }.sort
+  end
+
+  def expect_same_tag_names(a, b)
+    expect(sorted_tag_names(a)).to eq(sorted_tag_names(b))
+  end
+
   def capture_stdout
     old_stdout = $stdout
     io = StringIO.new

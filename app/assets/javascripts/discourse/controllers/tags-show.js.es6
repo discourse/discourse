@@ -26,6 +26,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
   search: null,
   max_posts: null,
   q: null,
+  showInfo: false,
 
   categories: alias("site.categoriesList"),
 
@@ -79,9 +80,9 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     return Discourse.SiteSettings.show_filter_by_tag;
   },
 
-  @discourseComputed("additionalTags", "canAdminTag", "category")
-  showAdminControls(additionalTags, canAdminTag, category) {
-    return !additionalTags && canAdminTag && !category;
+  @discourseComputed("additionalTags", "category", "tag.id")
+  showToggleInfo(additionalTags, category, tagId) {
+    return !additionalTags && !category && tagId !== "none";
   },
 
   loadMoreTopics() {
@@ -121,6 +122,10 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
       this.send("invalidateModel");
     },
 
+    toggleInfo() {
+      this.toggleProperty("showInfo");
+    },
+
     refresh() {
       // TODO: this probably doesn't work anymore
       return this.store
@@ -131,14 +136,22 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
         });
     },
 
-    deleteTag() {
+    deleteTag(tagInfo) {
       const numTopics =
         this.get("list.topic_list.tags.firstObject.topic_count") || 0;
 
-      const confirmText =
+      let confirmText =
         numTopics === 0
           ? I18n.t("tagging.delete_confirm_no_topics")
           : I18n.t("tagging.delete_confirm", { count: numTopics });
+
+      if (tagInfo.synonyms.length > 0) {
+        confirmText +=
+          " " +
+          I18n.t("tagging.delete_confirm_synonyms", {
+            count: tagInfo.synonyms.length
+          });
+      }
 
       bootbox.confirm(confirmText, result => {
         if (!result) return;

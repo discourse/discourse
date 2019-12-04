@@ -28,6 +28,9 @@ function defaultRenderTag(tag, params) {
   if (Discourse.SiteSettings.tag_style || params.style) {
     classes.push(params.style || Discourse.SiteSettings.tag_style);
   }
+  if (params.size) {
+    classes.push(params.size);
+  }
 
   let val =
     "<" +

@@ -8,10 +8,6 @@ require 'discourse_tagging'
 
 describe DiscourseTagging do
 
-  def sorted_tag_names(tag_records)
-    tag_records.map(&:name).sort
-  end
-
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user)  { Fabricate(:user) }
   let(:guardian) { Guardian.new(user) }
@@ -130,6 +126,46 @@ describe DiscourseTagging do
             term: 'fun'
           ).to_a
           expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
+        end
+      end
+
+      context 'tag synonyms' do
+        fab!(:base_tag) { Fabricate(:tag, name: 'discourse') }
+        fab!(:synonym) { Fabricate(:tag, name: 'discource', target_tag: base_tag) }
+
+        it 'returns synonyms by default' do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
+            for_input: true,
+            term: 'disc'
+          ).map(&:name)
+          expect(tags).to contain_exactly(base_tag.name, synonym.name)
+        end
+
+        it 'excludes synonyms with exclude_synonyms param' do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
+            for_input: true,
+            exclude_synonyms: true,
+            term: 'disc'
+          ).map(&:name)
+          expect(tags).to contain_exactly(base_tag.name)
+        end
+
+        it 'excludes tags with synonyms with exclude_has_synonyms params' do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
+            for_input: true,
+            exclude_has_synonyms: true,
+            term: 'disc'
+          ).map(&:name)
+          expect(tags).to contain_exactly(synonym.name)
+        end
+
+        it 'can exclude synonyms and tags with synonyms' do
+          expect(DiscourseTagging.filter_allowed_tags(Guardian.new(user),
+            for_input: true,
+            exclude_has_synonyms: true,
+            exclude_synonyms: true,
+            term: 'disc'
+          )).to be_empty
         end
       end
     end
@@ -357,6 +393,27 @@ describe DiscourseTagging do
         expect(valid).to eq(true)
       end
     end
+
+    context 'tag synonyms' do
+      fab!(:topic) { Fabricate(:topic) }
+
+      fab!(:syn1) { Fabricate(:tag, name: 'synonym1', target_tag: tag1) }
+      fab!(:syn2) { Fabricate(:tag, name: 'synonym2', target_tag: tag1) }
+
+      it "uses the base tag when a synonym is given" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [syn1.name])
+        expect(valid).to eq(true)
+        expect(topic.errors[:base]).to be_empty
+        expect_same_tag_names(topic.reload.tags, [tag1])
+      end
+
+      it "handles multiple synonyms for the same tag" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, syn1.name, syn2.name])
+        expect(valid).to eq(true)
+        expect(topic.errors[:base]).to be_empty
+        expect_same_tag_names(topic.reload.tags, [tag1])
+      end
+    end
   end
 
   describe '#tags_for_saving' do
@@ -438,6 +495,69 @@ describe DiscourseTagging do
 
       staff_tag_group.update(tag_names: [other_staff_tag.name])
       expect(DiscourseTagging.staff_tag_names).to contain_exactly(other_staff_tag.name)
+    end
+  end
+
+  describe '#add_or_create_synonyms_by_name' do
+    it "can add an existing tag" do
+      expect {
+        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name])).to eq(true)
+      }.to_not change { Tag.count }
+      expect_same_tag_names(tag1.reload.synonyms, [tag2])
+      expect(tag2.reload.target_tag).to eq(tag1)
+    end
+
+    it "can add existing tag with wrong case" do
+      expect {
+        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name.upcase])).to eq(true)
+      }.to_not change { Tag.count }
+      expect_same_tag_names(tag1.reload.synonyms, [tag2])
+      expect(tag2.reload.target_tag).to eq(tag1)
+    end
+
+    it "can create new tags" do
+      expect {
+        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, ['synonym1'])).to eq(true)
+      }.to change { Tag.count }.by(1)
+      s = Tag.where_name('synonym1').first
+      expect_same_tag_names(tag1.reload.synonyms, [s])
+      expect(s.target_tag).to eq(tag1)
+    end
+
+    it "can add existing and new tags" do
+      expect {
+        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name, 'synonym1'])).to eq(true)
+      }.to change { Tag.count }.by(1)
+      s = Tag.where_name('synonym1').first
+      expect_same_tag_names(tag1.reload.synonyms, [tag2, s])
+      expect(s.target_tag).to eq(tag1)
+      expect(tag2.reload.target_tag).to eq(tag1)
+    end
+
+    it "can change a synonym's target tag" do
+      synonym = Fabricate(:tag, name: 'synonym1', target_tag: tag1)
+      expect {
+        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag2, [synonym.name])).to eq(true)
+      }.to_not change { Tag.count }
+      expect_same_tag_names(tag2.reload.synonyms, [synonym])
+      expect(tag1.reload.synonyms.count).to eq(0)
+      expect(synonym.reload.target_tag).to eq(tag2)
+    end
+
+    it "doesn't allow tags that have synonyms to become synonyms" do
+      tag2.synonyms << Fabricate(:tag)
+      value = DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name])
+      expect(value).to be_a(Array)
+      expect(value.size).to eq(1)
+      expect(value.first.errors[:target_tag_id]).to be_present
+      expect(tag1.reload.synonyms.count).to eq(0)
+      expect(tag2.reload.synonyms.count).to eq(1)
+    end
+
+    it "changes tag of topics" do
+      topic = Fabricate(:topic, tags: [tag2])
+      expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name])).to eq(true)
+      expect_same_tag_names(topic.reload.tags, [tag1])
     end
   end
 end

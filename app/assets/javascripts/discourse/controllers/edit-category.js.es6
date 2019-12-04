@@ -107,7 +107,7 @@ export default Controller.extend(ModalFunctionality, {
             slug: result.category.slug,
             id: result.category.id
           });
-          DiscourseURL.redirectTo("/c/" + Category.slugFor(model));
+          DiscourseURL.redirectTo(`/c/${Category.slugFor(model)}/${model.id}`);
         })
         .catch(error => {
           this.flash(extractError(error), "error");

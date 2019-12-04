@@ -56,8 +56,9 @@ class PostDestroyer
   def destroy
     payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(:post).exists?
     topic = @post.topic
+    is_first_post = @post.is_first_post? && topic
 
-    if @post.is_first_post? && topic
+    if is_first_post
       topic_view = TopicView.new(topic.id, Discourse.system_user)
       topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer) if WebHook.active_web_hooks(:topic).exists?
     end
@@ -75,11 +76,11 @@ class PostDestroyer
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
     WebHook.enqueue_post_hooks(:post_destroyed, @post, payload)
 
-    if @post.is_first_post? && @post.topic
+    if is_first_post
       UserProfile.remove_featured_topic_from_all_profiles(@topic)
-      UserActionManager.topic_destroyed(@post.topic)
-      DiscourseEvent.trigger(:topic_destroyed, @post.topic, @user)
-      WebHook.enqueue_topic_hooks(:topic_destroyed, @post.topic, topic_payload)
+      UserActionManager.topic_destroyed(topic)
+      DiscourseEvent.trigger(:topic_destroyed, topic, @user)
+      WebHook.enqueue_topic_hooks(:topic_destroyed, topic, topic_payload)
     end
   end
 

@@ -19,6 +19,7 @@ const Theme = RestModel.extend({
   isActive: or("default", "user_selectable"),
   isPendingUpdates: gt("remote_theme.commits_behind", 0),
   hasEditedFields: gt("editedFields.length", 0),
+  hasParents: gt("parent_themes.length", 0),
 
   @discourseComputed("theme_fields.[]")
   targets() {

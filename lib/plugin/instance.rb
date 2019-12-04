@@ -418,7 +418,10 @@ class Plugin::Instance
   end
 
   def register_html_builder(name, &block)
-    DiscoursePluginRegistry.register_html_builder(name, &block)
+    plugin = self
+    DiscoursePluginRegistry.register_html_builder(name) do |*args|
+      block.call(*args) if plugin.enabled?
+    end
   end
 
   def register_asset(file, opts = nil)
