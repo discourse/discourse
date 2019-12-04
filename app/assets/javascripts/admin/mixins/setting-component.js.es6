@@ -102,12 +102,16 @@ export default Mixin.create({
 
   @discourseComputed("buffered.value")
   bufferedValues(bufferedValuesString) {
-    return bufferedValuesString && bufferedValuesString.split("|");
+    return (
+      bufferedValuesString && bufferedValuesString.split("|").filter(Boolean)
+    );
   },
 
   @discourseComputed("setting.defaultValues")
   defaultValues(defaultValuesString) {
-    return defaultValuesString && defaultValuesString.split("|");
+    return (
+      defaultValuesString && defaultValuesString.split("|").filter(Boolean)
+    );
   },
 
   @discourseComputed("defaultValues", "bufferedValues")
