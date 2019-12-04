@@ -682,7 +682,9 @@ export default Controller.extend(bufferedProperty("model"), {
     toggleFeaturedOnProfile() {
       if (!this.currentUser) return;
       const toggle = () => {
-        this.model.toggleFeaturedOnProfile(this.currentUser).catch(popupAjaxError);
+        this.model
+          .toggleFeaturedOnProfile(this.currentUser)
+          .catch(popupAjaxError);
       };
 
       if (
