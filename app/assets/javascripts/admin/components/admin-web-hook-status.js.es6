@@ -25,7 +25,13 @@ export default Component.extend({
 
   didReceiveAttrs() {
     this._super(...arguments);
-    this.set("circleIcon", iconHTML(this.icon, { class: this.class }).htmlSafe());
-    this.set("deliveryStatus", I18n.t(`admin.web_hooks.delivery_status.${this.get("status.name")}`));
+    this.set(
+      "circleIcon",
+      iconHTML(this.icon, { class: this.class }).htmlSafe()
+    );
+    this.set(
+      "deliveryStatus",
+      I18n.t(`admin.web_hooks.delivery_status.${this.get("status.name")}`)
+    );
   }
 });
