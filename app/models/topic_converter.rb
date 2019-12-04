@@ -50,7 +50,7 @@ class TopicConverter
 
       add_allowed_users
       update_post_uploads_secure_status
-      remove_as_featured_topic_from_user_profiles
+      UserProfile.remove_featured_topic_from_all_profiles(@topic)
 
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
@@ -104,10 +104,5 @@ class TopicConverter
       post.update_uploads_secure_status
       post.rebake!
     end
-  end
-
-  def remove_as_featured_topic_from_user_profiles
-    puts UserProfile.where(featured_topic_id: @topic.id).inspect
-    UserProfile.where(featured_topic_id: @topic.id).update_all(featured_topic_id: nil)
   end
 end

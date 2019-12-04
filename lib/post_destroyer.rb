@@ -76,6 +76,7 @@ class PostDestroyer
     WebHook.enqueue_post_hooks(:post_destroyed, @post, payload)
 
     if @post.is_first_post? && @post.topic
+      UserProfile.remove_featured_topic_from_all_profiles(@topic)
       UserActionManager.topic_destroyed(@post.topic)
       DiscourseEvent.trigger(:topic_destroyed, @post.topic, @user)
       WebHook.enqueue_topic_hooks(:topic_destroyed, @post.topic, topic_payload)
