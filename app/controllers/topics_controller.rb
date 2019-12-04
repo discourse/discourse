@@ -27,8 +27,6 @@ class TopicsController < ApplicationController
     :move_to_inbox,
     :convert_topic,
     :bookmark,
-    :feature_on_card,
-    :remove_from_card,
     :publish,
     :reset_bump_date
   ]
