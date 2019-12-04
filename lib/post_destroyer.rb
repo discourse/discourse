@@ -77,9 +77,9 @@ class PostDestroyer
     WebHook.enqueue_post_hooks(:post_destroyed, @post, payload)
 
     if is_first_post
-      UserActionManager.topic_destroyed(@post.topic)
-      DiscourseEvent.trigger(:topic_destroyed, @post.topic, @user)
-      WebHook.enqueue_topic_hooks(:topic_destroyed, @post.topic, topic_payload)
+      UserActionManager.topic_destroyed(topic)
+      DiscourseEvent.trigger(:topic_destroyed, topic, @user)
+      WebHook.enqueue_topic_hooks(:topic_destroyed, topic, topic_payload)
     end
   end
 
