@@ -17,6 +17,8 @@ export default MultiSelectComponent.extend(TagsMixin, {
   attributeBindings: ["categoryId"],
   allowCreate: null,
   allowAny: alias("allowCreate"),
+  excludeSynonyms: false,
+  excludeHasSynonyms: false,
 
   init() {
     this._super(...arguments);
@@ -118,6 +120,8 @@ export default MultiSelectComponent.extend(TagsMixin, {
     }
 
     if (!this.everyTag) data.filterForInput = true;
+    if (this.excludeSynonyms) data.excludeSynonyms = true;
+    if (this.excludeHasSynonyms) data.excludeHasSynonyms = true;
 
     this.searchTags("/tags/filter/search", data, this._transformJson);
   },

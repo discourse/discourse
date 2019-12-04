@@ -5,6 +5,7 @@ class TagsController < ::ApplicationController
   include TopicQueryParams
 
   before_action :ensure_tags_enabled
+  before_action :ensure_visible, only: [:show, :info]
 
   requires_login except: [
     :index,
@@ -12,13 +13,16 @@ class TagsController < ::ApplicationController
     :tag_feed,
     :search,
     :check_hashtag,
+    :info,
     Discourse.anonymous_filters.map { |f| :"show_#{f}" }
   ].flatten
 
   skip_before_action :check_xhr, only: [:tag_feed, :show, :index]
 
   before_action :set_category_from_params, except: [:index, :update, :destroy,
-    :tag_feed, :search, :notifications, :update_notifications, :personal_messages]
+    :tag_feed, :search, :notifications, :update_notifications, :personal_messages, :info]
+
+  before_action :fetch_tag, only: [:info, :create_synonyms, :destroy_synonym]
 
   def index
     @description_meta = I18n.t("tags.title")
@@ -31,21 +35,21 @@ class TagsController < ::ApplicationController
       ungrouped_tags = ungrouped_tags.where("tags.topic_count > 0") unless show_all_tags
 
       grouped_tag_counts = TagGroup.visible(guardian).order('name ASC').includes(:tags).map do |tag_group|
-        { id: tag_group.id, name: tag_group.name, tags: self.class.tag_counts_json(tag_group.tags) }
+        { id: tag_group.id, name: tag_group.name, tags: self.class.tag_counts_json(tag_group.tags.where(target_tag_id: nil)) }
       end
 
       @tags = self.class.tag_counts_json(ungrouped_tags)
       @extras = { tag_groups: grouped_tag_counts }
     else
       tags = show_all_tags ? Tag.all : Tag.where("tags.topic_count > 0")
-      unrestricted_tags = DiscourseTagging.filter_visible(tags, guardian)
+      unrestricted_tags = DiscourseTagging.filter_visible(tags.where(target_tag_id: nil), guardian)
 
       categories = Category.where("id IN (SELECT category_id FROM category_tags)")
         .where("id IN (?)", guardian.allowed_category_ids)
         .includes(:tags)
 
       category_tag_counts = categories.map do |c|
-        { id: c.id, tags: self.class.tag_counts_json(c.tags) }
+        { id: c.id, tags: self.class.tag_counts_json(c.tags.where(target_tag_id: nil)) }
       end
 
       @tags = self.class.tag_counts_json(unrestricted_tags)
@@ -98,9 +102,11 @@ class TagsController < ::ApplicationController
   end
 
   def show
-    raise Discourse::NotFound if DiscourseTagging.hidden_tag_names(guardian).include?(params[:tag_id])
-
     show_latest
+  end
+
+  def info
+    render_serialized(@tag, DetailedTagSerializer, root: :tag_info)
   end
 
   def update
@@ -196,7 +202,9 @@ class TagsController < ::ApplicationController
     filter_params = {
       for_input: params[:filterForInput],
       selected_tags: params[:selected_tags],
-      limit: params[:limit]
+      limit: params[:limit],
+      exclude_synonyms: params[:excludeSynonyms],
+      exclude_has_synonyms: params[:excludeHasSynonyms]
     }
 
     if params[:categoryId]
@@ -224,19 +232,25 @@ class TagsController < ::ApplicationController
       # filter_allowed_tags determined that the tag entered is not allowed
       json_response[:forbidden] = params[:q]
 
-      category_names = tag.categories.where(id: guardian.allowed_category_ids).pluck(:name)
-      category_names += Category.joins(tag_groups: :tags).where(id: guardian.allowed_category_ids, "tags.id": tag.id).pluck(:name)
-
-      if category_names.present?
-        category_names.uniq!
-        json_response[:forbidden_message] = I18n.t(
-          "tags.forbidden.restricted_to",
-          count: category_names.count,
-          tag_name: tag.name,
-          category_names: category_names.join(", ")
-        )
+      if filter_params[:exclude_synonyms] && tag.synonym?
+        json_response[:forbidden_message] = I18n.t("tags.forbidden.synonym", tag_name: tag.target_tag.name)
+      elsif filter_params[:exclude_has_synonyms] && tag.synonyms.exists?
+        json_response[:forbidden_message] = I18n.t("tags.forbidden.has_synonyms", tag_name: tag.name)
       else
-        json_response[:forbidden_message] = I18n.t("tags.forbidden.in_this_category", tag_name: tag.name)
+        category_names = tag.categories.where(id: guardian.allowed_category_ids).pluck(:name)
+        category_names += Category.joins(tag_groups: :tags).where(id: guardian.allowed_category_ids, "tags.id": tag.id).pluck(:name)
+
+        if category_names.present?
+          category_names.uniq!
+          json_response[:forbidden_message] = I18n.t(
+            "tags.forbidden.restricted_to",
+            count: category_names.count,
+            tag_name: tag.name,
+            category_names: category_names.join(", ")
+          )
+        else
+          json_response[:forbidden_message] = I18n.t("tags.forbidden.in_this_category", tag_name: tag.name)
+        end
       end
     end
 
@@ -276,14 +290,56 @@ class TagsController < ::ApplicationController
     render json: { tags: pm_tags }
   end
 
+  def create_synonyms
+    guardian.ensure_can_admin_tags!
+    value = DiscourseTagging.add_or_create_synonyms_by_name(@tag, params[:synonyms])
+    if value.is_a?(Array)
+      render json: failed_json.merge(
+        failed_tags: value.inject({}) { |h, t| h[t.name] = t.errors.full_messages.first; h }
+      )
+    else
+      render json: success_json
+    end
+  end
+
+  def destroy_synonym
+    guardian.ensure_can_admin_tags!
+    synonym = Tag.where_name(params[:synonym_id]).first
+    raise Discourse::NotFound unless synonym
+    if synonym.target_tag == @tag
+      synonym.update!(target_tag: nil)
+      render json: success_json
+    else
+      render json: failed_json, status: 400
+    end
+  end
+
   private
+
+  def fetch_tag
+    @tag = Tag.find_by_name(params[:tag_id].force_encoding("UTF-8"))
+    raise Discourse::NotFound unless @tag
+  end
 
   def ensure_tags_enabled
     raise Discourse::NotFound unless SiteSetting.tagging_enabled?
   end
 
+  def ensure_visible
+    raise Discourse::NotFound if DiscourseTagging.hidden_tag_names(guardian).include?(params[:tag_id])
+  end
+
   def self.tag_counts_json(tags)
-    tags.map { |t| { id: t.name, text: t.name, count: t.topic_count, pm_count: t.pm_topic_count } }
+    target_tags = Tag.where(id: tags.map(&:target_tag_id).compact.uniq).select(:id, :name)
+    tags.map do |t|
+      {
+        id: t.name,
+        text: t.name,
+        count: t.topic_count,
+        pm_count: t.pm_topic_count,
+        target_tag: t.target_tag_id ? target_tags.find { |x| x.id == t.target_tag_id }&.name : nil
+      }
+    end
   end
 
   def set_category_from_params

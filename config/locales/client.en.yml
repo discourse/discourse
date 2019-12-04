@@ -3043,11 +3043,30 @@ en:
       changed: "tags changed:"
       tags: "Tags"
       choose_for_topic: "optional tags"
+      info: "Info"
+      default_info: "This tag isn't restricted to any categories, and has no synonyms."
+      synonyms: "Synonyms"
+      synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
+      tag_groups_info:
+        one: 'This tag belongs to the group "{{tag_groups}}".'
+        other: "This tag belongs to these groups: {{tag_groups}}."
+      category_restrictions:
+        one: "It can only be used in this category:"
+        other: "It can only be used in these categories:"
+      edit_synonyms: "Manage Synonyms"
+      add_synonyms_label: "Add synonyms:"
+      add_synonyms: "Add"
+      add_synonyms_failed: "The following tags couldn't be added as synonyms: <b>%{tag_names}</b>. Ensure they don't have synonyms and aren't synonyms of another tag."
+      remove_synonym: "Remove Synonym"
+      delete_synonym_confirm: 'Are you sure you want to delete the synonym "%{tag_name}"?'
       delete_tag: "Delete Tag"
       delete_confirm:
         one: "Are you sure you want to delete this tag and remove it from %{count} topic it is assigned to?"
         other: "Are you sure you want to delete this tag and remove it from {{count}} topics it is assigned to?"
       delete_confirm_no_topics: "Are you sure you want to delete this tag?"
+      delete_confirm_synonyms:
+        one: "Its synonym will also be deleted."
+        other: "Its {{count}} synonyms will also be deleted."
       rename_tag: "Rename Tag"
       rename_instructions: "Choose a new name for the tag:"
       sort_by: "Sort by:"

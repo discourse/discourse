@@ -13,6 +13,7 @@ describe Tag do
   end
 
   let(:tag) { Fabricate(:tag) }
+  let(:tag2) { Fabricate(:tag) }
   let(:topic) { Fabricate(:topic, tags: [tag]) }
 
   before do
@@ -45,6 +46,12 @@ describe Tag do
 
       expect(event[:event_name]).to eq(:tag_destroyed)
       expect(event[:params].first).to eq(subject)
+    end
+
+    it 'removes it from its tag group' do
+      tag_group = Fabricate(:tag_group, tags: [tag])
+      expect { tag.destroy }.to change { TagGroupMembership.count }.by(-1)
+      expect(tag_group.reload.tags).to be_empty
     end
   end
 
@@ -186,6 +193,58 @@ describe Tag do
 
     it "returns the correct tags" do
       expect(Tag.unused.pluck(:name)).to contain_exactly("unused1", "unused2")
+    end
+  end
+
+  context "synonyms" do
+    let(:synonym) { Fabricate(:tag, target_tag: tag) }
+
+    it "can be a synonym for another tag" do
+      expect(synonym).to be_synonym
+      expect(synonym.target_tag).to eq(tag)
+    end
+
+    it "cannot have a synonym of a synonym" do
+      synonym2 = Fabricate.build(:tag, target_tag: synonym)
+      expect(synonym2).to_not be_valid
+      expect(synonym2.errors[:target_tag_id]).to be_present
+    end
+
+    it "a tag with synonyms cannot become a synonym" do
+      synonym
+      tag.target_tag = Fabricate(:tag)
+      expect(tag).to_not be_valid
+      expect(tag.errors[:target_tag_id]).to be_present
+    end
+
+    it "can be added to a tag group" do
+      tag_group = Fabricate(:tag_group, tags: [tag])
+      synonym
+      expect(tag_group.reload.tags).to include(synonym)
+    end
+
+    it "can be added to a category" do
+      category = Fabricate(:category, tags: [tag])
+      synonym
+      expect(category.reload.tags).to include(synonym)
+    end
+
+    it "destroying a tag destroys its synonyms" do
+      synonym
+      expect { tag.destroy }.to change { Tag.count }.by(-2)
+      expect(Tag.find_by_id(synonym.id)).to be_nil
+    end
+
+    it "can add a tag from the same tag group as a synonym" do
+      tag_group = Fabricate(:tag_group, tags: [tag, tag2])
+      tag2.update!(target_tag: tag)
+      expect(tag_group.reload.tags).to include(tag2)
+    end
+
+    it "can add a tag restricted to the same category as a synonym" do
+      category = Fabricate(:category, tags: [tag, tag2])
+      tag2.update!(target_tag: tag)
+      expect(category.reload.tags).to include(tag2)
     end
   end
 end

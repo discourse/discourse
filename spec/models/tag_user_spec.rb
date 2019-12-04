@@ -40,6 +40,28 @@ describe TagUser do
       TagUser.change(user.id, tag.id, regular)
       expect(TopicUser.get(topic, user).notification_level).to eq tracking
     end
+
+    it "watches or tracks on change using a synonym" do
+      user = Fabricate(:user)
+      tag = Fabricate(:tag)
+      synonym = Fabricate(:tag, target_tag: tag)
+      post = create_post(tags: [tag.name])
+      topic = post.topic
+
+      TopicUser.change(user.id, topic.id, total_msecs_viewed: 1)
+
+      TagUser.change(user.id, synonym.id, tracking)
+      expect(TopicUser.get(topic, user).notification_level).to eq tracking
+
+      TagUser.change(user.id, synonym.id, watching)
+      expect(TopicUser.get(topic, user).notification_level).to eq watching
+
+      TagUser.change(user.id, synonym.id, regular)
+      expect(TopicUser.get(topic, user).notification_level).to eq tracking
+
+      expect(TagUser.where(user_id: user.id, tag_id: synonym.id).first).to be_nil
+      expect(TagUser.where(user_id: user.id, tag_id: tag.id).first).to be_present
+    end
   end
 
   context "batch_set" do
@@ -58,6 +80,30 @@ describe TagUser do
       expect(TopicUser.get(topic, user).notification_level).to eq tracking
 
       TagUser.batch_set(user, :watching, [tag.name])
+
+      expect(TopicUser.get(topic, user).notification_level).to eq watching
+
+      TagUser.batch_set(user, :watching, [])
+
+      expect(TopicUser.get(topic, user).notification_level).to eq tracking
+    end
+
+    it "watches and unwatches tags correctly using tag synonym" do
+
+      user = Fabricate(:user)
+      tag = Fabricate(:tag)
+      synonym = Fabricate(:tag, target_tag: tag)
+      post = create_post(tags: [tag.name])
+      topic = post.topic
+
+      # we need topic user record to ensure watch picks up other wise it is implicit
+      TopicUser.change(user.id, topic.id, total_msecs_viewed: 1)
+
+      TagUser.batch_set(user, :tracking, [synonym.name])
+
+      expect(TopicUser.get(topic, user).notification_level).to eq tracking
+
+      TagUser.batch_set(user, :watching, [synonym.name])
 
       expect(TopicUser.get(topic, user).notification_level).to eq watching
 

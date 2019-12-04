@@ -178,6 +178,7 @@ describe TopicQuery do
       fab!(:tagged_topic3) { Fabricate(:topic, tags: [tag, other_tag]) }
       fab!(:tagged_topic4) { Fabricate(:topic, tags: [uppercase_tag]) }
       fab!(:no_tags_topic) { Fabricate(:topic) }
+      let(:synonym) { Fabricate(:tag, target_tag: tag, name: 'synonym') }
 
       it "returns topics with the tag when filtered to it" do
         expect(TopicQuery.new(moderator, tags: tag.name).list_latest.topics)
@@ -209,6 +210,26 @@ describe TopicQuery do
 
       it "can return topics with no tags" do
         expect(TopicQuery.new(moderator, no_tags: true).list_latest.topics.map(&:id)).to eq([no_tags_topic.id])
+      end
+
+      it "can filter using a synonym" do
+        expect(TopicQuery.new(moderator, tags: synonym.name).list_latest.topics)
+          .to contain_exactly(tagged_topic1, tagged_topic3)
+
+        expect(TopicQuery.new(moderator, tags: [synonym.id]).list_latest.topics)
+          .to contain_exactly(tagged_topic1, tagged_topic3)
+
+        expect(TopicQuery.new(
+          moderator, tags: [synonym.name, other_tag.name]
+        ).list_latest.topics).to contain_exactly(
+          tagged_topic1, tagged_topic2, tagged_topic3
+        )
+
+        expect(TopicQuery.new(moderator, tags: [synonym.id, other_tag.id]).list_latest.topics)
+          .to contain_exactly(tagged_topic1, tagged_topic2, tagged_topic3)
+
+        expect(TopicQuery.new(moderator, tags: ["SYnonYM"]).list_latest.topics)
+          .to contain_exactly(tagged_topic1, tagged_topic3)
       end
     end
 
