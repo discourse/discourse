@@ -428,7 +428,7 @@ def migrate_to_s3
           %Q{attachment; filename="#{upload.original_filename}"}
       end
 
-      if upload.secure
+      if upload&.secure
         options[:acl] = "private"
       end
     end
