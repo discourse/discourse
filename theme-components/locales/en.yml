@@ -1,0 +1,9 @@
+---
+en:
+  close:
+    title: Close the banner
+    label: Close
+  toggle:
+    title: Expand/Collapse the banner
+    collapse_label: Collapse
+    expand_label: Expand

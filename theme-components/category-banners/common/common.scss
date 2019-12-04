@@ -1,0 +1,31 @@
+div[class^="category-title-header"] {
+  padding-top: 60px;
+  display: flex;
+  text-align: center;
+  width: 100%;
+  justify-content: center;
+  .category-title-contents {
+    max-width: 500px;
+    padding: 40px;
+    svg {
+      height: 1.5em;
+      width: 1.1em;
+      margin-right: 0.25em;
+    }
+    h1 {
+      display: inline;
+    }
+  }
+  .category-title-description {
+    a,
+    a:visited {
+      color: inherit;
+      text-decoration: underline;
+    }
+  }
+}
+.category-header {
+  #main-outlet {
+    padding-top: 20px;
+  }
+}

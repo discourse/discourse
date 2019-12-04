@@ -1,0 +1,211 @@
+show_for_members:
+  type: bool
+  default: true
+  description: 
+    en: 'Display the banner for users logged into the forum'
+show_for_anon:
+  type: bool
+  default: true
+  description: 
+    en: 'Display the banner for anonymous users'
+display_on_mobile:
+  type: bool
+  default: true
+  description: 
+    en: 'Display the banner on mobile devices'
+display_on_desktop:
+  type: bool
+  default: true
+  description: 
+    en: 'Display the banner on desktop computers'
+display_on_homepage:
+  type: bool
+  default: true
+  description: 
+    en: 'Display the banner on the homepage'
+url_must_contain:
+  type: list
+  default: /c/|/t/
+  description: 
+    en: 'If any of the above sets of characters appear in the URL, the banner will display'
+dismissible:
+  type: bool
+  default: false
+  description: 
+    en: 'Allow the banner to be closed by users'
+collapsible:
+  type: bool
+  default: false
+  description: 
+    en: 'Allow the banner to be expanded and collapsed by users'
+default_collapsed_state:
+  type: enum
+  default: collapsed
+  choices:
+    - expanded
+  description: 
+    en: 'Default collapsed state when collapsible setting is enabled'
+cookie_lifespan:
+  type: enum
+  default: none
+  choices:
+    - minute
+    - day
+    - week
+    - month
+    - year
+  description: 
+    en: 'The lifespan of the cookie used to remember if the banner has been closed, expanded, or collapsed.
+         If set to "none", NO cookies will be used with this component, and any previously created cookies 
+         related to the banner will be deleted the next time a user performs a full page load. The values are 
+         measured as a single unit, so setting "year" will be one year, "week" will be one week, etc.'
+cookie_name:
+  type: string
+  default: "v1"
+  description: 
+    en: 'When important changes are made to the banner, you must change the cookie name to ensure all your users see the changes.'
+full_width_banner:
+  type: bool
+  default: false
+  description: 
+    en: 'Display the banner at full browser width'
+banner_background_image:
+  type: string
+  default: "https://i.imgur.com/k7SnZth.jpg"
+  description: 
+    en: 'The source url for your background image. Tip: You can upload an image to your main theme and use the url from that, 
+         but make sure that you do not use "Uploads" section of this component. Any uploads added to this component will be 
+         deleted whenever it is updated.'
+background_color:
+  type: string
+  default: "#EED4A1"
+  description: 
+    en: 'Used in place of a background image'
+primary_text_color:
+  type: string
+  default: "#000"
+  description:
+    en: 'The main text color of the banner'
+secondary_text_color:
+  type: string
+  default: "#FF6C00"
+  description:
+    en: 'The text color of the icon and text headings, and the button background color.'
+link_text_color:
+  type: string
+  default: "#0f82af"
+  description:
+    en: 'The text color links within the banner.
+        <br><br><br>
+        <h2>Banner Content Customization</h2>
+        Customize the content of the banner with HTML. If you need to style your custom content 
+        with CSS, create a separate theme component. Leave the content blank to exclude a column. 
+        While a fourth column is provided, it will likely result in too much content for the 
+        available space. Be sure you are happy with your configuration across different brower widths.'
+main_heading_content:
+  type: string
+  textarea: true
+  default: |
+            <h2 class="x-title">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            </h2>
+            <div class="colored-line"></div>
+            <div class="description">
+              <p>
+                Nulla ullamcorper augue vel sodales pellentesque. Sed 
+                vitae sapien sit amet mauris consequat malesuada. 
+                Vestibulum vitae iaculis nisl, vel aliquet velit. 
+                Fusce venenatis laoreet diam, non dictum nisl 
+                vestibulum non.
+              </p>
+            </div>
+            <div class="colored-line"></div>
+first_column_content:
+  type: string
+  textarea: true
+  default: |
+            <h3>A simple box</h3>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+              Sed id congue eros, sit amet suscipit libero. Nunc vitae 
+              placerat est.
+            </p>
+            <div class="banner-list">
+              <ul>
+                <li><a href="https://twitter.com/discourse" target="_blank">A tweet</a> to wake up my friends</li>
+                <li>Put the photos in the bag</li>
+                <li>Rearrange books in the study</li>
+                <li>And the notes?</li>
+              </ul>
+            </div>
+second_column_content:
+  type: string
+  textarea: true
+  default: |
+            <h3>Another simple box</h3>
+            <p>
+              Integer velit ante, 
+              <a href="https://discourse.org">DISCOURSE</a> 
+              amet tristique in, gravida at ligula. Sed gravida mauris id 
+              neque vestibulum semper. Suspendisse potenti. Nam 
+              nec maximus ligula. Ut eget semper est. Sed ornare 
+              sit amet justo eu rutrum. Integer sit amet facilisis ipsum.
+            </p>
+
+            <div class="buttons" id="my-button">
+              <a href="#" class="btn btn-icon-text">My new button</a>
+            </div>
+third_column_content:
+  type: string
+  textarea: true
+  default: |
+            <h3>Yet another simple box</h3>
+            <p>
+              Pellentesque ut lacinia nunc, eu molestie nulla. 
+              Pellentesque viverra nisi urna, at hendrerit nisl 
+              sodales in. Morbi auctor sodales nisi, eget aliquam 
+              justo maximus in. Suspendisse a felis a massa 
+              elementum pellentesque quis eget dolor. Orci varius 
+              natoque penatibus et magnis dis parturient montes, 
+              nascetur ridiculus mus.
+            </p>
+fourth_column_content:
+  type: string
+  textarea: true
+  default: ''
+  description:
+    en: '<br><br>
+        <h2>Column Sizes</h2>
+        Use a percentage to make columns more wide or narrow. When set to "auto", the column will fill the 
+        available space evenly with other "auto" columns.'
+first_column_size:
+  type: string
+  default: 'auto'
+second_column_size:
+  type: string
+  default: 'auto'
+third_column_size:
+  type: string
+  default: 'auto'
+fourth_column_size:
+  type: string
+  default: ''
+  description: 
+    en: '<br><br>
+        <h2>Column Icons</h2>
+        Use font awesome or a link to an image for the icon at the top of the columns.
+        Accepted font awesome formats: <b>fa-icon</b>, <b>far fa-icon</b> or <b>fab fa-icon</b>. 
+        <a href="https://fontawesome.com/icons?d=gallery&m=free" target="_blank">Click Here</a> 
+        to view the list of available icons.'
+first_column_icon:
+  type: string
+  default: 'cog'
+second_column_icon:
+  type: string
+  default: 'https://d11a6trkgmumsb.cloudfront.net/original/3X/b/3/b33be9538df3547fcf9d1a51a4637d77392ac6f9.png'
+third_column_icon:
+  type: string
+  default: 'wrench'
+fourth_column_icon:
+  type: string
+  default: ''

@@ -1,0 +1,20 @@
+show_description: 
+  default: true
+  description: 'Show description from "About This Category" post'
+
+show_mobile: 
+  default: true
+  description: 'Show banners on mobile'
+
+show_subcategory: 
+  default: true
+  description: 'Show banners for subcategories'
+
+hide_if_no_description: 
+  default: true
+  description: 'Hide banners if category description is not set'
+
+exceptions:
+  default: ""
+  type: list
+  description: "Banner will not show for these categories"
