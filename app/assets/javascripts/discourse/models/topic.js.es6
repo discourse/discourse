@@ -444,7 +444,7 @@ const Topic = RestModel.extend({
     });
   },
 
-  toggleFeaturedOnCard(user) {
+  toggleFeaturedOnProfile(user) {
     const removing = user.featured_topic && this.id === user.featured_topic.id;
     const path = removing ? "clear-featured-topic" : "feature-topic";
     return ajax(`/u/${user.username}/${path}`, { type: "PUT", data: { topic_id: this.id} })
