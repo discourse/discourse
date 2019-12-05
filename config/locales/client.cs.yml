@@ -2197,7 +2197,6 @@ cs:
       email_in_disabled: "Přidávání nových témat před email je zakázáno v Nastavení fóra. K povolení nových témat přes email,"
       email_in_disabled_click: 'povolit nastavení "email in"'
       mailinglist_mirror: "Kategorie kopíruje mailing list"
-      suppress_from_latest: "Potlač tuto kategorii na nejnovějších tématech."
       show_subcategory_list: "Ukázat seznam podkategorií nad tématy v této kategorii."
       num_featured_topics: "Počet témat, která se zobrazují na stránce kategorie "
       subcategory_num_featured_topics: "Počet zobrazených témat na stránce nadřazené kategorie:"
@@ -2582,6 +2581,7 @@ cs:
       changed: "změněné štítky:"
       tags: "Štítky"
       choose_for_topic: "volitelné štítky"
+      add_synonyms: "Přidat"
       delete_tag: "Smaž štítek"
       delete_confirm:
         one: "Jsi si jist, že chceš smazat tento štítek a odstranit ho z tématu, kterému je přiřazen?"

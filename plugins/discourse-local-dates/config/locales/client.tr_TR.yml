@@ -12,3 +12,4 @@ tr_TR:
         form:
           date_title: Tarih
           time_title: Saat
+          timezone: Saat dilimi

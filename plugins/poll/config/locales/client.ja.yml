@@ -37,7 +37,8 @@ ja:
         label: "結果を表示"
       hide-results:
         title: "投票に戻る"
-        label: "結果を非表示にする"
+      export-results:
+        label: "エクスポート"
       open:
         title: "投票をオープンする"
         label: "オープン"

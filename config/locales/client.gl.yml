@@ -1654,6 +1654,7 @@ gl:
         </form>
       </p>
     tagging:
+      add_synonyms: "Engadir"
       cancel_delete_unused: "Cancelar"
       notifications:
         watching:

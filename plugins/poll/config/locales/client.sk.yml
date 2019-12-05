@@ -45,7 +45,8 @@ sk:
         label: "Zobraz výsledky"
       hide-results:
         title: "Návrat na odovzdané hlasy"
-        label: "Skryť výsledky"
+      export-results:
+        label: "Export"
       open:
         title: "Zahájiť hlasovanie"
         label: "Zahájiť"

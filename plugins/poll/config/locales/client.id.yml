@@ -30,7 +30,6 @@ id:
         label: "Lihat hasil"
       hide-results:
         title: "Kembali ke suaramu"
-        label: "Sembunyikan hasil"
       open:
         title: "Buka Polling"
         label: "Buka"

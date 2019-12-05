@@ -2208,6 +2208,7 @@ et:
       changed: "muudetud sildid:"
       tags: "Sildid"
       choose_for_topic: "valikulised sildid"
+      add_synonyms: "Lisa"
       delete_tag: "Kustuta silt"
       rename_tag: "Nimeta silt ümber"
       rename_instructions: "Vali sildile uus nimi:"

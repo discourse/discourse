@@ -2251,6 +2251,7 @@ lt:
       selector_all_tags: "visos žymos"
       selector_no_tags: "nėra žymų"
       tags: "Žymos"
+      add_synonyms: "Pridėti"
       delete_tag: "Ištrinti žymą"
       rename_tag: "Pervadinti žymą"
       sort_by: "Rūšiuoti pagal:"

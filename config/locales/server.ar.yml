@@ -574,9 +574,6 @@ ar:
     error: "حدث خطأ في تغيير عنوان بريدك الإلكتروني. لربما يكون العنوان مستخدما بالفعل."
     error_staged: "حدث خطأ في تغيير عنوان بريدك الإلكتروني. العنوان الذى ادخلته مستخدم من قبل مشترك عبر البريد الالكترونى."
     already_done: "نأسف عنوان التاكيد هدا لم يعد صالحا بعد الان. ربما تم تغيير بريدك بالفعل؟"
-    authorizing_old:
-      title: "شكرا لك لتاكيدك عنوان بريدك الحالي."
-      description: "نحن الان نقوم بمراسله عنوانك الجديد للتأكيد."
   activation:
     action: "انقر هنا لتنشيط حسابك."
     already_done: "آسفون، لم يعد رابط تأكيد الحساب صالحا. لربما يكون الحساب نشطا بالفعل."
@@ -1453,20 +1450,8 @@ ar:
       subject_template: "حسابك الجديد [%{email_prefix}]"
     confirm_new_email:
       subject_template: "أكّد عنوان بريد الإلكتروني الجديد %{email_prefix}"
-      text_body_template: |
-        أكد عنوان بريدك الإلكتروني لـ %{site_name} بالضغط على الرابط التالي :
-
-        %{email_token}/u/confirm-new-email/%{base_url}
     confirm_old_email:
       subject_template: "أكّد عنوان بريد الإلكتروني الحالي %{email_prefix}"
-      text_body_template: |
-        قبل أن نُغيّر عنوان بريد الإلكتروني ، نحتاجك إلى تأكيد تحكمك
-        بالبريد الالكتروني الحالي للحساب ، بعد إكمال هذه الخطوة ، سوف نؤكد لك
-        عنوان البريد الإلكتروني الجديد .
-
-        أكّد عنوان بريدك الإلكتروني الحالي لـ %{site_name} بالضغط على الرابط التالي :
-
-        %{email_token}/u/confirm-old-email/%{base_url}
     notify_old_email:
       subject_template: "عنوان بريد الإلكتروني تم تغييرة %{email_prefix}"
     signup_after_approval:

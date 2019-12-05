@@ -31,9 +31,13 @@ vi:
   submit: "Gửi đi"
   disable_remote_images_download_reason: "Không thể tải ảnh về máy chủ vì không dung lượng lưu trữ."
   anonymous: "Ẩn danh"
+  themes:
+    import_error:
+      git: "Lỗi nhân bản kho git, truy cập bị từ chối hoặc không tìm thấy kho lưu trữ"
   emails:
     incoming:
       show_trimmed_content: "Hiện nội dung đã ẩn"
+      maximum_staged_user_per_email_reached: "Đạt số lượng thành viên theo giai đoạn tối đa được tạo trên mỗi email."
       errors:
         empty_email_error: "Xảy ra khi hệ thống nhận được một thư rỗng."
         no_message_id_error: "Xảy ra khi thư không có phần 'Message-Id'."
@@ -338,9 +342,6 @@ vi:
     error: "Có một lỗi khi thay đổi địa chỉ email của bạn. Có lẽ email này đã được sử dụng rồi?"
     error_staged: "Có lỗi khi thay đổi địa chỉ email của bạn, email đã được người khác sử dụng."
     already_done: "Xin lỗi, liên kết xác nhận này không còn giá trị. Có lẽ email của bạn đã được thay đổi?"
-    authorizing_old:
-      title: "Cám ơn bạn đã xác nhận địa chỉ email."
-      description: "Chúng tôi sẽ không gửi email tới địa chỉ mới của bạn để xác nhận."
   activation:
     action: "Nhấn vào đây để kích hoạt tài khoản của bạn"
     already_done: "Xin lỗi, liên kết để xác nhận tài khoản này không còn hợp lệ. Có thể tài khoản của bạn được kích hoạt?"
@@ -423,36 +424,48 @@ vi:
     otp_confirmation:
       confirm_title: "Tiếp tục tới %{site_name}"
       confirm_button: Kết thúc đăng nhập
+    scopes:
+      one_time_password: "Tạo mã token đăng nhập một lần"
   reports:
     default:
       labels:
         count: Đếm
         day: Ngày
     post_edits:
+      title: "Sửa Bài Viết"
       labels:
         edited_at: ày
         post: Bài viết
         editor: Biên tập
         edit_reason: Lý do
+      description: "Số bài viết mới chỉnh sửa."
     user_flagging_ratio:
+      title: "Tỷ lệ gắn cờ người dùng"
       labels:
         user: Người dùng
         score: Điểm số
     moderators_activity:
+      title: "Hoạt động của người điều hành"
       labels:
         moderator: Điều hành
+      description: "Danh sách hoạt động của người điều hành bao gồm các cờ được xem xét, thời gian đọc, chủ đề được tạo, bài đăng được tạo, tin nhắn cá nhân được tạo và sửa đổi."
     flags_status:
+      title: "Tình trạng cờ"
       labels:
         flag: Loại
+      description: "Danh sách các trạng thái của cờ bao gồm loại cờ, người đăng, người gắn cờ và thời gian giải quyết."
     visits:
       title: "Các thành viên truy cập"
       xaxis: "Ngày"
       yaxis: "Số lần truy cập"
+      description: "Số lượt truy cập của người dùng."
     signups:
       xaxis: "Ngày"
     new_contributors:
       xaxis: "Ngày"
+      description: "Số thành viên thực hiện bài đăng đầu tiên của họ trong giai đoạn này."
     consolidated_page_views:
+      title: "Số lượt xem hợp nhất"
       yaxis: "Ngày"
       labels:
         post: Bài viết
@@ -462,6 +475,7 @@ vi:
       xaxis: "Ngày"
     daily_engaged_users:
       xaxis: "Ngày"
+      description: "Số Thành viên đã thích hoặc đăng trong ngày cuối cùng"
     profile_views:
       title: "Xem hồ sơ người dùng"
       xaxis: "Ngày"
@@ -487,10 +501,12 @@ vi:
       xaxis: "Ngày"
       yaxis: "Số đánh dấu mới"
     users_by_trust_level:
-      title: "Thành viên ở mõi bậc tin tưởng"
+      title: "Người dùng trên mỗi cấp độ tin cậy"
       xaxis: "Bậc tin tưởng"
       yaxis: "Số thành viên"
+      description: "Số lượng thành viên được nhóm theo mức độ tin cậy."
     users_by_type:
+      title: "Người dùng mỗi loại"
       xaxis: "Loại"
       yaxis: "Số thành viên"
       labels:
@@ -499,6 +515,13 @@ vi:
         admin: Quản trị
         moderator: Điều hành
         suspended: Đã tạm khóa
+      description: "Số thành viên được nhóm bởi quản trị viên, điều hành viên, đã tạm ngưng và im lặng."
+    trending_search:
+      title: Xu hướng tìm kiếm
+      labels:
+        term: Thuật ngữ
+        searches: Số lần tìm kiếm
+      description: "Các thuật ngữ tìm kiếm phổ biến nhất với tỷ lệ nhấp chuột của họ."
     emails:
       title: "Email đã gửi"
       xaxis: "Ngày"
@@ -525,6 +548,7 @@ vi:
       title: "Thông báo người dùng"
       xaxis: "Ngày"
       yaxis: "Số lượng tin nhắn"
+      description: "Số lần Thành viên đã được thông báo riêng bởi một lá cờ."
     top_referrers:
       title: "Giới thiệu hàng đầu"
       xaxis: "Người dùng"
@@ -534,6 +558,7 @@ vi:
         user: "Người dùng"
         num_clicks: "Clicks"
         num_topics: "Chủ đề"
+      description: "Danh sách thành viên theo số lần nhấp vào liên kết họ đã chia sẻ."
     top_traffic_sources:
       title: "Nguồn truy cập"
       xaxis: "Tên miền"
@@ -555,13 +580,16 @@ vi:
     page_view_logged_in_reqs:
       title: "Đã đăng nhập"
       xaxis: "Ngày"
+      description: "Số lượt xem trang mới từ Thành viên đã đăng nhập."
     page_view_crawler_reqs:
       xaxis: "Ngày"
     page_view_total_reqs:
+      title: "Số lượt xem"
       xaxis: "Ngày"
       yaxis: "Tổng lượt xem trang"
     page_view_logged_in_mobile_reqs:
       xaxis: "Ngày"
+      description: "Số lượt xem trang mới từ thành viên trên thiết bị di động và đăng nhập vào tài khoản."
     page_view_anon_mobile_reqs:
       xaxis: "Ngày"
     http_background_reqs:
@@ -592,21 +620,32 @@ vi:
       title: "Thời gian để phản hồi lần đầu"
       xaxis: "Ngày"
       yaxis: "Thời gian trung bình (giờ)"
+      description: "Thời gian trung bình (tính bằng giờ) của phản hồi đầu tiên cho các chủ đề mới."
     topics_with_no_response:
       title: "Chủ đề không có phản hồi"
       xaxis: "Ngày"
       yaxis: "Tổng số"
     mobile_visits:
+      title: "Lượt truy cập của người dùng (di động)"
       xaxis: "Ngày"
       yaxis: "Số lần truy cập"
+      description: "Số Thành viên duy nhất đã truy cập bằng thiết bị di động."
+    web_crawlers:
+      labels:
+        page_views: "Số lượt xem"
     suspicious_logins:
+      title: "Đăng nhập đáng ngờ"
       labels:
         user: Người dùng
         location: Vị trí
+      description: "Chi tiết về thông tin đăng nhập mới khác biệt đáng ngờ với thông tin đăng nhập trước đó."
     staff_logins:
+      title: "Đăng nhập quản trị viên"
       labels:
         user: Người dùng
         location: Vị trí
+        login_at: Đăng nhập lúc
+      description: "Danh sách thời gian đăng nhập của quản trị viên với các địa điểm."
     top_uploads:
       labels:
         filename: Tên tập tin
@@ -621,6 +660,7 @@ vi:
       other: "Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='%{base_path}/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết."
     poll_pop3_timeout: "Không thể kết nối với POP3 server, sẽ không nhận được email gửi đến. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a> và nhà cung cấp dịch vụ."
     poll_pop3_auth_error: "Không thể kết nối với POP3 server do lỗi chứng thực. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a>."
+    unreachable_themes: "Chúng tôi không thể kiểm tra cập nhật về các chủ đề sau:"
   site_settings:
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Tự động ẩn bất kỳ bài viết ở ẩn hơn 30 ngày."
@@ -657,6 +697,7 @@ vi:
     post_onebox_maxlength: "Số ký tự tối đa của một bài onebox Discourse."
     notification_email: "Địa chỉ email 'Từ:' được dùng để gửi các email thiết yếu của hệ thống. Các tên miền quy định ở đây phải có SPF, DKIM và bản ghi PTR phải được thiết lập chính xác cho email đến."
     email_custom_headers: "Danh sách xác định email header tùy chỉnh"
+    force_https: "Buộc trang web của bạn chỉ sử dụng HTTPS. CẢNH BÁO: KHÔNG kích hoạt tính năng này cho đến khi bạn xác minh HTTPS được thiết lập đầy đủ và hoạt động hoàn toàn ở mọi nơi! Bạn đã kiểm tra CDN của mình, tất cả thông tin đăng nhập xã hội và bất kỳ biểu trưng / phụ thuộc bên ngoài nào để đảm bảo tất cả chúng đều tương thích với HTTPS?"
     summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một bài viết bao gồm 'Tóm tắt chủ đề này'"
     summary_posts_required: "Số bài viết tối thiểu trong một chủ đề trước khi 'Tóm tắt chủ đề này' được kích hoạt"
     summary_likes_required: "Số lượt thích trong một chủ đề trước khi 'Tóm tắt chủ đề này' được kích hoạt"
@@ -788,6 +829,7 @@ vi:
     newuser_max_mentions_per_post: "Số tối đa thông báo @name mà thành viên mới có thể sử dụng trong bài viết."
     newuser_max_replies_per_topic: "Số lượng tối đa trả lời mà thành viên có thể thực hiện trong một chủ đề cho đến khi có ai đó gửi trả lời."
     max_mentions_per_post: "Số tối đa thông báo @name mà tất cả mọi người có thể sử dụng trong bài viết."
+    max_users_notified_per_group_mention: "Số thành viên tối đa có thể nhận được thông báo nếu một nhóm được đề cập (nếu đáp ứng ngưỡng sẽ không có thông báo nào được nêu ra)"
     create_thumbnails: "Tạo ảnh nhỏ và ảnh lightbox nếu quá lớn để vừa trong một bài đăng."
     email_time_window_mins: "Chờ (n) phút trước khi gửi bất kỳ một email thông báo nào, để cung cấp cho người dùng cơ hội để chỉnh sửa và hoàn tất bài viết của họ."
     email_posts_context: "Có bao nhiêu trả lời trước được kèm theo như là bối cảnh trong email thông báo."
@@ -840,6 +882,7 @@ vi:
     delete_email_logs_after_days: "Xóa nhật ký email sau (N) ngày. 0 để giữ lại vĩnh viễn"
     max_emails_per_day_per_user: "Số lượng tối đa email thành viên được gửi mỗi ngày. 0 để không giới hạn"
     enable_staged_users: "Tự động tạo các giai đoạn người dùng khi xử lý các email gửi đến."
+    maximum_staged_users_per_email: "Số lượng tối đa thành viên theo giai đoạn được tạo khi xử lý email đến."
     manual_polling_enabled: "Push email bằng cách sử dụng API để trả lời email."
     pop3_polling_enabled: "Poll thông qua POP3 các email trả lời."
     pop3_polling_ssl: "Sử dụng SSL khi kết nối tới POP3 server. (Đề nghị sử dụng)"
@@ -891,7 +934,9 @@ vi:
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
     show_create_topics_notice: "Nếu trang có ít hơn 5 chủ đề công khai, hiển thị một thông báo yêu cầu quản trị tạo thêm các chủ đề mới"
     delete_drafts_older_than_n_days: "Xóa các bản nháp cũ hơn (n) ngày."
+    bootstrap_mode_min_users: "Số thành viên tối thiểu được yêu cầu để tắt chế độ bootstrap (đặt thành 0 để tắt)"
     prevent_anons_from_downloading_files: "Cấm khách truy cập tải các tập tin đính kèm. CẢNH BÁO: việc này sẽ chặn những hình ảnh không thuộc giao diện trang hoạt động"
+    secure_media: 'Giới hạn truy cập để tải lên phương tiện truyền thông (hình ảnh, video, âm thanh). Nếu "yêu cầu đăng nhập" được bật, chỉ Thành viên đã đăng nhập mới có thể truy cập tải lên phương tiện. Nếu không, quyền truy cập sẽ chỉ bị giới hạn đối với các phương tiện tải lên trong các tin nhắn riêng tư. Lưu ý: Tải lên S3 phải được bật trước khi bật cài đặt này.'
     slug_generation_method: "Chọn phương thức tạo slug. 'encoded' sẽ tạo ra phần trăm chuỗi mã hóa. 'none' sẽ tắt slug."
     enable_emoji: "Kích hoạt emoji"
     emoji_set: "Bạn thích dùng gói emoji nào?"
@@ -940,6 +985,7 @@ vi:
       category: "Thư mục"
       topic: "Kết quả"
       user: "Thành viên"
+    results_page: "Search results for '%{term}'"
   sso:
     not_found: "Không tìm thấy tài khoản của bạn, xin hãy liên hệ với BQT."
     account_not_approved: "Tài khoản của bạn chưa được BQT chấp thuận, bạn sẽ nhận được email thông báo khi được chấp nhận."
@@ -1101,6 +1147,9 @@ vi:
     download_remote_images_disabled:
       subject_template: "Download ảnh từ xa đã bị vô hiệu"
       text_body_template: "Thiết lập `download_remote_images_to_local` đã bị vô hiệu do khoảng trống ổ cứng `download_remote_images_threshold` đã đạt mức giới hạn."
+    new_user_of_the_month:
+      title: "Bạn là thành viên mới của tháng!"
+      subject_template: "Bạn là một thành viên mới của tháng!"
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
@@ -1133,6 +1182,8 @@ vi:
         %{new_email}
     signup_after_approval:
       subject_template: "Bạn đã được kiểm duyệt ở %{site_name}!"
+    suspicious_login:
+      subject_template: "[%{site_name}] Đăng nhập mới từ %{location}"
   page_not_found:
     title: "Rất tiếc! Địa chỉ này không tồn tại hoặc riêng tư."
     popular_topics: "Phổ biến"
@@ -1339,6 +1390,8 @@ vi:
       description: Sử dụng Emoji trong bài viết
     first_mention:
       name: Đề cập đầu tiên
+    new_user_of_the_month:
+      name: "Thành viên mới của tháng"
   admin_login:
     success: "Gửi mail lỗi"
     email_input: "Email quản trị"
@@ -1370,6 +1423,7 @@ vi:
             placeholder: "name@example.com"
       corporate:
         title: "Công ty"
+        description: "Thông tin này sẽ được nhập vào <a href='%{base_path}/tos' target='blank'>Điều khoản dịch vụ</a> của bạn, đây là một chủ đề bạn có thể chỉnh sửa trong danh mục Nhân viên. Nếu bạn không có một công ty, hãy bỏ qua bước này ngay bây giờ."
       colors:
         title: "Giao diện"
       homepage:

@@ -764,6 +764,7 @@ sl:
       collapse_profile: "Skrči"
       bookmarks: "Zaznamki"
       bio: "O meni"
+      timezone: "Časovni pas"
       invited_by: "Povabilo od"
       trust_level: "Nivo zaupanja"
       notifications: "Obvestila"
@@ -2485,7 +2486,6 @@ sl:
       email_in_disabled: "Objavljanje novih tem preko e-sporočila je onemogočeno v Nastavitvah strani. Za omogočanje objave novih tem preko e-sporočila, "
       email_in_disabled_click: 'vključite "email in" nastavitev.'
       mailinglist_mirror: "Kategorija zrcali poštni seznam"
-      suppress_from_latest: "Ne prikaži to kategorijo med najnovejšimi temami."
       show_subcategory_list: "Prikaži seznam podkategorij nad temami za to kategorijo."
       num_featured_topics: "Število tem prikazanih na seznamu kategorij:"
       subcategory_num_featured_topics: "Število osrednjih tem na strani nadrejene kategorije:"
@@ -2895,6 +2895,7 @@ sl:
       changed: "spremenjene oznake:"
       tags: "Oznake"
       choose_for_topic: "neobvezne oznake"
+      add_synonyms: "Dodaj"
       delete_tag: "Izbriši oznako"
       delete_confirm:
         one: "Ali ste prepričani, da želite izbrisati to oznako in jo umaknili iz {{count}} teme s to oznako?"

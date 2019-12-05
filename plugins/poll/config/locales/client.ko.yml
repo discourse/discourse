@@ -30,7 +30,8 @@ ko:
         label: "결과 보기"
       hide-results:
         title: "투표로 돌아가기"
-        label: "결과 숨기기"
+      export-results:
+        label: "내보내기"
       open:
         title: "투표 열기"
         label: "열기"

@@ -1114,6 +1114,7 @@ pt:
     trust_level: "Nível de Confiança"
     search_hint: "nome de utilizador, e-mail ou endereço de IP"
     create_account:
+      disclaimer: "Ao registar-se, concorda com a <a href='{{privacy_link}}' target='blank'>política de privacidade</a> e os <a href='{{tos_link}}' target='blank'>termos do serviço</a>."
       title: "Criar Nova Conta"
       failed: "Ocorreu algo de errado, este e-mail já pode estar registado. Tente utilizar a hiperligação \"Esqueci-me da Palavra-passe\"."
     forgot_password:
@@ -2419,6 +2420,7 @@ pt:
       selector_no_tags: "sem etiquetas"
       changed: "etiquetas modificadas:"
       tags: "Etiquetas"
+      add_synonyms: "Adicionar"
       delete_tag: "Remover Etiqueta"
       rename_tag: "Renomear Etiqueta"
       rename_instructions: "Escolha o novo nome para a etiqueta:"

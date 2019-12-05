@@ -1955,6 +1955,7 @@ bg:
       changed: "променени тагове:"
       tags: "Тагове"
       choose_for_topic: "етикети по желание"
+      add_synonyms: "Добави"
       delete_tag: "Изтрийте таг"
       manage_groups_description: "Дефинирай групи за организране на етикетите"
       cancel_delete_unused: "Отмени"

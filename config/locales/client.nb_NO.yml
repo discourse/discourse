@@ -2069,7 +2069,6 @@ nb_NO:
       email_in_disabled: "Publisering av nye emner via e-post er deaktivert i innstillingene for nettstedet. For å aktivere publisering av nye emner via e-post,"
       email_in_disabled_click: 'aktiver innstillingen "e-post inn".'
       mailinglist_mirror: "Kategorien gjenspeiler en e-postliste"
-      suppress_from_latest: "Utelat denne kategorien fra siste emner."
       show_subcategory_list: "Plasser listen over underkategorien i toppen av emner i denne kategorien."
       num_featured_topics: "Antall emner som skal vises på kategori-siden:"
       subcategory_num_featured_topics: "Antall fremhevede emner på hovedkategoriens side:"
@@ -2415,6 +2414,7 @@ nb_NO:
       changed: "stikkord endret:"
       tags: "Stikkord"
       choose_for_topic: "valgfrie stikkord"
+      add_synonyms: "Legg til"
       delete_tag: "Slett stikkord"
       delete_confirm:
         one: "Er du sikker på at du ønsker å slette dette stikkordet og fjerne det fra emnet det er tilknyttet?"

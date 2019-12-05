@@ -35,7 +35,8 @@ sv:
         label: "Visa resultat"
       hide-results:
         title: "Tillbaka till dina röster"
-        label: "Göm resultat"
+      export-results:
+        label: "Exportera"
       open:
         title: "Öppna omröstningen"
         label: "Öppna"

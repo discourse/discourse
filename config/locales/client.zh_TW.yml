@@ -2195,7 +2195,6 @@ zh_TW:
       email_in_disabled: "\"用電子郵件張貼新的話題\"功能已被關閉。若要使用此功能，"
       email_in_disabled_click: '請啟用"email in"功能'
       mailinglist_mirror: "以類別來區分郵件列表"
-      suppress_from_latest: "從最新話題中不顯示此分類"
       show_subcategory_list: "在此分類中，將子分類顯示在話題上方。"
       num_featured_topics: "分類頁面中顯示的話題數量："
       subcategory_num_featured_topics: "類別頁上的精選話題數量："
@@ -2539,6 +2538,7 @@ zh_TW:
       changed: "標籤被修改："
       tags: "標籤"
       choose_for_topic: "可選標籤"
+      add_synonyms: "新增"
       delete_tag: "刪除標籤"
       delete_confirm:
         other: "您確定要刪除此標籤並將它從{{count}}個話題中移除嗎？"

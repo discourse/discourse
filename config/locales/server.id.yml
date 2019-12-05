@@ -275,9 +275,6 @@ id:
     error: "Ada kesalahan dalam merubah alamat email Anda. Mungkinkah alamat ini telah digunakan oleh pengguna lain?"
     error_staged: "Ada kesalahan dalam merubah alamat email Anda. Alamat ini telah digunakan oleh pengguna lain."
     already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah anda telah mengubah surel anda?"
-    authorizing_old:
-      title: "Terima kasih telah mengkonfirmasi alamat email terkini Anda"
-      description: "Sekarang kami akan mengirimkan surel konfirmasi ke alamat email baru Anda."
   activation:
     action: "Klik disini untuk mengaktifkan akun anda"
     already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah akun anda sudah aktif?"

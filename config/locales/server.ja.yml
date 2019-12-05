@@ -416,9 +416,6 @@ ja:
     error: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでに使われている可能性があります。"
     error_staged: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでに使われている可能性があります。"
     already_done: "申し訳ありませんが、この確認リンクは有効ではありません。既にあなたのメールは変更されていませんか？"
-    authorizing_old:
-      title: "メールアドレスを確認していただきありがとうございます！\U0001F609"
-      description: "登録されたメールアドレスに確認メールを送りました\U0001F606"
   activation:
     action: "クリックしてアカウントを認証する"
     already_done: "申し訳ありませんが、このアカウント認証リンクは無効です。既にアカウントがアクティブになっていませんか?"
@@ -1297,10 +1294,6 @@ ja:
     confirm_new_email:
       title: "メールを確認してください"
       subject_template: "[%{email_prefix}]新しいメールアドレスを確認してください"
-      text_body_template: |
-        %{site_name}への新しいメールアドレスを下のリンクから確認してください。
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "古いメールの確認"
       subject_template: "[%{email_prefix}]現在のメールアドレスの確認"

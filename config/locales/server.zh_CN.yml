@@ -124,6 +124,7 @@ zh_CN:
       inclusion: 不包括在列表中
       invalid: 无效
       is_invalid: "似乎不清楚，这是一个完整的句子？"
+      invalid_timezone: "“%{tz}”不是一个有效的时区"
       contains_censored_words: "包含了以下敏感词:%{censored_words}"
       less_than: "必须小于 %{count}"
       less_than_or_equal_to: "必须小于等于 %{count}"
@@ -161,6 +162,7 @@ zh_CN:
       enable_s3_uploads_is_required: "除非已启用S3上载，否则无法将库存启用到S3。"
       s3_backup_requires_s3_settings: "除非你提供了'%{setting_name}'，否则无法将S3用作备份位置。"
       s3_bucket_reused: "您不可把同一个 bucket 既用作 ‘s3_upload_bucket’ 又用作 ‘s3_backup_bucket’。请选择不同的 bucket 或为每个 bucket 使用不同的路径。"
+      secure_media_requirements: "在启用安全媒体之前，必须先启用S3上传。"
     conflicting_google_user_id: '此帐户的Google帐户ID已更改; 出于安全原因，需要管理人员干预。请联系工作人员并将其指向<a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
@@ -675,9 +677,8 @@ zh_CN:
     error: "在修改你的电子邮箱地址时出现了错误，可能此邮箱已经在论坛中使用了？"
     error_staged: "在修改你的电子邮箱地址时出现了错误。这个邮箱已经被一个暂存用户占用了。"
     already_done: "抱歉，此激活链接已经失效。可能你已经修改了邮箱？"
-    authorizing_old:
-      title: "感谢你确认你目前的邮箱地址"
-      description: "我们正向你的新地址发送确认邮件。"
+    authorizing_new:
+      title: "确认您的新邮箱"
   associated_accounts:
     revoke_failed: "无法使用%{provider_name}撤消你的帐户。"
     connected: "（已连接）"
@@ -1698,8 +1699,6 @@ zh_CN:
     permalink_normalizations: "在匹配永久链接之前应用如下正则表达式，例如：/(topic.*)\\?.*/\\1 将去掉所有主题路径的参数字符串。格式为使用正则表达式+使用 \\1 等字符串来访问捕获内容"
     global_notice: "为所有访客显示紧急的，不可取消的全局横幅通知，修改为空以隐藏（可使用HTML）。"
     disable_system_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统编辑提醒。"
-    likes_notification_consolidation_threshold: "合并为单个提醒前接受的被赞提醒数量。设置为0以关闭。窗口可以通过`SiteSetting.likes_notification_consolidation_window_mins`配置。"
-    likes_notification_consolidation_window_mins: "当达到阈值时多个赞的提醒合并到单个的持续时间。阈值可通过`SiteSetting.likes_notification_consolidation_threshold`配置。"
     automatically_unpin_topics: "当用户到达底部时自动解除主题置顶。"
     read_time_word_count: "一分钟阅读的词的数量，用于估计阅读时间。"
     topic_page_title_includes_category: "主题页面<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>标题标签</a>包含分类名。"
@@ -1935,10 +1934,12 @@ zh_CN:
     autoclosed_disabled_lastpost: "本主题现在开放了。可以添加新的回复。"
     auto_deleted_by_timer: "由计时器自动删除。"
   login:
-    security_key_alternative: "找不到您的安全密钥，是否要使用其他方法？"
+    security_key_description: "当你准备好物理安全密钥后，请按下面的“使用安全密钥进行身份验证”按钮。"
+    security_key_alternative: "尝试另一种方式"
     security_key_authenticate: "使用安全密钥进行身份验证"
     security_key_not_allowed_error: "安全密钥验证超时或被取消。"
     security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
+    security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
     security_key_invalid: "验证安全密钥时出错。"
     not_approved: "你的账户尚未获得批准。一旦你的账户获得批准，你会收到一封电子邮件。"
     incorrect_username_email_or_password: "用户名、电子邮箱或密码不正确"
@@ -3010,19 +3011,9 @@ zh_CN:
     confirm_new_email:
       title: "确认新邮箱"
       subject_template: "[%{email_prefix}] 确认你的新电子邮箱地址"
-      text_body_template: |
-        点击下面的链接来确认你在%{site_name}上的新电子邮箱地址：
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "确认旧邮箱"
       subject_template: "[%{email_prefix}] 确认你现在的电子邮箱地址"
-      text_body_template: |
-        在修改你的邮箱地址前，我们需要确认你现在的邮箱。在你完成这步之后，我们将确认你的新邮件地址。
-
-        点击下面的链接来确认你在%{site_name}正使用的邮件：
-
-        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "通知旧邮箱"
       subject_template: "[%{email_prefix}] 你的邮箱已经修改成功"

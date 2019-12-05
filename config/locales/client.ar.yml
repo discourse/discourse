@@ -643,6 +643,7 @@ ar:
       collapse_profile: "إخفاء"
       bookmarks: "العلامات المرجعية"
       bio: "معلومات عنّي"
+      timezone: "المنطقة الزمنية"
       invited_by: "مدعو بواسطة"
       trust_level: "مستوى الثقة"
       notifications: "الإشعارات"
@@ -2460,6 +2461,7 @@ ar:
       changed: "الأوسمة المعدلة:"
       tags: "الأوسمة"
       choose_for_topic: "الأوسمة الإختيارية"
+      add_synonyms: "اضافة"
       delete_tag: "احذف الوسم"
       delete_confirm:
         zero: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟"

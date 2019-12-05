@@ -35,7 +35,8 @@ el:
         label: "Εμφάνισε τα αποτελέσματα"
       hide-results:
         title: "Πίσω στην ψηφοφορία"
-        label: "Κρύψε τα αποτελέσματα"
+      export-results:
+        label: "Εξαγωγή"
       open:
         title: "Να ξεκινήσει η ψηφοφορία"
         label: "Ξεκίνημα"

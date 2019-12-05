@@ -1872,6 +1872,7 @@ sq:
       selector_no_tags: "asnjë etiketë"
       changed: "etiketat e ndryshuara:"
       tags: "Etiketat"
+      add_synonyms: "Shto"
       delete_tag: "Fshi etiketën"
       rename_tag: "Riemëro etiketën"
       rename_instructions: "Zgjidhni një emër të ri për këtë etiketë"

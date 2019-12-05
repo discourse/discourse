@@ -35,7 +35,8 @@ et:
         label: "Kuva tulemused"
       hide-results:
         title: "Tagasi sinu vastuse juurde"
-        label: "Peida tulemused"
+      export-results:
+        label: "Ekspordi"
       open:
         title: "Ava hääletus"
         label: "Ava"

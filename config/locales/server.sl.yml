@@ -508,9 +508,6 @@ sl:
     error: "Prišlo je do napake med spremembo vašega e-naslova. Mogoče je e-naslov že uporabljen?"
     error_staged: "Prišlo je do napake pri menjavi vašega e-naslova. E-naslov je že v uporabi s strani prirejenega uporabnika."
     already_done: "Oprostite, vendar povezava za potrditev ni več veljavna. Mogoče je bil vaš e-naslov že spremenjen?"
-    authorizing_old:
-      title: "Hvala za potrditev vašega trenutnega e-naslova"
-      description: "Na nov e-naslov smo vam poslali povezavo za potrditev."
   associated_accounts:
     revoke_failed: "Nismo uspeli razveljaviti vaš račun pri %{provider_name}."
   activation:
@@ -1656,19 +1653,9 @@ sl:
     confirm_new_email:
       title: "Potrdite nov e-naslov"
       subject_template: "[%{email_prefix}] Potrdite vaš novi e-naslov"
-      text_body_template: |
-        Potrdite vaš nov e-naslov pri %{site_name} tako da sledite povezavi:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Potrdite star e-naslov"
       subject_template: "[%{email_prefix}] Potrdite vaš trenutni e-naslov"
-      text_body_template: |
-        Preden lahko spremenite vaš e-naslov, morate potrditi da imate nadzor nad vašim trenutnim e-naslovom. Po tem pa vam bomo omogočili potrditev novega e-naslova.
-
-        Potrdite vaš trenutni e-naslov pri %{site_name} tako da sledite povezavi:
-
-        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Obvesti stari e-naslov"
       subject_template: "[%{email_prefix}] Vaš e-naslov je bil spremenjen"

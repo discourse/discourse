@@ -124,6 +124,9 @@ lv:
       topic_html: 'Temats: <span class="topic-title">%{topicTitle}</span>'
       post: "ieraksts #%{postNumber}"
       close: "aizvērt"
+      twitter: "Dalīties ar šo saiti Twitter"
+      facebook: "Dalīties ar šo saiti Facebook"
+      email: "Nosūtīt šo saiti e-pastā"
     action_codes:
       public_topic: "padarīja tēmu publisku %{when}"
       split_topic: "sadalīja šo tēmu %{when}"
@@ -211,6 +214,8 @@ lv:
     every_hour: "katru stundu"
     daily: "katru dienu"
     weekly: "katru nedēļu"
+    every_month: "katru mēnesi"
+    every_six_months: "katrus sešus mēnešus"
     max_of_count: "ne vairāk kā {{count}}"
     alternation: "vai"
     character_count:
@@ -278,13 +283,17 @@ lv:
         placeholder: "ierakstiet tēmas nosaukumu šeit"
     review:
       order_by: "Kārtot pēc"
+      explain:
+        total: "Kopā"
       delete: "Dzēst"
       settings:
         saved: "Saglabāts"
         save_changes: "Saglabāt izmaiņas"
         title: "Iestatījumi"
+      view_all: "Skatīt visus"
       topic: "Tēma:"
       filtered_user: "Lietotājs"
+      show_all_topics: "rādīt visas tēmas"
       deleted_post: "(ieraksts dzēsts)"
       deleted_user: "(lietotājs dzēsts)"
       user:
@@ -307,6 +316,7 @@ lv:
         orders:
           priority: "Prioritāte"
       scores:
+        date: "Datums"
         status: "Statuss"
       statuses:
         pending:
@@ -403,12 +413,14 @@ lv:
       allow_membership_requests: "Ļauj lietotājiem sūtīt dalības pieprasījumus grupu īpašniekiem"
       membership: "Piederība"
       name: "Vārds"
+      group_name: "Grupas nosaukums"
       user_count: "Lietotāji"
       bio: "Par grupu"
       selector_placeholder: "ievadi lietotājvārdu"
       owner: "īpašnieks"
       index:
         title: "Grupas"
+        all: "Visas grupas"
         empty: "Nav redzamu grupu."
         automatic: "Automātiski"
         closed: "Slēgts"
@@ -532,6 +544,7 @@ lv:
       activity_stream: "Aktivitāte"
       preferences: "Iestatījumi"
       expand_profile: "Paplašināt"
+      collapse_profile: "Sakļaut"
       bookmarks: "Grāmatzīmes"
       bio: "Par mani"
       invited_by: "Uzaicināja"
@@ -647,6 +660,7 @@ lv:
         copy_to_clipboard_error: "Radās kļūda, kopējot uz starpliktuvi (clipboard)"
       second_factor:
         name: "Vārds"
+        label: "Kods"
         edit: "Labot"
         security_key:
           delete: "Dzēst"
@@ -724,7 +738,11 @@ lv:
       website: "Tīmekļa vietne"
       email_settings: "E-pasts"
       text_size:
+        title: "Teksta izmērs"
+        smaller: "Mazāks"
         normal: "Normāls"
+        larger: "Lielāks"
+        largest: "Lielākais"
       like_notification_frequency:
         title: "Paziņot, ja saņemta atzinība"
         always: "Vienmēr"
@@ -741,6 +759,8 @@ lv:
         every_hour: "katru stundu"
         daily: "katru dienu"
         weekly: "katru nedēļu"
+        every_month: "katru mēnesi"
+        every_six_months: "katrus sešus mēnešus"
       email_level:
         title: "Sūtīt man e-pastu, kad kāds citē mani, atbild manam ierakstam, piemin manu @lietotājvārdu vai ielūdz mani kādā tēmā"
         always: "vienmēr"
@@ -943,6 +963,7 @@ lv:
       disable: "Rādīt dzēstos ierakstus"
     private_message_info:
       title: "Ziņa"
+      edit: "Pievienot vai noņemt..."
       remove_allowed_user: "Vai jūs tiešām gribat dzēst {{name}} no šīs ziņas?"
       remove_allowed_group: "Vai jūs tiešām gribat dzēst {{name}} no šīs ziņas?"
     email: "E-pasts"
@@ -1009,11 +1030,17 @@ lv:
         name: "Twitter"
         title: "ar Twitter"
       instagram:
+        name: "Instagram"
         title: "ar Instagram"
       facebook:
+        name: "Facebook"
         title: "ar Facebook"
       github:
+        name: "GitHub"
         title: "ar GitHub"
+      discord:
+        name: "Discord"
+        title: "ar Discord"
     invites:
       accept_title: "Ielūgums"
       welcome_to: "Laipni lūdzam %{site_name}!"
@@ -1050,6 +1077,7 @@ lv:
     emoji_picker:
       filter_placeholder: Meklēt emoji
       objects: Priekšmeti
+      symbols: Simboli
       flags: Sūdzības
       custom: Lietotāja emoji
       recent: Nesen izmantotie
@@ -1619,6 +1647,8 @@ lv:
         zero: "apslēpt {{count}} slēptās atbildes"
         one: "aplūjot %{count} slēpto atbildi"
         other: "aplūkot {{count}} slēptās atbildes"
+      notice:
+        new_user: "Šis ir pirmais {{user}} ieraksts — sagaidīsim viņu mūsu kopienā!"
       unread: "Ieraksts nav lasīts"
       has_replies:
         zero: "{{count}} atbildes"
@@ -2116,6 +2146,7 @@ lv:
       selector_no_tags: "bez tagiem"
       changed: "mainītie tagi:"
       tags: "Tagi"
+      add_synonyms: "Pievienot"
       delete_tag: "Dzēst tagu"
       rename_tag: "Pārsaukt tagu"
       rename_instructions: "Izvēlēties jaunu nosaukumu tagam:"
@@ -2455,6 +2486,7 @@ lv:
           color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains"
           custom_sections: "Specifiskas sadaļas:"
           theme_components: "Dizaina komponenti"
+          collapse: Sakļaut
           uploads: "Augšupielādes"
           no_uploads: "Jūs varat augšupielādēt resursus, kas ir saistīti ar jūsu dizainu, piemēram, fontus un attēlus"
           add_upload: "Pievienot augšupielādējamu resursu"

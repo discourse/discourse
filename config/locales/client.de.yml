@@ -747,6 +747,7 @@ de:
       collapse_profile: "Zuklappen"
       bookmarks: "Lesezeichen"
       bio: "Über mich"
+      timezone: "Zeitzone"
       invited_by: "Eingeladen von"
       trust_level: "Vertrauensstufe"
       notifications: "Benachrichtigungen"
@@ -950,6 +951,9 @@ de:
         uploaded_avatar_empty: "Eigenes Bild hinzufügen"
         upload_title: "Lade dein Bild hoch"
         image_is_not_a_square: "Achtung: Wir haben dein Bild zugeschnitten, weil Höhe und Breite nicht übereingestimmt haben."
+      change_profile_background:
+        title: "Profil Kopfzeile"
+        instructions: "Profil Kopfzeilen werden zentriert und haben eine Standardbreite von 1110px."
       change_card_background:
         title: "Benutzerkarten-Hintergrund"
         instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 590px."
@@ -1332,7 +1336,7 @@ de:
       second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungs-Codes ein:"
       second_factor: "Anmeldung mit einer Authentifizierungs-App"
       security_key_description: "Wenn Du Deinen physischen Sicherheitsschlüssel vorbereitet hast, klicke unten auf die Schaltfläche \"Mit Sicherheitsschlüssel authentifizieren\"."
-      security_key_alternative: "Du kannst Deinen Sicherheitsschlüssel nicht finden oder möchtest eine andere Methode verwenden?"
+      security_key_alternative: "Versuche einen anderen Weg"
       security_key_authenticate: "Mit Sicherheitsschlüssel authentifizieren"
       security_key_not_allowed_error: "Der Authentifizierungsprozess für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
       security_key_no_matching_credential_error: "Im angegebenen Sicherheitsschlüssel wurden keine übereinstimmenden Anmeldeinformationen gefunden."
@@ -1540,6 +1544,7 @@ de:
       link_description: "gib hier eine Link-Beschreibung ein"
       link_dialog_title: "Link einfügen"
       link_optional_text: "Optionaler Titel"
+      link_url_placeholder: "Füge eine URL ein oder tippe, um die Themen zu durchsuchen"
       quote_title: "Zitat"
       quote_text: "Zitat"
       code_title: "Vorformatierter Text"
@@ -1629,6 +1634,7 @@ de:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>New Topic</span> {{description}}"
       membership_request_accepted: "Mitgliedschaft akzeptiert in '{{group_name}}' "
+      membership_request_consolidated: "{{count}} offene Gruppenmitgliedschaftsanfrage/n für die Gruppe '{{group_name}}'"
       group_message_summary:
         one: "{{count}} Nachricht in deinem {{group_name}} Posteingang"
         other: "{{count}} Nachrichten in deinem {{group_name}} Posteingang"
@@ -1664,6 +1670,7 @@ de:
         topic_reminder: "Themen-Erinnerung"
         liked_consolidated: "neue „Gefällt mir“-Angaben"
         post_approved: "Beitrag genehmigt"
+        membership_request_consolidated: "Neue Gruppenmitgliedschaftsanfragen"
     upload_selector:
       title: "Ein Bild hinzufügen"
       title_with_attachments: "Ein Bild oder eine Datei hinzufügen"
@@ -1709,6 +1716,7 @@ de:
       context:
         user: "Beiträge von @{{username}} durchsuchen"
         category: "Kategorie #{{category}} durchsuchen"
+        tag: "Den #{{tag}} tag suchen"
         topic: "Dieses Thema durchsuchen"
         private_messages: "Nachrichten durchsuchen"
       advanced:
@@ -2231,8 +2239,10 @@ de:
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
         attachment_download_requires_login: "Entschuldige, du musst angemeldet sein, um Dateien herunterladen zu können."
       abandon_edit:
+        confirm: "Sollen die Änderungen verworfen werden?"
         no_value: "Nein, behalten"
         no_save_draft: "Nein, speichere den Entwurf"
+        yes_value: "Ja, Änderungen verwerfen"
       abandon:
         confirm: "Möchtest du deinen Beitrag wirklich verwerfen?"
         no_value: "Nein, beibehalten"
@@ -2375,9 +2385,14 @@ de:
       tags_allowed_tags: "Schlagwörter auf diese Kategorie einschränken:"
       tags_allowed_tag_groups: "Schlagwortgruppen auf diese Kategorie einschränken:"
       tags_placeholder: "(Optional) Liste erlaubter Schlagwörter"
+      tags_tab_description: "Die oben spezifizierten Tags und Tag-Gruppen werden nur in dieser Kategorie und anderen Kategorien, für die sie ebenfalls spezifiziert sind, verfügbar sein. Darüber hinaus werden sie nicht in weiteren Kategorien verwendbar sein."
       tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwort-Gruppen"
       manage_tag_groups_link: "Verwalte hier die Schlagwort-Gruppen."
       allow_global_tags_label: "Erlaube auch andere Schlagwörter."
+      tag_group_selector_placeholder: "(Optional) Tag Gruppe"
+      required_tag_group_description: "Neue Themen müssen Tags von einer Tag Gruppe haben:"
+      min_tags_from_required_group_label: "Num Tags:"
+      required_tag_group_label: "Tag Gruppe:"
       topic_featured_link_allowed: "Erlaube hervorgehobene Links in dieser Kategorie"
       delete: "Kategorie löschen"
       create: "Neue Kategorie"
@@ -2414,7 +2429,6 @@ de:
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
       mailinglist_mirror: "Kategorie spiegelt eine Mailingliste"
-      suppress_from_latest: "Unterdrücke die Kategorie bei den aktuellen Themen"
       show_subcategory_list: "Zeige Liste von Unterkategorien oberhalb von Themen in dieser Kategorie"
       num_featured_topics: "Anzahl der Themen, die auf der Kategorien-Seite angezeigt werden"
       subcategory_num_featured_topics: "Anzahl beworbener Themen, die auf der Seite der übergeordneten Kategorie angezeigt werden:"
@@ -2782,11 +2796,30 @@ de:
       changed: "Geänderte Schlagwörter:"
       tags: "Schlagwörter"
       choose_for_topic: "optionale Schlagwörter"
+      info: "Info"
+      default_info: "Dieses Schlagwort ist nicht auf Kategorien beschränkt und hat keine Synonyme."
+      synonyms: "Synonyme"
+      synonyms_description: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch <b>%{base_tag_name} </b> ersetzt."
+      tag_groups_info:
+        one: 'Dieser Tag gehört zur Gruppe &quot;{{tag_groups}}&quot;.'
+        other: "Dieses Schlagwort gehört zu diesen Gruppen: {{tag_groups}}."
+      category_restrictions:
+        one: "Es kann nur in dieser Kategorie verwendet werden:"
+        other: "Es kann nur in folgenden Kategorien verwendet werden:"
+      edit_synonyms: "Synonyme Verwalten"
+      add_synonyms_label: "Synonyme hinzufügen:"
+      add_synonyms: "Hinzufügen"
+      add_synonyms_failed: "Die folgenden Schlagwörter konnten nicht als Synonyme hinzugefügt werden: <b>%{tag_names}</b> . Stellen Sie sicher, dass sie keine Synonyme und keine Synonyme eines anderen Schlagwortes bereits haben."
+      remove_synonym: "Synonym entfernen"
+      delete_synonym_confirm: 'Bist du dir sicher das du das folgende Synonym entfernen möchtest "%{tag_name}" ?'
       delete_tag: "Schlagwört löschen"
       delete_confirm:
         one: "Bist du sicher, dass du dieses Schlagwort löschen und von einem zugeordneten Thema entfernen möchtest?"
         other: "Bist du sicher, dass du dieses Schlagwort löschen und von {{count}} zugeordneten Themen entfernen möchtest?"
       delete_confirm_no_topics: "Bist du sicher, dass du dieses Schlagwort löschen möchtest?"
+      delete_confirm_synonyms:
+        one: "Das Synonym wird ebenfalls gelöscht."
+        other: "Es werden {{count}} weitere Synonyme ebenfalls gelöscht."
       rename_tag: "Schlagwort umbenennen"
       rename_instructions: "Neuen Namen für das Schlagwort wählen:"
       sort_by: "Sortieren nach:"
@@ -2839,6 +2872,7 @@ de:
         parent_tag_description: "Schlagwörter aus dieser Gruppe können nur verwendet werden, wenn das übergeordnete Schlagwort zugeordnet ist."
         one_per_topic_label: "Beschränke diese Gruppe auf ein Schlagwort pro Thema"
         new_name: "Neue Schlagwort-Gruppe"
+        name_placeholder: "Name der Tag Gruppe"
         save: "Speichern"
         delete: "Löschen"
         confirm_delete: "Möchtest du wirklich diese Schlagwort-Gruppe löschen?"
@@ -3008,6 +3042,7 @@ de:
           membership:
             automatic: Automatisch
             trust_levels_title: "Vertrauensstufe, die neuen Mitgliedern automatisch verliehen wird:"
+            effects: Effekte
             trust_levels_none: "Keine"
             automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
             automatic_membership_retroactive: "Diese Regel auch auf existierende Benutzer anwenden, um diese zur Gruppe hinzuzufügen."
@@ -3038,14 +3073,30 @@ de:
         none: "Es gibt momentan keine aktiven API-Keys"
         user: "Benutzer"
         title: "API"
+        key: "Schlüssel"
         created: Erstellt
         updated: Aktualisiert
+        last_used: Zuletzt verwendet
+        never_used: (nie)
         generate: "Erzeugen"
+        undo_revoke: "Widerrufen zurückziehen"
         revoke: "Widerrufen"
         all_users: "Alle Benutzer"
+        active_keys: "Aktive API Schlüssel"
+        manage_keys: Schlüssel verwalten
         show_details: Details
         description: Beschreibung
+        no_description: (keine Beschreibung)
+        all_api_keys: Alle API Schlüssel
+        user_mode: Benutzerrang
+        impersonate_all_users: Als jeder Benutzer ausgeben
+        single_user: "Einzelbenutzer"
+        user_placeholder: Benutzernamen eingeben
+        description_placeholder: "Wofür wird dieser Schlüssel verwendet werden?"
         save: Speichern
+        new_key: Neuer API Schlüssel
+        revoked: Widerrufen
+        delete: Endgültig gelöscht
       web_hooks:
         title: "Webhooks"
         none: "Aktuell gibt es keine Webhooks."
@@ -3288,6 +3339,7 @@ de:
           color_scheme_select: "Wähle Farben für dieses Theme"
           custom_sections: "Benutzerdefinierte Abschnitte:"
           theme_components: "Theme-Komponenten"
+          add_all_themes: "Alle Themen hinzufügen"
           convert: "Umwandeln"
           convert_component_alert: "Bist Du sicher, dass du diese Komponente in ein Theme umwandeln möchtest? Sie wird als Komponente entfernt von %{relatives}."
           convert_component_tooltip: "Wandle diese Komponente in ein Theme um"
@@ -3320,6 +3372,9 @@ de:
           edit_css_html: "Bearbeite CSS/HTML"
           edit_css_html_help: "Du hast kein CSS oder HTML bearbeitet"
           delete_upload_confirm: "Upload löschen? (Theme-CSS funktioniert eventuell nicht mehr!)"
+          component_on_themes: "Komponente zu diesen Themen hinzufügen"
+          included_components: "Enthaltene Komponente"
+          add_all: "Alle hinzufügen"
           import_web_tip: "Repository mit dem Theme"
           import_web_advanced: "Erweitert..."
           import_file_tip: ".tar.gz, .zip, oder .dcstyle.json Datei, die ein Theme enthält"
@@ -3628,6 +3683,12 @@ de:
             change_theme_setting: "Theme Einstellung ändern"
             disable_theme_component: "Theme-Komponente deaktivieren"
             enable_theme_component: "Theme-Komponente aktivieren"
+            revoke_title: "Titel widerrufen"
+            change_title: "Titel ändern"
+            api_key_create: "Api Schlüssel erstellen"
+            api_key_update: "Api Schlüssel aktualisieren"
+            api_key_destroy: "Api Schlüssel zerstören"
+            override_upload_secure_status: "Hochladesicherheitsstatus überschreiben"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
@@ -3825,7 +3886,7 @@ de:
         flags_given_count: Gemachte Meldungen
         flags_received_count: Erhaltene Meldungen
         warnings_received_count: Warnungen erhalten
-        flags_given_received_count: "Erhaltene / gemachte Meldungen"
+        flags_given_received_count: "Gemachte / erhaltene Meldungen"
         approve: "Genehmigen"
         approved_by: "genehmigt von"
         approve_success: "Benutzer wurde genehmigt und eine E-Mail mit Anweisungen zur Aktivierung wurde gesendet."
@@ -4018,7 +4079,9 @@ de:
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
         default_categories:
+          modal_description: "Soll diese Änderung rückwirkend gelten? Das ändert die Voreinstellungen für %{count} bestehende Benutzer."
           modal_yes: "Ja"
+          modal_no: "Nein, die Änderung soll sich nur zukünftig auswirken"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen

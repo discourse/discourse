@@ -747,6 +747,7 @@ it:
       collapse_profile: "Raggruppa"
       bookmarks: "Segnalibri"
       bio: "Su di me"
+      timezone: "Fuso orario"
       invited_by: "Invitato Da"
       trust_level: "Livello Esperienza"
       notifications: "Notifiche"
@@ -2405,7 +2406,6 @@ it:
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
       mailinglist_mirror: "La categoria si comporta come una mailing list"
-      suppress_from_latest: "Nascondi la categoria dagli argomenti recenti."
       show_subcategory_list: "Mostra la lista delle sottocategorie sopra agli argomenti in questa categoria."
       num_featured_topics: "Numero degli argomenti mostrati nella pagina categorie:"
       subcategory_num_featured_topics: "Numero degli argomenti in evidenza nella pagina della categoria superiore"
@@ -2770,6 +2770,7 @@ it:
       changed: "etichette cambiate:"
       tags: "Etichette"
       choose_for_topic: "etichette facoltative"
+      add_synonyms: "Aggiungi"
       delete_tag: "Cancella Etichetta"
       delete_confirm:
         one: "Sei sicuro di voler eliminare questa etichetta e rimuoverla da %{count} argomento a cui è assegnata?"

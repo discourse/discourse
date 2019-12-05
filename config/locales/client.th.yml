@@ -1471,6 +1471,7 @@ th:
       selector_all_tags: "แท็กทั้งหมด"
       changed: "เปลี่ยนแท็ก:"
       tags: "ป้าย"
+      add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       rename_tag: "เปลี่ยนชื่อแท็ก"
       rename_instructions: "เลือกชื่อใหม่สำหรับแท็ก:"

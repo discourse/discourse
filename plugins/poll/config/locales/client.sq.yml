@@ -35,7 +35,8 @@ sq:
         label: "Shfaq rezultatet"
       hide-results:
         title: "Back to your votes"
-        label: "Fshihni rezultatet"
+      export-results:
+        label: "Eksporto"
       open:
         title: "Fillo një Sondazh"
         label: "Fillo"

@@ -42,6 +42,15 @@ vi:
       bookmark:
         instructions: |-
           Nếu bạn muốn tìm hiểu thêm, hãy chọn nút <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> bên dưới và chọn <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> để **đánh dấu tin nhắn cá nhân này**. Nếu bạn làm như vậy, bạn có thể có một :gift: trong tương lai!
+      search:
+        reply: |-
+          Bạn có thể tìm thấy nó :tada:
+
+          - Để tìm kiếm chi tiết hơn, hãy đến [trang tìm kiếm đầy đủ](%{search_url}).
+
+          - Để nhảy đến bất cứ nơi nào trong một cuộc thảo luận dài, hãy thử các điều khiển dòng thời gian của chủ đề ở bên phải (và dưới cùng, trên thiết bị di động).
+
+          - Nếu bạn có :keyboard: vật lý, nhấn <kbd>? </kbd>để xem các phím tắt tiện dụng của chúng tôi.
       certificate:
         alt: "Giấy chứng nhận thành tích"
     advanced_user_narrative:
