@@ -238,8 +238,8 @@ class UsersController < ApplicationController
     raise Discourse::NotFound if params[:path] !~ /^[a-z_\-\/]+$/
 
     if current_user.blank?
-      cookies[:destination_url] = "/my/#{params[:path]}"
-      redirect_to "/login-preferences"
+      cookies[:destination_url] = path("/my/#{params[:path]}")
+      redirect_to path("/login-preferences")
     else
       redirect_to(path("/u/#{current_user.username}/#{params[:path]}"))
     end
