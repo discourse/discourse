@@ -58,6 +58,33 @@ RSpec.describe Admin::SiteTextsController do
         expect(JSON.parse(response.body)['extras']['has_more']).to be_truthy
       end
 
+      it 'works with pages' do
+        texts = Set.new
+
+        get "/admin/customize/site_texts.json", params: { q: 'e' }
+        JSON.parse(response.body)['site_texts'].each { |text| texts << text['id'] }
+        expect(texts.size).to eq(50)
+
+        get "/admin/customize/site_texts.json", params: { q: 'e', page: 1 }
+        JSON.parse(response.body)['site_texts'].each { |text| texts << text['id'] }
+        expect(texts.size).to eq(100)
+      end
+
+      it 'works with locales' do
+        get "/admin/customize/site_texts.json", params: { q: 'yes_value', locale: 'en' }
+        value = JSON.parse(response.body)['site_texts'].find { |text| text['id'] == 'js.yes_value' }['value']
+        expect(value).to eq(I18n.with_locale(:en) { I18n.t('js.yes_value') })
+
+        get "/admin/customize/site_texts.json", params: { q: 'yes_value', locale: 'de' }
+        value = JSON.parse(response.body)['site_texts'].find { |text| text['id'] == 'js.yes_value' }['value']
+        expect(value).to eq(I18n.with_locale(:de) { I18n.t('js.yes_value') })
+      end
+
+      it 'returns an error on invalid locale' do
+        get "/admin/customize/site_texts.json", params: { locale: '?' }
+        expect(response.status).to eq(400)
+      end
+
       it 'normalizes quotes during search' do
         value = %q|“That’s a ‘magic’ sock.”|
         put "/admin/customize/site_texts/title.json", params: { site_text: { value: value } }

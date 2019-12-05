@@ -221,8 +221,8 @@
     .none {
       padding-top: 5px;
     }
-    .spinner-container.visible {
-      min-height: 30px;
+    .spinner-container {
+      min-height: 2em;
     }
     .spinner {
       width: 20px;

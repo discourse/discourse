@@ -32,7 +32,10 @@ describe Plugin::Instance do
 
     context "with a plugin that extends things" do
 
-      class Trout; end
+      class Trout
+        attr_accessor :data
+      end
+
       class TroutSerializer < ApplicationSerializer
         attribute :name
 
@@ -90,7 +93,6 @@ describe Plugin::Instance do
       end
 
       it "checks enabled/disabled functionality for extensions" do
-
         # with an enabled plugin
         @plugin.enabled = true
         expect(@trout.status?).to eq("evil")
@@ -113,6 +115,17 @@ describe Plugin::Instance do
         expect(@child_serializer.scales).to eq(1024)
         expect(@child_serializer.include_scales?).to eq(false)
         expect(@child_serializer.name).to eq("a trout jr")
+      end
+
+      it "only returns HTML if enabled" do
+        ctx = Trout.new
+        ctx.data = "hello"
+
+        @plugin.register_html_builder('test:html') { |c| "<div>#{c.data}</div>" }
+        @plugin.enabled = false
+        expect(DiscoursePluginRegistry.build_html('test:html', ctx)).to eq("")
+        @plugin.enabled = true
+        expect(DiscoursePluginRegistry.build_html('test:html', ctx)).to eq("<div>hello</div>")
       end
     end
   end

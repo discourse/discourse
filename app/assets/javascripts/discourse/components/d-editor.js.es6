@@ -99,6 +99,7 @@ class Toolbar {
         id: "link",
         group: "insertions",
         shortcut: "K",
+        trimLeading: true,
         sendAction: event => this.context.send("showLinkModal", event)
       });
     }
@@ -911,7 +912,11 @@ export default Component.extend({
       const captures = selected.pre.match(/\B:(\w*)$/);
 
       if (_.isEmpty(captures)) {
-        this._addText(selected, `:${code}:`);
+        if (selected.pre.match(/\S$/)) {
+          this._addText(selected, ` :${code}:`);
+        } else {
+          this._addText(selected, `:${code}:`);
+        }
       } else {
         let numOfRemovedChars = selected.pre.length - captures[1].length;
         selected.pre = selected.pre.slice(
@@ -956,15 +961,14 @@ export default Component.extend({
       }
 
       let linkText = "";
-      this._lastSel = this._getSelected();
+      this._lastSel = toolbarEvent.selected;
 
       if (this._lastSel) {
-        linkText = this._lastSel.value.trim();
+        linkText = this._lastSel.value;
       }
 
       showModal("insert-hyperlink").setProperties({
-        linkText: linkText,
-        _lastSel: this._lastSel,
+        linkText,
         toolbarEvent
       });
     },

@@ -247,12 +247,12 @@ class Post < ActiveRecord::Base
 
   def store_unique_post_key
     if SiteSetting.unique_posts_mins > 0
-      $redis.setex(unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, id)
+      Discourse.redis.setex(unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, id)
     end
   end
 
   def matches_recent_post?
-    post_id = $redis.get(unique_post_key)
+    post_id = Discourse.redis.get(unique_post_key)
     post_id != (nil) && post_id.to_i != (id)
   end
 
@@ -696,11 +696,11 @@ class Post < ActiveRecord::Base
   end
 
   def self.estimate_posts_per_day
-    val = $redis.get("estimated_posts_per_day")
+    val = Discourse.redis.get("estimated_posts_per_day")
     return val.to_i if val
 
     posts_per_day = Topic.listable_topics.secured.joins(:posts).merge(Post.created_since(30.days.ago)).count / 30
-    $redis.setex("estimated_posts_per_day", 1.day.to_i, posts_per_day.to_s)
+    Discourse.redis.setex("estimated_posts_per_day", 1.day.to_i, posts_per_day.to_s)
     posts_per_day
 
   end

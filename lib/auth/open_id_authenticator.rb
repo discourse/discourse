@@ -87,7 +87,7 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
     omniauth.provider :open_id,
          setup: lambda { |env|
            strategy = env["omniauth.strategy"]
-           strategy.options[:store] = OpenID::Store::Redis.new($redis)
+           strategy.options[:store] = OpenID::Store::Redis.new(Discourse.redis)
 
            # Add CSRF protection in addition to OpenID Specification
            def strategy.query_string

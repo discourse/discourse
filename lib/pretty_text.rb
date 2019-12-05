@@ -218,6 +218,7 @@ module PrettyText
 
     set = SiteSetting.emoji_set.inspect
     custom = Emoji.custom.map { |e| [e.name, e.url] }.to_h.to_json
+
     protect do
       v8.eval(<<~JS)
         __paths = #{paths_json};
@@ -225,7 +226,8 @@ module PrettyText
           getURL: __getURL,
           emojiSet: #{set},
           customEmoji: #{custom},
-          enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts}
+          enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts},
+          inlineEmoji: #{SiteSetting.enable_inline_emoji_translation}
         });
       JS
     end
@@ -238,7 +240,10 @@ module PrettyText
 
     protect do
       v8.eval(<<~JS)
-        __performEmojiEscape(#{title.inspect}, { emojiShortcuts: #{replace_emoji_shortcuts} });
+        __performEmojiEscape(#{title.inspect}, {
+          emojiShortcuts: #{replace_emoji_shortcuts},
+          inlineEmoji: #{SiteSetting.enable_inline_emoji_translation}
+        });
       JS
     end
   end

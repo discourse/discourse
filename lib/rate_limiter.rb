@@ -24,12 +24,12 @@ class RateLimiter
 
   # Only used in test, only clears current namespace, does not clear globals
   def self.clear_all!
-    $redis.delete_prefixed(RateLimiter.key_prefix)
+    Discourse.redis.delete_prefixed(RateLimiter.key_prefix)
   end
 
   def self.clear_all_global!
-    $redis.without_namespace.keys("GLOBAL::#{key_prefix}*").each do |k|
-      $redis.without_namespace.del k
+    Discourse.redis.without_namespace.keys("GLOBAL::#{key_prefix}*").each do |k|
+      Discourse.redis.without_namespace.del k
     end
   end
 
@@ -119,12 +119,12 @@ class RateLimiter
     if @global
       "GLOBAL::#{key}"
     else
-      $redis.namespace_key(key)
+      Discourse.redis.namespace_key(key)
     end
   end
 
   def redis
-    $redis.without_namespace
+    Discourse.redis.without_namespace
   end
 
   def seconds_to_wait

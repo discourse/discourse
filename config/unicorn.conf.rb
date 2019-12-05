@@ -155,7 +155,7 @@ before_fork do |server, worker|
               sleep 10
               force_kill_rogue_sidekiq
             end
-            $redis._client.disconnect
+            Discourse.redis._client.disconnect
           end
         end
 
@@ -170,7 +170,7 @@ before_fork do |server, worker|
 
   end
 
-  $redis._client.disconnect
+  Discourse.redis._client.disconnect
 
   # Throttle the master from forking too quickly by sleeping.  Due
   # to the implementation of standard Unix signal handlers, this

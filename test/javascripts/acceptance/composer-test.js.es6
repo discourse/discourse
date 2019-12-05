@@ -234,6 +234,26 @@ QUnit.test("Create an enqueued Topic", async assert => {
   assert.ok(invisible(".d-modal"), "the modal can be dismissed");
 });
 
+QUnit.test("Can display a message and route to a URL", async assert => {
+  await visit("/");
+  await click("#create-topic");
+  await fillIn("#reply-title", "This title doesn't matter");
+  await fillIn(".d-editor-input", "custom message");
+  await click("#reply-control button.create");
+  assert.equal(
+    find(".bootbox .modal-body").text(),
+    "This is a custom response"
+  );
+  assert.equal(currentURL(), "/", "it doesn't change routes");
+
+  await click(".bootbox .btn-primary");
+  assert.equal(
+    currentURL(),
+    "/faq",
+    "can navigate to a `route_to` destination"
+  );
+});
+
 QUnit.test("Create a Reply", async assert => {
   await visit("/t/internationalization-localization/280");
 

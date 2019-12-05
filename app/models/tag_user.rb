@@ -21,6 +21,12 @@ class TagUser < ActiveRecord::Base
 
     tag_ids = tags.empty? ? [] : Tag.where_name(tags).pluck(:id)
 
+    Tag.where_name(tags).joins(:target_tag).each do |tag|
+      tag_ids[tag_ids.index(tag.id)] = tag.target_tag_id
+    end
+
+    tag_ids.uniq!
+
     remove = (old_ids - tag_ids)
     if remove.present?
       records.where('tag_id in (?)', remove).destroy_all
@@ -41,7 +47,17 @@ class TagUser < ActiveRecord::Base
   end
 
   def self.change(user_id, tag_id, level)
-    tag_id = tag_id.id if tag_id.is_a?(::Tag)
+    if tag_id.is_a?(::Tag)
+      tag = tag_id
+      tag_id = tag.id
+    else
+      tag = Tag.find_by_id(tag_id)
+    end
+
+    if tag.synonym?
+      tag_id = tag.target_tag_id
+    end
+
     user_id = user_id.id if user_id.is_a?(::User)
 
     tag_id = tag_id.to_i

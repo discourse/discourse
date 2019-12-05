@@ -12,16 +12,16 @@ class EmailBackupToken
 
   def self.set(user_id)
     token = self.generate
-    $redis.setex self.key(user_id), 1.day.to_i, token
+    Discourse.redis.setex self.key(user_id), 1.day.to_i, token
     token
   end
 
   def self.get(user_id)
-    $redis.get self.key(user_id)
+    Discourse.redis.get self.key(user_id)
   end
 
   def self.del(user_id)
-    $redis.del self.key(user_id)
+    Discourse.redis.del self.key(user_id)
   end
 
   def self.compare(user_id, token)

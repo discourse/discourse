@@ -240,6 +240,12 @@ basic:
       - box
       - bullet
       - none
+  max_category_nesting:
+    client: true
+    default: 2
+    min: 2
+    max: 3
+    hidden: true
   enable_mobile_theme:
     client: true
     default: true
@@ -1389,6 +1395,9 @@ security:
   content_security_policy_script_src:
     type: list
     default: ""
+  content_security_policy_allow_unsafe_eval:
+    default: true
+    hidden: true
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0

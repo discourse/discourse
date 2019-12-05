@@ -147,7 +147,7 @@ export default Controller.extend(ModalFunctionality, {
       const origLink = this.linkUrl;
       const linkUrl =
         origLink.indexOf("://") === -1 ? `http://${origLink}` : origLink;
-      const sel = this._lastSel;
+      const sel = this.toolbarEvent.selected;
 
       if (isEmpty(linkUrl)) {
         return;

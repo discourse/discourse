@@ -13,10 +13,10 @@ describe ::Presence::PresenceManager do
   let(:post2) { Fabricate(:post) }
 
   after(:each) do
-    $redis.del("presence:topic:#{post1.topic.id}")
-    $redis.del("presence:topic:#{post2.topic.id}")
-    $redis.del("presence:post:#{post1.id}")
-    $redis.del("presence:post:#{post2.id}")
+    Discourse.redis.del("presence:topic:#{post1.topic.id}")
+    Discourse.redis.del("presence:topic:#{post2.topic.id}")
+    Discourse.redis.del("presence:post:#{post1.id}")
+    Discourse.redis.del("presence:post:#{post2.id}")
   end
 
   it 'adds, removes and lists users correctly' do

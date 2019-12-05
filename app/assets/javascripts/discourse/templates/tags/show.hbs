@@ -39,13 +39,16 @@
       label=createTopicLabel
       action=(route-action "createTopic")}}
 
-     {{#if showAdminControls}}
-        {{d-button action=(route-action "renameTag") actionParam=tag icon="pencil-alt" class="admin-tag"}}
-        {{d-button action=(action "deleteTag") icon="far-trash-alt" class="admin-tag btn-danger"}}
-      {{/if}}
+    {{#if showToggleInfo}}
+      {{d-button icon="tag" label="tagging.info" action=(action "toggleInfo") id="show-tag-info"}}
+    {{/if}}
     </section>
   </div>
 </div>
+
+{{#if showToggleInfo}}
+  {{tag-info tag=tag expanded=showInfo list=list deleteAction=(action "deleteTag")}}
+{{/if}}
 
 {{plugin-outlet name="discovery-list-container-top"}}
 <div class="container list-container">

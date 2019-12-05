@@ -92,6 +92,41 @@ QUnit.test("emojiUnescape", assert => {
     "no emoticons when emoji shortcuts are disabled",
     { enable_emoji_shortcuts: false }
   );
+  testUnescape(
+    "Hello 😊 World",
+    `Hello <img src='/images/emoji/emoji_one/blush.png?v=${v}' title='blush' alt='blush' class='emoji'> World`,
+    "emoji from Unicode emoji"
+  );
+  testUnescape(
+    "Hello😊World",
+    "Hello😊World",
+    "keeps Unicode emoji when inline translation disabled",
+    {
+      enable_inline_emoji_translation: false
+    }
+  );
+  testUnescape(
+    "Hello😊World",
+    `Hello<img src='/images/emoji/emoji_one/blush.png?v=${v}' title='blush' alt='blush' class='emoji'>World`,
+    "emoji from Unicode emoji when inline translation enabled",
+    {
+      enable_inline_emoji_translation: true
+    }
+  );
+  testUnescape(
+    "hi:smile:",
+    "hi:smile:",
+    "no emojis when inline translation disabled",
+    {
+      enable_inline_emoji_translation: false
+    }
+  );
+  testUnescape(
+    "hi:smile:",
+    `hi<img src='/images/emoji/emoji_one/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
+    "emoji when inline translation enabled",
+    { enable_inline_emoji_translation: true }
+  );
 });
 
 QUnit.test("Emoji search", assert => {

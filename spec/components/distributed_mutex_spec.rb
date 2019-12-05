@@ -6,7 +6,7 @@ describe DistributedMutex do
   let(:key) { "test_mutex_key" }
 
   after do
-    $redis.del(key)
+    Discourse.redis.del(key)
   end
 
   it "allows only one mutex object to have the lock at a time" do
@@ -31,7 +31,7 @@ describe DistributedMutex do
   it "handles auto cleanup correctly" do
     m = DistributedMutex.new(key)
 
-    $redis.setnx key, Time.now.to_i - 1
+    Discourse.redis.setnx key, Time.now.to_i - 1
 
     start = Time.now.to_i
     m.synchronize do
@@ -54,16 +54,16 @@ describe DistributedMutex do
     mutex = DistributedMutex.new(key, validity: 2)
 
     mutex.synchronize do
-      expect($redis.ttl(key)).to eq(2)
-      expect($redis.get(key).to_i).to eq(Time.now.to_i + 2)
+      expect(Discourse.redis.ttl(key)).to eq(2)
+      expect(Discourse.redis.get(key).to_i).to eq(Time.now.to_i + 2)
     end
 
     mutex = DistributedMutex.new(key)
 
     mutex.synchronize do
-      expect($redis.ttl(key)).to eq(DistributedMutex::DEFAULT_VALIDITY)
+      expect(Discourse.redis.ttl(key)).to eq(DistributedMutex::DEFAULT_VALIDITY)
 
-      expect($redis.get(key).to_i)
+      expect(Discourse.redis.get(key).to_i)
         .to eq(Time.now.to_i + DistributedMutex::DEFAULT_VALIDITY)
     end
   end
@@ -80,11 +80,11 @@ describe DistributedMutex do
 
   context "readonly redis" do
     before do
-      $redis.slaveof "127.0.0.1", "99991"
+      Discourse.redis.slaveof "127.0.0.1", "99991"
     end
 
     after do
-      $redis.slaveof "no", "one"
+      Discourse.redis.slaveof "no", "one"
     end
 
     it "works even if redis is in readonly" do
@@ -111,7 +111,7 @@ describe DistributedMutex do
         Concurrency::Scenario.new do |execution|
           locked = false
 
-          $redis.del('mutex_key')
+          Discourse.redis.del('mutex_key')
 
           connections.each do |connection|
             connection.unwatch

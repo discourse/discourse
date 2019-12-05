@@ -177,8 +177,8 @@ module Middleware
       end
 
       def cached(env = {})
-        if body = decompress($redis.get(cache_key_body))
-          if other = $redis.get(cache_key_other)
+        if body = decompress(Discourse.redis.get(cache_key_body))
+          if other = Discourse.redis.get(cache_key_other)
             other = JSON.parse(other)
             if req_params = other[1].delete(ADP)
               env[ADP] = req_params
@@ -203,7 +203,7 @@ module Middleware
         if status == 200 && cache_duration
 
           if GlobalSetting.anon_cache_store_threshold > 1
-            count = $redis.eval(<<~REDIS, [cache_key_count], [cache_duration])
+            count = Discourse.redis.eval(<<~REDIS, [cache_key_count], [cache_duration])
               local current = redis.call("incr", KEYS[1])
               redis.call("expire",KEYS[1],ARGV[1])
               return current
@@ -231,8 +231,8 @@ module Middleware
             }
           end
 
-          $redis.setex(cache_key_body,  cache_duration, compress(parts.join))
-          $redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
+          Discourse.redis.setex(cache_key_body,  cache_duration, compress(parts.join))
+          Discourse.redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
 
           headers["X-Discourse-Cached"] = "store"
         else
@@ -243,8 +243,8 @@ module Middleware
       end
 
       def clear_cache
-        $redis.del(cache_key_body)
-        $redis.del(cache_key_other)
+        Discourse.redis.del(cache_key_body)
+        Discourse.redis.del(cache_key_other)
       end
 
     end

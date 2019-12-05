@@ -296,7 +296,7 @@ RSpec.describe Admin::UsersController do
     fab!(:another_user) { Fabricate(:coding_horror) }
 
     after do
-      $redis.flushall
+      Discourse.redis.flushall
     end
 
     it "raises an error when the user doesn't have permission" do
@@ -745,7 +745,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#invite_admin' do
-    let(:api_key) { Fabricate(:api_key, user: admin, key: SecureRandom.hex) }
+    let(:api_key) { Fabricate(:api_key, user: admin) }
     let(:api_params) do
       { api_key: api_key.key, api_username: admin.username }
     end

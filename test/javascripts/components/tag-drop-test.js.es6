@@ -25,13 +25,13 @@ componentTest("default", {
       if (params.queryParams.q === "rég") {
         return response({
           "results": [
-            { "id": "régis", "text": "régis", "count": 2, "pm_count": 0 }
+            { "id": "régis", "text": "régis", "count": 2, "pm_count": 0, target_tag: null }
           ]
         });
-      }else if (params.queryParams.q === "dav") {
+      } else if (params.queryParams.q === "dav") {
         return response({
           "results": [
-            { "id": "David", "text": "David", "count": 2, "pm_count": 0 }
+            { "id": "David", "text": "David", "count": 2, "pm_count": 0, target_tag: null }
           ]
         });
       }
@@ -73,6 +73,42 @@ componentTest("default", {
     assert.ok(
       DiscourseURL.routeTo.calledWith("/tags/david"),
       "it uses lowercase URLs for tags"
+    );
+  }
+});
+
+componentTest("synonym", {
+  template: "{{tag-drop}}",
+
+  beforeEach() {
+    this.site.set("can_create_tag", true);
+    this.set("site.top_tags", ["jeff", "neil", "arpit", "régis"]);
+
+    const response = object => {
+      return [200, { "Content-Type": "application/json" }, object];
+    };
+
+    // prettier-ignore
+    server.get("/tags/filter/search", (params) => { //eslint-disable-line
+      if (params.queryParams.q === "robin") {
+        return response({
+          "results": [
+            { "id": "Robin", "text": "Robin", "count": 2, "pm_count": 0, target_tag: 'EvilTrout' }
+          ]
+        });
+      }
+    });
+  },
+
+  async test(assert) {
+    await this.subject.expand();
+
+    sandbox.stub(DiscourseURL, "routeTo");
+    await this.subject.fillInFilter("robin");
+    await this.subject.keyboard("enter");
+    assert.ok(
+      DiscourseURL.routeTo.calledWith("/tags/eviltrout"),
+      "it routes to the target tag"
     );
   }
 });

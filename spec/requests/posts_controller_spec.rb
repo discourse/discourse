@@ -781,7 +781,7 @@ describe PostsController do
 
       it 'prevents whispers for regular users' do
         post_1 = Fabricate(:post)
-        user_key = ApiKey.create!(user: user, key: SecureRandom.hex).key
+        user_key = ApiKey.create!(user: user).key
 
         post "/posts.json", params: {
           api_username: user.username,

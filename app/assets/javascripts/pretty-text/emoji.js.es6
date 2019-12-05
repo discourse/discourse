@@ -42,10 +42,31 @@ export function buildReplacementsList(emojiReplacements) {
     .join("|");
 }
 
-const unicodeRegexp = new RegExp(
-  buildReplacementsList(replacements) + "|\\B:[^\\s:]+(?::t\\d)?:?\\B",
-  "g"
-);
+let replacementListCache;
+const unicodeRegexpCache = {};
+
+function replacementList() {
+  if (replacementListCache === undefined) {
+    replacementListCache = buildReplacementsList(replacements);
+  }
+
+  return replacementListCache;
+}
+
+function unicodeRegexp(inlineEmoji) {
+  if (unicodeRegexpCache[inlineEmoji] === undefined) {
+    const emojiExpression = inlineEmoji
+      ? "|:[^\\s:]+(?::t\\d)?:?"
+      : "|\\B:[^\\s:]+(?::t\\d)?:?\\B";
+
+    unicodeRegexpCache[inlineEmoji] = new RegExp(
+      replacementList() + emojiExpression,
+      "g"
+    );
+  }
+
+  return unicodeRegexpCache[inlineEmoji];
+}
 
 // add all default emojis
 emojis.forEach(code => (emojiHash[code] = true));
@@ -56,12 +77,29 @@ Object.keys(aliases).forEach(name => {
   aliases[name].forEach(alias => (aliasHash[alias] = name));
 });
 
+function isReplacableInlineEmoji(string, index, inlineEmoji) {
+  if (inlineEmoji) return true;
+
+  // index depends on regex; when `inlineEmoji` is false, the regex starts
+  // with a `\B` character, so there's no need to subtract from the index
+  const beforeEmoji = string.slice(0, index - (inlineEmoji ? 1 : 0));
+
+  return (
+    beforeEmoji.length === 0 ||
+    /(?:\s|[>.,\/#!$%^&*;:{}=\-_`~()])$/.test(beforeEmoji) ||
+    new RegExp(`(?:${replacementList()})$`).test(beforeEmoji)
+  );
+}
+
 export function performEmojiUnescape(string, opts) {
   if (!string) {
     return;
   }
 
-  return string.replace(unicodeRegexp, m => {
+  const inlineEmoji = opts.inlineEmoji;
+  const regexp = unicodeRegexp(inlineEmoji);
+
+  return string.replace(regexp, (m, index) => {
     const isEmoticon = opts.enableEmojiShortcuts && !!translations[m];
     const isUnicodeEmoticon = !!replacements[m];
     let emojiVal;
@@ -78,7 +116,11 @@ export function performEmojiUnescape(string, opts) {
       ? "emoji emoji-custom"
       : "emoji";
 
-    return url && (isEmoticon || hasEndingColon || isUnicodeEmoticon)
+    const isReplacable =
+      (isEmoticon || hasEndingColon || isUnicodeEmoticon) &&
+      isReplacableInlineEmoji(string, index, inlineEmoji);
+
+    return url && isReplacable
       ? `<img src='${url}' ${
           opts.skipTitle ? "" : `title='${emojiVal}'`
         } alt='${emojiVal}' class='${classes}'>`
@@ -89,14 +131,19 @@ export function performEmojiUnescape(string, opts) {
 }
 
 export function performEmojiEscape(string, opts) {
-  return string.replace(unicodeRegexp, m => {
-    if (!!translations[m]) {
-      return opts.emojiShortcuts ? `:${translations[m]}:` : m;
-    } else if (!!replacements[m]) {
-      return `:${replacements[m]}:`;
-    } else {
-      return m;
+  const inlineEmoji = opts.inlineEmoji;
+  const regexp = unicodeRegexp(inlineEmoji);
+
+  return string.replace(regexp, (m, index) => {
+    if (isReplacableInlineEmoji(string, index, inlineEmoji)) {
+      if (!!translations[m]) {
+        return opts.emojiShortcuts ? `:${translations[m]}:` : m;
+      } else if (!!replacements[m]) {
+        return `:${replacements[m]}:`;
+      }
     }
+
+    return m;
   });
 
   return string;

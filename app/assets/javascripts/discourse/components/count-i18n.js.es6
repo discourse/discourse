@@ -1,17 +1,15 @@
 import Component from "@ember/component";
-import { bufferedRender } from "discourse-common/lib/buffered-render";
 
-export default Component.extend(
-  bufferedRender({
-    tagName: "span",
-    rerenderTriggers: ["count", "suffix"],
+export default Component.extend({
+  tagName: "span",
+  rerenderTriggers: ["count", "suffix"],
+  i18nCount: null,
 
-    buildBuffer(buffer) {
-      buffer.push(
-        I18n.t(this.key + (this.suffix || ""), {
-          count: this.count
-        })
-      );
-    }
-  })
-);
+  didReceiveAttrs() {
+    this._super(...arguments);
+    this.set(
+      "i18nCount",
+      I18n.t(this.key + (this.suffix || ""), { count: this.count }).htmlSafe()
+    );
+  }
+});

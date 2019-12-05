@@ -64,8 +64,8 @@ export default function() {
       return response(json);
     });
 
-    this.get("/c/bug/l/latest.json", () => {
-      const json = fixturesByUrl["/c/bug/l/latest.json"];
+    this.get("/c/bug/1/l/latest.json", () => {
+      const json = fixturesByUrl["/c/bug/1/l/latest.json"];
 
       if (loggedIn()) {
         // Stuff to let us post
@@ -265,6 +265,7 @@ export default function() {
 
     this.put("/categories/:category_id", request => {
       const category = parsePostData(request.requestBody);
+      category.id = parseInt(request.params.category_id, 10);
 
       if (category.email_in === "duplicate@example.com") {
         return response(422, { errors: ["duplicate email"] });
@@ -494,6 +495,15 @@ export default function() {
             id: 1234,
             raw: data.raw
           }
+        });
+      }
+
+      if (data.raw === "custom message") {
+        return response(200, {
+          success: true,
+          action: "custom",
+          message: "This is a custom response",
+          route_to: "/faq"
         });
       }
 

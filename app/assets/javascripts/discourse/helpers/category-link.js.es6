@@ -79,7 +79,7 @@ function defaultCategoryLinkRenderer(category, opts) {
   let restricted = get(category, "read_restricted");
   let url = opts.url
     ? opts.url
-    : Discourse.getURL("/c/") + Category.slugFor(category);
+    : Discourse.getURL(`/c/${Category.slugFor(category)}/${category.id}`);
   let href = opts.link === false ? "" : url;
   let tagName = opts.link === false || opts.link === "false" ? "span" : "a";
   let extraClasses = opts.extraClasses ? " " + opts.extraClasses : "";
