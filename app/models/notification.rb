@@ -147,14 +147,12 @@ class Notification < ActiveRecord::Base
 
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
-    @data_hash ||= begin
-      return {} if data.blank?
+    return {} if data.blank?
 
-      parsed = JSON.parse(data)
-      return {} if parsed.blank?
+    parsed = JSON.parse(data)
+    return {} if parsed.blank?
 
-      parsed.with_indifferent_access
-    end
+    parsed.with_indifferent_access
   end
 
   def url
@@ -230,11 +228,6 @@ class Notification < ActiveRecord::Base
 
   def post_id
     Post.where(topic: topic_id, post_number: post_number).pluck_first(:id)
-  end
-
-  def reload(options = nil)
-    super
-    @data_hash = nil
   end
 
   protected
