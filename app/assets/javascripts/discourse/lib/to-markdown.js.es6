@@ -489,6 +489,8 @@ function tags() {
     Tag.keep("small"),
     Tag.keep("big"),
     Tag.keep("kbd"),
+    Tag.keep("ruby"),
+    Tag.keep("rt"),
     Tag.li(),
     Tag.link(),
     Tag.image(),
