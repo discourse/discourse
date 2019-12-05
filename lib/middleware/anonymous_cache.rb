@@ -66,7 +66,7 @@ module Middleware
         @is_mobile = val ? :true : :false
       end
 
-      def key_is_mobile?
+      def is_mobile?
         @is_mobile ||=
           begin
             session = @env[RACK_SESSION]
@@ -79,6 +79,7 @@ module Middleware
 
         @is_mobile == :true
       end
+      alias_method :key_is_mobile?, :is_mobile?
 
       def key_has_brotli?
         @has_brotli ||=
@@ -88,7 +89,7 @@ module Middleware
         @has_brotli == :true
       end
 
-      def key_is_crawler?
+      def is_crawler?
         @is_crawler ||=
           begin
             user_agent = @env[USER_AGENT]
@@ -101,6 +102,7 @@ module Middleware
           end
         @is_crawler == :true
       end
+      alias_method :key_is_crawler?, :is_crawler?
 
       def cache_key
         return @cache_key if defined?(@cache_key)
