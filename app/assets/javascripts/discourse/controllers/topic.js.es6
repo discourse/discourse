@@ -681,20 +681,15 @@ export default Controller.extend(bufferedProperty("model"), {
 
     toggleFeaturedOnProfile() {
       if (!this.currentUser) return;
-      const toggle = () => {
-        this.model
-          .toggleFeaturedOnProfile(this.currentUser)
-          .catch(popupAjaxError);
-      };
 
       if (
         this.currentUser.featured_topic &&
         this.currentUser.featured_topic.id !== this.model.id
       ) {
         bootbox.confirm(I18n.t("topic.remove_from_profile.warning"), result => {
-          if (result) return toggle();
+          if (result) return this._performToggleFeaturedOnProfile();
         });
-      } else return toggle();
+      } else return this._performToggleFeaturedOnProfile();
     },
 
     jumpToIndex(index) {
@@ -1086,6 +1081,10 @@ export default Controller.extend(bufferedProperty("model"), {
         .then(() => this.set(`model.${topicTimer}`, EmberObject.create({})))
         .catch(error => popupAjaxError(error));
     }
+  },
+
+  _performToggleFeaturedOnProfile() {
+    this.model.toggleFeaturedOnProfile(this.currentUser).catch(popupAjaxError);
   },
 
   _jumpToIndex(index) {

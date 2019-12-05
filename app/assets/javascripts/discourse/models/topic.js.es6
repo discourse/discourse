@@ -445,7 +445,7 @@ const Topic = RestModel.extend({
   },
 
   toggleFeaturedOnProfile(user) {
-    const removing = user.featured_topic && this.id === user.featured_topic.id;
+    const removing = user.get("featured_topic.id") === this.id;
     const path = removing ? "clear-featured-topic" : "feature-topic";
     return ajax(`/u/${user.username}/${path}`, {
       type: "PUT",
@@ -456,8 +456,7 @@ const Topic = RestModel.extend({
         user.set("featured_topic", newFeaturedTopic);
         return;
       })
-      .catch(popupAjaxError)
-      .finally();
+      .catch(popupAjaxError);
   },
 
   createGroupInvite(group) {

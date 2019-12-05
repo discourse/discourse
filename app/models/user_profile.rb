@@ -147,7 +147,7 @@ class UserProfile < ActiveRecord::Base
   end
 
   def self.remove_featured_topic_from_all_profiles(topic)
-    self.where(featured_topic_id: topic.id).update_all(featured_topic_id: nil)
+    where(featured_topic_id: topic.id).update_all(featured_topic_id: nil)
   end
 end
 

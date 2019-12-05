@@ -1,5 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import { alias, gte, and, gt, not, or } from "@ember/object/computed";
+import { alias, gte, and, gt, not, or, reads } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import {
@@ -30,7 +30,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   showBadges: setting("enable_badges"),
 
   postStream: alias("topic.postStream"),
-  featuredTopic: alias("user.featured_topic"),
+  featuredTopic: reads("user.featured_topic"),
   enoughPostsForFiltering: gte("topicPostCount", 2),
   showFilter: and(
     "viewingTopic",

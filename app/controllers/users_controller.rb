@@ -1402,20 +1402,18 @@ class UsersController < ApplicationController
 
   def feature_topic
     user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
     topic = Topic.find(params[:topic_id].to_i)
 
-    raise Discourse::NotFound unless topic && topic.user_id == user.id
+    raise Discourse::InvalidAccess.new unless topic && guardian.can_feature_topic?(user, topic)
     user.user_profile.update(featured_topic_id: topic.id)
-
-    render body: nil
+    render json: success_json
   end
 
   def clear_featured_topic
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
     user.user_profile.update(featured_topic_id: nil)
-    render body: nil
+    render json: success_json
   end
 
   HONEYPOT_KEY ||= 'HONEYPOT_KEY'

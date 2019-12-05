@@ -1,5 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { alias, or, and } from "@ember/object/computed";
+import { propertyEqual } from "discourse/lib/computed";
 import Component from "@ember/component";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 
@@ -8,6 +9,11 @@ export default Component.extend({
 
   // Allow us to extend it
   layoutName: "components/topic-footer-buttons",
+
+  topicFeaturedOnProfile: propertyEqual(
+    "topic.id",
+    "currentUser.featured_topic.id"
+  ),
 
   @discourseComputed("topic.isPrivateMessage")
   canArchive(isPM) {
@@ -60,13 +66,12 @@ export default Component.extend({
   archiveLabel: archived =>
     archived ? "topic.move_to_inbox.title" : "topic.archive_message.title",
 
-  @discourseComputed("topic.id", "currentUser.featured_topic")
-  topicFeaturedOnProfile(topicId, featuredTopic) {
-    return featuredTopic && featuredTopic.id === topicId;
-  },
-
-  @discourseComputed("topic.user_id", "topic.isPrivateMessage")
-  showToggleFeatureOnProfileButton(user_id, isPm) {
-    return !isPm && user_id === this.currentUser.get("id");
+  @discourseComputed(
+    "topic.user_id",
+    "topic.isPrivateMessage",
+    "topic.category.read_restricted"
+  )
+  showToggleFeatureOnProfileButton(userId, isPm, restricted) {
+    return !isPm && userId === this.currentUser.get("id") && !restricted;
   }
 });
