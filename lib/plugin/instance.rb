@@ -82,6 +82,13 @@ class Plugin::Instance
     @idx = 0
   end
 
+  def register_anonymous_cache_key(key, &block)
+    key_method = "key_#{key}"
+    add_to_class(Middleware::AnonymousCache, key_method, &block)
+    Middleware::AnonymousCache.cache_key_segments[key] = key_method
+    Middleware::AnonymousCache.compile_key_builder
+  end
+
   def add_admin_route(label, location)
     @admin_route = { label: label, location: location }
   end
