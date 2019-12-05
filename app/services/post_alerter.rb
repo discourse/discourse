@@ -331,28 +331,19 @@ class PostAlerter
 
     notification_data = {}
 
-    if is_liked
-      if existing_notification_of_same_type &&
-        existing_notification_of_same_type.created_at > 1.day.ago &&
-        (
-          user.user_option.like_notification_frequency ==
-          UserOption.like_notification_frequency_type[:always]
-        )
+    if is_liked &&
+      existing_notification_of_same_type &&
+      existing_notification_of_same_type.created_at > 1.day.ago &&
+      (
+        user.user_option.like_notification_frequency ==
+        UserOption.like_notification_frequency_type[:always]
+      )
 
-        data = existing_notification_of_same_type.data_hash
-        notification_data["username2"] = data["display_username"]
-        notification_data["count"] = (data["count"] || 1).to_i + 1
-        # don't use destroy so we don't trigger a notification count refresh
-        Notification.where(id: existing_notification_of_same_type.id).destroy_all
-      elsif !SiteSetting.likes_notification_consolidation_threshold.zero?
-        notification = consolidate_liked_notifications(
-          user,
-          post,
-          opts[:display_username]
-        )
-
-        return notification if notification
-      end
+      data = existing_notification_of_same_type.data_hash
+      notification_data["username2"] = data["display_username"]
+      notification_data["count"] = (data["count"] || 1).to_i + 1
+      # don't use destroy so we don't trigger a notification count refresh
+      Notification.where(id: existing_notification_of_same_type.id).destroy_all
     end
 
     collapsed = false
@@ -624,83 +615,5 @@ class PostAlerter
 
   def warn_if_not_sidekiq
     Rails.logger.warn("PostAlerter.#{caller_locations(1, 1)[0].label} was called outside of sidekiq") unless Sidekiq.server?
-  end
-
-  private
-
-  def consolidate_liked_notifications(user, post, username)
-    user_notifications = user.notifications
-
-    consolidation_window =
-      SiteSetting.likes_notification_consolidation_window_mins.minutes.ago
-
-    liked_by_user_notifications =
-      user_notifications
-        .filter_by_display_username_and_type(
-          username, Notification.types[:liked]
-        )
-        .where(
-          "created_at > ? AND data::json ->> 'username2' IS NULL",
-          consolidation_window
-        )
-
-    user_liked_consolidated_notification =
-      user_notifications
-        .filter_by_display_username_and_type(
-          username, Notification.types[:liked_consolidated]
-        )
-        .where("created_at > ?", consolidation_window)
-        .first
-
-    if user_liked_consolidated_notification
-      return update_consolidated_liked_notification_count!(
-        user_liked_consolidated_notification
-      )
-    elsif (
-      liked_by_user_notifications.count >=
-      SiteSetting.likes_notification_consolidation_threshold
-    )
-      return create_consolidated_liked_notification!(
-        liked_by_user_notifications,
-        post,
-        username
-      )
-    end
-  end
-
-  def update_consolidated_liked_notification_count!(notification)
-    data = notification.data_hash
-    data["count"] += 1
-
-    notification.update!(
-      data: data.to_json,
-      read: false
-    )
-
-    notification
-  end
-
-  def create_consolidated_liked_notification!(notifications, post, username)
-    notification = nil
-
-    Notification.transaction do
-      timestamp = notifications.last.created_at
-
-      notification = Notification.create!(
-        notification_type: Notification.types[:liked_consolidated],
-        user_id: post.user_id,
-        data: {
-          username: username,
-          display_username: username,
-          count: notifications.count + 1
-        }.to_json,
-        updated_at: timestamp,
-        created_at: timestamp
-      )
-
-      notifications.each(&:destroy!)
-    end
-
-    notification
   end
 end

@@ -5,7 +5,6 @@ class Notification < ActiveRecord::Base
   belongs_to :topic
 
   MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS = 24
-  MEMBERSHIP_REQUEST_CONSOLIDATION_THRESHOLD = 3
 
   validates_presence_of :data
   validates_presence_of :notification_type
@@ -15,10 +14,25 @@ class Notification < ActiveRecord::Base
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
     .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
-  scope :filter_by_display_username_and_type, ->(username, notification_type) {
-    where("data::json ->> 'display_username' = ?", username)
-      .where(notification_type: notification_type)
-      .order(created_at: :desc)
+  scope :filter_by_consolidation_data, ->(notification_type, data) {
+    notifications = where(notification_type: notification_type)
+
+    case notification_type
+    when types[:liked], types[:liked_consolidated]
+      key = "display_username"
+      consolidation_window = SiteSetting.likes_notification_consolidation_window_mins.minutes.ago
+    when types[:private_message]
+      key = "topic_title"
+      consolidation_window = MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS.hours.ago
+    when types[:membership_request_consolidated]
+      key = "group_name"
+      consolidation_window = MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS.hours.ago
+    end
+
+    notifications = notifications.where("created_at > ? AND data::json ->> '#{key}' = ?", consolidation_window, data[key.to_sym]) if data[key&.to_sym].present?
+    notifications = notifications.where("data::json ->> 'username2' IS NULL") if notification_type == types[:liked]
+
+    notifications
   }
 
   attr_accessor :skip_send_email
@@ -27,7 +41,7 @@ class Notification < ActiveRecord::Base
 
   after_commit(on: :create) do
     DiscourseEvent.trigger(:notification_created, self)
-    send_email unless consolidate_membership_requests
+    send_email unless NotificationConsolidator.new(self).consolidate!
   end
 
   def self.ensure_consistency!
@@ -228,70 +242,6 @@ class Notification < ActiveRecord::Base
 
   def send_email
     NotificationEmailer.process_notification(self) if !skip_send_email
-  end
-
-  private
-
-  def consolidate_membership_requests
-    return unless unread_pm?
-
-    post_id = data_hash[:original_post_id]
-    return if post_id.blank?
-
-    custom_field = PostCustomField.select(:value).find_by(post_id: post_id, name: "requested_group_id")
-    return if custom_field.blank?
-
-    group_id = custom_field.value.to_i
-    group_name = Group.select(:name).find_by(id: group_id)&.name
-    return if group_name.blank?
-
-    consolidation_window = MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS.hours.ago
-    timestamp = Time.zone.now
-    unread = user.notifications.unread
-
-    consolidated_notification = unread
-      .where("created_at > ? AND data::json ->> 'group_name' = ?", consolidation_window, group_name)
-      .find_by(notification_type: Notification.types[:membership_request_consolidated])
-
-    if consolidated_notification.present?
-      data = consolidated_notification.data_hash
-      data["count"] += 1
-
-      Notification.transaction do
-        consolidated_notification.update!(
-          data: data.to_json,
-          read: false,
-          updated_at: timestamp
-        )
-
-        destroy!
-      end
-
-      return true
-    end
-
-    notifications = unread
-      .where(notification_type: Notification.types[:private_message])
-      .where("created_at > ? AND data::json ->> 'topic_title' = ?", consolidation_window, data_hash[:topic_title])
-
-    return if notifications.count < MEMBERSHIP_REQUEST_CONSOLIDATION_THRESHOLD
-
-    Notification.transaction do
-      Notification.create!(
-        notification_type: Notification.types[:membership_request_consolidated],
-        user_id: user_id,
-        data: {
-          group_name: group_name,
-          count: notifications.count
-        }.to_json,
-        updated_at: timestamp,
-        created_at: timestamp
-      )
-
-      notifications.destroy_all
-    end
-
-    true
   end
 
 end
