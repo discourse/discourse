@@ -1402,6 +1402,8 @@ security:
     default: 365
     min: 0
     max: 2000
+  allow_embedding_site_in_an_iframe:
+    default: false
 
 onebox:
   enable_flash_video_onebox: false

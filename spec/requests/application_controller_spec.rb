@@ -433,6 +433,20 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe 'allow_embedding_site_in_an_iframe' do
+
+    it "should have the 'X-Frame-Options' header with value 'sameorigin'" do
+      get("/latest")
+      expect(response.headers['X-Frame-Options']).to eq("SAMEORIGIN")
+    end
+
+    it "should not include the 'X-Frame-Options' header" do
+      SiteSetting.allow_embedding_site_in_an_iframe = true
+      get("/latest")
+      expect(response.headers).not_to include('X-Frame-Options')
+    end
+  end
+
   describe 'Delegated auth' do
     let :public_key do
       <<~TXT
