@@ -47,8 +47,12 @@ def better(line)
   line = remove_prefix(line)
   line = escape_brackets(line)
   line[0] = '\#' if line[0] == '#'
-  line[0] = line[0].capitalize
-  "- " + line
+  if line[0]
+    line[0] = line[0].capitalize
+    "- " + line
+  else
+    nil
+  end
 end
 
 def remove_prefix(line)
