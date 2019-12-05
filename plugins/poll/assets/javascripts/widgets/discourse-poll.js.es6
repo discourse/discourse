@@ -630,6 +630,7 @@ createWidget("discourse-poll-buttons", {
     const closed = attrs.isClosed;
     const staffOnly = poll.results === "staff_only";
     const isStaff = this.currentUser && this.currentUser.staff;
+    const isAdmin = this.currentUser && this.currentUser.admin;
     const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
     const hideResultsDisabled = !staffOnly && (closed || topicArchived);
     const exportQueryID = this.siteSettings.poll_export_data_explorer_query_id;
@@ -682,7 +683,7 @@ createWidget("discourse-poll-buttons", {
       }
     }
 
-    if (isStaff && dataExplorerEnabled && poll.voters > 0 && exportQueryID) {
+    if (isAdmin && dataExplorerEnabled && poll.voters > 0 && exportQueryID) {
       contents.push(
         this.attach("button", {
           className: "btn btn-default export-results",
