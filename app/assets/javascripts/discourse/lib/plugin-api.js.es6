@@ -42,7 +42,7 @@ import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1
 import Sharing from "discourse/lib/sharing";
 import {
   addComposerUploadHandler,
-  addComposerUploadMarkdownGetter
+  addComposerUploadMarkdownResolver
 } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { queryRegistry } from "discourse/widgets/widget";
@@ -875,12 +875,12 @@ class PluginApi {
    *
    * Example:
    *
-   * api.addComposerUploadMarkdownGetter(upload => {
+   * api.addComposerUploadMarkdownResolver(upload => {
    *   return `_uploaded ${upload.original_filename}_`;
    * })
    */
-  addComposerUploadMarkdownGetter(getter) {
-    addComposerUploadMarkdownGetter(getter);
+  addComposerUploadMarkdownResolver(resolver) {
+    addComposerUploadMarkdownResolver(resolver);
   }
 
   /**

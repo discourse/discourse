@@ -124,7 +124,7 @@ function setupHoister(md) {
   md.renderer.rules.html_raw = renderHoisted;
 }
 
-function extractDataAttribute(str) {
+export function extractDataAttribute(str) {
   let sep = str.indexOf("=");
   if (sep === -1) {
     return null;

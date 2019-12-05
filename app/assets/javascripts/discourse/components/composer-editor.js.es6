@@ -62,9 +62,9 @@ export function addComposerUploadHandler(extensions, method) {
   });
 }
 
-const uploadMarkdownGetters = [];
-export function addComposerUploadMarkdownGetter(getter) {
-  uploadMarkdownGetters.push(getter);
+const uploadMarkdownResolvers = [];
+export function addComposerUploadMarkdownResolver(resolver) {
+  uploadMarkdownResolvers.push(resolver);
 }
 
 export default Component.extend({
@@ -746,8 +746,8 @@ export default Component.extend({
       let upload = data.result;
       this._setUploadPlaceholderDone(data);
       if (!this._xhr || !this._xhr._userCancelled) {
-        const markdown = uploadMarkdownGetters.reduce(
-          (md, getter) => getter(upload) || md,
+        const markdown = uploadMarkdownResolvers.reduce(
+          (md, resolver) => resolver(upload) || md,
           getUploadMarkdown(upload)
         );
 
