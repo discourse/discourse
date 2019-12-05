@@ -258,7 +258,7 @@ describe Notification do
     end
   end
 
-  describe '.filter_by_display_username_and_type' do
+  describe '.filter_by_consolidation_data' do
     let(:post) { Fabricate(:post) }
     fab!(:user) { Fabricate(:user) }
 
@@ -267,8 +267,8 @@ describe Notification do
     end
 
     it 'should return the right notifications' do
-      expect(Notification.filter_by_display_username_and_type(
-        user.username_lower, Notification.types[:liked]
+      expect(Notification.filter_by_consolidation_data(
+        Notification.types[:liked], display_username: user.username_lower
       )).to eq([])
 
       expect do
@@ -280,8 +280,8 @@ describe Notification do
         PostActionCreator.like(user, post)
       end.to change { Notification.count }.by(2)
 
-      expect(Notification.filter_by_display_username_and_type(
-        user.username_lower, Notification.types[:liked]
+      expect(Notification.filter_by_consolidation_data(
+        Notification.types[:liked], display_username: user.username_lower
       )).to contain_exactly(
         Notification.find_by(notification_type: Notification.types[:liked])
       )
@@ -376,7 +376,7 @@ describe Notification do
 
       before do
         PostCustomField.create!(post_id: post.id, name: "requested_group_id", value: group.id)
-        create_membership_request_notification
+        2.times { create_membership_request_notification }
       end
 
       it 'should consolidate membership requests to a new notification' do
@@ -391,12 +391,12 @@ describe Notification do
 
         data = notification.data_hash
         expect(data[:group_name]).to eq(group.name)
-        expect(data[:count]).to eq(3)
+        expect(data[:count]).to eq(4)
 
         notification = create_membership_request_notification
         expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
-        expect(Notification.last.data_hash[:count]).to eq(4)
+        expect(Notification.last.data_hash[:count]).to eq(5)
       end
     end
   end

@@ -1857,7 +1857,7 @@ uncategorized:
 
   disable_system_edit_notifications: true
 
-  likes_notification_consolidation_threshold:
+  notification_consolidation_threshold:
     default: 3
     min: 0
 
