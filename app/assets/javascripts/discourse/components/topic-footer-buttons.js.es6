@@ -72,6 +72,11 @@ export default Component.extend({
     "topic.category.read_restricted"
   )
   showToggleFeatureOnProfileButton(userId, isPm, restricted) {
-    return !isPm && userId === this.currentUser.get("id") && !restricted;
+    return (
+      this.siteSettings.allow_featured_topic_on_user_profiles &&
+      userId === this.currentUser.get("id") &&
+      !restricted &&
+      !isPm
+    );
   }
 });

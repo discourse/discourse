@@ -3838,45 +3838,64 @@ describe UsersController do
     fab!(:private_message) { Fabricate(:private_message_topic, user: other_user) }
     fab!(:category) { Fabricate(:category_with_definition) }
 
-    it 'requires the user to be logged in' do
-      put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
-      expect(response.status).to eq(403)
-    end
+    describe "site setting enabled" do
+      before do
+        SiteSetting.allow_featured_topic_on_user_profiles = true
+      end
 
-    it 'returns an error if the the current user does not have access' do
-      sign_in(user)
-      topic.update(user_id: other_user.id)
-      put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
-      expect(response.status).to eq(403)
-    end
+      it 'requires the user to be logged in' do
+        put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(403)
+      end
 
-    it 'returns an error if the user did not create the topic' do
-      sign_in(user)
-      topic.update(user_id: other_user.id)
-      put "/u/#{other_user.username}/feature-topic.json", params: { topic_id: topic.id }
-      expect(response.status).to eq(403)
-    end
+      it 'returns an error if the the current user does not have access' do
+        sign_in(user)
+        topic.update(user_id: other_user.id)
+        put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(403)
+      end
 
-    it 'returns an error if the topic is a PM' do
-      sign_in(other_user)
-      put "/u/#{other_user.username}/feature-topic.json", params: { topic_id: private_message.id }
-      expect(response.status).to eq(403)
-    end
+      it 'returns an error if the user did not create the topic' do
+        sign_in(user)
+        topic.update(user_id: other_user.id)
+        put "/u/#{other_user.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(403)
+      end
 
-    it "returns an error if the topic's category is read_restricted" do
-      sign_in(user)
-      category.set_permissions({})
-      topic.update(category_id: category.id)
-      put "/u/#{other_user.username}/feature-topic.json", params: { topic_id: topic.id }
-      expect(response.status).to eq(403)
-    end
+      it 'returns an error if the topic is a PM' do
+        sign_in(other_user)
+        put "/u/#{other_user.username}/feature-topic.json", params: { topic_id: private_message.id }
+        expect(response.status).to eq(403)
+      end
 
-    it 'sets the user_profiles featured_topic correctly' do
-      sign_in(user)
-      topic.update(user_id: user.id)
-      put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
-      expect(response.status).to eq(200)
-      expect(user.user_profile.featured_topic).to eq topic
+      it "returns an error if the topic's category is read_restricted" do
+        sign_in(user)
+        category.set_permissions({})
+        topic.update(category_id: category.id)
+        put "/u/#{other_user.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(403)
+      end
+
+      it 'sets the user_profiles featured_topic correctly' do
+        sign_in(user)
+        topic.update(user_id: user.id)
+        put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(200)
+        expect(user.user_profile.featured_topic).to eq topic
+      end
+
+      describe "site setting disabled" do
+        before do
+          SiteSetting.allow_featured_topic_on_user_profiles = false
+        end
+
+        it "does not allow setting featured_topic for user_profiles" do
+          sign_in(user)
+          topic.update(user_id: user.id)
+          put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
+          expect(response.status).to eq(403)
+        end
+      end
     end
   end
 

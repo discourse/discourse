@@ -100,6 +100,13 @@ export default Controller.extend(CanCheckEmails, {
     return prioritizeNameInUx(name, this.siteSettings);
   },
 
+  @discourseComputed("model.featured_topic")
+  showFeaturedTopic(featuredTopic) {
+    return (
+      featuredTopic && this.siteSettings.allow_featured_topic_on_user_profiles
+    );
+  },
+
   @discourseComputed("model.badge_count")
   showBadges(badgeCount) {
     return Discourse.SiteSettings.enable_badges && badgeCount > 0;
