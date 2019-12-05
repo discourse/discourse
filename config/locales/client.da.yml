@@ -745,6 +745,7 @@ da:
       collapse_profile: "Fald sammen"
       bookmarks: "Bogmærker"
       bio: "Om mig"
+      timezone: "Tidszone"
       invited_by: "Inviteret af"
       trust_level: "Tillidsniveau"
       notifications: "Underretninger"
@@ -2384,7 +2385,6 @@ da:
       email_in_disabled: "Nye emner via email er deaktiveret i Site opsætning. For at aktivere oprettelse af nye emner via email,"
       email_in_disabled_click: 'aktiver "email ind" indstilligen.'
       mailinglist_mirror: "Kategori spejler en mailing liste"
-      suppress_from_latest: "Undertryk kategori fra de seneste emner."
       show_subcategory_list: "Vis oversigt med subkategorier ovenover emner i denne kategori."
       num_featured_topics: "Antal emner som skal vises på siden med kategorier:"
       subcategory_num_featured_topics: "Antal af fremhævede emner på siden for den overordnede kategori:"
@@ -2756,6 +2756,7 @@ da:
       changed: "tags skiftet:"
       tags: "Tags"
       choose_for_topic: "valgfri tags"
+      add_synonyms: "Tilføj"
       delete_tag: "Slet tag"
       delete_confirm:
         one: "Er du sikker på, at du vil slette dette tag og fjerne det fra et emne %{count}, der er tildelt det?"

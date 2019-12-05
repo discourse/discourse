@@ -95,6 +95,12 @@ tr_TR:
         x_days:
           one: "%{count} gün önce"
           other: "%{count} gün önce"
+        x_months:
+          one: "%{count} ay önce"
+          other: "%{count} ay önce"
+        x_years:
+          one: "%{count} yıl önce"
+          other: "%{count} yıl önce"
       later:
         x_days:
           one: "%{count} gün sonra"
@@ -315,9 +321,25 @@ tr_TR:
       order_by: "Sırala"
       in_reply_to: "cevap olarak"
       explain:
+        why: "bu makalenin neden sıraya girdiğini açıkla"
+        title: "Gözden geçirilebilir Puanlama"
+        formula: "Formül"
+        subtotal: "ara toplam"
         total: "Toplam"
+        min_score_visibility: "Görünürlük için Minimum Puan"
+        score_to_hide: "Gönderiyi Gizlemek için Puan"
+        take_action_bonus:
+          name: "harekete geçti"
+          title: "Bir personel harekete geçmeyi seçtiğinde bayrağa bonus verilir."
+        user_accuracy_bonus:
+          name: "kullanıcı doğruluğu"
+          title: "Bayrakları tarihsel olarak kararlaştırılmış olanlara bonus verilir."
         trust_level_bonus:
           name: "güven seviyesi"
+          title: "Güven düzeyi yüksek kullanıcılar tarafından oluşturulan, incelenebilir öğeler daha yüksek bir puana sahiptir."
+        type_bonus:
+          name: "tür bonusu"
+          title: "Bazı gözden geçirilebilir türlere daha yüksek öncelikli olmaları için personel tarafından bir bonus tahsis edilebilir."
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu öğeyi talep edebilirsiniz."
         required: "Öğeleri inceleyebilmeniz için önce hak talebinde bulunmalısınız."
@@ -725,6 +747,7 @@ tr_TR:
       collapse_profile: "Daralt"
       bookmarks: "İşaretlenenler"
       bio: "Hakkımda"
+      timezone: "Saat dilimi"
       invited_by: "Tarafından Davet Edildi"
       trust_level: "Güven Seviyesi"
       notifications: "Bildirimler"
@@ -856,6 +879,7 @@ tr_TR:
         copied_to_clipboard: "Panoya kopyalandı"
         copy_to_clipboard_error: "Panoya kopyalanırken hata oluştu"
         remaining_codes: "<strong>{{count}}</strong> yedek kodun kaldı "
+        use: "Bir yedekleme kodu kullanın"
         enable_prerequisites: "Yedek kodları oluşturmadan önce birincil ikinci faktörü etkinleştirmelisiniz."
         codes:
           title: "Yedek kod oluşturuldu"
@@ -863,6 +887,7 @@ tr_TR:
       second_factor:
         title: "İki Faktörlü Kimlik Doğrulama"
         enable: "İki Adımlı Kimlik Doğrulamayı Düzenle"
+        forgot_password: "Şifrenizi mi unuttunuz?"
         confirm_password_description: "Devam etmek için lütfen şifrenizi onaylayın"
         name: "İsim"
         label: "Kod"
@@ -876,6 +901,7 @@ tr_TR:
         extended_description: |
           İki faktörlü kimlik doğrulama, şifrenize ek olarak bir kerelik bir belirteç gerektirerek hesabınıza ekstra güvenlik sağlar. Tokenler <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ve <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> cihazlarda yaratılabilir.
         oauth_enabled_warning: "Hesabınızda iki faktörlü kimlik doğrulaması etkinleştirildikten sonra sosyal girişlerin devre dışı bırakılacağını lütfen unutmayın."
+        use: "Authenticator uygulamasını kullan"
         enforced_notice: "Bu siteye erişmeden önce iki faktörlü kimlik doğrulamasını etkinleştirmeniz gerekir."
         disable: "devre dışı bırak"
         disable_title: "İkinci Faktör İnaktif"
@@ -883,12 +909,20 @@ tr_TR:
         edit: "Düzenle"
         edit_title: "İkinci Faktörü Düzenle"
         edit_description: "İkinci Faktör Adı"
+        enable_security_key_description: "Fiziksel güvenlik anahtarınızı hazırladığınızda, aşağıdaki Kayıt düğmesine basın."
         totp:
           title: "Token Tabanlı Doğrulayıcılar"
           add: "Yeni Doğrulayıcı"
           default_name: "Benim Doğrulayıcım"
         security_key:
           register: "Kayıt Ol"
+          title: "Güvenlik Sözcükleri"
+          add: "Güvenlik Anahtarını Kaydedin"
+          default_name: "Ana Güvenlik Anahtarı"
+          not_allowed_error: "Güvenlik anahtarı kayıt işlemi zaman aşımına uğradı veya iptal edildi."
+          already_added_error: "Bu güvenlik anahtarın daha önce kaydettiğiniz için tekrar kaydetmeniz gerekmez."
+          edit: "Güvenlik Anahtarını Düzenle"
+          edit_description: "Güvenlik Anahtarı Adı"
           delete: "Sil"
       change_about:
         title: "\"Hakkımda\"yı Değiştir"
@@ -915,6 +949,9 @@ tr_TR:
         uploaded_avatar_empty: "Kişisel bir resim ekle"
         upload_title: "Resmini yükle"
         image_is_not_a_square: "Uyarı: Genişliği ve yüksekliği eşit olmadığı için görseli kesmek durumunda kaldık."
+      change_profile_background:
+        title: "Profil Başlığı"
+        instructions: "Profil başlıkları ortalanacak ve varsayılan olarak 1110 piksel boyutunda olacaktır."
       change_card_background:
         title: "Kullanıcı Kartı Arkaplanı"
         instructions: "Profil arkaplanları ortalanacak ve genişliği 590px olacak. "
@@ -1283,8 +1320,16 @@ tr_TR:
       password: "Şifre"
       second_factor_title: "İki Faktörlü Kimlik Doğrulama"
       second_factor_description: "Lütfen uygulamadan \"Kimlik Doğrulama Kodu\"nu gir:"
+      second_factor_backup: "Bir yedekleme kodu kullanarak giriş yapın"
       second_factor_backup_title: "İki Faktörlü Yedekleme"
       second_factor_backup_description: "Lütfen yedek kodlarından birini gir:"
+      second_factor: "Authenticator uygulamasını kullanarak giriş yapın"
+      security_key_description: "Fiziksel güvenlik anahtarınızı hazırladığınızda, aşağıdaki Güvenlik Anahtarıyla Kimlik Doğrula düğmesine basın."
+      security_key_alternative: "Başka bir yol dene"
+      security_key_authenticate: "Güvenlik Anahtarı ile Kimlik Doğrulama"
+      security_key_not_allowed_error: "Güvenlik anahtarı kimlik doğrulama işlemi zaman aşımına uğradı veya iptal edildi."
+      security_key_no_matching_credential_error: "Sağlanan güvenlik anahtarında eşleşen kimlik bilgisi bulunamadı."
+      security_key_support_missing_error: "Geçerli cihazınız veya tarayıcınız güvenlik tuşlarının kullanımını desteklemiyor. Lütfen farklı bir yöntem kullanın."
       email_placeholder: "e-posta veya kullanıcı adı"
       caps_lock_warning: "Caps Lock açık"
       error: "Bilinmeyen hata"
@@ -1332,6 +1377,9 @@ tr_TR:
       discord:
         name: "Discord"
         title: "Discord ile"
+      second_factor_toggle:
+        totp: "Bunun yerine bir doğrulama uygulaması kullanın"
+        backup_code: "Bunun yerine bir yedekleme kodu kullanın"
     invites:
       accept_title: "Davet"
       welcome_to: "%{site_name} hoş geldin!"
@@ -1349,6 +1397,7 @@ tr_TR:
       apple_international: "Apple/Uluslararası"
       google: "Google"
       twitter: "Twitter"
+      emoji_one: "JoyPixels (eski adıyla EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1433,14 +1482,17 @@ tr_TR:
       cannot_see_mention:
         category: "{{username}} adlı kullanıcıdan bahsettin fakat bildirim gönderilmeyecek çünkü kullanıcının bu kategoriye ulaşma izni yok. Kullanıcının bildirimi görebilmesi için onu bu gruba eklemen gerekiyor. "
         private: "{{username}} adlı kullanıcıdan bahsettin fakat bildirim gönderilmeyecek çünkü kullanıcının bu kişisel mesaja ulaşma izni yok. Kişisel mesaja ulaşabilmesi için kullanıcıyı PM'ye eklemen gerekiyor. "
+      reference_topic_title: "RE: {{title}}"
       error:
         title_missing: "Başlık gerekli"
         title_too_short: "Başlık en az {{min}} karakter olmalı"
         title_too_long: "Başlık {{max}} karakterden daha uzun olamaz"
+        post_missing: "Gönderi boş olamaz"
         post_length: "Gönderi en az {{min}} karakter olmalı"
         try_like: "{{heart}} düğmesini denediniz mi?"
         category_missing: "Bir kategori seçmelisin"
         tags_missing: "En azından {{count}} etiket seçmelisin"
+        topic_template_not_modified: "Lütfen konu şablonunu düzenleyerek daha fazla ayrıntı ekleyin."
       save_edit: "Değişikliği Kaydet"
       overwrite_edit: "Üzerine Yaz"
       reply_original: "Asıl konu üzerinden cevap ver"
@@ -1480,6 +1532,7 @@ tr_TR:
       link_description: "buraya bağlantı açıklamasını gir"
       link_dialog_title: "Hyperlink ekle"
       link_optional_text: "isteğe bağlı başlık"
+      link_url_placeholder: "Arama konularına bir URL yapıştırın veya yazın"
       quote_title: "Blok-alıntı"
       quote_text: "Blok-alıntı"
       code_title: "Önceden biçimlendirilmiş yazı"
@@ -1528,6 +1581,7 @@ tr_TR:
           label: "Paylaşılan Taslak"
           desc: "Sadece görevli tarafından görülebilecek bir konu tasarla"
         toggle_topic_bump:
+          label: "Konu detaylarını değiştir"
           desc: "Son cevap tarihini değiştirmeden yanıtla"
     notifications:
       tooltip:
@@ -1553,6 +1607,9 @@ tr_TR:
       liked_many:
         one: "<span>{{username}}, {{username2}} ve {{count}} diğer</span> {{description}}"
         other: "<span>{{username}}, {{username2}} ve {{count}} diğer</span> {{description}}"
+      liked_consolidated_description:
+        one: "gönderilerinizden {{count}} tanesi beğenildi"
+        other: "gönderilerinizden {{count}} tanesi beğenildi"
       liked_consolidated: "<span>{{username}}</span> {{description}}"
       private_message: "<span>{{username}}</span> {{description}}"
       invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
@@ -1563,6 +1620,11 @@ tr_TR:
       granted_badge: "'{{description}}' kazandı"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Yeni Konu</span> {{description}}"
+      membership_request_accepted: "&#39;{{group_name}}&#39; üyeliğine kabul edildi"
+      membership_request_consolidated: "{{count}} &#39;{{group_name}}&#39; için açık üyelik talepleri"
+      group_message_summary:
+        one: "{{group_name}} gelen kutunuzdaki {{count}} mesaj var"
+        other: "{{group_name}} gelen kutunuzda {{count}} mesajları"
       popup:
         mentioned: '{{username}}, "{{topic}}" başlıklı konuda sizden bahsetti - {{site_title}}'
         group_mentioned: '{{username}} sizden bahsetti "{{topic}}" - {{site_title}}'
@@ -1592,6 +1654,7 @@ tr_TR:
         topic_reminder: "konu hatırlatıcısı"
         liked_consolidated: "yeni beğeniler"
         post_approved: "gönderi onaylandı"
+        membership_request_consolidated: "Yeni üyelik talepleri"
     upload_selector:
       title: "Resim ekle"
       title_with_attachments: "Resim ya da dosya ekle"
@@ -1637,6 +1700,7 @@ tr_TR:
       context:
         user: "@{{username}} kullancısına ait gönderilerde ara"
         category: "#{{category}} kategorisini ara"
+        tag: "# {{tag}} etiketini arayın"
         topic: "Bu konuyu ara"
         private_messages: "Mesajlarda ara"
       advanced:
@@ -2137,8 +2201,10 @@ tr_TR:
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar dosya yükleyemez."
         attachment_download_requires_login: "Üzgünüz, eklentileri indirebilmek için giriş yapman gerekiyor."
       abandon_edit:
+        confirm: "Değişikliklerinizi silmek istediğinizden emin misiniz?"
         no_value: "Hayır, kalsın"
         no_save_draft: "Hayır, taslağı kaydet"
+        yes_value: "Evet, düzenlemeyi iptal et"
       abandon:
         confirm: "Gönderinden vazgeçtiğine emin misin?"
         no_value: "Hayır, kalsın"
@@ -2281,6 +2347,9 @@ tr_TR:
       tag_groups_placeholder: "(Seçmeli) izin verilen etiket gruplarının listesi"
       manage_tag_groups_link: "Etiket gruplarını burada yönetin."
       allow_global_tags_label: "Diğer etiketlere de izin ver"
+      tag_group_selector_placeholder: "(Opsiyonel) Etiket grubu"
+      min_tags_from_required_group_label: "Etiketler:"
+      required_tag_group_label: "Etiket grubu:"
       topic_featured_link_allowed: "Bu kategoride özellikli bağlantılara izin ver"
       delete: "Kategoriyi Sil"
       create: "Yeni Kategori"
@@ -2316,7 +2385,6 @@ tr_TR:
       email_in_disabled: "E-posta üzerinden yeni konu oluşturma özelliği Site Ayarları'nda devre dışı bırakılmış. E-posta üzerinden yeni konu oluşturma özelliğini etkinleştirmek için,"
       email_in_disabled_click: '"e-posta" ayarını etkinleştir'
       mailinglist_mirror: "Kategori bir e-posta listesini yansıtır"
-      suppress_from_latest: "Kategoriyi son konulardan gizle"
       show_subcategory_list: "Bu kategorideki alt kategori listesini üst başlıklarda göster"
       num_featured_topics: "Kategoriler sayfasında gösterilen konu sayısı:"
       subcategory_num_featured_topics: "Üst kategori sayfasındaki öne çıkan konuların sayısı:"
@@ -2575,6 +2643,9 @@ tr_TR:
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
       shortcut_key_delimiter_plus: "+"
+      shortcut_delimiter_or: "%{shortcut1} veya %{shortcut2}"
+      shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
+      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Klavye Kısayolları"
       jump_to:
         title: "Şuraya git"
@@ -2679,6 +2750,7 @@ tr_TR:
       changed: "değişen etiketler:"
       tags: "Etiketler"
       choose_for_topic: "opsiyonel etiketler"
+      add_synonyms: "Ekle"
       delete_tag: "Etiketi Sil"
       delete_confirm_no_topics: "Bu etiketi silmek istediğinize emin misiniz?"
       rename_tag: "Etiketi Yeniden Adlandır"
@@ -2726,6 +2798,7 @@ tr_TR:
         parent_tag_description: "Bu gruptaki etiketler üst etiket olduğu sürece kullanılamaz."
         one_per_topic_label: "Bu etiket grubundan her konu için bir etiket ile sınır koy"
         new_name: "Yeni Etiket Grubu"
+        name_placeholder: "Etiket Grubu Adı"
         save: "Kaydet"
         delete: "Sil"
         confirm_delete: "Bu etiket grubunu silmek istediğine emin misin?"
@@ -2764,6 +2837,7 @@ tr_TR:
       tags:
         remove_muted_tags_from_latest:
           always: "her zaman"
+          only_muted: "tek başına veya diğer sessize alınmış etiketlerle kullanıldığında"
           never: "asla"
       reports:
         title: "Mevcut raporlar listesi"
@@ -2888,6 +2962,7 @@ tr_TR:
           membership:
             automatic: Otomatik
             trust_levels_title: "Güven seviyesi, üyelere -eklendiklerinde- otomatik olarak verilir:"
+            effects: Etkileri
             trust_levels_none: "Hiçbiri"
             automatic_membership_email_domains: "Listede, e-posta alan adıyla tam olarak eşleşen kayıtlı kullanıcılar, otomatik olarak bu gruba eklenir:"
             automatic_membership_retroactive: "Mevcut kayıtlı kullanıcıları eklemek için aynı e-posta alanı kuralını uygula"
@@ -2918,13 +2993,30 @@ tr_TR:
         none: "Şu an etkin API anahtarı bulunmuyor."
         user: "Kullanıcı"
         title: "API"
+        key: "anahtar"
         created: Oluşturuldu
+        updated: Güncellenmiş
+        last_used: Son kullanılan
+        never_used: (asla)
         generate: "Oluştur"
+        undo_revoke: "İptal Etmeyi Geri Al"
         revoke: "İptal Et"
         all_users: "Tüm Kullanıcılar"
+        active_keys: "Aktif API Anahtarları"
+        manage_keys: Anahtarları Yönet
         show_details: Detaylar
         description: Açıklama
+        no_description: (açıklama yok)
+        all_api_keys: Tüm API Anahtarları
+        user_mode: Kullanıcı Seviyesi
+        impersonate_all_users: Herhangi bir kullanıcı rolüne gir
+        single_user: "Tekil kullanıcı"
+        user_placeholder: Kullanıcı adı girin
+        description_placeholder: "Bu anahtar ne için kullanılacak?"
         save: Kaydet
+        new_key: Yeni API Anahtarı
+        revoked: İptal edilmiş
+        delete: Kalıcı Sil
       web_hooks:
         title: "Web Kancaları"
         none: "Şu anda bir web kancası yok."
@@ -2982,6 +3074,11 @@ tr_TR:
         queued_post_event:
           name: "Etkinlik Onayı Gönderisi"
           details: "Yeni bir kuyruklu posta oluşturulduğunda, onaylanan veya reddedilen."
+        reviewable_event:
+          name: "Görüntülenebilen Etkinlik"
+        notification_event:
+          name: "Bildirim etkinliği"
+          details: "Bir kullanıcı yayınında bir bildirim aldığında."
         delivery_status:
           title: "Teslim Durumu"
           inactive: "Aktif Değil"
@@ -3080,6 +3177,7 @@ tr_TR:
             confirm: "Veritabanını çalışan son haline döndürmek istediğine emin misin?"
         location:
           local: "Yerel Depolama"
+          s3: "S3"
       export_csv:
         success: "Dışa aktarma işlemi başlatıldı. İşlem tamamlandığında mesajla bilgilendirileceksin."
         failed: "Dışa aktarımda bir hata oluştu. Lütfen kayıtları kontrol et."
@@ -3122,6 +3220,13 @@ tr_TR:
           revert_confirm: "Değişiklikleri geri almak istediğine emin misin?"
         theme:
           theme: "Tema"
+          component: "Bileşen"
+          components: "Bileşenler"
+          theme_name: "Tema adı"
+          component_name: "Bileşen Adı"
+          themes_intro: "Başlamak için mevcut bir tema seçin veya yeni bir tema\n yükleyin"
+          beginners_guide_title: "Başlangıç Temalarını Kullanma Kılavuzu"
+          developers_guide_title: "Forum Temaları için Geliştirici kılavuzu"
           browse_themes: "Topluluk temalarına göz atın"
           customize_desc: "Kişiselleştir:"
           title: "Temalar"
@@ -3131,19 +3236,35 @@ tr_TR:
           long_title: "Sitenin renklerini, CSS ve HTML içeriğini değiştir"
           edit: "Düzenle"
           edit_confirm: "Bu, uzak bir temadır. Eğer CSS / HTML'yi düzenlersen, temayı güncellediğinde değişiklikler silinir."
+          update_confirm: "Bu yerel değişiklikler güncelleme ile silinecektir. Devam etmek istediğine emin misin?"
+          update_confirm_yes: "Evet, güncellemeye devam et"
           common: "Ortak"
           desktop: "Masaüstü"
           mobile: "Mobil"
           settings: "Ayarlar"
           translations: "Çeviriler"
+          extra_scss: "Ekstra SCSS"
           preview: "Önizleme"
+          show_advanced: "Gelişmiş klasörleri göster"
+          hide_advanced: "Gelişmiş klasörleri  gizle"
+          hide_unused_fields: "Kullanılmayan alanları gizle"
           is_default: "Tema varsayılan olarak etkinleştirildi"
           user_selectable: "Tema kullanıcılar tarafından seçilebilir"
           color_scheme: "Renk Paleti"
           color_scheme_select: "Temada kullanılacak renkleri seç"
           custom_sections: "İsteğe uyarlanmış bölümler:"
           theme_components: "Tema Öğeleri"
+          add_all_themes: "Tüm temaları ekle"
           convert: "Dönüştür"
+          convert_component_tooltip: "Bu bileşeni temaya dönüştür"
+          convert_theme_tooltip: "Bu temayı bileşene dönüştür"
+          inactive_themes: "Etkin olmayan temalar:"
+          inactive_components: "Kullanılmayan bileşenler:"
+          broken_theme_tooltip: "Bu temanın CSS, HTML veya YAML kodlarında hata var"
+          disabled_component_tooltip: "Bu bileşen inaktif"
+          default_theme_tooltip: "Bu tema sitenin varsayılan temasıdır"
+          updates_available_tooltip: "Bu tema için güncellemeler var"
+          and_x_more: "ve {{count}} tane daha."
           collapse: Daralt
           uploads: "Yüklemeler"
           no_uploads: "Fontlar ve resimler gibi temayla ilişkili varlıkları yükleyebilirsin"
@@ -3156,27 +3277,40 @@ tr_TR:
             no_overwrite: "Geçersiz değişken adı. Mevcut bir değişkenin üzerine yazılmamalıdır."
             must_be_unique: "Geçersiz değişken adı. Benzersiz olmalıdır."
           upload: "Yükle"
+          select_component: "Bir bileşen seçin..."
+          unsaved_changes_alert: "Değişikliklerinizi henüz kaydetmediniz, Silmek ve devam etmek istediğinize emin misiniz?"
           discard: "At"
           stay: "Kalmak"
           css_html: "İsteğe uyarlanmış CSS/HTML"
           edit_css_html: "CSS/HTML Düzenle"
           edit_css_html_help: "Herhangi bir CSS veya HTML düzenlemedin"
           delete_upload_confirm: "Yükleme silinsin mi?(Tema CSS çalışmayı durdurabilir!)"
+          component_on_themes: "Bu temalara bileşen ekle"
           import_web_tip: "Veri havuzu içeren tema"
           import_web_advanced: "Gelişmiş..."
+          import_file_tip: "tema içeren .tar.gz, .zip veya .dcstyle.json dosyası"
           is_private: "Tema özel bir git veri havuzunda"
           remote_branch: "Şube adı (isteğe bağlı)"
           public_key: "Repo'ya aşağıdaki genel anahtar erişimini ver:"
           install: "Yükle"
           installed: "Yüklendi"
           install_popular: "Gözde"
+          install_upload: "Cihazınızdan"
+          install_git_repo: "Git deposundan"
           install_create: "Yeni oluştur"
           about_theme: "Hakkında"
           license: "Lisans"
           version: "Versiyon:"
+          authors: "Yazan:"
           source_url: "Kaynak"
           enable: "Etkinleştir"
           disable: "Devre dışı bırak"
+          disabled: "Bu bileşen devre dışı bırakıldı."
+          disabled_by: "Bu bileşeni devre dışı bırakan kişi"
+          required_version:
+            error: "Bu tema otomatik olarak devre dışı bırakıldı çünkü forum bu sürüm ile uyumlu değil."
+            minimum: "Forum sürümü {{version}} veya üstünü gerektirir."
+            maximum: "Forum sürümü {{version}} veya daha düşük gerektirir."
           component_of: "Bileşen:"
           update_to_latest: "Sona Doğru Güncelle"
           check_for_updates: "Güncellemeleri kontrol et"
@@ -3185,6 +3319,14 @@ tr_TR:
           add: "Ekle"
           theme_settings: "Tema Ayarları"
           no_settings: "Bu temada ayarlar mevcut değil."
+          theme_translations: "Tema Çevirileri"
+          empty: "Öğe yok"
+          commits_behind:
+            one: "%{count} temalar geride kaldı!"
+            other: "{{count}} tema geride kaldı!"
+          compare_commits: "(Yeni yorumlara bakınız)"
+          repo_unreachable: "Bu temanın Git deposuyla bağlantı kurulamadı. Hata mesajı:"
+          imported_from_archive: "Bu tema bir .zip dosyasından içe aktarıldı"
           scss:
             text: "CSS"
             title: "İsteğe uyarlanmış CSS'yi gir. Tüm geçerli CSS ve SCSS tiplerini kabul ediyoruz. "
@@ -3210,11 +3352,20 @@ tr_TR:
             text: "YAML"
             title: "Tema ayarlarını YAML formatında tanımla"
         colors:
+          select_base:
+            title: "Temel renk paletini seç"
+            description: "Temel palet:"
           title: "Renkler"
+          edit: "Renk Paletlerini Düzenle"
+          long_title: "Renk Paletleri"
+          about: "Temalarında kullandığın renkleri değiştir. Başlamak için yeni bir renk paleti oluştur."
+          new_name: "Yeni Renk Paleti"
           copy_name_prefix: "Kopyası"
+          delete_confirm: "Bu renk paletini sil?"
           undo: "geri al"
           undo_title: " Son kayıt esnasında yapılan bu renkteki değişiklikleri geri al."
           revert: "eski haline getir"
+          revert_title: "Bu rengi Discourse'un varsayılan renk paletine sıfırla."
           primary:
             name: "Ana"
             description: "Çoğu yazı, ikonlar ve kenarlar"
@@ -3245,13 +3396,20 @@ tr_TR:
           love:
             name: "sevgi"
             description: "Beğen düğmesinin rengi."
+        robots:
+          title: "Sitenizin robots.txt dosyasını geçersiz kılın:"
+          warning: "Bu, ilgili tüm site ayarlarını kalıcı olarak geçersiz kılar."
         email_style:
           css: "CSS"
+          reset: "Varsayılana sıfırla"
+          save_error_with_reason: "Değişiklikleriniz kaydedilmedi. %{error}"
       email:
         title: "E-postalar"
         settings: "Ayarlar"
         templates: "Şablonlar"
         preview_digest: "Özeti Önizle"
+        advanced_test:
+          email: "Orjinal ileti"
         sending_test: "Test e-postası gönderiliyor..."
         error: "<b>HATA</b> - %{server_error}"
         test_error: "Test e-postasının gönderilmesinde sorun yaşandı. Lütfen e-posta ayarlarını tekrar kontrol et, yer sağlayıcının e-posta bağlantılarını engellemediğinden emin ol ve tekrar dene."
@@ -3318,6 +3476,7 @@ tr_TR:
           silence_user: "Kullanıcı Susturuldu"
           delete_post: "Gönderi Silindi"
           delete_topic: "Konu Silindi"
+          post_approved: "Gönderi Onaylandı"
       logs:
         title: "Kayıtlar"
         action: "Eylem"
@@ -3409,6 +3568,17 @@ tr_TR:
             change_badge: "rozet değiştir"
             delete_badge: "rozet sil"
             merge_user: "kullanıcıyı birleştir"
+            change_name: "isim değiştir"
+            approve_user: "onaylanmış kullanıcı"
+            web_hook_create: "webhook oluştur"
+            web_hook_update: "webhook'u güncelle"
+            web_hook_destroy: "webhook'u yok et"
+            web_hook_deactivate: "webhook'u devre dışı bırak"
+            change_title: "başlığı değiştir"
+            api_key_create: "api anahtarı oluştur"
+            api_key_update: "api anahtarını güncelleştir"
+            api_key_destroy: "api anahtarını yok et"
+            override_upload_secure_status: "yükleme güvenlik durumunu geçersiz kıl"
         screened_emails:
           title: "Taranmış E-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında aşağıdaki e-posta adresleri kontrol edilecek ve kayıt önlenecek ya da başka bir eylem gerçekleşecek."
@@ -3456,6 +3626,7 @@ tr_TR:
         search: "ara"
         clear_filter: "Temizle"
         show_words: "kelimeleri göster"
+        one_word_per_line: "Satır başına bir kelime"
         download: İndir
         clear_all: Tümünü Temizle
         word_count:
@@ -3478,6 +3649,7 @@ tr_TR:
           add: "Ekle"
           success: "Başarılı"
           exists: "Zaten mevcut"
+          upload: "Dosyadan ekle"
           upload_successful: "Yükleme başarılı oldu. Kelimeler eklendi."
         test:
           button_label: "Deneme"
@@ -3493,7 +3665,9 @@ tr_TR:
         last_emailed: "Son E-posta Gönderimi"
         not_found: "Üzgünüz, bu kullanıcı adı sistemimizde bulunmuyor. "
         id_not_found: "Üzgünüz, bu kullanıcı kimliği sistemimizde bulunmuyor."
+        active: "Etkinleştirildi"
         show_emails: "E-postaları Göster"
+        hide_emails: "E-postaları gizle"
         nav:
           new: "Yeni"
           active: "Aktif"
@@ -3545,8 +3719,11 @@ tr_TR:
         suspended_until: "(%{until} a kadar)"
         cant_suspend: "Bu kullanıcı askıya alınamaz."
         delete_all_posts: "Tüm gönderileri sil"
+        delete_posts_progress: "Gönderiler siliniyor..."
+        delete_posts_failed: "Gönderiler silinirken bir sorun oluştu."
         penalty_post_actions: "İlişkili gönderi ile ne yapmak istiyorsun? "
         penalty_post_delete: "Gönderiyi sil"
+        penalty_post_delete_replies: "Bu gönderi ve bütün cevapları  sil"
         penalty_post_edit: "Gönderiyi düzenle"
         penalty_post_none: "Hiçbir şey yapma"
         penalty_count: "Ceza Sayımı"
@@ -3669,6 +3846,8 @@ tr_TR:
           likes_received: "Alınan Beğeniler"
           likes_received_days: "Alınan beğeniler: Benzersiz günlerde"
           likes_received_users: "Alınan beğeniler: Benzersiz kullanıcılar"
+          suspended: "Askıya alındı (6 ay)"
+          silenced: "Susturuldu (6 ay)"
           qualifies: "Güven seviyesi 3 için hak kazanan"
           does_not_qualify: "Güven seviyesi 3 için yeterli değil."
           will_be_promoted: "Yakında yükseltilecek."
@@ -3738,6 +3917,7 @@ tr_TR:
         clear_filter: "Temizle"
         add_url: "URL ekle"
         add_host: "sunucu ekle"
+        add_group: "grup ekle"
         uploaded_image_list:
           label: "Listeyi düzenle"
           empty: "Henüz hiç resim yok. Lütfen bir tane yükle."
@@ -3774,6 +3954,8 @@ tr_TR:
           search: "Arama"
           groups: "Gruplar"
           dashboard: "Gösterge Paneli"
+        secret_list:
+          invalid_input: "Giriş alanları boş olamaz veya özel karakter içeremez."
         default_categories:
           modal_yes: "Evet"
       badges:
@@ -3889,7 +4071,10 @@ tr_TR:
           add: "Ekle"
           filter: "Ara (URL veya Harici URL)"
       reseed:
+        action:
+          label: "Metni Değiştir…"
         modal:
+          title: "Metni Değiştir"
           categories: "Kategoriler"
           topics: "Konular"
           replace: "Değiştir"

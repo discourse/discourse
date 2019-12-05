@@ -37,7 +37,8 @@ fa_IR:
         label: "نتایج را نشان بده"
       hide-results:
         title: "برگشتن به رای گیری "
-        label: "نتایج را مخفی کن "
+      export-results:
+        label: "خروجی گرفتن"
       open:
         title: "نظرسنجی را باز کن "
         label: "باز"

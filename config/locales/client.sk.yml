@@ -2212,6 +2212,7 @@ sk:
       selector_no_tags: "žiadne štítky"
       changed: "zmenené štítky:"
       tags: "Štítky"
+      add_synonyms: "Pridať"
       delete_tag: "Zmazať štítok"
       rename_tag: "Premenovať štítok"
       rename_instructions: "Vyberte nové meno pre štítok:"

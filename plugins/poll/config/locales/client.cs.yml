@@ -45,7 +45,8 @@ cs:
         label: "Ukaž výsledky"
       hide-results:
         title: "Zpět k hlasování"
-        label: "Skrýt výsledky"
+      export-results:
+        label: "Export"
       open:
         title: "Otevřít hlasování"
         label: "Otevřít"

@@ -8,6 +8,8 @@
 te:
   js:
     poll:
+      export-results:
+        label: "ఎగుమతి"
       close:
         label: "మూసివేయి"
       ui_builder:

@@ -23,7 +23,8 @@ gl:
         label: "Mostrar os resultados"
       hide-results:
         title: "Volver aos teus votos"
-        label: "Ocultar os resultados"
+      export-results:
+        label: "Exportar"
       open:
         title: "Abrir a enquisa"
         label: "Abrir"

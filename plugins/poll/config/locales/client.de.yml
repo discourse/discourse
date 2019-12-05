@@ -44,7 +44,8 @@ de:
         label: "Ergebnisse anzeigen"
       hide-results:
         title: "Zurück zur Umfrage"
-        label: "Ergebnisse ausblenden"
+      export-results:
+        label: "Exportieren"
       open:
         title: "Umfrage starten"
         label: "Starten"

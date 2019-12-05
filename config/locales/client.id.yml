@@ -1095,6 +1095,7 @@ id:
         </form>
       </p>
     tagging:
+      add_synonyms: "Menambahkan"
       sort_by_name: "nama"
       cancel_delete_unused: "Batal"
       notifications:

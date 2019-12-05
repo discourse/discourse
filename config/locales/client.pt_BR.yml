@@ -720,6 +720,7 @@ pt_BR:
       collapse_profile: "Recolher"
       bookmarks: "Favoritos"
       bio: "Sobre mim"
+      timezone: "Fuso Horário"
       invited_by: "Convidado Por"
       trust_level: "Nível de Confiança"
       notifications: "Notificações"
@@ -2357,7 +2358,6 @@ pt_BR:
       email_in_disabled: "Postar novos tópicos via e-mail está desabilitado nas Configurações do Site. Para habilitar respostas em novos tópicos via e-mail,"
       email_in_disabled_click: 'habilitar a configuração de "e-mail em".'
       mailinglist_mirror: "Categoria espelha uma lista de discussão"
-      suppress_from_latest: "Suprimir categoria dos tópicos mais recentes."
       show_subcategory_list: "Exibir lista de subcategorias acima dos tópicos nesta categoria."
       num_featured_topics: "Número de tópicos exibidos na página de Categorias:"
       subcategory_num_featured_topics: "Número de tópicos em destaque na página da categoria pai:"
@@ -2729,6 +2729,7 @@ pt_BR:
       changed: "etiquetas alteradas:"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
+      add_synonyms: "Adicionar"
       delete_tag: "Apagar marcação"
       delete_confirm:
         one: "Tem certeza de que deseja excluir esta tag e removê-la de um tópico para o qual ela está atribuída?"

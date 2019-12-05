@@ -456,9 +456,6 @@ ro:
     error: "A apărut o eroare la schimbarea adresei de email. Poate adresa e deja folosită?"
     error_staged: "A apărut o eroare la schimbarea adresei tale de email. Adresa este deja folosită de un utilizator în așteptare."
     already_done: "Ne pare rău, dar acest link de confirmare nu mai este valid. Poate că emailul tău a fost deja schimbat?"
-    authorizing_old:
-      title: "Îți mulțumim că ne-ai confirmat noua ta adresă de email."
-      description: "Acum îți trimitem un email la noua ta adresă, pentru confirmare."
   activation:
     action: "Click aici pentru a-ți activa contul"
     already_done: "Ne pare rău, această adresă pentru confirmarea contului nu mai este valabilă. Poate contul tău este deja activ?"

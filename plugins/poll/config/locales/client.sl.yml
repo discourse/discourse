@@ -52,7 +52,8 @@ sl:
         label: "Prikaži rezultate"
       hide-results:
         title: "Nazaj na vašo glasovnico"
-        label: "Skrij rezultate"
+      export-results:
+        label: "Izvozi"
       open:
         title: "Odpri anketo"
         label: "Odpri"

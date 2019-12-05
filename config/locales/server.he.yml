@@ -104,6 +104,7 @@ he:
         unsubscribe_not_allowed: "מתרחש כאשר למשתמש אין הרשאה לבטל מינוי דרך דוא״ל."
         email_not_allowed: "מתרחש כאשר כתובת דוא״ל אינה ברשימות ההיתר או האיסור."
       unrecognized_error: "שגיאה לא מוכרת"
+    secure_media_placeholder: "חידוש: באתר זה מופעלת מדיה מאובטחת, יש לבקר בנושא כדי לצפות בתמונה/קטע שמע/סרטון שצורפו."
   errors: &errors
     format: "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -125,6 +126,7 @@ he:
       inclusion: לא נכלל ברשימה
       invalid: לא תקין
       is_invalid: "נראה לא ברור, האם זה משפט שלם?"
+      invalid_timezone: "‚%{tz}’ אינו אזור זמן תקף"
       contains_censored_words: "מכיל את המילים המצונזרות הבאות: %{censored_words}"
       less_than: "חייב להיות קטן מ־%{count}"
       less_than_or_equal_to: "חייב להיות קטן או שווה ל־%{count}"
@@ -177,6 +179,10 @@ he:
       enable_s3_uploads_is_required: "אי אפשר להגדיר מאגר ל־S3 אלמלא הפעלת העלאות ל־S3."
       s3_backup_requires_s3_settings: "לא ניתן להשתמש ב־S3 כמיקום לגיבוי אלמלא סיפקת את ‚%{setting_name}’."
       s3_bucket_reused: "אין לך אפשרות להשתמש באותו הדלי עבור ‚s3_upload_bucket’ וגם ‚s3_backup_bucket’. נא לבחור בדלי שונה או להשתמש בנתיב שונה לכל דלי."
+      secure_media_requirements: "יש להפעיל העלאה ל־S3 בטרם הפעלת מדיה מאובטחת."
+      second_factor_cannot_be_enforced_with_disabled_local_login: "אי אפשר לאכוף אימות דו־שלבי אם כניסה מקומית מושבתת."
+      local_login_cannot_be_disabled_if_second_factor_enforced: "אי אפשר להשבית כניסה מקומית אם נאכף אימות דו־שלבי. יש להשבית את אכיפת האימות הדו־שלבי בטרם השבתת כניסה מקומית."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "לא ניתן להפעיל העלאות ל־S3 כיוון שהעלאות ל־S3 כבר פעילות באופן גלובלי והפעלת האפשרות הזאת ברמת האתר עשויה להוביל לתקלות חמורות בהעלאה."
     conflicting_google_user_id: 'מזהה חשבון ה־Google לחשבון זה השתנה, התערבות של חבר סגל נדרשת מטעמי אבטחה. נא ליצור קשר עם אחד מחברי הסגל ולהפנות אותו אל <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
@@ -311,6 +317,7 @@ he:
   max_pm_recepients: "ניתן לשלוח הודעה ל־%{recipients_limit} נמענים לכל היותר, עמך הסליחה."
   pm_reached_recipients_limit: "להודעה לא יכולים להיות למעלה מ־%{recipients_limit} נמענים, עמך הסליחה."
   removed_direct_reply_full_quotes: "הוסר ציטוט של כל הפוסט הקודם אוטומטית."
+  secure_upload_not_allowed_in_public_topic: "לא ניתן להשתמש בהעלאות המאובטחות הבאות בנושא ציבורי: %{upload_filenames}, עמך הסליחה."
   just_posted_that: "דומה מדי למה שפרסמת לאחרונה"
   invalid_characters: "מכיל תווים לא תקניים"
   is_invalid: "נראה לא ברור, האם זה משפט שלם?"
@@ -783,14 +790,23 @@ he:
       windows: "Windows מבית Microsoft"
       unknown: "מערכת הפעלה בלתי מוכרת"
   change_email:
+    wrong_account_error: "נכנסת לחשבון הלא נכון, נא לצאת ולנסות שוב."
     confirmed: "כתובת הדוא״ל שלך עודכנה."
     please_continue: "להמשיך אל %{site_name}"
     error: "הייתה שגיאה בעדכון כתובת הדוא״ל. אולי היא כבר בשימוש?"
     error_staged: "אירעה שגיאה בהחלפת כתובת הדוא״ל שלך. הכתובת כבר נמצאת בשימוש על ידי מועמדים לשימוש במערכת."
     already_done: "קישור אימות זה אינו תקף עוד, עמך הסליחה. אולי כתובת הדוא״ל שלך כבר הוחלפה?"
+    confirm: "אישור"
+    authorizing_new:
+      title: "אישור כתובת הדוא״ל החדשה שלך"
+      description: "נא לאשר את החלפת כתובת הדוא״ל שלך לכתובת:"
     authorizing_old:
-      title: "תודה על אישור כתובת הדוא״ל הנוכחית שלך"
-      description: "אנחנו שולחים כעת הודעה לכתובת הדוא״ל החדשה לאישור."
+      title: "החלפת כתובת הדוא״ל שלך"
+      description: "נא לאשר את החלפת כתובת הדוא״ל שלך"
+      old_email: "כתובת דוא״ל ישנה: %{email}"
+      new_email: "כתובת דוא״ל חדשה: %{email}"
+      almost_done_title: "אישור כתובת הדוא״ל החדשה"
+      almost_done_description: "שלחנו הודעה לכתובת הדוא״ל החדשה שלך כדי לאשר את השינוי!"
   associated_accounts:
     revoke_failed: "שלילת החשבון שלך מול %{provider_name} נכשלה."
     connected: "(מחובר)"
@@ -926,6 +942,8 @@ he:
     description: "העדפות הדוא״ל עבור <b>%{email}</b> עודכנו. כדי לשנות את הגדרות הדוא״ל שךף <a href='%{url}'>יש לבקר בהעדפות המשתמש שלך</a>."
     topic_description: "כדי להרשם מחדש ל %{link}, השתמשו בהגדרות ההתראות בתחתית או משמאל לנושא."
     private_topic_description: "כדי להירשם מחדש, יש להשתמש בבקרת ההתראות בתחתית הנושא או משמאל לו."
+  uploads:
+    marked_insecure_from_theme_component_reason: "ההעלאה בה נעשה שימוש ברכיב ערכת עיצוב"
   unsubscribe:
     title: "בטלו את המנוי"
     stop_watching_topic: "הפסיקו לצפות בנושא זה, %{link}"
@@ -1311,8 +1329,8 @@ he:
       other: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
     missing_mailgun_api_key: "השרת מוגדר לשלוח דוא״ל דרך Mailgun אך לא סיפקת מפתח API שישמש לאימות ההודעות דרך ההתליה."
     bad_favicon_url: "טעינת סמל האתר נכשלה. נא לבדוק את הגדרות סמל האתר שלך תחת <a href='%{base_path}/admin/site_settings'>הגדרות האתר</a>."
-    deprecated_api_usage: "זיהינו בקשת API שמשתמשת בשיטת אימות מיושנת. נא לעדכן אותה כדי שתשתמש ב<a href='https://meta.discourse.org/t/discourse-api-documentation/22706'>אימות מבוסס כותרת</a>."
-    update_mail_receiver: "זיהינו גרסה מיושנת של מנגנון קבלת דוא״ל (mail-receiver). נא להתחבר לשרת הזה ב־ssh ולהריץ את הפקודה `‎/var/discourse/launcher rebuild mail-receiver`."
+    deprecated_api_usage: "זיהינו בקשת API שהשתמשה בשיטת אימות ישנה. נא לעדכן את הלקוח להשתמש ב<a href='https://meta.discourse.org/t/-/22706'>אימות בכותרת</a>. לאחר העדכון ההודעה הזו תיעלם תוך 24 שעות."
+    update_mail_receiver: "זיהינו גרסה מיושנת של mail-receiver. יש ללחוץ <a href='https://meta.discourse.org/t/-/133491'>כאן</a> להנחיות על עדכון. לאחר העדכון ההודעה הזו תיעלם תוך 24 שעות."
     poll_pop3_timeout: "החיבור לשרת POP3 התנתק. דוא\"ל נכנס לא יכול להשלף ואינו מאוחזר. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם ואת ספק השירות."
     poll_pop3_auth_error: "החיבור לשרת POP3 נכשל בשל שגיאת הזדהות. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם."
     force_https_warning: "האתר שלך משתמש ב־SSL. אך `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` לא מופעל עדיין בהגדרות האתר שלך."
@@ -1766,6 +1784,7 @@ he:
     log_mail_processing_failures: "לתעד את כל שגיאות עיבוד הדוא״ל אל <a href='%{base_path}/logs' target='_blank'>‎/logs</a>"
     email_in: 'לאפשר למשתמשים לפרסם נושאים חדשים באמצעות דוא״ל (נדרש תשאול ידני או דרך pop3). יש להגדיר את הכתובות בלשונית ה„הגדרות” שבכל קטגוריה.'
     email_in_min_trust: "רמת האמון המינימלית הנדרשת למשתמשים כדי שיוכלו להעלות נושאים חדשים באמצעות הדוא\"ל."
+    email_in_authserv_id: "מזהה השירות מבצע בדיקות אימות על הודעות דוא״ל נכנסות. יש לעיין ב־<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> לקבלת הנחיות כיצד להגדיר זאת."
     email_in_spam_header: "כותרת הודעת הדוא״ל לאיתור ספאם."
     email_prefix: "ה[תווית] שתשמש כנושא של מיילים. אם לא יוגדר, ברירת המחדל תכוון ל'כותרת' אם לא יוגדר אחרת."
     email_site_title: "הכותרת של האתר שתשמש כשם השולח של דוא\"ל מהאתר. במידה ולא יוגדר ערך, תכוון ברירת המחדל ל\"כותרת\". אם ה\"כותרת\" שלכם מכילה תוים שאינם מותרים לשימוש במחרוזות \"שם השולח\" בדוא\"ל, השתמשו בהגדרה זו."
@@ -1824,8 +1843,8 @@ he:
     permalink_normalizations: "החילו את הביטויים הרגולריים האלו לפני שמתאימים קישורים-קבועים, למשל: /(topic.*)\\?.*/\\1 יסיר מחרוזות שאילתה מנתיבי נושאים. הפורמט הוא regex+string משתמש ב \\1 וכד׳ כדי לגשת להתאמות"
     global_notice: "הצגת מודעה גלובלית דחופה בגדר חירום לכל המבקרים, יש להחליף בתוכן ריק כדי להסתיר אותה (מותר HTML)."
     disable_system_edit_notifications: "ביטול התראות עריכה על ידי משתמש המערכת כאשר 'download_remote_images_to_local' פעיל."
-    likes_notification_consolidation_threshold: "מספר ההתראות שסומנו בלייק שהתקבלו לפני שההתראות קובצו להתראה אחת. יש להגדיר ל־0 כדי לנטרל. ניתן להגדיר את החלון `SiteSetting.likes_notification_consolidation_window_mins` (חלון קיבוץ התראות על לייקים בדקות)."
-    likes_notification_consolidation_window_mins: "משך הזמן בשניות בו התראות מקובצות להתראה אחת לאחר שהגיעו לסף הזה. ניתן להגדיר את הסף דרך `SiteSetting.likes_notification_consolidation_threshold` (סף קיבוץ התראות לייקים)."
+    notification_consolidation_threshold: "מספר ההתראות שסומנו בלייק או בקשות שהתקבלו לפני שההתראות קובצו להתראה אחת. יש להגדיר ל־0 כדי להשבית."
+    likes_notification_consolidation_window_mins: "משך הזמן בשניות בו התראות מקובצות להתראה אחת לאחר שהגיעו לסף הזה. ניתן להגדיר את הסף דרך `SiteSetting.notification_consolidation_threshold` (סף קיבוץ התראות)."
     automatically_unpin_topics: "הסרת נעיצה אוטומטית של נושאים כאשר המשתמשים מגיעים לתחתית."
     read_time_word_count: "מספר המילים לדקה כדי להעריך את זמן הקריאה."
     topic_page_title_includes_category: "<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>תגית הכותרת (title)</a> בעמוד הנושא מכילה את שם הקטגוריה."
@@ -1859,6 +1878,7 @@ he:
     delete_drafts_older_than_n_days: "מחקו טיוטות בנות יותר מ (n) ימים."
     bootstrap_mode_min_users: "מספר משתמשים מינימלי שנדרש כדי לנטרל מצב איתחול (קבעו ל 0 כדי לנטרל)"
     prevent_anons_from_downloading_files: "מונע ממשתמשים אנונימיים להוריד צרופות (attachments). אזהרה: דבר זה ימנע מכל משאב שאינו תמונה ופורסם כצרופה לעבוד."
+    secure_media: 'הגבלת הגישה להעלאות מדיה (תמונות, סרטונים, קטעי שמע). אם מופעלת „דרישת כניסה”, רק למשתמשים שנכנסו לחשבון במערכת תהיה גישה למדיה שהועלתה. אחרת, הגישה תוגבל רק למדיה שנשלחה בהודעות פרטיות. לתשומת לבך: חובה להפעיל העלאות ל־S3 בטרם הפעלת הגדרה זו.'
     slug_generation_method: "בחרו צורת ייצור slug. צורה של 'encoded' תגרום למחרוזות עם קידוד אחוזים. 'none' ינטרל slug לחלוטין."
     enable_emoji: "הפעלת אמוג׳י"
     enable_emoji_shortcuts: "חייכנים נפוצים כגון ‎:) :p :(‎ יומרו לאמוג׳ים"
@@ -2125,7 +2145,7 @@ he:
     auto_deleted_by_timer: "יימחק אוטומטית על ידי שעון."
   login:
     security_key_description: "כשמפתח האבטחה הפיזי שלך מוכן יש ללחוץ על כפתור האימות עם מפתח האבטחה שלהלן."
-    security_key_alternative: "לא הצלחת למצוא את מפתח האבטחה או שברצונך לנסות שיטה אחרת?"
+    security_key_alternative: "לנסות דרך אחרת"
     security_key_authenticate: "אימות עם מפתח אבטחה"
     security_key_not_allowed_error: "זמן תהליך אימות מפתח האבטחה פג או שבוטל."
     security_key_no_matching_credential_error: "לא ניתן למצוא פרטי גישה במפתח האבטחה שסופק."
@@ -3257,17 +3277,18 @@ he:
       title: "אישור מייל חדש"
       subject_template: "[%{email_prefix}] אשרו את כתובת המייל החדשה שלכם"
       text_body_template: |
-        אשרו את כתובת המייל החדשה שלכם עבור %{site_name} על ידי לחיצה על הקישור הבא:
+        נא לאשר את כתובת הדוא״ל שתשמש אותך לגשת אל %{site_name} על ידי לחיצה על הקישור הבא:
 
         %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "אישור מייל ישן"
       subject_template: "[%{email_prefix}] אשרו את כתובת המייל הנוכחית שלכם"
       text_body_template: |
-        לפני שנוכל לשנות את כתובת המייל שלכם, אנחנו צריכים שתאשרו שאתם שולטים
-        בחשבון המייל הנוכחי. אחרי שתשלימו שלב זה, נבקש שתאשרו את כתובת המייל החדשה.
+        לפני שנוכל להחליף את כתובת הדוא״ל שלך, עלינו לאשר שיש לך שליטה
+        בחשבון הדוא״ל הנוכחי. לאחר השלמת השלב הזה, נבקש ממך לאשר
+        את כתובת הדוא״ל החדשה.
 
-        אשרו את כתובת המייל הנוכחית עבור %{site_name} על ידי לחיצה על הקישור הבא:
+        ניתן לאשר את כתובת הדוא״ל הנוכחית שלך לגישה לאתר %{site_name} בלחיצה על הקישור הבא:
 
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
@@ -3891,11 +3912,15 @@ he:
         two: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
         many: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
         other: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
+      synonym: 'אסור להשתמש במילים נרדפות. יש להשתמש ב־„%{tag_name}” במקום.'
+      has_synonyms: 'לא ניתן להשתמש ב־„%{tag_name}” כיוון שיש לו מילים נרדפות.'
     required_tags_from_group:
       one: "עליך לכלול תגית %{tag_group_name} %{count} לפחות"
       two: "עליך לכלול %{count} תגיות %{tag_group_name} לפחות"
       many: "עליך לכלול %{count} תגיות %{tag_group_name} לפחות"
       other: "עליך לכלול %{count} תגיות %{tag_group_name} לפחות"
+    invalid_target_tag: "לא יכול להיות מילה נרדפת של מילה נרדפת"
+    synonyms_exist: "אסור לשימוש כל עוד קיימות מילים נרדפות"
   rss_by_tag: "נושאים מתוייגים %{tag}"
   finish_installation:
     congratulations: "ברכותינו, התקנת את Discourse!"

@@ -39,7 +39,8 @@ zh_CN:
         label: "显示结果"
       hide-results:
         title: "返回到你的投票"
-        label: "隐藏结果"
+      export-results:
+        label: "导出"
       open:
         title: "开启投票"
         label: "开启"

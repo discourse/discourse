@@ -711,9 +711,6 @@ ur:
     error: "آپ کا اِی میل ایڈریس تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ شاید یہ ایڈریس پہلے سے استعمال میں ہے؟"
     error_staged: "آپ کا اِی میل تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ یہ ایڈریس پہلے سے ہی ایک سٹَیجڈ صارف کے استعمال میں ہے۔"
     already_done: "معذرت، یہ تصدیقی لِنک اب درست نہیں ہے۔ شاید آپ کا اِی میل پہلے ہی بدل چکا تھا؟"
-    authorizing_old:
-      title: "اپنے موجودہ اِی میل ایڈریس کی تصدیق کرنے کیلئے شکریہ"
-      description: "اب ہم تصدیق کیلئے آپ کے نئے ایڈریس پر اِی میل کر رہے ہیں۔"
   associated_accounts:
     revoke_failed: "%{provider_name} کے ساتھ آپ کے اکاؤنٹ کو منسوخ کرنے میں ناکامی۔"
     connected: "(کنَیکٹ شدہ)"
@@ -1714,8 +1711,6 @@ ur:
     permalink_normalizations: "دائمی لِنکس میچ کرنے سے پہلے درج ذیل رَیج اَیکس کا اطلاق کریں، مثال کے طور پر: /(topic.*)\\?.*/\\1 ٹاپک روٹس میں سے قُوَیری سٹرِنگ کو نکال دے گا۔ فارمیٹ regex+string ہے، میچ کردہ کو ایکسَیس کرنے کیلئے \\1 وغیرہ کا استعمال کریں"
     global_notice: "تمام زائرین کو فوری،اَیمرجنسی ناقابلِ برطرف گلوبل بَینر نوٹِس دکھائیں، اِسے چھپانے کیلئے خالی جگہ میں تبدیل کریں (HTML کی اجازت)۔"
     disable_system_edit_notifications: "سِسٹم صارف کی طرف سے ترمیم اطلاعات کو غیر فعال کریں جب 'download_remote_images_to_local' فعال ہو۔"
-    likes_notification_consolidation_threshold: "لائیک اطلاعات کی تعداد جس سے پہلے اطلاعات ایک میں جمع کر دی جائیں۔ غیر فعال کرنے کیلئے 0 پر سَیٹ کریں۔ ونڈو بذریعہ `SiteSetting.likes_notification_consolidation_window_mins` ترتیب دی جا سکتی ہے۔"
-    likes_notification_consolidation_window_mins: "منٹوں میں مدت جہاں لائیک اطلاعات کو ایک میں جمع کر دیا جاتا ہے، جب حد تک پہنچ جایا جائے۔ حد کو بذریعہ `SiteSetting.likes_notification_consolidation_threshold` ترتیب دیا جا سکتا ہے۔"
     automatically_unpin_topics: "صارفین جب ٹاپک کے آخر تک پہنچ جائیں تو خود بخود ٹاپکس پر سے پِن ہٹا دیں۔"
     read_time_word_count: "متوقع پڑھنے کے وقت کا حساب لگانے کیلئے فی منٹ الفاظ کی تعداد۔"
     topic_page_title_includes_category: "ٹاپک صفحہ کے <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>عنوان ٹَیگ</a> میں زُمرہ کا نام شامل ہے۔"
@@ -3030,21 +3025,9 @@ ur:
     confirm_new_email:
       title: "نئے ای میل کی تصدیق کریں"
       subject_template: "[%{email_prefix}] اپنے نئے ای میل ایڈریس کی تصدیق کریں"
-      text_body_template: |
-        %{site_name} پر اپنے نئے ای میل ایڈریس کی تصدیق کرنے کیلئے مندرجہ ذیل لِنک پر کلِک کریں:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "پرانی ای میل تصدیق"
       subject_template: "[%{email_prefix}] اپنا موجودہ ای میل ایڈریس تصدیق کریں"
-      text_body_template: |
-        اِس سے پہلے کہ ہم آپ کا ای میل ایڈریس تبدیل کر سکیں، ہمیں آپ کے اِس بات کی تصدیق کرنے کی ضرورت ہے کہ آپ کنٹرول کرتے ہیں
-        موجودہ ای میل اکاؤنٹ۔ آپ کا یہ قدم مکمل کرنے کے بعد، ہم آپ کی طرف سے تصدیق کروائئں گے
-        نئے ای میل ایڈریس کی۔
-
-        %{site_name} پر اپنے موجودہ ای میل ایڈریس کی تصدیق کرنے کیلئے مندرجہ ذیل لِنک پر کلک کریں:
-
-        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "پرانا ای میل مطلع"
       subject_template: "[%{email_prefix}] آپ کا ای میل ایڈریس تبدیل ہوگیا ہے"

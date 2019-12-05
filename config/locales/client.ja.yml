@@ -168,6 +168,7 @@ ja:
     submit: "送信"
     generic_error: "申し訳ありません、エラーが発生しました。"
     generic_error_with_reason: "エラーが発生しました: %{error}"
+    go_ahead: "どうぞ"
     sign_up: "アカウントを作成"
     log_in: "ログイン"
     age: "経過"
@@ -184,6 +185,7 @@ ja:
     privacy: "プライバシー"
     tos: "利用規約"
     rules: "ルール"
+    conduct: "行動範囲"
     mobile_view: "モバイル表示"
     desktop_view: "デスクトップ表示"
     you: "あなた"
@@ -292,8 +294,13 @@ ja:
       order_by: "順"
       in_reply_to: "こちらへの回答"
       explain:
+        why: "このアイテムが、キューに入れられた理由を教えて下さい"
+        title: "レビュー可能な得点"
+        formula: "式"
         subtotal: "小計"
         total: "合計"
+        min_score_visibility: "表示の最小スコア"
+        score_to_hide: "投稿を非表示にするスコア"
         trust_level_bonus:
           name: "トラストレベル"
       claim:
@@ -344,6 +351,7 @@ ja:
       edit: "編集"
       save: "保存"
       cancel: "キャンセル"
+      new_topic: "このアイテムを承認すると新しいトピックが作成されます"
       filters:
         all_categories: "(すべてのカテゴリ)"
         type:
@@ -355,8 +363,10 @@ ja:
         category: "カテゴリ"
         orders:
           priority: "優先度"
+          priority_asc: "優先度（逆順）"
           created_at: "作られた"
         priority:
+          title: "最小の優先度"
           medium: "普通"
           high: "高い"
       conversation:
@@ -366,6 +376,8 @@ ja:
         date: "日付"
         type: "タイプ"
         status: "ステータス"
+        submitted_by: "投稿者："
+        reviewed_by: "レビューアー："
       statuses:
         pending:
           title: "保留中"
@@ -466,6 +478,7 @@ ja:
       empty:
         posts: "このグループのメンバーによる投稿はありません。"
         members: "このグループにはメンバーがいません。"
+        requests: "このグループへのメンバーシップリクエストはありません"
         mentions: "このグループに対するメンションはありません。"
         messages: "このグループへのメッセージはありません。"
         topics: "このグループのメンバーによるトピックはありません。"
@@ -520,6 +533,7 @@ ja:
         remove_owner: "オーナーから削除"
         remove_owner_description: "<b>%{username}</b> をこのグループから削除します"
         owner: "オーナー"
+        forbidden: "メンバーの閲覧は許可されていません"
       topics: "トピック"
       posts: "投稿"
       mentions: "メンション"
@@ -532,6 +546,7 @@ ja:
         only_admins: "管理者のみ"
         mods_and_admins: "管理者とモデレータのみ"
         members_mods_and_admins: "管理者、モデレータ、グループメンバーのみ"
+        owners_mods_and_admins: "管理者、モデレータ、グループメンバーのみ"
         everyone: "だれでも"
       notifications:
         watching:
@@ -629,6 +644,7 @@ ja:
       private_messages: "メッセージ"
       user_notifications:
         ignore_duration_username: "ユーザー名"
+        ignore_duration_when: "期間："
         ignore_duration_save: "無視する"
         ignore_no_users: "無視するユーザーはいません。"
         ignore_option: "無視する"
@@ -641,6 +657,7 @@ ja:
       collapse_profile: "折りたたむ"
       bookmarks: "ブックマーク"
       bio: "自己紹介"
+      timezone: "タイムゾーン"
       invited_by: "招待した人: "
       trust_level: "トラストレベル"
       notifications: "お知らせ"
@@ -659,6 +676,7 @@ ja:
       dismiss_notifications: "すべて既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       first_notification: "最初の通知です! 始めるために選択してください。"
+      dynamic_favicon: "ブラウザのアイコンに件数を表示する"
       theme_default_on_all_devices: "これをすべてのデバイスのデフォルトテーマにする"
       text_size_default_on_all_devices: "これをすべての端末のデフォルトのテキストサイズにする"
       allow_private_messages: "他のユーザーが私にパーソナルメッセージを送信できるようにする"
@@ -703,6 +721,7 @@ ja:
       watched_first_post_tags_instructions: "これらのタグの新規トピック内の新規投稿は通知されます。"
       muted_categories: "通知しない"
       muted_categories_instructions: "これらのカテゴリの新しいトピックについては通知されず、カテゴリや最新のページにも表示されません。"
+      muted_categories_instructions_dont_hide: "グループ内の新規トピックについては何も通知されません。"
       no_category_access: "モデレータとしてカテゴリーへのアクセスが制限されたので、保存できませんでした。"
       delete_account: "アカウントを削除する"
       delete_account_confirm: "アカウントを削除してもよろしいですか？削除されたアカウントは復元できません。"
@@ -770,6 +789,7 @@ ja:
         copied_to_clipboard: "クリップボードにコピーしました"
         copy_to_clipboard_error: "クリップボードにコピーする際にエラーが発生しました"
         remaining_codes: "<strong>{{count}}</strong> 個のバックアップコードが残っています。"
+        use: "バックアップコードを使用"
         codes:
           title: "バックアップコードが作られました"
       second_factor:
@@ -2281,6 +2301,7 @@ ja:
       changed: "タグを変更しました:"
       tags: "タグ"
       choose_for_topic: "タグ(オプション)"
+      add_synonyms: "追加"
       delete_tag: "タグを削除"
       rename_tag: "タグの名前を変更"
       rename_instructions: "このタグの新しい名前を選択:"

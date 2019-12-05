@@ -649,9 +649,6 @@ zh_TW:
     error: "修改你的電郵位址時發生錯誤，可能此郵箱已有人使用了。"
     error_staged: "在修改你的電子郵箱地址時出現了錯誤。這個郵箱已經被一個暫存使用者占用了。"
     already_done: "抱歉，此激活連結已經失效。可能你已經修改了郵箱？"
-    authorizing_old:
-      title: "感謝你確認你目前的郵箱地址"
-      description: "我們正向你的新地址發送確認郵件。"
   associated_accounts:
     revoke_failed: "無法使用%{provider_name}刪除你的帳戶。"
   activation:
@@ -1624,8 +1621,6 @@ zh_TW:
     permalink_normalizations: "在匹配永久連結之前應用如下正則表達式，例如：/(topic.*)\\?.*/\\1 將去掉所有主題路徑的參數字元串。格式為使用正則表達式+使用 \\1 等字元串來訪問捕獲內容"
     global_notice: "向所有訪客顯示緊急的、不可駁回的全版面橫幅通知，設定留空將會隱藏它（允許使用HTML）。"
     disable_system_edit_notifications: "當 'download_remote_images_to_local' 啟用時禁用系統編輯提醒。"
-    likes_notification_consolidation_threshold: "在將通知合併為單個通知之前收到的已通知數。 設定0為禁用。該視窗可以通過`SiteSetting.likes_notification_consolidation_window_mins`進行設定。"
-    likes_notification_consolidation_window_mins: "達到門檻值後，將受歡迎的通知合併為單個通知的持續時間（分鐘）。 可以通過`SiteSetting.likes_notification_consolidation_threshold`設定門檻值。"
     automatically_unpin_topics: "當使用者到達底部時自動解除主題置頂。"
     read_time_word_count: "一分鐘閲讀的詞的數量，用於估計閲讀時間。"
     native_app_install_banner_ios: "將iOS裝置上的DiscourseHub 橫幅主題顯示給一般使用者（信任等級1以上）。"
@@ -2807,20 +2802,9 @@ zh_TW:
     confirm_new_email:
       title: "確認新郵件地址"
       subject_template: "[%{email_prefix}] 確認你的新郵件地址"
-      text_body_template: |
-        點擊以下連結，確認你 %{site_name} 的新郵件地址：
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "確認原郵件地址"
       subject_template: "[%{email_prefix}] 確認你的現行郵件地址"
-      text_body_template: |
-        在我們修改你的郵件地址前，我們需要你確認你擁有當前的郵件帳號。
-        完成此步驟後，我們將請你確認新的郵件地址。
-
-        點擊下面的連結，以確認你當前在 %{site_name} 的郵件地址：
-
-        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "通知原郵件地址"
       subject_template: "[%{email_prefix}] 已變更你的郵件地址"

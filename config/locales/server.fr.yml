@@ -711,9 +711,6 @@ fr:
     error: "Il y a eu une erreur lors de la modification de votre adresse de courriel. Elle est peut-être déjà utilisée ?"
     error_staged: "Une erreur est survenue lors de la modification de votre adresse courriel. Cette adresse est déjà utilisée par un utilisateur distant."
     already_done: "Désolé, ce lien de confirmation n'est plus valide. Votre adresse de courriel a peut-être déjà été changée ?"
-    authorizing_old:
-      title: "Merci d'avoir confirmé votre adresse de courriel"
-      description: "Nous envoyons un courriel sur votre nouvelle adresse pour confirmation."
   associated_accounts:
     revoke_failed: "Echec de révocation de votre compte avec %{provider_name}."
     connected: "(connecté)"
@@ -1714,8 +1711,6 @@ fr:
     permalink_normalizations: "Appliquer l'expression régulière suivante avant de détecter les permaliens, par exemple /(\\/topic.*)\\?.*/\\1 supprimera les chaînes de requête des chemins de sujet. Le format est regex+string, utilisez \\1 etc. pour capturer des séquences"
     global_notice: "Afficher une bannière de notification globale, d'URGENCE, et qui ne peut pas être ignoré, à tous les visiteurs, vide pour cacher (HTML admis)."
     disable_system_edit_notifications: "Désactiver les notifications de modifications par l'utilisateur système lorsque l'option 'download_remote_images_to_local' est activée."
-    likes_notification_consolidation_threshold: "Nombre de notifications reçues et aimées avant que les notifications ne soient regroupées en une seule. Régler à 0 pour désactiver. La fenêtre peut être configurée via `SiteSetting.likes_notification_consolidation_window_mins`."
-    likes_notification_consolidation_window_mins: "Durée en minutes où les notifications aimées sont regroupées en une seule une fois le seuil atteint. Le seuil peut être configuré via `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."
     read_time_word_count: "Nombre de mots par minute servant de base de calcul à l'estimation du temps de lecture."
     topic_page_title_includes_category: "La <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>balise de titre de</a> la page du sujet comprend le nom de la catégorie."
@@ -1966,7 +1961,6 @@ fr:
     auto_deleted_by_timer: "Supprimé automatiquement par planification"
   login:
     security_key_description: "Dès que votre clé de sécurité physique est prête, appuyer sur le bouton S'authentifier avec une clé de sécurité ci-dessous."
-    security_key_alternative: "Vous ne trouvez pas votre clé de sécurité ou voulez utiliser une autre méthode ?"
     security_key_authenticate: "S'authentifier avec une clé de sécurité"
     security_key_not_allowed_error: "La procédure d'authentification de la clé de sécurité a expiré ou a été annulée."
     security_key_no_matching_credential_error: "Aucun identifiant correspondant n'a pu être trouvé dans la clé de sécurité donnée."
@@ -3006,19 +3000,9 @@ fr:
     confirm_new_email:
       title: "Confirmer votre nouvelle adresse courriel"
       subject_template: "[%{email_prefix}] Confirmez votre nouvelle adresse email"
-      text_body_template: |
-        Confirmez votre nouvelle adresse email pour %{site_name} en cliquant sur le lien suivant :
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Confirmez votre ancienne adresse email"
       subject_template: "[%{email_prefix}] Confirmez votre adresse email actuelle"
-      text_body_template: |
-        Avant de modifier votre adresse email, nous devons confirmer votre adresse email actuelle. Ensuite, nous vous demanderons de vérifier votre nouvelle adresse email.
-
-        Confirmez votre adresse email actuelle pour %{site_name} en cliquant sur le lien suivant :
-
-        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Notifier l'ancienne adresse courriel"
       subject_template: "[%{email_prefix}] Votre adresse email a été modifié"
@@ -4007,6 +3991,8 @@ fr:
     user_merged: "%{username} a être fusionné avec ce compte"
     user_delete_self: "Supprimer par l'utilisateur depuis %{url}"
     webhook_deactivation_reason: "Votre compte Web a été désactivé automatiquement. Nous avons reçu plusieurs réponses d'échec d'état HTTP '%{status}'."
+    api_key:
+      revoked: Révoquée
   reviewables:
     priorities:
       low: "Faible"

@@ -30,7 +30,8 @@ zh_TW:
         label: "顯示結果"
       hide-results:
         title: "返回到你的投票"
-        label: "隱藏結果"
+      export-results:
+        label: "匯出"
       open:
         title: "開啟投票"
         label: "開啟"

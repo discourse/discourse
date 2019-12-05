@@ -11,6 +11,8 @@ pl_PL:
     poll_maximum_options: "Maksymalna ilość dozwolonych opcji w ankiecie."
     poll_edit_window_mins: "Liczba minut po utworzeniu postu, podczas którego można edytować ankietę."
     poll_minimum_trust_level_to_create: "Minimalny poziom zaufania potrzebny do stworzenia ankiety."
+    poll_groupable_user_fields: "Zestaw nazw pól użytkownika, który może zostać użyty do grupowania i filtrowania wyników ankiet."
+    poll_export_data_explorer_query_id: "ID zapytania Data Explorera do używania w trakcie eksportowania wyników ankiet (0, by wyłączyć)."
   poll:
     poll: "ankieta"
     invalid_argument: "Nieprawidłowa wartość '%{value}' dla argumentu '%{argument}'."
@@ -46,3 +48,5 @@ pl_PL:
     insufficient_rights_to_create: "Nie masz zezwolenia na tworzenie ankiet."
     email:
       link_to_poll: "Kliknij, aby zobaczyć ankietę."
+    user_field:
+      no_data: "Brak danych"

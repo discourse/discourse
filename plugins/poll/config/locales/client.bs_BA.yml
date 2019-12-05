@@ -40,7 +40,8 @@ bs_BA:
         label: "Prikaži rezultate"
       hide-results:
         title: "Nazad na glasove"
-        label: "Sakrij rezultate"
+      export-results:
+        label: "Izvoz"
       open:
         title: "Otvori anketu"
         label: "Otvori"

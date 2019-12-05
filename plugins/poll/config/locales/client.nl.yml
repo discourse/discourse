@@ -44,7 +44,16 @@ nl:
         label: "Resultaten tonen"
       hide-results:
         title: "Terug naar uw stemmen"
-        label: "Resultaten verbergen"
+        label: "Stem tonen"
+      group-results:
+        title: "Stemmen groeperen op gebruikersveld"
+        label: "Verdeling tonen"
+      ungroup-results:
+        title: "Alle stemmen combineren"
+        label: "Verdeling verbergen"
+      export-results:
+        title: "De pollresultaten exporteren"
+        label: "Exporteren"
       open:
         title: "De poll openen"
         label: "Openen"
@@ -59,6 +68,7 @@ nl:
       error_while_toggling_status: "Sorry, er is een fout opgetreden bij het omschakelen van de status van deze poll."
       error_while_casting_votes: "Sorry, er is een fout opgetreden bij het uitbrengen van uw stemmen."
       error_while_fetching_voters: "Sorry, er is een fout opgetreden bij het weergeven van de stemmers."
+      error_while_exporting_results: "Sorry, er is een fout opgetreden bij het exporteren van pollresultaten."
       ui_builder:
         title: Poll aanmaken
         insert: Poll invoegen
@@ -77,6 +87,8 @@ nl:
           vote: Bij stemmen
           closed: Wanneer gesloten
           staff: Alleen stafleden
+        poll_chart_type:
+          label: Diagramtype
         poll_config:
           max: Max
           min: Min

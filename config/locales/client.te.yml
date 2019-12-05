@@ -1287,6 +1287,7 @@ te:
           name: రాస్తున్నారు
     tagging:
       tags: "ట్యాగులు"
+      add_synonyms: "కలుపు"
       cancel_delete_unused: "రద్దుచేయి"
       notifications:
         watching:

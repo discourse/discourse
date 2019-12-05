@@ -2012,6 +2012,7 @@ sv:
       selector_no_tags: "inga taggar"
       changed: "taggar ändrade:"
       tags: "Taggar"
+      add_synonyms: "Lägg till"
       delete_tag: "Radera tag"
       rename_tag: "Döp om taggen"
       rename_instructions: "Välj ett nytt namn för taggen:"

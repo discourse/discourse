@@ -124,9 +124,6 @@ sr:
   password_reset:
     save: "Postavi Šifru"
     title: "Resetujte Šifru"
-  change_email:
-    authorizing_old:
-      title: "Hvala što ste potvrdili svoju važeću email adresu"
   activation:
     welcome_to: "Dobrodošao na %{site_name}!"
   reviewable_score_types:

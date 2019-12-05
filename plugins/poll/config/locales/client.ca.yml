@@ -44,7 +44,14 @@ ca:
         label: "Mostra els resultats"
       hide-results:
         title: "Torna als vots"
-        label: "Amaga resultats"
+        label: "Mostra el vot"
+      group-results:
+        title: "Agrupa els vots per camp d'usuari"
+      ungroup-results:
+        title: "Combina tots els vots"
+      export-results:
+        title: "Exporta els resultats de la votació"
+        label: "Exporta"
       open:
         title: "Obre l'enquesta"
         label: "Obre"
@@ -59,6 +66,7 @@ ca:
       error_while_toggling_status: "Ho sentim. S'ha produït un error en canviar l'estat d'aquesta enquesta."
       error_while_casting_votes: "Ho sentim. S'ha produït un error en l'emissió dels vostres vots."
       error_while_fetching_voters: "Hi ha hagut un error en mostrar els votants."
+      error_while_exporting_results: "S'ha produït un error en exportar els resultats de la votació."
       ui_builder:
         title: Crea una enquesta
         insert: Insereix una enquesta
@@ -77,6 +85,8 @@ ca:
           vote: En votació
           closed: Quan estigui tancada
           staff: Només l'equip responsable
+        poll_chart_type:
+          label: Tipus de gràfic
         poll_config:
           max: Màxim
           min: Mínim

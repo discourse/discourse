@@ -321,9 +321,21 @@ fr:
       order_by: "Trier par"
       in_reply_to: "en réponse à"
       explain:
+        why: "expliquer pourquoi cet élément s'est retrouvé dans la file d'attente"
+        title: "Notation révisable"
+        formula: "Formule"
+        subtotal: "Sous-total"
         total: "Total"
+        min_score_visibility: "Score minimum pour la visibilité"
+        score_to_hide: "Score pour cacher le message"
+        take_action_bonus:
+          name: "intervenu"
+          title: "Lorsqu'un membre du personnel choisit d'agir, l'indicateur reçoit un bonus."
+        user_accuracy_bonus:
+          name: "précision de l’utilisateur"
         trust_level_bonus:
           name: "niveau de confiance"
+          title: "Les éléments révisables créés par les utilisateurs ayant un niveau de confiance plus élevé ont un score plus élevé."
       claim_help:
         optional: "Vous pouvez réserver cet élément pour empêcher d'autres de le vérifier."
         required: "Vous devez réserver des éléments avant des les vérifier."
@@ -731,6 +743,7 @@ fr:
       collapse_profile: "Réduire"
       bookmarks: "Signets"
       bio: "À propos de moi"
+      timezone: "Fuseau horaire"
       invited_by: "Invité par"
       trust_level: "Niveau de confiance"
       notifications: "Notifications"
@@ -1217,6 +1230,9 @@ fr:
       enabled: "Le site est en mode lecture seule. Vous pouvez continer à naviguer, mais les réponses, J'aime et autre interactions sont désactivées pour l'instant."
       login_disabled: "La connexion est désactivée quand le site est en lecture seule."
       logout_disabled: "La déconnexion est désactivée quand le site est en lecture seule."
+    too_few_topics_and_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Commençons la discussion!</a> Il y a <strong> / %{currentTopics}</strong> sujets et <strong>%{currentPosts}</strong> messages. Les visiteurs ont besoin de plus à consulter et répondre – <strong>%{requiredTopics}</strong> sujets et <strong>%{requiredPosts}</strong> messages sont recommandés. Seul le personnel peut voir ce message."
+    too_few_topics_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Commençons la discussion!</a> Il y a <strong> / %{currentTopics}</strong> sujets. Les visiteurs ont besoin de plus à consulter et répondre – <strong>%{requiredTopics}</strong> sujets sont recommandés. Seul le personnel peut voir ce message."
+    too_few_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Commençons la discussion!</a> Il y a <strong> / %{currentPosts}</strong> messages. Les visiteurs ont besoin de plus à consulter et répondre – <strong>%{requiredPosts}</strong> messages sont recommandés. Seul le personnel peut voir ce message."
     logs_error_rate_notice:
       reached_hour_MF: "{relativeAge} – {rate, plural, one {# erreur/heure} other {# erreurs/heure}} arrive à la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
       reached_minute_MF: "{relativeAge} – {rate, plural, one {# erreur/minute} other {# erreurs/minute}} arrive à la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}."
@@ -1317,7 +1333,6 @@ fr:
       second_factor_backup_description: "Veuillez entrer un de vos codes de secours :"
       second_factor: "Se connecter avec une application"
       security_key_description: "Dès que votre clé de sécurité physique est prête, appuyer sur le bouton S'authentifier avec une clé de sécurité ci-dessous."
-      security_key_alternative: "Vous ne trouvez pas votre clé de sécurité ou voulez utiliser une autre méthode ?"
       security_key_authenticate: "S'authentifier avec une clé de sécurité"
       security_key_not_allowed_error: "La procédure d'authentification de la clé de sécurité a expiré ou a été annulée."
       security_key_no_matching_credential_error: "Aucun identifiant correspondant n'a pu être trouvé dans la clé de sécurité donnée."
@@ -1695,6 +1710,7 @@ fr:
       context:
         user: "Chercher dans les messages de @{{username}}"
         category: "Rechercher dans la catégorie #{{category}}"
+        tag: "Rechercher l'étiquette #{{tag}}"
         topic: "Rechercher dans ce sujet"
         private_messages: "Rechercher des messages directs"
       advanced:
@@ -2368,6 +2384,7 @@ fr:
       manage_tag_groups_link: "Gérer les groupes d'étiquettes ici."
       allow_global_tags_label: "Permettre aussi d'autres étiquettes"
       tag_group_selector_placeholder: "(Facultatif) Groupe d'étiquettes"
+      required_tag_group_description: "Exiger que les nouveaux sujets aient des étiquette à partir d'un groupe d’étiquettes :"
       min_tags_from_required_group_label: "Nombre d'étiquettes :"
       required_tag_group_label: "Groupe d'étiquettes :"
       topic_featured_link_allowed: "Autoriser les liens à la une dans cette catégorie"
@@ -2406,7 +2423,6 @@ fr:
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre « email in ».'
       mailinglist_mirror: "La catégorie reflète une liste de diffusion"
-      suppress_from_latest: "Retirer cette catégorie des sujets récents."
       show_subcategory_list: "Afficher la liste des sous-catégories au dessus des sujets dans cette catégorie."
       num_featured_topics: "Nombre de sujets affichés sur la page des catégories :"
       subcategory_num_featured_topics: "Nombre de sujets à la une sur la page de la catégorie parente :"
@@ -2791,6 +2807,7 @@ fr:
       changed: "étiquettes modifiées :"
       tags: "Étiquettes"
       choose_for_topic: "étiquettes optionnelles"
+      add_synonyms: "Ajouter"
       delete_tag: "Supprimer l'étiquette"
       delete_confirm:
         one: "Êtes-vous sûr de vouloir supprimer cette étiquettes et l'enlever de %{count} sujet auquel elle est assignée ?"
@@ -3018,6 +3035,7 @@ fr:
           membership:
             automatic: Automatique
             trust_levels_title: "Niveau de confiance automatiquement attribué lorsque les membres sont ajoutés :"
+            effects: Effets
             trust_levels_none: "Aucun"
             automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine courriel qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe :"
             automatic_membership_retroactive: "Appliquer la même règle de domaine courriel pour les utilisateurs existants"
@@ -3056,9 +3074,20 @@ fr:
         generate: "Générer"
         revoke: "Révoquer"
         all_users: "Tous les utilisateurs"
+        active_keys: "Activer une clé pour l’API"
+        manage_keys: Gérer les clés
         show_details: Détails
         description: Description
+        all_api_keys: Toutes les clés pour l’API
+        user_mode: Niveau de l’utilisateur
+        impersonate_all_users: Usurper l’identité d'un utilisateur
+        single_user: "Utilisateur unique"
+        user_placeholder: Saisir un pseudo
+        description_placeholder: "À quoi servira cette clé ?"
         save: Sauvegarder
+        new_key: Nouvelle clé pour l’API
+        revoked: Révoquée
+        delete: Supprimer de façon permanente
       web_hooks:
         title: "Webhooks"
         none: "Il n'y a aucun Webhook actuellement."
@@ -3641,6 +3670,11 @@ fr:
             change_theme_setting: "changer le réglage du thème"
             disable_theme_component: "désactiver le composant de thème"
             enable_theme_component: "activer le composant de thème"
+            revoke_title: "révoquer le titre"
+            change_title: "modifier le titre"
+            api_key_create: "créer une clé pour l’API"
+            api_key_update: "mettre à jour une clé pour l’API"
+            api_key_destroy: "détruire une clé pour l’API"
         screened_emails:
           title: "Courriels sous surveillance"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."

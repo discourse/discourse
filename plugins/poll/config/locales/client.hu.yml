@@ -31,7 +31,8 @@ hu:
         label: "Eredmények mutatása"
       hide-results:
         title: "Vissza a szavazataidhoz"
-        label: "Eredmények elrejtése"
+      export-results:
+        label: "Exportálás"
       open:
         title: "A szavazás megnyitása"
         label: "Megnyitás"

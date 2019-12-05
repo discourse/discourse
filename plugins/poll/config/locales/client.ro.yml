@@ -40,7 +40,8 @@ ro:
         label: "Afișează rezultate"
       hide-results:
         title: "Înapoi la voturile tale"
-        label: "Ascunde rezultate"
+      export-results:
+        label: "Exportă"
       open:
         title: "Deschide sondajul"
         label: "Deschide sondajul"

@@ -386,9 +386,6 @@ tr_TR:
     error: "E-posta adresiniz değiştirilirken bir hata oluştu. Bu adres zaten kullanımda olabilir."
     error_staged: "E-posta adresiniz değiştirilirken bir hata oluştu. Bu adres zaten başka bir kullanıcı tarafından kullanımdadır."
     already_done: "Üzgünüz, bu doğrulama bağlantısı geçerli değil. E-posta adresiniz değiştirilmiş olabilir mi?"
-    authorizing_old:
-      title: "Geçerli e-posta adresi onayladığınız için teşekkür ederiz"
-      description: "Doğrulama için yeni adresine şimdi e-posta gönderiyoruz."
   activation:
     action: "Hesabınızı etkinleştirmek için buraya tıklayın"
     already_done: "Üzgünüz, hesap doğrulama bağlantısı artık geçerli değil. Hesabınız zaten etkin olabilir mi?"
@@ -1073,6 +1070,12 @@ tr_TR:
     autoclosed_disabled: "Konu şimdi açıldı. Yeni cevaplara izin var."
     autoclosed_disabled_lastpost: "Konu şimdi açıldı. Yeni cevaplara izin var."
   login:
+    security_key_description: "Fiziksel güvenlik anahtarınızı hazırladığınızda, aşağıdaki Güvenlik Anahtarıyla Kimlik Doğrula düğmesine basın."
+    security_key_alternative: "Başka bir yol dene"
+    security_key_authenticate: "Güvenlik Anahtarı ile Kimlik Doğrulama"
+    security_key_not_allowed_error: "Güvenlik anahtarı kimlik doğrulama işlemi zaman aşımına uğradı veya iptal edildi."
+    security_key_no_matching_credential_error: "Sağlanan güvenlik anahtarında eşleşen kimlik bilgisi bulunamadı."
+    security_key_support_missing_error: "Geçerli cihazınız veya tarayıcınız güvenlik tuşlarının kullanımını desteklemiyor. Lütfen farklı bir yöntem kullanın."
     not_approved: "Hesabını henüz onaylanmadı. Giriş yapmak için hazır olduğunuzda e-posta ile bilgilendirileceksiniz."
     incorrect_username_email_or_password: "Yanlış kullanıcı adı, e-posta ya da parola"
     wait_approval: "Kayıt olduğunuz için teşekkürler. Hesabınız onaylandığında sizi haberdar edeceğiz."
@@ -1094,6 +1097,9 @@ tr_TR:
     missing_user_field: "Kullanıcı alanlarının tamamını doldurmadınız"
     second_factor_title: "İki Faktörlü Kimlik Doğrulama"
     second_factor_backup_description: "Lütfen yedek kodlarından birini gir:"
+    second_factor_toggle:
+      totp: "Bunun yerine bir doğrulama uygulaması kullanın"
+      backup_code: "Bunun yerine bir yedekleme kodu kullanın"
   admin:
     email:
       sent_test: "gönderildi!"
@@ -1695,6 +1701,9 @@ tr_TR:
     popup:
       confirm_title: "Bildirimler etkin - %{site_title}"
       confirm_body: "Başarılı! Bildirimler etkinleştirildi."
+  staff_action_logs:
+    api_key:
+      revoked: İptal edilmiş
   reviewables:
     priorities:
       low: "Düşük"
