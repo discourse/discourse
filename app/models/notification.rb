@@ -147,12 +147,14 @@ class Notification < ActiveRecord::Base
 
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
-    return {} if data.blank?
+    @data_hash ||= begin
+      return {} if data.blank?
 
-    parsed = JSON.parse(data)
-    return {} if parsed.blank?
+      parsed = JSON.parse(data)
+      return {} if parsed.blank?
 
-    parsed.with_indifferent_access
+      parsed.with_indifferent_access
+    end
   end
 
   def url
