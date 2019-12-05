@@ -232,6 +232,11 @@ class Notification < ActiveRecord::Base
     Post.where(topic: topic_id, post_number: post_number).pluck_first(:id)
   end
 
+  def reload(options = nil)
+    super
+    @data_hash = nil
+  end
+
   protected
 
   def refresh_notification_count
