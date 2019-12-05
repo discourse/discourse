@@ -150,11 +150,12 @@ NavItem.reopenClass({
 
     opts = opts || {};
 
-    if (
-      anonymous &&
-      !Site.currentProp("anonymous_top_menu_items").includes(filterType)
-    )
-      return null;
+    if (anonymous) {
+      const topMenuItems = Site.currentProp("anonymous_top_menu_items");
+      if (!topMenuItems || !topMenuItems.includes(filterType)) {
+        return null;
+      }
+    }
 
     if (!Category.list() && filterType === "categories") return null;
     if (!Site.currentProp("top_menu_items").includes(filterType)) return null;

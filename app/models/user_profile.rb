@@ -146,6 +146,9 @@ class UserProfile < ActiveRecord::Base
     self.errors.add :base, (I18n.t('user.website.domain_not_allowed', domains: allowed_domains.split('|').join(", "))) unless allowed_domains.split('|').include?(domain)
   end
 
+  def self.remove_featured_topic_from_all_profiles(topic)
+    self.where(featured_topic_id: topic.id).update_all(featured_topic_id: nil)
+  end
 end
 
 # == Schema Information

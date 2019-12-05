@@ -100,6 +100,28 @@ export default Mixin.create({
     return settingDefault !== bufferedValue;
   },
 
+  @discourseComputed("buffered.value")
+  bufferedValues(bufferedValuesString) {
+    return (
+      bufferedValuesString && bufferedValuesString.split("|").filter(Boolean)
+    );
+  },
+
+  @discourseComputed("setting.defaultValues")
+  defaultValues(defaultValuesString) {
+    return (
+      defaultValuesString && defaultValuesString.split("|").filter(Boolean)
+    );
+  },
+
+  @discourseComputed("defaultValues", "bufferedValues")
+  defaultIsAvailable(defaultValues, bufferedValues) {
+    return (
+      defaultValues &&
+      !defaultValues.every(value => bufferedValues.includes(value))
+    );
+  },
+
   _watchEnterKey: on("didInsertElement", function() {
     $(this.element).on("keydown.setting-enter", ".input-setting-string", e => {
       if (e.keyCode === 13) {
@@ -216,7 +238,13 @@ export default Mixin.create({
     },
 
     setDefaultValues() {
-      this.set("buffered.value", this.get("setting.defaultValues"));
+      this.set(
+        "buffered.value",
+        this.bufferedValues
+          .concat(this.defaultValues)
+          .uniq()
+          .join("|")
+      );
     }
   }
 });

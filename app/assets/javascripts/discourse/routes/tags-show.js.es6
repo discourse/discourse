@@ -56,7 +56,10 @@ export default DiscourseRoute.extend(FilterModeMixin, {
 
   afterModel(tag, transition) {
     const controller = this.controllerFor("tags.show");
-    controller.set("loading", true);
+    controller.setProperties({
+      loading: true,
+      showInfo: false
+    });
 
     const params = filterQueryParams(transition.to.queryParams, {});
     const category = this.categorySlugPathWithID

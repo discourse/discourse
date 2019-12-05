@@ -265,6 +265,7 @@ export default function() {
 
     this.put("/categories/:category_id", request => {
       const category = parsePostData(request.requestBody);
+      category.id = parseInt(request.params.category_id, 10);
 
       if (category.email_in === "duplicate@example.com") {
         return response(422, { errors: ["duplicate email"] });

@@ -822,4 +822,14 @@ describe PostDestroyer do
       expect(@reviewable_reply.reload.status).to eq Reviewable.statuses[:approved]
     end
   end
+
+  describe "featured topics for user_profiles" do
+    fab!(:user) { Fabricate(:user) }
+
+    it 'clears the user_profiles featured_topic column' do
+      user.user_profile.update(featured_topic: post.topic)
+      PostDestroyer.new(admin, post).destroy
+      expect(user.user_profile.reload.featured_topic).to eq(nil)
+    end
+  end
 end

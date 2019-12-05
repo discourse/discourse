@@ -168,12 +168,16 @@ export default ComboBoxComponent.extend(TagsMixin, {
     results = results.sort((a, b) => a.id > b.id);
 
     return results.map(r => {
-      return { id: r.id, name: r.text };
+      return {
+        id: r.id,
+        name: r.text,
+        targetTagId: r.target_tag || r.id
+      };
     });
   },
 
   actions: {
-    onSelect(tagId) {
+    onSelect(tagId, tag) {
       let url;
 
       if (tagId === "all-tags") {
@@ -189,7 +193,12 @@ export default ComboBoxComponent.extend(TagsMixin, {
           }`;
         }
 
-        url = Discourse.getURL(`${url}/${tagId.toLowerCase()}`);
+        if (tag && tag.targetTagId) {
+          url += `/${tag.targetTagId.toLowerCase()}`;
+        } else {
+          url += `/${tagId.toLowerCase()}`;
+        }
+        url = Discourse.getURL(url);
       }
 
       DiscourseURL.routeTo(url);

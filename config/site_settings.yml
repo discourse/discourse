@@ -240,6 +240,12 @@ basic:
       - box
       - bullet
       - none
+  max_category_nesting:
+    client: true
+    default: 2
+    min: 2
+    max: 3
+    hidden: true
   enable_mobile_theme:
     client: true
     default: true

@@ -54,7 +54,7 @@
       {{#if showTagsFilter}}
         <div class="filter">
           <label>{{d-icon 'circle' class='tracking'}}{{i18n 'admin.web_hooks.tags_filter'}}</label>
-          {{tag-chooser tags=model.tag_names everyTag=true}}
+          {{tag-chooser tags=model.tag_names everyTag=true excludeSynonyms=true}}
           <div class="instructions">{{i18n 'admin.web_hooks.tags_filter_instructions'}}</div>
         </div>
       {{/if}}
