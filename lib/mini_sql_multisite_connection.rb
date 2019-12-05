@@ -26,8 +26,9 @@ class MiniSqlMultisiteConnection < MiniSql::Postgres::Connection
   end
 
   class AfterCommitWrapper
-    def initialize
-      @callback = Proc.new
+    def initialize(&blk)
+      raise ArgumentError, "tried to create a Proc without a block in AfterCommitWrapper" if !blk
+      @callback = blk
     end
 
     def committed!(*)

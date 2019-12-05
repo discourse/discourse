@@ -181,7 +181,7 @@ class ImportScripts::MyBB < ImportScripts::Base
     if count > 5
       puts "Warning: probably incorrect quote in post #{post_id}"
     end
-    return username
+    username
   end
 
   # Take an original post id and return the migrated topic id and post number for it

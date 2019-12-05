@@ -1,6 +1,6 @@
 import { next } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
@@ -187,7 +187,7 @@ export default Mixin.create({
     const offsetBottom = this.element.getBoundingClientRect().bottom;
     const windowWidth = $(window).width();
 
-    if (this.fullWidthOnMobile && (this.site && this.site.isMobileDevice)) {
+    if (this.fullWidthOnMobile && this.site && this.site.isMobileDevice) {
       const margin = 10;
       const relativeLeft =
         $(this.element).offset().left - $(window).scrollLeft();

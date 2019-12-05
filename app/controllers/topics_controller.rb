@@ -327,10 +327,9 @@ class TopicsController < ApplicationController
       if category && topic_tags = (params[:tags] || topic.tags.pluck(:name)).reject { |c| c.empty? }
         if topic_tags.present?
           allowed_tags = DiscourseTagging.filter_allowed_tags(
-            Tag.all,
             guardian,
             category: category
-          ).pluck("tags.name")
+          ).map(&:name)
 
           invalid_tags = topic_tags - allowed_tags
 
@@ -450,7 +449,7 @@ class TopicsController < ApplicationController
     topic_status_update = topic.set_or_create_timer(
       status_type,
       params[:time],
-      options
+      **options
     )
 
     if topic.save
@@ -848,7 +847,23 @@ class TopicsController < ApplicationController
   end
 
   def reset_new
-    current_user.user_stat.update_column(:new_since, Time.now)
+    if params[:category_id].present?
+      category_ids = [params[:category_id]]
+      if params[:include_subcategories] == 'true'
+        category_ids = category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
+      end
+      category_ids.each do |category_id|
+        current_user
+          .category_users
+          .where(category_id: category_id)
+          .first_or_initialize
+          .update!(last_seen_at: Time.zone.now)
+        TopicTrackingState.publish_dismiss_new(current_user.id, category_id)
+      end
+    else
+      current_user.user_stat.update_column(:new_since, Time.zone.now)
+      TopicTrackingState.publish_dismiss_new(current_user.id)
+    end
     render body: nil
   end
 

@@ -109,13 +109,16 @@ createWidget("user-menu-links", {
     glyphs.push(this.notificationsGlyph());
     glyphs.push(this.bookmarksGlyph());
 
-    if (this.siteSettings.enable_personal_messages) {
+    if (this.siteSettings.enable_personal_messages || this.currentUser.staff) {
       glyphs.push(this.messagesGlyph());
     }
 
     return h("ul.menu-links-row", [
       links.map(l => h("li.user", this.linkHtml(l))),
-      h("li.glyphs", glyphs.map(l => this.glyphHtml(l)))
+      h(
+        "li.glyphs",
+        glyphs.map(l => this.glyphHtml(l))
+      )
     ]);
   },
 
@@ -221,7 +224,7 @@ export default createWidget("user-menu", {
       this.sendWidgetAction("toggleUserMenu");
     } else {
       const $window = $(window);
-      const windowWidth = parseInt($window.width(), 10);
+      const windowWidth = $window.width();
       const $panel = $(".menu-panel");
       $panel.addClass("animate");
       $panel.css("right", -windowWidth);

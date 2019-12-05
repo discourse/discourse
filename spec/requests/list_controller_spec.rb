@@ -21,12 +21,6 @@ RSpec.describe ListController do
       get "/latest?max_posts=bob"
       expect(response.status).to eq(400)
 
-      get "/latest?exclude_category_ids=bob"
-      expect(response.status).to eq(400)
-
-      get "/latest?exclude_category_ids[]=bob"
-      expect(response.status).to eq(400)
-
       get "/latest?max_posts=1111111111111111111111111111111111111111"
       expect(response.status).to eq(400)
 
@@ -41,10 +35,7 @@ RSpec.describe ListController do
     end
 
     it "returns 200 for legit requests" do
-      get "/latest.json?exclude_category_ids%5B%5D=69&exclude_category_ids%5B%5D=70&no_definitions=true&no_subcategories=false&page=1&_=1534296100767"
-      expect(response.status).to eq(200)
-
-      get "/latest.json?exclude_category_ids=-1"
+      get "/latest.json?no_definitions=true&no_subcategories=false&page=1&_=1534296100767"
       expect(response.status).to eq(200)
 
       get "/latest.json?max_posts=12"
@@ -108,33 +99,6 @@ RSpec.describe ListController do
     end
   end
 
-  describe 'suppress from latest' do
-
-    it 'supresses categories' do
-      topic
-
-      get "/latest.json"
-      data = JSON.parse(response.body)
-      expect(data["topic_list"]["topics"].length).to eq(1)
-
-      get "/categories_and_latest.json"
-      data = JSON.parse(response.body)
-      expect(data["topic_list"]["topics"].length).to eq(1)
-
-      topic.category.suppress_from_latest = true
-      topic.category.save
-
-      get "/latest.json"
-      data = JSON.parse(response.body)
-      expect(data["topic_list"]["topics"].length).to eq(0)
-
-      get "/categories_and_latest.json"
-      data = JSON.parse(response.body)
-      expect(data["topic_list"]["topics"].length).to eq(0)
-    end
-
-  end
-
   describe 'titles for crawler layout' do
     it 'has no title for the default URL' do
       topic
@@ -195,19 +159,34 @@ RSpec.describe ListController do
       user
     end
 
-    let!(:topic) do
-      Fabricate(:private_message_topic,
-        allowed_groups: [group],
-      )
+    describe 'with unicode_usernames' do
+      before { SiteSetting.unicode_usernames = false }
+
+      it 'should return the right response' do
+        group.add(user)
+        topic = Fabricate(:private_message_topic, allowed_groups: [group])
+        get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+
+        expect(response.status).to eq(200)
+
+        expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
+          .to eq(topic.id)
+      end
     end
 
-    it 'should return the right response' do
-      get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+    describe 'with unicode_usernames' do
+      before { SiteSetting.unicode_usernames = true }
 
-      expect(response.status).to eq(200)
+      it 'Returns a 200 with unicode group name' do
+        unicode_group = Fabricate(:group, name: '群群组')
+        unicode_group.add(user)
+        topic = Fabricate(:private_message_topic, allowed_groups: [unicode_group])
+        get "/topics/private-messages-group/#{user.username}/#{URI.escape(unicode_group.name)}.json"
+        expect(response.status).to eq(200)
 
-      expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
-        .to eq(topic.id)
+        expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
+          .to eq(topic.id)
+      end
     end
   end
 
@@ -324,8 +303,7 @@ RSpec.describe ListController do
     end
 
     it 'renders links correctly with subfolder' do
-      GlobalSetting.stubs(:relative_url_root).returns('/forum')
-      Discourse.stubs(:base_uri).returns("/forum")
+      set_subfolder "/forum"
       post = Fabricate(:post, topic: topic, user: user)
       get "/latest.rss"
       expect(response.status).to eq(200)
@@ -443,8 +421,7 @@ RSpec.describe ListController do
         end
 
         it "renders RSS in subfolder correctly" do
-          GlobalSetting.stubs(:relative_url_root).returns('/forum')
-          Discourse.stubs(:base_uri).returns("/forum")
+          set_subfolder "/forum"
           get "/c/#{category.slug}.rss"
           expect(response.status).to eq(200)
           expect(response.body).to_not include("/forum/forum")
@@ -635,31 +612,6 @@ RSpec.describe ListController do
       expect(ListController.best_periods_for(nil, :monthly)).to eq([:monthly, :all])
       expect(ListController.best_periods_for(nil, :weekly)).to eq([:weekly, :all])
       expect(ListController.best_periods_for(nil, :daily)).to eq([:daily, :all])
-    end
-  end
-
-  describe "categories suppression" do
-    let(:category_one) { Fabricate(:category_with_definition) }
-    let(:sub_category) { Fabricate(:category_with_definition, parent_category: category_one, suppress_from_latest: true) }
-    let!(:topic_in_sub_category) { Fabricate(:topic, category: sub_category) }
-
-    let(:category_two) { Fabricate(:category_with_definition, suppress_from_latest: true) }
-    let!(:topic_in_category_two) { Fabricate(:topic, category: category_two) }
-
-    it "suppresses categories from the latest list" do
-      get "/#{SiteSetting.homepage}.json"
-      expect(response.status).to eq(200)
-
-      topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
-      expect(topic_titles).not_to include(topic_in_sub_category.title, topic_in_category_two.title)
-    end
-
-    it "does not suppress" do
-      get "/#{SiteSetting.homepage}.json", params: { category: category_one.id }
-      expect(response.status).to eq(200)
-
-      topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
-      expect(topic_titles).to include(topic_in_sub_category.title)
     end
   end
 end

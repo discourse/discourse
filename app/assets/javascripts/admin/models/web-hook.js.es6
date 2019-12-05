@@ -3,9 +3,10 @@ import RestModel from "discourse/models/rest";
 import Category from "discourse/models/category";
 import Group from "discourse/models/group";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
+import Site from "discourse/models/site";
 
 export default RestModel.extend({
   content_type: 1, // json
@@ -16,7 +17,7 @@ export default RestModel.extend({
   web_hook_event_types: null,
   groupsFilterInName: null,
 
-  @computed("wildcard_web_hook")
+  @discourseComputed("wildcard_web_hook")
   webHookType: {
     get(wildcard) {
       return wildcard ? "wildcard" : "individual";
@@ -26,7 +27,7 @@ export default RestModel.extend({
     }
   },
 
-  @computed("category_ids")
+  @discourseComputed("category_ids")
   categories(categoryIds) {
     return Category.findByIds(categoryIds);
   },
@@ -36,7 +37,7 @@ export default RestModel.extend({
     const groupIds = this.group_ids;
     this.set(
       "groupsFilterInName",
-      Discourse.Site.currentProp("groups").reduce((groupNames, g) => {
+      Site.currentProp("groups").reduce((groupNames, g) => {
         if (groupIds.includes(g.id)) {
           groupNames.push(g.name);
         }
@@ -49,7 +50,7 @@ export default RestModel.extend({
     return Group.findAll({ term: term, ignore_automatic: false });
   },
 
-  @computed("wildcard_web_hook", "web_hook_event_types.[]")
+  @discourseComputed("wildcard_web_hook", "web_hook_event_types.[]")
   description(isWildcardWebHook, types) {
     let desc = "";
 
@@ -87,7 +88,7 @@ export default RestModel.extend({
       group_ids:
         isEmpty(groupNames) || isEmpty(groupNames[0])
           ? [null]
-          : Discourse.Site.currentProp("groups").reduce((groupIds, g) => {
+          : Site.currentProp("groups").reduce((groupIds, g) => {
               if (groupNames.includes(g.name)) {
                 groupIds.push(g.id);
               }

@@ -2,7 +2,7 @@ import { alias, equal } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { setting, i18n } from "discourse/lib/computed";
 
 export default Controller.extend({
@@ -12,7 +12,7 @@ export default Controller.extend({
   backupLocation: setting("backup_location"),
   localBackupStorage: equal("backupLocation", "local"),
 
-  @computed("status.allowRestore", "status.isOperationRunning")
+  @discourseComputed("status.allowRestore", "status.isOperationRunning")
   restoreTitle(allowRestore, isOperationRunning) {
     if (!allowRestore) {
       return "admin.backups.operations.restore.is_disabled";

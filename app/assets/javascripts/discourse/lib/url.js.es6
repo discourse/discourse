@@ -5,6 +5,7 @@ import { schedule } from "@ember/runloop";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import LockOn from "discourse/lib/lock-on";
 import { defaultHomepage } from "discourse/lib/utilities";
+import User from "discourse/models/user";
 
 const rewrites = [];
 const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
@@ -230,7 +231,7 @@ const DiscourseURL = EmberObject.extend({
     // Rewrite /my/* urls
     let myPath = `${baseUri}/my/`;
     if (path.indexOf(myPath) === 0) {
-      const currentUser = Discourse.User.current();
+      const currentUser = User.current();
       if (currentUser) {
         path = path.replace(
           myPath,

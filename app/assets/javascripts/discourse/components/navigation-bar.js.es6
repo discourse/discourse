@@ -1,13 +1,14 @@
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
+import FilterModeMixin from "discourse/mixins/filter-mode";
 
-export default Component.extend({
+export default Component.extend(FilterModeMixin, {
   tagName: "ul",
   classNameBindings: [":nav", ":nav-pills"],
   elementId: "navigation-bar",
@@ -17,15 +18,11 @@ export default Component.extend({
     this.set("connectors", renderedConnectorsFor("extra-nav-item", null, this));
   },
 
-  @computed("filterMode", "navItems")
-  selectedNavItem(filterMode, navItems) {
-    if (filterMode.indexOf("top/") === 0) {
-      filterMode = "top";
-    }
+  @discourseComputed("filterType", "navItems")
+  selectedNavItem(filterType, navItems) {
     let item = navItems.find(i => i.active === true);
 
-    item =
-      item || navItems.find(i => i.get("filterMode").indexOf(filterMode) === 0);
+    item = item || navItems.find(i => i.get("filterType") === filterType);
 
     if (!item) {
       let connectors = this.connectors;
@@ -38,7 +35,7 @@ export default Component.extend({
             typeof (c.connectorClass.displayName === "function")
           ) {
             let path = c.connectorClass.path(category);
-            if (path.indexOf(filterMode) > 0) {
+            if (path.indexOf(filterType) > 0) {
               item = {
                 displayName: c.connectorClass.displayName()
               };

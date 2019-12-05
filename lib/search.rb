@@ -862,6 +862,11 @@ class Search
         elsif @search_context.is_a?(Topic)
           posts.where("topics.id = #{@search_context.id}")
             .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
+        elsif @search_context.is_a?(Tag)
+          posts = posts
+            .joins("LEFT JOIN topic_tags ON topic_tags.topic_id = topics.id")
+            .joins("LEFT JOIN tags ON tags.id = topic_tags.tag_id")
+          posts.where("tags.id = #{@search_context.id}")
         end
       else
         posts = categories_ignored(posts) unless @category_filter_matched

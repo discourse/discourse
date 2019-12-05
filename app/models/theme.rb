@@ -376,10 +376,15 @@ class Theme < ActiveRecord::Base
     fields.values
   end
 
-  def add_child_theme!(theme)
-    new_relation = child_theme_relation.new(child_theme_id: theme.id)
+  def add_relative_theme!(kind, theme)
+    new_relation = if kind == :child
+      child_theme_relation.new(child_theme_id: theme.id)
+    else
+      parent_theme_relation.new(parent_theme_id: theme.id)
+    end
     if new_relation.save
       child_themes.reload
+      parent_themes.reload
       save!
       Theme.clear_cache!
     else

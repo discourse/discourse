@@ -90,6 +90,27 @@ describe PostMover do
           expect(move_message.post_type).to eq(Post.types[:small_action])
           expect(move_message.raw).to include("3 posts were split")
         end
+
+        it "correctly remaps quotes" do
+          raw = <<~RAW
+            [quote="dan, post:#{p2.post_number}, topic:#{p2.topic_id}, full:true"]
+            some quote from the other post
+            [/quote]
+
+            the quote above should be updated with new post number and topic id
+          RAW
+
+          p3.update!(raw: raw)
+          p3.rebake!
+
+          expect { topic.move_posts(user, [p2.id], title: "new testing topic name") }
+            .to  change { p2.reload.topic_id }
+            .and change { p2.post_number }
+            .and change { p3.reload.raw }
+            .and change { p3.baked_version }.to nil
+
+          expect(p3.raw).to include("post:#{p2.post_number}, topic:#{p2.topic_id}")
+        end
       end
 
       context "errors" do
@@ -313,12 +334,12 @@ describe PostMover do
 
             new_topic = topic.move_posts(user, [p3.id], title: "new testing topic name")
 
-            n3.reload
+            n3 = Notification.find(n3.id)
             expect(n3.topic_id).to eq(new_topic.id)
             expect(n3.post_number).to eq(1)
             expect(n3.data_hash[:topic_title]).to eq(new_topic.title)
 
-            n4.reload
+            n4 = Notification.find(n4.id)
             expect(n4.topic_id).to eq(topic.id)
             expect(n4.post_number).to eq(4)
           end
@@ -328,7 +349,7 @@ describe PostMover do
 
             topic.move_posts(user, [p1.id], title: "new testing topic name")
 
-            n1.reload
+            n1 = Notification.find(n1.id)
             expect(n1.topic_id).to eq(topic.id)
             expect(n1.data_hash[:topic_title]).to eq(topic.title)
             expect(n1.post_number).to eq(1)
@@ -554,12 +575,12 @@ describe PostMover do
 
             moved_to = topic.move_posts(user, [p3.id], destination_topic_id: destination_topic.id)
 
-            n3.reload
+            n3 = Notification.find(n3.id)
             expect(n3.topic_id).to eq(moved_to.id)
             expect(n3.post_number).to eq(2)
             expect(n3.data_hash[:topic_title]).to eq(moved_to.title)
 
-            n4.reload
+            n4 = Notification.find(n4.id)
             expect(n4.topic_id).to eq(topic.id)
             expect(n4.post_number).to eq(4)
           end

@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
-import computed from "ember-addons/ember-computed-decorators";
 import PenaltyController from "admin/mixins/penalty-controller";
 
 export default Controller.extend(PenaltyController, {
@@ -12,7 +12,7 @@ export default Controller.extend(PenaltyController, {
     this.setProperties({ suspendUntil: null, suspending: false });
   },
 
-  @computed("suspendUntil", "reason", "suspending")
+  @discourseComputed("suspendUntil", "reason", "suspending")
   submitDisabled(suspendUntil, reason, suspending) {
     return suspending || isEmpty(suspendUntil) || !reason || reason.length < 1;
   },

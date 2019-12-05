@@ -5,6 +5,8 @@
 
 .tag-list {
   margin-top: 2em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid $primary-low;
 }
 
 #list-area .tag-list h3 {
@@ -71,9 +73,7 @@ $tag-color: $primary-medium;
 .discourse-tag {
   max-width: 14em;
   display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  @include ellipsis;
   vertical-align: middle;
 }
 
@@ -88,6 +88,10 @@ $tag-color: $primary-medium;
 
   .extra-info-wrapper & {
     color: $header-primary_high !important;
+  }
+
+  &.large {
+    font-size: $font-up-2;
   }
 
   &.box {
@@ -105,6 +109,25 @@ $tag-color: $primary-medium;
   &.simple:hover {
     margin-right: 0;
     color: $primary-high;
+  }
+
+  &.bullet {
+    margin-right: 0.5em;
+    display: inline-flex;
+    align-items: center;
+    &:before {
+      background: $primary-low-mid;
+      margin-right: 5px;
+      position: relative;
+      width: 9px;
+      height: 9px;
+      display: inline-block;
+      content: "";
+    }
+    &.large:before {
+      width: 13px;
+      height: 13px;
+    }
   }
 }
 
@@ -151,21 +174,6 @@ $tag-color: $primary-medium;
   .discourse-tag.box {
     position: relative;
     top: 0;
-  }
-}
-
-.discourse-tag.bullet {
-  margin-right: 0.5em;
-  display: inline-flex;
-  align-items: center;
-  &:before {
-    background: $primary-low-mid;
-    margin-right: 5px;
-    position: relative;
-    width: 9px;
-    height: 9px;
-    display: inline-block;
-    content: "";
   }
 }
 
@@ -258,5 +266,28 @@ header .discourse-tag {
       width: 200px;
       margin-right: 10px;
     }
+  }
+}
+
+.tag-info {
+  margin-top: 1em;
+  margin-bottom: 1em;
+
+  .delete-tag {
+    float: right;
+  }
+  .synonyms-list,
+  .add-synonyms,
+  .tag-associations {
+    margin-top: 1em;
+  }
+  .tag-list {
+    border: none;
+    .d-icon {
+      color: $primary-medium;
+    }
+  }
+  .field {
+    margin-bottom: 5px;
   }
 }

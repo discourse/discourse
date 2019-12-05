@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   tagName: "td",
@@ -8,7 +8,7 @@ export default Component.extend({
   classNameBindings: ["type", "property"],
   options: null,
 
-  @computed("label", "data", "options")
+  @discourseComputed("label", "data", "options")
   computedLabel(label, data, options) {
     return label.compute(data, options || {});
   },

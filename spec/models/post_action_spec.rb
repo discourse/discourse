@@ -263,13 +263,13 @@ describe PostAction do
       fab!(:likee) { Fabricate(:user) }
 
       it "can be disabled" do
-        SiteSetting.likes_notification_consolidation_threshold = 0
+        SiteSetting.notification_consolidation_threshold = 0
 
         expect do
           PostActionCreator.like(liker, Fabricate(:post, user: likee))
         end.to change { likee.reload.notifications.count }.by(1)
 
-        SiteSetting.likes_notification_consolidation_threshold = 1
+        SiteSetting.notification_consolidation_threshold = 1
 
         expect do
           PostActionCreator.like(liker, Fabricate(:post, user: likee))
@@ -285,7 +285,7 @@ describe PostAction do
         end
 
         it 'should consolidate likes notification when the threshold is reached' do
-          SiteSetting.likes_notification_consolidation_threshold = 2
+          SiteSetting.notification_consolidation_threshold = 2
 
           expect do
             3.times do
@@ -353,7 +353,7 @@ describe PostAction do
         end
 
         it 'should consolidate liked notifications when threshold is reached' do
-          SiteSetting.likes_notification_consolidation_threshold = 2
+          SiteSetting.notification_consolidation_threshold = 2
 
           post = Fabricate(:post, user: likee)
 

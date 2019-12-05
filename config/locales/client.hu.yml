@@ -2280,6 +2280,7 @@ hu:
       selector_no_tags: "címke nélküli"
       tags: "Címkék"
       choose_for_topic: "Megadható címke"
+      add_synonyms: "Hozzáadás"
       delete_tag: "Címke törlése"
       delete_confirm_no_topics: "Biztos vagy benne hogy elakarod távolítani ezt a címkét?"
       rename_tag: "Címke átnevezése"

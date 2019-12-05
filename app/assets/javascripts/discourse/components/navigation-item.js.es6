@@ -1,8 +1,10 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
+import FilterModeMixin from "discourse/mixins/filter-mode";
 
 export default Component.extend(
+  FilterModeMixin,
   bufferedRender({
     tagName: "li",
     classNameBindings: [
@@ -15,15 +17,12 @@ export default Component.extend(
     hidden: false,
     rerenderTriggers: ["content.count"],
 
-    @computed("content.filterMode", "filterMode", "content.active")
-    active(contentFilterMode, filterMode, active) {
+    @discourseComputed("content.filterType", "filterType", "content.active")
+    active(contentFilterType, filterType, active) {
       if (active !== undefined) {
         return active;
       }
-      return (
-        contentFilterMode === filterMode ||
-        filterMode.indexOf(contentFilterMode) === 0
-      );
+      return contentFilterType === filterType;
     },
 
     buildBuffer(buffer) {
@@ -34,7 +33,7 @@ export default Component.extend(
 
       // Include the category id if the option is present
       if (content.get("includeCategoryId")) {
-        let categoryId = this.get("category.id");
+        let categoryId = this.get("content.category.id");
         if (categoryId) {
           queryParams.push(`category_id=${categoryId}`);
         }

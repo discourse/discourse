@@ -35,7 +35,8 @@ da:
         label: "Vis resultat"
       hide-results:
         title: "Tilbage til dine stemmer"
-        label: "Skjul resultat"
+      export-results:
+        label: "Eksporter"
       open:
         title: "Åbn afstemningen"
         label: "Åbn"

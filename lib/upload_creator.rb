@@ -118,6 +118,13 @@ class UploadCreator
       @upload.for_site_setting    = true if @opts[:for_site_setting]
       @upload.for_gravatar        = true if @opts[:for_gravatar]
 
+      if !FileHelper.is_supported_media?(@filename) &&
+        !@upload.for_theme &&
+        !@upload.for_site_setting &&
+        SiteSetting.prevent_anons_from_downloading_files
+        @upload.secure = true
+      end
+
       return @upload unless @upload.save
 
       # store the file and update its url

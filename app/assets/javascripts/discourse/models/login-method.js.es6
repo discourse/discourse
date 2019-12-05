@@ -1,20 +1,22 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
-import computed from "ember-addons/ember-computed-decorators";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import { Promise } from "rsvp";
+import Session from "discourse/models/session";
+import Site from "discourse/models/site";
 
 const LoginMethod = EmberObject.extend({
-  @computed
+  @discourseComputed
   title() {
     return this.title_override || I18n.t(`login.${this.name}.title`);
   },
 
-  @computed
+  @discourseComputed
   prettyName() {
     return this.pretty_name_override || I18n.t(`login.${this.name}.name`);
   },
 
-  @computed
+  @discourseComputed
   message() {
     return this.message_override || I18n.t(`login.${this.name}.message`);
   },
@@ -52,7 +54,7 @@ LoginMethod.reopenClass({
 
       const input = document.createElement("input");
       input.setAttribute("name", "authenticity_token");
-      input.setAttribute("value", Discourse.Session.currentProp("csrfToken"));
+      input.setAttribute("value", Session.currentProp("csrfToken"));
       form.appendChild(input);
 
       document.body.appendChild(form);
@@ -69,7 +71,7 @@ export function findAll() {
 
   methods = [];
 
-  Discourse.Site.currentProp("auth_providers").forEach(provider =>
+  Site.currentProp("auth_providers").forEach(provider =>
     methods.pushObject(LoginMethod.create(provider))
   );
 

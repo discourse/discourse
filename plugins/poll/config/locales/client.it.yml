@@ -44,7 +44,8 @@ it:
         label: "Mostra i risultati"
       hide-results:
         title: "Torna ai tuoi voti"
-        label: "Nascondi i risultati"
+      export-results:
+        label: "Esportare"
       open:
         title: "Apri il sondaggio"
         label: "Apri"

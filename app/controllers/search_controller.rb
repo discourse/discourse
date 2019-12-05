@@ -7,7 +7,7 @@ class SearchController < ApplicationController
   before_action :cancel_overloaded_search, only: [:query]
 
   def self.valid_context_types
-    %w{user topic category private_messages}
+    %w{user topic category private_messages tag}
   end
 
   def show
@@ -169,6 +169,8 @@ class SearchController < ApplicationController
         context_obj = Category.find_by(id: search_context[:id].to_i)
       elsif 'topic' == search_context[:type]
         context_obj = Topic.find_by(id: search_context[:id].to_i)
+      elsif 'tag' == search_context[:type]
+        context_obj = Tag.where_name(search_context[:name]).first
       end
 
       type_filter = nil

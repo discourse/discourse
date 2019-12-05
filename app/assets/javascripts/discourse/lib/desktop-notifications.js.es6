@@ -3,6 +3,8 @@ import DiscourseURL from "discourse/lib/url";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { formatUsername } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -21,21 +23,23 @@ function init(messageBus, appEvents) {
   liveEnabled = false;
   mbClientId = messageBus.clientId;
 
-  if (!Discourse.User.current()) {
+  if (!User.current()) {
     return;
   }
 
   try {
     keyValueStore.getItem(focusTrackerKey);
   } catch (e) {
-    Ember.Logger.info(
+    // eslint-disable-next-line no-console
+    console.info(
       "Discourse desktop notifications are disabled - localStorage denied."
     );
     return;
   }
 
   if (!("Notification" in window)) {
-    Ember.Logger.info(
+    // eslint-disable-next-line no-console
+    console.info(
       "Discourse desktop notifications are disabled - not supported by browser"
     );
     return;
@@ -49,7 +53,8 @@ function init(messageBus, appEvents) {
       return;
     }
   } catch (e) {
-    Ember.Logger.warn(
+    // eslint-disable-next-line no-console
+    console.warn(
       "Unexpected error, Notification is defined on window but not a responding correctly " +
         e
     );
@@ -60,7 +65,8 @@ function init(messageBus, appEvents) {
     // Preliminary checks passed, continue with setup
     setupNotifications(appEvents);
   } catch (e) {
-    Ember.Logger.error(e);
+    // eslint-disable-next-line no-console
+    console.error(e);
   }
 }
 
@@ -209,7 +215,7 @@ function requestPermission() {
 function i18nKey(notification_type) {
   return (
     "notifications.popup." +
-    Discourse.Site.current().get("notificationLookup")[notification_type]
+    Site.current().get("notificationLookup")[notification_type]
   );
 }
 

@@ -368,7 +368,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def notice_type
-    post_custom_fields["notice_type"]
+    post_custom_fields[Post::NOTICE_TYPE]
   end
 
   def include_notice_type?
@@ -389,7 +389,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def notice_args
-    post_custom_fields["notice_args"]
+    post_custom_fields[Post::NOTICE_ARGS]
   end
 
   def include_notice_args?

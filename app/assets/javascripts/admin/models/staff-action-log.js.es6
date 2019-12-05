@@ -1,4 +1,4 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -13,12 +13,12 @@ function format(label, value, escape = true) {
 const StaffActionLog = RestModel.extend({
   showFullDetails: false,
 
-  @computed("action_name")
+  @discourseComputed("action_name")
   actionName(actionName) {
     return I18n.t(`admin.logs.staff_actions.actions.${actionName}`);
   },
 
-  @computed(
+  @discourseComputed(
     "email",
     "ip_address",
     "topic_id",
@@ -69,12 +69,12 @@ const StaffActionLog = RestModel.extend({
     return formatted.length > 0 ? formatted + "<br/>" : "";
   },
 
-  @computed("details")
+  @discourseComputed("details")
   useModalForDetails(details) {
     return details && details.length > 100;
   },
 
-  @computed("action_name")
+  @discourseComputed("action_name")
   useCustomModalForDetails(actionName) {
     return ["change_theme", "delete_theme"].includes(actionName);
   }

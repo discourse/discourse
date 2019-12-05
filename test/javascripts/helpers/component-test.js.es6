@@ -2,6 +2,8 @@ import EmberObject from "@ember/object";
 import createStore from "helpers/create-store";
 import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
+import User from "discourse/models/user";
+import Site from "discourse/models/site";
 
 export default function(name, opts) {
   opts = opts || {};
@@ -11,7 +13,7 @@ export default function(name, opts) {
   }
 
   test(name, function(assert) {
-    this.site = Discourse.Site.current();
+    this.site = Site.current();
 
     this.registry.register("site-settings:main", Discourse.SiteSettings, {
       instantiate: false
@@ -29,7 +31,7 @@ export default function(name, opts) {
 
     const store = createStore();
     if (!opts.anonymous) {
-      const currentUser = Discourse.User.create({ username: "eviltrout" });
+      const currentUser = User.create({ username: "eviltrout" });
       this.currentUser = currentUser;
       this.registry.register("current-user:main", this.currentUser, {
         instantiate: false

@@ -15,6 +15,75 @@ RSpec.describe ApplicationController do
       get "/"
       expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
     end
+
+    it "should redirect to login normally" do
+      get "/"
+      expect(response).to redirect_to("/login")
+    end
+
+    it "should redirect to SSO if enabled" do
+      SiteSetting.sso_url = 'http://someurl.com'
+      SiteSetting.enable_sso = true
+      get "/"
+      expect(response).to redirect_to("/session/sso")
+    end
+
+    it "should redirect to authenticator if only one, and local logins disabled" do
+      # Local logins and google enabled, direct to login UI
+      SiteSetting.enable_google_oauth2_logins = true
+      get "/"
+      expect(response).to redirect_to("/login")
+
+      # Only google enabled, login immediately
+      SiteSetting.enable_local_logins = false
+      get "/"
+      expect(response).to redirect_to("/auth/google_oauth2")
+
+      # Google and GitHub enabled, direct to login UI
+      SiteSetting.enable_github_logins = true
+      get "/"
+      expect(response).to redirect_to("/login")
+    end
+
+    context "with omniauth in test mode" do
+      before do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2,
+          info: OmniAuth::AuthHash::InfoHash.new(
+            email: "address@example.com",
+          ),
+          extra: {
+            raw_info: OmniAuth::AuthHash.new(
+              email_verified: true,
+              email: "address@example.com",
+            )
+          }
+        )
+        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+      end
+
+      after do
+        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2] = nil
+        OmniAuth.config.test_mode = false
+      end
+
+      it "should not redirect to authenticator if registration in progress" do
+        SiteSetting.enable_local_logins = false
+        SiteSetting.enable_google_oauth2_logins = true
+
+        get "/"
+        expect(response).to redirect_to("/auth/google_oauth2")
+
+        expect(cookies[:authentication_data]).to eq(nil)
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response).to redirect_to("/")
+        expect(cookies[:authentication_data]).not_to eq(nil)
+
+        get "/"
+        expect(response).to redirect_to("/login")
+      end
+    end
   end
 
   describe '#redirect_to_second_factor_if_required' do
@@ -175,8 +244,7 @@ RSpec.describe ApplicationController do
       end
 
       it 'supports subfolder with permalinks' do
-        GlobalSetting.stubs(:relative_url_root).returns('/forum')
-        Discourse.stubs(:base_uri).returns("/forum")
+        set_subfolder "/forum"
 
         trashed_topic = create_post.topic
         trashed_topic.trash!
@@ -306,7 +374,7 @@ RSpec.describe ApplicationController do
       expect(controller.theme_ids).to eq([theme2.id])
 
       theme2.update!(user_selectable: false, component: true)
-      theme.add_child_theme!(theme2)
+      theme.add_relative_theme!(:child, theme2)
       cookies['theme_ids'] = "#{theme.id},#{theme2.id}|#{user.user_option.theme_key_seq}"
 
       get "/"

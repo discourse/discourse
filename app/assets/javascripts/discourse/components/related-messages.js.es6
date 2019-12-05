@@ -1,12 +1,12 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Component.extend({
   elementId: "related-messages",
   classNames: ["suggested-topics"],
 
-  @computed("topic")
+  @discourseComputed("topic")
   targetUser(topic) {
     if (!topic || !topic.isPrivateMessage) {
       return;
@@ -23,14 +23,14 @@ export default Component.extend({
     }
   },
 
-  @computed
+  @discourseComputed
   searchLink() {
     return Discourse.getURL(
       `/search?expanded=true&q=%40${this.targetUser.username}%20in%3Apersonal-direct`
     );
   },
 
-  @computed("topic")
+  @discourseComputed("topic")
   relatedTitle(topic) {
     const href = this.currentUser && this.currentUser.pmPath(topic);
     return href

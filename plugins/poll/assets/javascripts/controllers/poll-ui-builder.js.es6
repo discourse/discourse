@@ -2,8 +2,11 @@ import Controller from "@ember/controller";
 import {
   default as computed,
   observes
-} from "ember-addons/ember-computed-decorators";
-import InputValidation from "discourse/models/input-validation";
+} from "discourse-common/utils/decorators";
+import EmberObject from "@ember/object";
+
+export const BAR_CHART_TYPE = "bar";
+export const PIE_CHART_TYPE = "pie";
 
 export default Controller.extend({
   regularPollType: "regular",
@@ -14,6 +17,10 @@ export default Controller.extend({
   votePollResult: "on_vote",
   closedPollResult: "on_close",
   staffPollResult: "staff_only",
+  pollChartTypes: [
+    { name: BAR_CHART_TYPE.capitalize(), value: BAR_CHART_TYPE },
+    { name: PIE_CHART_TYPE.capitalize(), value: PIE_CHART_TYPE }
+  ],
 
   init() {
     this._super(...arguments);
@@ -36,6 +43,11 @@ export default Controller.extend({
         value: multiplePollType
       }
     ];
+  },
+
+  @computed("chartType", "pollType", "numberPollType")
+  isPie(chartType, pollType, numberPollType) {
+    return pollType !== numberPollType && chartType === PIE_CHART_TYPE;
   },
 
   @computed(
@@ -140,7 +152,7 @@ export default Controller.extend({
   )
   pollMaxOptions(isRegular, isMultiple, isNumber, count, pollMin, pollStep) {
     if (isRegular) return;
-    const pollMinInt = parseInt(pollMin) || 1;
+    const pollMinInt = parseInt(pollMin, 10) || 1;
 
     if (isMultiple) {
       return this._comboboxOptions(pollMinInt + 1, count + 1);
@@ -159,7 +171,7 @@ export default Controller.extend({
   @computed("isNumber", "pollMax")
   pollStepOptions(isNumber, pollMax) {
     if (!isNumber) return;
-    return this._comboboxOptions(1, (parseInt(pollMax) || 1) + 1);
+    return this._comboboxOptions(1, (parseInt(pollMax, 10) || 1) + 1);
   },
 
   @computed(
@@ -173,6 +185,7 @@ export default Controller.extend({
     "pollMax",
     "pollStep",
     "autoClose",
+    "chartType",
     "date",
     "time"
   )
@@ -187,6 +200,7 @@ export default Controller.extend({
     pollMax,
     pollStep,
     autoClose,
+    chartType,
     date,
     time
   ) {
@@ -212,6 +226,8 @@ export default Controller.extend({
     if (pollMax) pollHeader += ` max=${pollMax}`;
     if (isNumber) pollHeader += ` step=${step}`;
     if (publicPoll) pollHeader += ` public=true`;
+    if (chartType && pollType !== "number")
+      pollHeader += ` chartType=${chartType}`;
     if (autoClose) {
       let closeDate = moment(
         date + " " + time,
@@ -260,7 +276,7 @@ export default Controller.extend({
       };
     }
 
-    return InputValidation.create(options);
+    return EmberObject.create(options);
   },
 
   @computed("pollStep")
@@ -274,7 +290,7 @@ export default Controller.extend({
       };
     }
 
-    return InputValidation.create(options);
+    return EmberObject.create(options);
   },
 
   @computed("disableInsert")
@@ -288,7 +304,7 @@ export default Controller.extend({
       };
     }
 
-    return InputValidation.create(options);
+    return EmberObject.create(options);
   },
 
   _comboboxOptions(start_index, end_index) {
@@ -306,6 +322,7 @@ export default Controller.extend({
       pollMax: null,
       pollStep: 1,
       autoClose: false,
+      chartType: BAR_CHART_TYPE,
       date: moment()
         .add(1, "day")
         .format("YYYY-MM-DD"),

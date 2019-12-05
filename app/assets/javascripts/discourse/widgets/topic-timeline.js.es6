@@ -188,11 +188,7 @@ createWidget("timeline-scrollarea", {
 
     if (this.state.position !== result.scrollPosition) {
       this.state.position = result.scrollPosition;
-      this.sendWidgetAction(
-        "updatePosition",
-        result.position,
-        result.scrollPosition
-      );
+      this.sendWidgetAction("updatePosition", current);
     }
 
     return result;
@@ -215,7 +211,8 @@ createWidget("timeline-scrollarea", {
       position.lastRead > 3 &&
       Math.abs(position.lastRead - position.current) > 3 &&
       Math.abs(position.lastRead - position.total) > 1 &&
-      (position.lastRead && position.lastRead !== position.total);
+      position.lastRead &&
+      position.lastRead !== position.total;
 
     if (hasBackPosition) {
       const lastReadTop = Math.round(
@@ -266,7 +263,7 @@ createWidget("timeline-scrollarea", {
     const position = this.position();
     this.state.scrolledPost = position.current;
 
-    if (position.current === position.scrollPosition) {
+    if (position.current === position.scrollPosition || this.site.mobileView) {
       this.sendWidgetAction("jumpToIndex", position.current);
     } else {
       this.sendWidgetAction("jumpEnd");
@@ -391,7 +388,7 @@ export default createWidget("topic-timeline", {
     return { position: null, excerpt: null };
   },
 
-  updatePosition(postIdx, scrollPosition) {
+  updatePosition(scrollPosition) {
     if (!this.attrs.fullScreen) {
       return;
     }
@@ -407,8 +404,7 @@ export default createWidget("topic-timeline", {
       }
 
       // we have an off by one, stream is zero based,
-      // postIdx is 1 based
-      stream.excerpt(postIdx - 1).then(info => {
+      stream.excerpt(scrollPosition - 1).then(info => {
         if (info && this.state.position === scrollPosition) {
           let excerpt = "";
 

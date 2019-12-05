@@ -1,23 +1,26 @@
+import { computed } from "@ember/object";
+import { alias } from "@ember/object/computed";
 import { makeArray } from "discourse-common/lib/helpers";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
 import TagsMixin from "select-kit/mixins/tags";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 const { isEmpty, run } = Ember;
+import Category from "discourse/models/category";
+import deprecated from "discourse-common/lib/deprecated";
 
 export default ComboBoxComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-drop"],
   classNameBindings: ["categoryStyle", "tagClass"],
   classNames: "tag-drop",
   verticalOffset: 3,
-  value: Ember.computed.alias("tagId"),
+  value: alias("tagId"),
   headerComponent: "tag-drop/tag-drop-header",
   allowAutoSelectFirst: false,
   tagName: "li",
-  showFilterByTag: Ember.computed.alias("siteSettings.show_filter_by_tag"),
-  currentCategory: Ember.computed.or("secondCategory", "firstCategory"),
+  showFilterByTag: alias("siteSettings.show_filter_by_tag"),
   tagId: null,
-  categoryStyle: Ember.computed.alias("siteSettings.category_style"),
+  categoryStyle: alias("siteSettings.category_style"),
   mutateAttributes() {},
   fullWidthOnMobile: true,
   caretDownIcon: "caret-right",
@@ -25,18 +28,39 @@ export default ComboBoxComponent.extend(TagsMixin, {
   allowContentReplacement: true,
   isAsync: true,
 
-  @computed("tagId")
+  currentCategory: computed("secondCategory", "firstCategory", {
+    set(key, value) {
+      this.currentCategoryRaw = value;
+      return value;
+    },
+
+    get() {
+      if (this.currentCategoryRaw) {
+        return this.currentCategoryRaw;
+      }
+
+      const result = this.secondCategory || this.firstCategory;
+      if (result) {
+        deprecated(
+          "Setting firstCategory and secondCategory on tag-drop directly is deprecated. Please use currentCategory instead."
+        );
+        return result;
+      }
+    }
+  }),
+
+  @discourseComputed("tagId")
   noTagsSelected() {
     return this.tagId === "none";
   },
 
-  @computed("showFilterByTag", "content")
+  @discourseComputed("showFilterByTag", "content")
   isHidden(showFilterByTag, content) {
     if (showFilterByTag && !isEmpty(content)) return false;
     return true;
   },
 
-  @computed("content")
+  @discourseComputed("content")
   filterable(content) {
     return content && content.length >= 15;
   },
@@ -63,12 +87,12 @@ export default ComboBoxComponent.extend(TagsMixin, {
     return content;
   },
 
-  @computed("tagId")
+  @discourseComputed("tagId")
   tagClass(tagId) {
     return tagId ? `tag-${tagId}` : "tag_all";
   },
 
-  @computed("firstCategory", "secondCategory")
+  @discourseComputed("currentCategory")
   allTagsUrl() {
     if (this.currentCategory) {
       return Discourse.getURL(this.get("currentCategory.url") + "?allTags=1");
@@ -77,26 +101,28 @@ export default ComboBoxComponent.extend(TagsMixin, {
     }
   },
 
-  @computed("firstCategory", "secondCategory")
-  noTagsUrl() {
-    var url = "/tags";
-    if (this.currentCategory) {
-      url += this.get("currentCategory.url");
+  @discourseComputed("currentCategory")
+  noTagsUrl(currentCategory) {
+    let url = "/tags";
+
+    if (currentCategory) {
+      url += `/c/${Category.slugFor(currentCategory)}/${currentCategory.id}`;
     }
+
     return Discourse.getURL(`${url}/none`);
   },
 
-  @computed("tag")
+  @discourseComputed("tag")
   allTagsLabel() {
     return I18n.t("tagging.selector_all_tags");
   },
 
-  @computed("tag")
+  @discourseComputed("tag")
   noTagsLabel() {
     return I18n.t("tagging.selector_no_tags");
   },
 
-  @computed("tagId", "allTagsLabel", "noTagsLabel")
+  @discourseComputed("tagId", "allTagsLabel", "noTagsLabel")
   shortcuts(tagId, allTagsLabel, noTagsLabel) {
     const shortcuts = [];
 
@@ -119,7 +145,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
     return shortcuts;
   },
 
-  @computed("site.top_tags", "shortcuts")
+  @discourseComputed("site.top_tags", "shortcuts")
   content(topTags, shortcuts) {
     if (this.siteSettings.tags_sort_alphabetically && topTags) {
       return shortcuts.concat(topTags.sort());
@@ -142,12 +168,16 @@ export default ComboBoxComponent.extend(TagsMixin, {
     results = results.sort((a, b) => a.id > b.id);
 
     return results.map(r => {
-      return { id: r.id, name: r.text };
+      return {
+        id: r.id,
+        name: r.text,
+        targetTagId: r.target_tag || r.id
+      };
     });
   },
 
   actions: {
-    onSelect(tagId) {
+    onSelect(tagId, tag) {
       let url;
 
       if (tagId === "all-tags") {
@@ -156,10 +186,19 @@ export default ComboBoxComponent.extend(TagsMixin, {
         url = Discourse.getURL(this.noTagsUrl);
       } else {
         url = "/tags";
+
         if (this.currentCategory) {
-          url += this.get("currentCategory.url");
+          url += `/c/${Category.slugFor(this.currentCategory)}/${
+            this.currentCategory.id
+          }`;
         }
-        url = Discourse.getURL(`${url}/${tagId.toLowerCase()}`);
+
+        if (tag && tag.targetTagId) {
+          url += `/${tag.targetTagId.toLowerCase()}`;
+        } else {
+          url += `/${tagId.toLowerCase()}`;
+        }
+        url = Discourse.getURL(url);
       }
 
       DiscourseURL.routeTo(url);

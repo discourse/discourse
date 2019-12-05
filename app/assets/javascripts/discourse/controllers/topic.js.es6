@@ -12,13 +12,13 @@ import Post from "discourse/models/post";
 import Quote from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import Topic from "discourse/models/topic";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { ajax } from "discourse/lib/ajax";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
@@ -80,7 +80,7 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  @computed("model.details.can_create_post")
+  @discourseComputed("model.details.can_create_post")
   embedQuoteButton(canCreatePost) {
     return (
       canCreatePost &&
@@ -89,28 +89,31 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  @computed("model.postStream.loaded", "model.category_id")
+  @discourseComputed("model.postStream.loaded", "model.category_id")
   showSharedDraftControls(loaded, categoryId) {
     let draftCat = this.site.shared_drafts_category_id;
     return loaded && draftCat && categoryId && draftCat === categoryId;
   },
 
-  @computed("site.mobileView", "model.posts_count")
+  @discourseComputed("site.mobileView", "model.posts_count")
   showSelectedPostsAtBottom(mobileView, postsCount) {
     return mobileView && postsCount > 3;
   },
 
-  @computed("model.postStream.posts", "model.postStream.postsWithPlaceholders")
+  @discourseComputed(
+    "model.postStream.posts",
+    "model.postStream.postsWithPlaceholders"
+  )
   postsToRender(posts, postsWithPlaceholders) {
     return this.capabilities.isAndroid ? posts : postsWithPlaceholders;
   },
 
-  @computed("model.postStream.loadingFilter")
+  @discourseComputed("model.postStream.loadingFilter")
   androidLoading(loading) {
     return this.capabilities.isAndroid && loading;
   },
 
-  @computed("model")
+  @discourseComputed("model")
   pmPath(topic) {
     return this.currentUser && this.currentUser.pmPath(topic);
   },
@@ -153,12 +156,12 @@ export default Controller.extend(bufferedProperty("model"), {
     DiscourseURL.routeTo(url);
   },
 
-  @computed
+  @discourseComputed
   selectedQuery() {
     return post => this.postSelected(post);
   },
 
-  @computed("model.isPrivateMessage", "model.category.id")
+  @discourseComputed("model.isPrivateMessage", "model.category.id")
   canEditTopicFeaturedLink(isPrivateMessage, categoryId) {
     if (!this.siteSettings.topic_featured_link_enabled || isPrivateMessage) {
       return false;
@@ -174,12 +177,12 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  @computed("model")
+  @discourseComputed("model")
   featuredLinkDomain(topic) {
     return extractLinkMeta(topic).domain;
   },
 
-  @computed("model.isPrivateMessage")
+  @discourseComputed("model.isPrivateMessage")
   canEditTags(isPrivateMessage) {
     return (
       this.site.get("can_tag_topics") &&
@@ -444,9 +447,7 @@ export default Controller.extend(bufferedProperty("model"), {
         : "/";
       ajax("/t/" + topic.get("id") + "/timings.json?last=1", { type: "DELETE" })
         .then(() => {
-          const highestSeenByTopic = Discourse.Session.currentProp(
-            "highestSeenByTopic"
-          );
+          const highestSeenByTopic = this.session.get("highestSeenByTopic");
           highestSeenByTopic[topic.get("id")] = null;
           DiscourseURL.routeTo(goToPath);
         })
@@ -1157,7 +1158,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
   selectedPostsCount: alias("selectedPostIds.length"),
 
-  @computed(
+  @discourseComputed(
     "selectedPostIds",
     "model.postStream.posts",
     "selectedPostIds.[]",
@@ -1169,7 +1170,7 @@ export default Controller.extend(bufferedProperty("model"), {
       .filter(post => post !== undefined);
   },
 
-  @computed("selectedPostsCount", "selectedPosts", "selectedPosts.[]")
+  @discourseComputed("selectedPostsCount", "selectedPosts", "selectedPosts.[]")
   selectedPostsUsername(selectedPostsCount, selectedPosts) {
     if (selectedPosts.length < 1 || selectedPostsCount > selectedPosts.length) {
       return undefined;
@@ -1180,7 +1181,7 @@ export default Controller.extend(bufferedProperty("model"), {
       : undefined;
   },
 
-  @computed(
+  @discourseComputed(
     "selectedPostsCount",
     "model.postStream.isMegaTopic",
     "model.postStream.stream.length",
@@ -1199,14 +1200,14 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  @computed("selectedAllPosts", "model.postStream.isMegaTopic")
+  @discourseComputed("selectedAllPosts", "model.postStream.isMegaTopic")
   canSelectAll(selectedAllPosts, isMegaTopic) {
     return isMegaTopic ? false : !selectedAllPosts;
   },
 
   canDeselectAll: alias("selectedAllPosts"),
 
-  @computed(
+  @discourseComputed(
     "currentUser.staff",
     "selectedPostsCount",
     "selectedAllPosts",
@@ -1225,19 +1226,23 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  @computed("model.details.can_move_posts", "selectedPostsCount")
+  @discourseComputed("model.details.can_move_posts", "selectedPostsCount")
   canMergeTopic(canMovePosts, selectedPostsCount) {
     return canMovePosts && selectedPostsCount > 0;
   },
 
-  @computed("currentUser.admin", "selectedPostsCount", "selectedPostsUsername")
+  @discourseComputed(
+    "currentUser.admin",
+    "selectedPostsCount",
+    "selectedPostsUsername"
+  )
   canChangeOwner(isAdmin, selectedPostsCount, selectedPostsUsername) {
     return (
       isAdmin && selectedPostsCount > 0 && selectedPostsUsername !== undefined
     );
   },
 
-  @computed(
+  @discourseComputed(
     "selectedPostsCount",
     "selectedPostsUsername",
     "selectedPosts",
@@ -1260,7 +1265,7 @@ export default Controller.extend(bufferedProperty("model"), {
     return this.selectedAllPost || this.selectedPostIds.includes(post.id);
   },
 
-  @computed
+  @discourseComputed
   loadingHTML() {
     return spinnerHTML;
   },
@@ -1360,7 +1365,8 @@ export default Controller.extend(bufferedProperty("model"), {
             if (callback) {
               callback(this, data);
             } else {
-              Ember.Logger.warn("unknown topic bus message type", data);
+              // eslint-disable-next-line no-console
+              console.warn("unknown topic bus message type", data);
             }
           }
         }
@@ -1393,7 +1399,7 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  _scrollToPost: debounce(function(postNumber) {
+  _scrollToPost: discourseDebounce(function(postNumber) {
     const $post = $(`.topic-post article#post_${postNumber}`);
 
     if ($post.length === 0 || isElementInViewport($post)) return;

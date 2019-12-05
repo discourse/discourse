@@ -361,6 +361,59 @@ describe UploadsController do
     end
   end
 
+  describe "#show_secure" do
+    describe "local store" do
+      fab!(:image_upload) { upload_file("smallest.png") }
+
+      it "does not return secure media when using local store" do
+        secure_url = image_upload.url.sub("/uploads", "/secure-media-uploads")
+        get secure_url
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    describe "s3 store" do
+      let(:upload) { Fabricate(:upload_s3) }
+
+      before do
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "fakeid7974664"
+        SiteSetting.s3_secret_access_key = "fakesecretid7974664"
+        SiteSetting.secure_media = true
+      end
+
+      it "should return 404 for anonymous requests requests" do
+        secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
+        get secure_url
+        expect(response.status).to eq(404)
+      end
+
+      it "should return signed url for legitimate request" do
+        secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
+        sign_in(user)
+        stub_request(:head, "https://s3-upload-bucket.s3.amazonaws.com/")
+
+        get secure_url
+
+        expect(response.status).to eq(302)
+        expect(response.redirect_url).to match("Amz-Expires")
+      end
+
+      it "should return secure media URL when looking up urls" do
+        upload.update_column(:secure, true)
+        sign_in(user)
+
+        post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
+        expect(response.status).to eq(200)
+
+        result = JSON.parse(response.body)
+        expect(result[0]["url"]).to match("secure-media-uploads")
+      end
+    end
+  end
+
   describe '#lookup_urls' do
     it 'can look up long urls' do
       sign_in(user)
@@ -372,6 +425,42 @@ describe UploadsController do
       result = JSON.parse(response.body)
       expect(result[0]["url"]).to eq(upload.url)
       expect(result[0]["short_path"]).to eq(upload.short_path)
+    end
+
+    describe 'secure media' do
+      let(:upload) { Fabricate(:upload_s3, secure: true) }
+
+      before do
+        SiteSetting.authorized_extensions = "pdf|png"
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "s3-access-key-id"
+        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.secure_media = true
+      end
+
+      it 'returns secure url for a secure media upload' do
+        sign_in(user)
+
+        post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
+        expect(response.status).to eq(200)
+
+        result = JSON.parse(response.body)
+        expect(result[0]["url"]).to match("/secure-media-uploads")
+        expect(result[0]["short_path"]).to eq(upload.short_path)
+      end
+
+      it 'does not return secure urls for non-media uploads' do
+        upload.update!(original_filename: "not-an-image.pdf", extension: "pdf")
+        sign_in(user)
+
+        post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
+        expect(response.status).to eq(200)
+
+        result = JSON.parse(response.body)
+        expect(result[0]["url"]).not_to match("/secure-media-uploads")
+        expect(result[0]["short_path"]).to eq(upload.short_path)
+      end
     end
   end
 

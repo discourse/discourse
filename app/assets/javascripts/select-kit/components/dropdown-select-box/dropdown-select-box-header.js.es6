@@ -1,5 +1,5 @@
 import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default SelectKitHeaderComponent.extend({
   layoutName:
@@ -9,7 +9,7 @@ export default SelectKitHeaderComponent.extend({
 
   classNameBindings: ["btnClassName"],
 
-  @computed("options.showFullTitle")
+  @discourseComputed("options.showFullTitle")
   btnClassName(showFullTitle) {
     return `btn ${showFullTitle ? "btn-icon-text" : "no-text btn-icon"}`;
   }

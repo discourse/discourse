@@ -3,8 +3,8 @@ import { schedule } from "@ember/runloop";
 import Controller from "@ember/controller";
 import {
   on,
-  default as computed
-} from "ember-addons/ember-computed-decorators";
+  default as discourseComputed
+} from "discourse-common/utils/decorators";
 
 const ButtonBackBright = {
     classes: "btn-primary",
@@ -33,7 +33,7 @@ export default Controller.extend({
   thrown: null,
   lastTransition: null,
 
-  @computed
+  @discourseComputed
   isNetwork() {
     // never made it on the wire
     if (this.get("thrown.readyState") === 0) return true;
@@ -60,7 +60,7 @@ export default Controller.extend({
     this.set("loading", false);
   },
 
-  @computed("isNetwork", "isServer", "isUnknown")
+  @discourseComputed("isNetwork", "isServer", "isUnknown")
   reason() {
     if (this.isNetwork) {
       return I18n.t("errors.reasons.network");
@@ -78,7 +78,7 @@ export default Controller.extend({
 
   requestUrl: alias("thrown.requestedUrl"),
 
-  @computed("networkFixed", "isNetwork", "isServer", "isUnknown")
+  @discourseComputed("networkFixed", "isNetwork", "isServer", "isUnknown")
   desc() {
     if (this.networkFixed) {
       return I18n.t("errors.desc.network_fixed");
@@ -96,7 +96,7 @@ export default Controller.extend({
     }
   },
 
-  @computed("networkFixed", "isNetwork", "isServer", "isUnknown")
+  @discourseComputed("networkFixed", "isNetwork", "isServer", "isUnknown")
   enabledButtons() {
     if (this.networkFixed) {
       return [ButtonLoadPage];

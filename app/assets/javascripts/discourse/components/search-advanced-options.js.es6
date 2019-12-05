@@ -1,10 +1,11 @@
 import { debounce } from "@ember/runloop";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
 import Badge from "discourse/models/badge";
+import Category from "discourse/models/category";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
@@ -224,7 +225,7 @@ export default Component.extend({
         .replace(REGEXP_CATEGORY_PREFIX, "")
         .split(":");
       if (subcategories.length > 1) {
-        const userInput = Discourse.Category.findBySlug(
+        const userInput = Category.findBySlug(
           subcategories[1],
           subcategories[0]
         );
@@ -234,14 +235,14 @@ export default Component.extend({
         )
           this.set("searchedTerms.category", userInput);
       } else if (isNaN(subcategories)) {
-        const userInput = Discourse.Category.findSingleBySlug(subcategories[0]);
+        const userInput = Category.findSingleBySlug(subcategories[0]);
         if (
           (!existingInput && userInput) ||
           (existingInput && userInput && existingInput.id !== userInput.id)
         )
           this.set("searchedTerms.category", userInput);
       } else {
-        const userInput = Discourse.Category.findById(subcategories[0]);
+        const userInput = Category.findById(subcategories[0]);
         if (
           (!existingInput && userInput) ||
           (existingInput && userInput && existingInput.id !== userInput.id)

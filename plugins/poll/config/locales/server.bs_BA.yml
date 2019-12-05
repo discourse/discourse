@@ -13,7 +13,7 @@ bs_BA:
     poll_minimum_trust_level_to_create: "Definišite minimalni nivo povjerenja potreban za kreiranje anketa."
   poll:
     poll: "anketa"
-    invalid_argument: "Nevažeća vrijednost &#39;%{value}&#39; za argument &#39;%{argument}&#39;."
+    invalid_argument: "Nevažeća vrijednost '%{value}' za argument '%{argument}'."
     multiple_polls_without_name: "Postoji više anketa bez imena. Koristite atribut „ <code>name</code> “ da biste jedinstveno identifikovali vaše ankete."
     multiple_polls_with_same_name: "Postoji više anketa sa istim imenom: <strong>%{name}</strong> . Koristite atribut „ <code>name</code> “ da biste jedinstveno identifikovali vaše ankete."
     default_poll_must_have_at_least_2_options: "Anketa mora imati najmanje 2 opcije."

@@ -1,22 +1,22 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 import Controller from "@ember/controller";
-import computed from "ember-addons/ember-computed-decorators";
 import { dasherize } from "@ember/string";
 
 export default Controller.extend({
   router: service(),
 
-  @computed("siteSettings.enable_group_directory")
+  @discourseComputed("siteSettings.enable_group_directory")
   showGroups(enableGroupDirectory) {
     return !enableGroupDirectory;
   },
 
-  @computed("siteSettings.enable_badges")
+  @discourseComputed("siteSettings.enable_badges")
   showBadges(enableBadges) {
     return this.currentUser.get("admin") && enableBadges;
   },
 
-  @computed("router._router.currentPath")
+  @discourseComputed("router._router.currentPath")
   adminContentsClassName(currentPath) {
     let cssClasses = currentPath
       .split(".")

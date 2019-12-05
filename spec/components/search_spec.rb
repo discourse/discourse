@@ -669,13 +669,15 @@ describe Search do
     let(:category) { Fabricate(:category_with_definition) }
 
     context 'post searching' do
-      it 'can find posts with tags' do
+      before do
         SiteSetting.tagging_enabled = true
-
-        post = Fabricate(:post, raw: 'I am special post')
         DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Fabricate.build(:admin)), [tag.name, uppercase_tag.name])
         post.topic.save
+      end
 
+      let(:post) { Fabricate(:post, raw: 'I am special post') }
+
+      it 'can find posts with tags' do
         # we got to make this index (it is deferred)
         Jobs::ReindexSearch.new.rebuild_problem_posts
 
@@ -689,6 +691,13 @@ describe Search do
 
         result = Search.execute(tag.name)
         expect(result.posts.length).to eq(0)
+      end
+
+      it 'can find posts with tag synonyms' do
+        synonym = Fabricate(:tag, name: 'synonym', target_tag: tag)
+        Jobs::ReindexSearch.new.rebuild_problem_posts
+        result = Search.execute(synonym.name)
+        expect(result.posts.length).to eq(1)
       end
     end
 
@@ -784,12 +793,27 @@ describe Search do
       sub_topic = Fabricate(:topic, category: subcategory)
 
       post = Fabricate(:post, topic: topic, user: topic.user)
-      _another_post = Fabricate(:post, topic: topic_no_cat, user: topic.user)
+      Fabricate(:post, topic: topic_no_cat, user: topic.user)
       sub_post = Fabricate(:post, raw: 'I am saying hello from a subcategory', topic: sub_topic, user: topic.user)
 
       search = Search.execute('hello', search_context: category)
-      expect(search.posts.map(&:id).sort).to eq([post.id, sub_post.id].sort)
+      expect(search.posts.map(&:id)).to match_array([post.id, sub_post.id])
       expect(search.posts.length).to eq(2)
+    end
+
+    it 'can use tag as a search context' do
+      tag = Fabricate(:tag, name: 'important-stuff')
+
+      topic = Fabricate(:topic)
+      topic_no_tag = Fabricate(:topic)
+      Fabricate(:topic_tag, tag: tag, topic: topic)
+
+      post = Fabricate(:post, topic: topic, user: topic.user, raw: 'This is my hello')
+      Fabricate(:post, topic: topic_no_tag, user: topic.user)
+
+      search = Search.execute('hello', search_context: tag)
+      expect(search.posts.map(&:id)).to contain_exactly(post.id)
+      expect(search.posts.length).to eq(1)
     end
 
   end

@@ -218,6 +218,7 @@ module PrettyText
 
     set = SiteSetting.emoji_set.inspect
     custom = Emoji.custom.map { |e| [e.name, e.url] }.to_h.to_json
+
     protect do
       v8.eval(<<~JS)
         __paths = #{paths_json};
@@ -225,7 +226,8 @@ module PrettyText
           getURL: __getURL,
           emojiSet: #{set},
           customEmoji: #{custom},
-          enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts}
+          enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts},
+          inlineEmoji: #{SiteSetting.enable_inline_emoji_translation}
         });
       JS
     end
@@ -238,7 +240,10 @@ module PrettyText
 
     protect do
       v8.eval(<<~JS)
-        __performEmojiEscape(#{title.inspect}, { emojiShortcuts: #{replace_emoji_shortcuts} });
+        __performEmojiEscape(#{title.inspect}, {
+          emojiShortcuts: #{replace_emoji_shortcuts},
+          inlineEmoji: #{SiteSetting.enable_inline_emoji_translation}
+        });
       JS
     end
   end
@@ -381,9 +386,19 @@ module PrettyText
     end
   end
 
+  def self.strip_secure_media(doc)
+    doc.css("a[href]").each do |a|
+      if a["href"].include?("/secure-media-uploads/") && FileHelper.is_supported_media?(a["href"])
+        target = %w(video audio).include?(a&.parent&.parent&.name) ? a.parent.parent : a
+        target.replace "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
+      end
+    end
+  end
+
   def self.format_for_email(html, post = nil)
     doc = Nokogiri::HTML.fragment(html)
     DiscourseEvent.trigger(:reduce_cooked, doc, post)
+    strip_secure_media(doc) if post&.with_secure_media?
     strip_image_wrapping(doc)
     convert_vimeo_iframes(doc)
     make_all_links_absolute(doc)

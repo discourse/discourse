@@ -618,7 +618,6 @@ testCase(`doesn't jump to bottom with long text`, async function(
 });
 
 componentTest("emoji", {
-  skip: true,
   template: "{{d-editor value=value}}",
   beforeEach() {
     // Test adding a custom button
@@ -641,7 +640,7 @@ componentTest("emoji", {
     await click(
       '.emoji-picker .section[data-section="smileys_&_emotion"] button.emoji[title="grinning"]'
     );
-    assert.equal(this.value, "hello world.:grinning:");
+    assert.equal(this.value, "hello world. :grinning:");
   }
 });
 

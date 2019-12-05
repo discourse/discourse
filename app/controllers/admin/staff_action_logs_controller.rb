@@ -35,23 +35,23 @@ class Admin::StaffActionLogsController < Admin::AdminController
 
     diff_fields = {}
 
-    output = +"<h2>#{CGI.escapeHTML(cur["name"].to_s)}</h2><p></p>"
+    output = +"<h2>#{CGI.escapeHTML(cur&.dig("name").to_s)}</h2><p></p>"
 
     diff_fields["name"] = {
-      prev: prev["name"].to_s,
-      cur: cur["name"].to_s,
+      prev: prev&.dig("name").to_s,
+      cur: cur&.dig("name").to_s,
     }
 
     ["default", "user_selectable"].each do |f|
       diff_fields[f] = {
-        prev: (!!prev[f]).to_s,
-        cur: (!!cur[f]).to_s
+        prev: (!!prev&.dig(f)).to_s,
+        cur: (!!cur&.dig(f)).to_s
       }
     end
 
     diff_fields["color scheme"] = {
-      prev: prev["color_scheme"]&.fetch("name").to_s,
-      cur: cur["color_scheme"]&.fetch("name").to_s,
+      prev: prev&.dig("color_scheme", "name").to_s,
+      cur: cur&.dig("color_scheme", "name").to_s,
     }
 
     diff_fields["included themes"] = {
@@ -76,13 +76,13 @@ class Admin::StaffActionLogsController < Admin::AdminController
   protected
 
   def child_themes(theme)
-    return "" unless children = theme["child_themes"]
+    return "" unless children = theme&.dig("child_themes")
 
     children.map { |row| row["name"] }.join(" ").to_s
   end
 
   def load_diff(hash, key, val)
-    if f = val["theme_fields"]
+    if f = val&.dig("theme_fields")
       f.each do |row|
         entry = hash[row["target"] + " " + row["name"]] ||= {}
         entry[key] = row["value"]

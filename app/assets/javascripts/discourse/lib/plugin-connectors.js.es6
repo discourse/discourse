@@ -1,3 +1,6 @@
+import Site from "discourse/models/site";
+import deprecated from "discourse-common/lib/deprecated";
+
 let _connectorCache;
 let _rawConnectorCache;
 let _extraConnectorClasses = {};
@@ -22,7 +25,7 @@ const DefaultConnectorClass = {
 };
 
 function findOutlets(collection, callback) {
-  const disabledPlugins = Discourse.Site.currentProp("disabled_plugins") || [];
+  const disabledPlugins = Site.currentProp("disabled_plugins") || [];
 
   Object.keys(collection).forEach(function(res) {
     if (res.indexOf("/connectors/") !== -1) {
@@ -106,4 +109,24 @@ export function rawConnectorsFor(outletName) {
     buildRawConnectorCache();
   }
   return _rawConnectorCache[outletName] || [];
+}
+
+export function buildArgsWithDeprecations(args, deprecatedArgs) {
+  const output = {};
+
+  Object.keys(args).forEach(key => {
+    Object.defineProperty(output, key, { value: args[key] });
+  });
+
+  Object.keys(deprecatedArgs).forEach(key => {
+    Object.defineProperty(output, key, {
+      get() {
+        deprecated(`${key} is deprecated`);
+
+        return deprecatedArgs[key];
+      }
+    });
+  });
+
+  return output;
 }

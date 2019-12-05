@@ -30,9 +30,9 @@ class TopicConverter
       )
 
       update_user_stats
+      update_post_uploads_secure_status
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
-
       watch_topic(topic)
     end
     @topic
@@ -49,6 +49,7 @@ class TopicConverter
       )
 
       add_allowed_users
+      update_post_uploads_secure_status
 
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
@@ -60,31 +61,30 @@ class TopicConverter
 
   private
 
+  def posters
+    @posters ||= @topic.posts.distinct.pluck(:user_id).to_a
+  end
+
   def update_user_stats
-    @topic.posts.where(deleted_at: nil).each do |p|
-      user = User.find(p.user_id)
-      # update posts count. NOTE that DirectoryItem.refresh will overwrite this by counting UserAction records.
-      user.user_stat.post_count += 1
-      user.user_stat.save!
-    end
+    # update posts count. NOTE that DirectoryItem.refresh will overwrite this by counting UserAction records.
     # update topics count
-    @topic.user.user_stat.topic_count += 1
-    @topic.user.user_stat.save!
+    UserStat.where(user_id: posters).update_all('post_count = post_count + 1')
+    UserStat.where(user_id: @topic.user_id).update_all('topic_count = topic_count + 1')
   end
 
   def add_allowed_users
-    @topic.posts.where(deleted_at: nil).each do |p|
-      user = User.find(p.user_id)
-      @topic.topic_allowed_users.build(user_id: user.id) unless @topic.topic_allowed_users.where(user_id: user.id).exists?
-      # update posts count. NOTE that DirectoryItem.refresh will overwrite this by counting UserAction records.
-      user.user_stat.post_count -= 1
-      user.user_stat.save!
-    end
-    @topic.topic_allowed_users.build(user_id: @user.id) unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
-    @topic.topic_allowed_users = @topic.topic_allowed_users.uniq(&:user_id)
+    # update posts count. NOTE that DirectoryItem.refresh will overwrite this by counting UserAction records.
     # update topics count
-    @topic.user.user_stat.topic_count -= 1
-    @topic.user.user_stat.save!
+    UserStat.where(user_id: posters).update_all('post_count = post_count - 1')
+    UserStat.where(user_id: @topic.user_id).update_all('topic_count = topic_count - 1')
+
+    existing_allowed_users = @topic.topic_allowed_users.pluck(:user_id)
+    users_to_allow = posters << @user.id
+
+    (users_to_allow - existing_allowed_users).uniq.each do |user_id|
+      @topic.topic_allowed_users.build(user_id: user_id)
+    end
+
     @topic.save!
   end
 
@@ -97,4 +97,11 @@ class TopicConverter
     end
   end
 
+  def update_post_uploads_secure_status
+    @topic.posts.each do |post|
+      next if post.uploads.empty?
+      post.update_uploads_secure_status
+      post.rebake!
+    end
+  end
 end

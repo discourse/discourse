@@ -446,8 +446,7 @@ describe Category do
     end
 
     it "correctly creates permalink when category slug is changed in subfolder install" do
-      GlobalSetting.stubs(:relative_url_root).returns('/forum')
-      Discourse.stubs(:base_uri).returns("/forum")
+      set_subfolder '/forum'
       old_url = @category.url
       @category.update(slug: 'new-category')
       permalink = Permalink.last
@@ -891,6 +890,43 @@ describe Category do
       category.save!
 
       expect(Category.auto_bump_topic!).to eq(false)
+    end
+
+    it 'should not automatically bump topics with a bump scheduled' do
+      freeze_time 1.second.ago
+      category = Fabricate(:category_with_definition)
+      category.clear_auto_bump_cache!
+
+      freeze_time 1.second.from_now
+      post1 = create_post(category: category)
+
+      # no limits on post creation or category creation please
+      RateLimiter.enable
+
+      time = 1.month.from_now
+      freeze_time time
+
+      expect(category.auto_bump_topic!).to eq(false)
+      expect(Topic.where(bumped_at: time).count).to eq(0)
+
+      category.num_auto_bump_daily = 2
+      category.save!
+
+      topic = Topic.find_by_id(post1.topic_id)
+
+      TopicTimer.create!(
+        user_id: -1,
+        topic: topic,
+        execute_at: 1.hour.from_now,
+        status_type: TopicTimer.types[:bump]
+      )
+
+      expect(Topic.joins(:topic_timers).where(topic_timers: { status_type: 6, deleted_at: nil }).count).to eq(1)
+
+      expect(category.auto_bump_topic!).to eq(false)
+      expect(Topic.where(bumped_at: time).count).to eq(0)
+      # does not include a bump message
+      expect(post1.topic.reload.posts_count).to eq(1)
     end
   end
 

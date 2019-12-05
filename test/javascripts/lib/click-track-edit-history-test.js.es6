@@ -1,6 +1,7 @@
 import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
 import { fixture, logIn } from "helpers/qunit-helpers";
+import User from "discourse/models/user";
 
 QUnit.module("lib:click-track-edit-history", {
   beforeEach() {
@@ -93,7 +94,7 @@ QUnit.skip(
   "tracks external URLs when opening in another window",
   async assert => {
     assert.expect(3);
-    Discourse.User.currentProp("external_links_in_new_tab", true);
+    User.currentProp("external_links_in_new_tab", true);
 
     const done = assert.async();
     /* global server */

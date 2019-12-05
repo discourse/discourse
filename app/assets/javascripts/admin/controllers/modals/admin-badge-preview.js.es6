@@ -1,6 +1,6 @@
 import { alias, map } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export default Controller.extend({
@@ -8,7 +8,7 @@ export default Controller.extend({
   errors: alias("model.errors"),
   count: alias("model.grant_count"),
 
-  @computed("count", "sample.length")
+  @discourseComputed("count", "sample.length")
   countWarning(count, sampleLength) {
     if (count <= 10) {
       return sampleLength !== count;
@@ -17,12 +17,12 @@ export default Controller.extend({
     }
   },
 
-  @computed("model.query_plan")
+  @discourseComputed("model.query_plan")
   hasQueryPlan(queryPlan) {
     return !!queryPlan;
   },
 
-  @computed("model.query_plan")
+  @discourseComputed("model.query_plan")
   queryPlanHtml(queryPlan) {
     let output = `<pre class="badge-query-plan">`;
 

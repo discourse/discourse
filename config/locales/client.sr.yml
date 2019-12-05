@@ -1546,6 +1546,7 @@ sr:
         posting:
           name: Poruke
     tagging:
+      add_synonyms: "Dodaj"
       cancel_delete_unused: "Odustani"
       notifications:
         watching:

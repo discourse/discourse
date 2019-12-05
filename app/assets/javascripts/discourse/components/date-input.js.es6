@@ -3,16 +3,16 @@ import Component from "@ember/component";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["d-date-input"],
   date: null,
   _picker: null,
 
-  @computed("site.mobileView")
+  @discourseComputed("site.mobileView")
   inputType(mobileView) {
     return mobileView ? "date" : "text";
   },
@@ -25,6 +25,10 @@ export default Component.extend({
       this._loadNativePicker(container);
     } else {
       this._loadPikadayPicker(container);
+    }
+
+    if (this.date && this._picker) {
+      this._picker.setDate(this.date, true);
     }
   },
 
@@ -71,6 +75,9 @@ export default Component.extend({
     picker.destroy = () => {
       /* do nothing for native */
     };
+    picker.setDate = date => {
+      picker.value = date;
+    };
     this._picker = picker;
   },
 
@@ -92,7 +99,7 @@ export default Component.extend({
     this._picker = null;
   },
 
-  @computed()
+  @discourseComputed()
   placeholder() {
     return I18n.t("dates.placeholder");
   },

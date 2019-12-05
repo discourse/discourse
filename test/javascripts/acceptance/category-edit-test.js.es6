@@ -36,7 +36,7 @@ QUnit.test("Editing the category", async assert => {
   assert.ok(!visible(".d-modal"), "it closes the modal");
   assert.equal(
     DiscourseURL.redirectedTo,
-    "/c/bug",
+    "/c/bug/1",
     "it does one of the rare full page redirects"
   );
 });

@@ -2,6 +2,7 @@
 @import "vendor/sweetalert";
 @import "common/foundation/colors";
 @import "common/foundation/variables";
+@import "common/foundation/mixins";
 @import "common/select-kit/*";
 @import "common/components/svg";
 
@@ -129,7 +130,6 @@ body.wizard {
 
 .wizard-step-colors {
   max-height: 465px;
-  margin-bottom: 20px;
   overflow-y: auto;
   .grid {
     box-sizing: border-box;
@@ -188,6 +188,7 @@ body.wizard {
 
   .wizard-step-contents {
     height: 550px;
+    margin-bottom: 2em;
     a {
       text-decoration: none;
       color: #6699ff;
@@ -515,7 +516,7 @@ body.wizard {
 }
 
 .radio-field-choice {
-  margin-bottom: 1.5em;
+  margin-bottom: 1.25em;
 
   input {
     outline: 0;
@@ -600,9 +601,6 @@ body.wizard {
   }
   .wizard-footer {
     display: none !important;
-  }
-  .wizard-field {
-    margin-bottom: 1em !important;
   }
   .wizard-step-description {
     margin-bottom: 1em !important;

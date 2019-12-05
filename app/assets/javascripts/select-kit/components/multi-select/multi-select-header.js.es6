@@ -1,6 +1,7 @@
+import { alias, or } from "@ember/object/computed";
 import { makeArray } from "discourse-common/lib/helpers";
-import { on } from "ember-addons/ember-computed-decorators";
-import computed from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
 
 export default SelectKitHeaderComponent.extend({
@@ -13,13 +14,13 @@ export default SelectKitHeaderComponent.extend({
   classNames: "multi-select-header",
   layoutName:
     "select-kit/templates/components/multi-select/multi-select-header",
-  selectedNameComponent: Ember.computed.alias("options.selectedNameComponent"),
+  selectedNameComponent: alias("options.selectedNameComponent"),
 
-  forceEscape: Ember.computed.alias("options.forceEscape"),
+  forceEscape: alias("options.forceEscape"),
 
-  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title", "names"),
+  ariaLabel: or("computedContent.ariaLabel", "title", "names"),
 
-  title: Ember.computed.or("computedContent.title", "names"),
+  title: or("computedContent.title", "names"),
 
   @on("didRender")
   _positionFilter() {
@@ -38,14 +39,14 @@ export default SelectKitHeaderComponent.extend({
     $filter.width(availableSpace - parentRightPadding * 4);
   },
 
-  @computed("computedContent.selection.[]")
+  @discourseComputed("computedContent.selection.[]")
   names(selection) {
     return makeArray(selection)
       .map(s => s.name)
       .join(",");
   },
 
-  @computed("computedContent.selection.[]")
+  @discourseComputed("computedContent.selection.[]")
   values(selection) {
     return makeArray(selection)
       .map(s => s.value)

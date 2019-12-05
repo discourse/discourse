@@ -1,5 +1,4 @@
-import { observes } from "ember-addons/ember-computed-decorators";
-
+import { observes } from "discourse-common/utils/decorators";
 import { createPreviewComponent, drawHeader, LOREM } from "wizard/lib/preview";
 
 export default createPreviewComponent(375, 100, {

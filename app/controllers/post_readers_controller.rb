@@ -8,16 +8,14 @@ class PostReadersController < ApplicationController
     ensure_can_see_readers!(post)
 
     readers = User
+      .real
       .where(staged: false)
       .where.not(id: post.user_id)
       .joins(:topic_users)
       .where.not(topic_users: { last_read_post_number: nil })
       .where('topic_users.topic_id = ? AND topic_users.last_read_post_number >= ?', post.topic_id, post.post_number)
 
-    if post.whisper?
-      non_group_members = post.topic.topic_allowed_users.map(&:user_id)
-      readers = readers.where.not(id: non_group_members)
-    end
+    readers = readers.where('admin OR moderator') if post.whisper?
 
     readers = readers.map do |r|
       {

@@ -1,17 +1,17 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { fmt } from "discourse/lib/computed";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   classNameBindings: [":user-field", "field.field_type", "customFieldClass"],
   layoutName: fmt("field.field_type", "components/user-fields/%@"),
 
-  @computed
+  @discourseComputed
   noneLabel() {
     return "user_fields.none";
   },
 
-  @computed("field.name")
+  @discourseComputed("field.name")
   customFieldClass(fieldName) {
     if (fieldName) {
       fieldName = fieldName

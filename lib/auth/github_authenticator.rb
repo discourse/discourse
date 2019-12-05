@@ -38,7 +38,7 @@ class Auth::GithubAuthenticator < Auth::Authenticator
 
     def valid?()
       @validator.validate_each(self, :email, @email)
-      return errors.blank?
+      errors.blank?
     end
 
   end

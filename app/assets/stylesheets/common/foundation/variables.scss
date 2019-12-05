@@ -198,11 +198,23 @@ $box-shadow: (
   }
 }
 @function dark-light-choose($light-theme-result, $dark-theme-result) {
-  @if dc-color-brightness($primary) < dc-color-brightness($secondary) {
+  @if is-light-color-scheme() {
     @return $light-theme-result;
   } @else {
     @return $dark-theme-result;
   }
+}
+
+@function is-light-color-scheme() {
+  @if dc-color-brightness($primary) < dc-color-brightness($secondary) {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+@function is-dark-color-scheme() {
+  @return not is-light-color-scheme();
 }
 
 @import "color_transformations";

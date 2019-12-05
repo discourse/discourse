@@ -2,9 +2,9 @@ import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   application: inject(),
@@ -14,12 +14,12 @@ export default Controller.extend({
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   },
 
-  @computed("model.content.length")
+  @discourseComputed("model.content.length")
   hasNotifications(length) {
     return length > 0;
   },
 
-  @computed("model.content.@each.read")
+  @discourseComputed("model.content.@each.read")
   allNotificationsRead() {
     return !this.get("model.content").some(
       notification => !notification.get("read")

@@ -10,9 +10,9 @@ import {
   isValidSearchTerm
 } from "discourse/lib/search";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { escapeExpression } from "discourse/lib/utilities";
 import { setTransient } from "discourse/lib/page-tracker";
@@ -47,17 +47,17 @@ export default Controller.extend({
   page: 1,
   resultCount: null,
 
-  @computed("resultCount")
+  @discourseComputed("resultCount")
   hasResults(resultCount) {
     return (resultCount || 0) > 0;
   },
 
-  @computed("q")
+  @discourseComputed("q")
   hasAutofocus(q) {
     return isEmpty(q);
   },
 
-  @computed("q")
+  @discourseComputed("q")
   highlightQuery(q) {
     if (!q) {
       return;
@@ -66,7 +66,7 @@ export default Controller.extend({
     return _.reject(q.split(/\s+/), t => t === "l").join(" ");
   },
 
-  @computed("skip_context", "context")
+  @discourseComputed("skip_context", "context")
   searchContextEnabled: {
     get(skip, context) {
       return (!skip && context) || skip === "false";
@@ -76,7 +76,7 @@ export default Controller.extend({
     }
   },
 
-  @computed("context", "context_id")
+  @discourseComputed("context", "context_id")
   searchContextDescription(context, id) {
     var name = id;
     if (context === "category") {
@@ -90,18 +90,18 @@ export default Controller.extend({
     return searchContextDescription(context, name);
   },
 
-  @computed("q")
+  @discourseComputed("q")
   searchActive(q) {
     return isValidSearchTerm(q);
   },
 
-  @computed("q")
+  @discourseComputed("q")
   noSortQ(q) {
     q = this.cleanTerm(q);
     return escapeExpression(q);
   },
 
-  @computed("canCreateTopic", "siteSettings.login_required")
+  @discourseComputed("canCreateTopic", "siteSettings.login_required")
   showSuggestion(canCreateTopic, loginRequired) {
     return canCreateTopic || !loginRequired;
   },
@@ -146,7 +146,7 @@ export default Controller.extend({
     }
   },
 
-  @computed("q")
+  @discourseComputed("q")
   showLikeCount(q) {
     return q && q.indexOf("order:likes") > -1;
   },
@@ -160,7 +160,7 @@ export default Controller.extend({
     }
   },
 
-  @computed("q")
+  @discourseComputed("q")
   isPrivateMessage(q) {
     return (
       q &&
@@ -177,7 +177,7 @@ export default Controller.extend({
     this.set("application.showFooter", !this.loading);
   },
 
-  @computed("resultCount", "noSortQ")
+  @discourseComputed("resultCount", "noSortQ")
   resultCountLabel(count, term) {
     const plus = count % 50 === 0 ? "+" : "";
     return I18n.t("search.result_count", { count, plus, term });
@@ -188,17 +188,17 @@ export default Controller.extend({
     this.set("resultCount", this.get("model.posts.length"));
   },
 
-  @computed("hasResults")
+  @discourseComputed("hasResults")
   canBulkSelect(hasResults) {
     return this.currentUser && this.currentUser.staff && hasResults;
   },
 
-  @computed("model.grouped_search_result.can_create_topic")
+  @discourseComputed("model.grouped_search_result.can_create_topic")
   canCreateTopic(userCanCreateTopic) {
     return this.currentUser && userCanCreateTopic;
   },
 
-  @computed("page")
+  @discourseComputed("page")
   isLastPage(page) {
     return page === PAGE_LIMIT;
   },

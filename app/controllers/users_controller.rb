@@ -128,7 +128,7 @@ class UsersController < ApplicationController
       end
     end
 
-    json_result(user, serializer: UserSerializer, additional_errors: [:user_profile]) do |u|
+    json_result(user, serializer: UserSerializer, additional_errors: [:user_profile, :user_option]) do |u|
       updater = UserUpdater.new(current_user, user)
       updater.update(attributes.permit!)
     end
@@ -195,14 +195,36 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     user_badge = UserBadge.find_by(id: params[:user_badge_id])
+    previous_title = user.title
     if user_badge && user_badge.user == user && user_badge.badge.allow_title?
       user.title = user_badge.badge.display_name
-      user.user_profile.badge_granted_title = true
       user.save!
-      user.user_profile.save!
+
+      log_params = {
+        details: "title matching badge id #{user_badge.badge.id}",
+        previous_value: previous_title,
+        new_value: user.title
+      }
+
+      if current_user.staff? && current_user != user
+        StaffActionLogger.new(current_user).log_title_change(user, log_params)
+      else
+        UserHistory.create!(log_params.merge(target_user_id: user.id, action: UserHistory.actions[:change_title]))
+      end
     else
       user.title = ''
       user.save!
+
+      log_params = {
+        revoke_reason: 'user title was same as revoked badge name or custom badge name',
+        previous_value: previous_title
+      }
+
+      if current_user.staff? && current_user != user
+        StaffActionLogger.new(current_user).log_title_revoke(user, log_params)
+      else
+        UserHistory.create!(log_params.merge(target_user_id: user.id, action: UserHistory.actions[:revoke_title]))
+      end
     end
 
     render body: nil
@@ -365,7 +387,7 @@ class UsersController < ApplicationController
 
     params[:locale] ||= I18n.locale unless current_user
 
-    new_user_params = user_params
+    new_user_params = user_params.except(:timezone)
     user = User.unstage(new_user_params)
     user = User.new(new_user_params) if user.nil?
 
@@ -413,6 +435,7 @@ class UsersController < ApplicationController
     if user.save
       authentication.finish
       activation.finish
+      user.update_timezone_if_missing(params[:timezone])
 
       secure_session[HONEYPOT_KEY] = nil
       secure_session[CHALLENGE_KEY] = nil

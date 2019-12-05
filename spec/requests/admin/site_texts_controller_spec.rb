@@ -58,6 +58,33 @@ RSpec.describe Admin::SiteTextsController do
         expect(JSON.parse(response.body)['extras']['has_more']).to be_truthy
       end
 
+      it 'works with pages' do
+        texts = Set.new
+
+        get "/admin/customize/site_texts.json", params: { q: 'e' }
+        JSON.parse(response.body)['site_texts'].each { |text| texts << text['id'] }
+        expect(texts.size).to eq(50)
+
+        get "/admin/customize/site_texts.json", params: { q: 'e', page: 1 }
+        JSON.parse(response.body)['site_texts'].each { |text| texts << text['id'] }
+        expect(texts.size).to eq(100)
+      end
+
+      it 'works with locales' do
+        get "/admin/customize/site_texts.json", params: { q: 'yes_value', locale: 'en' }
+        value = JSON.parse(response.body)['site_texts'].find { |text| text['id'] == 'js.yes_value' }['value']
+        expect(value).to eq(I18n.with_locale(:en) { I18n.t('js.yes_value') })
+
+        get "/admin/customize/site_texts.json", params: { q: 'yes_value', locale: 'de' }
+        value = JSON.parse(response.body)['site_texts'].find { |text| text['id'] == 'js.yes_value' }['value']
+        expect(value).to eq(I18n.with_locale(:de) { I18n.t('js.yes_value') })
+      end
+
+      it 'returns an error on invalid locale' do
+        get "/admin/customize/site_texts.json", params: { locale: '?' }
+        expect(response.status).to eq(400)
+      end
+
       it 'normalizes quotes during search' do
         value = %q|“That’s a ‘magic’ sock.”|
         put "/admin/customize/site_texts/title.json", params: { site_text: { value: value } }
@@ -414,6 +441,37 @@ RSpec.describe Admin::SiteTextsController do
         expect(response.status).to eq(200)
         json = ::JSON.parse(response.body)
         expect(json['site_text']['value']).to_not eq(ru_mf_text)
+      end
+
+      context 'when updating a translation override for a system badge' do
+        fab!(:user_with_badge_title) { Fabricate(:active_user) }
+        let(:badge) { Badge.find(Badge::Regular) }
+
+        before do
+          BadgeGranter.grant(badge, user_with_badge_title)
+          user_with_badge_title.update(title: 'Regular')
+        end
+
+        it 'updates matching user titles to the override text in a job' do
+          Jobs.expects(:enqueue).with(
+            :bulk_user_title_update,
+            new_title: 'Terminator',
+            granted_badge_id: badge.id,
+            action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
+          )
+          put '/admin/customize/site_texts/badges.regular.name.json', params: {
+            site_text: { value: 'Terminator' }
+          }
+
+          Jobs.expects(:enqueue).with(
+            :bulk_user_title_update,
+            granted_badge_id: badge.id,
+            action: Jobs::BulkUserTitleUpdate::RESET_ACTION
+          )
+
+          # Revert
+          delete "/admin/customize/site_texts/badges.regular.name.json"
+        end
       end
     end
 

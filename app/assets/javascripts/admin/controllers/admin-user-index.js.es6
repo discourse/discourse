@@ -6,7 +6,7 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 import { htmlSafe } from "@ember/template";
 
@@ -30,12 +30,12 @@ export default Controller.extend(CanCheckEmails, {
     "model.can_disable_second_factor"
   ),
 
-  @computed("model.customGroups")
+  @discourseComputed("model.customGroups")
   customGroupIds(customGroups) {
     return customGroups.mapBy("id");
   },
 
-  @computed("customGroupIdsBuffer", "customGroupIds")
+  @discourseComputed("customGroupIdsBuffer", "customGroupIds")
   customGroupsDirty(buffer, original) {
     if (buffer === null) return false;
 
@@ -44,7 +44,7 @@ export default Controller.extend(CanCheckEmails, {
       : true;
   },
 
-  @computed("model.automaticGroups")
+  @discourseComputed("model.automaticGroups")
   automaticGroups(automaticGroups) {
     return automaticGroups
       .map(group => {
@@ -54,26 +54,30 @@ export default Controller.extend(CanCheckEmails, {
       .join(", ");
   },
 
-  @computed("model.associated_accounts")
+  @discourseComputed("model.associated_accounts")
   associatedAccountsLoaded(associatedAccounts) {
     return typeof associatedAccounts !== "undefined";
   },
 
-  @computed("model.associated_accounts")
+  @discourseComputed("model.associated_accounts")
   associatedAccounts(associatedAccounts) {
     return associatedAccounts
       .map(provider => `${provider.name} (${provider.description})`)
       .join(", ");
   },
 
-  @computed("model.user_fields.[]")
+  @discourseComputed("model.user_fields.[]")
   userFields(userFields) {
     return this.site.collectUserFields(userFields);
   },
 
   preferencesPath: fmt("model.username_lower", userPath("%@/preferences")),
 
-  @computed("model.can_delete_all_posts", "model.staff", "model.post_count")
+  @discourseComputed(
+    "model.can_delete_all_posts",
+    "model.staff",
+    "model.post_count"
+  )
   deleteAllPostsExplanation(canDeleteAllPosts, staff, postCount) {
     if (canDeleteAllPosts) {
       return null;
@@ -93,7 +97,7 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
-  @computed("model.canBeDeleted", "model.staff")
+  @discourseComputed("model.canBeDeleted", "model.staff")
   deleteExplanation(canBeDeleted, staff) {
     if (canBeDeleted) {
       return null;

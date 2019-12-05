@@ -1,11 +1,11 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { extractDomainFromUrl } from "discourse/lib/utilities";
-import computed from "ember-addons/ember-computed-decorators";
-import InputValidation from "discourse/models/input-validation";
+import EmberObject from "@ember/object";
 
 export default Controller.extend({
   adminWebHooks: inject(),
@@ -13,12 +13,12 @@ export default Controller.extend({
   defaultEventTypes: alias("adminWebHooks.defaultEventTypes"),
   contentTypes: alias("adminWebHooks.contentTypes"),
 
-  @computed
+  @discourseComputed
   showTagsFilter() {
     return this.siteSettings.tagging_enabled;
   },
 
-  @computed("model.isSaving", "saved", "saveButtonDisabled")
+  @discourseComputed("model.isSaving", "saved", "saveButtonDisabled")
   savingStatus(isSaving, saved, saveButtonDisabled) {
     if (isSaving) {
       return I18n.t("saving");
@@ -30,25 +30,25 @@ export default Controller.extend({
     return "";
   },
 
-  @computed("model.isNew")
+  @discourseComputed("model.isNew")
   saveButtonText(isNew) {
     return isNew
       ? I18n.t("admin.web_hooks.create")
       : I18n.t("admin.web_hooks.save");
   },
 
-  @computed("model.secret")
+  @discourseComputed("model.secret")
   secretValidation(secret) {
     if (!isEmpty(secret)) {
       if (secret.indexOf(" ") !== -1) {
-        return InputValidation.create({
+        return EmberObject.create({
           failed: true,
           reason: I18n.t("admin.web_hooks.secret_invalid")
         });
       }
 
       if (secret.length < 12) {
-        return InputValidation.create({
+        return EmberObject.create({
           failed: true,
           reason: I18n.t("admin.web_hooks.secret_too_short")
         });
@@ -56,17 +56,17 @@ export default Controller.extend({
     }
   },
 
-  @computed("model.wildcard_web_hook", "model.web_hook_event_types.[]")
+  @discourseComputed("model.wildcard_web_hook", "model.web_hook_event_types.[]")
   eventTypeValidation(isWildcard, eventTypes) {
     if (!isWildcard && isEmpty(eventTypes)) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("admin.web_hooks.event_type_missing")
       });
     }
   },
 
-  @computed(
+  @discourseComputed(
     "model.isSaving",
     "secretValidation",
     "eventTypeValidation",

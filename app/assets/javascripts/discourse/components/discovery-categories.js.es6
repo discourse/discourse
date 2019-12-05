@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import UrlRefresh from "discourse/mixins/url-refresh";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 
 const CATEGORIES_LIST_BODY_CLASS = "categories-list";
 

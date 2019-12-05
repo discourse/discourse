@@ -140,6 +140,8 @@ lv:
       every_hour: "katru stundu"
       daily: "katru dienu"
       weekly: "katru nedēļu"
+      every_month: "katru mēnesi"
+      every_six_months: "katrus sešus mēnešus"
   user_api_key:
     read: "izlasīts"
     otp_confirmation:
@@ -151,6 +153,7 @@ lv:
         day: Diena
     post_edits:
       labels:
+        edited_at: Datums
         post: Ieraksts
         edit_reason: Iemesls
     user_flagging_ratio:
@@ -255,11 +258,13 @@ lv:
     http_5xx_reqs:
       xaxis: "Diena"
     http_total_reqs:
+      title: "Kopā"
       xaxis: "Diena"
     time_to_first_response:
       xaxis: "Diena"
     topics_with_no_response:
       xaxis: "Diena"
+      yaxis: "Kopā"
     mobile_visits:
       xaxis: "Diena"
     web_crawlers:

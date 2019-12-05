@@ -1,5 +1,4 @@
-import { observes } from "ember-addons/ember-computed-decorators";
-
+import { observes } from "discourse-common/utils/decorators";
 import { createPreviewComponent } from "wizard/lib/preview";
 
 export default createPreviewComponent(371, 124, {

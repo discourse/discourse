@@ -1,7 +1,8 @@
+import { alias } from "@ember/object/computed";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import TagsMixin from "select-kit/mixins/tags";
 import renderTag from "discourse/lib/render-tag";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
 const { get, run } = Ember;
 
@@ -15,7 +16,9 @@ export default MultiSelectComponent.extend(TagsMixin, {
   blacklist: null,
   attributeBindings: ["categoryId"],
   allowCreate: null,
-  allowAny: Ember.computed.alias("allowCreate"),
+  allowAny: alias("allowCreate"),
+  excludeSynonyms: false,
+  excludeHasSynonyms: false,
 
   init() {
     this._super(...arguments);
@@ -45,22 +48,26 @@ export default MultiSelectComponent.extend(TagsMixin, {
         parseInt(
           this.limit ||
             this.maximum ||
-            this.get("siteSettings.max_tags_per_topic")
+            this.get("siteSettings.max_tags_per_topic"),
+          10
         )
       );
     }
   },
 
   mutateValues(values) {
-    this.set("tags", values.filter(v => v));
+    this.set(
+      "tags",
+      values.filter(v => v)
+    );
   },
 
-  @computed("tags")
+  @discourseComputed("tags")
   values(tags) {
     return makeArray(tags);
   },
 
-  @computed("tags")
+  @discourseComputed("tags")
   content(tags) {
     return makeArray(tags);
   },
@@ -113,6 +120,8 @@ export default MultiSelectComponent.extend(TagsMixin, {
     }
 
     if (!this.everyTag) data.filterForInput = true;
+    if (this.excludeSynonyms) data.excludeSynonyms = true;
+    if (this.excludeHasSynonyms) data.excludeHasSynonyms = true;
 
     this.searchTags("/tags/filter/search", data, this._transformJson);
   },

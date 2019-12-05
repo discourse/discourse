@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import computed from "ember-addons/ember-computed-decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { extractError } from "discourse/lib/ajax-error";
 import { changeEmail } from "discourse/lib/user-activation";
@@ -12,7 +12,7 @@ export default Controller.extend(ModalFunctionality, {
   newEmail: null,
   password: null,
 
-  @computed("newEmail", "currentEmail")
+  @discourseComputed("newEmail", "currentEmail")
   submitDisabled(newEmail, currentEmail) {
     return newEmail === currentEmail;
   },

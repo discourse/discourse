@@ -12,6 +12,7 @@ import {
   isPushNotificationsEnabled
 } from "discourse/lib/push-notifications";
 import { set } from "@ember/object";
+import ENV from "discourse-common/config/environment";
 
 export default {
   name: "subscribe-user-notifications",
@@ -127,7 +128,7 @@ export default {
         Discourse.set("assetVersion", data)
       );
 
-      if (!Ember.testing) {
+      if (ENV.environment !== "test") {
         bus.subscribe(alertChannel(user), data => onNotification(data, user));
         initDesktopNotifications(bus, appEvents);
 

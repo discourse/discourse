@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 
 const Tab = EmberObject.extend({
   init() {
@@ -18,13 +18,20 @@ export default Controller.extend({
   showing: "members",
   destroying: null,
 
-  @computed(
+  @discourseComputed(
     "showMessages",
     "model.user_count",
+    "model.request_count",
     "canManageGroup",
     "model.allow_membership_requests"
   )
-  tabs(showMessages, userCount, canManageGroup, allowMembershipRequests) {
+  tabs(
+    showMessages,
+    userCount,
+    requestCount,
+    canManageGroup,
+    allowMembershipRequests
+  ) {
     const membersTab = Tab.create({
       name: "members",
       route: "group.index",
@@ -41,7 +48,8 @@ export default Controller.extend({
         Tab.create({
           name: "requests",
           i18nKey: "requests.title",
-          icon: "user-plus"
+          icon: "user-plus",
+          count: requestCount
         })
       );
     }
@@ -68,7 +76,7 @@ export default Controller.extend({
     return defaultTabs;
   },
 
-  @computed("model.is_group_user")
+  @discourseComputed("model.is_group_user")
   showMessages(isGroupUser) {
     if (!this.siteSettings.enable_personal_messages) {
       return false;
@@ -77,17 +85,17 @@ export default Controller.extend({
     return isGroupUser || (this.currentUser && this.currentUser.admin);
   },
 
-  @computed("model.is_group_owner", "model.automatic")
+  @discourseComputed("model.is_group_owner", "model.automatic")
   canEditGroup(isGroupOwner, automatic) {
     return !automatic && isGroupOwner;
   },
 
-  @computed("model.displayName", "model.full_name")
+  @discourseComputed("model.displayName", "model.full_name")
   groupName(displayName, fullName) {
     return (fullName || displayName).capitalize();
   },
 
-  @computed(
+  @discourseComputed(
     "model.name",
     "model.flair_url",
     "model.flair_bg_color",
@@ -102,12 +110,12 @@ export default Controller.extend({
     };
   },
 
-  @computed("model.messageable")
+  @discourseComputed("model.messageable")
   displayGroupMessageButton(messageable) {
     return this.currentUser && messageable;
   },
 
-  @computed("model", "model.automatic")
+  @discourseComputed("model", "model.automatic")
   canManageGroup(model, automatic) {
     return (
       this.currentUser &&

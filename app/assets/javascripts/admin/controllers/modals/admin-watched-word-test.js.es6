@@ -1,9 +1,9 @@
 import Controller from "@ember/controller";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 export default Controller.extend(ModalFunctionality, {
-  @computed("value", "model.compiledRegularExpression")
+  @discourseComputed("value", "model.compiledRegularExpression")
   matches(value, regexpString) {
     if (!value || !regexpString) return;
     let censorRegexp = new RegExp(regexpString, "ig");

@@ -121,6 +121,17 @@
     .category-chooser {
       width: 100%;
     }
+
+    .d-date-time-input-range {
+      width: inherit;
+      border: none;
+      padding: 0;
+
+      .d-date-input {
+        flex: 1 1 auto;
+        border: 1px solid $primary-medium;
+      }
+    }
   }
 }
 
@@ -284,7 +295,6 @@
   .reviewed-by {
     display: flex;
     align-items: center;
-    white-space: nowrap;
   }
 
   .user-flag-percentage {
@@ -309,8 +319,7 @@
       &.user a,
       &.reviewed-by a {
         max-width: 150px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
       }
     }
 
@@ -327,8 +336,7 @@
         padding: 0.5em 1em 0.5em 0;
       }
       @include breakpoint("mobile-large") {
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
         padding-right: 0.5em;
       }
     }

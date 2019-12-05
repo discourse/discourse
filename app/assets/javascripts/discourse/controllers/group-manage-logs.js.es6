@@ -2,9 +2,9 @@ import { inject } from "@ember/controller";
 import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   group: inject(),
@@ -17,7 +17,7 @@ export default Controller.extend({
     this.set("filters", EmberObject.create());
   },
 
-  @computed(
+  @discourseComputed(
     "filters.action",
     "filters.acting_user",
     "filters.target_user",

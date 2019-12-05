@@ -13,6 +13,19 @@ describe UserNotificationsHelper do
       paragraphs.join("\n")
     end
 
+    let(:post_quote) do
+      <<~HTML
+        <aside class="quote no-group" data-post="859" data-topic="30">
+        <div class="title">
+        <div class="quote-controls"></div>
+        <img alt width="20" height="20" src="https://example.com/m.png" class="avatar"> modman:</div>
+        <blockquote>
+        <p>This is a post quote</p>
+        </blockquote>
+        </aside>
+      HTML
+    end
+
     it "can return the first paragraph" do
       SiteSetting.digest_min_excerpt_length = 50
       expect(helper.email_excerpt(cooked)).to eq(paragraphs[0])
@@ -53,6 +66,24 @@ describe UserNotificationsHelper do
       HTML
 
       expect(helper.email_excerpt(cooked)).to eq "<p>BEFORE</p><blockquote>\n  <p>This is a user quote</p>\n</blockquote><p>AFTER</p>"
+    end
+
+    it "defaults to content after post quote (image w/ no text)" do
+      image_paragraph = '<p><img src="//localhost:3000/uploads/b9.png" width="300" height="300"></p>'
+      cooked = <<~HTML
+        #{post_quote}
+        #{image_paragraph}
+      HTML
+      expect(helper.email_excerpt(cooked)).to eq(image_paragraph)
+    end
+
+    it "defaults to content after post quote (onebox)" do
+      aside_onebox = '<aside class="onebox wikipedia"><article class="onebox-body"><p>Onebox excerpt here</p></article><div class="onebox-metadata"></div></aside>'
+      cooked = <<~HTML
+        #{post_quote}
+        #{aside_onebox}
+      HTML
+      expect(helper.email_excerpt(cooked)).to eq(aside_onebox)
     end
   end
 

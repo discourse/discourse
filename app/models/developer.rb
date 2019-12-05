@@ -28,3 +28,7 @@ end
 #  id      :integer          not null, primary key
 #  user_id :integer          not null
 #
+# Indexes
+#
+#  index_developers_on_user_id  (user_id) UNIQUE
+#

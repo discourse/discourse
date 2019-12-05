@@ -1,16 +1,16 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   tagName: "",
 
-  @computed("percentage")
+  @discourseComputed("percentage")
   showPercentage(percentage) {
     return percentage.total >= 3;
   },
 
   // We do a little logic to choose which icon to display and which text
-  @computed("agreed", "disagreed", "ignored")
+  @discourseComputed("agreed", "disagreed", "ignored")
   percentage(agreed, disagreed, ignored) {
     let total = agreed + disagreed + ignored;
     let result = { total };

@@ -244,7 +244,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     raise "Attachment for post #{post[:id]} failed: #{attachment[:filename]}" unless path.present?
     upload = create_upload(post[:user_id], path, attachment[:filename])
     raise "Attachment for post #{post[:id]} failed: #{upload.errors.full_messages.join(', ')}" unless upload.persisted?
-    return upload
+    upload
   rescue SystemCallError => err
     raise "Attachment for post #{post[:id]} failed: #{err.message}"
   end
@@ -280,7 +280,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     return __query(db, sql).to_a                       if opts[:as] == :array
     return __query(db, sql, as: :array).first[0]       if opts[:as] == :single
     return __query(db, sql, stream: true).each(&block) if block_given?
-    return __query(db, sql, stream: true)
+    __query(db, sql, stream: true)
   end
 
   def __query(db, sql, **opts)
@@ -345,7 +345,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       end
     end
 
-    return opts[:ignore_quotes] ? body : convert_quotes(body)
+    opts[:ignore_quotes] ? body : convert_quotes(body)
   end
 
   def get_upload_markdown(upload)

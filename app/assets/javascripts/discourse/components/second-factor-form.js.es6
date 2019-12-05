@@ -1,9 +1,9 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
 export default Component.extend({
-  @computed("secondFactorMethod")
+  @discourseComputed("secondFactorMethod")
   secondFactorTitle(secondFactorMethod) {
     switch (secondFactorMethod) {
       case SECOND_FACTOR_METHODS.TOTP:
@@ -15,7 +15,7 @@ export default Component.extend({
     }
   },
 
-  @computed("secondFactorMethod")
+  @discourseComputed("secondFactorMethod")
   secondFactorDescription(secondFactorMethod) {
     switch (secondFactorMethod) {
       case SECOND_FACTOR_METHODS.TOTP:
@@ -27,7 +27,7 @@ export default Component.extend({
     }
   },
 
-  @computed("secondFactorMethod", "isLogin")
+  @discourseComputed("secondFactorMethod", "isLogin")
   linkText(secondFactorMethod, isLogin) {
     if (isLogin) {
       return secondFactorMethod === SECOND_FACTOR_METHODS.TOTP
@@ -40,7 +40,7 @@ export default Component.extend({
     }
   },
 
-  @computed("backupEnabled", "secondFactorMethod")
+  @discourseComputed("backupEnabled", "secondFactorMethod")
   showToggleMethodLink(backupEnabled, secondFactorMethod) {
     return (
       backupEnabled && secondFactorMethod !== SECOND_FACTOR_METHODS.SECURITY_KEY

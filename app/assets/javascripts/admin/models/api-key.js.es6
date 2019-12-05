@@ -1,10 +1,11 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import AdminUser from "admin/models/admin-user";
 import RestModel from "discourse/models/rest";
 import { ajax } from "discourse/lib/ajax";
-import computed from "ember-addons/ember-computed-decorators";
+import { computed } from "@ember/object";
 
 const ApiKey = RestModel.extend({
-  user: Ember.computed("_user", {
+  user: computed("_user", {
     get() {
       return this._user;
     },
@@ -18,12 +19,12 @@ const ApiKey = RestModel.extend({
     }
   }),
 
-  @computed("key")
+  @discourseComputed("key")
   shortKey(key) {
     return `${key.substring(0, 4)}...`;
   },
 
-  @computed("description")
+  @discourseComputed("description")
   shortDescription(description) {
     if (!description || description.length < 40) return description;
     return `${description.substring(0, 40)}...`;
@@ -45,7 +46,7 @@ const ApiKey = RestModel.extend({
     return this.getProperties("description", "username");
   },
 
-  @computed()
+  @discourseComputed()
   basePath() {
     return this.store
       .adapterFor("api-key")

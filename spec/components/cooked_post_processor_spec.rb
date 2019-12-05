@@ -4,6 +4,17 @@ require "rails_helper"
 require "cooked_post_processor"
 require "file_store/s3_store"
 
+def s3_setup
+  Rails.configuration.action_controller.stubs(:asset_host).returns("https://local.cdn.com")
+
+  SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
+  SiteSetting.s3_access_key_id = "s3-access-key-id"
+  SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+  SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+  SiteSetting.enable_s3_uploads = true
+  SiteSetting.authorized_extensions = "png|jpg|gif|mov|ogg|"
+end
+
 describe CookedPostProcessor do
   fab!(:upload) { Fabricate(:upload) }
 
@@ -491,6 +502,37 @@ describe CookedPostProcessor do
           end
         end
 
+        context "s3_uploads" do
+          before do
+            s3_setup
+            stored_path = Discourse.store.get_path_for_upload(upload)
+            upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
+
+            stub_request(:any, /some-bucket-on-s3\.s3\.amazonaws\.com/)
+
+            OptimizedImage.expects(:resize).returns(true)
+            FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+            Discourse.store.class.any_instance.expects(:has_been_uploaded?).at_least_once.returns(true)
+
+            SiteSetting.login_required = true
+            SiteSetting.secure_media = true
+            upload.update_column(:secure, true)
+          end
+
+          let(:post) do
+            Fabricate(:post, raw: "![large.png|600x500](#{upload.short_url})")
+          end
+
+          it "handles secure images with the correct lightbox link href" do
+            cpp.post_process
+
+            expect(cpp.html).to match_html <<~HTML
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-media-uploads/original/1X/#{upload.sha1}.png" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">large.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+            </div></a></div></p>
+            HTML
+          end
+        end
       end
 
       context "with tall images" do
@@ -558,14 +600,12 @@ describe CookedPostProcessor do
         end
 
         let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
-        let(:base_url) { "http://test.localhost/subfolder" }
-        let(:base_uri) { "/subfolder" }
 
         before do
+          set_subfolder "/subfolder"
+
           SiteSetting.max_image_height = 2000
           SiteSetting.create_thumbnails = true
-          Discourse.stubs(:base_url).returns(base_url)
-          Discourse.stubs(:base_uri).returns(base_uri)
           FastImage.expects(:size).returns([1750, 2000])
           OptimizedImage.expects(:resize).returns(true)
 
@@ -814,8 +854,8 @@ describe CookedPostProcessor do
 
       it "is always allowed to crawl our own images" do
         store = stub
+        Discourse.expects(:store).returns(store).at_least_once
         store.expects(:has_been_uploaded?).returns(true)
-        Discourse.expects(:store).returns(store)
         FastImage.expects(:size).returns([100, 200])
         expect(cpp.get_size("http://foo.bar/image2.png")).to eq([100, 200])
       end
@@ -872,6 +912,40 @@ describe CookedPostProcessor do
       expect(cpp.get_filename(upload, "http://domain.com/image.png")).to eq(I18n.t('upload.pasted_image_filename'))
     end
 
+  end
+
+  context "#convert_to_link" do
+    fab!(:thumbnail) { Fabricate(:optimized_image, upload: upload, width: 512, height: 384) }
+
+    before do
+      CookedPostProcessor.any_instance.stubs(:get_size).with(upload.url).returns([1024, 768])
+    end
+
+    it "adds lightbox and optimizes images" do
+      post = Fabricate(:post, raw: "![image|1024x768, 50%](#{upload.short_url})")
+
+      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp.post_process
+
+      doc = Nokogiri::HTML::fragment(cpp.html)
+      expect(doc.css('.lightbox-wrapper').size).to eq(1)
+      expect(doc.css('img').first['srcset']).to_not eq(nil)
+    end
+
+    it "optimizes images in quotes" do
+      post = Fabricate(:post, raw: <<~MD)
+        [quote]
+        ![image|1024x768, 50%](#{upload.short_url})
+        [/quote]
+      MD
+
+      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp.post_process
+
+      doc = Nokogiri::HTML::fragment(cpp.html)
+      expect(doc.css('.lightbox-wrapper').size).to eq(0)
+      expect(doc.css('img').first['srcset']).to_not eq(nil)
+    end
   end
 
   context "#post_process_oneboxes" do
@@ -1106,40 +1180,169 @@ describe CookedPostProcessor do
         HTML
       end
 
-      it "uses the right CDN when uploads are on S3" do
-        Rails.configuration.action_controller.stubs(:asset_host).returns("https://local.cdn.com")
+      context "s3_uploads" do
+        before do
+          s3_setup
 
-        SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
-        SiteSetting.s3_access_key_id = "s3-access-key-id"
-        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-        SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-        SiteSetting.enable_s3_uploads = true
+          uploaded_file = file_from_fixtures("smallest.png")
+          upload_sha1 = Digest::SHA1.hexdigest(File.read(uploaded_file))
 
-        uploaded_file = file_from_fixtures("smallest.png")
-        upload_sha1 = Digest::SHA1.hexdigest(File.read(uploaded_file))
+          upload.update!(
+            original_filename: "smallest.png",
+            width: 10,
+            height: 20,
+            sha1: upload_sha1,
+            extension: "png",
+          )
+        end
 
-        upload.update!(
-          original_filename: "smallest.png",
-          width: 10,
-          height: 20,
-          sha1: upload_sha1,
-          extension: "png",
-        )
+        it "uses the right CDN when uploads are on S3" do
+          stored_path = Discourse.store.get_path_for_upload(upload)
+          upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
 
-        stored_path = Discourse.store.get_path_for_upload(upload)
-        upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
+          the_post = Fabricate(:post, raw: %Q{This post has a local emoji :+1: and an external upload\n\n![smallest.png|10x20](#{upload.short_url})})
 
-        the_post = Fabricate(:post, raw: %Q{This post has a local emoji :+1: and an external upload\n\n![smallest.png|10x20](#{upload.short_url})})
+          cpp = CookedPostProcessor.new(the_post)
+          cpp.optimize_urls
 
-        cpp = CookedPostProcessor.new(the_post)
-        cpp.optimize_urls
+          expect(cpp.html).to match_html <<~HTML
+            <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
+            <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
+          HTML
+        end
 
-        expect(cpp.html).to match_html <<~HTML
-          <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
-          <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
-        HTML
+        it "doesn't use CDN for secure media" do
+          SiteSetting.secure_media = true
+
+          stored_path = Discourse.store.get_path_for_upload(upload)
+          upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
+          upload.update_column(:secure, true)
+
+          the_post = Fabricate(:post, raw: %Q{This post has a local emoji :+1: and an external upload\n\n![smallest.png|10x20](#{upload.short_url})})
+
+          cpp = CookedPostProcessor.new(the_post)
+          cpp.optimize_urls
+
+          expect(cpp.html).to match_html <<~HTML
+            <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
+            <p><img src="/secure-media-uploads/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
+          HTML
+        end
+
+        context "media uploads" do
+          fab!(:image_upload) { Fabricate(:upload) }
+          fab!(:audio_upload) { Fabricate(:upload, extension: "ogg") }
+          fab!(:video_upload) { Fabricate(:upload, extension: "mov") }
+
+          before do
+            video_upload.update!(url: "#{SiteSetting.s3_cdn_url}/#{Discourse.store.get_path_for_upload(video_upload)}")
+            stub_request(:head, video_upload.url)
+          end
+
+          it "ignores prevent_anons_from_downloading_files and oneboxes video uploads" do
+            SiteSetting.prevent_anons_from_downloading_files = true
+
+            the_post = Fabricate(:post, raw: "This post has an S3 video onebox:\n#{video_upload.url}")
+
+            cpp = CookedPostProcessor.new(the_post)
+            cpp.post_process_oneboxes
+
+            expect(cpp.html).to match_html <<~HTML
+              <p>This post has an S3 video onebox:<br></p>
+              <div class="onebox video-onebox">
+                <video width="100%" height="100%" controls="">
+                  <source src="#{video_upload.url}">
+                    <a href="#{video_upload.url}" rel="nofollow ugc noopener">#{video_upload.url}</a>
+                  </source>
+                </video>
+              </div>
+            HTML
+          end
+
+          it "oneboxes video using secure url when secure_media is enabled" do
+            SiteSetting.login_required = true
+            SiteSetting.secure_media = true
+            video_upload.update_column(:secure, true)
+
+            the_post = Fabricate(:post, raw: "This post has an S3 video onebox:\n#{video_upload.url}")
+
+            cpp = CookedPostProcessor.new(the_post)
+            cpp.post_process_oneboxes
+
+            secure_url = video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
+
+            expect(cpp.html).to match_html <<~HTML
+              <p>This post has an S3 video onebox:<br>
+              <div class="onebox video-onebox">
+                <video width="100%" height="100%" controls="">
+                  <source src="#{secure_url}">
+                    <a href="#{secure_url}">#{secure_url}</a>
+                  </source>
+                </video>
+              </div>
+              </p>
+            HTML
+          end
+
+          it "oneboxes only audio/video and not images when secure_media is enabled" do
+            SiteSetting.login_required = true
+            SiteSetting.secure_media = true
+
+            video_upload.update_column(:secure, true)
+
+            audio_upload.update!(
+              url: "#{SiteSetting.s3_cdn_url}/#{Discourse.store.get_path_for_upload(audio_upload)}",
+              secure: true
+            )
+
+            image_upload.update!(
+              url: "#{SiteSetting.s3_cdn_url}/#{Discourse.store.get_path_for_upload(image_upload)}",
+              secure: true
+            )
+
+            stub_request(:head, audio_upload.url)
+            stub_request(:get, image_upload.url)
+
+            raw = <<~RAW
+              This post has a video upload.
+              #{video_upload.url}
+
+              This post has an audio upload.
+              #{audio_upload.url}
+
+              And an image upload.
+              ![logo.png](upload://#{image_upload.base62_sha1}.#{image_upload.extension})
+            RAW
+
+            the_post = Fabricate(:post, raw: raw)
+
+            cpp = CookedPostProcessor.new(the_post)
+            cpp.post_process_oneboxes
+
+            secure_video_url = video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
+            secure_audio_url = audio_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
+
+            expect(cpp.html).to match_html <<~HTML
+              <p>This post has a video upload.<br></p>
+              <div class="onebox video-onebox">
+                <video width="100%" height="100%" controls="">
+                  <source src="#{secure_video_url}">
+                    <a href="#{secure_video_url}">#{secure_video_url}</a>
+                  </source>
+                </video>
+              </div>
+
+             <p>This post has an audio upload.<br>
+                <audio controls><source src="#{secure_audio_url}"><a href="#{secure_audio_url}">#{secure_audio_url}</a></source></audio>
+              </p>
+              <p>And an image upload.<br>
+              <img src="#{image_upload.url}" alt="#{image_upload.original_filename}" data-base62-sha1="#{image_upload.base62_sha1}"></p>
+
+            HTML
+          end
+
+        end
       end
-
     end
 
   end

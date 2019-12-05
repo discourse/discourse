@@ -1,11 +1,11 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias, oneWay } from "@ember/object/computed";
-import computed from "ember-addons/ember-computed-decorators";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { on } from "@ember/object/evented";
 import Mixin from "@ember/object/mixin";
 import showModal from "discourse/lib/show-modal";
-import AboutRoute from "discourse/routes/about";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
 
 const CUSTOM_TYPES = [
   "bool",
@@ -26,13 +26,21 @@ const CUSTOM_TYPES = [
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
 
+function splitPipes(str) {
+  if (typeof str === "string") {
+    return str.split("|").filter(Boolean);
+  } else {
+    return [];
+  }
+}
+
 export default Mixin.create({
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   content: alias("setting"),
   validationMessage: null,
   isSecret: oneWay("setting.secret"),
 
-  @computed("buffered.value", "setting.value")
+  @discourseComputed("buffered.value", "setting.value")
   dirty(bufferVal, settingVal) {
     if (bufferVal === null || bufferVal === undefined) bufferVal = "";
     if (settingVal === null || settingVal === undefined) settingVal = "";
@@ -40,7 +48,7 @@ export default Mixin.create({
     return bufferVal.toString() !== settingVal.toString();
   },
 
-  @computed("setting", "buffered.value")
+  @discourseComputed("setting", "buffered.value")
   preview(setting, value) {
     // A bit hacky, but allows us to use helpers
     if (setting.get("setting") === "category_style") {
@@ -51,7 +59,6 @@ export default Mixin.create({
         });
       }
     }
-
     let preview = setting.get("preview");
     if (preview) {
       return new Handlebars.SafeString(
@@ -62,22 +69,22 @@ export default Mixin.create({
     }
   },
 
-  @computed("componentType")
+  @discourseComputed("componentType")
   typeClass(componentType) {
     return componentType.replace(/\_/g, "-");
   },
 
-  @computed("setting.setting")
-  settingName(setting) {
-    return setting.replace(/\_/g, " ");
+  @discourseComputed("setting.setting", "setting.label")
+  settingName(setting, label) {
+    return label || setting.replace(/\_/g, " ");
   },
 
-  @computed("type")
+  @discourseComputed("type")
   componentType(type) {
     return CUSTOM_TYPES.indexOf(type) !== -1 ? type : "string";
   },
 
-  @computed("setting")
+  @discourseComputed("setting")
   type(setting) {
     if (setting.type === "list" && setting.list_type) {
       return `${setting.list_type}_list`;
@@ -86,14 +93,34 @@ export default Mixin.create({
     return setting.type;
   },
 
-  @computed("typeClass")
+  @discourseComputed("typeClass")
   componentName(typeClass) {
     return "site-settings/" + typeClass;
   },
 
-  @computed("setting.default", "buffered.value")
+  @discourseComputed("setting.anyValue")
+  allowAny(anyValue) {
+    return anyValue !== false;
+  },
+
+  @discourseComputed("setting.default", "buffered.value")
   overridden(settingDefault, bufferedValue) {
     return settingDefault !== bufferedValue;
+  },
+
+  @discourseComputed("buffered.value")
+  bufferedValues: splitPipes,
+
+  @discourseComputed("setting.defaultValues")
+  defaultValues: splitPipes,
+
+  @discourseComputed("defaultValues", "bufferedValues")
+  defaultIsAvailable(defaultValues, bufferedValues) {
+    return (
+      defaultValues &&
+      defaultValues.length > 0 &&
+      !defaultValues.every(value => bufferedValues.includes(value))
+    );
   },
 
   _watchEnterKey: on("didInsertElement", function() {
@@ -125,7 +152,6 @@ export default Mixin.create({
         "default_email_messages_level",
         "default_email_mailing_list_mode",
         "default_email_mailing_list_mode_frequency",
-        "disable_mailing_list_mode",
         "default_email_previous_replies",
         "default_email_in_reply_to",
         "default_other_new_topic_duration_minutes",
@@ -151,12 +177,19 @@ export default Mixin.create({
       const key = this.buffered.get("setting");
 
       if (defaultUserPreferences.includes(key)) {
-        AboutRoute.create()
-          .model()
-          .then(result => {
+        const data = {};
+        data[key] = this.buffered.get("value");
+
+        ajax(`/admin/site_settings/${key}/user_count.json`, {
+          type: "PUT",
+          data
+        }).then(result => {
+          const count = result.user_count;
+
+          if (count > 0) {
             const controller = showModal("site-setting-default-categories", {
               model: {
-                count: result.stats.user_count,
+                count: result.user_count,
                 key: key.replace(/_/g, " ")
               },
               admin: true
@@ -166,7 +199,10 @@ export default Mixin.create({
               this.updateExistingUsers = controller.updateExistingUsers;
               this.send("save");
             });
-          });
+          } else {
+            this.send("save");
+          }
+        });
       } else {
         this.send("save");
       }
@@ -200,6 +236,16 @@ export default Mixin.create({
 
     toggleSecret() {
       this.toggleProperty("isSecret");
+    },
+
+    setDefaultValues() {
+      this.set(
+        "buffered.value",
+        this.bufferedValues
+          .concat(this.defaultValues)
+          .uniq()
+          .join("|")
+      );
     }
   }
 });

@@ -1358,10 +1358,10 @@ describe PostCreator do
 
     it "generates post notices for new users" do
       post = PostCreator.create!(user, title: "one of my first topics", raw: "one of my first posts")
-      expect(post.custom_fields["notice_type"]).to eq("new_user")
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:new_user])
 
       post = PostCreator.create!(user, title: "another one of my first topics", raw: "another one of my first posts")
-      expect(post.custom_fields["notice_type"]).to eq(nil)
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
     end
 
     it "generates post notices for returning users" do
@@ -1369,12 +1369,12 @@ describe PostCreator do
       old_post = Fabricate(:post, user: user, created_at: 31.days.ago)
 
       post = PostCreator.create!(user, title: "this is a returning topic", raw: "this is a post")
-      expect(post.custom_fields["notice_type"]).to eq(Post.notices[:returning_user])
-      expect(post.custom_fields["notice_args"]).to eq(old_post.created_at.iso8601)
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:returning_user])
+      expect(post.custom_fields[Post::NOTICE_ARGS]).to eq(old_post.created_at.iso8601)
 
       post = PostCreator.create!(user, title: "this is another topic", raw: "this is my another post")
-      expect(post.custom_fields["notice_type"]).to eq(nil)
-      expect(post.custom_fields["notice_args"]).to eq(nil)
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+      expect(post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
     end
 
     it "does not generate for non-human, staged or anonymous users" do
@@ -1383,9 +1383,80 @@ describe PostCreator do
       [anonymous, Discourse.system_user, staged].each do |user|
         expect(user.posts.size).to eq(0)
         post = PostCreator.create!(user, title: "#{user.username}'s first topic", raw: "#{user.name}'s first post")
-        expect(post.custom_fields["notice_type"]).to eq(nil)
-        expect(post.custom_fields["notice_args"]).to eq(nil)
+        expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+        expect(post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
       end
     end
   end
+
+  context "secure media uploads" do
+    fab!(:image_upload) { Fabricate(:upload, secure: true) }
+    fab!(:user2) { Fabricate(:user) }
+    fab!(:public_topic) { Fabricate(:topic) }
+
+    before do
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.authorized_extensions = "png|jpg|gif|mp4"
+      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+      SiteSetting.s3_access_key_id = "some key"
+      SiteSetting.s3_secret_access_key = "some secret key"
+      SiteSetting.secure_media = true
+
+      stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+      stub_request(
+        :put,
+        "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
+      )
+    end
+
+    it "does not allow a secure image to be used in a public topic" do
+      public_post = PostCreator.create(
+        user,
+        topic_id: public_topic.id,
+        raw: "A public post with an image.\n![](#{image_upload.short_path})"
+      )
+
+      expect(public_post.errors.count).to be(1)
+      expect(public_post.errors.full_messages).to include(I18n.t('secure_upload_not_allowed_in_public_topic', upload_filenames: image_upload.original_filename))
+
+      # secure upload CAN be used in another PM
+      pm = PostCreator.create(
+        user,
+        title: 'this is another private message',
+        raw: "with an upload: \n![](#{image_upload.short_path})",
+        archetype: Archetype.private_message,
+        target_usernames: [user2.username].join(',')
+      )
+
+      expect(pm.errors).to be_blank
+    end
+
+    it "does not allow a secure video to be used in a public topic" do
+      video_upload = Fabricate(:upload_s3, extension: 'mp4', original_filename: "video.mp4", secure: true)
+
+      public_post = PostCreator.create(
+        user,
+        topic_id: public_topic.id,
+        raw: "A public post with a video onebox:\n#{video_upload.url}"
+      )
+
+      expect(public_post.errors.count).to be(1)
+      expect(public_post.errors.full_messages).to include(I18n.t('secure_upload_not_allowed_in_public_topic', upload_filenames: video_upload.original_filename))
+    end
+
+    it "allows an existing upload to be used again in nonPM topics in login_required sites" do
+      SiteSetting.login_required = true
+
+      public_post = PostCreator.create(
+        user,
+        topic_id: public_topic.id,
+        raw: "Reusing this image on a public topic in a login_required site:\n![](#{image_upload.short_path})"
+      )
+
+      expect(public_post.errors.count).to be(0)
+    end
+
+  end
+
 end

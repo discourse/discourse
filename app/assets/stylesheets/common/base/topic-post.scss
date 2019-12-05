@@ -53,9 +53,7 @@
     font-size: $font-0;
     margin-right: 8px;
     display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
     vertical-align: middle;
     a {
       color: dark-light-choose($primary-high, $secondary-low);
@@ -235,8 +233,6 @@ blockquote {
   // !important here otherwise it won't work.
   img {
     max-width: 100% !important;
-    object-fit: cover;
-    object-position: top;
   }
 }
 
@@ -912,7 +908,10 @@ a.mention-group {
   background-color: $tertiary-low;
   border-top: 1px solid $primary-low;
   display: flex;
-  max-width: calc(#{$topic-body-width} + #{$topic-avatar-width} - 0.1em);
+  max-width: calc(
+    #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
+      (0.8em * 2)
+  );
   padding: 0.8em;
 
   &.old {

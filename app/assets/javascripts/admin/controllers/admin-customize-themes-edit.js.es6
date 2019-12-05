@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { url } from "discourse/lib/computed";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   section: null,
@@ -16,7 +16,7 @@ export default Controller.extend({
     this.set("currentTarget", target && target.id);
   },
 
-  @computed("currentTarget")
+  @discourseComputed("currentTarget")
   currentTargetName(id) {
     const target = this.get("model.targets").find(
       t => t.id === parseInt(id, 10)
@@ -24,12 +24,12 @@ export default Controller.extend({
     return target && target.name;
   },
 
-  @computed("model.isSaving")
+  @discourseComputed("model.isSaving")
   saveButtonText(isSaving) {
     return isSaving ? I18n.t("saving") : I18n.t("admin.customize.save");
   },
 
-  @computed("model.changed", "model.isSaving")
+  @discourseComputed("model.changed", "model.isSaving")
   saveDisabled(changed, isSaving) {
     return !changed || isSaving;
   },

@@ -827,6 +827,7 @@ ru:
       collapse_profile: "Свернуть"
       bookmarks: "Закладки"
       bio: "Обо мне"
+      timezone: "Часовой пояс"
       invited_by: "Пригласил"
       trust_level: "Уровень"
       notifications: "Уведомления"
@@ -1437,7 +1438,7 @@ ru:
       second_factor_backup_description: "Введите запасной код:"
       second_factor: "Войти с помощью программы аутентификации"
       security_key_description: "Когда вы подготовите свой физический ключ безопасности, нажмите кнопку Аутентификация с ключом безопасности ниже."
-      security_key_alternative: "Не удается найти ключ безопасности или хотите использовать другой метод?"
+      security_key_alternative: "Попробуйте другой способ"
       security_key_authenticate: "Аутентификация с Ключом Безопасности."
       security_key_not_allowed_error: "Время проверки подлинности ключа безопасности истекло или было отменено."
       security_key_no_matching_credential_error: "В указанном ключе безопасности не найдено подходящих учетных данных."
@@ -1749,6 +1750,7 @@ ru:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Новая тема</span> {{description}}"
       membership_request_accepted: "Запрос на вступление принят '{{group_name}}'"
+      membership_request_consolidated: "{{count}} открытые запросы на вступления для '{{group_name}}'"
       group_message_summary:
         one: "{{count}} сообщение в вашей группе: {{group_name}} "
         few: "{{count}} сообщений в вашей группе: {{group_name}} "
@@ -1786,6 +1788,7 @@ ru:
         topic_reminder: "напоминание о теме"
         liked_consolidated: "новые симпатии"
         post_approved: "сообщение утверждено"
+        membership_request_consolidated: "новые запросы на вступление"
     upload_selector:
       title: "Add an image"
       title_with_attachments: "Добавить изображение или файл"
@@ -1833,6 +1836,7 @@ ru:
       context:
         user: "Искать сообщения от @{{username}}"
         category: "Искать в разделе #{{category}}"
+        tag: "Поиск по #{{tag}} тегу"
         topic: "Искать в этой теме"
         private_messages: "Искать в личных сообщениях"
       advanced:
@@ -2605,7 +2609,6 @@ ru:
       email_in_disabled: "Создание новых тем через электронную почту отключено в настройках сайта. Чтобы разрешить создание новых тем через электронную почту,"
       email_in_disabled_click: 'активируйте настройку "email in".'
       mailinglist_mirror: "Категория отражает список рассылки"
-      suppress_from_latest: "Скрыть категорию из последних тем."
       show_subcategory_list: "Показывать список подразделов над списком тем в этом разделе."
       num_featured_topics: "Количество тем на странице разделов"
       subcategory_num_featured_topics: "Количество избранных тем на странице родительской категории:"
@@ -3015,6 +3018,26 @@ ru:
       changed: "Теги изменены:"
       tags: "Теги"
       choose_for_topic: "Выберите теги для этой темы (опционально)"
+      info: "Информация"
+      default_info: "Этот тег не ограничен никакими категориями и не имеет синонимов."
+      synonyms: "Синонимы"
+      synonyms_description: "При использовании следующих тегов они будут заменены на  <b>%{base_tag_name}</b>."
+      tag_groups_info:
+        one: 'Этот тег принадлежит группе "{{tag_groups}}".'
+        few: "Этот тег принадлежит к этим группам: {{tag_groups}}."
+        many: "Этот тег принадлежит к этим группам: {{tag_groups}}."
+        other: "Этот тег принадлежит к этим группам: {{tag_groups}}."
+      category_restrictions:
+        one: "Его можно использовать только в этой категории:"
+        few: "Их можно использовать только в этой категории:"
+        many: "Их можно использовать только в этой категории:"
+        other: "Их можно использовать только в этой категории:"
+      edit_synonyms: "Управление Синонимами"
+      add_synonyms_label: "Добавить синонимы:"
+      add_synonyms: "Добавить"
+      add_synonyms_failed: "Следующие теги не могут быть добавлены в качестве синонимов: <b>%{tag_names}</b>. Убедитесь, что они не имеют синонимов и не являются синонимами другого тега."
+      remove_synonym: "Удалить Синоним"
+      delete_synonym_confirm: 'Вы уверены, что хотите удалить синоним "%{tag_name}"?'
       delete_tag: "Удалить тег"
       delete_confirm:
         one: "Вы действительно хотите удалить этот тэг и удалить его из %{count} топика, которому он присвоен?"
@@ -3022,6 +3045,11 @@ ru:
         many: "Вы действительно хотите удалить этот тэг и удалить его из {{count}} топиков, которым он присвоен?"
         other: "Вы действительно хотите удалить этот тэг и удалить его из {{count}} топиков, которым он присвоен?"
       delete_confirm_no_topics: "Вы действительно хотите удалить этот тэг?"
+      delete_confirm_synonyms:
+        one: "Его синоним также будет удален."
+        few: "Его {{count}} синонимы также будут удалены."
+        many: "Его {{count}} синонимы также будут удалены."
+        other: "Его {{count}} синонимы также будут удалены."
       rename_tag: "Редактировать тег"
       rename_instructions: "Выберите новое название тега:"
       sort_by: "Сортировка:"
@@ -3281,15 +3309,30 @@ ru:
         none: "Отсутствует ключ API."
         user: "Пользователь"
         title: "API"
+        key: "Ключ"
         created: Создано
+        updated: Обновленный
         last_used: Последнее Использование
         never_used: (никогда)
         generate: "Сгенерировать"
+        undo_revoke: "Отменить"
         revoke: "Отозвать"
         all_users: "Все пользователи"
+        active_keys: "Активные API  ключи"
+        manage_keys: Управление Ключами
         show_details: Детали
         description: Описание
+        no_description: (без описания)
+        all_api_keys: Все API ключи
+        user_mode: Уровень Пользователя
+        impersonate_all_users: Представиться как пользователь
+        single_user: "Отдельный Пользователь"
+        user_placeholder: Введите псевдоним
+        description_placeholder: "Для чего будет использоваться этот ключ?"
         save: Сохранить
+        new_key: Новый API ключ
+        revoked: Отозвать
+        delete: Окончательно Удалить
       web_hooks:
         title: "Webhooks"
         none: "Сейчас нет веб-перехватчиков."
@@ -3536,6 +3579,7 @@ ru:
           color_scheme_select: "Выберите цвета для стиля"
           custom_sections: "Настройка секций:"
           theme_components: "Компоненты стиля"
+          add_all_themes: "Добавить все темы"
           convert: "Конвертировать"
           convert_component_alert: "Вы уверены, что хотите преобразовать этот компонент в тему? Он будет удален как компонент из %{relatives}."
           convert_component_tooltip: "Преобразовать этот компонент в тему"
@@ -3568,6 +3612,9 @@ ru:
           edit_css_html: "Редактировать CSS/HTML"
           edit_css_html_help: "Вы не внесли никаких изменений в CSS или HTML"
           delete_upload_confirm: "Удалить этот файл? CSS стиля может перестать функционировать!"
+          component_on_themes: "Включить компонент по этим темам"
+          included_components: "Включенные компоненты"
+          add_all: "Добавить все"
           import_web_tip: "Репозиторий стиля"
           import_web_advanced: "Дополнительно..."
           import_file_tip: ".tar.gz, .zip, или .dcstyle.json файл, содержащий тему"
@@ -3878,6 +3925,12 @@ ru:
             change_theme_setting: "изменить настройки темы"
             disable_theme_component: "отключить компонент темы"
             enable_theme_component: "включить компонент темы"
+            revoke_title: "отозвать название"
+            change_title: "изменить название"
+            api_key_create: "создать api ключ"
+            api_key_update: "обновление api ключа"
+            api_key_destroy: "уничтожить api ключ"
+            override_upload_secure_status: "перезаписать защищенный статус загрузки"
         screened_emails:
           title: "Почтовые адреса"
           description: "Когда кто-то создаёт новую учётную запись, проверяется данный почтовый адрес и регистрация блокируется или производятся другие дополнительные действия."
@@ -4375,21 +4428,15 @@ ru:
         category: "Опубликовать в разделе"
         add_host: "Добавить хост"
         settings: "Настройки встраивания"
-        feed_settings: "Настройки Фида"
-        feed_description: "Поддержка RSS/ATOM вашим сайтом может улучшить возможности импорта данных."
         crawling_settings: "Настройки определения"
         crawling_description: "Если RSS/ATOM не поддерживается, то при создании тем Discourse попытается разобрать содержимое из HTML. В некоторых случаях извлечение содержимого оказывается сложным, поэтому мы предоставляем возможность задавать правила CSS, чтобы сделать извлечение проще."
         embed_by_username: "Имя пользователя, которое будет использоваться для создания темы"
         embed_post_limit: "Максимальное количество вложенных сообщений"
-        embed_username_key_from_feed: "Ключ для извлечения пользователя из ленты"
         embed_title_scrubber: "Регулярное выражение, используемое для очистки заголовка сообщений"
         embed_truncate: "Обрезать встроенные сообщения."
         embed_whitelist_selector: "Селекторы CSS которые разрешены для использования."
         embed_blacklist_selector: "Селекторы CSS которые запрещены для использования."
         embed_classname_whitelist: "Разрешённые CSS-классы"
-        feed_polling_enabled: "Импорт сообщений через RSS/ATOM"
-        feed_polling_url: "Ссылка на RSS/ATOM"
-        feed_polling_frequency_mins: "Частота опроса ленты (в минутах)"
         save: "Сохранить настройки встраивания"
       permalink:
         title: "Постоянные ссылки"

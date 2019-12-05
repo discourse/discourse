@@ -15,7 +15,8 @@ lv:
         label: "Rādīt rezultātus"
       hide-results:
         title: "Atpakaļ pie balsojumiem"
-        label: "Paslēpt rezultātus"
+      export-results:
+        label: "Eksportēt"
       open:
         title: "Atvērt aptauju"
         label: "Atvērt"

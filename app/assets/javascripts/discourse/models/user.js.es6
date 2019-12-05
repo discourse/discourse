@@ -1,6 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import { gt, equal, or } from "@ember/object/computed";
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
@@ -9,9 +9,9 @@ import UserPostsStream from "discourse/models/user-posts-stream";
 import Singleton from "discourse/mixins/singleton";
 import { longDate } from "discourse/lib/formatter";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import UserActionStat from "discourse/models/user-action-stat";
@@ -25,6 +25,8 @@ import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { Promise } from "rsvp";
 import { getProperties } from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
+import Site from "discourse/models/site";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -43,27 +45,27 @@ const User = RestModel.extend({
     reason: null
   },
 
-  @computed("can_be_deleted", "post_count")
+  @discourseComputed("can_be_deleted", "post_count")
   canBeDeleted(canBeDeleted, postCount) {
     return canBeDeleted && postCount <= 5;
   },
 
-  @computed()
+  @discourseComputed()
   stream() {
     return UserStream.create({ user: this });
   },
 
-  @computed()
+  @discourseComputed()
   postsStream() {
     return UserPostsStream.create({ user: this });
   },
 
-  @computed()
+  @discourseComputed()
   userDraftsStream() {
     return UserDraftsStream.create({ user: this });
   },
 
-  staff: Ember.computed("admin", "moderator", {
+  staff: computed("admin", "moderator", {
     get() {
       return this.admin || this.moderator;
     },
@@ -78,7 +80,7 @@ const User = RestModel.extend({
     return ajax(`/session/${this.username}`, { type: "DELETE" });
   },
 
-  @computed("username_lower")
+  @discourseComputed("username_lower")
   searchContext(username) {
     return {
       type: "user",
@@ -87,7 +89,7 @@ const User = RestModel.extend({
     };
   },
 
-  @computed("username", "name")
+  @discourseComputed("username", "name")
   displayName(username, name) {
     if (Discourse.SiteSettings.enable_names && !isEmpty(name)) {
       return name;
@@ -95,7 +97,7 @@ const User = RestModel.extend({
     return username;
   },
 
-  @computed("profile_background_upload_url")
+  @discourseComputed("profile_background_upload_url")
   profileBackgroundUrl(bgUrl) {
     if (isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) {
       return "".htmlSafe();
@@ -107,13 +109,13 @@ const User = RestModel.extend({
     ).htmlSafe();
   },
 
-  @computed()
+  @discourseComputed()
   path() {
     // no need to observe, requires a hard refresh to update
     return userPath(this.username_lower);
   },
 
-  @computed()
+  @discourseComputed()
   userApiKeys() {
     const keys = this.user_api_keys;
     if (keys) {
@@ -171,35 +173,35 @@ const User = RestModel.extend({
 
   adminPath: url("id", "username_lower", "/admin/users/%@1/%@2"),
 
-  @computed()
+  @discourseComputed()
   mutedTopicsPath() {
     return defaultHomepage() === "latest"
       ? Discourse.getURL("/?state=muted")
       : Discourse.getURL("/latest?state=muted");
   },
 
-  @computed()
+  @discourseComputed()
   watchingTopicsPath() {
     return defaultHomepage() === "latest"
       ? Discourse.getURL("/?state=watching")
       : Discourse.getURL("/latest?state=watching");
   },
 
-  @computed()
+  @discourseComputed()
   trackingTopicsPath() {
     return defaultHomepage() === "latest"
       ? Discourse.getURL("/?state=tracking")
       : Discourse.getURL("/latest?state=tracking");
   },
 
-  @computed("username")
+  @discourseComputed("username")
   username_lower(username) {
     return username.toLowerCase();
   },
 
-  @computed("trust_level")
+  @discourseComputed("trust_level")
   trustLevel(trustLevel) {
-    return Discourse.Site.currentProp("trustLevels").findBy(
+    return Site.currentProp("trustLevels").findBy(
       "id",
       parseInt(trustLevel, 10)
     );
@@ -210,26 +212,26 @@ const User = RestModel.extend({
   isElder: equal("trust_level", 4),
   canManageTopic: or("staff", "isElder"),
 
-  @computed("previous_visit_at")
+  @discourseComputed("previous_visit_at")
   previousVisitAt(previous_visit_at) {
     return new Date(previous_visit_at);
   },
 
-  @computed("suspended_till")
+  @discourseComputed("suspended_till")
   suspended(suspendedTill) {
     return suspendedTill && moment(suspendedTill).isAfter();
   },
 
-  @computed("suspended_till")
+  @discourseComputed("suspended_till")
   suspendedForever: isForever,
 
-  @computed("silenced_till")
+  @discourseComputed("silenced_till")
   silencedForever: isForever,
 
-  @computed("suspended_till")
+  @discourseComputed("suspended_till")
   suspendedTillDate: longDate,
 
-  @computed("silenced_till")
+  @discourseComputed("silenced_till")
   silencedTillDate: longDate,
 
   changeUsername(new_username) {
@@ -247,7 +249,7 @@ const User = RestModel.extend({
   },
 
   copy() {
-    return Discourse.User.create(this.getProperties(Object.keys(this)));
+    return User.create(this.getProperties(Object.keys(this)));
   },
 
   save(fields) {
@@ -300,7 +302,8 @@ const User = RestModel.extend({
       "homepage_id",
       "hide_profile_and_presence",
       "text_size",
-      "title_count_mode"
+      "title_count_mode",
+      "timezone"
     ];
 
     if (fields) {
@@ -359,7 +362,7 @@ const User = RestModel.extend({
           "external_links_in_new_tab",
           "dynamic_favicon"
         );
-        Discourse.User.current().setProperties(userProps);
+        User.current().setProperties(userProps);
         this.setProperties(updatedState);
       })
       .finally(() => {
@@ -492,7 +495,7 @@ const User = RestModel.extend({
 
   numGroupsToDisplay: 2,
 
-  @computed("groups.[]")
+  @discourseComputed("groups.[]")
   filteredGroups() {
     const groups = this.groups || [];
 
@@ -501,19 +504,19 @@ const User = RestModel.extend({
     });
   },
 
-  @computed("filteredGroups", "numGroupsToDisplay")
+  @discourseComputed("filteredGroups", "numGroupsToDisplay")
   displayGroups(filteredGroups, numGroupsToDisplay) {
     const groups = filteredGroups.slice(0, numGroupsToDisplay);
     return groups.length === 0 ? null : groups;
   },
 
-  @computed("filteredGroups", "numGroupsToDisplay")
+  @discourseComputed("filteredGroups", "numGroupsToDisplay")
   showMoreGroupsLink(filteredGroups, numGroupsToDisplay) {
     return filteredGroups.length > numGroupsToDisplay;
   },
 
   // The user's stat count, excluding PMs.
-  @computed("statsExcludingPms.@each.count")
+  @discourseComputed("statsExcludingPms.@each.count")
   statsCountNonPM() {
     if (isEmpty(this.statsExcludingPms)) return 0;
     let count = 0;
@@ -526,7 +529,7 @@ const User = RestModel.extend({
   },
 
   // The user's stats, excluding PMs.
-  @computed("stats.@each.isPM")
+  @discourseComputed("stats.@each.isPM")
   statsExcludingPms() {
     if (isEmpty(this.stats)) return [];
     return this.stats.rejectBy("isPM");
@@ -539,7 +542,7 @@ const User = RestModel.extend({
       return ajax(userPath(`${user.get("username")}.json`), { data: options });
     }).then(json => {
       if (!isEmpty(json.user.stats)) {
-        json.user.stats = Discourse.User.groupStats(
+        json.user.stats = User.groupStats(
           json.user.stats.map(s => {
             if (s.count) s.count = parseInt(s.count, 10);
             return UserActionStat.create(s);
@@ -560,7 +563,7 @@ const User = RestModel.extend({
       }
 
       if (json.user.invited_by) {
-        json.user.invited_by = Discourse.User.create(json.user.invited_by);
+        json.user.invited_by = User.create(json.user.invited_by);
       }
 
       if (!isEmpty(json.user.featured_user_badge_ids)) {
@@ -583,7 +586,7 @@ const User = RestModel.extend({
   },
 
   findStaffInfo() {
-    if (!Discourse.User.currentProp("staff")) {
+    if (!User.currentProp("staff")) {
       return Promise.resolve(null);
     }
     return ajax(userPath(`${this.username_lower}/staff-info.json`)).then(
@@ -631,17 +634,14 @@ const User = RestModel.extend({
 
   @observes("muted_category_ids")
   updateMutedCategories() {
-    this.set(
-      "mutedCategories",
-      Discourse.Category.findByIds(this.muted_category_ids)
-    );
+    this.set("mutedCategories", Category.findByIds(this.muted_category_ids));
   },
 
   @observes("tracked_category_ids")
   updateTrackedCategories() {
     this.set(
       "trackedCategories",
-      Discourse.Category.findByIds(this.tracked_category_ids)
+      Category.findByIds(this.tracked_category_ids)
     );
   },
 
@@ -649,7 +649,7 @@ const User = RestModel.extend({
   updateWatchedCategories() {
     this.set(
       "watchedCategories",
-      Discourse.Category.findByIds(this.watched_category_ids)
+      Category.findByIds(this.watched_category_ids)
     );
   },
 
@@ -657,11 +657,11 @@ const User = RestModel.extend({
   updateWatchedFirstPostCategories() {
     this.set(
       "watchedFirstPostCategories",
-      Discourse.Category.findByIds(this.watched_first_post_category_ids)
+      Category.findByIds(this.watched_first_post_category_ids)
     );
   },
 
-  @computed("can_delete_account")
+  @discourseComputed("can_delete_account")
   canDeleteAccount(canDeleteAccount) {
     return !Discourse.SiteSettings.enable_sso && canDeleteAccount;
   },
@@ -682,7 +682,7 @@ const User = RestModel.extend({
       type: "PUT",
       data: { notification_level: level, expiring_at: expiringAt }
     }).then(() => {
-      const currentUser = Discourse.User.current();
+      const currentUser = User.current();
       if (currentUser) {
         if (level === "normal" || level === "mute") {
           currentUser.ignored_users.removeObject(this.username);
@@ -768,7 +768,7 @@ const User = RestModel.extend({
       : this.admin || group.get("is_group_owner");
   },
 
-  @computed("groups.@each.title", "badges.[]")
+  @discourseComputed("groups.@each.title", "badges.[]")
   availableTitles() {
     let titles = [];
 
@@ -794,7 +794,7 @@ const User = RestModel.extend({
       });
   },
 
-  @computed("user_option.text_size_seq", "user_option.text_size")
+  @discourseComputed("user_option.text_size_seq", "user_option.text_size")
   currentTextSize(serverSeq, serverSize) {
     if ($.cookie("text_size")) {
       const [cookieSize, cookieSeq] = $.cookie("text_size").split("|");
@@ -817,7 +817,7 @@ const User = RestModel.extend({
     }
   },
 
-  @computed("second_factor_enabled", "staff")
+  @discourseComputed("second_factor_enabled", "staff")
   enforcedSecondFactor(secondFactorEnabled, staff) {
     const enforce = Discourse.SiteSettings.enforce_second_factor;
     return (
@@ -828,7 +828,7 @@ const User = RestModel.extend({
 });
 
 User.reopenClass(Singleton, {
-  // Find a `Discourse.User` for a given username.
+  // Find a `User` for a given username.
   findByUsername(username, options) {
     const user = User.create({ username: username });
     return user.findDetails(options);
@@ -852,6 +852,11 @@ User.reopenClass(Singleton, {
       return store.createRecord("user", userJson);
     }
     return null;
+  },
+
+  resetCurrent(user) {
+    this._super(user);
+    Discourse.currentUser = user;
   },
 
   checkUsername(username, email, for_user_id) {
@@ -897,10 +902,25 @@ User.reopenClass(Singleton, {
         username: attrs.accountUsername,
         password_confirmation: attrs.accountPasswordConfirm,
         challenge: attrs.accountChallenge,
-        user_fields: attrs.userFields
+        user_fields: attrs.userFields,
+        timezone: moment.tz.guess()
       },
       type: "POST"
     });
+  }
+});
+
+let warned = false;
+Object.defineProperty(Discourse, "User", {
+  get() {
+    if (!warned) {
+      deprecated("Import the User class instead of using User", {
+        since: "2.4.0",
+        dropFrom: "2.6.0"
+      });
+      warned = true;
+    }
+    return User;
   }
 });
 

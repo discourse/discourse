@@ -7,7 +7,7 @@ QUnit.test("slugFor", assert => {
   const store = createStore();
 
   const slugFor = function(cat, val, text) {
-    assert.equal(Discourse.Category.slugFor(cat), val, text);
+    assert.equal(Category.slugFor(cat), val, text);
   };
 
   slugFor(
@@ -86,35 +86,35 @@ QUnit.test("findBySlug", assert => {
     }),
     categoryList = [darth, luke, hurricane, newsFeed, time, bah];
 
-  sandbox.stub(Discourse.Category, "list").returns(categoryList);
+  sandbox.stub(Category, "list").returns(categoryList);
 
   assert.deepEqual(
-    Discourse.Category.findBySlug("darth"),
+    Category.findBySlug("darth"),
     darth,
     "we can find a category"
   );
   assert.deepEqual(
-    Discourse.Category.findBySlug("luke", "darth"),
+    Category.findBySlug("luke", "darth"),
     luke,
     "we can find the other category with parent category"
   );
   assert.deepEqual(
-    Discourse.Category.findBySlug("熱帶風暴畫眉"),
+    Category.findBySlug("熱帶風暴畫眉"),
     hurricane,
     "we can find a category with CJK slug"
   );
   assert.deepEqual(
-    Discourse.Category.findBySlug("뉴스피드", "熱帶風暴畫眉"),
+    Category.findBySlug("뉴스피드", "熱帶風暴畫眉"),
     newsFeed,
     "we can find a category with CJK slug whose parent slug is also CJK"
   );
   assert.deepEqual(
-    Discourse.Category.findBySlug("时间", "darth"),
+    Category.findBySlug("时间", "darth"),
     time,
     "we can find a category with CJK slug whose parent slug is english"
   );
   assert.deepEqual(
-    Discourse.Category.findBySlug("bah", "熱帶風暴畫眉"),
+    Category.findBySlug("bah", "熱帶風暴畫眉"),
     bah,
     "we can find a category with english slug whose parent slug is CJK"
   );
@@ -150,54 +150,38 @@ QUnit.test("findSingleBySlug", assert => {
     }),
     categoryList = [darth, luke, hurricane, newsFeed, time, bah];
 
-  sandbox.stub(Discourse.Category, "list").returns(categoryList);
+  sandbox.stub(Category, "list").returns(categoryList);
 
   assert.deepEqual(
-    Discourse.Category.findSingleBySlug("darth"),
+    Category.findSingleBySlug("darth"),
     darth,
     "we can find a category"
   );
   assert.deepEqual(
-    Discourse.Category.findSingleBySlug("darth/luke"),
+    Category.findSingleBySlug("darth/luke"),
     luke,
     "we can find the other category with parent category"
   );
   assert.deepEqual(
-    Discourse.Category.findSingleBySlug("熱帶風暴畫眉"),
+    Category.findSingleBySlug("熱帶風暴畫眉"),
     hurricane,
     "we can find a category with CJK slug"
   );
   assert.deepEqual(
-    Discourse.Category.findSingleBySlug("熱帶風暴畫眉/뉴스피드"),
+    Category.findSingleBySlug("熱帶風暴畫眉/뉴스피드"),
     newsFeed,
     "we can find a category with CJK slug whose parent slug is also CJK"
   );
   assert.deepEqual(
-    Discourse.Category.findSingleBySlug("darth/时间"),
+    Category.findSingleBySlug("darth/时间"),
     time,
     "we can find a category with CJK slug whose parent slug is english"
   );
   assert.deepEqual(
-    Discourse.Category.findSingleBySlug("熱帶風暴畫眉/bah"),
+    Category.findSingleBySlug("熱帶風暴畫眉/bah"),
     bah,
     "we can find a category with english slug whose parent slug is CJK"
   );
-});
-
-QUnit.test("findByIds", assert => {
-  const store = createStore();
-  const categories = {
-    1: store.createRecord("category", { id: 1 }),
-    2: store.createRecord("category", { id: 2 })
-  };
-
-  sandbox.stub(Discourse.Category, "idMap").returns(categories);
-  assert.deepEqual(
-    Discourse.Category.findByIds([1, 2, 3]),
-    _.values(categories)
-  );
-
-  assert.deepEqual(Discourse.Category.findByIds(), []);
 });
 
 QUnit.test("search with category name", assert => {

@@ -1,7 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import EmberObject from "@ember/object";
 
-const WatchedWord = Discourse.Model.extend({
+const WatchedWord = EmberObject.extend({
   save() {
     return ajax(
       "/admin/logs/watched_words" + (this.id ? "/" + this.id : "") + ".json",

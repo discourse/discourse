@@ -1,10 +1,9 @@
 import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
-import InputValidation from "discourse/models/input-validation";
 import {
   on,
-  default as computed
-} from "ember-addons/ember-computed-decorators";
+  default as discourseComputed
+} from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
@@ -24,7 +23,7 @@ export default Mixin.create({
   },
 
   // Validate required fields
-  @computed("userFields.@each.value")
+  @discourseComputed("userFields.@each.value")
   userFieldsValidation() {
     let userFields = this.userFields;
     if (userFields) {
@@ -36,9 +35,9 @@ export default Mixin.create({
         return !val || isEmpty(val);
       });
       if (anyEmpty) {
-        return InputValidation.create({ failed: true });
+        return EmberObject.create({ failed: true });
       }
     }
-    return InputValidation.create({ ok: true });
+    return EmberObject.create({ ok: true });
   }
 });

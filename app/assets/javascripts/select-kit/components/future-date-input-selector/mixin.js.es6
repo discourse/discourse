@@ -1,6 +1,7 @@
 import { CLOSE_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 import { timeframeDetails } from "select-kit/components/future-date-input-selector";
 import Mixin from "@ember/object/mixin";
+import { isNone } from "@ember/utils";
 
 export default Mixin.create({
   _computeIconsForValue(value) {
@@ -14,7 +15,7 @@ export default Mixin.create({
   },
 
   _computeDatetimeForValue(value) {
-    if (Ember.isNone(value)) {
+    if (isNone(value)) {
       return null;
     }
 

@@ -11,7 +11,10 @@ moduleForComponent("combo-box", {
 componentTest("default", {
   template: "{{combo-box content=items}}",
   beforeEach() {
-    this.set("items", [{ id: 1, name: "hello" }, { id: 2, name: "world" }]);
+    this.set("items", [
+      { id: 1, name: "hello" },
+      { id: 2, name: "world" }
+    ]);
   },
 
   async test(assert) {
@@ -43,7 +46,10 @@ componentTest("with valueAttribute", {
 componentTest("with nameProperty", {
   template: '{{combo-box content=items nameProperty="text"}}',
   beforeEach() {
-    this.set("items", [{ id: 0, text: "hello" }, { id: 1, text: "world" }]);
+    this.set("items", [
+      { id: 0, text: "hello" },
+      { id: 1, text: "world" }
+    ]);
   },
 
   async test(assert) {

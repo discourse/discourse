@@ -71,6 +71,8 @@ class ThemeField < ActiveRecord::Base
     errors = []
     javascript_cache || build_javascript_cache
 
+    errors << I18n.t("themes.errors.optimized_link") if contains_optimized_link?(html)
+
     js_compiler = ThemeJavascriptCompiler.new(theme_id, self.theme.name)
 
     doc = Nokogiri::HTML.fragment(html)
@@ -355,7 +357,11 @@ class ThemeField < ActiveRecord::Base
     result = ["failed"]
     begin
       result = compile_scss
-      self.error = nil unless error.nil?
+      if contains_optimized_link?(self.value)
+        self.error = I18n.t("themes.errors.optimized_link")
+      else
+        self.error = nil unless error.nil?
+      end
     rescue SassC::SyntaxError => e
       self.error = e.message unless self.destroyed?
     end
@@ -365,6 +371,10 @@ class ThemeField < ActiveRecord::Base
 
   def target_name
     Theme.targets[target_id].to_s
+  end
+
+  def contains_optimized_link?(text)
+    OptimizedImage::URL_REGEX.match?(text)
   end
 
   class ThemeFileMatcher

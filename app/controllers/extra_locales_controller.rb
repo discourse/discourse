@@ -9,15 +9,20 @@ class ExtraLocalesController < ApplicationController
     :verify_authenticity_token
 
   OVERRIDES_BUNDLE ||= 'overrides'
+  MD5_HASH_LENGTH ||= 32
 
   def show
     bundle = params[:bundle]
-
     raise Discourse::InvalidAccess.new if !valid_bundle?(bundle)
 
-    if params[:v]&.size == 32
-      hash = ExtraLocalesController.bundle_js_hash(bundle)
-      immutable_for(1.year) if hash == params[:v]
+    version = params[:v]
+    if version.present?
+      if version.kind_of?(String) && version.length == MD5_HASH_LENGTH
+        hash = ExtraLocalesController.bundle_js_hash(bundle)
+        immutable_for(1.year) if hash == version
+      else
+        raise Discourse::InvalidParameters.new(:v)
+      end
     end
 
     render plain: ExtraLocalesController.bundle_js(bundle), content_type: "application/javascript"

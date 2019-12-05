@@ -747,6 +747,7 @@ es:
       collapse_profile: "Contraer"
       bookmarks: "Marcadores"
       bio: "Acerca de mí"
+      timezone: "Zona horaria"
       invited_by: "Invitado por"
       trust_level: "Nivel de confianza"
       notifications: "Notificaciones"
@@ -951,7 +952,7 @@ es:
         upload_title: "Sube tu foto"
         image_is_not_a_square: "Advertencia: hemos recortado tu imagen porque la anchura y la altura no eran iguales."
       change_profile_background:
-        title: "Encabezado del perfil"
+        title: "Encabezado de perfil"
         instructions: "Por defecto, los encabezados de perfil estarán centrados y tendrán una anchura de 1110px."
       change_card_background:
         title: "Fondo de tarjeta de usuario"
@@ -1335,7 +1336,7 @@ es:
       second_factor_backup_description: "Por favor, ingresa uno de los códigos de respaldo:"
       second_factor: "Iniciar sesión utilizando la app Authenticator"
       security_key_description: "Cuando tengas tu clave de seguridad física preparada, presiona el botón de autenticar con clave de seguridad que se encuentra debajo."
-      security_key_alternative: "¿No encuentras tu clave de seguridad o quieres utilizar otro método?"
+      security_key_alternative: "Intenta de otra manera"
       security_key_authenticate: "Autenticar con clave de seguridad"
       security_key_not_allowed_error: "La autenticación de la clave de seguridad fue cancelada o se agotó el tiempo."
       security_key_no_matching_credential_error: "No se encontraron credenciales que coincidan en la clave de seguridad provista."
@@ -1633,6 +1634,7 @@ es:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Nuevo tema</span> {{description}}"
       membership_request_accepted: "Membresía aceptada en «{{group_name}}»"
+      membership_request_consolidated: "{{count}} solicitudes de membresía abiertas para '{{group_name}}'"
       group_message_summary:
         one: "{{count}} mensaje en tu bandeja de {{group_name}}"
         other: "{{count}} mensajes en tu bandeja de {{group_name}} "
@@ -1668,6 +1670,7 @@ es:
         topic_reminder: "recordatorio de tema"
         liked_consolidated: "nuevos me gusta"
         post_approved: "publicación aprobada"
+        membership_request_consolidated: "nuevas solicitudes de membresía"
     upload_selector:
       title: "Agregar imagen"
       title_with_attachments: "Agregar una imagen o archivo"
@@ -1713,6 +1716,7 @@ es:
       context:
         user: "Buscar publicaciones de @{{username}}"
         category: "Buscar la categoría #{{category}}"
+        tag: "Buscar la etiqueta #{{tag}} "
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
       advanced:
@@ -2381,12 +2385,12 @@ es:
       tags_allowed_tags: "Restringir estas etiquetas a esta categoría:"
       tags_allowed_tag_groups: "Restringir estos grupos de etiquetas a esta categoría:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
-      tags_tab_description: "Las etiquetas y grupos de etiquetas arriba especificadas solo estarán disponibles en esta categoría y en las otras categorías que igualmente lo especifiquen. No se permitirá su uso en otras categorías."
+      tags_tab_description: "Las etiquetas y grupos de etiquetas arriba especificados solo estarán disponibles en esta categoría y en las otras categorías que igualmente lo especifiquen. No se permitirá su uso en otras categorías."
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       manage_tag_groups_link: "Gestiona los grupos de etiquetas aquí."
       allow_global_tags_label: "Permitir también otras etiquetas"
       tag_group_selector_placeholder: "(Opcional) Grupo de etiquetas"
-      required_tag_group_description: "Requiere temas nuevos para tener etiquetas de un grupo de etiquetas:"
+      required_tag_group_description: "Requerir que los nuevos temas tengan etiquetas de un grupo de etiquetas:"
       min_tags_from_required_group_label: "Número de etiquetas:"
       required_tag_group_label: "Grupo de etiquetas:"
       topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"
@@ -2425,7 +2429,6 @@ es:
       email_in_disabled: "La posibilidad de publicar temas nuevos por correo electrónico está deshabilitada en los ajustes del sitio. Para habilitar la publicación de temas nuevos por correo electrónico,"
       email_in_disabled_click: 'activa la opción «correo electrónico»'
       mailinglist_mirror: "La categoría es el reflejo de una lista de correo"
-      suppress_from_latest: "Ocultar la categoría de la lista de últimos temas."
       show_subcategory_list: "Mostrar la lista de subcategorías arriba de la lista de temas en esta categoría."
       num_featured_topics: "Número de temas que se muestran en la página de categorías:"
       subcategory_num_featured_topics: "Número de temas destacados a mostrar en la página principal de categorías:"
@@ -2797,6 +2800,7 @@ es:
       changed: "etiquetas cambiadas:"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionales"
+      add_synonyms: "Agregar"
       delete_tag: "Eliminar etiqueta"
       delete_confirm:
         one: "¿Estás seguro de querer borrar esta etiqueta y eliminarla de %{count} tema asignado?"
@@ -2854,7 +2858,7 @@ es:
         parent_tag_description: "Las etiquetas de este grupo no se pueden utilizar a menos que la etiqueta primaria esté presente. "
         one_per_topic_label: "Limitar las etiquetas de este grupo a utilizarse solo una vez por tema"
         new_name: "Nuevo grupo de etiquetas"
-        name_placeholder: "Nombre del grupo de etiquetas:"
+        name_placeholder: "Nombre del grupo de etiquetas"
         save: "Guardar"
         delete: "Eliminar"
         confirm_delete: "¿Estás seguro de que quieres eliminar este grupo de etiquetas?"
@@ -3055,16 +3059,30 @@ es:
         none: "No hay ninguna clave de API activa en este momento."
         user: "Usuario"
         title: "API"
+        key: "Clave"
         created: Creado
         updated: Actualizado
         last_used: Usada por última vez
         never_used: (nunca)
         generate: "Generar clave de API"
+        undo_revoke: "Deshacer revocación"
         revoke: "Revocar"
         all_users: "Todos los usuarios"
+        active_keys: "Claves de API activas"
+        manage_keys: Gestionar clave
         show_details: Detalles
         description: Descripción
+        no_description: (sin descripción)
+        all_api_keys: Todas las claves de API
+        user_mode: Nivel de usuario
+        impersonate_all_users: Suplantar cualquier usuario
+        single_user: "Un usuario"
+        user_placeholder: Introducir nombre de usuario
+        description_placeholder: "¿Para qué se usará esta clave?"
         save: Guardar
+        new_key: Nueva clave de API
+        revoked: Revocada
+        delete: Eliminar permanentemente
       web_hooks:
         title: "Webhooks"
         none: "Ahora mismo no hay webhooks."
@@ -3307,6 +3325,7 @@ es:
           color_scheme_select: "Selecciona colores para usar en el tema"
           custom_sections: "Secciones personalizadas:"
           theme_components: "Componentes del tema"
+          add_all_themes: "Agregar todos los temas"
           convert: "Convertir"
           convert_component_alert: "¿Estás seguro de que quieres convertir este componente en tema? Se eliminará como componente en %{relatives}."
           convert_component_tooltip: "Convertir este componente en tema"
@@ -3339,6 +3358,7 @@ es:
           edit_css_html: "Editar CSS/HTML"
           edit_css_html_help: "No has editado ningún CSS o HTML"
           delete_upload_confirm: "¿Eliminar este archivo? (¡El tema CSS puede dejar de funcionar!)"
+          component_on_themes: "Incluir componentes en estos temas"
           import_web_tip: "Repositorio que contiene el tema"
           import_web_advanced: "Avanzado..."
           import_file_tip: "archivo .tar.gz, .zip o .dcstyle.json que contiene un tema"
@@ -3647,6 +3667,12 @@ es:
             change_theme_setting: "cambiar la configuración del tema"
             disable_theme_component: "deshabilitar componente de tema"
             enable_theme_component: "habilitar componente de tema"
+            revoke_title: "revocar título"
+            change_title: "cambiar título"
+            api_key_create: "crear clave API"
+            api_key_update: "actualizar clave API"
+            api_key_destroy: "destruir clave API"
+            override_upload_secure_status: "sobrescribir estado seguro de la subida"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos se revisarán y el registro se bloqueará, o se realizará alguna otra acción."
@@ -4132,21 +4158,15 @@ es:
         category: "Publicar en categoría"
         add_host: "Añadir host"
         settings: "Ajustes de insertado"
-        feed_settings: "Ajustes de feed"
-        feed_description: "Discourse podrá importar tu contenido más facilmente si proporcionas un feed RSS/ATOM de tu sitio."
         crawling_settings: "Ajustes de crawlers"
         crawling_description: "Cuando Discourse crea temas para tus publicaciones, si no hay un feed RSS/ATOM presente intentará analizar el contenido de tu HTML. A veces puede ser difícil extraer tu contenido, por lo que damos la posibilidad de especificar las reglas CSS para hacer la extracción más fácil."
         embed_by_username: "Usuario para la creación de temas"
         embed_post_limit: "Número máximo de publicaciones que se pueden insertar"
-        embed_username_key_from_feed: "Clave para extraer usuario de discourse del feed"
         embed_title_scrubber: "Expresión regular utilizada para depurar el título de las publicaciones"
         embed_truncate: "Truncar las publicaciones insertadas"
         embed_whitelist_selector: "Selector CSS para elementos permitidos en los insertados"
         embed_blacklist_selector: "Selector CSS para los elementos que se eliminan de los insertados"
         embed_classname_whitelist: "Clases CSS permitidas"
-        feed_polling_enabled: "Importar publicaciones mediante RSS/ATOM"
-        feed_polling_url: "URL del feed RSS/ATOM para explorar datos"
-        feed_polling_frequency_mins: "Frecuencia del feed de la encuesta (en minutos)"
         save: "Guardar ajustes de insertado"
       permalink:
         title: "Enlaces permanentes"

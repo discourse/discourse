@@ -33,7 +33,10 @@ componentTest("accepts a value by reference", {
 
   beforeEach() {
     this.set("value", 1);
-    this.set("content", [{ id: 1, name: "robin" }, { id: 2, name: "regis" }]);
+    this.set("content", [
+      { id: 1, name: "robin" },
+      { id: 2, name: "regis" }
+    ]);
   },
 
   async test(assert) {
@@ -148,7 +151,10 @@ componentTest("dynamic headerText", {
   template: "{{single-select value=1 content=content}}",
 
   beforeEach() {
-    this.set("content", [{ id: 1, name: "robin" }, { id: 2, name: "regis" }]);
+    this.set("content", [
+      { id: 1, name: "robin" },
+      { id: 2, name: "regis" }
+    ]);
   },
 
   async test(assert) {
@@ -246,7 +252,10 @@ componentTest("supports keyboard events", {
   template: "{{single-select content=content filterable=true}}",
 
   beforeEach() {
-    this.set("content", [{ id: 1, name: "robin" }, { id: 2, name: "regis" }]);
+    this.set("content", [
+      { id: 1, name: "robin" },
+      { id: 2, name: "regis" }
+    ]);
   },
 
   skip: true,

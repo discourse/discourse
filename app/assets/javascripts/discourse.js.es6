@@ -1,10 +1,13 @@
 /*global Mousetrap:true*/
 import { buildResolver } from "discourse-common/resolver";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
+import { computed } from "@ember/object";
 import FocusEvent from "discourse-common/mixins/focus-event";
+import EmberObject from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
 
 const _pluginCallbacks = [];
 
@@ -58,25 +61,26 @@ const Discourse = Ember.Application.extend(FocusEvent, {
       $("title").text(title);
     }
 
-    var displayCount = this.displayCount;
-    if (displayCount > 0 && !Discourse.User.currentProp("dynamic_favicon")) {
+    let displayCount = this.displayCount;
+    let dynamicFavicon = this.currentUser && this.currentUser.dynamic_favicon;
+    if (displayCount > 0 && !dynamicFavicon) {
       title = `(${displayCount}) ${title}`;
     }
 
     document.title = title;
   },
 
-  @computed("contextCount", "notificationCount")
+  @discourseComputed("contextCount", "notificationCount")
   displayCount() {
-    return Discourse.User.current() &&
-      Discourse.User.currentProp("title_count_mode") === "notifications"
+    return this.currentUser &&
+      this.currentUser.get("title_count_mode") === "notifications"
       ? this.notificationCount
       : this.contextCount;
   },
 
   @observes("contextCount", "notificationCount")
   faviconChanged() {
-    if (Discourse.User.currentProp("dynamic_favicon")) {
+    if (this.currentUser && this.currentUser.get("dynamic_favicon")) {
       let url = Discourse.SiteSettings.site_favicon_url;
 
       // Since the favicon is cached on the browser for a really long time, we
@@ -179,7 +183,7 @@ const Discourse = Ember.Application.extend(FocusEvent, {
     });
   },
 
-  @computed("currentAssetVersion", "desiredAssetVersion")
+  @discourseComputed("currentAssetVersion", "desiredAssetVersion")
   requiresRefresh(currentAssetVersion, desiredAssetVersion) {
     return desiredAssetVersion && currentAssetVersion !== desiredAssetVersion;
   },
@@ -188,7 +192,7 @@ const Discourse = Ember.Application.extend(FocusEvent, {
     _pluginCallbacks.push({ version, code });
   },
 
-  assetVersion: Ember.computed({
+  assetVersion: computed({
     get() {
       return this.currentAssetVersion;
     },
@@ -204,5 +208,15 @@ const Discourse = Ember.Application.extend(FocusEvent, {
     }
   })
 }).create();
+
+Object.defineProperty(Discourse, "Model", {
+  get() {
+    deprecated("Use an `@ember/object` instead of Discourse.Model", {
+      since: "2.4.0",
+      dropFrom: "2.5.0"
+    });
+    return EmberObject;
+  }
+});
 
 export default Discourse;

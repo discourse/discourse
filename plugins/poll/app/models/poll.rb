@@ -32,6 +32,11 @@ class Poll < ActiveRecord::Base
     everyone: 1,
   }
 
+  enum chart_type: {
+    bar: 0,
+    pie: 1
+  }
+
   validates :min, numericality: { allow_nil: true, only_integer: true, greater_than_or_equal_to: 0 }
   validates :max, numericality: { allow_nil: true, only_integer: true, greater_than: 0 }
   validates :step, numericality: { allow_nil: true, only_integer: true, greater_than: 0 }
@@ -74,6 +79,7 @@ end
 #  anonymous_voters :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  chart_type       :integer          default("bar"), not null
 #
 # Indexes
 #

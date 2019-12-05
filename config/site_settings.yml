@@ -240,6 +240,12 @@ basic:
       - box
       - bullet
       - none
+  max_category_nesting:
+    client: true
+    default: 2
+    min: 2
+    max: 3
+    hidden: true
   enable_mobile_theme:
     client: true
     default: true
@@ -389,12 +395,12 @@ login:
   enable_discord_logins:
     default: false
   discord_client_id:
-    default: ''
+    default: ""
   discord_secret:
-    default: ''
+    default: ""
     secret: true
   discord_trusted_guilds:
-    default: ''
+    default: ""
     type: list
   enable_sso:
     client: true
@@ -965,6 +971,8 @@ email:
   email_in_min_trust:
     default: 2
     enum: "TrustLevelSetting"
+  email_in_authserv_id:
+    default: ""
   email_in_spam_header:
     type: enum
     default: "none"
@@ -1125,6 +1133,9 @@ files:
   purge_deleted_uploads_grace_period_days:
     default: 30
   prevent_anons_from_downloading_files:
+    default: false
+    client: true
+  secure_media:
     default: false
     client: true
   enable_s3_uploads:
@@ -1339,7 +1350,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse"
     type: list
     list_type: compact
   crawler_check_bypass_agents:
@@ -1368,7 +1379,7 @@ security:
     list_type: compact
   blacklisted_crawler_user_agents:
     type: list
-    default: "mauibot|semrushbot|ahrefsbot|blexbot"
+    default: "mauibot|semrushbot|ahrefsbot|blexbot|seo spider"
     list_type: compact
   slow_down_crawler_user_agents:
     type: list
@@ -1384,6 +1395,9 @@ security:
   content_security_policy_script_src:
     type: list
     default: ""
+  content_security_policy_allow_unsafe_eval:
+    default: true
+    hidden: true
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
@@ -1581,23 +1595,9 @@ developer:
     client: true
 
 embedding:
-  feed_polling_enabled:
-    default: false
-    hidden: true
-  feed_polling_url:
-    default: ""
-    hidden: true
-  feed_polling_frequency_mins:
-    min: 5
-    max: 180
-    default: 60
-    hidden: true
   embed_by_username:
     default: ""
     type: username
-    hidden: true
-  embed_username_key_from_feed:
-    default: ""
     hidden: true
   embed_post_limit:
     default: 100
@@ -1857,7 +1857,7 @@ uncategorized:
 
   disable_system_edit_notifications: true
 
-  likes_notification_consolidation_threshold:
+  notification_consolidation_threshold:
     default: 3
     min: 0
 
@@ -2022,6 +2022,9 @@ user_preferences:
   default_categories_watching_first_post:
     type: category_list
     default: ""
+  mute_all_categories_by_default:
+    default: false
+    client: true
 
   default_tags_watching:
     type: tag_list
@@ -2056,7 +2059,7 @@ api:
     default: 30
   retry_web_hook_events:
     default: false
-  api_key_last_used_epoch: 
+  api_key_last_used_epoch:
     default: "" # Value is added in a migration
     hidden: true
   revoke_api_keys_days:

@@ -37,6 +37,7 @@ acceptance("Group Requests", {
           is_group_user: true,
           is_group_owner: true,
           is_group_owner_display: true,
+          can_see_members: true,
           mentionable: false,
           messageable: false
         },
@@ -126,5 +127,8 @@ QUnit.test("Group Requests", async assert => {
       .trim(),
     "denied"
   );
-  assert.deepEqual(requests, [["19", "true"], ["20", undefined]]);
+  assert.deepEqual(requests, [
+    ["19", "true"],
+    ["20", undefined]
+  ]);
 });

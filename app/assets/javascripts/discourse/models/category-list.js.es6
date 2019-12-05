@@ -1,5 +1,8 @@
 import PreloadStore from "preload-store";
 import { ajax } from "discourse/lib/ajax";
+import Topic from "discourse/models/topic";
+import Category from "discourse/models/category";
+import Site from "discourse/models/site";
 
 const CategoryList = Ember.ArrayProxy.extend({
   init() {
@@ -11,7 +14,7 @@ const CategoryList = Ember.ArrayProxy.extend({
 CategoryList.reopenClass({
   categoriesFrom(store, result) {
     const categories = CategoryList.create();
-    const list = Discourse.Category.list();
+    const list = Category.list();
 
     let statPeriod = "all";
     const minCategories = result.category_list.categories.length * 0.66;
@@ -39,7 +42,7 @@ CategoryList.reopenClass({
 
       if (c.topics) {
         c.topics = c.topics.map(t => {
-          const topic = Discourse.Topic.create(t);
+          const topic = Topic.create(t);
           topic.set("category", c);
           return topic;
         });
@@ -74,7 +77,9 @@ CategoryList.reopenClass({
           break;
       }
 
-      categories.pushObject(store.createRecord("category", c));
+      const record = Site.current().updateCategory(c);
+      record.setupGroupsAndPermissions();
+      categories.pushObject(record);
     });
     return categories;
   },

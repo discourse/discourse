@@ -30,7 +30,8 @@ th:
         label: "แสดงผล"
       hide-results:
         title: "กลับสู่การโหวต"
-        label: "ซ่อนผล"
+      export-results:
+        label: "ส่งออก"
       open:
         title: "เปิดโพล"
         label: "เปิด"

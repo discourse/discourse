@@ -56,7 +56,6 @@ class User < ActiveRecord::Base
   has_many :user_associated_accounts, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
   has_many :oauth2_user_infos, dependent: :destroy
-  has_one :instagram_user_info, dependent: :destroy
   has_many :user_second_factors, dependent: :destroy
 
   has_many :totps, -> {
@@ -418,6 +417,7 @@ class User < ActiveRecord::Base
 
   def enqueue_staff_welcome_message(role)
     return unless staff?
+    return if role == :admin && User.real.where(admin: true).count == 1
 
     Jobs.enqueue(
       :send_system_message,
@@ -670,6 +670,15 @@ class User < ActiveRecord::Base
     create_visit_record!(date) unless visit_record_for(date)
   end
 
+  def update_timezone_if_missing(timezone)
+    return if timezone.blank? || !TimezoneValidator.valid?(timezone)
+
+    # we only want to update the user's timezone if they have not set it themselves
+    UserOption
+      .where(user_id: self.id, timezone: nil)
+      .update_all(timezone: timezone)
+  end
+
   def update_posts_read!(num_posts, opts = {})
     now = opts[:at] || Time.zone.now
     _retry = opts[:retry] || false
@@ -908,7 +917,7 @@ class User < ActiveRecord::Base
   def email_confirmed?
     email_tokens.where(email: email, confirmed: true).present? ||
     email_tokens.empty? ||
-    single_sign_on_record&.external_email == email
+    single_sign_on_record&.external_email&.downcase == email
   end
 
   def activate
@@ -1478,8 +1487,13 @@ class User < ActiveRecord::Base
 
   def check_if_title_is_badged_granted
     if title_changed? && !new_record? && user_profile
-      badge_granted_title = title.present? && badges.where(allow_title: true, name: title).exists?
-      user_profile.update_column(:badge_granted_title, badge_granted_title)
+      badge_matching_title = title && badges.find do |badge|
+        badge.allow_title? && (badge.display_name == title || badge.name == title)
+      end
+      user_profile.update(
+        badge_granted_title: badge_matching_title.present?,
+        granted_title_badge_id: badge_matching_title&.id
+      )
     end
   end
 

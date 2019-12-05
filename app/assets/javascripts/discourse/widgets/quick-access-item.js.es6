@@ -33,11 +33,21 @@ createWidget("quick-access-item", {
     return result;
   },
 
-  html({ icon, href }) {
+  html({ href, icon }) {
+    let content = this._contentHtml();
+
+    if (href) {
+      let topicId = href.match(/\/t\/.*?\/(\d+)/);
+      if (topicId && topicId[1]) {
+        topicId = escapeExpression(topicId[1]);
+        content = `<span data-topic-id="${topicId}">${content}</span>`;
+      }
+    }
+
     return h("a", { attributes: { href } }, [
       iconNode(icon),
       new RawHtml({
-        html: `<div>${this._usernameHtml()}${this._contentHtml()}</div>`
+        html: `<div>${this._usernameHtml()}${content}</div>`
       })
     ]);
   },

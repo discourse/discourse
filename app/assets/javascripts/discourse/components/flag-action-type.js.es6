@@ -1,17 +1,22 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { and, not, equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Component.extend({
   classNames: ["flag-action-type"],
 
-  @computed("flag.name_key")
+  @discourseComputed("flag.name_key")
   customPlaceholder(nameKey) {
     return I18n.t("flagging.custom_placeholder_" + nameKey);
   },
 
-  @computed("flag.name", "flag.name_key", "flag.is_custom_flag", "username")
+  @discourseComputed(
+    "flag.name",
+    "flag.name_key",
+    "flag.is_custom_flag",
+    "username"
+  )
   formattedName(name, nameKey, isCustomFlag, username) {
     if (isCustomFlag) {
       return name.replace("{{username}}", username);
@@ -20,7 +25,7 @@ export default Component.extend({
     }
   },
 
-  @computed("flag", "selectedFlag")
+  @discourseComputed("flag", "selectedFlag")
   selected(flag, selectedFlag) {
     return flag === selectedFlag;
   },
@@ -29,12 +34,12 @@ export default Component.extend({
   showDescription: not("showMessageInput"),
   isNotifyUser: equal("flag.name_key", "notify_user"),
 
-  @computed("flag.description", "flag.short_description")
+  @discourseComputed("flag.description", "flag.short_description")
   description(long_description, short_description) {
     return this.site.mobileView ? short_description : long_description;
   },
 
-  @computed("message.length")
+  @discourseComputed("message.length")
   customMessageLengthClasses(messageLength) {
     return messageLength <
       Discourse.SiteSettings.min_personal_message_post_length
@@ -42,7 +47,7 @@ export default Component.extend({
       : "ok";
   },
 
-  @computed("message.length")
+  @discourseComputed("message.length")
   customMessageLength(messageLength) {
     const len = messageLength || 0;
     const minLen = Discourse.SiteSettings.min_personal_message_post_length;

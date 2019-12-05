@@ -2,10 +2,11 @@ import { scheduleOnce } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import { deprecated } from "discourse/mixins/scroll-top";
 import Mixin from "@ember/object/mixin";
+import ENV from "discourse-common/config/environment";
 
 const context = {
   _scrollTop() {
-    if (Ember.testing) {
+    if (ENV.environment === "test") {
       return;
     }
     $(document).scrollTop(0);

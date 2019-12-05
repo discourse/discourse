@@ -1,3 +1,5 @@
+import User from "discourse/models/user";
+
 export function parsePostData(query) {
   const result = {};
   query.split("&").forEach(function(part) {
@@ -29,7 +31,7 @@ export function success() {
   return response({ success: true });
 }
 
-const loggedIn = () => !!Discourse.User.current();
+const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
 export let fixturesByUrl;
 
@@ -62,8 +64,8 @@ export default function() {
       return response(json);
     });
 
-    this.get("/c/bug/l/latest.json", () => {
-      const json = fixturesByUrl["/c/bug/l/latest.json"];
+    this.get("/c/bug/1/l/latest.json", () => {
+      const json = fixturesByUrl["/c/bug/1/l/latest.json"];
 
       if (loggedIn()) {
         // Stuff to let us post
@@ -263,6 +265,7 @@ export default function() {
 
     this.put("/categories/:category_id", request => {
       const category = parsePostData(request.requestBody);
+      category.id = parseInt(request.params.category_id, 10);
 
       if (category.email_in === "duplicate@example.com") {
         return response(422, { errors: ["duplicate email"] });
@@ -436,25 +439,25 @@ export default function() {
 
     this.get("/t/:topic_id/posts.json", request => {
       const postIds = request.queryParams.post_ids;
-      const postNumber = parseInt(request.queryParams.post_number);
+      const postNumber = parseInt(request.queryParams.post_number, 10);
       let posts;
 
       if (postIds) {
         posts = postIds.map(p => ({
-          id: parseInt(p),
-          post_number: parseInt(p)
+          id: parseInt(p, 10),
+          post_number: parseInt(p, 10)
         }));
       } else if (postNumber && request.queryParams.asc === "true") {
         posts = _.range(postNumber + 1, postNumber + 6).map(p => ({
-          id: parseInt(p),
-          post_number: parseInt(p)
+          id: parseInt(p, 10),
+          post_number: parseInt(p, 10)
         }));
       } else if (postNumber && request.queryParams.asc === "false") {
         posts = _.range(postNumber - 5, postNumber)
           .reverse()
           .map(p => ({
-            id: parseInt(p),
-            post_number: parseInt(p)
+            id: parseInt(p, 10),
+            post_number: parseInt(p, 10)
           }));
       }
 
@@ -492,6 +495,15 @@ export default function() {
             id: 1234,
             raw: data.raw
           }
+        });
+      }
+
+      if (data.raw === "custom message") {
+        return response(200, {
+          success: true,
+          action: "custom",
+          message: "This is a custom response",
+          route_to: "/faq"
         });
       }
 

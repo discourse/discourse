@@ -11,6 +11,8 @@ he:
     poll_maximum_options: "מספר האפשרויות המירבי המותר בסקר"
     poll_edit_window_mins: "מספר דקות אחרי יצירת פוסט במהלכן ניתן לערוך סקרים."
     poll_minimum_trust_level_to_create: "הגדרת רמת המהימנות המזערית הנדרשת ליצירת סקרים."
+    poll_groupable_user_fields: "רשימה של שמות משדה המשתמש שניתן להשתמש בהם לקיבוץ ולסינון תוצאות סקרים."
+    poll_export_data_explorer_query_id: "מזהה שאילתת חוקר הנתונים לשימוש לטובת ייצוא תוצאות הסקר (0 כדי להשבית)."
   poll:
     poll: "סקר"
     invalid_argument: "ערך שגוי ‚%{value}’ למשתנה ‚%{argument}’."
@@ -46,3 +48,5 @@ he:
     insufficient_rights_to_create: "אין לך רשות ליצור סקרים."
     email:
       link_to_poll: "לחצו כדי לצפות בסקר."
+    user_field:
+      no_data: "אין נתונים"

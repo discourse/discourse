@@ -12,7 +12,7 @@ describe ReviewableFlaggedPostSerializer do
     json = ReviewableFlaggedPostSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
     expect(json[:cooked]).to eq(p0.cooked)
     expect(json[:raw]).to eq(p0.raw)
-    expect(json[:target_url]).to eq(p0.url)
+    expect(json[:target_url]).to eq(Discourse.base_url + p0.url)
   end
 
   it "works when the topic is deleted" do

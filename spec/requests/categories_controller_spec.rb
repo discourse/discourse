@@ -8,21 +8,8 @@ describe CategoriesController do
 
   context 'index' do
 
-    it 'suppresses categories correctly' do
-      post = create_post(title: 'super AMAZING AMAZING post')
-
-      get "/categories"
-      expect(response.body).to include('AMAZING AMAZING')
-
-      post.topic.category.update_columns(suppress_from_latest: true)
-
-      get "/categories"
-      expect(response.body).not_to include('AMAZING AMAZING')
-    end
-
     it 'web crawler view has correct urls for subfolder install' do
-      GlobalSetting.stubs(:relative_url_root).returns('/forum')
-      Discourse.stubs(:base_uri).returns("/forum")
+      set_subfolder "/forum"
       get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
       html = Nokogiri::HTML(response.body)
       expect(html.css('body.crawler')).to be_present
@@ -347,6 +334,7 @@ describe CategoriesController do
 
       describe "success" do
         it "updates attributes correctly" do
+          SiteSetting.tagging_enabled = true
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
           tag_group = Fabricate(:tag_group)
@@ -427,6 +415,22 @@ describe CategoriesController do
           expect(category.require_reply_approval?).to eq(true)
           expect(category.num_auto_bump_daily).to eq(10)
           expect(category.navigate_to_first_post_after_read).to eq(true)
+        end
+
+        it "can remove required tag group" do
+          SiteSetting.tagging_enabled = true
+          category.update!(required_tag_group: Fabricate(:tag_group))
+          put "/categories/#{category.id}.json", params: {
+            name: category.name,
+            color: category.color,
+            text_color: category.text_color,
+            allow_global_tags: 'false',
+            min_tags_from_required_group: 1
+          }
+
+          expect(response.status).to eq(200)
+          category.reload
+          expect(category.required_tag_group).to be_nil
         end
       end
     end

@@ -1,8 +1,8 @@
 import NotificationOptionsComponent from "select-kit/components/notifications-button";
 import {
-  default as computed,
+  default as discourseComputed,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { topicLevels } from "discourse/lib/notification-levels";
 
 export default NotificationOptionsComponent.extend({
@@ -12,7 +12,7 @@ export default NotificationOptionsComponent.extend({
   i18nPrefix: "topic.notifications",
   allowInitialValueMutation: false,
 
-  @computed("topic.archetype")
+  @discourseComputed("topic.archetype")
   i18nPostfix(archetype) {
     return archetype === "private_message" ? "_pm" : "";
   },

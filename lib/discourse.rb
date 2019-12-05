@@ -24,19 +24,51 @@ module Discourse
   end
 
   class Utils
-    def self.execute_command(*command, failure_message: "", success_status_codes: [0], chdir: ".")
-      stdout, stderr, status = Open3.capture3(*command, chdir: chdir)
+    # Usage:
+    #   Discourse::Utils.execute_command("pwd", chdir: 'mydirectory')
+    # or with a block
+    #   Discourse::Utils.execute_command(chdir: 'mydirectory') do |runner|
+    #     runner.exec("pwd")
+    #   end
+    def self.execute_command(*command, **args)
+      runner = CommandRunner.new(**args)
 
-      if !status.exited? || !success_status_codes.include?(status.exitstatus)
-        failure_message = "#{failure_message}\n" if !failure_message.blank?
-        raise "#{caller[0]}: #{failure_message}#{stderr}"
+      if block_given?
+        raise RuntimeError.new("Cannot pass command and block to execute_command") if command.present?
+        yield runner
+      else
+        runner.exec(*command)
       end
-
-      stdout
     end
 
     def self.pretty_logs(logs)
       logs.join("\n".freeze)
+    end
+
+    private
+
+    class CommandRunner
+      def initialize(**init_params)
+        @init_params = init_params
+      end
+
+      def exec(*command, **exec_params)
+        raise RuntimeError.new("Cannot specify same parameters at block and command level") if (@init_params.keys & exec_params.keys).present?
+        execute_command(*command, **@init_params.merge(exec_params))
+      end
+
+      private
+
+      def execute_command(*command, failure_message: "", success_status_codes: [0], chdir: ".")
+        stdout, stderr, status = Open3.capture3(*command, chdir: chdir)
+
+        if !status.exited? || !success_status_codes.include?(status.exitstatus)
+          failure_message = "#{failure_message}\n" if !failure_message.blank?
+          raise "#{caller[0]}: #{failure_message}#{stderr}"
+        end
+
+        stdout
+      end
     end
   end
 
@@ -129,11 +161,11 @@ module Discourse
   end
 
   def self.top_menu_items
-    @top_menu_items ||= Discourse.filters + [:category, :categories, :top]
+    @top_menu_items ||= Discourse.filters + [:categories, :top]
   end
 
   def self.anonymous_top_menu_items
-    @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:category, :categories, :top]
+    @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:categories, :top]
   end
 
   PIXEL_RATIOS ||= [1, 1.5, 2, 3]
@@ -152,29 +184,8 @@ module Discourse
   end
 
   def self.activate_plugins!
-    all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
-
-    if Rails.env.development?
-      plugin_hash = Digest::SHA1.hexdigest(all_plugins.map { |p| p.path }.sort.join('|'))
-      hash_file = "#{Rails.root}/tmp/plugin-hash"
-
-      old_hash = begin
-        File.read(hash_file)
-      rescue Errno::ENOENT
-      end
-
-      if old_hash && old_hash != plugin_hash
-        puts "WARNING: It looks like your discourse plugins have recently changed."
-        puts "It is highly recommended to remove your `tmp` directory, otherwise"
-        puts "plugins might not work."
-        puts
-      else
-        File.write(hash_file, plugin_hash)
-      end
-    end
-
     @plugins = []
-    all_plugins.each do |p|
+    Plugin::Instance.find_all("#{Rails.root}/plugins").each do |p|
       v = p.metadata.required_version || Discourse::VERSION::STRING
       if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
         p.activate!

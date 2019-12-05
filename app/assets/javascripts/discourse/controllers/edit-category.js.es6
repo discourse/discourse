@@ -4,10 +4,11 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import DiscourseURL from "discourse/lib/url";
 import { extractError } from "discourse/lib/ajax-error";
 import {
-  default as computed,
+  default as discourseComputed,
   on,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
+import Category from "discourse/models/category";
 
 export default Controller.extend(ModalFunctionality, {
   selectedTab: null,
@@ -39,7 +40,7 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("model.{id,name}")
+  @discourseComputed("model.{id,name}")
   title(model) {
     if (model.id) {
       return I18n.t("category.edit_dialog_title", {
@@ -54,7 +55,7 @@ export default Controller.extend(ModalFunctionality, {
     this.set("modal.title", this.title);
   },
 
-  @computed("saving", "model.name", "model.color", "deleting")
+  @discourseComputed("saving", "model.name", "model.color", "deleting")
   disabled(saving, name, color, deleting) {
     if (saving || deleting) return true;
     if (!name) return true;
@@ -62,18 +63,18 @@ export default Controller.extend(ModalFunctionality, {
     return false;
   },
 
-  @computed("saving", "deleting")
+  @discourseComputed("saving", "deleting")
   deleteDisabled(saving, deleting) {
     return deleting || saving || false;
   },
 
-  @computed("name")
+  @discourseComputed("name")
   categoryName(name) {
     name = name || "";
     return name.trim().length > 0 ? name : I18n.t("preview");
   },
 
-  @computed("saving", "model.id")
+  @discourseComputed("saving", "model.id")
   saveLabel(saving, id) {
     if (saving) return "saving";
     return id ? "category.save" : "category.create";
@@ -106,7 +107,7 @@ export default Controller.extend(ModalFunctionality, {
             slug: result.category.slug,
             id: result.category.id
           });
-          DiscourseURL.redirectTo("/c/" + Discourse.Category.slugFor(model));
+          DiscourseURL.redirectTo(`/c/${Category.slugFor(model)}/${model.id}`);
         })
         .catch(error => {
           this.flash(extractError(error), "error");

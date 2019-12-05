@@ -1,5 +1,6 @@
 import MultiSelectComponent from "select-kit/components/multi-select";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+
 const { makeArray } = Ember;
 
 export default MultiSelectComponent.extend({
@@ -10,7 +11,7 @@ export default MultiSelectComponent.extend({
   allowAny: false,
   buffer: null,
 
-  @computed("buffer")
+  @discourseComputed("buffer")
   values(buffer) {
     return buffer === null
       ? makeArray(this.selected).map(s => this.valueForContentItem(s))

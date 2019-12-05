@@ -1,11 +1,11 @@
 import { next } from "@ember/runloop";
 import MountWidget from "discourse/components/mount-widget";
 import Docking from "discourse/mixins/docking";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
 
 const headerPadding = () => {
-  let topPadding = parseInt($("#main-outlet").css("padding-top")) + 3;
+  let topPadding = parseInt($("#main-outlet").css("padding-top"), 10) + 3;
   const iPadNavHeight = $(".footer-nav-ipad .footer-nav").height();
   if (iPadNavHeight) {
     topPadding += iPadNavHeight;

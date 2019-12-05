@@ -54,11 +54,13 @@ class Post < ActiveRecord::Base
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check, :skip_validation
 
-  LARGE_IMAGES      ||= "large_images".freeze
-  BROKEN_IMAGES     ||= "broken_images".freeze
-  DOWNLOADED_IMAGES ||= "downloaded_images".freeze
-  MISSING_UPLOADS ||= "missing uploads".freeze
-  MISSING_UPLOADS_IGNORED ||= "missing uploads ignored".freeze
+  LARGE_IMAGES            ||= "large_images"
+  BROKEN_IMAGES           ||= "broken_images"
+  DOWNLOADED_IMAGES       ||= "downloaded_images"
+  MISSING_UPLOADS         ||= "missing uploads"
+  MISSING_UPLOADS_IGNORED ||= "missing uploads ignored"
+  NOTICE_TYPE             ||= "notice_type"
+  NOTICE_ARGS             ||= "notice_args"
 
   SHORT_POST_CHARS ||= 1200
 
@@ -131,7 +133,8 @@ class Post < ActiveRecord::Base
                                  new_user_spam_threshold_reached: 3,
                                  flagged_by_tl3_user: 4,
                                  email_spam_header_found: 5,
-                                 flagged_by_tl4_user: 6)
+                                 flagged_by_tl4_user: 6,
+                                 email_authentication_result_header: 7)
   end
 
   def self.types
@@ -300,6 +303,15 @@ class Post < ActiveRecord::Base
     options[:user_id] = post_user.id if post_user
     options[:omit_nofollow] = true if omit_nofollow?
 
+    if self.with_secure_media?
+      each_upload_url do |url|
+        uri = URI.parse(url)
+        if FileHelper.is_supported_media?(File.basename(uri.path))
+          raw = raw.sub(Discourse.store.s3_upload_host, "#{Discourse.base_url}/secure-media-uploads")
+        end
+      end
+    end
+
     cooked = post_analyzer.cook(raw, options)
 
     new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
@@ -413,8 +425,8 @@ class Post < ActiveRecord::Base
   end
 
   def delete_post_notices
-    self.custom_fields.delete("notice_type")
-    self.custom_fields.delete("notice_args")
+    self.custom_fields.delete(Post::NOTICE_TYPE)
+    self.custom_fields.delete(Post::NOTICE_ARGS)
     self.save_custom_fields
   end
 
@@ -490,6 +502,11 @@ class Post < ActiveRecord::Base
 
   def reviewable_flag
     ReviewableFlaggedPost.pending.find_by(target: self)
+  end
+
+  def with_secure_media?
+    return false unless SiteSetting.secure_media?
+    topic&.private_message? || SiteSetting.login_required?
   end
 
   def hide!(post_action_type_id, reason = nil)
@@ -882,6 +899,13 @@ class Post < ActiveRecord::Base
     end
 
     upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
+
+    disallowed_uploads = []
+    if SiteSetting.secure_media? && !self.with_secure_media?
+      disallowed_uploads = Upload.where(id: upload_ids, secure: true).pluck(:original_filename)
+    end
+    return disallowed_uploads if disallowed_uploads.count > 0
+
     values = upload_ids.map! { |upload_id| "(#{self.id},#{upload_id})" }.join(",")
 
     PostUpload.transaction do
@@ -890,6 +914,12 @@ class Post < ActiveRecord::Base
       if values.size > 0
         DB.exec("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
       end
+    end
+  end
+
+  def update_uploads_secure_status
+    if Discourse.store.external?
+      self.uploads.each { |upload| upload.update_secure_status }
     end
   end
 
@@ -909,6 +939,7 @@ class Post < ActiveRecord::Base
     ]
 
     fragments ||= Nokogiri::HTML::fragment(self.cooked)
+
     links = fragments.css("a/@href", "img/@src").map do |media|
       src = media.value
       next if src.blank?

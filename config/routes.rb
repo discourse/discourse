@@ -74,6 +74,8 @@ Discourse::Application.routes.draw do
       collection do
         get "category/:id" => "site_settings#index"
       end
+
+      put "user_count" => "site_settings#user_count"
     end
 
     get "reports" => "reports#index"
@@ -406,8 +408,13 @@ Discourse::Application.routes.draw do
     put "#{root_path}/password-reset/:token" => "users#password_reset"
     get "#{root_path}/activate-account/:token" => "users#activate_account"
     put({ "#{root_path}/activate-account/:token" => "users#perform_account_activation" }.merge(index == 1 ? { as: 'perform_activate_account' } : {}))
-    get "#{root_path}/authorize-email/:token" => "users_email#confirm"
-    put "#{root_path}/authorize-email/:token" => "users_email#confirm"
+
+    get "#{root_path}/confirm-old-email/:token" => "users_email#show_confirm_old_email"
+    put "#{root_path}/confirm-old-email" => "users_email#confirm_old_email"
+
+    get "#{root_path}/confirm-new-email/:token" => "users_email#show_confirm_new_email"
+    put "#{root_path}/confirm-new-email" => "users_email#confirm_new_email"
+
     get({
       "#{root_path}/confirm-admin/:token" => "users#confirm_admin",
       constraints: { token: /[0-9a-f]+/ }
@@ -500,6 +507,7 @@ Discourse::Application.routes.draw do
   get "uploads/:site/original/:tree:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, tree: /([a-z0-9]+\/)+/i, sha: /\h{40}/, extension: /[a-z0-9\.]+/i }
   # used to download attachments (old route)
   get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /\h{16}/, format: /.*/ }
+  get "secure-media-uploads/*path(.:extension)" => "uploads#show_secure", constraints: { extension: /[a-z0-9\.]+/i }
 
   get "posts" => "posts#latest", id: "latest_posts", constraints: { format: /(json|rss)/ }
   get "private-posts" => "posts#latest", id: "private_posts", constraints: { format: /(json|rss)/ }
@@ -854,10 +862,13 @@ Discourse::Application.routes.draw do
       get '/:tag_id.rss' => 'tags#tag_feed'
       get '/:tag_id' => 'tags#show', as: 'tag_show'
       get '/intersection/:tag_id/*additional_tag_ids' => 'tags#show', as: 'tag_intersection'
+      get '/:tag_id/info' => 'tags#info'
       get '/:tag_id/notifications' => 'tags#notifications'
       put '/:tag_id/notifications' => 'tags#update_notifications'
       put '/:tag_id' => 'tags#update'
       delete '/:tag_id' => 'tags#destroy'
+      post '/:tag_id/synonyms' => 'tags#create_synonyms'
+      delete '/:tag_id/synonyms/:synonym_id' => 'tags#destroy_synonym'
 
       Discourse.filters.each do |filter|
         get "/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_show_#{filter}"

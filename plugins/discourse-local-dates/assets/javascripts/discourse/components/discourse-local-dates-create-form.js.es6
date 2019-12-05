@@ -6,7 +6,7 @@ import { propertyNotEqual } from "discourse/lib/computed";
 import loadScript from "discourse/lib/load-script";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { cookAsync } from "discourse/lib/text";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 
 export default Component.extend({
   timeFormat: "HH:mm:ss",
@@ -51,7 +51,7 @@ export default Component.extend({
     });
   },
 
-  _renderPreview: debounce(function() {
+  _renderPreview: discourseDebounce(function() {
     const markup = this.markup;
 
     if (markup) {

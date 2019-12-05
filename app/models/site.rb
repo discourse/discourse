@@ -55,15 +55,11 @@ class Site
 
       by_id = {}
 
-      category_user = {}
-      unless @guardian.anonymous?
-        category_user = Hash[*CategoryUser.where(user: @guardian.user).pluck(:category_id, :notification_level).flatten]
-      end
-
-      regular = CategoryUser.notification_levels[:regular]
+      notification_levels = CategoryUser.notification_levels_for(@guardian)
+      default_notification_level = CategoryUser.default_notification_level
 
       categories.each do |category|
-        category.notification_level = category_user[category.id] || regular
+        category.notification_level = notification_levels[category.id] || default_notification_level
         category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create&.include?(category.id) || @guardian.is_admin?
         category.has_children = with_children.include?(category.id)
         by_id[category.id] = category
@@ -76,10 +72,6 @@ class Site
 
   def groups
     Group.visible_groups(@guardian.user, "name ASC", include_everyone: true)
-  end
-
-  def suppressed_from_latest_category_ids
-    categories.select { |c| c.suppress_from_latest == true }.map(&:id)
   end
 
   def archetypes

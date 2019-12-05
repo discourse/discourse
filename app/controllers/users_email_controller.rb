@@ -4,8 +4,26 @@ class UsersEmailController < ApplicationController
 
   requires_login only: [:index, :update]
 
-  skip_before_action :check_xhr, only: [:confirm]
-  skip_before_action :redirect_to_login_if_required, only: [:confirm]
+  skip_before_action :check_xhr, only: [
+    :confirm_old_email,
+    :show_confirm_old_email,
+    :confirm_new_email,
+    :show_confirm_new_email
+  ]
+
+  skip_before_action :redirect_to_login_if_required, only: [
+    :confirm_old_email,
+    :show_confirm_old_email,
+    :confirm_new_email,
+    :show_confirm_new_email
+  ]
+
+  before_action :require_login, only: [
+    :confirm_old_email,
+    :show_confirm_old_email,
+    :confirm_new_email,
+    :show_confirm_new_email
+  ]
 
   def index
   end
@@ -29,38 +47,141 @@ class UsersEmailController < ApplicationController
     render_json_error(I18n.t("rate_limiter.slow_down"))
   end
 
-  def confirm
-    expires_now
+  def confirm_new_email
+    load_change_request(:new)
 
-    token = EmailToken.confirmable(params[:token])
-    user = token&.user
+    if @change_request&.change_state != EmailChangeRequest.states[:authorizing_new]
+      @error = I18n.t("change_email.already_done")
+    end
 
-    change_request =
-      if user
-        user.email_change_requests.where(new_email_token_id: token.id).first
-      end
+    redirect_url = path("/u/confirm-new-email/#{params[:token]}")
 
-    if change_request&.change_state == EmailChangeRequest.states[:authorizing_new] &&
-       user.totp_enabled? && !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
+    if !@error && @user.totp_enabled? && !@user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
+      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+      flash[:invalid_second_factor] = true
+      redirect_to redirect_url
+      return
+    end
 
-      @update_result = :invalid_second_factor
-      @backup_codes_enabled = true if user.backup_codes_enabled?
-
-      if params[:second_factor_token].present?
-        RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-        @show_invalid_second_factor_error = true
-      end
-    else
+    if !@error
       updater = EmailUpdater.new
-      @update_result = updater.confirm(params[:token])
-
-      if @update_result == :complete
+      if updater.confirm(params[:token]) == :complete
         updater.user.user_stat.reset_bounce_score!
-        log_on_user(updater.user)
+      else
+        @error = I18n.t("change_email.already_done")
       end
     end
 
+    if @error
+      flash[:error] = @error
+      redirect_to redirect_url
+    else
+      redirect_to "#{redirect_url}?done=true"
+    end
+  end
+
+  def show_confirm_new_email
+    load_change_request(:new)
+
+    if params[:done].to_s == "true"
+      @done = true
+    end
+
+    if @change_request&.change_state != EmailChangeRequest.states[:authorizing_new]
+      @error = I18n.t("change_email.already_done")
+    end
+
+    @show_invalid_second_factor_error = flash[:invalid_second_factor]
+
+    if !@error
+      if @user.totp_enabled?
+        @backup_codes_enabled = @user.backup_codes_enabled?
+        if params[:show_backup].to_s == "true" && @backup_codes_enabled
+          @show_backup_codes = true
+        else
+          @show_second_factor = true
+        end
+      end
+
+      @to_email = @change_request.new_email
+    end
+
     render layout: 'no_ember'
+  end
+
+  def confirm_old_email
+    load_change_request(:old)
+
+    if @change_request&.change_state != EmailChangeRequest.states[:authorizing_old]
+      @error = I18n.t("change_email.already_done")
+    end
+
+    redirect_url = path("/u/confirm-old-email/#{params[:token]}")
+
+    if !@error
+      updater = EmailUpdater.new
+      if updater.confirm(params[:token]) != :authorizing_new
+        @error = I18n.t("change_email.already_done")
+      end
+    end
+
+    if @error
+      flash[:error] = @error
+      redirect_to redirect_url
+    else
+      redirect_to "#{redirect_url}?done=true"
+    end
+  end
+
+  def show_confirm_old_email
+    load_change_request(:old)
+
+    if @change_request&.change_state != EmailChangeRequest.states[:authorizing_old]
+      @error = I18n.t("change_email.already_done")
+    end
+
+    if params[:done].to_s == "true"
+      @almost_done = true
+    end
+
+    if !@error
+      @from_email = @user.email
+      @to_email = @change_request.new_email
+    end
+
+    render layout: 'no_ember'
+  end
+
+  private
+
+  def load_change_request(type)
+    expires_now
+
+    @token = EmailToken.confirmable(params[:token])
+
+    if @token
+      if type == :old
+        @change_request = @token.user&.email_change_requests.where(old_email_token_id: @token.id).first
+      elsif type == :new
+        @change_request = @token.user&.email_change_requests.where(new_email_token_id: @token.id).first
+      end
+    end
+
+    @user = @token&.user
+
+    if (!@user || !@change_request)
+      @error = I18n.t("change_email.already_done")
+    end
+
+    if current_user.id != @user&.id
+      @error = I18n.t 'change_email.wrong_account_error'
+    end
+  end
+
+  def require_login
+    if !current_user
+      redirect_to_login
+    end
   end
 
 end

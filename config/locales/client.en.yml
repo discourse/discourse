@@ -821,6 +821,7 @@ en:
       collapse_profile: "Collapse"
       bookmarks: "Bookmarks"
       bio: "About me"
+      timezone: "Timezone"
       invited_by: "Invited By"
       trust_level: "Trust Level"
       notifications: "Notifications"
@@ -1461,7 +1462,7 @@ en:
       second_factor_backup_description: "Please enter one of your backup codes:"
       second_factor: "Log in using Authenticator app"
       security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
-      security_key_alternative: "Can't find your security key or want to use another method?"
+      security_key_alternative: "Try another way"
       security_key_authenticate: "Authenticate with Security Key"
       security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
       security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
@@ -1781,6 +1782,7 @@ en:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>New Topic</span> {{description}}"
       membership_request_accepted: "Membership accepted in '{{group_name}}'"
+      membership_request_consolidated: "{{count}} open membership requests for '{{group_name}}'"
 
       group_message_summary:
         one: "{{count}} message in your {{group_name}} inbox"
@@ -1819,6 +1821,7 @@ en:
         topic_reminder: "topic reminder"
         liked_consolidated: "new likes"
         post_approved: "post approved"
+        membership_request_consolidated: "new membership requests"
 
     upload_selector:
       title: "Add an image"
@@ -1867,6 +1870,7 @@ en:
       context:
         user: "Search posts by @{{username}}"
         category: "Search the #{{category}} category"
+        tag: "Search the #{{tag}} tag"
         topic: "Search this topic"
         private_messages: "Search messages"
 
@@ -2650,7 +2654,6 @@ en:
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
       mailinglist_mirror: "Category mirrors a mailing list"
-      suppress_from_latest: "Suppress category from latest topics."
       show_subcategory_list: "Show subcategory list above topics in this category."
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
@@ -3040,11 +3043,30 @@ en:
       changed: "tags changed:"
       tags: "Tags"
       choose_for_topic: "optional tags"
+      info: "Info"
+      default_info: "This tag isn't restricted to any categories, and has no synonyms."
+      synonyms: "Synonyms"
+      synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
+      tag_groups_info:
+        one: 'This tag belongs to the group "{{tag_groups}}".'
+        other: "This tag belongs to these groups: {{tag_groups}}."
+      category_restrictions:
+        one: "It can only be used in this category:"
+        other: "It can only be used in these categories:"
+      edit_synonyms: "Manage Synonyms"
+      add_synonyms_label: "Add synonyms:"
+      add_synonyms: "Add"
+      add_synonyms_failed: "The following tags couldn't be added as synonyms: <b>%{tag_names}</b>. Ensure they don't have synonyms and aren't synonyms of another tag."
+      remove_synonym: "Remove Synonym"
+      delete_synonym_confirm: 'Are you sure you want to delete the synonym "%{tag_name}"?'
       delete_tag: "Delete Tag"
       delete_confirm:
         one: "Are you sure you want to delete this tag and remove it from %{count} topic it is assigned to?"
         other: "Are you sure you want to delete this tag and remove it from {{count}} topics it is assigned to?"
       delete_confirm_no_topics: "Are you sure you want to delete this tag?"
+      delete_confirm_synonyms:
+        one: "Its synonym will also be deleted."
+        other: "Its {{count}} synonyms will also be deleted."
       rename_tag: "Rename Tag"
       rename_instructions: "Choose a new name for the tag:"
       sort_by: "Sort by:"
@@ -3587,6 +3609,7 @@ en:
           color_scheme_select: "Select colors to be used by theme"
           custom_sections: "Custom sections:"
           theme_components: "Theme Components"
+          add_all_themes: "Add all themes"
           convert: "Convert"
           convert_component_alert: "Are you sure you want to convert this component to theme? It will be removed as a component from %{relatives}."
           convert_component_tooltip: "Convert this component to theme"
@@ -3619,6 +3642,9 @@ en:
           edit_css_html: "Edit CSS/HTML"
           edit_css_html_help: "You have not edited any CSS or HTML"
           delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
+          component_on_themes: "Include component on these themes"
+          included_components: "Included components"
+          add_all: "Add all"
           import_web_tip: "Repository containing theme"
           import_web_advanced: "Advanced..."
           import_file_tip: ".tar.gz, .zip, or .dcstyle.json file containing theme"
@@ -3930,9 +3956,12 @@ en:
             change_theme_setting: "change theme setting"
             disable_theme_component: "disable theme component"
             enable_theme_component: "enable theme component"
+            revoke_title: "revoke title"
+            change_title: "change title"
             api_key_create: "api key create"
             api_key_update: "api key update"
             api_key_destroy: "api key destroy"
+            override_upload_secure_status: "override upload secure status"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -4432,22 +4461,16 @@ en:
         category: "Post to Category"
         add_host: "Add Host"
         settings: "Embedding Settings"
-        feed_settings: "Feed Settings"
-        feed_description: "Providing an RSS/ATOM feed for your site can improve Discourse's ability to import your content."
         crawling_settings: "Crawler Settings"
         crawling_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
 
         embed_by_username: "Username for topic creation"
         embed_post_limit: "Maximum number of posts to embed"
-        embed_username_key_from_feed: "Key to pull discourse username from feed"
         embed_title_scrubber: "Regular expression used to scrub the title of posts"
         embed_truncate: "Truncate the embedded posts"
         embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
         embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
         embed_classname_whitelist: "Allowed CSS class names"
-        feed_polling_enabled: "Import posts via RSS/ATOM"
-        feed_polling_url: "URL of RSS/ATOM feed to crawl"
-        feed_polling_frequency_mins: "Frequency of feed polling (in minutes)"
         save: "Save Embedding Settings"
 
       permalink:

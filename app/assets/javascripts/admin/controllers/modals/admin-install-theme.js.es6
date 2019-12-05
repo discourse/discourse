@@ -5,9 +5,9 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { THEMES, COMPONENTS } from "admin/models/theme";
 import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
 import { set } from "@ember/object";
@@ -43,7 +43,7 @@ export default Controller.extend(ModalFunctionality, {
     ];
   },
 
-  @computed("themesController.installedThemes")
+  @discourseComputed("themesController.installedThemes")
   themes(installedThemes) {
     return POPULAR_THEMES.map(t => {
       if (installedThemes.includes(t.name)) {
@@ -53,7 +53,7 @@ export default Controller.extend(ModalFunctionality, {
     });
   },
 
-  @computed(
+  @discourseComputed(
     "loading",
     "remote",
     "uploadUrl",
@@ -102,12 +102,12 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("name")
+  @discourseComputed("name")
   nameTooShort(name) {
     return !name || name.length < MIN_NAME_LENGTH;
   },
 
-  @computed("component")
+  @discourseComputed("component")
   placeholder(component) {
     if (component) {
       return I18n.t("admin.customize.theme.component_name");
@@ -116,14 +116,14 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("selection")
+  @discourseComputed("selection")
   submitLabel(selection) {
     return `admin.customize.theme.${
       selection === "create" ? "create" : "install"
     }`;
   },
 
-  @computed("privateChecked", "checkPrivate", "publicKey")
+  @discourseComputed("privateChecked", "checkPrivate", "publicKey")
   showPublicKey(privateChecked, checkPrivate, publicKey) {
     return privateChecked && checkPrivate && publicKey;
   },

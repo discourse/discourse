@@ -20,11 +20,15 @@ class Admin::SiteTextsController < Admin::AdminController
     extras = {}
 
     query = params[:q] || ""
+
+    locale = params[:locale] || I18n.locale
+    raise Discourse::InvalidParameters.new(:locale) if !I18n.locale_available?(locale)
+
     if query.blank? && !overridden
       extras[:recommended] = true
-      results = self.class.preferred_keys.map { |k| record_for(k) }
+      results = I18n.with_locale(locale) { self.class.preferred_keys.map { |k| record_for(k) } }
     else
-      results = find_translations(query, overridden)
+      results = I18n.with_locale(locale) { find_translations(query, overridden) }
 
       if results.any?
         extras[:regex] = I18n::Backend::DiscourseI18n.create_search_regexp(query, as_string: true)
@@ -41,8 +45,15 @@ class Admin::SiteTextsController < Admin::AdminController
       end
     end
 
-    extras[:has_more] = true if results.size > 50
-    render_serialized(results[0..49], SiteTextSerializer, root: 'site_texts', rest_serializer: true, extras: extras, overridden_keys: overridden_keys)
+    page = params[:page].to_i
+    raise Discourse::InvalidParameters.new(:page) if page < 0
+
+    per_page = 50
+    first = page * per_page
+    last = first + per_page
+
+    extras[:has_more] = true if results.size > last
+    render_serialized(results[first..last - 1], SiteTextSerializer, root: 'site_texts', rest_serializer: true, extras: extras, overridden_keys: overridden_keys)
   end
 
   def show
@@ -59,6 +70,15 @@ class Admin::SiteTextsController < Admin::AdminController
 
     if translation_override.errors.empty?
       StaffActionLogger.new(current_user).log_site_text_change(id, value, old_value)
+      system_badge_id = Badge.find_system_badge_id_from_translation_key(id)
+      if system_badge_id.present?
+        Jobs.enqueue(
+          :bulk_user_title_update,
+          new_title: value,
+          granted_badge_id: system_badge_id,
+          action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
+        )
+      end
       render_serialized(site_text, SiteTextSerializer, root: 'site_text', rest_serializer: true)
     else
       render json: failed_json.merge(
@@ -69,10 +89,19 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def revert
     site_text = find_site_text
-    old_text = I18n.t(site_text[:id])
-    TranslationOverride.revert!(I18n.locale, site_text[:id])
+    id = site_text[:id]
+    old_text = I18n.t(id)
+    TranslationOverride.revert!(I18n.locale, id)
     site_text = find_site_text
-    StaffActionLogger.new(current_user).log_site_text_change(site_text[:id], site_text[:value], old_text)
+    StaffActionLogger.new(current_user).log_site_text_change(id, site_text[:value], old_text)
+    system_badge_id = Badge.find_system_badge_id_from_translation_key(id)
+    if system_badge_id.present?
+      Jobs.enqueue(
+        :bulk_user_title_update,
+        granted_badge_id: system_badge_id,
+        action: Jobs::BulkUserTitleUpdate::RESET_ACTION
+      )
+    end
     render_serialized(site_text, SiteTextSerializer, root: 'site_text', rest_serializer: true)
   end
 

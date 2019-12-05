@@ -7,10 +7,10 @@ import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 /*global Mousetrap:true */
 import {
-  default as computed,
+  default as discourseComputed,
   on,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { cookAsync } from "discourse/lib/text";
@@ -30,6 +30,7 @@ import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor } from "discourse/lib/text";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
+import ENV from "discourse-common/config/environment";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -98,6 +99,7 @@ class Toolbar {
         id: "link",
         group: "insertions",
         shortcut: "K",
+        trimLeading: true,
         sendAction: event => this.context.send("showLinkModal", event)
       });
     }
@@ -137,7 +139,7 @@ class Toolbar {
       shortcut: "Shift+7",
       title: "composer.olist_title",
       perform: e =>
-        e.applyList(i => (!i ? "1. " : `${parseInt(i) + 1}. `), "list_item")
+        e.applyList(i => (!i ? "1. " : `${parseInt(i, 10) + 1}. `), "list_item")
     });
 
     if (siteSettings.support_mixed_text_direction) {
@@ -228,7 +230,7 @@ export default Component.extend({
   emojiPickerIsActive: false,
   emojiStore: service("emoji-store"),
 
-  @computed("placeholder")
+  @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
     if (placeholder) return I18n.t(placeholder);
     return null;
@@ -326,7 +328,7 @@ export default Component.extend({
     $(this.element.querySelector(".d-editor-preview")).off("click.preview");
   },
 
-  @computed
+  @discourseComputed
   toolbar() {
     const toolbar = new Toolbar(
       this.getProperties("site", "siteSettings", "showLink")
@@ -375,7 +377,7 @@ export default Component.extend({
     }
 
     // Debouncing in test mode is complicated
-    if (Ember.testing) {
+    if (ENV.environment === "test") {
       this._updatePreview();
     } else {
       debounce(this, this._updatePreview, 30);
@@ -910,7 +912,11 @@ export default Component.extend({
       const captures = selected.pre.match(/\B:(\w*)$/);
 
       if (_.isEmpty(captures)) {
-        this._addText(selected, `:${code}:`);
+        if (selected.pre.match(/\S$/)) {
+          this._addText(selected, ` :${code}:`);
+        } else {
+          this._addText(selected, `:${code}:`);
+        }
       } else {
         let numOfRemovedChars = selected.pre.length - captures[1].length;
         selected.pre = selected.pre.slice(
@@ -955,15 +961,14 @@ export default Component.extend({
       }
 
       let linkText = "";
-      this._lastSel = this._getSelected();
+      this._lastSel = toolbarEvent.selected;
 
       if (this._lastSel) {
-        linkText = this._lastSel.value.trim();
+        linkText = this._lastSel.value;
       }
 
       showModal("insert-hyperlink").setProperties({
-        linkText: linkText,
-        _lastSel: this._lastSel,
+        linkText,
         toolbarEvent
       });
     },

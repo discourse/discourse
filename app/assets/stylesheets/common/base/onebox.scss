@@ -562,21 +562,18 @@ aside.onebox.twitterstatus .onebox-body {
   .outer-box {
     position: absolute;
     z-index: z("base");
-    overflow: hidden;
     font-size: $font-down-1;
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
-    text-overflow: ellipsis;
-    max-width: 100%;
+    @include ellipsis;
+    max-width: 690px;
     padding: 5px 0;
 
     .inner-box {
       padding-left: 10px;
       padding-right: 10px;
       overflow: hidden;
-      text-overflow: ellipsis;
-      word-wrap: normal;
-      white-space: nowrap;
+      @include ellipsis;
 
       .album-title {
         width: 100%;

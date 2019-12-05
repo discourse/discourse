@@ -1,9 +1,8 @@
-import { isEmpty } from "@ember/utils";
 import { not, or, gt } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -11,6 +10,7 @@ import showModal from "discourse/lib/show-modal";
 import { findAll } from "discourse/models/login-method";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
+import logout from "discourse/lib/logout";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
@@ -43,7 +43,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
     this.set("passwordProgress", null);
   },
 
-  @computed()
+  @discourseComputed()
   nameInstructions() {
     return I18n.t(
       this.siteSettings.full_name_required
@@ -54,7 +54,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
 
   canSelectTitle: gt("model.availableTitles.length", 0),
 
-  @computed("model.filteredGroups")
+  @discourseComputed("model.filteredGroups")
   canSelectPrimaryGroup(primaryGroupOptions) {
     return (
       primaryGroupOptions.length > 0 &&
@@ -62,7 +62,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
     );
   },
 
-  @computed("model.is_anonymous")
+  @discourseComputed("model.is_anonymous")
   canChangePassword(isAnonymous) {
     if (isAnonymous) {
       return false;
@@ -73,12 +73,12 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
     }
   },
 
-  @computed("model.associated_accounts")
+  @discourseComputed("model.associated_accounts")
   associatedAccountsLoaded(associatedAccounts) {
     return typeof associatedAccounts !== "undefined";
   },
 
-  @computed("model.associated_accounts.[]")
+  @discourseComputed("model.associated_accounts.[]")
   authProviders(accounts) {
     const allMethods = findAll();
 
@@ -94,7 +94,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
 
   disableConnectButtons: propertyNotEqual("model.id", "currentUser.id"),
 
-  @computed(
+  @discourseComputed(
     "model.second_factor_enabled",
     "canCheckEmails",
     "model.is_anonymous"
@@ -110,7 +110,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
     return findAll().length > 0;
   },
 
-  @computed("showAllAuthTokens", "model.user_auth_tokens")
+  @discourseComputed("showAllAuthTokens", "model.user_auth_tokens")
   authTokens(showAllAuthTokens, tokens) {
     tokens.sort((a, b) => {
       if (a.is_active) {
@@ -240,14 +240,7 @@ export default Controller.extend(CanCheckEmails, PreferencesTabController, {
         }
       )
         .then(() => {
-          if (!token) {
-            const redirect = this.siteSettings.logout_redirect;
-            if (isEmpty(redirect)) {
-              window.location = Discourse.getURL("/");
-            } else {
-              window.location.href = redirect;
-            }
-          }
+          if (!token) logout(); // All sessions revoked
         })
         .catch(popupAjaxError);
     },

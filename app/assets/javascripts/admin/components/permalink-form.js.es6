@@ -1,6 +1,6 @@
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 import Permalink from "admin/models/permalink";
 
@@ -10,7 +10,7 @@ export default Component.extend({
   permalinkType: "topic_id",
   permalinkTypePlaceholder: fmt("permalinkType", "admin.permalink.%@"),
 
-  @computed
+  @discourseComputed
   permalinkTypes() {
     return [
       { id: "topic_id", name: I18n.t("admin.permalink.topic_id") },

@@ -119,7 +119,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
     end
   end
 
-  context 'private uploads' do
+  context 'secure uploads' do
     let(:store) { FileStore::S3Store.new }
     let(:client) { Aws::S3::Client.new(stub_responses: true) }
     let(:resource) { Aws::S3::Resource.new(client: client) }
@@ -133,18 +133,18 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       SiteSetting.s3_secret_access_key = "s3-secret-access-key"
       SiteSetting.enable_s3_uploads = true
       SiteSetting.prevent_anons_from_downloading_files = true
+      SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
     end
 
     before do
       s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "etag"))
     end
 
-    describe "when private uploads are enabled" do
+    describe "when secure attachments are enabled" do
       it "returns signed URL with correct path" do
         test_multisite_connection('default') do
-          SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
           upload = build_upload
-          upload.update!(original_filename: "small.pdf", extension: "pdf")
+          upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_bucket.expects(:object).with("uploads/default/original/1X/#{upload.sha1}.pdf").returns(s3_object).at_least_once
@@ -159,13 +159,41 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       end
     end
 
+    describe "when secure media are enabled" do
+      before do
+        SiteSetting.login_required = true
+        SiteSetting.secure_media = true
+        s3_helper.stubs(:s3_client).returns(client)
+        Discourse.stubs(:store).returns(store)
+      end
+
+      it "returns signed URL with correct path" do
+        test_multisite_connection('default') do
+          upload = Fabricate.build(:upload_s3, sha1: upload_sha1, id: 1)
+
+          signed_url = Discourse.store.signed_url_for_path(upload.url)
+          expect(signed_url).to match(/Amz-Expires/)
+          expect(signed_url).to match("uploads/default")
+        end
+
+        test_multisite_connection('second') do
+          upload = Fabricate.build(:upload_s3, sha1: upload_sha1, id: 1)
+
+          signed_url = Discourse.store.signed_url_for_path(upload.url)
+          expect(signed_url).to match(/Amz-Expires/)
+          expect(signed_url).to match("uploads/second")
+        end
+      end
+    end
+
     describe "#update_upload_ACL" do
       it "updates correct file for default and second multisite db" do
         test_multisite_connection('default') do
           upload = build_upload
+          upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          s3_bucket.expects(:object).with("uploads/default/original/1X/#{upload.sha1}.png").returns(s3_object)
+          s3_bucket.expects(:object).with("uploads/default/original/1X/#{upload.sha1}.pdf").returns(s3_object)
           s3_object.expects(:acl).returns(s3_object)
           s3_object.expects(:put).with(acl: "private").returns(s3_object)
 
@@ -174,9 +202,10 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
 
         test_multisite_connection('second') do
           upload = build_upload
+          upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          s3_bucket.expects(:object).with("uploads/second/original/1X/#{upload.sha1}.png").returns(s3_object)
+          s3_bucket.expects(:object).with("uploads/second/original/1X/#{upload.sha1}.pdf").returns(s3_object)
           s3_object.expects(:acl).returns(s3_object)
           s3_object.expects(:put).with(acl: "private").returns(s3_object)
 

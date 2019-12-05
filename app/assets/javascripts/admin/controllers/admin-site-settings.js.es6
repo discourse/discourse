@@ -1,7 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 
 export default Controller.extend({
   filter: null,
@@ -76,7 +76,7 @@ export default Controller.extend({
     );
   },
 
-  filterContent: debounce(function() {
+  filterContent: discourseDebounce(function() {
     if (this._skipBounce) {
       this.set("_skipBounce", false);
     } else {

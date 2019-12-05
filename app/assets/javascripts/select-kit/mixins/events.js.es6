@@ -3,7 +3,7 @@ import { makeArray } from "discourse-common/lib/helpers";
 import { isEmpty } from "@ember/utils";
 import { throttle } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 
 const { bind } = Ember.run;

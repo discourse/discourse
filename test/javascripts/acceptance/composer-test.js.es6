@@ -234,6 +234,26 @@ QUnit.test("Create an enqueued Topic", async assert => {
   assert.ok(invisible(".d-modal"), "the modal can be dismissed");
 });
 
+QUnit.test("Can display a message and route to a URL", async assert => {
+  await visit("/");
+  await click("#create-topic");
+  await fillIn("#reply-title", "This title doesn't matter");
+  await fillIn(".d-editor-input", "custom message");
+  await click("#reply-control button.create");
+  assert.equal(
+    find(".bootbox .modal-body").text(),
+    "This is a custom response"
+  );
+  assert.equal(currentURL(), "/", "it doesn't change routes");
+
+  await click(".bootbox .btn-primary");
+  assert.equal(
+    currentURL(),
+    "/faq",
+    "can navigate to a `route_to` destination"
+  );
+});
+
 QUnit.test("Create a Reply", async assert => {
   await visit("/t/internationalization-localization/280");
 
@@ -755,34 +775,46 @@ QUnit.test("Image resizing buttons", async assert => {
 
   // Default
   uploads[0] = "![test|690x313, 50%](upload://test.png)";
-  await click(find(".button-wrapper .scale-btn[data-scale='50']")[0]);
+  await click(
+    find(".button-wrapper[data-image-index='0'] .scale-btn[data-scale='50']")
+  );
   assertImageResized(assert, uploads);
 
   // Targets the correct image if two on the same line
   uploads[6] =
     "![onTheSameLine1|200x200, 50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)";
-  await click(find(".button-wrapper .scale-btn[data-scale='50']")[3]);
+  await click(
+    find(".button-wrapper[data-image-index='3'] .scale-btn[data-scale='50']")
+  );
   assertImageResized(assert, uploads);
 
   // Try the other image on the same line
   uploads[6] =
     "![onTheSameLine1|200x200, 50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250, 75%](upload://onTheSameLine2.jpeg)";
-  await click(find(".button-wrapper .scale-btn[data-scale='75']")[4]);
+  await click(
+    find(".button-wrapper[data-image-index='4'] .scale-btn[data-scale='75']")
+  );
   assertImageResized(assert, uploads);
 
   // Make sure we target the correct image if there are duplicates
   uploads[7] = "![identicalImage|300x300, 50%](upload://identicalImage.png)";
-  await click(find(".button-wrapper .scale-btn[data-scale='50']")[5]);
+  await click(
+    find(".button-wrapper[data-image-index='5'] .scale-btn[data-scale='50']")
+  );
   assertImageResized(assert, uploads);
 
   // Try the other dupe
   uploads[8] = "![identicalImage|300x300, 75%](upload://identicalImage.png)";
-  await click(find(".button-wrapper .scale-btn[data-scale='75']")[6]);
+  await click(
+    find(".button-wrapper[data-image-index='6'] .scale-btn[data-scale='75']")
+  );
   assertImageResized(assert, uploads);
 
   // Don't mess with image titles
   uploads[10] = `![image|690x220, 75%](upload://test.png "image title")`;
-  await click(find(".button-wrapper .scale-btn[data-scale='75']")[8]);
+  await click(
+    find(".button-wrapper[data-image-index='8'] .scale-btn[data-scale='75']")
+  );
   assertImageResized(assert, uploads);
 
   await fillIn(

@@ -544,5 +544,191 @@ export default {
     ],
     chunk_size: 20,
     bookmarked: false
+  },
+  "/t/topic_with_pie_chart_poll.json": {
+    post_stream: {
+      posts: [
+        {
+          id: 294,
+          name: "",
+          username: "markvanlan",
+          avatar_template: "/user_avatar/localhost/markvanlan/{size}/11_2.png",
+          created_at: "2019-11-22T18:55:41.439Z",
+          cooked:
+            '\u003cdiv class="poll" data-poll-status="open" data-poll-max="3" data-poll-min="1" data-poll-results="always" data-poll-charttype="pie" data-poll-type="multiple" data-poll-name="poll"\u003e\n\u003cdiv\u003e\n\u003cdiv class="poll-container"\u003e\n\u003cul\u003e\n\u003cli data-poll-option-id="687a1ccf3c6a260f9aeeb7f68a1d463c"\u003eThis Is\u003c/li\u003e\n\u003cli data-poll-option-id="9377906763a1221d31d656ea0c4a4495"\u003eA test for sure\u003c/li\u003e\n\u003cli data-poll-option-id="ecf47c65a85a0bb20029072b1b721977"\u003eWhy not give it some more\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/div\u003e\n\u003cdiv class="poll-info"\u003e\n\u003cp\u003e\n\u003cspan class="info-number"\u003e0\u003c/span\u003e\n\u003cspan class="info-label"\u003evoters\u003c/span\u003e\n\u003c/p\u003e\n\u003c/div\u003e\n\u003c/div\u003e\n\u003c/div\u003e',
+          post_number: 1,
+          post_type: 1,
+          updated_at: "2019-11-22T18:55:41.439Z",
+          reply_count: 0,
+          reply_to_post_number: null,
+          quote_count: 0,
+          incoming_link_count: 0,
+          reads: 2,
+          readers_count: 1,
+          score: 0.2,
+          yours: false,
+          topic_id: 256,
+          topic_slug: "14-the-title-must-be-longer-i-guess",
+          display_username: "",
+          primary_group_name: "Team",
+          primary_group_flair_url: null,
+          primary_group_flair_bg_color: "",
+          primary_group_flair_color: "",
+          version: 1,
+          can_edit: false,
+          can_delete: false,
+          can_recover: false,
+          can_wiki: false,
+          read: true,
+          user_title: "You are a member of the team",
+          actions_summary: [
+            { id: 2, can_act: true },
+            { id: 3, can_act: true },
+            { id: 4, can_act: true },
+            { id: 8, can_act: true },
+            { id: 6, can_act: true },
+            { id: 7, can_act: true }
+          ],
+          moderator: true,
+          admin: true,
+          staff: true,
+          user_id: 1,
+          hidden: false,
+          trust_level: 4,
+          deleted_at: null,
+          user_deleted: false,
+          edit_reason: null,
+          can_view_edit_history: true,
+          wiki: false,
+          user_custom_fields: { team: "Engineering", votes: [247, 251, 248] },
+          can_accept_answer: false,
+          can_unaccept_answer: false,
+          accepted_answer: false,
+          can_translate: false,
+          can_vote: true,
+          polls: [
+            {
+              name: "poll",
+              type: "multiple",
+              status: "open",
+              results: "always",
+              min: 1,
+              max: 3,
+              options: [
+                {
+                  id: "687a1ccf3c6a260f9aeeb7f68a1d463c",
+                  html: "This Is",
+                  votes: 2
+                },
+                {
+                  id: "9377906763a1221d31d656ea0c4a4495",
+                  html: "A test for sure",
+                  votes: 2
+                },
+                {
+                  id: "ecf47c65a85a0bb20029072b1b721977",
+                  html: "Why not give it some more",
+                  votes: 1
+                }
+              ],
+              voters: 2,
+              chart_type: "pie"
+            }
+          ],
+          polls_votes: {
+            poll: [
+              "687a1ccf3c6a260f9aeeb7f68a1d463c",
+              "9377906763a1221d31d656ea0c4a4495"
+            ]
+          }
+        }
+      ],
+      stream: [294]
+    },
+    timeline_lookup: [[1, 2]],
+    suggested_topics: [],
+    tags: [],
+    id: 256,
+    title: "14 the title must be longer i guess",
+    fancy_title: "14 the title must be longer i guess",
+    posts_count: 1,
+    created_at: "2019-11-22T18:55:41.259Z",
+    views: 3,
+    reply_count: 0,
+    like_count: 0,
+    last_posted_at: "2019-11-22T18:55:41.439Z",
+    visible: true,
+    closed: false,
+    archived: false,
+    has_summary: false,
+    archetype: "regular",
+    slug: "14-the-title-must-be-longer-i-guess",
+    category_id: 1,
+    word_count: 24,
+    deleted_at: null,
+    user_id: 1,
+    featured_link: null,
+    pinned_globally: false,
+    pinned_at: null,
+    pinned_until: null,
+    image_url: null,
+    draft: null,
+    draft_key: "topic_256",
+    draft_sequence: 0,
+    posted: false,
+    unpinned: null,
+    pinned: false,
+    current_post_number: 1,
+    highest_post_number: 1,
+    last_read_post_number: 1,
+    last_read_post_id: 294,
+    deleted_by: null,
+    actions_summary: [
+      { id: 4, count: 0, hidden: false, can_act: true },
+      { id: 8, count: 0, hidden: false, can_act: true },
+      { id: 7, count: 0, hidden: false, can_act: true }
+    ],
+    chunk_size: 20,
+    bookmarked: false,
+    topic_timer: null,
+    private_topic_timer: null,
+    message_bus_last_id: 1,
+    participant_count: 1,
+    show_read_indicator: false,
+    can_vote: true,
+    vote_count: 0,
+    user_voted: false,
+    details: {
+      notification_level: 1,
+      notifications_reason_id: null,
+      can_create_post: true,
+      can_reply_as_new_topic: true,
+      can_flag_topic: true,
+      participants: [
+        {
+          id: 1,
+          username: "markvanlan",
+          name: "",
+          avatar_template: "/user_avatar/localhost/markvanlan/{size}/11_2.png",
+          post_count: 1,
+          primary_group_name: "Team",
+          primary_group_flair_url: null,
+          primary_group_flair_color: "",
+          primary_group_flair_bg_color: ""
+        }
+      ],
+      created_by: {
+        id: 1,
+        username: "markvanlan",
+        name: "",
+        avatar_template: "/user_avatar/localhost/markvanlan/{size}/11_2.png"
+      },
+      last_poster: {
+        id: 1,
+        username: "markvanlan",
+        name: "",
+        avatar_template: "/user_avatar/localhost/markvanlan/{size}/11_2.png"
+      }
+    }
   }
 };

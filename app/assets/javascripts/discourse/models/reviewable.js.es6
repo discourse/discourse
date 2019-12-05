@@ -1,6 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
-import computed from "ember-addons/ember-computed-decorators";
 import Category from "discourse/models/category";
 import { Promise } from "rsvp";
 
@@ -11,7 +11,7 @@ export const IGNORED = 3;
 export const DELETED = 4;
 
 export default RestModel.extend({
-  @computed("type", "topic")
+  @discourseComputed("type", "topic")
   humanType(type, topic) {
     // Display "Queued Topic" if the post will create a topic
     if (type === "ReviewableQueuedPost" && !topic) {

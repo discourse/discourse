@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend(ModalFunctionality, {
   @observes("model")

@@ -1,6 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import Component from "@ember/component";
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 import { set } from "@ember/object";
 
 export default Component.extend({

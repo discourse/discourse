@@ -1,38 +1,35 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import NavItem from "discourse/models/nav-item";
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
+import FilterModeMixin from "discourse/mixins/filter-mode";
 
-export default Component.extend({
+export default Component.extend(FilterModeMixin, {
   router: service(),
   persistedQueryParams: null,
 
   tagName: "",
 
-  @computed("category")
+  @discourseComputed("category")
   showCategoryNotifications(category) {
     return category && this.currentUser;
   },
 
-  @computed()
+  @discourseComputed()
   categories() {
     return this.site.get("categoriesList");
   },
 
-  @computed("hasDraft")
+  @discourseComputed("hasDraft")
   createTopicLabel(hasDraft) {
     return hasDraft ? "topic.open_draft" : "topic.create";
   },
 
-  @computed("category.can_edit")
+  @discourseComputed("category.can_edit")
   showCategoryEdit: canEdit => canEdit,
 
-  @computed("filterMode", "category", "noSubcategories")
-  navItems(filterMode, category, noSubcategories) {
-    // we don't want to show the period in the navigation bar since it's in a dropdown
-    if (filterMode.indexOf("top/") === 0) {
-      filterMode = filterMode.replace("top/", "");
-    }
-
+  @discourseComputed("filterType", "category", "noSubcategories")
+  navItems(filterType, category, noSubcategories) {
     let params;
     const currentRouteQueryParams = this.get("router.currentRoute.queryParams");
     if (this.persistedQueryParams && currentRouteQueryParams) {
@@ -47,8 +44,8 @@ export default Component.extend({
       }, {});
     }
 
-    return Discourse.NavItem.buildList(category, {
-      filterMode,
+    return NavItem.buildList(category, {
+      filterType,
       noSubcategories,
       persistedQueryParams: params
     });

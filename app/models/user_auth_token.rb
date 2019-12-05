@@ -8,6 +8,8 @@ class UserAuthToken < ActiveRecord::Base
   # used when token did not arrive at client
   URGENT_ROTATE_TIME = 1.minute
 
+  MAX_SESSION_COUNT = 60
+
   USER_ACTIONS = ['generate']
 
   attr_accessor :unhashed_auth_token
@@ -219,6 +221,14 @@ class UserAuthToken < ActiveRecord::Base
       false
     end
 
+  end
+
+  def self.enforce_session_count_limit!(user_id)
+    tokens_to_destroy = where(user_id: user_id).
+      where('rotated_at > ?', SiteSetting.maximum_session_age.hours.ago).
+      order("rotated_at DESC").offset(MAX_SESSION_COUNT)
+
+    tokens_to_destroy.delete_all # Returns the number of deleted rows
   end
 end
 

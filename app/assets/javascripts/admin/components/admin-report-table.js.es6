@@ -1,7 +1,7 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import computed from "ember-addons/ember-computed-decorators";
 
 const PAGES_LIMIT = 8;
 
@@ -13,12 +13,16 @@ export default Component.extend({
   perPage: alias("options.perPage"),
   page: 0,
 
-  @computed("model.computedLabels.length")
+  @discourseComputed("model.computedLabels.length")
   twoColumns(labelsLength) {
     return labelsLength === 2;
   },
 
-  @computed("totalsForSample", "options.total", "model.dates_filtering")
+  @discourseComputed(
+    "totalsForSample",
+    "options.total",
+    "model.dates_filtering"
+  )
   showTotalForSample(totalsForSample, total, datesFiltering) {
     // check if we have at least one cell which contains a value
     const sum = totalsForSample
@@ -29,12 +33,16 @@ export default Component.extend({
     return sum >= 1 && total && datesFiltering;
   },
 
-  @computed("model.total", "options.total", "twoColumns")
+  @discourseComputed("model.total", "options.total", "twoColumns")
   showTotal(reportTotal, total, twoColumns) {
     return reportTotal && total && twoColumns;
   },
 
-  @computed("model.{average,data}", "totalsForSample.1.value", "twoColumns")
+  @discourseComputed(
+    "model.{average,data}",
+    "totalsForSample.1.value",
+    "twoColumns"
+  )
   showAverage(model, sampleTotalValue, hasTwoColumns) {
     return (
       model.average &&
@@ -44,17 +52,17 @@ export default Component.extend({
     );
   },
 
-  @computed("totalsForSample.1.value", "model.data.length")
+  @discourseComputed("totalsForSample.1.value", "model.data.length")
   averageForSample(totals, count) {
     return (totals / count).toFixed(0);
   },
 
-  @computed("model.data.length")
+  @discourseComputed("model.data.length")
   showSortingUI(dataLength) {
     return dataLength >= 5;
   },
 
-  @computed("totalsForSampleRow", "model.computedLabels")
+  @discourseComputed("totalsForSampleRow", "model.computedLabels")
   totalsForSample(row, labels) {
     return labels.map(label => {
       const computedLabel = label.compute(row);
@@ -64,7 +72,7 @@ export default Component.extend({
     });
   },
 
-  @computed("model.data", "model.computedLabels")
+  @discourseComputed("model.data", "model.computedLabels")
   totalsForSampleRow(rows, labels) {
     if (!rows || !rows.length) return {};
 
@@ -90,7 +98,7 @@ export default Component.extend({
     return totalsRow;
   },
 
-  @computed("sortLabel", "sortDirection", "model.data.[]")
+  @discourseComputed("sortLabel", "sortDirection", "model.data.[]")
   sortedData(sortLabel, sortDirection, data) {
     data = makeArray(data);
 
@@ -110,7 +118,7 @@ export default Component.extend({
     return data;
   },
 
-  @computed("sortedData.[]", "perPage", "page")
+  @discourseComputed("sortedData.[]", "perPage", "page")
   paginatedData(data, perPage, page) {
     if (perPage < data.length) {
       const start = perPage * page;
@@ -120,7 +128,7 @@ export default Component.extend({
     return data;
   },
 
-  @computed("model.data", "perPage", "page")
+  @discourseComputed("model.data", "perPage", "page")
   pages(data, perPage, page) {
     if (!data || data.length <= perPage) return [];
 

@@ -54,7 +54,16 @@ pl_PL:
         label: "Pokaż wyniki"
       hide-results:
         title: "Wróć do oddanych głosów"
-        label: "Ukryj wyniki"
+        label: "Pokaż głos"
+      group-results:
+        title: "Grupuj głosy polami użytkownika"
+        label: "Pokaż podsumowanie"
+      ungroup-results:
+        title: "Połącz wszystkie głosy"
+        label: "Ukryj podsumowanie"
+      export-results:
+        title: "Eksportuj wyniki ankiety"
+        label: "Eksport"
       open:
         title: "Otwórz ankietę"
         label: "Otwórz"
@@ -69,6 +78,7 @@ pl_PL:
       error_while_toggling_status: "Przepraszamy, wystąpił błąd podczas przełączania statusu w tej ankiecie."
       error_while_casting_votes: "Przepraszamy, wystąpił błąd podczas oddawania głosów."
       error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."
+      error_while_exporting_results: "Przepraszamy, wystąpił błąd poczas eksportowania wyników ankiety."
       ui_builder:
         title: Utwórz ankietę
         insert: Wstaw ankietę
@@ -87,6 +97,8 @@ pl_PL:
           vote: Po zagłosowaniu
           closed: Po zamknięciu
           staff: Wyłącznie dla zespołu
+        poll_chart_type:
+          label: Typ wykresu
         poll_config:
           max: Max
           min: Min

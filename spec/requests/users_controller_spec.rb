@@ -702,6 +702,22 @@ describe UsersController do
         post_user
         expect(User.find_by(username: @user.username).locale).to eq('fr')
       end
+
+      context "when timezone is provided as a guess on signup" do
+        let(:post_user_params) do
+          { name: @user.name,
+            username: @user.username,
+            password: "strongpassword",
+            email: @user.email,
+            timezone: "Australia/Brisbane" }
+        end
+
+        it "sets the timezone" do
+          post_user
+          expect(response.status).to eq(200)
+          expect(User.find_by(username: @user.username).user_option.timezone).to eq("Australia/Brisbane")
+        end
+      end
     end
 
     context 'when creating a non active user (unconfirmed email)' do
@@ -1685,14 +1701,16 @@ describe UsersController do
         let!(:user) { sign_in(Fabricate(:user)) }
 
         it 'allows the update' do
+          SiteSetting.tagging_enabled = true
           user2 = Fabricate(:user)
           user3 = Fabricate(:user)
           tags = [Fabricate(:tag), Fabricate(:tag)]
+          tag_synonym = Fabricate(:tag, target_tag: tags[1])
 
           put "/u/#{user.username}.json", params: {
             name: 'Jim Tom',
             muted_usernames: "#{user2.username},#{user3.username}",
-            watched_tags: "#{tags[0].name},#{tags[1].name}",
+            watched_tags: "#{tags[0].name},#{tag_synonym.name}",
             card_background_upload_url: upload.url,
             profile_background_upload_url: upload.url
           }
@@ -1911,11 +1929,17 @@ describe UsersController do
 
       expect(user.reload.title).to eq(badge.display_name)
       expect(user.user_profile.badge_granted_title).to eq(true)
+      expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
 
-      user.title = "testing"
-      user.save
+      badge.update allow_title: false
+
+      put "/u/#{user.username}/preferences/badge_title.json", params: { user_badge_id: user_badge.id }
+
+      user.reload
       user.user_profile.reload
+      expect(user.title).to eq('')
       expect(user.user_profile.badge_granted_title).to eq(false)
+      expect(user.user_profile.granted_title_badge_id).to eq(nil)
     end
 
     context "with overrided name" do

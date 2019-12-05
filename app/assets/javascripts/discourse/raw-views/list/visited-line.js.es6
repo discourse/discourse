@@ -1,8 +1,8 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default EmberObject.extend({
-  @computed
+  @discourseComputed
   isLastVisited: function() {
     return this.lastVisitedTopic === this.topic;
   }

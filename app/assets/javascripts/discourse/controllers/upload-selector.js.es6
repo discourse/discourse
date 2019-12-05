@@ -2,18 +2,18 @@ import { equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import {
-  default as computed,
+  default as discourseComputed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import {
   allowsAttachments,
-  authorizesAllExtensions,
   authorizedExtensions,
+  authorizesAllExtensions,
   uploadIcon
-} from "discourse/lib/utilities";
+} from "discourse/lib/uploads";
 
-function uploadTranslate(key) {
-  if (allowsAttachments()) {
+function uploadTranslate(key, user) {
+  if (allowsAttachments(user.staff)) {
     key += "_with_attachments";
   }
   return `upload_selector.${key}`;
@@ -27,18 +27,24 @@ export default Controller.extend(ModalFunctionality, {
   remote: equal("selection", "remote"),
   selection: "local",
 
-  @computed()
-  uploadIcon: () => uploadIcon(),
+  @discourseComputed()
+  uploadIcon() {
+    return uploadIcon(this.currentUser.staff);
+  },
 
-  @computed()
-  title: () => uploadTranslate("title"),
+  @discourseComputed()
+  title() {
+    return uploadTranslate("title", this.currentUser);
+  },
 
-  @computed("selection")
+  @discourseComputed("selection")
   tip(selection) {
-    const authorized_extensions = authorizesAllExtensions()
+    const authorized_extensions = authorizesAllExtensions(
+      this.currentUser.staff
+    )
       ? ""
-      : `(${authorizedExtensions()})`;
-    return I18n.t(uploadTranslate(`${selection}_tip`), {
+      : `(${authorizedExtensions(this.currentUser.staff)})`;
+    return I18n.t(uploadTranslate(`${selection}_tip`, this.currentUser), {
       authorized_extensions
     });
   },

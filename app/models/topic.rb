@@ -135,6 +135,7 @@ class Topic < ActiveRecord::Base
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
+  attr_accessor :category_user_data
 
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :participants
@@ -156,6 +157,8 @@ class Topic < ActiveRecord::Base
   scope :visible, -> { where(visible: true) }
 
   scope :created_since, lambda { |time_ago| where('topics.created_at > ?', time_ago) }
+
+  scope :exclude_scheduled_bump_topics, -> { where.not(id: TopicTimer.scheduled_bump_topics) }
 
   scope :secured, lambda { |guardian = nil|
     ids = guardian.secure_category_ids if guardian
@@ -1371,7 +1374,8 @@ class Topic < ActiveRecord::Base
       post_type: Post.types[:regular]
     ).last || first_post
 
-    update!(bumped_at: post.created_at)
+    self.bumped_at = post.created_at
+    self.save(validate: false)
   end
 
   def auto_close_threshold_reached?

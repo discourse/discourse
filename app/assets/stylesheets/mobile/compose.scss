@@ -71,9 +71,7 @@
     }
     .draft-text {
       width: calc(100% - 40px);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      @include ellipsis;
     }
   }
 

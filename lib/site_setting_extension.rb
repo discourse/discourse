@@ -413,6 +413,22 @@ module SiteSettingExtension
     end
   end
 
+  if defined?(Rails::Console)
+    # Convenience method for debugging site setting issues
+    # Returns a hash with information about a specific setting
+    def info(name)
+      {
+        resolved_value: get(name),
+        default_value: defaults[name],
+        global_override: GlobalSetting.respond_to?(name) ? GlobalSetting.public_send(name) : nil,
+        database_value: provider.find(name)&.value,
+        refresh?: refresh_settings.include?(name),
+        client?: client_settings.include?(name),
+        secret?: secret_settings.include?(name),
+      }
+    end
+  end
+
   protected
 
   def clear_cache!

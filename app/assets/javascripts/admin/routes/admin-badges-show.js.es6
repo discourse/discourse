@@ -15,7 +15,10 @@ export default Route.extend({
         name: I18n.t("admin.badges.new_badge")
       });
     }
-    return this.modelFor("adminBadges").findBy("id", parseInt(params.badge_id));
+    return this.modelFor("adminBadges").findBy(
+      "id",
+      parseInt(params.badge_id, 10)
+    );
   },
 
   actions: {
@@ -51,7 +54,8 @@ export default Route.extend({
         })
         .catch(function(error) {
           badge.set("preview_loading", false);
-          Ember.Logger.error(error);
+          // eslint-disable-next-line no-console
+          console.error(error);
           bootbox.alert("Network error");
         });
     }

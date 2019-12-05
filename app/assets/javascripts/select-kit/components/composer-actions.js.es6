@@ -1,5 +1,5 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import {
   PRIVATE_MESSAGE,
   CREATE_TOPIC,
@@ -76,7 +76,7 @@ export default DropdownSelectBoxComponent.extend({
     return content;
   },
 
-  @computed("options", "canWhisper", "action")
+  @discourseComputed("options", "canWhisper", "action")
   content(options, canWhisper, action) {
     let items = [];
 
@@ -132,7 +132,9 @@ export default DropdownSelectBoxComponent.extend({
       (action !== REPLY && _topicSnapshot) ||
       (action === REPLY &&
         _topicSnapshot &&
-        (options.userAvatar && options.userLink && options.topicLink))
+        options.userAvatar &&
+        options.userLink &&
+        options.topicLink)
     ) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_to_topic.label"),
