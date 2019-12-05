@@ -10,5 +10,17 @@
     .ember-text-field.bookmark-name {
       width: 100%;
     }
+
+    .save-button-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      text-align: center;
+
+      .btn-primary, .d-modal-cancel {
+        display: block;
+        flex: 1;
+      }
+    }
   }
 }

@@ -13,7 +13,16 @@
     border: 2px solid #c7d2db;
     margin: 0 0 20px;
     width: 28%;
-    font-size: 14px;
+    font-size: 12px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #e8f1f7;
+    }
+
+    &.active {
+      background-color: #d1e2ed;
+    }
 
     .svg-icon, .svg-icon-title {
       width: 2.5em;

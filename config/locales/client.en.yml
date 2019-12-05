@@ -40,6 +40,10 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time: "HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+      time_short_day: "ddd HH:mm a"
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+      month_day_time: "MMM D, HH:mm a"
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_no_year: "D MMM HH:mm"
@@ -305,6 +309,15 @@ en:
       not_bookmarked: "bookmark this post"
       remove: "Remove Bookmark"
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
+      save: "save"
+      reminders:
+        at_desktop: "Next time I'm at my desktop"
+        later_today: "Later today <br/>{{date}}"
+        next_business_day: "Next business day <br/>{{date}}"
+        tomorrow: "Tomorrow <br/>{{date}}"
+        next_week: "Next week <br/>{{date}}"
+        next_month: "Next month <br/>{{date}}"
+        custom: "Custom date and time"
 
     drafts:
       resume: "Resume"
