@@ -1836,7 +1836,6 @@ en:
       hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Uploading"
       select_file: "Select File"
-      image_link: "link your image will point to"
       default_image_alt_text: image
 
     search:
