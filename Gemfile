@@ -14,8 +14,10 @@ if rails_master?
   gem 'arel', git: 'https://github.com/rails/arel.git'
   gem 'rails', git: 'https://github.com/rails/rails.git'
 else
-  # until rubygems gives us optional dependencies we are stuck with this
-  # bundle update actionmailer actionpack actionview activemodel activerecord activesupport railties
+  # NOTE: Until rubygems gives us optional dependencies we are stuck with this needing to be explicit
+  # this allows us to include the bits of rails we use without pieces we do not.
+  #
+  # To issue a rails update bump the version number here
   gem 'actionmailer', '6.0.1'
   gem 'actionpack', '6.0.1'
   gem 'actionview', '6.0.1'
@@ -36,18 +38,25 @@ gem 'mail', require: false
 gem 'mini_mime'
 gem 'mini_suffix'
 
-gem 'redis', '4.1.3'
+gem 'redis'
 gem 'redis-namespace'
 
+# NOTE: AM serializer gets a lot slower with recent updates
+# we used an old branch which is the fastest one out there
+# are long term goal here is to fork this gem so we have a
+# better maintained living fork
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.9.24'
+gem 'onebox'
 
-gem 'http_accept_language', '~>2.0.5', require: false
+gem 'http_accept_language', require: false
 
+# Ember related gems need to be pinned cause they control client side
+# behavior, we will push these versions up when upgrading ember
 gem 'ember-rails', '0.18.5'
 gem 'discourse-ember-source', '~> 3.10.0'
 gem 'ember-handlebars-template', '0.8.0'
+
 gem 'barber'
 
 gem 'message_bus'
@@ -66,7 +75,7 @@ gem 'aws-sdk-sns', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
-gem 'email_reply_trimmer', '~> 0.1'
+gem 'email_reply_trimmer'
 
 # Forked until https://github.com/toy/image_optim/pull/162 is merged
 # https://github.com/discourse/image_optim
@@ -92,7 +101,7 @@ gem 'oj'
 gem 'pg'
 gem 'mini_sql'
 gem 'pry-rails', require: false
-gem 'r2', '~> 0.2.5', require: false
+gem 'r2', require: false
 gem 'rake'
 
 gem 'thor', require: false
@@ -107,7 +116,10 @@ gem 'tilt', require: false
 
 gem 'execjs', require: false
 gem 'mini_racer'
+
+# TODO: determine why highline is being held back and upgrade to latest
 gem 'highline', '~> 1.7.0', require: false
+
 gem 'rack-protection' # security
 gem 'cbor', require: false
 gem 'cose', require: false
@@ -121,7 +133,7 @@ end
 
 group :test do
   gem 'webmock', require: false
-  gem 'fakeweb', '~> 1.3.0', require: false
+  gem 'fakeweb', require: false
   gem 'minitest', require: false
   gem 'simplecov', require: false
   gem "test-prof"
@@ -136,9 +148,15 @@ group :test, :development do
   gem 'fabrication', require: false
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
+
+  # TODO determine if we can update this to 0.10, API changes happened
+  # we would like to upgrade it if possible
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
+
+  # TODO once 4.0.0 is released upgrade to it, at time of writing 3.9.0 is latest
   gem 'rspec-rails', '4.0.0.beta2', require: false
-  gem 'shoulda-matchers', '~> 3.1', '>= 3.1.3', require: false
+
+  gem 'shoulda-matchers', require: false
   gem 'rspec-html-matchers'
   gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?
@@ -153,13 +171,7 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'yaml-lint'
-
-  # waiting on 2.7.5 per: https://github.com/ctran/annotate_models/pull/595
-  if rails_master?
-    gem 'annotate', git: 'https://github.com/ctran/annotate_models.git'
-  else
-    gem 'annotate'
-  end
+  gem 'annotate'
 end
 
 # this is an optional gem, it provides a high performance replacement
@@ -213,11 +225,13 @@ gem 'lz4-ruby', require: false, platform: :mri
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
   gem 'redcarpet'
+
+  # NOTE: in import mode the version of sqlite can matter a lot, so we stick it to a specific one
   gem 'sqlite3', '~> 1.3', '>= 1.3.13'
   gem 'ruby-bbcode-to-md', git: 'https://github.com/nlalonde/ruby-bbcode-to-md'
   gem 'reverse_markdown'
   gem 'tiny_tds'
-  gem 'csv', '~> 3.0'
+  gem 'csv'
 end
 
 gem 'webpush', require: false
