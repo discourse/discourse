@@ -590,6 +590,8 @@ Discourse::Application.routes.draw do
     end
   end
 
+  resources :bookmarks, only: %i[create]
+
   resources :notifications, except: :show do
     collection do
       put 'mark-read' => 'notifications#mark_read'

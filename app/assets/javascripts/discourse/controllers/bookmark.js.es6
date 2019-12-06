@@ -2,16 +2,16 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
-import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
 
 const START_OF_DAY_HOUR = 8;
 const REMINDER_TYPES = {
-  AT_DESKTOP: "at-desktop",
-  LATER_TODAY: "later-today",
-  NEXT_BUSINESS_DAY: "next-business-day",
+  AT_DESKTOP: "at_desktop",
+  LATER_TODAY: "later_today",
+  NEXT_BUSINESS_DAY: "next_business_day",
   TOMORROW: "tomorrow",
-  NEXT_WEEK: "next-week",
-  NEXT_MONTH: "next-month",
+  NEXT_WEEK: "next_week",
+  NEXT_MONTH: "next_month",
   CUSTOM: "custom"
 };
 
@@ -30,13 +30,6 @@ export default Controller.extend(ModalFunctionality, {
     });
 
     this.set("loading", false);
-  },
-
-  saveBookmark() {
-    let promise = new Promise(resolve => {
-      resolve();
-    });
-    return promise;
   },
 
   @discourseComputed()
@@ -99,6 +92,40 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
+  saveBookmark() {
+    const data = {
+      reminder_type: this.selectedReminderType,
+      reminder_at: this.reminderAt().toISOString(),
+      name: this.name,
+      post_id: this.model.postId
+    };
+
+    return ajax("/bookmarks", { type: "POST", data: data });
+  },
+
+  reminderAt() {
+    if (this.selectedReminderType === null) {
+      return;
+    }
+
+    switch (this.selectedReminderType) {
+      case REMINDER_TYPES.AT_DESKTOP:
+        return "";
+      case REMINDER_TYPES.LATER_TODAY:
+        return this.laterToday();
+      case REMINDER_TYPES.NEXT_BUSINESS_DAY:
+        return this.nextBusinessDay();
+      case REMINDER_TYPES.TOMORROW:
+        return this.tomorrow();
+      case REMINDER_TYPES.NEXT_WEEK:
+        return this.nextWeek();
+      case REMINDER_TYPES.NEXT_MONTH:
+        return this.nextMonth();
+      case REMINDER_TYPES.CUSTOM:
+        return "";
+    }
+  },
+
   nextWeek() {
     return this.startOfDay(this.now().add(7, "days"));
   },
@@ -110,9 +137,11 @@ export default Controller.extend(ModalFunctionality, {
   nextBusinessDay() {
     const currentDay = this.now().isoWeekday(); // 1=Mon, 7=Sun
     let next = null;
-    if (currentDay === 5) { // friday
+    if (currentDay === 5) {
+      // friday
       next = this.now().add(3, "days");
-    } else if (currentDay === 6) { // saturday {
+    } else if (currentDay === 6) {
+      // saturday {
       next = this.now().add(2, "days");
     } else {
       next = this.now().add(1, "day");
@@ -139,7 +168,9 @@ export default Controller.extend(ModalFunctionality, {
 
   laterToday() {
     let later = this.now().add(3, "hours");
-    return later.minutes() < 30 ? later.minutes(30) : later.add(30, "minutes").startOf("hour");
+    return later.minutes() < 30
+      ? later.minutes(30)
+      : later.add(30, "minutes").startOf("hour");
   },
 
   actions: {

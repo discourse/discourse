@@ -340,7 +340,9 @@ const Post = RestModel.extend({
   toggleUltraBookmark() {
     // const bookmarkController =
     showModal("bookmark", {
-      model: this.model,
+      model: {
+        postId: this.id
+      },
       title: "post.bookmarks.create",
       modalClass: "bookmark-with-reminder"
     });
