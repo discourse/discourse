@@ -7,8 +7,7 @@ function isGUID(value) {
 }
 
 function imageNameFromFileName(fileName) {
-  const split = fileName.split(".");
-  let name = split[split.length - 2];
+  let name = fileName.substr(0, fileName.lastIndexOf("."));
 
   if (isAppleDevice() && isGUID(name)) {
     name = I18n.t("upload_selector.default_image_alt_text");
