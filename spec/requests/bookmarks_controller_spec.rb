@@ -19,7 +19,7 @@ describe BookmarksController do
       it "returns failed JSON with a 422 error" do
         post "/bookmarks.json", params: {
           post_id: bookmark_post.id,
-          reminder_type: Bookmark.reminder_types[:tomorrow],
+          reminder_type: "tomorrow",
           reminder_at: (Time.now.utc + 1.day).iso8601
         }
 
@@ -34,7 +34,7 @@ describe BookmarksController do
       it "returns failed JSON with a 400 error" do
         post "/bookmarks.json", params: {
           post_id: bookmark_post.id,
-          reminder_type: Bookmark.reminder_types[:tomorrow]
+          reminder_type: "tomorrow"
         }
 
         expect(response.status).to eq(400)

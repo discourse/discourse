@@ -5,7 +5,9 @@ class Bookmark < ActiveRecord::Base
   belongs_to :post
   belongs_to :topic
 
-  validates :reminder_at, presence: true, if: -> { reminder_type != :at_desktop }
+  validates :reminder_at, presence: true, if: -> do
+    reminder_type.present? && reminder_type != Bookmark.reminder_types[:at_desktop]
+  end
 
   def self.reminder_types
     @reminder_type = Enum.new(
@@ -29,7 +31,7 @@ end
 #  topic_id      :bigint
 #  post_id       :bigint           not null
 #  name          :string
-#  reminder_type :integer          not null
+#  reminder_type :integer
 #  reminder_at   :datetime
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null

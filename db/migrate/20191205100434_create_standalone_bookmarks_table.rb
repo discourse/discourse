@@ -7,7 +7,7 @@ class CreateStandaloneBookmarksTable < ActiveRecord::Migration[6.0]
       t.references :topic, index: true, foreign_key: true, null: true
       t.references :post, index: true, foreign_key: true, null: false
       t.string :name, null: true
-      t.integer :reminder_type, null: false, index: true
+      t.integer :reminder_type, null: true, index: true
       t.datetime :reminder_at, null: true, index: true
 
       t.timestamps

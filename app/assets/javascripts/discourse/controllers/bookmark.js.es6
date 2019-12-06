@@ -1,6 +1,7 @@
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 
@@ -20,16 +21,28 @@ export default Controller.extend(ModalFunctionality, {
   errorMessage: null,
   name: null,
   selectedReminderType: null,
+  closeWithoutSaving: false,
+  saveButtonClicked: false,
 
   onShow() {
     this.setProperties({
       errorMessage: null,
       loading: true,
       name: null,
-      selectedReminderType: null
+      selectedReminderType: null,
+      closeWithoutSaving: false,
+      saveButtonClicked: false
     });
 
     this.set("loading", false);
+  },
+
+  // we always want to save the bookmark unless the user specifically
+  // clicks the save or cancel button to mimic browser behaviour
+  onClose() {
+    if (!this.closeWithoutSaving && !this.saveButtonClicked) {
+      this.saveBookmark();
+    }
   },
 
   @discourseComputed()
@@ -93,9 +106,10 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   saveBookmark() {
+    const reminderAt = this.reminderAt();
     const data = {
       reminder_type: this.selectedReminderType,
-      reminder_at: this.reminderAt().toISOString(),
+      reminder_at: reminderAt ? reminderAt.toISOString() : null,
       name: this.name,
       post_id: this.model.postId
     };
@@ -175,12 +189,17 @@ export default Controller.extend(ModalFunctionality, {
 
   actions: {
     saveAndClose() {
+      this.saveButtonClicked = true;
       this.saveBookmark().then(() => {
         this.send("closeModal");
+      }).catch(e => {
+        this.saveButtonClicked = false;
+        popupAjaxError(e);
       });
     },
 
     closeWithoutSavingBookmark() {
+      this.closeWithoutSaving = true;
       this.send("closeModal");
     },
 

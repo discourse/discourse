@@ -4,7 +4,6 @@ class BookmarksController < ApplicationController
   requires_login
 
   def create
-    params.require(:reminder_type)
     params.require(:post_id)
 
     existing_bookmark = Bookmark.find_by(post_id: params[:post_id], user_id: current_user.id)
