@@ -205,6 +205,11 @@ QUnit.test("getUploadMarkdown", assert => {
     "![file name with space|100x200](/uploads/123/abcdef.ext)"
   );
 
+  assert.equal(
+    testUploadMarkdown("image.file.name.with.dots.png"),
+    "![image.file.name.with.dots|100x200](/uploads/123/abcdef.ext)"
+  );
+
   const short_url = "uploads://asdaasd.ext";
 
   assert.equal(
@@ -213,15 +218,18 @@ QUnit.test("getUploadMarkdown", assert => {
   );
 });
 
-QUnit.test("replaces GUID in image alt text on iOS", assert => {
-  assert.equal(
-    testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
-    "![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)"
-  );
+QUnit.test(
+  "getUploadMarkdown - replaces GUID in image alt text on iOS",
+  assert => {
+    assert.equal(
+      testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
+      "![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)"
+    );
 
-  sandbox.stub(Utilities, "isAppleDevice").returns(true);
-  assert.equal(
-    testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
-    "![image|100x200](/uploads/123/abcdef.ext)"
-  );
-});
+    sandbox.stub(Utilities, "isAppleDevice").returns(true);
+    assert.equal(
+      testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
+      "![image|100x200](/uploads/123/abcdef.ext)"
+    );
+  }
+);
