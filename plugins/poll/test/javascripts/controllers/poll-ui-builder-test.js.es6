@@ -283,6 +283,14 @@ test("regular pollOutput", function(assert) {
     "[poll type=regular public=true chartType=bar]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
+
+  controller.set("pollGroups", "test");
+
+  assert.equal(
+    controller.get("pollOutput"),
+    "[poll type=regular public=true chartType=bar groups=test]\n* 1\n* 2\n[/poll]\n",
+    "it should return the right output"
+  );
 });
 
 test("multiple pollOutput", function(assert) {
