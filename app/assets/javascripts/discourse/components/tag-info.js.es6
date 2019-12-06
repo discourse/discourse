@@ -1,10 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { reads, and } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
@@ -43,11 +40,9 @@ export default Component.extend({
     return isEmpty(tagGroupNames) && isEmpty(categories) && isEmpty(synonyms);
   },
 
-  @observes("expanded")
-  toggleExpanded() {
-    if (this.expanded && !this.tagInfo) {
-      this.loadTagInfo();
-    }
+  didInsertElement() {
+    this._super(...arguments);
+    this.loadTagInfo();
   },
 
   loadTagInfo() {
@@ -68,7 +63,8 @@ export default Component.extend({
           result.category_ids.map(id => Category.findById(id))
         );
       })
-      .finally(() => this.set("loading", false));
+      .finally(() => this.set("loading", false))
+      .catch(popupAjaxError);
   },
 
   actions: {
@@ -89,7 +85,7 @@ export default Component.extend({
         type: "DELETE"
       })
         .then(() => this.tagInfo.synonyms.removeObject(tag))
-        .catch(() => bootbox.alert(I18n.t("generic_error")));
+        .catch(popupAjaxError);
     },
 
     deleteSynonym(tag) {
@@ -101,7 +97,7 @@ export default Component.extend({
           tag
             .destroyRecord()
             .then(() => this.tagInfo.synonyms.removeObject(tag))
-            .catch(() => bootbox.alert(I18n.t("generic_error")));
+            .catch(popupAjaxError);
         }
       );
     },

@@ -46,8 +46,8 @@
   </div>
 </div>
 
-{{#if showToggleInfo}}
-  {{tag-info tag=tag expanded=showInfo list=list deleteAction=(action "deleteTag")}}
+{{#if showInfo}}
+  {{tag-info tag=tag list=list deleteAction=(action "deleteTag")}}
 {{/if}}
 
 {{plugin-outlet name="discovery-list-container-top"}}
