@@ -199,7 +199,7 @@ module Email
       @hidden_reason_id ||=
         if is_spam?
           Post.hidden_reasons[:email_spam_header_found]
-        elsif auth_res_action == :hide
+        elsif !sent_to_mailinglist_mirror? && auth_res_action == :hide
           Post.hidden_reasons[:email_authentication_result_header]
         else
           nil
