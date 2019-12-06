@@ -105,6 +105,11 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
+  @discourseComputed()
+  userHasTimezoneSet() {
+    return !_.isEmpty(this.userTimezone());
+  },
+
   saveBookmark() {
     const reminderAt = this.reminderAt();
     const data = {
