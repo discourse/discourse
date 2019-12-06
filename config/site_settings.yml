@@ -199,6 +199,7 @@ basic:
       - bookmark
       - admin
       - reply
+      - ultraBookmark
   post_menu_hidden_items:
     client: true
     type: list

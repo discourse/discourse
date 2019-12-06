@@ -5,6 +5,8 @@ class Bookmark < ActiveRecord::Base
   belongs_to :post
   belongs_to :topic
 
+  validates :reminder_at, presence: true, if: -> { reminder_type != :at_desktop }
+
   def self.reminder_types
     @reminder_type = Enum.new(
       at_desktop: 0,

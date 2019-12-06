@@ -379,6 +379,10 @@ en:
 
   excerpt_image: "image"
 
+  bookmarks:
+    errors:
+      already_bookmarked_post: "You cannot bookmark the same post twice."
+
   groups:
     success:
       bulk_add:
@@ -561,6 +565,11 @@ en:
           attributes:
             word:
               too_many: "Too many words for that action"
+        bookmark:
+          attributes:
+            reminder_at:
+              blank: "time must be provided for all reminders except 'Next time I'm at my Desktop'"
+              
 
   uncategorized_category_name: "Uncategorized"
 
