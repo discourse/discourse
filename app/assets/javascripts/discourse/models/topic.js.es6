@@ -452,8 +452,8 @@ const Topic = RestModel.extend({
       data: { topic_id: this.id }
     })
       .then(() => {
-        const newFeaturedTopic = removing ? null : this;
-        user.set("featured_topic", newFeaturedTopic);
+        const featuredTopic = removing ? null : this;
+        user.set("featured_topic", featuredTopic);
         return;
       })
       .catch(popupAjaxError);

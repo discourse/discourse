@@ -61,6 +61,8 @@ export default Controller.extend(CanCheckEmails, {
     "hasReceivedWarnings"
   ),
 
+  showFeaturedTopic: and("model.featured_topic", "siteSettings.allow_featured_topic_on_user_profiles"),
+
   @discourseComputed("model.suspended", "currentUser.staff")
   isNotSuspendedOrIsStaff(suspended, isStaff) {
     return !suspended || isStaff;
@@ -98,13 +100,6 @@ export default Controller.extend(CanCheckEmails, {
   @discourseComputed("model.name")
   nameFirst(name) {
     return prioritizeNameInUx(name, this.siteSettings);
-  },
-
-  @discourseComputed("model.featured_topic")
-  showFeaturedTopic(featuredTopic) {
-    return (
-      featuredTopic && this.siteSettings.allow_featured_topic_on_user_profiles
-    );
   },
 
   @discourseComputed("model.badge_count")

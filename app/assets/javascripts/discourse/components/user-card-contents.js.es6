@@ -50,12 +50,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   // If inside a topic
   topicPostCount: null,
 
-  @discourseComputed("user.featured_topic")
-  showFeaturedTopic(featuredTopic) {
-    return (
-      featuredTopic && this.siteSettings.allow_featured_topic_on_user_profiles
-    );
-  },
+  showFeaturedTopic: and("user.featured_topic", "siteSettings.allow_featured_topic_on_user_profiles"),
 
   @discourseComputed("user.staff")
   staff: isStaff => (isStaff ? "staff" : ""),

@@ -2503,4 +2503,17 @@ describe Topic do
       expect(topic.access_topic_via_group).to eq(open_group)
     end
   end
+
+  describe "#after_update" do
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:category) { Fabricate(:category_with_definition, read_restricted: true) }
+
+    it "removes the topic as featured from user profiles if new category is read_restricted" do
+      user.user_profile.update(featured_topic: topic)
+      expect(user.user_profile.featured_topic).to eq(topic)
+
+      topic.update(category: category)
+      expect(user.user_profile.reload.featured_topic).to eq(nil)
+    end
+  end
 end
