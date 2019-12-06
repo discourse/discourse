@@ -43,6 +43,7 @@ class ApplicationController < ActionController::Base
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
+  after_action  :conditionally_allow_site_embedding
 
   layout :set_layout
 
@@ -84,6 +85,12 @@ class ApplicationController < ActionController::Base
     if !response.headers["Cache-Control"] && response.cache_control.blank?
       response.cache_control[:no_cache] = true
       response.cache_control[:extras] = ["no-store"]
+    end
+  end
+
+  def conditionally_allow_site_embedding
+    if SiteSetting.allow_embedding_site_in_an_iframe
+      response.headers.delete('X-Frame-Options')
     end
   end
 
