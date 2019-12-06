@@ -1,0 +1,12 @@
+{{#if showTopicTimer}}
+  <h3 class="topic-timer-heading">
+    <span title="{{title}}">
+      {{clockIcon}} {{notice}}
+    </span>
+    {{#if showTrashCan}}
+      <button class="btn topic-timer-remove no-text" title="{{trashCanTitle}}">
+        {{trashCanIcon}}
+      </button>
+    {{/if}}
+  </h3>
+{{/if}}
