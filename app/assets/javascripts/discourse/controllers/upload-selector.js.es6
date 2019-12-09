@@ -1,10 +1,7 @@
 import { equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import {
   allowsAttachments,
   authorizedExtensions,
@@ -20,9 +17,7 @@ function uploadTranslate(key, user) {
 }
 
 export default Controller.extend(ModalFunctionality, {
-  showMore: false,
   imageUrl: null,
-  imageLink: null,
   local: equal("selection", "local"),
   remote: equal("selection", "remote"),
   selection: "local",
@@ -49,13 +44,6 @@ export default Controller.extend(ModalFunctionality, {
     });
   },
 
-  @observes("selection")
-  _selectionChanged() {
-    if (this.local) {
-      this.set("showMore", false);
-    }
-  },
-
   actions: {
     upload() {
       if (this.local) {
@@ -64,22 +52,15 @@ export default Controller.extend(ModalFunctionality, {
         });
       } else {
         const imageUrl = this.imageUrl || "";
-        const imageLink = this.imageLink || "";
         const toolbarEvent = this.toolbarEvent;
 
-        if (this.showMore && imageLink.length > 3) {
-          toolbarEvent.addText(`[![](${imageUrl})](${imageLink})`);
-        } else if (imageUrl.match(/\.(jpg|jpeg|png|gif)$/)) {
+        if (imageUrl.match(/\.(jpg|jpeg|png|gif)$/)) {
           toolbarEvent.addText(`![](${imageUrl})`);
         } else {
           toolbarEvent.addText(imageUrl);
         }
       }
       this.send("closeModal");
-    },
-
-    toggleShowMore() {
-      this.toggleProperty("showMore");
     }
   }
 });
