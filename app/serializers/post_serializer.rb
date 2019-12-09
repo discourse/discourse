@@ -49,6 +49,7 @@ class PostSerializer < BasicPostSerializer
              :user_title,
              :reply_to_user,
              :bookmarked,
+             :bookmark_reminder_at,
              :raw,
              :actions_summary,
              :moderator?,
@@ -218,10 +219,6 @@ class PostSerializer < BasicPostSerializer
     }
   end
 
-  def bookmarked
-    true
-  end
-
   def deleted_by
     BasicUserSerializer.new(object.deleted_by, root: false).as_json
   end
@@ -309,8 +306,27 @@ class PostSerializer < BasicPostSerializer
     !(SiteSetting.suppress_reply_when_quoting && object.reply_quoted?) && object.reply_to_user
   end
 
+  # this atrtribute is not even included unless include_bookmarked? is true,
+  # which is why it is always true if included
+  def bookmarked
+    true
+  end
+
   def include_bookmarked?
-    actions.present? && actions.keys.include?(PostActionType.types[:bookmark])
+    (actions.present? && actions.keys.include?(PostActionType.types[:bookmark])) || post_bookmark.present?
+  end
+
+  def include_bookmark_reminder_at?
+    include_bookmarked?
+  end
+
+  def post_bookmark
+    return nil if !SiteSetting.enable_bookmarks_with_reminders?
+    @post_bookmark ||= @topic_view.user_post_bookmarks.find { |bookmark| bookmark.post_id == object.id }
+  end
+
+  def bookmark_reminder_at
+    post_bookmark&.reminder_at
   end
 
   def include_display_username?

@@ -428,6 +428,10 @@ class TopicView
     @links ||= TopicLink.topic_map(@guardian, @topic.id)
   end
 
+  def user_post_bookmarks
+    @user_post_bookmarks ||= Bookmark.where(user: @user, post_id: unfiltered_post_ids)
+  end
+
   def reviewable_counts
     if @reviewable_counts.nil?
 

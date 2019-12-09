@@ -301,23 +301,34 @@ registerButton("bookmark", attrs => {
   };
 });
 
-registerButton("ultraBookmark", attrs => {
-  if (!attrs.canBookmark) {
+registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
+  if (!attrs.canBookmark || !siteSettings.enable_bookmarks_with_reminders) {
     return;
   }
 
-  let className = "bookmark";
+  let className = "bookmark ultra";
+  let title = "bookmarks.not_bookmarked";
+  let titleOptions = {};
 
   if (attrs.bookmarked) {
     className += " bookmarked";
+
+    if (attrs.bookmark_reminder_at) {
+      let reminderAtDate = moment(attrs.bookmark_reminder_at).tz(Discourse.currentUser.timezone);
+      title = "bookmarks.created_with_reminder";
+      titleOptions = { date: reminderAtDate.format(I18n.t("dates.long_with_year")) };
+    } else {
+      title = "bookmarks.created";
+    }
   }
 
   return {
     id: attrs.bookmarked ? "unbookmark" : "bookmark",
-    action: "toggleUltraBookmark",
-    title: attrs.bookmarked ? "bookmarks.created" : "bookmarks.not_bookmarked",
+    action: "toggleBookmarkWithReminder",
+    title: title,
+    titleOptions: titleOptions,
     className,
-    icon: "rocket"
+    icon: "book"
   };
 });
 
@@ -429,7 +440,8 @@ export default createWidget("post-menu", {
     const hiddenSetting = siteSettings.post_menu_hidden_items || "";
     const hiddenButtons = hiddenSetting
       .split("|")
-      .filter(s => !attrs.bookmarked || s !== "bookmark");
+      .filter(s => !attrs.bookmarked || (s !== "bookmark"))
+      .filter(s => !attrs.bookmarked || (s !== "bookmarkWithReminder"));
 
     if (currentUser && keyValueStore) {
       const likedPostId = keyValueStore.getInt("likedPostId");

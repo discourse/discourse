@@ -337,7 +337,7 @@ const Post = RestModel.extend({
       });
   },
 
-  toggleUltraBookmark() {
+  toggleBookmarkWithReminder() {
     // const bookmarkController =
     showModal("bookmark", {
       model: {
