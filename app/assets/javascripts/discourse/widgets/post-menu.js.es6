@@ -314,9 +314,13 @@ registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
     className += " bookmarked";
 
     if (attrs.bookmark_reminder_at) {
-      let reminderAtDate = moment(attrs.bookmark_reminder_at).tz(Discourse.currentUser.timezone);
+      let reminderAtDate = moment(attrs.bookmark_reminder_at).tz(
+        Discourse.currentUser.timezone
+      );
       title = "bookmarks.created_with_reminder";
-      titleOptions = { date: reminderAtDate.format(I18n.t("dates.long_with_year")) };
+      titleOptions = {
+        date: reminderAtDate.format(I18n.t("dates.long_with_year"))
+      };
     } else {
       title = "bookmarks.created";
     }
@@ -440,8 +444,8 @@ export default createWidget("post-menu", {
     const hiddenSetting = siteSettings.post_menu_hidden_items || "";
     const hiddenButtons = hiddenSetting
       .split("|")
-      .filter(s => !attrs.bookmarked || (s !== "bookmark"))
-      .filter(s => !attrs.bookmarked || (s !== "bookmarkWithReminder"));
+      .filter(s => !attrs.bookmarked || s !== "bookmark")
+      .filter(s => !attrs.bookmarked || s !== "bookmarkWithReminder");
 
     if (currentUser && keyValueStore) {
       const likedPostId = keyValueStore.getInt("likedPostId");
