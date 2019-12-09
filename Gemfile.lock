@@ -353,7 +353,7 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.7)
     rubocop-discourse (1.0.1)
       rubocop (>= 0.69.0)
-    ruby-openid (2.7.0)
+    ruby-openid (2.9.2)
     ruby-prof (1.0.0)
     ruby-progressbar (1.10.0)
     ruby-readability (0.7.0)
