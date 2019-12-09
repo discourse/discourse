@@ -68,6 +68,25 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  context "#muted_tag_ids" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:tag) { Fabricate(:tag) }
+    let!(:tag_user) do
+      TagUser.create!(user_id: user.id,
+                      notification_level: TagUser.notification_levels[:muted],
+                      tag_id: tag.id
+                     )
+    end
+    let :serializer do
+      CurrentUserSerializer.new(user, scope: Guardian.new, root: false)
+    end
+
+    it 'include muted tag ids' do
+      payload = serializer.as_json
+      expect(payload[:muted_tag_ids]).to eq([tag.id])
+    end
+  end
+
   context "#second_factor_enabled" do
     fab!(:user) { Fabricate(:user) }
     let :serializer do
