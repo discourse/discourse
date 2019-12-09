@@ -306,7 +306,7 @@ registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
     return;
   }
 
-  let className = "bookmark ultra";
+  let className = "bookmark with-reminder";
   let title = "bookmarks.not_bookmarked";
   let titleOptions = {};
 

@@ -206,7 +206,7 @@ nav.post-controls {
       &.bookmarked .d-icon {
         color: $tertiary;
       }
-      &.ultra.bookmarked .d-icon {
+      &.with-reminder.bookmarked .d-icon {
         color: $danger;
       }
     }
