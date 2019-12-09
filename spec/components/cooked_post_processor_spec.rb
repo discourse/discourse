@@ -946,6 +946,21 @@ describe CookedPostProcessor do
       expect(doc.css('.lightbox-wrapper').size).to eq(0)
       expect(doc.css('img').first['srcset']).to_not eq(nil)
     end
+
+    it "optimizes images in Onebox" do
+      Oneboxer.expects(:onebox)
+        .with("https://discourse.org", anything)
+        .returns("<aside class='onebox'><img src='#{upload.url}' width='512' height='384'></aside>")
+
+      post = Fabricate(:post, raw: "https://discourse.org")
+
+      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp.post_process
+
+      doc = Nokogiri::HTML::fragment(cpp.html)
+      expect(doc.css('.lightbox-wrapper').size).to eq(0)
+      expect(doc.css('img').first['srcset']).to_not eq(nil)
+    end
   end
 
   context "#post_process_oneboxes" do
