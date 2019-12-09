@@ -125,6 +125,7 @@ module SvgSprite
     "heading",
     "heart",
     "home",
+    "id-card",
     "info-circle",
     "italic",
     "key",
