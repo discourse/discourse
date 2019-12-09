@@ -3636,6 +3636,7 @@ en:
           upload: "Upload"
           select_component: "Select a component..."
           unsaved_changes_alert: "You haven't saved your changes yet, do you want to discard them and move on?"
+          unsaved_parent_themes: "You haven't assigned the component to themes, do you want to move on?"
           discard: "Discard"
           stay: "Stay"
           css_html: "Custom CSS/HTML"

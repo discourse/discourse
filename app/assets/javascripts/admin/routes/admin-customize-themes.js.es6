@@ -18,6 +18,7 @@ export default Route.extend({
 
     addTheme(theme) {
       this.refresh();
+      theme.setProperties({ recentlyInstalled: true });
       this.transitionTo("adminCustomizeThemes.show", theme.get("id"));
     }
   }
