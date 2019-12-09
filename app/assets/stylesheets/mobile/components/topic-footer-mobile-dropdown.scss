@@ -5,5 +5,10 @@
         color: $tertiary;
       }
     }
+    &.featured-on-profile {
+      .d-icon {
+        color: $tertiary;
+      }
+    }
   }
 }

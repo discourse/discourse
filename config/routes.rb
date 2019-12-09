@@ -476,6 +476,8 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/deleted-posts" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/topic-tracking-state" => "users#topic_tracking_state", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/profile-hidden" => "users#profile_hidden"
+    put "#{root_path}/:username/feature-topic" => "users#feature_topic", constraints: { username: RouteFormat.username }
+    put "#{root_path}/:username/clear-featured-topic" => "users#clear_featured_topic", constraints: { username: RouteFormat.username }
   end
 
   get "user-badges/:username.json" => "user_badges#username", constraints: { username: RouteFormat.username }, defaults: { format: :json }

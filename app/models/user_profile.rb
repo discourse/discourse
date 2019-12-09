@@ -10,6 +10,7 @@ class UserProfile < ActiveRecord::Base
   belongs_to :card_background_upload, class_name: "Upload"
   belongs_to :profile_background_upload, class_name: "Upload"
   belongs_to :granted_title_badge, class_name: "Badge"
+  belongs_to :featured_topic, class_name: 'Topic'
 
   validates :bio_raw, length: { maximum: 3000 }
   validates :website, url: true, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
@@ -145,6 +146,9 @@ class UserProfile < ActiveRecord::Base
     self.errors.add :base, (I18n.t('user.website.domain_not_allowed', domains: allowed_domains.split('|').join(", "))) unless allowed_domains.split('|').include?(domain)
   end
 
+  def self.remove_featured_topic_from_all_profiles(topic)
+    where(featured_topic_id: topic.id).update_all(featured_topic_id: nil)
+  end
 end
 
 # == Schema Information

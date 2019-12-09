@@ -1951,6 +1951,8 @@ en:
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
 
+    allow_featured_topic_on_user_profiles: "Allow users to feature a link to a topic on their user card and profile."
+
     show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
 
     hide_suspension_reasons: "Don't display suspension reasons publically on user profiles."

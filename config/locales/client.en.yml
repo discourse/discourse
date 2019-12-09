@@ -848,6 +848,7 @@ en:
       enable_quoting: "Enable quote reply for highlighted text"
       enable_defer: "Enable defer to mark topics unread"
       change: "change"
+      featured_topic: "Featured Topic"
       moderator: "{{user}} is a moderator"
       admin: "{{user}} is an admin"
       moderator_tooltip: "This user is a moderator"
@@ -1044,6 +1045,10 @@ en:
       change_card_background:
         title: "User Card Background"
         instructions: "Background images will be centered and have a default width of 590px."
+
+      change_featured_topic:
+        title: "Featured Topic"
+        instructions: "To change this, either navigate to the topic to remove it as the featured topic, or feature a different topic."
 
       email:
         title: "Email"
@@ -1997,6 +2002,14 @@ en:
       defer:
         help: "Mark as unread"
         title: "Defer"
+      feature_on_profile:
+        help: "Add a link to this topic on your user card and profile"
+        title: "Feature On Profile"
+      remove_from_profile:
+        warning: "Your profile already has a featured topic. If you continue, this topic will replace the existing topic."
+        help: "Remove the link to this topic on your user profile"
+        title: "Remove From Profile"
+
       list: "Topics"
       new: "new topic"
       unread: "unread"
