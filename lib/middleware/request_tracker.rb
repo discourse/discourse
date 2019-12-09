@@ -117,7 +117,12 @@ class Middleware::RequestTracker
     }
 
     if h[:is_crawler]
-      h[:user_agent] = env['HTTP_USER_AGENT']
+      user_agent = env['HTTP_USER_AGENT']
+      if user_agent.encoding != Encoding::UTF_8
+        user_agent = user_agent.encode("utf-8")
+        user_agent.scrub!
+      end
+      h[:user_agent] = user_agent
     end
 
     if cache = headers["X-Discourse-Cached"]
