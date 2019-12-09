@@ -118,7 +118,7 @@ class Middleware::RequestTracker
 
     if h[:is_crawler]
       user_agent = env['HTTP_USER_AGENT']
-      if user_agent.encoding != Encoding::UTF_8
+      if user_agent && (user_agent.encoding != Encoding::UTF_8)
         user_agent = user_agent.encode("utf-8")
         user_agent.scrub!
       end
