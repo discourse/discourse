@@ -239,7 +239,7 @@ class Topic < ActiveRecord::Base
   after_update do
     if saved_changes[:category_id] && self.tags.present?
       CategoryTagStat.topic_moved(self, *saved_changes[:category_id])
-    elsif saved_changes[:category_id] && self.category.read_restricted?
+    elsif saved_changes[:category_id] && self.category&.read_restricted?
       UserProfile.remove_featured_topic_from_all_profiles(self)
     end
   end

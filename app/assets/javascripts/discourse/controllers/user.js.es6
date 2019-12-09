@@ -61,7 +61,10 @@ export default Controller.extend(CanCheckEmails, {
     "hasReceivedWarnings"
   ),
 
-  showFeaturedTopic: and("model.featured_topic", "siteSettings.allow_featured_topic_on_user_profiles"),
+  showFeaturedTopic: and(
+    "model.featured_topic",
+    "siteSettings.allow_featured_topic_on_user_profiles"
+  ),
 
   @discourseComputed("model.suspended", "currentUser.staff")
   isNotSuspendedOrIsStaff(suspended, isStaff) {
