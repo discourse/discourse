@@ -6,7 +6,7 @@ function isGUID(value) {
   );
 }
 
-function imageNameFromFileName(fileName) {
+export function imageNameFromFileName(fileName) {
   let name = fileName.substr(0, fileName.lastIndexOf("."));
 
   if (isAppleDevice() && isGUID(name)) {
