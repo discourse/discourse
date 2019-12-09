@@ -64,6 +64,11 @@ export function addComposerUploadHandler(extensions, method) {
   });
 }
 
+const uploadMarkdownResolvers = [];
+export function addComposerUploadMarkdownResolver(resolver) {
+  uploadMarkdownResolvers.push(resolver);
+}
+
 export default Component.extend({
   classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
 
@@ -745,7 +750,11 @@ export default Component.extend({
       let upload = data.result;
       this._setUploadPlaceholderDone(data);
       if (!this._xhr || !this._xhr._userCancelled) {
-        const markdown = getUploadMarkdown(upload);
+        const markdown = uploadMarkdownResolvers.reduce(
+          (md, resolver) => resolver(upload) || md,
+          getUploadMarkdown(upload)
+        );
+
         cacheShortUploadUrl(upload.short_url, upload.url);
         this.appEvents.trigger(
           "composer:replace-text",

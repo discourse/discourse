@@ -34,6 +34,6 @@ QUnit.test("attachments are cooked properly", async assert => {
     find(".d-editor-preview:visible")
       .html()
       .trim(),
-    '<p><a href="/uploads/short-url/asdsad.png" class="attachment">test</a></p>'
+    '<p><a class="attachment" href="/uploads/short-url/asdsad.png">test</a></p>'
   );
 });
