@@ -132,7 +132,7 @@ GEM
       rake
       rake-compiler
     fast_xs (0.8.0)
-    fastimage (2.1.5)
+    fastimage (2.1.7)
     ffi (1.11.3)
     flamegraph (0.9.5)
     fspath (3.1.0)
