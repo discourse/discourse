@@ -9,7 +9,8 @@ import {
   setDefaultHomepage,
   caretRowCol,
   setCaretPosition,
-  fillMissingDates
+  fillMissingDates,
+  inCodeBlock
 } from "discourse/lib/utilities";
 
 QUnit.module("lib:utilities");
@@ -185,4 +186,33 @@ QUnit.test("fillMissingDates", assert => {
     31,
     "it returns a JSON array with 31 dates"
   );
+});
+
+QUnit.test("inCodeBlock", assert => {
+  const text =
+    "000\n\n```\n111\n```\n\n000\n\n`111 111`\n\n000\n\n[code]\n111\n[/code]\n\n    111\n\t111\n\n000`000";
+  for (let i = 0; i < text.length; ++i) {
+    if (text[i] === "0") {
+      assert.notOk(inCodeBlock(text, i), `position ${i} is not in code block`);
+    } else if (text[i] === "1") {
+      assert.ok(inCodeBlock(text, i), `position ${i} is in code block`);
+    }
+  }
+});
+
+QUnit.skip("inCodeBlock - runs fast", assert => {
+  const phrase = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+  const text = `${phrase}\n\n\`\`\`\n${phrase}\n\`\`\`\n\n${phrase}\n\n\`${phrase}\n${phrase}\n\n${phrase}\n\n[code]\n${phrase}\n[/code]\n\n${phrase}\n\n    ${phrase}\n\n\`${phrase}\`\n\n${phrase}`;
+
+  let time = Number.MAX_VALUE;
+  for (let i = 0; i < 10; ++i) {
+    const start = performance.now();
+    inCodeBlock(text, text.length);
+    const end = performance.now();
+    time = Math.min(time, end - start);
+  }
+
+  // This runs in 'keyUp' event handler so it should run as fast as
+  // possible. It should take less than 1ms for the test text.
+  assert.ok(time < 10);
 });
