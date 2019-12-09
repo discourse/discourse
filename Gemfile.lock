@@ -418,7 +418,7 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
-    webpush (1.0.0)
+    webpush (0.3.8)
       hkdf (~> 0.2)
       jwt (~> 2.0)
     yaml-lint (0.0.10)
