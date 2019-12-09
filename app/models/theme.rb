@@ -119,7 +119,7 @@ class Theme < ActiveRecord::Base
 
   def self.components_for(theme_id)
     get_set_cache "theme_components_for_#{theme_id}" do
-      ChildTheme.where(parent_theme_id: theme_id).distinct.pluck(:child_theme_id)
+      ChildTheme.where(parent_theme_id: theme_id).pluck(:child_theme_id)
     end
   end
 
