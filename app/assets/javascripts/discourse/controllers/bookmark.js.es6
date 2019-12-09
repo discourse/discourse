@@ -133,6 +133,7 @@ export default Controller.extend(ModalFunctionality, {
 
     switch (this.selectedReminderType) {
       case REMINDER_TYPES.AT_DESKTOP:
+        // TODO: Implement at desktop bookmark reminder functionality
         return "";
       case REMINDER_TYPES.LATER_TODAY:
         return this.laterToday();
@@ -145,6 +146,7 @@ export default Controller.extend(ModalFunctionality, {
       case REMINDER_TYPES.NEXT_MONTH:
         return this.nextMonth();
       case REMINDER_TYPES.CUSTOM:
+        // TODO: Implement custom bookmark reminder times
         return "";
     }
   },
@@ -160,11 +162,12 @@ export default Controller.extend(ModalFunctionality, {
   nextBusinessDay() {
     const currentDay = this.now().isoWeekday(); // 1=Mon, 7=Sun
     let next = null;
+
+    // friday
     if (currentDay === 5) {
-      // friday
       next = this.now().add(3, "days");
+      // saturday
     } else if (currentDay === 6) {
-      // saturday {
       next = this.now().add(2, "days");
     } else {
       next = this.now().add(1, "day");
