@@ -1437,18 +1437,18 @@ describe CookedPostProcessor do
 
     before do
       SiteSetting.download_remote_images_to_local = true
-      cpp.expects(:available_disk_space).returns(50)
+      SiteSetting.download_remote_images_threshold = 20
+      cpp.stubs(:available_disk_space).returns(50)
     end
 
     it "does nothing when there's enough disk space" do
-      SiteSetting.expects(:download_remote_images_threshold).returns(20)
       SiteSetting.expects(:download_remote_images_to_local=).never
       expect(cpp.disable_if_low_on_disk_space).to eq(false)
     end
 
     context "when there's not enough disk space" do
 
-      before { SiteSetting.expects(:download_remote_images_threshold).returns(75) }
+      before { SiteSetting.download_remote_images_threshold = 75 }
 
       it "disables download_remote_images_threshold and send a notification to the admin" do
         StaffActionLogger.any_instance.expects(:log_site_setting_change).once
