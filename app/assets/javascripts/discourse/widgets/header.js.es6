@@ -178,39 +178,45 @@ createWidget("header-icons", {
       return [];
     }
 
-    const hamburger = this.attach("header-dropdown", {
-      title: "hamburger_menu",
-      icon: "bars",
-      iconId: "toggle-hamburger-menu",
-      active: attrs.hamburgerVisible,
-      action: "toggleHamburger",
-      href: "",
-      contents() {
-        let { currentUser } = this;
-        if (currentUser && currentUser.reviewable_count) {
-          return h(
-            "div.badge-notification.reviewables",
-            {
-              attributes: {
-                title: I18n.t("notifications.reviewable_items")
-              }
-            },
-            this.currentUser.reviewable_count
-          );
+    let icons = [];
+
+    // TODO remove ! to hide icons for regular users
+    // if (!this.currentUser.staff) {
+      const hamburger = this.attach("header-dropdown", {
+        title: "hamburger_menu",
+        icon: "bars",
+        iconId: "toggle-hamburger-menu",
+        active: attrs.hamburgerVisible,
+        action: "toggleHamburger",
+        href: "",
+        contents() {
+          let { currentUser } = this;
+          if (currentUser && currentUser.reviewable_count) {
+            return h(
+              "div.badge-notification.reviewables",
+              {
+                attributes: {
+                  title: I18n.t("notifications.reviewable_items")
+                }
+              },
+              this.currentUser.reviewable_count
+            );
+          }
         }
-      }
-    });
+      });
 
-    const search = this.attach("header-dropdown", {
-      title: "search.title",
-      icon: "search",
-      iconId: "search-button",
-      action: "toggleSearchMenu",
-      active: attrs.searchVisible,
-      href: Discourse.getURL("/search")
-    });
+      const search = this.attach("header-dropdown", {
+        title: "search.title",
+        icon: "search",
+        iconId: "search-button",
+        action: "toggleSearchMenu",
+        active: attrs.searchVisible,
+        href: Discourse.getURL("/search")
+      });
 
-    const icons = [search, hamburger];
+      icons.push(hamburger, search);
+    // }
+
     if (attrs.user) {
       icons.push(
         this.attach("user-dropdown", {
