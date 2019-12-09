@@ -338,14 +338,31 @@ const Post = RestModel.extend({
   },
 
   toggleBookmarkWithReminder() {
-    // const bookmarkController =
-    showModal("bookmark", {
-      model: {
-        postId: this.id
-      },
-      title: "post.bookmarks.create",
-      modalClass: "bookmark-with-reminder"
-    });
+    this.toggleProperty("bookmarked_with_reminder");
+    if (this.bookmarked_with_reminder) {
+      let controller = showModal("bookmark", {
+        model: {
+          postId: this.id
+        },
+        title: "post.bookmarks.create",
+        modalClass: "bookmark-with-reminder"
+      });
+      controller.setProperties({
+        onCloseWithoutSaving: () => {
+          this.toggleProperty("bookmarked_with_reminder");
+          this.appEvents.trigger("post-stream:refresh", { id: this.id });
+        }
+      });
+    } else {
+      return Post.destroyBookmark(this.id)
+        .then(() => {
+          this.appEvents.trigger("page:bookmark-post-toggled", this);
+        })
+        .catch(error => {
+          this.toggleProperty("bookmarked_with_reminder");
+          throw new Error(error);
+        });
+    }
   },
 
   updateActionsSummary(json) {
@@ -394,6 +411,12 @@ Post.reopenClass({
     return ajax(`/posts/${postId}/bookmark`, {
       type: "PUT",
       data: { bookmarked }
+    });
+  },
+
+  destroyBookmark(postId) {
+    return ajax(`/posts/${postId}/bookmark`, {
+      type: "DELETE"
     });
   },
 

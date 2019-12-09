@@ -49,6 +49,7 @@ class PostSerializer < BasicPostSerializer
              :user_title,
              :reply_to_user,
              :bookmarked,
+             :bookmarked_with_reminder,
              :bookmark_reminder_at,
              :raw,
              :actions_summary,
@@ -312,12 +313,20 @@ class PostSerializer < BasicPostSerializer
     true
   end
 
+  def bookmarked_with_reminder
+    true
+  end
+
   def include_bookmarked?
-    (actions.present? && actions.keys.include?(PostActionType.types[:bookmark])) || post_bookmark.present?
+    (actions.present? && actions.keys.include?(PostActionType.types[:bookmark]))
+  end
+
+  def include_bookmarked_with_reminder?
+    post_bookmark.present?
   end
 
   def include_bookmark_reminder_at?
-    include_bookmarked?
+    include_bookmarked_with_reminder?
   end
 
   def post_bookmark

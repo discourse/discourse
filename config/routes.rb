@@ -571,6 +571,7 @@ Discourse::Application.routes.draw do
 
   resources :posts do
     put "bookmark"
+    delete "bookmark", to: "posts#destroy_bookmark"
     put "wiki"
     put "post_type"
     put "rebake"

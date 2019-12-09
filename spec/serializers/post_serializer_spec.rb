@@ -259,7 +259,7 @@ describe PostSerializer do
         end
 
         it "returns true" do
-          expect(serialized.as_json[:bookmarked]).to eq(true)
+          expect(serialized.as_json[:bookmarked_with_reminder]).to eq(true)
         end
 
         it "returns the reminder_at for the bookmark" do
@@ -269,7 +269,11 @@ describe PostSerializer do
 
       context "when the site setting for bookmarks with reminders is disabled" do
         it "does not return the bookmarked attribute" do
-          expect(serialized.as_json.key?(:bookmarked)).to eq(false)
+          expect(serialized.as_json.key?(:bookmarked_with_reminder)).to eq(false)
+        end
+
+        it "does not return the bookmark_reminder_at attribute" do
+          expect(serialized.as_json.key?(:bookmark_reminder_at)).to eq(false)
         end
       end
     end

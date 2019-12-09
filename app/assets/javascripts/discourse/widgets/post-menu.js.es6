@@ -310,7 +310,7 @@ registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
   let title = "bookmarks.not_bookmarked";
   let titleOptions = {};
 
-  if (attrs.bookmarked) {
+  if (attrs.bookmarked_with_reminder) {
     className += " bookmarked";
 
     if (attrs.bookmark_reminder_at) {
@@ -327,7 +327,7 @@ registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
   }
 
   return {
-    id: attrs.bookmarked ? "unbookmark" : "bookmark",
+    id: attrs.bookmarked_with_reminder ? "unbookmark" : "bookmark",
     action: "toggleBookmarkWithReminder",
     title: title,
     titleOptions: titleOptions,
@@ -445,7 +445,9 @@ export default createWidget("post-menu", {
     const hiddenButtons = hiddenSetting
       .split("|")
       .filter(s => !attrs.bookmarked || s !== "bookmark")
-      .filter(s => !attrs.bookmarked || s !== "bookmarkWithReminder");
+      .filter(
+        s => !attrs.bookmarked_with_reminder || s !== "bookmarkWithReminder"
+      );
 
     if (currentUser && keyValueStore) {
       const likedPostId = keyValueStore.getInt("likedPostId");

@@ -23,6 +23,7 @@ export default Controller.extend(ModalFunctionality, {
   selectedReminderType: null,
   closeWithoutSaving: false,
   saveButtonClicked: false,
+  onCloseWithoutSaving: null,
 
   onShow() {
     this.setProperties({
@@ -42,6 +43,9 @@ export default Controller.extend(ModalFunctionality, {
   onClose() {
     if (!this.closeWithoutSaving && !this.saveButtonClicked) {
       this.saveBookmark();
+    }
+    if (this.onCloseWithoutSaving && this.closeWithoutSaving) {
+      this.onCloseWithoutSaving();
     }
   },
 
@@ -195,12 +199,14 @@ export default Controller.extend(ModalFunctionality, {
   actions: {
     saveAndClose() {
       this.saveButtonClicked = true;
-      this.saveBookmark().then(() => {
-        this.send("closeModal");
-      }).catch(e => {
-        this.saveButtonClicked = false;
-        popupAjaxError(e);
-      });
+      this.saveBookmark()
+        .then(() => {
+          this.send("closeModal");
+        })
+        .catch(e => {
+          this.saveButtonClicked = false;
+          popupAjaxError(e);
+        });
     },
 
     closeWithoutSavingBookmark() {
