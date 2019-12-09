@@ -33,7 +33,9 @@ import {
   tinyAvatar,
   formatUsername,
   clipboardData,
-  safariHacksDisabled
+  safariHacksDisabled,
+  caretPosition,
+  inCodeBlock
 } from "discourse/lib/utilities";
 import {
   validateUploadedFiles,
@@ -192,7 +194,9 @@ export default Component.extend({
         afterComplete() {
           // ensures textarea scroll position is correct
           scheduleOnce("afterRender", () => $input.blur().focus());
-        }
+        },
+        triggerRule: textarea =>
+          !inCodeBlock(textarea.value, caretPosition(textarea))
       });
     }
 
