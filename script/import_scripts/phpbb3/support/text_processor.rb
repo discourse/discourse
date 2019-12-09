@@ -28,11 +28,11 @@ module ImportScripts::PhpBB3
         converter = BBCode::XmlToMarkdown.new(
           raw,
           username_from_user_id: lambda { |user_id| @lookup.find_username_by_import_id(user_id) },
-          smilie_to_emoji: lambda { |smilie| @smiley_processor.emoji(smilie) },
+          smilie_to_emoji: lambda { |smilie| @smiley_processor.emoji(smilie).dup },
           quoted_post_from_post_id: lambda { |post_id| @lookup.topic_lookup_from_imported_post_id(post_id) },
           upload_md_from_file: lambda do |filename, index|
             unreferenced_attachments[index] = nil
-            attachments.fetch(index, filename)
+            attachments.fetch(index, filename).dup
           end,
           url_replacement: nil,
           allow_inline_code: false

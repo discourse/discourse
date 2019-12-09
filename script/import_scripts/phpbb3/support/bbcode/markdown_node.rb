@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ImportScripts; end
 module ImportScripts::PhpBB3; end
 
@@ -51,9 +53,9 @@ module ImportScripts::PhpBB3::BBCode
     def initialize(xml_node_name:, parent:)
       @xml_node_name = xml_node_name
 
-      @text = ""
-      @prefix = ""
-      @postfix = ""
+      @text = +""
+      @prefix = +""
+      @postfix = +""
 
       @prefix_linebreaks = 0
       @postfix_linebreaks = 0

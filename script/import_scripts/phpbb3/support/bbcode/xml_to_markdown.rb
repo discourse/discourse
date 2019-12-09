@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'nokogiri'
 require_relative 'markdown_node'
 
@@ -144,7 +146,7 @@ module ImportScripts::PhpBB3::BBCode
     end
 
     def visit_IMG(xml_node, md_node)
-      md_node.text = "![](#{xml_node.attribute('src')})"
+      md_node.text = +"![](#{xml_node.attribute('src')})"
       md_node.prefix_linebreaks = md_node.postfix_linebreaks = 2
       md_node.skip_children
     end
@@ -249,7 +251,7 @@ module ImportScripts::PhpBB3::BBCode
 
     # @param md_parent [MarkdownNode]
     def to_markdown(md_parent)
-      markdown = ""
+      markdown = +""
 
       md_parent.children.each do |md_node|
         prefix = md_node.prefix
