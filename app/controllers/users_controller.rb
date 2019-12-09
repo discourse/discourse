@@ -1219,7 +1219,7 @@ class UsersController < ApplicationController
   end
 
   def create_second_factor_totp
-    totp_data = ROTP::Base32.random_base32
+    totp_data = ROTP::Base32.random
     secure_session["staged-totp-#{current_user.id}"] = totp_data
     qrcode_svg = RQRCode::QRCode.new(current_user.totp_provisioning_uri(totp_data)).as_svg(
       offset: 0,
@@ -1295,7 +1295,11 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "second-factor-min-#{key}", 3, 1.minute).performed!
     end
 
-    authenticated = !auth_token.blank? && totp_object.verify_with_drift(auth_token, 30)
+    authenticated = !auth_token.blank? && totp_object.verify(
+      auth_token,
+      drift_ahead: SecondFactorManager::TOTP_ALLOWED_DRIFT_SECONDS,
+      drift_behind: SecondFactorManager::TOTP_ALLOWED_DRIFT_SECONDS
+    )
     unless authenticated
       return render json: failed_json.merge(
                       error: I18n.t("login.invalid_second_factor_code")
