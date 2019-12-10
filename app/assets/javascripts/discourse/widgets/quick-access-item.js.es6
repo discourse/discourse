@@ -67,6 +67,8 @@ createWidget("quick-access-item", {
   },
 
   _usernameHtml() {
-    return this.attrs.username ? `<span>${this.attrs.username}</span> ` : "";
+    // Generate an empty `<span>` even if there is no username, because the
+    // first `<span>` is styled differently.
+    return this.attrs.username ? `<span>${this.attrs.username}</span> ` : "<span></span>";
   }
 });
