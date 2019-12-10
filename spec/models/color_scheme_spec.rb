@@ -54,7 +54,7 @@ describe ColorScheme do
     it "creates a new color scheme" do
       c = described_class.create_from_base(name: 'Yellow', colors: { first_one: 'FFFF00', third_one: 'F00D33' })
       expect(c.colors.size).to eq base_colors.size
-      first  = c.colors.find { |x| x.name == 'first_one' }
+      first = c.colors.find { |x| x.name == 'first_one' }
       second = c.colors.find { |x| x.name == 'second_one' }
       third  = c.colors.find { |x| x.name == 'third_one' }
       expect(first.hex).to eq 'FFFF00'

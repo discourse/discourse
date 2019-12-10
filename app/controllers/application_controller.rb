@@ -757,7 +757,7 @@ class ApplicationController < ActionController::Base
       redirect_path = "#{GlobalSetting.relative_url_root}/u/#{current_user.username}/preferences/second-factor"
       if !request.fullpath.start_with?(redirect_path)
         redirect_to path(redirect_path)
-        return
+        nil
       end
     end
   end

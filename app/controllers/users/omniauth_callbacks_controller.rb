@@ -67,7 +67,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     if @auth_result.failed?
       flash[:error] = @auth_result.failed_reason.html_safe
-      return render('failure')
+      render('failure')
     else
       @auth_result.authenticator_name = authenticator.name
       complete_response_data
