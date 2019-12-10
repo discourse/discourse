@@ -69,6 +69,7 @@ class Plugin::Metadata
     "discourse-yearly-review",
     "discourse-openid-connect",
     "discourse-restricted-replies",
+    "discourse-rss-polling",
     "docker_manager",
     "lazy-yt",
     "poll"
