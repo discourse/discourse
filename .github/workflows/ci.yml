@@ -1,7 +1,9 @@
 name: CI
-
+   
 on:
   push:
+    branches:
+      - master
     branches-ignore:
       - 'tests-passed'
   pull_request:
