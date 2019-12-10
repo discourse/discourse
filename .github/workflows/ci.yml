@@ -1,8 +1,6 @@
 name: CI
 
-on:
-  check_run:
-    types: [created, rerequested]
+on: check_run
 
 jobs:
   build:
