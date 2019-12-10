@@ -9,7 +9,6 @@ on:
   pull_request:
     branches-ignore:
       - 'tests-passed'
-
     
 jobs:
   build:
