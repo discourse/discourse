@@ -55,7 +55,7 @@ class Invite < ActiveRecord::Base
   end
 
   def expired?
-    created_at < SiteSetting.invite_expiry_days.days.ago
+    updated_at < SiteSetting.invite_expiry_days.days.ago
   end
 
   # link_valid? indicates whether the invite link can be used to log in to the site
@@ -191,7 +191,7 @@ class Invite < ActiveRecord::Base
   end
 
   def self.find_pending_invites_from(inviter, offset = 0)
-    find_all_invites_from(inviter, offset).where('invites.user_id IS NULL').order('invites.created_at DESC')
+    find_all_invites_from(inviter, offset).where('invites.user_id IS NULL').order('invites.updated_at DESC')
   end
 
   def self.find_redeemed_invites_from(inviter, offset = 0)
@@ -244,7 +244,7 @@ class Invite < ActiveRecord::Base
   end
 
   def self.rescind_all_expired_invites_from(user)
-    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ? AND invites.created_at < ?',
+    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ? AND invites.updated_at < ?',
                 user.id, SiteSetting.invite_expiry_days.days.ago).find_each do |invite|
       invite.trash!(user)
     end
