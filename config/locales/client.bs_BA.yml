@@ -2437,7 +2437,6 @@ bs_BA:
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
       mailinglist_mirror: "Kategorija odražava mailing listu"
-      suppress_from_latest: "Suzite kategoriju od najnovijih tema."
       show_subcategory_list: "Prikaži listu podkategorija iznad tema u ovoj kategoriji."
       subcategory_num_featured_topics: "Broj istaknutih tema na stranici roditeljske kategorije:"
       all_topics_wiki: "Podrazumevano postavite nove teme"
@@ -2812,6 +2811,7 @@ bs_BA:
       changed: "oznake  promijenjene:"
       tags: "Oznake"
       choose_for_topic: "izborne oznake"
+      add_synonyms: "Dodaj"
       delete_tag: "Izbriši oznaku"
       delete_confirm:
         one: "Jeste li sigurni da želite izbrisati ovu oznaku i ukloniti je iz teme %{count} kojoj je dodijeljen?"

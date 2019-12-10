@@ -566,6 +566,9 @@ users:
   hide_user_profiles_from_public:
     default: false
     client: true
+  allow_featured_topic_on_user_profiles:
+    default: true
+    client: true
   show_inactive_accounts:
     default: false
   user_website_domains_whitelist:
@@ -1408,6 +1411,8 @@ security:
     default: 365
     min: 0
     max: 2000
+  allow_embedding_site_in_an_iframe:
+    default: false
 
 onebox:
   enable_flash_video_onebox: false
@@ -1863,7 +1868,7 @@ uncategorized:
 
   disable_system_edit_notifications: true
 
-  likes_notification_consolidation_threshold:
+  notification_consolidation_threshold:
     default: 3
     min: 0
 

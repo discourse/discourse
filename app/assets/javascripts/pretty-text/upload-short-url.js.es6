@@ -53,8 +53,11 @@ function _loadCachedShortUrls($uploads) {
 
           if (url !== MISSING) {
             $upload.attr("href", url);
-            const content = $upload.text().split("|");
 
+            // Replace "|attachment" with class='attachment'
+            // TODO: This is a part of the cooking process now and should be
+            // removed in the future.
+            const content = $upload.text().split("|");
             if (content[1] === ATTACHMENT_CSS_CLASS) {
               $upload.addClass(ATTACHMENT_CSS_CLASS);
               $upload.text(content[0]);

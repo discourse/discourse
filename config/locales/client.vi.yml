@@ -782,6 +782,7 @@ vi:
         title: "Xác minh hai bước"
         name: "Tên"
         show_key_description: "Nhập thủ công"
+        oauth_enabled_warning: "Xin lưu ý rằng thông tin đăng nhập xã hội sẽ bị vô hiệu hóa khi xác thực hai yếu tố đã được bật trên tài khoản của bạn."
         edit: "Sửa"
         security_key:
           delete: "Xóa"
@@ -1102,6 +1103,7 @@ vi:
     trust_level: "Độ tin tưởng"
     search_hint: "username, email or IP address"
     create_account:
+      disclaimer: "Bằng cách đăng ký, bạn đồng ý với <a href='{{privacy_link}}' target='blank'>chính sách bảo mật</a> và <a href='{{tos_link}}' target='blank'>điều khoản dịch vụ</a>."
       title: "Tạo tài khoản mới"
       failed: "Có gì đó không đúng, có thể email này đã được đăng ký, thử liên kết quên mật khẩu"
     forgot_password:
@@ -1120,6 +1122,10 @@ vi:
     email_login:
       link_label: "Gửi liên kết đăng nhập qua email"
       button_label: "với email"
+      complete_username: "Nếu một tài khoản khớp với tên người dùng <b>%{username}</b>, bạn sẽ sớm nhận được email có liên kết đăng nhập."
+      complete_email: "Nếu một tài khoản phù hợp với <b>%{email}</b>, bạn sẽ sớm nhận được email có liên kết đăng nhập."
+      complete_username_found: "Chúng tôi đã tìm thấy một tài khoản phù hợp với tên người dùng <b>%{username}</b>, bạn sẽ sớm nhận được email có liên kết đăng nhập."
+      complete_email_found: "Chúng tôi đã tìm thấy một tài khoản phù hợp với <b>%{email}</b>, bạn sẽ sớm nhận được email có liên kết đăng nhập."
       complete_username_not_found: "Không có tài khoản phù hợp với tên thành viên <b>%{username} </b>"
       complete_email_not_found: "Không tìm thấy tài khoản nào tương ứng với <b>%{email}</b>"
       confirm_title: "Tiếp tục tới %{site_name}"
@@ -1174,6 +1180,7 @@ vi:
       accept_title: "Lời mời"
       welcome_to: "Chào mừng bạn đến với %{site_name}!"
       invited_by: "Bạn đã được mời bởi:"
+      social_login_available: "Bạn cũng có thể đăng nhập bằng bất kỳ thông tin đăng nhập xã hội nào bằng email đó."
       your_email: "Địa chỉ email của bạn là <b>%{email}</b>."
       accept_invite: "Chấp nhận lời mời"
       name_label: "T"
@@ -1295,6 +1302,7 @@ vi:
       post_approved: "Bài đăng của bạn đã được phê duyệt"
       liked_consolidated_description:
         other: "đã thích {{count}} bài viết của bạn"
+      invited_to_private_message: "<p><span>{{username}}</span>{{description}}"
       invitee_accepted: "<span>{{username}}</span> đã chấp nhận lời mời của bạn"
       moved_post: "<span>{{username}}</span> đã chuyển {{description}}"
       popup:
@@ -1331,11 +1339,14 @@ vi:
       select_all: "Chọn tất cả"
       clear_all: "Xóa tất cả"
       too_short: "Từ khoá tìm kiếm của bạn quá ngắn."
+      result_count:
+        other: "Hơn <span>{{count}}{{plus}} kết quả cho</span><span class='term'>{{term}}</span>"
       title: "tìm kiếm chủ đề, bài viết, tài khoản hoặc các danh mục"
       no_results: "Không tìm thấy kết quả."
       no_more_results: "Không tìm thấy kết quả"
       searching: "Đang tìm ..."
       post_format: "#{{post_number}} bởi {{username}}"
+      results_page: "Kết quả tìm kiếm cho '{{term}}'"
       search_google_button: "G"
       search_google_title: "Tìm trong trang n"
       context:
@@ -2125,6 +2136,7 @@ vi:
       selector_no_tags: "không có thẻ"
       changed: "thẻ đã đổi:"
       tags: "Thẻ"
+      add_synonyms: "Thêm"
       delete_tag: "Xoá thẻ"
       rename_tag: "Đổi tên thẻ"
       rename_instructions: "Chọn tên mới cho thẻ:"
@@ -2201,9 +2213,14 @@ vi:
         private_messages_title: "Tin nhắn"
         mobile_title: "Điện thoại"
         backups: "Sao lưu"
+        backup_count:
+          other: "%{count} bản sao lưu trên %{location}"
         traffic_short: "Băng thông"
         traffic: "Application web requests"
+        page_views: "Số lượt xem"
+        page_views_short: "Số lượt xem"
         show_traffic_report: "Xem chi tiết Báo cáo Lưu lượng"
+        moderators_activity: Người điều hành hoạt động
         general_tab: "Chung"
         security_tab: "Bảo mật"
         report_filter_any: "bất kì"
@@ -2395,12 +2412,18 @@ vi:
           mobile: "Điện thoại"
           settings: "Xác lập"
           upload: "Tải lên"
+          import_web_tip: "Kho chứa chủ đề"
+          is_private: "Theme nằm trong kho git riêng"
           installed: "Đã cài đặt"
           install_popular: "Phổ biến"
+          install_git_repo: "Từ kho git"
           about_theme: "Giới thiệu"
           enable: "Kích hoạt"
           disable: "Vô hiệu hóa"
+          update_to_latest: "Cập nhật lên mới nhất"
+          up_to_date: "Chủ đề được cập nhật, kiểm tra lần cuối:"
           add: "Thêm"
+          repo_unreachable: "Không thể liên hệ với kho Git chứa chủ đề này. Thông báo lỗi:"
           scss:
             text: "CSS"
           header:
@@ -2510,6 +2533,9 @@ vi:
             address_placeholder: "name@example.com"
             type_placeholder: "tập san, đăng ký..."
             reply_key_placeholder: "key phản hồi"
+      moderation_history:
+        actions:
+          suspend_user: "Thành viên đã tạm ngưng"
       logs:
         title: "Log"
         action: "Hành động"
@@ -2566,6 +2592,7 @@ vi:
             revoke_admin: "hủy bỏ quản trị"
             grant_moderation: "cấp điều hành"
             revoke_moderation: "hủy bỏ điều hành"
+            activate_user: "kích hoạt thành viên"
         screened_emails:
           title: "Screened Emails"
           description: "Khi ai đó cố gắng tạo tài khoản mới, các địa chỉ email sau sẽ được kiểm tra và đăng ký sẽ bị chặn, hoặc một số hành động khác được thực hiện."
@@ -2597,6 +2624,8 @@ vi:
             text: "Cuộn lên"
             title: "Tạo mạng con mới các entry cấm nếu có ít nhất 'min_ban_entries_for_roll_up' entry."
         search_logs:
+          term: "Thuật ngữ"
+          searches: "Số lần tìm kiếm"
           types:
             header: "Header"
         logster:
@@ -2657,6 +2686,7 @@ vi:
         suspend_reason: "Lý do"
         suspended_by: "Tạm khóa bởi"
         silence_reason: "Lý do"
+        cant_suspend: "Thành viên này không thể bị tạm ngưng"
         delete_all_posts: "Xóa tất cả bài viết"
         moderator: "Mod?"
         admin: "Quản trị?"

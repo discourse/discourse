@@ -328,9 +328,6 @@ sq:
     please_continue: "Vazhdo tek %{site_name}"
     error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga një llogari tjetër në faqe?"
     already_done: "Na vjen keq, ky link nuk vlen më. Mbase adresa juaj email u ndryshua para pak kohësh?"
-    authorizing_old:
-      title: "Ju falënderojmë për konfirmimin e adresës tuaj email"
-      description: "Tani po ju dërgojmë një mesazh tek adresa e re e emailit për t'a konfirmuar."
   activation:
     action: "Klikoni këtu për të aktivizuar llogarinë tuaj"
     already_done: "Na vjen keq, ky link nuk vlen më. Mbase llogaria është që tani e aktivizuar?"
@@ -1160,10 +1157,6 @@ sq:
       title: "Vendos Fjalëkalim"
     confirm_new_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën tuaj të re të emailit"
-      text_body_template: |
-        Konfirmoni adresën tuaj të re të emailit për "%{site_name}" duke klikuar linkun më poshtë:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën e tanishme të emailit "
     notify_old_email:

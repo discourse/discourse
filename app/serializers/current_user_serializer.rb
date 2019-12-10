@@ -27,6 +27,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :redirected_to_top,
              :custom_fields,
              :muted_category_ids,
+             :muted_tag_ids,
              :dismissed_banner_key,
              :is_anonymous,
              :reviewable_count,
@@ -45,7 +46,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :second_factor_enabled,
              :ignored_users,
              :title_count_mode,
-             :timezone
+             :timezone,
+             :featured_topic
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name.downcase } }
@@ -168,6 +170,10 @@ class CurrentUserSerializer < BasicUserSerializer
     CategoryUser.lookup(object, :muted).pluck(:category_id)
   end
 
+  def muted_tag_ids
+    TagUser.lookup(object, :muted).pluck(:tag_id)
+  end
+
   def ignored_users
     IgnoredUser.where(user: object.id).joins(:ignored_user).pluck(:username)
   end
@@ -216,5 +222,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def second_factor_enabled
     object.totp_enabled? || object.security_keys_enabled?
+  end
+
+  def featured_topic
+    object.user_profile.featured_topic
   end
 end

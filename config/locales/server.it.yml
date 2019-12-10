@@ -694,9 +694,6 @@ it:
     error: "Si è verificato un errore durante la modifica del tuo indirizzo email. Forse l'indirizzo è già in uso?"
     error_staged: "Si è verificato un errore durante il cambio di indirizzo email. L'indirizzo è già stato usato da un utente temporaneo."
     already_done: "Spiacenti, il collegamento di conferma non è più valido. Hai forse già cambiato email?"
-    authorizing_old:
-      title: "Grazie per aver confermato il tuo attuale indirizzo email"
-      description: "Ti stiamo inviando una email al nuovo indirizzo per conferma."
   associated_accounts:
     revoke_failed: "Impossibile revocare il tuo account con %{provider_name}."
     connected: "(connesso)"
@@ -1692,8 +1689,6 @@ it:
     permalink_normalizations: "Applicare il seguente regex prima di accedere ai permalink, ad esempio: /(topic.*)\\?.*/\\1 eliminerà le stringhe query dalla route degli argomenti. Il formato è regex+string use \\1 ecc. per accedere alle catture"
     global_notice: "Mostra un banner di avviso globale URGENTE, EMERGENZA, non eliminabile a tutti i visitatori, imposta a vuoto per nasconderlo (HTML consentito)."
     disable_system_edit_notifications: "Disabilita le notifiche di modifica dall'utente system quando 'download_remote_images_to_local' è attivo."
-    likes_notification_consolidation_threshold: "Numero di notifiche da ricevere oltre il quale saranno consolidate in una singola notifica. Impostare su 0 per disabilitare. Il valore può essere configurato tramite 'SiteSetting.likes_notification_consolidation_window_mins'."
-    likes_notification_consolidation_window_mins: "Tempo in minuti nel quale le notifiche preferite vengono consolidate in un'unica notifica una volta raggiunta una determinata soglia. La soglia può essere configurata tramite 'SiteSetting.likes_notification_consolidation_threshold'."
     automatically_unpin_topics: " Spunta automaticamente gli argomenti quando l'utente arriva in fondo. "
     read_time_word_count: "Conteggio di parole al minuto per calcolare il tempo stimato di lettura."
     topic_page_title_includes_category: "La pagina dell'argomento <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titolo etichetta</a> include il nome della categoria."
@@ -2859,21 +2854,9 @@ it:
     confirm_new_email:
       title: "Conferma Nuova Email"
       subject_template: "[%{email_prefix}] Conferma il tuo nuovo indizzo email"
-      text_body_template: |
-        Conferma il tuo nuovo indirizzo email su %{site_name} cliccando il seguente collegamento:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Conferma Vecchia Email"
       subject_template: "[%{email_prefix}] Conferma il tuo attuale indirizzo email"
-      text_body_template: |
-        Prima di poter cambiare il tuo indirizzo email abbiamo bisogno che tu confermi di controllare
-        l'indirizzo email attuale. Dopo aver completato questo passaggio, dovrai confermare
-        il nuovo indirizzo email.
-
-        Conferma il tuo attuale indirizzo email su %{site_name} cliccando il seguente collegamento:
-
-        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Notifica Vecchia Email"
       subject_template: "[%{email_prefix}] Il tuo indirizzo email è stato cambiato"

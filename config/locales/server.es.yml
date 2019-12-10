@@ -56,6 +56,7 @@ es:
       component_no_default: "Los componentes del tema no pueden ser tema predeterminado"
       component_no_color_scheme: "Los componentes del tema no pueden tener paletas de colores"
       no_multilevels_components: "Los temas con temas secundarios no pueden ser temas secundarios en sí mismos."
+      optimized_link: Los enlaces de imagen optimizados son efímeros y no deben incluirse en el código fuente del tema.
     settings_errors:
       invalid_yaml: "El YAML provisto es inválido."
       data_type_not_a_number: "El tipo de ajuste «%{name}» no está soportado. Los tipos soportados son: «integer», «bool», «list» y «enum»"
@@ -103,6 +104,7 @@ es:
         unsubscribe_not_allowed: "Sucede cuando no se le permite a este usuario anular la subscripción por correo electrónico."
         email_not_allowed: "Sucede cuando la dirección de correo electrónico no está en la lista blanca o está en la lista negra."
       unrecognized_error: "Error no identificado"
+    secure_media_placeholder: "Redactado: este sitio tiene medios seguros habilitados. Visita el tema para ver las imágenes/audio/video adjuntas."
   errors: &errors
     format: "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -124,6 +126,7 @@ es:
       inclusion: no está incluido en la lista
       invalid: es inválido
       is_invalid: "parece poco claro, ¿es una oración completa?"
+      invalid_timezone: "'%{tz}' no es una zona horaria"
       contains_censored_words: "contiene las siguientes palabras censuradas: %{censored_words}"
       less_than: "debe ser menor que %{count}"
       less_than_or_equal_to: "debe ser menor o igual que %{count}"
@@ -166,6 +169,10 @@ es:
       enable_s3_uploads_is_required: "No puedes activar el inventario en S3 a menos que se haya habilitado las subidas en S3."
       s3_backup_requires_s3_settings: "No puedes usar S3 como método de respaldo salvo que hayas rellenado «%{setting_name}»."
       s3_bucket_reused: "No puedes usar el mismo bucket para «s3_upload_bucket» y «s3_backup_bucket». Por favor, selecciona otro bucket o usa una ruta diferente para cada bucket."
+      secure_media_requirements: "Se debe habilitar la subida de S3 antes de habilitar medios seguros."
+      second_factor_cannot_be_enforced_with_disabled_local_login: "No puede aplicar 2FA si los inicios de sesión locales están deshabilitados."
+      local_login_cannot_be_disabled_if_second_factor_enforced: "No puede deshabilitar el inicio de sesión local si se aplica 2FA. Deshabilite 2FA antes de deshabilitar los inicios de sesión locales."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "No puedes habilitar las cargas S3 porque las cargas S3 ya están habilitadas globalmente, y habilitar este nivel de sitio podría causar problemas críticos con las cargas."
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el staff debe intervenir por razones de seguridad. Por favor, ponte en contacto con el staff y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
@@ -280,6 +287,7 @@ es:
   max_pm_recepients: "Lo sentimos, puedes enviar un mensaje a un máximo de %{recipients_limit} destinatarios."
   pm_reached_recipients_limit: "Lo sentimos, no puedes tener más de %{recipients_limit} destinatarios en un mensaje."
   removed_direct_reply_full_quotes: "Cita de toda la publicación anterior eliminada automáticamente."
+  secure_upload_not_allowed_in_public_topic: "Lo sentimos, la(s) siguiente(s) subida(s) no se pueden utilizar en un tema público: %{upload_filenames}."
   just_posted_that: "es demasiado parecido a lo que has publicado recientemente"
   invalid_characters: "contiene caracteres inválidos"
   is_invalid: "parece poco claro, ¿es una oración completa?"
@@ -714,14 +722,23 @@ es:
       windows: "Microsoft Windows"
       unknown: "sistema operativo desconocido"
   change_email:
+    wrong_account_error: "Iniciaste sesión en la cuenta equivocada. Por favor, cierra sesión e intenta nuevamente."
     confirmed: "Se actualizó tu correo electrónico."
     please_continue: "Continuar a %{site_name}"
     error: "Hubo un problema al cambiar tu dirección de correo electrónico. ¿Quizás la dirección ya está en uso?"
     error_staged: "Se produjo un error al cambiar tu correo electrónico. La dirección ya está en uso por un usuario temporal."
     already_done: "Lo sentimos, este enlace de confirmación ya no es válido. ¿Quizá tu correo electrónico ya fue cambiado?"
+    confirm: "Confirmar"
+    authorizing_new:
+      title: "Confirmar tu nuevo correo electrónico"
+      description: "Por favor, confirma que quisieras cambiar tu correo electrónico por el nuevo: "
     authorizing_old:
-      title: "Gracias por confirmar tu dirección de correo electrónico actual"
-      description: "Te enviaremos un correo electrónico a tu nueva dirección para confirmar."
+      title: "Cambiar tu dirección de correo electrónico"
+      description: "Por favor, confirma el cambio de tu dirección de correo electrónico"
+      old_email: "Correo electrónico antiguo: %{email}"
+      new_email: "Correo electrónico nuevo: %{email}"
+      almost_done_title: "Confirmando la nueva dirección de correo electrónico"
+      almost_done_description: "¡Enviamos un correo a tu nueva dirección de correo electrónico para confirmar el cambio!"
   associated_accounts:
     revoke_failed: "No pudo revocar la conexión con %{provider_name}."
     connected: "(conectados)"
@@ -857,6 +874,8 @@ es:
     description: "las preferencias de correo electrónico para <b>%{email}</b> han sido actualizadas. Para cambiar tus configuraciones de correo electrónico, <a href='%{url}'>visita tus preferencias de usuario</a>."
     topic_description: "Para volver a suscribirte a %{link}, cambia los ajustes de notificación en la parte inferior o en la parte derecha del tema."
     private_topic_description: "Para volver a suscribirte, cambia los ajustes de notificación en la parte inferior o en la parte derecha del tema."
+  uploads:
+    marked_insecure_from_theme_component_reason: "subida usada en componente de tema"
   unsubscribe:
     title: "Cancelar suscripción"
     stop_watching_topic: "Dejar de vigilar este tema, %{link}"
@@ -1240,8 +1259,8 @@ es:
       other: "El polling por correo electrónico ha generado %{count} errores en las últimas 24 horas. Revisa <a href='%{base_path}/logs' target='_blank'>los registros</a> para más detalles."
     missing_mailgun_api_key: "El servidor está configurado para enviar correos electrónicos a través de Mailgun pero no has proporcionado una clave API que se utiliza para verificar los mensajes de webhook."
     bad_favicon_url: "El favicon está produciendo errores en el proceso de carga. Revisa la opción favicon en los <a href='%{base_path}/admin/site_settings'>ajustes del sitio</a>."
-    deprecated_api_usage: "Hemos detectado una solicitud a la API usando un método de autentificación deprecado. Por favor, actualízalo para usar <a href='https://meta.discourse.org/t/discourse-api-documentation/22706'>autentificación basada en encabezados</a>."
-    update_mail_receiver: "Hemos detectado una versión antigua de mail-receiver. Por favor, conéctate con SSH al servidor y ejecuta `/var/discourse/launcher rebuild mail-receiver`."
+    deprecated_api_usage: "Detectamos una solicitud de API utilizando un método de autenticación obsoleto. Actualicelo para usar la autenticación <a href='https://meta.discourse.org/t/-/22706'>basada en un encabezado</a>. Después de actualizar, este mensaje puede tardar 24 horas en desaparecer."
+    update_mail_receiver: "Detectamos una versión desactualizada del receptor de correo. Clic <a href='https://meta.discourse.org/t/-/133491'>aquí</a> para instrucciones de actualización. Después de actualizar, este mensaje puede tardar 24 horas en desaparecer."
     poll_pop3_timeout: "La conexión al servidor POP3 está superando el tiempo de espera. No se pudieron recuperar los correos electrónicos entrantes. Por favor, revisa los <a href='%{base_path}/admin/site_settings/category/email'>ajustes de POP3</a> y tu proveedor de servicio."
     poll_pop3_auth_error: "La conexión al servidor POP3 está fallando debido a un error de autenticación. Por favor, revisa los <a href='%{base_path}/admin/site_settings/category/email'>ajustes POP3</a>."
     force_https_warning: "Tu sitio web está usando SSL. Pero «<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>» no está habilitado todavía en la configuración de tu sitio."
@@ -1385,6 +1404,7 @@ es:
     content_security_policy: "Activar la política de seguridad de contenido (CSP)"
     content_security_policy_report_only: "Activar solo el informe de la política de seguridad de contenido (CPS)"
     content_security_policy_collect_reports: "Habilitar la recolección de reportes de violación de CSP en /csp_reports"
+    content_security_policy_script_src: "Fuentes de script adicionales en la lista blanca. El host actual y CDN se incluyen por defecto. Leer <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
     invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
     top_menu: "Determinar los elementos que aparecen en el menú de navegación de la página de inicio y su orden. Ejemplo últimos|nuevos|no leídos|categorías|destacados|leídos|publicados|marcadores"
     post_menu: "Determinar los elementos que aparecen en el menú de publicación  y su orden. Ejemplo: me gusta|editar|reportar|eliminar|compartir|guardar en marcadores|responder"
@@ -1694,6 +1714,7 @@ es:
     log_mail_processing_failures: "Registra todos los fallos de procesamiento de <a href='%{base_path}/logs' target='_blank'>/registros</a>"
     email_in: 'Permitir a los usuarios crear nuevos temas por correo electrónico (requiere el polling manual o pop3). Configura las direcciones en la pestaña «ajustes» de cada categoría.'
     email_in_min_trust: "El nivel de confianza mínimo requerido para poder publicar temas nuevos por correo electrónico."
+    email_in_authserv_id: "El identificador del servicio realizando revisiones de autenticación en correos electrónicos entrantes. Ver: <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obtener instrucciones sobre cómo configurar esto."
     email_in_spam_header: "El encabezado del correo electrónico para detectar spam."
     email_prefix: "La [etiqueta] utilizada en el asunto de los correos electrónicos. Si no está configurado, será por defecto el «título»."
     email_site_title: "El título del sitio utilizado como remitente de los correos electrónicos desde el sitio. Si no está configurado, será por defecto «título». Si tu «título» contiene caracteres que no están permitidos en las cadenas del remitente del correo electrónico, usa esta opción."
@@ -1752,8 +1773,6 @@ es:
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de hacer coincidir los permalinks, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
     global_notice: "Mostrar un anuncio global de URGENCIA o EMERGENCIA que no se pueda ocultar para todos los visitantes. Deja este campo en blanco para ocultarlo (se permite HTML)."
     disable_system_edit_notifications: "Inhabilitar editar notificaciones por el usuario del sistema cuando «download_remote_images_to_local» este activo."
-    likes_notification_consolidation_threshold: "Número de notificaciones de me gusta recibidas antes de que las notificaciones se consoliden en una sola. Establece el valor en 0 para deshabilitar. La ventana se puede configurar a través de `SiteSetting.likes_notification_consolidation_window_mins`."
-    likes_notification_consolidation_window_mins: "Duración en minutos tras los que se consolidan las notificaciones de me gusta en una sola notificación una vez que se ha alcanzado el umbral. El umbral se puede configurar a través de `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
     read_time_word_count: "Número de palabras por minuto para calcular el tiempo de lectura estimado."
     topic_page_title_includes_category: "La <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta del título</a> de la página del tema incluye el nombre de la categoría."
@@ -1787,6 +1806,7 @@ es:
     delete_drafts_older_than_n_days: "Eliminar borradores de más de (n) días de antigüedad."
     bootstrap_mode_min_users: "Número mínimo de usuarios requerido para desactivar el modo bootstrap (establece en 0 para desactivar esta opción)"
     prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto que no sea una imagen."
+    secure_media: 'Limita el acceso a los medios subidos (imágenes, video, audio). Si está habilitado «inicio de sesión requerido», solo los usuarios que hayan iniciado sesión pueden acceder a los medios subidos. En caso contrario, se limitará el acceso únicamente a los medios subidos en mensajes privados. Nota: se deben habilitar las subidas S3 antes de poder habilitar esta configuración.'
     slug_generation_method: "Elegir un método de generación de slug. «encoded» generará cadenas con código porcentual. «none» deshabilitará completamente el slug."
     enable_emoji: "Habilitar emoji"
     enable_emoji_shortcuts: "Texto común de emoticones como :) :p :( se convertirán a emojis"
@@ -1829,6 +1849,7 @@ es:
     default_categories_tracking: "Lista de categorías que están seguidas por defecto"
     default_categories_muted: "Lista de categorías que están silenciadas por defecto."
     default_categories_watching_first_post: "Lista de categorías en las que el primer mensaje de cada tema nuevo se vigilará por defecto."
+    mute_all_categories_by_default: "Establezca el nivel de notificación predeterminado de todas las categorías en silenciado. Solicite a los usuarios que opten por las categorías para que aparezcan en las páginas de 'latest' y 'categories'. Si desea modificar los valores predeterminados para usuarios anónimos, establezca la configuración en 'default_categories_'."
     default_tags_watching: "Lista de etiquetas vigiladas por defecto."
     default_tags_tracking: "Lista de etiquetas seguidas por defecto."
     default_tags_muted: "Lista de etiquetas silenciadas por defecto."
@@ -2014,7 +2035,7 @@ es:
     auto_deleted_by_timer: "Eliminado automáticamente por el temporizador."
   login:
     security_key_description: "Cuando tengas tu clave de seguridad física preparada, presiona el botón de autenticar con clave de seguridad que se encuentra debajo."
-    security_key_alternative: "¿No encuentras tu clave de seguridad o quieres utilizar otro método?"
+    security_key_alternative: "Intenta de otra manera"
     security_key_authenticate: "Autenticar con clave de seguridad"
     security_key_not_allowed_error: "La autenticación de la clave de seguridad fue cancelada o se agotó el tiempo."
     security_key_no_matching_credential_error: "No se encontraron credenciales que coincidan en la clave de seguridad provista."
@@ -3144,18 +3165,17 @@ es:
       text_body_template: |
         Confirma tu nueva dirección de correo electrónico para %{site_name} haciendo clic en el siguiente enlace:
 
-        %{base_url}/u/confirm-new-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email:
       title: "Confirmar correo electrónico antiguo"
       subject_template: "[%{email_prefix}] Confirma tu dirección actual de correo electrónico"
       text_body_template: |
-        Antes de cambiar tu dirección de correo electrónico, necesitamos que confirmes que controlas
-        el correo actual. Después de completar este paso, podrás confirmar
-        la nueva dirección de correo electrónico.
+        Antes de que podamos cambiar tu dirección de correo electrónico, es necesario que confirmes
+        que la cuenta de correo electrónica actual está bajo tu control. Tras completar este paso, deberemos confirmar también la nueva dirección.
 
-        Confirma tu correo electrónico actual para %{site_name} haciendo clic en el siguiente enlace:
+        Confirma tu dirección de correo electrónico actual para %{site_name} haciendo clic en el siguiente enlace:
 
-        %{base_url}/u/confirm-new-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Antiguo correo electrónico de notificaciones"
       subject_template: "[%{email_prefix}] Tu dirección de correo electrónico ha sido cambiada"

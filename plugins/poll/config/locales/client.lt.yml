@@ -27,7 +27,8 @@ lt:
         label: "Rodyti rezultatus"
       hide-results:
         title: "Grįžti į balsavimus"
-        label: "Slėpti rezultatus"
+      export-results:
+        label: "Eksportuoti"
       open:
         title: "Atidaryti balsavimą"
         label: "Atidaryti"

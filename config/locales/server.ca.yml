@@ -92,6 +92,7 @@ ca:
         from_reply_by_address_error: "Passa quan la capçalera del remitent coincideix amb l'adreça de correu de resposta."
         inactive_user_error: "Passa quan l'emissor no és actiu."
         silenced_user_error: "Passa quan el remitent ha estat silenciat."
+        bad_destination_address: "Passa quan cap de les adreces electròniques dels camps A/Cc no coincideix amb una adreça de correu entrant configurada."
         strangers_not_allowed_error: "Passa quan un usuari ha provat de crear un tema nou en una categoria de la qual no és membre."
         insufficient_trust_level_error: "Passa quan un usuari ha provat de crear un tema nou en una categoria per a la qual no té el nivell de confiança necessari."
         reply_user_not_matching_error: "Passa quan una resposta arriba des d'una adreça de correu diferent d'aquella a la qual s'ha enviat la notificació."
@@ -123,6 +124,7 @@ ca:
       inclusion: no és inclòs en la llista
       invalid: no és vàlid
       is_invalid: "no sembla clar. És una frase sencera?"
+      invalid_timezone: "'%{tz}' no és una zona horària vàlida"
       contains_censored_words: "conté les següents paraules censurades: %{censored_words}"
       less_than: "ha de ser menys de %{count}"
       less_than_or_equal_to: "ha de ser igual o menor que %{count}"
@@ -246,6 +248,7 @@ ca:
       other: "%{count} 'm'agrada'"
     last_reply: "Darrera resposta"
     created: "Creat"
+    new_topic: "Crea un tema nou"
   no_mentions_allowed: "No podeu mencionar altres usuaris"
   too_many_mentions:
     one: "Només podeu mencionar un usuari en una publicació."
@@ -711,14 +714,23 @@ ca:
       windows: "Microsoft Windows"
       unknown: "sistema operatiu desconegut"
   change_email:
+    wrong_account_error: "Heu iniciat sessió amb un compte equivocat. Tanqueu la sessió i torneu-ho a provar."
     confirmed: "El vostre correu electrònic ha estat actualitzat."
     please_continue: "Continua a %{site_name}"
     error: "Hi ha hagut un error en canviar la vostra adreça de correu. Potser l'adreça ja està en ús."
     error_staged: "Hi ha hagut un error en canviar la vostra adreça electrònica. L'adreça ja està en ús per un usuari fictici."
     already_done: "Aquest enllaç de confirmació ja no és vàlid. Potser s'ha canviat el vostre correu electrònic."
+    confirm: "Confirma"
+    authorizing_new:
+      title: "Confirmeu la vostra nova adreça electrònica"
+      description: "Confirmeu que voleu canviar la vostra nova adreça de correu electrònic a:"
     authorizing_old:
-      title: "Gràcies per confirmar la vostra adreça actual de correu."
-      description: "Us enviem ara per correu la vostra adreça per a confirmar-la."
+      title: "Canvieu la vostra adreça de correu electrònic"
+      description: "Confirmeu el canvi d’adreça electrònica"
+      old_email: "Adreça electrònica antiga: %{email}"
+      new_email: "Adreça electrònica nova: %{email}"
+      almost_done_title: "Confirmant la nova adreça electrònica"
+      almost_done_description: "Hem enviat un correu electrònic a la vostra nova adreça electrònica per a confirmar el canvi."
   associated_accounts:
     revoke_failed: "No s'ha pogut revocar el vostre compte amb %{provider_name}."
     connected: "(connectat)"
@@ -733,6 +745,7 @@ ca:
     activated: "Aquest compte ja ha estat activat."
     admin_confirm:
       title: "Confirma el compte d'administrador"
+      description: "Esteu segur que voleu que <b>%{target_username}(%{target_email})</b> sigui administrador?"
       grant: "Atorga accés d'administrador"
       complete: "<b>%{target_username}</b> és ara administrador."
       back_to: "Torna a %{title}"
@@ -781,6 +794,10 @@ ca:
       description: "M'agrada aquesta publicació"
       short_description: "M'agrada aquesta publicació"
       long_form: "ha fet 'M'agrada'"
+  draft:
+    sequence_conflict_error:
+      title: "error d'esborrany"
+      description: "L’esborrany s’està editant en una altra finestra. Torneu a carregar aquesta pàgina."
   draft_backup:
     pm_title: "Esborranys de còpia de seguretat de temes en curs"
     pm_body: "Tema que conté esborranys de còpia de seguretat"
@@ -1668,6 +1685,9 @@ ca:
     private_email: "No incloguis contingut de publicacions o temes en el títol o el cos del correu electrònic. NOTA: també desactiva els correus electrònics de resum."
     email_total_attachment_size_limit_kb: "Mida total màxima dels fitxers adjuntats als correus sortints. 0 per a inhabilitar l’enviament d'adjunts."
     post_excerpts_in_emails: "En els correus de notificació, envia sempre fragments en lloc de publicacions completes."
+    raw_email_max_length: "Quants caràcters s’han d’emmagatzemar per al correu electrònic entrant."
+    raw_rejected_email_max_length: "Quants caràcters s’han d’emmagatzemar per al correu electrònic entrant rebutjat."
+    delete_rejected_email_after_days: "Suprimeix els correus electrònics rebutjats amb més de (n) dies."
     manual_polling_enabled: "Envia correus (push) fent servir l'API per a respostes de correu."
     pop3_polling_enabled: "Consulta via POP3 les respostes de correu"
     pop3_polling_ssl: "Fes servir SSL en connectar amb el servidor POP3 (recomanat)."
@@ -1726,6 +1746,7 @@ ca:
     ignored_users_count_message_threshold: "Notifica als moderadors si un usuari determinat és ignorat per molts altres usuaris."
     ignored_users_message_gap_days: "Quant de temps haureu d'esperar abans de notificar de nou als moderadors sobre un usuari ignorat per molts altres."
     clean_up_inactive_users_after_days: "Nombre de dies abans d'eliminar un usuari inactiu (nivell de confiança 0 sense publicacions). Per a desactivar la neteja, poseu 0."
+    user_selected_primary_groups: "Permet als usuaris configurar el seu propi grup principal"
     user_website_domains_whitelist: "El lloc web de l'usuari serà verificat contra aquests dominis. Llista delimitada amb barres verticals."
     allow_profile_backgrounds: "Permet que els usuaris carreguin fons de perfil."
     sequential_replies_threshold: "Nombre de publicacions seguides que un usuari ha de fer en un tema abans de ser advertit de fer massa respostes seqüencials."
@@ -1738,8 +1759,6 @@ ca:
     permalink_normalizations: "Aplica la següent expressió regular abans de cercar enllaços permanents coincidents. Per exemple: /(topic.*)\\?.*/\\1 eliminarà les cadenes de consulta de les rutes dels temes. El format és regex+string; utilitzeu \\1 \\2...  per a accedir a captures."
     global_notice: "Mostra un bàner d'avís global d'EMERGÈNCIA URGENT, no descartable, a tots els visitants. Canvieu a blanc per a amagar-lo. (Es permet HTML.)"
     disable_system_edit_notifications: "Inhabilita les notificacions d'edició per l'usuari del sistema quan 'download_remote_images_to_local' és actiu."
-    likes_notification_consolidation_threshold: "Nombre de notificacions amb 'M'agrada' rebudes abans de consolidar les notificacions en una de sola. 0 per desactivar. La finestra es pot configurar mitjançant `SiteSetting.likes_notification_consolidation_window_mins`."
-    likes_notification_consolidation_window_mins: "Durada en minuts en què les notificacions amb 'M'agrada' es consoliden en una única notificació una vegada s'ha assolit el llindar. El llindar es pot configurar mitjançant `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Desafixa temes automàticament quan l'usuari arribi al capdavall."
     read_time_word_count: "Recompte de paraules per minut per a calcular el temps estimat de lectura."
     topic_page_title_includes_category: "L'<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta del títol</a>  de la pàgina del tema inclou el nom de la categoria."
@@ -1815,10 +1834,15 @@ ca:
     default_categories_tracking: "Llista de categories seguides per defecte."
     default_categories_muted: "Llista de categories silenciades per defecte."
     default_categories_watching_first_post: "La llista de categories en què per defecte es vigilarà la primera publicació en cada tema nou. "
+    default_tags_watching: "Llista d’etiquetes que són vigilades per defecte."
+    default_tags_tracking: "Llista d’etiquetes que són seguides per defecte."
+    default_tags_muted: "Llista d'etiquetes que són silenciades per defecte."
+    default_tags_watching_first_post: "Llista d'etiquetes en les quals la primera publicació en cada tema nou serà vigilada per defecte."
     default_text_size: "Mida del text seleccionada per defecte"
     default_title_count_mode: "Mode predeterminat per al comptador de títols de la pàgina"
     retain_web_hook_events_period_days: "Nombre de dies per a conservar els registres d'esdeveniments webhook."
     retry_web_hook_events: "Reintenta automàticament quatre vegades els esdeveniments webhook fallits. Els intervals de temps entre els reintents són 1, 5, 25 i 125 minuts."
+    revoke_api_keys_days: "Nombre de dies abans que una clau d’API no utilitzada sigui revocada  automàticament (0 per a mai)"
     allow_user_api_keys: "Permet la generació de claus API d'usuari"
     allow_user_api_key_scopes: "Llista d'àmbits permesos per a les claus d'API d'usuari"
     max_api_keys_per_user: "Nombre màxim de claus API personals per usuari"
@@ -1907,6 +1931,8 @@ ca:
       topic: "Resultats"
       user: "Usuaris"
     results_page: "Resultats de la cerca per a '%{term}'"
+    audio: "[àudio]"
+    video: "[vídeo]"
   sso:
     login_error: "Error d'inici de sessió"
     not_found: "No s'ha trobat el vostre compte. Contacteu amb l'administrador del lloc web."
@@ -1993,7 +2019,7 @@ ca:
     auto_deleted_by_timer: "S'ha suprimit automàticament per temporitzador."
   login:
     security_key_description: "Quan tingueu preparada la vostra clau de seguretat física, premeu el botó Autentica amb clau de seguretat."
-    security_key_alternative: "¿No podeu trobar la vostra clau de seguretat o voleu utilitzar un altre mètode?"
+    security_key_alternative: "Proveu d’una altra manera"
     security_key_authenticate: "Autenticació amb clau de seguretat"
     security_key_not_allowed_error: "El procés d'autenticació de claus de seguretat ha arribat al límit de temps o s'ha cancel·lat. "
     security_key_no_matching_credential_error: "No s'ha trobat cap credencial coincident amb la clau de seguretat proporcionada."
@@ -2120,6 +2146,10 @@ ca:
   admin_confirmation_mailer:
     title: "Confirmació d'administració"
     subject_template: "[%{email_prefix}] Confirmeu un nou compte d'administració"
+    text_body_template: |
+      Confirmeu que voleu afegir **%{target_username} (%{target_email}) ** com a administrador del fòrum.
+
+      [Confirma el compte d’administrador](%{admin_confirm_url})
   test_mailer:
     title: "Test"
     subject_template: "[%{email_prefix}] Test de lliurament de correu electrònic"
@@ -2211,6 +2241,7 @@ ca:
         Estem molt contents que passeu temps amb nosaltres, i ens agradaria conèixer-vos més bé. Dediqueu un moment a [omplir el vostre perfil](%{base_url}/my/preferences/profile), o bé podeu [començar un tema nou](%{base_url}/categories).
     welcome_staff:
       title: "Benvingut membre de l'equip responsable"
+      subject_template: "Enhorabona, se us ha concedit estatus de: %{role}!"
     welcome_invite:
       title: "Benvingut convidat"
       subject_template: "Benvingut a %{site_name}!"
@@ -2743,20 +2774,13 @@ ca:
       title: "Confirmeu l'adreça de correu nova"
       subject_template: "[%{email_prefix}] Confirmeu la vostra nova adreça de correu"
       text_body_template: |
-        Confirmeu la vostra nova adreça de correu per a %{site_name} fent clic en l'enllaç següent:
+        Confirmeu la vostra nova adreça electrònica per a %{site_name} fent clic en l'enllaç següent:
 
         %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Confirmeu l'adreça de correu antiga"
       subject_template: "[%{email_prefix}] Confirmeu la vostra adreça de correu actual"
-      text_body_template: |
-        Abans de poder canviar la vostra adreça de correu, cal que confirmeu que controleu
-        el compte de correu actual. Una vegada completat aquest pas, us farem confirmar
-        la nova adreça de correu.
-
-         Confirmeu la vostra adreça actual per a %{site_name} fent clic en l'enllaç següent:
-
-        %{base_url}/u/confirm-old-email/%{email_token}
+      text_body_template: "Abans de canviar la vostra adreça electrònica, necessitem que confirmeu que controleu\nel compte de correu electrònic actual. Després de completar aquest pas, us haurem de confirmar \nla nova adreça electrònica. \n\nConfirmeu la vostra adreça electrònica actual per a %{site_name} fent clic en l'enllaç següent:\n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
     notify_old_email:
       title: "Notifica l'adreça de correu antiga"
       subject_template: "[%{email_prefix}] La vostra adreça de correu ha canviat"
@@ -3139,6 +3163,9 @@ ca:
       restricted_to:
         one: '"%{tag_name}" està restringit a la categoria "%{category_names}"'
         other: '"%{tag_name}" és restringit a les següents categories: %{category_names}'
+    required_tags_from_group:
+      one: "Heu d’incloure almenys %{count} etiqueta %{tag_group_name}."
+      other: "Heu d’incloure com a mínim %{count} etiquetes %{tag_group_name}."
   rss_by_tag: "Temes etiquetats amb %{tag}"
   finish_installation:
     congratulations: "Enhorabona, heu instal·lat Discourse!"

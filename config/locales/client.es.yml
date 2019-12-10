@@ -747,6 +747,7 @@ es:
       collapse_profile: "Contraer"
       bookmarks: "Marcadores"
       bio: "Acerca de mí"
+      timezone: "Zona horaria"
       invited_by: "Invitado por"
       trust_level: "Nivel de confianza"
       notifications: "Notificaciones"
@@ -1335,7 +1336,7 @@ es:
       second_factor_backup_description: "Por favor, ingresa uno de los códigos de respaldo:"
       second_factor: "Iniciar sesión utilizando la app Authenticator"
       security_key_description: "Cuando tengas tu clave de seguridad física preparada, presiona el botón de autenticar con clave de seguridad que se encuentra debajo."
-      security_key_alternative: "¿No encuentras tu clave de seguridad o quieres utilizar otro método?"
+      security_key_alternative: "Intenta de otra manera"
       security_key_authenticate: "Autenticar con clave de seguridad"
       security_key_not_allowed_error: "La autenticación de la clave de seguridad fue cancelada o se agotó el tiempo."
       security_key_no_matching_credential_error: "No se encontraron credenciales que coincidan en la clave de seguridad provista."
@@ -1633,6 +1634,7 @@ es:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Nuevo tema</span> {{description}}"
       membership_request_accepted: "Membresía aceptada en «{{group_name}}»"
+      membership_request_consolidated: "{{count}} solicitudes de membresía abiertas para '{{group_name}}'"
       group_message_summary:
         one: "{{count}} mensaje en tu bandeja de {{group_name}}"
         other: "{{count}} mensajes en tu bandeja de {{group_name}} "
@@ -1668,6 +1670,7 @@ es:
         topic_reminder: "recordatorio de tema"
         liked_consolidated: "nuevos me gusta"
         post_approved: "publicación aprobada"
+        membership_request_consolidated: "nuevas solicitudes de membresía"
     upload_selector:
       title: "Agregar imagen"
       title_with_attachments: "Agregar una imagen o archivo"
@@ -1713,6 +1716,7 @@ es:
       context:
         user: "Buscar publicaciones de @{{username}}"
         category: "Buscar la categoría #{{category}}"
+        tag: "Buscar la etiqueta #{{tag}} "
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
       advanced:
@@ -2425,7 +2429,6 @@ es:
       email_in_disabled: "La posibilidad de publicar temas nuevos por correo electrónico está deshabilitada en los ajustes del sitio. Para habilitar la publicación de temas nuevos por correo electrónico,"
       email_in_disabled_click: 'activa la opción «correo electrónico»'
       mailinglist_mirror: "La categoría es el reflejo de una lista de correo"
-      suppress_from_latest: "Ocultar la categoría de la lista de últimos temas."
       show_subcategory_list: "Mostrar la lista de subcategorías arriba de la lista de temas en esta categoría."
       num_featured_topics: "Número de temas que se muestran en la página de categorías:"
       subcategory_num_featured_topics: "Número de temas destacados a mostrar en la página principal de categorías:"
@@ -2797,6 +2800,7 @@ es:
       changed: "etiquetas cambiadas:"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionales"
+      add_synonyms: "Agregar"
       delete_tag: "Eliminar etiqueta"
       delete_confirm:
         one: "¿Estás seguro de querer borrar esta etiqueta y eliminarla de %{count} tema asignado?"
@@ -3071,8 +3075,8 @@ es:
         no_description: (sin descripción)
         all_api_keys: Todas las claves de API
         user_mode: Nivel de usuario
-        impersonate_all_users: Suplantar cualquier usuari
-        single_user: "Un usuari"
+        impersonate_all_users: Suplantar cualquier usuario
+        single_user: "Un usuario"
         user_placeholder: Introducir nombre de usuario
         description_placeholder: "¿Para qué se usará esta clave?"
         save: Guardar
@@ -3321,6 +3325,7 @@ es:
           color_scheme_select: "Selecciona colores para usar en el tema"
           custom_sections: "Secciones personalizadas:"
           theme_components: "Componentes del tema"
+          add_all_themes: "Agregar todos los temas"
           convert: "Convertir"
           convert_component_alert: "¿Estás seguro de que quieres convertir este componente en tema? Se eliminará como componente en %{relatives}."
           convert_component_tooltip: "Convertir este componente en tema"
@@ -3353,6 +3358,7 @@ es:
           edit_css_html: "Editar CSS/HTML"
           edit_css_html_help: "No has editado ningún CSS o HTML"
           delete_upload_confirm: "¿Eliminar este archivo? (¡El tema CSS puede dejar de funcionar!)"
+          component_on_themes: "Incluir componentes en estos temas"
           import_web_tip: "Repositorio que contiene el tema"
           import_web_advanced: "Avanzado..."
           import_file_tip: "archivo .tar.gz, .zip o .dcstyle.json que contiene un tema"
@@ -3666,6 +3672,7 @@ es:
             api_key_create: "crear clave API"
             api_key_update: "actualizar clave API"
             api_key_destroy: "destruir clave API"
+            override_upload_secure_status: "sobrescribir estado seguro de la subida"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos se revisarán y el registro se bloqueará, o se realizará alguna otra acción."

@@ -747,6 +747,7 @@ ca:
       collapse_profile: "Redueix"
       bookmarks: "Preferits"
       bio: "Quant a mi"
+      timezone: "Zona horària"
       invited_by: "Convidat per"
       trust_level: "Nivell de confiança"
       notifications: "Notificacions"
@@ -950,6 +951,9 @@ ca:
         uploaded_avatar_empty: "Afegeix una foto personalitzada"
         upload_title: "Carrega la foto"
         image_is_not_a_square: "Atenció: hem retallat la vostra imatge; l'amplada i l'alçada no eren iguals."
+      change_profile_background:
+        title: "Capçalera de perfil"
+        instructions: "Les capçaleres de perfil estaran centrades i tindran una amplada predeterminada de 1110px."
       change_card_background:
         title: "Fons de la targeta d'usuari"
         instructions: "Les imatges de fons se centraran i tindran una amplada per defecte de 590px."
@@ -1332,7 +1336,7 @@ ca:
       second_factor_backup_description: "Introduïu un dels vostres codis de còpia de seguretat:"
       second_factor: "Inici de sessió amb l’aplicació Authenticator"
       security_key_description: "Quan tingueu preparada la vostra clau de seguretat física, premeu el botó Autentica amb clau de seguretat."
-      security_key_alternative: "¿No podeu trobar la vostra clau de seguretat o voleu utilitzar un altre mètode?"
+      security_key_alternative: "Proveu d’una altra manera"
       security_key_authenticate: "Autenticació amb clau de seguretat"
       security_key_not_allowed_error: "El procés d'autenticació de claus de seguretat ha arribat al límit de temps o s'ha cancel·lat. "
       security_key_no_matching_credential_error: "No s'ha trobat cap credencial coincident amb la clau de seguretat proporcionada."
@@ -1710,6 +1714,7 @@ ca:
       context:
         user: "Cerca publicacions de @{{username}}"
         category: "Cerca en la categoria #{{category}} "
+        tag: "Cerca l'etiqueta #{{tag}}"
         topic: "Cerca en aquest tema"
         private_messages: "Cerca missatges"
       advanced:
@@ -2382,6 +2387,9 @@ ca:
       manage_tag_groups_link: "Gestioneu els grups d'etiquetes aquí."
       allow_global_tags_label: "Permet també altres etiquetes"
       tag_group_selector_placeholder: "(Opcional) Grup d’etiquetes"
+      required_tag_group_description: "Requereix que els temes nous tinguin etiquetes d’un grup d’etiquetes:"
+      min_tags_from_required_group_label: "Etiquetes num.:"
+      required_tag_group_label: "Grup d'etiquetes:"
       topic_featured_link_allowed: "Permet enllaços destacats dins aquesta categoria"
       delete: "Suprimeix categoria"
       create: "Nova categoria"
@@ -2418,7 +2426,6 @@ ca:
       email_in_disabled: "Les publicacions des del correu electrònic estan desactivades en les preferències del lloc web. Per a activar les publicacions des del correu electrònic, "
       email_in_disabled_click: 'activa l''opció "email in".'
       mailinglist_mirror: "Una categoria reflecteix una llista de correu"
-      suppress_from_latest: "Suprimeix la categoria dels temes més recents."
       show_subcategory_list: "Mostra la llista de subcategories de temes en aquesta categoria. "
       num_featured_topics: "Nombre de temes mostrats en la pàgina de categories:"
       subcategory_num_featured_topics: "Nombre de temes destacats en la pàgina de la categoria primària:"
@@ -2790,6 +2797,7 @@ ca:
       changed: "etiquetes canviades:"
       tags: "Etiquetes"
       choose_for_topic: "etiquetes opcionals"
+      add_synonyms: "Afegeix"
       delete_tag: "Suprimeix l'etiqueta"
       delete_confirm:
         one: "Esteu segur que voleu suprimir aquesta etiqueta i eliminar-la del tema %{count} al qual és assignada?"
@@ -2847,6 +2855,7 @@ ca:
         parent_tag_description: "Les etiquetes d'aquest grup no es poden fer servir si no hi és l'etiqueta primària."
         one_per_topic_label: "Limita a una etiqueta per cada tema d'aquest grup"
         new_name: "Nou grup d'etiquetes"
+        name_placeholder: "Nom del grup d’etiquetes"
         save: "Desa"
         delete: "Suprimeix"
         confirm_delete: "Esteu segur que voleu suprimir aquest grup d'etiquetes?"
@@ -3047,6 +3056,7 @@ ca:
         none: "No hi ha claus API actives ara mateix"
         user: "Usuari"
         title: "API"
+        key: "Clau"
         created: Creat
         updated: Actualitzat
         last_used: Darrer utilitzat
@@ -3055,11 +3065,15 @@ ca:
         undo_revoke: "Desfés revocar"
         revoke: "Revoca"
         all_users: "Tots els usuaris"
+        active_keys: "Claus actives de l'API"
         show_details: Detalls
         description: Descripció
         no_description: (sense descripció)
         all_api_keys: Totes les claus de l'API
         user_mode: Nivell d’usuari
+        impersonate_all_users: Suplanta qualsevol usuari
+        single_user: "Usuari únic"
+        user_placeholder: Introduïu el nom d'usuari
         description_placeholder: "Per a què es farà servir aquesta clau?"
         save: Desa
         new_key: Nova clau d’API
@@ -3646,6 +3660,9 @@ ca:
             change_theme_setting: "canvia la configuració de l'aparença"
             disable_theme_component: "inhabilita el component d'aparença"
             enable_theme_component: "habilita el component d'aparença"
+            revoke_title: "revoca el títol"
+            change_title: "canvia el títol"
+            api_key_create: "crea la clau API"
         screened_emails:
           title: "Correus sota supervisió"
           description: "Quan es prova de crear un compte nou, es revisaran les següents adreces i es blocarà el registre o es durà a terme alguna altra acció."

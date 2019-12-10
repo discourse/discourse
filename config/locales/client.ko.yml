@@ -605,6 +605,7 @@ ko:
       expand_profile: "확장"
       bookmarks: "북마크"
       bio: "내 소개"
+      timezone: "시간대"
       invited_by: "(이)가 초대했습니다."
       trust_level: "신뢰도"
       notifications: "알림"
@@ -2248,6 +2249,7 @@ ko:
       changed: "바뀐 태그:"
       tags: "태그"
       choose_for_topic: "선택적 태그"
+      add_synonyms: "추가"
       delete_tag: "태그 삭제"
       delete_confirm:
         other: "정말로 이 태그를 삭제하고 이 태그가 붙은 {{count}} 개의 토픽에서 태그를 제거할까요?"

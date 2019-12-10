@@ -104,6 +104,7 @@ nl:
         unsubscribe_not_allowed: "Gebeurt wanneer uitschrijven via e-mail niet is toegestaan voor deze gebruiker."
         email_not_allowed: "Gebeurt wanneer het e-mailadres zich niet op de whitelist of wel op de blacklist bevindt."
       unrecognized_error: "Niet-herkende fout"
+    secure_media_placeholder: "Geredigeerd: deze website heeft beveiligde media ingeschakeld; bezoek het topic om de gekoppelde afbeelding/audio/video te zien."
   errors: &errors
     format: "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -125,6 +126,7 @@ nl:
       inclusion: komt niet voor in de lijst
       invalid: is ongeldig
       is_invalid: "lijkt onduidelijk, is het een volledige zin?"
+      invalid_timezone: "'%{tz}' is geen geldige tijdzone"
       contains_censored_words: "bevat de volgende gecensureerde woorden: %{censored_words}"
       less_than: "moet minder zijn dan %{count}"
       less_than_or_equal_to: "moet minder zijn dan of gelijk zijn aan %{count}"
@@ -167,6 +169,10 @@ nl:
       enable_s3_uploads_is_required: "U kunt geen inventory naar S3 inschakelen voordat u de S3-uploads hebt ingeschakeld."
       s3_backup_requires_s3_settings: "U kunt S3 niet als back-uplocatie gebruiken voordat u de '%{setting_name}' hebt opgegeven."
       s3_bucket_reused: "U kunt niet dezelfde bucket voor 's3_upload_bucket' en 's3_backup_bucket' gebruiken. Kies een andere bucket of gebruik een ander pad voor elke bucket."
+      secure_media_requirements: "S3-uploads moeten zijn ingeschakeld voordat u beveiligde media inschakelt."
+      second_factor_cannot_be_enforced_with_disabled_local_login: "U kunt geen 2FA afdwingen als lokale aanmeldingen zijn uitgeschakeld."
+      local_login_cannot_be_disabled_if_second_factor_enforced: "U kunt geen lokale aanmelding uitschakelen als 2FA is afgedwongen. Schakel afgedwongen 2FA uit voordat u lokale aanmeldingen uitschakelt."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "U kunt geen S3-uploads inschakelen, omdat S3-uploads al globaal zijn ingeschakeld, en inschakelen hiervan op websiteniveau kan kritieke problemen met uploads veroorzaken"
     conflicting_google_user_id: 'De Google-account-ID voor deze account is gewijzigd; om beveiligingsredenen is stafinterventie vereist. Neem contact op met een staflid en wijs hem of haar op <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
@@ -281,6 +287,7 @@ nl:
   max_pm_recepients: "Sorry, u kunt naar maximaal %{recipients_limit} ontvangers een bericht sturen."
   pm_reached_recipients_limit: "Sorry, u kunt niet meer dan %{recipients_limit} ontvangers in een bericht hebben."
   removed_direct_reply_full_quotes: "Citaat van hele voorgaande bericht is automatisch verwijderd."
+  secure_upload_not_allowed_in_public_topic: "Sorry, de volgende beveiligde upload(s) kan/kunnen niet in een publiek topic wordt gebruikt: %{upload_filenames}."
   just_posted_that: "lijkt te veel op wat u onlangs hebt geplaatst"
   invalid_characters: "bevat ongeldige tekens"
   is_invalid: "lijkt onduidelijk, is het een volledige zin?"
@@ -715,14 +722,23 @@ nl:
       windows: "Microsoft Windows"
       unknown: "onbekend besturingssysteem"
   change_email:
+    wrong_account_error: "U bent bij de verkeerde account aangemeld; meld u af en probeer het opnieuw."
     confirmed: "Uw e-mailadres is bijgewerkt."
     please_continue: "Doorgaan naar %{site_name}"
     error: "Er is een fout opgetreden bij het wijzigen van uw e-mailadres. Misschien is het adres al in gebruik?"
     error_staged: "Er is een fout opgetreden bij het wijzigen van uw e-mailadres. Het adres is al in gebruik door een staged gebruiker."
     already_done: "Sorry, deze bevestigingskoppeling is niet meer geldig. Misschien is uw e-mailadres al gewijzigd?"
+    confirm: "Bevestigen"
+    authorizing_new:
+      title: "Bevestig uw nieuwe e-mailadres"
+      description: "Bevestig dat u uw nieuwe e-mailadres gewijzigd wilt zien naar:"
     authorizing_old:
-      title: "Bedankt voor het bevestigen van uw huidige e-mailadres"
-      description: "We sturen nu ter bevestiging een e-mail naar uw nieuwe adres."
+      title: "Uw e-mailadres wijzigen"
+      description: "Bevestig de wijziging van uw e-mailadres"
+      old_email: "Oude e-mailadres: %{email}"
+      new_email: "Nieuwe e-mailadres: %{email}"
+      almost_done_title: "Nieuwe e-mailadres bevestigen"
+      almost_done_description: "Er is een e-mail naar uw nieuwe e-mailadres verstuurd om de wijziging te bevestigen!"
   associated_accounts:
     revoke_failed: "Intrekken van uw account bij %{provider_name} is mislukt."
     connected: "(verbonden)"
@@ -858,6 +874,8 @@ nl:
     description: "e-mailvoorkeuren voor <b>%{email}</b> zijn bijgewerkt. <a href='%{url}'>Bezoek uw gebruikersvoorkeuren</a> om uw e-mailinstellingen te wijzigen."
     topic_description: "Gebruik de meldingsinstellingen onder of rechts van het topic om u opnieuw voor %{link} in te schrijven."
     private_topic_description: "Gebruik de meldingsinstellingen onder of rechts van het topic om u opnieuw in te schrijven."
+  uploads:
+    marked_insecure_from_theme_component_reason: "upload gebruikt in themaonderdeel"
   unsubscribe:
     title: "Uitschrijven"
     stop_watching_topic: "Dit topic niet meer in de gaten houden, %{link}"
@@ -1214,12 +1232,12 @@ nl:
         filesize: Bestandsgrootte
       description: "Lijst van alle uploads op extensie, bestandsgrootte en maker."
     top_ignored_users:
-      title: "Meest Genegeerde / Gedempte Gebruikers"
+      title: "Meest genegeerde / gedempte gebruikers"
       labels:
         ignored_user: Genegeerde gebruiker
         ignores_count: Aantal genegeerd
         mutes_count: Aantal gedempt
-      description: "Gebruikers die gedempt en/of genegeerd worden door vele andere gebruikers."
+      description: "Gebruikers die door veel andere gebruikers zijn gedempt en/of genegeerd."
   dashboard:
     rails_env_warning: "Uw server werkt in de modus voor %{env}."
     host_names_warning: "Uw bestand config/database.yml gebruikt de standaardhostnaam localhost. Werk deze bij naar de hostnaam van uw website."
@@ -1241,9 +1259,9 @@ nl:
       other: "E-mailpolling heeft de afgelopen 24 uur %{count} fouten gegenereerd. Bekijk <a href='%{base_path}/logs' target='_blank'>de logboeken</a> voor meer details."
     missing_mailgun_api_key: "De server is geconfigureerd om e-mails via Mailgun te verzenden, maar u hebt geen API-sleutel opgegeven voor verificatie van de webhookberichten."
     bad_favicon_url: "De favicon wordt niet geladen. Controleer uw favicon-instelling in de <a href='%{base_path}/admin/site_settings'>Website-instellingen</a>."
-    deprecated_api_usage: "We hebben een API-aanvraag via een verouderde authenticatiemethode gedetecteerd. Werk deze bij zodat <a href='https://meta.discourse.org/t/discourse-api-documentation/22706'>op koptekst gebaseerde authenticatie</a> wordt gebruikt."
-    update_mail_receiver: "We hebben een verouderde versie van mail-receiver gedetecteerd. Meld u aan bij deze server via ssh en voer `/var/discourse/launcher rebuild mail-receiver` uit."
-    poll_pop3_timeout: "Time-out voor verbinding met de POP3-server. Binnenkomende e-mail kon niet worden opgehaald. Controleer uw <a href='%{base_path}/admin/site_settings/category/email'>POP3-instellingen</a> en serviceprovider."
+    deprecated_api_usage: "We hebben een API-aanvraag via een verouderde authenticatiemethode gedetecteerd. Werk deze bij zodat <a href='https://meta.discourse.org/t/-/22706'>op headers gebaseerde authenticatie</a> wordt gebruikt. Na het bijwerken zou dit bericht pas na 24 uur kunnen verschijnen."
+    update_mail_receiver: "We hebben een verouderde versie van mail-receiver gedetecteerd. Klik <a href='https://meta.discourse.org/t/-/133491'>hier</a> voor update-instructies. Na het bijwerken zou dit bericht pas na 24 uur kunnen verschijnen."
+    poll_pop3_timeout: "Time-out voor verbinding met de POP3-server. Inkomende e-mail kon niet worden opgehaald. Controleer uw <a href='%{base_path}/admin/site_settings/category/email'>POP3-instellingen</a> en serviceprovider."
     poll_pop3_auth_error: "Verbinding met de POP3-server is mislukt met een authenticatiefout. Controleer uw <a href='%{base_path}/admin/site_settings/category/email'>POP3-instellingen</a>."
     force_https_warning: "Uw website gebruikt SSL, maar `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is nog niet ingeschakeld in uw website-instellingen."
     out_of_date_themes: "Er zijn updates voor de volgende thema's beschikbaar:"
@@ -1319,11 +1337,11 @@ nl:
     logo_small: "De kleine logoafbeelding links bovenaan op uw website, zichtbaar bij omlaag scrollen. Gebruik een vierkante afbeelding van 120 × 120. Bij leeg laten wordt een startpaginasymbool getoond."
     digest_logo: "De alternatieve logoafbeelding bovenaan de e-mailsamenvatting van uw website. Gebruik een brede rechthoekige afbeelding. Gebruik geen SVG-afbeelding. Bij leeg laten wordt de afbeelding van de instelling `logo` gebruikt."
     mobile_logo: "Het logo dat op de mobiele versie van uw website wordt gebruikt. Gebruik een brede rechthoekige afbeelding met een hoogte van 120 en een hoogte-breedteverhouding groter dan 3:1. Bij leeg laten wordt de afbeelding van de instelling `logo` gebruikt."
-    large_icon: "Afbeelding die als basis wordt gebruikt voor andere metadata iconen. Moet idealiter groter zijn dan 512 x 512. Als het leeg gelaten wordt, dan zal logo_small worden gebruikt."
-    manifest_icon: "Afbeelding gebruikt als logo/splash-afbeelding op Android. Zal vanzelf worden geschaald naar 512 x 512. Als het leeg gelaten wordt, dan zal large_icon gebruikt worden."
-    favicon: "Een favicon voor jouw website, zie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Om correct te werken via een CDN, moet dit een png zijn. Zal worden geschaald naar 32x32. Als het leeg gelaten wordt, dan zal large_icon gebruikt worden."
-    apple_touch_icon: "Icoon gebruikt voor Apple touch-apparaten. Zal geschaald worden naar 180x180. Als het leeg gelaten wordt, dan zal large_icon worden gebruikt."
-    opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere afbeelding bevat. Als het leeg gelaten wordt, dan zal large_icon worden gebruikt"
+    large_icon: "Afbeelding die als basis voor andere metagegevenspictogrammen wordt gebruikt. Moet idealiter groter zijn dan 512 x 512. Bij leeg laten wordt logo_small gebruikt."
+    manifest_icon: "Afbeelding die als logo/splashafbeelding op Android wordt gebruikt. Wordt automatisch verkleind naar 512 x 512. Bij leeg laten wordt large_icon gebruikt."
+    favicon: "Een favicon voor uw website, zie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://nl.wikipedia.org/wiki/Favicon</a>.  Om goed via een CDN te werken, moet dit een png zijn. Wordt verkleind naar 32x32. Bij leeg laten wordt large_icon gebruikt."
+    apple_touch_icon: "Pictogram dat voor Apple touch-apparaten wordt gebruikt. Wordt automatisch verkleind naar 180x180. Bij leeg laten wordt large_icon gebruikt."
+    opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
     twitter_summary_large_image: "'summary large image' van Twitter-card (dient minstens 280 in breedte, en minstens 150 in hoogte te zijn). Bij leeg laten worden reguliere kaartmetagegevens gegenereerd via de opengraph_image."
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
     email_custom_headers: "Een door een pipe (|) gescheiden lijst van aangepaste e-mailheaders"
@@ -1652,7 +1670,7 @@ nl:
     reply_by_email_address: "Sjabloon voor adres voor inkomende e-mail bij antwoorden per e-mail, bijvoorbeeld: %%{reply_key}@reply.example.com of replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lijst van alternatieve sjablonen voor adressen voor inkomende e-mail bij antwoorden per e-mail. Voorbeeld: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "HTML in plaats van tekst gebruiken voor inkomende e-mail."
-    strip_incoming_email_lines: "Voorloop- en volgspaties uit elke regel van binnenkomende e-mails verwijderen."
+    strip_incoming_email_lines: "Voorloop- en volgspaties uit elke regel van inkomende e-mails verwijderen."
     disable_emails: "Voorkomen dat Discourse alle soorten e-mail verstuurt. Selecteer 'yes' om e-mails voor alle gebruikers uit te schakelen. Selecteer 'non-staff' om alleen e-mails voor stafleden uit te schakelen."
     strip_images_from_short_emails: "Afbeeldingen met grootte van minder dan 2800 bytes uit e-mails verwijderen"
     short_email_length: "Lengte van korte e-mail in bytes"
@@ -1696,6 +1714,7 @@ nl:
     log_mail_processing_failures: "Alle fouten van e-mailverwerking opslaan in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: 'Gebruikers mogen nieuwe topics maken via e-mail (vereist handmatige of POP3-polling). Configureer de adressen in het tabblad ''Instellingen'' van elke categorie.'
     email_in_min_trust: "Het minimale vertrouwensniveau dat een gebruiker moet hebben om nieuwe topics te kunnen plaatsen via e-mail."
+    email_in_authserv_id: "De ID van de service die authenticatiecontroles op inkomende e-mails uitvoert. Zie <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> voor instructies over het configureren hiervan."
     email_in_spam_header: "De e-mailheader voor het detecteren van spam."
     email_prefix: "Het [label] dat in het onderwerp van e-mails wordt gebruikt. Als niets is ingevuld, wordt 'title' gebruikt."
     email_site_title: "De titel van de website die als de afzender van e-mails van de website wordt gebruikt. Standaard wordt 'titel' gebruikt als niets is ingesteld. Gebruik deze instelling als uw 'titel' tekens bevat die niet in tekenreeksen van e-mailafzenders zijn toegestaan."
@@ -1754,8 +1773,6 @@ nl:
     permalink_normalizations: "De volgende reguliere expressie toepassen voordat permalinks worden verwerkt. Voorbeeld: /(topic.*)\\?.*/\\1 verwijdert querystrings uit topicroutes. Notatie is regex+strings, gebruik \\1 etc. voor deeluitdrukkingen."
     global_notice: "Een algemene niet te verbergen DRINGEND, NOODGEVAL-bannermelding voor alle gebruikers weergeven. Laat leeg om deze te verbergen (HTML toegestaan)."
     disable_system_edit_notifications: "Schakelt bewerkingsmeldingen van de systeemgebruiker uit als 'download_remote_images_to_local' actief is."
-    likes_notification_consolidation_threshold: "Aantal ontvangen like-meldingen voordat de meldingen in een enkele worden samengevoegd. Stel dit in op 0 om uit te schakelen. Het venster kan worden geconfigureerd via `SiteSetting.likes_notification_consolidation_window_mins`."
-    likes_notification_consolidation_window_mins: "Tijdsduur in minuten waarin like-meldingen in een enkele melding worden samengevoegd zodra de drempel is bereikt. De drempel kan worden geconfigureerd via `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Topics automatisch losmaken wanneer de gebruiker de onderkant bereikt."
     read_time_word_count: "Aantal woorden per minuut voor het berekenen van geschatte leestijd."
     topic_page_title_includes_category: "Topicpagina <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titeltag</a> bevat de categorienaam."
@@ -1789,6 +1806,7 @@ nl:
     delete_drafts_older_than_n_days: "Concepten ouder dan (n) dagen verwijderen."
     bootstrap_mode_min_users: "Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen (stel dit in op 0 om uit te schakelen)"
     prevent_anons_from_downloading_files: "Voorkomen dat anonieme gebruikers bijlagen downloaden. WAARSCHUWING: hierdoor zullen websiteonderdelen anders dan afbeeldingen die als bijlage zijn geplaatst niet werken."
+    secure_media: 'Beperkt toegang tot media-uploads (afbeeldingen, video, audio). Als ''aanmelding vereist'' is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot media-uploads. Anders is toegang beperkt tot media-uploads in privéberichten. Opmerking: S3-uploads moeten zijn ingeschakeld voordat u deze instelling inschakelt.'
     slug_generation_method: "Kies een slug-generatiemodus. 'encoded' genereert een percentage-coderingsstring. 'none' schakelt de slug helemaal uit."
     enable_emoji: "Emoji inschakelen"
     enable_emoji_shortcuts: "Gebruikelijke smileyteksten zoals :) :p :( worden naar emoji geconverteerd"
@@ -2017,7 +2035,7 @@ nl:
     auto_deleted_by_timer: "Automatisch verwijderd door timer."
   login:
     security_key_description: "Houd uw fysieke beveiligingssleutel gereed en klik op de onderstaande knop Authenticeren met beveiligingssleutel."
-    security_key_alternative: "Uw beveiligingssleutel niet gevonden of een andere methode gebruiken?"
+    security_key_alternative: "Andere manier proberen"
     security_key_authenticate: "Authenticeren met beveiligingssleutel"
     security_key_not_allowed_error: "Het authenticatieproces van de beveiligingssleutel had een time-out of is geannuleerd."
     security_key_no_matching_credential_error: "Geen referenties gevonden in de opgegeven beveiligingssleutel."
@@ -2102,40 +2120,40 @@ nl:
       other: "%{count} items moeten beoordeeld worden"
   unsubscribe_mailer:
     title: "Mailer Uitschrijven"
-    subject_template: "Bevestig dat je niet langer email-updates wilt krijgen van %{site_title}"
+    subject_template: "Bevestig dat u geen e-mailupdates van %{site_title} meer wilt ontvangen"
     text_body_template: |
-      Iemand (mogelijk jij?) vroeg aan om niet langer email-updates te krijgen van %{site_domain_name} naar dit adres.
-      Als je dit wilt bevestigen, klik dan op de link:
+      Iemand (mogelijk u?) heeft gevraagd geen e-mailupdates van %{site_domain_name} meer naar dit adres te sturen.
+      Als u dit wilt bevestigen, klikt u op deze koppeling:
 
       %{confirm_unsubscribe_link}
 
-      Als je nogsteeds email-updates wilt krijgen, dan mag je deze mail negeren.
+      Als u e-mailupdates wilt blijven ontvangen, kunt u dit e-mailbericht negeren.
   invite_mailer:
     title: "Mailer Uitnodigen"
-    subject_template: "%{inviter_name} heeft jouw uitgenodigd in '%{topic_title}' op %{site_domain_name}"
+    subject_template: "%{inviter_name} heeft u uitgenodigd in '%{topic_title}' op %{site_domain_name}"
     text_body_template: |
-      %{inviter_name} heeft jouw uitgenodigd bij een discussie
+      %{inviter_name} heeft u uitgenodigd voor een discussie
 
       > **%{topic_title}**
       >
       > %{topic_excerpt}
 
-      bij
+      op
 
       > %{site_title} -- %{site_description}
 
-      Als je geïnteresseerd bent, klik dan op onderstaande link:
+      Als u geïnteresseerd bent, klik dan op de onderstaande koppeling:
 
       %{invite_link}
   custom_invite_mailer:
-    subject_template: "%{inviter_name} heeft jouw uitgenodigd in '%{topic_title}' op %{site_domain_name}"
+    subject_template: "%{inviter_name} heeft u uitgenodigd in '%{topic_title}' op %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Stel het wachtwoord in voor uw %{site_name}-account"
   download_backup_mailer:
     no_token: |
-      Sorry, deze backup-downloadlink is al gebruikt of is verlopen.
+      Sorry, deze back-up-downloadkoppeling is al gebruikt of is verlopen.
   admin_confirmation_mailer:
-    subject_template: "[%{email_prefix}] Bevestig nieuw Admin-Account"
+    subject_template: "[%{email_prefix}] Bevestig nieuwe beheerdersaccount"
   flag_reasons:
     off_topic: "Uw bericht is gemarkeerd als **off-topic**: de gemeenschap vindt dat het niet goed bij het onderwerp past, zoals momenteel bepaald door de titel en het eerste bericht."
     inappropriate: "Uw bericht is gemarkeerd als **ongepast**: de gemeenschap vindt het bericht beledigend, grof, of een schending van [onze gemeenschapsrichtlijnen](%{base_path}/guidelines)."
@@ -2150,13 +2168,13 @@ nl:
   system_messages:
     private_topic_title: "Topic #%{id}"
     post_hidden:
-      title: "Bericht Verborgen"
+      title: "Bericht verborgen"
       subject_template: "Bericht verborgen door gemeenschapsmarkeringen"
     flags_agreed_and_post_deleted:
-      title: "Gemarkeerd bericht verwijderd door personeel"
-      subject_template: "Gemarkeerd bericht verwijderd door personeel"
+      title: "Gemarkeerd bericht verwijderd door staflid"
+      subject_template: "Gemarkeerd bericht verwijderd door staflid"
     welcome_user:
-      title: "Welkom Gebruiker"
+      title: "Welkom gebruiker"
       subject_template: "Welkom bij %{site_name}!"
       text_body_template: |
         Fijn dat u lid bent geworden van %{site_name}, en welkom!
@@ -2167,10 +2185,10 @@ nl:
 
         Geniet van uw verblijf!
     welcome_tl1_user:
-      title: "Welkom TL1 Gebruiker"
-      subject_template: "Bedankt dat je tijd met ons doorbrengt"
+      title: "Welkom TL1-gebruiker"
+      subject_template: "Bedankt voor de tijd die u met ons doorbrengt"
     welcome_invite:
-      title: "Welkom Uitnodiging"
+      title: "Welkomstuitnodiging"
       subject_template: "Welkom bij %{site_name}!"
     backup_succeeded:
       title: "Back-up geslaagd"
@@ -2179,9 +2197,9 @@ nl:
       title: "Back-up mislukt"
       subject_template: "Back-up mislukt"
       text_body_template: |
-        De back-up heeft gefaald.
+        De back-up is mislukt.
 
-        Hier is de log:
+        Hier zijn de details:
 
         ``` text
         %{logs}
@@ -2612,8 +2630,12 @@ nl:
       icons:
         title: "Pictogrammen"
         fields:
+          favicon:
+            label: "Browserpictogram"
+            description: "Pictogramafbeelding die uw website vertegenwoordigt in webbrowsers en er goed uitziet bij kleine afmetingen. Aanbevolen afbeeldingsextensies zijn PNG of JPG. Standaard wordt het vierkante logo gebruikt."
           large_icon:
             label: "Groot pictogram"
+            description: "Pictogramafbeelding die uw website vertegenwoordigt op moderne apparaten en er goed uitziet bij grotere afmetingen. Moet idealiter groter zijn dan 512 x 512. Standaard wordt het vierkante logo gebruikt."
       homepage:
         description: "Het tonen van de nieuwste topics op uw startpagina wordt aanbevolen, maar als u dat liever hebt, kunt u ook categorieën (groepen of topics) op de startpagina tonen."
         title: "Startpagina"

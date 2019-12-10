@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { userPath } from "discourse/lib/url";
-import { formatUsername, escapeExpression } from "discourse/lib/utilities";
+import { formatUsername } from "discourse/lib/utilities";
 import { normalize } from "discourse/components/user-info";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { computed } from "@ember/object";
@@ -18,7 +18,7 @@ export default Component.extend({
         name,
         userPath: userPath(user.username),
         avatar: renderAvatar(user, { imageSize: "large" }),
-        title: escapeExpression(user.title || ""),
+        title: user.title || "",
         formatedUsername: formatUsername(user.username)
       };
     });

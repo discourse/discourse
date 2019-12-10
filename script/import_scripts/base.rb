@@ -222,7 +222,7 @@ class ImportScripts::Base
 
     if existing == import_ids.length
       puts "Skipping #{import_ids.length} already imported #{type}"
-      return true
+      true
     end
   ensure
     connection.exec('DROP TABLE import_ids') unless connection.nil?

@@ -747,6 +747,7 @@ fi:
       collapse_profile: "Supista"
       bookmarks: "Kirjanmerkit"
       bio: "Tietoa minusta"
+      timezone: "Aikavyöhyke"
       invited_by: "Kutsuja"
       trust_level: "Luottamustaso"
       notifications: "Ilmoitukset"
@@ -1334,7 +1335,7 @@ fi:
       second_factor_backup_description: "Syötä yksi varakoodeistasi:"
       second_factor: "Kirjaudu tunnistautumissovelluksella"
       security_key_description: "Kun fyysinen tunnistautumislaite on kätesi ulottuvilla, klikkaa alla olevaa \"Tunnistaudu tunnistautumislaitteella\" -painiketta."
-      security_key_alternative: "Et löydä tunnistautumislaitetta tai haluat käyttää muuta tapaa?"
+      security_key_alternative: "Kokeile muuta tapaa"
       security_key_authenticate: "Tunnistaudu tunnistautumislaitteen avulla"
       security_key_not_allowed_error: "Tunnistaumislaitteella tunnistautumisprosessi joko vanheni tai peruutettiin."
       security_key_no_matching_credential_error: "Tunnistautumislaitteelta ei löytynyt kelpaavia pääsytietoja."
@@ -1712,6 +1713,7 @@ fi:
       context:
         user: "Etsi @{{username}} viestejä"
         category: "Etsi alueelta #{{category}}"
+        tag: "Hae tunnistetta #{{tag}}"
         topic: "Etsi tästä ketjusta"
         private_messages: "Etsi viesteistä"
       advanced:
@@ -2127,10 +2129,10 @@ fi:
           one: "Valitse ketju, johon haluat siirtää valitun viestin."
           other: "Valitse ketju, johon haluat siirtää valitut <b>{{count}}</b> viestiä."
       move_to_new_message:
-        title: "Siirrä uuteen keskusteluun"
-        action: "siirrä uuteen keskusteluun"
+        title: "Siirrä uuteen yksityiskeskusteluun"
+        action: "siirrä uuteen yksityiskeskusteluun"
         message_title: "Uuden keskustelun otsikko"
-        radio_label: "Uusi keskustelu"
+        radio_label: "Uusi yksityiskeskustelu"
         participants: "Osallistujat"
         instructions:
           one: "Olet luomassa uutta keskustelua, jossa olisi viesti, jonka olet valinnut."
@@ -2424,7 +2426,6 @@ fi:
       email_in_disabled: "Uusien ketjujen aloittaminen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
       mailinglist_mirror: "Alue jäljittelee postituslistaa"
-      suppress_from_latest: "Älä näytä alueen ketjuja Tuoreimmat-näkymässä"
       show_subcategory_list: "Näytä lista tytäralueista ketjujen yläpuolella tällä alueella."
       num_featured_topics: "Kuinka monta ketjua näytetään Keskustelualueet-sivulla:"
       subcategory_num_featured_topics: "Kuinka monta ketjua näytetään emoalueen sivulla:"
@@ -2796,6 +2797,7 @@ fi:
       changed: "muutetut tunnisteet"
       tags: "Tunnisteet"
       choose_for_topic: "ei-pakolliset tunnisteet"
+      add_synonyms: "Lisää"
       delete_tag: "Poista tunniste"
       delete_confirm:
         one: "Haluatko varmasti poistaa tunnisteen, mikä poistaa sen myös yhdeltä ketjulta, jolla tunniste on?"
@@ -3658,6 +3660,8 @@ fi:
             change_theme_setting: "muutti teema-asetusta"
             disable_theme_component: "otti teemakomponentin käytöstä"
             enable_theme_component: "otti teemakomponentin käyttöön"
+            revoke_title: "peru titteli"
+            change_title: "muuta titteliä"
             api_key_create: "loi rajapinta-avaimen"
             api_key_update: "päivitti rajapinta-avainta"
             api_key_destroy: "tuhosi rajapinta-avaimen"

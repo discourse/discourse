@@ -312,6 +312,7 @@ zh_CN:
           title: "待审阅项目由较高信任级别且具有较高分数的用户创建的。"
         type_bonus:
           name: "奖励类型"
+          title: "某些可审核的类型可以由管理人员加权，以使其具有更高的优先级。"
       claim_help:
         optional: "你可以认领此条目以防止他人审核。"
         required: "在你审核之前你必须认领此条目。"
@@ -706,6 +707,7 @@ zh_CN:
       collapse_profile: "折叠"
       bookmarks: "收藏"
       bio: "我是谁"
+      timezone: "时区"
       invited_by: "邀请人"
       trust_level: "信任等级"
       notifications: "通知"
@@ -839,6 +841,7 @@ zh_CN:
         copied_to_clipboard: "已复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"
         remaining_codes: "你有<strong>{{count}}</strong>个备份码"
+        use: "使用备份码"
         enable_prerequisites: "你必须在生成备份代码之前启用主要第二因素。"
         codes:
           title: "备份码生成"
@@ -846,6 +849,7 @@ zh_CN:
       second_factor:
         title: "双重验证"
         enable: "管理两步验证"
+        forgot_password: "忘记密码？"
         confirm_password_description: "确认密码以继续"
         name: "名称"
         label: "编码"
@@ -859,6 +863,7 @@ zh_CN:
         extended_description: |
           双重身份验证除了你的密码之外还需要一次性令牌，从而为你的帐户增加了额外的安全性。 可以在<a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>和<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>设备。
         oauth_enabled_warning: "请注意，一旦你的帐户启用了双重身份验证，系统就会停用社交登录。"
+        use: "使用身份验证器app"
         enforced_notice: "在访问此站点之前，你需要启用双重身份验证。"
         disable: "停用"
         disable_title: "禁用次要身份验证器"
@@ -866,12 +871,20 @@ zh_CN:
         edit: "编辑"
         edit_title: "编辑次要身份验证器"
         edit_description: "次要身份验证器名称"
+        enable_security_key_description: "当你准备好物理安全密钥后，请按下面的“注册”按钮。"
         totp:
           title: "基于凭证的身份验证器"
           add: "新增身份验证器"
           default_name: "我的身份验证器"
         security_key:
           register: "注册"
+          title: "安全密钥"
+          add: "注册安全密钥"
+          default_name: "主要安全密钥"
+          not_allowed_error: "安全密钥注册过程已超时或被取消。"
+          already_added_error: "你已注册此安全密钥，无需再次注册。"
+          edit: "编辑安全密钥"
+          edit_description: "安全密钥名称"
           delete: "删除"
       change_about:
         title: "更改个人信息"
@@ -900,6 +913,7 @@ zh_CN:
         image_is_not_a_square: "注意：图片不是正方形的，我们裁剪了部分图像。"
       change_profile_background:
         title: "个人档头部"
+        instructions: "个人资料的页头会被居中显示且默认宽度为1110px。"
       change_card_background:
         title: "用户卡背景"
         instructions: "显示在用户卡片中，上传的图片将被居中且默认宽度为 590px。"
@@ -1170,6 +1184,7 @@ zh_CN:
       login_disabled: "只读模式下不允许登录。"
       logout_disabled: "站点在只读模式下无法登出。"
     too_few_topics_notice: "让我们<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论</a>吧！现在有<strong>%{currentTopics}</strong>个主题。 用户需要进行更多阅读与回复 – 我们推荐至少<strong>%{requiredTopics}</strong> 个主题。 此消息仅管理员可见。"
+    too_few_posts_notice: "让我们<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论</a>吧！现在有<strong>%{currentPosts}</strong>个主题。 用户需要进行更多的阅读或回复 – 我们推荐至少<strong>%{requiredPosts}</strong> 个主题。 此消息仅管理人员可见。"
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a>达到了站点设置中的限制{limit, plural, one {# error/hour} other {# errors/hour}}。"
       reached_minute_MF: "<b>{relativeAge}</b>1 – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a>已经达到站点设置限制 {limit, plural, one {# error/minute} other {# errors/minute}}。"
@@ -1264,12 +1279,16 @@ zh_CN:
       password: "密码"
       second_factor_title: "双重验证"
       second_factor_description: "请输入来自 app 的验证码："
+      second_factor_backup: "使用备用码登录"
       second_factor_backup_title: "两步验证备份"
       second_factor_backup_description: "请输入你的备份码："
-      security_key_alternative: "找不到您的安全密钥，是否要使用其他方法？"
+      second_factor: "使用身份验证器app登录"
+      security_key_description: "当你准备好物理安全密钥后，请按下面的“使用安全密钥进行身份验证”按钮。"
+      security_key_alternative: "尝试另一种方式"
       security_key_authenticate: "使用安全密钥进行身份验证"
       security_key_not_allowed_error: "安全密钥验证超时或被取消。"
       security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
+      security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
       email_placeholder: "电子邮件或者用户名"
       caps_lock_warning: "大写锁定开启"
       error: "未知错误"
@@ -1633,6 +1652,7 @@ zh_CN:
       context:
         user: "搜索 @{{username}} 的帖子"
         category: "搜索 #{{category}} 分类"
+        tag: "搜索＃{{tag}}标签"
         topic: "搜索本主题"
         private_messages: "搜索私信"
       advanced:
@@ -2131,8 +2151,10 @@ zh_CN:
         attachment_upload_not_allowed_for_new_user: "抱歉，新用户无法上传附件。"
         attachment_download_requires_login: "抱歉，你需要登录后才能下载附件。"
       abandon_edit:
+        confirm: "您确定要放弃所做的更改吗？"
         no_value: "不，保持"
         no_save_draft: "不，保存草稿"
+        yes_value: "是的，忽略编辑"
       abandon:
         confirm: "确定要放弃编辑帖子吗？"
         no_value: "否"
@@ -2272,6 +2294,9 @@ zh_CN:
       tag_groups_placeholder: "（可选）允许使用的标签组列表"
       manage_tag_groups_link: "管理这里的标签组。"
       allow_global_tags_label: "总是允许其它标题"
+      tag_group_selector_placeholder: "（可选）标签组"
+      required_tag_group_description: "要求新主题包含标签组中的标签："
+      required_tag_group_label: "标签组："
       topic_featured_link_allowed: "允许在该分类中发布特色链接标题"
       delete: "删除分类"
       create: "新分类"
@@ -2308,7 +2333,6 @@ zh_CN:
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
       mailinglist_mirror: "分类镜像了一个邮件列表"
-      suppress_from_latest: "从最新主题列表中剔除该分类"
       show_subcategory_list: "在这个分类中把子分类列表显示在主题的上面"
       num_featured_topics: "分类页面上显示的主题数量："
       subcategory_num_featured_topics: "父分类页面上的推荐主题数量："
@@ -2661,6 +2685,7 @@ zh_CN:
       changed: "标签被修改："
       tags: "标签"
       choose_for_topic: "可选标签"
+      add_synonyms: "新增"
       delete_tag: "删除标签"
       delete_confirm:
         other: "你确定你想要删除这个标签以及撤销在{{count}}个主题中的关联么？"
@@ -2715,6 +2740,7 @@ zh_CN:
         parent_tag_description: "未设置上级标签前群组内标签无法使用。"
         one_per_topic_label: "只可给主题设置一个该组内的标签"
         new_name: "新建标签组"
+        name_placeholder: "标签组名称"
         save: "保存"
         delete: "删除"
         confirm_delete: "确定要删除此标签组吗？"
@@ -2879,6 +2905,7 @@ zh_CN:
             members_visibility_levels:
               title: "谁可以看见这个群组的成员？"
               description: "管理员可以查看所有群组的成员。"
+            publish_read_state: "在群组消息中发布群组阅读状态"
           membership:
             automatic: 自动
             trust_levels_title: "这些用户加入时，将自动赋予信任等级："
@@ -2912,14 +2939,30 @@ zh_CN:
         none: "当前没有可用的 API 密钥。"
         user: "用户"
         title: "API"
+        key: "密钥"
         created: 创建时间
+        updated: 已更新
+        last_used: 最后使用
+        never_used: （从不）
         generate: "生成"
+        undo_revoke: "取消撤销"
         revoke: "撤销"
         all_users: "所有用户"
+        active_keys: "激活API密钥"
+        manage_keys: 管理密钥
         show_details: 详情
         description: 描述
+        no_description: （没有描述）
+        all_api_keys: 所有API密钥
+        user_mode: 用户等级
+        impersonate_all_users: 模拟任意用户
+        single_user: "单个用户"
+        user_placeholder: 输入用户名
+        description_placeholder: 此密钥将被如何使用？
         save: 保存
+        new_key: 新建API密钥
         revoked: 已撤销
+        delete: 永久删除
       web_hooks:
         title: "Webhooks"
         none: "当前没有 Webhooks。"
@@ -3231,6 +3274,7 @@ zh_CN:
             other: "主题落后了 {{count}} 个变更！"
           compare_commits: "（查看新提交）"
           repo_unreachable: "无法联系此主题的Git存储库。错误信息："
+          imported_from_archive: "此主题是从一个.zip文件导入的"
           scss:
             text: "CSS"
             title: "输入自定义 CSS，我们接受所有有效的 CSS 和 SCSS 样式"
@@ -3498,6 +3542,11 @@ zh_CN:
             change_theme_setting: "更改主题设置"
             disable_theme_component: "停用主题组件"
             enable_theme_component: "启用主题组件"
+            revoke_title: "撤销头衔"
+            change_title: "修改头衔"
+            api_key_create: "创建api密钥"
+            api_key_update: "更新api密钥"
+            api_key_destroy: "销毁api密钥"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -3883,7 +3932,9 @@ zh_CN:
         secret_list:
           invalid_input: "输入字段不能为空或包含竖线字符。"
         default_categories:
+          modal_description: "你想在已存在的设置上应用此更改吗？这将更改%{count}位现有用户的首选项。"
           modal_yes: "是"
+          modal_no: "不，仅应用以后的更改"
       badges:
         title: 徽章
         new_badge: 新徽章

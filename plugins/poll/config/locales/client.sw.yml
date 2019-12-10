@@ -37,7 +37,8 @@ sw:
         label: "Onyesha matokeo"
       hide-results:
         title: "Rudi kwenye kura zako"
-        label: "Ficha matokeo"
+      export-results:
+        label: "Hamisha"
       open:
         title: "Fungua uchaguzi"
         label: "Fungua"

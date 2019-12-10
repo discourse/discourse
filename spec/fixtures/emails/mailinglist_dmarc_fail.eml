@@ -1,0 +1,13 @@
+Authentication-Results: example.com; dmarc=fail
+From: alice@foo.com
+To: list@example.com
+Subject: mailinglist mirror
+Date: Mon, 16 Oct 2017 09:18:32 +0100
+Message-ID: <bddaa334ef93b5f3c7c3a42599330844@foo.com>
+Precedence: list
+List-Id: Example List <list@example.com>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Sender: list-bounces@example.com
+
+I love Discourse's mailinglist mirror feature.

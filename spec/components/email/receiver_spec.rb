@@ -1422,6 +1422,14 @@ describe Email::Receiver do
 
       expect { process("mailinglist_unsubscribe") }.to_not change { ActionMailer::Base.deliveries.count }
     end
+
+    it "ignores dmarc fails" do
+      expect { process("mailinglist_dmarc_fail") }.to change { Topic.count }
+
+      post = Topic.last.first_post
+      expect(post.hidden).to eq(false)
+      expect(post.hidden_reason_id).to be_nil
+    end
   end
 
   it "tries to fix unparsable email addresses in To and CC headers" do

@@ -2298,6 +2298,7 @@ ro:
       changed: "etichete schimbate:"
       tags: "Etichete"
       choose_for_topic: "etichete opționale"
+      add_synonyms: "Adaugă"
       delete_tag: "Șterge etichetă"
       delete_confirm:
         one: "Ești sigur că vrei să ștergi această etichetă și să o scoți dintr-un subiect care o folosește?"

@@ -397,7 +397,13 @@ export default function() {
     this.get("/t/500.json", () => response(502, {}));
 
     this.put("/t/:slug/:id", request => {
-      const data = parsePostData(request.requestBody);
+      const isJSON = request.requestHeaders["Content-Type"].includes(
+        "application/json"
+      );
+
+      const data = isJSON
+        ? JSON.parse(request.requestBody)
+        : parsePostData(request.requestBody);
 
       return response(200, {
         basic_topic: {

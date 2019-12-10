@@ -32,7 +32,8 @@ vi:
         label: "Hiện kết quả"
       hide-results:
         title: "Trở lại bình chọn của bạn"
-        label: "Ẩn kết quả"
+      export-results:
+        label: "Xuất"
       open:
         title: "Mở thăm dò"
         label: "Mở"

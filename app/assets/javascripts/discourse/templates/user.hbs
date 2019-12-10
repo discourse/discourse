@@ -92,6 +92,14 @@
               {{/if}}
               {{plugin-outlet name="user-post-names" args=(hash model=model)}}
             </div>
+
+            {{#if showFeaturedTopic}}
+              <h3 class="featured-topic">
+                <span>{{i18n 'user.featured_topic'}}</span>
+                {{#link-to "topic" model.featured_topic.slug model.featured_topic.id}}{{model.featured_topic.fancy_title}}{{/link-to}}
+              </h3>
+            {{/if}}
+
             <h3 class="location-and-website">
             {{#if model.location}}<div class="user-profile-location">{{d-icon "map-marker-alt"}} {{model.location}}</div>{{/if}}
             {{#if model.website_name}}

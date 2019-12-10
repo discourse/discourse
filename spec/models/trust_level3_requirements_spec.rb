@@ -204,7 +204,7 @@ describe TrustLevel3Requirements do
       _not_a_reply = create_post(user: user) # user created the topic, so it doesn't count
 
       topic1 = create_post.topic
-      _reply1      = create_post(topic: topic1, user: user)
+      _reply1 = create_post(topic: topic1, user: user)
       _reply_again = create_post(topic: topic1, user: user) # two replies in one topic
 
       topic2 = create_post(created_at: 101.days.ago).topic
@@ -319,7 +319,7 @@ describe TrustLevel3Requirements do
       UserActionManager.enable
 
       t = Fabricate(:topic, user: user, created_at: 102.days.ago)
-      old_post     = create_post(topic: t, user: user, created_at: 102.days.ago)
+      old_post = create_post(topic: t, user: user, created_at: 102.days.ago)
       recent_post2 = create_post(topic: t, user: user, created_at: 10.days.ago)
       recent_post1 = create_post(topic: t, user: user, created_at: 1.hour.ago)
 

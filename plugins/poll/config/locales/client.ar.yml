@@ -55,7 +55,8 @@ ar:
         label: "أظهر النتائج"
       hide-results:
         title: "ارجع إلى أصواتك"
-        label: "أخفِ النتائج"
+      export-results:
+        label: "تصدير"
       open:
         title: "افتح التّصويت"
         label: "افتح"
