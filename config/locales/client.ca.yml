@@ -1682,7 +1682,6 @@ ca:
       hint_for_supported_browsers: "també podeu arrossegar i deixar anar o enganxar imatges en l'editor"
       uploading: "Carregant"
       select_file: "Tria un fitxer"
-      image_link: "enllaç al qual assenyalarà la vostra imatge"
       default_image_alt_text: imatge
     search:
       sort_by: "Ordena per"

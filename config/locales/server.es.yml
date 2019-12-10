@@ -756,7 +756,7 @@ es:
       description: "¿Estás seguro de que querer convertir a <b>%{target_username} (%{target_email})</b> en un administrador?"
       grant: "Conceder acceso de administrador"
       complete: "<b>%{target_username}</b> ahora es un administrador."
-      back_to: "Volver al %{title}"
+      back_to: "Volver a %{title}"
   reviewable_score_types:
     needs_approval:
       title: "Necesita aprobación"

@@ -44,7 +44,15 @@ fr:
         label: "Afficher les résultats"
       hide-results:
         title: "Retourner au vote"
+        label: "Afficher le sondage"
+      group-results:
+        title: "Grouper les votes par champ utilisateur"
+        label: "Afficher les détails"
+      ungroup-results:
+        title: "Combiner tous les votes"
+        label: "Cacher les détails"
       export-results:
+        title: "Exporter les résultats du sondage"
         label: "Exporter"
       open:
         title: "Ouvrir le sondage"
@@ -60,6 +68,7 @@ fr:
       error_while_toggling_status: "Désolé, il y a eu une erreur lors du changement de statut de ce sondage."
       error_while_casting_votes: "Désolé, il y a eu une erreur lors de l'envoi de vos votes."
       error_while_fetching_voters: "Désolé, il y a eu une erreur lors de l'affichage des votants."
+      error_while_exporting_results: "Désolé, une erreur est survenue lors de l'exportation des résultats du sondage."
       ui_builder:
         title: Créer un sondage
         insert: Insérer le sondage
@@ -78,6 +87,8 @@ fr:
           vote: Lors du vote
           closed: A la fermeture
           staff: Personnel seulement
+        poll_chart_type:
+          label: Type de graphique
         poll_config:
           max: Max
           min: Min

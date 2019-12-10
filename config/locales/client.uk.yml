@@ -1799,7 +1799,6 @@ uk:
       hint_for_supported_browsers: "ви так само можете перетягнути або скопіювати зображення в редактор"
       uploading: "Завантаження"
       select_file: "Обрати файл"
-      image_link: "посилання, на яке буде вказувати ваше зображення"
       default_image_alt_text: зображення
     search:
       sort_by: "Сортувати за"

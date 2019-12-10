@@ -1333,8 +1333,11 @@ it:
       second_factor_backup_description: "Per favore, inserisci uno dei tuoi codici di backup:"
       second_factor: "Accedi utilizzando l'app Authenticator"
       security_key_description: "Quando hai preparato la chiave di sicurezza fisica, premi il pulsante Autentica con Security Key qui sotto."
+      security_key_alternative: "Prova in un altro modo"
       security_key_authenticate: "Autentica con Security Key"
       security_key_not_allowed_error: "Il processo di autenticazione con Security Key è scaduto o è stato annullato."
+      security_key_no_matching_credential_error: "Non è stato possibile trovare credenziali corrispondenti nella chiave di sicurezza fornita."
+      security_key_support_missing_error: "Il tuo dispositivo o browser attuale non supporta l&#39;uso di chiavi di sicurezza. Si prega di utilizzare un altro metodo."
       email_placeholder: "email o nome utente"
       caps_lock_warning: "Il Blocco Maiuscole è attivo"
       error: "Errore sconosciuto"
@@ -1381,6 +1384,7 @@ it:
         title: "con GitHub"
       discord:
         name: "Discord"
+        title: "con Discord"
       second_factor_toggle:
         totp: "Utilizzare un'app di autenticazione"
         backup_code: "Utilizza un codice di backup"
@@ -1485,14 +1489,17 @@ it:
         category: "Hai menzionato {{username}} ma non verranno notificati perché non hanno accesso a questa categoria. Dovrai aggiungerli ad un gruppo che ha accesso a questa categoria."
         private: "Hai menzionato {{username}} ma non verranno notificati perché non hanno accesso a questo messaggio personale. Dovrai invitarli a questo MP."
       duplicate_link: "Sembra che il tuo collegamento a <b>{{domain}}</b> sia già stato pubblicato in questo argomento da <b>@{{username}}</b> in <a href='{{post_url}}'>una risposta di {{ago}}</a> - sei sicuro di volerlo pubblicare ancora?"
+      reference_topic_title: "RE: {{title}}"
       error:
         title_missing: "Il titolo è richiesto"
         title_too_short: "Il titolo deve essere lungo almeno {{min}} caratteri"
         title_too_long: "Il titolo non può essere più lungo di {{max}} caratteri"
+        post_missing: "Il messaggio non può essere vuoto"
         post_length: "Il messaggio deve essere lungo almeno {{min}} caratteri"
         try_like: "Hai provato ad usare il pulsante {{heart}} ?"
         category_missing: "Devi scegliere una categoria"
         tags_missing: "Devi scegliere almeno {{count}} etichette"
+        topic_template_not_modified: "Aggiungi dettagli e specificità al tuo Argomento modificando il modello di Argomento."
       save_edit: "Salva Modifiche"
       overwrite_edit: "Sovrascrivi modifica"
       reply_original: "Rispondi all'Argomento Originale"
@@ -1532,6 +1539,7 @@ it:
       link_description: "inserisci qui la descrizione del collegamento"
       link_dialog_title: "Inserisci il collegamento"
       link_optional_text: "titolo opzionale"
+      link_url_placeholder: "Incolla un URL o digita per cercare Argomenti"
       quote_title: "Citazione"
       quote_text: "Citazione"
       code_title: "Testo preformattato"
@@ -1620,6 +1628,8 @@ it:
       granted_badge: "Guadagnato '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Nuovo Argomento</span> {{description}}"
+      membership_request_accepted: "Iscrizione accettata in &quot;{{group_name}}&quot;"
+      membership_request_consolidated: "{{count}} richieste di iscrizione aperte per &#39;{{group_name}}&#39;"
       group_message_summary:
         one: "{{count}} messaggi in arrivo nella casella {{group_name}}"
         other: "{{count}} messaggi in arrivo nella casella {{group_name}}"
@@ -1655,6 +1665,7 @@ it:
         topic_reminder: "promemoria Argomento"
         liked_consolidated: "nuovi \"Mi piace\""
         post_approved: "messaggio approvato"
+        membership_request_consolidated: "nuove richieste di iscrizione"
     upload_selector:
       title: "Aggiungi un'immagine"
       title_with_attachments: "Aggiungi un'immagine o un file"
@@ -1668,7 +1679,6 @@ it:
       hint_for_supported_browsers: "puoi fare il \"trascina e rilascia\" o incollare immagini nell'editor"
       uploading: "In caricamento"
       select_file: "Seleziona File"
-      image_link: "collegamento a cui la tua immagine punterà"
       default_image_alt_text: immagine
     search:
       sort_by: "Ordina per"
@@ -1700,6 +1710,7 @@ it:
       context:
         user: "Cerca messaggi di @{{username}}"
         category: "Cerca nella categoria #{{category}}"
+        tag: "Cerca l'etichetta # {{tag}}"
         topic: "Cerca in questo argomento"
         private_messages: "Cerca messaggi"
       advanced:
@@ -1750,6 +1761,7 @@ it:
     go_back: "indietro"
     not_logged_in_user: "pagina utente con riassunto delle attività correnti e delle impostazioni"
     current_user: "vai alla pagina utente"
+    view_all: "vedi tutto"
     topics:
       new_messages_marker: "ultima visita"
       bulk:
@@ -1859,6 +1871,9 @@ it:
       toggle_information: "commuta i dettagli dell'argomento"
       read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in {{catLink}} o {{latestLink}}."
       read_more: "Vuoi saperne di più? {{catLink}} o {{latestLink}}."
+      group_request: "Per vedere questo Argomento devi richiedere l&#39;iscrizioneal gruppo `{{name}}`"
+      group_join: "È necessario iscriversi al gruppo `{{name}}` per visualizzare questo Argomento"
+      unread_indicator: "Nessun utente ha ancora letto l&#39;ultimo post di questo Argomento."
       read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'>1 argomento non letto</a> } other { Ci sono <a href='{basePath}/unread'># argomenti non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {è } other{}} <a href='{basePath}/new'>1 nuovo</a> argomento} other { {BOTH, select, true{e } false {Ci sono } other{}} <a href='{basePath}/new'># nuovi</a> argomenti} } restanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Scorri tutte le categorie
       view_latest_topics: visualizza gli argomenti più recenti
@@ -2295,6 +2310,7 @@ it:
           notify_user: "hanno inviato un messaggio"
           bookmark: "l'hanno aggiunto ai segnalibri"
           like: "hanno messo \"Mi piace\""
+          read: "leggi questo"
           like_capped:
             one: "e a {{count}} persona è piaciuto"
             other: "e ad altre {{count}} persone è piaciuto"
@@ -2685,6 +2701,7 @@ it:
         up_down: "%{shortcut} Sposta la selezione &uarr; &darr;"
         open: "%{shortcut} Apri argomento selezionato"
         next_prev: "%{shortcut} Prossima/precedente sezione"
+        go_to_unread_post: "%{shortcut} Vai al primo messaggio non letto"
       application:
         title: "Applicazione"
         create: "%{shortcut} Crea un nuovo argomento"
@@ -2770,12 +2787,25 @@ it:
       changed: "etichette cambiate:"
       tags: "Etichette"
       choose_for_topic: "etichette facoltative"
+      info: "Info"
+      synonyms: "Sinonimi"
+      category_restrictions:
+        one: "Può essere utilizzato solo in questa categoria:"
+        other: "Può essere utilizzato solo in queste categorie:"
+      edit_synonyms: "Gestisci sinonimi"
+      add_synonyms_label: "Aggiungi sinonimi:"
       add_synonyms: "Aggiungi"
+      add_synonyms_failed: "Le seguenti etichette non possono essere aggiunte come sinonimi: <b>%{tag_names}</b> . Assicurati che non abbiano sinonimi e non siano sinonimi di un'altra etichetta."
+      remove_synonym: "Rimuovi sinonimo"
+      delete_synonym_confirm: 'Sei sicuro di voler eliminare il sinonimo &quot;%{tag_name}&quot;?'
       delete_tag: "Cancella Etichetta"
       delete_confirm:
         one: "Sei sicuro di voler eliminare questa etichetta e rimuoverla da %{count} argomento a cui è assegnata?"
         other: "Sei sicuro di voler eliminare questa etichetta e rimuoverla da {{count}} argomenti a cui è assegnata?"
       delete_confirm_no_topics: "Sei sicuro di voler eliminare questa etichetta?"
+      delete_confirm_synonyms:
+        one: "Anche il suo sinonimo verrà eliminato."
+        other: "I sinonimi {{count}} verranno a loro volta eliminati."
       rename_tag: "Rinomina Etichetta"
       rename_instructions: "Scegli un altro nome per l'etichetta:"
       sort_by: "Ordina per:"
@@ -2939,6 +2969,8 @@ it:
           view_table: "tabella"
           view_graph: "grafico"
           refresh_report: "Aggiorna Rapporto"
+          start_date: "Data di inizio (UTC)"
+          end_date: "Data di fine (UTC)"
           groups: "Tutti i gruppi"
           disabled: "Il rapporto è disabilitato"
           totals_for_sample: "Totale per campione"
@@ -2984,10 +3016,19 @@ it:
             visibility_levels:
               title: "Chi può vedere questo Gruppo?"
               public: "Chiunque"
+              logged_on_users: "Utenti connessi"
+              members: "Proprietari del gruppo, membri"
               staff: "Proprietari del gruppo e staff"
+              owners: "Proprietari del gruppo"
+              description: "Gli amministratori possono vedere tutti i gruppi."
+            members_visibility_levels:
+              title: "Chi può vedere i membri di questo gruppo?"
+              description: "Gli amministratori possono vedere i membri di tutti i gruppi."
+            publish_read_state: "Pubblica lo stato di lettura del gruppo nei messaggi di gruppo"
           membership:
             automatic: Automatico
             trust_levels_title: "Livello Esperienza assegnato automaticamente agli utenti quando vengono aggiunti:"
+            effects: Effetti
             trust_levels_none: "Nessuno"
             automatic_membership_email_domains: "Gli utenti che si registrano con un dominio email che corrisponde esattamente a uno presente in questa lista, saranno aggiunti automaticamente a questo gruppo:"
             automatic_membership_retroactive: "Applica la stessa regola sul dominio email per aggiungere utenti registrati esistenti"
@@ -3018,7 +3059,10 @@ it:
         none: "Non ci sono chiavi API attive al momento."
         user: "Utente"
         title: "API"
+        key: "Chiave"
         created: Creazione
+        updated: Aggiornato
+        last_used: Ultimo uso
         generate: "Genera"
         revoke: "Revoca"
         all_users: "Tutti gli Utenti"

@@ -1408,7 +1408,6 @@ ja:
       hint_for_supported_browsers: "ドラッグ＆ドロップあるいはエディター内に画像を貼り付けてください。"
       uploading: "アップロード中"
       select_file: "ファイル選択"
-      image_link: "イメージのリンク先"
       default_image_alt_text: 画像
     search:
       sort_by: "並べ替え"

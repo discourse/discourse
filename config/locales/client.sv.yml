@@ -1121,7 +1121,6 @@ sv:
       hint_for_supported_browsers: "du kan också släppa eller klistra in bilder i redigeraren"
       uploading: "Laddar upp bild"
       select_file: "Välj fil"
-      image_link: "länk dit din bild ska peka"
       default_image_alt_text: bild
     search:
       sort_by: "Sortera efter"

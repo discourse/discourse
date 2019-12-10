@@ -8,8 +8,36 @@
 tr_TR:
   js:
     discourse_local_dates:
+      relative_dates:
+        today: Bugün %{time}
+        tomorrow: Yarın %{time}
+        yesterday: Dün %{time}
+        countdown:
+          passed: tarih geçti
+      title: Tarih/saat ekle
       create:
         form:
+          insert: Ekle
+          advanced_mode: Gelişmiş mod
+          simple_mode: Basit mod
+          format_description: "Kullanıcının tarihini görüntülemek için kullanılan format. Kullanıcı saat dilimi kelimesini görüntülemek için &quot;\\ T \\ Z&quot; kullanın (Avrupa / Paris)"
+          timezones_title: Görüntülenecek zaman dilimleri
+          timezones_description: Saat dilimleri önizleme ve geri dönüş tarihlerini görüntülemek için kullanılacaktır.
+          recurring_title: Yinelenme
+          recurring_description: "Bu olayın ne kadar sürede tekrar edeceğini belirleyin.Bu seçeneği el ile düzenleyebilir veya aşağıdaki anahtarlardan birini kullanabilirsiniz: yıllar, aylar, haftalar, günler, saatler, dakikalar, saniyeler, milisaniyeler."
+          recurring_none: Tekrarlama yok
+          invalid_date: 'Geçersiz tarih: Tarih ve saatin doğru olduğundan emin olun!'
           date_title: Tarih
           time_title: Saat
+          format_title: Tarih formatı
           timezone: Saat dilimi
+          until: A kadar...
+          recurring:
+            every_day: "Her gün"
+            every_week: "Her hafta"
+            every_two_weeks: "İki haftada bir"
+            every_month: "Her ay"
+            every_two_months: "İki ayda bir"
+            every_three_months: "Üç ayda bir"
+            every_six_months: "Altı ayda bir"
+            every_year: "Her yıl"

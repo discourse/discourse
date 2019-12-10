@@ -1939,8 +1939,11 @@ it:
     auto_deleted_by_timer: "Eliminato automaticamente dal timer."
   login:
     security_key_description: "Quando hai preparato la chiave di sicurezza fisica, premi il pulsante Autentica con Security Key qui sotto."
+    security_key_alternative: "Prova in un altro modo"
     security_key_authenticate: "Autentica con Security Key"
     security_key_not_allowed_error: "Il processo di autenticazione con Security Key è scaduto o è stato annullato."
+    security_key_no_matching_credential_error: "Non è stato possibile trovare credenziali corrispondenti nella chiave di sicurezza fornita."
+    security_key_support_missing_error: "Il tuo dispositivo o browser attuale non supporta l&#39;uso di chiavi di sicurezza. Si prega di utilizzare un altro metodo."
     not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via mail quando potrai collegarti."
     incorrect_username_email_or_password: "Nome utente, email o password errati"
     incorrect_password: "Password errata"

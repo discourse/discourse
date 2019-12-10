@@ -1450,7 +1450,6 @@ pt:
       hint_for_supported_browsers: "também pode arrastar e largar ou colar as imagens no editor"
       uploading: "A enviar"
       select_file: "Selecionar Ficheiro"
-      image_link: "hiperligação da imagem irá apontar para"
       default_image_alt_text: imagem
     search:
       sort_by: "Ordenar por"

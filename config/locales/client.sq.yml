@@ -1062,7 +1062,6 @@ sq:
       hint_for_supported_browsers: "ju mund të tërhiqni e lëshoni imazhet në editorin e tekstit"
       uploading: "Duke ngarkuar"
       select_file: "Zgjdhni një Skedar"
-      image_link: "linku për imazhin"
       default_image_alt_text: imazh
     search:
       sort_by: "Rendit sipas"

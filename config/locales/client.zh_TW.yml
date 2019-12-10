@@ -1504,7 +1504,6 @@ zh_TW:
       hint_for_supported_browsers: "可以拖放或複製粘帖至編輯器以上傳"
       uploading: "正在上傳"
       select_file: "選取檔案"
-      image_link: "連結你的圖片將指向"
       default_image_alt_text: 圖片
     search:
       sort_by: "排序"

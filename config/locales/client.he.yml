@@ -1802,7 +1802,6 @@ he:
       hint_for_supported_browsers: "תוכלו גם לגרור או להדביק תמונות לעורך"
       uploading: "מעלה"
       select_file: "בחירת קובץ"
-      image_link: "קישור לתמונה יצביע ל"
       default_image_alt_text: תמונה
     search:
       sort_by: "מיון על פי"

@@ -49,6 +49,7 @@ fr:
       about_json_values: "about.json contient des valeurs invalides : %{errors}"
       git: "Erreur de clonage du dépôt git, l'accès est refusé ou le dépôt n'est pas trouvé."
       unpack_failed: "Impossible de décompresser le fichier"
+      file_too_big: "Le fichier non compressé est trop gros."
       unknown_file_type: "Le fichier que vous avez essayé d'envoyer ne semble pas être un thème Discourse valide."
     errors:
       component_no_user_selectable: "Les composants du thème ne peuvent pas être sélectionnés par les utilisateurs"
@@ -122,6 +123,7 @@ fr:
       inclusion: n'est pas inclus dans la liste
       invalid: est invalide
       is_invalid: "ne semble pas clair, est-ce une phrase complète ?"
+      invalid_timezone: "« %{tz} » n'est pas fuseau horaire valide"
       contains_censored_words: "contient les mots censurés suivants : %{censored_words}"
       less_than: "doit être inférieure à %{count}"
       less_than_or_equal_to: "doit être inférieur ou égal à %{count}"
@@ -159,6 +161,7 @@ fr:
         one: "Vous avez spécifié le choix invalide %{name}"
         other: "Vous avez spécifié les choix invalides %{name}"
       default_categories_already_selected: "Vous ne pouvez pas séléctionner une catégorie qui est utilisée dans une autre liste."
+      default_tags_already_selected: "Vous ne pouvez pas sélectionner une étiquette utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'upload sur S3 avant d'avoir renseigné le 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Vous ne pouvez pas activer l'inventaire sur S3 avant d'avoir activer les envois S3."
       s3_backup_requires_s3_settings: "Il n'est pas possible d'utiliser le lieu de sauvegarde S3 sans renseigner le '%{setting_name}'."
@@ -208,7 +211,11 @@ fr:
   email_template_cant_be_modified: "Ce modèle de courriel ne peut pas être modifié"
   invalid_whisper_access: "Les murmures ne sont pas activés ou vous n'avez pas accès à la création des messages murmurés."
   not_in_group:
+    title_topic: "Vous devez être dans un groupe pour voir ce sujet."
+    title_category: "Vous devez être dans un groupe pour voir cette catégorie."
+    request_membership: "Demande d'adhésion"
     join_group: "Rejoindre le groupe"
+  deleted_topic: "Ce sujet a été supprimé et n'est plus disponible."
   reading_time: "Temps de lecture"
   likes: "J'aime"
   too_many_replies:
@@ -706,11 +713,23 @@ fr:
       windows: "Microsoft Windows"
       unknown: "système d'exploitation inconnu"
   change_email:
+    wrong_account_error: "Vous êtes connectés avec le mauvais compte, veuillez vous déconnecter et réessayer à nouveau."
     confirmed: "Votre adresse de courriel a été mise à jour."
     please_continue: "Continuer vers %{site_name}"
     error: "Il y a eu une erreur lors de la modification de votre adresse de courriel. Elle est peut-être déjà utilisée ?"
     error_staged: "Une erreur est survenue lors de la modification de votre adresse courriel. Cette adresse est déjà utilisée par un utilisateur distant."
     already_done: "Désolé, ce lien de confirmation n'est plus valide. Votre adresse de courriel a peut-être déjà été changée ?"
+    confirm: "Confirmer"
+    authorizing_new:
+      title: "Confirmer votre nouvelle adresse courriel"
+      description: "Veuillez confirmer que vous souhaitez changer votre adresse courriel à :"
+    authorizing_old:
+      title: "Changer votre adresse courriel"
+      description: "Veuillez confirmer votre changement d'adresse courriel"
+      old_email: "Adresse précédente : %{email}"
+      new_email: "Nouvelle adresse : %{email}"
+      almost_done_title: "Confirmer une nouvelle adresse courriel"
+      almost_done_description: "Nous avons envoyé un courriel à votre nouvelle adresse pour confirmer le changement !"
   associated_accounts:
     revoke_failed: "Echec de révocation de votre compte avec %{provider_name}."
     connected: "(connecté)"
@@ -725,6 +744,7 @@ fr:
     activated: "Désolé, ce compte a déjà été activé."
     admin_confirm:
       title: "Confirmer le compte administrateur"
+      description: "Êtes-vous sûr de vouloir <b>%{target_username} (%{target_email})</b> comme administrateur ?"
       grant: "Accorder l'accès administrateur"
       complete: "<b>%{target_username}</b> est maintenant un administrateur."
       back_to: "Retourner à %{title}"
@@ -773,6 +793,11 @@ fr:
       description: "Aimer ce message"
       short_description: "Aimer ce message"
       long_form: "a été aimé"
+  draft:
+    sequence_conflict_error:
+      description: "L'ébauche est en train d'être modifiée dans une autre fenêtre. Veuillez recharger cette page."
+  draft_backup:
+    pm_body: "Sujet contenant des ébauches sauvegardées"
   user_activity:
     no_default:
       self: "Vous n'avez aucune activité pour le moment."
@@ -788,6 +813,11 @@ fr:
       others: "Aucune réponse."
     no_drafts:
       self: "Vous n'avez pas d'ébauche ; commencez à répondre à un sujet et la réponse sera automatiquement sauvegardée comme nouvelle ébauche."
+  webauthn:
+    validation:
+      invalid_origin_error: "L'origine de la requête d'authentification ne correspond pas à l'origine du serveur."
+      unsupported_public_key_algorithm_error: "L'algorithme de clé publique fournie n'est pas supporté par le serveur."
+      ownership_error: "La clé de sécurité n'appartient pas à l'utilisateur."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1641,6 +1671,9 @@ fr:
     private_email: "Ne pas inclure le contenu de messages ou de sujets dans le titre ou le corps du courriel. REMARQUE : désactive également les courriels de résumé."
     email_total_attachment_size_limit_kb: "Taille totale maximale des fichiers joints aux courriels sortants. Définissez la valeur sur 0 pour désactiver l'envoi de pièces jointes."
     post_excerpts_in_emails: "Dans les courriels de notification, envoyez toujours des extraits au lieu de messages complets."
+    raw_email_max_length: "Combien de caractères doivent être stockés pour le courriel entrant."
+    raw_rejected_email_max_length: "Combien de caractères doivent être stockés pour le courriel entrant rejeté."
+    delete_rejected_email_after_days: "Supprimer les courriels rejetés plus vieux que (n) jours."
     manual_polling_enabled: "Envoyer les courriels en utilisant l'API des réponses par courriel."
     pop3_polling_enabled: "Utiliser POP3 pour les réponses via courriel."
     pop3_polling_ssl: "Utiliser SSL pour les connexions au serveur POP3. (Recommandé)"
@@ -1699,6 +1732,7 @@ fr:
     ignored_users_count_message_threshold: "Notifier les modérateur si un utilisateur est ignoré par autant d'utilisateurs."
     ignored_users_message_gap_days: "Combien de temps faut-il attendre avant de notifier à nouveau les modérateurs d'un utilisateur ignoré par beaucoup d'autres."
     clean_up_inactive_users_after_days: "Nombre de jours avant qu'un utilisateur inactif (niveau de confiance 0 sans aucun messages) soit supprimé. Pour désactiver le nettoyage saisir 0."
+    user_selected_primary_groups: "Autoriser les utilisateurs à définir leur groupe principal"
     user_website_domains_whitelist: "Les sites Web des utilisateurs vont être vérifiés contre ces domaines. Liste délimitée par des pipes (|)."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
     sequential_replies_threshold: "Nombre de messages successifs qu'un utilisateur peut poster dans un sujet avant d'être averti d'avoir posté un nombre excessif de réponses qui se suivent."
@@ -1783,10 +1817,15 @@ fr:
     default_categories_tracking: "Liste de catégories suivies par défaut."
     default_categories_muted: "Liste de catégories silencées par défaut."
     default_categories_watching_first_post: "Liste des catégories dont le premier message de chaque nouveau sujet sera surveillé par défaut."
+    default_tags_watching: "Liste des étiquettes qui sont surveillées par défaut."
+    default_tags_tracking: "Liste des étiquettes qui sont suivies par défaut."
+    default_tags_muted: "Liste des étiquettes qui sont mises sous silence par défaut."
+    default_tags_watching_first_post: "Liste des étiquettes pour lesquelles le premier message de chaque nouveau sujet sera surveillé par défaut."
     default_text_size: "Taille de texte par défaut"
     default_title_count_mode: "Mode par défaut pour le compteur de titre de page"
     retain_web_hook_events_period_days: "Nombre de jours de conservation des événement des Web hooks."
     retry_web_hook_events: "Réessayez automatiquement 4 fois les événements de hook web qui ont échoué. Les intervalles entre les tentatives sont de 1, 5, 25 et 125 minutes."
+    revoke_api_keys_days: "Nombre de jours avant qu'une clé API inutilisée ne soit automatiquement révoquée (0 pour jamais)"
     allow_user_api_keys: "Autoriser la génération des clés de l'API utilisateur"
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
     max_api_keys_per_user: "Nombre maximum de clés de l'API utilisateur par utilisateur"
@@ -1875,6 +1914,8 @@ fr:
       topic: "Résultats"
       user: "Utilisateurs"
     results_page: "Résultats de recherche pour « %{term} »"
+    audio: "[audio]"
+    video: "[vidéo]"
   sso:
     login_error: "Erreur de connexion"
     not_found: "Votre compte n'a pas été trouvé. Merci de contacter l'administrateur du site."
@@ -1961,10 +2002,12 @@ fr:
     auto_deleted_by_timer: "Supprimé automatiquement par planification"
   login:
     security_key_description: "Dès que votre clé de sécurité physique est prête, appuyer sur le bouton S'authentifier avec une clé de sécurité ci-dessous."
+    security_key_alternative: "Essayer une autre méthode"
     security_key_authenticate: "S'authentifier avec une clé de sécurité"
     security_key_not_allowed_error: "La procédure d'authentification de la clé de sécurité a expiré ou a été annulée."
     security_key_no_matching_credential_error: "Aucun identifiant correspondant n'a pu être trouvé dans la clé de sécurité donnée."
     security_key_support_missing_error: "Votre appareil ou navigateur actuel ne supporte pas l'utilisation de clés de sécurité. Veuillez utiliser une autre méthode."
+    security_key_invalid: "Une erreur est survenue lors de la validation de la clé de sécurité."
     not_approved: "Votre compte n'a pas encore été approuvé. Vous serez notifié par courriel quand cela sera fait."
     incorrect_username_email_or_password: "pseudo, adresse de courriel ou mot de passe incorrect"
     incorrect_password: "Mot de passe incorrect"
@@ -1982,6 +2025,7 @@ fr:
     omniauth_error:
       generic: "Désolé, une erreur s'est produite lors de l'autorisation de votre compte. Veuillez réessayer."
       csrf_detected: "L'autorisation a expiré ou vous avez changé de navigateur. Veuillez réessayer."
+      request_error: "Une erreur est survenue en initiant l'autorisation. Veuillez réessayer."
       invalid_iat: "Impossible de vérifier le jeton d'autorisation en raison de différences d'horloge du serveur. Veuillez réessayer."
     omniauth_error_unknown: "Quelque chose s'est mal passé lors de votre connexion, merci de réessayer."
     omniauth_confirm_title: "Connectez-vous à l'aide de %{provider}"
@@ -2000,6 +2044,7 @@ fr:
     second_factor_backup_description: "Veuillez entrer un de vos codes de secours :"
     second_factor_backup_title: "Code de secours de l'authentification à deux facteurs"
     invalid_second_factor_code: "Code d'authentification invalide. Chaque code ne peut être utilisé qu'une fois."
+    invalid_security_key: "Clé de sécurité invalide."
     second_factor_toggle:
       totp: "Utilisez plutôt une application d'authentification"
       backup_code: "Utilisez plutôt un code de secours"
@@ -2016,6 +2061,7 @@ fr:
       short: "doit être d'au moins %{min} caractères"
       long: "ne doit pas être supérieur à %{max} caractères"
       too_long: "est trop long"
+      characters: "doit uniquement contenir des chiffres, lettres, points, tirets et tirets bas."
       unique: "doit être unique"
       blank: "doit être présent"
       must_begin_with_alphanumeric_or_underscore: "doit commencer par une lettre, un chiffre ou un tiret bas"
@@ -2316,6 +2362,8 @@ fr:
         Salut ! Nous avons vu que vous lisez beaucoup, ce qui est super, alors nous vous avons monté d'un [niveau de confiance !](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 
         Nous sommes ravis que vous passez du temps avec nous, et on adorerez en savoir plus sur vous. Prenez un moment pour [remplir votre profil](%{base_url}/my/preferences/profile), ou sentez-vous libre de [démarrer un nouveau sujet](%{base_url}/categories).
+    welcome_staff:
+      subject_template: "Félicitations, le statut de %{role} vous a été accordé !"
     welcome_invite:
       title: "Bienvenue invité"
       subject_template: "Bienvenue sur %{site_name} !"
@@ -3815,6 +3863,9 @@ fr:
       restricted_to:
         one: '« %{tag_name} » est réservée à la catégorie « %{category_names} »'
         other: '« %{tag_name} » est réservé aux catégories suivantes : %{category_names}'
+      synonym: 'Les synonymes ne sont pas autorisés. Utilisez « %{tag_name} ».'
+      has_synonyms: '« %{tag_name} » ne peut pas être utilisé car il a des synonymes.'
+    invalid_target_tag: "ne peut pas être un synonyme d'un synonyme"
   rss_by_tag: "Sujets avec l'étiquette %{tag}"
   finish_installation:
     congratulations: "Félicitations, vous avez installé Discourse !"

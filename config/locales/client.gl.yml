@@ -930,7 +930,6 @@ gl:
       hint_for_supported_browsers: "tamén podes arrastrar e soltar ou pegar imaxes no editor"
       uploading: "Enviando"
       select_file: "Seleccionar ficheiro"
-      image_link: "ligazón onde levará a túa imaxe"
       default_image_alt_text: imaxe
     search:
       sort_by: "Ordenar por"

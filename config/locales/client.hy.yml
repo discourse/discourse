@@ -1469,7 +1469,6 @@ hy:
       hint_for_supported_browsers: "Դուք կարող եք նաև քաշել և գցել կամ տեղադրել նկարները խմբագրիչի մեջ"
       uploading: "Վերբեռնվում է"
       select_file: "Ընտրել Ֆայլ"
-      image_link: "Ձեր նկարի հղումը"
       default_image_alt_text: նկար
     search:
       sort_by: "Դասավորել ըստ"

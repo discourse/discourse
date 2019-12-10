@@ -1684,7 +1684,6 @@ de:
       hint_for_supported_browsers: "du kannst Bilder auch in den Editor ziehen oder diese aus der Zwischenablage einfügen"
       uploading: "Wird hochgeladen"
       select_file: "Datei auswählen"
-      image_link: "Der Link deines Bildes verweist auf"
       default_image_alt_text: Bild
     search:
       sort_by: "Sortieren nach"

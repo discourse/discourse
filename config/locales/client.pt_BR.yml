@@ -1625,7 +1625,6 @@ pt_BR:
       hint_for_supported_browsers: "você também pode arrastar e soltar no editor para enviá-las"
       uploading: "Enviando"
       select_file: "Selecionar Arquivo"
-      image_link: "link para o qual a sua imagem irá apontar"
       default_image_alt_text: imagem
     search:
       sort_by: "Ordenar por"

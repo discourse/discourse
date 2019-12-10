@@ -1298,7 +1298,6 @@ lt:
       hint_for_supported_browsers: "gali perstumti, numesti ir kopijuoti nuotraukas į redagavimo skydą"
       uploading: "Įkeliama"
       select_file: "Pasirinkti failus"
-      image_link: "nurodyta nuotrauka skirta"
       default_image_alt_text: pveikslėlis
     search:
       sort_by: "Rūšiuoti pagal"

@@ -1274,7 +1274,6 @@ et:
       hint_for_supported_browsers: "võid pildi redaktorisse ka pukseerida või kleepida"
       uploading: "Laen üles"
       select_file: "Vali fail"
-      image_link: "viide millele Su pilt hakkab osutama"
       default_image_alt_text: pilt
     search:
       sort_by: "Järjesta"

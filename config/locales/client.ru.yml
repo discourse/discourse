@@ -1802,7 +1802,6 @@ ru:
       hint_for_supported_browsers: "вы так же можете перетащить или скопировать изображения в редактор"
       uploading: "Загрузка"
       select_file: "Выбрать файл"
-      image_link: "ссылка, на которую будет указывать ваше изображение"
       default_image_alt_text: изображение
     search:
       sort_by: "Сортировка"

@@ -1357,7 +1357,6 @@ ar:
       hint_for_supported_browsers: "يمكنك أيضا سحب وإفلات الصور أو لصقها في المحرر"
       uploading: "يرفع"
       select_file: "اختر ملفا"
-      image_link: "رابط سيفتح عند الضغط علي الصورة"
       default_image_alt_text: صورة
     search:
       sort_by: "رتب حسب"

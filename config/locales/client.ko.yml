@@ -1308,7 +1308,6 @@ ko:
       hint_for_supported_browsers: "편집창에 이미지를 끌어다 놓거나 붙여넣기 할 수도 있습니다"
       uploading: "업로드 중입니다..."
       select_file: "파일 선택"
-      image_link: "이 이미지를 누르면 이동할 링크"
       default_image_alt_text: 이미지
     search:
       sort_by: "다음으로 정렬"
