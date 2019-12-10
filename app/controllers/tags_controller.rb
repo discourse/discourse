@@ -106,7 +106,12 @@ class TagsController < ::ApplicationController
   end
 
   def info
-    render_serialized(@tag, DetailedTagSerializer, root: :tag_info)
+    render_serialized(
+      @tag,
+      DetailedTagSerializer,
+      rest_serializer: true,
+      root: :tag_info
+    )
   end
 
   def update
