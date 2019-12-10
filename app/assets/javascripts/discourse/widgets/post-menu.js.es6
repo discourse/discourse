@@ -306,15 +306,15 @@ registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
     return;
   }
 
-  let className = "bookmark with-reminder";
+  let classNames = ["bookmark", "with-reminder"];
   let title = "bookmarks.not_bookmarked";
   let titleOptions = {};
 
-  if (attrs.bookmarked_with_reminder) {
-    className += " bookmarked";
+  if (attrs.bookmarkedWithReminder) {
+    classNames.push("bookmarked");
 
-    if (attrs.bookmark_reminder_at) {
-      let reminderAtDate = moment(attrs.bookmark_reminder_at).tz(
+    if (attrs.bookmarkReminderAt) {
+      let reminderAtDate = moment(attrs.bookmarkReminderAt).tz(
         Discourse.currentUser.timezone
       );
       title = "bookmarks.created_with_reminder";
@@ -327,11 +327,11 @@ registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
   }
 
   return {
-    id: attrs.bookmarked_with_reminder ? "unbookmark" : "bookmark",
+    id: attrs.bookmarkedWithReminder ? "unbookmark" : "bookmark",
     action: "toggleBookmarkWithReminder",
-    title: title,
-    titleOptions: titleOptions,
-    className,
+    title,
+    titleOptions,
+    className: classNames.join(" "),
     icon: "book"
   };
 });
@@ -446,7 +446,7 @@ export default createWidget("post-menu", {
       .split("|")
       .filter(s => !attrs.bookmarked || s !== "bookmark")
       .filter(
-        s => !attrs.bookmarked_with_reminder || s !== "bookmarkWithReminder"
+        s => !attrs.bookmarkedWithReminder || s !== "bookmarkWithReminder"
       );
 
     if (currentUser && keyValueStore) {

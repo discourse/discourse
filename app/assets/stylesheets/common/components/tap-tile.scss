@@ -3,25 +3,27 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
+  $tile-width: 100px;
+  $horizontal-tile-padding: 5px;
 
   .tap-tile {
-    padding: 10px 5px;
+    padding: 10px $horizontal-tile-padding;
     display: flex;
     flex-direction: column;
     text-align: center;
     align-items: center;
-    border: 2px solid #c7d2db;
+    border: 1px solid $primary-medium;
     margin: 0 0 20px;
-    width: 28%;
+    width: $tile-width;
     font-size: 12px;
     cursor: pointer;
 
     &:hover {
-      background-color: #e8f1f7;
+      background-color: $tertiary-low;
     }
 
     &.active {
-      background-color: #d1e2ed;
+      background-color: $highlight-medium;
     }
 
     .svg-icon,
@@ -34,6 +36,6 @@
 
   &::after {
     content: "";
-    width: 31%;
+    width: $tile-width + ($horizontal-tile-padding * 3);
   }
 }

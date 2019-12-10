@@ -4,6 +4,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
+import { reads } from "@ember/object/computed";
 
 const START_OF_DAY_HOUR = 8;
 const REMINDER_TYPES = {
@@ -22,26 +23,23 @@ export default Controller.extend(ModalFunctionality, {
   name: null,
   selectedReminderType: null,
   closeWithoutSaving: false,
-  saveButtonClicked: false,
+  isSavingBookmarkManually: false,
   onCloseWithoutSaving: null,
 
   onShow() {
     this.setProperties({
       errorMessage: null,
-      loading: true,
       name: null,
       selectedReminderType: null,
       closeWithoutSaving: false,
-      saveButtonClicked: false
+      isSavingBookmarkManually: false
     });
-
-    this.set("loading", false);
   },
 
   // we always want to save the bookmark unless the user specifically
   // clicks the save or cancel button to mimic browser behaviour
   onClose() {
-    if (!this.closeWithoutSaving && !this.saveButtonClicked) {
+    if (!this.closeWithoutSaving && !this.isSavingBookmarkManually) {
       this.saveBookmark();
     }
     if (this.onCloseWithoutSaving && this.closeWithoutSaving) {
@@ -49,13 +47,10 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @discourseComputed()
-  usingMobileDevice() {
-    return this.site.mobileView;
-  },
+  usingMobileDevice: reads("site.mobileView"),
 
   @discourseComputed()
-  reminderTypes() {
+  reminderTypes: () => {
     return REMINDER_TYPES;
   },
 
@@ -123,11 +118,11 @@ export default Controller.extend(ModalFunctionality, {
       post_id: this.model.postId
     };
 
-    return ajax("/bookmarks", { type: "POST", data: data });
+    return ajax("/bookmarks", { type: "POST", data });
   },
 
   reminderAt() {
-    if (this.selectedReminderType === null) {
+    if (!this.selectedReminderType) {
       return;
     }
 
@@ -201,13 +196,11 @@ export default Controller.extend(ModalFunctionality, {
 
   actions: {
     saveAndClose() {
-      this.saveButtonClicked = true;
+      this.isSavingBookmarkManually = true;
       this.saveBookmark()
-        .then(() => {
-          this.send("closeModal");
-        })
+        .then(() => this.send("closeModal"))
         .catch(e => {
-          this.saveButtonClicked = false;
+          this.isSavingBookmarkManually = false;
           popupAjaxError(e);
         });
     },
