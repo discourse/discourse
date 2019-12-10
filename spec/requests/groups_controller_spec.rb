@@ -451,6 +451,11 @@ describe GroupsController do
     it "should return the right response" do
       sign_in(user)
 
+      group.update!(
+        mentionable_level: Group::ALIAS_LEVELS[:owners_mods_and_admins],
+        visibility_level: Group.visibility_levels[:logged_on_users]
+      )
+
       get "/groups/#{group.name}/mentionable.json"
       expect(response.status).to eq(200)
 
@@ -460,6 +465,17 @@ describe GroupsController do
       group.update!(
         mentionable_level: Group::ALIAS_LEVELS[:everyone],
         visibility_level: Group.visibility_levels[:staff]
+      )
+
+      get "/groups/#{group.name}/mentionable.json"
+      expect(response.status).to eq(200)
+
+      response_body = JSON.parse(response.body)
+      expect(response_body["mentionable"]).to eq(true)
+
+      group.update!(
+        mentionable_level: Group::ALIAS_LEVELS[:nobody],
+        visibility_level: Group.visibility_levels[:public]
       )
 
       get "/groups/#{group.name}/mentionable.json"

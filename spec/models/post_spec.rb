@@ -985,6 +985,7 @@ describe Post do
     describe 'mentions' do
       fab!(:group) do
         Fabricate(:group,
+          visibility_level: Group.visibility_levels[:members],
           mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins]
         )
       end
