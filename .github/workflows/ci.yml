@@ -9,6 +9,7 @@ jobs:
   build:
     name: "${{ matrix.target }}-${{ matrix.build_types }}"
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
 
     env:
       DISCOURSE_HOSTNAME: www.example.com
@@ -142,12 +143,15 @@ jobs:
       - name: Core QUnit
         if: env.BUILD_TYPE == 'FRONTEND' && env.TARGET == 'CORE'
         run: bundle exec rake qunit:test['1200000']
+        timeout-minutes: 30
       
       - name: Wizard QUnit
         if: env.BUILD_TYPE == 'FRONTEND' && env.TARGET == 'CORE'
         run: bundle exec rake qunit:test['1200000','/wizard/qunit']
+        timeout-minutes: 30
           
       - name: Plugin QUnit # Tests core plugins in TARGET=CORE, and all plugins in TARGET=PLUGINS
         if: env.BUILD_TYPE == 'FRONTEND'
         run: bundle exec rake plugin:qunit
+        timeout-minutes: 30
         
