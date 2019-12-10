@@ -219,7 +219,7 @@ module Concurrency
       previous_value, @in_transaction = @in_transaction, true
 
       begin
-        return yield
+        yield
       ensure
         @in_transaction = previous_value
       end
