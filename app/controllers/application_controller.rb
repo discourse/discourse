@@ -790,6 +790,9 @@ class ApplicationController < ActionController::Base
     @title = opts[:title] || I18n.t("page_not_found.title")
     @group = opts[:group]
     @hide_search = true if SiteSetting.login_required
+
+    params[:slug] = params[:slug].first if params[:slug].kind_of?(Array)
+    params[:id] = params[:id].first if params[:id].kind_of?(Array)
     @slug = (params[:slug].presence || params[:id].presence || "").tr('-', ' ')
 
     render_to_string status: opts[:status], layout: opts[:layout], formats: [:html], template: '/exceptions/not_found'
