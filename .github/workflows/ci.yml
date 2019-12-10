@@ -1,11 +1,14 @@
 name: CI
 
 on:
-  pull_request:
   push:
     branches-ignore:
       - 'tests-passed'
+  pull_request:
+    branches-ignore:
+      - 'tests-passed'
 
+    
 jobs:
   build:
     name: "${{ matrix.target }}-${{ matrix.build_types }}"
