@@ -16,6 +16,7 @@ tr_TR:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B %Y"
   date:
     month_names: [~, Ocak, Şubat, Mart, Nisan, Mayıs, Haziran, Temmuz, Ağustos, Eylül, Ekim, Kasım, Aralık]
     <<: *datetime_formats
@@ -27,6 +28,7 @@ tr_TR:
   topics: "Konular"
   posts: "gönderiler"
   loading: "Yükleniyor"
+  powered_by_html: ' <a href="https://www.discourse.org">Discourse</a>tarafından destekleniyor, en iyi şekilde JavaScript etkinleştirildiğinde görüntülenebilir'
   sign_up: "Kayıt Ol"
   log_in: "Giriş Yap"
   submit: "Gönder"
@@ -34,18 +36,71 @@ tr_TR:
   disable_remote_images_download_reason: "Yeterli disk alanı kalmaması sebebiyle uzaktan görüntü indirme devre dışı bırakıldı."
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Yazar tarafından silindi"
+  redirect_warning: "Seçtiğiniz bağlantının gerçekten foruma gönderildiğini doğrulayamadık. Yine de devam etmek istiyorsanız, aşağıdaki bağlantıyı seçin."
   on_another_topic: "Başka bir konuda"
   themes:
+    bad_color_scheme: "Tema güncellenemiyor, geçersiz renk paleti"
     other_error: "Temanın güncellenmesi sırasında bir sorun oluştu"
+    compile_error:
+      unrecognized_extension: "Tanınmayan dosya uzantısı: %{extension}"
+    import_error:
+      generic: Bu temayı içe aktarırken bir hata oluştu
+      about_json: "Alma Hatası: about.json mevcut değil veya geçersiz"
+      about_json_values: "about.json geçersiz değerler içeriyor: %{errors}"
+      git: "Git deposu klonlanırken hata oluştu, erişim reddedildi veya depo bulunamadı"
+      unpack_failed: "Dosya çözülemedi"
+      file_too_big: "Sıkıştırılmamış dosya çok büyük."
+      unknown_file_type: "Yüklediğiniz dosya geçerli bir Discourse teması gibi görünmüyor."
+    errors:
+      component_no_user_selectable: "Tema bileşenleri kullanıcı tarafından seçilemez"
+      component_no_default: "Tema bileşenleri varsayılan tema olamaz"
+      component_no_color_scheme: "Tema bileşenlerinde renk paletleri olamaz"
+      no_multilevels_components: "Alt temaları olan temalar, alt temaların kendisi olamaz"
+      optimized_link: Optimize edilmiş görüntü bağlantıları geçicidir ve tema kaynak koduna dahil edilmemelidir.
+    settings_errors:
+      invalid_yaml: "Sağlanan YAML geçersiz."
+      data_type_not_a_number: "`%{name}` tipinin ayarlanması desteklenmiyor. Desteklenen türler tam sayı, bool, liste ve enum'dur."
+      name_too_long: "Çok uzun ismi olan bir ayar var. Maksimum uzunluk 255"
+      default_value_missing: "`%{name}` ayarının varsayılan değeri yoktur"
+      default_not_match_type: "`%{name}` ayarının varsayılan değerinin türü ayar türüyle eşleşmiyor."
+      default_out_range: "`%{name}` ayarının varsayılan değeri belirtilen aralıkta değil."
+      enum_value_not_valid: "Seçilen değer enum seçeneklerinden biri değil."
+      number_value_not_valid: "Yeni değer izin verilen aralıkta değil."
+      number_value_not_valid_min_max: "En az %{min} ve en fazla %{max} arasında olmalıdır."
+      number_value_not_valid_min: "%{min} değerine eşit veya daha büyük olmalıdır."
+      number_value_not_valid_max: "%{max} değerine eşit veya daha küçük olmalıdır."
+      string_value_not_valid: "Yeni değer uzunluğu izin verilen aralıkta değil."
+      string_value_not_valid_min_max: "En az %{min} en fazla %{max} karakter uzunluğunda olmalıdır."
+      string_value_not_valid_min: "En az %{min} karakter uzunluğunda olmalıdır."
+      string_value_not_valid_max: "En çok %{max} karakter uzunluğunda olmalıdır."
+    locale_errors:
+      top_level_locale: "Bir yerel dosyadaki en üst düzey anahtar yerel ayar adıyla eşleşmelidir"
+      invalid_yaml: "Çeviri YAML geçersiz"
   emails:
     incoming:
       default_subject: "Konuya bir başlık konulmalı"
       show_trimmed_content: "Kısaltılmış olan içeriği göster"
       maximum_staged_user_per_email_reached: "E-posta başına maksimum sayıda kullanıcıya ulaşıldı."
+      no_subject: "(konu yok)"
+      no_body: "(kimse)"
+      missing_attachment: "(%{filename} adet ek eksik)"
       errors:
         empty_email_error: "Bize ulaşan ham posta boş olduğunda olur."
         no_message_id_error: "E-postanın 'Message-Id' başlığı olmadığında olur."
+        auto_generated_email_error: "'Öncelik' başlığı ayarlandığında gerçekleşir: liste, önemsiz, toplu veya cevap, veya başka bir başlık varsa: otomatik gönderilen, otomatik yanıtlanan veya otomatik üretilen."
+        no_body_detected_error: "Bir gövdeyi ayıklayamadığımız ve hiçbir ekin olmadığı zaman olur."
+        no_sender_detected_error: "From Header'da geçerli bir e-posta adresi bulamadığımızda olur."
+        from_reply_by_address_error: "From header'da, e-posta adresiyle cevap eşleştiğinde olur."
         inactive_user_error: "Gönderici etkin olmadığında olur."
+        silenced_user_error: "Gönderen susturulduğunda olur."
+        bad_destination_address: "Kime / CC Alanlarındaki e-posta adreslerinden hiçbiri yapılandırılmış bir gelen e-posta adresiyle eşleşmediğinde olur."
+        strangers_not_allowed_error: "Bir kullanıcı, üye olmadığı bir kategoride yeni bir konu oluşturmaya çalıştığında gerçekleşir."
+        insufficient_trust_level_error: "Bir kullanıcı, gerekli güven seviyesine sahip olmadığı bir kategoride yeni bir konu oluşturmaya çalıştığında gerçekleşir."
+        reply_user_not_matching_error: "Bildirimin gönderildiği farklı bir e-posta adresinden yanıt geldiğinde gerçekleşir."
+        topic_not_found_error: "Bir cevap geldiğinde gerçekleşir ancak ilgili konu silinir."
+        topic_closed_error: "Kapanan konuya cevap geldiğinde olur."
+        screened_email_error: "Bu olay gönderenin e-posta adresi tarandığında olur."
+      unrecognized_error: "Bilinmeyen Hata"
   errors: &errors
     format: "%{attribute} %{message}"
     messages:
@@ -562,6 +617,7 @@ tr_TR:
       labels:
         term: Dönem
         searches: Aramalar
+        click_through: Tıklanma Oranı
     emails:
       title: "Gönderilen e-postalar"
       xaxis: "Gün"

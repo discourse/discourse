@@ -1651,7 +1651,6 @@ da:
       hint_for_supported_browsers: "du kan også bruge træk-og-slip eller indsætte billeder i editoren"
       uploading: "Uploader billede"
       select_file: "Vælg fil"
-      image_link: "link som dit billede vil pege på"
       default_image_alt_text: billede
     search:
       sort_by: "Sorter efter"

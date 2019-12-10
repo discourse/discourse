@@ -1468,7 +1468,6 @@ cs:
       hint_for_supported_browsers: "také můžeš obrázky do editoru přetáhnout nebo vložit"
       uploading: "Nahrávám"
       select_file: "Vyberte soubor"
-      image_link: "adresa na kterou má váš obrázek odkazovat"
       default_image_alt_text: obrázek
     search:
       sort_by: "Seřadil"

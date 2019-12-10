@@ -1688,7 +1688,6 @@ sl:
       hint_for_supported_browsers: "slike lahko naložite tudi tako, da jih povlečete in spustite v urejevalnik"
       uploading: "Nalagam"
       select_file: "Izberite datoteko"
-      image_link: "povezava na katero bo kazala slika"
       default_image_alt_text: slika
     search:
       sort_by: "Uredi po"

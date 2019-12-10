@@ -1735,7 +1735,6 @@ pl_PL:
       hint_for_supported_browsers: "możesz też przeciągać lub wklejać grafiki do edytora"
       uploading: "Wgrywanie"
       select_file: "Wybierz plik"
-      image_link: "odnośnik do którego Twój obraz będzie kierował"
       default_image_alt_text: Obraz
     search:
       sort_by: "Sortuj po"

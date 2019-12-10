@@ -932,7 +932,6 @@ sr:
       hint: "(možete i povući i pustiti datoteke u ovaj prozor da ih učitate)"
       hint_for_supported_browsers: "možete takođe prevući ili nalepiti slike u editor"
       uploading: "Učitavanje"
-      image_link: "link na koju vodi vaša slika"
       default_image_alt_text: slika
     search:
       most_liked: "Najviše sviđanja"

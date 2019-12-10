@@ -1684,7 +1684,6 @@ es:
       hint_for_supported_browsers: "puedes también arrastrar o pegar imágenes en el editor"
       uploading: "Subiendo"
       select_file: "Selecciona archivo"
-      image_link: "el enlace de tu imagen llevará a"
       default_image_alt_text: imagen
     search:
       sort_by: "Ordenar por"
@@ -1967,7 +1966,7 @@ es:
       notifications:
         title: cambiar la frecuencia con la que se te notifica acerca de este tema
         reasons:
-          mailing_list_mode: "El modo lista de correo se encuentra activado, por lo que se te notificará de las respuestas a este tema por correo electrónico."
+          mailing_list_mode: "El modo lista de correo se encuentra activado, por lo que se te notificarán las respuestas a este tema por correo electrónico."
           "3_10": "Recibirás notificaciones porque estás vigilando una etiqueta de este tema."
           "3_6": "Recibirás notificaciones porque estás vigilando esta categoría."
           "3_5": "Recibirás notificaciones porque has empezado a vigilar este tema automáticamente."
@@ -2800,6 +2799,10 @@ es:
       changed: "etiquetas cambiadas:"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionales"
+      info: "Info"
+      default_info: "Esta etiqueta no está restringida a ninguna categoría, y no tiene sinónimos."
+      synonyms: "Sinónimos"
+      synonyms_description: "Cuando las siguientes etiquetas sean usadas, serán reemplazadas por <b>%{base_tag_name}</b>."
       add_synonyms: "Agregar"
       delete_tag: "Eliminar etiqueta"
       delete_confirm:
@@ -2834,7 +2837,7 @@ es:
       notifications:
         watching:
           title: "Vigilar"
-          description: "Vigilarás automáticamente todos los temas con esta etiqueta. Se te notificará de todos los temas y publicaciones nuevas. Además aparecerá un contador de publicaciones nuevas y sin leer al lado del tema."
+          description: "Vigilarás automáticamente todos los temas con esta etiqueta. Se te notificarán todos los temas y publicaciones nuevas. Además aparecerá un contador de publicaciones nuevas y sin leer al lado del tema."
         watching_first_post:
           title: "Vigilar primera publicación"
           description: "Se te notificará acerca de nuevos temas con esta etiqueta, pero no cuando haya respuestas al tema."

@@ -1621,7 +1621,6 @@ zh_CN:
       hint_for_supported_browsers: "可以拖放或复制粘帖至编辑器以上传"
       uploading: "上传中"
       select_file: "选择文件"
-      image_link: "链接图片到"
       default_image_alt_text: 图片
     search:
       sort_by: "排序"

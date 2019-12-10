@@ -1397,7 +1397,6 @@ nb_NO:
       hint_for_supported_browsers: "du kan også dra og slippe eller lime inn bilder i tekstbehandleren"
       uploading: "Laster opp bilde"
       select_file: "Velg fil"
-      image_link: "lenken som bildet skal peke til"
       default_image_alt_text: bilde
     search:
       sort_by: "Sorter etter"

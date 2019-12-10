@@ -1304,7 +1304,6 @@ sk:
       hint_for_supported_browsers: "môžete taktiež potiahnuť a pustiť alebo priložiť obrázky do editora"
       uploading: "Nahrávanie"
       select_file: "Zvoľte súbor"
-      image_link: "adresa na ktorú bude odkazovať váš obrázok"
       default_image_alt_text: Obrázok
     search:
       sort_by: "Zoradiť podľa"

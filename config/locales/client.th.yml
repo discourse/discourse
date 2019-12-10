@@ -983,7 +983,6 @@ th:
       hint_for_supported_browsers: "คุณยังสามารถลากหรือวางไฟล์ในช่องแก้ไขโดยตรงได้ด้วย"
       uploading: "กำลังอัปโหลด"
       select_file: "เลือกไฟล์"
-      image_link: "ลิงค์รูปของคุณจะชี้ไปที่"
     search:
       sort_by: "เรียงโดย"
       relevance: "เกี่ยวข้อง"
