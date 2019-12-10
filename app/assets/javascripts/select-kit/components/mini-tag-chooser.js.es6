@@ -218,7 +218,7 @@ export default ComboBox.extend(TagsMixin, {
     context.set("termMatchErrorMessage", json.forbidden_message);
 
     if (context.get("siteSettings.tags_sort_alphabetically")) {
-      results = results.sort((a, b) => a.id > b.id);
+      results = results.sort((a, b) => a.text.localeCompare(b.text));
     }
 
     results = results.filter(r => !context.get("selection").includes(r.id));
