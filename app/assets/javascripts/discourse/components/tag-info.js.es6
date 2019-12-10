@@ -5,7 +5,6 @@ import { default as discourseComputed } from "discourse-common/utils/decorators"
 import Component from "@ember/component";
 import { reads, and } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
-import Category from "discourse/models/category";
 
 export default Component.extend({
   tagName: "",
@@ -57,10 +56,6 @@ export default Component.extend({
         this.set(
           "tagInfo.synonyms",
           result.synonyms.map(s => this.store.createRecord("tag", s))
-        );
-        this.set(
-          "tagInfo.categories",
-          result.category_ids.map(id => Category.findById(id))
         );
       })
       .finally(() => this.set("loading", false))

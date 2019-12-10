@@ -217,6 +217,7 @@ acceptance("Tag info", {
 
     server.get("/tags/planters/info", () => {
       return helper.response({
+        __rest_serializer: "1",
         tag_info: {
           id: 12,
           name: "planters",
