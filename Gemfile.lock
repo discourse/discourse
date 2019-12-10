@@ -92,7 +92,7 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.5)
-    css_parser (1.7.0)
+    css_parser (1.7.1)
       addressable
     debug_inspector (0.0.3)
     diff-lcs (1.3)
