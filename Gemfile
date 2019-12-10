@@ -213,7 +213,8 @@ gem 'logstash-event', require: false
 gem 'logstash-logger', require: false
 gem 'logster'
 
-gem 'sassc', require: false
+#
+gem 'sassc', '2.0.1', require: false
 gem "sassc-rails"
 
 gem 'rotp'
