@@ -187,7 +187,7 @@ basic:
   post_menu:
     client: true
     type: list
-    default: "read|like|share|flag|edit|bookmark|delete|admin|reply"
+    default: "read|like|share|flag|edit|bookmark|bookmarkWithReminder|delete|admin|reply"
     allow_any: false
     choices:
       - read
@@ -199,10 +199,11 @@ basic:
       - bookmark
       - admin
       - reply
+      - bookmarkWithReminder
   post_menu_hidden_items:
     client: true
     type: list
-    default: "flag|bookmark|edit|delete|admin"
+    default: "flag|bookmark|bookmarkWithReminder|edit|delete|admin"
     allow_any: false
     choices:
       - like
@@ -213,6 +214,7 @@ basic:
       - bookmark
       - admin
       - reply
+      - bookmarkWithReminder
   share_links:
     client: true
     type: list
@@ -288,6 +290,10 @@ basic:
   enable_whispers:
     client: true
     default: false
+  enable_bookmarks_with_reminders:
+    client: true
+    default: false
+    hidden: true
   push_notifications_prompt:
     default: true
     client: true

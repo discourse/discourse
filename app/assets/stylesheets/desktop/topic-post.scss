@@ -206,6 +206,9 @@ nav.post-controls {
       &.bookmarked .d-icon {
         color: $tertiary;
       }
+      &.with-reminder.bookmarked .d-icon {
+        color: $danger;
+      }
     }
   }
   .post-admin-menu {

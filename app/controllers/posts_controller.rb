@@ -508,6 +508,15 @@ class PostsController < ApplicationController
     render_json_dump(topic_bookmarked: topic_user.try(:bookmarked))
   end
 
+  def destroy_bookmark
+    params.require(:post_id)
+
+    existing_bookmark = Bookmark.find_by(post_id: params[:post_id], user_id: current_user.id)
+    existing_bookmark.destroy if existing_bookmark.present?
+
+    render json: success_json
+  end
+
   def wiki
     post = find_post_from_params
     guardian.ensure_can_wiki!(post)

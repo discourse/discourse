@@ -40,6 +40,10 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time: "HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+      time_short_day: "ddd HH:mm a"
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+      month_day_time: "MMM D, HH:mm a"
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_no_year: "D MMM HH:mm"
@@ -303,8 +307,19 @@ en:
     bookmarks:
       created: "you've bookmarked this post"
       not_bookmarked: "bookmark this post"
+      created_with_reminder: "you've bookmarked this post with a reminder at %{date}"
       remove: "Remove Bookmark"
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
+      save: "Save"
+      no_timezone: "You have not set a timezone yet. You will not be able to set reminders. Set one up <a href=\"%{basePath}/my/preferences/profile\">in your profile</a>."
+      reminders:
+        at_desktop: "Next time I'm at my desktop"
+        later_today: "Later today <br/>{{date}}"
+        next_business_day: "Next business day <br/>{{date}}"
+        tomorrow: "Tomorrow <br/>{{date}}"
+        next_week: "Next week <br/>{{date}}"
+        next_month: "Next month <br/>{{date}}"
+        custom: "Custom date and time"
 
     drafts:
       resume: "Resume"
@@ -2606,6 +2621,12 @@ en:
           html_part:
             title: "Show the html part of the email"
             button: "HTML"
+      
+      bookmarks:
+        create: "Create bookmark"
+        name: "Name"
+        name_placeholder: "Name the bookmark to help jog your memory"
+        set_reminder: "Set a reminder"
 
     category:
       can: "can&hellip; "
