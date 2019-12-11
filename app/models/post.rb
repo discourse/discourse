@@ -971,7 +971,7 @@ class Post < ActiveRecord::Base
       next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
 
       path = begin
-        URI(URI.unescape(GlobalSetting.cdn_url ? src.sub(GlobalSetting.cdn_url, "") : src))&.path
+        URI(UrlHelper.unencode(GlobalSetting.cdn_url ? src.sub(GlobalSetting.cdn_url, "") : src))&.path
       rescue URI::Error
       end
 
