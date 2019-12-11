@@ -305,6 +305,18 @@ describe UploadsController do
   end
 
   describe "#show_short" do
+    it 'inlines only supported image files' do
+      upload = upload_file("smallest.png")
+      get upload.short_path, params: { inline: true }
+      expect(response.header['Content-Type']).to eq('image/png')
+      expect(response.header['Content-Disposition']).to include('inline;')
+
+      upload.update!(original_filename: "test.xml")
+      get upload.short_path, params: { inline: true }
+      expect(response.header['Content-Type']).to eq('application/xml')
+      expect(response.header['Content-Disposition']).to include('attachment;')
+    end
+
     describe "local store" do
       fab!(:image_upload) { upload_file("smallest.png") }
 
