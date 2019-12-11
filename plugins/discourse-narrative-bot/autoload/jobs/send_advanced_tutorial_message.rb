@@ -4,7 +4,7 @@ module Jobs
   class SendAdvancedTutorialMessage < ::Jobs::Base
     def execute(args)
       user = User.find_by(id: args[:user_id])
-      raise Discourse::InvalidParameters.new(:user_id) if user.nil?
+      return if user.nil?
 
       PostCreator.create!(
         Discourse.system_user,
