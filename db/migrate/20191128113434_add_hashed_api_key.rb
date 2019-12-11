@@ -11,21 +11,31 @@ class AddHashedApiKey < ActiveRecord::Migration[6.0]
       SQL
     )
 
-    batch_size = 100
+    batch_size = 500
     begin
-      batch = ActiveRecord::Base.connection.select_all <<-SQL
+      batch = DB.query <<-SQL
         SELECT id, key
         FROM api_keys
         WHERE key_hash IS NULL
         LIMIT #{batch_size}
       SQL
 
+      to_update = []
       for row in batch
-        hashed = Digest::SHA256.hexdigest row["key"]
-        execute <<~SQL
+        hashed = Digest::SHA256.hexdigest row.key
+        to_update << { id: row.id, key_hash: hashed }
+      end
+
+      if to_update.size > 0
+        data_string = to_update.map { |r| "(#{r[:id]}, '#{r[:key_hash]}')" }.join(",")
+
+        DB.exec <<~SQL
           UPDATE api_keys
-          SET key_hash = '#{hashed}'
-          WHERE id = #{row["id"]}
+          SET key_hash = data.key_hash
+          FROM (values
+            #{data_string}
+          ) as data(id, key_hash)
+          WHERE api_keys.id = data.id
         SQL
       end
     end until batch.length < batch_size
