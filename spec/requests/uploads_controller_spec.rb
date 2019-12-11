@@ -406,7 +406,7 @@ describe UploadsController do
       it "should return signed url for legitimate request" do
         secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
         sign_in(user)
-        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/")
+        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
 
         get secure_url
 
