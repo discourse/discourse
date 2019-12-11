@@ -91,7 +91,7 @@ $tag-color: $primary-medium;
   }
 
   &.large {
-    font-size: $font-up-2;
+    font-size: $font-up-3;
   }
 
   &.box {
@@ -270,25 +270,42 @@ header .discourse-tag {
 }
 
 .tag-info {
-  margin-top: 1em;
-  margin-bottom: 1em;
+  margin: 1em 0;
+  padding: 2em;
+  border: 1px solid $primary-low;
 
-  .delete-tag {
-    float: right;
+  .field {
+    margin: 0 0 0.5em;
   }
+
+  .btn {
+    margin-right: 0.5em;
+  }
+
+  .tag-name .discourse-tag {
+    display: block;
+    margin-bottom: 0.75em;
+  }
+
   .synonyms-list,
   .add-synonyms,
   .tag-associations {
     margin-top: 1em;
-    clear: both;
+    @include clearfix;
   }
+
+  .synonyms-list {
+    margin: 2em 0 0;
+  }
+
   .tag-list {
+    margin: 1em 0 0 0;
+    padding: 0;
     border: none;
-    .d-icon {
+    @include clearfix;
+    a {
       color: $primary-medium;
+      margin-left: 0.25em;
     }
-  }
-  .field {
-    margin-bottom: 5px;
   }
 }
