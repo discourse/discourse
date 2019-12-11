@@ -329,12 +329,12 @@ describe OptimizedImage do
 
           stub_request(
             :head,
-            "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/"
+            "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/"
           )
 
           stub_request(
             :put,
-            "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com#{optimized_path}"
+            "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{optimized_path}"
           ).to_return(
             status: 200,
             headers: { "ETag" => "someetag" }
