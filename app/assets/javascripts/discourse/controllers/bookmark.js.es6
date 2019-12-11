@@ -184,7 +184,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   now() {
-    return moment().tz(this.userTimezone());
+    return moment.tz(this.userTimezone());
   },
 
   laterToday() {
