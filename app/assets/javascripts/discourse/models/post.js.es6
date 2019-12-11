@@ -338,8 +338,8 @@ const Post = RestModel.extend({
   },
 
   toggleBookmarkWithReminder() {
-    this.toggleProperty("bookmarkedWithReminder");
-    if (this.bookmarkedWithReminder) {
+    this.toggleProperty("bookmarked_with_reminder");
+    if (this.bookmarked_with_reminder) {
       let controller = showModal("bookmark", {
         model: {
           postId: this.id
@@ -349,7 +349,7 @@ const Post = RestModel.extend({
       });
       controller.setProperties({
         onCloseWithoutSaving: () => {
-          this.toggleProperty("bookmarkedWithReminder");
+          this.toggleProperty("bookmarked_with_reminder");
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
         }
       });
@@ -357,7 +357,7 @@ const Post = RestModel.extend({
       return Post.destroyBookmark(this.id)
         .then(() => this.appEvents.trigger("page:bookmark-post-toggled", this))
         .catch(error => {
-          this.toggleProperty("bookmarkedWithReminder");
+          this.toggleProperty("bookmarked_with_reminder");
           throw new Error(error);
         });
     }
