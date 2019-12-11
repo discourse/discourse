@@ -11,7 +11,6 @@ def s3_setup
   SiteSetting.s3_access_key_id = "s3-access-key-id"
   SiteSetting.s3_secret_access_key = "s3-secret-access-key"
   SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-  SiteSetting.s3_region = "us-east-1"
   SiteSetting.enable_s3_uploads = true
   SiteSetting.authorized_extensions = "png|jpg|gif|mov|ogg|"
 end
@@ -505,18 +504,16 @@ describe CookedPostProcessor do
 
         context "s3_uploads" do
           before do
-            SiteSetting.s3_region = "us-east-1"
             s3_setup
             stored_path = Discourse.store.get_path_for_upload(upload)
             upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
 
-            stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/")
+            stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
             stub_request(
               :put,
-              "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/optimized/1X/#{upload.sha1}_2_#{optimized_size}.#{upload.extension}"
+              "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/optimized/1X/#{upload.sha1}_2_#{optimized_size}.#{upload.extension}"
             )
-
-            stub_request(:get, /#{SiteSetting.s3_upload_bucket}\.s3\.#{SiteSetting.s3_region}\.amazonaws\.com/)
+            stub_request(:get, /#{SiteSetting.s3_upload_bucket}\.s3\.amazonaws\.com/)
 
             OptimizedImage.expects(:resize).returns(true)
             FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
