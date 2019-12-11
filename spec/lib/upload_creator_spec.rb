@@ -247,4 +247,26 @@ RSpec.describe UploadCreator do
       end
     end
   end
+
+  describe '#whitelist_svg!' do
+    let(:file) do
+      file = Tempfile.new
+      file.write(<<~XML)
+        <?xml version="1.0" encoding="UTF-8"?>
+        <svg xmlns="http://www.w3.org/2000/svg" width="200px" height="200px" onload="alert(location)">
+        </svg>
+      XML
+      file.rewind
+      file
+    end
+
+    it 'removes event handlers' do
+      begin
+        UploadCreator.new(file, 'file.svg').whitelist_svg!
+        expect(file.read).not_to include('onload')
+      ensure
+        file.unlink
+      end
+    end
+  end
 end
