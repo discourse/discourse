@@ -488,7 +488,7 @@ DEPENDENCIES
   mini_sql
   mini_suffix
   minitest
-  mocha
+  mocha (= 1.8.0)
   mock_redis
   multi_json
   mustache
