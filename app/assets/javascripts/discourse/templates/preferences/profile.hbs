@@ -69,6 +69,11 @@
   </div>
 {{/if}}
 
+{{d-button action=(action "showFeaturedTopicModal")
+  class="btn-primary new-totp"
+  disabled=loading
+  label="user.second_factor.totp.add"}}
+
 {{plugin-outlet name="user-preferences-profile" args=(hash model=model save=(action "save"))}}
 
 {{plugin-outlet name="user-custom-preferences" args=(hash model=model)}}

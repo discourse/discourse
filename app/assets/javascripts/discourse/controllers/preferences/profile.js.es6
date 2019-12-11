@@ -5,6 +5,7 @@ import { default as discourseComputed } from "discourse-common/utils/decorators"
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cookAsync } from "discourse/lib/text";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(PreferencesTabController, {
   init() {
@@ -48,6 +49,13 @@ export default Controller.extend(PreferencesTabController, {
   },
 
   actions: {
+    showFeaturedTopicModal() {
+      showModal("feature-topic-on-profile", {
+        model: this.model,
+        title: "topic.feature_topic.title"
+      });
+    },
+
     save() {
       this.set("saved", false);
 
