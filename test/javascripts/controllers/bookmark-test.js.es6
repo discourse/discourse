@@ -4,6 +4,10 @@ let BookmarkController;
 moduleFor("controller:bookmark", {
   beforeEach() {
     BookmarkController = this.subject({ currentUser: currentUser() });
+  },
+
+  afterEach() {
+    sandbox.restore();
   }
 });
 
