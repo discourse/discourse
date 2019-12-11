@@ -382,6 +382,16 @@ en:
   bookmarks:
     errors:
       already_bookmarked_post: "You cannot bookmark the same post twice."
+      time_must_be_provided: "time must be provided for all reminders except '%{reminder_type}'"
+
+    reminders:
+        at_desktop: "Next time I'm at my desktop"
+        later_today: "Later today <br/>{{date}}"
+        next_business_day: "Next business day <br/>{{date}}"
+        tomorrow: "Tomorrow <br/>{{date}}"
+        next_week: "Next week <br/>{{date}}"
+        next_month: "Next month <br/>{{date}}"
+        custom: "Custom date and time"
 
   groups:
     success:
@@ -565,10 +575,6 @@ en:
           attributes:
             word:
               too_many: "Too many words for that action"
-        bookmark:
-          attributes:
-            reminder_at:
-              blank: "time must be provided for all reminders except 'Next time I'm at my Desktop'"
               
 
   uncategorized_category_name: "Uncategorized"

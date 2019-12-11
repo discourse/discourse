@@ -5,9 +5,10 @@ class Bookmark < ActiveRecord::Base
   belongs_to :post
   belongs_to :topic
 
-  validates :reminder_at, presence: true, if: -> do
-    reminder_type.present? && reminder_type != Bookmark.reminder_types[:at_desktop]
-  end
+  validates :reminder_at, presence: {
+    message: I18n.t("bookmarks.errors.time_must_be_provided", reminder_type: I18n.t("bookmarks.reminders.at_desktop")),
+    if: -> { reminder_type.present? && reminder_type != Bookmark.reminder_types[:at_desktop] }
+  }
 
   def self.reminder_types
     @reminder_type = Enum.new(
