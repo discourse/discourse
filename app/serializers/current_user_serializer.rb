@@ -27,6 +27,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :redirected_to_top,
              :custom_fields,
              :muted_category_ids,
+             :muted_tag_ids,
              :dismissed_banner_key,
              :is_anonymous,
              :reviewable_count,
@@ -167,6 +168,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def muted_category_ids
     CategoryUser.lookup(object, :muted).pluck(:category_id)
+  end
+
+  def muted_tag_ids
+    TagUser.lookup(object, :muted).pluck(:tag_id)
   end
 
   def ignored_users

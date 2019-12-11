@@ -353,6 +353,77 @@ describe TopicTrackingState do
     expect(report.length).to eq(1)
   end
 
+  context 'muted tags' do
+    it "remove_muted_tags_from_latest is set to always" do
+      SiteSetting.remove_muted_tags_from_latest = 'always'
+      user = Fabricate(:user)
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      Fabricate(:topic_tag, tag: tag1, topic: topic)
+      Fabricate(:topic_tag, tag: tag2, topic: topic)
+      post
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+
+      TagUser.create!(user_id: user.id,
+                      notification_level: TagUser.notification_levels[:muted],
+                      tag_id: tag1.id
+                     )
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(0)
+    end
+
+    it "remove_muted_tags_from_latest is set to only_muted" do
+      SiteSetting.remove_muted_tags_from_latest = 'only_muted'
+      user = Fabricate(:user)
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      Fabricate(:topic_tag, tag: tag1, topic: topic)
+      Fabricate(:topic_tag, tag: tag2, topic: topic)
+      post
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+
+      TagUser.create!(user_id: user.id,
+                      notification_level: TagUser.notification_levels[:muted],
+                      tag_id: tag1.id
+                     )
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+
+      TagUser.create!(user_id: user.id,
+                      notification_level: TagUser.notification_levels[:muted],
+                      tag_id: tag2.id
+                     )
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(0)
+    end
+
+    it "remove_muted_tags_from_latest is set to never" do
+      SiteSetting.remove_muted_tags_from_latest = 'never'
+      user = Fabricate(:user)
+      tag1 = Fabricate(:tag)
+      Fabricate(:topic_tag, tag: tag1, topic: topic)
+      post
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+
+      TagUser.create!(user_id: user.id,
+                      notification_level: TagUser.notification_levels[:muted],
+                      tag_id: tag1.id
+                     )
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+    end
+  end
+
   it "correctly handles seen categories" do
     user = Fabricate(:user)
     post

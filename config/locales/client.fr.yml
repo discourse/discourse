@@ -333,6 +333,7 @@ fr:
           title: "Lorsqu'un membre du personnel choisit d'agir, l'indicateur reçoit un bonus."
         user_accuracy_bonus:
           name: "précision de l’utilisateur"
+          title: "Utilisateurs dont les signalements ont généralement été approuvés obtiennent un bonus."
         trust_level_bonus:
           name: "niveau de confiance"
           title: "Les éléments révisables créés par les utilisateurs ayant un niveau de confiance plus élevé ont un score plus élevé."
@@ -1333,6 +1334,7 @@ fr:
       second_factor_backup_description: "Veuillez entrer un de vos codes de secours :"
       second_factor: "Se connecter avec une application"
       security_key_description: "Dès que votre clé de sécurité physique est prête, appuyer sur le bouton S'authentifier avec une clé de sécurité ci-dessous."
+      security_key_alternative: "Essayer une autre méthode"
       security_key_authenticate: "S'authentifier avec une clé de sécurité"
       security_key_not_allowed_error: "La procédure d'authentification de la clé de sécurité a expiré ou a été annulée."
       security_key_no_matching_credential_error: "Aucun identifiant correspondant n'a pu être trouvé dans la clé de sécurité donnée."
@@ -1630,6 +1632,7 @@ fr:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Nouveau sujet</span> {{description}}"
       membership_request_accepted: "Adhésion acceptée dans '{{group_name}}'"
+      membership_request_consolidated: "{{count}} demandes d'adhésion ouvertes pour « {{group_name}} »"
       group_message_summary:
         one: "{{count}} message dans la boîte de réception de {{group_name}}"
         other: "{{count}} messages dans la boîte de réception de {{group_name}}"
@@ -1665,6 +1668,7 @@ fr:
         topic_reminder: "rappel de sujet"
         liked_consolidated: "nouveaux j'aime"
         post_approved: "message approuvé"
+        membership_request_consolidated: "nouvelles demandes d'adhésion"
     upload_selector:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"
@@ -1678,7 +1682,6 @@ fr:
       hint_for_supported_browsers: "vous pouvez aussi glisser-déposer ou coller des images dans l'éditeur"
       uploading: "En cours d'envoi"
       select_file: "Sélectionner un fichier"
-      image_link: "lien vers lequel l'image pointera"
       default_image_alt_text: image
     search:
       sort_by: "Trier par"
@@ -2807,12 +2810,30 @@ fr:
       changed: "étiquettes modifiées :"
       tags: "Étiquettes"
       choose_for_topic: "étiquettes optionnelles"
+      info: "Information"
+      default_info: "Cette étiquette n'est pas limitée à une catégorie et n'a aucun synonyme."
+      synonyms: "Synonymes"
+      synonyms_description: "Quand les étiquettes suivantes sont utilisées, elles seront remplacées par <b>%{base_tag_name}</b>."
+      tag_groups_info:
+        one: 'Cette étiquette appartient au groupe « {{tag_groups}} ».'
+        other: "Cette étiquette appartient à ces groupes : {{tag_groups}}."
+      category_restrictions:
+        one: "Elle ne peut être utilisée que dans cette catégorie :"
+        other: "Elle ne peut être utilisée que dans ces catégories :"
+      edit_synonyms: "Gérer les synonymes"
+      add_synonyms_label: "Ajouter des synonymes :"
       add_synonyms: "Ajouter"
+      add_synonyms_failed: "Les étiquettes suivantes n'ont pas pu être ajoutées comme synonymes : <b>%{tag_names}</b>. Assurez-vous qu'elles n'ont pas de synonymes et ne sont pas des synonymes d'une autre étiquette."
+      remove_synonym: "Supprimer le synonyme"
+      delete_synonym_confirm: 'Êtes-vous sur de vouloir supprimer le synonyme « %{tag_name} » ?'
       delete_tag: "Supprimer l'étiquette"
       delete_confirm:
         one: "Êtes-vous sûr de vouloir supprimer cette étiquettes et l'enlever de %{count} sujet auquel elle est assignée ?"
         other: "Êtes-vous sûr de vouloir supprimer cette étiquette et l'enlever de {{count}} sujets auxquels elle est assignée ?"
       delete_confirm_no_topics: "Êtes-vous sûr de vouloir supprimer cette étiquette ?"
+      delete_confirm_synonyms:
+        one: "Son synonyme sera aussi supprimé."
+        other: "Ses {{count}} synonymes seront aussi supprimés."
       rename_tag: "Renommer l'étiquette"
       rename_instructions: "Choisir un nouveau nom pour cette étiquette :"
       sort_by: "Trier par :"
@@ -3072,12 +3093,14 @@ fr:
         last_used: Dernière utilisation
         never_used: (jamais)
         generate: "Générer"
+        undo_revoke: "Annuler la révocation"
         revoke: "Révoquer"
         all_users: "Tous les utilisateurs"
         active_keys: "Activer une clé pour l’API"
         manage_keys: Gérer les clés
         show_details: Détails
         description: Description
+        no_description: (aucune description)
         all_api_keys: Toutes les clés pour l’API
         user_mode: Niveau de l’utilisateur
         impersonate_all_users: Usurper l’identité d'un utilisateur
@@ -3330,6 +3353,7 @@ fr:
           color_scheme_select: "Sélectionner les couleurs utilisées par le thème"
           custom_sections: "Sections personnalisées :"
           theme_components: "Composants du thème :"
+          add_all_themes: "Ajouter tous les thèmes"
           convert: "Convertir"
           convert_component_alert: "Êtes-vous sûr·e de vouloir convertir ce composant en thème ? Il sera éliminé comme composant de %{relatives}."
           convert_component_tooltip: "Convertir ce composant en thème"
@@ -3362,6 +3386,9 @@ fr:
           edit_css_html: "Modifier le CSS/HTML"
           edit_css_html_help: "Vous n'avez modifié aucun CSS ou HTML"
           delete_upload_confirm: "Supprimer cet upload ? (Le thème CSS pourrait ne plus fonctionner !)"
+          component_on_themes: "Inclure le composant à ces thèmes"
+          included_components: "Composants inclus"
+          add_all: "Tout ajouter"
           import_web_tip: "Dépôt contenant le thème"
           import_web_advanced: "Avancé..."
           import_file_tip: "Fichier .tar.gz, .zip ou .dcstyle.json contenant le thème"

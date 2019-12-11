@@ -1137,7 +1137,6 @@ bg:
       hint_for_supported_browsers: "вие можете винаги да привлачите или поставите картинки върху вашия редактора"
       uploading: "Качване "
       select_file: "Избери файл"
-      image_link: "адресът, на който ще бъде показано вашето изображение "
       default_image_alt_text: изображение
     search:
       sort_by: "Сортирай по"

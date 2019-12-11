@@ -774,6 +774,7 @@ nl:
       enable_quoting: "Antwoord-met-citaat voor gemarkeerde tekst inschakelen"
       enable_defer: "Negeren voor markeren van topics als ongelezen inschakelen"
       change: "wijzigen"
+      featured_topic: "Aanbevolen topic"
       moderator: "{{user}} is een moderator"
       admin: "{{user}} is een beheerder"
       moderator_tooltip: "Deze gebruiker is een moderator"
@@ -955,8 +956,11 @@ nl:
         title: "Profielkoptekst"
         instructions: "Profielkopteksten worden gecentreerd en hebben een standaardbreedte van 1110px."
       change_card_background:
-        title: "Achtergrond van gebruikersprofiel"
+        title: "Achtergrond van gebruikerskaart"
         instructions: "Achtergrondafbeeldingen worden gecentreerd en hebben een standaardbreedte van 590px."
+      change_featured_topic:
+        title: "Aanbevolen topic"
+        instructions: "Om dit te wijzigen, navigeert u naar het topic om het als aanbevolen topic te verwijderen, of beveelt u een ander topic aan."
       email:
         title: "E-mail"
         primary: "Primair e-mailadres"
@@ -1684,7 +1688,6 @@ nl:
       hint_for_supported_browsers: "u kunt ook afbeeldingen naar de editor slepen of hierin plakken"
       uploading: "Uploaden"
       select_file: "Bestand selecteren"
-      image_link: "koppeling waarnaar uw afbeelding verwijst"
       default_image_alt_text: afbeelding
     search:
       sort_by: "Sorteren op"
@@ -1839,6 +1842,13 @@ nl:
       defer:
         help: "Markeren als ongelezen"
         title: "Negeren"
+      feature_on_profile:
+        help: "Een koppeling naar dit topic toevoegen op uw gebruikerskaart en profiel"
+        title: "Aanbevelen op profiel"
+      remove_from_profile:
+        warning: "Uw profiel heeft al een aanbevolen topic. Als u doorgaat, vervangt dit topic het bestaande topic."
+        help: "De koppeling naar dit topic op uw gebruikersprofiel verwijderen"
+        title: "Verwijderen uit profiel"
       list: "Topics"
       new: "nieuw topic"
       unread: "ongelezen"
@@ -2800,12 +2810,30 @@ nl:
       changed: "gewijzigde tags:"
       tags: "Tags"
       choose_for_topic: "optionele tags"
+      info: "Info"
+      default_info: "Deze tag is niet beperkt tot categorieën, en heeft geen synoniemen."
+      synonyms: "Synoniemen"
+      synonyms_description: "Wanneer de volgende tags worden gebruikt, worden deze vervangen door <b>%{base_tag_name}</b>."
+      tag_groups_info:
+        one: 'Deze tag behoort tot de groep ''{{tag_groups}}''.'
+        other: "Deze tag behoort tot deze groepen: {{tag_groups}}."
+      category_restrictions:
+        one: "Deze kan alleen worden gebruikt in deze categorie:"
+        other: "Deze kan alleen worden gebruikt in deze categorieën:"
+      edit_synonyms: "Synoniemen beheren"
+      add_synonyms_label: "Synoniemen toevoegen:"
       add_synonyms: "Toevoegen"
+      add_synonyms_failed: "De volgende tags konden niet worden toegevoegd als synoniemen: <b>%{tag_names}</b>. Zorg dat ze geen synoniemen hebben en geen synoniem van een andere tag zijn."
+      remove_synonym: "Synoniem verwijderen"
+      delete_synonym_confirm: 'Weet u zeker dat u het synoniem ''%{tag_name}'' wilt verwijderen?'
       delete_tag: "Tag verwijderen"
       delete_confirm:
         one: "Weet u zeker dat u deze tag wilt verwijderen en loskoppelen van %{count} topic waaraan deze is toegewezen?"
         other: "Weet u zeker dat u deze tag wilt verwijderen en loskoppelen van {{count}} topics waaraan deze is toegewezen?"
       delete_confirm_no_topics: "Weet u zeker dat u deze tag wilt verwijderen?"
+      delete_confirm_synonyms:
+        one: "Het synoniem ervan wordt ook verwijderd."
+        other: "De {{count}} synoniemen ervan worden ook verwijderd."
       rename_tag: "Tag hernoemen"
       rename_instructions: "Kies een nieuwe naam voor de tag:"
       sort_by: "Sorteren op:"
@@ -3352,6 +3380,7 @@ nl:
           upload: "Upload"
           select_component: "Selecteer een onderdeel..."
           unsaved_changes_alert: "U hebt uw wijzigingen nog niet opgeslagen. Wilt u ze negeren en verdergaan?"
+          unsaved_parent_themes: "U hebt het onderdeel niet aan thema's toegewezen. Wilt u verdergaan?"
           discard: "Negeren"
           stay: "Blijven"
           css_html: "Aangepaste CSS/HTML"
@@ -3359,6 +3388,8 @@ nl:
           edit_css_html_help: "U hebt geen CSS of HTML bewerkt"
           delete_upload_confirm: "Deze upload verwijderen? (Thema-CSS zou kunnen stoppen met werken!)"
           component_on_themes: "Onderdeel voor deze thema's bijvoegen"
+          included_components: "Opgenomen onderdelen"
+          add_all: "Alle toevoegen"
           import_web_tip: "Repository die thema bevat"
           import_web_advanced: "Geavanceerd..."
           import_file_tip: ".tar.gz-, .zip- of .dcstyle.json-bestand dat thema bevat"

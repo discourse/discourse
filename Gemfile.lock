@@ -45,21 +45,22 @@ GEM
       rake (>= 10.4, < 14.0)
     ast (2.4.0)
     aws-eventstream (1.0.3)
-    aws-partitions (1.251.0)
-    aws-sdk-core (3.84.0)
+
+    aws-partitions (1.252.0)
+    aws-sdk-core (3.85.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-kms (1.26.0)
+    aws-sdk-kms (1.27.0)
       aws-sdk-core (~> 3, >= 3.71.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-s3 (1.59.0)
       aws-sdk-core (~> 3, >= 3.83.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
-    aws-sdk-sns (1.13.0)
-      aws-sdk-core (~> 3, >= 3.48.2)
+    aws-sdk-sns (1.21.0)
+      aws-sdk-core (~> 3, >= 3.71.0)
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.1.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
@@ -92,7 +93,7 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.5)
-    css_parser (1.7.0)
+    css_parser (1.7.1)
       addressable
     debug_inspector (0.0.3)
     diff-lcs (1.3)
@@ -120,7 +121,7 @@ GEM
       railties (>= 3.1)
     ember-source (2.18.2)
     erubi (1.9.0)
-    excon (0.64.0)
+    excon (0.70.0)
     execjs (2.7.0)
     exifr (1.3.6)
     fabrication (2.21.0)
@@ -140,7 +141,7 @@ GEM
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     guess_html_encoding (0.0.11)
-    hashdiff (0.3.9)
+    hashdiff (1.0.0)
     hashie (3.6.0)
     highline (1.7.10)
     hkdf (0.3.0)
@@ -150,7 +151,7 @@ GEM
       concurrent-ruby (~> 1.0)
     image_size (1.5.0)
     in_threads (1.5.1)
-    jaro_winkler (1.5.2)
+    jaro_winkler (1.5.4)
     jmespath (1.4.0)
     jquery-rails (4.3.3)
       rails-dom-testing (>= 1, < 3)
@@ -160,10 +161,9 @@ GEM
     jwt (2.2.1)
     kgio (2.11.2)
     libv8 (7.3.492.27.1)
-    listen (3.1.5)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
-      ruby_dep (~> 1.2)
+    listen (3.2.1)
+      rb-fsevent (~> 0.10, >= 0.10.3)
+      rb-inotify (~> 0.9, >= 0.9.10)
     lograge (0.11.2)
       actionpack (>= 4)
       activesupport (>= 4)
@@ -198,7 +198,7 @@ GEM
     minitest (5.13.0)
     mocha (1.8.0)
       metaclass (~> 0.0.1)
-    mock_redis (0.19.0)
+    mock_redis (0.22.0)
     msgpack (1.3.1)
     multi_json (1.14.1)
     multi_xml (0.6.0)
@@ -255,9 +255,9 @@ GEM
       ruby-openid
     optimist (3.0.0)
     parallel (1.19.1)
-    parallel_tests (2.29.2)
+    parallel_tests (2.30.0)
       parallel
-    parser (2.6.3.0)
+    parser (2.6.5.0)
       ast (~> 2.4.0)
     pg (1.1.4)
     progress (3.5.0)
@@ -317,8 +317,10 @@ GEM
     rinku (2.0.6)
     rotp (5.1.0)
       addressable (~> 2.5)
-    rqrcode (0.10.1)
+    rqrcode (1.1.2)
       chunky_png (~> 1.0)
+      rqrcode_core (~> 0.1)
+    rqrcode_core (0.1.1)
     rspec (3.9.0)
       rspec-core (~> 3.9.0)
       rspec-expectations (~> 3.9.0)
@@ -344,7 +346,7 @@ GEM
       rspec-support (~> 3.8)
     rspec-support (3.9.0)
     rtlit (0.0.5)
-    rubocop (0.69.0)
+    rubocop (0.77.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.6)
@@ -355,20 +357,20 @@ GEM
       rubocop (>= 0.69.0)
     ruby-openid (2.9.2)
     ruby-prof (1.0.0)
-    ruby-progressbar (1.10.0)
+    ruby-progressbar (1.10.1)
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
-    ruby_dep (1.5.0)
     rubyzip (2.0.0)
     safe_yaml (1.0.5)
     sanitize (5.1.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
       nokogumbo (~> 2.0)
-    sassc (2.2.1)
+    sassc (2.0.1)
       ffi (~> 1.9)
-    sassc-rails (2.1.1)
+      rake
+    sassc-rails (2.1.2)
       railties (>= 4.0.0)
       sassc (>= 2.0)
       sprockets (> 3.0)
@@ -379,11 +381,11 @@ GEM
       activesupport (>= 3.1)
     shoulda-matchers (4.1.2)
       activesupport (>= 4.2.0)
-    sidekiq (5.2.7)
-      connection_pool (~> 2.2, >= 2.2.2)
-      rack (>= 1.5.0)
-      rack-protection (>= 1.5.0)
-      redis (>= 3.3.5, < 5)
+    sidekiq (6.0.3)
+      connection_pool (>= 2.2.2)
+      rack (>= 2.0.0)
+      rack-protection (>= 2.0.0)
+      redis (>= 4.1.0)
     simplecov (0.17.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
@@ -414,10 +416,10 @@ GEM
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.13.0)
-    webmock (3.5.1)
+    webmock (3.7.6)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
-      hashdiff
+      hashdiff (>= 0.4.0, < 2.0.0)
     webpush (1.0.0)
       hkdf (~> 0.2)
       jwt (~> 2.0)
@@ -487,7 +489,7 @@ DEPENDENCIES
   mini_sql
   mini_suffix
   minitest
-  mocha
+  mocha (= 1.8.0)
   mock_redis
   multi_json
   mustache
@@ -533,12 +535,13 @@ DEPENDENCIES
   ruby-readability
   rubyzip
   sanitize
-  sassc
+  sassc (= 2.0.1)
   sassc-rails
   seed-fu
   shoulda-matchers
   sidekiq
   simplecov
+  sprockets (= 3.7.2)
   sprockets-rails
   sshkey
   stackprof

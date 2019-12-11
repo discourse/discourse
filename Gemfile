@@ -28,6 +28,10 @@ else
   gem 'sprockets-rails'
 end
 
+# TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
+# This is a desired upgrade we should get to.
+gem 'sprockets', '3.7.2'
+
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master
 gem 'actionview_precompiler', require: false
@@ -144,9 +148,12 @@ group :test, :development do
   gem 'mock_redis'
   gem 'listen', require: false
   gem 'certified', require: false
-  # later appears to break Fabricate(:topic, category: category)
   gem 'fabrication', require: false
-  gem 'mocha', require: false
+
+  # TODO: upgrading to 1.10.1 cause it breaks our test suite.
+  # We want our test suite fixed though to support this upgrade.
+  gem 'mocha', '1.8.0', require: false
+
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
 
   # TODO determine if we can update this to 0.10, API changes happened
@@ -209,7 +216,9 @@ gem 'logstash-event', require: false
 gem 'logstash-logger', require: false
 gem 'logster'
 
-gem 'sassc', require: false
+# NOTE: later versions of sassc are causing a segfault, possibly dependent on processer architecture
+# and until resolved should be locked at 2.0.1
+gem 'sassc', '2.0.1', require: false
 gem "sassc-rails"
 
 gem 'rotp'

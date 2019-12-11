@@ -28,12 +28,12 @@ zh_CN:
   topics: "主题列表"
   posts: "帖子"
   loading: "载入中"
-  powered_by_html: '采用 <a href="http://www.discourse.org">Discourse</a>，启用 JavaScript 以获得最佳体验'
+  powered_by_html: '采用 <a href="https://www.discourse.org">Discourse</a>，启用 JavaScript 以获得最佳体验'
   sign_up: "注册"
   log_in: "登录"
   submit: "提交"
-  purge_reason: "自动删除废弃，停用账户"
-  disable_remote_images_download_reason: "磁盘空间不足，远程图像下载已经被停用。"
+  purge_reason: "自动删除为废弃、停用的账户"
+  disable_remote_images_download_reason: "远程图像下载因为磁盘空间不足已经被停用。"
   anonymous: "匿名"
   remove_posts_deleted_by_author: "被作者删除"
   redirect_warning: "我们无法验证你选择的链接是否已实际发布到论坛。如果您仍想继续，请选择以下链接。"
@@ -267,6 +267,7 @@ zh_CN:
   max_pm_recepients: "抱歉，你至多可以向%{recipients_limit}个收件人发送私信。"
   pm_reached_recipients_limit: "抱歉，私信中的收信人不能超过%{recipients_limit}。"
   removed_direct_reply_full_quotes: "自动删除整个上篇帖子的引用。"
+  secure_upload_not_allowed_in_public_topic: "抱歉，无法在公开的主题中使用以下安全上传：%{upload_filenames}。"
   just_posted_that: "太类似于你最近发表的内容"
   invalid_characters: "包含无效字符"
   is_invalid: "似乎不清楚，这是一个完整的句子？ "
@@ -672,13 +673,23 @@ zh_CN:
       windows: "Microsoft Windows"
       unknown: "未知操作系统"
   change_email:
+    wrong_account_error: "你登录了错误的账户，请注销并重试。"
     confirmed: "你的电子邮箱已被更新。"
     please_continue: "转入到%{site_name}"
     error: "在修改你的电子邮箱地址时出现了错误，可能此邮箱已经在论坛中使用了？"
     error_staged: "在修改你的电子邮箱地址时出现了错误。这个邮箱已经被一个暂存用户占用了。"
     already_done: "抱歉，此激活链接已经失效。可能你已经修改了邮箱？"
+    confirm: "确认"
     authorizing_new:
       title: "确认您的新邮箱"
+      description: "请你确认要将新的电子邮件地址更改为："
+    authorizing_old:
+      title: "修改你的电子邮件地址"
+      description: "请确认你的电子邮件地址更改"
+      old_email: "旧邮件：%{email}"
+      new_email: "新邮件：%{email}"
+      almost_done_title: "确认新的电子邮件地址"
+      almost_done_description: "我们需要发送一封电子邮件到您的新电子邮件地址以确认更改！"
   associated_accounts:
     revoke_failed: "无法使用%{provider_name}撤消你的帐户。"
     connected: "（已连接）"

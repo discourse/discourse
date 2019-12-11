@@ -934,7 +934,7 @@ module Email
       return if message_ids.empty?
 
       host = Email::Sender.host_for(Discourse.base_url)
-      post_id_regexp  = Regexp.new "topic/\\d+/(\\d+)@#{Regexp.escape(host)}"
+      post_id_regexp = Regexp.new "topic/\\d+/(\\d+)@#{Regexp.escape(host)}"
       topic_id_regexp = Regexp.new "topic/(\\d+)@#{Regexp.escape(host)}"
 
       post_ids =  message_ids.map { |message_id| message_id[post_id_regexp, 1] }.compact.map(&:to_i)

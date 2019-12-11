@@ -301,6 +301,41 @@ registerButton("bookmark", attrs => {
   };
 });
 
+registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
+  if (!attrs.canBookmark || !siteSettings.enable_bookmarks_with_reminders) {
+    return;
+  }
+
+  let classNames = ["bookmark", "with-reminder"];
+  let title = "bookmarks.not_bookmarked";
+  let titleOptions = {};
+
+  if (attrs.bookmarkedWithReminder) {
+    classNames.push("bookmarked");
+
+    if (attrs.bookmarkReminderAt) {
+      let reminderAtDate = moment(attrs.bookmarkReminderAt).tz(
+        Discourse.currentUser.timezone
+      );
+      title = "bookmarks.created_with_reminder";
+      titleOptions = {
+        date: reminderAtDate.format(I18n.t("dates.long_with_year"))
+      };
+    } else {
+      title = "bookmarks.created";
+    }
+  }
+
+  return {
+    id: attrs.bookmarkedWithReminder ? "unbookmark" : "bookmark",
+    action: "toggleBookmarkWithReminder",
+    title,
+    titleOptions,
+    className: classNames.join(" "),
+    icon: "book"
+  };
+});
+
 registerButton("admin", attrs => {
   if (!attrs.canManage && !attrs.canWiki) {
     return;
@@ -409,7 +444,10 @@ export default createWidget("post-menu", {
     const hiddenSetting = siteSettings.post_menu_hidden_items || "";
     const hiddenButtons = hiddenSetting
       .split("|")
-      .filter(s => !attrs.bookmarked || s !== "bookmark");
+      .filter(s => !attrs.bookmarked || s !== "bookmark")
+      .filter(
+        s => !attrs.bookmarkedWithReminder || s !== "bookmarkWithReminder"
+      );
 
     if (currentUser && keyValueStore) {
       const likedPostId = keyValueStore.getInt("likedPostId");

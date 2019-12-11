@@ -1300,7 +1300,6 @@ ro:
       hint_for_supported_browsers: "Poți de asemenea să faci drag and drop sau să lipești imagini în editor"
       uploading: "Se încarcă"
       select_file: "Alege fișier"
-      image_link: "Link-ul de la imagine va duce la"
       default_image_alt_text: imagine
     search:
       sort_by: "Sortează după"

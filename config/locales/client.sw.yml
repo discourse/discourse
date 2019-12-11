@@ -1329,7 +1329,6 @@ sw:
       hint_for_supported_browsers: "Unaweza pia kuvuta na kudondosha kwenye kihariri"
       uploading: "Inapakiwa"
       select_file: "Chagua Faili"
-      image_link: "Linki ya picha yako itaonyesha"
       default_image_alt_text: picha
     search:
       sort_by: "Panga kwa"

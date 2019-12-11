@@ -1196,7 +1196,6 @@ lv:
       hint_for_supported_browsers: "Jūs varat arī ievilkt vai ielīmēt redaktorā attēlus"
       uploading: "Augšuplādē"
       select_file: "Izvēlēties failu"
-      image_link: "saite, uz kuru norādīs jūsu attēls"
     search:
       sort_by: "Kārtot pēc"
       relevance: "Nozīmīgums"

@@ -1644,7 +1644,6 @@ fa_IR:
       hint_for_supported_browsers: "شما همچنین میتوانید عکس ها را به داخل ویرایشگر بکشید و رها کنید یا کپی کنید"
       uploading: "در حال بروز‌رسانی "
       select_file: "انتخاب فایل"
-      image_link: "به لینک تصویر خود اشاره کنید"
       default_image_alt_text: تصویر
     search:
       sort_by: "مرتب سازی بر اساس"

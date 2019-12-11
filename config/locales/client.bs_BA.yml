@@ -1676,7 +1676,6 @@ bs_BA:
       hint_for_supported_browsers: "također možete povući i ispustiti ili zalijepiti slike u editor teksta"
       uploading: "Učitavam"
       select_file: "Izaberi fajl"
-      image_link: "link do vaše slike će pokazivati"
       default_image_alt_text: slika
     search:
       sort_by: "Sortiraj po"

@@ -573,6 +573,7 @@ Discourse::Application.routes.draw do
 
   resources :posts do
     put "bookmark"
+    delete "bookmark", to: "posts#destroy_bookmark"
     put "wiki"
     put "post_type"
     put "rebake"
@@ -591,6 +592,8 @@ Discourse::Application.routes.draw do
       put "merge_posts"
     end
   end
+
+  resources :bookmarks, only: %i[create]
 
   resources :notifications, except: :show do
     collection do

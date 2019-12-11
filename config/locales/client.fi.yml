@@ -1633,6 +1633,7 @@ fi:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Uusi ketju</span> {{description}}"
       membership_request_accepted: "Hyväksyttiin ryhmään '{{group_name}}'"
+      membership_request_consolidated: "{{count}} odottavaa jäsenhakemusta ryhmään {{group_name}}"
       group_message_summary:
         one: "{{count}} viesti ryhmän {{group_name}} saapuneissa"
         other: "{{count}} viestiä ryhmän {{group_name}} saapuneissa"
@@ -1668,6 +1669,7 @@ fi:
         topic_reminder: "ketjumuistutus"
         liked_consolidated: "uusia tykkäyksiä"
         post_approved: "viesti hyväksytty"
+        membership_request_consolidated: "uusia jäsenhakemuksia"
     upload_selector:
       title: "Lisää kuva"
       title_with_attachments: "Lisää kuva tai tiedosto"
@@ -1681,7 +1683,6 @@ fi:
       hint_for_supported_browsers: "voit myös raahata tai liittää kuvia editoriin"
       uploading: "Lähettää"
       select_file: "Valitse tiedosto"
-      image_link: "linkki, johon kuvasi osoittaa"
       default_image_alt_text: kuva
     search:
       sort_by: "Järjestä"
@@ -2797,12 +2798,30 @@ fi:
       changed: "muutetut tunnisteet"
       tags: "Tunnisteet"
       choose_for_topic: "ei-pakolliset tunnisteet"
+      info: "Tietoa"
+      default_info: "Tätä tunnistetta ei ole rajattu millekään alueelle eikä sillä ole synonyymejä."
+      synonyms: "Synonyymit"
+      synonyms_description: "Kun näitä tunnisteita käytetään, ne korvataan pääsynonyymillä <b>%{base_tag_name}</b>."
+      tag_groups_info:
+        one: 'Tunniste kuuluu ryhmään "{{tag_groups}}".'
+        other: "Tunniste kuuluu näihin ryhmiin: {{tag_groups}}"
+      category_restrictions:
+        one: "Sitä voi käyttää vain tällä alueella:"
+        other: "Sitä voi käyttää vain näillä alueilla:"
+      edit_synonyms: "Hallinnoi synonyymejä"
+      add_synonyms_label: "Lisää synonyymejä:"
       add_synonyms: "Lisää"
+      add_synonyms_failed: "Näitä tunnisteita ei voitu lisätä synonyymeiksi: <b>%{tag_names}</b>. Varmistu, ettei niillä itsellään ole synonyymejä ja ettei ne ole synonyymejä muulle tunnisteelle."
+      remove_synonym: "Poista synonyymi"
+      delete_synonym_confirm: 'Haluatko varmasti poistaa synonyymin "%{tag_name}"?'
       delete_tag: "Poista tunniste"
       delete_confirm:
         one: "Haluatko varmasti poistaa tunnisteen, mikä poistaa sen myös yhdeltä ketjulta, jolla tunniste on?"
         other: "Haluatko varmasti poistaa tunnisteen, mikä poistaa sen myös {{count}} ketjulta, joilla tunniste on?"
       delete_confirm_no_topics: "Haluatko varmasti poistaa tunnisteen?"
+      delete_confirm_synonyms:
+        one: "Sen synonyymi poistetaan myös."
+        other: "Sen {{count}} muuta synonyymiä poistetaan myös."
       rename_tag: "Uudelleennimeä tunniste"
       rename_instructions: "Valitse uusi nimi tälle tunnisteelle:"
       sort_by: "Järjestä:"
@@ -3321,6 +3340,7 @@ fi:
           color_scheme_select: "Valitse teemalle värit"
           custom_sections: "Mukautetut osiot:"
           theme_components: "Teeman komponentit"
+          add_all_themes: "Lisää kaikki teemat"
           convert: "Muunna"
           convert_component_alert: "Oletko varma että haluat muuttaa tämän komponentin teemaksi? Se ei sen jälkeen enää ole teemojen %{relatives} komponentti."
           convert_component_tooltip: "Muunna komponentti teemaksi"
@@ -3353,6 +3373,9 @@ fi:
           edit_css_html: "Muokkaa CSS/HTML"
           edit_css_html_help: "Et ole muokannut CSS:ää tai HTML:ää"
           delete_upload_confirm: "Poista ladattu tiedosto? (Teeman CSS voi lakata toimimasta!)"
+          component_on_themes: "Sisällytä komponentti näihin teemoihin"
+          included_components: "Sisältää komponentit"
+          add_all: "Lisää kaikki"
           import_web_tip: "Tietovarasto, jossa teema on"
           import_web_advanced: "Lisäasetukset..."
           import_file_tip: ".tar.gz, .zip, tai .dcstyle.json tiedosto, jossa teema on"

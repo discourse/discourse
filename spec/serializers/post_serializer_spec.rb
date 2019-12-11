@@ -109,12 +109,6 @@ describe PostSerializer do
     let(:user) { Fabricate.build(:user, id: 101) }
     let(:raw)  { "Raw contents of the post." }
 
-    def serialized_post_for_user(u)
-      s = PostSerializer.new(post, scope: Guardian.new(u), root: false)
-      s.add_raw = true
-      s.as_json
-    end
-
     context "a public post" do
       let(:post) { Fabricate.build(:post, raw: raw, user: user) }
 
@@ -231,4 +225,68 @@ describe PostSerializer do
     end
   end
 
+  context "post with bookmarks" do
+    let(:current_user) { Fabricate(:user) }
+    let(:serialized) do
+      s = serialized_post(current_user)
+      s.post_actions = PostAction.counts_for([post], current_user)[post.id]
+      s.topic_view = TopicView.new(post.topic, current_user)
+      s
+    end
+
+    context "when a user post action for the bookmark exists" do
+      before do
+        PostActionCreator.create(current_user, post, :bookmark)
+      end
+
+      it "returns true" do
+        expect(serialized.as_json[:bookmarked]).to eq(true)
+      end
+    end
+
+    context "when a user post action for the bookmark does not exist" do
+      it "does not return the bookmarked attribute" do
+        expect(serialized.as_json.key?(:bookmarked)).to eq(false)
+      end
+    end
+
+    context "when a Bookmark record exists for the user on the post" do
+      let!(:bookmark) { Fabricate(:bookmark_next_business_day_reminder, user: current_user, post: post) }
+
+      context "when the site setting for bookmarks with reminders is enabled" do
+        before do
+          SiteSetting.enable_bookmarks_with_reminders = true
+        end
+
+        it "returns true" do
+          expect(serialized.as_json[:bookmarked_with_reminder]).to eq(true)
+        end
+
+        it "returns the reminder_at for the bookmark" do
+          expect(serialized.as_json[:bookmark_reminder_at]).to eq(bookmark.reminder_at.iso8601)
+        end
+      end
+
+      context "when the site setting for bookmarks with reminders is disabled" do
+        it "does not return the bookmarked attribute" do
+          expect(serialized.as_json.key?(:bookmarked_with_reminder)).to eq(false)
+        end
+
+        it "does not return the bookmark_reminder_at attribute" do
+          expect(serialized.as_json.key?(:bookmark_reminder_at)).to eq(false)
+        end
+      end
+    end
+  end
+
+  def serialized_post(u)
+    s = PostSerializer.new(post, scope: Guardian.new(u), root: false)
+    s.add_raw = true
+    s
+  end
+
+  def serialized_post_for_user(u)
+    s = serialized_post(u)
+    s.as_json
+  end
 end

@@ -1327,7 +1327,6 @@ vi:
       hint_for_supported_browsers: "bạn có thể kéo và thả ảnh vào trình soan thảo này"
       uploading: "Đang tải lên"
       select_file: "Chọn Tài liệu"
-      image_link: "liên kết hình ảnh của bạn sẽ trỏ đến"
       default_image_alt_text: hình ảnh
     search:
       sort_by: "Sắp xếp theo"

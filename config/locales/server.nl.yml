@@ -1406,6 +1406,7 @@ nl:
     content_security_policy_collect_reports: "Rapportverzameling voor CSP-schendingen inschakelen via /csp_reports"
     content_security_policy_script_src: "Aanvullende scriptbronnen op de whitelist. De huidige host en CDN zijn standaard inbegrepen. Zie <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy</a>."
     invalidate_inactive_admin_email_after_days: "Beheerdersaccounts die de website dit aantal dagen niet hebben bezocht, dienen hun e-mailadres voor het aanmelden opnieuw te valideren. Stel dit in op 0 om uit te schakelen."
+    allow_embedding_site_in_an_iframe: "Inbedding van de website in iframes inschakelen."
     top_menu: "Bepalen welke items in het hoofdnavigatiemenu verschijnen, en in welke volgorde. Voorbeeld: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Bepalen welke items in het berichtmenu verschijnen, en in welke volgorde. Voorbeeld: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "De menu-items die standaard in het berichtmenu moeten worden verborgen, totdat er op een uitvouw-ellipsis wordt geklikt."
@@ -1754,6 +1755,7 @@ nl:
     anonymous_posting_min_trust_level: "Het minimale vertrouwensniveau dat nodig is om anonieme berichtplaatsing in te schakelen"
     anonymous_account_duration_minutes: "Om anonimiteit te beschermen, elke N minuten voor iedere gebruiker een nieuwe anonieme account aanmaken. Voorbeeld: als dit is ingesteld op 600, wordt een nieuwe anonieme account aangemaakt als er 600 minuten zijn verstreken na het laatste bericht EN de gebruiker naar anon overschakelt."
     hide_user_profiles_from_public: "Gebruikerskaarten, gebruikersprofielen en gebruikerslijst voor anonieme gebruikers uitschakelen."
+    allow_featured_topic_on_user_profiles: "Gebruikers mogen een koppeling naar een topic aanbevelen op hun gebruikerskaart en profiel."
     show_inactive_accounts: "Aangemelde gebruikers mogen profielen van inactieve accounts doorbladeren."
     hide_suspension_reasons: "Schorsingsredenen niet openbaar weergeven op gebruikersprofielen."
     log_personal_messages_views: "PM-weergaven door Admin voor andere gebruikers/groepen in logboek opslaan."
@@ -1773,6 +1775,8 @@ nl:
     permalink_normalizations: "De volgende reguliere expressie toepassen voordat permalinks worden verwerkt. Voorbeeld: /(topic.*)\\?.*/\\1 verwijdert querystrings uit topicroutes. Notatie is regex+strings, gebruik \\1 etc. voor deeluitdrukkingen."
     global_notice: "Een algemene niet te verbergen DRINGEND, NOODGEVAL-bannermelding voor alle gebruikers weergeven. Laat leeg om deze te verbergen (HTML toegestaan)."
     disable_system_edit_notifications: "Schakelt bewerkingsmeldingen van de systeemgebruiker uit als 'download_remote_images_to_local' actief is."
+    notification_consolidation_threshold: "Aantal ontvangen meldingen van likes of lidmaatschapsaanvragen voordat de meldingen in een enkele worden samengevoegd. Stel dit in op 0 om uit te schakelen."
+    likes_notification_consolidation_window_mins: "Tijdsduur in minuten waarin like-meldingen in een enkele melding worden samengevoegd zodra de drempel is bereikt. De drempel kan worden geconfigureerd via `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Topics automatisch losmaken wanneer de gebruiker de onderkant bereikt."
     read_time_word_count: "Aantal woorden per minuut voor het berekenen van geschatte leestijd."
     topic_page_title_includes_category: "Topicpagina <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titeltag</a> bevat de categorienaam."
@@ -2558,6 +2562,11 @@ nl:
     initial_topic_title: Performancerapportages van de website
   tags:
     title: "Tags"
+    forbidden:
+      synonym: 'Synoniemen zijn niet toegestaan. Gebruik in plaats hiervan ''%{tag_name}''.'
+      has_synonyms: '''%{tag_name}'' kan niet worden gebruikt, omdat deze geen synoniemen heeft.'
+    invalid_target_tag: "kan geen synoniem van een synoniem zijn"
+    synonyms_exist: "is niet toegestaan terwijl er synoniemen bestaan"
   finish_installation:
     congratulations: "Gefeliciteerd, u hebt Discourse geïnstalleerd!"
     register:

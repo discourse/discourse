@@ -492,7 +492,7 @@ class SessionController < ApplicationController
     end
 
     if ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
-      return admin_not_allowed_from_ip_address(user)
+      admin_not_allowed_from_ip_address(user)
     end
   end
 

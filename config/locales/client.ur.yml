@@ -1653,7 +1653,6 @@ ur:
       hint_for_supported_browsers: "آپ تصاویر کو ایڈیٹر میں ڈرَیگ & ڈراپ یا پَیسٹ بھی کر سکتے ہیں"
       uploading: "اَپ لوڈ کیا جا رہا ہے"
       select_file: "فائل منتخب کریں"
-      image_link: "لنک جس سے آپ کی تصویر منسلک ہو گی"
       default_image_alt_text: تصویر
     search:
       sort_by: "ترتیب بہ"
