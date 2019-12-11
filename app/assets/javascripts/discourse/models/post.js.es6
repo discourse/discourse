@@ -16,6 +16,7 @@ import Composer from "discourse/models/composer";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import showModal from "discourse/lib/show-modal";
 
 const Post = RestModel.extend({
   // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
@@ -336,6 +337,32 @@ const Post = RestModel.extend({
       });
   },
 
+  toggleBookmarkWithReminder() {
+    this.toggleProperty("bookmarkedWithReminder");
+    if (this.bookmarkedWithReminder) {
+      let controller = showModal("bookmark", {
+        model: {
+          postId: this.id
+        },
+        title: "post.bookmarks.create",
+        modalClass: "bookmark-with-reminder"
+      });
+      controller.setProperties({
+        onCloseWithoutSaving: () => {
+          this.toggleProperty("bookmarkedWithReminder");
+          this.appEvents.trigger("post-stream:refresh", { id: this.id });
+        }
+      });
+    } else {
+      return Post.destroyBookmark(this.id)
+        .then(() => this.appEvents.trigger("page:bookmark-post-toggled", this))
+        .catch(error => {
+          this.toggleProperty("bookmarkedWithReminder");
+          throw new Error(error);
+        });
+    }
+  },
+
   updateActionsSummary(json) {
     if (json && json.id === this.id) {
       json = Post.munge(json);
@@ -382,6 +409,12 @@ Post.reopenClass({
     return ajax(`/posts/${postId}/bookmark`, {
       type: "PUT",
       data: { bookmarked }
+    });
+  },
+
+  destroyBookmark(postId) {
+    return ajax(`/posts/${postId}/bookmark`, {
+      type: "DELETE"
     });
   },
 

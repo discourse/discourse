@@ -679,6 +679,16 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
+    toggleBookmarkWithReminder(post) {
+      if (!this.currentUser) {
+        return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
+      } else if (post) {
+        return post.toggleBookmarkWithReminder();
+      } else {
+        return this.model.toggleBookmarkWithReminder();
+      }
+    },
+
     toggleFeaturedOnProfile() {
       if (!this.currentUser) return;
 
