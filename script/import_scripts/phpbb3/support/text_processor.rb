@@ -58,20 +58,18 @@ module ImportScripts::PhpBB3
         process_lists(text)
         process_code(text)
         fix_markdown(text)
+        process_attachments(text, attachments) if attachments.present?
+
         text
       end
     end
 
     def process_post(raw, attachments)
-      text = process_raw_text(raw, attachments)
-      text = process_attachments(text, attachments) if attachments.present?
-      text
+      process_raw_text(raw, attachments)
     end
 
     def process_private_msg(raw, attachments)
-      text = process_raw_text(raw, attachments)
-      text = process_attachments(text, attachments) if attachments.present?
-      text
+      process_raw_text(raw, attachments)
     end
 
     protected
