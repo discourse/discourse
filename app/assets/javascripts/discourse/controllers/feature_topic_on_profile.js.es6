@@ -6,7 +6,7 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 export default Controller.extend(ModalFunctionality, {
   existingFeaturedTopic: null,
-  newFeaturedTopic: null,
+  newFeaturedTopicId: null,
   saving: false,
 
   init() {

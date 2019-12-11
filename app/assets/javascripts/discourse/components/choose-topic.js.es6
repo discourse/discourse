@@ -12,6 +12,7 @@ export default Component.extend({
   selectedTopicId: null,
   currentTopicId: null,
   topicTitle: null,
+  restrictToUser: null,
 
   @observes("topicTitle")
   topicTitleChanged() {
@@ -44,12 +45,26 @@ export default Component.extend({
       this.setProperties({ topics: null, loading: false });
       return;
     }
+    searchContext: {
+    }
 
-    searchForTerm(title, {
+    let searchParams = {
       typeFilter: "topic",
-      searchForId: true,
       restrictToArchetype: "regular"
-    }).then(results => {
+    };
+
+    if (this.restrictToUser) {
+      searchParams.searchContext = {
+        type: "user",
+        id: this.currentUser.username,
+        user: this.currentUser
+      };
+    } else {
+      searchParams.typeFilter = "topic";
+      searchParams.restrictToArchetype = "regular";
+    }
+
+    searchForTerm(title, searchParams).then(results => {
       if (results && results.posts && results.posts.length > 0) {
         this.set(
           "topics",
