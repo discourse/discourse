@@ -56,7 +56,7 @@ export default Component.extend({
     const chartData = makeArray(model.get("chartData") || model.get("data"));
 
     const data = {
-      labels: chartData[0].data.map(cd => cd.x),
+      labels: chartData[0].data.mapBy("x"),
       datasets: chartData.map(cd => {
         return {
           label: cd.label,
@@ -69,6 +69,7 @@ export default Component.extend({
 
     loadScript("/javascripts/Chart.min.js").then(() => {
       this._resetChart();
+
       this._chart = new window.Chart(context, this._buildChartConfig(data));
     });
   },
@@ -80,7 +81,11 @@ export default Component.extend({
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        responsiveAnimationDuration: 0,
         hover: { mode: "index" },
+        animation: {
+          duration: 0
+        },
         tooltips: {
           mode: "index",
           intersect: false,
@@ -114,7 +119,10 @@ export default Component.extend({
                 userCallback: label => {
                   if (Math.floor(label) === label) return label;
                 },
-                callback: label => number(label)
+                callback: label => number(label),
+                sampleSize: 5,
+                maxRotation: 25,
+                minRotation: 25
               }
             }
           ],
@@ -127,6 +135,11 @@ export default Component.extend({
               time: {
                 parser: "YYYY-MM-DD",
                 minUnit: "day"
+              },
+              ticks: {
+                sampleSize: 5,
+                maxRotation: 50,
+                minRotation: 50
               }
             }
           ]
