@@ -1,12 +1,8 @@
 name: CI
    
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches-ignore:
-      - 'tests-passed'
+  check_suite:
+    types: [requested, rerequested]
     
 jobs:
   build:
