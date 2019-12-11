@@ -72,7 +72,8 @@ class Plugin::Metadata
     "discourse-rss-polling",
     "docker_manager",
     "lazy-yt",
-    "poll"
+    "poll",
+    "discourse-internet-explorer"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]
