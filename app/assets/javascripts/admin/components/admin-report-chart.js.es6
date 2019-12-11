@@ -87,6 +87,11 @@ export default Component.extend({
 
     loadScript("/javascripts/Chart.min.js").then(() => {
       this._resetChart();
+
+      if (!this.element) {
+        return;
+      }
+
       this._chart = new window.Chart(context, this._buildChartConfig(data));
     });
   },
@@ -107,6 +112,10 @@ export default Component.extend({
         },
         responsive: true,
         maintainAspectRatio: false,
+        responsiveAnimationDuration: 0,
+        animation: {
+          duration: 0
+        },
         layout: {
           padding: {
             left: 0,
@@ -123,7 +132,10 @@ export default Component.extend({
                 userCallback: label => {
                   if (Math.floor(label) === label) return label;
                 },
-                callback: label => number(label)
+                callback: label => number(label),
+                sampleSize: 5,
+                maxRotation: 25,
+                minRotation: 25
               }
             }
           ],
@@ -134,6 +146,11 @@ export default Component.extend({
               type: "time",
               time: {
                 parser: "YYYY-MM-DD"
+              },
+              ticks: {
+                sampleSize: 5,
+                maxRotation: 50,
+                minRotation: 50
               }
             }
           ]
