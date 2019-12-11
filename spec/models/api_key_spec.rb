@@ -10,25 +10,25 @@ describe ApiKey do
   it { is_expected.to belong_to :created_by }
 
   it 'generates a key when saving' do
-    key = ApiKey.new
-    key.save!
-    initial_key = key.key
+    api_key = ApiKey.new
+    api_key.save!
+    initial_key = api_key.key
     expect(initial_key.length).to eq(64)
 
     # Does not overwrite key when saving again
-    key.description = "My description here"
-    key.save!
-    expect(key.reload.key).to eq(initial_key)
+    api_key.description = "My description here"
+    api_key.save!
+    expect(api_key.reload.key).to eq(initial_key)
   end
 
   it 'does not have the key when loading later from the database' do
-    key = ApiKey.create!
-    expect(key.key_available?).to eq(true)
-    expect(key.key.length).to eq(64)
+    api_key = ApiKey.create!
+    expect(api_key.key_available?).to eq(true)
+    expect(api_key.key.length).to eq(64)
 
-    key = ApiKey.find(key.id)
-    expect(key.key_available?).to eq(false)
-    expect { key.key }.to raise_error(ApiKey::KeyAccessError)
+    api_key = ApiKey.find(api_key.id)
+    expect(api_key.key_available?).to eq(false)
+    expect { api_key.key }.to raise_error(ApiKey::KeyAccessError)
   end
 
   it "can lookup keys based on their hash" do
