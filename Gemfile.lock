@@ -534,7 +534,7 @@ DEPENDENCIES
   ruby-readability
   rubyzip
   sanitize
-  sassc
+  sassc (= 2.0.1)
   sassc-rails
   seed-fu
   shoulda-matchers
