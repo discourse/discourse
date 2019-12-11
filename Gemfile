@@ -148,9 +148,12 @@ group :test, :development do
   gem 'mock_redis'
   gem 'listen', require: false
   gem 'certified', require: false
-  # later appears to break Fabricate(:topic, category: category)
   gem 'fabrication', require: false
-  gem 'mocha', require: false
+
+  # TODO: upgrading to 1.10.1 cause it breaks our test suite.
+  # We want our test suite fixed though to support this upgrade.
+  gem 'mocha', '1.8.0', require: false
+
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
 
   # TODO determine if we can update this to 0.10, API changes happened
