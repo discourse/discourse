@@ -277,6 +277,7 @@ class UploadCreator
   def whitelist_svg!
     doc = Nokogiri::XML(@file)
     doc.xpath(svg_whitelist_xpath).remove
+    doc.xpath("//@*[starts-with(name(), 'on')]").remove
     File.write(@file.path, doc.to_s)
     @file.rewind
   end
