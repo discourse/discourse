@@ -39,6 +39,11 @@ module ImportScripts::PhpBB3
         )
 
         text = converter.convert
+
+        text.gsub!(@short_internal_link_regexp) do |link|
+          replace_internal_link(link, $1, $2)
+        end
+
         add_unreferenced_attachments(text, unreferenced_attachments)
       else
         text = raw.dup
