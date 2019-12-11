@@ -122,10 +122,7 @@ jobs:
 
       - name: Rubocop
         if: env.BUILD_TYPE == 'LINT'
-        run: ruby script/rubocop_github_action.rb
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          JOB_NAME: ${{ matrix.target }}-${{ matrix.build_types }} / Rubocop
+        run: bundle exec rubocop .
       
       - name: ESLint
         if: env.BUILD_TYPE == 'LINT'
