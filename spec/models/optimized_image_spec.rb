@@ -299,6 +299,7 @@ describe OptimizedImage do
         SiteSetting.s3_upload_bucket = "s3-upload-bucket"
         SiteSetting.s3_access_key_id = "some key"
         SiteSetting.s3_secret_access_key = "some secret key"
+        SiteSetting.s3_region = "us-east-1"
 
         tempfile = Tempfile.new(["discourse-external", ".png"])
 
@@ -328,12 +329,12 @@ describe OptimizedImage do
 
           stub_request(
             :head,
-            "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/"
+            "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/"
           )
 
           stub_request(
             :put,
-            "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{optimized_path}"
+            "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com#{optimized_path}"
           ).to_return(
             status: 200,
             headers: { "ETag" => "someetag" }
