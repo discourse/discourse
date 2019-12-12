@@ -11,13 +11,14 @@ class UsersController < ApplicationController
     :enable_second_factor_totp, :disable_second_factor, :list_second_factors,
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
-    :create_second_factor_security_key
+    :create_second_factor_security_key, :feature_topic, :clear_featured_topic
   ]
 
   skip_before_action :check_xhr, only: [
     :show, :badges, :password_reset, :update, :account_created,
     :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar,
-    :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary
+    :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary,
+    :feature_topic, :clear_featured_topic
   ]
 
   before_action :second_factor_check_confirmed_password, only: [
@@ -59,8 +60,6 @@ class UsersController < ApplicationController
     user_serializer = nil
     if guardian.can_see_profile?(@user)
       user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
-      # TODO remove this options from serializer
-      user_serializer.omit_stats = true
 
       topic_id = params[:include_post_count_for].to_i
       if topic_id != 0
@@ -238,8 +237,8 @@ class UsersController < ApplicationController
     raise Discourse::NotFound if params[:path] !~ /^[a-z_\-\/]+$/
 
     if current_user.blank?
-      cookies[:destination_url] = "/my/#{params[:path]}"
-      redirect_to "/login-preferences"
+      cookies[:destination_url] = path("/my/#{params[:path]}")
+      redirect_to path("/login-preferences")
     else
       redirect_to(path("/u/#{current_user.username}/#{params[:path]}"))
     end
@@ -1219,7 +1218,7 @@ class UsersController < ApplicationController
   end
 
   def create_second_factor_totp
-    totp_data = ROTP::Base32.random_base32
+    totp_data = ROTP::Base32.random
     secure_session["staged-totp-#{current_user.id}"] = totp_data
     qrcode_svg = RQRCode::QRCode.new(current_user.totp_provisioning_uri(totp_data)).as_svg(
       offset: 0,
@@ -1295,7 +1294,11 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "second-factor-min-#{key}", 3, 1.minute).performed!
     end
 
-    authenticated = !auth_token.blank? && totp_object.verify_with_drift(auth_token, 30)
+    authenticated = !auth_token.blank? && totp_object.verify(
+      auth_token,
+      drift_ahead: SecondFactorManager::TOTP_ALLOWED_DRIFT_SECONDS,
+      drift_behind: SecondFactorManager::TOTP_ALLOWED_DRIFT_SECONDS
+    )
     unless authenticated
       return render json: failed_json.merge(
                       error: I18n.t("login.invalid_second_factor_code")
@@ -1399,6 +1402,22 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
+  def feature_topic
+    user = fetch_user_from_params
+    topic = Topic.find(params[:topic_id].to_i)
+
+    raise Discourse::InvalidAccess.new unless topic && guardian.can_feature_topic?(user, topic)
+    user.user_profile.update(featured_topic_id: topic.id)
+    render json: success_json
+  end
+
+  def clear_featured_topic
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+    user.user_profile.update(featured_topic_id: nil)
+    render json: success_json
+  end
+
   HONEYPOT_KEY ||= 'HONEYPOT_KEY'
   CHALLENGE_KEY ||= 'CHALLENGE_KEY'
 
@@ -1453,7 +1472,8 @@ class UsersController < ApplicationController
       :dismissed_banner_key,
       :profile_background_upload_url,
       :card_background_upload_url,
-      :primary_group_id
+      :primary_group_id,
+      :featured_topic_id
     ]
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
@@ -1528,4 +1548,5 @@ class UsersController < ApplicationController
       challenge: secure_session["staged-webauthn-challenge-#{user.id}"]
     }
   end
+
 end

@@ -115,6 +115,13 @@
     &.tag-drop,
     &.group-dropdown {
       min-width: auto;
+    }
+
+    &.tag-drop {
+      color: $primary-high;
+    }
+
+    &.group-dropdown {
       .select-kit-row {
         font-weight: bold;
       }

@@ -33,7 +33,9 @@ import {
   tinyAvatar,
   formatUsername,
   clipboardData,
-  safariHacksDisabled
+  safariHacksDisabled,
+  caretPosition,
+  inCodeBlock
 } from "discourse/lib/utilities";
 import {
   validateUploadedFiles,
@@ -60,6 +62,11 @@ export function addComposerUploadHandler(extensions, method) {
     extensions,
     method
   });
+}
+
+const uploadMarkdownResolvers = [];
+export function addComposerUploadMarkdownResolver(resolver) {
+  uploadMarkdownResolvers.push(resolver);
 }
 
 export default Component.extend({
@@ -192,7 +199,9 @@ export default Component.extend({
         afterComplete() {
           // ensures textarea scroll position is correct
           scheduleOnce("afterRender", () => $input.blur().focus());
-        }
+        },
+        triggerRule: textarea =>
+          !inCodeBlock(textarea.value, caretPosition(textarea))
       });
     }
 
@@ -741,7 +750,11 @@ export default Component.extend({
       let upload = data.result;
       this._setUploadPlaceholderDone(data);
       if (!this._xhr || !this._xhr._userCancelled) {
-        const markdown = getUploadMarkdown(upload);
+        const markdown = uploadMarkdownResolvers.reduce(
+          (md, resolver) => resolver(upload) || md,
+          getUploadMarkdown(upload)
+        );
+
         cacheShortUploadUrl(upload.short_url, upload.url);
         this.appEvents.trigger(
           "composer:replace-text",

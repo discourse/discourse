@@ -144,7 +144,7 @@ export default ComboBoxComponent.extend({
       } else {
         const category = Category.findById(parseInt(categoryId, 10));
         const slug = Category.slugFor(category);
-        categoryURL = Discourse.getURL("/c/") + slug;
+        categoryURL = Discourse.getURL(`/c/${slug}/${categoryId}`);
       }
 
       DiscourseURL.routeTo(categoryURL);

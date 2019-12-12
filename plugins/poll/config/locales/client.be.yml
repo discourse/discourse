@@ -31,6 +31,8 @@ be:
             few: "Абярыце ня больш за <strong>%{count}</strong> варыянтаў адказаў"
             many: "Абярыце ня больш за <strong>%{count}</strong> варыянтаў адказаў"
             other: "Абярыце ня больш за <strong>%{count}</strong> варыянтаў адказаў"
+      export-results:
+        label: "экспарт"
       close:
         label: "зачыніць"
       ui_builder:

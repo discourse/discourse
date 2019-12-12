@@ -4,6 +4,8 @@ class Notification < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
 
+  MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS = 24
+
   validates_presence_of :data
   validates_presence_of :notification_type
 
@@ -12,19 +14,34 @@ class Notification < ActiveRecord::Base
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
     .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
-  scope :filter_by_display_username_and_type, ->(username, notification_type) {
-    where("data::json ->> 'display_username' = ?", username)
-      .where(notification_type: notification_type)
-      .order(created_at: :desc)
+  scope :filter_by_consolidation_data, ->(notification_type, data) {
+    notifications = where(notification_type: notification_type)
+
+    case notification_type
+    when types[:liked], types[:liked_consolidated]
+      key = "display_username"
+      consolidation_window = SiteSetting.likes_notification_consolidation_window_mins.minutes.ago
+    when types[:private_message]
+      key = "topic_title"
+      consolidation_window = MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS.hours.ago
+    when types[:membership_request_consolidated]
+      key = "group_name"
+      consolidation_window = MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS.hours.ago
+    end
+
+    notifications = notifications.where("created_at > ? AND data::json ->> '#{key}' = ?", consolidation_window, data[key.to_sym]) if data[key&.to_sym].present?
+    notifications = notifications.where("data::json ->> 'username2' IS NULL") if notification_type == types[:liked]
+
+    notifications
   }
 
   attr_accessor :skip_send_email
 
-  after_commit :send_email, on: :create
   after_commit :refresh_notification_count, on: [:create, :update, :destroy]
 
   after_commit(on: :create) do
     DiscourseEvent.trigger(:notification_created, self)
+    send_email unless NotificationConsolidator.new(self).consolidate!
   end
 
   def self.ensure_consistency!
@@ -66,7 +83,8 @@ class Notification < ActiveRecord::Base
                         liked_consolidated: 19,
                         post_approved: 20,
                         code_review_commit_approved: 21,
-                        membership_request_accepted: 22
+                        membership_request_accepted: 22,
+                        membership_request_consolidated: 23
                        )
   end
 

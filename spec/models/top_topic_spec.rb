@@ -91,8 +91,8 @@ describe TopTopic do
       top_topics = TopTopic.all
 
       expect(top_topics.where(topic_id: topic_1.id).pluck_first(:yearly_score)).to eq(27)
-      expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to eq(18.301029995664)
-      expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to eq(11.2041199826559)
+      expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to be_within(0.0000000001).of(18.301029995664)
+      expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to be_within(0.0000000001).of(11.2041199826559)
 
       # when 'top_topics_formula_first_post_likes_multiplier' setting is changed
       SiteSetting.top_topics_formula_log_views_multiplier = 2 # unchanged
@@ -109,8 +109,8 @@ describe TopTopic do
       top_topics = TopTopic.all
 
       expect(top_topics.where(topic_id: topic_1.id).pluck_first(:yearly_score)).to eq(69)
-      expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to eq(33.301029995664)
-      expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to eq(10.602059991328)
+      expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to be_within(0.0000000001).of(33.301029995664)
+      expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to be_within(0.0000000001).of(10.602059991328)
 
       # when 'top_topics_formula_least_likes_per_post_multiplier' setting is changed
       SiteSetting.top_topics_formula_log_views_multiplier = 2 # unchanged
@@ -127,8 +127,8 @@ describe TopTopic do
       top_topics = TopTopic.all
 
       expect(top_topics.where(topic_id: topic_1.id).pluck_first(:yearly_score)).to eq(30)
-      expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to eq(21.301029995664)
-      expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to eq(10.602059991328)
+      expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to be_within(0.0000000001).of(21.301029995664)
+      expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to be_within(0.0000000001).of(10.602059991328)
 
       # handles invalid string value
       SiteSetting.top_topics_formula_log_views_multiplier = "not good"
@@ -139,8 +139,8 @@ describe TopTopic do
       top_topics = TopTopic.all
 
       expect(top_topics.where(topic_id: topic_1.id).pluck_first(:yearly_score)).to eq(27)
-      expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to eq(18.301029995664)
-      expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to eq(10.602059991328)
+      expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to be_within(0.0000000001).of(18.301029995664)
+      expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to be_within(0.0000000001).of(10.602059991328)
 
     end
   end

@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-tr_TR: {}
+tr_TR:
+  site_settings:
+    discourse_local_dates_enabled: "Forum-yerel tarihler özelliğini etkinleştirin. Bu, [date] öğesini kullanan yayınlardaki yerel saat dilimine uygun tarihlere destek ekler."
+    discourse_local_dates_default_formats: "Sık kullanılan tarih saat formatları, bakınız: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string formatı</a>"
+    discourse_local_dates_default_timezones: "Varsayılan saat dilimleri listesi, geçerli bir <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> olmalıdır"
+    discourse_local_dates_email_format: "E-postalarda bir tarih görüntülemek için kullanılan biçim."

@@ -476,6 +476,8 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/deleted-posts" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/topic-tracking-state" => "users#topic_tracking_state", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/profile-hidden" => "users#profile_hidden"
+    put "#{root_path}/:username/feature-topic" => "users#feature_topic", constraints: { username: RouteFormat.username }
+    put "#{root_path}/:username/clear-featured-topic" => "users#clear_featured_topic", constraints: { username: RouteFormat.username }
   end
 
   get "user-badges/:username.json" => "user_badges#username", constraints: { username: RouteFormat.username }, defaults: { format: :json }
@@ -571,6 +573,7 @@ Discourse::Application.routes.draw do
 
   resources :posts do
     put "bookmark"
+    delete "bookmark", to: "posts#destroy_bookmark"
     put "wiki"
     put "post_type"
     put "rebake"
@@ -589,6 +592,8 @@ Discourse::Application.routes.draw do
       put "merge_posts"
     end
   end
+
+  resources :bookmarks, only: %i[create]
 
   resources :notifications, except: :show do
     collection do
@@ -862,10 +867,13 @@ Discourse::Application.routes.draw do
       get '/:tag_id.rss' => 'tags#tag_feed'
       get '/:tag_id' => 'tags#show', as: 'tag_show'
       get '/intersection/:tag_id/*additional_tag_ids' => 'tags#show', as: 'tag_intersection'
+      get '/:tag_id/info' => 'tags#info'
       get '/:tag_id/notifications' => 'tags#notifications'
       put '/:tag_id/notifications' => 'tags#update_notifications'
       put '/:tag_id' => 'tags#update'
       delete '/:tag_id' => 'tags#destroy'
+      post '/:tag_id/synonyms' => 'tags#create_synonyms'
+      delete '/:tag_id/synonyms/:synonym_id' => 'tags#destroy_synonym'
 
       Discourse.filters.each do |filter|
         get "/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_show_#{filter}"

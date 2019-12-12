@@ -23,10 +23,22 @@ class Admin::ThemesController < Admin::AdminController
         if upload.errors.count > 0
           render_json_error upload
         else
+          # we assume a user intends to make some media public
+          # if they are uploading it to a theme component
+          mark_upload_insecure(upload) if upload.secure?
           render json: { upload_id: upload.id }, status: :created
         end
       end
     end
+  end
+
+  def mark_upload_insecure(upload)
+    upload.update_secure_status(secure_override_value: false)
+    StaffActionLogger.new(current_user).log_change_upload_secure_status(
+      upload_id: upload.id,
+      new_value: false
+    )
+    Jobs.enqueue(:rebake_posts_for_upload, id: upload.id)
   end
 
   def generate_key_pair
@@ -38,6 +50,13 @@ class Admin::ThemesController < Admin::AdminController
       public_key: k.ssh_public_key
     }
   end
+
+  THEME_CONTENT_TYPES ||= %w{
+    application/gzip
+    application/x-gzip
+    application/x-zip-compressed
+    application/zip
+  }
 
   def import
     @theme = nil
@@ -86,7 +105,7 @@ class Admin::ThemesController < Admin::AdminController
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end
-    elsif params[:bundle] || (params[:theme] && ["application/x-gzip", "application/gzip", "application/zip"].include?(params[:theme].content_type))
+    elsif params[:bundle] || (params[:theme] && THEME_CONTENT_TYPES.include?(params[:theme].content_type))
       # params[:bundle] used by theme CLI. params[:theme] used by admin UI
       bundle = params[:bundle] || params[:theme]
       theme_id = params[:theme_id]
@@ -164,19 +183,11 @@ class Admin::ThemesController < Admin::AdminController
     end
 
     if theme_params.key?(:child_theme_ids)
-      expected = theme_params[:child_theme_ids].map(&:to_i)
+      add_relative_themes!(:child, theme_params[:child_theme_ids])
+    end
 
-      @theme.child_theme_relation.to_a.each do |child|
-        if expected.include?(child.child_theme_id)
-          expected.reject! { |id| id == child.child_theme_id }
-        else
-          child.destroy
-        end
-      end
-
-      Theme.where(id: expected).each do |theme|
-        @theme.add_child_theme!(theme)
-      end
+    if theme_params.key?(:parent_theme_ids)
+      add_relative_themes!(:parent, theme_params[:parent_theme_ids])
     end
 
     set_fields
@@ -282,6 +293,26 @@ class Admin::ThemesController < Admin::AdminController
 
   private
 
+  def add_relative_themes!(kind, ids)
+    expected = ids.map(&:to_i)
+
+    relation = kind == :child ? @theme.child_theme_relation : @theme.parent_theme_relation
+
+    relation.to_a.each do |relative|
+      if kind == :child && expected.include?(relative.child_theme_id)
+        expected.reject! { |id| id == relative.child_theme_id }
+      elsif kind == :parent && expected.include?(relative.parent_theme_id)
+        expected.reject! { |id| id == relative.parent_theme_id }
+      else
+        relative.destroy
+      end
+    end
+
+    Theme.where(id: expected).each do |theme|
+      @theme.add_relative_theme!(kind, theme)
+    end
+  end
+
   def update_default_theme
     if theme_params.key?(:default)
       is_default = theme_params[:default].to_s == "true"
@@ -298,6 +329,7 @@ class Admin::ThemesController < Admin::AdminController
       begin
         # deep munge is a train wreck, work around it for now
         params[:theme][:child_theme_ids] ||= [] if params[:theme].key?(:child_theme_ids)
+        params[:theme][:parent_theme_ids] ||= [] if params[:theme].key?(:parent_theme_ids)
 
         params.require(:theme).permit(
           :name,
@@ -309,7 +341,8 @@ class Admin::ThemesController < Admin::AdminController
           settings: {},
           translations: {},
           theme_fields: [:name, :target, :value, :upload_id, :type_id],
-          child_theme_ids: []
+          child_theme_ids: [],
+          parent_theme_ids: []
         )
       end
   end

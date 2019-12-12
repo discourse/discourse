@@ -42,7 +42,8 @@ pt_BR:
         label: "Mostrar resultados"
       hide-results:
         title: "Voltar para os seus votos"
-        label: "Ocultar resultados"
+      export-results:
+        label: "Exportar"
       open:
         title: "Abrir a votação"
         label: "Abrir"

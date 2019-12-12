@@ -16,33 +16,44 @@ export default (filterArg, params) => {
   return DiscourseRoute.extend({
     queryParams,
 
-    model(modelParams) {
-      const category = Category.findBySlug(
-        modelParams.slug,
-        modelParams.parentSlug
-      );
-      if (!category) {
-        return Category.reloadBySlug(
-          modelParams.slug,
-          modelParams.parentSlug
-        ).then(atts => {
-          if (modelParams.parentSlug) {
-            atts.category.parentCategory = Category.findBySlug(
-              modelParams.parentSlug
-            );
-          }
-          const record = this.store.createRecord("category", atts.category);
-          record.setupGroupsAndPermissions();
-          this.site.updateCategory(record);
-          return {
-            category: Category.findBySlug(
-              modelParams.slug,
-              modelParams.parentSlug
-            )
-          };
-        });
+    serialize(modelParams) {
+      if (!modelParams.category_slug_path_with_id) {
+        if (modelParams.id === "none") {
+          const category_slug_path_with_id = [
+            modelParams.parentSlug,
+            modelParams.slug
+          ].join("/");
+          const category = Category.findBySlugPathWithID(
+            category_slug_path_with_id
+          );
+          this.replaceWith("discovery.categoryNone", {
+            category,
+            category_slug_path_with_id
+          });
+        } else {
+          modelParams.category_slug_path_with_id = [
+            modelParams.parentSlug,
+            modelParams.slug,
+            modelParams.id
+          ]
+            .filter(x => x)
+            .join("/");
+        }
       }
-      return { category };
+
+      return modelParams;
+    },
+
+    model(modelParams) {
+      modelParams = this.serialize(modelParams);
+
+      const category = Category.findBySlugPathWithID(
+        modelParams.category_slug_path_with_id
+      );
+
+      if (category) {
+        return { category };
+      }
     },
 
     afterModel(model, transition) {
@@ -91,9 +102,9 @@ export default (filterArg, params) => {
     },
 
     _retrieveTopicList(category, transition) {
-      const listFilter = `c/${Category.slugFor(category)}/l/${this.filter(
-          category
-        )}`,
+      const listFilter = `c/${Category.slugFor(category)}/${
+          category.id
+        }/l/${this.filter(category)}`,
         findOpts = filterQueryParams(transition.to.queryParams, params),
         extras = { cached: this.isPoppedState(transition) };
 

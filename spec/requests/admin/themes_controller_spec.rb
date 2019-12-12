@@ -37,6 +37,37 @@ describe Admin::ThemesController do
       expect(upload.id).not_to be_nil
       expect(JSON.parse(response.body)["upload_id"]).to eq(upload.id)
     end
+
+    context "when trying to upload an existing file" do
+      let(:uploaded_file) { Upload.find_by(original_filename: "fake.woff2") }
+      let(:response_json) { JSON.parse(response.body) }
+
+      before do
+        post "/admin/themes/upload_asset.json", params: { file: upload }
+        expect(response.status).to eq(201)
+      end
+
+      context "if the file is secure media" do
+        before do
+          uploaded_file.update_secure_status(secure_override_value: true)
+          upload.rewind
+        end
+
+        it "marks the upload as not secure" do
+          post "/admin/themes/upload_asset.json", params: { file: upload }
+          expect(response.status).to eq(201)
+          expect(response_json["upload_id"]).to eq(uploaded_file.id)
+          uploaded_file.reload
+          expect(uploaded_file.secure).to eq(false)
+        end
+
+        it "enqueues a job to rebake the posts for the upload" do
+          Jobs.expects(:enqueue).with(:rebake_posts_for_upload, id: uploaded_file.id)
+          post "/admin/themes/upload_asset.json", params: { file: upload }
+          expect(response.status).to eq(201)
+        end
+      end
+    end
   end
 
   describe '#export' do
@@ -288,6 +319,16 @@ describe Admin::ThemesController do
       expect(fields.length).to eq(2)
       expect(json["theme"]["child_themes"].length).to eq(1)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+    end
+
+    it 'updates a child theme' do
+      child_theme = Fabricate(:theme, component: true)
+      put "/admin/themes/#{child_theme.id}.json", params: {
+        theme: {
+          parent_theme_ids: [theme.id],
+        }
+      }
+      expect(child_theme.parent_themes).to eq([theme])
     end
 
     it 'can update translations' do

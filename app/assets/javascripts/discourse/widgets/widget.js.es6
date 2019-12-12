@@ -118,7 +118,7 @@ export default class Widget {
     this.appEvents = register.lookup("service:app-events");
     this.keyValueStore = register.lookup("key-value-store:main");
 
-    this.init();
+    this.init(this.attrs);
 
     // Helps debug widgets
     if (Discourse.Environment === "development" || ENV.environment === "test") {

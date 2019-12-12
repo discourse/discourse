@@ -31,7 +31,7 @@ class Demon::Sidekiq < ::Demon::Base
     # trouble, if STDOUT is closed in our process all sort of weird
     # will ensue, resetting the logger ensures it will reinit correctly
     # parent process is in charge of the file anyway.
-    Sidekiq::Logging.logger = nil
+    Sidekiq.logger = nil
     cli = Sidekiq::CLI.instance
 
     options = ["-c", GlobalSetting.sidekiq_workers.to_s]

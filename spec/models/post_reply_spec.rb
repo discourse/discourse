@@ -7,9 +7,6 @@ describe PostReply do
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:other_post) { Fabricate(:post, topic: topic) }
 
-  it { is_expected.to belong_to :post }
-  it { is_expected.to belong_to :reply }
-
   context "validation" do
     it "should ensure that the posts belong in the same topic" do
       expect(PostReply.new(post: post, reply: other_post)).to be_valid

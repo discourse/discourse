@@ -1274,7 +1274,6 @@ et:
       hint_for_supported_browsers: "võid pildi redaktorisse ka pukseerida või kleepida"
       uploading: "Laen üles"
       select_file: "Vali fail"
-      image_link: "viide millele Su pilt hakkab osutama"
       default_image_alt_text: pilt
     search:
       sort_by: "Järjesta"
@@ -2208,6 +2207,7 @@ et:
       changed: "muudetud sildid:"
       tags: "Sildid"
       choose_for_topic: "valikulised sildid"
+      add_synonyms: "Lisa"
       delete_tag: "Kustuta silt"
       rename_tag: "Nimeta silt ümber"
       rename_instructions: "Vali sildile uus nimi:"

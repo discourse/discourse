@@ -33,7 +33,7 @@ describe Topic do
 
       describe 'censored words' do
         after do
-          $redis.flushall
+          Discourse.redis.flushall
         end
 
         describe 'when title contains censored words' do
@@ -308,6 +308,7 @@ describe Topic do
     let(:topic_emoji) { build_topic_with_title("I 💖 candy alot") }
     let(:topic_modifier_emoji) { build_topic_with_title("I 👨‍🌾 candy alot") }
     let(:topic_shortcut_emoji) { build_topic_with_title("I love candy :)") }
+    let(:topic_inline_emoji) { build_topic_with_title("Hello😊World") }
 
     it "escapes script contents" do
       expect(topic_script.fancy_title).to eq("Topic with &lt;script&gt;alert(&lsquo;title&rsquo;)&lt;/script&gt; script in its title")
@@ -358,6 +359,16 @@ describe Topic do
       it "does not convert emoji shortcuts" do
         expect(topic_shortcut_emoji.fancy_title).to eq("I love candy :)")
       end
+    end
+
+    it "keeps inline emojis if inline emoji setting disabled" do
+      SiteSetting.enable_inline_emoji_translation = false
+      expect(topic_inline_emoji.fancy_title).to eq("Hello😊World")
+    end
+
+    it "expands inline emojis if inline emoji setting enabled" do
+      SiteSetting.enable_inline_emoji_translation = true
+      expect(topic_inline_emoji.fancy_title).to eq("Hello:blush:World")
     end
   end
 
@@ -2490,6 +2501,19 @@ describe Topic do
       category.save!
 
       expect(topic.access_topic_via_group).to eq(open_group)
+    end
+  end
+
+  describe "#after_update" do
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:category) { Fabricate(:category_with_definition, read_restricted: true) }
+
+    it "removes the topic as featured from user profiles if new category is read_restricted" do
+      user.user_profile.update(featured_topic: topic)
+      expect(user.user_profile.featured_topic).to eq(topic)
+
+      topic.update(category: category)
+      expect(user.user_profile.reload.featured_topic).to eq(nil)
     end
   end
 end

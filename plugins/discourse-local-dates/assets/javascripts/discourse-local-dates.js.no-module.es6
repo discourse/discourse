@@ -22,7 +22,6 @@
     const dateTime = options.time
       ? `${options.date} ${options.time}`
       : options.date;
-    let utcDateTime;
 
     let displayedTimezone;
     if (options.time) {
@@ -33,6 +32,7 @@
     }
 
     // if timezone given we convert date and time from given zone to Etc/UTC
+    let utcDateTime;
     if (options.timezone) {
       utcDateTime = _applyZoneToDateTime(dateTime, options.timezone);
     } else {
@@ -43,7 +43,7 @@
       // if event is in the past we want to bump it no next occurrence when
       // recurring is set
       if (options.recurring) {
-        utcDateTime = _applyRecurrence(utcDateTime, options.recurring);
+        utcDateTime = _applyRecurrence(utcDateTime, options);
       } else {
         $element.addClass("past");
       }
@@ -199,22 +199,37 @@
     return dateTime;
   }
 
-  function _applyRecurrence(dateTime, recurring) {
+  function _applyRecurrence(dateTime, { recurring, timezone }) {
     const parts = recurring.split(".");
     const count = parseInt(parts[0], 10);
     const type = parts[1];
     const diff = moment().diff(dateTime, type);
     const add = Math.ceil(diff + count);
-    const wasDST = dateTime.isDST();
-    let dateTimeWithRecurrence = dateTime.add(add, type);
-    const isDST = dateTimeWithRecurrence.isDST();
 
+    // we create new moment object from format
+    // to ensure it's created in user context
+    const wasDST = moment(dateTime.format()).isDST();
+    let dateTimeWithRecurrence = moment(dateTime).add(add, type);
+    const isDST = moment(dateTimeWithRecurrence.format()).isDST();
+
+    // these dates are more or less DST "certain"
+    const noDSTOffset = moment
+      .tz({ month: 0, day: 1 }, timezone || "Etc/UTC")
+      .utcOffset();
+    const withDSTOffset = moment
+      .tz({ month: 5, day: 1 }, timezone || "Etc/UTC")
+      .utcOffset();
+
+    // we remove the DST offset present when the date was created,
+    // and add current DST offset
     if (!wasDST && isDST) {
-      dateTimeWithRecurrence.subtract(1, "hour");
+      dateTimeWithRecurrence.add(-withDSTOffset + noDSTOffset, "minutes");
     }
 
+    // we add the DST offset present when the date was created,
+    // and remove current DST offset
     if (wasDST && !isDST) {
-      dateTimeWithRecurrence.add(1, "hour");
+      dateTimeWithRecurrence.add(withDSTOffset - noDSTOffset, "minutes");
     }
 
     return dateTimeWithRecurrence;

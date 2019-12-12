@@ -51,6 +51,7 @@ flushMap();
 
 export default EmberObject.extend({
   _plurals: {
+    category: "categories",
     "post-reply": "post-replies",
     "post-reply-history": "post_reply_histories",
     reviewable_history: "reviewable_histories"

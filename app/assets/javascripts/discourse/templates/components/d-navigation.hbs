@@ -12,6 +12,13 @@
   {{category-notifications-button value=category.notification_level category=category}}
 {{/if}}
 
+{{plugin-outlet name="before-create-topic-button"
+  args=(hash
+    canCreateTopic=canCreateTopic
+    createTopicDisabled=createTopicDisabled
+    createTopicLabel=createTopicLabel)
+}}
+
 {{create-topic-button
   canCreateTopic=canCreateTopic
   action=createTopic

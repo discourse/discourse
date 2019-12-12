@@ -243,7 +243,7 @@ describe DiscourseNarrativeBot::TrackSelector do
 
         context 'generic replies' do
           after do
-            $redis.del("#{described_class::GENERIC_REPLIES_COUNT_PREFIX}#{user.id}")
+            Discourse.redis.del("#{described_class::GENERIC_REPLIES_COUNT_PREFIX}#{user.id}")
           end
 
           it 'should create the right generic do not understand responses' do
@@ -472,17 +472,17 @@ describe DiscourseNarrativeBot::TrackSelector do
           let(:post) { Fabricate(:post, topic: topic) }
 
           after do
-            $redis.flushall
+            Discourse.redis.flushall
           end
 
           describe 'when random reply massage has been displayed in the last 6 hours' do
             it 'should not do anything' do
-              $redis.set(
+              Discourse.redis.set(
                 "#{described_class::PUBLIC_DISPLAY_BOT_HELP_KEY}:#{other_post.topic_id}",
                 post.post_number - 11
               )
 
-              $redis.class.any_instance.expects(:ttl).returns(19.hours.to_i)
+              Discourse.redis.class.any_instance.expects(:ttl).returns(19.hours.to_i)
 
               user
               post.update!(raw: "Show me what you can do @discobot")
@@ -494,12 +494,12 @@ describe DiscourseNarrativeBot::TrackSelector do
 
           describe 'when random reply message has not been displayed in the last 6 hours' do
             it 'should create the right reply' do
-              $redis.set(
+              Discourse.redis.set(
                 "#{described_class::PUBLIC_DISPLAY_BOT_HELP_KEY}:#{other_post.topic_id}",
                 post.post_number - 11
               )
 
-              $redis.class.any_instance.expects(:ttl).returns(7.hours.to_i)
+              Discourse.redis.class.any_instance.expects(:ttl).returns(7.hours.to_i)
 
               user
               post.update!(raw: "Show me what you can do @discobot")
@@ -515,7 +515,7 @@ describe DiscourseNarrativeBot::TrackSelector do
               described_class.new(:reply, user, post_id: other_post.id).select
               expect(Post.last.raw).to eq(random_mention_reply)
 
-              expect($redis.get(
+              expect(Discourse.redis.get(
                 "#{described_class::PUBLIC_DISPLAY_BOT_HELP_KEY}:#{other_post.topic_id}"
               ).to_i).to eq(other_post.post_number.to_i)
 

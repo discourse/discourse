@@ -1,21 +1,30 @@
 import { alias, not } from "@ember/object/computed";
 import Component from "@ember/component";
-import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
-export default Component.extend(
-  bufferedRender({
-    classNameBindings: [":tip", "good", "bad"],
-    rerenderTriggers: ["validation"],
+export default Component.extend({
+  classNameBindings: [":tip", "good", "bad"],
+  rerenderTriggers: ["validation"],
+  tipIcon: null,
+  tipReason: null,
 
-    bad: alias("validation.failed"),
-    good: not("bad"),
+  bad: alias("validation.failed"),
+  good: not("bad"),
 
-    buildBuffer(buffer) {
-      const reason = this.get("validation.reason");
-      if (reason) {
-        buffer.push(iconHTML(this.good ? "check" : "times") + " " + reason);
-      }
+  tipIconHTML() {
+    let icon = iconHTML(this.good ? "check" : "times");
+    return `${icon}`.htmlSafe();
+  },
+
+  didReceiveAttrs() {
+    this._super(...arguments);
+    let reason = this.get("validation.reason");
+    if (reason) {
+      this.set("tipIcon", this.tipIconHTML());
+      this.set("tipReason", reason);
+    } else {
+      this.set("tipIcon", null);
+      this.set("tipReason", null);
     }
-  })
-);
+  }
+});

@@ -9,7 +9,7 @@
 # If the password file is changed, you need to add a migration that deletes the list from redis
 # so it gets re-populated:
 #
-#   $redis.without_namespace.del CommonPasswords::LIST_KEY
+#   Discourse.redis.without_namespace.del CommonPasswords::LIST_KEY
 
 class CommonPasswords
 
@@ -39,7 +39,7 @@ class CommonPasswords
   end
 
   def self.redis
-    $redis.without_namespace
+    Discourse.redis.without_namespace
   end
 
   def self.load_passwords

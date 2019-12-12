@@ -20,7 +20,9 @@ import { siteDir } from "discourse/lib/text-direction";
 import {
   determinePostReplaceSelection,
   clipboardData,
-  safariHacksDisabled
+  safariHacksDisabled,
+  caretPosition,
+  inCodeBlock
 } from "discourse/lib/utilities";
 import toMarkdown from "discourse/lib/to-markdown";
 import deprecated from "discourse-common/lib/deprecated";
@@ -99,6 +101,7 @@ class Toolbar {
         id: "link",
         group: "insertions",
         shortcut: "K",
+        trimLeading: true,
         sendAction: event => this.context.send("showLinkModal", event)
       });
     }
@@ -419,6 +422,10 @@ export default Component.extend({
       },
 
       onKeyUp: (text, cp) => {
+        if (inCodeBlock(text, cp)) {
+          return false;
+        }
+
         const matches = /(?:^|[^a-z])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
           text.substring(0, cp)
         );
@@ -510,7 +517,10 @@ export default Component.extend({
             }
             return list;
           });
-      }
+      },
+
+      triggerRule: textarea =>
+        !inCodeBlock(textarea.value, caretPosition(textarea))
     });
   },
 
@@ -911,7 +921,11 @@ export default Component.extend({
       const captures = selected.pre.match(/\B:(\w*)$/);
 
       if (_.isEmpty(captures)) {
-        this._addText(selected, `:${code}:`);
+        if (selected.pre.match(/\S$/)) {
+          this._addText(selected, ` :${code}:`);
+        } else {
+          this._addText(selected, `:${code}:`);
+        }
       } else {
         let numOfRemovedChars = selected.pre.length - captures[1].length;
         selected.pre = selected.pre.slice(
@@ -956,15 +970,14 @@ export default Component.extend({
       }
 
       let linkText = "";
-      this._lastSel = this._getSelected();
+      this._lastSel = toolbarEvent.selected;
 
       if (this._lastSel) {
-        linkText = this._lastSel.value.trim();
+        linkText = this._lastSel.value;
       }
 
       showModal("insert-hyperlink").setProperties({
-        linkText: linkText,
-        _lastSel: this._lastSel,
+        linkText,
         toolbarEvent
       });
     },

@@ -192,7 +192,7 @@ module SiteSettingExtension
   end
 
   def client_settings_json
-    Rails.cache.fetch(SiteSettingExtension.client_settings_cache_key, expires_in: 30.minutes) do
+    Discourse.cache.fetch(SiteSettingExtension.client_settings_cache_key, expires_in: 30.minutes) do
       client_settings_json_uncached
     end
   end
@@ -432,7 +432,7 @@ module SiteSettingExtension
   protected
 
   def clear_cache!
-    Rails.cache.delete(SiteSettingExtension.client_settings_cache_key)
+    Discourse.cache.delete(SiteSettingExtension.client_settings_cache_key)
     Site.clear_anon_cache!
   end
 

@@ -456,7 +456,7 @@ describe PrettyText do
         ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
         expect(PrettyText.cook("# banana")).not_to include('banana')
       ensure
-        $redis.flushall
+        Discourse.redis.flushall
       end
     end
   end
@@ -1091,7 +1091,7 @@ HTML
   end
 
   describe "censoring" do
-    after(:all) { $redis.flushall }
+    after(:all) { Discourse.redis.flushall }
 
     def expect_cooked_match(raw, expected_cooked)
       expect(PrettyText.cook(raw)).to eq(expected_cooked)
@@ -1450,7 +1450,7 @@ HTML
 
       cooked = <<~HTML
       <p><img src="/images/transparent.png" alt="upload" data-orig-src="upload://abcABC.png"></p>
-      <p><a href="/404" data-orig-href="upload://abcdefg.png">some attachment|attachment</a></p>
+      <p><a class="attachment" href="/404" data-orig-href="upload://abcdefg.png">some attachment</a></p>
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)

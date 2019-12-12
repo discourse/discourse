@@ -26,6 +26,14 @@ const CUSTOM_TYPES = [
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
 
+function splitPipes(str) {
+  if (typeof str === "string") {
+    return str.split("|").filter(Boolean);
+  } else {
+    return [];
+  }
+}
+
 export default Mixin.create({
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   content: alias("setting"),
@@ -51,7 +59,6 @@ export default Mixin.create({
         });
       }
     }
-
     let preview = setting.get("preview");
     if (preview) {
       return new Handlebars.SafeString(
@@ -67,9 +74,9 @@ export default Mixin.create({
     return componentType.replace(/\_/g, "-");
   },
 
-  @discourseComputed("setting.setting")
-  settingName(setting) {
-    return setting.replace(/\_/g, " ");
+  @discourseComputed("setting.setting", "setting.label")
+  settingName(setting, label) {
+    return label || setting.replace(/\_/g, " ");
   },
 
   @discourseComputed("type")
@@ -91,9 +98,29 @@ export default Mixin.create({
     return "site-settings/" + typeClass;
   },
 
+  @discourseComputed("setting.anyValue")
+  allowAny(anyValue) {
+    return anyValue !== false;
+  },
+
   @discourseComputed("setting.default", "buffered.value")
   overridden(settingDefault, bufferedValue) {
     return settingDefault !== bufferedValue;
+  },
+
+  @discourseComputed("buffered.value")
+  bufferedValues: splitPipes,
+
+  @discourseComputed("setting.defaultValues")
+  defaultValues: splitPipes,
+
+  @discourseComputed("defaultValues", "bufferedValues")
+  defaultIsAvailable(defaultValues, bufferedValues) {
+    return (
+      defaultValues &&
+      defaultValues.length > 0 &&
+      !defaultValues.every(value => bufferedValues.includes(value))
+    );
   },
 
   _watchEnterKey: on("didInsertElement", function() {
@@ -209,6 +236,16 @@ export default Mixin.create({
 
     toggleSecret() {
       this.toggleProperty("isSecret");
+    },
+
+    setDefaultValues() {
+      this.set(
+        "buffered.value",
+        this.bufferedValues
+          .concat(this.defaultValues)
+          .uniq()
+          .join("|")
+      );
     }
   }
 });

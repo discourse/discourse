@@ -50,6 +50,7 @@ class TopicConverter
 
       add_allowed_users
       update_post_uploads_secure_status
+      UserProfile.remove_featured_topic_from_all_profiles(@topic)
 
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)

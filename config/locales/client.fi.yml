@@ -747,6 +747,7 @@ fi:
       collapse_profile: "Supista"
       bookmarks: "Kirjanmerkit"
       bio: "Tietoa minusta"
+      timezone: "Aikavyöhyke"
       invited_by: "Kutsuja"
       trust_level: "Luottamustaso"
       notifications: "Ilmoitukset"
@@ -1334,7 +1335,7 @@ fi:
       second_factor_backup_description: "Syötä yksi varakoodeistasi:"
       second_factor: "Kirjaudu tunnistautumissovelluksella"
       security_key_description: "Kun fyysinen tunnistautumislaite on kätesi ulottuvilla, klikkaa alla olevaa \"Tunnistaudu tunnistautumislaitteella\" -painiketta."
-      security_key_alternative: "Et löydä tunnistautumislaitetta tai haluat käyttää muuta tapaa?"
+      security_key_alternative: "Kokeile muuta tapaa"
       security_key_authenticate: "Tunnistaudu tunnistautumislaitteen avulla"
       security_key_not_allowed_error: "Tunnistaumislaitteella tunnistautumisprosessi joko vanheni tai peruutettiin."
       security_key_no_matching_credential_error: "Tunnistautumislaitteelta ei löytynyt kelpaavia pääsytietoja."
@@ -1632,6 +1633,7 @@ fi:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Uusi ketju</span> {{description}}"
       membership_request_accepted: "Hyväksyttiin ryhmään '{{group_name}}'"
+      membership_request_consolidated: "{{count}} odottavaa jäsenhakemusta ryhmään {{group_name}}"
       group_message_summary:
         one: "{{count}} viesti ryhmän {{group_name}} saapuneissa"
         other: "{{count}} viestiä ryhmän {{group_name}} saapuneissa"
@@ -1667,6 +1669,7 @@ fi:
         topic_reminder: "ketjumuistutus"
         liked_consolidated: "uusia tykkäyksiä"
         post_approved: "viesti hyväksytty"
+        membership_request_consolidated: "uusia jäsenhakemuksia"
     upload_selector:
       title: "Lisää kuva"
       title_with_attachments: "Lisää kuva tai tiedosto"
@@ -1680,7 +1683,6 @@ fi:
       hint_for_supported_browsers: "voit myös raahata tai liittää kuvia editoriin"
       uploading: "Lähettää"
       select_file: "Valitse tiedosto"
-      image_link: "linkki, johon kuvasi osoittaa"
       default_image_alt_text: kuva
     search:
       sort_by: "Järjestä"
@@ -1712,6 +1714,7 @@ fi:
       context:
         user: "Etsi @{{username}} viestejä"
         category: "Etsi alueelta #{{category}}"
+        tag: "Hae tunnistetta #{{tag}}"
         topic: "Etsi tästä ketjusta"
         private_messages: "Etsi viesteistä"
       advanced:
@@ -2127,10 +2130,10 @@ fi:
           one: "Valitse ketju, johon haluat siirtää valitun viestin."
           other: "Valitse ketju, johon haluat siirtää valitut <b>{{count}}</b> viestiä."
       move_to_new_message:
-        title: "Siirrä uuteen keskusteluun"
-        action: "siirrä uuteen keskusteluun"
+        title: "Siirrä uuteen yksityiskeskusteluun"
+        action: "siirrä uuteen yksityiskeskusteluun"
         message_title: "Uuden keskustelun otsikko"
-        radio_label: "Uusi keskustelu"
+        radio_label: "Uusi yksityiskeskustelu"
         participants: "Osallistujat"
         instructions:
           one: "Olet luomassa uutta keskustelua, jossa olisi viesti, jonka olet valinnut."
@@ -2424,7 +2427,6 @@ fi:
       email_in_disabled: "Uusien ketjujen aloittaminen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
       mailinglist_mirror: "Alue jäljittelee postituslistaa"
-      suppress_from_latest: "Älä näytä alueen ketjuja Tuoreimmat-näkymässä"
       show_subcategory_list: "Näytä lista tytäralueista ketjujen yläpuolella tällä alueella."
       num_featured_topics: "Kuinka monta ketjua näytetään Keskustelualueet-sivulla:"
       subcategory_num_featured_topics: "Kuinka monta ketjua näytetään emoalueen sivulla:"
@@ -2796,11 +2798,30 @@ fi:
       changed: "muutetut tunnisteet"
       tags: "Tunnisteet"
       choose_for_topic: "ei-pakolliset tunnisteet"
+      info: "Tietoa"
+      default_info: "Tätä tunnistetta ei ole rajattu millekään alueelle eikä sillä ole synonyymejä."
+      synonyms: "Synonyymit"
+      synonyms_description: "Kun näitä tunnisteita käytetään, ne korvataan pääsynonyymillä <b>%{base_tag_name}</b>."
+      tag_groups_info:
+        one: 'Tunniste kuuluu ryhmään "{{tag_groups}}".'
+        other: "Tunniste kuuluu näihin ryhmiin: {{tag_groups}}"
+      category_restrictions:
+        one: "Sitä voi käyttää vain tällä alueella:"
+        other: "Sitä voi käyttää vain näillä alueilla:"
+      edit_synonyms: "Hallinnoi synonyymejä"
+      add_synonyms_label: "Lisää synonyymejä:"
+      add_synonyms: "Lisää"
+      add_synonyms_failed: "Näitä tunnisteita ei voitu lisätä synonyymeiksi: <b>%{tag_names}</b>. Varmistu, ettei niillä itsellään ole synonyymejä ja ettei ne ole synonyymejä muulle tunnisteelle."
+      remove_synonym: "Poista synonyymi"
+      delete_synonym_confirm: 'Haluatko varmasti poistaa synonyymin "%{tag_name}"?'
       delete_tag: "Poista tunniste"
       delete_confirm:
         one: "Haluatko varmasti poistaa tunnisteen, mikä poistaa sen myös yhdeltä ketjulta, jolla tunniste on?"
         other: "Haluatko varmasti poistaa tunnisteen, mikä poistaa sen myös {{count}} ketjulta, joilla tunniste on?"
       delete_confirm_no_topics: "Haluatko varmasti poistaa tunnisteen?"
+      delete_confirm_synonyms:
+        one: "Sen synonyymi poistetaan myös."
+        other: "Sen {{count}} muuta synonyymiä poistetaan myös."
       rename_tag: "Uudelleennimeä tunniste"
       rename_instructions: "Valitse uusi nimi tälle tunnisteelle:"
       sort_by: "Järjestä:"
@@ -3319,6 +3340,7 @@ fi:
           color_scheme_select: "Valitse teemalle värit"
           custom_sections: "Mukautetut osiot:"
           theme_components: "Teeman komponentit"
+          add_all_themes: "Lisää kaikki teemat"
           convert: "Muunna"
           convert_component_alert: "Oletko varma että haluat muuttaa tämän komponentin teemaksi? Se ei sen jälkeen enää ole teemojen %{relatives} komponentti."
           convert_component_tooltip: "Muunna komponentti teemaksi"
@@ -3351,6 +3373,9 @@ fi:
           edit_css_html: "Muokkaa CSS/HTML"
           edit_css_html_help: "Et ole muokannut CSS:ää tai HTML:ää"
           delete_upload_confirm: "Poista ladattu tiedosto? (Teeman CSS voi lakata toimimasta!)"
+          component_on_themes: "Sisällytä komponentti näihin teemoihin"
+          included_components: "Sisältää komponentit"
+          add_all: "Lisää kaikki"
           import_web_tip: "Tietovarasto, jossa teema on"
           import_web_advanced: "Lisäasetukset..."
           import_file_tip: ".tar.gz, .zip, tai .dcstyle.json tiedosto, jossa teema on"
@@ -3658,6 +3683,8 @@ fi:
             change_theme_setting: "muutti teema-asetusta"
             disable_theme_component: "otti teemakomponentin käytöstä"
             enable_theme_component: "otti teemakomponentin käyttöön"
+            revoke_title: "peru titteli"
+            change_title: "muuta titteliä"
             api_key_create: "loi rajapinta-avaimen"
             api_key_update: "päivitti rajapinta-avainta"
             api_key_destroy: "tuhosi rajapinta-avaimen"

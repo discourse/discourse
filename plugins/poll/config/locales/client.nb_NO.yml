@@ -35,7 +35,8 @@ nb_NO:
         label: "Vis resultat"
       hide-results:
         title: "Tilbake til dine stemmer"
-        label: "Skjul resultater"
+      export-results:
+        label: "Eksporter"
       open:
         title: "Åpne avstemning"
         label: "Åpne"

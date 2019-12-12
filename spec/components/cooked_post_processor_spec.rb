@@ -4,6 +4,17 @@ require "rails_helper"
 require "cooked_post_processor"
 require "file_store/s3_store"
 
+def s3_setup
+  Rails.configuration.action_controller.stubs(:asset_host).returns("https://local.cdn.com")
+
+  SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
+  SiteSetting.s3_access_key_id = "s3-access-key-id"
+  SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+  SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+  SiteSetting.enable_s3_uploads = true
+  SiteSetting.authorized_extensions = "png|jpg|gif|mov|ogg|"
+end
+
 describe CookedPostProcessor do
   fab!(:upload) { Fabricate(:upload) }
 
@@ -491,6 +502,44 @@ describe CookedPostProcessor do
           end
         end
 
+        context "s3_uploads" do
+          before do
+            s3_setup
+            stored_path = Discourse.store.get_path_for_upload(upload)
+            upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
+
+            stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+            stub_request(
+              :put,
+              "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/optimized/1X/#{upload.sha1}_2_#{optimized_size}.#{upload.extension}"
+            )
+            stub_request(:get, /#{SiteSetting.s3_upload_bucket}\.s3\.amazonaws\.com/)
+
+            OptimizedImage.expects(:resize).returns(true)
+            FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+            Discourse.store.class.any_instance.expects(:has_been_uploaded?).at_least_once.returns(true)
+
+            SiteSetting.login_required = true
+            SiteSetting.secure_media = true
+            upload.update_column(:secure, true)
+          end
+
+          let(:optimized_size) { "600x500" }
+
+          let(:post) do
+            Fabricate(:post, raw: "![large.png|#{optimized_size}](#{upload.short_url})")
+          end
+
+          it "handles secure images with the correct lightbox link href" do
+            cpp.post_process
+
+            expect(cpp.html).to match_html <<~HTML
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-media-uploads/original/1X/#{upload.sha1}.png" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">large.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+            </div></a></div></p>
+            HTML
+          end
+        end
       end
 
       context "with tall images" do
@@ -872,6 +921,55 @@ describe CookedPostProcessor do
 
   end
 
+  context "#convert_to_link" do
+    fab!(:thumbnail) { Fabricate(:optimized_image, upload: upload, width: 512, height: 384) }
+
+    before do
+      CookedPostProcessor.any_instance.stubs(:get_size).with(upload.url).returns([1024, 768])
+    end
+
+    it "adds lightbox and optimizes images" do
+      post = Fabricate(:post, raw: "![image|1024x768, 50%](#{upload.short_url})")
+
+      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp.post_process
+
+      doc = Nokogiri::HTML::fragment(cpp.html)
+      expect(doc.css('.lightbox-wrapper').size).to eq(1)
+      expect(doc.css('img').first['srcset']).to_not eq(nil)
+    end
+
+    it "optimizes images in quotes" do
+      post = Fabricate(:post, raw: <<~MD)
+        [quote]
+        ![image|1024x768, 50%](#{upload.short_url})
+        [/quote]
+      MD
+
+      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp.post_process
+
+      doc = Nokogiri::HTML::fragment(cpp.html)
+      expect(doc.css('.lightbox-wrapper').size).to eq(0)
+      expect(doc.css('img').first['srcset']).to_not eq(nil)
+    end
+
+    it "optimizes images in Onebox" do
+      Oneboxer.expects(:onebox)
+        .with("https://discourse.org", anything)
+        .returns("<aside class='onebox'><img src='#{upload.url}' width='512' height='384'></aside>")
+
+      post = Fabricate(:post, raw: "https://discourse.org")
+
+      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp.post_process
+
+      doc = Nokogiri::HTML::fragment(cpp.html)
+      expect(doc.css('.lightbox-wrapper').size).to eq(0)
+      expect(doc.css('img').first['srcset']).to_not eq(nil)
+    end
+  end
+
   context "#post_process_oneboxes" do
     let(:post) { build(:post_with_youtube, id: 123) }
     let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
@@ -1106,14 +1204,8 @@ describe CookedPostProcessor do
 
       context "s3_uploads" do
         before do
-          Rails.configuration.action_controller.stubs(:asset_host).returns("https://local.cdn.com")
+          s3_setup
 
-          SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
-          SiteSetting.s3_access_key_id = "s3-access-key-id"
-          SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-          SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-          SiteSetting.enable_s3_uploads = true
-          SiteSetting.authorized_extensions = "png|jpg|gif|mov|ogg|"
           uploaded_file = file_from_fixtures("smallest.png")
           upload_sha1 = Digest::SHA1.hexdigest(File.read(uploaded_file))
 
@@ -1367,18 +1459,18 @@ describe CookedPostProcessor do
 
     before do
       SiteSetting.download_remote_images_to_local = true
-      cpp.expects(:available_disk_space).returns(50)
+      SiteSetting.download_remote_images_threshold = 20
+      cpp.stubs(:available_disk_space).returns(50)
     end
 
     it "does nothing when there's enough disk space" do
-      SiteSetting.expects(:download_remote_images_threshold).returns(20)
       SiteSetting.expects(:download_remote_images_to_local=).never
       expect(cpp.disable_if_low_on_disk_space).to eq(false)
     end
 
     context "when there's not enough disk space" do
 
-      before { SiteSetting.expects(:download_remote_images_threshold).returns(75) }
+      before { SiteSetting.download_remote_images_threshold = 75 }
 
       it "disables download_remote_images_threshold and send a notification to the admin" do
         StaffActionLogger.any_instance.expects(:log_site_setting_change).once

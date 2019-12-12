@@ -20,6 +20,7 @@ en:
     poll_maximum_options: "Maximum number of options allowed in a poll."
     poll_edit_window_mins: "Number of minutes after post creation during which polls can be edited."
     poll_minimum_trust_level_to_create: "Define the minimum trust level needed to create polls."
+    poll_groupable_user_fields: "A set of user field names that can be used to group and filter poll results."
     poll_export_data_explorer_query_id: "ID of the Data Explorer Query to use for exporting poll results (0 to disable)."
 
   poll:
@@ -67,3 +68,6 @@ en:
 
     email:
       link_to_poll: "Click to view the poll."
+
+    user_field:
+      no_data: "No Data"

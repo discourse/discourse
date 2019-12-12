@@ -9,6 +9,25 @@ export default TextField.extend({
   autocapitalize: false,
   name: "user-selector",
 
+  init() {
+    this._super();
+    this._paste = e => {
+      let pastedText = "";
+      if (window.clipboardData && window.clipboardData.getData) {
+        // IE
+        pastedText = window.clipboardData.getData("Text");
+      } else if (e.clipboardData && e.clipboardData.getData) {
+        pastedText = e.clipboardData.getData("text/plain");
+      }
+
+      if (pastedText.length > 0) {
+        this.importText(pastedText);
+        e.preventDefault();
+        return false;
+      }
+    };
+  },
+
   @observes("usernames")
   _update() {
     if (this.canReceiveUpdates === "true") {
@@ -19,6 +38,7 @@ export default TextField.extend({
   @on("willDestroyElement")
   _destroyAutocompleteInstance() {
     $(this.element).autocomplete("destroy");
+    this.element.addEventListener("paste", this._paste);
   },
 
   @on("didInsertElement")
@@ -51,6 +71,8 @@ export default TextField.extend({
       }
       return usernames;
     };
+
+    this.element.addEventListener("paste", this._paste);
 
     const userSelectorComponent = this;
 
@@ -126,6 +148,24 @@ export default TextField.extend({
           return { username: i };
         }
       });
+  },
+
+  importText(text) {
+    let usernames = [];
+    if ((this.usernames || "").length > 0) {
+      usernames = this.usernames.split(",");
+    }
+
+    (text || "").split(/[, \n]+/).forEach(val => {
+      val = val.replace(/^@+/, "").trim();
+      if (val.length > 0) {
+        usernames.push(val);
+      }
+    });
+    this.set("usernames", usernames.uniq().join(","));
+    if (this.canReceiveUpdates !== "true") {
+      this._createAutocompleteInstance({ updateData: true });
+    }
   },
 
   // THIS IS A HUGE HACK TO SUPPORT CLEARING THE INPUT

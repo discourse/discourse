@@ -1,5 +1,11 @@
 import { makeArray } from "discourse-common/lib/helpers";
-import { empty, notEmpty, match } from "@ember/object/computed";
+import {
+  empty,
+  filterBy,
+  match,
+  mapBy,
+  notEmpty
+} from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 import { url } from "discourse/lib/computed";
@@ -15,6 +21,15 @@ export default Controller.extend({
   previewUrl: url("model.id", "/admin/themes/%@/preview"),
   addButtonDisabled: empty("selectedChildThemeId"),
   editRouteName: "adminCustomizeThemes.edit",
+  parentThemesNames: mapBy("model.parentThemes", "name"),
+  availableParentThemes: filterBy("allThemes", "component", false),
+  availableActiveParentThemes: filterBy("availableParentThemes", "isActive"),
+  availableThemesNames: mapBy("availableParentThemes", "name"),
+  availableActiveThemesNames: mapBy("availableActiveParentThemes", "name"),
+  availableActiveChildThemes: filterBy("availableChildThemes", "hasParents"),
+  availableComponentsNames: mapBy("availableChildThemes", "name"),
+  availableActiveComponentsNames: mapBy("availableActiveChildThemes", "name"),
+  childThemesNames: mapBy("model.childThemes", "name"),
 
   @discourseComputed("model.editedFields")
   editedFieldsFormatted() {
@@ -48,6 +63,42 @@ export default Controller.extend({
         : available.filter(theme => childThemes.indexOf(theme) === -1);
       return themes.length === 0 ? null : themes;
     }
+  },
+
+  @discourseComputed("model.parentThemes.[]")
+  relativesSelectorSettingsForComponent() {
+    return Ember.Object.create({
+      list_type: "compact",
+      type: "list",
+      preview: null,
+      anyValue: false,
+      setting: "parent_theme_ids",
+      label: I18n.t("admin.customize.theme.component_on_themes"),
+      choices: this.availableThemesNames,
+      default: this.parentThemesNames.join("|"),
+      value: this.parentThemesNames.join("|"),
+      defaultValues: this.availableActiveThemesNames.join("|"),
+      allThemes: this.allThemes,
+      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all_themes")
+    });
+  },
+
+  @discourseComputed("model.parentThemes.[]")
+  relativesSelectorSettingsForTheme() {
+    return Ember.Object.create({
+      list_type: "compact",
+      type: "list",
+      preview: null,
+      anyValue: false,
+      setting: "child_theme_ids",
+      label: I18n.t("admin.customize.theme.included_components"),
+      choices: this.availableComponentsNames,
+      default: this.childThemesNames.join("|"),
+      value: this.childThemesNames.join("|"),
+      defaultValues: this.availableActiveComponentsNames.join("|"),
+      allThemes: this.allThemes,
+      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all")
+    });
   },
 
   @discourseComputed("allThemes", "model.component", "model")
@@ -241,7 +292,7 @@ export default Controller.extend({
     addChildTheme() {
       let themeId = parseInt(this.selectedChildThemeId, 10);
       let theme = this.allThemes.findBy("id", themeId);
-      this.model.addChildTheme(theme);
+      this.model.addChildTheme(theme).then(() => this.store.findAll("theme"));
     },
 
     removeUpload(upload) {
@@ -258,7 +309,9 @@ export default Controller.extend({
     },
 
     removeChildTheme(theme) {
-      this.model.removeChildTheme(theme);
+      this.model
+        .removeChildTheme(theme)
+        .then(() => this.store.findAll("theme"));
     },
 
     destroy() {
@@ -271,6 +324,7 @@ export default Controller.extend({
         result => {
           if (result) {
             const model = this.model;
+            model.setProperties({ recentlyInstalled: false });
             model.destroyRecord().then(() => {
               this.allThemes.removeObject(model);
               this.transitionToRoute("adminCustomizeThemes");

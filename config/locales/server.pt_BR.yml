@@ -699,9 +699,6 @@ pt_BR:
     error: "Houve um erro ao alterar o seu endereço de email. Talvez o endereço já esteja sendo utilizado?"
     error_staged: "Houve um erro ao alterar o seu endereço de email. O endereço já está usado por outro usuário que ainda não confirmou seu email."
     already_done: "Desculpe, este link de confirmação não está mais válido. Talvez o seu e-mail já foi alterado?"
-    authorizing_old:
-      title: "Obrigado por confirmar o seu endereço de e-mail atual."
-      description: "Estamos enviando um e-mail ao seu novo endereço para confirmação."
   associated_accounts:
     revoke_failed: "Falha ao revogar sua conta com %{provider_name}."
     connected: "(conectado)"
@@ -1689,8 +1686,6 @@ pt_BR:
     permalink_normalizations: "Aplique o seguinte regex antes de combinar permalinks, por exemplo: /(topic.*)\\?.*/\\1 irá retirar as strings de consulta das rotas de tópicos. Formato é regex + string use \\ 1 etc. para acessar capturas"
     global_notice: "Exibir um aviso de banner global URGENTE, EMERGENCIAL e não descartável para todos os visitantes, deixe em branco para ocultá-lo (permitido por HTML)."
     disable_system_edit_notifications: "Desabilitar modificação de notificações pelo sistema quando 'download_remote_images_to_local' estiver ativado."
-    likes_notification_consolidation_threshold: "Número de notificações de curtidas recebidas antes que as notificações sejam consolidadas em uma única. Defina como 0 para desabilitar. A janela pode ser configurada via `SiteSetting.likes_notification_consolidation_window_mins`."
-    likes_notification_consolidation_window_mins: "Duração em minutos em que as notificações de curtidas são consolidadas em uma única notificação quando o limite é atingido. O limite pode ser configurado via `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Desafixar automaticamente os tópicos quando o usuário atinge o fundo."
     read_time_word_count: "Palavras por minuto para calcular o tempo estimado de leitura."
     native_app_install_banner_ios: "Exibir o banner do aplicativo DiscourseHub em dispositivos iOS para usuários regulares (nível de confiança 1 e superior)."
@@ -2922,14 +2917,9 @@ pt_BR:
     confirm_new_email:
       title: "Confirmar novo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu novo endereço de e-mail"
-      text_body_template: |
-        Confirme seu novo endereço de e-mail para %{site_name} clicando no seguinte link:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Confirmar Antigo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"
-      text_body_template: "Antes que possamos alterar seu endereço de e-mail, precisamos que você confirme que você controla a conta de e-mail atual. \nDepois de concluir esta etapa, você terá que confirmar\no novo endereço de e-mail.\n\nConfirme seu endereço de e-mail atual para %{site_name} clicando no seguinte link:\n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
     notify_old_email:
       title: "Notificar e-mail antigo"
       subject_template: "[%{email_prefix}] Seu endereço de e-mail foi alterado"

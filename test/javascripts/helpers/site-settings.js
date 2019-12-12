@@ -93,6 +93,8 @@ Discourse.SiteSettingsOriginal = {
   enable_emoji: true,
   enable_emoji_shortcuts: true,
   emoji_set: "emoji_one",
+  enable_emoji_shortcuts: true,
+  enable_inline_emoji_translation: false,
   desktop_category_page_style: "categories_and_latest_topics",
   enable_mentions: true,
   enable_personal_messages: true,

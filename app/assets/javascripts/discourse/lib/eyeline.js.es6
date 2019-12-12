@@ -1,21 +1,42 @@
 import ENV from "discourse-common/config/environment";
 import { EventTarget } from "rsvp";
 
-//  Track visible elemnts on the screen.
+let _skipUpdate;
+let _rootElement;
+
+export function configureEyeline(opts) {
+  if (opts) {
+    _skipUpdate = opts.skipUpdate;
+    _rootElement = opts.rootElement;
+  } else {
+    _skipUpdate = ENV.environment === "test";
+    _rootElement = null;
+  }
+}
+
+configureEyeline();
+
+//  Track visible elements on the screen.
 const Eyeline = function Eyeline(selector) {
   this.selector = selector;
 };
 
 Eyeline.prototype.update = function() {
-  if (ENV.environment === "test") {
+  if (_skipUpdate) {
     return;
   }
 
-  const docViewTop = $(window).scrollTop(),
-    windowHeight = $(window).height(),
-    docViewBottom = docViewTop + windowHeight,
-    $elements = $(this.selector),
-    bottomOffset = $elements.last().offset();
+  const docViewTop = _rootElement
+    ? $(_rootElement).scrollTop()
+    : $(window).scrollTop();
+  const windowHeight = _rootElement
+    ? $(_rootElement).height()
+    : $(window).height();
+  const docViewBottom = docViewTop + windowHeight;
+  const $elements = $(this.selector);
+  const bottomOffset = _rootElement
+    ? $elements.last().position()
+    : $elements.last().offset();
 
   let atBottom = false;
   if (bottomOffset) {
@@ -25,7 +46,7 @@ Eyeline.prototype.update = function() {
 
   return $elements.each((i, elem) => {
     const $elem = $(elem),
-      elemTop = $elem.offset().top,
+      elemTop = _rootElement ? $elem.position().top : $elem.offset().top,
       elemBottom = elemTop + $elem.height();
 
     let markSeen = false;

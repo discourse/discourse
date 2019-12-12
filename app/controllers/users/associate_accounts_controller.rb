@@ -21,7 +21,7 @@ class Users::AssociateAccountsController < ApplicationController
   # Presents a confirmation screen to the user. Accessed via GET, with no CSRF checks
   def connect
     auth = get_auth_hash
-    $redis.del "#{REDIS_PREFIX}_#{current_user&.id}_#{params[:token]}"
+    Discourse.redis.del "#{REDIS_PREFIX}_#{current_user&.id}_#{params[:token]}"
 
     provider_name = auth.provider
     authenticator = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
@@ -37,7 +37,7 @@ class Users::AssociateAccountsController < ApplicationController
 
   def get_auth_hash
     token = params[:token]
-    json = $redis.get "#{REDIS_PREFIX}_#{current_user&.id}_#{token}"
+    json = Discourse.redis.get "#{REDIS_PREFIX}_#{current_user&.id}_#{token}"
     raise Discourse::NotFound if json.nil?
 
     OmniAuth::AuthHash.new(JSON.parse(json))

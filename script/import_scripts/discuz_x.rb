@@ -833,9 +833,9 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     file_name = "#{part_4}_avatar_big.jpg"
 
     if absolute
-      return File.join(DISCUZX_BASE_DIR, AVATAR_DIR, part_1, part_2, part_3, file_name), file_name
+      [File.join(DISCUZX_BASE_DIR, AVATAR_DIR, part_1, part_2, part_3, file_name), file_name]
     else
-      return File.join(AVATAR_DIR, part_1, part_2, part_3, file_name), file_name
+      [File.join(AVATAR_DIR, part_1, part_2, part_3, file_name), file_name]
     end
   end
 

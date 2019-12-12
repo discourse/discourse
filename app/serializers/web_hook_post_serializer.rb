@@ -3,6 +3,7 @@
 class WebHookPostSerializer < PostSerializer
 
   attributes :topic_posts_count,
+             :topic_filtered_posts_count,
              :topic_archetype,
              :category_slug
 
@@ -32,6 +33,10 @@ class WebHookPostSerializer < PostSerializer
 
   def topic_posts_count
     object.topic ? object.topic.posts_count : 0
+  end
+
+  def topic_filtered_posts_count
+    object.topic ? object.topic.posts.where(post_type: Post.types[:regular]).count : 0
   end
 
   def topic_archetype

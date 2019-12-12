@@ -119,7 +119,7 @@ class Theme < ActiveRecord::Base
 
   def self.components_for(theme_id)
     get_set_cache "theme_components_for_#{theme_id}" do
-      ChildTheme.where(parent_theme_id: theme_id).distinct.pluck(:child_theme_id)
+      ChildTheme.where(parent_theme_id: theme_id).pluck(:child_theme_id)
     end
   end
 
@@ -376,10 +376,15 @@ class Theme < ActiveRecord::Base
     fields.values
   end
 
-  def add_child_theme!(theme)
-    new_relation = child_theme_relation.new(child_theme_id: theme.id)
+  def add_relative_theme!(kind, theme)
+    new_relation = if kind == :child
+      child_theme_relation.new(child_theme_id: theme.id)
+    else
+      parent_theme_relation.new(parent_theme_id: theme.id)
+    end
     if new_relation.save
       child_themes.reload
+      parent_themes.reload
       save!
       Theme.clear_cache!
     else
@@ -418,7 +423,7 @@ class Theme < ActiveRecord::Base
   end
 
   def cached_settings
-    Rails.cache.fetch("settings_for_theme_#{self.id}", expires_in: 30.minutes) do
+    Discourse.cache.fetch("settings_for_theme_#{self.id}", expires_in: 30.minutes) do
       hash = {}
       self.settings.each do |setting|
         hash[setting.name] = setting.value
@@ -438,7 +443,7 @@ class Theme < ActiveRecord::Base
   end
 
   def clear_cached_settings!
-    Rails.cache.delete("settings_for_theme_#{self.id}")
+    Discourse.cache.delete("settings_for_theme_#{self.id}")
   end
 
   def included_settings

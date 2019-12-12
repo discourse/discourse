@@ -193,6 +193,7 @@
                 expandHidden=(action "expandHidden")
                 newTopicAction=(action "replyAsNewTopic")
                 toggleBookmark=(action "toggleBookmark")
+                toggleBookmarkWithReminder=(action "toggleBookmarkWithReminder")
                 togglePostType=(action "togglePostType")
                 rebakePost=(action "rebakePost")
                 changePostOwner=(action "changePostOwner")
@@ -313,7 +314,8 @@
                     toggleArchiveMessage=(action "toggleArchiveMessage")
                     editFirstPost=(action "editFirstPost")
                     deferTopic=(action "deferTopic")
-                    replyToPost=(action "replyToPost")}}
+                    replyToPost=(action "replyToPost")
+                    toggleFeaturedOnProfile=(action  "toggleFeaturedOnProfile")}}
                 {{else}}
                   <div id="topic-footer-buttons">
                     {{d-button icon="reply" class="btn-primary pull-right" action=(route-action "showLogin") label="topic.reply.title"}}

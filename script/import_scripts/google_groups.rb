@@ -69,10 +69,30 @@ def find(css, parent_element = driver)
   end
 end
 
+def base_url
+  if @domain.nil?
+    "https://groups.google.com/forum/?_escaped_fragment_=categories"
+  else
+    "https://groups.google.com/a/#{@domain}/forum/?_escaped_fragment_=categories"
+  end
+end
+
 def crawl_categories
   1.step(nil, 100).each do |start|
-    url = "https://groups.google.com/forum/?_escaped_fragment_=categories/#{@groupname}[#{start}-#{start + 99}]"
+    url = "#{base_url}/#{@groupname}[#{start}-#{start + 99}]"
     get(url)
+
+    begin
+      if start == 1 && find("h2").text == "Error 403"
+        exit_with_error(<<~MSG.red.bold)
+          Unable to find topics. Try running the script with the "--domain example.com"
+          option if you are a G Suite user and your group's URL contains a path with
+          your domain that looks like "/a/example.com".
+        MSG
+      end
+    rescue Selenium::WebDriver::Error::NoSuchElementError
+      # Ignore this error. It simply means there wasn't an error.
+    end
 
     topic_urls = extract(".subject a[href*='#{@groupname}']") { |a| a["href"].sub("/d/topic/", "/forum/?_escaped_fragment_=topic/") }
     break if topic_urls.size == 0
@@ -208,6 +228,7 @@ def parse_arguments
     opts.banner = "Usage: google_groups.rb [options]"
 
     opts.on("-g", "--groupname GROUPNAME") { |v| @groupname = v }
+    opts.on("-d", "--domain DOMAIN") { |v| @domain = v }
     opts.on("-c", "--cookies PATH", "path to cookies.txt") { |v| @cookies = v }
     opts.on("--path PATH", "output path for emails") { |v| @path = v }
     opts.on("-f", "--force", "force import when user isn't allowed to see email addresses") { @force_import = true }

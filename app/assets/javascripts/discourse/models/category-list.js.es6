@@ -2,6 +2,7 @@ import PreloadStore from "preload-store";
 import { ajax } from "discourse/lib/ajax";
 import Topic from "discourse/models/topic";
 import Category from "discourse/models/category";
+import Site from "discourse/models/site";
 
 const CategoryList = Ember.ArrayProxy.extend({
   init() {
@@ -76,7 +77,9 @@ CategoryList.reopenClass({
           break;
       }
 
-      categories.pushObject(store.createRecord("category", c));
+      const record = Site.current().updateCategory(c);
+      record.setupGroupsAndPermissions();
+      categories.pushObject(record);
     });
     return categories;
   },

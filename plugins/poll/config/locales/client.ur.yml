@@ -44,7 +44,8 @@ ur:
         label: "نتائج دکھائیں"
       hide-results:
         title: "وآپس اپنے ووٹس پر"
-        label: "نتائج چھپائیں"
+      export-results:
+        label: "ایکسپورٹ"
       open:
         title: "پول کھولیں"
         label: "کھولیں"

@@ -8,7 +8,7 @@ class DistributedMemoizer
 
   # memoize a key across processes and machines
   def self.memoize(key, duration = 60 * 60 * 24, redis = nil)
-    redis ||= $redis
+    redis ||= Discourse.redis
 
     redis_key = self.redis_key(key)
 
@@ -50,7 +50,7 @@ class DistributedMemoizer
 
   # Used for testing
   def self.flush!
-    $redis.scan_each(match: "memoize_*").each { |key| $redis.del(key) }
+    Discourse.redis.scan_each(match: "memoize_*").each { |key| Discourse.redis.del(key) }
   end
 
   protected

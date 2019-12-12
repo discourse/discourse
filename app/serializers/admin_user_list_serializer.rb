@@ -23,7 +23,6 @@ class AdminUserListSerializer < BasicUserSerializer
              :approved,
              :suspended_at,
              :suspended_till,
-             :suspended,
              :silenced,
              :silenced_till,
              :time_read,
@@ -60,10 +59,6 @@ class AdminUserListSerializer < BasicUserSerializer
 
   def include_silenced_till?
     object.silenced_till?
-  end
-
-  def suspended
-    object.suspended?
   end
 
   def include_suspended_at?

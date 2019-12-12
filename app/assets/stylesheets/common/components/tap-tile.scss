@@ -1,0 +1,41 @@
+.tap-tile-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  $tile-width: 100px;
+  $horizontal-tile-padding: 5px;
+
+  .tap-tile {
+    padding: 10px $horizontal-tile-padding;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    border: 1px solid $primary-medium;
+    margin: 0 0 20px;
+    width: $tile-width;
+    font-size: $font-down-2;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $tertiary-low;
+    }
+
+    &.active {
+      background-color: $highlight-medium;
+    }
+
+    .svg-icon,
+    .svg-icon-title {
+      width: 2.5em;
+      height: 2.5em;
+      margin-bottom: 10px;
+    }
+  }
+
+  &::after {
+    content: "";
+    width: $tile-width + ($horizontal-tile-padding * 3);
+  }
+}

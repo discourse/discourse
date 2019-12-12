@@ -3,8 +3,9 @@
 // create account modals
 .login-modal,
 .create-account {
-  .modal-inner-container {
+  &.fixed-modal .modal-inner-container {
     max-width: 350px;
+    max-height: 85vh;
   }
 
   .close {
@@ -13,6 +14,7 @@
 
   #login-buttons:not(.hidden) {
     display: flex;
+    flex: 1 0 auto;
     flex-wrap: wrap;
     justify-content: center;
     width: 102%;

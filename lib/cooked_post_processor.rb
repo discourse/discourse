@@ -206,11 +206,7 @@ class CookedPostProcessor
     # minus data images
     @doc.css("img[src^='data']") -
     # minus emojis
-    @doc.css("img.emoji") -
-    # minus oneboxed images
-    oneboxed_images -
-    # minus images inside quotes
-    @doc.css(".quote img")
+    @doc.css("img.emoji")
   end
 
   def extract_images_for_post
@@ -348,7 +344,11 @@ class CookedPostProcessor
       end
     end
 
-    add_lightbox!(img, original_width, original_height, upload, cropped: crop)
+    if img.ancestors('.onebox, .onebox-body, .quote').blank? && !img.classes.include?("onebox")
+      add_lightbox!(img, original_width, original_height, upload, cropped: crop)
+    end
+
+    optimize_image!(img, upload, cropped: crop) if upload
   end
 
   def loading_image(upload)
@@ -373,6 +373,39 @@ class CookedPostProcessor
       .each { |r| yield r if r > 1 }
   end
 
+  def optimize_image!(img, upload, cropped: false)
+    w, h = img["width"].to_i, img["height"].to_i
+
+    # note: optimize_urls cooks the src and data-small-upload further after this
+    thumbnail = upload.thumbnail(w, h)
+    if thumbnail && thumbnail.filesize.to_i < upload.filesize
+      img["src"] = thumbnail.url
+
+      srcset = +""
+
+      each_responsive_ratio do |ratio|
+        resized_w = (w * ratio).to_i
+        resized_h = (h * ratio).to_i
+
+        if !cropped && upload.width && resized_w > upload.width
+          cooked_url = UrlHelper.cook_url(upload.url, secure: @post.with_secure_media?)
+          srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
+        elsif t = upload.thumbnail(resized_w, resized_h)
+          cooked_url = UrlHelper.cook_url(t.url, secure: @post.with_secure_media?)
+          srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
+        end
+
+        img["srcset"] = "#{UrlHelper.cook_url(img["src"], secure: @post.with_secure_media?)}#{srcset}" if srcset.present?
+      end
+    else
+      img["src"] = upload.url
+    end
+
+    if small_upload = loading_image(upload)
+      img["data-small-upload"] = small_upload.url
+    end
+  end
+
   def add_lightbox!(img, original_width, original_height, upload, cropped: false)
     # first, create a div to hold our lightbox
     lightbox = create_node("div", LIGHTBOX_WRAPPER_CSS_CLASS)
@@ -380,7 +413,8 @@ class CookedPostProcessor
     lightbox.add_child(img)
 
     # then, the link to our larger image
-    a = create_link_node("lightbox", img["src"])
+    src = UrlHelper.cook_url(img["src"], secure: @post.with_secure_media?)
+    a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
 
     if upload
@@ -388,39 +422,6 @@ class CookedPostProcessor
     end
 
     a.add_child(img)
-
-    # replace the image by its thumbnail
-    w, h = img["width"].to_i, img["height"].to_i
-
-    if upload
-      thumbnail = upload.thumbnail(w, h)
-      if thumbnail && thumbnail.filesize.to_i < upload.filesize
-        img["src"] = thumbnail.url
-
-        srcset = +""
-
-        each_responsive_ratio do |ratio|
-          resized_w = (w * ratio).to_i
-          resized_h = (h * ratio).to_i
-
-          if !cropped && upload.width && resized_w > upload.width
-            cooked_url = UrlHelper.cook_url(upload.url, secure: upload.secure?)
-            srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
-          elsif t = upload.thumbnail(resized_w, resized_h)
-            cooked_url = UrlHelper.cook_url(t.url, secure: upload.secure?)
-            srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
-          end
-
-          img["srcset"] = "#{UrlHelper.cook_url(img["src"], secure: upload.secure?)}#{srcset}" if srcset.present?
-        end
-      else
-        img["src"] = upload.url
-      end
-
-      if small_upload = loading_image(upload)
-        img["data-small-upload"] = small_upload.url
-      end
-    end
 
     # then, some overlay informations
     meta = create_node("div", "meta")
@@ -642,9 +643,9 @@ class CookedPostProcessor
   end
 
   def disable_if_low_on_disk_space
+    return false if Discourse.store.external?
     return false if !SiteSetting.download_remote_images_to_local
     return false if available_disk_space >= SiteSetting.download_remote_images_threshold
-    return false if Discourse.store.external?
 
     SiteSetting.download_remote_images_to_local = false
     # log the site setting change

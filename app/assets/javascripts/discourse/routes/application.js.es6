@@ -145,8 +145,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     showUploadSelector(toolbarEvent) {
       showModal("uploadSelector").setProperties({
         toolbarEvent,
-        imageUrl: null,
-        imageLink: null
+        imageUrl: null
       });
     },
 

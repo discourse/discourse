@@ -59,7 +59,7 @@ class UserSilencer
           silenced_till: @user.silenced_till,
           silenced_at: DateTime.now
         )
-        return true
+        true
       end
     else
       false

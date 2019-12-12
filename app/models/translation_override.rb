@@ -94,7 +94,7 @@ class TranslationOverride < ActiveRecord::Base
           keys: invalid_keys.join(', ')
         ))
 
-        return false
+        false
       end
     end
   end

@@ -37,11 +37,11 @@ module Jobs
     end
 
     def self.last_notified_id
-      $redis.get(last_notified_key).to_i
+      Discourse.redis.get(last_notified_key).to_i
     end
 
     def self.last_notified_id=(arg)
-      $redis.set(last_notified_key, arg)
+      Discourse.redis.set(last_notified_key, arg)
     end
 
     def self.last_notified_key
@@ -49,7 +49,7 @@ module Jobs
     end
 
     def self.clear_key
-      $redis.del(last_notified_key)
+      Discourse.redis.del(last_notified_key)
     end
 
     def active_moderator_usernames

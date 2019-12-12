@@ -110,7 +110,7 @@ const Topic = RestModel.extend({
   @discourseComputed("fancy_title")
   fancyTitle(title) {
     let fancyTitle = censor(
-      emojiUnescape(title || ""),
+      emojiUnescape(title) || "",
       Site.currentProp("censored_regexp")
     );
 
@@ -444,6 +444,21 @@ const Topic = RestModel.extend({
     });
   },
 
+  toggleFeaturedOnProfile(user) {
+    const removing = user.get("featured_topic.id") === this.id;
+    const path = removing ? "clear-featured-topic" : "feature-topic";
+    return ajax(`/u/${user.username}/${path}`, {
+      type: "PUT",
+      data: { topic_id: this.id }
+    })
+      .then(() => {
+        const featuredTopic = removing ? null : this;
+        user.set("featured_topic", featuredTopic);
+        return;
+      })
+      .catch(popupAjaxError);
+  },
+
   createGroupInvite(group) {
     return ajax(`/t/${this.id}/invite-group`, {
       type: "POST",
@@ -660,8 +675,6 @@ Topic.reopenClass({
   },
 
   update(topic, props) {
-    props = JSON.parse(JSON.stringify(props)) || {};
-
     // We support `category_id` and `categoryId` for compatibility
     if (typeof props.categoryId !== "undefined") {
       props.category_id = props.categoryId;
@@ -673,11 +686,11 @@ Topic.reopenClass({
       delete props.category_id;
     }
 
-    if (props.tags && props.tags.length === 0) {
-      props.tags = [""];
-    }
-
-    return ajax(topic.get("url"), { type: "PUT", data: props }).then(result => {
+    return ajax(topic.get("url"), {
+      type: "PUT",
+      data: JSON.stringify(props),
+      contentType: "application/json"
+    }).then(result => {
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;

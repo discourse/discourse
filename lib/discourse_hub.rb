@@ -14,7 +14,7 @@ module DiscourseHub
   end
 
   def self.stats_fetched_at=(time_with_zone)
-    $redis.set STATS_FETCHED_AT_KEY, time_with_zone.to_i
+    Discourse.redis.set STATS_FETCHED_AT_KEY, time_with_zone.to_i
   end
 
   def self.get_payload
@@ -102,7 +102,7 @@ module DiscourseHub
   end
 
   def self.stats_fetched_at
-    t = $redis.get(STATS_FETCHED_AT_KEY)
+    t = Discourse.redis.get(STATS_FETCHED_AT_KEY)
     t ? Time.zone.at(t.to_i) : 1.year.ago
   end
 

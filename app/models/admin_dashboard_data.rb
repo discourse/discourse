@@ -63,16 +63,16 @@ class AdminDashboardData
   end
 
   def self.set_problems_started
-    existing_time = $redis.get(problems_started_key)
-    $redis.setex(problems_started_key, 14.days.to_i, existing_time || Time.zone.now.to_s)
+    existing_time = Discourse.redis.get(problems_started_key)
+    Discourse.redis.setex(problems_started_key, 14.days.to_i, existing_time || Time.zone.now.to_s)
   end
 
   def self.clear_problems_started
-    $redis.del problems_started_key
+    Discourse.redis.del problems_started_key
   end
 
   def self.problems_started_at
-    s = $redis.get(problems_started_key)
+    s = Discourse.redis.get(problems_started_key)
     s ? Time.zone.parse(s) : nil
   end
 
@@ -109,19 +109,19 @@ class AdminDashboardData
   end
 
   def self.problem_message_check(i18n_key)
-    $redis.get(problem_message_key(i18n_key)) ? I18n.t(i18n_key, base_path: Discourse.base_path) : nil
+    Discourse.redis.get(problem_message_key(i18n_key)) ? I18n.t(i18n_key, base_path: Discourse.base_path) : nil
   end
 
   def self.add_problem_message(i18n_key, expire_seconds = nil)
     if expire_seconds.to_i > 0
-      $redis.setex problem_message_key(i18n_key), expire_seconds.to_i, 1
+      Discourse.redis.setex problem_message_key(i18n_key), expire_seconds.to_i, 1
     else
-      $redis.set problem_message_key(i18n_key), 1
+      Discourse.redis.set problem_message_key(i18n_key), 1
     end
   end
 
   def self.clear_problem_message(i18n_key)
-    $redis.del problem_message_key(i18n_key)
+    Discourse.redis.del problem_message_key(i18n_key)
   end
 
   def self.problem_message_key(i18n_key)

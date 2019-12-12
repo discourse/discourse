@@ -98,13 +98,13 @@ describe UserStat do
       # this tests implementation which is not 100% ideal
       # that said, redis key leaks are not good
       stat.update_time_read!
-      ttl = $redis.ttl(UserStat.last_seen_key(user.id))
+      ttl = Discourse.redis.ttl(UserStat.last_seen_key(user.id))
       expect(ttl).to be > 0
       expect(ttl).to be <= UserStat::MAX_TIME_READ_DIFF
     end
 
     it 'makes no changes if nothing is cached' do
-      $redis.del(UserStat.last_seen_key(user.id))
+      Discourse.redis.del(UserStat.last_seen_key(user.id))
       stat.update_time_read!
       stat.reload
       expect(stat.time_read).to eq(0)

@@ -7,10 +7,40 @@ require_dependency "guardian"
 module Middleware
   class AnonymousCache
 
+    def self.cache_key_segments
+      @@cache_key_segments ||= {
+        m: 'key_is_mobile?',
+        c: 'key_is_crawler?',
+        b: 'key_has_brotli?',
+        t: 'key_cache_theme_ids',
+        ca: 'key_compress_anon'
+      }
+    end
+
+    # Compile a string builder method that will be called to create
+    # an anonymous cache key
+    def self.compile_key_builder
+      method = +"def self.__compiled_key_builder(h)\n  \""
+      cache_key_segments.each do |k, v|
+        raise "Invalid key name" unless k =~ /^[a-z]+$/
+        raise "Invalid method name" unless v =~ /^key_[a-z_\?]+$/
+        method << "|#{k}=#\{h.#{v}}"
+      end
+      method << "\"\nend"
+      eval(method)
+      @@compiled = true
+    end
+
+    def self.build_cache_key(helper)
+      compile_key_builder unless defined?(@@compiled)
+      __compiled_key_builder(helper)
+    end
+
     def self.anon_cache(env, duration)
       env["ANON_CACHE_DURATION"] = duration
     end
 
+    # This gives us an API to insert anonymous cache segments
     class Helper
       RACK_SESSION     = "rack.session"
       USER_AGENT       = "HTTP_USER_AGENT"
@@ -49,8 +79,9 @@ module Middleware
 
         @is_mobile == :true
       end
+      alias_method :key_is_mobile?, :is_mobile?
 
-      def has_brotli?
+      def key_has_brotli?
         @has_brotli ||=
           begin
             @env[ACCEPT_ENCODING].to_s =~ /br/ ? :true : :false
@@ -71,9 +102,22 @@ module Middleware
           end
         @is_crawler == :true
       end
+      alias_method :key_is_crawler?, :is_crawler?
 
       def cache_key
-        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_ids.join(",")}#{GlobalSetting.compress_anon_cache}"
+        return @cache_key if defined?(@cache_key)
+
+        @cache_key = +"ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
+        @cache_key << AnonymousCache.build_cache_key(self)
+        @cache_key
+      end
+
+      def key_cache_theme_ids
+        theme_ids.join(',')
+      end
+
+      def key_compress_anon
+        GlobalSetting.compress_anon_cache
       end
 
       def theme_ids
@@ -177,8 +221,8 @@ module Middleware
       end
 
       def cached(env = {})
-        if body = decompress($redis.get(cache_key_body))
-          if other = $redis.get(cache_key_other)
+        if body = decompress(Discourse.redis.get(cache_key_body))
+          if other = Discourse.redis.get(cache_key_other)
             other = JSON.parse(other)
             if req_params = other[1].delete(ADP)
               env[ADP] = req_params
@@ -203,7 +247,7 @@ module Middleware
         if status == 200 && cache_duration
 
           if GlobalSetting.anon_cache_store_threshold > 1
-            count = $redis.eval(<<~REDIS, [cache_key_count], [cache_duration])
+            count = Discourse.redis.eval(<<~REDIS, [cache_key_count], [cache_duration])
               local current = redis.call("incr", KEYS[1])
               redis.call("expire",KEYS[1],ARGV[1])
               return current
@@ -231,8 +275,8 @@ module Middleware
             }
           end
 
-          $redis.setex(cache_key_body,  cache_duration, compress(parts.join))
-          $redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
+          Discourse.redis.setex(cache_key_body,  cache_duration, compress(parts.join))
+          Discourse.redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
 
           headers["X-Discourse-Cached"] = "store"
         else
@@ -243,8 +287,8 @@ module Middleware
       end
 
       def clear_cache
-        $redis.del(cache_key_body)
-        $redis.del(cache_key_other)
+        Discourse.redis.del(cache_key_body)
+        Discourse.redis.del(cache_key_other)
       end
 
     end

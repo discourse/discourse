@@ -409,9 +409,6 @@ sw:
     error: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Labda barua pepe tayari inatumika?"
     error_staged: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Barua pepe inatumika na mtumiaji aliyekuwa staged."
     already_done: "Samahani, kiungo cha uthibitisho cha akaunti ni batili. Labda barua pepe yako imeshabadilishwa??"
-    authorizing_old:
-      title: "Asante kwa kuthibitisha barua pepe yako"
-      description: "Tunakutumia barua pepe mpya ya kuthibitisha."
   activation:
     action: "Bonyeza hapa kuanzisha akkaunti yako"
     already_done: "Samahani, kiungo cha uthibitisho cha akaunti ni batili. Labda akaunti yako tayari ipo hewani?"
@@ -1723,21 +1720,9 @@ sw:
     confirm_new_email:
       title: "Thibitisha Barua Pepe Mpya"
       subject_template: "[%{email_prefix}] Thibitisha barua pepe mpya"
-      text_body_template: |
-        Thibitisha barua pepe yako kwenye %{site_name} kwa kubofya kiungo kifuatacho:
-
-        %{base_url}/u/authorize-baruapepe/%{email_token}
     confirm_old_email:
       title: "Thibitisha Barua pepe ya Zamani"
       subject_template: "[%{email_prefix}] Thibitisha barua pepe ya sasa"
-      text_body_template: |
-        Kabla hatujabadilisha barua pepe yako, tunahitaji kuthibitisha kuwa unamiliki
-        barua pepe yako ya sasa. Baada ya kumaliza hatua hii, tutathibitisha
-        barua pepe yako mpya.
-
-        Thibitisha barua pepe yako ya sasa kwenye %{site_name} kwa kubonyeza kiungo kifuatacho:
-
-        %{base_url}/u/authorize-barua pepe/%{email_token}
     notify_old_email:
       title: "Ijulishe Barua Pepe ya Zamani"
       subject_template: "[%{email_prefix}] Barua pepe yako imebadilishwa"

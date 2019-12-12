@@ -33,8 +33,8 @@ class ReviewablesController < ApplicationController
       filters[filter_key] = params[filter_key]
     end
 
-    total_rows = Reviewable.list_for(current_user, filters).count
-    reviewables = Reviewable.list_for(current_user, filters.merge(limit: PER_PAGE, offset: offset)).to_a
+    total_rows = Reviewable.list_for(current_user, **filters).count
+    reviewables = Reviewable.list_for(current_user, **filters.merge(limit: PER_PAGE, offset: offset)).to_a
 
     claimed_topics = ReviewableClaimedTopic.claimed_hash(reviewables.map { |r| r.topic_id }.uniq)
 
@@ -169,7 +169,7 @@ class ReviewablesController < ApplicationController
         render_json_error(reviewable.errors)
       end
     rescue Reviewable::UpdateConflict
-      return render_json_error(I18n.t('reviewables.conflict'), status: 409)
+      render_json_error(I18n.t('reviewables.conflict'), status: 409)
     end
   end
 

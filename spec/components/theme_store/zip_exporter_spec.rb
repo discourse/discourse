@@ -4,17 +4,20 @@ require 'rails_helper'
 require 'theme_store/zip_exporter'
 
 describe ThemeStore::ZipExporter do
+  let(:rand_hex) do
+    +"X" << SecureRandom.hex
+  end
   let!(:theme) do
     Fabricate(:theme, name: "Header Icons").tap do |theme|
       theme.set_field(target: :common, name: :body_tag, value: "<b>testtheme1</b>")
-      theme.set_field(target: :settings, name: :yaml, value: "somesetting: test")
+      theme.set_field(target: :settings, name: :yaml, value: "somesetting: #{rand_hex}")
       theme.set_field(target: :mobile, name: :scss, value: 'body {background-color: $background_color; font-size: $font-size}')
       theme.set_field(target: :translations, name: :en, value: { en: { key: "value" } }.deep_stringify_keys.to_yaml)
       image = file_from_fixtures("logo.png")
       upload = UploadCreator.new(image, "logo.png").create_for(Discourse::SYSTEM_USER_ID)
       theme.set_field(target: :common, name: :logo, upload_id: upload.id, type: :theme_upload_var)
       image = file_from_fixtures("logo.png")
-      other_upload = UploadCreator.new(image, "logo.png").create_for(Discourse::SYSTEM_USER_ID)
+      _other_upload = UploadCreator.new(image, "logo.png").create_for(Discourse::SYSTEM_USER_ID)
       theme.set_field(target: :common, name: "other_logo", upload_id: upload.id, type: :theme_upload_var)
       theme.build_remote_theme(remote_url: "", about_url: "abouturl", license_url: "licenseurl",
                                authors: "David Taylor", theme_version: "1.0", minimum_discourse_version: "1.0.0",
@@ -61,7 +64,6 @@ describe ThemeStore::ZipExporter do
   it "exports the theme correctly" do
     package
     file = 'discourse-header-icons.zip'
-    dest = 'discourse-header-icons'
     Dir.chdir(dir) do
       available_size = SiteSetting.decompressed_theme_max_file_size_mb
       Compression::Zip.new.decompress(dir, file, available_size, allow_non_root_folder: true)
@@ -103,8 +105,14 @@ describe ThemeStore::ZipExporter do
 
       expect(File.read("common/body_tag.html")).to eq("<b>testtheme1</b>")
       expect(File.read("mobile/mobile.scss")).to eq("body {background-color: $background_color; font-size: $font-size}")
-      expect(File.read("settings.yml")).to eq("somesetting: test")
+      expect(File.read("settings.yml")).to eq("somesetting: #{rand_hex}")
       expect(File.read("locales/en.yml")).to eq({ en: { key: "value" } }.deep_stringify_keys.to_yaml)
+
+      theme.update!(name: "Discourse Header Icons")
+      exporter = ThemeStore::ZipExporter.new(theme)
+      filename = exporter.package_filename
+      exporter.cleanup!
+      expect(filename).to end_with "/discourse-header-icons.zip"
     end
   end
 
@@ -117,14 +125,6 @@ describe ThemeStore::ZipExporter do
       theme.save!
       package
     end.to raise_error(RuntimeError)
-  end
-
-  it "doesn't prepend 'discourse' to filename if already there" do
-    theme.update!(name: "Discourse Header Icons")
-    exporter = ThemeStore::ZipExporter.new(theme)
-    filename = exporter.package_filename
-    exporter.cleanup!
-    expect(filename).to end_with "/discourse-header-icons.zip"
   end
 
 end

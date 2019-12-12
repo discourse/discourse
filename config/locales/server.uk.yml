@@ -767,9 +767,6 @@ uk:
     error: "Під час зміни адреси Вашої електронної скриньки трапилася помилка. Можливо, ця адреса вже використовується?"
     error_staged: "Під час зміни вашої електронної адреси сталася помилка. Адреса вже використовується іншим користувачем."
     already_done: "На жаль, це підтвердження більше не дійсне. Можливо, вашу електронну пошту вже змінено?"
-    authorizing_old:
-      title: "Дякую за підтвердження вашої email-адреси"
-      description: "Ми відправили повідомлення з посиланням для підтвердження вашої нової адреси."
   associated_accounts:
     revoke_failed: "Не вдалося від’єднати від облікового запису %{provider_name}."
     connected: "(пов’язаний)"
@@ -1278,8 +1275,6 @@ uk:
     subfolder_ends_in_slash: "Неправильно налаштована ваша папка; DISCOURSE_RELATIVE_URL_ROOT закінчується косою рискою."
     missing_mailgun_api_key: "Сервер налаштований для надсилання електронної пошти через Mailgun, але ви не надали ключ API, який використовується для перевірки повідомлень webhook."
     bad_favicon_url: "Фавікон не завантажується. Перевірте налаштування Фавікон в <a href='%{base_path}/admin/site_settings'>налаштуваннях сайту</a>."
-    deprecated_api_usage: "Ми виявили запит API, використовуючий застарілий метод аутентифікації. Оновіть його, щоб використовувати <a href='https://meta.discourse.org/t/discourse-api-documentation/22706'>аутентифікацію на основі заголовка</a> ."
-    update_mail_receiver: "Ми виявили застарілу версію поштового одержувача. Будь ласка, увійдіть через ssh на цьому сервері та запустіть `/var/discourse/launcher rebuild mail-receiver`."
     poll_pop3_timeout: "Час підключення до сервера POP3 закінчився. Не вдалося отримати електронну пошту. Перевірте свої <a href='%{base_path}/admin/site_settings/category/email'>налаштування POP3</a> та постачальника послуг."
     poll_pop3_auth_error: "Підключення до сервера POP3 не вдається з помилкою аутентифікації. Перевірте свої <a href='%{base_path}/admin/site_settings/category/email'>налаштування POP3</a> ."
     force_https_warning: "Ваш веб-сайт використовує SSL. Але `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ще не ввімкнено в налаштуваннях вашого сайту."
@@ -1954,7 +1949,6 @@ uk:
     auto_deleted_by_timer: "Автоматично видаляється за таймером."
   login:
     security_key_description: "Підготувавши свій фізичний ключ безпеки, натисніть кнопку 'Аутентифікація за допомогою ключа безпеки' нижче."
-    security_key_alternative: "Не можете знайти ключ безпеки, або хочете скористатися іншим методом?"
     security_key_authenticate: "Аутентифікувати за допомогою ключа безпеки"
     security_key_not_allowed_error: "Процес аутентифікації з ключем безпеки або вичерпано, або скасовано."
     security_key_no_matching_credential_error: "У наданому ключі безпеки не знайдено відповідних облікових даних."
@@ -2431,10 +2425,6 @@ uk:
     confirm_new_email:
       title: "Підтвердіть нову електронну пошту"
       subject_template: "[%{email_prefix}] Підтвердіть свою нову електронну пошту"
-      text_body_template: |
-        Підтвердіть свою нову електронну адресу для %{site_name} натиснувши наступне посилання:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Підтвердіть стару електронну пошту"
       subject_template: "[%{email_prefix}] Підтвердіть свою поточну адресу електроної пошти"

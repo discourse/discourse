@@ -86,7 +86,7 @@ Layout/Tab:
   Enabled: true
 
 # Blank lines should not have any spaces.
-Layout/TrailingBlankLines:
+Layout/TrailingEmptyLines:
   Enabled: true
 
 # No trailing whitespace.
@@ -116,7 +116,7 @@ Layout/MultilineMethodCallIndentation:
   Enabled: true
   EnforcedStyle: indented
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: true
 
 Bundler/OrderedGems:
@@ -132,8 +132,20 @@ Style/Semicolon:
 Style/RedundantReturn:
   Enabled: true
 
-DiscourseCops/NoChdir:	
-  Enabled: true	
-  Exclude:	
-    - 'spec/**/*' # Specs are run sequentially, so chdir can be used	
+DiscourseCops/NoChdir:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*' # Specs are run sequentially, so chdir can be used
+    - 'plugins/*/spec/**/*'
+
+DiscourseCops/NoURIEscapeEncode:
+  Enabled: true
+
+Style/GlobalVars:
+  Enabled: true
+  Severity: warning
+  Exclude:
+    - 'lib/tasks/**/*'
+    - 'script/**/*'
+    - 'spec/**/*.rb'
     - 'plugins/*/spec/**/*'

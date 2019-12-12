@@ -35,6 +35,7 @@ class PostCreator
   #                             call `enqueue_jobs` after the transaction is comitted.
   #   hidden_reason_id        - Reason for hiding the post (optional)
   #   skip_validations        - Do not validate any of the content in the post
+  #   draft_key               - the key of the draft we are creating (will be deleted on success)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -180,7 +181,9 @@ class PostCreator
         update_uploads_secure_status
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message
-        @post.advance_draft_sequence unless @opts[:import_mode]
+        if !@opts[:import_mode]
+          DraftSequence.next!(@user, draft_key)
+        end
         @post.save_reply_relationships
       end
     end
@@ -292,10 +295,13 @@ class PostCreator
 
   protected
 
+  def draft_key
+    @draft_key ||= @opts[:draft_key]
+    @draft_key ||= @topic ? "topic_#{@topic.id}" : "new_topic"
+  end
+
   def build_post_stats
     if PostCreator.track_post_stats
-      draft_key = @topic ? "topic_#{@topic.id}" : "new_topic"
-
       sequence = DraftSequence.current(@user, draft_key)
       revisions = Draft.where(sequence: sequence,
                               user_id: @user.id,
@@ -375,7 +381,9 @@ class PostCreator
   end
 
   def update_uploads_secure_status
-    @post.update_uploads_secure_status
+    if SiteSetting.secure_media? || SiteSetting.prevent_anons_from_downloading_files?
+      @post.update_uploads_secure_status
+    end
   end
 
   def handle_spam
@@ -550,10 +558,10 @@ class PostCreator
       .first
 
     if !last_post_time
-      @post.custom_fields["notice_type"] = Post.notices[:new_user]
+      @post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:new_user]
     elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
-      @post.custom_fields["notice_type"] = Post.notices[:returning_user]
-      @post.custom_fields["notice_args"] = last_post_time.iso8601
+      @post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:returning_user]
+      @post.custom_fields[Post::NOTICE_ARGS] = last_post_time.iso8601
     end
   end
 

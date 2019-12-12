@@ -1,7 +1,7 @@
 import { acceptance } from "helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 
-acceptance("Rendering polls - desktop", {
+acceptance("Rendering polls with bar charts - desktop", {
   loggedIn: true,
   settings: { poll_enabled: true },
   beforeEach() {

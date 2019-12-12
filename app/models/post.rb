@@ -54,11 +54,13 @@ class Post < ActiveRecord::Base
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check, :skip_validation
 
-  LARGE_IMAGES      ||= "large_images".freeze
-  BROKEN_IMAGES     ||= "broken_images".freeze
-  DOWNLOADED_IMAGES ||= "downloaded_images".freeze
-  MISSING_UPLOADS ||= "missing uploads".freeze
-  MISSING_UPLOADS_IGNORED ||= "missing uploads ignored".freeze
+  LARGE_IMAGES            ||= "large_images"
+  BROKEN_IMAGES           ||= "broken_images"
+  DOWNLOADED_IMAGES       ||= "downloaded_images"
+  MISSING_UPLOADS         ||= "missing uploads"
+  MISSING_UPLOADS_IGNORED ||= "missing uploads ignored"
+  NOTICE_TYPE             ||= "notice_type"
+  NOTICE_ARGS             ||= "notice_args"
 
   SHORT_POST_CHARS ||= 1200
 
@@ -131,7 +133,8 @@ class Post < ActiveRecord::Base
                                  new_user_spam_threshold_reached: 3,
                                  flagged_by_tl3_user: 4,
                                  email_spam_header_found: 5,
-                                 flagged_by_tl4_user: 6)
+                                 flagged_by_tl4_user: 6,
+                                 email_authentication_result_header: 7)
   end
 
   def self.types
@@ -244,12 +247,12 @@ class Post < ActiveRecord::Base
 
   def store_unique_post_key
     if SiteSetting.unique_posts_mins > 0
-      $redis.setex(unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, id)
+      Discourse.redis.setex(unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, id)
     end
   end
 
   def matches_recent_post?
-    post_id = $redis.get(unique_post_key)
+    post_id = Discourse.redis.get(unique_post_key)
     post_id != (nil) && post_id.to_i != (id)
   end
 
@@ -422,8 +425,8 @@ class Post < ActiveRecord::Base
   end
 
   def delete_post_notices
-    self.custom_fields.delete("notice_type")
-    self.custom_fields.delete("notice_args")
+    self.custom_fields.delete(Post::NOTICE_TYPE)
+    self.custom_fields.delete(Post::NOTICE_ARGS)
     self.save_custom_fields
   end
 
@@ -693,11 +696,11 @@ class Post < ActiveRecord::Base
   end
 
   def self.estimate_posts_per_day
-    val = $redis.get("estimated_posts_per_day")
+    val = Discourse.redis.get("estimated_posts_per_day")
     return val.to_i if val
 
     posts_per_day = Topic.listable_topics.secured.joins(:posts).merge(Post.created_since(30.days.ago)).count / 30
-    $redis.setex("estimated_posts_per_day", 1.day.to_i, posts_per_day.to_s)
+    Discourse.redis.setex("estimated_posts_per_day", 1.day.to_i, posts_per_day.to_s)
     posts_per_day
 
   end
@@ -968,7 +971,7 @@ class Post < ActiveRecord::Base
       next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
 
       path = begin
-        URI(URI.unescape(GlobalSetting.cdn_url ? src.sub(GlobalSetting.cdn_url, "") : src))&.path
+        URI(UrlHelper.unencode(GlobalSetting.cdn_url ? src.sub(GlobalSetting.cdn_url, "") : src))&.path
       rescue URI::Error
       end
 

@@ -679,6 +679,29 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
+    toggleBookmarkWithReminder(post) {
+      if (!this.currentUser) {
+        return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
+      } else if (post) {
+        return post.toggleBookmarkWithReminder();
+      } else {
+        return this.model.toggleBookmarkWithReminder();
+      }
+    },
+
+    toggleFeaturedOnProfile() {
+      if (!this.currentUser) return;
+
+      if (
+        this.currentUser.featured_topic &&
+        this.currentUser.featured_topic.id !== this.model.id
+      ) {
+        bootbox.confirm(I18n.t("topic.remove_from_profile.warning"), result => {
+          if (result) return this._performToggleFeaturedOnProfile();
+        });
+      } else return this._performToggleFeaturedOnProfile();
+    },
+
     jumpToIndex(index) {
       this._jumpToIndex(index);
     },
@@ -1068,6 +1091,10 @@ export default Controller.extend(bufferedProperty("model"), {
         .then(() => this.set(`model.${topicTimer}`, EmberObject.create({})))
         .catch(error => popupAjaxError(error));
     }
+  },
+
+  _performToggleFeaturedOnProfile() {
+    this.model.toggleFeaturedOnProfile(this.currentUser).catch(popupAjaxError);
   },
 
   _jumpToIndex(index) {

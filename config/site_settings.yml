@@ -187,7 +187,7 @@ basic:
   post_menu:
     client: true
     type: list
-    default: "read|like|share|flag|edit|bookmark|delete|admin|reply"
+    default: "read|like|share|flag|edit|bookmark|bookmarkWithReminder|delete|admin|reply"
     allow_any: false
     choices:
       - read
@@ -199,10 +199,11 @@ basic:
       - bookmark
       - admin
       - reply
+      - bookmarkWithReminder
   post_menu_hidden_items:
     client: true
     type: list
-    default: "flag|bookmark|edit|delete|admin"
+    default: "flag|bookmark|bookmarkWithReminder|edit|delete|admin"
     allow_any: false
     choices:
       - like
@@ -213,6 +214,7 @@ basic:
       - bookmark
       - admin
       - reply
+      - bookmarkWithReminder
   share_links:
     client: true
     type: list
@@ -240,6 +242,12 @@ basic:
       - box
       - bullet
       - none
+  max_category_nesting:
+    client: true
+    default: 2
+    min: 2
+    max: 3
+    hidden: true
   enable_mobile_theme:
     client: true
     default: true
@@ -282,6 +290,10 @@ basic:
   enable_whispers:
     client: true
     default: false
+  enable_bookmarks_with_reminders:
+    client: true
+    default: false
+    hidden: true
   push_notifications_prompt:
     default: true
     client: true
@@ -389,12 +401,12 @@ login:
   enable_discord_logins:
     default: false
   discord_client_id:
-    default: ''
+    default: ""
   discord_secret:
-    default: ''
+    default: ""
     secret: true
   discord_trusted_guilds:
-    default: ''
+    default: ""
     type: list
   enable_sso:
     client: true
@@ -553,6 +565,9 @@ users:
     max: 99000
   hide_user_profiles_from_public:
     default: false
+    client: true
+  allow_featured_topic_on_user_profiles:
+    default: true
     client: true
   show_inactive_accounts:
     default: false
@@ -965,6 +980,8 @@ email:
   email_in_min_trust:
     default: 2
     enum: "TrustLevelSetting"
+  email_in_authserv_id:
+    default: ""
   email_in_spam_header:
     type: enum
     default: "none"
@@ -1342,7 +1359,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse"
     type: list
     list_type: compact
   crawler_check_bypass_agents:
@@ -1387,10 +1404,15 @@ security:
   content_security_policy_script_src:
     type: list
     default: ""
+  content_security_policy_allow_unsafe_eval:
+    default: true
+    hidden: true
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
     max: 2000
+  allow_embedding_site_in_an_iframe:
+    default: false
 
 onebox:
   enable_flash_video_onebox: false
@@ -1846,7 +1868,7 @@ uncategorized:
 
   disable_system_edit_notifications: true
 
-  likes_notification_consolidation_threshold:
+  notification_consolidation_threshold:
     default: 3
     min: 0
 
@@ -2048,7 +2070,7 @@ api:
     default: 30
   retry_web_hook_events:
     default: false
-  api_key_last_used_epoch: 
+  api_key_last_used_epoch:
     default: "" # Value is added in a migration
     hidden: true
   revoke_api_keys_days:

@@ -17,6 +17,12 @@ module DiscourseTagging
     if guardian.can_tag?(topic)
       tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, guardian) || []
 
+      if !tag_names.empty?
+        Tag.where_name(tag_names).joins(:target_tag).includes(:target_tag).each do |tag|
+          tag_names[tag_names.index(tag.name)] = tag.target_tag.name
+        end
+      end
+
       old_tag_names = topic.tags.pluck(:name) || []
       new_tag_names = tag_names - old_tag_names
       removed_tag_names = old_tag_names - tag_names
@@ -145,7 +151,7 @@ module DiscourseTagging
 
   TAG_GROUP_RESTRICTIONS_SQL ||= <<~SQL
     tag_group_restrictions AS (
-      SELECT t.name as tag_name, t.id as tag_id, tgm.id as tgm_id, tg.id as tag_group_id, tg.parent_tag_id as parent_tag_id,
+      SELECT t.id as tag_id, tgm.id as tgm_id, tg.id as tag_group_id, tg.parent_tag_id as parent_tag_id,
         tg.one_per_topic as one_per_topic
       FROM tags t
       LEFT OUTER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
@@ -155,13 +161,13 @@ module DiscourseTagging
 
   CATEGORY_RESTRICTIONS_SQL ||= <<~SQL
     category_restrictions AS (
-      SELECT t.name as tag_name, t.id as tag_id, ct.id as ct_id, ct.category_id as category_id
+      SELECT t.id as tag_id, ct.id as ct_id, ct.category_id as category_id
       FROM tags t
       INNER JOIN category_tags ct ON t.id = ct.tag_id /*and_name_like*/
 
       UNION
 
-      SELECT t.name as tag_name, t.id as tag_id, ctg.id as ctg_id, ctg.category_id as category_id
+      SELECT t.id as tag_id, ctg.id as ctg_id, ctg.category_id as category_id
       FROM tags t
       INNER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
       INNER JOIN category_tag_groups ctg ON tgm.tag_group_id = ctg.tag_group_id
@@ -183,13 +189,15 @@ module DiscourseTagging
 
   # Options:
   #   term: a search term to filter tags by name
-  #   order: order by for the query
   #   limit: max number of results
   #   category: a Category to which the object being tagged belongs
   #   for_input: result is for an input field, so only show permitted tags
   #   for_topic: results are for tagging a topic
   #   selected_tags: an array of tag names that are in the current selection
   #   only_tag_names: limit results to tags with these names
+  #   exclude_synonyms: exclude synonyms from results
+  #   order_search_results: result should be ordered for name search results
+  #   order_popularity: order result by topic_count
   def self.filter_allowed_tags(guardian, opts = {})
     selected_tag_ids = opts[:selected_tags] ? Tag.where_name(opts[:selected_tags]).pluck(:id) : []
     category = opts[:category]
@@ -212,10 +220,18 @@ module DiscourseTagging
 
     outer_join = category.nil? || category.allow_global_tags || !category_has_restricted_tags
 
+    distinct_clause = if opts[:order_popularity]
+      "DISTINCT ON (topic_count, name)"
+    elsif opts[:order_search_results]
+      "DISTINCT ON (lower(name) = lower(:cleaned_term), topic_count, name)"
+    else
+      ""
+    end
+
     sql << <<~SQL
-      SELECT t.id, t.name, t.topic_count, t.pm_topic_count,
+      SELECT #{distinct_clause} t.id, t.name, t.topic_count, t.pm_topic_count,
         tgr.tgm_id as tgm_id, tgr.tag_group_id as tag_group_id, tgr.parent_tag_id as parent_tag_id,
-        tgr.one_per_topic as one_per_topic
+        tgr.one_per_topic as one_per_topic, t.target_tag_id
       FROM tags t
       INNER JOIN tag_group_restrictions tgr ON tgr.tag_id = t.id
       #{outer_join ? "LEFT OUTER" : "INNER"}
@@ -307,11 +323,19 @@ module DiscourseTagging
       end
     end
 
+    if opts[:exclude_synonyms]
+      builder.where("target_tag_id IS NULL")
+    end
+
+    if opts[:exclude_has_synonyms]
+      builder.where("id NOT IN (SELECT target_tag_id FROM tags WHERE target_tag_id IS NOT NULL)")
+    end
+
     builder.limit(opts[:limit]) if opts[:limit]
-    if opts[:order]
-      builder.order_by(opts[:order])
+    if opts[:order_popularity]
+      builder.order_by("topic_count DESC, name")
     elsif opts[:order_search_results] && !term.blank?
-      builder.order_by("lower(name) = lower(:cleaned_term) DESC, topic_count DESC")
+      builder.order_by("lower(name) = lower(:cleaned_term) DESC, topic_count DESC, name")
     end
 
     result = builder.query(builder_params).uniq { |t| t.id }
@@ -336,7 +360,7 @@ module DiscourseTagging
   end
 
   def self.staff_tag_names
-    tag_names = Discourse.cache.read(TAGS_STAFF_CACHE_KEY, tag_names)
+    tag_names = Discourse.cache.read(TAGS_STAFF_CACHE_KEY)
 
     if !tag_names
       tag_names = Tag.joins(tag_groups: :tag_group_permissions)
@@ -383,13 +407,26 @@ module DiscourseTagging
     tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user), opts) || []
     if taggable.tags.pluck(:name).sort != tag_names.sort
       taggable.tags = Tag.where_name(tag_names).all
-      if taggable.tags.size < tag_names.size
-        new_tag_names = tag_names - taggable.tags.map(&:name)
-        new_tag_names.each do |name|
-          taggable.tags << Tag.create(name: name)
-        end
+      new_tag_names = taggable.tags.size < tag_names.size ? tag_names - taggable.tags.map(&:name) : []
+      taggable.tags << Tag.where(target_tag_id: taggable.tags.map(&:id)).all
+      new_tag_names.each do |name|
+        taggable.tags << Tag.create(name: name)
       end
     end
+  end
+
+  # Returns true if all were added successfully, or an Array of the
+  # tags that failed to be added, with errors on each Tag.
+  def self.add_or_create_synonyms_by_name(target_tag, synonym_names)
+    tag_names = DiscourseTagging.tags_for_saving(synonym_names, Guardian.new(Discourse.system_user)) || []
+    existing = Tag.where_name(tag_names).all
+    target_tag.synonyms << existing
+    (tag_names - target_tag.synonyms.map(&:name)).each do |name|
+      target_tag.synonyms << Tag.create(name: name)
+    end
+    successful = existing.select { |t| !t.errors.present? }
+    TopicTag.where(tag_id: successful.map(&:id)).update_all(tag_id: target_tag.id)
+    (existing - successful).presence || true
   end
 
   def self.muted_tags(user)

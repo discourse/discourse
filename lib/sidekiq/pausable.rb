@@ -12,13 +12,13 @@ class SidekiqPauser
   end
 
   def pause!(value = "paused")
-    $redis.setex PAUSED_KEY, TTL, value
+    Discourse.redis.setex PAUSED_KEY, TTL, value
     extend_lease_thread
     true
   end
 
   def paused?
-    !!$redis.get(PAUSED_KEY)
+    !!Discourse.redis.get(PAUSED_KEY)
   end
 
   def unpause_all!
@@ -48,7 +48,7 @@ class SidekiqPauser
       stop_extend_lease_thread if @dbs.size == 0
     end
 
-    $redis.del(PAUSED_KEY)
+    Discourse.redis.del(PAUSED_KEY)
     true
   end
 
@@ -83,7 +83,7 @@ class SidekiqPauser
           @mutex.synchronize do
             @dbs.each do |db|
               RailsMultisite::ConnectionManagement.with_connection(db) do
-                if !$redis.expire(PAUSED_KEY, TTL)
+                if !Discourse.redis.expire(PAUSED_KEY, TTL)
                   # if it was unpaused in another process we got to remove the
                   # bad key
                   @dbs.delete(db)

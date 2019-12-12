@@ -42,7 +42,8 @@ hy:
         label: "Ցուցադրել արդյունքները"
       hide-results:
         title: "Վերադառնալ դեպի Ձեր քվեները"
-        label: "Թաքցնել արդյունքները"
+      export-results:
+        label: "Արտահանել"
       open:
         title: "Բացել հարցումը"
         label: "Բացել"

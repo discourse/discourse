@@ -129,7 +129,8 @@ task 'docker:test' do
 
       command_prefix =
         if ENV["SKIP_PLUGINS"]
-          ""
+          # Make sure not to load plugins. bin/rake will add LOAD_PLUGINS=1 automatically unless we set it to 0 explicitly
+          "LOAD_PLUGINS=0 "
         else
           "LOAD_PLUGINS=1 "
         end
@@ -137,7 +138,7 @@ task 'docker:test' do
       @good &&= run_or_fail("#{command_prefix}bundle exec rake db:migrate")
 
       if ENV['USE_TURBO']
-        @good &&= run_or_fail("bundle exec rake parallel:migrate")
+        @good &&= run_or_fail("#{command_prefix}bundle exec rake parallel:migrate")
       end
 
       puts "travis_fold:end:prepare_tests" if ENV["TRAVIS"]

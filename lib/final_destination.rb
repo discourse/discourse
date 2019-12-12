@@ -11,17 +11,17 @@ class FinalDestination
 
   def self.clear_https_cache!(domain)
     key = redis_https_key(domain)
-    $redis.without_namespace.del(key)
+    Discourse.redis.without_namespace.del(key)
   end
 
   def self.cache_https_domain(domain)
     key = redis_https_key(domain)
-    $redis.without_namespace.setex(key, "1", 1.day.to_i).present?
+    Discourse.redis.without_namespace.setex(key, "1", 1.day.to_i).present?
   end
 
   def self.is_https_domain?(domain)
     key = redis_https_key(domain)
-    $redis.without_namespace.get(key).present?
+    Discourse.redis.without_namespace.get(key).present?
   end
 
   def self.redis_https_key(domain)
@@ -315,10 +315,7 @@ class FinalDestination
   end
 
   def escape_url
-    UrlHelper.escape_uri(
-      CGI.unescapeHTML(@url),
-      Regexp.new("[^#{URI::PATTERN::UNRESERVED}#{URI::PATTERN::RESERVED}#]")
-    )
+    UrlHelper.escape_uri(@url)
   end
 
   def private_ranges

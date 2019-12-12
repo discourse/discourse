@@ -56,7 +56,6 @@ class User < ActiveRecord::Base
   has_many :user_associated_accounts, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
   has_many :oauth2_user_infos, dependent: :destroy
-  has_one :instagram_user_info, dependent: :destroy
   has_many :user_second_factors, dependent: :destroy
 
   has_many :totps, -> {
@@ -418,6 +417,7 @@ class User < ActiveRecord::Base
 
   def enqueue_staff_welcome_message(role)
     return unless staff?
+    return if role == :admin && User.real.where(admin: true).count == 1
 
     Jobs.enqueue(
       :send_system_message,
@@ -711,9 +711,9 @@ class User < ActiveRecord::Base
     now_date = now.to_date
     # Only update last seen once every minute
     redis_key = "user:#{id}:#{now_date}"
-    return unless $redis.setnx(redis_key, "1")
+    return unless Discourse.redis.setnx(redis_key, "1")
 
-    $redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
+    Discourse.redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
     update_previous_visit(now)
     # using update_column to avoid the AR transaction
     update_column(:last_seen_at, now)
@@ -768,8 +768,8 @@ class User < ActiveRecord::Base
       url = SiteSetting.external_system_avatars_url.dup
       url = +"#{Discourse::base_uri}#{url}" unless url =~ /^https?:\/\//
       url.gsub! "{color}", letter_avatar_color(normalized_username)
-      url.gsub! "{username}", CGI.escape(username)
-      url.gsub! "{first_letter}", CGI.escape(normalized_username.grapheme_clusters.first)
+      url.gsub! "{username}", UrlHelper.encode_component(username)
+      url.gsub! "{first_letter}", UrlHelper.encode_component(normalized_username.grapheme_clusters.first)
       url.gsub! "{hostname}", Discourse.current_hostname
       url
     else

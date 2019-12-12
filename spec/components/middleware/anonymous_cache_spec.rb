@@ -143,7 +143,7 @@ describe Middleware::AnonymousCache::Helper do
 
       # depends on i7z implementation, but lets assume it is stable unless we discover
       # otherwise
-      expect($redis.get(helper.cache_key_body).length).to eq(16)
+      expect(Discourse.redis.get(helper.cache_key_body).length).to eq(16)
     end
 
     it "handles brotli switching" do

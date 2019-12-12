@@ -96,16 +96,16 @@ module Jobs
     end
 
     def last_cleanup=(v)
-      $redis.setex(last_cleanup_key, 7.days.to_i, v.to_s)
+      Discourse.redis.setex(last_cleanup_key, 7.days.to_i, v.to_s)
     end
 
     def last_cleanup
-      v = $redis.get(last_cleanup_key)
+      v = Discourse.redis.get(last_cleanup_key)
       v ? v.to_i : v
     end
 
     def reset_last_cleanup!
-      $redis.del(last_cleanup_key)
+      Discourse.redis.del(last_cleanup_key)
     end
 
     protected

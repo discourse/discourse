@@ -54,7 +54,8 @@ uk:
         label: "Показати результати"
       hide-results:
         title: "Назад до своїх голосів"
-        label: "Приховати результати"
+      export-results:
+        label: "Експорт"
       open:
         title: "Відкрити опитування"
         label: "Відкрити"

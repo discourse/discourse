@@ -34,7 +34,7 @@ export default Mixin.create({
       topicBody,
       topicCategoryId,
       topicTags,
-      draftKey: controller.get("model.draft_key"),
+      draftKey: controller.get("model.draft_key") || Composer.NEW_TOPIC_KEY,
       draftSequence: controller.get("model.draft_sequence")
     });
   },

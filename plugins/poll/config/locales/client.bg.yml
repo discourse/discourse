@@ -29,7 +29,8 @@ bg:
         label: "Покажи резултатите"
       hide-results:
         title: "Обратно към вашите гласове"
-        label: "Скрий резултатите"
+      export-results:
+        label: "Експорт "
       open:
         title: "Отвори гласуването"
         label: "Отвори"

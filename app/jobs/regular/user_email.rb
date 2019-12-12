@@ -225,7 +225,7 @@ module Jobs
 
         already_read = user.user_option.email_level != UserOption.email_level_types[:always] && PostTiming.exists?(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id)
         if already_read
-          return SkippedEmailLog.reason_types[:user_email_already_read]
+          SkippedEmailLog.reason_types[:user_email_already_read]
         end
       else
         false

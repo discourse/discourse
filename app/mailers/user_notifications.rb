@@ -624,7 +624,7 @@ class UserNotifications < ActionMailer::Base
 
     email_opts = {
       topic_title: Emoji.gsub_emoji_to_unicode(title),
-      topic_title_url_encoded: title ? URI.encode(title) : title,
+      topic_title_url_encoded: title ? UrlHelper.encode_component(title) : title,
       message: message,
       url: post.url(without_slug: SiteSetting.private_email?),
       post_id: post.id,
@@ -649,7 +649,7 @@ class UserNotifications < ActionMailer::Base
       use_topic_title_subject: use_topic_title_subject,
       site_description: SiteSetting.site_description,
       site_title: SiteSetting.title,
-      site_title_url_encoded: URI.encode(SiteSetting.title),
+      site_title_url_encoded: UrlHelper.encode_component(SiteSetting.title),
       locale: locale
     }
 
@@ -697,9 +697,9 @@ class UserNotifications < ActionMailer::Base
   def summary_new_users_count(min_date)
     min_date_str = min_date.is_a?(String) ? min_date : min_date.strftime('%Y-%m-%d')
     key = self.class.summary_new_users_count_key(min_date_str)
-    ((count = $redis.get(key)) && count.to_i) || begin
+    ((count = Discourse.redis.get(key)) && count.to_i) || begin
       count = User.real.where(active: true, staged: false).not_suspended.where("created_at > ?", min_date_str).count
-      $redis.setex(key, 1.day, count)
+      Discourse.redis.setex(key, 1.day, count)
       count
     end
   end

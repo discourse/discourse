@@ -605,6 +605,7 @@ ko:
       expand_profile: "확장"
       bookmarks: "북마크"
       bio: "내 소개"
+      timezone: "시간대"
       invited_by: "(이)가 초대했습니다."
       trust_level: "신뢰도"
       notifications: "알림"
@@ -1307,7 +1308,6 @@ ko:
       hint_for_supported_browsers: "편집창에 이미지를 끌어다 놓거나 붙여넣기 할 수도 있습니다"
       uploading: "업로드 중입니다..."
       select_file: "파일 선택"
-      image_link: "이 이미지를 누르면 이동할 링크"
       default_image_alt_text: 이미지
     search:
       sort_by: "다음으로 정렬"
@@ -2248,6 +2248,7 @@ ko:
       changed: "바뀐 태그:"
       tags: "태그"
       choose_for_topic: "선택적 태그"
+      add_synonyms: "추가"
       delete_tag: "태그 삭제"
       delete_confirm:
         other: "정말로 이 태그를 삭제하고 이 태그가 붙은 {{count}} 개의 토픽에서 태그를 제거할까요?"

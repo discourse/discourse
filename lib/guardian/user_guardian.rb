@@ -123,4 +123,11 @@ module UserGuardian
         end
       end
   end
+
+  def can_feature_topic?(user, topic)
+    return false if !SiteSetting.allow_featured_topic_on_user_profiles?
+    return false if !is_me?(user) && !is_staff?
+    return false if topic.read_restricted_category? || topic.private_message?
+    topic.user_id === user.id
+  end
 end

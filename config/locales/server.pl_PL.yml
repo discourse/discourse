@@ -241,7 +241,14 @@ pl_PL:
       few: "%{count}odpowiedzi"
       many: "%{count}odpowiedzi"
       other: "%{count}odpowiedzi"
+    likes:
+      one: "%{count} lajk"
+      few: "%{count} lajki"
+      many: "%{count} lajków"
+      other: "%{count} lajków"
+    last_reply: "Ostatnia odpowiedź"
     created: "Utworzono"
+    new_topic: "Utwórz nowy wątek"
   no_mentions_allowed: "Przepraszamy, nie możesz odwoływać się do innych użytkowników."
   too_many_mentions:
     one: "Przepraszamy, możesz wspomnieć tylko o jednym użytkowniku we wpisie."
@@ -529,6 +536,11 @@ pl_PL:
     cannot_delete:
       uncategorized: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nieprzypisanych do żadnej kategorii i jako taka nie może zostać usunięta."
       has_subcategories: "Nie można usunąć tej kategorii ponieważ posiada podkategorie. "
+      topic_exists:
+        one: "Nie można usunąć tej kategorii, bo zawiera %{count} wątek. Najstarszy wątek to %{topic_link}."
+        few: "Nie można usunąć tej kategorii, bo zawiera %{count} wątki. Najstarszy wątek to %{topic_link}."
+        many: "Nie można usunąć tej kategorii, bo zawiera %{count} wątków. Najstarszy wątek to %{topic_link}."
+        other: "Nie można usunąć tej kategorii, bo zawiera %{count} wątków. Najstarszy wątek to %{topic_link}."
       topic_exists_no_oldest: "Nie można usunąć tej kategorii z uwagi na liczbę tematów: %{count}."
     uncategorized_description: "Tematy które nie potrzebują kategorii, albo nie nadają się do żadnej innej."
   trust_levels:
@@ -738,14 +750,23 @@ pl_PL:
       windows: "Microsoft Windows"
       unknown: "nieznany system operacyjny"
   change_email:
+    wrong_account_error: "Jesteś zalogowany ze złego konta, wyloguj się proszę i spróbuj ponownie."
     confirmed: "Twój email został zmieniony."
     please_continue: "Przejdź do %{site_name}"
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     error_staged: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twój mail został zmieniony?"
+    confirm: "Potwierdź"
+    authorizing_new:
+      title: "Potwierdź swój nowy adres e-mail"
+      description: "Potwierdź zmianę adresu e-mail na:"
     authorizing_old:
-      title: "Dziękujemy za potwierdzenie twojego aktualnego adresu e-mail"
-      description: "Wysyłamy teraz twój nowy adres do potwierdzenia."
+      title: "Zmień swój adres e-mail"
+      description: "Potwierdź zmianę adresu e-mail"
+      old_email: "Stary adres e-mail: %{email}"
+      new_email: "Nowy adres e-mail: %{email}"
+      almost_done_title: "Potwierdzanie nowego adresu e-mail"
+      almost_done_description: "Wysłaliśmy e-maila na nowy adres, by potwierdzić tę zmianę!"
   associated_accounts:
     connected: "(połączony)"
   activation:
@@ -1314,14 +1335,17 @@ pl_PL:
     enable_instagram_logins: "Włącz uwierzytelnienie za pomocą Instagramu, wymaga instagram_consumer_key i instagram_consumer_secret."
     instagram_consumer_key: "Klucz konsumenta dla uwierzytelnienia Instragram"
     instagram_consumer_secret: "Sekret konsumenta dla uwierzytelnienia Instragram"
+    discord_secret: "Sekretny klucz Discorda"
     readonly_mode_during_backup: "Włącz tryb tylko do odczytu podczas wykonywania kopii zapasowej"
     allow_restore: "Dopuść przywracanie, które może zamienić WSZYSTKIE dane strony! Zostaw fałsz, chyba że planujesz przywrócić kopię zapasową"
     maximum_backups: "Maksymalna liczba kopii zapasowych do przechowywania na dysku. Starsze kopie zapasowe zostaną automatycznie usunięte."
     automatic_backups_enabled: "Uruchom automatyczne kopie zapasowe zgodnie z ustawioną częstotliwością kopii"
+    backup_frequency: "Liczba dni pomiędzy tworzeniem kopii zapasowych."
     s3_backup_bucket: "Zdalne wiadro do przechowywania kopii zapasowych. UWAGA: Upewnij się, że jest to wiadro prywatne."
     s3_disable_cleanup: "Dezaktywuj usuwanie kopii zapasowych z S3 kiedy usunięte lokalnie."
     backup_time_of_day: "Godzina (UTC) wykonania kopii zapasowej."
     backup_with_uploads: "Uwzględniaj przesyły w zaplanowanych backupach. Wyłączenie tej opcji spowoduje backup jedynie bazy danych."
+    backup_gzip_compression_level_for_uploads: "Poziom kompresji gzip używany przy kompresowaniu wgranych plików."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     verbose_localization: "Wyświetlaj dodatkowe identyfikatory tłumaczeń w treści etykiet"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
@@ -1329,6 +1353,7 @@ pl_PL:
     top_topics_formula_first_post_likes_multiplier: "wartość mnożnika polubień pierwszego posta (n) w tematach formuła: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "wartość mnożnika najmniejszej liczby polubień na post w (n) tematach formuła: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rebake_old_posts_count: "Liczba starych postów, które są ponownie wypalane co 15 minut."
+    enable_safe_mode: "Zezwól użytkownikom na wchodzenie do trybu awaryjnego w celu debudowania wtyczek."
     rate_limit_create_topic: "Po otworzeniu tematu użytkownicy muszą odczekać (n) sekund, zanim otworzą inny temat."
     rate_limit_create_post: "Po napisaniu posta użytkownicy muszą odczekać (n) sekund, zanim napiszą inny post."
     rate_limit_new_user_create_topic: "Po otworzeniu tematu nowi użytkownicy muszą odczekać (n) sekund, zanim otworzą inny temat."
@@ -1343,21 +1368,27 @@ pl_PL:
     max_topic_invitations_per_day: "Maksymalna dzienna liczba zaproszeń do tematu, jakie może wysłać użytkownik."
     max_logins_per_ip_per_hour: "Maksymalna liczba logowań dozwolona per adres IP na godzinę"
     max_logins_per_ip_per_minute: "Maksymalna liczba logowań dozwolona per adres IP na minutę"
+    max_post_deletions_per_minute: "Maksymalna liczba wpisów, które użytkownik może usunąć w minutę."
+    max_post_deletions_per_day: "Maksymalna liczba wpisów, które użytkownik może usunąć jednego dnia."
     alert_admins_if_errors_per_minute: "Liczba błędów na minutę do zaalarmowania admina. Wartość 0 wyłącza tę funkcjonalność. UWAGA: wymaga restartu."
     alert_admins_if_errors_per_hour: "Liczba błędów na godzinę do zaalarmowania admina. Wartość 0 wyłącza tę funkcjonalność. UWAGA: wymaga restartu."
     categories_topics: "Liczba wątków do wyświetlenia na stronie /categories."
     suggested_topics: "Liczba sugerowanych tematów widocznych na końcu aktualnego tematu."
     limit_suggested_to_category: "Sugeruj tematy jedynie z tej samej kategorii."
     suggested_topics_max_days_old: "Sugerowane tematy nie powinny być starsze niż n dni."
+    suggested_topics_unread_max_days_old: "Sugerowane nieprzeczytane tematy nie powinny być starsze niż n dni."
     clean_up_uploads: "Usuń osierocone pliki aby zapobiec wykorzystywaniu forum jako hosting. UWAGA: przed włączeniem tej opcji zaleca się wykonanie kopii katalogu /uploads."
     clean_orphan_uploads_grace_period_hours: "Okres karencji (w dniach) przed wysłaniem sierot zostanie skasowany."
     purge_deleted_uploads_grace_period_days: "Okres karencji (w dniach) przed usunięciem upload zostanie skasowany."
+    purge_unactivated_users_grace_period_days: "Okres karencji w dniach, po upływie którego nieaktywowane konto użytkownika zostaje usunięte. Ustaw 0, by nigdy nie usuwań nieaktywnych użytkowników."
     enable_s3_uploads: "Umieść przesyły w pamięci Amazon S3. Ważne: wymaga ważnych danych uwierzytelniających (zarówno klucza id i tajnego klucza dostępu)"
     s3_upload_bucket: "Nazwa koszyka Amazon S3, do którego zostaną przesłane pliki. Ostrzeżenie: bez wielkich liter, kropek czy podkreślenia."
     s3_cdn_url: "URL CDN używany dla wszystkich aktywów s3 (na przykład : https://cdn.somewhere.com). Ostrzeżenie: po zmianie tego ustawienia musisz ponownie przywrócić stare posty."
     avatar_sizes: "Lista automatycznie wygenerowanych rozmiarów awatarów."
     external_system_avatars_enabled: "Użyj zewnętrzny system awatarów."
     external_system_avatars_url: "Adres URL zewnętrznego dostawcy awatarów. Dozwolone podstawienia: {username} {first_letter} {color} {size}"
+    selectable_avatars_enabled: "Wymuś na użytkownikach wybieranie awatara z listy."
+    selectable_avatars: "Lista awatarów, z których mogą wybierać użytkownicy."
     allow_all_attachments_for_group_messages: "Zezwól na wszystkie załączniki email dla wiadomości grupowych."
     png_to_jpg_quality: "Jakość skonwertowanego pliku JPG (1 to najniższa jakość, 99 to najlepsza jakość, 100 aby dezaktywować)."
     allow_staff_to_upload_any_file_in_pm: "Pozwól personelowi przesyłać pliki w wiadomościach."
@@ -1390,9 +1421,13 @@ pl_PL:
     tl3_requires_likes_received: "Minimalna liczba polubień, które użytkownik musi otrzymać w ostatnich (tl3 okres) dniach, aby zakwalifikować się do awansu na poziom zaufania 3."
     tl3_links_no_follow: "Nie usuwaj rel=nofollow z linków od użytkowników z trzecim poziomem zaufania."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
+    allow_flagging_staff: "Jeżeli włączone, użytkownicy mogą flagować wpisy członków zespołu."
     min_trust_to_edit_wiki_post: "Minimalny poziom zaufania wymagany do edycji posta oznaczonego jako wiki."
     min_trust_to_edit_post: "Minimalny poziom zaufania potrzebny do edytowania postów."
     min_trust_to_allow_self_wiki: "Wymagany poziom zaufania, by post użytkownika uczynić wiki."
+    min_trust_to_send_messages: "Minimalny poziom zaufania wymagany do tworzenia wiadomości prywatnych."
+    min_trust_to_flag_posts: "Minimalny poziom zaufania potrzebny do flagowania postów"
+    min_trust_to_post_links: "Minimalny poziom zaufania potrzebny do umieszczania linków we wpisach"
     newuser_max_links: "Ile linków może dodać nowy użytkownik do posta."
     newuser_max_images: "Ile obrazów może dodać nowy użytkownik do posta."
     newuser_max_attachments: "Ile załączników może dodać nowy użytkownik do posta."
@@ -1400,8 +1435,10 @@ pl_PL:
     newuser_max_replies_per_topic: "Maksymalna liczba odpowiedzi, jakie nowy użytkownik może dodać w pojedynczym temacie zanim ktoś odpowie."
     max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla wszystkich)."
     max_users_notified_per_group_mention: "Maksymalna liczba użytkowników, którzy mogą otrzymać powiadomienie jeśli ktoś wspomniał o grupie (jeśli próg został osiągnięty, nie będzie żadnych powiadomień)"
+    enable_mentions: "Zezwól użytkownikom na wzmianki innych użytkowników."
     create_thumbnails: "Stwórz miniatury i obrazy lightbox, które są za duże, aby pasować do postu."
     email_time_window_mins: "Odczekaj (n) minut przed wysłaniem maila z powiadomieniem, aby dać użytkownikom szansę na edytowanie i ukończenie postów."
+    personal_email_time_window_seconds: "Poczekaj (n) sekund przed wysłaniem powiadomienia na e-mail o prywatnej wiadomości, by użytkownicy mogli edytować i dokończyć swoje wiadomości."
     email_posts_context: "Jak wiele poprzednich wiadomości zawrzeć jako kontekst i emailu powiadamiającym."
     flush_timings_secs: "W sekundach, jak często wysyłamy dane czasowe na serwer."
     title_max_word_length: "Maksymalna dozwolona długość słowa, w znakach, jako tytuł tematu."
@@ -1482,6 +1519,7 @@ pl_PL:
     pop3_polling_username: "Nazwa użytkownika dla konta POP3 do przeglądania cyklicznego emaila."
     pop3_polling_password: "Hasło dla konta POP3 do przeglądania cyklicznego maila."
     email_in_min_trust: "Minimalny poziom zaufania, który musi posiadać użytkownik, aby móc dodawać nowe posty w tematach poprzez email."
+    email_in_spam_header: "Nagłówek e-maila do wykrywania spamu."
     email_prefix: "Etykieta używana w temacie emaili. Domyślnie będzie ustawiana jako \"tytuł\", w przypadku braku ustawienia."
     email_site_title: "Tytuł strony używany jako nadawca emaili ze strony. Domyślnie ustawiony jako \"tytuł\", w przypadku braku ustawienia. Jeśli twój \"tytuł\" zawiera znaki, które nie są dozwolone przez ciągi znaków nadawcy emaila, użyj tego ustawienia."
     find_related_post_with_key: "Używaj \"klucza odpowiedzi\" tylko po to, aby znaleźć post, na który odpowiadasz. Ostrzeżenie: Wyłączenie tej funkcji, pozwoli na personifikację użytkownika na podstawie adresu email."
@@ -1692,7 +1730,7 @@ pl_PL:
     autoclosed_disabled_lastpost: "Temat został otwarty. Pisanie odpowiedzi jest możliwe."
     auto_deleted_by_timer: "Automatycznie usunięte przez regulator czasowy."
   login:
-    security_key_alternative: "Nie możesz znaleźć swojego klucza bezpieczeństwa lub chcesz użyć innej metody?"
+    security_key_alternative: "Spróbuj w inny sposób"
     security_key_authenticate: "Uwierzytelnij się za pomocą klucza bezpieczeństwa"
     security_key_not_allowed_error: "Upłynął limit czasu procesu uwierzytelniania klucza bezpieczeństwa lub został on anulowany."
     not_approved: "Twoje konto nie zostało jeszcze aktywowane. Zostaniesz powiadomiony emailem gdy będziesz mógł się zalogować."
@@ -1752,6 +1790,17 @@ pl_PL:
       max_new_accounts_per_registration_ip: "Z twojego adresu IP nowe rejestracje nie są możliwe (wyczerpany limit). Skonaktuj się z personelem."
     website:
       domain_not_allowed: "Błędny adres strony internetowej. Dozwolone domeny: %{domains}"
+    destroy_reasons:
+      unused_staged_user: "Nieużywany użytkownik wystawiony"
+      fixed_primary_email: "Ustalony główny adres e-mail wystawionego użytkownika"
+      same_ip_address: "Taki sam adres IP (%{ip_address}) jak inni użytkownicy"
+      inactive_user: "Nieaktywny użytkownik"
+  reviewables_reminder:
+    subject_template:
+      one: "%{count} wpis czeka na przejrzenie"
+      few: "%{count} wpisy czekają na przejrzenie"
+      many: "%{count} wpisów czeka na przejrzenie"
+      other: "%{count} wpisów czeka na przejrzenie"
   unsubscribe_mailer:
     title: "Przestań obserwować mailera"
     subject_template: "Potwierdź, że nie chcesz już otrzymywać powiadomień mailowych ze strony %{site_title}"
@@ -2310,19 +2359,9 @@ pl_PL:
     confirm_new_email:
       title: "Potwierdź Nowy Email"
       subject_template: "[%{email_prefix}] Potwierdź swój nowy adres email"
-      text_body_template: |
-        Potwierdź swój nowy adres email dla %{site_name} poprzez kliknięcia na następujący link:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Potwierdź stary email"
       subject_template: "[%{site_name}] Potwierdź aktualny adres email"
-      text_body_template: |
-        Przed zmianą twojego adresu email, potrzebujemy, abyś potwierdził, że masz dostęp do tego adresu. Po zakończeniu tego kroku, poinformujemy cię o nowym adresie email.
-
-        Potwierdź obecny adres email dla %{site_name}poprzez naciśnięcie na następujący link:
-
-        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Powiadom Stary Email"
       subject_template: "[%{site_name}] Twój adres email został zmieniony"
@@ -2934,6 +2973,9 @@ pl_PL:
     popup:
       confirm_title: "Powiadomienia włączone - %{site_title}"
       confirm_body: "Powodzenie! Powiadomienia zostały włączone."
+  staff_action_logs:
+    api_key:
+      revoked: Unieważniono
   reviewables:
     priorities:
       low: "Niski"

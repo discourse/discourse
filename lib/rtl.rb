@@ -13,7 +13,7 @@ class Rtl
   end
 
   def current_user_rtl?
-    SiteSetting.allow_user_locale && user.try(:locale).in?(rtl_locales)
+    SiteSetting.allow_user_locale && (user&.locale || SiteSetting.default_locale).in?(rtl_locales)
   end
 
   def site_locale_rtl?

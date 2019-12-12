@@ -2,8 +2,7 @@
 
 class UserSerializer < BasicUserSerializer
 
-  attr_accessor :omit_stats,
-                :topic_post_count
+  attr_accessor :topic_post_count
 
   def self.staff_attributes(*attrs)
     attributes(*attrs)
@@ -48,7 +47,6 @@ class UserSerializer < BasicUserSerializer
              :can_edit_username,
              :can_edit_email,
              :can_edit_name,
-             :stats,
              :ignored,
              :muted,
              :can_ignore_user,
@@ -83,7 +81,8 @@ class UserSerializer < BasicUserSerializer
              :second_factor_remaining_backup_codes,
              :associated_accounts,
              :profile_background_upload_url,
-             :card_background_upload_url
+             :card_background_upload_url,
+             :featured_topic
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -108,7 +107,6 @@ class UserSerializer < BasicUserSerializer
                      :tracked_category_ids,
                      :watched_category_ids,
                      :watched_first_post_category_ids,
-                     :private_messages_stats,
                      :system_avatar_upload_id,
                      :system_avatar_template,
                      :gravatar_avatar_upload_id,
@@ -256,14 +254,6 @@ class UserSerializer < BasicUserSerializer
     scope.can_edit_name?(object)
   end
 
-  def include_stats?
-    !omit_stats == true
-  end
-
-  def stats
-    UserAction.stats(object.id, scope)
-  end
-
   def ignored
     IgnoredUser.where(user_id: scope.user&.id, ignored_user_id: object.id).exists?
   end
@@ -377,14 +367,6 @@ class UserSerializer < BasicUserSerializer
     IgnoredUser.where(user_id: object.id).joins(:ignored_user).pluck(:username)
   end
 
-  def include_private_messages_stats?
-    can_edit && !(omit_stats == true)
-  end
-
-  def private_messages_stats
-    UserAction.private_messages_stats(object.id, scope)
-  end
-
   def system_avatar_upload_id
     # should be left blank
   end
@@ -484,4 +466,7 @@ class UserSerializer < BasicUserSerializer
     object.card_background_upload&.url
   end
 
+  def featured_topic
+    object.user_profile.featured_topic
+  end
 end
