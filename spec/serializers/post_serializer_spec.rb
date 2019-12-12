@@ -227,10 +227,11 @@ describe PostSerializer do
 
   context "post with bookmarks" do
     let(:current_user) { Fabricate(:user) }
+    let(:topic_view) { TopicView.new(post.topic, current_user) }
     let(:serialized) do
       s = serialized_post(current_user)
       s.post_actions = PostAction.counts_for([post], current_user)[post.id]
-      s.topic_view = TopicView.new(post.topic, current_user)
+      s.topic_view = topic_view
       s
     end
 
@@ -265,10 +266,18 @@ describe PostSerializer do
         it "returns the reminder_at for the bookmark" do
           expect(serialized.as_json[:bookmark_reminder_at]).to eq(bookmark.reminder_at.iso8601)
         end
+
+        context "if topic_view is blank" do
+          let(:topic_view) { nil }
+
+          it "does not return the bookmarked_with_reminder attribute" do
+            expect(serialized.as_json.key?(:bookmarked_with_reminder)).to eq(false)
+          end
+        end
       end
 
       context "when the site setting for bookmarks with reminders is disabled" do
-        it "does not return the bookmarked attribute" do
+        it "does not return the bookmarked_with_reminder attribute" do
           expect(serialized.as_json.key?(:bookmarked_with_reminder)).to eq(false)
         end
 

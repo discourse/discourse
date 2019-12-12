@@ -330,7 +330,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def post_bookmark
-    return nil if !SiteSetting.enable_bookmarks_with_reminders?
+    return nil if !SiteSetting.enable_bookmarks_with_reminders? || @topic_view.blank?
     @post_bookmark ||= @topic_view.user_post_bookmarks.find { |bookmark| bookmark.post_id == object.id }
   end
 
