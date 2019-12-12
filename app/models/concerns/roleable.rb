@@ -53,8 +53,7 @@ module Roleable
   private
 
   def auto_approve_user
-    reviewable = ReviewableUser.where(status: Reviewable.statuses[:pending]).find_by(target: self)
-    if reviewable
+    if reviewable = ReviewableUser.find_by(target: self, status: Reviewable.statuses[:pending])
       reviewable.perform(Discourse.system_user, :approve_user, send_email: false)
     else
       ReviewableUser.set_approved_fields!(self, Discourse.system_user)
