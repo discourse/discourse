@@ -315,10 +315,7 @@ class FinalDestination
   end
 
   def escape_url
-    UrlHelper.escape_uri(
-      CGI.unescapeHTML(@url),
-      Regexp.new("[^#{URI::PATTERN::UNRESERVED}#{URI::PATTERN::RESERVED}#]")
-    )
+    UrlHelper.escape_uri(@url)
   end
 
   def private_ranges

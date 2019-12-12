@@ -10,11 +10,29 @@ class UrlHelper
     url, fragment = url.split("#", 2)
     uri = URI.parse(url)
     if uri
-      fragment = URI.escape(fragment) if fragment&.include?('#')
+      # Addressable::URI::CharacterClasses::UNRESERVED is used here because without it
+      # the # in the fragment is not encoded
+      fragment = Addressable::URI.encode_component(fragment, Addressable::URI::CharacterClasses::UNRESERVED) if fragment&.include?('#')
       uri.fragment = fragment
       uri
     end
   rescue URI::Error
+  end
+
+  def self.encode_and_parse(url)
+    URI.parse(Addressable::URI.encode(url))
+  end
+
+  def self.encode(url)
+    Addressable::URI.encode(url)
+  end
+
+  def self.unencode(url)
+    Addressable::URI.unencode(url)
+  end
+
+  def self.encode_component(url_component)
+    Addressable::URI.encode_component(url_component)
   end
 
   def self.is_local(url)
@@ -43,14 +61,10 @@ class UrlHelper
     self.absolute(url, nil)
   end
 
-  DOUBLE_ESCAPED_REGEXP ||= /%25([0-9a-f]{2})/i
-
   # Prevents double URL encode
   # https://stackoverflow.com/a/37599235
-  def self.escape_uri(uri, pattern = URI::UNSAFE)
-    encoded = URI.encode(uri, pattern)
-    encoded.gsub!(DOUBLE_ESCAPED_REGEXP, '%\1')
-    encoded
+  def self.escape_uri(uri)
+    UrlHelper.encode_component(CGI.unescapeHTML(UrlHelper.unencode(uri)))
   end
 
   def self.cook_url(url, secure: false)

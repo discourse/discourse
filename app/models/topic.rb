@@ -1354,7 +1354,7 @@ class Topic < ActiveRecord::Base
   end
 
   def featured_link_root_domain
-    MiniSuffix.domain(URI.parse(URI.encode(self.featured_link)).hostname)
+    MiniSuffix.domain(UrlHelper.encode_and_parse(self.featured_link).hostname)
   end
 
   def self.private_message_topics_count_per_day(start_date, end_date, topic_subtype)
