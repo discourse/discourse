@@ -815,7 +815,7 @@ describe UsersController do
 
       context "with a regular api key" do
         fab!(:user) { Fabricate(:user) }
-        fab!(:api_key) { Fabricate(:api_key, user: user) }
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "won't create the user as active with a regular key" do
           post "/u.json",
@@ -828,7 +828,7 @@ describe UsersController do
 
       context "with an admin api key" do
         fab!(:admin) { Fabricate(:admin) }
-        fab!(:api_key) { Fabricate(:api_key, user: admin) }
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: admin) }
 
         it "creates the user as active with a an admin key" do
           SiteSetting.send_welcome_message = true
@@ -915,7 +915,7 @@ describe UsersController do
 
       context "with a regular api key" do
         fab!(:user) { Fabricate(:user) }
-        fab!(:api_key) { Fabricate(:api_key, user: user) }
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "won't create the user as staged with a regular key" do
           post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)
@@ -928,7 +928,7 @@ describe UsersController do
 
       context "with an admin api key" do
         fab!(:user) { Fabricate(:admin) }
-        fab!(:api_key) { Fabricate(:api_key, user: user) }
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "creates the user as staged with a regular key" do
           post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)

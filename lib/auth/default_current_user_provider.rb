@@ -284,7 +284,7 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def lookup_api_user(api_key_value, request)
-    if api_key = ApiKey.active.where(key: api_key_value).includes(:user).first
+    if api_key = ApiKey.active.with_key(api_key_value).includes(:user).first
       api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
 
       # Check for deprecated api auth
@@ -333,7 +333,7 @@ class Auth::DefaultCurrentUserProvider
 
     RateLimiter.new(
       nil,
-      "admin_api_min_#{api_key}",
+      "admin_api_min_#{ApiKey.hash_key(api_key)}",
       GlobalSetting.max_admin_api_reqs_per_key_per_minute,
       60
     ).performed!
