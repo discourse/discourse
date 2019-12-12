@@ -63,7 +63,7 @@ async function runAllTests() {
     try {
       protocol = await CDP({ port: chrome.port });
     } catch (e) {
-      if (e === "No inspectable targets" && connectAttempts < 50) {
+      if (e.message === "No inspectable targets" && connectAttempts < 50) {
         connectAttempts++;
         console.log(
           "Unable to establish connection to chrome target - trying again..."
