@@ -4,7 +4,15 @@ class Tag < ActiveRecord::Base
   include Searchable
   include HasDestroyedWebHook
 
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  RESERVED_TAGS = [
+    'c'
+  ]
+
+  validates :name,
+    presence: true,
+    uniqueness: { case_sensitive: false },
+    exclusion: { in: RESERVED_TAGS }
+
   validate :target_tag_validator, if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
 
   scope :where_name, ->(name) do
