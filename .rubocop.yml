@@ -138,6 +138,9 @@ DiscourseCops/NoChdir:
     - 'spec/**/*' # Specs are run sequentially, so chdir can be used
     - 'plugins/*/spec/**/*'
 
+DiscourseCops/NoURIEscapeEncode:
+  Enabled: true
+
 Style/GlobalVars:
   Enabled: true
   Severity: warning

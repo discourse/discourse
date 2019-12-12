@@ -45,7 +45,6 @@ GEM
       rake (>= 10.4, < 14.0)
     ast (2.4.0)
     aws-eventstream (1.0.3)
-
     aws-partitions (1.252.0)
     aws-sdk-core (3.85.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
@@ -353,7 +352,7 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
-    rubocop-discourse (1.0.1)
+    rubocop-discourse (1.0.2)
       rubocop (>= 0.69.0)
     ruby-openid (2.9.2)
     ruby-prof (1.0.0)
