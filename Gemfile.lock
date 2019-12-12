@@ -45,7 +45,6 @@ GEM
       rake (>= 10.4, < 14.0)
     ast (2.4.0)
     aws-eventstream (1.0.3)
-
     aws-partitions (1.252.0)
     aws-sdk-core (3.85.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
@@ -438,6 +437,7 @@ DEPENDENCIES
   activemodel (= 6.0.1)
   activerecord (= 6.0.1)
   activesupport (= 6.0.1)
+  addressable (~> 2.7.0)
   annotate
   aws-sdk-s3
   aws-sdk-sns
