@@ -60,8 +60,6 @@ class UsersController < ApplicationController
     user_serializer = nil
     if guardian.can_see_profile?(@user)
       user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
-      # TODO remove this options from serializer
-      user_serializer.omit_stats = true
 
       topic_id = params[:include_post_count_for].to_i
       if topic_id != 0
