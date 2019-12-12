@@ -304,7 +304,7 @@ class ListController < ApplicationController
         (slug_path + [@category.id.to_s]).join("/")
     end
 
-    route_params[:username] = UrlHelper.escape_uri(params[:username]) if params[:username].present?
+    route_params[:username] = UrlHelper.encode_component(params[:username]) if params[:username].present?
     route_params
   end
 
@@ -374,7 +374,7 @@ class ListController < ApplicationController
 
     opts = opts.dup
     if SiteSetting.unicode_usernames && opts[:group_name]
-      opts[:group_name] = URI.encode(opts[:group_name])
+      opts[:group_name] = UrlHelper.encode_component(opts[:group_name])
     end
     opts.delete(:category) if page_params.include?(:category_slug_path_with_id)
 

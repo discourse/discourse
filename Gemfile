@@ -134,6 +134,7 @@ gem 'highline', '~> 1.7.0', require: false
 gem 'rack-protection' # security
 gem 'cbor', require: false
 gem 'cose', require: false
+gem 'addressable', '~> 2.7.0'
 
 # Gems used only for assets and not required in production environments by default.
 # Allow everywhere for now cause we are allowing asset debugging in production
