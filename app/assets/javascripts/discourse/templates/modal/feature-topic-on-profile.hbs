@@ -1,3 +1,7 @@
-{{#d-modal-body class="explain-reviewable"}}
-  {{choose-topic currentTopicId=model.featuredTopic.id selectedTopicId=newFeaturedTopicId restrictToUser=model}}
+{{#d-modal-body class="feature-topic-on-profile"}}
+  {{choose-topic currentTopicId=model.featuredTopic.id selectedTopicId=newFeaturedTopicId additionalFilters="in:created status:public" label="user.feature_topic_on_profile.search_label"}}
+  {{d-button action=(action "save")
+    class="btn-primary"
+    disabled=noTopicSelected
+    label="user.feature_topic_on_profile.save"}}
 {{/d-modal-body}}

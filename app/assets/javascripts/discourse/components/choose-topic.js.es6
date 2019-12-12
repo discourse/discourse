@@ -4,6 +4,7 @@ import Component from "@ember/component";
 import discourseDebounce from "discourse/lib/debounce";
 import { searchForTerm } from "discourse/lib/search";
 import { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   loading: null,
@@ -11,8 +12,24 @@ export default Component.extend({
   topics: null,
   selectedTopicId: null,
   currentTopicId: null,
+  additionalFilters: "",
   topicTitle: null,
-  restrictToUser: null,
+  label: null,
+
+  didInsertElement() {
+    this._super(...arguments);
+
+    searchForTerm(this.additionalFilters, {}).then(results => {
+      if (results && results.posts && results.posts.length > 0) {
+        this.set(
+          "topics",
+          results.posts.mapBy("topic").filter(t => t.id !== this.currentTopicId)
+        );
+      } else {
+        this.setProperties({ topics: null, loading: false });
+      }
+    });
+  },
 
   @observes("topicTitle")
   topicTitleChanged() {
@@ -23,6 +40,11 @@ export default Component.extend({
     });
 
     this.search(this.topicTitle);
+  },
+
+  @discourseComputed("label")
+  labelText(label) {
+    return label || "choose_topic.title.search";
   },
 
   @observes("topics")
@@ -45,35 +67,24 @@ export default Component.extend({
       this.setProperties({ topics: null, loading: false });
       return;
     }
-    searchContext: {
-    }
 
     let searchParams = {
       typeFilter: "topic",
       restrictToArchetype: "regular"
     };
 
-    if (this.restrictToUser) {
-      searchParams.searchContext = {
-        type: "user",
-        id: this.currentUser.username,
-        user: this.currentUser
-      };
-    } else {
-      searchParams.typeFilter = "topic";
-      searchParams.restrictToArchetype = "regular";
-    }
-
-    searchForTerm(title, searchParams).then(results => {
-      if (results && results.posts && results.posts.length > 0) {
-        this.set(
-          "topics",
-          results.posts.mapBy("topic").filter(t => t.id !== currentTopicId)
-        );
-      } else {
-        this.setProperties({ topics: null, loading: false });
+    searchForTerm(`${title} ${this.additionalFilters}`, searchParams).then(
+      results => {
+        if (results && results.posts && results.posts.length > 0) {
+          this.set(
+            "topics",
+            results.posts.mapBy("topic").filter(t => t.id !== currentTopicId)
+          );
+        } else {
+          this.setProperties({ topics: null, loading: false });
+        }
       }
-    });
+    );
   }, 300),
 
   actions: {

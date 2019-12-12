@@ -52,7 +52,7 @@ export default Controller.extend(PreferencesTabController, {
     showFeaturedTopicModal() {
       showModal("feature-topic-on-profile", {
         model: this.model,
-        title: "topic.feature_topic.title"
+        title: "user.feature_topic_on_profile.title"
       });
     },
 

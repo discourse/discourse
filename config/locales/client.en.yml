@@ -831,6 +831,11 @@ en:
         normal_option_title: "You will be notified if this user replies to you, quotes you, or mentions you."
       activity_stream: "Activity"
       preferences: "Preferences"
+      feature_topic_on_profile:
+        open_search: "Select a new topic"
+        title: "Select a Topic"
+        search_label: "Search for Topic by title"
+        save: "Save"
       profile_hidden: "This user's public profile is hidden."
       expand_profile: "Expand"
       collapse_profile: "Collapse"
@@ -1910,6 +1915,7 @@ en:
           title: Matching in title only
           likes: I liked
           posted: I posted in
+          created: I created
           watching: I'm watching
           tracking: I'm tracking
           private: In my messages
@@ -1926,6 +1932,7 @@ en:
           label: Where topics
           open: are open
           closed: are closed
+          public: are public
           archived: are archived
           noreplies: have zero replies
           single_user: contain a single user
@@ -2621,7 +2628,7 @@ en:
           html_part:
             title: "Show the html part of the email"
             button: "HTML"
-      
+
       bookmarks:
         create: "Create bookmark"
         name: "Name"
