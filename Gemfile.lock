@@ -45,7 +45,6 @@ GEM
       rake (>= 10.4, < 14.0)
     ast (2.4.0)
     aws-eventstream (1.0.3)
-
     aws-partitions (1.252.0)
     aws-sdk-core (3.85.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
@@ -399,7 +398,7 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
-    stackprof (0.2.13)
+    stackprof (0.2.14)
     test-prof (0.10.1)
     thor (0.20.3)
     thread_safe (0.3.6)
