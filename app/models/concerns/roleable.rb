@@ -20,6 +20,7 @@ module Roleable
 
   def grant_moderation!
     set_permission('moderator', true)
+    auto_approve_user
     enqueue_staff_welcome_message(:moderator)
   end
 
@@ -29,6 +30,7 @@ module Roleable
 
   def grant_admin!
     set_permission('admin', true)
+    auto_approve_user
     enqueue_staff_welcome_message(:admin)
   end
 
@@ -48,4 +50,14 @@ module Roleable
     save_and_refresh_staff_groups!
   end
 
+  private
+
+  def auto_approve_user
+    if reviewable = ReviewableUser.find_by(target: self, status: Reviewable.statuses[:pending])
+      reviewable.perform(Discourse.system_user, :approve_user, send_email: false)
+    else
+      ReviewableUser.set_approved_fields!(self, Discourse.system_user)
+      self.save!
+    end
+  end
 end
