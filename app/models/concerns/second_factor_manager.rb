@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'rotp'
 
 module SecondFactorManager
   TOTP_ALLOWED_DRIFT_SECONDS = 30

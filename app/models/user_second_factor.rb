@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'rotp'
 
 class UserSecondFactor < ActiveRecord::Base
   belongs_to :user
