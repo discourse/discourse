@@ -140,6 +140,8 @@ DiscourseCops/NoChdir:
 
 DiscourseCops/NoURIEscapeEncode:
   Enabled: true
+  Exclude:
+    - 'plugins/**/*'
 
 Style/GlobalVars:
   Enabled: true
