@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Category < ActiveRecord::Base
+  RESERVED_SLUGS = [
+    'none'
+  ]
+
   self.ignored_columns = %w{
     uploaded_meta_id
     suppress_from_latest
@@ -59,6 +63,7 @@ class Category < ActiveRecord::Base
   validate :permissions_compatibility_validator
 
   validates :auto_close_hours, numericality: { greater_than: 0, less_than_or_equal_to: 87600 }, allow_nil: true
+  validates :slug, exclusion: { in: RESERVED_SLUGS }
 
   after_create :create_category_definition
 
