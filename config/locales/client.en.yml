@@ -3394,6 +3394,8 @@ en:
         new_key: New API Key
         revoked: Revoked
         delete: Permenantly Delete
+        not_shown_again: This key will not be displayed again. Make sure you take a copy before continuing.
+        continue: Continue
 
       web_hooks:
         title: "Webhooks"
