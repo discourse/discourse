@@ -41,13 +41,18 @@ class TopicGroup < ActiveRecord::Base
     query = <<~SQL
       INSERT INTO topic_groups (topic_id, group_id, last_read_post_number, created_at, updated_at)
       SELECT tag.topic_id, tag.group_id, :post_number, :now, :now
-      FROM topic_allowed_groups tag
-      INNER JOIN group_users gu ON gu.group_id = tag.group_id
-      WHERE gu.user_id = :user_id
-      AND tag.topic_id = :topic_id
+        FROM topic_allowed_groups tag
+        INNER JOIN group_users gu ON gu.group_id = tag.group_id
+        WHERE gu.user_id = :user_id
+        AND tag.topic_id = :topic_id
     SQL
 
     query += 'AND NOT(tag.group_id IN (:already_updated_groups))' unless updated_group_ids.length.zero?
+
+    query += <<~CONFLICT
+      ON CONFLICT(topic_id, group_id)
+      DO UPDATE SET last_read_post_number = :post_number, created_at = :now, updated_at = :now
+    CONFLICT
 
     DB.exec(
       query,
