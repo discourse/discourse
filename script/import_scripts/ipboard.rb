@@ -972,7 +972,7 @@ EOM
     User.find_each do |u|
       ucf = u.custom_fields
       if ucf && ucf["import_id"] && ucf["import_username"]
-        username = URI.escape(ucf["import_username"])
+        username = UrlHelper.encode_component(ucf["import_username"])
         Permalink.create(url: "#{USERDIR}/#{ucf['import_id']}-#{username}", external_url: "/users/#{u.username}") rescue nil
         print '.'
       end

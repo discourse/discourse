@@ -437,6 +437,7 @@ DEPENDENCIES
   activemodel (= 6.0.1)
   activerecord (= 6.0.1)
   activesupport (= 6.0.1)
+  addressable (~> 2.7.0)
   annotate
   aws-sdk-s3
   aws-sdk-sns

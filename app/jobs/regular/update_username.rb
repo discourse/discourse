@@ -27,7 +27,7 @@ module Jobs
 
       cooked_username = PrettyText::Helpers.format_username(@old_username)
       @cooked_mention_username_regex = /^@#{cooked_username}$/i
-      @cooked_mention_user_path_regex = /^\/u(?:sers)?\/#{CGI.escape(cooked_username)}$/i
+      @cooked_mention_user_path_regex = /^\/u(?:sers)?\/#{UrlHelper.encode_component(cooked_username)}$/i
       @cooked_quote_username_regex = /(?<=\s)#{cooked_username}(?=:)/i
 
       update_posts

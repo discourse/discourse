@@ -34,7 +34,7 @@ class EmbeddableHost < ActiveRecord::Base
       return eh if eh.path_whitelist.blank?
 
       path_regexp = Regexp.new(eh.path_whitelist)
-      return eh if path_regexp.match(path) || path_regexp.match(URI.unescape(path))
+      return eh if path_regexp.match(path) || path_regexp.match(UrlHelper.unencode(path))
     end
 
     nil
