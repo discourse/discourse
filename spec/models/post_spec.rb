@@ -1335,7 +1335,6 @@ describe Post do
           :put,
           "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{attachment_upload.sha1}.#{attachment_upload.extension}?acl"
         )
-
         stub_request(
           :put,
           "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"

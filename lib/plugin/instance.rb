@@ -84,7 +84,7 @@ class Plugin::Instance
 
   def register_anonymous_cache_key(key, &block)
     key_method = "key_#{key}"
-    add_to_class(Middleware::AnonymousCache, key_method, &block)
+    add_to_class(Middleware::AnonymousCache::Helper, key_method, &block)
     Middleware::AnonymousCache.cache_key_segments[key] = key_method
     Middleware::AnonymousCache.compile_key_builder
   end

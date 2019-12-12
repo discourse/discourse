@@ -305,6 +305,18 @@ describe UploadsController do
   end
 
   describe "#show_short" do
+    it 'inlines only supported image files' do
+      upload = upload_file("smallest.png")
+      get upload.short_path, params: { inline: true }
+      expect(response.header['Content-Type']).to eq('image/png')
+      expect(response.header['Content-Disposition']).to include('inline;')
+
+      upload.update!(original_filename: "test.xml")
+      get upload.short_path, params: { inline: true }
+      expect(response.header['Content-Type']).to eq('application/xml')
+      expect(response.header['Content-Disposition']).to include('attachment;')
+    end
+
     describe "local store" do
       fab!(:image_upload) { upload_file("smallest.png") }
 
@@ -381,6 +393,7 @@ describe UploadsController do
         SiteSetting.s3_upload_bucket = "s3-upload-bucket"
         SiteSetting.s3_access_key_id = "fakeid7974664"
         SiteSetting.s3_secret_access_key = "fakesecretid7974664"
+        SiteSetting.s3_region = "us-east-1"
         SiteSetting.secure_media = true
       end
 
@@ -393,7 +406,7 @@ describe UploadsController do
       it "should return signed url for legitimate request" do
         secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
         sign_in(user)
-        stub_request(:head, "https://s3-upload-bucket.s3.amazonaws.com/")
+        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
 
         get secure_url
 

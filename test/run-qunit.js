@@ -127,12 +127,10 @@ async function runAllTests() {
   });
 }
 
-try {
-  runAllTests();
-} catch (e) {
+runAllTests().catch(e => {
   console.log("Failed to run tests: " + e);
   process.exit(1);
-}
+});
 
 // The following functions are converted to strings
 // And then sent to chrome to be evalaluated

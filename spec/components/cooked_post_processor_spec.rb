@@ -508,7 +508,12 @@ describe CookedPostProcessor do
             stored_path = Discourse.store.get_path_for_upload(upload)
             upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
 
-            stub_request(:any, /some-bucket-on-s3\.s3\.amazonaws\.com/)
+            stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+            stub_request(
+              :put,
+              "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/optimized/1X/#{upload.sha1}_2_#{optimized_size}.#{upload.extension}"
+            )
+            stub_request(:get, /#{SiteSetting.s3_upload_bucket}\.s3\.amazonaws\.com/)
 
             OptimizedImage.expects(:resize).returns(true)
             FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
@@ -519,8 +524,10 @@ describe CookedPostProcessor do
             upload.update_column(:secure, true)
           end
 
+          let(:optimized_size) { "600x500" }
+
           let(:post) do
-            Fabricate(:post, raw: "![large.png|600x500](#{upload.short_url})")
+            Fabricate(:post, raw: "![large.png|#{optimized_size}](#{upload.short_url})")
           end
 
           it "handles secure images with the correct lightbox link href" do
