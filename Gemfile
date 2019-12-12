@@ -43,6 +43,13 @@ gem 'mini_mime'
 gem 'mini_suffix'
 
 gem 'redis'
+
+# This is explicitly used by Sidekiq and is an optional dependency.
+# We tell Sidekiq to use the namespace "sidekiq" which triggers this
+# gem to be used. There is no explicit dependency in sidekiq cause
+# redis namespace support is optional
+# We already namespace stuff in DiscourseRedis, so we should consider
+# just using a single implementation in core vs having 2 namespace implementations
 gem 'redis-namespace'
 
 # NOTE: AM serializer gets a lot slower with recent updates
@@ -127,6 +134,7 @@ gem 'highline', '~> 1.7.0', require: false
 gem 'rack-protection' # security
 gem 'cbor', require: false
 gem 'cose', require: false
+gem 'addressable', '~> 2.7.0'
 
 # Gems used only for assets and not required in production environments by default.
 # Allow everywhere for now cause we are allowing asset debugging in production

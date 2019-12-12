@@ -181,7 +181,7 @@ RSpec.describe ListController do
         unicode_group = Fabricate(:group, name: '群群组')
         unicode_group.add(user)
         topic = Fabricate(:private_message_topic, allowed_groups: [unicode_group])
-        get "/topics/private-messages-group/#{user.username}/#{URI.escape(unicode_group.name)}.json"
+        get "/topics/private-messages-group/#{user.username}/#{UrlHelper.encode_component(unicode_group.name)}.json"
         expect(response.status).to eq(200)
 
         expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
