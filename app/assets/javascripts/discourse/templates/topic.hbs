@@ -103,6 +103,7 @@
               toggleClosed=(action "toggleClosed")
               toggleArchived=(action "toggleArchived")
               toggleVisibility=(action "toggleVisibility")
+              toggleFeaturedOnProfile=(action "toggleFeaturedOnProfile")
               showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
               showFeatureTopic=(route-action "showFeatureTopic")
               showChangeTimestamp=(route-action "showChangeTimestamp")
@@ -303,6 +304,7 @@
                     toggleClosed=(action "toggleClosed")
                     toggleArchived=(action "toggleArchived")
                     toggleVisibility=(action "toggleVisibility")
+                    toggleFeaturedOnProfile=(action "toggleFeaturedOnProfile")
                     showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
                     showFeatureTopic=(route-action "showFeatureTopic")
                     showChangeTimestamp=(route-action "showChangeTimestamp")
@@ -314,8 +316,7 @@
                     toggleArchiveMessage=(action "toggleArchiveMessage")
                     editFirstPost=(action "editFirstPost")
                     deferTopic=(action "deferTopic")
-                    replyToPost=(action "replyToPost")
-                    toggleFeaturedOnProfile=(action  "toggleFeaturedOnProfile")}}
+                    replyToPost=(action "replyToPost")}}
                 {{else}}
                   <div id="topic-footer-buttons">
                     {{d-button icon="reply" class="btn-primary pull-right" action=(route-action "showLogin") label="topic.reply.title"}}
