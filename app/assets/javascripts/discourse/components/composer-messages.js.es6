@@ -101,7 +101,7 @@ export default Component.extend({
 
       if (
         recipients.length > 0 &&
-        recipients.every(r => r === this.currentUser.get("username"))
+        recipients.every(r => r.name === this.currentUser.get("username"))
       ) {
         const message =
           this._yourselfConfirm ||

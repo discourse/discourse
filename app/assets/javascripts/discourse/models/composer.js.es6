@@ -14,7 +14,11 @@ import {
   observes,
   on
 } from "discourse-common/utils/decorators";
-import { escapeExpression, tinyAvatar } from "discourse/lib/utilities";
+import {
+  escapeExpression,
+  tinyAvatar,
+  emailValid
+} from "discourse/lib/utilities";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { throttle } from "@ember/runloop";
 import { Promise } from "rsvp";
@@ -353,7 +357,18 @@ const Composer = RestModel.extend({
 
   @discourseComputed("targetRecipients")
   targetRecipientsArray(targetRecipients) {
-    return targetRecipients ? targetRecipients.split(",") : [];
+    const recipients = targetRecipients ? targetRecipients.split(",") : [];
+    const groups = new Set(this.site.groups.map(g => g.name));
+
+    return recipients.map(item => {
+      if (groups.has(item)) {
+        return { type: "group", name: item };
+      } else if (emailValid(item)) {
+        return { type: "email", name: item };
+      } else {
+        return { type: "user", name: item };
+      }
+    });
   },
 
   @discourseComputed(
