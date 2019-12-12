@@ -332,7 +332,7 @@ registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
     title,
     titleOptions,
     className: classNames.join(" "),
-    icon: "book"
+    icon: "bookmark"
   };
 });
 
@@ -460,7 +460,16 @@ export default createWidget("post-menu", {
     const allButtons = [];
     let visibleButtons = [];
 
-    const orderedButtons = this.menuItems();
+    // filter menu items based on site settings
+    const orderedButtons = this.menuItems().filter(button => {
+      if (
+        this.siteSettings.enable_bookmarks_with_reminders &&
+        button === "bookmark"
+      ) {
+        return false;
+      }
+      return true;
+    });
 
     // If the post is a wiki, make Edit more prominent
     if (attrs.wiki && attrs.canEdit) {
