@@ -1,17 +1,33 @@
-// import { next } from "@ember/runloop";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-// import { default as discourseComputed } from "discourse-common/utils/decorators";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { none } from "@ember/object/computed";
 
 export default Controller.extend(ModalFunctionality, {
-  existingFeaturedTopic: null,
-  newFeaturedTopicId: null,
+  newFeaturedTopic: null,
   saving: false,
-  noTopicSelected: true,
+  noTopicSelected: none("newFeaturedTopic"),
+
+  onClose() {
+    this.set("newFeaturedTopic", null);
+  },
 
   actions: {
     save() {
-      return null;
+      return ajax(`/u/${this.model.username}/feature-topic`, {
+        type: "PUT",
+        data: { topic_id: this.newFeaturedTopic.id }
+      })
+        .then(() => {
+          this.model.set("featured_topic", this.newFeaturedTopic);
+          return this.send("closeModal");
+        })
+        .catch(popupAjaxError);
+    },
+
+    newTopicSelected(topic) {
+      this.set("newFeaturedTopic", topic);
     }
   }
 });

@@ -46,6 +46,7 @@ export default Component.extend({
 
   @discourseComputed
   showAdminButton() {
+    return true;
     return (
       !this.site.mobileView &&
       this.currentUser &&

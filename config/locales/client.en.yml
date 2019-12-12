@@ -1068,7 +1068,7 @@ en:
 
       change_featured_topic:
         title: "Featured Topic"
-        instructions: "To change this, either navigate to the topic to remove it as the featured topic, or feature a different topic."
+        instructions: "A link to this topic will be on your user card, and profile."
 
       email:
         title: "Email"

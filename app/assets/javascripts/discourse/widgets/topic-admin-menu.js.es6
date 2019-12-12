@@ -32,14 +32,23 @@ createWidget("topic-admin-menu-button", {
   },
 
   html(attrs, state) {
-    if (!this.currentUser || !this.currentUser.get("canManageTopic")) {
-      return;
-    }
-
     const result = [];
 
+    const menu = this.attach("topic-admin-menu", {
+      position: state.position,
+      fixed: attrs.fixed,
+      topic: attrs.topic,
+      openUpwards: attrs.openUpwards,
+      rightSide: attrs.rightSide,
+      userIsStaff: this.currentUser && this.currentUser.get("canManageTopic"),
+      adminButtons: []
+    });
+
     // We don't show the button when expanded on the right side
-    if (!(attrs.rightSide && state.expanded)) {
+    if (
+      menu.attrs.adminButtons.length > 0 &&
+      !(attrs.rightSide && state.expanded)
+    ) {
       result.push(
         this.attach("button", {
           className:
@@ -54,15 +63,7 @@ createWidget("topic-admin-menu-button", {
     }
 
     if (state.expanded) {
-      result.push(
-        this.attach("topic-admin-menu", {
-          position: state.position,
-          fixed: attrs.fixed,
-          topic: attrs.topic,
-          openUpwards: attrs.openUpwards,
-          rightSide: attrs.rightSide
-        })
-      );
+      result.push(menu);
     }
 
     return result;
@@ -129,9 +130,23 @@ export default createWidget("topic-admin-menu", {
     }
   },
 
+  addAdminButton(button) {
+    if (this.attrs.userIsStaff) {
+      this.attrs.adminButtons.push(button);
+    }
+  },
+
+  getAdminButton() {
+    return this.adminButtons;
+  },
+
   html(attrs) {
-    const buttons = [];
-    buttons.push({
+    const topic = attrs.topic;
+    const details = topic.get("details");
+    const isPrivateMessage = topic.get("isPrivateMessage");
+    const featured = topic.get("pinned_at") || topic.get("isBanner");
+
+    this.addAdminButton({
       className: "topic-admin-multi-select",
       buttonClass: "btn-default",
       action: "toggleMultiSelect",
@@ -139,11 +154,8 @@ export default createWidget("topic-admin-menu", {
       label: "actions.multi_select"
     });
 
-    const topic = attrs.topic;
-    const details = topic.get("details");
-
     if (details.get("can_delete")) {
-      buttons.push({
+      this.addAdminButton({
         className: "topic-admin-delete",
         buttonClass: "btn-danger",
         action: "deleteTopic",
@@ -153,7 +165,7 @@ export default createWidget("topic-admin-menu", {
     }
 
     if (topic.get("deleted") && details.get("can_recover")) {
-      buttons.push({
+      this.addAdminButton({
         className: "topic-admin-recover",
         buttonClass: "btn-default",
         action: "recoverTopic",
@@ -163,7 +175,7 @@ export default createWidget("topic-admin-menu", {
     }
 
     if (topic.get("closed")) {
-      buttons.push({
+      this.addAdminButton({
         className: "topic-admin-open",
         buttonClass: "btn-default",
         action: "toggleClosed",
@@ -171,7 +183,7 @@ export default createWidget("topic-admin-menu", {
         label: "actions.open"
       });
     } else {
-      buttons.push({
+      this.addAdminButton({
         className: "topic-admin-close",
         buttonClass: "btn-default",
         action: "toggleClosed",
@@ -180,7 +192,7 @@ export default createWidget("topic-admin-menu", {
       });
     }
 
-    buttons.push({
+    this.addAdminButton({
       className: "topic-admin-status-update",
       buttonClass: "btn-default",
       action: "showTopicStatusUpdate",
@@ -188,11 +200,8 @@ export default createWidget("topic-admin-menu", {
       label: "actions.timed_update"
     });
 
-    const isPrivateMessage = topic.get("isPrivateMessage");
-
-    const featured = topic.get("pinned_at") || topic.get("isBanner");
     if (!isPrivateMessage && (topic.get("visible") || featured)) {
-      buttons.push({
+      this.addAdminButton({
         className: "topic-admin-pin",
         buttonClass: "btn-default",
         action: "showFeatureTopic",
@@ -202,7 +211,7 @@ export default createWidget("topic-admin-menu", {
     }
 
     if (this.currentUser.get("staff")) {
-      buttons.push({
+      this.addAdminButton({
         className: "topic-admin-change-timestamp",
         buttonClass: "btn-default",
         action: "showChangeTimestamp",
@@ -211,7 +220,7 @@ export default createWidget("topic-admin-menu", {
       });
     }
 
-    buttons.push({
+    this.addAdminButton({
       className: "topic-admin-reset-bump-date",
       buttonClass: "btn-default",
       action: "resetBumpDate",
@@ -220,7 +229,7 @@ export default createWidget("topic-admin-menu", {
     });
 
     if (!isPrivateMessage) {
-      buttons.push({
+      this.addAdminButton({
         className: "topic-admin-archive",
         buttonClass: "btn-default",
         action: "toggleArchived",
@@ -230,7 +239,7 @@ export default createWidget("topic-admin-menu", {
     }
 
     const visible = topic.get("visible");
-    buttons.push({
+    this.addAdminButton({
       className: "topic-admin-visible",
       buttonClass: "btn-default",
       action: "toggleVisibility",
@@ -239,7 +248,7 @@ export default createWidget("topic-admin-menu", {
     });
 
     if (details.get("can_convert_topic")) {
-      buttons.push({
+      this.addAdminButton({
         className: "topic-admin-convert",
         buttonClass: "btn-default",
         action: isPrivateMessage
@@ -251,7 +260,7 @@ export default createWidget("topic-admin-menu", {
     }
 
     if (this.currentUser.get("staff")) {
-      buttons.push({
+      this.addAdminButton({
         icon: "list",
         buttonClass: "btn-default",
         fullLabel: "review.moderation_history",
@@ -270,7 +279,7 @@ export default createWidget("topic-admin-menu", {
       h("h3", I18n.t("admin_title")),
       h(
         "ul",
-        buttons
+        attrs.adminButtons
           .concat(extraButtons)
           .map(b => this.attach("admin-menu-button", b))
       )

@@ -10,25 +10,31 @@ export default Component.extend({
   loading: null,
   noResults: null,
   topics: null,
+  selectedTopic: null,
   selectedTopicId: null,
   currentTopicId: null,
   additionalFilters: "",
-  topicTitle: null,
+  topicTitle: "",
   label: null,
+  loadOnInit: false,
+  topicChangedCallback: () => {},
 
   didInsertElement() {
     this._super(...arguments);
 
-    searchForTerm(this.additionalFilters, {}).then(results => {
-      if (results && results.posts && results.posts.length > 0) {
-        this.set(
-          "topics",
-          results.posts.mapBy("topic").filter(t => t.id !== this.currentTopicId)
-        );
-      } else {
-        this.setProperties({ topics: null, loading: false });
-      }
-    });
+    if (this.loadOnInit && !isEmpty(this.additionalFilters))
+      searchForTerm(this.additionalFilters, {}).then(results => {
+        if (results && results.posts && results.posts.length > 0) {
+          this.set(
+            "topics",
+            results.posts
+              .mapBy("topic")
+              .filter(t => t.id !== this.currentTopicId)
+          );
+        } else {
+          this.setProperties({ topics: null, loading: false });
+        }
+      });
   },
 
   @observes("topicTitle")
@@ -40,6 +46,11 @@ export default Component.extend({
     });
 
     this.search(this.topicTitle);
+  },
+
+  @observes("selectedTopic")
+  selectedTopicChanged() {
+    return this.topicChangedCallback(this.selectedTopic);
   },
 
   @discourseComputed("label")
@@ -61,34 +72,35 @@ export default Component.extend({
       return;
     }
 
-    const currentTopicId = this.currentTopicId;
-
-    if (isEmpty(title)) {
+    if (isEmpty(title) && isEmpty(this.additionalFilters)) {
       this.setProperties({ topics: null, loading: false });
       return;
     }
 
-    let searchParams = {
-      typeFilter: "topic",
-      restrictToArchetype: "regular"
-    };
+    const currentTopicId = this.currentTopicId;
+    const titleWithFilters = `${title} ${this.additionalFilters}`;
+    let searchParams = {};
 
-    searchForTerm(`${title} ${this.additionalFilters}`, searchParams).then(
-      results => {
-        if (results && results.posts && results.posts.length > 0) {
-          this.set(
-            "topics",
-            results.posts.mapBy("topic").filter(t => t.id !== currentTopicId)
-          );
-        } else {
-          this.setProperties({ topics: null, loading: false });
-        }
+    if (!isEmpty(title)) {
+      searchParams.typeFilter = "topic";
+      searchParams.restrictToArchetype = "regular";
+    }
+
+    searchForTerm(titleWithFilters, searchParams).then(results => {
+      if (results && results.posts && results.posts.length > 0) {
+        this.set(
+          "topics",
+          results.posts.mapBy("topic").filter(t => t.id !== currentTopicId)
+        );
+      } else {
+        this.setProperties({ topics: null, loading: false });
       }
-    );
+    });
   }, 300),
 
   actions: {
     chooseTopic(topic) {
+      this.set("selectedTopic", topic);
       this.set("selectedTopicId", topic.id);
       next(() => {
         document.getElementById(`choose-topic-${topic.id}`).checked = true;
