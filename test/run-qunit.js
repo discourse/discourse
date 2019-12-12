@@ -54,7 +54,26 @@ async function runAllTests() {
   }
 
   let chrome = await launchChrome();
-  let protocol = await CDP({ port: chrome.port });
+
+  let protocol = null;
+  let connectAttempts = 0;
+  while (!protocol) {
+    // Workaround for intermittent CI error caused by
+    // https://github.com/GoogleChrome/chrome-launcher/issues/145
+    try {
+      protocol = await CDP({ port: chrome.port });
+    } catch (e) {
+      if (e === "No inspectable targets" && connectAttempts < 50) {
+        connectAttempts++;
+        console.log(
+          "Unable to establish connection to chrome target - trying again..."
+        );
+        await new Promise(resolve => setTimeout(resolve, 100));
+      } else {
+        throw e;
+      }
+    }
+  }
 
   const { Inspector, Page, Runtime } = protocol;
 
