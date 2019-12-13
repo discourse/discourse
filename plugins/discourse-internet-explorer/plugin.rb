@@ -47,7 +47,7 @@ after_initialize do
   # to be loaded before other files
   register_html_builder('server:before-script-load') do |controller|
     if BrowserDetection.browser(controller.request.env['HTTP_USER_AGENT']) == :ie
-      path = controller.helpers.script_asset_path('/plugins/discourse-internet-explorer/js/ie')
+      path = "#{Discourse.base_uri}/plugins/discourse-internet-explorer/js/ie.js"
 
       <<~JAVASCRIPT
         <script src="#{path}"></script>
