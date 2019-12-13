@@ -62,12 +62,11 @@ export default Controller.extend(PreferencesTabController, {
         I18n.t("user.feature_topic_on_profile.clear.warning"),
         result => {
           if (result) {
-            return ajax(`/u/${this.model.username}/clear-featured-topic`, {
+            ajax(`/u/${this.model.username}/clear-featured-topic`, {
               type: "PUT"
             })
               .then(() => {
                 this.model.set("featured_topic", null);
-                return;
               })
               .catch(popupAjaxError);
           }
