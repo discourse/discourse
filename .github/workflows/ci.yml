@@ -130,7 +130,9 @@ jobs:
 
       - name: Prettier
         if: env.BUILD_TYPE == 'LINT'
-        run: yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" "plugins/**/*.scss" "plugins/**/*.es6"
+        run: |
+          yarn prettier -v
+          yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" "plugins/**/*.scss" "plugins/**/*.es6"
         
       - name: Core RSpec
         if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'CORE'
