@@ -38,16 +38,6 @@ export default Component.extend({
 
   inviteDisabled: or("topic.archived", "topic.closed", "topic.deleted"),
 
-  @discourseComputed
-  showAdminButton() {
-    return true;
-    return (
-      !this.site.mobileView &&
-      this.currentUser &&
-      this.currentUser.get("canManageTopic")
-    );
-  },
-
   showEditOnFooter: and("topic.isPrivateMessage", "site.can_tag_pms"),
 
   @discourseComputed("topic.message_archived")

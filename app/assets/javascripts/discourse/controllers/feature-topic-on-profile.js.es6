@@ -21,7 +21,7 @@ export default Controller.extend(ModalFunctionality, {
       })
         .then(() => {
           this.model.set("featured_topic", this.newFeaturedTopic);
-          return this.send("closeModal");
+          this.send("closeModal");
         })
         .catch(popupAjaxError);
     },

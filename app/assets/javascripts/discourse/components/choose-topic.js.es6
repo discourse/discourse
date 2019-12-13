@@ -10,11 +10,10 @@ export default Component.extend({
   loading: null,
   noResults: null,
   topics: null,
-  selectedTopic: null,
   selectedTopicId: null,
   currentTopicId: null,
-  additionalFilters: "",
-  topicTitle: "",
+  additionalFilters: null,
+  topicTitle: null,
   label: null,
   loadOnInit: false,
   topicChangedCallback: null,
@@ -22,7 +21,10 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    if (this.loadOnInit && !isEmpty(this.additionalFilters))
+    this.additionalFilters = this.additionalFilters || "";
+    this.topicTitle = this.topicTitle || "";
+
+    if (this.loadOnInit && !isEmpty(this.additionalFilters)) {
       searchForTerm(this.additionalFilters, {}).then(results => {
         if (results && results.posts && results.posts.length > 0) {
           this.set(
@@ -35,6 +37,7 @@ export default Component.extend({
           this.setProperties({ topics: null, loading: false });
         }
       });
+    }
   },
 
   @observes("topicTitle")
@@ -46,12 +49,6 @@ export default Component.extend({
     });
 
     this.search(this.topicTitle);
-  },
-
-  @observes("selectedTopic")
-  selectedTopicChanged() {
-    if (this.topicChangedCallback)
-      return this.topicChangedCallback(this.selectedTopic);
   },
 
   @discourseComputed("label")
@@ -101,12 +98,12 @@ export default Component.extend({
 
   actions: {
     chooseTopic(topic) {
-      this.set("selectedTopic", topic);
       this.set("selectedTopicId", topic.id);
       next(() => {
         document.getElementById(`choose-topic-${topic.id}`).checked = true;
       });
-      return false;
+      if (this.topicChangedCallback)
+        this.topicChangedCallback(topic);
     }
   }
 });
