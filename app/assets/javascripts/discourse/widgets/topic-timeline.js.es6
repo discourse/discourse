@@ -319,10 +319,10 @@ createWidget("timeline-controls", {
 
   html(attrs) {
     const controls = [];
-    const { fullScreen, currentUser, topic } = attrs;
+    const { fullScreen, topic } = attrs;
 
-    if (!fullScreen && currentUser && currentUser.get("canManageTopic")) {
-      controls.push(this.attach("topic-admin-menu-button", { topic }));
+    if (!fullScreen) {
+      controls.push(this.attach("ropic-admin-menu-button", { topic }));
     }
 
     return controls;
