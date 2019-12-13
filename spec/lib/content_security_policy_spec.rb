@@ -48,7 +48,6 @@ describe ContentSecurityPolicy do
     it 'always has self, logster, sidekiq, and assets' do
       script_srcs = parse(policy)['script-src']
       expect(script_srcs).to include(*%w[
-        'unsafe-eval'
         'report-sample'
         http://test.localhost/logs/
         http://test.localhost/sidekiq/
