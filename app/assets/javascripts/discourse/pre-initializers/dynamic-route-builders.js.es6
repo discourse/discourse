@@ -103,8 +103,13 @@ export default {
     });
     app["TagsShowParentCategoryRoute"] = TagsShowRoute.extend();
 
+    app["TagShowRoute"] = TagsShowRoute;
+
     site.get("filters").forEach(function(filter) {
       app["TagsShow" + filter.capitalize() + "Route"] = TagsShowRoute.extend({
+        navMode: filter
+      });
+      app["TagShow" + filter.capitalize() + "Route"] = TagsShowRoute.extend({
         navMode: filter
       });
       app[
