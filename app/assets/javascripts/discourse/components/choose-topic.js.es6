@@ -102,8 +102,7 @@ export default Component.extend({
       next(() => {
         document.getElementById(`choose-topic-${topic.id}`).checked = true;
       });
-      if (this.topicChangedCallback)
-        this.topicChangedCallback(topic);
+      if (this.topicChangedCallback) this.topicChangedCallback(topic);
     }
   }
 });
