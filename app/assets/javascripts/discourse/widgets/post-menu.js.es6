@@ -578,9 +578,10 @@ export default createWidget("post-menu", {
 
     if (state.readers.length) {
       const remaining = state.totalReaders - state.readers.length;
-      const description = remaining > 0
-        ? "post.actions.people.read_capped"
-        : "post.actions.people.read";
+      const description =
+        remaining > 0
+          ? "post.actions.people.read_capped"
+          : "post.actions.people.read";
       const count = remaining > 0 ? remaining : state.totalReaders;
 
       contents.push(
@@ -596,9 +597,10 @@ export default createWidget("post-menu", {
 
     if (state.likedUsers.length) {
       const remaining = state.total - state.likedUsers.length;
-      const description = remaining > 0
-        ? "post.actions.people.like_capped"
-        : "post.actions.people.like";
+      const description =
+        remaining > 0
+          ? "post.actions.people.like_capped"
+          : "post.actions.people.like";
       const count = remaining > 0 ? remaining : state.total;
 
       contents.push(
