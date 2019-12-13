@@ -379,14 +379,14 @@ en:
     choose_topic:
       none_found: "No topics found."
       title:
-        search: "Search for a Topic by title, url or id:"
-        placeholder: "type the topic title here"
+        search: "Search for a Topic"
+        placeholder: "type the topic title, url or id here"
 
     choose_message:
       none_found: "No messages found."
       title:
-        search: "Search for a Message by title:"
-        placeholder: "type the message title here"
+        search: "Search for a Message"
+        placeholder: "type the message title, url or id here"
 
     review:
       order_by: "Order by"
