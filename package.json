@@ -1,6 +1,6 @@
 {
   "name": "discourse",
-  "version": "1.0.0",
+  "version": "1.19.2",
   "main": "index.js",
   "repository": "git@github.com:discourse/discourse.git",
   "author": "Discourse",
