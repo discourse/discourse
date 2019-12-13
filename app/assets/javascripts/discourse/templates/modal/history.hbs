@@ -15,7 +15,7 @@
           &rarr; {{bound-avatar-template model.user_changes.current.avatar_template "small"}} {{model.user_changes.current.username}}
         {{/if}}
         {{#if model.wiki_changes}}
-          &mdash; {{disabled-icon icon="pencil-square-o" disabled=wikiDisabled}}
+          &mdash; {{disabled-icon icon="far-edit" disabled=wikiDisabled}}
         {{/if}}
         {{#if model.post_type_changes}}
           &mdash; {{disabled-icon icon="shield-alt" disabled=postTypeDisabled}}
@@ -28,7 +28,7 @@
 
     <div id="display-modes">
       {{d-button action=(action "displayInline")
-          icon="square-o"
+          icon="far-square"
           label="post.revisions.displays.inline.button"
           title="post.revisions.displays.inline.title"
           class=inlineClass}}
@@ -62,7 +62,7 @@
       {{/if}}
       {{#if model.wiki_changes}}
         <div class="row">
-          {{disabled-icon icon="pencil-square-o" disabled=wikiDisabled}}
+          {{disabled-icon icon="far-edit" disabled=wikiDisabled}}
         </div>
       {{/if}}
       {{#if model.post_type_changes}}
