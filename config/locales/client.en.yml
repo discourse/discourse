@@ -2563,11 +2563,18 @@ en:
           notify_moderators: "notified moderators"
           notify_user: "sent a message"
           bookmark: "bookmarked this"
-          like: "liked this"
-          read: "read this"
+          like:
+            one: "liked this"
+            other: "liked this"
+          read:
+            one: "read this"
+            other: "read this"
           like_capped:
             one: "and {{count}} other liked this"
             other: "and {{count}} others liked this"
+          read_capped:
+            one: "and {{count}} other read this"
+            other: "and {{count}} others read this"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
@@ -2621,7 +2628,7 @@ en:
           html_part:
             title: "Show the html part of the email"
             button: "HTML"
-      
+
       bookmarks:
         create: "Create bookmark"
         name: "Name"
