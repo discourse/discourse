@@ -840,6 +840,27 @@ Discourse::Application.routes.draw do
   get "apple-app-site-association" => "metadata#app_association_ios", format: false
   get "opensearch" => "metadata#opensearch", constraints: { format: :xml }
 
+  scope '/tag/:tag_id' do
+    constraints format: :json do
+      get '/' => 'tags#show'
+      get '/info' => 'tags#info'
+      get '/notifications' => 'tags#notifications'
+      put '/notifications' => 'tags#update_notifications'
+      put '/' => 'tags#update'
+      delete '/' => 'tags#destroy'
+      post '/synonyms' => 'tags#create_synonyms'
+      delete '/synonyms/:synonym_id' => 'tags#destroy_synonym'
+
+      Discourse.filters.each do |filter|
+        get "/l/#{filter}" => "tags#show_#{filter}"
+      end
+    end
+
+    constraints format: :rss do
+      get '/' => 'tags#tag_feed'
+    end
+  end
+
   scope "/tags" do
     get '/' => 'tags#index'
     get '/filter/list' => 'tags#index'
@@ -849,6 +870,7 @@ Discourse::Application.routes.draw do
     post '/upload' => 'tags#upload'
     get '/unused' => 'tags#list_unused'
     delete '/unused' => 'tags#destroy_unused'
+
     constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
       scope path: '/c/*category_slug_path_with_id' do
         Discourse.filters.each do |filter|
@@ -864,9 +886,13 @@ Discourse::Application.routes.draw do
         get '/:tag_id' => 'tags#show', as: 'tag_category_show'
       end
 
+      get '/intersection/:tag_id/*additional_tag_ids' => 'tags#show', as: 'tag_intersection'
+    end
+
+    # legacy routes
+    constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
       get '/:tag_id.rss' => 'tags#tag_feed'
       get '/:tag_id' => 'tags#show', as: 'tag_show'
-      get '/intersection/:tag_id/*additional_tag_ids' => 'tags#show', as: 'tag_intersection'
       get '/:tag_id/info' => 'tags#info'
       get '/:tag_id/notifications' => 'tags#notifications'
       put '/:tag_id/notifications' => 'tags#update_notifications'
