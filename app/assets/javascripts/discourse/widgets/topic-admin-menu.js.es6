@@ -44,7 +44,10 @@ createWidget("topic-admin-menu-button", {
     });
 
     // We don't show the button when expanded on the right side
-    if (menu.attrs.actionButtons.length && !(attrs.rightSide && state.expanded)) {
+    if (
+      menu.attrs.actionButtons.length &&
+      !(attrs.rightSide && state.expanded)
+    ) {
       result.push(
         this.attach("button", {
           className:

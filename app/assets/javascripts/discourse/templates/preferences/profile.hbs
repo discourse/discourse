@@ -68,9 +68,13 @@
 
     <div>
       {{d-button action=(action "showFeaturedTopicModal")
-        class="btn-primary new-totp"
-        disabled=loading
+        class="btn-primary"
         label="user.feature_topic_on_profile.open_search"}}
+      {{#if model.featured_topic}}
+        {{d-button action=(action "clearFeaturedTopicFromProfile")
+          class="btn-danger"
+          label="user.feature_topic_on_profile.clear.title"}}
+      {{/if}}
     </div>
     <div class='instructions'>
       {{i18n 'user.change_featured_topic.instructions'}}

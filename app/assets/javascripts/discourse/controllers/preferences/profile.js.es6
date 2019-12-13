@@ -5,6 +5,7 @@ import { default as discourseComputed } from "discourse-common/utils/decorators"
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cookAsync } from "discourse/lib/text";
+import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(PreferencesTabController, {
@@ -54,6 +55,24 @@ export default Controller.extend(PreferencesTabController, {
         model: this.model,
         title: "user.feature_topic_on_profile.title"
       });
+    },
+
+    clearFeaturedTopicFromProfile() {
+      bootbox.confirm(
+        I18n.t("user.feature_topic_on_profile.clear.warning"),
+        result => {
+          if (result) {
+            return ajax(`/u/${this.model.username}/clear-featured-topic`, {
+              type: "PUT"
+            })
+              .then(() => {
+                this.model.set("featured_topic", null);
+                return;
+              })
+              .catch(popupAjaxError);
+          }
+        }
+      );
     },
 
     save() {
