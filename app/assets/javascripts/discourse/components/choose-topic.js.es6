@@ -17,9 +17,9 @@ export default Component.extend({
   topicTitle: "",
   label: null,
   loadOnInit: false,
-  topicChangedCallback: () => {},
+  topicChangedCallback: null,
 
-  didInsertElement() {
+  init() {
     this._super(...arguments);
 
     if (this.loadOnInit && !isEmpty(this.additionalFilters))
@@ -50,7 +50,8 @@ export default Component.extend({
 
   @observes("selectedTopic")
   selectedTopicChanged() {
-    return this.topicChangedCallback(this.selectedTopic);
+    if (this.topicChangedCallback)
+      return this.topicChangedCallback(this.selectedTopic);
   },
 
   @discourseComputed("label")
