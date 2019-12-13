@@ -93,24 +93,22 @@
 
       {{#topic-navigation topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
         {{#if info.renderTimeline}}
-          {{#if info.renderAdminMenuButton}}
-            {{topic-admin-menu-button
-              topic=model
-              fixed="true"
-              toggleMultiSelect=(action "toggleMultiSelect")
-              deleteTopic=(action "deleteTopic")
-              recoverTopic=(action "recoverTopic")
-              toggleClosed=(action "toggleClosed")
-              toggleArchived=(action "toggleArchived")
-              toggleVisibility=(action "toggleVisibility")
-              toggleFeaturedOnProfile=(action "toggleFeaturedOnProfile")
-              showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
-              showFeatureTopic=(route-action "showFeatureTopic")
-              showChangeTimestamp=(route-action "showChangeTimestamp")
-              resetBumpDate=(action "resetBumpDate")
-              convertToPublicTopic=(action "convertToPublicTopic")
-              convertToPrivateMessage=(action "convertToPrivateMessage")}}
-          {{/if}}
+          {{topic-admin-menu-button
+            topic=model
+            fixed="true"
+            toggleMultiSelect=(action "toggleMultiSelect")
+            deleteTopic=(action "deleteTopic")
+            recoverTopic=(action "recoverTopic")
+            toggleClosed=(action "toggleClosed")
+            toggleArchived=(action "toggleArchived")
+            toggleVisibility=(action "toggleVisibility")
+            toggleFeaturedOnProfile=(action "toggleFeaturedOnProfile")
+            showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
+            showFeatureTopic=(route-action "showFeatureTopic")
+            showChangeTimestamp=(route-action "showChangeTimestamp")
+            resetBumpDate=(action "resetBumpDate")
+            convertToPublicTopic=(action "convertToPublicTopic")
+            convertToPrivateMessage=(action "convertToPrivateMessage")}}
 
           {{topic-timeline
             topic=model
