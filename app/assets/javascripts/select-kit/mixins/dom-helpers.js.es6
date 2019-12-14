@@ -111,11 +111,7 @@ export default Mixin.create({
             $(context.element).focus();
           }
         } else {
-          if (this.site && this.site.isMobileDevice) {
-            this.expand();
-          } else {
-            context.$filterInput().focus();
-          }
+          context.$filterInput().focus();
         }
       });
     });

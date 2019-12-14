@@ -458,7 +458,7 @@ class PostAlerter
   def expand_group_mentions(groups, post)
     return unless post.user && groups
 
-    Group.mentionable(post.user).where(id: groups.map(&:id)).each do |group|
+    Group.mentionable(post.user, include_public: false).where(id: groups.map(&:id)).each do |group|
       next if group.user_count >= SiteSetting.max_users_notified_per_group_mention
       yield group, group.users
     end

@@ -40,7 +40,6 @@ $controls-color: #fff !default;
 $inner-close-icon-color: #333 !default;
 $controls-text-color: #ccc !default; // Color of preloader and "1 of X" indicator
 $controls-text-color-hover: #fff !default;
-$IE7support: true !default; // Very basic IE7 support
 
 // Iframe-type options
 $include-iframe-type: true !default;
@@ -73,15 +72,12 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: $z-index-base + 2;
+  z-index: z("modal", "popover");
   overflow: hidden;
   position: fixed;
 
   background: $overlay-color;
   opacity: $overlay-opacity;
-  @if $IE7support {
-    filter: unquote("alpha(opacity=#{$overlay-opacity*100})");
-  }
 }
 
 // Wrapper for popup
@@ -90,7 +86,7 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: $z-index-base + 3;
+  z-index: z("modal", "popover") + 1;
   position: fixed;
   outline: 0 !important;
   -webkit-backface-visibility: hidden; // fixes webkit bug that can cause "false" scrollbar
@@ -274,9 +270,6 @@ button {
   text-decoration: none;
   text-align: center;
   opacity: $controls-opacity;
-  @if $IE7support {
-    filter: unquote("alpha(opacity=#{$controls-opacity*100})");
-  }
   padding: 0 0 18px 10px;
   color: $controls-color;
   font-style: normal;
@@ -287,9 +280,6 @@ button {
   &:focus {
     opacity: 1;
     outline: 0;
-    @if $IE7support {
-      filter: unquote("alpha(opacity=#{1*100})");
-    }
   }
 
   &:active {
@@ -327,9 +317,6 @@ button {
   .mfp-arrow {
     position: absolute;
     opacity: $controls-opacity;
-    @if $IE7support {
-      filter: unquote("alpha(opacity=#{$controls-opacity*100})");
-    }
     top: 50%;
     margin: -55px 0 0;
     padding: 0;
@@ -343,9 +330,6 @@ button {
     &:focus {
       outline: 0;
       opacity: 1;
-      @if $IE7support {
-        filter: unquote("alpha(opacity=#{1*100})");
-      }
     }
     &:before,
     &:after,
@@ -595,34 +579,6 @@ button {
   .mfp-container {
     padding-left: $popup-padding-left-mobile;
     padding-right: $popup-padding-left-mobile;
-  }
-}
-
-// IE7 support
-// Styles that make popup look nicier in old IE
-@if $IE7support {
-  .mfp-ie7 {
-    .mfp-img {
-      padding: 0;
-    }
-    .mfp-bottom-bar {
-      width: 600px;
-      left: 50%;
-      margin-left: -300px;
-      margin-top: 5px;
-      padding-bottom: 5px;
-    }
-    .mfp-container {
-      padding: 0;
-    }
-    .mfp-content {
-      padding-top: 44px;
-    }
-    .mfp-close {
-      top: 0;
-      right: 0;
-      padding-top: 0;
-    }
   }
 }
 

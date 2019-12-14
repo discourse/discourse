@@ -31,6 +31,9 @@ describe WildcardDomainChecker do
 
         result4 = WildcardDomainChecker.check_domain('www.*.discourse.org', 'www.www.discourse.org')
         expect(result4).to eq(nil)
+
+        result5 = WildcardDomainChecker.check_domain('www.discourse.org', "www.discourse.org\nwww.discourse.org.evil.com")
+        expect(result5).to eq(nil)
       end
     end
   end

@@ -81,5 +81,12 @@ describe TopicGroup do
       expect(created_topic_group.last_read_post_number).to eq new_post_number
       expect(created_topic_group2.last_read_post_number).to eq topic2.highest_post_number
     end
+
+    it "will not raise an error if a topic group already exists" do
+      TopicGroup.create_topic_group(user, @topic.id, 3, [])
+      expect(TopicGroup.find_by(group: group, topic: @topic).last_read_post_number).to eq(3)
+      TopicGroup.create_topic_group(user, @topic.id, 10, [])
+      expect(TopicGroup.find_by(group: group, topic: @topic).last_read_post_number).to eq(10)
+    end
   end
 end
