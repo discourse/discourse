@@ -22,6 +22,7 @@ def downsize_upload(upload, path, max_image_pixels)
   sha1 = Upload.generate_digest(path)
   w, h = FastImage.size(path, timeout: 10, raise_on_failure: true)
   return if !w || !h
+  return if sha1 == upload.sha1
 
   ww, hh = ImageSizer.resize(w, h)
 
