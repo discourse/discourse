@@ -71,7 +71,7 @@ def downsize_upload(upload, path, max_image_pixels)
     CustomEmoji.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
     ThemeField.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
 
-    original_upload.destroy!
+    original_upload.reload.destroy!
   end
 
   true
