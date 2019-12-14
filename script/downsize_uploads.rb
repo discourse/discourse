@@ -64,6 +64,12 @@ def downsize_upload(upload, path, max_image_pixels)
     User.where(uploaded_avatar_id: original_upload.id).update_all(uploaded_avatar_id: upload.id)
     UserAvatar.where(gravatar_upload_id: original_upload.id).update_all(gravatar_upload_id: upload.id)
     UserAvatar.where(custom_upload_id: original_upload.id).update_all(custom_upload_id: upload.id)
+    UserProfile.where(profile_background_upload_id: original_upload.id).update_all(profile_background_upload_id: upload.id)
+    UserProfile.where(card_background_upload_id: original_upload.id).update_all(card_background_upload_id: upload.id)
+    Category.where(uploaded_logo_id: original_upload.id).update_all(uploaded_logo_id: upload.id)
+    Category.where(uploaded_background_id: original_upload.id).update_all(uploaded_background_id: upload.id)
+    CustomEmoji.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
+    ThemeField.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
 
     original_upload.destroy!
   end
