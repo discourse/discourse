@@ -45,6 +45,8 @@ def downsize_upload(upload, path, max_image_pixels)
   if new_file
     return unless url = Discourse.store.store_upload(File.new(path), upload)
     upload.url = url
+
+    upload.optimized_images.each(&:destroy!)
   end
 
   upload.save!
