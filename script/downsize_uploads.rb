@@ -53,7 +53,7 @@ def downsize_upload(upload, path, max_image_pixels)
 
   original_upload.posts.each do |post|
     post.update!(raw: post.raw.gsub(original_upload.short_url, upload.short_url))
-    Jobs.enqueue(:process_post, post_id: post.id, bypass_bump: true, cook: true)
+    post.rebake!
   end
 
   if new_file
