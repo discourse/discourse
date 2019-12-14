@@ -31,13 +31,11 @@ module FileStore
     end
 
     def upload_path
-      if  ENV['RAILS_ENV'] != "test" || !ENV['TEST_ENV_NUMBER']
-        return File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
-      end
+      path = File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
+      return path unless Discourse.is_parallel_test?
 
-      # Parallel spec system
       n = ENV['TEST_ENV_NUMBER'].presence || '1'
-      File.join("uploads", RailsMultisite::ConnectionManagement.current_db, n)
+      File.join(path, n)
     end
 
     def has_been_uploaded?(url)
