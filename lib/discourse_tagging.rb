@@ -222,7 +222,7 @@ module DiscourseTagging
 
     distinct_clause = if opts[:order_popularity]
       "DISTINCT ON (topic_count, name)"
-    elsif opts[:order_search_results]
+    elsif opts[:order_search_results] && opts[:term].present?
       "DISTINCT ON (lower(name) = lower(:cleaned_term), topic_count, name)"
     else
       ""
@@ -278,9 +278,7 @@ module DiscourseTagging
 
     term = opts[:term]
     if term.present?
-      term = term.gsub("_", "\\_")
-      clean_tag(term)
-      term.downcase!
+      term = term.gsub("_", "\\_").downcase
       builder.where("LOWER(name) LIKE :term")
       builder_params[:cleaned_term] = term
       builder_params[:term] = "%#{term}%"
