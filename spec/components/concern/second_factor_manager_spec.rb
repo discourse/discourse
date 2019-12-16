@@ -18,8 +18,8 @@ RSpec.describe SecondFactorManager do
         totp = another_user.create_totp(enabled: true)
       end.to change { UserSecondFactor.count }.by(1)
 
-      expect(totp.get_totp_object.issuer).to eq(SiteSetting.title)
-      expect(totp.get_totp_object.secret).to eq(another_user.reload.user_second_factors.totps.first.data)
+      expect(totp.totp_object.issuer).to eq(SiteSetting.title)
+      expect(totp.totp_object.secret).to eq(another_user.reload.user_second_factors.totps.first.data)
     end
   end
 
@@ -46,7 +46,7 @@ RSpec.describe SecondFactorManager do
       freeze_time do
         expect(user.user_second_factors.totps.first.last_used).to eq(nil)
 
-        token = user.user_second_factors.totps.first.get_totp_object.now
+        token = user.user_second_factors.totps.first.totp_object.now
 
         expect(user.authenticate_totp(token)).to eq(true)
         expect(user.user_second_factors.totps.first.last_used).to eq_time(DateTime.now)

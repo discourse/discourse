@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'rotp'
 
 class UsersController < ApplicationController
 
@@ -1219,6 +1218,7 @@ class UsersController < ApplicationController
   end
 
   def create_second_factor_totp
+    require 'rotp' if !defined? ROTP
     totp_data = ROTP::Base32.random
     secure_session["staged-totp-#{current_user.id}"] = totp_data
     qrcode_svg = RQRCode::QRCode.new(current_user.totp_provisioning_uri(totp_data)).as_svg(

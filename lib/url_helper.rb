@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'addressable'
-
 class UrlHelper
 
   # At the moment this handles invalid URLs that browser address bar accepts
