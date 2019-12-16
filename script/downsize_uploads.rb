@@ -48,6 +48,12 @@ def downsize_upload(upload, path, max_image_pixels)
     upload.url = url
   end
 
+  if ENV["VERBOSE"]
+    puts "#{original_upload.base62_sha1} -> #{Upload.base62_sha1(sha1)}"
+    puts "#{original_upload.sha1} -> #{sha1}"
+    puts "new file? #{new_file}"
+  end
+
   upload.save!
 
   upload.optimized_images.each(&:destroy!) if new_file
@@ -76,13 +82,18 @@ def downsize_upload(upload, path, max_image_pixels)
     post.raw.gsub!(Discourse.store.cdn_url(original_upload.url), Discourse.store.cdn_url(upload.url))
 
     if post.raw_changed?
+      puts "updating post #{post.id}" if ENV["VERBOSE"]
       post.save!
+    else
+      puts "Could find the upload path in post.raw (post_id: #{post.id})" if ENV["VERBOSE"]
     end
 
     post.rebake!
   end
 
   original_upload.reload.destroy! unless new_file
+
+  puts "" if ENV["VERBOSE"]
 
   true
 end
@@ -95,6 +106,7 @@ puts "Uploads to process: #{scope.count}"
 
 scope.find_each do |upload|
   print "\rFixed dimensions: %8d        Downsized: %8d (upload id: #{upload.id})".freeze % [dimensions_count, downsized_count]
+  puts "\n" if ENV["VERBOSE"]
 
   next unless source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
 
