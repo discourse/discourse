@@ -46,12 +46,11 @@ def downsize_upload(upload, path, max_image_pixels)
   if new_file
     return unless url = Discourse.store.store_upload(File.new(path), upload)
     upload.url = url
-
-    upload.optimized_images.each(&:destroy!)
   end
 
   upload.save!
 
+  upload.optimized_images.each(&:destroy!) if new_file
   original_upload.posts.each do |post|
     post.update!(raw: post.raw.gsub(original_upload.short_url, upload.short_url))
     post.rebake!
