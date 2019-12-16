@@ -149,7 +149,7 @@ GEM
     i18n (1.7.0)
       concurrent-ruby (~> 1.0)
     image_size (1.5.0)
-    in_threads (1.5.1)
+    in_threads (1.5.3)
     jaro_winkler (1.5.4)
     jmespath (1.4.0)
     jquery-rails (4.3.5)
