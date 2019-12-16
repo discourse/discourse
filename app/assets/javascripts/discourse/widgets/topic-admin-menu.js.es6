@@ -111,6 +111,7 @@ export default createWidget("topic-admin-menu", {
 
     if (
       this.siteSettings.allow_featured_topic_on_user_profiles &&
+      this.currentUser &&
       topic.user_id === this.currentUser.get("id") &&
       !topic.isPrivateMessage &&
       !topic.category.read_restricted
