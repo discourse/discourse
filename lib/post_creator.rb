@@ -178,7 +178,7 @@ class PostCreator
         update_user_counts
         create_embedded_topic
         link_post_uploads
-        update_uploads_secure_status
+        # update_uploads_secure_status
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message
         if !@opts[:import_mode]
@@ -380,11 +380,11 @@ class PostCreator
     end
   end
 
-  def update_uploads_secure_status
-    if SiteSetting.secure_media? || SiteSetting.prevent_anons_from_downloading_files?
-      @post.update_uploads_secure_status
-    end
-  end
+  # def update_uploads_secure_status
+  #   if SiteSetting.secure_media? || SiteSetting.prevent_anons_from_downloading_files?
+  #     @post.update_uploads_secure_status
+  #   end
+  # end
 
   def handle_spam
     if @spam

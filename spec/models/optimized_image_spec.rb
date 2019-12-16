@@ -348,7 +348,6 @@ describe OptimizedImage do
           expect(oi.height).to eq(200)
           expect(oi.url).to eq("//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com#{optimized_path}")
         end
-
       end
 
     end

@@ -506,7 +506,7 @@ class Post < ActiveRecord::Base
 
   def with_secure_media?
     return false unless SiteSetting.secure_media?
-    topic&.private_message? || SiteSetting.login_required?
+    topic&.private_message? || SiteSetting.login_required? || topic&.category&.read_restricted
   end
 
   def hide!(post_action_type_id, reason = nil)
@@ -900,11 +900,11 @@ class Post < ActiveRecord::Base
 
     upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
 
-    disallowed_uploads = []
     if SiteSetting.secure_media? && !self.with_secure_media?
-      disallowed_uploads = Upload.where(id: upload_ids, secure: true).pluck(:original_filename)
+      Upload.where(id: upload_ids, secure: true).find_each do |upload|
+        upload.update_secure_status(secure_override_value: false)
+      end
     end
-    return disallowed_uploads if disallowed_uploads.count > 0
 
     values = upload_ids.map! { |upload_id| "(#{self.id},#{upload_id})" }.join(",")
 

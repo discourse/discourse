@@ -1309,6 +1309,37 @@ describe Post do
           post_uploads_ids
         )
       end
+
+      context "when a secure upload is found in the post" do
+        before do
+          enable_secure_media
+          stub_request(
+            :put,
+            "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
+          )
+          image_upload.update_secure_status(secure_override_value: true)
+        end
+
+        context "when the post is not with secure media (public)" do
+          before do
+            SiteSetting.login_required = false
+          end
+          it "automatically changes the upload to insecure" do
+            post.link_post_uploads
+            expect(image_upload.reload.secure).to eq(false)
+          end
+        end
+
+        context "when the post with secure media (private)" do
+          before do
+            SiteSetting.login_required = true
+          end
+          it "does nothing to the upload" do
+            post.link_post_uploads
+            expect(image_upload.reload.secure).to eq(true)
+          end
+        end
+      end
     end
 
     context '#update_uploads_secure_status' do
@@ -1323,14 +1354,8 @@ describe Post do
 
       before do
         SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-        SiteSetting.s3_access_key_id = "some key"
-        SiteSetting.s3_secret_access_key = "some secret key"
-        SiteSetting.secure_media = true
+        enable_secure_media
         attachment_upload.update!(original_filename: "hello.csv")
-
-        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
 
         stub_request(
           :put,
@@ -1530,4 +1555,12 @@ describe Post do
     end
   end
 
+  def enable_secure_media
+    SiteSetting.enable_s3_uploads = true
+    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+    SiteSetting.s3_access_key_id = "some key"
+    SiteSetting.s3_secret_access_key = "some secret key"
+    SiteSetting.secure_media = true
+    stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+  end
 end

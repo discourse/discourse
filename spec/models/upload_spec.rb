@@ -225,6 +225,110 @@ describe Upload do
     end
   end
 
+  describe ".used_in_public_context?" do
+    let(:upload) { Fabricate(:upload_s3) }
+
+    context "when the upload is used for a theme component" do
+      before do
+        ThemeField.create(
+          theme: Fabricate(:theme),
+          target_id: Theme.targets[:common],
+          name: "test",
+          value: "",
+          type_id: ThemeField.types[:theme_upload_var],
+          upload_id: upload.id
+        )
+      end
+
+      it "returns true" do
+        expect(upload.used_in_public_context?).to eq(true)
+      end
+    end
+
+    context "when the upload is used for a site setting" do
+      before do
+        SiteSetting.create(
+          name: "manifest_icon",
+          data_type: SiteSetting.types[:upload],
+          value: upload.id
+        )
+      end
+
+      it "returns true" do
+        expect(upload.used_in_public_context?).to eq(true)
+      end
+    end
+
+    context "when the upload is linked to a post" do
+      before do
+        PostUpload.create(post: post, upload: upload)
+      end
+
+      context "when the post is a private message" do
+        let(:post) { Fabricate(:private_message_post_one_user) }
+
+        it "returns false" do
+          expect(upload.used_in_public_context?).to eq(false)
+        end
+
+        context "when the post is deleted" do
+          before do
+            PostDestroyer.new(Fabricate(:admin), post, context: "").destroy
+          end
+
+          it "returns false" do
+            expect(upload.used_in_public_context?).to eq(false)
+          end
+        end
+
+        context "when the topic is deleted" do
+          before do
+            first_post = post.topic.ordered_posts.first
+            PostDestroyer.new(Fabricate(:admin), first_post, context: "").destroy
+          end
+
+          it "returns false" do
+            expect(upload.used_in_public_context?).to eq(false)
+          end
+        end
+      end
+
+      context "when the post is a regular post" do
+        let(:post) { Fabricate(:post, topic: topic) }
+
+        context "when the post topic has no category" do
+          let(:topic) { Fabricate(:topic, category_id: nil) }
+          it "returns true" do
+            expect(upload.used_in_public_context?).to eq(true)
+          end
+        end
+
+        context "when the post topic has a category that is not read restricted" do
+          let(:category) { Fabricate(:category) }
+          let(:topic) { Fabricate(:topic, category_id: category.id) }
+          it "returns true" do
+            expect(upload.used_in_public_context?).to eq(true)
+          end
+        end
+
+        context "when the post topic has a category that is private/read restricted" do
+          let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
+          let(:topic) { Fabricate(:topic, category_id: category.id) }
+          it "returns false" do
+            expect(upload.used_in_public_context?).to eq(false)
+          end
+        end
+      end
+    end
+
+    context "when the upload is linked to multiple posts" do
+      before do
+        PostUpload.create(post: post, upload: upload)
+        PostUpload.create(post: secondary_post, upload: upload)
+      end
+    end
+  end
+
   describe '.generate_digest' do
     it "should return the right digest" do
       expect(Upload.generate_digest(image.path)).to eq('bc975735dfc6409c1c2aa5ebf2239949bcbdbd65')
@@ -358,7 +462,16 @@ describe Upload do
         )
       end
 
-      it 'marks an image upload as not secure when not associated with a post' do
+      it 'marks an image upload as secure when not used in a public context' do
+        upload.update!(secure: false)
+        expect { upload.update_secure_status }
+          .to change { upload.secure }
+
+        expect(upload.secure).to eq(true)
+      end
+
+      it 'marks an image upload as not secure when used in a public context' do
+        PostUpload.create(post: Fabricate(:post), upload: upload)
         upload.update!(secure: true)
         expect { upload.update_secure_status }
           .to change { upload.secure }

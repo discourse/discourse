@@ -203,6 +203,60 @@ RSpec.describe UploadCreator do
       end
     end
 
+    describe "secure media" do
+      let(:filename) { "logo.jpg" }
+      let(:file) { file_from_fixtures(filename) }
+
+      it "will not mark upload as secure if secure_media is not enabled" do
+        SiteSetting.secure_media = false
+        upload = UploadCreator.new(file, filename).create_for(user.id)
+        stored_upload = Upload.last
+
+        expect(stored_upload.secure?).to eq(false)
+      end
+
+      context "when secure_media enabled" do
+        before do
+          stub_enable_s3_uploads
+          SiteSetting.secure_media = true
+        end
+
+        it 'should not mark theme uploads as secure unless other conditions are met' do
+          upload = UploadCreator.new(file, filename, for_theme: true).create_for(user.id)
+          expect(upload.secure?).to eq(false)
+        end
+
+        it 'should not mark avatar uploads as secure' do
+          SiteSetting.login_required = true
+          upload = UploadCreator.new(file, filename, type: "avatar").create_for(user.id)
+          expect(upload.secure?).to eq(false)
+        end
+
+        it 'should not mark site setting uploads as secure' do
+          upload = UploadCreator.new(file, filename, for_site_setting: true).create_for(user.id)
+          expect(upload.secure?).to eq(false)
+        end
+
+        it 'should mark uploads as secure if login_required' do
+          SiteSetting.login_required = true
+          upload = UploadCreator.new(file, filename).create_for(user.id)
+          expect(upload.secure?).to eq(true)
+        end
+
+        it 'should mark uploads as secure if for private message' do
+          SiteSetting.login_required = false
+          upload = UploadCreator.new(file, filename, type: "composer", for_private_message: true).create_for(user.id)
+          expect(upload.secure?).to eq(true)
+        end
+
+        it 'should mark uploads as secure if uploaded in the composer in general,
+            cause we dont know if its in a private category yet' do
+          upload = UploadCreator.new(file, filename, type: "composer").create_for(user.id)
+          expect(upload.secure?).to eq(true)
+        end
+      end
+    end
+
     context 'uploading to s3' do
       let(:filename) { "should_be_jpeg.png" }
       let(:file) { file_from_fixtures(filename) }
@@ -210,17 +264,7 @@ RSpec.describe UploadCreator do
       let(:pdf_file) { file_from_fixtures(pdf_filename, "pdf") }
 
       before do
-        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-        SiteSetting.s3_access_key_id = "s3-access-key-id"
-        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-        SiteSetting.s3_region = 'us-west-1'
-        SiteSetting.enable_s3_uploads = true
-
-        store = FileStore::S3Store.new
-        s3_helper = store.instance_variable_get(:@s3_helper)
-        client = Aws::S3::Client.new(stub_responses: true)
-        s3_helper.stubs(:s3_client).returns(client)
-        Discourse.stubs(:store).returns(store)
+        stub_enable_s3_uploads
       end
 
       it 'should store the file and return etag' do
@@ -245,6 +289,20 @@ RSpec.describe UploadCreator do
         expect(stored_upload.url).not_to eq(signed_url)
         expect(signed_url).to match(/Amz-Credential/)
       end
+    end
+
+    def stub_enable_s3_uploads
+      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+      SiteSetting.s3_access_key_id = "s3-access-key-id"
+      SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+      SiteSetting.s3_region = 'us-west-1'
+      SiteSetting.enable_s3_uploads = true
+
+      store = FileStore::S3Store.new
+      s3_helper = store.instance_variable_get(:@s3_helper)
+      client = Aws::S3::Client.new(stub_responses: true)
+      s3_helper.stubs(:s3_client).returns(client)
+      Discourse.stubs(:store).returns(store)
     end
   end
 

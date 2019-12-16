@@ -50,6 +50,8 @@ Discourse::Application.configure do
   unless ENV['RAILS_ENABLE_TEST_LOG']
     config.logger = Logger.new(nil)
     config.log_level = :fatal
+  else
+    config.logger = Logger.new(STDOUT)
   end
 
   if defined? RspecErrorTracker

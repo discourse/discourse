@@ -230,6 +230,30 @@ class Upload < ActiveRecord::Base
     self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
   end
 
+  def used_in_public_context?
+    used_for_theme_component = ThemeField.exists?(upload_id: self.id)
+    used_for_site_setting = SiteSetting.exists?(name: SiteIconManager::WATCHED_SETTINGS, value: self.id)
+    used_for_theme_component || used_for_site_setting || used_in_public_post?
+  end
+
+  def used_in_public_post?
+    return false if SiteSetting.login_required?
+
+    public_category_ids = Category.where(read_restricted: false).pluck(:id)
+    used_in_public_post = DB.query_single(<<~SQL, archetype: Archetype.private_message, public_category_ids: public_category_ids, upload_id: self.id)
+      SELECT 1 AS one
+      FROM post_uploads
+      INNER JOIN posts ON posts.id = post_uploads.post_id
+      INNER JOIN topics ON topics.id = posts.topic_id
+      WHERE post_uploads.upload_id = :upload_id
+      AND topics.archetype != :archetype
+      AND (topics.category_id IS NULL OR topics.category_id IN (:public_category_ids))
+      AND posts.deleted_at IS NULL AND topics.deleted_at IS NULL
+      LIMIT 1
+    SQL
+    used_in_public_post.any?
+  end
+
   def update_secure_status(secure_override_value: nil)
     return false if self.for_theme || self.for_site_setting
     mark_secure = secure_override_value.nil? ? should_be_secure? : secure_override_value
@@ -241,17 +265,7 @@ class Upload < ActiveRecord::Base
   def should_be_secure?
     mark_secure = false
     if FileHelper.is_supported_media?(self.original_filename)
-      if SiteSetting.secure_media?
-        mark_secure = true if SiteSetting.login_required?
-        unless SiteSetting.login_required?
-          # first post associated with upload determines secure status
-          # i.e. an already public upload will stay public even if added to a new PM
-          first_post_with_upload = self.posts.order(sort_order: :asc).first
-          mark_secure = first_post_with_upload ? first_post_with_upload.with_secure_media? : false
-        end
-      else
-        mark_secure = false
-      end
+      mark_secure = SiteSetting.secure_media? && (SiteSetting.login_required? || !used_in_public_context?)
     else
       mark_secure = SiteSetting.prevent_anons_from_downloading_files?
     end

@@ -9,7 +9,7 @@ module FileStore
       store_file(file, path)
     end
 
-    def store_optimized_image(file, optimized_image)
+    def store_optimized_image(file, optimized_image, content_type = nil, secure: false)
       path = get_path_for_optimized_image(optimized_image)
       store_file(file, path)
     end
