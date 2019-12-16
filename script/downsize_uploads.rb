@@ -51,10 +51,6 @@ def downsize_upload(upload, path, max_image_pixels)
   upload.save!
 
   upload.optimized_images.each(&:destroy!) if new_file
-  original_upload.posts.each do |post|
-    post.update!(raw: post.raw.gsub(original_upload.short_url, upload.short_url))
-    post.rebake!
-  end
 
   if new_file
     Discourse.store.remove_upload(original_upload)
@@ -73,9 +69,20 @@ def downsize_upload(upload, path, max_image_pixels)
     Category.where(uploaded_background_id: original_upload.id).update_all(uploaded_background_id: upload.id)
     CustomEmoji.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
     ThemeField.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
-
-    original_upload.reload.destroy!
   end
+
+  original_upload.posts.each do |post|
+    post.raw.gsub!(/upload:\/\/#{original_upload.base62_sha1}(\.#{original_upload.extension})?/, upload.short_url)
+    post.raw.gsub!(Discourse.store.cdn_url(original_upload.url), Discourse.store.cdn_url(upload.url))
+
+    if post.raw_changed?
+      post.save!
+    end
+
+    post.rebake!
+  end
+
+  original_upload.reload.destroy! unless new_file
 
   true
 end
