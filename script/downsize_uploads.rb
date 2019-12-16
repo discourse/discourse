@@ -56,9 +56,8 @@ def downsize_upload(upload, path, max_image_pixels)
 
   upload.save!
 
-  upload.optimized_images.each(&:destroy!) if new_file
-
   if new_file
+    upload.optimized_images.each(&:destroy!)
     Discourse.store.remove_upload(original_upload)
   else
     begin
