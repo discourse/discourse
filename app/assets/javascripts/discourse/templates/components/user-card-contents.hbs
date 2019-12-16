@@ -144,7 +144,7 @@
         <div class="card-row">
           <div class="featured-topic">
             <span class="desc">{{i18n 'user.featured_topic'}}</span>
-            {{#link-to "topic" user.featured_topic.slug user.featured_topic.id }}{{user.featured_topic.fancy_title}}{{/link-to}}
+            {{#link-to "topic" user.featured_topic.slug user.featured_topic.id }}{{{user.featured_topic.fancy_title}}}{{/link-to}}
           </div>
         </div>
       {{/if}}

@@ -187,7 +187,7 @@ en:
         enabled: "made this a banner %{when}. It will appear at the top of every page until it is dismissed by the user."
         disabled: "removed this banner %{when}. It will no longer appear at the top of every page."
 
-    topic_admin_menu: "topic admin actions"
+    topic_admin_menu: "topic actions"
 
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
@@ -831,6 +831,14 @@ en:
         normal_option_title: "You will be notified if this user replies to you, quotes you, or mentions you."
       activity_stream: "Activity"
       preferences: "Preferences"
+      feature_topic_on_profile:
+        open_search: "Select a New Topic"
+        title: "Select a Topic"
+        search_label: "Search for Topic by title"
+        save: "Save"
+        clear:
+          title: "Clear"
+          warning: "Are you sure you want to clear your featured topic?"
       profile_hidden: "This user's public profile is hidden."
       expand_profile: "Expand"
       collapse_profile: "Collapse"
@@ -1063,7 +1071,7 @@ en:
 
       change_featured_topic:
         title: "Featured Topic"
-        instructions: "To change this, either navigate to the topic to remove it as the featured topic, or feature a different topic."
+        instructions: "A link to this topic will be on your user card, and profile."
 
       email:
         title: "Email"
@@ -1910,6 +1918,7 @@ en:
           title: Matching in title only
           likes: I liked
           posted: I posted in
+          created: I created
           watching: I'm watching
           tracking: I'm tracking
           private: In my messages
@@ -1926,6 +1935,7 @@ en:
           label: Where topics
           open: are open
           closed: are closed
+          public: are public
           archived: are archived
           noreplies: have zero replies
           single_user: contain a single user
@@ -2217,6 +2227,7 @@ en:
           description: "You will never be notified of anything about this topic, and it will not appear in latest."
 
       actions:
+        title: "Actions"
         recover: "Un-Delete Topic"
         delete: "Delete Topic"
         open: "Open Topic"

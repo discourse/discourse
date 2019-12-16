@@ -32,14 +32,22 @@ createWidget("topic-admin-menu-button", {
   },
 
   html(attrs, state) {
-    if (!this.currentUser || !this.currentUser.get("canManageTopic")) {
-      return;
-    }
-
     const result = [];
 
+    const menu = this.attach("topic-admin-menu", {
+      position: state.position,
+      fixed: attrs.fixed,
+      topic: attrs.topic,
+      openUpwards: attrs.openUpwards,
+      rightSide: attrs.rightSide,
+      actionButtons: []
+    });
+
     // We don't show the button when expanded on the right side
-    if (!(attrs.rightSide && state.expanded)) {
+    if (
+      menu.attrs.actionButtons.length &&
+      !(attrs.rightSide && state.expanded)
+    ) {
       result.push(
         this.attach("button", {
           className:
@@ -54,15 +62,7 @@ createWidget("topic-admin-menu-button", {
     }
 
     if (state.expanded) {
-      result.push(
-        this.attach("topic-admin-menu", {
-          position: state.position,
-          fixed: attrs.fixed,
-          topic: attrs.topic,
-          openUpwards: attrs.openUpwards,
-          rightSide: attrs.rightSide
-        })
-      );
+      result.push(menu);
     }
 
     return result;
@@ -102,6 +102,160 @@ export default createWidget("topic-admin-menu", {
     }
   },
 
+  init(attrs) {
+    const topic = attrs.topic;
+    const details = topic.get("details");
+    const isPrivateMessage = topic.get("isPrivateMessage");
+    const featured = topic.get("pinned_at") || topic.get("isBanner");
+    const visible = topic.get("visible");
+
+    if (
+      this.siteSettings.allow_featured_topic_on_user_profiles &&
+      topic.user_id === this.currentUser.get("id") &&
+      !topic.isPrivateMessage &&
+      !topic.category.read_restricted
+    ) {
+      let topicFeaturedOnProfile =
+        topic.id === this.currentUser.get("featured_topic.id");
+
+      this.addActionButton({
+        className: "topic-action-feature-on-profile",
+        buttonClass: topicFeaturedOnProfile ? "btn-primary" : "btn-default",
+        action: "toggleFeaturedOnProfile",
+        icon: "id-card",
+        fullLabel: topicFeaturedOnProfile
+          ? "topic.remove_from_profile.title"
+          : "topic.feature_on_profile.title"
+      });
+    }
+
+    // Admin actions
+    if (this.currentUser && this.currentUser.get("canManageTopic")) {
+      this.addActionButton({
+        className: "topic-admin-multi-select",
+        buttonClass: "btn-default",
+        action: "toggleMultiSelect",
+        icon: "tasks",
+        label: "actions.multi_select"
+      });
+
+      if (details.get("can_delete")) {
+        this.addActionButton({
+          className: "topic-admin-delete",
+          buttonClass: "btn-danger",
+          action: "deleteTopic",
+          icon: "far-trash-alt",
+          label: "actions.delete"
+        });
+      }
+
+      if (topic.get("deleted") && details.get("can_recover")) {
+        this.addActionButton({
+          className: "topic-admin-recover",
+          buttonClass: "btn-default",
+          action: "recoverTopic",
+          icon: "undo",
+          label: "actions.recover"
+        });
+      }
+
+      if (topic.get("closed")) {
+        this.addActionButton({
+          className: "topic-admin-open",
+          buttonClass: "btn-default",
+          action: "toggleClosed",
+          icon: "unlock",
+          label: "actions.open"
+        });
+      } else {
+        this.addActionButton({
+          className: "topic-admin-close",
+          buttonClass: "btn-default",
+          action: "toggleClosed",
+          icon: "lock",
+          label: "actions.close"
+        });
+      }
+
+      this.addActionButton({
+        className: "topic-admin-status-update",
+        buttonClass: "btn-default",
+        action: "showTopicStatusUpdate",
+        icon: "far-clock",
+        label: "actions.timed_update"
+      });
+
+      if (!isPrivateMessage && (topic.get("visible") || featured)) {
+        this.addActionButton({
+          className: "topic-admin-pin",
+          buttonClass: "btn-default",
+          action: "showFeatureTopic",
+          icon: "thumbtack",
+          label: featured ? "actions.unpin" : "actions.pin"
+        });
+      }
+
+      if (this.currentUser.get("staff")) {
+        this.addActionButton({
+          className: "topic-admin-change-timestamp",
+          buttonClass: "btn-default",
+          action: "showChangeTimestamp",
+          icon: "calendar-alt",
+          label: "change_timestamp.title"
+        });
+      }
+
+      this.addActionButton({
+        className: "topic-admin-reset-bump-date",
+        buttonClass: "btn-default",
+        action: "resetBumpDate",
+        icon: "anchor",
+        label: "actions.reset_bump_date"
+      });
+
+      if (!isPrivateMessage) {
+        this.addActionButton({
+          className: "topic-admin-archive",
+          buttonClass: "btn-default",
+          action: "toggleArchived",
+          icon: "folder",
+          label: topic.get("archived") ? "actions.unarchive" : "actions.archive"
+        });
+      }
+
+      this.addActionButton({
+        className: "topic-admin-visible",
+        buttonClass: "btn-default",
+        action: "toggleVisibility",
+        icon: visible ? "far-eye-slash" : "far-eye",
+        label: visible ? "actions.invisible" : "actions.visible"
+      });
+
+      if (details.get("can_convert_topic")) {
+        this.addActionButton({
+          className: "topic-admin-convert",
+          buttonClass: "btn-default",
+          action: isPrivateMessage
+            ? "convertToPublicTopic"
+            : "convertToPrivateMessage",
+          icon: isPrivateMessage ? "comment" : "envelope",
+          label: isPrivateMessage
+            ? "actions.make_public"
+            : "actions.make_private"
+        });
+      }
+
+      if (this.currentUser.get("staff")) {
+        this.addActionButton({
+          icon: "list",
+          buttonClass: "btn-default",
+          fullLabel: "review.moderation_history",
+          url: `/review?topic_id=${topic.id}&status=all`
+        });
+      }
+    }
+  },
+
   buildAttributes(attrs) {
     let { top, left, outerHeight } = attrs.position;
     const position = attrs.fixed ? "fixed" : "absolute";
@@ -129,148 +283,22 @@ export default createWidget("topic-admin-menu", {
     }
   },
 
+  addActionButton(button) {
+    this.attrs.actionButtons.push(button);
+  },
+
   html(attrs) {
-    const buttons = [];
-    buttons.push({
-      className: "topic-admin-multi-select",
-      buttonClass: "btn-default",
-      action: "toggleMultiSelect",
-      icon: "tasks",
-      label: "actions.multi_select"
-    });
-
-    const topic = attrs.topic;
-    const details = topic.get("details");
-
-    if (details.get("can_delete")) {
-      buttons.push({
-        className: "topic-admin-delete",
-        buttonClass: "btn-danger",
-        action: "deleteTopic",
-        icon: "far-trash-alt",
-        label: "actions.delete"
-      });
-    }
-
-    if (topic.get("deleted") && details.get("can_recover")) {
-      buttons.push({
-        className: "topic-admin-recover",
-        buttonClass: "btn-default",
-        action: "recoverTopic",
-        icon: "undo",
-        label: "actions.recover"
-      });
-    }
-
-    if (topic.get("closed")) {
-      buttons.push({
-        className: "topic-admin-open",
-        buttonClass: "btn-default",
-        action: "toggleClosed",
-        icon: "unlock",
-        label: "actions.open"
-      });
-    } else {
-      buttons.push({
-        className: "topic-admin-close",
-        buttonClass: "btn-default",
-        action: "toggleClosed",
-        icon: "lock",
-        label: "actions.close"
-      });
-    }
-
-    buttons.push({
-      className: "topic-admin-status-update",
-      buttonClass: "btn-default",
-      action: "showTopicStatusUpdate",
-      icon: "far-clock",
-      label: "actions.timed_update"
-    });
-
-    const isPrivateMessage = topic.get("isPrivateMessage");
-
-    const featured = topic.get("pinned_at") || topic.get("isBanner");
-    if (!isPrivateMessage && (topic.get("visible") || featured)) {
-      buttons.push({
-        className: "topic-admin-pin",
-        buttonClass: "btn-default",
-        action: "showFeatureTopic",
-        icon: "thumbtack",
-        label: featured ? "actions.unpin" : "actions.pin"
-      });
-    }
-
-    if (this.currentUser.get("staff")) {
-      buttons.push({
-        className: "topic-admin-change-timestamp",
-        buttonClass: "btn-default",
-        action: "showChangeTimestamp",
-        icon: "calendar-alt",
-        label: "change_timestamp.title"
-      });
-    }
-
-    buttons.push({
-      className: "topic-admin-reset-bump-date",
-      buttonClass: "btn-default",
-      action: "resetBumpDate",
-      icon: "anchor",
-      label: "actions.reset_bump_date"
-    });
-
-    if (!isPrivateMessage) {
-      buttons.push({
-        className: "topic-admin-archive",
-        buttonClass: "btn-default",
-        action: "toggleArchived",
-        icon: "folder",
-        label: topic.get("archived") ? "actions.unarchive" : "actions.archive"
-      });
-    }
-
-    const visible = topic.get("visible");
-    buttons.push({
-      className: "topic-admin-visible",
-      buttonClass: "btn-default",
-      action: "toggleVisibility",
-      icon: visible ? "far-eye-slash" : "far-eye",
-      label: visible ? "actions.invisible" : "actions.visible"
-    });
-
-    if (details.get("can_convert_topic")) {
-      buttons.push({
-        className: "topic-admin-convert",
-        buttonClass: "btn-default",
-        action: isPrivateMessage
-          ? "convertToPublicTopic"
-          : "convertToPrivateMessage",
-        icon: isPrivateMessage ? "comment" : "envelope",
-        label: isPrivateMessage ? "actions.make_public" : "actions.make_private"
-      });
-    }
-
-    if (this.currentUser.get("staff")) {
-      buttons.push({
-        icon: "list",
-        buttonClass: "btn-default",
-        fullLabel: "review.moderation_history",
-        url: `/review?topic_id=${topic.id}&status=all`
-      });
-    }
-
     const extraButtons = applyDecorators(
       this,
       "adminMenuButtons",
       this.attrs,
       this.state
     );
-
     return [
-      h("h3", I18n.t("admin_title")),
+      h("h3", I18n.t("topic.actions.title")),
       h(
         "ul",
-        buttons
+        attrs.actionButtons
           .concat(extraButtons)
           .filter(Boolean)
           .map(b => this.attach("admin-menu-button", b))
