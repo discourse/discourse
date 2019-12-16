@@ -363,3 +363,15 @@ QUnit.test("recently connected devices", async assert => {
     "it should highlight password preferences"
   );
 });
+
+// QUnit.test("visit my preferences", async assert => {
+  // await visit("/u/eviltrout/preferences/profile");
+  // assert.ok($("body.user-preferences-page").length, "has the body class");
+  // assert.equal(
+    // currentURL(),
+    // "/u/eviltrout/preferences/account",
+    // "defaults to account tab"
+  // );
+  // assert.ok(exists(".user-preferences"), "it shows the preferences");
+// });
+
