@@ -15,7 +15,13 @@ worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
 working_directory discourse_path
 
 # listen "#{discourse_path}/tmp/sockets/unicorn.sock"
-listen "#{(ENV["UNICORN_BIND_ALL"] ? "" : "127.0.0.1:")}#{(ENV["UNICORN_PORT"] || 3000).to_i}"
+port = (ENV["UNICORN_PORT"] || 3000).to_i
+if ENV["UNICORN_BIND_ALL"]
+  listen port
+else
+  listen "127.0.0.1:#{port}"
+  listen "[::1]:#{port}"
+end
 
 if !File.exist?("#{discourse_path}/tmp/pids")
   FileUtils.mkdir_p("#{discourse_path}/tmp/pids")
