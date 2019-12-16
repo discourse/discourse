@@ -166,34 +166,5 @@ export default {
         return this.site.mobileView;
       }
     });
-
-    registerTopicFooterButton({
-      dependentKeys: ["currentUser.featured_topic"],
-      id: "toggle-feature-on-profile",
-      icon: "id-card",
-      priority: 300,
-      label() {
-        return this.topicFeaturedOnProfile
-          ? "topic.remove_from_profile.title"
-          : "topic.feature_on_profile.title";
-      },
-      title() {
-        return this.topicFeaturedOnProfile
-          ? "topic.remove_from_profile.help"
-          : "topic.feature_on_profile.help";
-      },
-      classNames() {
-        return this.topicFeaturedOnProfile
-          ? ["feature-on-profile", "featured-on-profile"]
-          : ["feature-on-profile"];
-      },
-      action: "toggleFeaturedOnProfile",
-      displayed() {
-        return this.showToggleFeatureOnProfileButton;
-      },
-      dropdown() {
-        return this.site.mobileView;
-      }
-    });
   }
 };

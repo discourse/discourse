@@ -1006,24 +1006,34 @@ describe Search do
     end
 
     it 'can find by status' do
+      public_category = Fabricate(:category, read_restricted: false)
       post = Fabricate(:post, raw: 'hi this is a test 123 123')
       topic = post.topic
+      topic.update(category: public_category)
 
+      private_category = Fabricate(:category, read_restricted: true)
+      post2 = Fabricate(:post, raw: 'hi this is another test 123 123')
+      second_topic = post2.topic
+      second_topic.update(category: private_category)
+
+      post3 = Fabricate(:post, raw: "another test!", user: topic.user, topic: second_topic)
+
+      expect(Search.execute('test status:public').posts.length).to eq(1)
       expect(Search.execute('test status:closed').posts.length).to eq(0)
       expect(Search.execute('test status:open').posts.length).to eq(1)
       expect(Search.execute('test posts_count:1').posts.length).to eq(1)
       expect(Search.execute('test min_post_count:1').posts.length).to eq(1)
 
-      topic.closed = true
-      topic.save
+      topic.update(closed: true)
+      second_topic.update(category: public_category)
 
+      expect(Search.execute('test status:public').posts.length).to eq(2)
       expect(Search.execute('test status:closed').posts.length).to eq(1)
       expect(Search.execute('status:closed').posts.length).to eq(1)
-      expect(Search.execute('test status:open').posts.length).to eq(0)
+      expect(Search.execute('test status:open').posts.length).to eq(1)
 
-      topic.archived = true
-      topic.closed = false
-      topic.save
+      topic.update(archived: true, closed: false)
+      second_topic.update(closed: true)
 
       expect(Search.execute('test status:archived').posts.length).to eq(1)
       expect(Search.execute('test status:open').posts.length).to eq(0)
@@ -1032,7 +1042,9 @@ describe Search do
 
       expect(Search.execute('test in:likes', guardian: Guardian.new(topic.user)).posts.length).to eq(0)
 
-      expect(Search.execute('test in:posted', guardian: Guardian.new(topic.user)).posts.length).to eq(1)
+      expect(Search.execute('test in:posted', guardian: Guardian.new(topic.user)).posts.length).to eq(2)
+
+      expect(Search.execute('test in:created', guardian: Guardian.new(topic.user)).posts.length).to eq(1)
 
       TopicUser.change(topic.user.id, topic.id, notification_level: TopicUser.notification_levels[:tracking])
       expect(Search.execute('test in:watching', guardian: Guardian.new(topic.user)).posts.length).to eq(0)
