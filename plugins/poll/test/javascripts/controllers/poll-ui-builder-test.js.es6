@@ -311,3 +311,25 @@ test("multiple pollOutput", function(assert) {
     "it should return the right output"
   );
 });
+
+test("staff_only option is not present for non-staff", function(assert) {
+  const controller = this.subject();
+  controller.currentUser = { staff: false };
+
+  assert.ok(
+    controller.pollResults.filter(result => result.value === "staff_only")
+      .length === 0,
+    "staff_only is not present"
+  );
+});
+
+test("staff_only option is present for staff", function(assert) {
+  const controller = this.subject();
+  controller.currentUser = { staff: true };
+
+  assert.ok(
+    controller.pollResults.filter(result => result.value === "staff_only")
+      .length === 1,
+    "staff_only is present"
+  );
+});
