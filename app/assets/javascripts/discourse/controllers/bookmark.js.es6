@@ -111,14 +111,19 @@ export default Controller.extend(ModalFunctionality, {
 
   saveBookmark() {
     const reminderAt = this.reminderAt();
+    const reminderAtISO = reminderAt ? reminderAt.toISOString() : null;
     const data = {
       reminder_type: this.selectedReminderType,
-      reminder_at: reminderAt ? reminderAt.toISOString() : null,
+      reminder_at: reminderAtISO,
       name: this.name,
       post_id: this.model.postId
     };
 
-    return ajax("/bookmarks", { type: "POST", data });
+    return ajax("/bookmarks", { type: "POST", data }).then(() => {
+      if (this.afterSave) {
+        this.afterSave(reminderAtISO);
+      }
+    });
   },
 
   reminderAt() {
