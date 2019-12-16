@@ -471,7 +471,6 @@ class Admin::UsersController < Admin::AdminController
     end
 
     user.active = true
-    user.approved = true
     user.save!
     user.grant_admin!
     user.change_trust_level!(4)

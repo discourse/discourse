@@ -19,7 +19,7 @@
       <tr class={{if k.revoked_at "revoked"}}>
         <td class="key">
           {{#if k.revoked_at}}{{d-icon 'times-circle'}}{{/if}}
-          {{k.shortKey}}
+          {{k.truncatedKey}}
         </td>
         <td class="key-description">
           {{k.shortDescription}}

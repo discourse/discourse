@@ -18,13 +18,11 @@ class PostActionUsersController < ApplicationController
     post_actions = post.post_actions.where(post_action_type_id: post_action_type_id)
       .includes(:user)
       .offset(page * page_size)
-      .order('post_actions.created_at asc')
+      .order('post_actions.created_at ASC')
       .limit(page_size)
 
     if !guardian.can_see_post_actors?(post.topic, post_action_type_id)
-      if !current_user
-        raise Discourse::InvalidAccess
-      end
+      raise Discourse::InvalidAccess unless current_user
       post_actions = post_actions.where(user_id: current_user.id)
     end
 

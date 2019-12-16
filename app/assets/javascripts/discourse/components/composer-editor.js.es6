@@ -755,7 +755,7 @@ export default Component.extend({
           getUploadMarkdown(upload)
         );
 
-        cacheShortUploadUrl(upload.short_url, upload.url);
+        cacheShortUploadUrl(upload.short_url, upload);
         this.appEvents.trigger(
           "composer:replace-text",
           this.uploadPlaceholder.trim(),

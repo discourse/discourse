@@ -28,12 +28,11 @@ export default Ember.Controller.extend({
     },
 
     save() {
-      this.model
-        .save()
-        .then(() => {
-          this.transitionToRoute("adminApiKeys.show", this.model.id);
-        })
-        .catch(popupAjaxError);
+      this.model.save().catch(popupAjaxError);
+    },
+
+    continue() {
+      this.transitionToRoute("adminApiKeys.show", this.model.id);
     }
   }
 });

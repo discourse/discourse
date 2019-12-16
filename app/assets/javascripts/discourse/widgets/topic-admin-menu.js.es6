@@ -272,6 +272,7 @@ export default createWidget("topic-admin-menu", {
         "ul",
         buttons
           .concat(extraButtons)
+          .filter(Boolean)
           .map(b => this.attach("admin-menu-button", b))
       )
     ];

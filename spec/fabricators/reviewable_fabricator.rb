@@ -58,3 +58,11 @@ Fabricator(:reviewable_flagged_post) do
   target_type 'Post'
   target { Fabricate(:post) }
 end
+
+Fabricator(:reviewable_user) do
+  reviewable_by_moderator true
+  type 'ReviewableUser'
+  created_by { Fabricate(:user) }
+  target_type 'User'
+  target { Fabricate(:user) }
+end

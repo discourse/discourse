@@ -815,7 +815,7 @@ describe UsersController do
 
       context "with a regular api key" do
         fab!(:user) { Fabricate(:user) }
-        fab!(:api_key) { Fabricate(:api_key, user: user) }
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "won't create the user as active with a regular key" do
           post "/u.json",
@@ -828,7 +828,7 @@ describe UsersController do
 
       context "with an admin api key" do
         fab!(:admin) { Fabricate(:admin) }
-        fab!(:api_key) { Fabricate(:api_key, user: admin) }
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: admin) }
 
         it "creates the user as active with a an admin key" do
           SiteSetting.send_welcome_message = true
@@ -915,7 +915,7 @@ describe UsersController do
 
       context "with a regular api key" do
         fab!(:user) { Fabricate(:user) }
-        fab!(:api_key) { Fabricate(:api_key, user: user) }
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "won't create the user as staged with a regular key" do
           post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)
@@ -928,7 +928,7 @@ describe UsersController do
 
       context "with an admin api key" do
         fab!(:user) { Fabricate(:admin) }
-        fab!(:api_key) { Fabricate(:api_key, user: user) }
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "creates the user as staged with a regular key" do
           post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)
@@ -3163,26 +3163,27 @@ describe UsersController do
     context 'groups' do
       let!(:mentionable_group) do
         Fabricate(:group,
-          mentionable_level: 99,
-          messageable_level: 0,
-          visibility_level: 0,
+          mentionable_level: Group::ALIAS_LEVELS[:everyone],
+          messageable_level: Group::ALIAS_LEVELS[:nobody],
+          visibility_level: Group.visibility_levels[:public],
           name: 'aaa1'
         )
       end
 
       let!(:mentionable_group_2) do
         Fabricate(:group,
-          mentionable_level: 99,
-          messageable_level: 0,
-          visibility_level: 1,
+          mentionable_level: Group::ALIAS_LEVELS[:everyone],
+          messageable_level: Group::ALIAS_LEVELS[:nobody],
+          visibility_level: Group.visibility_levels[:logged_on_users],
           name: 'aaa2'
         )
       end
 
       let!(:messageable_group) do
         Fabricate(:group,
-          mentionable_level: 0,
-          messageable_level: 99,
+          mentionable_level: Group::ALIAS_LEVELS[:nobody],
+          messageable_level: Group::ALIAS_LEVELS[:everyone],
+          visibility_level: Group.visibility_levels[:logged_on_users],
           name: 'aaa3'
         )
       end
