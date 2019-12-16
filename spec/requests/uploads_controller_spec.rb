@@ -217,7 +217,7 @@ describe UploadsController do
   end
 
   describe '#show' do
-    let(:site) { "default" }
+    let(:upload_path) { Discourse.store.upload_path }
     let(:sha) { Digest::SHA1.hexdigest("discourse") }
 
     context "when using external storage" do
@@ -231,20 +231,20 @@ describe UploadsController do
 
       it "returns 404 " do
         upload = Fabricate(:upload_s3)
-        get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
+        get "/#{upload_path}/#{upload.sha1}.#{upload.extension}"
 
         expect(response.response_code).to eq(404)
       end
 
       it "returns upload if url not migrated" do
-        get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
+        get "/#{upload_path}/#{upload.sha1}.#{upload.extension}"
 
         expect(response.status).to eq(200)
       end
     end
 
     it "returns 404 when the upload doesn't exist" do
-      get "/uploads/#{site}/#{sha}.pdf"
+      get "/#{upload_path}/#{sha}.pdf"
       expect(response.status).to eq(404)
     end
 
@@ -252,13 +252,13 @@ describe UploadsController do
       upload = upload_file("logo.png")
       upload.update_column(:url, "invalid-url")
 
-      get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
+      get "/#{upload_path}/#{upload.sha1}.#{upload.extension}"
       expect(response.status).to eq(404)
     end
 
     it 'uses send_file' do
       upload = upload_file("logo.png")
-      get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
+      get "/#{upload_path}/#{upload.sha1}.#{upload.extension}"
       expect(response.status).to eq(200)
 
       expect(response.headers["Content-Disposition"])
@@ -276,7 +276,7 @@ describe UploadsController do
       SiteSetting.authorized_extensions = "*"
       upload = upload_file("image_no_extension")
 
-      get "/uploads/#{site}/#{upload.sha1}.json"
+      get "/#{upload_path}/#{upload.sha1}.json"
       expect(response.status).to eq(200)
       expect(response.headers["Content-Disposition"])
         .to eq(%Q|attachment; filename="image_no_extension.png"; filename*=UTF-8''image_no_extension.png|)
@@ -286,7 +286,7 @@ describe UploadsController do
       SiteSetting.authorized_extensions = "*"
       upload = upload_file("not_an_image")
 
-      get "/uploads/#{site}/#{upload.sha1}.json"
+      get "/#{upload_path}/#{upload.sha1}.json"
       expect(response.status).to eq(200)
       expect(response.headers["Content-Disposition"])
         .to eq(%Q|attachment; filename="not_an_image"; filename*=UTF-8''not_an_image|)
@@ -298,7 +298,7 @@ describe UploadsController do
         delete "/session/#{user.username}.json"
 
         SiteSetting.prevent_anons_from_downloading_files = true
-        get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
+        get "/#{upload_path}/#{upload.sha1}.#{upload.extension}"
         expect(response.status).to eq(404)
       end
     end
