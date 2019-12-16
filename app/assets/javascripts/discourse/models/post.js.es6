@@ -351,9 +351,14 @@ const Post = RestModel.extend({
         onCloseWithoutSaving: () => {
           this.toggleProperty("bookmarked_with_reminder");
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
+        },
+        afterSave: reminderAtISO => {
+          this.set("bookmark_reminder_at", reminderAtISO);
+          this.appEvents.trigger("post-stream:refresh", { id: this.id });
         }
       });
     } else {
+      this.set("bookmark_reminder_at", null);
       return Post.destroyBookmark(this.id)
         .then(() => this.appEvents.trigger("page:bookmark-post-toggled", this))
         .catch(error => {

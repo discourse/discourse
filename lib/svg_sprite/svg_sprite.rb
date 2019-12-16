@@ -30,6 +30,7 @@ module SvgSprite
     "book",
     "book-reader",
     "bookmark",
+    "discourse-bookmark-clock",
     "briefcase",
     "calendar-alt",
     "caret-down",
