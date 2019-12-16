@@ -41,10 +41,12 @@ class SessionController < ApplicationController
   end
 
   def sso_provider(payload = nil)
-    payload ||= request.query_string
-
     if SiteSetting.enable_sso_provider
       begin
+        if !payload
+          params.require(:sso)
+          payload = request.query_string
+        end
         sso = SingleSignOnProvider.parse(payload)
       rescue SingleSignOnProvider::BlankSecret
         render plain: I18n.t("sso.missing_secret"), status: 400
