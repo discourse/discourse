@@ -62,7 +62,7 @@ export default Controller.extend({
     closedPollResult,
     staffPollResult
   ) {
-    return [
+    let options = [
       {
         name: I18n.t("poll.ui_builder.poll_result.always"),
         value: alwaysPollResult
@@ -74,12 +74,15 @@ export default Controller.extend({
       {
         name: I18n.t("poll.ui_builder.poll_result.closed"),
         value: closedPollResult
-      },
-      {
-        name: I18n.t("poll.ui_builder.poll_result.staff"),
-        value: staffPollResult
       }
     ];
+    if (this.currentUser.staff) {
+      options.push({
+        name: I18n.t("poll.ui_builder.poll_result.staff"),
+        value: staffPollResult
+      });
+    }
+    return options;
   },
 
   @computed("pollType", "regularPollType")
