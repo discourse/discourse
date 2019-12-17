@@ -17,6 +17,10 @@ describe Slug do
       expect(Slug.for('')).to eq default_slug
     end
 
+    it 'return topic by default if the string boils down to a number' do
+      expect(Slug.for('=213=-!(@#+@)(!*_(@#&(!)#')).to eq default_slug
+    end
+
     it 'accepts fallback' do
       expect(Slug.for('', 'king')).to eq 'king'
     end
