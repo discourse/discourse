@@ -82,6 +82,7 @@ export default Component.extend({
     if (!isEmpty(title)) {
       searchParams.typeFilter = "topic";
       searchParams.restrictToArchetype = "regular";
+      searchParams.searchForId = true;
     }
 
     searchForTerm(titleWithFilters, searchParams).then(results => {
