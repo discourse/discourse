@@ -133,6 +133,19 @@ describe UserApiKeysController do
       expect(key.revoked_at).not_to eq(nil)
     end
 
+    it "will not allow revoking another users key" do
+      key = Fabricate(:readonly_user_api_key)
+      acting_user = Fabricate(:user)
+      sign_in(acting_user)
+
+      post "/user-api-key/revoke.json",
+        params: { id: key.id }
+
+      expect(response.status).to eq(403)
+      key.reload
+      expect(key.revoked_at).to eq(nil)
+    end
+
     it "will not return p access if not yet configured" do
       SiteSetting.min_trust_level_for_user_api_key = 0
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
