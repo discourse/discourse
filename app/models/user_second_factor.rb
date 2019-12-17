@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UserSecondFactor < ActiveRecord::Base
+  include SecondFactorManager
   belongs_to :user
 
   scope :backup_codes, -> do
@@ -22,12 +23,12 @@ class UserSecondFactor < ActiveRecord::Base
     )
   end
 
-  def get_totp_object
-    ROTP::TOTP.new(self.data, issuer: SiteSetting.title)
+  def totp_object
+    get_totp_object(self.data)
   end
 
   def totp_provisioning_uri
-    get_totp_object.provisioning_uri(user.email)
+    totp_object.provisioning_uri(user.email)
   end
 
 end
