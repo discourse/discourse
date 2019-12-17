@@ -11,7 +11,6 @@ const createArgs = topic => {
     toggleMultiSelect: () => {},
     deleteTopic: () => {},
     recoverTopic: () => {},
-    toggleFeaturedOnProfile: () => {},
     toggleClosed: () => {},
     toggleArchived: () => {},
     toggleVisibility: () => {},
@@ -45,29 +44,6 @@ widgetTest("topic-admin-menu-button is present for admin/moderators", {
 });
 
 widgetTest(
-  "topic-admin-menu-button shows for non-admin when the use can feature the topic",
-  {
-    template: '{{mount-widget widget="topic-admin-menu-button" args=args}}',
-
-    beforeEach() {
-      this.currentUser.setProperties({
-        admin: false,
-        moderator: false,
-        id: 123
-      });
-      const topic = Topic.create({ user_id: this.currentUser.id });
-      topic.category = Category.create({ read_restricted: false });
-      this.siteSettings.allow_featured_topic_on_user_profiles = true;
-      this.set("args", createArgs(topic));
-    },
-
-    test(assert) {
-      assert.ok(exists(".toggle-admin-menu"), "admin wrench is present");
-    }
-  }
-);
-
-widgetTest(
   "topic-admin-menu-button hides for non-admin when there is no action",
   {
     template: '{{mount-widget widget="topic-admin-menu-button" args=args}}',
@@ -85,7 +61,7 @@ widgetTest(
     },
 
     test(assert) {
-      assert.ok(!exists(".toggle-admin-menu"), "admin wrench is present");
+      assert.ok(!exists(".toggle-admin-menu"), "admin wrench is not present");
     }
   }
 );
