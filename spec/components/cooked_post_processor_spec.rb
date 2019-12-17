@@ -467,7 +467,7 @@ describe CookedPostProcessor do
 
         describe 'when image is an svg' do
           fab!(:post) do
-            Fabricate(:post, raw: "<img src=\"/#{upload_path}/original/1X/1234567890123456.svg\">")
+            Fabricate(:post, raw: "<img src=\"/#{Discourse.store.upload_path}/original/1X/1234567890123456.svg\">")
           end
 
           it 'should not add lightbox' do

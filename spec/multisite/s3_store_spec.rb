@@ -35,6 +35,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         end
 
         test_multisite_connection('second') do
+          upload_path = Discourse.store.upload_path
           upload = build_upload
           expect(store.store_upload(uploaded_file, upload)).to eq(
             "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com/#{upload_path}/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
@@ -178,6 +179,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         end
 
         test_multisite_connection('second') do
+          upload_path = Discourse.store.upload_path
           upload = Fabricate.build(:upload_s3, sha1: upload_sha1, id: 1)
 
           signed_url = Discourse.store.signed_url_for_path(upload.url)
@@ -202,6 +204,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         end
 
         test_multisite_connection('second') do
+          upload_path = Discourse.store.upload_path
           upload = build_upload
           upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
 
