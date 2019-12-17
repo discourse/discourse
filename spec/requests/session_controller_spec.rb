@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'rotp'
 
 RSpec.describe SessionController do
   let(:email_token) { Fabricate(:email_token) }
