@@ -109,27 +109,6 @@ export default createWidget("topic-admin-menu", {
     const featured = topic.get("pinned_at") || topic.get("isBanner");
     const visible = topic.get("visible");
 
-    if (
-      this.siteSettings.allow_featured_topic_on_user_profiles &&
-      this.currentUser &&
-      topic.user_id === this.currentUser.get("id") &&
-      !topic.isPrivateMessage &&
-      !topic.category.read_restricted
-    ) {
-      let topicFeaturedOnProfile =
-        topic.id === this.currentUser.get("featured_topic.id");
-
-      this.addActionButton({
-        className: "topic-action-feature-on-profile",
-        buttonClass: topicFeaturedOnProfile ? "btn-primary" : "btn-default",
-        action: "toggleFeaturedOnProfile",
-        icon: "id-card",
-        fullLabel: topicFeaturedOnProfile
-          ? "topic.remove_from_profile.title"
-          : "topic.feature_on_profile.title"
-      });
-    }
-
     // Admin actions
     if (this.currentUser && this.currentUser.get("canManageTopic")) {
       this.addActionButton({
