@@ -109,7 +109,6 @@ describe Invite do
             expect(new_invite.invite_key).not_to eq(invite.invite_key)
             expect(new_invite.topics).to eq([topic])
           end
-
         end
 
         context 'when adding a duplicate' do
@@ -137,7 +136,7 @@ describe Invite do
 
           it 'returns a new invite if the other has expired' do
             SiteSetting.invite_expiry_days = 1
-            invite.update!(created_at: 2.days.ago)
+            invite.update!(updated_at: 2.days.ago)
 
             new_invite = Invite.invite_by_email(
               'iceking@adventuretime.ooo', inviter, topic
@@ -157,6 +156,15 @@ describe Invite do
             expect(another_topic.invites).to eq([invite])
             expect(invite.topics).to match_array([topic, another_topic])
           end
+        end
+
+        it 'resets expiry of a resent invite' do
+          SiteSetting.invite_expiry_days = 2
+          invite.update!(updated_at: 10.days.ago)
+          expect(invite).to be_expired
+
+          invite.resend_invite
+          expect(invite).not_to be_expired
         end
 
         it 'correctly marks invite emailed_status for email invites' do
@@ -214,7 +222,7 @@ describe Invite do
 
     it 'wont redeem an expired invite' do
       SiteSetting.invite_expiry_days = 10
-      invite.update_column(:created_at, 20.days.ago)
+      invite.update_column(:updated_at, 20.days.ago)
       expect(invite.redeem).to be_blank
     end
 
@@ -493,7 +501,7 @@ describe Invite do
       invite_1 = Fabricate(:invite, invited_by: user)
       invite_2 = Fabricate(:invite, invited_by: user)
       expired_invite = Fabricate(:invite, invited_by: user)
-      expired_invite.update!(created_at: 2.days.ago)
+      expired_invite.update!(updated_at: 2.days.ago)
       Invite.rescind_all_expired_invites_from(user)
       invite_1.reload
       invite_2.reload
