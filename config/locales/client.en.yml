@@ -1223,7 +1223,7 @@ en:
         search: "type to search invites..."
         title: "Invites"
         user: "Invited User"
-        sent: "Sent"
+        sent: "Last Sent"
         none: "No invites to display."
         truncated:
           one: "Showing the first invite."

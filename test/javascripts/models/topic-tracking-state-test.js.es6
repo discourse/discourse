@@ -42,7 +42,7 @@ QUnit.test("subscribe to category", function(assert) {
 
   const state = TopicTrackingState.create();
 
-  state.trackIncoming("c/darth/l/latest");
+  state.trackIncoming("c/darth/1/l/latest");
 
   state.notify({
     message_type: "new_topic",
@@ -67,7 +67,7 @@ QUnit.test("subscribe to category", function(assert) {
   );
 
   state.resetTracking();
-  state.trackIncoming("c/darth/luke/l/latest");
+  state.trackIncoming("c/darth/luke/2/l/latest");
 
   state.notify({
     message_type: "new_topic",

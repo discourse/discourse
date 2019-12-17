@@ -134,7 +134,7 @@ gem 'highline', '~> 1.7.0', require: false
 gem 'rack-protection' # security
 gem 'cbor', require: false
 gem 'cose', require: false
-gem 'addressable', '~> 2.7.0'
+gem 'addressable'
 
 # Gems used only for assets and not required in production environments by default.
 # Allow everywhere for now cause we are allowing asset debugging in production
@@ -229,7 +229,7 @@ gem 'logster'
 gem 'sassc', '2.0.1', require: false
 gem "sassc-rails"
 
-gem 'rotp'
+gem 'rotp', require: false
 gem 'rqrcode'
 
 gem 'rubyzip', require: false

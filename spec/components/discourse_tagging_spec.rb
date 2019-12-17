@@ -129,6 +129,16 @@ describe DiscourseTagging do
         end
       end
 
+      context 'empty term' do
+        it "works with an empty term" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
+            term: '',
+            order_search_results: true
+          ).map(&:name)
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
+        end
+      end
+
       context 'tag synonyms' do
         fab!(:base_tag) { Fabricate(:tag, name: 'discourse') }
         fab!(:synonym) { Fabricate(:tag, name: 'discource', target_tag: base_tag) }
