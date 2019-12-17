@@ -82,6 +82,13 @@ class Plugin::Instance
     @idx = 0
   end
 
+  def register_anonymous_cache_key(key, &block)
+    key_method = "key_#{key}"
+    add_to_class(Middleware::AnonymousCache::Helper, key_method, &block)
+    Middleware::AnonymousCache.cache_key_segments[key] = key_method
+    Middleware::AnonymousCache.compile_key_builder
+  end
+
   def add_admin_route(label, location)
     @admin_route = { label: label, location: location }
   end
@@ -418,7 +425,10 @@ class Plugin::Instance
   end
 
   def register_html_builder(name, &block)
-    DiscoursePluginRegistry.register_html_builder(name, &block)
+    plugin = self
+    DiscoursePluginRegistry.register_html_builder(name) do |*args|
+      block.call(*args) if plugin.enabled?
+    end
   end
 
   def register_asset(file, opts = nil)
@@ -516,7 +526,7 @@ class Plugin::Instance
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
 
     # Automatically include migrations
-    migration_paths = ActiveRecord::Migrator.migrations_paths
+    migration_paths = ActiveRecord::Tasks::DatabaseTasks.migrations_paths
     migration_paths << File.dirname(path) + "/db/migrate"
 
     unless Discourse.skip_post_deployment_migrations?
@@ -661,6 +671,15 @@ class Plugin::Instance
 
   def js_asset_exists?
     File.exists?(js_file_path)
+  end
+
+  # Receives an array with two elements:
+  # 1. A symbol that represents the name of the value to filter.
+  # 2. A Proc that takes the existing ActiveRecord::Relation and the value received from the front-end.
+  def add_custom_reviewable_filter(filter)
+    reloadable_patch do
+      Reviewable.add_custom_filter(filter)
+    end
   end
 
   protected

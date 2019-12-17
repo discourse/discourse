@@ -10,4 +10,5 @@ lv:
     discourse_local_dates:
       create:
         form:
+          date_title: Datums
           time_title: Laiks

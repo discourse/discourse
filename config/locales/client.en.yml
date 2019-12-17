@@ -40,6 +40,10 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time: "HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+      time_short_day: "ddd HH:mm a"
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+      month_day_time: "MMM D, HH:mm a"
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_no_year: "D MMM HH:mm"
@@ -183,7 +187,7 @@ en:
         enabled: "made this a banner %{when}. It will appear at the top of every page until it is dismissed by the user."
         disabled: "removed this banner %{when}. It will no longer appear at the top of every page."
 
-    topic_admin_menu: "topic admin actions"
+    topic_admin_menu: "topic actions"
 
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
@@ -303,8 +307,19 @@ en:
     bookmarks:
       created: "you've bookmarked this post"
       not_bookmarked: "bookmark this post"
+      created_with_reminder: "you've bookmarked this post with a reminder at %{date}"
       remove: "Remove Bookmark"
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
+      save: "Save"
+      no_timezone: "You have not set a timezone yet. You will not be able to set reminders. Set one up <a href=\"%{basePath}/my/preferences/profile\">in your profile</a>."
+      reminders:
+        at_desktop: "Next time I'm at my desktop"
+        later_today: "Later today <br/>{{date}}"
+        next_business_day: "Next business day <br/>{{date}}"
+        tomorrow: "Tomorrow <br/>{{date}}"
+        next_week: "Next week <br/>{{date}}"
+        next_month: "Next month <br/>{{date}}"
+        custom: "Custom date and time"
 
     drafts:
       resume: "Resume"
@@ -364,14 +379,14 @@ en:
     choose_topic:
       none_found: "No topics found."
       title:
-        search: "Search for a Topic by title, url or id:"
-        placeholder: "type the topic title here"
+        search: "Search for a Topic"
+        placeholder: "type the topic title, url or id here"
 
     choose_message:
       none_found: "No messages found."
       title:
-        search: "Search for a Message by title:"
-        placeholder: "type the message title here"
+        search: "Search for a Message"
+        placeholder: "type the message title, url or id here"
 
     review:
       order_by: "Order by"
@@ -816,11 +831,20 @@ en:
         normal_option_title: "You will be notified if this user replies to you, quotes you, or mentions you."
       activity_stream: "Activity"
       preferences: "Preferences"
+      feature_topic_on_profile:
+        open_search: "Select a New Topic"
+        title: "Select a Topic"
+        search_label: "Search for Topic by title"
+        save: "Save"
+        clear:
+          title: "Clear"
+          warning: "Are you sure you want to clear your featured topic?"
       profile_hidden: "This user's public profile is hidden."
       expand_profile: "Expand"
       collapse_profile: "Collapse"
       bookmarks: "Bookmarks"
       bio: "About me"
+      timezone: "Timezone"
       invited_by: "Invited By"
       trust_level: "Trust Level"
       notifications: "Notifications"
@@ -847,6 +871,7 @@ en:
       enable_quoting: "Enable quote reply for highlighted text"
       enable_defer: "Enable defer to mark topics unread"
       change: "change"
+      featured_topic: "Featured Topic"
       moderator: "{{user}} is a moderator"
       admin: "{{user}} is an admin"
       moderator_tooltip: "This user is a moderator"
@@ -1044,6 +1069,10 @@ en:
         title: "User Card Background"
         instructions: "Background images will be centered and have a default width of 590px."
 
+      change_featured_topic:
+        title: "Featured Topic"
+        instructions: "A link to this topic will be on your user card, and profile."
+
       email:
         title: "Email"
         primary: "Primary Email"
@@ -1194,7 +1223,7 @@ en:
         search: "type to search invites..."
         title: "Invites"
         user: "Invited User"
-        sent: "Sent"
+        sent: "Last Sent"
         none: "No invites to display."
         truncated:
           one: "Showing the first invite."
@@ -1461,7 +1490,7 @@ en:
       second_factor_backup_description: "Please enter one of your backup codes:"
       second_factor: "Log in using Authenticator app"
       security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
-      security_key_alternative: "Can't find your security key or want to use another method?"
+      security_key_alternative: "Try another way"
       security_key_authenticate: "Authenticate with Security Key"
       security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
       security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
@@ -1781,6 +1810,7 @@ en:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>New Topic</span> {{description}}"
       membership_request_accepted: "Membership accepted in '{{group_name}}'"
+      membership_request_consolidated: "{{count}} open membership requests for '{{group_name}}'"
 
       group_message_summary:
         one: "{{count}} message in your {{group_name}} inbox"
@@ -1819,6 +1849,7 @@ en:
         topic_reminder: "topic reminder"
         liked_consolidated: "new likes"
         post_approved: "post approved"
+        membership_request_consolidated: "new membership requests"
 
     upload_selector:
       title: "Add an image"
@@ -1833,7 +1864,6 @@ en:
       hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Uploading"
       select_file: "Select File"
-      image_link: "link your image will point to"
       default_image_alt_text: image
 
     search:
@@ -1888,6 +1918,7 @@ en:
           title: Matching in title only
           likes: I liked
           posted: I posted in
+          created: I created
           watching: I'm watching
           tracking: I'm tracking
           private: In my messages
@@ -1904,6 +1935,7 @@ en:
           label: Where topics
           open: are open
           closed: are closed
+          public: are public
           archived: are archived
           noreplies: have zero replies
           single_user: contain a single user
@@ -1995,6 +2027,14 @@ en:
       defer:
         help: "Mark as unread"
         title: "Defer"
+      feature_on_profile:
+        help: "Add a link to this topic on your user card and profile"
+        title: "Feature On Profile"
+      remove_from_profile:
+        warning: "Your profile already has a featured topic. If you continue, this topic will replace the existing topic."
+        help: "Remove the link to this topic on your user profile"
+        title: "Remove From Profile"
+
       list: "Topics"
       new: "new topic"
       unread: "unread"
@@ -2187,6 +2227,7 @@ en:
           description: "You will never be notified of anything about this topic, and it will not appear in latest."
 
       actions:
+        title: "Actions"
         recover: "Un-Delete Topic"
         delete: "Delete Topic"
         open: "Open Topic"
@@ -2533,11 +2574,18 @@ en:
           notify_moderators: "notified moderators"
           notify_user: "sent a message"
           bookmark: "bookmarked this"
-          like: "liked this"
-          read: "read this"
+          like:
+            one: "liked this"
+            other: "liked this"
+          read:
+            one: "read this"
+            other: "read this"
           like_capped:
             one: "and {{count}} other liked this"
             other: "and {{count}} others liked this"
+          read_capped:
+            one: "and {{count}} other read this"
+            other: "and {{count}} others read this"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
@@ -2591,6 +2639,12 @@ en:
           html_part:
             title: "Show the html part of the email"
             button: "HTML"
+
+      bookmarks:
+        create: "Create bookmark"
+        name: "Name"
+        name_placeholder: "Name the bookmark to help jog your memory"
+        set_reminder: "Set a reminder"
 
     category:
       can: "can&hellip; "
@@ -3040,11 +3094,30 @@ en:
       changed: "tags changed:"
       tags: "Tags"
       choose_for_topic: "optional tags"
+      info: "Info"
+      default_info: "This tag isn't restricted to any categories, and has no synonyms."
+      synonyms: "Synonyms"
+      synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
+      tag_groups_info:
+        one: 'This tag belongs to the group "{{tag_groups}}".'
+        other: "This tag belongs to these groups: {{tag_groups}}."
+      category_restrictions:
+        one: "It can only be used in this category:"
+        other: "It can only be used in these categories:"
+      edit_synonyms: "Manage Synonyms"
+      add_synonyms_label: "Add synonyms:"
+      add_synonyms: "Add"
+      add_synonyms_failed: "The following tags couldn't be added as synonyms: <b>%{tag_names}</b>. Ensure they don't have synonyms and aren't synonyms of another tag."
+      remove_synonym: "Remove Synonym"
+      delete_synonym_confirm: 'Are you sure you want to delete the synonym "%{tag_name}"?'
       delete_tag: "Delete Tag"
       delete_confirm:
         one: "Are you sure you want to delete this tag and remove it from %{count} topic it is assigned to?"
         other: "Are you sure you want to delete this tag and remove it from {{count}} topics it is assigned to?"
       delete_confirm_no_topics: "Are you sure you want to delete this tag?"
+      delete_confirm_synonyms:
+        one: "Its synonym will also be deleted."
+        other: "Its {{count}} synonyms will also be deleted."
       rename_tag: "Rename Tag"
       rename_instructions: "Choose a new name for the tag:"
       sort_by: "Sort by:"
@@ -3339,6 +3412,8 @@ en:
         new_key: New API Key
         revoked: Revoked
         delete: Permenantly Delete
+        not_shown_again: This key will not be displayed again. Make sure you take a copy before continuing.
+        continue: Continue
 
       web_hooks:
         title: "Webhooks"
@@ -3587,6 +3662,7 @@ en:
           color_scheme_select: "Select colors to be used by theme"
           custom_sections: "Custom sections:"
           theme_components: "Theme Components"
+          add_all_themes: "Add all themes"
           convert: "Convert"
           convert_component_alert: "Are you sure you want to convert this component to theme? It will be removed as a component from %{relatives}."
           convert_component_tooltip: "Convert this component to theme"
@@ -3613,12 +3689,16 @@ en:
           upload: "Upload"
           select_component: "Select a component..."
           unsaved_changes_alert: "You haven't saved your changes yet, do you want to discard them and move on?"
+          unsaved_parent_themes: "You haven't assigned the component to themes, do you want to move on?"
           discard: "Discard"
           stay: "Stay"
           css_html: "Custom CSS/HTML"
           edit_css_html: "Edit CSS/HTML"
           edit_css_html_help: "You have not edited any CSS or HTML"
           delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
+          component_on_themes: "Include component on these themes"
+          included_components: "Included components"
+          add_all: "Add all"
           import_web_tip: "Repository containing theme"
           import_web_advanced: "Advanced..."
           import_file_tip: ".tar.gz, .zip, or .dcstyle.json file containing theme"
@@ -3935,6 +4015,7 @@ en:
             api_key_create: "api key create"
             api_key_update: "api key update"
             api_key_destroy: "api key destroy"
+            override_upload_secure_status: "override upload secure status"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

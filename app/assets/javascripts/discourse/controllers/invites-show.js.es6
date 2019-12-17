@@ -82,7 +82,8 @@ export default Controller.extend(
             username: this.accountUsername,
             name: this.accountName,
             password: this.accountPassword,
-            user_custom_fields: userCustomFields
+            user_custom_fields: userCustomFields,
+            timezone: moment.tz.guess()
           }
         })
           .then(result => {

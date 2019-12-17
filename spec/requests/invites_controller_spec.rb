@@ -290,6 +290,16 @@ describe InvitesController do
             expect(json["success"]).to eq(true)
             expect(json["redirect_to"]).to eq(topic.relative_url)
           end
+
+          context "if a timezone guess is provided" do
+            it "sets the timezone of the user in user_options" do
+              put "/invites/show/#{invite.invite_key}.json", params: { timezone: "Australia/Melbourne" }
+              expect(response.status).to eq(200)
+              invite.reload
+              user = User.find(invite.user_id)
+              expect(user.user_option.timezone).to eq("Australia/Melbourne")
+            end
+          end
         end
 
         context 'failure' do

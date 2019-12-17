@@ -48,7 +48,10 @@ task "admin:create" => :environment do
         begin
           password = ask("Password:  ") { |q| q.echo = false }
           password_confirmation = ask("Repeat password:  ") { |q| q.echo = false }
-        end while password != password_confirmation
+          passwords_match = password == password_confirmation
+
+          say("Passwords don't match, try again...") unless passwords_match
+        end while !passwords_match
         admin.password = password
       end
     else
@@ -62,17 +65,17 @@ task "admin:create" => :environment do
         else
           password = ask("Password:  ") { |q| q.echo = false }
           password_confirmation = ask("Repeat password:  ") { |q| q.echo = false }
+          passwords_match = password == password_confirmation
         end
-      end while password != password_confirmation
+
+        say("Passwords don't match, try again...") unless passwords_match
+      end while !passwords_match
       admin.password = password
     end
 
     # save/update user account
     saved = admin.save
-    if !saved
-      puts admin.errors.full_messages.join("\n")
-      next
-    end
+    say(admin.errors.full_messages.join("\n")) unless saved
   end while !saved
 
   say "\nEnsuring account is active!"

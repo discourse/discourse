@@ -43,6 +43,7 @@ class ApplicationController < ActionController::Base
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
+  after_action  :conditionally_allow_site_embedding
 
   layout :set_layout
 
@@ -84,6 +85,12 @@ class ApplicationController < ActionController::Base
     if !response.headers["Cache-Control"] && response.cache_control.blank?
       response.cache_control[:no_cache] = true
       response.cache_control[:extras] = ["no-store"]
+    end
+  end
+
+  def conditionally_allow_site_embedding
+    if SiteSetting.allow_embedding_site_in_an_iframe
+      response.headers.delete('X-Frame-Options')
     end
   end
 
@@ -687,6 +694,25 @@ class ApplicationController < ActionController::Base
     request.original_url unless request.original_url =~ /uploads/
   end
 
+  def redirect_to_login
+    dont_cache_page
+
+    if SiteSetting.enable_sso?
+      # save original URL in a session so we can redirect after login
+      session[:destination_url] = destination_url
+      redirect_to path('/session/sso')
+    elsif !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
+      # Only one authentication provider, direct straight to it.
+      # If authentication_data is present, then we are halfway though registration. Don't redirect offsite
+      cookies[:destination_url] = destination_url
+      redirect_to path("/auth/#{Discourse.enabled_authenticators.first.name}")
+    else
+      # save original URL in a cookie (javascript redirects after login in this case)
+      cookies[:destination_url] = destination_url
+      redirect_to path("/login")
+    end
+  end
+
   def redirect_to_login_if_required
     return if request.format.json? && is_api?
 
@@ -715,23 +741,8 @@ class ApplicationController < ActionController::Base
 
     if !current_user && SiteSetting.login_required?
       flash.keep
-      dont_cache_page
-
-      if SiteSetting.enable_sso?
-        # save original URL in a session so we can redirect after login
-        session[:destination_url] = destination_url
-        redirect_to path('/session/sso')
-        return
-      elsif !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
-        # Only one authentication provider, direct straight to it
-        cookies[:destination_url] = destination_url
-        redirect_to path("/auth/#{Discourse.enabled_authenticators.first.name}")
-      else
-        # save original URL in a cookie (javascript redirects after login in this case)
-        cookies[:destination_url] = destination_url
-        redirect_to path("/login")
-        return
-      end
+      redirect_to_login
+      return
     end
 
     check_totp = current_user &&
@@ -746,7 +757,7 @@ class ApplicationController < ActionController::Base
       redirect_path = "#{GlobalSetting.relative_url_root}/u/#{current_user.username}/preferences/second-factor"
       if !request.fullpath.start_with?(redirect_path)
         redirect_to path(redirect_path)
-        return
+        nil
       end
     end
   end
@@ -764,14 +775,14 @@ class ApplicationController < ActionController::Base
 
     if !SiteSetting.login_required? || (current_user rescue false)
       key = "page_not_found_topics"
-      if @topics_partial = $redis.get(key)
+      if @topics_partial = Discourse.redis.get(key)
         @topics_partial = @topics_partial.html_safe
       else
         category_topic_ids = Category.pluck(:topic_id).compact
         @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
         @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
         @topics_partial = render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
-        $redis.setex(key, 10.minutes, @topics_partial)
+        Discourse.redis.setex(key, 10.minutes, @topics_partial)
       end
     end
 
@@ -779,6 +790,9 @@ class ApplicationController < ActionController::Base
     @title = opts[:title] || I18n.t("page_not_found.title")
     @group = opts[:group]
     @hide_search = true if SiteSetting.login_required
+
+    params[:slug] = params[:slug].first if params[:slug].kind_of?(Array)
+    params[:id] = params[:id].first if params[:id].kind_of?(Array)
     @slug = (params[:slug].presence || params[:id].presence || "").tr('-', ' ')
 
     render_to_string status: opts[:status], layout: opts[:layout], formats: [:html], template: '/exceptions/not_found'

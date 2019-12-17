@@ -6,7 +6,9 @@ class NewPostResultSerializer < ApplicationSerializer
              :errors,
              :success,
              :pending_count,
-             :reason
+             :reason,
+             :message,
+             :route_to
 
   has_one :pending_post, serializer: TopicPendingPostSerializer, root: false, embed: :objects
 
@@ -62,6 +64,22 @@ class NewPostResultSerializer < ApplicationSerializer
 
   def include_pending_count?
     pending_count.present?
+  end
+
+  def route_to
+    object.route_to
+  end
+
+  def include_route_to?
+    object.route_to.present?
+  end
+
+  def message
+    object.message
+  end
+
+  def include_message?
+    object.message.present?
   end
 
 end

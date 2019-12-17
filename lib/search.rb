@@ -137,7 +137,7 @@ class Search
     return 0 unless SiteSetting.search_prefer_recent_posts?
 
     # It can be quite slow to count all the posts so let's cache it
-    Rails.cache.fetch("search-min-post-id:#{SiteSetting.search_recent_posts_size}", expires_in: 1.week) do
+    Discourse.cache.fetch("search-min-post-id:#{SiteSetting.search_recent_posts_size}", expires_in: 1.week) do
       min_post_id_no_cache
     end
   end
@@ -303,6 +303,14 @@ class Search
     posts.where('topics.closed')
   end
 
+  advanced_filter(/^status:public$/) do |posts|
+    category_ids = Category
+      .where(read_restricted: false)
+      .pluck(:id)
+
+    posts.where("topics.category_id in (?)", category_ids)
+  end
+
   advanced_filter(/^status:archived$/) do |posts|
     posts.where('topics.archived')
   end
@@ -368,6 +376,10 @@ class Search
 
   advanced_filter(/^in:posted$/) do |posts|
     posts.where("posts.user_id = #{@guardian.user.id}") if @guardian.user
+  end
+
+  advanced_filter(/^in:created$/) do |posts|
+    posts.where(user_id: @guardian.user.id, post_number: 1) if @guardian.user
   end
 
   advanced_filter(/^in:(watching|tracking)$/) do |posts, match|

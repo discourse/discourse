@@ -54,7 +54,16 @@ he:
         label: "הצגת תוצאות"
       hide-results:
         title: "חזרה להצבעות שלך"
-        label: "הסתרת תוצאות"
+        label: "הצגת הצבעה"
+      group-results:
+        title: "קיבוץ הצבעות לפי משתמש"
+        label: "הצגת פילוח"
+      ungroup-results:
+        title: "שקלול כל ההצבעות"
+        label: "הסתרת הפילוח"
+      export-results:
+        title: "ייצוא תוצאות הסקר"
+        label: "ייצוא"
       open:
         title: "פתיחת הסקר"
         label: "פתיחה"
@@ -69,6 +78,7 @@ he:
       error_while_toggling_status: " חלה שגיאה בשינוי המצב של סקר זה, עמך הסליחה."
       error_while_casting_votes: "חלה שגיאה בהצבעתך, עמך הסליחה."
       error_while_fetching_voters: "חלה שגיאה בהצגת המצביעים, עמך הסליחה."
+      error_while_exporting_results: "אירעה שגיאה בייצוא תוצאות הסקר."
       ui_builder:
         title: בניית סקר
         insert: הכנסת סקר
@@ -87,6 +97,8 @@ he:
           vote: בהליכי הצבעה
           closed: כאשר סגור
           staff: סגל בלבד
+        poll_chart_type:
+          label: סוג תרשים
         poll_config:
           max: מרבי
           min: מזערי

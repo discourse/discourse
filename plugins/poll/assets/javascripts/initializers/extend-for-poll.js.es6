@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import { getRegister } from "discourse-common/lib/get-owner";
 import WidgetGlue from "discourse/widgets/glue";
 
@@ -88,12 +88,19 @@ function initializePolls(api) {
       }
 
       if (poll) {
-        const glue = new WidgetGlue("discourse-poll", register, {
+        const attrs = {
           id: `${pollName}-${post.id}`,
           post,
           poll,
-          vote
-        });
+          vote,
+          groupableUserFields: (
+            api.container.lookup("site-settings:main")
+              .poll_groupable_user_fields || ""
+          )
+            .split("|")
+            .filter(Boolean)
+        };
+        const glue = new WidgetGlue("discourse-poll", register, attrs);
         glue.appendTo(pollElem);
         _glued.push(glue);
       }

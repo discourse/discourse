@@ -150,6 +150,9 @@
     a.license-url {
       display: inline-block;
       margin-right: 10px;
+      .d-icon {
+        margin-left: 5px;
+      }
     }
 
     .mini-title {
@@ -316,7 +319,9 @@
   }
 
   .theme.settings {
-    .theme-setting,
+    .theme-setting {
+      min-height: 35px;
+    }
     .theme-translation {
       padding-bottom: 0;
       margin-top: 18px;

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'rotp'
 
 RSpec.describe SessionController do
   let(:email_token) { Fabricate(:email_token) }
@@ -1048,6 +1049,16 @@ RSpec.describe SessionController do
           expect(user.user_auth_tokens.count).to eq(1)
           expect(UserAuthToken.hash_token(cookies[:_t])).to eq(user.user_auth_tokens.first.auth_token)
         end
+
+        context "when timezone param is provided" do
+          it "sets the user_option timezone for the user" do
+            post "/session.json", params: {
+              login: user.username, password: 'myawesomepassword', timezone: "Australia/Melbourne"
+            }
+            expect(response.status).to eq(200)
+            expect(user.reload.user_option.timezone).to eq("Australia/Melbourne")
+          end
+        end
       end
 
       context 'when user has 2-factor logins' do
@@ -1405,7 +1416,7 @@ RSpec.describe SessionController do
       context 'when token is valid' do
         it "should display the form for GET" do
           token = SecureRandom.hex
-          $redis.setex "otp_#{token}", 10.minutes, user.username
+          Discourse.redis.setex "otp_#{token}", 10.minutes, user.username
 
           get "/session/otp/#{token}"
 
@@ -1413,7 +1424,7 @@ RSpec.describe SessionController do
           expect(response.body).to include(
             I18n.t("user_api_key.otp_confirmation.logging_in_as", username: user.username)
           )
-          expect($redis.get("otp_#{token}")).to eq(user.username)
+          expect(Discourse.redis.get("otp_#{token}")).to eq(user.username)
 
           expect(session[:current_user_id]).to eq(nil)
         end
@@ -1421,12 +1432,12 @@ RSpec.describe SessionController do
         it "should redirect on GET if already logged in" do
           sign_in(user)
           token = SecureRandom.hex
-          $redis.setex "otp_#{token}", 10.minutes, user.username
+          Discourse.redis.setex "otp_#{token}", 10.minutes, user.username
 
           get "/session/otp/#{token}"
           expect(response.status).to eq(302)
 
-          expect($redis.get("otp_#{token}")).to eq(nil)
+          expect(Discourse.redis.get("otp_#{token}")).to eq(nil)
           expect(session[:current_user_id]).to eq(user.id)
         end
 
@@ -1437,13 +1448,13 @@ RSpec.describe SessionController do
           expect(response.status).to eq(404)
 
           token = SecureRandom.hex
-          $redis.setex "otp_#{token}", 10.minutes, user.username
+          Discourse.redis.setex "otp_#{token}", 10.minutes, user.username
 
           post "/session/otp/#{token}"
 
           expect(response.status).to eq(302)
           expect(response).to redirect_to("/")
-          expect($redis.get("otp_#{token}")).to eq(nil)
+          expect(Discourse.redis.get("otp_#{token}")).to eq(nil)
 
           get "/session/current.json"
           expect(response.status).to eq(200)

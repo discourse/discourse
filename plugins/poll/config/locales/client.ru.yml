@@ -52,7 +52,8 @@ ru:
         label: "Показать результаты"
       hide-results:
         title: "Вернуться к опросу"
-        label: "Скрыть результаты"
+      export-results:
+        label: "Экспорт"
       open:
         title: "Снова начать принимать новые голоса"
         label: "Открыть"

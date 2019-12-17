@@ -122,17 +122,17 @@ class BadgeGranter
       }
     end
 
-    $redis.lpush queue_key, payload.to_json if payload
+    Discourse.redis.lpush queue_key, payload.to_json if payload
   end
 
   def self.clear_queue!
-    $redis.del queue_key
+    Discourse.redis.del queue_key
   end
 
   def self.process_queue!
     limit = 1000
     items = []
-    while limit > 0 && item = $redis.lpop(queue_key)
+    while limit > 0 && item = Discourse.redis.lpop(queue_key)
       items << JSON.parse(item)
       limit -= 1
     end

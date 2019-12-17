@@ -5,6 +5,6 @@
 
   {{d-button class="btn-primary" action=(route-action "showLogin") label="log_in"}}
   {{#unless siteSettings.enable_sso}}
-    {{d-button action=(action "showForgotPassword") label="login.forgot"}}
+    {{d-button action=(route-action "showForgotPassword") label="login.forgot"}}
   {{/unless}}
 </div>

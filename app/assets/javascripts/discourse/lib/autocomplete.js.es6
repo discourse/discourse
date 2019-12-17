@@ -212,11 +212,9 @@ export default function(options) {
     }
 
     if (options.single && !options.width) {
-      this.css("width", "100%");
+      this.attr("class", `${this.attr("class")} fullwidth-input`);
     } else if (options.width) {
       this.css("width", options.width);
-    } else {
-      this.width(150);
     }
 
     this.attr(

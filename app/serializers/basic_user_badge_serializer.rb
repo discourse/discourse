@@ -10,6 +10,6 @@ class BasicUserBadgeSerializer < ApplicationSerializer
   end
 
   def grouping_position
-    object.badge.badge_grouping.position
+    object.badge&.badge_grouping&.position
   end
 end

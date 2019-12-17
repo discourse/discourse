@@ -42,7 +42,8 @@ tr_TR:
         label: "Sonuçları göster"
       hide-results:
         title: "Oylarınıza dönün"
-        label: "Sonuçları gizle"
+      export-results:
+        label: "Dışa Aktar"
       open:
         title: "Anketi başlat"
         label: "Başlat"

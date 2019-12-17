@@ -58,42 +58,42 @@ module DiscourseUpdates
 
     # last_installed_version is the installed version at the time of the last version check
     def last_installed_version
-      $redis.get last_installed_version_key
+      Discourse.redis.get last_installed_version_key
     end
 
     def latest_version
-      $redis.get latest_version_key
+      Discourse.redis.get latest_version_key
     end
 
     def missing_versions_count
-      $redis.get(missing_versions_count_key).try(:to_i)
+      Discourse.redis.get(missing_versions_count_key).try(:to_i)
     end
 
     def critical_updates_available?
-      ($redis.get(critical_updates_available_key) || false) == 'true'
+      (Discourse.redis.get(critical_updates_available_key) || false) == 'true'
     end
 
     def updated_at
-      t = $redis.get(updated_at_key)
+      t = Discourse.redis.get(updated_at_key)
       t ? Time.zone.parse(t) : nil
     end
 
     def updated_at=(time_with_zone)
-      $redis.set updated_at_key, time_with_zone.as_json
+      Discourse.redis.set updated_at_key, time_with_zone.as_json
     end
 
     ['last_installed_version', 'latest_version', 'missing_versions_count', 'critical_updates_available'].each do |name|
       eval "define_method :#{name}= do |arg|
-        $redis.set #{name}_key, arg
+        Discourse.redis.set #{name}_key, arg
       end"
     end
 
     def missing_versions=(versions)
       # delete previous list from redis
-      prev_keys = $redis.lrange(missing_versions_list_key, 0, 4)
+      prev_keys = Discourse.redis.lrange(missing_versions_list_key, 0, 4)
       if prev_keys
-        $redis.del prev_keys
-        $redis.del(missing_versions_list_key)
+        Discourse.redis.del prev_keys
+        Discourse.redis.del(missing_versions_list_key)
       end
 
       if versions.present?
@@ -101,18 +101,18 @@ module DiscourseUpdates
         version_keys = []
         versions[0, 5].each do |v|
           key = "#{missing_versions_key_prefix}:#{v['version']}"
-          $redis.mapped_hmset key, v
+          Discourse.redis.mapped_hmset key, v
           version_keys << key
         end
-        $redis.rpush missing_versions_list_key, version_keys
+        Discourse.redis.rpush missing_versions_list_key, version_keys
       end
 
       versions || []
     end
 
     def missing_versions
-      keys = $redis.lrange(missing_versions_list_key, 0, 4) # max of 5 versions
-      keys.present? ? keys.map { |k| $redis.hgetall(k) } : []
+      keys = Discourse.redis.lrange(missing_versions_list_key, 0, 4) # max of 5 versions
+      keys.present? ? keys.map { |k| Discourse.redis.hgetall(k) } : []
     end
 
     private

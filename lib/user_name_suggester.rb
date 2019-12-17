@@ -11,7 +11,7 @@ module UserNameSuggester
   end
 
   def self.parse_name_from_email(name_or_email)
-    return name_or_email if name_or_email !~ User::EMAIL
+    return name_or_email if name_or_email.to_s !~ User::EMAIL
 
     # When 'walter@white.com' take 'walter'
     name = Regexp.last_match[1]

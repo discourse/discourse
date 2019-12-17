@@ -84,36 +84,36 @@ describe GroupMessage do
 
     describe 'sent_recently?' do
       it 'returns true if redis says so' do
-        $redis.stubs(:get).with(group_message.sent_recently_key).returns('1')
+        Discourse.redis.stubs(:get).with(group_message.sent_recently_key).returns('1')
         expect(group_message.sent_recently?).to be_truthy
       end
 
       it 'returns false if redis returns nil' do
-        $redis.stubs(:get).with(group_message.sent_recently_key).returns(nil)
+        Discourse.redis.stubs(:get).with(group_message.sent_recently_key).returns(nil)
         expect(group_message.sent_recently?).to be_falsey
       end
 
       it 'always returns false if limit_once_per is false' do
         gm = GroupMessage.new(moderators_group, :user_automatically_silenced, user: user, limit_once_per: false)
         gm.stubs(:sent_recently_key).returns('the_key')
-        $redis.stubs(:get).with(gm.sent_recently_key).returns('1')
+        Discourse.redis.stubs(:get).with(gm.sent_recently_key).returns('1')
         expect(gm.sent_recently?).to be_falsey
       end
     end
 
     describe 'remember_message_sent' do
       it 'stores a key in redis that expires after 24 hours' do
-        $redis.expects(:setex).with(group_message.sent_recently_key, 24 * 60 * 60, anything).returns('OK')
+        Discourse.redis.expects(:setex).with(group_message.sent_recently_key, 24 * 60 * 60, anything).returns('OK')
         group_message.remember_message_sent
       end
 
       it 'can use a given expiry time' do
-        $redis.expects(:setex).with(anything, 30 * 60, anything).returns('OK')
+        Discourse.redis.expects(:setex).with(anything, 30 * 60, anything).returns('OK')
         GroupMessage.new(moderators_group, :user_automatically_silenced, user: user, limit_once_per: 30.minutes).remember_message_sent
       end
 
       it 'can be disabled' do
-        $redis.expects(:setex).never
+        Discourse.redis.expects(:setex).never
         GroupMessage.new(moderators_group, :user_automatically_silenced, user: user, limit_once_per: false).remember_message_sent
       end
     end

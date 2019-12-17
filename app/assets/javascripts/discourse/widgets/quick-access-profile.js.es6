@@ -1,5 +1,6 @@
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidgetFrom } from "discourse/widgets/widget";
+import { Promise } from "rsvp";
 
 createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
   buildKey: () => "quick-access-profile",
@@ -50,7 +51,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
     }
     defaultItems.push(
       {
-        icon: "pencil",
+        icon: "pencil-alt",
         href: `${this.attrs.path}/activity/drafts`,
         content: I18n.t("user_action_groups.15")
       },

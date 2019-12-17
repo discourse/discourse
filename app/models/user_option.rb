@@ -42,6 +42,7 @@ class UserOption < ActiveRecord::Base
   validates :text_size_key, inclusion: { in: UserOption.text_sizes.values }
   validates :email_level, inclusion: { in: UserOption.email_level_types.values }
   validates :email_messages_level, inclusion: { in: UserOption.email_level_types.values }
+  validates :timezone, timezone: true
 
   def set_defaults
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
@@ -93,8 +94,8 @@ class UserOption < ActiveRecord::Base
     delay = SiteSetting.active_user_rate_limit_secs
 
     # only update last_redirected_to_top_at once every minute
-    return unless $redis.setnx(key, "1")
-    $redis.expire(key, delay)
+    return unless Discourse.redis.setnx(key, "1")
+    Discourse.redis.expire(key, delay)
 
     # delay the update
     Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.user_id, redirected_at: Time.zone.now)
@@ -224,6 +225,7 @@ end
 #  email_messages_level             :integer          default(0), not null
 #  title_count_mode_key             :integer          default(0), not null
 #  enable_defer                     :boolean          default(FALSE), not null
+#  timezone                         :string
 #
 # Indexes
 #

@@ -9,5 +9,5 @@ nl:
   js:
     discourse_narrative_bot:
       welcome_post_type:
-        new_user_track: "Start de nieuwe gebruikerstutorial voor alle nieuwe gebruikers"
-        welcome_message: "Stuur een welkomstbericht met een snelle start handleiding naar alle nieuwe gebruikers"
+        new_user_track: "De handleiding voor nieuwe gebruikers starten voor alle nieuwe gebruikers"
+        welcome_message: "Een welkomstbericht met een snelstartgids naar alle nieuwe gebruikers sturen"

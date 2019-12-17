@@ -65,7 +65,6 @@ describe Hijack do
 
       expect(@calls).to eq(1)
       expect(@status).to eq(201)
-      expect(@status).to be > 0
     end
   end
 

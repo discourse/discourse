@@ -6,6 +6,7 @@ import { getRegister } from "discourse-common/lib/get-owner";
 import { underscore } from "@ember/string";
 import { set } from "@ember/object";
 import Category from "discourse/models/category";
+import { Promise } from "rsvp";
 
 let _identityMap;
 
@@ -50,6 +51,7 @@ flushMap();
 
 export default EmberObject.extend({
   _plurals: {
+    category: "categories",
     "post-reply": "post-replies",
     "post-reply-history": "post_reply_histories",
     reviewable_history: "reviewable_histories"

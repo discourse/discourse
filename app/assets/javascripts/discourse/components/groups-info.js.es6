@@ -5,8 +5,8 @@ export default Component.extend({
   tagName: "span",
   classNames: ["group-info-details"],
 
-  @discourseComputed("group.full_name", "group.title")
-  showFullName(fullName, title) {
-    return fullName && fullName.length && fullName !== title;
+  @discourseComputed("group.full_name")
+  showFullName(fullName) {
+    return fullName && fullName.length;
   }
 });

@@ -19,6 +19,7 @@ const Theme = RestModel.extend({
   isActive: or("default", "user_selectable"),
   isPendingUpdates: gt("remote_theme.commits_behind", 0),
   hasEditedFields: gt("editedFields.length", 0),
+  hasParents: gt("parent_themes.length", 0),
 
   @discourseComputed("theme_fields.[]")
   targets() {
@@ -267,6 +268,15 @@ const Theme = RestModel.extend({
     childThemes.removeObject(theme);
     childThemes.pushObject(theme);
     return this.saveChanges("child_theme_ids");
+  },
+
+  addParentTheme(theme) {
+    let parentThemes = this.parentThemes;
+    if (!parentThemes) {
+      parentThemes = [];
+      this.set("parentThemes", parentThemes);
+    }
+    parentThemes.addObject(theme);
   },
 
   @discourseComputed("name", "default")

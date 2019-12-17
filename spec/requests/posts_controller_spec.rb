@@ -781,7 +781,7 @@ describe PostsController do
 
       it 'prevents whispers for regular users' do
         post_1 = Fabricate(:post)
-        user_key = ApiKey.create!(user: user, key: SecureRandom.hex).key
+        user_key = ApiKey.create!(user: user).key
 
         post "/posts.json", params: {
           api_username: user.username,
@@ -862,18 +862,25 @@ describe PostsController do
         it "doesn't enqueue posts when user first creates a topic" do
           user.user_stat.update_column(:topic_count, 1)
 
+          Draft.set(user, "should_clear", 0, "{'a' : 'b'}")
+
           post "/posts.json", params: {
             raw: 'this is the test content',
             title: 'this is the test title for the topic',
             composer_open_duration_msecs: 204,
             typing_duration_msecs: 100,
-            topic_id: topic.id
+            topic_id: topic.id,
+            draft_key: "should_clear"
           }
 
           expect(response.status).to eq(200)
           parsed = ::JSON.parse(response.body)
 
           expect(parsed["action"]).not_to be_present
+
+          expect {
+            Draft.get(user, "should_clear", 0)
+          }.to raise_error(Draft::OutOfSequence)
         end
 
         it "doesn't enqueue replies when the topic is closed" do
@@ -1852,16 +1859,16 @@ describe PostsController do
 
       expect(response.status).to eq(200)
       public_post.reload
-      expect(public_post.custom_fields['notice_type']).to eq(Post.notices[:custom])
-      expect(public_post.custom_fields['notice_args']).to include('<p>Hello <em>world</em>!</p>')
-      expect(public_post.custom_fields['notice_args']).not_to include('onebox')
+      expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:custom])
+      expect(public_post.custom_fields[Post::NOTICE_ARGS]).to include('<p>Hello <em>world</em>!</p>')
+      expect(public_post.custom_fields[Post::NOTICE_ARGS]).not_to include('onebox')
 
       put "/posts/#{public_post.id}/notice.json", params: { notice: nil }
 
       expect(response.status).to eq(200)
       public_post.reload
-      expect(public_post.custom_fields['notice_type']).to eq(nil)
-      expect(public_post.custom_fields['notice_args']).to eq(nil)
+      expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+      expect(public_post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
     end
   end
 end

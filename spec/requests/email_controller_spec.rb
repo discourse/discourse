@@ -151,7 +151,7 @@ RSpec.describe EmailController do
     describe 'when topic is public' do
       it 'should return the right response' do
         key = SecureRandom.hex
-        $redis.set(key, user.email)
+        Discourse.cache.write(key, user.email)
         get '/email/unsubscribed', params: { key: key, topic_id: topic.id }
         expect(response.status).to eq(200)
         expect(response.body).to include(topic.title)
@@ -161,7 +161,7 @@ RSpec.describe EmailController do
     describe 'when topic is private' do
       it 'should return the right response' do
         key = SecureRandom.hex
-        $redis.set(key, user.email)
+        Discourse.cache.write(key, user.email)
         get '/email/unsubscribed', params: { key: key, topic_id: private_topic.id }
         expect(response.status).to eq(200)
         expect(response.body).to_not include(private_topic.title)

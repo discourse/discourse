@@ -262,7 +262,7 @@ class DiscourseRedis
 
   def delete_prefixed(prefix)
     DiscourseRedis.ignore_readonly do
-      keys("#{prefix}*").each { |k| $redis.del(k) }
+      keys("#{prefix}*").each { |k| Discourse.redis.del(k) }
     end
   end
 

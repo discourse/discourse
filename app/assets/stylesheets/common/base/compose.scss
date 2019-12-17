@@ -437,6 +437,9 @@ div.ac-wrap {
     margin: 0;
     background: transparent;
     min-height: unset;
+    &.fullwidth-input {
+      width: 100%;
+    }
   }
 }
 

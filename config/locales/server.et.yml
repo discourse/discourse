@@ -452,9 +452,6 @@ et:
     error: "Sinu meiliaadressi muutmisel esines tõrge. Äkki on see juba kasutuses?"
     error_staged: "Sinu meiliaadressi muutmisel esines tõrge. Ettevalmistamisel olev kasutaja juba kasutab seda."
     already_done: "Vabandust, see kinnitamise link ei kehti enam. Äkki on teie meiliaadress juba muudetud?"
-    authorizing_old:
-      title: "Täname, et oma kehtiva meiliaadressi kinnitasid"
-      description: "Saadame nüüd kinnituse Teie uuele meiliaadressile."
   activation:
     action: "Oma konto aktiveerimiseks kliki siia"
     already_done: "Vabandust, see konto kinnitamise link ei kehti enam. Äkki on Teie konto juba aktiveeritud?"

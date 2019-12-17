@@ -285,7 +285,11 @@ export default SelectKitComponent.extend({
           this
         );
 
-        this._boundaryActionHandler("onSelect", computedContentItem.value);
+        this._boundaryActionHandler(
+          "onSelect",
+          computedContentItem.value,
+          computedContentItem.originalContent
+        );
         this._boundaryActionHandler("onSelectAny", computedContentItem);
 
         this.autoHighlight();

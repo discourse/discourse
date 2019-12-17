@@ -573,9 +573,6 @@ da:
     error: "Der opstod en fejl under opdateringen af din e-mail-adresse. Måske er adressen allerede i brug?"
     error_staged: "Der opstod en fejl under opdateringen af din e-mail-adresse. Måske er adressen allerede i brug?"
     already_done: "Beklager, linket er ikke længere gyldigt - har du ændret din emal adresse?"
-    authorizing_old:
-      title: "Tak fordi du bekræftede din email adresse!"
-      description: "Vi sender nu en ny email der skal verificeres."
   activation:
     action: "Klik her for at aktivere din konto"
     already_done: "Beklager, dette bekræftelses-link er ikke længere gyldigt. Måske er din konto allerede aktiv?"

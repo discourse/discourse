@@ -10,11 +10,11 @@ module Jobs
     end
 
     def execute(args)
-      $redis.set(self.class.heartbeat_key, Time.new.to_i.to_s)
+      Discourse.redis.set(self.class.heartbeat_key, Time.new.to_i.to_s)
     end
 
     def self.last_heartbeat
-      $redis.get(heartbeat_key).to_i
+      Discourse.redis.get(heartbeat_key).to_i
     end
   end
 end

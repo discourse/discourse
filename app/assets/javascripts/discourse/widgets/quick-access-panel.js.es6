@@ -2,6 +2,7 @@ import Session from "discourse/models/session";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { headerHeight } from "discourse/components/site-header";
+import { Promise } from "rsvp";
 
 const AVERAGE_ITEM_HEIGHT = 55;
 

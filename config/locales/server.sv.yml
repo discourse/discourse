@@ -407,9 +407,6 @@ sv:
     error: "Det uppstod ett fel med ändringen av din e-postadress. Adressen kanske redan används?"
     error_staged: "Ett problem uppstod vid ändring av din e-postadress. Adressen används redan av en annan användare. "
     already_done: "Tyvärr har den här aktiveringslänken löpt ut. Kanske är din e-postadress redan ändrad? "
-    authorizing_old:
-      title: "Tack för att du bekräftar din nuvarande e-postadress"
-      description: "Vi skickar nu e-post för bekräftelse till din nya adress "
   activation:
     action: "Klicka här för att aktivera ditt konto"
     already_done: "Tyvärr, denna kontoaktiveringslänk är inte längre giltig. Kanske är ditt konto redan aktiverat?"

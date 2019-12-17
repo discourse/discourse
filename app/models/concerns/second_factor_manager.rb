@@ -1,17 +1,21 @@
 # frozen_string_literal: true
 
 module SecondFactorManager
+  TOTP_ALLOWED_DRIFT_SECONDS = 30
+
   extend ActiveSupport::Concern
 
   def create_totp(opts = {})
+    require_rotp
     UserSecondFactor.create!({
                                user_id: self.id,
                                method: UserSecondFactor.methods[:totp],
-                               data: ROTP::Base32.random_base32
+                               data: ROTP::Base32.random
                              }.merge(opts))
   end
 
   def get_totp_object(data)
+    require_rotp
     ROTP::TOTP.new(data, issuer: SiteSetting.title)
   end
 
@@ -30,7 +34,13 @@ module SecondFactorManager
         last_used = totp.last_used.to_i
       end
 
-      authenticated = !token.blank? && totp.get_totp_object.verify_with_drift_and_prior(token, 30, last_used)
+      authenticated = !token.blank? && totp.totp_object.verify(
+        token,
+        drift_ahead: TOTP_ALLOWED_DRIFT_SECONDS,
+        drift_behind: TOTP_ALLOWED_DRIFT_SECONDS,
+        after: last_used
+      )
+
       if authenticated
         totp.update!(last_used: DateTime.now)
         break
@@ -123,5 +133,9 @@ module SecondFactorManager
 
   def hash_backup_code(code, salt)
     Pbkdf2.hash_password(code, salt, Rails.configuration.pbkdf2_iterations, Rails.configuration.pbkdf2_algorithm)
+  end
+
+  def require_rotp
+    require 'rotp' if !defined? ROTP
   end
 end

@@ -1,6 +1,7 @@
 import Post from "discourse/models/post";
 import createStore from "helpers/create-store";
 import User from "discourse/models/user";
+import { Promise } from "rsvp";
 
 QUnit.module("model:post-stream");
 
@@ -208,7 +209,7 @@ QUnit.test("removePosts", assert => {
 QUnit.test("cancelFilter", assert => {
   const postStream = buildStream(1235);
 
-  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
+  sandbox.stub(postStream, "refresh").returns(Promise.resolve());
 
   postStream.set("summary", true);
   postStream.cancelFilter();
@@ -246,7 +247,7 @@ QUnit.test("findPostIdForPostNumber", assert => {
 
 QUnit.test("toggleParticipant", assert => {
   const postStream = buildStream(1236);
-  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
+  sandbox.stub(postStream, "refresh").returns(Promise.resolve());
 
   assert.equal(
     postStream.get("userFilters.length"),
@@ -269,7 +270,7 @@ QUnit.test("toggleParticipant", assert => {
 
 QUnit.test("streamFilters", assert => {
   const postStream = buildStream(1237);
-  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
+  sandbox.stub(postStream, "refresh").returns(Promise.resolve());
 
   assert.deepEqual(
     postStream.get("streamFilters"),

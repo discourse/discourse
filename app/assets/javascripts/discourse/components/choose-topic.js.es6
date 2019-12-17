@@ -4,6 +4,7 @@ import Component from "@ember/component";
 import discourseDebounce from "discourse/lib/debounce";
 import { searchForTerm } from "discourse/lib/search";
 import { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   loading: null,
@@ -11,7 +12,33 @@ export default Component.extend({
   topics: null,
   selectedTopicId: null,
   currentTopicId: null,
+  additionalFilters: null,
   topicTitle: null,
+  label: null,
+  loadOnInit: false,
+  topicChangedCallback: null,
+
+  init() {
+    this._super(...arguments);
+
+    this.additionalFilters = this.additionalFilters || "";
+    this.topicTitle = this.topicTitle || "";
+
+    if (this.loadOnInit && !isEmpty(this.additionalFilters)) {
+      searchForTerm(this.additionalFilters, {}).then(results => {
+        if (results && results.posts && results.posts.length > 0) {
+          this.set(
+            "topics",
+            results.posts
+              .mapBy("topic")
+              .filter(t => t.id !== this.currentTopicId)
+          );
+        } else {
+          this.setProperties({ topics: null, loading: false });
+        }
+      });
+    }
+  },
 
   @observes("topicTitle")
   topicTitleChanged() {
@@ -22,6 +49,11 @@ export default Component.extend({
     });
 
     this.search(this.topicTitle);
+  },
+
+  @discourseComputed("label")
+  labelText(label) {
+    return label || "choose_topic.title.search";
   },
 
   @observes("topics")
@@ -38,18 +70,21 @@ export default Component.extend({
       return;
     }
 
-    const currentTopicId = this.currentTopicId;
-
-    if (isEmpty(title)) {
+    if (isEmpty(title) && isEmpty(this.additionalFilters)) {
       this.setProperties({ topics: null, loading: false });
       return;
     }
 
-    searchForTerm(title, {
-      typeFilter: "topic",
-      searchForId: true,
-      restrictToArchetype: "regular"
-    }).then(results => {
+    const currentTopicId = this.currentTopicId;
+    const titleWithFilters = `${title} ${this.additionalFilters}`;
+    let searchParams = {};
+
+    if (!isEmpty(title)) {
+      searchParams.typeFilter = "topic";
+      searchParams.restrictToArchetype = "regular";
+    }
+
+    searchForTerm(titleWithFilters, searchParams).then(results => {
       if (results && results.posts && results.posts.length > 0) {
         this.set(
           "topics",
@@ -67,7 +102,7 @@ export default Component.extend({
       next(() => {
         document.getElementById(`choose-topic-${topic.id}`).checked = true;
       });
-      return false;
+      if (this.topicChangedCallback) this.topicChangedCallback(topic);
     }
   }
 });

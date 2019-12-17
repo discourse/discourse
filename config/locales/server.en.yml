@@ -163,6 +163,7 @@ en:
       inclusion: is not included in the list
       invalid: is invalid
       is_invalid: "seems unclear, is it a complete sentence?"
+      invalid_timezone: "'%{tz}' is not a valid timezone"
       contains_censored_words: "contains the following censored words: %{censored_words}"
       less_than: must be less than %{count}
       less_than_or_equal_to: must be less than or equal to %{count}
@@ -208,6 +209,7 @@ en:
       secure_media_requirements: "S3 uploads must be enabled before enabling secure media."
       second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
       local_login_cannot_be_disabled_if_second_factor_enforced: "You cannot disable local login if 2FA is enforced. Disable enforced 2FA before disabling local logins."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
 
   activemodel:
@@ -376,6 +378,20 @@ en:
   revert_version_same: "The current version is same as the version you are trying to revert to."
 
   excerpt_image: "image"
+
+  bookmarks:
+    errors:
+      already_bookmarked_post: "You cannot bookmark the same post twice."
+      time_must_be_provided: "time must be provided for all reminders except '%{reminder_type}'"
+
+    reminders:
+        at_desktop: "Next time I'm at my desktop"
+        later_today: "Later today <br/>{{date}}"
+        next_business_day: "Next business day <br/>{{date}}"
+        tomorrow: "Tomorrow <br/>{{date}}"
+        next_week: "Next week <br/>{{date}}"
+        next_month: "Next month <br/>{{date}}"
+        custom: "Custom date and time"
 
   groups:
     success:
@@ -559,6 +575,7 @@ en:
           attributes:
             word:
               too_many: "Too many words for that action"
+              
 
   uncategorized_category_name: "Uncategorized"
 
@@ -804,14 +821,25 @@ en:
       unknown: "unknown operating system"
 
   change_email:
+    wrong_account_error: "You are logged in the wrong account, please log out and try again."
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
     error_staged: "There was an error changing your email address. The address is already in use by a staged user."
     already_done: "Sorry, this confirmation link is no longer valid. Perhaps your email was already changed?"
+    confirm: "Confirm"
+
+    authorizing_new:
+      title: "Confirm your new email"
+      description: "Please confirm you would like your new email address changed to:"
+
     authorizing_old:
-      title: "Thanks for confirming your current email address"
-      description: "We're now emailing your new address for confirmation."
+      title: "Change your email address"
+      description: "Please confirm your email address change"
+      old_email: "Old email: %{email}"
+      new_email: "New email: %{email}"
+      almost_done_title: "Confirming new email address"
+      almost_done_description: "We have sent an email to your new email address to confirm the change!"
 
   associated_accounts:
     revoke_failed: "Failed to revoke your account with %{provider_name}."
@@ -957,6 +985,9 @@ en:
     description: "email preferences for <b>%{email}</b> were updated. To change your email settings <a href='%{url}'>visit your user preferences</a>."
     topic_description: "To re-subscribe to %{link}, use the notification control at the bottom or right of the topic."
     private_topic_description: "To re-subscribe, use the notification control at the bottom or right of the topic."
+
+  uploads:
+    marked_insecure_from_theme_component_reason: "upload used in theme component"
 
   unsubscribe:
     title: "Unsubscribe"
@@ -1501,6 +1532,7 @@ en:
     content_security_policy_collect_reports: "Enable CSP violation report collection at /csp_reports"
     content_security_policy_script_src: "Additional whitelisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
+    allow_embedding_site_in_an_iframe: "Enable embedding of the site in iframes."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
@@ -1887,6 +1919,7 @@ en:
     log_mail_processing_failures: "Log all email processing failures to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: 'Allow users to post new topics via email (requires manual or pop3 polling). Configure the addresses in the "Settings" tab of each category.'
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
+    email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
     email_in_spam_header: "The email header to detect spam."
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
@@ -1933,6 +1966,8 @@ en:
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
 
+    allow_featured_topic_on_user_profiles: "Allow users to feature a link to a topic on their user card and profile."
+
     show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
 
     hide_suspension_reasons: "Don't display suspension reasons publically on user profiles."
@@ -1971,9 +2006,9 @@ en:
 
     disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
 
-    likes_notification_consolidation_threshold: "Number of liked notifications received before the notifications are consolidated into a single one. Set to 0 to disable. The window can be configured via `SiteSetting.likes_notification_consolidation_window_mins`."
+    notification_consolidation_threshold: "Number of liked or membership request notifications received before the notifications are consolidated into a single one. Set to 0 to disable."
 
-    likes_notification_consolidation_window_mins: "Duration in minutes where liked notifications are consolidated into a single notification once the threshold has been reached. The threshold can be configured via `SiteSetting.likes_notification_consolidation_threshold`."
+    likes_notification_consolidation_window_mins: "Duration in minutes where liked notifications are consolidated into a single notification once the threshold has been reached. The threshold can be configured via `SiteSetting.notification_consolidation_threshold`."
 
     automatically_unpin_topics: "Automatically unpin topics when the user reaches the bottom."
 
@@ -2284,7 +2319,7 @@ en:
 
   login:
     security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
-    security_key_alternative: "Can't find your security key or want to use another method?"
+    security_key_alternative: "Try another way"
     security_key_authenticate: "Authenticate with Security Key"
     security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
     security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
@@ -3544,7 +3579,7 @@ en:
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
 
     confirm_old_email:
       title: "Confirm Old Email"
@@ -3556,7 +3591,7 @@ en:
 
         Confirm your current email address for %{site_name} by clicking on the following link:
 
-        %{base_url}/u/authorize-email/%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
 
     notify_old_email:
       title: "Notify Old Email"
@@ -4361,9 +4396,13 @@ en:
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
+      synonym: 'Synonyms are not allowed. Use "%{tag_name}" instead.'
+      has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
     required_tags_from_group:
       one: "You must include at least %{count} %{tag_group_name} tag."
       other: "You must include at least %{count} %{tag_group_name} tags."
+    invalid_target_tag: "cannot be a synonym of a synonym"
+    synonyms_exist: "is not allowed while synonyms exist"
   rss_by_tag: "Topics tagged %{tag}"
 
   finish_installation:

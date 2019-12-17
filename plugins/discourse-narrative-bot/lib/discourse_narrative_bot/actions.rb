@@ -18,7 +18,8 @@ module DiscourseNarrativeBot
           raw: raw,
           topic_id: post.topic_id,
           reply_to_post_number: post.post_number,
-          post_alert_options: defaut_post_alert_opts
+          post_alert_options: defaut_post_alert_opts,
+          skip_validations: true
         }
 
         new_post = PostCreator.create!(self.discobot_user, default_opts.merge(opts))
@@ -27,7 +28,8 @@ module DiscourseNarrativeBot
       else
         PostCreator.create!(self.discobot_user, {
           post_alert_options: defaut_post_alert_opts,
-          raw: raw
+          raw: raw,
+          skip_validations: true
         }.merge(opts))
       end
     end
@@ -49,15 +51,15 @@ module DiscourseNarrativeBot
 
       key = "#{DiscourseNarrativeBot::PLUGIN_NAME}:reset-rate-limit:#{post.topic_id}:#{data['state']}"
 
-      if !(count = $redis.get(key))
+      if !(count = Discourse.redis.get(key))
         count = 0
-        $redis.setex(key, duration, count)
+        Discourse.redis.setex(key, duration, count)
       end
 
       if count.to_i < 2
         post.default_rate_limiter.rollback!
         post.limit_posts_per_day&.rollback!
-        $redis.incr(key)
+        Discourse.redis.incr(key)
       end
     end
 

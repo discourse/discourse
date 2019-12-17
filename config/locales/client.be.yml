@@ -1220,6 +1220,7 @@ be:
     tagging:
       tags: "тэгі"
       choose_for_topic: "дадатковыя тэгі"
+      add_synonyms: "дадаць"
       sort_by: "Сартаваць па:"
       sort_by_name: "Імя"
       cancel_delete_unused: "адмяніць"

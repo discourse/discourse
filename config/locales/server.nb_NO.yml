@@ -575,9 +575,6 @@ nb_NO:
     error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje addressen allerede er i bruk?"
     error_staged: "En feil oppstod ved endring av e-postadressen din. Den nye adressen er allerede i bruk av en arrangert bruker."
     already_done: "Beklager, denne godkjenningslenken er ikke lenger gyldig. Kanskje e-postadressen din allerede er byttet?"
-    authorizing_old:
-      title: "Takk for at du bekreftet din nåværende e-postadresse"
-      description: "Vi sender deg en e-post til din nye adresse for bekreftelse."
   associated_accounts:
     revoke_failed: "Klarte ikke å oppheve kontotilknytningen til %{provider_name}."
   activation:

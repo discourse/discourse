@@ -289,6 +289,18 @@ describe Upload do
   end
 
   describe '.update_secure_status' do
+    it "respects the secure_override_value parameter if provided" do
+      upload.update!(secure: true)
+
+      upload.update_secure_status(secure_override_value: true)
+
+      expect(upload.secure).to eq(true)
+
+      upload.update_secure_status(secure_override_value: false)
+
+      expect(upload.secure).to eq(false)
+    end
+
     it 'marks a local upload as not secure with default settings' do
       upload.update!(secure: true)
       expect { upload.update_secure_status }
@@ -335,7 +347,7 @@ describe Upload do
         SiteSetting.enable_s3_uploads = true
         SiteSetting.s3_upload_bucket = "s3-upload-bucket"
         SiteSetting.s3_access_key_id = "some key"
-        SiteSetting.s3_secret_access_key = "some secret key"
+        SiteSetting.s3_secret_access_key = "some secrets3_region key"
         SiteSetting.secure_media = true
 
         stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")

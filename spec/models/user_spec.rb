@@ -917,6 +917,48 @@ describe User do
     end
   end
 
+  describe "update_timezone_if_missing" do
+    let(:timezone) { nil }
+
+    it "does nothing if timezone is nil" do
+      user.update_timezone_if_missing(timezone)
+      expect(user.reload.user_option.timezone).to eq(nil)
+    end
+
+    context "if timezone is provided" do
+      context "if the timezone is valid" do
+        let(:timezone) { "Australia/Melbourne" }
+        context "if no timezone exists on user option" do
+          it "sets the timezone for the user" do
+            user.update_timezone_if_missing(timezone)
+            expect(user.reload.user_option.timezone).to eq(timezone)
+          end
+        end
+      end
+
+      context "if the timezone is not valid" do
+        let(:timezone) { "Jupiter" }
+        context "if no timezone exists on user option" do
+          it "does not set the timezone for the user" do
+            user.update_timezone_if_missing(timezone)
+            expect(user.reload.user_option.timezone).to eq(nil)
+          end
+        end
+      end
+
+      context "if a timezone already exists on user option" do
+        before do
+          user.user_option.update_attribute(:timezone, "America/Denver")
+        end
+
+        it "does not update the timezone" do
+          user.update_timezone_if_missing(timezone)
+          expect(user.reload.user_option.timezone).to eq("America/Denver")
+        end
+      end
+    end
+  end
+
   describe "last_seen_at" do
     fab!(:user) { Fabricate(:user) }
 
@@ -937,7 +979,7 @@ describe User do
       end
 
       after do
-        $redis.flushall
+        Discourse.redis.flushall
       end
 
       it "updates last_seen_at" do
@@ -2196,6 +2238,41 @@ describe User do
           expect(user.reload.secure_identifier).not_to eq(nil)
         end
       end
+    end
+  end
+
+  describe 'Granting admin or moderator status' do
+    it 'approves the associated reviewable when granting admin status' do
+      reviewable_user = Fabricate(:reviewable_user)
+
+      reviewable_user.target.grant_admin!
+
+      expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
+    end
+
+    it 'does nothing when the user is already approved' do
+      reviewable_user = Fabricate(:reviewable_user)
+      reviewable_user.perform(Discourse.system_user, :approve_user)
+
+      reviewable_user.target.grant_admin!
+
+      expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
+    end
+
+    it 'approves the associated reviewable when granting moderator status' do
+      reviewable_user = Fabricate(:reviewable_user)
+
+      reviewable_user.target.grant_moderation!
+
+      expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
+    end
+
+    it 'approves the user if there is no reviewable' do
+      user = Fabricate(:user, approved: false)
+
+      user.grant_admin!
+
+      expect(user.approved).to eq(true)
     end
   end
 end

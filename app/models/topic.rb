@@ -127,6 +127,7 @@ class Topic < ActiveRecord::Base
   has_many :invites, through: :topic_invites, source: :invite
   has_many :topic_timers, dependent: :destroy
   has_many :reviewables
+  has_many :user_profiles
 
   has_one :user_warning
   has_one :first_post, -> { where post_number: 1 }, class_name: 'Post'
@@ -157,6 +158,8 @@ class Topic < ActiveRecord::Base
   scope :visible, -> { where(visible: true) }
 
   scope :created_since, lambda { |time_ago| where('topics.created_at > ?', time_ago) }
+
+  scope :exclude_scheduled_bump_topics, -> { where.not(id: TopicTimer.scheduled_bump_topics) }
 
   scope :secured, lambda { |guardian = nil|
     ids = guardian.secure_category_ids if guardian
@@ -236,6 +239,8 @@ class Topic < ActiveRecord::Base
   after_update do
     if saved_changes[:category_id] && self.tags.present?
       CategoryTagStat.topic_moved(self, *saved_changes[:category_id])
+    elsif saved_changes[:category_id] && self.category&.read_restricted?
+      UserProfile.remove_featured_topic_from_all_profiles(self)
     end
   end
 
@@ -1349,7 +1354,7 @@ class Topic < ActiveRecord::Base
   end
 
   def featured_link_root_domain
-    MiniSuffix.domain(URI.parse(URI.encode(self.featured_link)).hostname)
+    MiniSuffix.domain(UrlHelper.encode_and_parse(self.featured_link).hostname)
   end
 
   def self.private_message_topics_count_per_day(start_date, end_date, topic_subtype)
@@ -1372,7 +1377,8 @@ class Topic < ActiveRecord::Base
       post_type: Post.types[:regular]
     ).last || first_post
 
-    update!(bumped_at: post.created_at)
+    self.bumped_at = post.created_at
+    self.save(validate: false)
   end
 
   def auto_close_threshold_reached?

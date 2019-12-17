@@ -116,12 +116,16 @@ function positioningWorkaround($fixedElement) {
     // - switching to another iOS app
     // - invoking a select-kit dropdown
     // - invoking mentions
+    // - invoking emoji dropdown via : and hitting return
     // - invoking a toolbar button
+
     if (
       lastTouchedElement &&
       (document.visibilityState === "hidden" ||
         $(lastTouchedElement).hasClass("select-kit-header") ||
         $(lastTouchedElement).closest(".autocomplete").length ||
+        (lastTouchedElement.nodeName.toLowerCase() === "textarea" &&
+          document.activeElement === lastTouchedElement) ||
         ["span", "svg", "button"].includes(
           lastTouchedElement.nodeName.toLowerCase()
         ))

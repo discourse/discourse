@@ -41,7 +41,7 @@ module ApplicationHelper
       return request.env[sk] if request.env[sk]
 
       request.env[sk] = key = (session[sk] ||= SecureRandom.hex)
-      $redis.setex "#{sk}_#{key}", 7.days, current_user.id.to_s
+      Discourse.redis.setex "#{sk}_#{key}", 7.days, current_user.id.to_s
       key
     end
   end
@@ -383,8 +383,7 @@ module ApplicationHelper
 
   def topic_featured_link_domain(link)
     begin
-      uri = URI.encode(link)
-      uri = URI.parse(uri)
+      uri = UrlHelper.encode_and_parse(link)
       uri = URI.parse("http://#{uri}") if uri.scheme.nil?
       host = uri.host.downcase
       host.start_with?('www.') ? host[4..-1] : host

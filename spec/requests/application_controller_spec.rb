@@ -44,6 +44,46 @@ RSpec.describe ApplicationController do
       get "/"
       expect(response).to redirect_to("/login")
     end
+
+    context "with omniauth in test mode" do
+      before do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2,
+          info: OmniAuth::AuthHash::InfoHash.new(
+            email: "address@example.com",
+          ),
+          extra: {
+            raw_info: OmniAuth::AuthHash.new(
+              email_verified: true,
+              email: "address@example.com",
+            )
+          }
+        )
+        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+      end
+
+      after do
+        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2] = nil
+        OmniAuth.config.test_mode = false
+      end
+
+      it "should not redirect to authenticator if registration in progress" do
+        SiteSetting.enable_local_logins = false
+        SiteSetting.enable_google_oauth2_logins = true
+
+        get "/"
+        expect(response).to redirect_to("/auth/google_oauth2")
+
+        expect(cookies[:authentication_data]).to eq(nil)
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response).to redirect_to("/")
+        expect(cookies[:authentication_data]).not_to eq(nil)
+
+        get "/"
+        expect(response).to redirect_to("/login")
+      end
+    end
   end
 
   describe '#redirect_to_second_factor_if_required' do
@@ -262,7 +302,7 @@ RSpec.describe ApplicationController do
 
         it 'should handle 404 to a css file' do
 
-          $redis.del("page_not_found_topics")
+          Discourse.redis.del("page_not_found_topics")
 
           topic1 = Fabricate(:topic)
           get '/stylesheets/mobile_1_4cd559272273fe6d3c7db620c617d596a5fdf240.css', headers: { 'HTTP_ACCEPT' => 'text/css,*/*,q=0.1' }
@@ -283,7 +323,7 @@ RSpec.describe ApplicationController do
       end
 
       it 'should cache results' do
-        $redis.del("page_not_found_topics")
+        Discourse.redis.del("page_not_found_topics")
 
         topic1 = Fabricate(:topic)
         get '/t/nope-nope/99999999'
@@ -334,7 +374,7 @@ RSpec.describe ApplicationController do
       expect(controller.theme_ids).to eq([theme2.id])
 
       theme2.update!(user_selectable: false, component: true)
-      theme.add_child_theme!(theme2)
+      theme.add_relative_theme!(:child, theme2)
       cookies['theme_ids'] = "#{theme.id},#{theme2.id}|#{user.user_option.theme_key_seq}"
 
       get "/"
@@ -390,6 +430,20 @@ RSpec.describe ApplicationController do
       )
 
       expect(response.body).not_to include("test123")
+    end
+  end
+
+  describe 'allow_embedding_site_in_an_iframe' do
+
+    it "should have the 'X-Frame-Options' header with value 'sameorigin'" do
+      get("/latest")
+      expect(response.headers['X-Frame-Options']).to eq("SAMEORIGIN")
+    end
+
+    it "should not include the 'X-Frame-Options' header" do
+      SiteSetting.allow_embedding_site_in_an_iframe = true
+      get("/latest")
+      expect(response.headers).not_to include('X-Frame-Options')
     end
   end
 
@@ -482,7 +536,6 @@ RSpec.describe ApplicationController do
       script_src = parse(response.headers['Content-Security-Policy'])['script-src']
 
       expect(script_src).to include('example.com')
-      expect(script_src).to include("'unsafe-eval'")
     end
 
     it 'does not set CSP when responding to non-HTML' do

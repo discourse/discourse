@@ -23,7 +23,7 @@ module Oneboxer
   end
 
   def self.ignore_redirects
-    @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', Discourse.base_url]
+    @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', 'http://vimeo.com', Discourse.base_url]
   end
 
   def self.force_get_hosts
@@ -51,7 +51,7 @@ module Oneboxer
   end
 
   def self.cached_onebox(url)
-    if c = Rails.cache.read(onebox_cache_key(url))
+    if c = Discourse.cache.read(onebox_cache_key(url))
       c[:onebox]
     end
   rescue => e
@@ -61,7 +61,7 @@ module Oneboxer
   end
 
   def self.cached_preview(url)
-    if c = Rails.cache.read(onebox_cache_key(url))
+    if c = Discourse.cache.read(onebox_cache_key(url))
       c[:preview]
     end
   rescue => e
@@ -71,7 +71,8 @@ module Oneboxer
   end
 
   def self.invalidate(url)
-    Rails.cache.delete(onebox_cache_key(url))
+    Discourse.cache.delete(onebox_cache_key(url))
+    Discourse.cache.delete(onebox_failed_cache_key(url))
   end
 
   # Parse URLs out of HTML, returning the document when finished.
@@ -121,19 +122,27 @@ module Oneboxer
   end
 
   def self.is_previewing?(user_id)
-    $redis.get(preview_key(user_id)) == "1"
+    Discourse.redis.get(preview_key(user_id)) == "1"
   end
 
   def self.preview_onebox!(user_id)
-    $redis.setex(preview_key(user_id), 1.minute, "1")
+    Discourse.redis.setex(preview_key(user_id), 1.minute, "1")
   end
 
   def self.onebox_previewed!(user_id)
-    $redis.del(preview_key(user_id))
+    Discourse.redis.del(preview_key(user_id))
   end
 
   def self.engine(url)
     Onebox::Matcher.new(url).oneboxed
+  end
+
+  def self.recently_failed?(url)
+    Discourse.cache.read(onebox_failed_cache_key(url)).present?
+  end
+
+  def self.cache_failed!(url)
+    Discourse.cache.write(onebox_failed_cache_key(url), true, expires_in: 1.hour)
   end
 
   private
@@ -148,6 +157,10 @@ module Oneboxer
 
   def self.onebox_cache_key(url)
     "onebox__#{url}"
+  end
+
+  def self.onebox_failed_cache_key(url)
+    "onebox_failed__#{url}"
   end
 
   def self.onebox_raw(url, opts = {})
@@ -281,7 +294,7 @@ module Oneboxer
   end
 
   def self.external_onebox(url)
-    Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
+    Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
       fd = FinalDestination.new(url,
                               ignore_redirects: ignore_redirects,
                               ignore_hostnames: blacklisted_domains,

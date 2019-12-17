@@ -44,7 +44,8 @@ fi:
         label: "Näytä tulos"
       hide-results:
         title: "Palaa äänestysvalintaasi"
-        label: "Piilota tulos"
+      export-results:
+        label: "Vie"
       open:
         title: "Avaa äänestys"
         label: "Avaa"

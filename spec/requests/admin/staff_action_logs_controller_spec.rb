@@ -90,5 +90,12 @@ describe Admin::StaffActionLogsController do
 
       expect(parsed["side_by_side"]).not_to include("omit-dupe")
     end
+
+    it 'is not erroring when current value is empty' do
+      theme = Fabricate(:theme)
+      StaffActionLogger.new(admin).log_theme_destroy(theme)
+      get "/admin/logs/staff_action_logs/#{UserHistory.last.id}/diff.json"
+      expect(response.status).to eq(200)
+    end
   end
 end

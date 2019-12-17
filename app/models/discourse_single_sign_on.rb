@@ -27,21 +27,21 @@ class DiscourseSingleSignOn < SingleSignOn
 
   def register_nonce(return_path)
     if nonce
-      $redis.setex(nonce_key, SingleSignOn.nonce_expiry_time, return_path)
+      Discourse.cache.write(nonce_key, return_path, expires_in: SingleSignOn.nonce_expiry_time)
     end
   end
 
   def nonce_valid?
-    nonce && $redis.get(nonce_key).present?
+    nonce && Discourse.cache.read(nonce_key).present?
   end
 
   def return_path
-    $redis.get(nonce_key) || "/"
+    Discourse.cache.read(nonce_key) || "/"
   end
 
   def expire_nonce!
     if nonce
-      $redis.del nonce_key
+      Discourse.cache.delete nonce_key
     end
   end
 

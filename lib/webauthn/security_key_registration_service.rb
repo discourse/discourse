@@ -49,7 +49,7 @@ module Webauthn
       #     attribute of one of the items in options.pubKeyCredParams.
       #     https://w3c.github.io/webauthn/#table-attestedCredentialData
       #     See https://www.iana.org/assignments/cose/cose.xhtml#algorithms for supported algorithm
-      #     codes, -7 which Discourse uses is ECDSA w/ SHA-256
+      #     codes.
       credential_public_key, credential_public_key_bytes, credential_id = extract_public_key_and_credential_from_attestation(auth_data)
       raise(UnsupportedPublicKeyAlgorithmError, I18n.t('webauthn.validation.unsupported_public_key_algorithm_error')) if ::Webauthn::SUPPORTED_ALGORITHMS.exclude?(credential_public_key.alg)
 

@@ -55,6 +55,16 @@ const Category = RestModel.extend({
     return { type: "category", id, category: this };
   },
 
+  @discourseComputed("parentCategory.ancestors")
+  ancestors(parentAncestors) {
+    return [...(parentAncestors || []), this];
+  },
+
+  @discourseComputed("parentCategory.level")
+  level(parentLevel) {
+    return (parentLevel || -1) + 1;
+  },
+
   @discourseComputed("notification_level")
   isMuted(notificationLevel) {
     return notificationLevel === NotificationLevels.MUTED;
@@ -62,7 +72,7 @@ const Category = RestModel.extend({
 
   @discourseComputed("name")
   url() {
-    return Discourse.getURL("/c/") + Category.slugFor(this);
+    return Discourse.getURL(`/c/${Category.slugFor(this)}/${this.id}`);
   },
 
   @discourseComputed
@@ -285,6 +295,58 @@ Category.reopenClass({
       }
     });
     return categories;
+  },
+
+  findBySlugAndParent(slug, parentCategory) {
+    return Category.list().find(category => {
+      if (Discourse.SiteSettings.slug_generation_method === "encoded") {
+        slug = encodeURI(slug);
+      }
+
+      return (
+        category.slug === slug &&
+        (category.parentCategory || null) === parentCategory
+      );
+    });
+  },
+
+  findBySlugPath(slugPath) {
+    let category = null;
+
+    for (const slug of slugPath) {
+      category = this.findBySlugAndParent(slug, category);
+
+      if (!category) {
+        return null;
+      }
+    }
+
+    return category;
+  },
+
+  findBySlugPathWithID(slugPathWithID) {
+    const parts = slugPathWithID.split("/");
+    let category = null;
+
+    if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
+      const id = parseInt(parts.pop(), 10);
+
+      category = Category.findById(id);
+    } else {
+      category = Category.findBySlugPath(parts);
+
+      if (
+        !category &&
+        parts.length > 0 &&
+        parts[parts.length - 1].match(/^\d+-/)
+      ) {
+        const id = parseInt(parts.pop(), 10);
+
+        category = Category.findById(id);
+      }
+    }
+
+    return category;
   },
 
   findBySlug(slug, parentSlug) {

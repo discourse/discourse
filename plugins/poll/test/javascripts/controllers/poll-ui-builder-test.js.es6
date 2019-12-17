@@ -272,7 +272,7 @@ test("regular pollOutput", function(assert) {
 
   assert.equal(
     controller.get("pollOutput"),
-    "[poll type=regular]\n* 1\n* 2\n[/poll]\n",
+    "[poll type=regular chartType=bar]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
 
@@ -280,7 +280,7 @@ test("regular pollOutput", function(assert) {
 
   assert.equal(
     controller.get("pollOutput"),
-    "[poll type=regular public=true]\n* 1\n* 2\n[/poll]\n",
+    "[poll type=regular public=true chartType=bar]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
 });
@@ -299,7 +299,7 @@ test("multiple pollOutput", function(assert) {
 
   assert.equal(
     controller.get("pollOutput"),
-    "[poll type=multiple min=1 max=2]\n* 1\n* 2\n[/poll]\n",
+    "[poll type=multiple min=1 max=2 chartType=bar]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
 
@@ -307,7 +307,7 @@ test("multiple pollOutput", function(assert) {
 
   assert.equal(
     controller.get("pollOutput"),
-    "[poll type=multiple min=1 max=2 public=true]\n* 1\n* 2\n[/poll]\n",
+    "[poll type=multiple min=1 max=2 public=true chartType=bar]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
 });

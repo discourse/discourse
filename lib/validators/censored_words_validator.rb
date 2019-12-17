@@ -2,9 +2,13 @@
 
 class CensoredWordsValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    if WordWatcher.words_for_action(:censor).present? && (censored_words = censor_words(value, censored_words_regexp)).present?
+    words_regexp = censored_words_regexp
+    if WordWatcher.words_for_action(:censor).present? && !words_regexp.nil?
+      censored_words = censor_words(value, words_regexp)
+      return if censored_words.blank?
       record.errors.add(
-        attribute, :contains_censored_words,
+        attribute,
+        :contains_censored_words,
         censored_words: join_censored_words(censored_words)
       )
     end

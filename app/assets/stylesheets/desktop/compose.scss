@@ -15,6 +15,12 @@
     width: 404px;
   }
 
+  .item + #private-message-users {
+    width: unset;
+    min-width: 150px;
+    flex: 1 1 auto;
+  }
+
   .select-kit.is-expanded {
     z-index: z("composer", "dropdown") + 1;
   }

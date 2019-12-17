@@ -11,6 +11,7 @@ ca:
     poll_maximum_options: "Nombre màxim d'opcions permeses en una enquesta."
     poll_edit_window_mins: "Nombre de minuts després de la creació de la publicació durant els quals poden editar-se les enquestes."
     poll_minimum_trust_level_to_create: "Definiu el nivell de confiança mínim necessari per a crear enquestes."
+    poll_groupable_user_fields: "Conjunt de noms de camp d’usuari que es poden utilitzar per a agrupar i filtrar els resultats de la votació."
   poll:
     poll: "enquesta"
     invalid_argument: "El valor '%{value}' no és vàlid per a l'argument '%{argument}'."
@@ -42,3 +43,5 @@ ca:
     insufficient_rights_to_create: "No teniu permís per a crear enquestes."
     email:
       link_to_poll: "Feu clic per a veure l'enquesta"
+    user_field:
+      no_data: "No hi ha dades"

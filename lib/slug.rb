@@ -19,10 +19,8 @@ module Slug
       when :encoded then self.encoded_generator(string)
       when :none then self.none_generator(string)
       end
-    # Reject slugs that only contain numbers, because they would be indistinguishable from id's.
-    slug = (slug =~ /[^\d]/ ? slug : '')
     slug = self.prettify_slug(slug, max_length: max_length)
-    slug.blank? ? default : slug
+    (slug.blank? || slug_is_only_numbers?(slug)) ? default : slug
   end
 
   def self.sanitize(string, downcase: false, max_length: MAX_LENGTH)
@@ -32,7 +30,14 @@ module Slug
 
   private
 
+  def self.slug_is_only_numbers?(slug)
+    (slug =~ /[^\d]/).blank?
+  end
+
   def self.prettify_slug(slug, max_length:)
+    # Reject slugs that only contain numbers, because they would be indistinguishable from id's.
+    slug = (slug_is_only_numbers?(slug) ? '' : slug)
+
     slug
       .tr("_", "-")
       .truncate(max_length, omission: '')

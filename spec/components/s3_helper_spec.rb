@@ -10,6 +10,7 @@ describe "S3Helper" do
     SiteSetting.enable_s3_uploads = true
     SiteSetting.s3_access_key_id = "abc"
     SiteSetting.s3_secret_access_key = "def"
+    SiteSetting.s3_region = "us-east-1"
 
     @lifecycle = <<~XML
       <?xml version="1.0" encoding="UTF-8"?>

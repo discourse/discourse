@@ -93,7 +93,7 @@ module TestSetup
     #
     #   perf benefit seems low (shaves 20 secs off a 4 minute test suite)
     #
-    # $redis = DiscourseMockRedis.new
+    # Discourse.redis = DiscourseMockRedis.new
 
     RateLimiter.disable
     PostActionNotifier.disable
@@ -176,6 +176,12 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = true
 
   config.before(:suite) do
+    begin
+      ActiveRecord::Migration.check_pending!
+    rescue ActiveRecord::PendingMigrationError
+      raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
+    end
+
     Sidekiq.error_handlers.clear
 
     # Ugly, but needed until we have a user creator

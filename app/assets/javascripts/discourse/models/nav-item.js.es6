@@ -2,6 +2,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
+import { reads } from "@ember/object/computed";
 import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
@@ -33,8 +34,8 @@ const NavItem = EmberObject.extend({
     );
   },
 
-  @discourseComputed("name", "category", "noSubcategories", "tagId")
-  href(filterMode, category, noSubcategories, tagId) {
+  @discourseComputed("filterType", "category", "noSubcategories", "tagId")
+  href(filterType, category, noSubcategories, tagId) {
     let customHref = null;
 
     NavItem.customNavItemHrefs.forEach(function(cb) {
@@ -49,8 +50,10 @@ const NavItem = EmberObject.extend({
     }
 
     const context = { category, noSubcategories, tagId };
-    return NavItem.pathFor(filterMode, context);
+    return NavItem.pathFor(filterType, context);
   },
+
+  filterType: reads("name"),
 
   @discourseComputed("name", "category", "noSubcategories")
   filterMode(name, category, noSubcategories) {
@@ -117,7 +120,7 @@ NavItem.reopenClass({
 
     if (context.category) {
       includesCategoryContext = true;
-      path += `/c/${Category.slugFor(context.category)}`;
+      path += `/c/${Category.slugFor(context.category)}/${context.category.id}`;
 
       if (context.noSubcategories) {
         path += "/none";
@@ -147,11 +150,12 @@ NavItem.reopenClass({
 
     opts = opts || {};
 
-    if (
-      anonymous &&
-      !Site.currentProp("anonymous_top_menu_items").includes(filterType)
-    )
-      return null;
+    if (anonymous) {
+      const topMenuItems = Site.currentProp("anonymous_top_menu_items");
+      if (!topMenuItems || !topMenuItems.includes(filterType)) {
+        return null;
+      }
+    }
 
     if (!Category.list() && filterType === "categories") return null;
     if (!Site.currentProp("top_menu_items").includes(filterType)) return null;

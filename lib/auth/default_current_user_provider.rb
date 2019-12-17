@@ -30,7 +30,7 @@ class Auth::DefaultCurrentUserProvider
 
     # bypass if we have the shared session header
     if shared_key = @env['HTTP_X_SHARED_SESSION_KEY']
-      uid = $redis.get("shared_session_key_#{shared_key}")
+      uid = Discourse.redis.get("shared_session_key_#{shared_key}")
       user = nil
       if uid
         user = User.find_by(id: uid.to_i)
@@ -164,6 +164,9 @@ class Auth::DefaultCurrentUserProvider
     unstage_user(user)
     make_developer_admin(user)
     enable_bootstrap_mode(user)
+
+    UserAuthToken.enforce_session_count_limit!(user.id)
+
     @env[CURRENT_USER_KEY] = user
   end
 
@@ -281,7 +284,7 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def lookup_api_user(api_key_value, request)
-    if api_key = ApiKey.active.where(key: api_key_value).includes(:user).first
+    if api_key = ApiKey.active.with_key(api_key_value).includes(:user).first
       api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
 
       # Check for deprecated api auth
@@ -330,7 +333,7 @@ class Auth::DefaultCurrentUserProvider
 
     RateLimiter.new(
       nil,
-      "admin_api_min_#{api_key}",
+      "admin_api_min_#{ApiKey.hash_key(api_key)}",
       GlobalSetting.max_admin_api_reqs_per_key_per_minute,
       60
     ).performed!

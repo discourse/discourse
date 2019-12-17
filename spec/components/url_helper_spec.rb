@@ -131,4 +131,46 @@ describe UrlHelper do
     end
   end
 
+  describe "#cook_url" do
+    let(:url) { "//s3bucket.s3.dualstack.us-east-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg" }
+
+    before do
+      FileStore::S3Store.any_instance.stubs(:has_been_uploaded?).returns(true)
+      Rails.configuration.action_controller.asset_host = "https://test.some-cdn.com/dev"
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_upload_bucket = "s3bucket"
+      SiteSetting.s3_access_key_id = "s3_access_key_id"
+      SiteSetting.s3_secret_access_key = "s3_secret_access_key"
+      SiteSetting.login_required = true
+    end
+
+    def cooked
+      UrlHelper.cook_url(url, secure: secure)
+    end
+
+    context "when the upload for the url is secure" do
+      let(:secure) { true }
+
+      it "returns the secure_proxy_without_cdn url, with no asset host URL change" do
+        expect(cooked).to eq(
+          "//test.localhost/secure-media-uploads/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
+        )
+      end
+    end
+
+    context "when the upload for the url is not secure" do
+      let(:secure) { false }
+
+      it "returns the local_cdn_url" do
+        expect(cooked).to eq(
+          "//s3bucket.s3.dualstack.us-east-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
+        )
+      end
+    end
+
+    after do
+      Rails.configuration.action_controller.asset_host = nil
+    end
+  end
+
 end

@@ -10,6 +10,7 @@ class UserProfile < ActiveRecord::Base
   belongs_to :card_background_upload, class_name: "Upload"
   belongs_to :profile_background_upload, class_name: "Upload"
   belongs_to :granted_title_badge, class_name: "Badge"
+  belongs_to :featured_topic, class_name: 'Topic'
 
   validates :bio_raw, length: { maximum: 3000 }
   validates :website, url: true, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
@@ -145,6 +146,9 @@ class UserProfile < ActiveRecord::Base
     self.errors.add :base, (I18n.t('user.website.domain_not_allowed', domains: allowed_domains.split('|').join(", "))) unless allowed_domains.split('|').include?(domain)
   end
 
+  def self.remove_featured_topic_from_all_profiles(topic)
+    where(featured_topic_id: topic.id).update_all(featured_topic_id: nil)
+  end
 end
 
 # == Schema Information
@@ -162,18 +166,18 @@ end
 #  views                        :integer          default(0), not null
 #  profile_background_upload_id :integer
 #  card_background_upload_id    :integer
-#  granted_title_badge_id       :integer
+#  granted_title_badge_id       :bigint
 #
 # Indexes
 #
-#  index_user_profiles_on_bio_cooked_version  (bio_cooked_version)
-#  index_user_profiles_on_card_background     (card_background)
-#  index_user_profiles_on_profile_background  (profile_background)
-#  index_user_profiles_on_granted_title_badge_id (granted_title_badge)
+#  index_user_profiles_on_bio_cooked_version      (bio_cooked_version)
+#  index_user_profiles_on_card_background         (card_background)
+#  index_user_profiles_on_granted_title_badge_id  (granted_title_badge_id)
+#  index_user_profiles_on_profile_background      (profile_background)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (card_background_upload_id => uploads.id)
-#  fk_rails_...  (profile_background_upload_id => uploads.id)
 #  fk_rails_...  (granted_title_badge_id => badges.id)
+#  fk_rails_...  (profile_background_upload_id => uploads.id)
 #

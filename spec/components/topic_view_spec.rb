@@ -48,6 +48,11 @@ describe TopicView do
         expect(tv.filtered_post_ids).to eq([post.id, post2.id])
       end
 
+      it "returns nil for next_page" do
+        tv = TopicView.new(topic.id, evil_trout)
+        expect(tv.next_page).to eq(nil)
+      end
+
       describe "when an ignored user made the original post" do
         let!(:post) { Fabricate(:post, topic: topic, user: user) }
 
@@ -245,22 +250,16 @@ describe TopicView do
     end
 
     describe "#next_page" do
-      let(:p2) { stub(post_number: 2) }
-      let(:topic) do
-        topic = create_topic
-        topic.stubs(:highest_post_number).returns(5)
-        topic
-      end
+      let!(:post) { Fabricate(:post, topic: topic, user: user) }
+      let!(:post2) { Fabricate(:post, topic: topic, user: user) }
+      let!(:post3) { Fabricate(:post, topic: topic, user: user) }
 
       before do
-        TopicView.any_instance.expects(:find_topic).with(1234).returns(topic)
-        TopicView.any_instance.stubs(:filter_posts)
-        TopicView.any_instance.stubs(:last_post).returns(p2)
         TopicView.stubs(:chunk_size).returns(2)
       end
 
       it "should return the next page" do
-        expect(TopicView.new(1234, user).next_page).to eql(2)
+        expect(TopicView.new(topic.id, user).next_page).to eql(2)
       end
     end
 
