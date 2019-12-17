@@ -444,21 +444,6 @@ const Topic = RestModel.extend({
     });
   },
 
-  toggleFeaturedOnProfile(user) {
-    const removing = user.get("featured_topic.id") === this.id;
-    const path = removing ? "clear-featured-topic" : "feature-topic";
-    return ajax(`/u/${user.username}/${path}`, {
-      type: "PUT",
-      data: { topic_id: this.id }
-    })
-      .then(() => {
-        const featuredTopic = removing ? null : this;
-        user.set("featured_topic", featuredTopic);
-        return;
-      })
-      .catch(popupAjaxError);
-  },
-
   createGroupInvite(group) {
     return ajax(`/t/${this.id}/invite-group`, {
       type: "POST",
