@@ -831,4 +831,8 @@ module Discourse
   ensure
     @preloaded_rails = true
   end
+
+  def self.is_parallel_test?
+    ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
+  end
 end
