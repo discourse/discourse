@@ -52,7 +52,6 @@
       }
 
       .texts {
-        width: 0; //IE11
         line-height: $line-height-large;
         -webkit-box-flex: 1;
         -ms-flex: 1;
@@ -86,7 +85,6 @@
           -webkit-box-flex: 1;
           -ms-flex: 1;
           flex: 1 1 auto;
-          width: 100%; //IE11
           font-size: $font-down-1;
           font-weight: normal;
           color: $primary-medium;
