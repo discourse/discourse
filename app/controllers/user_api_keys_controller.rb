@@ -167,7 +167,7 @@ class UserApiKeysController < ApplicationController
 
   def find_key
     key = UserApiKey.find(params[:id])
-    raise Discourse::InvalidAccess unless current_user.admin || key.user_id = current_user.id
+    raise Discourse::InvalidAccess unless current_user.admin || key.user_id == current_user.id
     key
   end
 
