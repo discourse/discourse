@@ -422,17 +422,18 @@ const CODE_BLOCKS_REGEX = /^(    |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/c
 //                               +------- paragraphs starting with 4 spaces or tab
 
 export function inCodeBlock(text, pos) {
-  const matches = text.matchAll(CODE_BLOCKS_REGEX);
+  let result = false;
 
-  for (const match of matches) {
+  let match;
+  while ((match = CODE_BLOCKS_REGEX.exec(text)) !== null) {
     const begin = match.index;
     const end = match.index + match[0].length;
     if (begin <= pos && pos <= end) {
-      return true;
+      result = true;
     }
   }
 
-  return false;
+  return result;
 }
 
 // This prevents a mini racer crash
