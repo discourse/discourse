@@ -43,7 +43,6 @@ widgetTest("topic-admin-menu-button is present for admin/moderators", {
   }
 });
 
-
 widgetTest(
   "topic-admin-menu-button hides for non-admin when there is no action",
   {
