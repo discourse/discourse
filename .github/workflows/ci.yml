@@ -178,7 +178,7 @@ jobs:
         run: unbuffer d/bundle install
 
       - name: tmp
-        run: mkdir tmp
+        run: sudo chown -R 1000:1000 *
 
       - name: Migrate
         run: unbuffer d/rake db:migrate
