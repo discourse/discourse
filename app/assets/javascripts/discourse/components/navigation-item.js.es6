@@ -8,7 +8,7 @@ export default Component.extend(FilterModeMixin, {
     "active",
     "content.hasIcon:has-icon",
     "content.classNames",
-    "hidden"
+    "isHidden:hidden"
   ],
   attributeBindings: ["content.title:title"],
   hidden: false,
@@ -22,6 +22,18 @@ export default Component.extend(FilterModeMixin, {
       return active;
     }
     return contentFilterType === filterType;
+  },
+
+  @discourseComputed("content.count")
+  isHidden(count) {
+    return (
+      !this.active &&
+      this.currentUser &&
+      this.currentUser.trust_level > 0 &&
+      (this.content.get("name") === "new" ||
+        this.content.get("name") === "unread") &&
+      count < 1
+    );
   },
 
   didReceiveAttrs() {
@@ -53,17 +65,5 @@ export default Component.extend(FilterModeMixin, {
     this.set("hrefLink", href);
 
     this.set("activeClass", this.active ? "active" : "");
-
-    if (
-      !this.active &&
-      this.currentUser &&
-      this.currentUser.trust_level > 0 &&
-      (content.get("name") === "new" || content.get("name") === "unread") &&
-      content.get("count") < 1
-    ) {
-      this.set("hidden", true);
-    } else {
-      this.set("hidden", false);
-    }
   }
 });
