@@ -183,6 +183,12 @@ jobs:
       - name: Migrate
         run: unbuffer d/rake db:migrate
 
+      - name: Create user
+        run: unbuffer d/rails runner "User.create!(username:'smoke_user', password:'P4ssw0rd', admin:true)"
+
+      - name: Disable wizard
+        run: unbuffer d/rails runner "SiteSetting.wizard_enabled = false"
+
       - name: Start Server
         run: unbuffer d/rails s &
 
