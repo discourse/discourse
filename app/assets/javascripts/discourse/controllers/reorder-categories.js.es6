@@ -41,29 +41,21 @@ export default Controller.extend(ModalFunctionality, Ember.Evented, {
    **/
   @on("init")
   reorder() {
-    const newOrder = [];
-    const depths = {};
-
-    const addToNewOrder = (categoryId, depth) => {
+    const addToNewOrder = (categoryId, depth, index) => {
       this.categoriesOrdered.forEach(category => {
         if (
           (categoryId === null && !category.get("parent_category_id")) ||
           category.get("parent_category_id") === categoryId
         ) {
-          depths[category.get("id")] = depth;
-          newOrder.push(category);
-          addToNewOrder(category.get("id"), depth + 1);
+          category.setProperties({ depth, position: index++ });
+          index = addToNewOrder(category.get("id"), depth + 1, index);
         }
       });
+
+      return index;
     };
 
-    addToNewOrder(null, 0);
-    newOrder.forEach((category, idx) => {
-      category.setProperties({
-        position: idx,
-        depth: depths[category.get("id")]
-      });
-    });
+    addToNewOrder(null, 0, 0);
 
     this.categoriesBuffered.forEach(bc => {
       if (bc.get("hasBufferedChanges")) {
