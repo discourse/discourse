@@ -8,6 +8,7 @@ import { includeAttributes } from "discourse/lib/transform-post";
 import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import { addGlobalNotice } from "discourse/components/global-notice";
 import {
   createWidget,
   reopenWidget,
@@ -49,7 +50,7 @@ import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.36";
+const PLUGIN_API_VERSION = "0.8.37";
 
 class PluginApi {
   constructor(version, container) {
@@ -968,6 +969,18 @@ class PluginApi {
    **/
   registerHighlightJSLanguage(name, fn) {
     registerHighlightJSLanguage(name, fn);
+  }
+
+  /**
+   * Adds global notices to display.
+   *
+   * Example:
+   *
+   * api.addGlobalNotice("text", "foo", { html: "<p>bar</p>" })
+   *
+   **/
+  addGlobalNotice(id, text, options) {
+    addGlobalNotice(id, text, options);
   }
 }
 
