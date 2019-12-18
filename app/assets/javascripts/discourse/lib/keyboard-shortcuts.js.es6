@@ -642,6 +642,6 @@ export default {
   },
 
   toggleAdminActions() {
-    this.appEvents.trigger("topic:toggleAdminMenu");
+    this.appEvents.trigger("topic:toggle-actions");
   }
 };

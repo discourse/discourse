@@ -52,7 +52,10 @@ createWidget("topic-admin-menu-button", {
         this.attach("button", {
           className:
             "btn-default toggle-admin-menu" +
-            (attrs.fixed ? " show-topic-admin" : ""),
+            (attrs.fixed ? " show-topic-admin" : "") +
+            (attrs.triggerKeyboardShortcut
+              ? " keyboard-shortcut-toggle-admin-menu"
+              : ""),
           title: "topic_admin_menu",
           icon: "wrench",
           action: "showAdminMenu",
@@ -75,9 +78,16 @@ createWidget("topic-admin-menu-button", {
 
   showAdminMenu(e) {
     this.state.expanded = true;
+    let $button;
 
-    const $button = $(e.target).closest("button");
+    if (e === undefined) {
+      $button = $(".keyboard-shortcut-toggle-admin-menu");
+    } else {
+      $button = $(e.target).closest("button");
+    }
+
     const position = $button.position();
+
     const rtl = $("html").hasClass("rtl");
     position.left = position.left;
     position.outerHeight = $button.outerHeight();
@@ -90,6 +100,10 @@ createWidget("topic-admin-menu-button", {
       position.left += $button.width() - 203;
     }
     this.state.position = position;
+  },
+
+  topicToggleActions() {
+    this.state.expanded ? this.hideAdminMenu() : this.showAdminMenu();
   }
 });
 
