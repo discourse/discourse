@@ -126,7 +126,10 @@ const path = require("path");
   });
 
   await exec("expect a log in button in the header", () => {
-    return page.waitForSelector("header .login-button", { visible: true });
+    return page.waitForSelector("header .login-button", {
+      visible: true,
+      timeout: 60000
+    });
   });
 
   if (process.env.LOGIN_AT_BEGINNING) {
