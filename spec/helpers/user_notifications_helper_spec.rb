@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 describe UserNotificationsHelper do
+  let(:upload_path) { Discourse.store.upload_path }
+
   describe '#email_excerpt' do
     let(:paragraphs) { [
       "<p>This is the first paragraph, but you should read more.</p>",
@@ -97,7 +99,7 @@ describe UserNotificationsHelper do
 
       it 'should return the right URL' do
         expect(helper.logo_url).to eq(
-          "http://test.localhost/uploads/default/original/1X/somesha1.png"
+          "http://test.localhost/#{upload_path}/original/1X/somesha1.png"
         )
       end
 
@@ -110,7 +112,7 @@ describe UserNotificationsHelper do
 
         it 'should return the right URL' do
           expect(helper.logo_url).to eq(
-            "https://some.localcdn.com/uploads/default/original/1X/somesha1.png"
+            "https://some.localcdn.com/#{upload_path}/original/1X/somesha1.png"
           )
         end
       end

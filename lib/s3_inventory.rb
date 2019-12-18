@@ -39,7 +39,7 @@ class S3Inventory
           decompress_inventory_file(file)
         end
 
-        multisite_prefix = "uploads/#{RailsMultisite::ConnectionManagement.current_db}/"
+        multisite_prefix = Discourse.store.upload_path
         ActiveRecord::Base.transaction do
           begin
             connection.exec("CREATE TEMP TABLE #{table_name}(url text UNIQUE, etag text, PRIMARY KEY(etag, url))")

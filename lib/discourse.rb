@@ -837,6 +837,10 @@ module Discourse
   def self.redis
     $redis
   end
+
+  def self.is_parallel_test?
+    ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
+  end
 end
 
 # rubocop:enable Style/GlobalVars

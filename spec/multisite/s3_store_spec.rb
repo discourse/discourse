@@ -6,6 +6,7 @@ require 'file_store/s3_store'
 RSpec.describe 'Multisite s3 uploads', type: :multisite do
   let(:uploaded_file) { file_from_fixtures("smallest.png") }
   let(:upload_sha1) { Digest::SHA1.hexdigest(File.read(uploaded_file)) }
+  let(:upload_path) { Discourse.store.upload_path }
 
   def build_upload
     Fabricate.build(:upload, sha1: upload_sha1, id: 1)
@@ -28,15 +29,16 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         test_multisite_connection('default') do
           upload = build_upload
           expect(store.store_upload(uploaded_file, upload)).to eq(
-            "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com/uploads/default/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
+            "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com/#{upload_path}/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
           )
           expect(upload.etag).to eq("ETag")
         end
 
         test_multisite_connection('second') do
+          upload_path = Discourse.store.upload_path
           upload = build_upload
           expect(store.store_upload(uploaded_file, upload)).to eq(
-            "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com/uploads/second/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
+            "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com/#{upload_path}/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
           )
           expect(upload.etag).to eq("ETag")
         end
@@ -65,12 +67,12 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           upload = build_upload
           store.expects(:get_depth_for).with(upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/uploads/default/original/1X/#{upload.sha1}.png")
+          upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_path}/original/1X/#{upload.sha1}.png")
           s3_object = stub
 
           s3_bucket.expects(:object).with("uploads/tombstone/default/original/1X/#{upload.sha1}.png").returns(s3_object)
-          s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/uploads/default/original/1X/#{upload.sha1}.png")
-          s3_bucket.expects(:object).with("uploads/default/original/1X/#{upload.sha1}.png").returns(s3_object)
+          s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/#{upload_path}/original/1X/#{upload.sha1}.png")
+          s3_bucket.expects(:object).with("#{upload_path}/original/1X/#{upload.sha1}.png").returns(s3_object)
           s3_object.expects(:delete)
 
           store.remove_upload(upload)
@@ -82,12 +84,12 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           upload = build_upload
           store.expects(:get_depth_for).with(upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/uploads/second/original/1X/#{upload.sha1}.png")
+          upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_path}/original/1X/#{upload.sha1}.png")
           s3_object = stub
 
           s3_bucket.expects(:object).with("uploads/tombstone/second/original/1X/#{upload.sha1}.png").returns(s3_object)
-          s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/uploads/second/original/1X/#{upload.sha1}.png")
-          s3_bucket.expects(:object).with("uploads/second/original/1X/#{upload.sha1}.png").returns(s3_object)
+          s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/#{upload_path}/original/1X/#{upload.sha1}.png")
+          s3_bucket.expects(:object).with("#{upload_path}/original/1X/#{upload.sha1}.png").returns(s3_object)
           s3_object.expects(:delete)
 
           store.remove_upload(upload)
@@ -104,12 +106,12 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
             upload = build_upload
             store.expects(:get_depth_for).with(upload.id).returns(0)
             s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-            upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/uploads/default/original/1X/#{upload.sha1}.png")
+            upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/#{upload_path}/original/1X/#{upload.sha1}.png")
             s3_object = stub
 
             s3_bucket.expects(:object).with("discourse-uploads/uploads/tombstone/default/original/1X/#{upload.sha1}.png").returns(s3_object)
-            s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/discourse-uploads/uploads/default/original/1X/#{upload.sha1}.png")
-            s3_bucket.expects(:object).with("discourse-uploads/uploads/default/original/1X/#{upload.sha1}.png").returns(s3_object)
+            s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/discourse-uploads/#{upload_path}/original/1X/#{upload.sha1}.png")
+            s3_bucket.expects(:object).with("discourse-uploads/#{upload_path}/original/1X/#{upload.sha1}.png").returns(s3_object)
             s3_object.expects(:delete)
 
             store.remove_upload(upload)
@@ -147,11 +149,11 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          s3_bucket.expects(:object).with("uploads/default/original/1X/#{upload.sha1}.pdf").returns(s3_object).at_least_once
+          s3_bucket.expects(:object).with("#{upload_path}/original/1X/#{upload.sha1}.pdf").returns(s3_object).at_least_once
           s3_object.expects(:presigned_url).with(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
 
           expect(store.store_upload(uploaded_file, upload)).to eq(
-            "//some-really-cool-bucket.s3.dualstack.us-east-1.amazonaws.com/uploads/default/original/1X/#{upload.sha1}.pdf"
+            "//some-really-cool-bucket.s3.dualstack.us-east-1.amazonaws.com/#{upload_path}/original/1X/#{upload.sha1}.pdf"
           )
 
           expect(store.url_for(upload)).not_to eq(upload.url)
@@ -173,15 +175,16 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
 
           signed_url = Discourse.store.signed_url_for_path(upload.url)
           expect(signed_url).to match(/Amz-Expires/)
-          expect(signed_url).to match("uploads/default")
+          expect(signed_url).to match("#{upload_path}")
         end
 
         test_multisite_connection('second') do
+          upload_path = Discourse.store.upload_path
           upload = Fabricate.build(:upload_s3, sha1: upload_sha1, id: 1)
 
           signed_url = Discourse.store.signed_url_for_path(upload.url)
           expect(signed_url).to match(/Amz-Expires/)
-          expect(signed_url).to match("uploads/second")
+          expect(signed_url).to match("#{upload_path}")
         end
       end
     end
@@ -193,7 +196,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          s3_bucket.expects(:object).with("uploads/default/original/1X/#{upload.sha1}.pdf").returns(s3_object)
+          s3_bucket.expects(:object).with("#{upload_path}/original/1X/#{upload.sha1}.pdf").returns(s3_object)
           s3_object.expects(:acl).returns(s3_object)
           s3_object.expects(:put).with(acl: "private").returns(s3_object)
 
@@ -201,11 +204,12 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         end
 
         test_multisite_connection('second') do
+          upload_path = Discourse.store.upload_path
           upload = build_upload
           upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          s3_bucket.expects(:object).with("uploads/second/original/1X/#{upload.sha1}.pdf").returns(s3_object)
+          s3_bucket.expects(:object).with("#{upload_path}/original/1X/#{upload.sha1}.pdf").returns(s3_object)
           s3_object.expects(:acl).returns(s3_object)
           s3_object.expects(:put).with(acl: "private").returns(s3_object)
 
