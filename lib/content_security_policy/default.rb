@@ -51,6 +51,7 @@ class ContentSecurityPolicy
         "#{base_url}/mini-profiler-resources/",
         *script_assets
       ].tap do |sources|
+        sources << :unsafe_eval if Rails.env.development? # TODO Remove this when we stop using `eval` in development mode
         sources << 'https://www.google-analytics.com/analytics.js' if SiteSetting.ga_universal_tracking_code.present?
         sources << 'https://www.googletagmanager.com/gtm.js' if SiteSetting.gtm_container_id.present?
       end

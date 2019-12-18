@@ -363,3 +363,54 @@ QUnit.test("recently connected devices", async assert => {
     "it should highlight password preferences"
   );
 });
+
+acceptance(
+  "User can select a topic to feature on profile if site setting in enabled",
+  {
+    loggedIn: true,
+    settings: { allow_featured_topic_on_user_profiles: true },
+
+    pretend(server, helper) {
+      server.put("/u/eviltrout/feature-topic", () => {
+        return helper.response({
+          success: true
+        });
+      });
+    }
+  }
+);
+
+QUnit.test("setting featured topic on profile", async assert => {
+  await visit("/u/eviltrout/preferences/profile");
+
+  assert.ok(
+    !exists(".featured-topic-link"),
+    "no featured topic link to present"
+  );
+  assert.ok(
+    !exists(".clear-feature-topic-on-profile-btn"),
+    "clear button not present"
+  );
+
+  const selectTopicBtn = find(".feature-topic-on-profile-btn:first");
+  assert.ok(exists(selectTopicBtn), "feature topic button is present");
+
+  await click(selectTopicBtn);
+
+  assert.ok(exists(".feature-topic-on-profile"), "topic picker modal is open");
+
+  const topicRadioBtn = find('input[name="choose_topic_id"]:first');
+  assert.ok(exists(topicRadioBtn), "Topic options are prefilled");
+  await click(topicRadioBtn);
+
+  await click(".save-featured-topic-on-profile");
+
+  assert.ok(
+    exists(".featured-topic-link"),
+    "link to featured topic is present"
+  );
+  assert.ok(
+    exists(".clear-feature-topic-on-profile-btn"),
+    "clear button is present"
+  );
+});

@@ -1,0 +1,13 @@
+{{#d-modal-body class="feature-topic-on-profile"}}
+  {{choose-topic currentTopicId=model.featured_topic.id
+    selectedTopicId=newFeaturedTopicId
+    additionalFilters="in:created status:public"
+    label="user.feature_topic_on_profile.search_label"
+    topicChangedCallback=(action "newTopicSelected")
+    loadOnInit=true
+  }}
+  {{d-button action=(action "save")
+    class="btn-primary save-featured-topic-on-profile"
+    disabled=noTopicSelected
+    label="user.feature_topic_on_profile.save"}}
+{{/d-modal-body}}

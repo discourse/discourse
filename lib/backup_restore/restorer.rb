@@ -431,36 +431,36 @@ module BackupRestore
       log "Extracting uploads..."
 
       public_uploads_path = File.join(Rails.root, "public")
+      upload_path = Discourse.store.upload_path
 
       FileUtils.mkdir_p(File.join(public_uploads_path, "uploads"))
 
       tmp_uploads_path = Dir.glob(File.join(@tmp_directory, "uploads", "*")).first
       return if tmp_uploads_path.blank?
       previous_db_name = BackupMetadata.value_for("db_name") || File.basename(tmp_uploads_path)
-      current_db_name = RailsMultisite::ConnectionManagement.current_db
       optimized_images_exist = File.exist?(File.join(tmp_uploads_path, 'optimized'))
 
       Discourse::Utils.execute_command(
-        'rsync', '-avp', '--safe-links', "#{tmp_uploads_path}/", "uploads/#{current_db_name}/",
+        'rsync', '-avp', '--safe-links', "#{tmp_uploads_path}/", "#{upload_path}/",
         failure_message: "Failed to restore uploads.",
         chdir: public_uploads_path
       )
 
-      remap_uploads(previous_db_name, current_db_name)
+      remap_uploads(previous_db_name, upload_path)
 
       if SiteSetting.Upload.enable_s3_uploads
         migrate_to_s3
-        remove_local_uploads(File.join(public_uploads_path, "uploads/#{current_db_name}"))
+        remove_local_uploads(File.join(public_uploads_path, upload_path))
       end
 
       generate_optimized_images unless optimized_images_exist
     end
 
-    def remap_uploads(previous_db_name, current_db_name)
+    def remap_uploads(previous_db_name, upload_path)
       log "Remapping uploads..."
 
       was_multisite = BackupMetadata.value_for("multisite") == "t"
-      uploads_folder = was_multisite ? "/" : "/uploads/#{current_db_name}/"
+      uploads_folder = was_multisite ? "/" : "/#{upload_path}/"
 
       if (old_base_url = BackupMetadata.value_for("base_url")) && old_base_url != Discourse.base_url
         remap(old_base_url, Discourse.base_url)
@@ -490,8 +490,9 @@ module BackupRestore
         remap(old_host, new_host)
       end
 
+      current_db_name = RailsMultisite::ConnectionManagement.current_db
       if previous_db_name != current_db_name
-        remap("uploads/#{previous_db_name}", "uploads/#{current_db_name}")
+        remap("uploads/#{previous_db_name}", upload_path)
       end
 
     rescue => ex

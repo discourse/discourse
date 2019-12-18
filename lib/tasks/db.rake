@@ -60,7 +60,7 @@ task 'db:rollback' => ['environment', 'set_locale'] do |_, args|
 end
 
 # we need to run seed_fu every time we run rake db:migrate
-task 'db:migrate' => ['environment', 'set_locale'] do |_, args|
+task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
   ActiveRecord::Tasks::DatabaseTasks.migrate
 
   Rake::Task['db:_dump'].invoke

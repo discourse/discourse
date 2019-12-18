@@ -332,7 +332,7 @@ registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
     title,
     titleOptions,
     className: classNames.join(" "),
-    icon: "bookmark"
+    icon: attrs.bookmarkReminderAt ? "discourse-bookmark-clock" : "bookmark"
   };
 });
 

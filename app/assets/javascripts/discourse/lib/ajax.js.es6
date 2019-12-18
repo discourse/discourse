@@ -18,7 +18,7 @@ export function viewTrackingRequired() {
 }
 
 export function handleLogoff(xhr) {
-  if (xhr.getResponseHeader("Discourse-Logged-Out") && !_showingLogout) {
+  if (xhr && xhr.getResponseHeader("Discourse-Logged-Out") && !_showingLogout) {
     _showingLogout = true;
     const messageBus = Discourse.__container__.lookup("message-bus:main");
     messageBus.stop();
