@@ -77,8 +77,8 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         : null;
       const title = post
         ? I18n.t("composer.reference_topic_title", {
-          title: post.topic.title
-        })
+            title: post.topic.title
+          })
         : null;
 
       // used only once, one less dependency

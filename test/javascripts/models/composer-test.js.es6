@@ -398,11 +398,13 @@ QUnit.test("allows featured link before choosing a category", assert => {
 });
 
 QUnit.test("targetRecipientsArray contains types", assert => {
-  let composer = createComposer({ targetRecipients: "test,codinghorror,staff,foo@bar.com" });
+  let composer = createComposer({
+    targetRecipients: "test,codinghorror,staff,foo@bar.com"
+  });
   assert.ok(composer.targetRecipientsArray, [
-    { type: 'group', name: 'test' },
-    { type: 'user', name: 'codinghorror' },
-    { type: 'group', name: 'staff' },
-    { type: 'email', name: 'foo@bar.com' }
+    { type: "group", name: "test" },
+    { type: "user", name: "codinghorror" },
+    { type: "group", name: "staff" },
+    { type: "email", name: "foo@bar.com" }
   ]);
 });
