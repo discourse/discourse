@@ -177,6 +177,9 @@ jobs:
       - name: Bundle
         run: unbuffer d/bundle install
 
+      - name: tmp
+        run: mkdir tmp
+
       - name: Migrate
         run: unbuffer d/rake db:migrate
 
