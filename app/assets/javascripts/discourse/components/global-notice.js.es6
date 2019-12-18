@@ -175,7 +175,7 @@ export default Component.extend({
     LogsNotice.current().addObserver("text", this._boundLogsNoticeHandler);
   },
 
-  _teardDownObservers() {
+  _tearDownObservers() {
     if (this._boundLogsNoticeHandler) {
       LogsNotice.current().removeObserver("text", this._boundLogsNoticeHandler);
       LogsNotice.current().removeObserver(
