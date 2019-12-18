@@ -3,6 +3,7 @@
 require 'guardian/category_guardian'
 require 'guardian/ensure_magic'
 require 'guardian/post_guardian'
+require 'guardian/bookmark_guardian'
 require 'guardian/topic_guardian'
 require 'guardian/user_guardian'
 require 'guardian/post_revision_guardian'
@@ -14,6 +15,7 @@ class Guardian
   include EnsureMagic
   include CategoryGuardian
   include PostGuardian
+  include BookmarkGuardian
   include TopicGuardian
   include UserGuardian
   include PostRevisionGuardian
