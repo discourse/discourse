@@ -77,12 +77,7 @@ export default Component.extend({
 
   @observes(
     "bulkSelectEnabled",
-    "topic.pinned",
-    "topic.visible",
-    "topic.archived",
-    "topic.closed",
-    "topic.category",
-    "topic.tags"
+    "topic.{pinned,visible,archived,closed,category,tags}"
   )
   rerenderTriggers() {
     this.renderTopicListItem();
