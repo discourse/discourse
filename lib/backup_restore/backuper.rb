@@ -265,7 +265,7 @@ module BackupRestore
 
     def add_local_uploads_to_archive(tar_filename)
       log "Archiving uploads..."
-      upload_directory = "uploads/" + @current_db
+      upload_directory = Discourse.store.upload_path
 
       if File.directory?(File.join(Rails.root, "public", upload_directory))
         exclude_optimized = SiteSetting.include_thumbnails_in_backups ? '' : "--exclude=#{upload_directory}/optimized"
@@ -289,7 +289,7 @@ module BackupRestore
       log "Downloading uploads from S3. This may take a while..."
 
       store = FileStore::S3Store.new
-      upload_directory = File.join("uploads", @current_db)
+      upload_directory = Discourse.store.upload_path
       count = 0
 
       Upload.find_each do |upload|

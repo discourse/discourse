@@ -121,7 +121,7 @@ describe UrlHelper do
   end
 
   describe "#local_cdn_url" do
-    let(:url) { "/uploads/default/1X/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png" }
+    let(:url) { "/#{Discourse.store.upload_path}/1X/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png" }
     let(:asset_host) { "//my.awesome.cdn" }
 
     it "should return correct cdn url for local relative urls" do
