@@ -34,11 +34,14 @@ jobs:
       - name: Migrate
         run: unbuffer d/rake db:migrate
 
-      - name: Create user
-        run: unbuffer d/rails runner \"User.create!(username:'smoke_user', password:'P4ssw0rd', admin:true)\"
+      - name: Create script
+        run: | 
+          touch tmp/script.rb
+          echo "User.create!(username:'smoke_user', password:'P4ssw0rd', admin:true)" >> tmp/script.rb
+          echo "SiteSetting.wizard_enabled = false" >> tmp/script.rb
 
-      - name: Disable wizard
-        run: unbuffer d/rails runner "SiteSetting.wizard_enabled = false"
+      - name: Run script
+        run: unbuffer d/rails runner tmp/script.rb
 
       - name: Start Server
         run: unbuffer d/rails s &
