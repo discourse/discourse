@@ -193,7 +193,7 @@ export default Component.extend({
       options: {
         dismissable: true,
         persistentDismiss: false,
-        visibility: function() {
+        visibility() {
           return !LogsNotice.currentProp("hidden");
         },
         onDismiss: function() {
