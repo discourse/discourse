@@ -78,7 +78,7 @@ jobs:
           architecture: 'x64'
 
       - name: Setup bundler
-        run: gem install bundler -v 1.17.3 --no-doc
+        run: gem install bundler -v 2.1.1 --no-doc
 
       - name: Bundler cache
         uses: actions/cache@v1
