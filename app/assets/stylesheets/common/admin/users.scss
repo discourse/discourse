@@ -36,7 +36,7 @@
   .field {
     font-weight: bold;
     width: 17.65765%;
-    float: left;
+    min-width: 125px;
     margin-left: 12px;
     @media (max-width: $mobile-breakpoint) {
       margin-left: 0;
@@ -45,12 +45,14 @@
     }
   }
   .value {
-    width: 250px;
-    float: left;
+    width: 100%;
+    max-width: 350px;
+    min-width: 50px;
     margin-left: 12px;
+    .select-kit {
+      min-width: 100px;
+    }
     @media (max-width: $mobile-breakpoint) {
-      width: 75%;
-      float: right;
       text-align: left;
       margin-left: 0;
     }
@@ -59,8 +61,6 @@
     }
   }
   .long-value {
-    width: 800px;
-    float: left;
     margin-left: 12px;
     font-size: $font-down-1;
     button {
@@ -68,12 +68,9 @@
     }
   }
   .controls {
-    width: 480px;
-    float: left;
     margin-left: 12px;
     @media (max-width: $mobile-breakpoint) {
       width: 75%;
-      float: right;
       text-align: left;
       margin-left: 0;
     }
