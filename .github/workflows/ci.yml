@@ -168,8 +168,11 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Install unbuffer
+        run: sudo apt-get install -yqq expect
+
       - name: Boot dev image
-        run: d/boot_dev
+        run: unbuffer d/boot_dev
 
       - name: Bundle
         run: unbuffer d/bundle install
@@ -181,4 +184,4 @@ jobs:
         run: unbuffer d/rails s &
 
       - name: Run smoke test
-        run: unbuffer d/rake smoke_test
+        run: unbuffer d/rake smoke:test
