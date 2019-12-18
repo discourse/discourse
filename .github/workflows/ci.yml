@@ -168,6 +168,9 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: tmp
+        run: sudo chown -R 1000:1000 .
+
       - name: Install unbuffer
         run: sudo apt-get install -yqq expect
 
@@ -176,9 +179,6 @@ jobs:
 
       - name: Bundle
         run: unbuffer d/bundle install
-
-      - name: tmp
-        run: sudo chown -R 1000:1000 *
 
       - name: Migrate
         run: unbuffer d/rake db:migrate
