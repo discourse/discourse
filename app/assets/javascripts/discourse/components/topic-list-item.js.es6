@@ -75,11 +75,13 @@ export default Component.extend({
     }
   },
 
-  @observes(
-    "bulkSelectEnabled",
-    "topic.{pinned,visible,archived,closed,category,tags}"
-  )
+  @observes("bulkSelectEnabled", "topic.{pinned,tags}")
   rerenderTriggers() {
+    this.renderTopicListItem();
+  },
+
+  @discourseComputed("topic.{archived,visible,closed,category}")
+  rerenderComputedTriggers() {
     this.renderTopicListItem();
   },
 
