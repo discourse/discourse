@@ -168,14 +168,14 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: tmp
-        run: sudo chown -R 1000:1000 .
-
       - name: Install unbuffer
         run: sudo apt-get install -yqq expect
 
       - name: Boot dev image
         run: unbuffer d/boot_dev
+
+      - name: tmp
+        run: sudo chown -R 1000:1000 .
 
       - name: Bundle
         run: unbuffer d/bundle install
