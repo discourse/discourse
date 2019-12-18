@@ -188,3 +188,14 @@ jobs:
 
       - name: Run smoke test
         run: unbuffer d/rake smoke:test
+
+      - name: Zip Screenshots
+        if: failure()
+        run: sudo zip -r smoke-test-screenshots.zip tmp/smoke-test-screenshots
+
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: smoke-test-screenshots
+          path: smoke-test-screenshots.zip
+
