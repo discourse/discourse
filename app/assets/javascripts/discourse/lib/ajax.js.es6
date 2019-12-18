@@ -103,7 +103,7 @@ export function ajax() {
       run(() => {
         Site.currentProp(
           "isReadOnly",
-          !!xhr.getResponseHeader("Discourse-Readonly")
+          !!(xhr && xhr.getResponseHeader("Discourse-Readonly"))
         );
       });
 
