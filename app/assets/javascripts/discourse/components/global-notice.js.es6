@@ -47,7 +47,7 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    this._teardDownObservers();
+    this._tearDownObservers();
   },
 
   notices: Ember.computed(
