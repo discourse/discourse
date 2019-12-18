@@ -1,4 +1,5 @@
 import { h } from "virtual-dom";
+import { reportToLogster } from "discourse/lib/utilities";
 import attributeHook from "discourse-common/lib/attribute-hook";
 import deprecated from "discourse-common/lib/deprecated";
 
@@ -584,6 +585,11 @@ function warnIfDeprecated(oldId, newId) {
   deprecated(
     `Please replace all occurrences of "${oldId}"" with "${newId}". FontAwesome 4.7 icon names are now deprecated and will be removed in the next release.`
   );
+  const errorData = {
+    message: `FA icon deprecation: replace "${oldId}"" with "${newId}".`,
+    stacktrace: Error().stack
+  };
+  reportToLogster(errorData);
 }
 
 function handleIconId(icon) {
