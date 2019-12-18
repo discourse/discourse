@@ -156,4 +156,29 @@ jobs:
         if: env.BUILD_TYPE == 'FRONTEND'
         run: bundle exec rake plugin:qunit
         timeout-minutes: 30
-        
+
+
+  smoke_test:
+    name: "smoke test"
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+
+      - name: Boot dev image
+        run: d/boot_dev
+
+      - name: Bundle
+        run: d/bundle install
+
+      - name: Migrate
+        run: d/rake db:migrate
+
+      - name: Start Server
+        run: d/rails s &
+
+      - name: Run smoke test
+        run: d/rake smoke_test
