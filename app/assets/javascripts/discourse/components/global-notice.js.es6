@@ -196,7 +196,7 @@ export default Component.extend({
         visibility() {
           return !LogsNotice.currentProp("hidden");
         },
-        onDismiss: function() {
+        onDismiss() {
           LogsNotice.currentProp("hidden", true);
           LogsNotice.currentProp("text", "");
         }
