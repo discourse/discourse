@@ -172,13 +172,13 @@ jobs:
         run: d/boot_dev
 
       - name: Bundle
-        run: d/bundle install
+        run: unbuffer d/bundle install
 
       - name: Migrate
-        run: d/rake db:migrate
+        run: unbuffer d/rake db:migrate
 
       - name: Start Server
-        run: d/rails s &
+        run: unbuffer d/rails s &
 
       - name: Run smoke test
-        run: d/rake smoke_test
+        run: unbuffer d/rake smoke_test
