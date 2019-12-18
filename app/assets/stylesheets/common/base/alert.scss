@@ -16,7 +16,7 @@
   }
 
   .text {
-    flex: 1;
+    flex: 1 1 auto;
 
     & + .close {
       margin-left: 0.5em;
