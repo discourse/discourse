@@ -376,7 +376,12 @@ export function postRNWebviewMessage(prop, value) {
   }
 }
 
-export function reportToLogster(data) {
+function reportToLogster(name, error) {
+  const data = {
+    message: `${name} theme/component is throwing errors`,
+    stacktrace: error.stack
+  };
+
   Ember.$.ajax(`${Discourse.BaseUri}/logs/report_js_error`, {
     data,
     type: "POST",
@@ -387,11 +392,7 @@ export function reportToLogster(data) {
 export function rescueThemeError(name, error, api) {
   /* eslint-disable-next-line no-console */
   console.error(`"${name}" error:`, error);
-  const errorData = {
-    message: `${name} theme/component is throwing errors`,
-    stacktrace: error.stack
-  };
-  reportToLogster(errorData);
+  reportToLogster(name, error);
 
   const currentUser = api.getCurrentUser();
   if (!currentUser || !currentUser.admin) {
