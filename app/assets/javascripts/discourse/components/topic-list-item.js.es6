@@ -249,4 +249,3 @@ export default Component.extend({
     }
   })
 });
-
