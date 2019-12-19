@@ -37,7 +37,7 @@ export default Component.extend({
   attributeBindings: ["data-topic-id"],
   "data-topic-id": alias("topic.id"),
 
-  init() {
+  didReceiveAttrs() {
     this._super(...arguments);
     this.renderTopicListItem();
   },
@@ -75,13 +75,8 @@ export default Component.extend({
     }
   },
 
-  @observes("bulkSelectEnabled", "topic.{pinned,tags}")
+  @observes("topic.pinned")
   rerenderTriggers() {
-    this.renderTopicListItem();
-  },
-
-  @discourseComputed("topic.{archived,visible,closed,category}")
-  rerenderComputedTriggers() {
     this.renderTopicListItem();
   },
 
