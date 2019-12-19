@@ -325,7 +325,7 @@ createWidget("timeline-controls", {
       controls.push(
         this.attach("topic-admin-menu-button", {
           topic,
-          triggerKeyboardShortcut: true
+          addKeyboardTargetClass: true
         })
       );
     }

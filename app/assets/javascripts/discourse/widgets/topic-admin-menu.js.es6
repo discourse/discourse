@@ -53,9 +53,7 @@ createWidget("topic-admin-menu-button", {
           className:
             "btn-default toggle-admin-menu" +
             (attrs.fixed ? " show-topic-admin" : "") +
-            (attrs.triggerKeyboardShortcut
-              ? " keyboard-shortcut-toggle-admin-menu"
-              : ""),
+            (attrs.addKeyboardTargetClass ? " keyboard-target-admin-menu" : ""),
           title: "topic_admin_menu",
           icon: "wrench",
           action: "showAdminMenu",
@@ -81,7 +79,7 @@ createWidget("topic-admin-menu-button", {
     let $button;
 
     if (e === undefined) {
-      $button = $(".keyboard-shortcut-toggle-admin-menu");
+      $button = $(".keyboard-target-admin-menu");
     } else {
       $button = $(e.target).closest("button");
     }
