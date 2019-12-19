@@ -230,7 +230,6 @@
 .extra-info-wrapper {
   display: flex;
   align-items: center;
-  flex: 1 1 0%; // unit on flex-basis is required for IE11
   height: 100%;
   line-height: $line-height-medium;
   padding: 0 1.5em 0 0.5em;
@@ -298,7 +297,6 @@
     display: inline-flex;
     align-items: center;
     max-width: 100%;
-    flex: 1 0 0%; // unit on flex-basis is required for IE11
     .discourse-tags {
       color: $header_primary-high;
       @include ellipsis;
@@ -306,10 +304,6 @@
         display: inline; // tags need to stay inline in order for them to truncate
       }
     }
-  }
-  // the tag container should shrink
-  .topic-header-extra {
-    min-width: 1px; // 1px value is needed to avoid IE11 flexbox bug
   }
 }
 

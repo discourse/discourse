@@ -206,9 +206,7 @@ class CookedPostProcessor
     # minus data images
     @doc.css("img[src^='data']") -
     # minus emojis
-    @doc.css("img.emoji") -
-    # minus oneboxed images
-    oneboxed_images
+    @doc.css("img.emoji")
   end
 
   def extract_images_for_post
@@ -346,7 +344,10 @@ class CookedPostProcessor
       end
     end
 
-    add_lightbox!(img, original_width, original_height, upload, cropped: crop) if img.ancestors('.quote').blank?
+    if img.ancestors('.onebox, .onebox-body, .quote').blank? && !img.classes.include?("onebox")
+      add_lightbox!(img, original_width, original_height, upload, cropped: crop)
+    end
+
     optimize_image!(img, upload, cropped: crop) if upload
   end
 
@@ -642,9 +643,9 @@ class CookedPostProcessor
   end
 
   def disable_if_low_on_disk_space
+    return false if Discourse.store.external?
     return false if !SiteSetting.download_remote_images_to_local
     return false if available_disk_space >= SiteSetting.download_remote_images_threshold
-    return false if Discourse.store.external?
 
     SiteSetting.download_remote_images_to_local = false
     # log the site setting change

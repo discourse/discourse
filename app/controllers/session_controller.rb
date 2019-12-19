@@ -41,10 +41,12 @@ class SessionController < ApplicationController
   end
 
   def sso_provider(payload = nil)
-    payload ||= request.query_string
-
     if SiteSetting.enable_sso_provider
       begin
+        if !payload
+          params.require(:sso)
+          payload = request.query_string
+        end
         sso = SingleSignOnProvider.parse(payload)
       rescue SingleSignOnProvider::BlankSecret
         render plain: I18n.t("sso.missing_secret"), status: 400
@@ -492,7 +494,7 @@ class SessionController < ApplicationController
     end
 
     if ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
-      return admin_not_allowed_from_ip_address(user)
+      admin_not_allowed_from_ip_address(user)
     end
   end
 

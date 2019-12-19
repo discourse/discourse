@@ -51,6 +51,23 @@ export default Route.extend({
   actions: {
     didTransition() {
       scrollTop();
+    },
+    willTransition(transition) {
+      const model = this.controller.model;
+      if (model.recentlyInstalled && !model.hasParents && model.component) {
+        transition.abort();
+        bootbox.confirm(
+          I18n.t("admin.customize.theme.unsaved_parent_themes"),
+          I18n.t("admin.customize.theme.discard"),
+          I18n.t("admin.customize.theme.stay"),
+          result => {
+            if (!result) {
+              this.controller.model.setProperties({ recentlyInstalled: false });
+              transition.retry();
+            }
+          }
+        );
+      }
     }
   }
 });

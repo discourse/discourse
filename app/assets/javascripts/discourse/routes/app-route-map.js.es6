@@ -209,8 +209,17 @@ export default function() {
 
   this.route("full-page-search", { path: "/search" });
 
-  this.route("tags", { resetNamespace: true }, function() {
+  this.route("tag", { resetNamespace: true }, function() {
     this.route("show", { path: "/:tag_id" });
+
+    Site.currentProp("filters").forEach(filter => {
+      this.route("show" + filter.capitalize(), {
+        path: "/:tag_id/l/" + filter
+      });
+    });
+  });
+
+  this.route("tags", { resetNamespace: true }, function() {
     this.route("showCategory", {
       path: "/c/*category_slug_path_with_id/:tag_id"
     });
@@ -219,9 +228,6 @@ export default function() {
     });
 
     Site.currentProp("filters").forEach(filter => {
-      this.route("show" + filter.capitalize(), {
-        path: "/:tag_id/l/" + filter
-      });
       this.route("showCategory" + filter.capitalize(), {
         path: "/c/*category_slug_path_with_id/:tag_id/l/" + filter
       });
@@ -231,6 +237,14 @@ export default function() {
     });
     this.route("intersection", {
       path: "intersection/:tag_id/*additional_tags"
+    });
+
+    // legacy routes
+    this.route("show", { path: "/:tag_id" });
+    Site.currentProp("filters").forEach(filter => {
+      this.route("show" + filter.capitalize(), {
+        path: "/:tag_id/l/" + filter
+      });
     });
   });
 

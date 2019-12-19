@@ -10,21 +10,23 @@
 
   {{#if canSelectParentCategory}}
     <section class='field'>
-      {{#if subCategories}}
-        <label>{{i18n 'categories.subcategories'}}</label>
-        {{#each subCategories as |s|}}
-          {{category-badge s hideParent="true"}}
-        {{/each}}
-      {{else}}
-        <label>{{i18n 'category.parent'}}</label>
-        {{category-chooser
-          none="category.none"
-          value=category.parent_category_id
-          excludeCategoryId=category.id
-          categories=parentCategories
-          allowSubCategories=true
-          allowUncategorized=false}}
-      {{/if}}
+      <label>{{i18n 'category.parent'}}</label>
+      {{category-chooser
+        none="category.none"
+        value=category.parent_category_id
+        excludeCategoryId=category.id
+        categories=parentCategories
+        allowSubCategories=true
+        allowUncategorized=false}}
+    </section>
+  {{/if}}
+
+  {{#if subCategories}}
+    <section class='field'>
+      <label>{{i18n 'categories.subcategories'}}</label>
+      {{#each subCategories as |s|}}
+        {{category-badge s hideParent="true"}}
+      {{/each}}
     </section>
   {{/if}}
 

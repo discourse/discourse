@@ -354,6 +354,18 @@ he:
   edit_conflict: "פוסט זה נערך על ידי משתמש אחר ואין אפשרות עוד לשמור את השינויים שלך."
   revert_version_same: "הגרסה הנוכחית זהה לגרסה שמועמדת להחזרה."
   excerpt_image: "תמונה"
+  bookmarks:
+    errors:
+      already_bookmarked_post: "אי אפשר לסמן את אותו הפוסט פעמיים"
+      time_must_be_provided: "צריך לציין זמן לכל התזכורות למעט ‚%{reminder_type}’"
+    reminders:
+      at_desktop: "בשימוש הבא דרך שולחן העבודה"
+      later_today: "המשך היום <br/>{{date}}"
+      next_business_day: "ביום העסקים הבא <br/>{{date}}"
+      tomorrow: "מחר <br/>{{date}}"
+      next_week: "בשבוע הבא <br/>{{date}}"
+      next_month: "בחודש הבא <br/>{{date}}"
+      custom: "תאריך ושעה מותאמים אישית"
   groups:
     success:
       bulk_add:
@@ -1476,6 +1488,7 @@ he:
     content_security_policy_collect_reports: "הפעלת איסוף דוחות הפרה של CSP (מדיניות אבטחת תוכן) תחת ‎/csp_reports"
     content_security_policy_script_src: "מקורות נוספים לסקריפטים שעברו אישור. המארח וה־CDN הנוכחיים נכללים כבררת מחדל. ניתן לעיין ב<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>התקפות XSS בעזרת CSP - מדיניות אבטחת תוכן.</a>"
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי לנטרל."
+    allow_embedding_site_in_an_iframe: "לאפשר הטמעה של האתר בתוך מסגרות iframes."
     top_menu: "החליטו אילו פריטים יופיעו בניווט עמוד הבית ובאיזה סדר לדוגמה |אחרונים|חדשים|קטגוריות|מובילים|נקראו|פורסמו|סימניות"
     post_menu: "החליטו אילו פריטים מופיעים בתפריט הפוסט, ובאיזה סדר. למשל like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "פריטי התפריט להסתרה כברירת מחדל בתפריט הפוסט, אלא אם כן נלחץ לחצן ההרחבה."
@@ -1824,6 +1837,7 @@ he:
     anonymous_posting_min_trust_level: "רמת האמון המינמלית הנדרשת כדי לאפשר פרסום אנונימי"
     anonymous_account_duration_minutes: "בכדי להגן על האנונימות צרו חשבון אנונימי כל N דקות לכל משתמש. לדוגמה: אם מכוון ל-600, כאשר יעברו 600 דקות מהפרסום האחרון והמשתמש/ת יחליפו לזהות אנונימית, חשבון אנונימי חדש יווצר."
     hide_user_profiles_from_public: "נטרלו כרטיסי משתמשים, פרופילי משתמשים ומדריך משתמשים למשתמשים אנונימיים."
+    allow_featured_topic_on_user_profiles: "לאפשר למשתמשים להציג קישור לנושא בכרטיס המשתמש ובפרופיל שלהם."
     show_inactive_accounts: "לאפשר למשתמשים שנכנסו לעיין בפרופילים של חשבונות לא פעילים."
     hide_suspension_reasons: "לא להציג את סיבות ההשעיה באופן ציבורי בפרופילי המשתמשים."
     log_personal_messages_views: "תיעוד צפיות הודעות אישיות של מנהלים עבור משתמשים/קבוצות אחרות."

@@ -12,6 +12,7 @@ import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { Promise } from "rsvp";
 import ENV from "discourse-common/config/environment";
+import { get } from "@ember/object";
 
 const _registry = {};
 
@@ -149,6 +150,10 @@ export default class Widget {
   init() {}
 
   destroy() {}
+
+  get(propertyPath) {
+    return get(this, propertyPath);
+  }
 
   render(prev) {
     const { dirtyKeys } = this;

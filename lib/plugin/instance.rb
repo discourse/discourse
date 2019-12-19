@@ -82,6 +82,13 @@ class Plugin::Instance
     @idx = 0
   end
 
+  def register_anonymous_cache_key(key, &block)
+    key_method = "key_#{key}"
+    add_to_class(Middleware::AnonymousCache::Helper, key_method, &block)
+    Middleware::AnonymousCache.cache_key_segments[key] = key_method
+    Middleware::AnonymousCache.compile_key_builder
+  end
+
   def add_admin_route(label, location)
     @admin_route = { label: label, location: location }
   end
@@ -519,7 +526,7 @@ class Plugin::Instance
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
 
     # Automatically include migrations
-    migration_paths = ActiveRecord::Migrator.migrations_paths
+    migration_paths = ActiveRecord::Tasks::DatabaseTasks.migrations_paths
     migration_paths << File.dirname(path) + "/db/migrate"
 
     unless Discourse.skip_post_deployment_migrations?

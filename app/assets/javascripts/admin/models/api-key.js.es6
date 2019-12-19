@@ -3,6 +3,7 @@ import AdminUser from "admin/models/admin-user";
 import RestModel from "discourse/models/rest";
 import { ajax } from "discourse/lib/ajax";
 import { computed } from "@ember/object";
+import { fmt } from "discourse/lib/computed";
 
 const ApiKey = RestModel.extend({
   user: computed("_user", {
@@ -19,16 +20,13 @@ const ApiKey = RestModel.extend({
     }
   }),
 
-  @discourseComputed("key")
-  shortKey(key) {
-    return `${key.substring(0, 4)}...`;
-  },
-
   @discourseComputed("description")
   shortDescription(description) {
     if (!description || description.length < 40) return description;
     return `${description.substring(0, 40)}...`;
   },
+
+  truncatedKey: fmt("truncated_key", "%@..."),
 
   revoke() {
     return ajax(`${this.basePath}/revoke`, {

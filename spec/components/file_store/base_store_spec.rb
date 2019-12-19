@@ -53,6 +53,7 @@ RSpec.describe FileStore::BaseStore do
       SiteSetting.s3_upload_bucket = "s3-upload-bucket"
       SiteSetting.s3_access_key_id = "some key"
       SiteSetting.s3_secret_access_key = "some secret key"
+      SiteSetting.s3_region = "us-east-1"
 
       stub_request(:get, upload_s3.url).to_return(status: 200, body: "Hello world")
     end

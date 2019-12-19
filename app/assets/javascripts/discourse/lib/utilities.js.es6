@@ -410,5 +410,31 @@ export function rescueThemeError(name, error, api) {
   document.body.prepend(alertDiv);
 }
 
+const CODE_BLOCKS_REGEX = /^(    |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/code\]/gm;
+//                        |      ^     |   ^   |      ^      |           ^           |
+//                               |         |          |                  |
+//                               |         |          |       code blocks between [code]
+//                               |         |          |
+//                               |         |          +--- code blocks between three backquote
+//                               |         |
+//                               |         +----- inline code between backquotes
+//                               |
+//                               +------- paragraphs starting with 4 spaces or tab
+
+export function inCodeBlock(text, pos) {
+  let result = false;
+
+  let match;
+  while ((match = CODE_BLOCKS_REGEX.exec(text)) !== null) {
+    const begin = match.index;
+    const end = match.index + match[0].length;
+    if (begin <= pos && pos <= end) {
+      result = true;
+    }
+  }
+
+  return result;
+}
+
 // This prevents a mini racer crash
 export default {};

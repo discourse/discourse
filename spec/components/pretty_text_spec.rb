@@ -341,7 +341,10 @@ describe PrettyText do
     end
 
     it "does not create mention for a non mentionable group" do
-      group = Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:nobody])
+      group = Fabricate(:group,
+        visibility_level: Group.visibility_levels[:members],
+        mentionable_level: Group::ALIAS_LEVELS[:nobody]
+      )
 
       expect(PrettyText.cook("test @#{group.name} test")).to eq(
         %Q|<p>test <span class="mention">@#{group.name}</span> test</p>|
@@ -1450,7 +1453,7 @@ HTML
 
       cooked = <<~HTML
       <p><img src="/images/transparent.png" alt="upload" data-orig-src="upload://abcABC.png"></p>
-      <p><a href="/404" data-orig-href="upload://abcdefg.png">some attachment|attachment</a></p>
+      <p><a class="attachment" href="/404" data-orig-href="upload://abcdefg.png">some attachment</a></p>
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)

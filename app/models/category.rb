@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Category < ActiveRecord::Base
+  RESERVED_SLUGS = [
+    'none'
+  ]
+
   self.ignored_columns = %w{
     uploaded_meta_id
     suppress_from_latest
@@ -59,6 +63,7 @@ class Category < ActiveRecord::Base
   validate :permissions_compatibility_validator
 
   validates :auto_close_hours, numericality: { greater_than: 0, less_than_or_equal_to: 87600 }, allow_nil: true
+  validates :slug, exclusion: { in: RESERVED_SLUGS }
 
   after_create :create_category_definition
 
@@ -260,10 +265,19 @@ class Category < ActiveRecord::Base
   def description_text
     return nil unless self.description
 
-    @@cache ||= LruRedux::ThreadSafeCache.new(1000)
-    @@cache.getset(self.description) do
+    @@cache_text ||= LruRedux::ThreadSafeCache.new(1000)
+    @@cache_text.getset(self.description) do
       text = Nokogiri::HTML.fragment(self.description).text.strip
       Rack::Utils.escape_html(text).html_safe
+    end
+  end
+
+  def description_excerpt
+    return nil unless self.description
+
+    @@cache_excerpt ||= LruRedux::ThreadSafeCache.new(1000)
+    @@cache_excerpt.getset(self.description) do
+      PrettyText.excerpt(description, 300)
     end
   end
 

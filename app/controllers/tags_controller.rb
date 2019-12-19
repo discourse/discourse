@@ -106,7 +106,12 @@ class TagsController < ::ApplicationController
   end
 
   def info
-    render_serialized(@tag, DetailedTagSerializer, root: :tag_info)
+    render_serialized(
+      @tag,
+      DetailedTagSerializer,
+      rest_serializer: true,
+      root: :tag_info
+    )
   end
 
   def update
@@ -216,7 +221,7 @@ class TagsController < ::ApplicationController
       filter_params[:term] = clean_name
       filter_params[:order_search_results] = true
     else
-      filter_params[:order] = "topic_count DESC"
+      filter_params[:order_popularity] = true
     end
 
     tags_with_counts = DiscourseTagging.filter_allowed_tags(

@@ -27,6 +27,8 @@ nl:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
+      time_short_day: "ddd HH:mm"
+      month_day_time: "D MMM, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM HH:mm"
       long_no_year_no_time: "D MMM"
@@ -152,9 +154,9 @@ nl:
       banner:
         enabled: "heeft deze banner gemaakt op %{when}. De banner verschijnt bovenaan elke pagina, totdat de gebruiker deze verbergt."
         disabled: "heeft deze banner verwijderd op %{when}. De banner zal niet meer bovenaan elke pagina verschijnen."
-    topic_admin_menu: "beheeracties voor topic"
+    topic_admin_menu: "topicacties"
     wizard_required: "Welkom bij uw nieuwe Discourse! Laten we beginnen met <a href='%{url}' data-auto-route='true'>de configuratiewizard</a> ✨"
-    emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een administrator. Er wordt geen enkele e-mailmelding verstuurd."
+    emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding verstuurd."
     bootstrap_mode_enabled: "Om het opzetten van uw nieuwe website makkelijker te maken, bevindt u zich in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend, en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld zodra %{min_users} gebruikers lid zijn geworden."
     bootstrap_mode_disabled: "De bootstrapmodus wordt binnen 24 uur uitgeschakeld."
     themes:
@@ -262,8 +264,19 @@ nl:
     bookmarks:
       created: "u hebt een bladwijzer voor dit bericht gemaakt"
       not_bookmarked: "bladwijzer voor dit bericht maken"
+      created_with_reminder: "u hebt een bladwijzer voor dit bericht gemaakt met een herinnering op %{date}"
       remove: "Bladwijzer verwijderen"
       confirm_clear: "Weet u zeker dat u alle bladwijzers van dit topic wilt verwijderen?"
+      save: "Opslaan"
+      no_timezone: "U hebt nog geen tijdzone ingesteld. Hierdoor kunt u geen herinneringen instellen. Stel er een in <a href=\"%{basePath}/my/preferences/profile\">in uw profiel</a>."
+      reminders:
+        at_desktop: "De volgende keer vanaf mijn computer"
+        later_today: "Later vandaag <br/>{{date}}"
+        next_business_day: "Volgende werkdag <br/>{{date}}"
+        tomorrow: "Morgen <br/>{{date}}"
+        next_week: "Volgende week <br/>{{date}}"
+        next_month: "Volgende maand <br/>{{date}}"
+        custom: "Aangepaste datum en tijd"
     drafts:
       resume: "Hervatten"
       remove: "Verwijderen"
@@ -310,13 +323,13 @@ nl:
     choose_topic:
       none_found: "Geen topics gevonden."
       title:
-        search: "Zoeken naar een topic op naam, URL of ID:"
-        placeholder: "typ hier de titel van het topic"
+        search: "Zoeken naar een topic"
+        placeholder: "typ hier de titel, URL of ID van het topic"
     choose_message:
       none_found: "Geen berichten gevonden."
       title:
-        search: "Zoeken naar een bericht op titel:"
-        placeholder: "typ hier de titel van het bericht"
+        search: "Zoeken naar een bericht"
+        placeholder: "typ hier de titel, URL of ID van het bericht"
     review:
       order_by: "Sorteren op"
       in_reply_to: "in reactie op"
@@ -742,6 +755,14 @@ nl:
         normal_option_title: "U ontvangt een melding als deze gebruiker een bericht van u beantwoordt, u citeert, of uw naam noemt."
       activity_stream: "Activiteit"
       preferences: "Voorkeuren"
+      feature_topic_on_profile:
+        open_search: "Selecteer een nieuw topic"
+        title: "Een topic selecteren"
+        search_label: "Zoeken naar topic op titel"
+        save: "Opslaan"
+        clear:
+          title: "Wissen"
+          warning: "Weet u zeker dat u uw aanbevolen topic wilt wissen?"
       profile_hidden: "Het openbare profiel van deze gebruiker is verborgen."
       expand_profile: "Uitvouwen"
       collapse_profile: "Samenvouwen"
@@ -774,6 +795,7 @@ nl:
       enable_quoting: "Antwoord-met-citaat voor gemarkeerde tekst inschakelen"
       enable_defer: "Negeren voor markeren van topics als ongelezen inschakelen"
       change: "wijzigen"
+      featured_topic: "Aanbevolen topic"
       moderator: "{{user}} is een moderator"
       admin: "{{user}} is een beheerder"
       moderator_tooltip: "Deze gebruiker is een moderator"
@@ -955,8 +977,11 @@ nl:
         title: "Profielkoptekst"
         instructions: "Profielkopteksten worden gecentreerd en hebben een standaardbreedte van 1110px."
       change_card_background:
-        title: "Achtergrond van gebruikersprofiel"
+        title: "Achtergrond van gebruikerskaart"
         instructions: "Achtergrondafbeeldingen worden gecentreerd en hebben een standaardbreedte van 590px."
+      change_featured_topic:
+        title: "Aanbevolen topic"
+        instructions: "Er wordt een koppeling naar dit topic op uw gebruikerskaart en profiel geplaatst."
       email:
         title: "E-mail"
         primary: "Primair e-mailadres"
@@ -1092,7 +1117,7 @@ nl:
         search: "typ om uitnodigingen te zoeken..."
         title: "Uitnodigingen"
         user: "Uitgenodigde gebruiker"
-        sent: "Verzonden"
+        sent: "Laatst verzonden"
         none: "Geen uitnodigingen om weer te geven."
         truncated:
           one: "De eerste uitnodiging wordt getoond."
@@ -1486,7 +1511,7 @@ nl:
       similar_topics: "Uw topic lijkt op..."
       drafts_offline: "concepten offline"
       edit_conflict: "bewerkingsconflict"
-      group_mentioned_limit: "<b>Waarschuwing!</b> U hebt <a href='{{group_link}}'>{{group}}</a> genoemd, maar deze groep heeft meer leden dan de door een administrator geconfigureerde limiet van {{max}} gebruikers voor noemen. Niemand krijgt een melding. "
+      group_mentioned_limit: "<b>Waarschuwing!</b> U hebt <a href='{{group_link}}'>{{group}}</a> genoemd, maar deze groep heeft meer leden dan de door een beheerder geconfigureerde limiet van {{max}} gebruikers voor noemen. Niemand krijgt een melding. "
       group_mentioned:
         one: "Door {{group}} te vermelden, gaat u <a href='{{group_link}}'>%{count} persoon</a> op de hoogte brengen – weet u dit zeker?"
         other: "Door {{group}} te vermelden, gaat u <a href='{{group_link}}'>{{count}} personen</a> op de hoogte brengen – weet u dit zeker?"
@@ -1684,7 +1709,6 @@ nl:
       hint_for_supported_browsers: "u kunt ook afbeeldingen naar de editor slepen of hierin plakken"
       uploading: "Uploaden"
       select_file: "Bestand selecteren"
-      image_link: "koppeling waarnaar uw afbeelding verwijst"
       default_image_alt_text: afbeelding
     search:
       sort_by: "Sorteren op"
@@ -1736,6 +1760,7 @@ nl:
           title: Die alleen met de titel overeenkomen
           likes: die ik heb geliket
           posted: waarin ik iets heb geplaatst
+          created: die ik heb aangemaakt
           watching: die ik in de gaten houd
           tracking: die ik volg
           private: In mijn berichten
@@ -1752,6 +1777,7 @@ nl:
           label: Waarin topics
           open: open zijn
           closed: gesloten zijn
+          public: openbaar zijn
           archived: gearchiveerd zijn
           noreplies: geen antwoorden bevatten
           single_user: maar één gebruiker bevatten
@@ -1839,6 +1865,13 @@ nl:
       defer:
         help: "Markeren als ongelezen"
         title: "Negeren"
+      feature_on_profile:
+        help: "Een koppeling naar dit topic toevoegen op uw gebruikerskaart en profiel"
+        title: "Aanbevelen op profiel"
+      remove_from_profile:
+        warning: "Uw profiel heeft al een aanbevolen topic. Als u doorgaat, vervangt dit topic het bestaande topic."
+        help: "De koppeling naar dit topic op uw gebruikersprofiel verwijderen"
+        title: "Verwijderen uit profiel"
       list: "Topics"
       new: "nieuw topic"
       unread: "ongelezen"
@@ -2008,6 +2041,7 @@ nl:
           title: "Genegeerd"
           description: "U ontvangt geen enkele melding over dit topic, en het verschijnt niet in Nieuwste."
       actions:
+        title: "Acties"
         recover: "Topic verwijderen ongedaan maken"
         delete: "Topic verwijderen"
         open: "Topic openen"
@@ -2316,11 +2350,18 @@ nl:
           notify_moderators: "heeft moderators ingelicht"
           notify_user: "heeft een bericht gestuurd"
           bookmark: "heeft dit aan bladwijzers toegevoegd"
-          like: "heeft dit geliket"
-          read: "heeft dit gelezen"
+          like:
+            one: "heeft dit geliket"
+            other: "hebben dit geliket"
+          read:
+            one: "heeft dit gelezen"
+            other: "hebben dit gelezen"
           like_capped:
             one: "en {{count}} ander heeft dit geliket"
             other: "en {{count}} anderen hebben dit geliket"
+          read_capped:
+            one: "en {{count}} ander heeft dit gelezen"
+            other: "en {{count}} anderen hebben dit gelezen"
         by_you:
           off_topic: "U hebt dit als off-topic gemarkeerd"
           spam: "U hebt dit als spam gemarkeerd"
@@ -2370,6 +2411,11 @@ nl:
           html_part:
             title: "Het HTML-gedeelte van het e-mailbericht tonen"
             button: "HTML"
+      bookmarks:
+        create: "Bladwijzer maken"
+        name: "Naam"
+        name_placeholder: "Geef de bladwijzer een naam als geheugensteuntje"
+        set_reminder: "Een herinnering instellen"
     category:
       can: "kan&hellip; "
       none: "(geen categorie)"
@@ -2800,12 +2846,30 @@ nl:
       changed: "gewijzigde tags:"
       tags: "Tags"
       choose_for_topic: "optionele tags"
+      info: "Info"
+      default_info: "Deze tag is niet beperkt tot categorieën, en heeft geen synoniemen."
+      synonyms: "Synoniemen"
+      synonyms_description: "Wanneer de volgende tags worden gebruikt, worden deze vervangen door <b>%{base_tag_name}</b>."
+      tag_groups_info:
+        one: 'Deze tag behoort tot de groep ''{{tag_groups}}''.'
+        other: "Deze tag behoort tot deze groepen: {{tag_groups}}."
+      category_restrictions:
+        one: "Deze kan alleen worden gebruikt in deze categorie:"
+        other: "Deze kan alleen worden gebruikt in deze categorieën:"
+      edit_synonyms: "Synoniemen beheren"
+      add_synonyms_label: "Synoniemen toevoegen:"
       add_synonyms: "Toevoegen"
+      add_synonyms_failed: "De volgende tags konden niet worden toegevoegd als synoniemen: <b>%{tag_names}</b>. Zorg dat ze geen synoniemen hebben en geen synoniem van een andere tag zijn."
+      remove_synonym: "Synoniem verwijderen"
+      delete_synonym_confirm: 'Weet u zeker dat u het synoniem ''%{tag_name}'' wilt verwijderen?'
       delete_tag: "Tag verwijderen"
       delete_confirm:
         one: "Weet u zeker dat u deze tag wilt verwijderen en loskoppelen van %{count} topic waaraan deze is toegewezen?"
         other: "Weet u zeker dat u deze tag wilt verwijderen en loskoppelen van {{count}} topics waaraan deze is toegewezen?"
       delete_confirm_no_topics: "Weet u zeker dat u deze tag wilt verwijderen?"
+      delete_confirm_synonyms:
+        one: "Het synoniem ervan wordt ook verwijderd."
+        other: "De {{count}} synoniemen ervan worden ook verwijderd."
       rename_tag: "Tag hernoemen"
       rename_instructions: "Kies een nieuwe naam voor de tag:"
       sort_by: "Sorteren op:"
@@ -3083,6 +3147,8 @@ nl:
         new_key: Nieuwe API-sleutel
         revoked: Ingetrokken
         delete: Definitief verwijderen
+        not_shown_again: Deze sleutel wordt niet meer weergegeven. Zorg ervoor dat u een kopie maakt voordat u doorgaat.
+        continue: Doorgaan
       web_hooks:
         title: "Webhooks"
         none: "Er zijn op dit moment geen webhooks."
@@ -3352,6 +3418,7 @@ nl:
           upload: "Upload"
           select_component: "Selecteer een onderdeel..."
           unsaved_changes_alert: "U hebt uw wijzigingen nog niet opgeslagen. Wilt u ze negeren en verdergaan?"
+          unsaved_parent_themes: "U hebt het onderdeel niet aan thema's toegewezen. Wilt u verdergaan?"
           discard: "Negeren"
           stay: "Blijven"
           css_html: "Aangepaste CSS/HTML"
@@ -3359,6 +3426,8 @@ nl:
           edit_css_html_help: "U hebt geen CSS of HTML bewerkt"
           delete_upload_confirm: "Deze upload verwijderen? (Thema-CSS zou kunnen stoppen met werken!)"
           component_on_themes: "Onderdeel voor deze thema's bijvoegen"
+          included_components: "Opgenomen onderdelen"
+          add_all: "Alle toevoegen"
           import_web_tip: "Repository die thema bevat"
           import_web_advanced: "Geavanceerd..."
           import_file_tip: ".tar.gz-, .zip- of .dcstyle.json-bestand dat thema bevat"
@@ -3849,7 +3918,7 @@ nl:
         logged_out: "Gebruiker is op alle apparaten afgemeld"
         revoke_admin: "Beheerdersrechten intrekken"
         grant_admin: "Beheerdersrechten toekennen"
-        grant_admin_confirm: "We hebben u een e-mail gestuurd om de nieuwe administrator te verifiëren. Open deze en volg de instructies."
+        grant_admin_confirm: "We hebben u een e-mail gestuurd om de nieuwe beheerder te verifiëren. Open deze en volg de instructies."
         revoke_moderation: "Moderatierechten intrekken"
         grant_moderation: "Moderatierechten toekennen"
         unsuspend: "Schorsing opheffen"

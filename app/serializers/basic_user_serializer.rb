@@ -20,6 +20,6 @@ class BasicUserSerializer < ApplicationSerializer
   end
 
   def user
-    object[:user] || object
+    object[:user] || object.try(:user) || object
   end
 end

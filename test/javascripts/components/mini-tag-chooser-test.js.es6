@@ -14,6 +14,7 @@ componentTest("default", {
   beforeEach() {
     this.siteSettings.max_tag_length = 24;
     this.siteSettings.force_lowercase_tags = true;
+    this.siteSettings.tags_sort_alphabetically = true;
 
     this.site.set("can_create_tag", true);
     this.set("tags", ["jeff", "neil", "arpit"]);
@@ -35,11 +36,10 @@ componentTest("default", {
       }
 
       return response({
-        results: [{ text: "bianca", count: 3 }, { text: "régis", count: 5 }]
+        results: [{ text: "penar", count: 3 }, { text: "bianca", count: 3 }, { text: "régis", count: 5 }]
       });
     });
   },
-  skip: true,
   async test(assert) {
     await this.subject.expand();
 
@@ -51,6 +51,12 @@ componentTest("default", {
 
     assert.equal(
       this.subject.rowByIndex(1).name(),
+      "penar",
+      "it has the correct tag at the correct position after alphabetical sorting"
+    );
+
+    assert.equal(
+      this.subject.rowByIndex(2).name(),
       "régis",
       "it has the correct tag"
     );

@@ -94,32 +94,6 @@ h6 {
   margin-bottom: 0.5rem;
 }
 
-button {
-  &.ok {
-    background: $success;
-    color: $secondary;
-    .d-icon {
-      color: currentColor;
-    }
-    @include hover {
-      background: lighten($success, 10%);
-      color: $secondary;
-    }
-  }
-
-  &.cancel {
-    background: $danger;
-    color: $secondary;
-    .d-icon {
-      color: currentColor;
-    }
-    @include hover {
-      background: lighten($danger, 10%);
-      color: $secondary;
-    }
-  }
-}
-
 a.cancel {
   margin-left: 1.25em;
   line-height: normal;

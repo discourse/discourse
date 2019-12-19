@@ -33,7 +33,8 @@ class TopicTrackingState
         created_at: topic.created_at,
         topic_id: topic.id,
         category_id: topic.category_id,
-        archetype: topic.archetype
+        archetype: topic.archetype,
+        topic_tag_ids: topic.tags.pluck(:id)
       }
     }
 
@@ -52,7 +53,8 @@ class TopicTrackingState
       payload: {
         bumped_at: topic.bumped_at,
         category_id: topic.category_id,
-        archetype: topic.archetype
+        archetype: topic.archetype,
+        topic_tag_ids: topic.tags.pluck(:id)
       }
     }
 
@@ -182,7 +184,8 @@ class TopicTrackingState
       skip_order: true,
       staff: user.staff?,
       admin: user.admin?,
-      user: user
+      user: user,
+      muted_tag_ids: muted_tag_ids(user)
     )
 
     sql << "\nUNION ALL\n\n"
@@ -194,7 +197,8 @@ class TopicTrackingState
       staff: user.staff?,
       filter_old_unread: true,
       admin: user.admin?,
-      user: user
+      user: user,
+      muted_tag_ids: muted_tag_ids(user)
     )
 
     DB.query(
@@ -203,6 +207,10 @@ class TopicTrackingState
         topic_id: topic_id,
         min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
     )
+  end
+
+  def self.muted_tag_ids(user)
+    TagUser.lookup(user, :muted).pluck(:tag_id)
   end
 
   def self.report_raw_sql(opts = nil)
@@ -268,6 +276,19 @@ class TopicTrackingState
         "(topics.visible #{append}) AND"
       end
 
+    tags_filter =
+      if opts[:muted_tag_ids].present? && SiteSetting.remove_muted_tags_from_latest == 'always'
+        <<~SQL
+          NOT ((select array_agg(tag_id) from topic_tags where topic_tags.topic_id = topics.id) && ARRAY[#{opts[:muted_tag_ids].join(',')}]) AND
+        SQL
+      elsif opts[:muted_tag_ids].present? && SiteSetting.remove_muted_tags_from_latest == 'only_muted'
+        <<~SQL
+          NOT ((select array_agg(tag_id) from topic_tags where topic_tags.topic_id = topics.id) <@ ARRAY[#{opts[:muted_tag_ids].join(',')}]) AND
+        SQL
+      else
+        ""
+      end
+
     sql = +<<~SQL
     SELECT #{select}
     FROM topics
@@ -282,6 +303,7 @@ class TopicTrackingState
           topics.archetype <> 'private_message' AND
           ((#{unread}) OR (#{new})) AND
           #{visibility_filter}
+          #{tags_filter}
           topics.deleted_at IS NULL AND
           #{category_filter}
           (category_users.id IS NULL OR

@@ -20,7 +20,7 @@ module Slug
       when :none then self.none_generator(string)
       end
     slug = self.prettify_slug(slug, max_length: max_length)
-    slug.blank? ? default : slug
+    (slug.blank? || slug_is_only_numbers?(slug)) ? default : slug
   end
 
   def self.sanitize(string, downcase: false, max_length: MAX_LENGTH)
@@ -30,9 +30,13 @@ module Slug
 
   private
 
+  def self.slug_is_only_numbers?(slug)
+    (slug =~ /[^\d]/).blank?
+  end
+
   def self.prettify_slug(slug, max_length:)
     # Reject slugs that only contain numbers, because they would be indistinguishable from id's.
-    slug = (slug =~ /[^\d]/ ? slug : '')
+    slug = (slug_is_only_numbers?(slug) ? '' : slug)
 
     slug
       .tr("_", "-")

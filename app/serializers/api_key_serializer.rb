@@ -4,6 +4,7 @@ class ApiKeySerializer < ApplicationSerializer
 
   attributes :id,
              :key,
+             :truncated_key,
              :description,
              :last_used_at,
              :created_at,
@@ -16,4 +17,8 @@ class ApiKeySerializer < ApplicationSerializer
     !object.user_id.nil?
   end
 
+  def include_key?
+    # Only available when first created. Not stored in db
+    object.key_available?
+  end
 end

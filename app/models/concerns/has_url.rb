@@ -22,7 +22,7 @@ module HasUrl
       return if url.blank?
 
       uri = begin
-        URI(URI.unescape(url))
+        URI(UrlHelper.unencode(url))
       rescue URI::Error
       end
 

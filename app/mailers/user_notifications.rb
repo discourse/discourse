@@ -624,7 +624,7 @@ class UserNotifications < ActionMailer::Base
 
     email_opts = {
       topic_title: Emoji.gsub_emoji_to_unicode(title),
-      topic_title_url_encoded: title ? URI.encode(title) : title,
+      topic_title_url_encoded: title ? UrlHelper.encode_component(title) : title,
       message: message,
       url: post.url(without_slug: SiteSetting.private_email?),
       post_id: post.id,
@@ -649,7 +649,7 @@ class UserNotifications < ActionMailer::Base
       use_topic_title_subject: use_topic_title_subject,
       site_description: SiteSetting.site_description,
       site_title: SiteSetting.title,
-      site_title_url_encoded: URI.encode(SiteSetting.title),
+      site_title_url_encoded: UrlHelper.encode_component(SiteSetting.title),
       locale: locale
     }
 

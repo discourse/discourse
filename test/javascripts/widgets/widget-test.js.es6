@@ -380,3 +380,23 @@ widgetTest("override settings", {
     assert.equal(find(".settings").text(), "age is 37");
   }
 });
+
+widgetTest("get accessor", {
+  template: `{{mount-widget widget="get-accessor-test"}}`,
+
+  beforeEach() {
+    createWidget("get-accessor-test", {
+      tagName: "div.test",
+      template: hbs`Hello {{transformed.name}}`,
+      transform() {
+        return {
+          name: this.get("currentUser.username")
+        };
+      }
+    });
+  },
+
+  test(assert) {
+    assert.equal(find("div.test").text(), "Hello eviltrout");
+  }
+});

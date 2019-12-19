@@ -1,0 +1,14 @@
+.bookmark-with-reminder.modal {
+  .modal-body {
+    max-width: 410px;
+    min-width: 380px;
+
+    .control-label {
+      font-weight: 700;
+    }
+
+    .ember-text-field.bookmark-name {
+      width: 100%;
+    }
+  }
+}

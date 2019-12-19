@@ -321,7 +321,7 @@ createWidget("timeline-controls", {
     const controls = [];
     const { fullScreen, currentUser, topic } = attrs;
 
-    if (!fullScreen && currentUser && currentUser.get("canManageTopic")) {
+    if (!fullScreen && currentUser) {
       controls.push(this.attach("topic-admin-menu-button", { topic }));
     }
 

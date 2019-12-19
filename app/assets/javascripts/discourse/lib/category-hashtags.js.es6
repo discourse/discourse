@@ -1,5 +1,9 @@
 export const SEPARATOR = ":";
-import { caretRowCol } from "discourse/lib/utilities";
+import {
+  caretRowCol,
+  caretPosition,
+  inCodeBlock
+} from "discourse/lib/utilities";
 
 export function replaceSpan($elem, categorySlug, categoryLink) {
   $elem.replaceWith(
@@ -21,10 +25,14 @@ export function categoryHashtagTriggerRule(textarea, opts) {
     if (/^#{1}\w+/.test(line)) return false;
   }
 
-  if (col < 6) {
-    // Don't trigger autocomplete when ATX-style headers are used
-    return line.slice(0, col) !== "#".repeat(col);
-  } else {
-    return true;
+  // Don't trigger autocomplete when ATX-style headers are used
+  if (col < 6 && line.slice(0, col) === "#".repeat(col)) {
+    return false;
   }
+
+  if (inCodeBlock(textarea.value, caretPosition(textarea))) {
+    return false;
+  }
+
+  return true;
 }

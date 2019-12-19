@@ -617,6 +617,19 @@ describe TagsController do
         json = get_json_body
         expect(json["results"].map { |j| j["id"] }).to eq(['тема-в-разработке'])
       end
+
+      it "can return all the results" do
+        tag_group1 = Fabricate(:tag_group, tag_names: ['common1', 'common2', 'group1tag', 'group1tag2'])
+        tag_group2 = Fabricate(:tag_group, tag_names: ['common1', 'common2'])
+        category = Fabricate(:category, tag_groups: [tag_group1])
+        get "/tags/filter/search.json", params: { q: '', limit: 5, categoryId: category.id, filterForInput: 'true' }
+        expect(response.status).to eq(200)
+        json = get_json_body
+        expect_same_tag_names(
+          json["results"].map { |j| j["id"] },
+          ['common1', 'common2', 'group1tag', 'group1tag2']
+        )
+      end
     end
   end
 

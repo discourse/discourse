@@ -298,6 +298,15 @@ pt_BR:
   edit_conflict: "Esta postagem foi editada por outro usuário e suas alterações não podem mais ser salvas."
   revert_version_same: "A versão atual é a mesma versão para a qual você está tentando reverter."
   excerpt_image: "imagem"
+  bookmarks:
+    reminders:
+      at_desktop: "Da próxima vez que estiver na minha área de trabalho"
+      later_today: "Hoje mais tarde <br/>{{date}}"
+      next_business_day: "Próximo dia comercial <br/>{{date}}"
+      tomorrow: "Amanhã <br/>{{date}}"
+      next_week: "Próxima semana <br/>{{date}}"
+      next_month: "Próximo mês <br/>{{date}}"
+      custom: "Data e hora personalizadas"
   groups:
     success:
       bulk_add:

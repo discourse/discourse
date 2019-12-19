@@ -22,7 +22,7 @@ describe BackupRestore::S3BackupStore do
       expect(context.params[:prefix]).to eq(expected_prefix) if context.params.key?(:prefix)
     end
 
-    @s3_client.stub_responses(:list_objects, -> (context) do
+    @s3_client.stub_responses(:list_objects_v2, -> (context) do
       check_context(context)
 
       { contents: objects_with_prefix(context) }

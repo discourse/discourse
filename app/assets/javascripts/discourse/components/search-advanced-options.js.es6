@@ -20,7 +20,7 @@ const REGEXP_MIN_POST_COUNT_PREFIX = /^min_post_count:/gi;
 const REGEXP_POST_TIME_PREFIX = /^(before|after):/gi;
 const REGEXP_TAGS_REPLACE = /(^(tags?:|#(?=[a-z0-9\-]+::tag))|::tag\s?$)/gi;
 
-const REGEXP_IN_MATCH = /^(in|with):(posted|watching|tracking|bookmarks|first|pinned|unpinned|wiki|unseen|image)/gi;
+const REGEXP_IN_MATCH = /^(in|with):(posted|created|watching|tracking|bookmarks|first|pinned|unpinned|wiki|unseen|image)/gi;
 const REGEXP_SPECIAL_IN_LIKES_MATCH = /^in:likes/gi;
 const REGEXP_SPECIAL_IN_TITLE_MATCH = /^in:title/gi;
 const REGEXP_SPECIAL_IN_PERSONAL_MATCH = /^in:personal/gi;
@@ -41,6 +41,7 @@ export default Component.extend({
     this.inOptionsForUsers = [
       { name: I18n.t("search.advanced.filters.unseen"), value: "unseen" },
       { name: I18n.t("search.advanced.filters.posted"), value: "posted" },
+      { name: I18n.t("search.advanced.filters.created"), value: "created" },
       { name: I18n.t("search.advanced.filters.watching"), value: "watching" },
       { name: I18n.t("search.advanced.filters.tracking"), value: "tracking" },
       { name: I18n.t("search.advanced.filters.bookmarks"), value: "bookmarks" }
@@ -57,6 +58,7 @@ export default Component.extend({
     this.statusOptions = [
       { name: I18n.t("search.advanced.statuses.open"), value: "open" },
       { name: I18n.t("search.advanced.statuses.closed"), value: "closed" },
+      { name: I18n.t("search.advanced.statuses.public"), value: "public" },
       { name: I18n.t("search.advanced.statuses.archived"), value: "archived" },
       {
         name: I18n.t("search.advanced.statuses.noreplies"),

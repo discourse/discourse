@@ -51,6 +51,13 @@ class Admin::ThemesController < Admin::AdminController
     }
   end
 
+  THEME_CONTENT_TYPES ||= %w{
+    application/gzip
+    application/x-gzip
+    application/x-zip-compressed
+    application/zip
+  }
+
   def import
     @theme = nil
     if params[:theme] && params[:theme].content_type == "application/json"
@@ -98,7 +105,7 @@ class Admin::ThemesController < Admin::AdminController
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end
-    elsif params[:bundle] || (params[:theme] && ["application/x-gzip", "application/gzip", "application/zip"].include?(params[:theme].content_type))
+    elsif params[:bundle] || (params[:theme] && THEME_CONTENT_TYPES.include?(params[:theme].content_type))
       # params[:bundle] used by theme CLI. params[:theme] used by admin UI
       bundle = params[:bundle] || params[:theme]
       theme_id = params[:theme_id]

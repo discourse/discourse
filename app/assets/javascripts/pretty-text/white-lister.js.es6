@@ -115,7 +115,7 @@ export default class WhiteLister {
 
 // Only add to `default` when you always want your whitelist to occur. In other words,
 // don't change this for a plugin or a feature that can be disabled
-const DEFAULT_LIST = [
+export const DEFAULT_LIST = [
   "a.attachment",
   "a.hashtag",
   "a.mention",

@@ -7,6 +7,7 @@ import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox
 } from "pretty-text/inline-oneboxer";
+import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 
 QUnit.module("lib:pretty-text");
 
@@ -1364,4 +1365,12 @@ QUnit.test("emoji - emojiSet", assert => {
     { siteSettings: { emoji_set: "twitter" } },
     `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:"></p>`
   );
+});
+
+QUnit.test("extractDataAttribute", assert => {
+  assert.deepEqual(extractDataAttribute("foo="), ["data-foo", ""]);
+  assert.deepEqual(extractDataAttribute("foo=bar"), ["data-foo", "bar"]);
+
+  assert.notOk(extractDataAttribute("foo?=bar"));
+  assert.notOk(extractDataAttribute("https://discourse.org/?q=hello"));
 });

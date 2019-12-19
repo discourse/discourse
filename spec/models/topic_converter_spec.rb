@@ -221,5 +221,15 @@ describe TopicConverter do
         expect(topic.reload.archetype).to eq("private_message")
       end
     end
+
+    context 'user_profiles with newly converted PM as featured topic' do
+      it "sets all matching user_profile featured topic ids to nil" do
+        author.user_profile.update(featured_topic: topic)
+        topic.convert_to_private_message(admin)
+
+        expect(author.user_profile.reload.featured_topic).to eq(nil)
+      end
+    end
+
   end
 end

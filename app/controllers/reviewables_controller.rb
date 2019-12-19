@@ -169,7 +169,7 @@ class ReviewablesController < ApplicationController
         render_json_error(reviewable.errors)
       end
     rescue Reviewable::UpdateConflict
-      return render_json_error(I18n.t('reviewables.conflict'), status: 409)
+      render_json_error(I18n.t('reviewables.conflict'), status: 409)
     end
   end
 

@@ -15,6 +15,26 @@ describe Middleware::RequestTracker do
     }.merge(opts)
   end
 
+  context "full request" do
+    before do
+      @orig = WebCrawlerRequest.autoflush
+      WebCrawlerRequest.autoflush = 1
+    end
+    after do
+      WebCrawlerRequest.autoflush = @orig
+    end
+
+    it "can handle rogue user agents" do
+      agent = (+"Evil Googlebot String \xc3\x28").force_encoding("Windows-1252")
+
+      middleware = Middleware::RequestTracker.new(->(env) { ["200", { "Content-Type" => "text/html" }, [""]] })
+      middleware.call(env("HTTP_USER_AGENT" => agent))
+
+      expect(WebCrawlerRequest.where(user_agent: agent.encode('utf-8')).count).to eq(1)
+    end
+
+  end
+
   context "log_request" do
     before do
       freeze_time Time.now

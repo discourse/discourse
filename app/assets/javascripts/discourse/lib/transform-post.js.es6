@@ -35,6 +35,8 @@ export function transformBasicPost(post) {
     username: post.username,
     avatar_template: post.avatar_template,
     bookmarked: post.bookmarked,
+    bookmarkedWithReminder: post.bookmarked_with_reminder,
+    bookmarkReminderAt: post.bookmark_reminder_at,
     yours: post.yours,
     shareUrl: post.get("shareUrl"),
     staff: post.staff,

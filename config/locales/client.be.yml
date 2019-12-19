@@ -72,7 +72,6 @@ be:
       topic_html: 'Тэма: <span class="topic-title">%{topicTitle}</span>'
       post: "паведамленне #%{postNumber}"
       close: "схаваць"
-    topic_admin_menu: "кіравання тэмай"
     emails_are_disabled: "Адпраўка паведамленняў па электроннай пошце было глабальна адключана адміністратарам. Ні адно апавяшчэнне па электроннай пошце не будзе даслана."
     s3:
       regions:
@@ -165,6 +164,7 @@ be:
     bookmarks:
       created: "вы дадалі гэты паведамленне ў закладкі"
       remove: "выдаліць закладку"
+      save: "Захаваць"
     drafts:
       remove: "выдаліць"
       abandon:
@@ -191,11 +191,6 @@ be:
       edit: "Рэдагаваць гэты банер >>"
     choose_topic:
       none_found: "Не знойдзена тэмаў."
-      title:
-        placeholder: "увядзіце назву тэмы"
-    choose_message:
-      title:
-        placeholder: "увядзіце назву паведамлення тут"
     review:
       explain:
         total: "агульны"
@@ -401,6 +396,10 @@ be:
         mute_option: "ігнараваць"
       activity_stream: "Актыўнасць"
       preferences: "Налады"
+      feature_topic_on_profile:
+        save: "Захаваць"
+        clear:
+          title: "ачысціць"
       bookmarks: "закладкі"
       bio: "Аба мне"
       invited_by: "Запрошаны (а)"
@@ -562,7 +561,6 @@ be:
         search: "шукаць запрашэнні ..."
         title: "Запрашэнні"
         user: "запрошаны карыстальнік"
-        sent: "адпраўлена"
         redeemed: "Адазваныя запрашэнні"
         redeemed_tab: "прынята"
         redeemed_at: "прынята"
@@ -952,6 +950,7 @@ be:
         muted:
           title: "ігнараваць"
       actions:
+        title: "загалоўкі....................."
         recover: "Адмяніць выдаленне тэмы"
         delete: "Выдаліць тэму"
         open: "Адкрыць тэму"
@@ -1027,7 +1026,6 @@ be:
           off_topic: "заўважана гэта, як ад тэмы"
           spam: "пазначаны як спам"
           inappropriate: "пазначыў гэта як непрыстойныя"
-          like: "гэта спадабалася"
         by_you:
           notify_moderators: "Вы пазначылі гэта для мадэрацыі"
       revisions:
@@ -1044,6 +1042,8 @@ be:
             title: "Адлюстраваць паведамленне з улучанымі дадаткамі і выдаленнямі."
           side_by_side_markdown:
             title: "Паказаць непасрэдныя адрозненні побач"
+      bookmarks:
+        name: "Імя"
     category:
       can: "можа&hellip;"
       none: "(па-за катэгорыямі)"
@@ -1343,6 +1343,7 @@ be:
         show_details: Дэталі
         description: Апісанне
         save: Захаваць
+        continue: Працягнуць
       web_hooks:
         create: "стварыць"
         save: "стварыць..."

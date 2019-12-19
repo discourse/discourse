@@ -324,6 +324,7 @@ export default Controller.extend({
         result => {
           if (result) {
             const model = this.model;
+            model.setProperties({ recentlyInstalled: false });
             model.destroyRecord().then(() => {
               this.allThemes.removeObject(model);
               this.transitionToRoute("adminCustomizeThemes");

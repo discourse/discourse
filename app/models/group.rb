@@ -204,8 +204,8 @@ class Group < ActiveRecord::Base
     groups
   }
 
-  scope :mentionable, lambda { |user|
-    where(self.mentionable_sql_clause,
+  scope :mentionable, lambda { |user, include_public: true|
+    where(self.mentionable_sql_clause(include_public: include_public),
       levels: alias_levels(user),
       user_id: user&.id
     )
@@ -222,19 +222,25 @@ class Group < ActiveRecord::Base
           )", levels: alias_levels(user), user_id: user && user.id)
   }
 
-  def self.mentionable_sql_clause
-    <<~SQL
-    mentionable_level in (:levels)
-    OR (
-      mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
-      AND id in (
-        SELECT group_id FROM group_users WHERE user_id = :user_id)
-    ) OR (
-      mentionable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]}
-      AND id in (
-        SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
-    )
-    SQL
+  def self.mentionable_sql_clause(include_public: true)
+    clause = +<<~SQL
+      mentionable_level in (:levels)
+      OR (
+        mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
+        AND id in (
+          SELECT group_id FROM group_users WHERE user_id = :user_id)
+      ) OR (
+        mentionable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]}
+        AND id in (
+          SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
+      )
+      SQL
+
+    if include_public
+      clause << "OR visibility_level = #{Group.visibility_levels[:public]}"
+    end
+
+    clause
   end
 
   def self.alias_levels(user)

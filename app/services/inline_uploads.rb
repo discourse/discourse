@@ -54,10 +54,8 @@ class InlineUploads
       raw_matches << [match, href, replacement, index]
     end
 
-    db = RailsMultisite::ConnectionManagement.current_db
-
     regexps = [
-      /(https?:\/\/[a-zA-Z0-9\.\/-]+\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/,
+      /(https?:\/\/[a-zA-Z0-9\.\/-]+\/#{Discourse.store.upload_path}#{UPLOAD_REGEXP_PATTERN})/,
     ]
 
     if Discourse.store.external?
@@ -219,28 +217,28 @@ class InlineUploads
   end
 
   def self.matched_uploads(node)
-    db = RailsMultisite::ConnectionManagement.current_db
+    upload_path = Discourse.store.upload_path
     base_url = Discourse.base_url.sub(/https?:\/\//, "(https?://)")
 
     regexps = [
       /(upload:\/\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
       /(\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
       /(#{base_url}\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
-      /(#{GlobalSetting.relative_url_root}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/,
-      /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/,
+      /(#{GlobalSetting.relative_url_root}\/#{upload_path}#{UPLOAD_REGEXP_PATTERN})/,
+      /(#{base_url}\/#{upload_path}#{UPLOAD_REGEXP_PATTERN})/,
     ]
 
     if GlobalSetting.cdn_url && (cdn_url = GlobalSetting.cdn_url.sub(/https?:\/\//, "(https?://)"))
-      regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+      regexps << /(#{cdn_url}\/#{upload_path}#{UPLOAD_REGEXP_PATTERN})/
       if GlobalSetting.relative_url_root.present?
-        regexps << /(#{cdn_url}#{GlobalSetting.relative_url_root}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << /(#{cdn_url}#{GlobalSetting.relative_url_root}\/#{upload_path}#{UPLOAD_REGEXP_PATTERN})/
       end
     end
 
     if Discourse.store.external?
       if Rails.configuration.multisite
-        regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
-        regexps << /(#{SiteSetting.Upload.s3_cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}\/#{upload_path}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << /(#{SiteSetting.Upload.s3_cdn_url}\/#{upload_path}#{UPLOAD_REGEXP_PATTERN})/
       else
         regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(#{SiteSetting.Upload.s3_cdn_url}#{UPLOAD_REGEXP_PATTERN})/

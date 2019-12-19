@@ -660,8 +660,6 @@ Topic.reopenClass({
   },
 
   update(topic, props) {
-    props = JSON.parse(JSON.stringify(props)) || {};
-
     // We support `category_id` and `categoryId` for compatibility
     if (typeof props.categoryId !== "undefined") {
       props.category_id = props.categoryId;
@@ -673,11 +671,11 @@ Topic.reopenClass({
       delete props.category_id;
     }
 
-    if (props.tags && props.tags.length === 0) {
-      props.tags = [""];
-    }
-
-    return ajax(topic.get("url"), { type: "PUT", data: props }).then(result => {
+    return ajax(topic.get("url"), {
+      type: "PUT",
+      data: JSON.stringify(props),
+      contentType: "application/json"
+    }).then(result => {
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;

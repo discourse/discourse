@@ -31,7 +31,7 @@ class FinishInstallationController < ApplicationController
       if @user.save
         @user.change_trust_level!(1) if @user.trust_level < 1
         send_signup_email
-        return redirect_confirm(@user.email)
+        redirect_confirm(@user.email)
       end
 
     end

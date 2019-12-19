@@ -31,6 +31,18 @@ function isUnseen(topic) {
   return !topic.is_seen;
 }
 
+function hasMutedTags(topicTagIds, mutedTagIds) {
+  if (!mutedTagIds || !topicTagIds) {
+    return false;
+  }
+  return (
+    (Discourse.SiteSettings.remove_muted_tags_from_latest === "always" &&
+      topicTagIds.any(tagId => mutedTagIds.includes(tagId))) ||
+    (Discourse.SiteSettings.remove_muted_tags_from_latest === "only_muted" &&
+      topicTagIds.every(tagId => mutedTagIds.includes(tagId)))
+  );
+}
+
 const TopicTrackingState = EmberObject.extend({
   messageCount: 0,
 
@@ -56,6 +68,13 @@ const TopicTrackingState = EmberObject.extend({
           muted_category_ids &&
           muted_category_ids.includes(data.payload.category_id)
         ) {
+          return;
+        }
+      }
+
+      if (["new_topic", "latest"].includes(data.message_type)) {
+        const mutedTagIds = User.currentProp("muted_tag_ids");
+        if (hasMutedTags(data.payload.topic_tag_ids, mutedTagIds)) {
           return;
         }
       }
@@ -202,9 +221,9 @@ const TopicTrackingState = EmberObject.extend({
 
     if (split.length >= 4) {
       filter = split[split.length - 1];
-      // c/cat/subcat/l/latest
+      // c/cat/subcat/6/l/latest
       var category = Category.findSingleBySlug(
-        split.splice(1, split.length - 3).join("/")
+        split.splice(1, split.length - 4).join("/")
       );
       this.set("filterCategory", category);
     } else {

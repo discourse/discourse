@@ -476,6 +476,8 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/deleted-posts" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/topic-tracking-state" => "users#topic_tracking_state", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/profile-hidden" => "users#profile_hidden"
+    put "#{root_path}/:username/feature-topic" => "users#feature_topic", constraints: { username: RouteFormat.username }
+    put "#{root_path}/:username/clear-featured-topic" => "users#clear_featured_topic", constraints: { username: RouteFormat.username }
   end
 
   get "user-badges/:username.json" => "user_badges#username", constraints: { username: RouteFormat.username }, defaults: { format: :json }
@@ -505,6 +507,9 @@ Discourse::Application.routes.draw do
   get "uploads/short-url/:base62(.:extension)" => "uploads#show_short", constraints: { site: /\w+/, base62: /[a-zA-Z0-9]+/, extension: /[a-z0-9\.]+/i }, as: :upload_short
   # used to download attachments
   get "uploads/:site/original/:tree:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, tree: /([a-z0-9]+\/)+/i, sha: /\h{40}/, extension: /[a-z0-9\.]+/i }
+  if Discourse.is_parallel_test?
+    get "uploads/:site/:index/original/:tree:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, index: /\d+/, tree: /([a-z0-9]+\/)+/i, sha: /\h{40}/, extension: /[a-z0-9\.]+/i }
+  end
   # used to download attachments (old route)
   get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /\h{16}/, format: /.*/ }
   get "secure-media-uploads/*path(.:extension)" => "uploads#show_secure", constraints: { extension: /[a-z0-9\.]+/i }
@@ -571,6 +576,7 @@ Discourse::Application.routes.draw do
 
   resources :posts do
     put "bookmark"
+    delete "bookmark", to: "posts#destroy_bookmark"
     put "wiki"
     put "post_type"
     put "rebake"
@@ -589,6 +595,8 @@ Discourse::Application.routes.draw do
       put "merge_posts"
     end
   end
+
+  resources :bookmarks, only: %i[create]
 
   resources :notifications, except: :show do
     collection do
@@ -835,6 +843,27 @@ Discourse::Application.routes.draw do
   get "apple-app-site-association" => "metadata#app_association_ios", format: false
   get "opensearch" => "metadata#opensearch", constraints: { format: :xml }
 
+  scope '/tag/:tag_id' do
+    constraints format: :json do
+      get '/' => 'tags#show'
+      get '/info' => 'tags#info'
+      get '/notifications' => 'tags#notifications'
+      put '/notifications' => 'tags#update_notifications'
+      put '/' => 'tags#update'
+      delete '/' => 'tags#destroy'
+      post '/synonyms' => 'tags#create_synonyms'
+      delete '/synonyms/:synonym_id' => 'tags#destroy_synonym'
+
+      Discourse.filters.each do |filter|
+        get "/l/#{filter}" => "tags#show_#{filter}"
+      end
+    end
+
+    constraints format: :rss do
+      get '/' => 'tags#tag_feed'
+    end
+  end
+
   scope "/tags" do
     get '/' => 'tags#index'
     get '/filter/list' => 'tags#index'
@@ -844,6 +873,7 @@ Discourse::Application.routes.draw do
     post '/upload' => 'tags#upload'
     get '/unused' => 'tags#list_unused'
     delete '/unused' => 'tags#destroy_unused'
+
     constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
       scope path: '/c/*category_slug_path_with_id' do
         Discourse.filters.each do |filter|
@@ -859,9 +889,13 @@ Discourse::Application.routes.draw do
         get '/:tag_id' => 'tags#show', as: 'tag_category_show'
       end
 
+      get '/intersection/:tag_id/*additional_tag_ids' => 'tags#show', as: 'tag_intersection'
+    end
+
+    # legacy routes
+    constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
       get '/:tag_id.rss' => 'tags#tag_feed'
       get '/:tag_id' => 'tags#show', as: 'tag_show'
-      get '/intersection/:tag_id/*additional_tag_ids' => 'tags#show', as: 'tag_intersection'
       get '/:tag_id/info' => 'tags#info'
       get '/:tag_id/notifications' => 'tags#notifications'
       put '/:tag_id/notifications' => 'tags#update_notifications'

@@ -187,7 +187,7 @@ basic:
   post_menu:
     client: true
     type: list
-    default: "read|like|share|flag|edit|bookmark|delete|admin|reply"
+    default: "read|like|share|flag|edit|bookmark|bookmarkWithReminder|delete|admin|reply"
     allow_any: false
     choices:
       - read
@@ -199,10 +199,11 @@ basic:
       - bookmark
       - admin
       - reply
+      - bookmarkWithReminder
   post_menu_hidden_items:
     client: true
     type: list
-    default: "flag|bookmark|edit|delete|admin"
+    default: "flag|bookmark|bookmarkWithReminder|edit|delete|admin"
     allow_any: false
     choices:
       - like
@@ -213,6 +214,7 @@ basic:
       - bookmark
       - admin
       - reply
+      - bookmarkWithReminder
   share_links:
     client: true
     type: list
@@ -288,6 +290,10 @@ basic:
   enable_whispers:
     client: true
     default: false
+  enable_bookmarks_with_reminders:
+    client: true
+    default: false
+    hidden: true
   push_notifications_prompt:
     default: true
     client: true
@@ -559,6 +565,9 @@ users:
     max: 99000
   hide_user_profiles_from_public:
     default: false
+    client: true
+  allow_featured_topic_on_user_profiles:
+    default: true
     client: true
   show_inactive_accounts:
     default: false
@@ -1395,13 +1404,12 @@ security:
   content_security_policy_script_src:
     type: list
     default: ""
-  content_security_policy_allow_unsafe_eval:
-    default: true
-    hidden: true
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
     max: 2000
+  allow_embedding_site_in_an_iframe:
+    default: false
 
 onebox:
   enable_flash_video_onebox: false

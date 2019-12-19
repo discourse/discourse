@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'rotp'
 
 describe UsersController do
   let(:user) { Fabricate(:user) }
@@ -815,7 +816,7 @@ describe UsersController do
 
       context "with a regular api key" do
         fab!(:user) { Fabricate(:user) }
-        fab!(:api_key) { Fabricate(:api_key, user: user) }
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "won't create the user as active with a regular key" do
           post "/u.json",
@@ -828,7 +829,7 @@ describe UsersController do
 
       context "with an admin api key" do
         fab!(:admin) { Fabricate(:admin) }
-        fab!(:api_key) { Fabricate(:api_key, user: admin) }
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: admin) }
 
         it "creates the user as active with a an admin key" do
           SiteSetting.send_welcome_message = true
@@ -915,7 +916,7 @@ describe UsersController do
 
       context "with a regular api key" do
         fab!(:user) { Fabricate(:user) }
-        fab!(:api_key) { Fabricate(:api_key, user: user) }
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "won't create the user as staged with a regular key" do
           post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)
@@ -928,7 +929,7 @@ describe UsersController do
 
       context "with an admin api key" do
         fab!(:user) { Fabricate(:admin) }
-        fab!(:api_key) { Fabricate(:api_key, user: user) }
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "creates the user as staged with a regular key" do
           post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)
@@ -3163,26 +3164,27 @@ describe UsersController do
     context 'groups' do
       let!(:mentionable_group) do
         Fabricate(:group,
-          mentionable_level: 99,
-          messageable_level: 0,
-          visibility_level: 0,
+          mentionable_level: Group::ALIAS_LEVELS[:everyone],
+          messageable_level: Group::ALIAS_LEVELS[:nobody],
+          visibility_level: Group.visibility_levels[:public],
           name: 'aaa1'
         )
       end
 
       let!(:mentionable_group_2) do
         Fabricate(:group,
-          mentionable_level: 99,
-          messageable_level: 0,
-          visibility_level: 1,
+          mentionable_level: Group::ALIAS_LEVELS[:everyone],
+          messageable_level: Group::ALIAS_LEVELS[:nobody],
+          visibility_level: Group.visibility_levels[:logged_on_users],
           name: 'aaa2'
         )
       end
 
       let!(:messageable_group) do
         Fabricate(:group,
-          mentionable_level: 0,
-          messageable_level: 99,
+          mentionable_level: Group::ALIAS_LEVELS[:nobody],
+          messageable_level: Group::ALIAS_LEVELS[:everyone],
+          visibility_level: Group.visibility_levels[:logged_on_users],
           name: 'aaa3'
         )
       end
@@ -3829,6 +3831,98 @@ describe UsersController do
           end
         end
       end
+    end
+  end
+
+  describe '#feature_topic' do
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:other_user) { Fabricate(:user) }
+    fab!(:private_message) { Fabricate(:private_message_topic, user: other_user) }
+    fab!(:category) { Fabricate(:category_with_definition) }
+
+    describe "site setting enabled" do
+      before do
+        SiteSetting.allow_featured_topic_on_user_profiles = true
+      end
+
+      it 'requires the user to be logged in' do
+        put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(403)
+      end
+
+      it 'returns an error if the the current user does not have access' do
+        sign_in(user)
+        topic.update(user_id: other_user.id)
+        put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(403)
+      end
+
+      it 'returns an error if the user did not create the topic' do
+        sign_in(user)
+        topic.update(user_id: other_user.id)
+        put "/u/#{other_user.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(403)
+      end
+
+      it 'returns an error if the topic is a PM' do
+        sign_in(other_user)
+        put "/u/#{other_user.username}/feature-topic.json", params: { topic_id: private_message.id }
+        expect(response.status).to eq(403)
+      end
+
+      it "returns an error if the topic's category is read_restricted" do
+        sign_in(user)
+        category.set_permissions({})
+        topic.update(category_id: category.id)
+        put "/u/#{other_user.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(403)
+      end
+
+      it 'sets the user_profiles featured_topic correctly' do
+        sign_in(user)
+        topic.update(user_id: user.id)
+        put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(200)
+        expect(user.user_profile.featured_topic).to eq topic
+      end
+
+      describe "site setting disabled" do
+        before do
+          SiteSetting.allow_featured_topic_on_user_profiles = false
+        end
+
+        it "does not allow setting featured_topic for user_profiles" do
+          sign_in(user)
+          topic.update(user_id: user.id)
+          put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
+          expect(response.status).to eq(403)
+        end
+      end
+    end
+  end
+
+  describe '#clear_featured_topic' do
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:other_user) { Fabricate(:user) }
+
+    it 'requires the user to be logged in' do
+      put "/u/#{user.username}/clear-featured-topic.json"
+      expect(response.status).to eq(403)
+    end
+
+    it 'returns an error if the the current user does not have access' do
+      sign_in(user)
+      topic.update(user_id: other_user.id)
+      put "/u/#{other_user.username}/clear-featured-topic.json"
+      expect(response.status).to eq(403)
+    end
+
+    it 'clears the user_profiles featured_topic correctly' do
+      sign_in(user)
+      topic.update(user: user)
+      put "/u/#{user.username}/clear-featured-topic.json"
+      expect(response.status).to eq(200)
+      expect(user.user_profile.featured_topic).to eq nil
     end
   end
 end
