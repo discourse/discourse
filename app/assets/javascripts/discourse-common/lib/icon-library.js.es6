@@ -6,11 +6,11 @@ const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
 
 const REPLACEMENTS = {
-  "d-tracking": "circle",
-  "d-muted": "times-circle",
-  "d-regular": "far-circle",
-  "d-watching": "exclamation-circle",
-  "d-watching-first": "far-dot-circle",
+  "d-tracking": "bell",
+  "d-muted": "discourse-bell-slash",
+  "d-regular": "far-bell",
+  "d-watching": "discourse-bell-exclamation",
+  "d-watching-first": "discourse-bell-one",
   "d-drop-expanded": "caret-down",
   "d-drop-collapsed": "caret-right",
   "d-unliked": "far-heart",
@@ -33,7 +33,7 @@ const REPLACEMENTS = {
   "notification.linked": "link",
   "notification.granted_badge": "certificate",
   "notification.topic_reminder": "far-clock",
-  "notification.watching_first_post": "far-dot-circle",
+  "notification.watching_first_post": "discourse-bell-one",
   "notification.group_message_summary": "users",
   "notification.post_approved": "check",
   "notification.membership_request_accepted": "user-plus",
