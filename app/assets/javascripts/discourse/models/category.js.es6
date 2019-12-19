@@ -65,6 +65,16 @@ const Category = RestModel.extend({
     return (parentLevel || -1) + 1;
   },
 
+  @discourseComputed("subcategories")
+  isGrandParent(subcategories) {
+    return (
+      subcategories &&
+      subcategories.some(
+        cat => cat.subcategories && cat.subcategories.length > 0
+      )
+    );
+  },
+
   @discourseComputed("notification_level")
   isMuted(notificationLevel) {
     return notificationLevel === NotificationLevels.MUTED;
