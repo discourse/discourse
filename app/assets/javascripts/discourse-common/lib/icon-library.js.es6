@@ -580,21 +580,25 @@ function warnIfMissing(id) {
   }
 }
 
+const reportedIcons = [];
+
 function warnIfDeprecated(oldId, newId) {
   deprecated(
     `Please replace all occurrences of "${oldId}"" with "${newId}". FontAwesome 4.7 icon names are now deprecated and will be removed in the next release.`
   );
-  if (!Discourse.testing) {
+  if (!Discourse.testing && !reportedIcons.includes(oldId)) {
     const errorData = {
       message: `FA icon deprecation: replace "${oldId}"" with "${newId}".`,
       stacktrace: Error().stack
     };
 
     Ember.$.ajax(`${Discourse.BaseUri}/logs/report_js_error`, {
-      errorData,
+      data: errorData,
       type: "POST",
       cache: false
     });
+
+    reportedIcons.push(oldId);
   }
 }
 
