@@ -3042,6 +3042,7 @@ en:
         mark_watching: "%{shortcut} Watch topic"
         print: "%{shortcut} Print topic"
         defer: "%{shortcut} Defer topic"
+        topic_admin_actions: "%{shortcut} Open topic admin actions"
 
     badges:
       earned_n_times:

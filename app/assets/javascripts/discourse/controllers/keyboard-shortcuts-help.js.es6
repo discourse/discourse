@@ -167,6 +167,10 @@ export default Controller.extend(ModalFunctionality, {
       defer: buildShortcut("actions.defer", {
         keys1: [SHIFT, "u"],
         keysDelimiter: PLUS
+      }),
+      topic_admin_actions: buildShortcut("actions.topic_admin_actions", {
+        keys1: [SHIFT, "a"],
+        keysDelimiter: PLUS
       })
     }
   }

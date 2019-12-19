@@ -322,7 +322,12 @@ createWidget("timeline-controls", {
     const { fullScreen, currentUser, topic } = attrs;
 
     if (!fullScreen && currentUser) {
-      controls.push(this.attach("topic-admin-menu-button", { topic }));
+      controls.push(
+        this.attach("topic-admin-menu-button", {
+          topic,
+          addKeyboardTargetClass: true
+        })
+      );
     }
 
     return controls;

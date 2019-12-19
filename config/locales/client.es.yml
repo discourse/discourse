@@ -2785,6 +2785,7 @@ es:
         mark_watching: "%{shortcut} Vigilar Tema"
         print: "%{shortcut} Imprimir tema"
         defer: "%{shortcut} Aplazar el tema"
+        topic_admin_actions: "%{shortcut} Abrir acciones de administrador para el tema"
     badges:
       earned_n_times:
         one: "Ganó esta medalla %{count} vez"
