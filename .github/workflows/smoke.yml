@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
+    env:
+      RAILS_ENV: production
+
     steps:
       - uses: actions/checkout@master
         with:
@@ -42,6 +45,9 @@ jobs:
 
       - name: Migrate
         run: unbuffer d/rake db:migrate
+
+      - name: Precompile
+        run: unbuffer d/rake assets:precompile
 
       - name: Run script
         run: unbuffer d/rails runner tmp/script.rb
