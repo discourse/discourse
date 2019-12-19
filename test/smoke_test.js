@@ -122,7 +122,7 @@ const path = require("path");
   };
 
   await exec("go to site", () => {
-    return page.goto(url);
+    return page.goto(url, { timeout: 60000 });
   });
 
   await exec("expect a log in button in the header", () => {
