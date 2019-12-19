@@ -161,7 +161,6 @@ ro:
       banner:
         enabled: "a creat acest banner %{when}. Va apărea la începutul fiecărei pagini până când va fi ascuns de către utilizator."
         disabled: "a îndepărtat acest banner %{when}. Nu va mai apărea la începutul fiecărei pagini."
-    topic_admin_menu: "Opțiuni administrare subiect"
     wizard_required: "Bine ai venit la noul tău Discourse! Să începem cu <a href='%{url}' data-auto-route='true'>expertul de configurare</a> ✨"
     emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
     bootstrap_mode_enabled: "Pentru a simplifica lansarea noului dv. site, sunteți în modul bootstrap. Toți utilizatorii noi vor primi nivelul 1 de încredere și vor avea activată primirea zilnică de e-mail-uri rezumat. Această funcționalitate va fi oprită automat după ce se înregistrează primii %{min_users} membri."
@@ -260,6 +259,7 @@ ro:
     bookmarks:
       created: "Ai pus semn de carte pe acest mesaj"
       remove: "Șterge semn de carte"
+      save: "Salvează"
     drafts:
       resume: "Reluați"
       remove: "Eliminați"
@@ -303,8 +303,6 @@ ro:
       edit: "Editează acest banner."
     choose_topic:
       none_found: "Nu au fost găsite subiecte noi."
-      title:
-        placeholder: "Scrieți aici titlul subiectului"
     review:
       explain:
         total: "Total"
@@ -588,6 +586,10 @@ ro:
         normal_option: "Normal"
       activity_stream: "Activitate"
       preferences: "Preferințe"
+      feature_topic_on_profile:
+        save: "Salvează"
+        clear:
+          title: "Șterge"
       profile_hidden: "Acest profil public al utilizatorului este ascuns."
       expand_profile: "Extinde"
       collapse_profile: "Colaps"
@@ -843,7 +845,6 @@ ro:
         search: "Scrie pentru a căuta invitații..."
         title: "Invitații"
         user: "Utilizator invitat"
-        sent: "Trimis(e)"
         none: "Nu există invitații."
         truncated:
           one: "Se afișează prima invitație."
@@ -1595,6 +1596,7 @@ ro:
           title: "Silențios"
           description: "Nu vei fi notificat niciodată despre nimic legat de acest subiect și acesta nu va fi afișat la subiecte recente."
       actions:
+        title: "Acțiuni"
         recover: "Restaurează subiect"
         delete: "Șterge subiect"
         open: "Deschide subiect"
@@ -1858,7 +1860,6 @@ ro:
           notify_moderators: "moderatori notificați"
           notify_user: "a trimis un mesaj"
           bookmark: "a pus semn de carte la asta"
-          like: "a apreciat asta"
           like_capped:
             one: "și {{count}} altul au apreciat asta"
             few: "și {{count}} alții au apreciat asta"
@@ -1908,6 +1909,8 @@ ro:
           html_part:
             title: "Arată partea HTML a emailului"
             button: "HTML"
+      bookmarks:
+        name: "Nume"
     category:
       can: "can&hellip; "
       none: "(nicio categorie)"
@@ -2484,6 +2487,7 @@ ro:
         show_details: Detalii
         description: Descriere
         save: Salvează
+        continue: Continuă
       web_hooks:
         title: "Webhooks"
         none: "Momentan nu există nici un webhook"

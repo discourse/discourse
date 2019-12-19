@@ -27,6 +27,8 @@ fr:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
+      time_short_day: "dddd [à] HH:MM"
+      month_day_time: "[Le] D MMMM [à] HH:MM"
       timeline_date: "MMM YYYY"
       long_no_year: "DD MMM H:mm"
       long_no_year_no_time: "D MMM"
@@ -152,7 +154,6 @@ fr:
       banner:
         enabled: "a mis à la une %{when}. Il sera affiché en haut de chaque page jusqu’à ce qu'il soit ignoré par un utilisateur."
         disabled: "a supprimé de la une %{when}. Il ne sera plus affiché en haut de chaque page."
-    topic_admin_menu: "actions d'administration sur le sujet"
     wizard_required: "Bienvenue sur votre nouveau Discourse ! Démarrons par <a href='%{url}' data-auto-route='true'>l'assistant de configuration</a> ✨"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
     bootstrap_mode_enabled: "Pour rendre le lancement de votre site plus facile, vous êtes en mode 'bootstrap'. Tout nouvel utilisateur sera accordé le niveau de confiance 1 et aura les résumés par courriel hebdomadaires activés. Ceci cessera d'être le cas lorsque %{min_users} utilisateurs auront rejoints le site."
@@ -262,8 +263,19 @@ fr:
     bookmarks:
       created: "vous avez mis un signet à ce message"
       not_bookmarked: "mettre un signet à ce message"
+      created_with_reminder: "Vous avez épinglé cette contribution avec un rappel au %{date}"
       remove: "Retirer le signet"
       confirm_clear: "Êtes-vous sûr de vouloir retirer tous les signets de ce sujet ?"
+      save: "Sauvegarder"
+      no_timezone: "Vous n&#39;avez pas encore défini de fuseau horaire. Vous ne pourrez pas définir de rappels. Configurez-en un <a href=\"%{basePath}/my/preferences/profile\">dans votre profil</a>."
+      reminders:
+        at_desktop: "La prochaine fois je suis à mon bureau"
+        later_today: "Plus tard dans la journée<br/>{{date}}"
+        next_business_day: "Prochain jour ouvré<br/>{{date}}"
+        tomorrow: "Demain<br/>{{date}}"
+        next_week: "La semaine prochaine<br/>{{date}}"
+        next_month: "Le mois prochain<br/>{{date}}"
+        custom: "Date et heure personnalisés"
     drafts:
       resume: "Reprendre"
       remove: "Supprimer"
@@ -310,13 +322,13 @@ fr:
     choose_topic:
       none_found: "Aucun sujet trouvé."
       title:
-        search: "Rechercher sujet par titre, url ou ID :"
-        placeholder: "entrez ici le titre du sujet"
+        search: "Chercher un Sujet"
+        placeholder: "Saisir ici le titre du sujet, son URL ou son id"
     choose_message:
       none_found: "Aucun message trouvé."
       title:
-        search: "Rechercher messages par titre :"
-        placeholder: "saisir le titre du message ici"
+        search: "Chercher un Message"
+        placeholder: "saisir ici l'intitulé du sujet, son URL ou son id"
     review:
       order_by: "Trier par"
       in_reply_to: "en réponse à"
@@ -337,6 +349,9 @@ fr:
         trust_level_bonus:
           name: "niveau de confiance"
           title: "Les éléments révisables créés par les utilisateurs ayant un niveau de confiance plus élevé ont un score plus élevé."
+        type_bonus:
+          name: "indiquer le bonus"
+          title: "Certains types révisables peuvent se voir attribuer un bonus par les Responsables pour en élever la priorité."
       claim_help:
         optional: "Vous pouvez réserver cet élément pour empêcher d'autres de le vérifier."
         required: "Vous devez réserver des éléments avant des les vérifier."
@@ -739,6 +754,10 @@ fr:
         normal_option_title: "Vous serez notifié si cet utilisateur vous répond, vous cite, ou mentionne votre @pseudo."
       activity_stream: "Activité"
       preferences: "Préférences"
+      feature_topic_on_profile:
+        save: "Sauvegarder"
+        clear:
+          title: "Vider"
       profile_hidden: "Le profil public de cet usagé est caché."
       expand_profile: "Développer"
       collapse_profile: "Réduire"
@@ -771,6 +790,7 @@ fr:
       enable_quoting: "Proposer de citer le texte sélectionné"
       enable_defer: "Activer reporter pour marquer des sujets non lu"
       change: "modifier"
+      featured_topic: "Sujet à la une"
       moderator: "{{user}} est un modérateur"
       admin: "{{user}} est un administrateur"
       moderator_tooltip: "Cet utilisateur est un modérateur"
@@ -955,6 +975,8 @@ fr:
       change_card_background:
         title: "Arrière-plan de la carte de l'utilisateur"
         instructions: "Les images d'arrière-plan seront centrées avec une largeur par défaut de 590 pixels."
+      change_featured_topic:
+        title: "Sujet à la une"
       email:
         title: "Courriel"
         primary: "Adresse courriel principale"
@@ -1090,7 +1112,6 @@ fr:
         search: "commencer à saisir pour rechercher vos invitations…"
         title: "Invitations"
         user: "Utilisateurs"
-        sent: "Envoyé"
         none: "Il n'y a pas d'invitations en attente à afficher."
         truncated:
           one: "Afficher la première invitation."
@@ -1257,7 +1278,7 @@ fr:
     time_read_recently: "%{time_read} récemment"
     time_read_tooltip: "%{time_read} temps de lecture total"
     time_read_recently_tooltip: "%{time_read} temps de lecture total (%{recent_time_read} durant les 60 derniers jours)"
-    last_reply_lowercase: dernière réponse
+    last_reply_lowercase: réponse
     replies_lowercase:
       one: réponse
       other: réponses
@@ -1836,6 +1857,13 @@ fr:
       defer:
         help: "Marquer comme non-lu"
         title: "Reporter"
+      feature_on_profile:
+        help: "Ajouter un lien vers ce sujet sur votre carte d&#39;utilisateur et votre profil"
+        title: "Mettre en avant sur le profil"
+      remove_from_profile:
+        warning: "Votre profil a déjà un sujet en vedette. Si vous continuez, ce sujet le remplacera."
+        help: "Retirer le lien vers ce sujet de votre profil d'usager"
+        title: "Retirer du profil"
       list: "Sujets"
       new: "nouveau sujet"
       unread: "non lus"
@@ -2005,6 +2033,7 @@ fr:
           title: "Silencieux"
           description: "Vous ne serez jamais notifié de rien concernant ce sujet, et il n'apparaîtra pas des les derniers sujets."
       actions:
+        title: "Actions"
         recover: "Annuler la suppression du sujet"
         delete: "Supprimer le sujet"
         open: "Ouvrir le sujet"
@@ -2313,8 +2342,6 @@ fr:
           notify_moderators: "signalé aux modérateurs"
           notify_user: "a envoyé un message"
           bookmark: "signet ajouté"
-          like: "a aimé ceci"
-          read: "Lisez ceci"
           like_capped:
             one: "et {{count}} autre a aimé ça"
             other: "et {{count}} autres ont aimé ça"
@@ -2367,6 +2394,11 @@ fr:
           html_part:
             title: "Afficher le contenu HTML du courriel"
             button: "HTML"
+      bookmarks:
+        create: "Ajouter un signet"
+        name: "Nom"
+        name_placeholder: "Nommez le signet pour alléger votre mémoire"
+        set_reminder: "Ajouter un rappel"
     category:
       can: "peut&hellip; "
       none: "(aucune catégorie)"
@@ -3111,6 +3143,8 @@ fr:
         new_key: Nouvelle clé pour l’API
         revoked: Révoquée
         delete: Supprimer de façon permanente
+        not_shown_again: Cette clé ne sera plus affichée. Assurez-vous d'en avoir fait une copie avant de continuer.
+        continue: Poursuivre
       web_hooks:
         title: "Webhooks"
         none: "Il n'y a aucun Webhook actuellement."
@@ -3380,6 +3414,7 @@ fr:
           upload: "Upload"
           select_component: "Sélectionner un composant..."
           unsaved_changes_alert: "Vous n'avez pas encore sauvegardé vos modifications, voulez-vous les abandonner et continuer ?"
+          unsaved_parent_themes: "Vous n'avez assigné le composant à aucun thème, voulez-vous continuer ?"
           discard: "Abandonner"
           stay: "Rester"
           css_html: "CSS/HTML personnalisé"
@@ -3702,6 +3737,7 @@ fr:
             api_key_create: "créer une clé pour l’API"
             api_key_update: "mettre à jour une clé pour l’API"
             api_key_destroy: "détruire une clé pour l’API"
+            override_upload_secure_status: "passer outre le statut de téléchargement sécurisé"
         screened_emails:
           title: "Courriels sous surveillance"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."

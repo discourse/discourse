@@ -313,6 +313,15 @@ de:
   edit_conflict: "Dieser Beitrag wurde von einem anderen Benutzer bearbeitet und deine Änderungen können nicht länger gespeichert werden."
   revert_version_same: "Die aktuelle Version entspricht der Version, zu der du zurückkehren möchtest."
   excerpt_image: "Bild"
+  bookmarks:
+    reminders:
+      at_desktop: "Nächstes mal wenn ich an meinem PC bin"
+      later_today: "Im Laufe des Tages <br/>{{date}}"
+      next_business_day: "Nächster Geschäftstag <br/>{{date}}"
+      tomorrow: "Morgen <br/>{{date}}"
+      next_week: "Nächste Woche <br/>{{date}}"
+      next_month: "Nächster Monat <br/>{{date}}"
+      custom: "Eigenes Datum und Zeit"
   groups:
     success:
       bulk_add:

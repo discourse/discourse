@@ -12,6 +12,8 @@ zh_CN:
         today: 今天%{time}
         tomorrow: 明天%{time}
         yesterday: 昨天%{time}
+        countdown:
+          passed: 日期已过
       title: 插入日期/时间
       create:
         form:

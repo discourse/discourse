@@ -130,7 +130,6 @@ sq:
       visible:
         enabled: "listuar %{when}"
         disabled: "çlistuar %{when}"
-    topic_admin_menu: "veprimet administrative mbi temën"
     wizard_required: "Mirseerdhët tek faqja juaj e re Discourse! Le t'ia nisim me <a href='%{url}' data-auto-route='true'>\"setup wizard\"</a> ✨"
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
     themes:
@@ -218,6 +217,7 @@ sq:
     bookmarks:
       created: "ju ruajtët këtë temë tek të preferuarat tuaja"
       remove: "Hiqeni nga të prefereruarat"
+      save: "Ruaj"
     drafts:
       remove: "Hiq"
       abandon:
@@ -243,8 +243,6 @@ sq:
       edit: "Modifiko këtë banderolë >>"
     choose_topic:
       none_found: "Asnjë temë nuk u gjet."
-      title:
-        placeholder: "shkruaj titullin e temës këtu"
     review:
       in_reply_to: "në përgjigje të"
       explain:
@@ -466,6 +464,10 @@ sq:
         normal_option: "Normal"
       activity_stream: "Aktiviteti"
       preferences: "Preferencat"
+      feature_topic_on_profile:
+        save: "Ruaj"
+        clear:
+          title: "Pastro"
       expand_profile: "Shpalos"
       bookmarks: "Të preferuarat"
       bio: "Rreth meje"
@@ -699,7 +701,6 @@ sq:
         search: "shkruaj për të kërkuar ftesat..."
         title: "Ftesat"
         user: "Anëtari i ftuar"
-        sent: "Dërguar"
         truncated:
           one: "Po afishohet ftesa e parë."
           other: "Po afishohen {{count}} ftesat e para."
@@ -1268,6 +1269,7 @@ sq:
           title: "Pa njoftime"
           description: "Ju nuk do të njoftoheni për asgjë mbi këtë temë, dhe tema nuk do të shfaqet në listën e temave më të fundit. "
       actions:
+        title: "Veprimet"
         recover: "Rivendos temën"
         delete: "Fshi temën"
         open: "Hap temën"
@@ -1490,7 +1492,6 @@ sq:
           notify_moderators: "njoftoi moderatorët"
           notify_user: "dërgoi një mesazh"
           bookmark: "e shtoi këtë tek të preferuarat"
-          like: "pëlqeu këtë"
         by_you:
           off_topic: "Ti sinjalizove këtë postim si jashtë teme"
           spam: "Ti sinjalizove këtë postim si spam"
@@ -1523,6 +1524,8 @@ sq:
             button: "Tekst"
           html_part:
             button: "HTML"
+      bookmarks:
+        name: "Emri"
     category:
       can: "mund&hellip; "
       none: "(pa kategori)"

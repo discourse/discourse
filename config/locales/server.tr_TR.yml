@@ -100,9 +100,13 @@ tr_TR:
         topic_not_found_error: "Bir cevap geldiğinde gerçekleşir ancak ilgili konu silinir."
         topic_closed_error: "Kapanan konuya cevap geldiğinde olur."
         screened_email_error: "Bu olay gönderenin e-posta adresi tarandığında olur."
+        unsubscribe_not_allowed: "Bu kullanıcı için e-posta aboneliği iptal edilmiş."
+        email_not_allowed: "E-posta adresi kara listede."
       unrecognized_error: "Bilinmeyen Hata"
+    secure_media_placeholder: "Düzenlendi: Bu site güvenli bir medyaya sahip, ekli görüntü/ses/videoyu görmek için konuyu ziyaret edin."
   errors: &errors
     format: "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b> : %{message}"
     messages:
       too_long_validation: "%{max} karakter ile limitli; siz %{length} karakter girdiniz."
       invalid_boolean: "Geçersiz mantıksal değer."
@@ -120,12 +124,18 @@ tr_TR:
       has_already_been_used: "önceden kullanıldı"
       inclusion: listeye dahil edilmemiş
       invalid: geçersiz
+      is_invalid: "belirsiz görünüyor, bu tamamlanmış bir cümle mi?"
+      invalid_timezone: "&#39;%{tz}&#39; geçerli bir saat dilimi değil"
+      contains_censored_words: "aşağıdaki sansürlü kelimeleri içerir: %{censored_words}"
       less_than: "%{count} rakamından az olmalı"
       less_than_or_equal_to: "%{count} rakamına eşit veya daha az olmalı"
       not_a_number: sayı değil
       not_an_integer: tam sayı değil
       odd: tek sayı olmalı
       record_invalid: "Doğrulama başarısız: %{errors}"
+      max_emojis: "%{max_emojis_count} emoji&#39;den daha fazlasına sahip olamaz"
+      emojis_disabled: "emoji olamaz"
+      ip_address_already_screened: "zaten mevcut bir düzene dahil edildi"
       restrict_dependent_destroy:
         one: "Kayıt silinemiyor çünkü bir bağımlı %{record} var"
         many: "Kayıt silinemiyor çünkü bir bağımlı %{record} var"
@@ -139,6 +149,7 @@ tr_TR:
         one: yanlış uzunlukta (%{count} karakter olmalı)
         other: yanlış uzunlukta (%{count} karakter olmalı)
       other_than: "%{count} dışında bir rakam olmalı"
+      sso_overrides_username: "`Sso_overrides_username` ayarı etkin olduğu için kullanıcı adı SSO sağlayıcı tarafında güncellenmelidir."
     template:
       body: "Şu alanlarla ilgili problem yaşandı:"
       header:
@@ -147,11 +158,33 @@ tr_TR:
     embed:
       load_from_remote: "Gönderi yüklenirken bir hata oluştu."
     site_settings:
+      invalid_category_id: "Varolmayan bir kategori belirlediniz"
+      invalid_choice:
+        one: "Geçersiz %{name} seçeneğini belirttiniz"
+        other: "Geçersiz %{name} seçeneklerini belirttiniz"
       default_categories_already_selected: "Bir başka listede kullanılan bir kategoriyi seçemezsiniz."
+      default_tags_already_selected: "Başka listede kullanılan bir etiketi seçemezsiniz."
       s3_upload_bucket_is_required: "Bir 's3_upload_bucket' tanımlamadıysanız, S3 yüklemelerini etkinleştiremezsiniz."
+      enable_s3_uploads_is_required: "S3 yüklemelerini etkinleştirmediyseniz, envanteri S3&#39;e etkinleştiremezsiniz."
+      s3_backup_requires_s3_settings: "&#39;%{setting_name}&#39;ı sağlamadıysanız, S3&#39;ü yedekleme konumu olarak kullanamazsınız."
+      s3_bucket_reused: "Aynı sepeti &#39;s3_upload_bucket&#39; ve &#39;s3_backup_bucket&#39; için kullanamazsınız. Farklı bir sepet seçin veya her sepet için farklı bir yol kullanın."
+      secure_media_requirements: "Güvenli medyayı etkinleştirmeden önce S3 yüklemelerinin etkinleştirilmesi gerekir."
+      second_factor_cannot_be_enforced_with_disabled_local_login: "Yerel girişler devre dışı bırakılmışsa 2FA&#39;yı uygulayamazsınız."
+      local_login_cannot_be_disabled_if_second_factor_enforced: "2FA zorunluysa, yerel girişi devre dışı bırakamazsınız. Yerel girişleri devre dışı bırakmadan önce zorunlu 2FA&#39;yı devre dışı bırakın."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 yüklemeleri zaten küresel olarak etkin olduğundan S3 yüklemelerini etkinleştiremezsiniz ve bu site düzeyini etkinleştirmek yüklemelerde kritik sorunlara neden olabilir"
+    conflicting_google_user_id: 'Bu hesap için Google Hesap Kimliği değişti; Güvenlik nedeniyle yetkili müdahalesi gerekmektedir. Lütfen yetkili ile iletişime geçin ve <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
       <<: *errors
+  invite:
+    not_found: "Davetiyeniz geçersiz. Lütfen <a href='%{base_url}/about'>yetkili ile iletişime geçin</a> ."
+    not_found_json: "Davetiyeniz geçersiz. Lütfen personelle iletişime geçin."
+    error_message: "Davet kabul edilirken bir hata oluştu. Lütfen sitenin yöneticisine başvurun."
+    user_exists: "<b>%{email}</b> kişisinin <a href='%{base_path}/u/%{username}/summary'>zaten bir hesabı var!</a>"
+    confirm_email: "<p> Neredeyse bitti! E-posta adresinize bir aktivasyon postası gönderdik. Lütfen hesabınızı etkinleştirmek için postadaki talimatları izleyin. </p><p> Gelmezse, spam klasörünüzü kontrol edin. </p>"
+  bulk_invite:
+    file_should_be_csv: "Yüklenen dosya csv formatında olmalıdır."
+    error: "Bu dosya yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyiniz."
   topic_invite:
     user_exists: "Üzgünüz, bu kullanıcı zaten davet edildi. Konuya yalnızca bir kullanıcı davet edebilirsiniz."
   backup:
@@ -159,21 +192,45 @@ tr_TR:
     backup_file_should_be_tar_gz: "Yedekleme dosyası .tar.gz uzantılı olmalı."
     not_enough_space_on_disk: "Yedeklemenin yüklenebilmesi için diskte yeterli alan bulunmuyor."
     invalid_filename: "Yedekleme dosyasının adı geçersiz karakterler içeriyor. Geçerli olanlar: a-z 0-9 . -_."
+    file_exists: "Yüklemeye çalıştığınız dosya zaten var."
+    location:
+      local: "Yerel"
+      s3: "Amazon S3"
+  invalid_params: "İsteğe geçersiz parametreler verdiniz: %{message}"
   not_logged_in: "Bunun için giriş yapmanız gerekir."
   not_found: "İstenilen URL ya da kaynak bulunamadı."
   invalid_access: "İstenilen kaynağı görüntüleyebilmeniz için izniniz yok."
+  authenticator_not_found: "Kimlik doğrulama yöntemi mevcut değil veya devre dışı bırakıldı."
+  invalid_api_credentials: "İstenilen kaynağı görüntülemenize izin verilmiyor. API kullanıcı adı veya şifresi geçersiz."
+  provider_not_enabled: "İstenilen kaynağı görüntülemenize izin verilmiyor. Kimlik doğrulama kontrolü etkin değil."
+  provider_not_found: "İstenilen kaynağı görüntülemenize izin verilmiyor. Kimlik doğrulama sağlayıcısı mevcut değil."
   read_only_mode_enabled: "Bu site sadece okuma modunda. Eylemler devre dışı."
+  invalid_grant_badge_reason_link: "Rozet nedeniyle dış veya geçersiz forum bağlantısına izin verilmiyor"
+  email_template_cant_be_modified: "Bu e-posta şablonu değiştirilemez"
+  invalid_whisper_access: "Fısıltılar etkin değil veya fısıltı yayınları oluşturma erişiminiz yok"
   not_in_group:
+    title_topic: "Bu konuyu görebilmek için bir grupta olmalısınız."
+    title_category: "Bu kategoriyi görebilmek için bir grupta olmalısınız."
+    request_membership: "Üyelik İste"
     join_group: "Gruba katıl"
+  deleted_topic: "Hata! Bu konu silindi ve artık kullanılamıyor."
   reading_time: "Okuma Zamanı"
   likes: "Beğeniler"
   too_many_replies:
     one: "Üzgünüz, yeni kullanıcılar geçici olarak aynı konu içinde sadece %{count} cevap ile sınırlılar. "
     other: "Üzgünüz, yeni kullanıcılar geçici olarak aynı konu içinde sadece %{count} cevap ile sınırlılar. "
+  max_consecutive_replies:
+    one: "Ardışık cevap yok. Lütfen önceki cevabınızı düzenleyin veya birisinin size cevap vermesini bekleyin."
+    other: "En fazla %{count} ardışık cevaplara izin verilmez. Lütfen önceki cevabınızı düzenleyin veya birisinin size cevap vermesini bekleyin."
   embed:
     start_discussion: "Tartışma Başlat"
     continue: "Tartışmaya Devam Et"
+    error: "Gömme Hatası"
     referer: "Yönlendiren:"
+    error_topics: "`Gömülü konu listesi &#39;site ayarı etkin değil"
+    mismatch: "Yönlendirici ya gönderilmedi ya da aşağıdaki ana bilgisayarlardan hiçbiriyle eşleşmedi:"
+    no_hosts: "Gömmek için hiçbir ana bilgisayar ayarlanmadı."
+    configure: "Gömmeyi Yapılandır"
     more_replies:
       one: "%{count} cevap daha"
       other: "%{count} cevap daha"
@@ -181,7 +238,15 @@ tr_TR:
     permalink: "Kalıcı Bağlantı"
     imported_from: "Bu ilave bir tartışmadır, asıl konu adresi %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} cevap"
+      other: "%{count} cevap"
+    likes:
+      one: "%{count} beğeni"
+      other: "%{count} beğeni"
+    last_reply: "Son cevap"
     created: "Oluşturuldu"
+    new_topic: "Yeni konu oluştur"
   no_mentions_allowed: "Üzgünüz, diğer kullanıcılardan bahsedemezsiniz."
   too_many_mentions:
     one: "Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz."
@@ -190,6 +255,7 @@ tr_TR:
   too_many_mentions_newuser:
     one: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
     other: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
+  no_images_allowed_trust: "Maalesef, görüntüleri bir gönderiye koyamazsınız"
   no_images_allowed: "Üzgünüz, yeni kullanıcılar gönderilere resim koyamazlar."
   too_many_images:
     one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. "
@@ -199,14 +265,23 @@ tr_TR:
     one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler."
     other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler."
   no_links_allowed: "Üzgünüz, yeni kullanıcılar gönderilere bağlantı ekleyemezler."
+  links_require_trust: "Üzgünüz, yazılarınıza link ekleyemezsiniz."
   too_many_links:
     one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
     other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
+  contains_blocked_word: "Gönderiniz izin verilmeyen bir kelime içeriyor: %{word}"
+  contains_blocked_words: "Gönderiniz izin verilmeyen birden çok kelime içeriyor: %{words}"
   spamming_host: "Üzgünüz bu sunucuya bağlantı veremezsiniz."
   user_is_suspended: "Uzaklaştırılmış kullanıcılar gönderi yapamazlar."
   topic_not_found: "Bir şeyler ters gitti. Muhtemelen siz konuya bakarken bu konu kapatıldı ya da silindi."
+  not_accepting_pms: "Üzgünüz, %{username} şu anda mesaj kabul etmiyor."
+  max_pm_recepients: "Üzgünüz, maksimum %{recipients_limit} alıcıya mesaj gönderebilirsiniz."
+  pm_reached_recipients_limit: "Maalesef bir mesajı %{recipients_limit} alıcıdan daha fazlasına gönderemezsiniz."
+  removed_direct_reply_full_quotes: "Otomatik olarak önceki tüm gönderilerin alıntıları kaldırıldı."
+  secure_upload_not_allowed_in_public_topic: "Maalesef, aşağıdaki güvenli yükleme (ler) herkese açık bir konuda kullanılamaz: %{upload_filenames}."
   just_posted_that: "yakın zamanda yaptığınız bir gönderiye çok benziyor"
   invalid_characters: "geçersiz karakterler barındırıyor"
+  is_invalid: "belirsiz görünüyor, bu tamamlanmış bir cümle mi?"
   next_page: "sonraki sayfa →"
   prev_page: "← önceki sayfa"
   page_num: "Sayfa %{num}"
@@ -229,21 +304,41 @@ tr_TR:
     top_weekly: "Haftalık en iyi konular"
     top_daily: "Günlük en iyi konular"
     posts: "Son gönderiler"
+    private_posts: "Son kişisel mesajlar"
     group_posts: "%{group_name} tarafından son gönderiler"
     group_mentions: "%{group_name} tarafından son bahsetmeler"
     user_posts: "@%{username} tarafından son gönderiler"
     user_topics: "@%{username} tarafından son konular"
     tag: "Etiketlenmiş konular"
   too_late_to_edit: "Gönderi çok uzun zaman önce oluşturulmuş. Artık düzenlenemez ya da silinemez. "
+  edit_conflict: "Bu gönderi başka bir kullanıcı tarafından düzenlendi ve değişiklikleriniz artık kaydedilemiyor."
   revert_version_same: "Şu anki sürüm geri dönmeye çalıştığınız sürüm ile aynı."
   excerpt_image: "resim"
+  bookmarks:
+    errors:
+      already_bookmarked_post: "Aynı gönderiyi iki kez işaretleyemezsiniz."
+      time_must_be_provided: "&#39;%{reminder_type}&#39; dışındaki tüm hatırlatıcılara zaman verilmelidir"
+    reminders:
+      at_desktop: "Bir dahaki sefere masaüstümdeyim"
+      later_today: "Bugünden sonra <br/> {{date}}"
+      next_business_day: "Bir sonraki iş günü <br/> {{date}}"
+      tomorrow: "Yarın <br/> {{date}}"
+      next_week: "Gelecek hafta <br/> {{date}}"
+      next_month: "Gelecek ay <br/> {{date}}"
+      custom: "Özel tarih ve saat"
   groups:
     errors:
+      grant_trust_level_not_valid: "&#39;%{trust_level}&#39; geçerli bir güven düzeyi değil."
       can_not_modify_automatic: "Otomatik bir grupta değişiklik yapamazsınız"
+      member_already_exist:
+        one: "&#39;%{username}&#39; zaten bu grubun bir üyesi."
+        other: "Aşağıdaki kullanıcılar zaten bu gruba üye: %{username}"
       invalid_domain: "'%{domain}' geçerli bir alan adı değil."
       invalid_incoming_email: "'%{email}' geçerli bir e-posta adresi değil."
       email_already_used_in_group: "'%{email}' zaten '%{group_name}' grubu tarafından kullanılıyor."
       email_already_used_in_category: "'%{email}' zaten '%{category_name}' kategorisi tarafından kullanılıyor."
+      cant_allow_membership_requests: "Yöneticisi olmadığınız bir grup için üyelik isteklerine izin veremezsiniz."
+      already_requested_membership: "Bu gruba üyelik için zaten istek gönderdiniz."
     default_names:
       everyone: "herkes"
       admins: "yöneticiler"
@@ -254,6 +349,9 @@ tr_TR:
       trust_level_2: "güven_seviyesi_2"
       trust_level_3: "güven_seviyesi_3"
       trust_level_4: "güven_seviyesi_4"
+    request_membership_pm:
+      title: "@ %{group_name} için üyelik talebi"
+      handle: "üyelik isteğini yerine getir"
   education:
     until_posts:
       one: "%{count} gönderi"
@@ -284,6 +382,7 @@ tr_TR:
         name: "Kategori Adı"
       topic:
         title: "Başlık"
+        featured_link: "Öne Çıkanlar"
         category_id: "Kategori"
       post:
         raw: "İçerik"
@@ -295,8 +394,15 @@ tr_TR:
         topic:
           attributes:
             base:
+              warning_requires_pm: "Kişisel mesajlara sadece uyarılar ekleyebilirsiniz."
               too_many_users: "Uyarıları aynı anda sadece bir kişiye gönderebilirsiniz."
+              cant_send_pm: "Üzgünüz, bu kullanıcıya kişisel bir mesaj gönderemezsiniz."
               no_user_selected: "Geçerli bir kullanıcı seçmelisiniz."
+              reply_by_email_disabled: "E-postayla yanıtlama devre dışı bırakıldı."
+              target_user_not_found: "Bu mesajı gönderdiğiniz kullanıcılardan biri bulunamadı."
+            featured_link:
+              invalid: "geçersiz link. URL, http: // veya https: // içermelidir."
+              invalid_category: "bu kategoride düzenlenemez."
         user:
           attributes:
             password:
@@ -304,8 +410,18 @@ tr_TR:
               same_as_username: "kullanıcı adınızla aynı. Lütfen daha güvenli bir parola seçiniz."
               same_as_email: "e-posta adresinizle aynı. Lütfen daha güvenli bir parola seçiniz."
               same_as_current: "şimdiki parolanızla aynı."
+              same_as_name: "adınızla aynı."
+              unique_characters: "çok fazla tekrarlanan karakter var. Lütfen daha güvenli bir şifre kullanın."
+            username:
+              same_as_password: "şifrenizle aynı."
+            name:
+              same_as_password: "şifrenizle aynı."
             ip_address:
               signup_not_allowed: "Bu hesaptan yeni kayıt oluşturulmasına izin verilmiyor."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "Birincil e-postayı başka bir kullanıcıya yeniden atamanıza izin verilmez."
         color_scheme_color:
           attributes:
             hex:
@@ -313,24 +429,47 @@ tr_TR:
         post_reply:
           base:
             different_topic: "Gönderi ve cevap aynı konuya ait olmak zorunda."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL geçersiz. URL, http: // veya https: // içermelidir ve boş bırakılamaz."
+        custom_emoji:
+          attributes:
+            name:
+              taken: zaten başka bir emoji tarafından kullanılıyor
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "gelecekte olmalı."
+        watched_word:
+          attributes:
+            word:
+              too_many: "Bu işlem için çok fazla kelime var"
+  uncategorized_category_name: "Kategorize"
   vip_category_name: "Lobi"
   vip_category_description: "Güven seviyesi 3 ve üzerinde olan üyelere özel kategori."
   meta_category_name: "Site geri bildirimi"
   meta_category_description: "Bu site, sitenin organizasyonu, nasıl çalıştığı ve nasıl geliştirilebileceği ile ilgili tartışma alanı."
   staff_category_name: "Görevliler"
   staff_category_description: "Görevliler arası konuşmalar için özel kategori. Konular sadece yönetici ve moderatörlere gözükür."
+  discourse_welcome_topic:
+    title: "Forumumuza Hoşgeldiniz"
   lounge_welcome:
     title: "Lobiye hoş geldiniz"
+  admin_quick_start_title: "İLK ÖNCE BURAYI OKUYUN: Yönetici Hızlı Başlangıç Kılavuzu"
   category:
     topic_prefix: "%{category} kategorisi hakkında "
     post_template: "%{replace_paragraph}\n\nAşağıdaki satırları daha uzun açıklama, kategori yönergeleri ya da kurallar oluşturmak için kullanın:\n\n- Bu kategorinin amacı ne? İnsanlar konu oluştururken neden bu kategoriyi kullanmalılar?\n\n- Bu kategorinin mevcut diğer kategorilerden farkı ne?\n\n- Bu kategorideki konular neleri içermeli?\n\n- Bu kategoriye gerçekten ihtiyacımız var mı? Bu kategoriyi bir başka kategori ya da alt kategori ile birleştirmeli miyiz?\n"
     errors:
+      not_found: "Kategori bulunamadı!"
       uncategorized_parent: "Kategorisizin üst kategorisi olamaz"
       self_parent: "Alt kategorinin üst kategorisi kendisi olamaz"
       depth: "Bir alt kategori başka bir alt kategorinin altında yer alamaz"
       invalid_email_in: "Bu '%{email}' geçerli bir e-posta değil."
       email_already_used_in_group: "'%{email}' zaten '%{group_name}' grubu tarafından kullanılıyor."
       email_already_used_in_category: "'%{email}' zaten '%{category_name}' kategorisi tarafından kullanılıyor."
+      description_incomplete: "Kategorinin açıklama yazısı en az bir paragrafa sahip olmalıdır."
+      disallowed_tags_generic: "Bu konuya izin verilmeyen etiketler var."
     cannot_delete:
       has_subcategories: "Alt kategorileri bulunduğu için bu kategori silinemez."
       topic_exists_no_oldest: "Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor."
@@ -347,7 +486,30 @@ tr_TR:
     leader:
       title: "lider"
     change_failed_explanation: " %{user_name} adlı kullanıcıyı '%{new_trust_level}' seviyesine düşürmeye çalıştınız. Ancak, halihazırda kullanıcının güven seviyesi zaten '%{current_trust_level}'. %{user_name} '%{current_trust_level}' seviyesinde kalacak - eğer seviyesini düşürmek istiyorsanız öncelikle güven seviyesini kilitlemelisiniz"
+  post:
+    image_placeholder:
+      broken: "Bu görüntü bozuldu"
+    has_likes:
+      one: "%{count} Beğeni"
+      other: "%{count} Beğeni"
   rate_limiter:
+    slow_down: "Bu işlemi çok fazla yaptınız, lütfen daha sonra tekrar deneyin."
+    too_many_requests: "Bu işlemi çok defa yaptınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+    by_type:
+      first_day_replies_per_day: "Yeni bir kullanıcının ilk günlerinde oluşturabileceği maksimum yanıt sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+      first_day_topics_per_day: "Yeni bir kullanıcının ilk gününde oluşturabileceği maksimum konu sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+      create_topic: "Çok hızlı bir şekilde yeni konu oluşturuyorsunuz. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+      create_post: "Çok hızlı cevap veriyorsun. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+      delete_post: "Gönderileri çok hızlı siliyorsunuz. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+      public_group_membership: "Gruplara çok sık katılıyor/ayrılıyorsunuz. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+      topics_per_day: "Maksimum yeni konu sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+      pms_per_day: "Maksimum mesaj sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+      create_like: "Maksimum beğeniye ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+      create_bookmark: "Maksimum yer imi sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+      edit_post: "Maksimum düzenleme sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+      live_post_counts: "Çok hızlı bir şekilde canlı yayın sayımı istiyorsunuz. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+      unsubscribe_via_email: "E-postayla maksimum abonelik iptali sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+      topic_invitations_per_day: "Maksimum sayıda konu davetiyesine ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
     hours:
       one: "%{count} saat"
       other: "%{count} saat"
@@ -357,6 +519,7 @@ tr_TR:
     seconds:
       one: "%{count} saniye"
       other: "%{count} saniye"
+    short_time: "birkaç saniye"
   datetime:
     distance_in_words:
       half_a_minute: "< 1dk"
@@ -435,12 +598,58 @@ tr_TR:
     title: "Parola Sıfırla"
     success: "Parolanızı başarıyla değiştirdiniz ve giriş yaptınız."
     success_unapproved: "Parolanızı başarıyla değiştirdiniz."
+  email_login:
+    title: "Eposta girişi"
+  user_auth_tokens:
+    browser:
+      chrome: "Google Chrome"
+      discoursehub: "DiscourseHub uygulaması"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
+      unknown: "bilinmeyen tarayıcı"
+    device:
+      android: "Android Cihazı"
+      chromebook: "Chromebook"
+      ipad: "iPad"
+      iphone: "iPhone"
+      ipod: "iPod"
+      linux: "GNU / Linux Bilgisayar"
+      mac: "Mac"
+      mobile: "Mobil cihaz"
+      windows: "Windows bilgisayar"
+      unknown: "tanımlanmamış cihaz"
+    os:
+      android: "Android"
+      chromeos: "ChromeOS"
+      ios: "iOS"
+      linux: "Linux"
+      macos: "MacOS"
+      windows: "Microsoft Windows"
+      unknown: "bilinmeyen işletim sistemi"
   change_email:
+    wrong_account_error: "Yanlış hesapta oturum açtınız, lütfen çıkış yapıp tekrar deneyin."
     confirmed: "E-posta adresiniz güncellendi."
     please_continue: "%{site_name} adresine devam edin"
     error: "E-posta adresiniz değiştirilirken bir hata oluştu. Bu adres zaten kullanımda olabilir."
     error_staged: "E-posta adresiniz değiştirilirken bir hata oluştu. Bu adres zaten başka bir kullanıcı tarafından kullanımdadır."
     already_done: "Üzgünüz, bu doğrulama bağlantısı geçerli değil. E-posta adresiniz değiştirilmiş olabilir mi?"
+    confirm: "Onayla"
+    authorizing_new:
+      title: "Yeni e-postanı onayla"
+      description: "Lütfen yeni e-posta adresinizin değiştirilmesini istediğinizi onaylayın:"
+    authorizing_old:
+      title: "E posta adresini değiştir"
+      description: "Lütfen e-posta adresİ değişikliğini onayla"
+      old_email: "Eski e-posta: %{email}"
+      new_email: "Yeni e-posta: %{email}"
+      almost_done_title: "Yeni e-posta adresini onaylama"
+      almost_done_description: "Değişikliği onaylamak için yeni e-posta adresinize bir e-posta gönderdik!"
+  associated_accounts:
+    revoke_failed: "Hesabınız %{provider_name} ile iptal edemedi."
+    connected: "(bağlantı kuruldu)"
   activation:
     action: "Hesabınızı etkinleştirmek için buraya tıklayın"
     already_done: "Üzgünüz, hesap doğrulama bağlantısı artık geçerli değil. Hesabınız zaten etkin olabilir mi?"
@@ -449,6 +658,11 @@ tr_TR:
     welcome_to: "%{site_name} topluluğuna hoş geldiniz!"
     approval_required: "Bu foruma erişebilmeniz için yeni hesabınızın bir moderatör tarafından manuel olarak onaylanması gerekir. Hesabınız onaylandığında e-posta ile bilgilendirileceksiniz!"
     missing_session: "Hesabınızı tespit edemiyoruz eğer önceden hesap oluşturduysanız, lütfen çerezlerin etkin olduğundan emin olun."
+    activated: "Üzgünüz, bu hesap zaten aktif."
+    admin_confirm:
+      title: "Yönetici Hesabını Onayla"
+      grant: "Yönetici Erişimi Ver"
+      back_to: "%{title} sayfasına dön"
   reviewable_score_types:
     needs_approval:
       title: "Onay Gerektirir"
@@ -456,23 +670,29 @@ tr_TR:
     off_topic:
       title: "Konu dışı"
       description: "Bu gönderinin, başlık ve ilk gönderide belirtilen mevcut tartışmayla alakası yok, ve büyük ihtimal başka bir yere taşınmalı."
+      short_description: "Tartışma ile ilgili değil"
       long_form: "konu dışı olarak bildirildi"
     spam:
       title: "İstenmeyen"
+      short_description: "Bu bir reklam veya kötü amaçlı bir içerik olabilir"
       long_form: "istenmeyen olarak bildirilmiş"
       email_title: '"%{title}" istenmeyen olarak bildirildi'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Uygunsuz"
+      short_description: '<a href="%{base_path}/guidelines">Topluluk kurallarımızın</a> ihlali'
       long_form: "bunu uygunsuz olarak bildirdi"
     notify_user:
       title: "@{{username}} adlı kullanıcıya ileti gönder"
+      description: "Bu kişiyle doğrudan ve kişisel olarak gönderileri hakkında konuşmak istiyorum."
+      short_description: "Bu kişiyle doğrudan ve kişisel olarak gönderileri hakkında konuşmak istiyorum."
       long_form: "ileti gönderilen kullanıcı"
       email_title: '"%{title}" başlıklı gönderiniz'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Başka Bir Şey"
       description: "Bu gönderinin, yukarıda belirtilmeyen bir nedenden ötürü görevliler tarafından kontrol edilmesi gerekiyor."
+      short_description: "Başka bir sebepten dolayı moderatörün kontrolünü gerektirir"
       long_form: "bunu görevlinin ilgisi için bildirdi"
       email_title: '"%{title}" konusundaki bir gönderinin görevli tarafından kontrol edilmesi gerekiyor'
       email_body: "%{link}\n\n%{message}"
@@ -486,21 +706,62 @@ tr_TR:
       description: "Bu gönderiyi beğen"
       short_description: "Bu gönderiyi beğen"
       long_form: "bu beğenildi"
+  draft:
+    sequence_conflict_error:
+      title: "taslak hatası"
+      description: "Taslak başka bir pencerede düzenleniyor. Lütfen bu sayfayı tekrar yükleyin."
+  draft_backup:
+    pm_title: "Açık konulardaki Taslakları yedekle"
+    pm_body: "Yedek taslaklar içeren konu"
+  user_activity:
+    no_default:
+      self: "Henüz bir aktiviteniz yok."
+      others: "Aktivite yok."
+    no_bookmarks:
+      self: "Yer imlerine eklenmiş yayınınız yok; yer imleri, belirli gönderilere hızlı bir şekilde ulaşmanızı sağlar."
+      others: "Yer imi yok."
+    no_likes_given:
+      self: "Hiç gönderi paylaşmadınız."
+      others: "Beğenilen gönderi yok."
+    no_replies:
+      self: "Hiçbir mesaja cevap vermediniz."
+      others: "Cevap yok."
+    no_drafts:
+      self: "Taslağın yok; Herhangi bir konuda cevap yazmaya başladığınızda otomatik olarak yeni taslak olarak kaydedilecek."
+  webauthn:
+    validation:
+      invalid_type_error: "Sağlanan webauthn türü geçersizdi. Geçerli türler webauthn.get ve webauthn.create&#39;dir."
+      malformed_attestation_error: "Doğrulama verilerinin kodu okunurken bir hata oluştu."
+      invalid_relying_party_id_error: "Kimlik doğrulama isteğinin Relying Party ID&#39;si, sunucunun Relying Party ID&#39;siyle eşleşmiyor."
+      user_verification_error: "Kullanıcı doğrulaması gerekiyor."
+      unsupported_public_key_algorithm_error: "Sağlanan ortak anahtar algoritması sunucu tarafından desteklenmiyor."
+      unsupported_attestation_format_error: "Doğrulama formatı sunucu tarafından desteklenmiyor."
+      credential_id_in_use_error: "Sağlanan kimlik bilgisi zaten kullanılıyor."
+      public_key_error: "Kimlik bilgisi için genel anahtar doğrulaması başarısız oldu."
+      ownership_error: "Güvenlik anahtarı kullanıcıya ait değildir."
+      not_found_error: "Girilen kimlik numarası ile eşleşen bir güvenlik anahtarı bulunamadı."
   topic_flag_types:
     spam:
       title: "İstenmeyen"
       description: "Bu konu reklam içeriklidir. Bu siteye alakası ya da faydası yoktur."
       long_form: "bunu istenmeyen olarak bildirdi"
+      short_description: "Bu bir reklam"
     inappropriate:
       title: "Uygunsuz"
+      description: 'Bu konu; rahatsız edici, küfürlü veya <a href="%{base_path}/guidelines">topluluk kurallarımızı</a> ihlal edici içerikler içerebilir.'
       long_form: "bunu uygunsuz olarak bildirdi"
+      short_description: '<a href="%{base_path}/guidelines">Topluluk kurallarımızın</a> ihlali'
     notify_moderators:
       title: "Başka Bir Şey"
+      description: 'Bu konu, <a href="%{base_path}/guidelines">rehberde</a> <a href="%{tos_url}">TOS&#39;a</a> veya yukarıda listelenmemiş başka bir nedenden dolayı moderatör kontrolünü gerektirir.'
       long_form: "bunu moderatörün ilgisi için bildirdi"
+      short_description: "Başka bir sebepten dolayı moderatörün kontrolünü gerektirir"
       email_title: '"%{title}" konu başlığının moderatör tarafından kontrol edilmesi gerekiyor'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Bu gönderi topluluk tarafından bildirildi ve geçici olarak gizlendi.</p>"
+  ignored:
+    hidden_content: "<p> Yoksayılan içerik </p>"
   archetypes:
     regular:
       title: "Standart Konu"
@@ -509,6 +770,11 @@ tr_TR:
       message:
         make: "Bu konu artık bir manşettir. Kullanıcı tarafından yoksayılana kadar her sayfanın en üstünde belirecektir."
         remove: "Bu konu artık manşet değildir. Artık her sayfanın en üstünde yer belirmeyecektir."
+  unsubscribed:
+    title: "E-posta tercihleri güncellendi!"
+    private_topic_description: "Tekrar abone olmak için konunun altındaki veya sağındaki bildirim seçeneğini onaylayın."
+  uploads:
+    marked_insecure_from_theme_component_reason: "tema bileşeninde kullanılan yükleme"
   unsubscribe:
     title: "Aboneliği İptal Et"
     stop_watching_topic: "Bu konuyu gözlemeyi bırak, %{link}"
@@ -517,7 +783,9 @@ tr_TR:
     mailing_list_mode: "Duyuru listesi modunu kapat"
     all: "Bana %{sitename} tarafından gelen hiçbir mail gönderme"
     different_user_description: "E-posta gönderdiğimizden farklı bir kullanıcıyla giriş yapmışsınız. Lütfen çıkış yapın, veya anonim moduna geçip tekrar deneyin."
+    not_found_description: "Maalesef, bu aboneliği iptal etemedik. E-postanızdaki bağlantının süresi dolmuş olabilir."
     log_out: "Çıkış"
+    submit: "Tercihleri kaydet"
     digest_frequency:
       never: "asla"
       every_30_minutes: "Her 30 dakikada"
@@ -535,46 +803,89 @@ tr_TR:
       confirm_title: "%{site_name} devam et"
       confirm_button: Giriş yapmayı bitir
     no_trust_level: "Üzgünüz, kullanıcı APIsine erişmek için gerekli güvenilirlik seviyeniz yok"
+    scopes:
+      message_bus: "Anlık güncellemeler"
+      notifications: "Bildirimleri oku ve temizle"
+      push: "Harici servislere bildirim gönderin"
+      session_info: "Kullanıcı oturum bilgisini oku"
+      read: "Hepsini oku"
+      write: "Hepsini yaz"
+      one_time_password: "Tek seferlik giriş yapın"
+    invalid_public_key: "Üzgünüz, herkese açık anahtar geçersiz."
+    invalid_auth_redirect: "Üzgünüz, bu auth_redirect ana bilgisayarına izin verilmiyor."
+    invalid_token: "Eksik, geçersiz veya süresi dolmuş."
   reports:
     default:
       labels:
         count: say
+        percent: Yüzde
         day: Gün
     post_edits:
+      title: "Gönderi Düzenleme"
       labels:
         edited_at: Tarih
         post: Gönderi
         editor: Düzenleyici
+        author: "Yazar    "
         edit_reason: Sebep
+      description: "Yeni gönderi düzenleme sayısı."
     user_flagging_ratio:
       labels:
         user: Kullanıcı
         score: Skor
     moderators_activity:
+      title: "Moderatör Aktivitesi"
       labels:
         moderator: Moderatör
+        topic_count: Oluşturulan konular
+        post_count: Gönderiler oluşturuldu
+        pm_count: PM oluşturuldu
+        revision_count: Düzeltmeler
     flags_status:
+      values:
+        agreed: Kabul Edilmiş
+        disagreed: Reddedilmiş
+        deferred: Vadeli
+        no_action: Eylem yok
       labels:
         flag: Tür
         assigned: Atandı
+        poster: Afiş
     visits:
       title: "Kullanıcı ziyaretleri"
       xaxis: "Gün"
       yaxis: "Ziyaret sayısı"
+      description: "Tüm kullanıcı ziyaretlerinin sayısı."
     signups:
+      title: "Kayıtlar"
       xaxis: "Gün"
+      yaxis: "Kayıt sayısı"
+      description: "Bu dönem içinde oluşturulan hesap kayıtları."
     new_contributors:
+      title: "Yeni katılımcılar"
       xaxis: "Gün"
+      yaxis: "Yeni katılımcı sayısı"
+      description: "Bu dönemde ilk gönderisini paylaşan kullanıcı sayısı."
     consolidated_page_views:
+      title: "Konsolide Sayfa Görüntüleme Sayısı"
+      xaxis:
+        page_view_anon: "Anonim kullanıcılar"
+        page_view_logged_in: "Giriş yapan kullanıcılar"
       yaxis: "Gün"
       labels:
         post: Gönderi
         editor: Düzenleyici
+        author: "Yazar    "
         edit_reason: Sebep
     dau_by_mau:
+      title: "Günlük Aktif Kullanıcı ve Aylık Aktif Kullanıcı oranı"
       xaxis: "Gün"
+      yaxis: "Günlük Aktif Kullanıcı ve Aylık Aktif Kullanıcı oranı"
     daily_engaged_users:
+      title: "Günlük Aktif Kullanıcılar"
       xaxis: "Gün"
+      yaxis: "Aktif Kullanıcılar"
+      description: "Son günde beğeni yapmış veya gönderi paylaşmış olan kullanıcı sayısı."
     profile_views:
       title: "Kullanıcı Profil Görüntülemeleri"
       xaxis: "Gün"
@@ -591,6 +902,7 @@ tr_TR:
       title: "Beğeniler"
       xaxis: "Gün"
       yaxis: "Yeni beğenilerin sayısı"
+      description: "Yeni beğenilerin sayısı."
     flags:
       title: "Bildirilenler"
       xaxis: "Gün"
@@ -603,7 +915,10 @@ tr_TR:
       title: "Güven Seviyesine ait Kullanıcı Sayısı"
       xaxis: "Güven Seviyesi"
       yaxis: "Kullanıcı Sayısı"
+      labels:
+        level: Seviye
     users_by_type:
+      title: "Tür başına kullanıcılar"
       xaxis: "Tür"
       yaxis: "Kullanıcı Sayısı"
       labels:
@@ -723,22 +1038,44 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Toplam"
     mobile_visits:
+      title: "Kullanıcı Ziyaretleri (mobil)"
       xaxis: "Gün"
       yaxis: "Ziyaret sayısı"
     web_crawlers:
       labels:
+        user_agent: "Kullanıcı Temsilcisi"
         page_views: "Sayfa Görüntülemeleri"
     suspicious_logins:
       labels:
         user: Kullanıcı
         location: Lokasyon
+        browser: Tarayıcı
+        device: Aygıt
+        os: İşletim sistemi
+        login_time: Giriş zamanı
+      description: "Şüpheli girişlerin detayları."
     staff_logins:
+      title: "Yönetici Girişleri"
       labels:
         user: Kullanıcı
         location: Lokasyon
+        login_at: Giriş yap
+      description: "Yönetici girişleri ve giriş lokasyonlarının listesi."
     top_uploads:
+      title: "En Çok Yüklenenler"
       labels:
         filename: Dosya adı
+        extension: Uzantı
+        author: "Yazar    "
+        filesize: Dosya boyutu
+      description: "Tüm yüklemeleri uzantı, dosya boyutu ve yazara göre listeleyin."
+    top_ignored_users:
+      title: "En Çok Yoksayılan/Susturulmuş Kullanıcılar"
+      labels:
+        ignored_user: Yoksayılan Kullanıcı
+        ignores_count: Yoksayma toplamı
+        mutes_count: Susturma toplamı
+      description: "Diğer birçok kullanıcı tarafından susturulmuş veya yok sayılmış kullanıcılar."
   dashboard:
     rails_env_warning: "Sunucunuz %{env} modunda çalışıyor."
     host_names_warning: "config/database.yml dosyasınızda, bilgisayar adı olarak öntanımlı değer olan \"localhost\" ayarlı. Değeri, sitenizin bilgisayar adını kullanacak biçimde güncelleyiniz."

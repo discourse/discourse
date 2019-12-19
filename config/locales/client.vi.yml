@@ -130,7 +130,6 @@ vi:
       banner:
         enabled: "chọn đây làm banner %{when}. Nó sẽ xuất hiện ở đầu mỗi trang đến khi bị ẩn đi bởi người dùng,"
         disabled: "xoá banner này %{when}. Nó sẽ không còn xuất hiện ở đầu mỗi trang."
-    topic_admin_menu: "Lựa chọn quản lí chủ đề."
     wizard_required: "Chào mừng bạn đến với Discourse! Hãy bắt đầu với <a href='%{url}' data-auto-route='true'>hướng dẫn cài đặt</a> ✨"
     emails_are_disabled: "Ban quản trị đã tắt mọi email gửi đi. Sẽ không có bất kỳ thông báo nào qua email được gửi đi."
     bootstrap_mode_enabled: "Để đơn giản hoá quá trình triển khai, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có mức độ tin cậy 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{min_users}"
@@ -239,6 +238,7 @@ vi:
       not_bookmarked: "đánh dấu bài viết này"
       remove: "Xóa dấu trang"
       confirm_clear: "Bạn có chắc muốn xóa toàn bộ đánh dấu trong chủ đề này?"
+      save: "Lưu"
     drafts:
       resume: "Làm lại"
       remove: "Xoá"
@@ -281,14 +281,8 @@ vi:
       install_banner: "Bạn có muốn <a href>cài đặt %{title} trên thiết bị này?</a> "
     choose_topic:
       none_found: "Không tìm thấy chủ đề nào"
-      title:
-        search: "Tìm kiếm một Chủ đề bằng tiêu đề, url hoặc id:"
-        placeholder: "viết chủ đề của chủ đề thảo luận ở đây"
     choose_message:
       none_found: "Không tìm thấy tin nhắn nào."
-      title:
-        search: "Tìm kiếm một Tin nhắn bằng tiêu đề:"
-        placeholder: "nhập tiêu đề tin nhắn tại đây"
     review:
       order_by: "Lọc bởi"
       in_reply_to: "trong trả lời tới"
@@ -657,6 +651,10 @@ vi:
         normal_option: "Bình thường"
       activity_stream: "Hoạt động"
       preferences: "Tùy chỉnh"
+      feature_topic_on_profile:
+        save: "Lưu"
+        clear:
+          title: "Xóa"
       expand_profile: "Mở"
       bookmarks: "Theo dõi"
       bio: "Về tôi"
@@ -932,7 +930,6 @@ vi:
         search: "gõ để tìm kiếm thư mời "
         title: "Lời mời"
         user: "User được mời"
-        sent: "Đã gửi"
         none: "Không tìm thấy lời mời nào."
         truncated:
           other: "Hiện {{count}} thư mời đầu tiên"
@@ -1557,6 +1554,7 @@ vi:
           title: "Im lặng"
           description: "Bạn sẽ không nhận được bất kỳ thông báo nào trong chủ đề này, và chúng sẽ không hiển thị là mới nhất."
       actions:
+        title: "Hành động"
         recover: "Không-Xóa Chủ Đề Này"
         delete: "Xóa-Chủ Đề Này"
         open: "Mở Chủ Đề"
@@ -1765,7 +1763,6 @@ vi:
           notify_moderators: "đã thông báo với BQT"
           notify_user: "đã gửi tin nhắn"
           bookmark: "đã đánh dấu bài này"
-          like: "đã like bài này"
         by_you:
           off_topic: "Bạn đã đánh dấu cái nfay là chủ đề đóng"
           spam: "Bạn đã đánh dấu cái này là rác"
@@ -1803,6 +1800,8 @@ vi:
             button: "Văn bản"
           html_part:
             button: "HTML"
+      bookmarks:
+        name: "Tên"
     category:
       can: "can&hellip;"
       none: "(không danh mục)"
@@ -2293,6 +2292,7 @@ vi:
         show_details: Chi tiết
         description: Mô tả
         save: Lưu
+        continue: Tiếp tục
       web_hooks:
         save: "Lưu"
         destroy: "Xóa"

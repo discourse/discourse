@@ -138,7 +138,6 @@ sv:
       banner:
         enabled: "gjorde detta till en banderoll %{when}. Den kommer att visas högst upp på varje sida tills den blir avfärdad av användaren."
         disabled: "tog bort denna banderoll %{when}. Den kommer inte längre att visas högst upp på varje sida."
-    topic_admin_menu: "administratörsåtgärder för ämne"
     wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång genom <a href='%{url}' data-auto-route='true'>uppsättnings guiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postnotifikationer av något slag kommer att skickas ut."
     bootstrap_mode_enabled: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när det totala antalet användare överstiger %{min_users}."
@@ -236,6 +235,7 @@ sv:
     bookmarks:
       created: "du har bokmärkt detta inlägg"
       remove: "Ta bort bokmärke"
+      save: "Spara"
     drafts:
       remove: "Ta bort"
       abandon:
@@ -266,8 +266,6 @@ sv:
       edit: "Redigera denna banderoll >>"
     choose_topic:
       none_found: "Inga ämnen hittades."
-      title:
-        placeholder: "skriv ämnets rubrik här"
     review:
       in_reply_to: "som svar till"
       explain:
@@ -511,6 +509,10 @@ sv:
         normal_option: "Normal"
       activity_stream: "Aktivitet"
       preferences: "Inställningar"
+      feature_topic_on_profile:
+        save: "Spara"
+        clear:
+          title: "Rensa"
       expand_profile: "Utvidga"
       bookmarks: "Bokmärken"
       bio: "Om mig"
@@ -750,7 +752,6 @@ sv:
         search: "sök efter inbjudningar..."
         title: "Inbjudningar"
         user: "Inbjuden Användare"
-        sent: "Skickat"
         truncated:
           one: "Visar den första inbjudningen."
           other: "Visar de första {{count}} inbjudningarna."
@@ -1371,6 +1372,7 @@ sv:
           title: "Tystade"
           description: "Du kommer aldrig att notifieras om någonting som rör det här ämnet, och den kommer inte att visas i din flik med senaste."
       actions:
+        title: "Åtgärder"
         recover: "Återställ ämne"
         delete: "Radera ämne"
         open: "Öppna ämne"
@@ -1604,7 +1606,6 @@ sv:
           notify_moderators: "notifierade moderatorer"
           notify_user: "skickade ett meddelande"
           bookmark: "bokmärkte det här"
-          like: "gillade det här"
         by_you:
           off_topic: "Du flaggade detta som orelevant"
           spam: "Du flaggade detta som spam"
@@ -1644,6 +1645,8 @@ sv:
           html_part:
             title: "Visa html-delen av mailet"
             button: "HTML"
+      bookmarks:
+        name: "Namn"
     category:
       can: "can&hellip; "
       none: "(ingen kategori)"
@@ -2187,6 +2190,7 @@ sv:
         show_details: Detaljer
         description: Beskrivning
         save: Spara
+        continue: Fortsätt
       web_hooks:
         title: "Webhookar"
         none: "Det finns inga webhookar just nu."

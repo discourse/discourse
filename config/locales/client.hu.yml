@@ -146,7 +146,6 @@ hu:
       banner:
         enabled: "Kiemelve ekkor: %{when}. Amíg a felhasználó nem törli, minden oldal tetején megjelenik."
         disabled: "Kiemelés eltávolítva ekkor: %{when}. Többé nem jelenik meg minden oldal tetején."
-    topic_admin_menu: "téma adminisztrátori műveletek"
     wizard_required: "Üdvözöljük az új Discourse-on. Kezdjük a <a href='%{url}' data-auto-route='true'>beállításvarázslóval</a>. ✨"
     emails_are_disabled: "Egy adminisztrátor letiltotta a kimenő e-maileket. Semmilyen értesítő e-mail nem lesz elküldve."
     bootstrap_mode_enabled: "Hogy könnyebbé tegyük az új oldala elindítását, most előkészítési módban van. Minden új felhasználó 1-es szintet kap és be lesz állítva, hogy napi kivonat e-mailt kapjanak. Ez a beállítás automatikusan kikapcsol, ha legalább %{min_users} felhasználó regisztrált."
@@ -258,6 +257,7 @@ hu:
       not_bookmarked: "bejegyzés könyvjelzőzése"
       remove: "Könyvjelző eltávolítása"
       confirm_clear: "Biztos, hogy törli az összes könyvjelzőjétt ebből a témából?"
+      save: "Mentés"
     drafts:
       resume: "Folytatás"
       remove: "Eltávolítás"
@@ -301,14 +301,8 @@ hu:
       edit: "Kiemelés szerkesztése >>"
     choose_topic:
       none_found: "Nem találhatók témák."
-      title:
-        search: "Témakör keresése név, URL vagy azonosító alapján:"
-        placeholder: "írja ide a téma címét"
     choose_message:
       none_found: "Nem található üzenet."
-      title:
-        search: "Bejegyzés keresése cím alapján:"
-        placeholder: "írja ide a bejegyzés címét"
     review:
       order_by: "Rendezés:"
       in_reply_to: "válasz erre:"
@@ -720,6 +714,10 @@ hu:
         normal_option_title: "Értesítünk, ha a felhasználó válaszol, idéz vagy megemlít."
       activity_stream: "Aktivitás"
       preferences: "Beállítások"
+      feature_topic_on_profile:
+        save: "Mentés"
+        clear:
+          title: "Törlés"
       profile_hidden: "A felhasználó publikus profilja rejtett. "
       expand_profile: "Kibővítés"
       collapse_profile: "Összecsukás"
@@ -1009,7 +1007,6 @@ hu:
         search: "írd be a keresett meghívottak nevét…"
         title: "Meghívók"
         user: "Meghívott felhasználó"
-        sent: "Elküldve"
         none: "Nincsenek meghívók."
         redeemed: "Felhasznált meghívók"
         redeemed_tab: "Felhasználva"
@@ -1722,6 +1719,7 @@ hu:
           title: "Némítás"
           description: "Egyáltalán nem fogsz semmilyen értesítést sem kapni erről a témakörről és a legújabbak között sem nem fog szerepelni."
       actions:
+        title: "Műveletek"
         recover: "Témakör visszaállítása"
         delete: "Témakör törlése"
         open: "Nyitott téma"
@@ -1912,7 +1910,6 @@ hu:
           spam: "spamnek jelölve"
           inappropriate: "nem a témába tartozónak jelölve"
           notify_user: "üzenet küldése"
-          like: "Akiknek tetszett"
           like_capped:
             one: "és {{count}} ezt likeolták"
             other: "és {{count}} embernek tetszett"
@@ -1944,6 +1941,8 @@ hu:
           html_part:
             title: "A html rész mutatása az e-mailnak"
             button: "HTML"
+      bookmarks:
+        name: "Név"
     category:
       none: "(nincs kategória)"
       all: "Minden kategória"
@@ -2472,6 +2471,7 @@ hu:
         show_details: Részletek
         description: Leírás
         save: Mentés
+        continue: Folytatás
       web_hooks:
         title: "Webhooks"
         create: "Létrehoz"

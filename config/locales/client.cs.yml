@@ -182,7 +182,6 @@ cs:
       banner:
         enabled: "vytvořil(a) tento banner %{when}. Bude se zobrazovat nahoře na každé stránce, dokud nebude uživatelem odmítnut."
         disabled: "odstranil(a) tento banner %{when}. Už se nebude zobrazovat na každé stránce nahoře."
-    topic_admin_menu: "akce administrátora tématu"
     wizard_required: "Vítejte ve vašem novém Discourse! Začněte s <a href='%{url}' data-auto-route='true'>nastavením pomocí průvodce</a> ✨"
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
     bootstrap_mode_enabled: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile se zaregistruje alespoň %{min_users} uživatelů."
@@ -287,6 +286,7 @@ cs:
       not_bookmarked: "přidat záložku k příspěvku"
       remove: "Odstranit záložku"
       confirm_clear: "Opravdu chcete odstranit všechny své záložky z tohoto tématu?"
+      save: "Uložit"
     drafts:
       resume: "Pokračovat"
       remove: "Odstranit"
@@ -335,8 +335,6 @@ cs:
       edit: "Editujte tento banner >>"
     choose_topic:
       none_found: "Žádná témata nenalezena."
-      title:
-        placeholder: "sem napište název tématu"
     review:
       in_reply_to: "v odpovědi na"
       explain:
@@ -629,6 +627,10 @@ cs:
         normal_option: "Normální"
       activity_stream: "Aktivita"
       preferences: "Nastavení"
+      feature_topic_on_profile:
+        save: "Uložit"
+        clear:
+          title: "Zrušit"
       profile_hidden: "Tento uživatelský profil je skrytý."
       expand_profile: "Rozšířit"
       collapse_profile: "Sbalit"
@@ -920,7 +922,6 @@ cs:
         search: "pište pro hledání v pozvánkách..."
         title: "Pozvánky"
         user: "Pozvaný uživatel"
-        sent: "Odeslané"
         none: "Nejsou žádné pozvánky k zobrazení."
         truncated:
           one: "Zobrazena první pozvánka."
@@ -1797,6 +1798,7 @@ cs:
           title: "Ztišené"
           description: "Nikdy nedostanete nic ohledně tohoto tématu a nezobrazí se v aktuálních."
       actions:
+        title: "Akce"
         recover: "Vrátit téma"
         delete: "Odstranit téma"
         open: "Otevřít téma"
@@ -2092,7 +2094,6 @@ cs:
           notify_moderators: "označil příspěvek pro moderátora"
           notify_user: "odeslal zprávu"
           bookmark: "záložka přidána"
-          like: "se líbí"
           like_capped:
             one: "a jednomu dalšímu se to líbí"
             few: "a {{count}} dalším se to líbí"
@@ -2150,6 +2151,8 @@ cs:
           html_part:
             title: "Zobrazit html část emailu"
             button: "HTML"
+      bookmarks:
+        name: "Jméno"
     category:
       can: "smí&hellip; "
       none: "(bez kategorie)"
@@ -2789,6 +2792,7 @@ cs:
         show_details: Podrobnosti
         description: Popis
         save: Uložit
+        continue: Pokračovat
       web_hooks:
         title: "Webhooks"
         none: "Právě tu nejsou žádné webhooks."

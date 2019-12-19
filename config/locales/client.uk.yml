@@ -29,6 +29,8 @@ uk:
         millions: "{{number}} млн."
     dates:
       time: "HH:mm"
+      time_short_day: "ddd HH: мм а"
+      month_day_time: "МММ D, HH: мм а"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM HH:mm"
       long_no_year_no_time: "D MMM"
@@ -196,7 +198,7 @@ uk:
       banner:
         enabled: "робить це банером %{when}. Він з'являтиметься угорі кожної сторінки, поки користувач його не прибере."
         disabled: "вилучає цей банер %{when}. Він більше не з'являтиметься угорі кожної сторінки."
-    topic_admin_menu: "керування темою"
+    topic_admin_menu: "дії теми"
     wizard_required: "Запрошуємо до вашого нового Discourse! Давайте розпочнемо з <a href='%{url}' data-auto-route='true'>майстра налаштування</a> ✨"
     emails_are_disabled: "Надсилання повідомлень електронною поштою було глобально вимкнено адміністратором. Жодне сповіщення електронною поштою не буде надіслано."
     bootstrap_mode_enabled: "Задля спрощення запуску вашого нового сайту, ви зараз у режимі початкового завантаження. Усі нові користувачі отримають рівень довіри 1 й увімкнені щоденні підсумки електронною поштою. Це буде автоматично вимкнено, коли приєднається мінімально потрібна кількість користувачів — %{min_users}."
@@ -310,8 +312,19 @@ uk:
     bookmarks:
       created: "ви додали цей допис до закладок"
       not_bookmarked: "додати цей допис до закладок"
+      created_with_reminder: "ви додали закладку на цю публікацію з нагадуванням на %{date}"
       remove: "Вилучити закладку"
       confirm_clear: "Ви впевнені, що хочете вилучити всі закладки з цієї теми?"
+      save: "Зберегти"
+      no_timezone: "Ви ще не встановили часовий пояс. Ви не зможете встановити нагадування. Налаштуйте його <a href=\"%{basePath}/my/preferences/profile\">у своєму профілі</a> ."
+      reminders:
+        at_desktop: "Наступного разу на мій робочий стіл"
+        later_today: "Пізніше сьогодні <br/> {{date}}"
+        next_business_day: "Наступний робочий день <br/> {{date}}"
+        tomorrow: "Завтра <br/> {{date}}"
+        next_week: "Наступного тижня <br/> {{date}}"
+        next_month: "Наступного місяця <br/> {{date}}"
+        custom: "Вибрана дата та час"
     drafts:
       resume: "Продовжити"
       remove: "Вилучити"
@@ -364,13 +377,13 @@ uk:
     choose_topic:
       none_found: "Не знайдено тем."
       title:
-        search: "Шукайте теми за назвою, посиланням або id:"
-        placeholder: "введіть назву теми"
+        search: "Пошук теми"
+        placeholder: "введіть тут назву теми, URL-адресу або ідентифікатор"
     choose_message:
       none_found: "Не знайдено співпадінь."
       title:
-        search: "Шукайте повідомлення за назвою:"
-        placeholder: "введіть назву повідомлення"
+        search: "Шукати повідомлення"
+        placeholder: "введіть тут назву, URL-адресу або ідентифікатор"
     review:
       order_by: "Сортувати за"
       in_reply_to: "у відповідь на"
@@ -822,6 +835,14 @@ uk:
         normal_option_title: "Ви отримаєте сповіщення, коли цей користувач відповість вам, цитуватиме або згадуватиме вас."
       activity_stream: "Активність"
       preferences: "Налаштування"
+      feature_topic_on_profile:
+        open_search: "Виберіть нову тему"
+        title: "Виберіть тему"
+        search_label: "Шукайте тему за назвою"
+        save: "Зберегти"
+        clear:
+          title: "Очистити"
+          warning: "Ви впевнені, що хочете очистити свої закріплені теми?"
       profile_hidden: "Публічний профіль цього користувача прихований."
       expand_profile: "Розгорнути"
       collapse_profile: "Згорнути"
@@ -854,6 +875,7 @@ uk:
       enable_quoting: "Увімкнути відповіді на цитати для виділеного тексту"
       enable_defer: "Увімкнути відкладання позначення тем непрочитаними"
       change: "змінити"
+      featured_topic: "Закріплені теми"
       moderator: "{{user}} є модератором"
       admin: "{{user}} є адміном"
       moderator_tooltip: "Цей користувач є модератором"
@@ -1037,6 +1059,9 @@ uk:
       change_card_background:
         title: "Тло вашої візитки"
         instructions: "Зображення тла будуть відцентровані, ширина за замовчуванням — 590 пікселів."
+      change_featured_topic:
+        title: "Закріплені теми"
+        instructions: "Посилання на цю тему буде на вашій картці користувача та в профілі."
       email:
         title: "Електронна пошта"
         primary: "Основна електронна пошта"
@@ -1174,7 +1199,6 @@ uk:
         search: "шукати запрошення..."
         title: "Запрошення"
         user: "Запрошений користувач"
-        sent: "Надіслано"
         none: "Немає запрошень для відображення."
         truncated:
           one: "перше запрошення"
@@ -1438,6 +1462,7 @@ uk:
       second_factor_backup_description: "Введіть запасний код:"
       second_factor: "Увійти за допомогою програми аутентифікації"
       security_key_description: "Коли ви підготуєте свій фізичний ключ безпеки, натисніть кнопку Аутентификация з ключем безпеки нижче."
+      security_key_alternative: "Спробуйте інший спосіб"
       security_key_authenticate: "Аутентифікація з Ключем Безпеки."
       security_key_not_allowed_error: "Час перевірки автентичності ключа безпеки минув або було скасовано."
       security_key_no_matching_credential_error: "У зазначеному ключі безпеки не знайдено відповідних облікових даних."
@@ -1749,6 +1774,7 @@ uk:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Нова тема</span> {{description}}"
       membership_request_accepted: "Запит на вступ прийнятий '{{group_name}}'"
+      membership_request_consolidated: "{{count}} відкрити запити на членство для &quot;{{group_name}}&quot;"
       group_message_summary:
         one: "{{count}} повідомлення в вашій групі: {{group_name}} "
         few: "{{count}} повідомлень в вашій групі: {{group_name}} "
@@ -1786,6 +1812,7 @@ uk:
         topic_reminder: "нагадування про тему"
         liked_consolidated: "нові симпатії"
         post_approved: "повідомлення затверджено"
+        membership_request_consolidated: "нові запити на членство"
     upload_selector:
       title: "Додати зображення"
       title_with_attachments: "Додати зображення або файл"
@@ -1832,6 +1859,7 @@ uk:
       context:
         user: "Шукати повідомлення від @{{username}}"
         category: "Шукати в розділі #{{category}}"
+        tag: "Шукати тег #{{tag}}"
         topic: "Пошук в цій темі"
         private_messages: "Шукати приватні повідомлення"
       advanced:
@@ -1851,6 +1879,7 @@ uk:
           title: Збігам в заголовку
           likes: Мені сподобалися
           posted: В яких я писав
+          created: Я створив
           watching: За якими я спостерігаю
           tracking: За якими я стежу
           private: У моїх повідомленнях
@@ -1867,6 +1896,7 @@ uk:
           label: Де теми
           open: відкрита
           closed: закрита
+          public: є публічними
           archived: заархівувана
           noreplies: без відповідей
           single_user: зез відповідей
@@ -1958,6 +1988,13 @@ uk:
       defer:
         help: "Позначити як непрочитане"
         title: "Відкласти"
+      feature_on_profile:
+        help: "Додайте посилання на цю тему на своїй картці та профілі користувача"
+        title: "Вибрано у профілі"
+      remove_from_profile:
+        warning: "У вашому профілі вже є обрана тема. Якщо ви продовжите, ця тема замінить існуючу тему."
+        help: "Видаліть посилання на цю тему у своєму профілі користувача"
+        title: "Видалити з профілю"
       list: "Теми"
       new: "нова тема"
       unread: "непрочитані"
@@ -2141,6 +2178,7 @@ uk:
           title: "Ігнорувати"
           description: "Не повідомляти про зміни в цій темі та приховати її з останніх."
       actions:
+        title: "Дії"
         recover: "Відкликати видалення теми"
         delete: "Видалити тему"
         open: "Відкрити тему"
@@ -2485,13 +2523,26 @@ uk:
           notify_moderators: "notified moderators"
           notify_user: "надіслати повідомлення"
           bookmark: "Додати закладку"
-          like: "liked this"
-          read: "читати це"
+          like:
+            one: "сподобалось це"
+            few: "сподобалось це"
+            many: "сподобалось це"
+            other: "вподобав це"
+          read:
+            one: "Прочитай це"
+            few: "Прочитай це"
+            many: "Прочитай це"
+            other: "прочитав це"
           like_capped:
             one: "та {{count}} сподобалося"
             few: "і {{count}} іншим сподобалося"
             many: "і {{count}} іншим сподобалося"
             other: "і {{count}} іншим сподобалося"
+          read_capped:
+            one: "та {{count}} інші читають це"
+            few: "та {{count}} інші читали це"
+            many: "та {{count}} інші читали це"
+            other: "та {{count}} інші прочитали це"
         by_you:
           off_topic: "Ви поскаржилися на це як на недотичне до теми"
           spam: "Ви поскаржилися на це як на спам"
@@ -2545,6 +2596,11 @@ uk:
           html_part:
             title: "Показати HTML версію листа"
             button: "HTML"
+      bookmarks:
+        create: "Створити закладку"
+        name: "Назва"
+        name_placeholder: "Назва закладки, яка допоможе знайти та згадати"
+        set_reminder: "Створити нагадування"
     category:
       can: "може&hellip; "
       none: "(без категорії)"
@@ -3013,7 +3069,26 @@ uk:
       changed: "мітки змінилися:"
       tags: "Мітки"
       choose_for_topic: "необов'язкові мітки"
+      info: "Інформація"
+      default_info: "Цей тег не обмежений розділами та не має синонімів."
+      synonyms: "Синоніми"
+      synonyms_description: "Коли будуть використані наступні теги, вони будуть замінені на <b>%{base_tag_name}</b> ."
+      tag_groups_info:
+        one: 'Цей тег належить до групи &quot;{{tag_groups}}&quot;.'
+        few: "Цей тег належить до цих груп: {{tag_groups}}."
+        many: "Цей тег належить до цих груп: {{tag_groups}}."
+        other: "Цей тег належить до цих груп: {{tag_groups}}."
+      category_restrictions:
+        one: "Його можна використовувати лише в цій категорії:"
+        few: "Його можна використовувати лише в таких категоріях:"
+        many: "Його можна використовувати лише в таких категоріях:"
+        other: "Його можна використовувати лише в таких розділах:"
+      edit_synonyms: "Управління синонімами"
+      add_synonyms_label: "Додайте синоніми:"
       add_synonyms: "Додати"
+      add_synonyms_failed: "Наступні теги не можна додати як синоніми: <b>%{tag_names}</b>. Переконайтесь, що вони не мають синонімів та не є синонімами іншого тегу."
+      remove_synonym: "Видалити синонім"
+      delete_synonym_confirm: 'Ви впевнені, що хочете видалити синонім &quot;%{tag_name}&quot;?'
       delete_tag: "Вилучити мітку"
       delete_confirm:
         one: "Ви впевнені, що хочете вилучити цю мітку і прибрати її з %{count} теми, де вона використана?"
@@ -3021,6 +3096,11 @@ uk:
         many: "Ви впевнені, що хочете вилучити цю мітку і прибрати її з {{count}} тем, де вона використана?"
         other: "Ви впевнені, що хочете вилучити цю мітку і прибрати її з {{count}} тем, де вона використана?"
       delete_confirm_no_topics: "Ви впевнені, що хочете вилучити цю мітку?"
+      delete_confirm_synonyms:
+        one: "Його синонім також буде видалено."
+        few: "Синоніми {{count}} також будуть видалені."
+        many: "Синоніми {{count}} також будуть видалені."
+        other: "Синоніми {{count}} також будуть видалені."
       rename_tag: "Перейменувати мітку"
       rename_instructions: "Виберіть нову назву для мітки:"
       sort_by: "Сортувати за:"
@@ -3304,6 +3384,8 @@ uk:
         new_key: Новий ключ API
         revoked: Відкликано
         delete: Видалити назавжди
+        not_shown_again: "Ця клавіша більше не відображатиметься. Переконайтесь, що ви створили копію, перш ніж продовжувати."
+        continue: Продовжити
       web_hooks:
         title: "Вебгуки"
         none: "Зараз вебгуків немає."
@@ -3550,6 +3632,7 @@ uk:
           color_scheme_select: "Виберіть кольори для стилю"
           custom_sections: "Налаштування секцій:"
           theme_components: "Компоненти стилю"
+          add_all_themes: "Додати всі теми"
           convert: "Конвертувати"
           convert_component_alert: "Ви впевнені, що хочете перетворити цей компонент у тему? Він буде вилучений як компонент з%{relatives}."
           convert_component_tooltip: "Перетворити цей компонент в тему"
@@ -3576,12 +3659,16 @@ uk:
           upload: "Завантажити"
           select_component: "Виберіть компонент..."
           unsaved_changes_alert: "Ви ще не зберегли свої зміни, хочете скасувати їх та рухатися далі?"
+          unsaved_parent_themes: "Ви не призначили компонент темам, чи хочете ви продовжити?"
           discard: "відмовити"
           stay: "залишитися"
           css_html: "Налаштування CSS/HTML"
           edit_css_html: "Редагувати CSS/HTML"
           edit_css_html_help: "Ви не внесли ніяких змін в CSS або HTML"
           delete_upload_confirm: "Видалити цей файл? CSS стилю може перестати функціонувати!"
+          component_on_themes: "Включіть компонент у ці теми"
+          included_components: "Входять компоненти"
+          add_all: "Додати все"
           import_web_tip: "Репозиторій стилю"
           import_web_advanced: "Додатково..."
           import_file_tip: ".tar.gz, .zip, або .dcstyle .json файл, який містить тему"
@@ -3897,6 +3984,7 @@ uk:
             api_key_create: "api ключ створено"
             api_key_update: "api ключ оновлено"
             api_key_destroy: "api ключ знищено"
+            override_upload_secure_status: "змінити налаштування безпеки для завантаження"
         screened_emails:
           title: "Screened Emails"
           description: "Коли хтось намагатиметься створити новий обліковий запис, наступні електронні скриньки буде перевірено, і реєстрацію заблоковано, або вжито якихось інших дій."

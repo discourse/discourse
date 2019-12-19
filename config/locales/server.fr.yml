@@ -312,6 +312,15 @@ fr:
   edit_conflict: "Ce message a été modifié par une autre utilisateur, vos modifications ne peuvent plus être sauvegardées."
   revert_version_same: "La version actuelle est la même que la version vers laquelle vous essayez de revenir."
   excerpt_image: "image"
+  bookmarks:
+    reminders:
+      at_desktop: "La prochaine fois je suis à mon bureau"
+      later_today: "Plus tard dans la journée\n{{date}}"
+      next_business_day: "Prochain jour ouvré<br/>{{date}}"
+      tomorrow: "Demain<br/>{{date}}"
+      next_week: "La semaine prochaine<br/>{{date}}"
+      next_month: "Le mois prochain<br/>{{date}}"
+      custom: "Date et heure personnalisés"
   groups:
     success:
       bulk_add:
@@ -2782,6 +2791,33 @@ fr:
     visit_link_to_respond_pm: "[Voir le message](%{base_url}%{url}) pour répondre à %{participants}."
     posted_by: "Redigé par %{username} le %{post_date}"
     pm_participants: "Participants : %{participants}"
+    invited_to_private_message_body: |
+      %{username} vous invite à un message
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      à
+
+      > %{site_title} - %{site_description}
+
+      Pour joindre le message, cliquer le lien ci-dessous :
+
+      %{topic_url}
+    invited_to_topic_body: |
+      %{username} vous invite à une discussion
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      à
+
+      > %{site_title} - %{site_description}
+
+      Pour rejoindre la discussion, cliquer le lien ci-dessous :
+
+      %{topic_url}
     user_invited_to_private_message_pm_group:
       title: "Utilisateur a invité groupe au MD"
       subject_template: "[%{email_prefix}] %{username} a invité @%{group_name} dans la conversation « %{topic_title} »"
@@ -3051,6 +3087,12 @@ fr:
     confirm_old_email:
       title: "Confirmez votre ancienne adresse email"
       subject_template: "[%{email_prefix}] Confirmez votre adresse email actuelle"
+      text_body_template: |
+        Avant de pouvoir modifier votre adresse e-mail, nous avons besoin de vous pour confirmer que vous contrôlez bien ce compte de messagerie. Une fois cette étape terminée, nous vous demanderons de confirmer la nouvelle adresse e-mail.
+
+        Merci de confirmer votre adresse e-mail actuelle pour %{site_name} en cliquant sur le lien suivant:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Notifier l'ancienne adresse courriel"
       subject_template: "[%{email_prefix}] Votre adresse email a été modifié"

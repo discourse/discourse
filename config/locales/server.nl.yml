@@ -324,6 +324,18 @@ nl:
   edit_conflict: "Dat bericht is door een andere gebruiker bewerkt, en uw wijzigingen kunnen niet meer worden opgeslagen."
   revert_version_same: "De huidige versie is dezelfde als de versie die u probeert terug te zetten."
   excerpt_image: "afbeelding"
+  bookmarks:
+    errors:
+      already_bookmarked_post: "U kunt geen twee bladwijzers voor hetzelfde bericht maken."
+      time_must_be_provided: "tijd moet voor alle herinneringen behalve '%{reminder_type}' worden opgegeven"
+    reminders:
+      at_desktop: "De volgende keer vanaf mijn computer"
+      later_today: "Later vandaag <br/>{{date}}"
+      next_business_day: "Volgende werkdag <br/>{{date}}"
+      tomorrow: "Morgen <br/>{{date}}"
+      next_week: "Volgende week <br/>{{date}}"
+      next_month: "Volgende maand <br/>{{date}}"
+      custom: "Aangepaste datum en tijd"
   groups:
     success:
       bulk_add:
@@ -1775,8 +1787,8 @@ nl:
     permalink_normalizations: "De volgende reguliere expressie toepassen voordat permalinks worden verwerkt. Voorbeeld: /(topic.*)\\?.*/\\1 verwijdert querystrings uit topicroutes. Notatie is regex+strings, gebruik \\1 etc. voor deeluitdrukkingen."
     global_notice: "Een algemene niet te verbergen DRINGEND, NOODGEVAL-bannermelding voor alle gebruikers weergeven. Laat leeg om deze te verbergen (HTML toegestaan)."
     disable_system_edit_notifications: "Schakelt bewerkingsmeldingen van de systeemgebruiker uit als 'download_remote_images_to_local' actief is."
-    notification_consolidation_threshold: "Aantal ontvangen meldingen van likes of lidmaatschapsaanvragen voordat de meldingen in een enkele worden samengevoegd. Stel dit in op 0 om uit te schakelen."
-    likes_notification_consolidation_window_mins: "Tijdsduur in minuten waarin like-meldingen in een enkele melding worden samengevoegd zodra de drempel is bereikt. De drempel kan worden geconfigureerd via `SiteSetting.notification_consolidation_threshold`."
+    notification_consolidation_threshold: "Aantal ontvangen meldingen van likes of lidmaatschapsaanvragen voordat de meldingen in één melding worden samengevoegd. Stel dit in op 0 om uit te schakelen."
+    likes_notification_consolidation_window_mins: "Tijdsduur in minuten waarin like-meldingen in één melding worden samengevoegd zodra de drempel is bereikt. De drempel kan worden geconfigureerd via `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Topics automatisch losmaken wanneer de gebruiker de onderkant bereikt."
     read_time_word_count: "Aantal woorden per minuut voor het berekenen van geschatte leestijd."
     topic_page_title_includes_category: "Topicpagina <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titeltag</a> bevat de categorienaam."
@@ -2191,6 +2203,8 @@ nl:
     welcome_tl1_user:
       title: "Welkom TL1-gebruiker"
       subject_template: "Bedankt voor de tijd die u met ons doorbrengt"
+    welcome_staff:
+      subject_template: "Gefeliciteerd, de status %{role} is aan u toegekend!"
     welcome_invite:
       title: "Welkomstuitnodiging"
       subject_template: "Welkom bij %{site_name}!"

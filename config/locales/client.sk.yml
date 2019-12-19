@@ -182,7 +182,6 @@ sk:
       banner:
         enabled: "Téma je odteraz baner %{when} Bude sa zobrazovať navrchu každej stránky, pokiaľ ju používateľ nezavrie."
         disabled: "odstránil(a) tento oznam %{when}. Už sa viac nebude zobrazovať navrchu každej stránky."
-    topic_admin_menu: "akcie administrátora témy"
     wizard_required: "Vitajte vo vašom novom Discourse! Začnime so <a href='%{url}' data-auto-route='true'>sprievodcom nastavením</a>✨ "
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
     bootstrap_mode_enabled: "Pre zjednodušenie spustenia Vašej novej stránky sa nachádzate v zavádzacom režime. Všetci noví používatelia budú mať pridelený stupeň dôvery 1 a budú mať zapnutý denný emailový výber aktualít. Toto bude automaticky vypnuté keď celkový počet používateľov presiahne %{min_users}."
@@ -288,6 +287,7 @@ sk:
       not_bookmarked: "Vytvor záložku na tento príspevok"
       remove: "Odstrániť záložku"
       confirm_clear: "Ste si istý, že chcete odstrániť všetky záložky z tejto témy?"
+      save: "Uložiť"
     drafts:
       resume: "Pokračovať"
       remove: "Odstrániť"
@@ -334,8 +334,6 @@ sk:
       edit: "Upraviť tento banner >>"
     choose_topic:
       none_found: "Nenašli sa žiadne témy."
-      title:
-        placeholder: "sem napíšte názov témy"
     choose_message:
       none_found: "Žiadne správy."
     review:
@@ -628,6 +626,10 @@ sk:
         normal_option: "Normálne"
       activity_stream: "Aktivita"
       preferences: "Nastavenia"
+      feature_topic_on_profile:
+        save: "Uložiť"
+        clear:
+          title: "Vyčistiť"
       profile_hidden: "Tento užívateľský profil je skrytý."
       expand_profile: "Rozbaľ"
       collapse_profile: "Zbaliť"
@@ -913,7 +915,6 @@ sk:
         search: "začni písať pre hľadanie pozvánok"
         title: "Pozvánky"
         user: "Pozvaný používateľ"
-        sent: "Odoslané"
         none: "Nemáte žiadne pozvánky na zobrazenie."
         truncated:
           one: "Zobrazuje sa prvá pozvánka."
@@ -1566,6 +1567,7 @@ sk:
           title: "Stíšené"
           description: "Nikdy nebudete upozornení na nič ohľadom tejto témy, a nebude sa zobrazovať medzi najnovšími."
       actions:
+        title: "Akcie"
         recover: "Obnoviť zmazanú tému"
         delete: "Zmazať tému"
         open: "Otvoriť tému"
@@ -1811,7 +1813,6 @@ sk:
           off_topic: "toto je označené ako \"Mimo témy\""
           spam: "označiť toto ako spam"
           inappropriate: "toto označ ako nevhodné"
-          like: "páčilo sa"
         by_you:
           off_topic: "Označíli ste to ako mimo tému"
           spam: "Označíli ste to ako spam"
@@ -1839,6 +1840,8 @@ sk:
         displays:
           text_part:
             button: "Text"
+      bookmarks:
+        name: "Meno"
     category:
       can: "môže &hellip; "
       none: "(Bez kategórie)"
@@ -2389,6 +2392,7 @@ sk:
         show_details: Detaily
         description: Popis
         save: Uložiť
+        continue: Pokračovať
       web_hooks:
         create: "Vytvoriť"
         save: "Uložiť"

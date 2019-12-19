@@ -136,7 +136,6 @@ et:
       visible:
         enabled: "lisatud %{when}"
         disabled: "eemaldatud %{when}"
-    topic_admin_menu: "teema admintegevused"
     emails_are_disabled: "Kõik väljuvad meilid on administraatori poolt blokeeritud. Ühtegi teavitust meili teel ei saadeta."
     themes:
       default_description: "Vaikimisi"
@@ -234,6 +233,7 @@ et:
       created: "lisasid sellele postitusele järjehoidja"
       not_bookmarked: "lisa sellele postitusele järjehoidja"
       remove: "Eemalda järjehoidja"
+      save: "Salvesta"
     drafts:
       resume: "Taasta"
       remove: "Eemalda"
@@ -276,8 +276,6 @@ et:
       edit: "Muuda seda bännerit >>"
     choose_topic:
       none_found: "Teemasid ei leitud."
-      title:
-        placeholder: "kirjuta teema pealkiri siia"
     review:
       explain:
         total: "Kokku"
@@ -557,6 +555,10 @@ et:
         normal_option: "Normaalne"
       activity_stream: "Tegevused"
       preferences: "Eelistused"
+      feature_topic_on_profile:
+        save: "Salvesta"
+        clear:
+          title: "Puhasta"
       profile_hidden: "Selle kasutaja avalik profiil on peidetud."
       expand_profile: "Näita veel"
       collapse_profile: "Ahenda"
@@ -826,7 +828,6 @@ et:
         search: "kirjuta kutsete otsimiseks..."
         title: "kutsed"
         user: "Kutsutud kasutaja"
-        sent: "Saadetud"
         none: "Pole ühtegi kutset, mida näidata."
         truncated:
           one: "Näitan esimest kutset."
@@ -1557,6 +1558,7 @@ et:
           title: "Vaigistatud"
           description: "Sind ei teavitata selle teema kohta mitte kunagi ning see ei ilmu ka värskete teemade alla."
       actions:
+        title: "Tegevused"
         recover: "Taasta teema kustutamisest"
         delete: "Kustuta teema"
         open: "Ava teema"
@@ -1797,7 +1799,6 @@ et:
           notify_moderators: "teavitasin moderaatoreid"
           notify_user: "saatsin sõnumi"
           bookmark: "lisasin sellele järjehoidja"
-          like: "meeldis see"
         by_you:
           off_topic: "Tähistasid selle kui teemavälise"
           spam: "Tähistasid selle kui spämmi"
@@ -1843,6 +1844,8 @@ et:
             button: "Tekst"
           html_part:
             button: "HTML"
+      bookmarks:
+        name: "Nimi"
     category:
       can: "saab&hellip; "
       none: "(foorum puudub)"
@@ -2400,6 +2403,7 @@ et:
         show_details: Üksikasjad
         description: Kirjeldus
         save: Salvesta
+        continue: Jätka
       web_hooks:
         title: "Veebihaagid"
         none: "Hetkel veebihaagid puuduvad."

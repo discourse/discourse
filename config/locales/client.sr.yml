@@ -160,7 +160,6 @@ sr:
       banner:
         enabled: "je ovo načinio banerom%{when}. Pojavljivaće se na vrhu svake stranice dok ga korisnik ne ukloni."
         disabled: "je uklonio ovaj baner%{when}. Više se neće pojavljivati na vrhu svake stranice."
-    topic_admin_menu: "tema admin akcije"
     wizard_required: "Dobrodošli na Vaš novi Discourse! Počnimo sa <a href='%{url}' data-auto-route='true'>instalacijom</a>"
     emails_are_disabled: "Sva odlazeća epošta je onemogućena globalno od strane administratora. Ni jedna notifikacija neće biti poslata."
     themes:
@@ -251,6 +250,7 @@ sr:
     bookmarks:
       created: "markirao si ovu poruku"
       remove: "Obriši marker"
+      save: "Sačuvaj"
     drafts:
       remove: "Ukloni"
       abandon:
@@ -277,8 +277,6 @@ sr:
       edit: "Promeni ovaj baner >>"
     choose_topic:
       none_found: "Nema pronađenih tema."
-      title:
-        placeholder: "unesite naslov teme ovde"
     review:
       delete: "Obriši"
       settings:
@@ -457,6 +455,10 @@ sr:
         normal_option: "Normalno"
       activity_stream: "Aktivnost"
       preferences: "Postavke"
+      feature_topic_on_profile:
+        save: "Sačuvaj"
+        clear:
+          title: "Čisto"
       expand_profile: "Proširi"
       bookmarks: "Markiraj"
       bio: "O meni"
@@ -624,7 +626,6 @@ sr:
         search: "pišite da pregledate pozivnice"
         title: "Pozivnice"
         user: "Pozvani Korisnici"
-        sent: "Poslato"
         redeemed: "Nadoknadi Pozivnice"
         redeemed_tab: "Nadoknadi"
         redeemed_at: "Nadoknadi"
@@ -1102,6 +1103,7 @@ sr:
         muted:
           title: "Utišano"
       actions:
+        title: "Akcije"
         recover: "Vrati obrisanu temu"
         delete: "Obriši temu"
         open: "Otvori temu"
@@ -1281,6 +1283,8 @@ sr:
             title: "Prikaži izračunate odlazne podatke s razlikama nasuprot."
           side_by_side_markdown:
             title: "Prikaži razlike u sirovom izvoru jednu nasuprot druge."
+      bookmarks:
+        name: "Ime foruma"
     category:
       can: "može&hellip"
       none: "(nema kategorije)"

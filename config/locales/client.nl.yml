@@ -27,6 +27,8 @@ nl:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
+      time_short_day: "ddd HH:mm"
+      month_day_time: "D MMM, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM HH:mm"
       long_no_year_no_time: "D MMM"
@@ -152,9 +154,9 @@ nl:
       banner:
         enabled: "heeft deze banner gemaakt op %{when}. De banner verschijnt bovenaan elke pagina, totdat de gebruiker deze verbergt."
         disabled: "heeft deze banner verwijderd op %{when}. De banner zal niet meer bovenaan elke pagina verschijnen."
-    topic_admin_menu: "beheeracties voor topic"
+    topic_admin_menu: "topicacties"
     wizard_required: "Welkom bij uw nieuwe Discourse! Laten we beginnen met <a href='%{url}' data-auto-route='true'>de configuratiewizard</a> ✨"
-    emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een administrator. Er wordt geen enkele e-mailmelding verstuurd."
+    emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding verstuurd."
     bootstrap_mode_enabled: "Om het opzetten van uw nieuwe website makkelijker te maken, bevindt u zich in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend, en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld zodra %{min_users} gebruikers lid zijn geworden."
     bootstrap_mode_disabled: "De bootstrapmodus wordt binnen 24 uur uitgeschakeld."
     themes:
@@ -262,8 +264,19 @@ nl:
     bookmarks:
       created: "u hebt een bladwijzer voor dit bericht gemaakt"
       not_bookmarked: "bladwijzer voor dit bericht maken"
+      created_with_reminder: "u hebt een bladwijzer voor dit bericht gemaakt met een herinnering op %{date}"
       remove: "Bladwijzer verwijderen"
       confirm_clear: "Weet u zeker dat u alle bladwijzers van dit topic wilt verwijderen?"
+      save: "Opslaan"
+      no_timezone: "U hebt nog geen tijdzone ingesteld. Hierdoor kunt u geen herinneringen instellen. Stel er een in <a href=\"%{basePath}/my/preferences/profile\">in uw profiel</a>."
+      reminders:
+        at_desktop: "De volgende keer vanaf mijn computer"
+        later_today: "Later vandaag <br/>{{date}}"
+        next_business_day: "Volgende werkdag <br/>{{date}}"
+        tomorrow: "Morgen <br/>{{date}}"
+        next_week: "Volgende week <br/>{{date}}"
+        next_month: "Volgende maand <br/>{{date}}"
+        custom: "Aangepaste datum en tijd"
     drafts:
       resume: "Hervatten"
       remove: "Verwijderen"
@@ -310,13 +323,13 @@ nl:
     choose_topic:
       none_found: "Geen topics gevonden."
       title:
-        search: "Zoeken naar een topic op naam, URL of ID:"
-        placeholder: "typ hier de titel van het topic"
+        search: "Zoeken naar een topic"
+        placeholder: "typ hier de titel, URL of ID van het topic"
     choose_message:
       none_found: "Geen berichten gevonden."
       title:
-        search: "Zoeken naar een bericht op titel:"
-        placeholder: "typ hier de titel van het bericht"
+        search: "Zoeken naar een bericht"
+        placeholder: "typ hier de titel, URL of ID van het bericht"
     review:
       order_by: "Sorteren op"
       in_reply_to: "in reactie op"
@@ -742,6 +755,14 @@ nl:
         normal_option_title: "U ontvangt een melding als deze gebruiker een bericht van u beantwoordt, u citeert, of uw naam noemt."
       activity_stream: "Activiteit"
       preferences: "Voorkeuren"
+      feature_topic_on_profile:
+        open_search: "Selecteer een nieuw topic"
+        title: "Een topic selecteren"
+        search_label: "Zoeken naar topic op titel"
+        save: "Opslaan"
+        clear:
+          title: "Wissen"
+          warning: "Weet u zeker dat u uw aanbevolen topic wilt wissen?"
       profile_hidden: "Het openbare profiel van deze gebruiker is verborgen."
       expand_profile: "Uitvouwen"
       collapse_profile: "Samenvouwen"
@@ -960,7 +981,7 @@ nl:
         instructions: "Achtergrondafbeeldingen worden gecentreerd en hebben een standaardbreedte van 590px."
       change_featured_topic:
         title: "Aanbevolen topic"
-        instructions: "Om dit te wijzigen, navigeert u naar het topic om het als aanbevolen topic te verwijderen, of beveelt u een ander topic aan."
+        instructions: "Er wordt een koppeling naar dit topic op uw gebruikerskaart en profiel geplaatst."
       email:
         title: "E-mail"
         primary: "Primair e-mailadres"
@@ -1096,7 +1117,7 @@ nl:
         search: "typ om uitnodigingen te zoeken..."
         title: "Uitnodigingen"
         user: "Uitgenodigde gebruiker"
-        sent: "Verzonden"
+        sent: "Laatst verzonden"
         none: "Geen uitnodigingen om weer te geven."
         truncated:
           one: "De eerste uitnodiging wordt getoond."
@@ -1490,7 +1511,7 @@ nl:
       similar_topics: "Uw topic lijkt op..."
       drafts_offline: "concepten offline"
       edit_conflict: "bewerkingsconflict"
-      group_mentioned_limit: "<b>Waarschuwing!</b> U hebt <a href='{{group_link}}'>{{group}}</a> genoemd, maar deze groep heeft meer leden dan de door een administrator geconfigureerde limiet van {{max}} gebruikers voor noemen. Niemand krijgt een melding. "
+      group_mentioned_limit: "<b>Waarschuwing!</b> U hebt <a href='{{group_link}}'>{{group}}</a> genoemd, maar deze groep heeft meer leden dan de door een beheerder geconfigureerde limiet van {{max}} gebruikers voor noemen. Niemand krijgt een melding. "
       group_mentioned:
         one: "Door {{group}} te vermelden, gaat u <a href='{{group_link}}'>%{count} persoon</a> op de hoogte brengen – weet u dit zeker?"
         other: "Door {{group}} te vermelden, gaat u <a href='{{group_link}}'>{{count}} personen</a> op de hoogte brengen – weet u dit zeker?"
@@ -1739,6 +1760,7 @@ nl:
           title: Die alleen met de titel overeenkomen
           likes: die ik heb geliket
           posted: waarin ik iets heb geplaatst
+          created: die ik heb aangemaakt
           watching: die ik in de gaten houd
           tracking: die ik volg
           private: In mijn berichten
@@ -1755,6 +1777,7 @@ nl:
           label: Waarin topics
           open: open zijn
           closed: gesloten zijn
+          public: openbaar zijn
           archived: gearchiveerd zijn
           noreplies: geen antwoorden bevatten
           single_user: maar één gebruiker bevatten
@@ -2018,6 +2041,7 @@ nl:
           title: "Genegeerd"
           description: "U ontvangt geen enkele melding over dit topic, en het verschijnt niet in Nieuwste."
       actions:
+        title: "Acties"
         recover: "Topic verwijderen ongedaan maken"
         delete: "Topic verwijderen"
         open: "Topic openen"
@@ -2326,11 +2350,18 @@ nl:
           notify_moderators: "heeft moderators ingelicht"
           notify_user: "heeft een bericht gestuurd"
           bookmark: "heeft dit aan bladwijzers toegevoegd"
-          like: "heeft dit geliket"
-          read: "heeft dit gelezen"
+          like:
+            one: "heeft dit geliket"
+            other: "hebben dit geliket"
+          read:
+            one: "heeft dit gelezen"
+            other: "hebben dit gelezen"
           like_capped:
             one: "en {{count}} ander heeft dit geliket"
             other: "en {{count}} anderen hebben dit geliket"
+          read_capped:
+            one: "en {{count}} ander heeft dit gelezen"
+            other: "en {{count}} anderen hebben dit gelezen"
         by_you:
           off_topic: "U hebt dit als off-topic gemarkeerd"
           spam: "U hebt dit als spam gemarkeerd"
@@ -2380,6 +2411,11 @@ nl:
           html_part:
             title: "Het HTML-gedeelte van het e-mailbericht tonen"
             button: "HTML"
+      bookmarks:
+        create: "Bladwijzer maken"
+        name: "Naam"
+        name_placeholder: "Geef de bladwijzer een naam als geheugensteuntje"
+        set_reminder: "Een herinnering instellen"
     category:
       can: "kan&hellip; "
       none: "(geen categorie)"
@@ -3111,6 +3147,8 @@ nl:
         new_key: Nieuwe API-sleutel
         revoked: Ingetrokken
         delete: Definitief verwijderen
+        not_shown_again: Deze sleutel wordt niet meer weergegeven. Zorg ervoor dat u een kopie maakt voordat u doorgaat.
+        continue: Doorgaan
       web_hooks:
         title: "Webhooks"
         none: "Er zijn op dit moment geen webhooks."
@@ -3880,7 +3918,7 @@ nl:
         logged_out: "Gebruiker is op alle apparaten afgemeld"
         revoke_admin: "Beheerdersrechten intrekken"
         grant_admin: "Beheerdersrechten toekennen"
-        grant_admin_confirm: "We hebben u een e-mail gestuurd om de nieuwe administrator te verifiëren. Open deze en volg de instructies."
+        grant_admin_confirm: "We hebben u een e-mail gestuurd om de nieuwe beheerder te verifiëren. Open deze en volg de instructies."
         revoke_moderation: "Moderatierechten intrekken"
         grant_moderation: "Moderatierechten toekennen"
         unsuspend: "Schorsing opheffen"

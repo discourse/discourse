@@ -29,6 +29,8 @@ he:
         millions: "{{number}} מיליון"
     dates:
       time: "h:mm a"
+      time_short_day: "ddd HH:mm"
+      month_day_time: "D בMMM,‏ HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D בMMM ‏HH:mm"
       long_no_year_no_time: "D בMMM"
@@ -196,7 +198,7 @@ he:
       banner:
         enabled: "באנר זה נוצר ב־%{when}. הוא יופיע בראש כל דף עד שישוחרר על ידי המשתמש/ת."
         disabled: "באנר זה הוסר ב־%{when}. הוא לא יופיע יותר בראש כל דף."
-    topic_admin_menu: "פעולות ניהול לנושא"
+    topic_admin_menu: "פעולות על נושא"
     wizard_required: "ברוך בואך ל־Discourse החדש שלך! נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
     emails_are_disabled: "כל הדוא״ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תשלח."
     bootstrap_mode_enabled: "כדי להקל על הקמת האתר החדש שלך, כרגע המערכת במצב אתחול ראשוני. לכל המשתמשים החדשים תוענק דרגת האמון 1 ויישלח אליהם תמצות יומי בדוא״ל. אפשרות זו תכבה אוטומטית לאחר הצטרפות של למעלה מ־%{min_users} משתמשים."
@@ -310,8 +312,19 @@ he:
     bookmarks:
       created: "פוסט זה נוסף לסימניות"
       not_bookmarked: "סמנו פוסט זה עם סימנייה"
+      created_with_reminder: "סימנת את הפוסט הזה עם תזכורת ב־%{date}"
       remove: "הסרה מהסימניות"
       confirm_clear: "האם אתם בטוחים שאתם מעוניינים לנקות את כל הסימניות מנושא זה?"
+      save: "שמירה"
+      no_timezone: "עדיין לא הגדרת אזור זמן. לא תהיה לך אפשרות להגדיר תזכורות. ניתן להגדיר אותו <a href=\"%{basePath}/my/preferences/profile\">בפרופיל שלך</a>."
+      reminders:
+        at_desktop: "בשימוש הבא דרך שולחן העבודה"
+        later_today: "המשך היום <br/>{{date}}"
+        next_business_day: "ביום העסקים הבא <br/>{{date}}"
+        tomorrow: "מחר <br/>{{date}}"
+        next_week: "בשבוע הבא <br/>{{date}}"
+        next_month: "בחודש הבא <br/>{{date}}"
+        custom: "תאריך ושעה מותאמים אישית"
     drafts:
       resume: "המשך"
       remove: "הסרה"
@@ -364,13 +377,13 @@ he:
     choose_topic:
       none_found: "לא נמצאו נושאים."
       title:
-        search: "חיפוש נושא לפי שם, כתובת או מזהה:"
-        placeholder: "יש להקליד את כותרת הנושא כאן"
+        search: "חיפוש אחר נושא"
+        placeholder: "נא להקליד כאן את כותרת הנושא, הכתובת או את המזהה"
     choose_message:
       none_found: "לא נמצאו הודעות"
       title:
-        search: "חפש הודעה לפי שם:"
-        placeholder: "הקלידו את כותרת ההודעה כאן"
+        search: "חיפוש אחר הודעה"
+        placeholder: "נא להקליד כאן את כותרת ההודעה, הכתובת או את המזהה"
     review:
       order_by: "סידור לפי"
       in_reply_to: "בתגובה ל"
@@ -822,6 +835,14 @@ he:
         normal_option_title: "תגיע אליך התראה אם המשתמש הזה יגיב לך, יצטט אותך או יאזכר אותך."
       activity_stream: "פעילות"
       preferences: "העדפות"
+      feature_topic_on_profile:
+        open_search: "נא לבחור נושא חדש"
+        title: "נא לבחור נושא"
+        search_label: "חיפוש אחר נושא לפי כותרת"
+        save: "שמירה"
+        clear:
+          title: "נקה"
+          warning: "למחוק את הנושאים המומלצים שלך?"
       profile_hidden: "הפרופיל הציבורי של משתמש זה מוסתר"
       expand_profile: "הרחב"
       collapse_profile: "הקטן"
@@ -854,6 +875,7 @@ he:
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
       enable_defer: "הפעלת דחייה לאחר כך כדי לסמן נושאים כלא נקראו"
       change: "שנה"
+      featured_topic: "נושא מומלץ"
       moderator: "ל־{{user}} יש תפקיד פיקוח"
       admin: "{{user}} הוא מנהל מערכת"
       moderator_tooltip: "משתמש זה הוא מפקח"
@@ -1037,6 +1059,9 @@ he:
       change_card_background:
         title: "כרטיס הרקע של המשתמש/ת"
         instructions: "תמונות רקע ימורכזו ויוצגו ברוחב ברירת מחדל של 590px."
+      change_featured_topic:
+        title: "נושא מומלץ"
+        instructions: "קישור לנושא הזה יופיע בכרטיס המשתמש ובפרופיל שלך."
       email:
         title: "דואר אלקטרוני"
         primary: "כתובת דוא\"ל ראשית"
@@ -1174,7 +1199,7 @@ he:
         search: "הקלידו כדי לחפש הזמנות..."
         title: "הזמנות"
         user: "משתמשים שהוזמנו"
-        sent: "נשלח"
+        sent: "שליחה אחרונה"
         none: "אין הזמנות להצגה"
         truncated:
           one: "מראה את ההזמנה הראשונה."
@@ -1855,6 +1880,7 @@ he:
           title: מתאימים רק בכותרת
           likes: אהבתי
           posted: פרסמתי בהם
+          created: יצרתי
           watching: אני צופה בהם
           tracking: אני עוקב אחריהם
           private: בהודעות שלי
@@ -1871,6 +1897,7 @@ he:
           label: כאשר נושאים
           open: פתוחים
           closed: סגורים
+          public: הם ציבוריים
           archived: מאורכבים
           noreplies: אין להם תגובות
           single_user: מכילים משתמש/ת יחידים
@@ -1964,6 +1991,13 @@ he:
       defer:
         help: "סימון כלא נקראו"
         title: "אחר כך"
+      feature_on_profile:
+        help: "הוספת הנושא הזה לכרטיס המשתמש ולפרופיל שלך"
+        title: "הצגה בפרופיל"
+      remove_from_profile:
+        warning: "בפרופיל שלך כבר יש נושא מומלץ. המשך פעולה זו תחליף את הנושא הקיים."
+        help: "הסרת הקישור לנושא הזה בפרופיל המשתמש שלך"
+        title: "הסרה מהפרופיל"
       list: "נושאים"
       new: "נושא חדש"
       unread: "לא נקראו"
@@ -2147,6 +2181,7 @@ he:
           title: "מושתק"
           description: "לעולם לא תיודעו לגבי דבר בנוגע לנושא זה, והוא לא יופיע ב״אחרונים״."
       actions:
+        title: "פעולות"
         recover: "שחזר נושא"
         delete: "מחיקת נושא"
         open: "פתיחת נושא"
@@ -2491,13 +2526,26 @@ he:
           notify_moderators: "דיווח למפקחים"
           notify_user: "נשלחה הודעה"
           bookmark: "סומן"
-          like: "אהבו את זה"
-          read: "קוראים את זה"
+          like:
+            one: "אהב/ה את זה"
+            two: "אהבו את זה"
+            many: "אהבו את זה"
+            other: "אהבו את זה"
+          read:
+            one: "קרא/ה את זה"
+            two: "קראו את זה"
+            many: "קראו את זה"
+            other: "קראו את זה"
           like_capped:
             one: "ועוד מישהו אהב את זה"
             two: "ועוד 2 נוספים אהבו את זה"
             many: "ועוד {{count}} נוספים אהבו את זה"
             other: "ועוד {{count}} נוספים אהבו את זה"
+          read_capped:
+            one: "ועוד מישהו/י ({{count}}) קרא/ה את זה"
+            two: "ו־{{count}} נוספים קראו את זה"
+            many: "ו־{{count}} נוספים קראו את זה"
+            other: "ו־{{count}} נוספים קראו את זה"
         by_you:
           off_topic: "דיגלתם פרסום זה כאוף-טופיק"
           spam: "דיגלתם את זה כספאם"
@@ -2551,6 +2599,11 @@ he:
           html_part:
             title: "הצגת חלק ה HTML של המייל"
             button: "HTML"
+      bookmarks:
+        create: "יצירת סימנייה"
+        name: "שם"
+        name_placeholder: "יש לתת שם לסימנייה כדי לאמן את הזיכרון"
+        set_reminder: "הגדרת תזכורת"
     category:
       can: "יכול&hellip; "
       none: "(ללא קטגוריה)"
@@ -3334,6 +3387,8 @@ he:
         new_key: מפתח API חדש
         revoked: נשל
         delete: למחוק לצמיתות
+        not_shown_again: המפתח הזה לא יוצג עוד. נא לוודא שהעתקת אותו לפני המשך הפעילות שלך.
+        continue: המשך
       web_hooks:
         title: "Webhooks"
         none: "אין כרגע webhooks."
@@ -3607,6 +3662,7 @@ he:
           upload: "העלאה"
           select_component: "נא לבחור ברכיב…"
           unsaved_changes_alert: "עדיין לא שמרת את השינויים שלך, להשליך אותם ולהמשיך הלאה?"
+          unsaved_parent_themes: "לא הקצית את הרכיבים לערכות עיצוב, אפשר לדלג?"
           discard: "להשליך"
           stay: "להישאר"
           css_html: "CSS/HTML מותאמים"

@@ -27,6 +27,8 @@ es:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
+      time_short_day: "ddd HH:mm a"
+      month_day_time: "MMM D, HH:mm a"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM HH:mm"
       long_no_year_no_time: "D MMM"
@@ -152,7 +154,6 @@ es:
       banner:
         enabled: "hizo esto un encabezado %{when}. Aparecerá en la parte superior de cada página hasta que el usuario lo descarte."
         disabled: "eliminó este encabezado %{when}. Ya no aparecerá en la parte superior de cada página."
-    topic_admin_menu: "acciones de administrador para el tema"
     wizard_required: "¡Bienvenido a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a> ✨"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido deshabilitados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
     bootstrap_mode_enabled: "Para facilitar el lanzamiento de tu nuevo sitio, estás en modo de arranque. A todos los usuarios nuevos se les otorgará el nivel de confianza 1 y se tendrán habilitados los correos electrónicos de resumen diarios. Esta función se desactivará automáticamente cuando %{min_users} usuarios se hayan unido."
@@ -262,8 +263,19 @@ es:
     bookmarks:
       created: "has marcado esta publicación"
       not_bookmarked: "marcar esta publicación"
+      created_with_reminder: "Guardaste esta publicación en marcadores con un recordatorio el %{date}"
       remove: "Eliminar marcador"
       confirm_clear: "¿Estás seguro de que deseas eliminar todos tus marcadores en este tema?"
+      save: "Guardar"
+      no_timezone: "No has establecido una zona horaria todavía. No podrás establecer recordatorios. Puedes establecerlo <a href=\"%{basePath}/my/preferences/profile\">en tu perfil</a>."
+      reminders:
+        at_desktop: "La próxima vez que este en mi computadora"
+        later_today: "Más tarde hoy <br/>{{date}}"
+        next_business_day: "El próximo día hábil <br/>{{date}}"
+        tomorrow: "Mañana <br/>{{date}}"
+        next_week: "La próxima semana <br/>{{date}}"
+        next_month: "El mes que viene <br/>{{date}}"
+        custom: "Fecha y hora personalizadas"
     drafts:
       resume: "Reanudar"
       remove: "Eliminar"
@@ -310,13 +322,13 @@ es:
     choose_topic:
       none_found: "No se encontraron temas."
       title:
-        search: "Buscar un tema por título, URL o id:"
-        placeholder: "escribe el título del tema aquí"
+        search: "busca un tema"
+        placeholder: "escribe el título, url o ID del tema aquí"
     choose_message:
       none_found: "No se encontraron mensajes."
       title:
-        search: "Buscar un mensaje por título:"
-        placeholder: "escribe el título del mensaje aquí"
+        search: "Busca un mensaje"
+        placeholder: "escribe el título, url o ID del mensaje aquí"
     review:
       order_by: "Ordenar por"
       in_reply_to: "en respuesta a"
@@ -742,6 +754,10 @@ es:
         normal_option_title: "Se te notificará si este usuario te responde, cita o menciona."
       activity_stream: "Actividad"
       preferences: "Preferencias"
+      feature_topic_on_profile:
+        save: "Guardar"
+        clear:
+          title: "Quitar filtros"
       profile_hidden: "El perfil público de este usuario está oculto."
       expand_profile: "Expandir"
       collapse_profile: "Contraer"
@@ -774,6 +790,7 @@ es:
       enable_quoting: "Activar respuesta citando el texto resaltado"
       enable_defer: "Activar diferir para marcar temas no leídos"
       change: "cambio"
+      featured_topic: "Tema destacado"
       moderator: "{{user}} es un moderador"
       admin: "{{user}} es un administrador"
       moderator_tooltip: "Este usuario es un moderador"
@@ -957,6 +974,8 @@ es:
       change_card_background:
         title: "Fondo de tarjeta de usuario"
         instructions: "Las imágenes de fonodo estarán centradas y tendrán una anchura predeterminada de 590 px."
+      change_featured_topic:
+        title: "Tema destacado"
       email:
         title: "Correo electrónico"
         primary: "Correo electrónico principal"
@@ -1092,7 +1111,6 @@ es:
         search: "escribe para buscar invitaciones..."
         title: "Invitaciones"
         user: "Usuario invitado"
-        sent: "Enviada"
         none: "Sin invitaciones para mostrar."
         truncated:
           one: "Mostrando la primera invitación."
@@ -1838,6 +1856,13 @@ es:
       defer:
         help: "Marcar como no leído"
         title: "Aplazar"
+      feature_on_profile:
+        help: "Agregar un enlace a este tema en tu tarjeta de usuario y perfil"
+        title: "Destacar en el perfil"
+      remove_from_profile:
+        warning: "Tu perfil ya tiene un tema destacado. Si continúas, este tema remplazará el tema ya existente."
+        help: "Eliminar el enlace a este tema de tu perfil de usuario"
+        title: "Eliminar del perfil"
       list: "Temas"
       new: "nuevo tema"
       unread: "sin leer"
@@ -2007,6 +2032,7 @@ es:
           title: "Silenciar"
           description: "No recibirás ninguna notificación de este tema y no aparecerá en temas recientes."
       actions:
+        title: "Acciones"
         recover: "Deshacer eliminar tema"
         delete: "Eliminar tema"
         open: "Abrir tema"
@@ -2315,8 +2341,12 @@ es:
           notify_moderators: "notificó a moderadores"
           notify_user: "envió un mensaje"
           bookmark: "guardó esto en marcadores"
-          like: "le dio me gusta a esto"
-          read: "leyeron esto"
+          like:
+            one: "le dio me gusta a esto"
+            other: "le dieron me gusta a esto"
+          read:
+            one: "leyó esto"
+            other: "leyeron esto"
           like_capped:
             one: "y {{count}} otro le gustó esto"
             other: "y {{count}} otros le dieron me gusta a esto"
@@ -2369,6 +2399,11 @@ es:
           html_part:
             title: "Mostrar la parte HTML del correo electrónico"
             button: "HTML"
+      bookmarks:
+        create: "Crear marcador"
+        name: "Nombre"
+        name_placeholder: "Ponle un nombre a la publicación que guardaste en marcadores para ayudarte a recordarla"
+        set_reminder: "Establecer un recordatorio"
     category:
       can: "puede&hellip; "
       none: "(sin categoría)"
@@ -2803,12 +2838,26 @@ es:
       default_info: "Esta etiqueta no está restringida a ninguna categoría, y no tiene sinónimos."
       synonyms: "Sinónimos"
       synonyms_description: "Cuando las siguientes etiquetas sean usadas, serán reemplazadas por <b>%{base_tag_name}</b>."
+      tag_groups_info:
+        one: 'Esta etiqueta pertence al grupo: «{{tag_groups}}»'
+        other: "Esta etiqueta pertence a estos grupos: {{tag_groups}}."
+      category_restrictions:
+        one: "Solo se puede utilizar en esta categoría"
+        other: "Solo se puede utilizar en estas categorías"
+      edit_synonyms: "Administrar sinónimos"
+      add_synonyms_label: "Agregar sinónimos:"
       add_synonyms: "Agregar"
+      add_synonyms_failed: "No se pudieron agregar las siguientes etiquetas como sinónimos: <b>%{tag_names}</b>. Asegúrate de que no tienen sinónimos y de que no son sinónimos de otra etiqueta."
+      remove_synonym: "Eliminar sinónimo"
+      delete_synonym_confirm: '¿Estás seguro de que quieres eliminar el sinónimo «%{tag_name}»?'
       delete_tag: "Eliminar etiqueta"
       delete_confirm:
         one: "¿Estás seguro de querer borrar esta etiqueta y eliminarla de %{count} tema asignado?"
         other: "¿Estás seguro de que quieres eliminar esta etiqueta y quitarla de los {{count}} temas a los que está asignada?"
       delete_confirm_no_topics: "¿Estás seguro de que quieres eliminar esta etiqueta?"
+      delete_confirm_synonyms:
+        one: "Su sinónimo también se eliminará"
+        other: "Sus {{count}} sinónimos también se eliminarán."
       rename_tag: "Renombrar etiqueta"
       rename_instructions: "Elige un nuevo nombre para la etiqueta:"
       sort_by: "Ordenar por:"
@@ -3086,6 +3135,8 @@ es:
         new_key: Nueva clave de API
         revoked: Revocada
         delete: Eliminar permanentemente
+        not_shown_again: Esta clave no se volverá a mostrar. Asegúrate de copiarla correctamente antes de continuar.
+        continue: Continuar
       web_hooks:
         title: "Webhooks"
         none: "Ahora mismo no hay webhooks."
@@ -3355,6 +3406,7 @@ es:
           upload: "Subir"
           select_component: "Seleccionar un componente..."
           unsaved_changes_alert: "No has guardado los cambios aún, ¿los quieres descartar y seguir adelante?"
+          unsaved_parent_themes: "No has asignado este componente a los temas, ¿quieres continuar?"
           discard: "Descartar"
           stay: "Permanecer"
           css_html: "Personalizar CSS/HTML"
@@ -3362,6 +3414,8 @@ es:
           edit_css_html_help: "No has editado ningún CSS o HTML"
           delete_upload_confirm: "¿Eliminar este archivo? (¡El tema CSS puede dejar de funcionar!)"
           component_on_themes: "Incluir componentes en estos temas"
+          included_components: "Componentes incluidos"
+          add_all: "Agregar todos"
           import_web_tip: "Repositorio que contiene el tema"
           import_web_advanced: "Avanzado..."
           import_file_tip: "archivo .tar.gz, .zip o .dcstyle.json que contiene un tema"
