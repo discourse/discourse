@@ -29,7 +29,7 @@ jobs:
         run: | 
           mkdir tmp
           touch tmp/script.rb
-          echo "u = User.new(username:'smoke_user', password:'P4ssw0rd', email:'smoke@example.com', admin:true)" >> tmp/script.rb
+          echo "u = User.new(username:'smoke_user', password:'P4ssw0rd', email:'smoke@example.com', admin:true, active: true)" >> tmp/script.rb
           echo "u.save!(validate: false)" >> tmp/script.rb
           echo "SiteSetting.wizard_enabled = false" >> tmp/script.rb
 
