@@ -95,6 +95,12 @@ pt_BR:
         x_days:
           one: "%{count} dia atrás"
           other: "%{count} dias atrás"
+        x_months:
+          one: "%{count} mês atrás"
+          other: "%{count} meses atrás"
+        x_years:
+          one: "%{count} ano atrás"
+          other: "%{count} anos atrás"
       later:
         x_days:
           one: "%{count} dia depois"
@@ -146,7 +152,7 @@ pt_BR:
       banner:
         enabled: "tornou isto um banner %{when}. Isto será mostrado no topo de todas as páginas até que seja descartado pelo usuário."
         disabled: "removeu este banner %{when}. Ele não vai mais aparecer no topo de todas as páginas."
-    topic_admin_menu: "ações administrativas do tópico"
+    topic_admin_menu: "ações de tópico"
     wizard_required: "Bem vindo ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
     emails_are_disabled: "Todo o envio de e-mail foi globalmente desabilitado por um administrador. Nenhum e-mail de notificações de qualquer tipo será enviado."
     bootstrap_mode_enabled: "Para facilitar o lançamento do seu novo site, você está no modo de bootstrap. Todos os novos usuários receberão o nível de confiança 1 e terão os e-mails diários de resumo ativados. Isso será desativado automaticamente quando %{min_users} usuários se registrarem."
@@ -256,8 +262,19 @@ pt_BR:
     bookmarks:
       created: "você marcou esta postagem como favorita"
       not_bookmarked: "marcar postagem como favorita"
+      created_with_reminder: "você marcou esta postagem como favorito com um lembrete em %{date}"
       remove: "Remover Favorito"
       confirm_clear: "Você tem certeza de que deseja apagar todos os seus favoritos deste tópico?"
+      save: "Salvar"
+      no_timezone: "Você ainda não definiu um fuso horário. VOcê não poderá definir lembretes. Configure um <a href=\"%{basePath}/my/preferences/profile\">no seu perfil</a>."
+      reminders:
+        at_desktop: "Da próxima vez que estiver na minha área de trabalho"
+        later_today: "Hoje mais tarde <br/>{{date}}"
+        next_business_day: "Próximo dia comercial <br/>{{date}}"
+        tomorrow: "Amanhã <br/>{{date}}"
+        next_week: "Próxima semana <br/>{{date}}"
+        next_month: "Próximo mês <br/>{{date}}"
+        custom: "Data e hora personalizadas"
     drafts:
       resume: "Resumir"
       remove: "Remova"
@@ -299,21 +316,40 @@ pt_BR:
     banner:
       close: "Ignorar este banner."
       edit: "Editar este banner >>"
+    pwa:
+      install_banner: "Você quer <a href>instalar %{title} no seu dispositivo?</a>"
     choose_topic:
       none_found: "Nenhum tópico encontrado."
       title:
-        search: "Pesquisar por um Tópico pelo título, url ou id:"
-        placeholder: "digite o título do tópico aqui"
+        search: "Pesquisar um tópico"
+        placeholder: "digite o título do tópico, URL ou ID aqui"
     choose_message:
       none_found: "Nenhuma mensagem encontrada."
       title:
-        search: "Pesquisar por uma Mensagem pelo título:"
-        placeholder: "digite o título da mensagem aqui"
+        search: "Pesquisar mensagem"
+        placeholder: "digite o título da mensagem, URL ou ID aqui"
     review:
       order_by: "Ordenar por"
       in_reply_to: "Em resposta a"
       explain:
+        why: "explique por que esse item terminou na fila"
+        title: "Pontuação Revisável"
+        formula: "Fórmula"
+        subtotal: "Subtotal"
         total: "Total"
+        min_score_visibility: "Pontuação mínima para visibilidade"
+        score_to_hide: "Pontuação para ocultar postagem"
+        take_action_bonus:
+          name: "tomou medidas"
+          title: "Quando um membro da equipe decide agir, a bandeira recebe um bônus."
+        user_accuracy_bonus:
+          name: "precisão do usuário"
+          title: "Os usuários cujas bandeiras foram historicamente acordadas recebem um bônus."
+        trust_level_bonus:
+          name: "nível de confiança"
+          title: "Itens revisáveis criados por usuários com nível de confiança mais alto têm uma pontuação mais alta."
+        type_bonus:
+          name: "tipo de bônus"
       claim_help:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
         required: "Você precisa reivindicar itens antes de poder revisá-los."
@@ -715,6 +751,10 @@ pt_BR:
         normal_option_title: "Você será notificado se este usuário responder a você, citá-lo ou mencioná-lo."
       activity_stream: "Atividade"
       preferences: "Preferências"
+      feature_topic_on_profile:
+        save: "Salvar"
+        clear:
+          title: "Limpo"
       profile_hidden: "O perfil público deste usuário está oculto."
       expand_profile: "Expandir"
       collapse_profile: "Recolher"
@@ -1051,7 +1091,6 @@ pt_BR:
         search: "digite para pesquisar convites..."
         title: "Convites"
         user: "Usuário Convidado"
-        sent: "Enviado"
         none: "Não há convites para exibir."
         truncated:
           one: "Mostrando o primeiro convite."
@@ -1945,6 +1984,7 @@ pt_BR:
           title: "Silenciar"
           description: "Você nunca será notificado sobre este tópico e ele não aparecerá nos tópicos recentes."
       actions:
+        title: "Ações"
         recover: "Recuperar Tópico"
         delete: "Apagar tópico"
         open: "Abrir tópico"
@@ -2250,7 +2290,6 @@ pt_BR:
           notify_moderators: "notificaram os moderadores"
           notify_user: "enviou uma mensagem"
           bookmark: "favoritaram isto"
-          like: "curtiu isto"
           like_capped:
             one: "e {{count}} outro gostou disto"
             other: "e {{count}} outros gostaram disto"
@@ -2303,6 +2342,8 @@ pt_BR:
           html_part:
             title: "Mostrar texto html do e-mail"
             button: "HTML"
+      bookmarks:
+        name: "Nome"
     category:
       can: "pode&hellip; "
       none: "(sem categoria)"
@@ -2989,6 +3030,7 @@ pt_BR:
         show_details: Detalhes
         description: Descrição
         save: Salvar
+        continue: Continuar
       web_hooks:
         title: "Webhooks"
         none: "Não existem webhooks no momento."

@@ -152,7 +152,6 @@ de:
       banner:
         enabled: "hat dieses Banner erstellt, %{when}. Es wird oberhalb jeder Seite angezeigt, bis es vom Benutzer weggeklickt wird."
         disabled: "hat dieses Banner entfernt, %{when}. Es wird nicht mehr oberhalb jeder Seite angezeigt."
-    topic_admin_menu: "Thema administrieren"
     wizard_required: "Willkommen bei deinem neuen Discourse! Lass uns mit dem <a href='%{url}' data-auto-route='true'>Setup-Assistenten</a> ✨ starten"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     bootstrap_mode_enabled: "Damit du mit deiner Seite einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald die Gesamtanzahl der Benutzer den Wert %{min_users} überschreitet."
@@ -264,6 +263,16 @@ de:
       not_bookmarked: "Lesezeichen auf diesen Beitrag setzen"
       remove: "Lesezeichen entfernen"
       confirm_clear: "Bist du sicher, dass du alle Lesezeichen in diesem Thema entfernen möchtest? "
+      save: "Speichern"
+      no_timezone: "Du hast noch keine Zeitzone ausgewählt. Du wirst keine Erinnerungen erstellen können. Stelle eine <a href=\"%{basePath}/my/preferences/profile\">in deinem Profil</a> ein."
+      reminders:
+        at_desktop: "Nächstes mal wenn ich an meinem PC bin"
+        later_today: "Im Laufe des Tages <br/>{{date}}"
+        next_business_day: "Nächster Geschäftstag <br/>{{date}}"
+        tomorrow: "Morgen <br/>{{date}}"
+        next_week: "Nächste Woche <br/>{{date}}"
+        next_month: "Nächster Monat <br/>{{date}}"
+        custom: "Eigenes Datum und Zeit"
     drafts:
       resume: "Fortsetzen"
       remove: "Entfernen"
@@ -310,13 +319,13 @@ de:
     choose_topic:
       none_found: "Keine Themen gefunden."
       title:
-        search: "Suche nach Thema anhand von Überschrift, URL oder ID:"
-        placeholder: "Gib hier den Titel des Themas ein"
+        search: "Suche nach einem Thema"
+        placeholder: "Gebe denn Thema Titel, URL oder id hier ein"
     choose_message:
       none_found: "Keine Nachrichten gefunden."
       title:
-        search: "Suche eine Nachricht anhand der Überschrift:"
-        placeholder: "Gib hier die Überschrift der Nachricht ein"
+        search: "Suche nach einer Nachricht"
+        placeholder: "Gebe denn Nachrichten Titel, URL oder id hier ein"
     review:
       order_by: "beauftragt von"
       in_reply_to: "Antwort auf"
@@ -742,6 +751,10 @@ de:
         normal_option_title: "Du wirst benachrichtigt, wenn dieser Benutzer dir antwortet, dich zitiert oder erwähnt."
       activity_stream: "Aktivität"
       preferences: "Einstellungen"
+      feature_topic_on_profile:
+        save: "Speichern"
+        clear:
+          title: "Filter zurücksetzen"
       profile_hidden: "Das öffentliche Profil des Benutzers ist ausgeblendet."
       expand_profile: "Erweitern"
       collapse_profile: "Zuklappen"
@@ -774,6 +787,7 @@ de:
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       enable_defer: "Aktiviere Verzögerung für das ungelesen Markieren von Themen"
       change: "ändern"
+      featured_topic: "Hervorgehobenes Thema"
       moderator: "{{user}} ist ein Moderator"
       admin: "{{user}} ist ein Administrator"
       moderator_tooltip: "Dieser Benutzer ist ein Moderator"
@@ -957,6 +971,8 @@ de:
       change_card_background:
         title: "Benutzerkarten-Hintergrund"
         instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 590px."
+      change_featured_topic:
+        title: "Hervorgehobenes Thema"
       email:
         title: "E-Mail"
         primary: "Primäre E-Mail-Adresse"
@@ -1092,7 +1108,6 @@ de:
         search: "zum Suchen nach Einladungen hier eingeben…"
         title: "Einladungen"
         user: "Eingeladener Benutzer"
-        sent: "Gesendet"
         none: "Keine Einladungen anzuzeigen."
         truncated:
           one: "Zeige die erste Einladung."
@@ -1838,6 +1853,11 @@ de:
       defer:
         help: "Als ungelesen markieren"
         title: "Ignorieren"
+      feature_on_profile:
+        title: "Auf Profil hervorheben"
+      remove_from_profile:
+        help: "Entferne diesen Link zum Thema aus deinem Profil"
+        title: "Vom Profil entfernen"
       list: "Themen"
       new: "neues Thema"
       unread: "ungelesen"
@@ -2007,6 +2027,7 @@ de:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über neue Aktivitäten in diesem Thema und es wird auch nicht mehr in der Liste der letzten Beiträge erscheinen."
       actions:
+        title: "Aktionen"
         recover: "Löschen rückgängig machen"
         delete: "Thema löschen"
         open: "Thema öffnen"
@@ -2315,8 +2336,6 @@ de:
           notify_moderators: "informierte/n die Moderatoren"
           notify_user: "hat eine Nachricht gesendet"
           bookmark: "hat/haben ein Lesezeichen gesetzt"
-          like: "gefällt dies"
-          read: "lies dies"
           like_capped:
             one: "und {{count}} anderen gefällt das"
             other: "und {{count}} anderen gefällt das"
@@ -2369,6 +2388,10 @@ de:
           html_part:
             title: "Zeige den HTML-Teil der E-Mail"
             button: "HTML"
+      bookmarks:
+        create: "Lesezeichen erstellen"
+        name: "Name"
+        set_reminder: "Erstelle eine Erinnerung"
     category:
       can: "kann&hellip; "
       none: "(keine Kategorie)"
@@ -3096,6 +3119,7 @@ de:
         new_key: Neuer API Schlüssel
         revoked: Widerrufen
         delete: Endgültig gelöscht
+        continue: Weiter
       web_hooks:
         title: "Webhooks"
         none: "Aktuell gibt es keine Webhooks."

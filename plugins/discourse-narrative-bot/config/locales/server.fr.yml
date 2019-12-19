@@ -118,6 +118,15 @@ fr:
 
           `@%{discobot_username} %{reset_trigger} {nom-du-tutoriel}`
           > Débute un tutoriel interactif. `{nom-du-tutoriel}` est l'une des options suivantes : `%{tracks}`.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6`
+
+          @%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: On peut compter dessus
       do_not_understand:
         first_response: |-
           Hey, merci pour la réponse !
@@ -266,6 +275,12 @@ fr:
           _psst_ … J'ai caché une surprise dans ce sujet. Si vous aimez les challenges, sélectionnez **l’icône de recherche** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> en haut à droite &#8599; pour la trouver.
 
           Essayer de chercher le terme "capy​&#8203;bara" dans ce sujet.
+        hidden_message: |-
+          Comment avez-vous manqué ce capybara? :clin d&#39;œil:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Avez-vous remarqué que vous êtes maintenant de retour au début? Nourrissez ce pauvre capybara affamé en **répondant avec l&#39;emoji `%{search_answer}` ** et vous serez automatiquement conduit à la fin.
         reply: |-
           Vous l'avez trouvé :tada:
 

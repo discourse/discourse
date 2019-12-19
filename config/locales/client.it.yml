@@ -152,7 +152,6 @@ it:
       banner:
         enabled: "lo ha reso un annuncio il %{when}. Apparirà in cima ad ogni pagina finché non verrà chiuso dall'utente. "
         disabled: "ha rimosso questo banner il %{when}. Non apparirà più in cima ad ogni pagina."
-    topic_admin_menu: "azioni amministrative sull'argomento"
     wizard_required: "Benvenuto al tuo nuovo Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via email."
     bootstrap_mode_enabled: "Per aiutarti ad avviare il tuo nuovo sito, adesso sei in modalità bootstrap. Tutti i nuovi utenti saranno automaticamente promossi al livello di esperienza 1 e riceveranno il riepilogo quotidiano degli aggiornamenti via email. Questa modalità sarà disattivata automaticamente quando avrai più di %{min_users}utenti iscritti."
@@ -264,6 +263,7 @@ it:
       not_bookmarked: "aggiungi ai segnalibri"
       remove: "Rimuovi Segnalibro"
       confirm_clear: "Sei certo di voler rimuovere tutti i segnalibri da questo argomento?"
+      save: "Salva"
     drafts:
       resume: "Riprendi"
       remove: "Rimuovi"
@@ -309,14 +309,8 @@ it:
       install_banner: "Vuoi <a href>installare %{title} su questo dispositivo?</a>"
     choose_topic:
       none_found: "Nessun argomento trovato."
-      title:
-        search: "Cerca un Argomento per titolo, URL o id:"
-        placeholder: "digita il titolo dell'argomento"
     choose_message:
       none_found: "Nessun messaggio trovato."
-      title:
-        search: "Cerca un Messaggio per titolo:"
-        placeholder: "digita qui il titolo del messaggio"
     review:
       order_by: "Ordina per"
       in_reply_to: "in risposta a"
@@ -742,6 +736,10 @@ it:
         normal_option_title: "Riceverai una notifica quando questo utente ti risponde, ti cita o ti menziona."
       activity_stream: "Attività"
       preferences: "Opzioni"
+      feature_topic_on_profile:
+        save: "Salva"
+        clear:
+          title: "Pulisci"
       profile_hidden: "Il profilo pubblico di questo utente è nascosto."
       expand_profile: "Espandi"
       collapse_profile: "Raggruppa"
@@ -1092,7 +1090,6 @@ it:
         search: "digita per cercare inviti..."
         title: "Inviti"
         user: "Utente Invitato"
-        sent: "Spedito"
         none: "Nessun invito da visualizzare."
         truncated:
           one: "Mostro il primo invito."
@@ -2001,6 +1998,7 @@ it:
           title: "Silenziato"
           description: "Non riceverai mai notifiche o altro circa questo argomento e non apparirà nei recenti."
       actions:
+        title: "Azioni"
         recover: "Ripristina Argomento"
         delete: "Cancella Argomento"
         open: "Apri Argomento"
@@ -2309,8 +2307,6 @@ it:
           notify_moderators: "hanno informato i moderatori"
           notify_user: "hanno inviato un messaggio"
           bookmark: "l'hanno aggiunto ai segnalibri"
-          like: "hanno messo \"Mi piace\""
-          read: "leggi questo"
           like_capped:
             one: "e a {{count}} persona è piaciuto"
             other: "e ad altre {{count}} persone è piaciuto"
@@ -2363,6 +2359,8 @@ it:
           html_part:
             title: "Mostra la parte html della email"
             button: "HTML"
+      bookmarks:
+        name: "Nome"
     category:
       can: "può&hellip;"
       none: "(nessuna categoria)"
@@ -3069,6 +3067,7 @@ it:
         show_details: Dettagli
         description: Descrizione
         save: Salva
+        continue: Continua
       web_hooks:
         title: "Webhook"
         none: "Non ci sono webhook disponibili adesso."

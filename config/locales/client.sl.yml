@@ -196,7 +196,6 @@ sl:
       banner:
         enabled: "je ustvaril ta oglasni trak %{when}. Pojavil se bo na vrhu vsake strani, dokler ga uporabnik ne opusti."
         disabled: "je odstranil ta oglasni trak %{when}. Ne bo se več pojavljal na vrhu vsake strani."
-    topic_admin_menu: "ukrepi administratorja"
     wizard_required: "Dobrodošli v vašem novem Discoursu! Začnimo s <a href='%{url}' data-auto-route='true'>čarovnikom za nastavitve</a> ✨"
     emails_are_disabled: "Vsa odhodna e-pošta je bila globalno onemogočena iz strani administratorja. E-poštna obvestila ne bodo poslana."
     bootstrap_mode_enabled: "Zagonski način je vklopljen za lažji zagon vaše nove strani. Vsi novi uporabniki bodo dobili nivo zaupanja 1 in imeli vklopljene dnevna e-sporočila z povzetki. Ta način se bo samodejno onemogočil ko se bo registriralo %{min_users} uporabnikov."
@@ -310,6 +309,7 @@ sl:
       not_bookmarked: "zaznamuj prispevek"
       remove: "Odstrani zaznamek"
       confirm_clear: "Ste prepričani, da želite odstraniti vse svoje zaznamke iz te teme?"
+      save: "Shrani"
     drafts:
       resume: "Nadaljuj"
       remove: "Odstrani"
@@ -361,14 +361,8 @@ sl:
       install_banner: "Ali želite <a href>namestiti %{title} na to napravo?</a>"
     choose_topic:
       none_found: "Ni tem."
-      title:
-        search: "Išči temo po naslovu, URLju ali IDju:"
-        placeholder: "vpiši naslov teme tukaj"
     choose_message:
       none_found: "Ne najdem sporočila."
-      title:
-        search: "Poišči sporočilo po naslovu:"
-        placeholder: "vnesite naslov sporočila tukaj"
     review:
       order_by: "Uredi po"
       in_reply_to: "v odgovor na"
@@ -759,6 +753,10 @@ sl:
         normal_option_title: "Obveščeni boste če vam ta uporabnik odgovori, vas citira ali vas omeni. "
       activity_stream: "Aktivnost"
       preferences: "Nastavitve"
+      feature_topic_on_profile:
+        save: "Shrani"
+        clear:
+          title: "Počisti"
       profile_hidden: "Profil tega uporabnika je skrit."
       expand_profile: "Razširi"
       collapse_profile: "Skrči"
@@ -1083,7 +1081,6 @@ sl:
         search: "išči povabila..."
         title: "Povabila"
         user: "Povabljen uporabnik"
-        sent: "Poslano"
         none: "Ni povabil za prikaz."
         truncated:
           one: "Prikazano prvo povabilo."
@@ -2029,6 +2026,7 @@ sl:
           title: "Utišano"
           description: "Nikoli ne boste obveščeni o tej temi. Ta tema se ne bo pojavila med najnovejšimi."
       actions:
+        title: "Akcije"
         recover: "Prekliči izbris teme"
         delete: "Izbriši temo"
         open: "Odpri temo"
@@ -2371,8 +2369,6 @@ sl:
           notify_moderators: "opozoril moderatorje"
           notify_user: "pošlji opozorilo"
           bookmark: "je zaznamovalo"
-          like: "je všeč"
-          read: "so prebrali"
           like_capped:
             one: "in {{count}} drugemu uporabniku je prispevek všeč"
             two: "in {{count}} drugima uporabnikoma je prispevek všeč"
@@ -2431,6 +2427,8 @@ sl:
           html_part:
             title: "Prikaži HTML obliko e-sporočila"
             button: "HTML"
+      bookmarks:
+        name: "Polno ime"
     category:
       can: "lahko&hellip; "
       none: "(brez kategorije)"
@@ -3145,6 +3143,7 @@ sl:
         show_details: Podrobnosti
         description: Opis
         save: Shrani
+        continue: Nadaljuj
       web_hooks:
         create: "Ustvari"
         save: "Shrani"

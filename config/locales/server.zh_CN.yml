@@ -304,6 +304,15 @@ zh_CN:
   edit_conflict: "该帖子由其他用户编辑，你的更改无法再保存。"
   revert_version_same: "目前的版本和你想要回退至的版本一样。"
   excerpt_image: "图片"
+  bookmarks:
+    reminders:
+      at_desktop: "下次我使用桌面设备时"
+      later_today: "晚于今天的<br/>{{date}}"
+      next_business_day: "下个工作日的<br/>{{date}}"
+      tomorrow: "明天<br/>{{date}}"
+      next_week: "下周<br/>{{date}}"
+      next_month: "下个月<br/> {{date}}"
+      custom: "自定义日期和时间"
   groups:
     success:
       bulk_add:
@@ -321,7 +330,7 @@ zh_CN:
       already_requested_membership: "你已请求成为该群组的成员。"
     default_names:
       everyone: "任何人"
-      admins: "管理面板"
+      admins: "管理员"
       moderators: "版主"
       staff: "管理人员"
       trust_level_0: "信任等级0"
@@ -1903,7 +1912,7 @@ zh_CN:
       different_users: "无法合并不同用户的帖子。"
   move_posts:
     new_topic_moderator_post:
-      other: "1%{count}个帖子被分离到新主题%{topic_link}"
+      other: "%{count} 个帖子被分离到新主题 %{topic_link}"
     new_message_moderator_post:
       other: "%{count}个帖子被分拆到新私信：%{topic_link}"
     existing_topic_moderator_post:
@@ -3022,9 +3031,19 @@ zh_CN:
     confirm_new_email:
       title: "确认新邮箱"
       subject_template: "[%{email_prefix}] 确认你的新电子邮箱地址"
+      text_body_template: |
+        点击以下链接以确认你在%{site_name}的邮件地址：
+
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "确认旧邮箱"
       subject_template: "[%{email_prefix}] 确认你现在的电子邮箱地址"
+      text_body_template: |
+        在我们更改你的邮件地址前，我们需要确认你掌控当前邮件账户。在你完成这一步后，我们会让你确认新的邮件地址。
+
+        点击下面链接以确认你当前在%{site_name}的邮件地址：
+
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "通知旧邮箱"
       subject_template: "[%{email_prefix}] 你的邮箱已经修改成功"
@@ -3040,9 +3059,9 @@ zh_CN:
       text_body_template: |
         欢迎来到%{site_name}！
 
-        管理人员在%{site_name}上批准了你的帐户。
+        管理人员在%{site_name}上批准了你的账户。
 
-        你现在可以通过以下登录访问你的新帐户：
+        你现在可以通过以下登录访问你的新账户：
         %{base_url}
 
         如果上述链接无法点击，请尝试将其复制并粘贴到浏览器的地址栏中。

@@ -152,7 +152,6 @@ ca:
       banner:
         enabled: "convertit en bàner %{when}. Apareixerà a dalt de cada pàgina fins que sigui descartat per l'usuari."
         disabled: "ha suprimit aquest bàner %{when}. No apareixerà més a dalt de cada pàgina."
-    topic_admin_menu: "accions d'administració de tema"
     wizard_required: "Us donem la benvinguda al vostre nou Discourse! Comencem amb <a href='%{url}' data-auto-route='true'>l'assistent de configuració</a> ✨"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
     bootstrap_mode_enabled: "Per a facilitar el llançament del vostre lloc web nou, esteu en mode d'arrencada. Tots els usuaris nous tindran el nivell de confiança 1 i tindran activitats els correus de resum diari. Això es desactivarà automàticament quan s'hi hagin unit %{min_users} usuaris."
@@ -264,6 +263,7 @@ ca:
       not_bookmarked: "marca aquesta publicació com a preferit"
       remove: "Elimina preferit"
       confirm_clear: "Esteu segur que voleu eliminar tots els preferits d'aquest tema?"
+      save: "Desa"
     drafts:
       resume: "Reprèn"
       remove: "Elimina"
@@ -309,14 +309,8 @@ ca:
       install_banner: "Voleu <a href>instal·lar %{title} en aquest dispositiu?</a>"
     choose_topic:
       none_found: "No s'ha trobat temes."
-      title:
-        search: "Cerca un tema per títol, URL o ID:"
-        placeholder: "escriu el títol del tema aquí"
     choose_message:
       none_found: "No s'han trobat missatges."
-      title:
-        search: "Cerca un missatge pel títol:"
-        placeholder: "escriviu el títol del missatge aquí"
     review:
       order_by: "Ordena per"
       in_reply_to: "en resposta a"
@@ -742,6 +736,10 @@ ca:
         normal_option_title: "Sereu notificat si l'usuari us respon, us cita o us menciona."
       activity_stream: "Activitat"
       preferences: "Preferències"
+      feature_topic_on_profile:
+        save: "Desa"
+        clear:
+          title: "Neteja"
       profile_hidden: "El perfil públic d'aquest usuari és ocult. "
       expand_profile: "Expandeix"
       collapse_profile: "Redueix"
@@ -1092,7 +1090,6 @@ ca:
         search: "escriu aquí per a cercar invitacions..."
         title: "Invitacions"
         user: "Usuari convidat"
-        sent: "Enviat"
         none: "Cap invitació per a mostrar."
         truncated:
           one: "Mostrant la primera invitació."
@@ -2005,6 +2002,7 @@ ca:
           title: "Silenciat"
           description: "No us notificarem res sobre aquest tema i no apareixerà en els més recents."
       actions:
+        title: "Accions"
         recover: "Desfés la supressió del tema"
         delete: "Suprimeix tema"
         open: "Obre tema"
@@ -2313,8 +2311,6 @@ ca:
           notify_moderators: "s'ha notificat els moderadors"
           notify_user: "ha enviat un missatge"
           bookmark: "marcat com a preferit"
-          like: "ha fet 'M'agrada'"
-          read: "llegeix això"
           like_capped:
             one: "i {{count}}més han dit que els agrada"
             other: "i {{count}}més han dit que els agrada"
@@ -2367,6 +2363,8 @@ ca:
           html_part:
             title: "Mostra la part HTML del correu electrònic"
             button: "HTML"
+      bookmarks:
+        name: "Nom"
     category:
       can: "pot&hellip; "
       none: "(sense categoria)"
@@ -3077,6 +3075,7 @@ ca:
         save: Desa
         new_key: Nova clau d’API
         revoked: Revocat
+        continue: Continua
       web_hooks:
         title: "Webhooks"
         none: "Ara no hi ha webhooks."

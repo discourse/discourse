@@ -152,7 +152,6 @@ tr_TR:
       banner:
         enabled: "Bunu pankart yaptı %{when}. Kullanıcı tarafından yoksayılana kadar her sayfanın en üstünde belirecek."
         disabled: "Pankart kaldırıldı %{when}. Bundan sonra her sayfanın en üstünde gözükmeyecek. "
-    topic_admin_menu: "konu yöneticisi eylemleri"
     wizard_required: "Yeni Discourse'una hoşgeldin! Haydi kuruluma başlayalım! <a href='%{url}' data-auto-route='true'>Kurulum Sihirbazı</a> ✨"
     emails_are_disabled: "Giden tüm e-postalar yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     bootstrap_mode_enabled: "Yeni sitenizi daha kolay başlatmak için önyükleme modundasınız. Tüm yeni kullanıcılara güven düzeyi 1 verilir ve günlük e-posta özet güncellemeleri etkinleştirilir. Bu,%{min_users} kullanıcının katıldığı zaman otomatik olarak kapatılacaktır."
@@ -264,6 +263,15 @@ tr_TR:
       not_bookmarked: "bu yazıya yer işareti koy"
       remove: "İşareti Kaldır"
       confirm_clear: "Bu konudaki tüm yer işaretlerinizi silmek istediğinizden emin misiniz?"
+      save: "Kaydet"
+      reminders:
+        at_desktop: "Bir dahaki sefere masaüstümdeyim"
+        later_today: "Bugün daha sonra <br/> {{date}}"
+        next_business_day: "Bir sonraki iş günü <br/> {{date}}"
+        tomorrow: "Yarın <br/> {{date}}"
+        next_week: "Gelecek hafta <br/> {{date}}"
+        next_month: "Gelecek ay <br/> {{date}}"
+        custom: "Özel tarih ve saat"
     drafts:
       resume: "Sürdür"
       remove: "Kaldır"
@@ -309,14 +317,8 @@ tr_TR:
       install_banner: "Bu cihazda <a href>güncellemek %{title} ister misiniz?</a>"
     choose_topic:
       none_found: "Hiçbir konu bulunamadı."
-      title:
-        search: "Başlık, URL veya kimliğe göre bir konu arayın:"
-        placeholder: "konu başlığını buraya yaz"
     choose_message:
       none_found: "Mesaj bulunamadı."
-      title:
-        search: "Başlığına göre mesaj ara:"
-        placeholder: "mesaj başlığını buraya yaz"
     review:
       order_by: "Sırala"
       in_reply_to: "cevap olarak"
@@ -742,6 +744,10 @@ tr_TR:
         normal_option_title: "Bu kullanıcı sizi yanıtlarsa, alıntılarsa ya da sizden bahsederse bildirim alacaksınız."
       activity_stream: "Aktivite"
       preferences: "Tercihler"
+      feature_topic_on_profile:
+        save: "Kaydet"
+        clear:
+          title: "Temizle"
       profile_hidden: "Bu kullanıcının genel profili gizli."
       expand_profile: "Genişlet"
       collapse_profile: "Daralt"
@@ -1090,7 +1096,6 @@ tr_TR:
         search: "davet etmek için yaz..."
         title: "Davetler"
         user: "Davet Edilen Kullanıcı"
-        sent: "Gönderildi"
         none: "Görüntülenebilecek bir davet mevcut değil."
         truncated:
           one: "İlk {{count}} davet gösteriliyor."
@@ -2005,6 +2010,7 @@ tr_TR:
           title: "Sessiz"
           description: "Bu konu en son gönderilerde gözükmeyecek ve hakkında hiçbir bildirim almayacaksın."
       actions:
+        title: "Eylemler"
         recover: "Konuyu Geri Getir"
         delete: "Konuyu Sil"
         open: "Konuyu Aç"
@@ -2313,8 +2319,6 @@ tr_TR:
           notify_moderators: "bilgilendirilen moderatörler "
           notify_user: "mesaj gönderdi"
           bookmark: "bunu işaretledi"
-          like: "bunu beğendi"
-          read: "bunu oku"
           like_capped:
             one: "ve {{count}} diğer kişi bunu beğendi"
             other: "ve {{count}} diğerleri bunu beğendi"
@@ -2367,6 +2371,8 @@ tr_TR:
           html_part:
             title: "E-postanın html bölümünü göster"
             button: "HTML"
+      bookmarks:
+        name: "İsim"
     category:
       can: "yapabilir&hellip;"
       none: "(kategori yok)"
@@ -3098,6 +3104,7 @@ tr_TR:
         new_key: Yeni API Anahtarı
         revoked: İptal edilmiş
         delete: Kalıcı Sil
+        continue: Devam et
       web_hooks:
         title: "Web Kancaları"
         none: "Şu anda bir web kancası yok."

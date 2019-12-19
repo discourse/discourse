@@ -152,7 +152,6 @@ fi:
       banner:
         enabled: "teki tästä bannerin %{when}. Se näytetään jokaisen sivun ylälaidassa, kunnes käyttäjä kuittaa sen nähdyksi."
         disabled: "poisti tämän bannerin %{when}. Sitä ei enää näytetä jokaisen sivun ylälaidassa."
-    topic_admin_menu: "ketjun ylläpitotoimet"
     wizard_required: "Tervetuloa uuteen Discourseesi! Aloitetaan <a href='%{url}' data-auto-route='true'>ohjattu asennus</a> ✨"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
     bootstrap_mode_enabled: "Jotta uuden palstan vauhtiin saaminen olisi helpompaa, sivusto on aloitustilassa. Kaikki uudet käyttäjät saavat luottamustason 1 ja heille lähetetään sähköpostitiivistelmät päivittäin. Tila poistetaan automaattisesti, kun %{min_users} käyttäjää on liittynyt."
@@ -264,6 +263,7 @@ fi:
       not_bookmarked: "lisää viesti kirjanmerkkeihin"
       remove: "Poista kirjanmerkki"
       confirm_clear: "Haluatko varmasti poistaa kaikki kirjanmerkkisi tästä ketjusta?"
+      save: "Tallenna"
     drafts:
       resume: "Jatka"
       remove: "Poista"
@@ -309,14 +309,8 @@ fi:
       install_banner: "Haluatko <a href>asentaa sivuston %{title} tälle laitteelle?</a>"
     choose_topic:
       none_found: "Yhtään ketjua ei löydetty."
-      title:
-        search: "Etsi ketjua nimen, url:n tai id:n perusteella:"
-        placeholder: "kirjoita ketjun otsikko tähän"
     choose_message:
       none_found: "Keskusteluja ei löytynyt."
-      title:
-        search: "Etsi keskustelua otsikon perusteella:"
-        placeholder: "kirjoita keskustelun otsikko tähän"
     review:
       order_by: "Järjestä"
       in_reply_to: "vastauksena"
@@ -742,6 +736,10 @@ fi:
         normal_option_title: "Saat ilmoituksen jos käyttäjä vastaa sinulle, lainaa sinua tai mainitsee sinut."
       activity_stream: "Toiminta"
       preferences: "Asetukset"
+      feature_topic_on_profile:
+        save: "Tallenna"
+        clear:
+          title: "Tyhjennä"
       profile_hidden: "Käyttäjän julkinen profiili ei ole nähtävillä."
       expand_profile: "Laajenna"
       collapse_profile: "Supista"
@@ -1091,7 +1089,6 @@ fi:
         search: "kirjoita etsiäksesi kutsuja..."
         title: "Kutsut"
         user: "Kutsuttu käyttäjä"
-        sent: "Lähetetty"
         none: "Ei kutsuja, joita näyttää."
         truncated:
           one: "Näytetään ensimmäinen kutsu."
@@ -2006,6 +2003,7 @@ fi:
           title: "Vaimenna"
           description: "Et saa ilmoituksia mistään tässä ketjussa, eikä se näy tuoreimmissa."
       actions:
+        title: "Toiminnot"
         recover: "Peru ketjun poisto"
         delete: "Poista ketju"
         open: "Avaa ketju"
@@ -2314,8 +2312,6 @@ fi:
           notify_moderators: "ilmoitti valvojille"
           notify_user: "lähetti viestin"
           bookmark: "lisäsi tämän kirjanmerkkeihin"
-          like: "tykkäsi tästä"
-          read: "luki tämän"
           like_capped:
             one: "ja {{count}} muu tykkäsi tästä"
             other: "ja {{count}} muuta tykkäsi tästä"
@@ -2368,6 +2364,8 @@ fi:
           html_part:
             title: "Näytä sähköpostin HTML-osa"
             button: "HTML"
+      bookmarks:
+        name: "Nimi"
     category:
       can: "voivat&hellip; "
       none: "(ei aluetta)"
@@ -3099,6 +3097,7 @@ fi:
         new_key: Uusi rajapinta-avain
         revoked: Jäädytetty
         delete: Poista pysyvästi
+        continue: Jatka
       web_hooks:
         title: "Webhookit"
         none: "Webhookeja ei ole nyt."

@@ -324,6 +324,18 @@ es:
   edit_conflict: "La publicación ha sido editada por otro usuario y tus cambios no se pueden guardar."
   revert_version_same: "La versión actual es la misma que la versión a la que intentas volver."
   excerpt_image: "imagen"
+  bookmarks:
+    errors:
+      already_bookmarked_post: "No puedes guardar la misma publicación en marcadores dos veces"
+      time_must_be_provided: "se debe especificar la hora para todos los recordatorios excepto «%{reminder_type}»"
+    reminders:
+      at_desktop: "La próxima vez que este en mi computadora"
+      later_today: "Más tarde hoy <br/>{{date}}"
+      next_business_day: "El próximo día hábil <br/>{{date}}"
+      tomorrow: "Mañana <br/>{{date}}"
+      next_week: "La próxima semana <br/>{{date}}"
+      next_month: "El mes que viene <br/>{{date}}"
+      custom: "Fecha y hora personalizadas"
   groups:
     success:
       bulk_add:
@@ -1406,6 +1418,7 @@ es:
     content_security_policy_collect_reports: "Habilitar la recolección de reportes de violación de CSP en /csp_reports"
     content_security_policy_script_src: "Fuentes de script adicionales en la lista blanca. El host actual y CDN se incluyen por defecto. Leer <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
     invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
+    allow_embedding_site_in_an_iframe: "Habilitar la inserción del sitio en iframes."
     top_menu: "Determinar los elementos que aparecen en el menú de navegación de la página de inicio y su orden. Ejemplo últimos|nuevos|no leídos|categorías|destacados|leídos|publicados|marcadores"
     post_menu: "Determinar los elementos que aparecen en el menú de publicación  y su orden. Ejemplo: me gusta|editar|reportar|eliminar|compartir|guardar en marcadores|responder"
     post_menu_hidden_items: "Los elementos del menú que se ocultan por defecto en el menú de publicación a menos que se haga clic en el botón para expandir las opciones."
@@ -1754,6 +1767,7 @@ es:
     anonymous_posting_min_trust_level: "Nivel de confianza mínimo requerido para permitir la publicación anónima"
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde la última publicación Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
     hide_user_profiles_from_public: "Desactiva las tarjetas de usuario, los perfiles y el directorio de usuarios para usuarios anónimos."
+    allow_featured_topic_on_user_profiles: "Permitir a los usuarios destacar un enlace a un tema en su tarjeta de usuario y perfil."
     show_inactive_accounts: "Permitir a usuarios con una sesión iniciada visualizar perfiles de cuentas inactivas."
     hide_suspension_reasons: "No mostrar laa razones de suspensión públicamente en el perfil de usuario."
     log_personal_messages_views: "Registrar los mensajes personales vistos por el administrador para otros usuarios/grupos."
@@ -1773,6 +1787,8 @@ es:
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de hacer coincidir los permalinks, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
     global_notice: "Mostrar un anuncio global de URGENCIA o EMERGENCIA que no se pueda ocultar para todos los visitantes. Deja este campo en blanco para ocultarlo (se permite HTML)."
     disable_system_edit_notifications: "Inhabilitar editar notificaciones por el usuario del sistema cuando «download_remote_images_to_local» este activo."
+    notification_consolidation_threshold: "Cantidad de me gusta o notificaciones de solicitud de membresía recibidas antes de que las notificaciones se consoliden en una sola. Establece el valor en 0 para deshabilitar."
+    likes_notification_consolidation_window_mins: "Minutos durante los que las notificaciones se consolidan en una sola notificación una vez que se haya alcanzado el limite. El límite se puede configurar en `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
     read_time_word_count: "Número de palabras por minuto para calcular el tiempo de lectura estimado."
     topic_page_title_includes_category: "La <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta del título</a> de la página del tema incluye el nombre de la categoría."
@@ -3953,9 +3969,13 @@ es:
       restricted_to:
         one: '"%{tag_name}" está restringida a la categoría "%{category_names}"'
         other: '«%{tag_name}» está restringida a las siguientes categorías: %{category_names}'
+      synonym: 'Los sinónimos no están permitidos. Utiliza «%{tag_name}» en su lugar.'
+      has_synonyms: '«%{tag_name}» no se puede utilizar porque tiene sinónimos'
     required_tags_from_group:
       one: "Debes incluir al menos %{count} etiqueta %{tag_group_name}."
       other: "Debes incluir al menos %{count} etiquetas %{tag_group_name}."
+    invalid_target_tag: "no puede ser el sinónimo de un sinónimo"
+    synonyms_exist: "no está permitido mientras existan sinónimos"
   rss_by_tag: "Temas con la etiqueta %{tag}"
   finish_installation:
     congratulations: "¡Felicitaciones, has instalado Discourse!"

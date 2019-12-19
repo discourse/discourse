@@ -126,7 +126,6 @@ ko:
       banner:
         enabled: "%{when} 이 내용을 배너로 만드세요 . 사용자가 제거하지 않을 때 까지 배너는 모든 페이지 상단에 노출됩니다."
         disabled: "이 배너를 제거했습니다 %{when}. 더 이상 모든 페이지의 상단에 표시되지 않습니다."
-    topic_admin_menu: "토픽 관리"
     wizard_required: "새로운 Discourse에 오신것을 환영합니다! <a href='%{url}' data-auto-route='true'>설치 마법사</a> 로 시작해봅시다✨"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
     bootstrap_mode_enabled: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 신뢰 수준 1이 부여되고 매일 이메일 다이제스트가 보내집니다. 이 기능은 총 사용자 수가 %{min_users}를 초과 할 때 자동으로 꺼집니다."
@@ -234,6 +233,7 @@ ko:
       not_bookmarked: "이 글을 북마크에 추가"
       remove: "북마크 삭제"
       confirm_clear: "이 토픽의 모든 북마크를 지우시겠습니까?"
+      save: "저장"
     drafts:
       resume: "이력서"
       remove: "삭제"
@@ -274,14 +274,8 @@ ko:
       edit: "이 배너 수정 >>"
     choose_topic:
       none_found: "토픽을 찾을 수 없습니다."
-      title:
-        search: "제목, URL 또는 ID로 글 검색:"
-        placeholder: "토픽 제목을 입력하세요"
     choose_message:
       none_found: "메시지를 찾을 수 없습니다."
-      title:
-        search: "제목으로 메시지 검색:"
-        placeholder: "여기에 메시지 제목을 입력하십시오"
     review:
       in_reply_to: "답글"
       explain:
@@ -601,6 +595,10 @@ ko:
         normal_option: "알림 : 일반"
       activity_stream: "활동"
       preferences: "환경 설정"
+      feature_topic_on_profile:
+        save: "저장"
+        clear:
+          title: "Clear"
       profile_hidden: "이 사용자의 프로필은 비공개 상태입니다."
       expand_profile: "확장"
       bookmarks: "북마크"
@@ -875,7 +873,6 @@ ko:
         search: "검색"
         title: "초대"
         user: "사용자 초대"
-        sent: "보냄"
         truncated:
           other: "앞 {{count}}개의 초대를 보여줍니다."
         redeemed: "초대를 받았습니다."
@@ -1593,6 +1590,7 @@ ko:
           title: "알림 없음"
           description: "이 주제에 대해 어떠한 알림도 받지 않고 최신글 목록에도 나타나지 않을 것입니다."
       actions:
+        title: "액션"
         recover: "주제 다시 복구"
         delete: "주제 삭제"
         open: "주제 열기"
@@ -1828,7 +1826,6 @@ ko:
           notify_moderators: "운영자에게 알렸습니다"
           notify_user: "글쓴이에게 메시지를 보냈습니다"
           bookmark: "북마크 했습니다"
-          like: "좋아해요"
         by_you:
           off_topic: "이글을 주제에서 벗어났다고 신고했습니다"
           spam: "이글을 스팸으로 신고했습니다"
@@ -1875,6 +1872,8 @@ ko:
           html_part:
             title: "이메일 HTML 파트 보이기"
             button: "HTML"
+      bookmarks:
+        name: "이름"
     category:
       can: "허용"
       none: "(카테고리 없음)"
@@ -2444,6 +2443,7 @@ ko:
         show_details: 세부 내용
         description: 내용
         save: 저장
+        continue: 계속
       web_hooks:
         title: "Webhook"
         none: "현재 webhook이 없습니다."

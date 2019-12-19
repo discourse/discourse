@@ -116,7 +116,6 @@ th:
       banner:
         enabled: "ทำให้เป็นแบนเนอร์%{when} มันจะปรากฎที่ด้านบนสุดของทุกหน้าจนกว่าจะผู้ใช้งานจะกดลบ"
         disabled: "ลบแบนเนอร์นี้%{when} มันจะไม่ปรากฎที่ด้านบนของหน้าใดๆ"
-    topic_admin_menu: "จัดการกระทู้ "
     emails_are_disabled: "อีเมลขาออกทั้งหมดจะถูกปิดโดยผู้ดูแลระบบ ไม่มีอีเมลแจ้งเตือนใดๆจะถูกส่งออกไป"
     themes:
       default_description: "ค่าเริ่มต้น"
@@ -201,6 +200,7 @@ th:
     bookmarks:
       created: "คุณได้ทำบุ๊คม๊าคโพสแล้ว"
       remove: "ลบบุ๊คม๊าค"
+      save: "บันทึก"
     drafts:
       remove: "ลบ"
       abandon:
@@ -228,8 +228,6 @@ th:
       edit: "แก้ไขป้ายนี้ >>"
     choose_topic:
       none_found: "ไม่พบกระทู้ใดๆ"
-      title:
-        placeholder: "ระบุชื่อกระทู้ที่นี่"
     review:
       delete: "ลบ"
       settings:
@@ -447,6 +445,10 @@ th:
         normal_option: "ปกติ"
       activity_stream: "กิจกรรม"
       preferences: "การตั้งค่า"
+      feature_topic_on_profile:
+        save: "บันทึก"
+        clear:
+          title: "ล้าง"
       expand_profile: "ขยาย"
       bookmarks: "บุ๊คมาร์ค"
       bio: "เกี่ยวกับฉัน"
@@ -665,7 +667,6 @@ th:
         search: "พิมพ์เพื่อค้นหาการเชิญ..."
         title: "เชิญชวน"
         user: "เชิญชวนผู้ใช้"
-        sent: "ส่ง"
         truncated:
           other: "กำลังแสดงคำเชิญ {{count}} รายการแรก"
         redeemed: "ยืนยันการเชิญชวน"
@@ -1127,6 +1128,7 @@ th:
         muted:
           title: "ปิดการแจ้งเตือน"
       actions:
+        title: "การกระทำ"
         recover: "เลิกลบกระทู้"
         delete: "ลบกระทู้"
         open: "เปิดกระทู้"
@@ -1264,6 +1266,8 @@ th:
           bookmark: "ย้อนคืนการบุ๊คมาร์ค"
         by_you:
           bookmark: "บุ๊คมาร์คโพสนี้"
+      bookmarks:
+        name: "ชื่อ"
     category:
       edit: "แก้ไข"
       settings: "การตั้งค่า"

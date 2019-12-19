@@ -210,7 +210,6 @@ ar:
       banner:
         enabled: "اجعل هذا إعلانا %{when}. سوف يظهر اعلى جميع الصفحات حتى يتم الغاؤه بواسطة المستخدم."
         disabled: "أزل هذا الإعلان %{when}. لن يظهر بعد الآن في أعلى كلّ صفحة."
-    topic_admin_menu: "صلاحيات المدير علي المواضيع"
     wizard_required: "مرحبًا في نسختك الجديدة من دسكورس! فلنبدأ مع <a href='%{url}' data-auto-route='true'>مُرشد الإعدادات</a> ✨"
     emails_are_disabled: "لقد عطّل أحد المدراء الرّسائل الصادرة للجميع. لن تُرسل إشعارات عبر البريد الإلكتروني أيا كان نوعها."
     themes:
@@ -317,6 +316,7 @@ ar:
       created: "لقد وضعت علامة مرجعية علي هذا المنشور"
       remove: "أزل العلامة المرجعية"
       confirm_clear: "هل أنت متأكد من مسح جميع الاشعارات المرجعية من هذا الموضوع؟"
+      save: "احفظ"
     drafts:
       resume: "أكمل"
       remove: "احذف"
@@ -347,12 +347,8 @@ ar:
       edit: "عدل هذا الإعلان >>"
     choose_topic:
       none_found: "لم نجد اي موضوعات."
-      title:
-        placeholder: "اكتب عنوان الموضوع هنا"
     choose_message:
       none_found: "لم يتم العثور على أي رسالة"
-      title:
-        search: "ابحث في الرسائل باستخدام العنوان"
     review:
       explain:
         total: "مجموع"
@@ -638,6 +634,10 @@ ar:
         normal_option: "عادي"
       activity_stream: "النّشاط"
       preferences: " التّفضيلات"
+      feature_topic_on_profile:
+        save: "احفظ"
+        clear:
+          title: "مسح"
       profile_hidden: "البيانات العامة للعضو مخفية"
       expand_profile: "توسيع"
       collapse_profile: "إخفاء"
@@ -900,7 +900,6 @@ ar:
         search: "اكتب للبحث عن الدعوات..."
         title: "الدّعوات"
         user: "المستخدمين المدعويين"
-        sent: "تم الإرسال"
         truncated:
           zero: "لا يوجد دعوات لعرضها."
           one: "عرض الدعوة الأولى."
@@ -1680,6 +1679,7 @@ ar:
           title: "مكتوم"
           description: "لن تصلك أية إشعارات عن هذا الموضوع، ولن يظهر في اخر الموضوعات."
       actions:
+        title: "الإجراءات"
         recover: "إلغاء حذف الموضوع"
         delete: "احذف الموضوع"
         open: "افتح الموضوع"
@@ -1959,7 +1959,6 @@ ar:
           notify_moderators: "تم تنبية المشرفين"
           notify_user: "ارسلت رساله"
           bookmark: "وضع علية علامة مرجعية"
-          like: "أعجبهم هذا"
         by_you:
           off_topic: "لقد ابلغت ان هذا المنشور خارج الموضوع"
           spam: "لقد ابلغت ان هذا المنشور سبام"
@@ -2008,6 +2007,8 @@ ar:
           html_part:
             title: "اظهر جزء الـ HTML من رسالة البريد الالكتروني"
             button: "HTML"
+      bookmarks:
+        name: "الإسم"
     category:
       can: "قادر علي&hellip;"
       none: "(غير مصنف)"
@@ -2651,6 +2652,7 @@ ar:
         show_details: تفاصيل
         description: الوصف
         save: احفظ
+        continue: استمر
       web_hooks:
         title: "Webhooks"
         none: "لا يوجد Webhooks حاليا."
