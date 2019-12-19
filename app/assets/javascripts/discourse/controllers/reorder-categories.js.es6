@@ -18,11 +18,6 @@ export default Controller.extend(ModalFunctionality, Ember.Evented, {
     this.categoriesSorting = ["position"];
   },
 
-  @on("init")
-  _fixOrder() {
-    this.fixIndices();
-  },
-
   @discourseComputed("site.categories")
   categoriesBuffered(categories) {
     const bufProxy = EmberObjectProxy.extend(BufferedProxy);
@@ -31,123 +26,114 @@ export default Controller.extend(ModalFunctionality, Ember.Evented, {
 
   categoriesOrdered: sort("categoriesBuffered", "categoriesSorting"),
 
-  @discourseComputed("categoriesBuffered.@each.hasBufferedChanges")
-  showApplyAll() {
-    let anyChanged = false;
-    this.categoriesBuffered.forEach(bc => {
-      anyChanged = anyChanged || bc.get("hasBufferedChanges");
-    });
-    return anyChanged;
-  },
-
-  moveDir(cat, dir) {
-    const cats = this.categoriesOrdered;
-    const curIdx = cat.get("position");
-    let desiredIdx = curIdx + dir;
-    if (desiredIdx >= 0 && desiredIdx < cats.get("length")) {
-      let otherCat = cats.objectAt(desiredIdx);
-
-      // Respect children
-      const parentIdx = otherCat.get("parent_category_id");
-      if (parentIdx && parentIdx !== cat.get("parent_category_id")) {
-        if (parentIdx === cat.get("id")) {
-          // We want to move down
-          for (let i = curIdx + 1; i < cats.get("length"); i++) {
-            let tmpCat = cats.objectAt(i);
-            if (!tmpCat.get("parent_category_id")) {
-              desiredIdx = cats.indexOf(tmpCat);
-              otherCat = tmpCat;
-              break;
-            }
-          }
-        } else {
-          // We want to move up
-          cats.forEach(function(tmpCat) {
-            if (tmpCat.get("id") === parentIdx) {
-              desiredIdx = cats.indexOf(tmpCat);
-              otherCat = tmpCat;
-            }
-          });
-        }
-      }
-
-      otherCat.set("position", curIdx);
-      cat.set("position", desiredIdx);
-      this.send("commit");
-    }
-  },
-
   /**
-    1. Make sure all categories have unique position numbers.
-    2. Place sub-categories after their parent categories while maintaining the
-        same relative order.
+   * 1. Make sure all categories have unique position numbers.
+   * 2. Place sub-categories after their parent categories while maintaining
+   *    the same relative order.
+   *
+   *    e.g.
+   *      parent/c2/c1          parent
+   *      parent/c1             parent/c1
+   *      parent          =>    parent/c2
+   *      other                 parent/c2/c1
+   *      parent/c2             other
+   *
+   **/
+  @on("init")
+  reorder() {
+    const reorderChildren = (categoryId, depth, index) => {
+      this.categoriesOrdered.forEach(category => {
+        if (
+          (categoryId === null && !category.get("parent_category_id")) ||
+          category.get("parent_category_id") === categoryId
+        ) {
+          category.setProperties({ depth, position: index++ });
+          index = reorderChildren(category.get("id"), depth + 1, index);
+        }
+      });
 
-        e.g.
-          parent/c1         parent
-          parent      =>    parent/c1
-          other             parent/c2
-          parent/c2         other
-  **/
-  fixIndices() {
-    const categories = this.categoriesOrdered;
-    const subcategories = {};
+      return index;
+    };
 
-    categories.forEach(category => {
-      const parentCategoryId = category.get("parent_category_id");
+    reorderChildren(null, 0, 0);
 
-      if (parentCategoryId) {
-        subcategories[parentCategoryId] = subcategories[parentCategoryId] || [];
-        subcategories[parentCategoryId].push(category);
+    this.categoriesBuffered.forEach(bc => {
+      if (bc.get("hasBufferedChanges")) {
+        bc.applyBufferedChanges();
       }
     });
 
-    for (let i = 0, position = 0; i < categories.get("length"); ++i) {
-      const category = categories.objectAt(i);
+    this.notifyPropertyChange("categoriesBuffered");
+  },
 
-      if (!category.get("parent_category_id")) {
-        category.set("position", position++);
-        (subcategories[category.get("id")] || []).forEach(subcategory =>
-          subcategory.set("position", position++)
-        );
-      }
+  move(category, direction) {
+    let otherCategory;
+
+    if (direction === -1) {
+      // First category above current one
+      const categoriesOrderedDesc = this.categoriesOrdered.reverse();
+      otherCategory = categoriesOrderedDesc.find(
+        c =>
+          category.get("parent_category_id") === c.get("parent_category_id") &&
+          c.get("position") < category.get("position")
+      );
+    } else if (direction === 1) {
+      // First category under current one
+      otherCategory = this.categoriesOrdered.find(
+        c =>
+          category.get("parent_category_id") === c.get("parent_category_id") &&
+          c.get("position") > category.get("position")
+      );
+    } else {
+      // Find category occupying target position
+      otherCategory = this.categoriesOrdered.find(
+        c => c.get("position") === category.get("position") + direction
+      );
     }
+
+    if (otherCategory) {
+      // Try to swap positions of the two categories
+      if (category.get("id") !== otherCategory.get("id")) {
+        const currentPosition = category.get("position");
+        category.set("position", otherCategory.get("position"));
+        otherCategory.set("position", currentPosition);
+      }
+    } else if (direction < 0) {
+      category.set("position", -1);
+    } else if (direction > 0) {
+      category.set("position", this.categoriesOrdered.length);
+    }
+
+    this.reorder();
   },
 
   actions: {
-    change(cat, e) {
-      let position = parseInt($(e.target).val(), 10);
-      let amount = Math.min(
-        Math.max(position, 0),
+    change(category, event) {
+      let newPosition = parseInt(event.target.value, 10);
+      newPosition = Math.min(
+        Math.max(newPosition, 0),
         this.categoriesOrdered.length - 1
       );
-      this.moveDir(cat, amount - cat.get("position"));
+
+      this.move(category, newPosition - category.get("position"));
     },
 
-    moveUp(cat) {
-      this.moveDir(cat, -1);
-    },
-    moveDown(cat) {
-      this.moveDir(cat, 1);
+    moveUp(category) {
+      this.move(category, -1);
     },
 
-    commit() {
-      this.fixIndices();
-
-      this.categoriesBuffered.forEach(bc => {
-        if (bc.get("hasBufferedChanges")) {
-          bc.applyBufferedChanges();
-        }
-      });
-      this.notifyPropertyChange("categoriesBuffered");
+    moveDown(category) {
+      this.move(category, 1);
     },
 
-    saveOrder() {
-      this.send("commit");
+    save() {
+      this.reorder();
 
       const data = {};
       this.categoriesBuffered.forEach(cat => {
         data[cat.get("id")] = cat.get("position");
       });
+
       ajax("/categories/reorder", {
         type: "POST",
         data: { mapping: JSON.stringify(data) }

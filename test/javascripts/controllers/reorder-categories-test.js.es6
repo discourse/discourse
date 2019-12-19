@@ -9,7 +9,7 @@ moduleFor("controller:reorder-categories", "controller:reorder-categories", {
   needs: ["controller:modal"]
 });
 
-QUnit.test("fixIndices set unique position number", function(assert) {
+QUnit.test("reorder set unique position number", function(assert) {
   const store = createStore();
 
   const categories = [];
@@ -20,7 +20,7 @@ QUnit.test("fixIndices set unique position number", function(assert) {
   const site = EmberObject.create({ categories: categories });
   const reorderCategoriesController = this.subject({ site });
 
-  reorderCategoriesController.fixIndices();
+  reorderCategoriesController.reorder();
 
   reorderCategoriesController
     .get("categoriesOrdered")
@@ -30,7 +30,7 @@ QUnit.test("fixIndices set unique position number", function(assert) {
 });
 
 QUnit.test(
-  "fixIndices places subcategories after their parent categories, while maintaining the relative order",
+  "reorder places subcategories after their parent categories, while maintaining the relative order",
   function(assert) {
     const store = createStore();
 
@@ -63,7 +63,7 @@ QUnit.test(
     const site = EmberObject.create({ categories: categories });
     const reorderCategoriesController = this.subject({ site });
 
-    reorderCategoriesController.fixIndices();
+    reorderCategoriesController.reorder();
 
     assert.deepEqual(
       reorderCategoriesController.get("categoriesOrdered").mapBy("slug"),
@@ -102,7 +102,7 @@ QUnit.test(
     reorderCategoriesController.actions.change.call(
       reorderCategoriesController,
       elem1,
-      { target: "<input value='2'>" }
+      { target: { value: "2" } }
     );
 
     assert.deepEqual(
@@ -149,7 +149,7 @@ QUnit.test(
     reorderCategoriesController.actions.change.call(
       reorderCategoriesController,
       elem1,
-      { target: "<input value='3'>" }
+      { target: { value: 3 } }
     );
 
     assert.deepEqual(
@@ -177,23 +177,30 @@ QUnit.test(
       parent_category_id: 1
     });
 
+    const child2 = store.createRecord("category", {
+      id: 5,
+      position: 2,
+      slug: "foochildchild",
+      parent_category_id: 4
+    });
+
     const elem2 = store.createRecord("category", {
       id: 2,
-      position: 2,
+      position: 3,
       slug: "bar"
     });
 
     const elem3 = store.createRecord("category", {
       id: 3,
-      position: 3,
+      position: 4,
       slug: "test"
     });
 
-    const categories = [elem1, child1, elem2, elem3];
+    const categories = [elem1, child1, child2, elem2, elem3];
     const site = EmberObject.create({ categories: categories });
     const reorderCategoriesController = this.subject({ site });
 
-    reorderCategoriesController.fixIndices();
+    reorderCategoriesController.reorder();
 
     reorderCategoriesController.actions.moveDown.call(
       reorderCategoriesController,
@@ -202,7 +209,7 @@ QUnit.test(
 
     assert.deepEqual(
       reorderCategoriesController.get("categoriesOrdered").mapBy("slug"),
-      ["bar", "foo", "foochild", "test"]
+      ["bar", "foo", "foochild", "foochildchild", "test"]
     );
   }
 );
