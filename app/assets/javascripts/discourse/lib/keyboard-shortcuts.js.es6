@@ -71,6 +71,7 @@ const bindings = {
   "shift+z shift+z": { handler: "logout" },
   "shift+f11": { handler: "fullscreenComposer", global: true },
   "shift+u": { handler: "deferTopic" },
+  "shift+a": { handler: "toggleAdminActions" },
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
   "x r": {
@@ -638,5 +639,9 @@ export default {
 
   deferTopic() {
     this.container.lookup("controller:topic").send("deferTopic");
+  },
+
+  toggleAdminActions() {
+    this.appEvents.trigger("topic:toggle-actions");
   }
 };
