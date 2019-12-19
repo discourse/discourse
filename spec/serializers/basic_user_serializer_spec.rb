@@ -15,8 +15,7 @@ describe BasicUserSerializer do
     end
 
     describe 'extended serializers' do
-      Fabricator(:post_action) do
-      end
+      Fabricator(:post_action)
       let(:post_action) { Fabricate.build(:post_action, user: user) }
       let(:serializer) { PostActionUserSerializer.new(post_action, scope: Guardian.new(user), root: false) }
       it "returns the user correctly" do
