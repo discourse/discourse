@@ -12,6 +12,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :position,
              :description,
              :description_text,
+             :description_excerpt,
              :topic_url,
              :read_restricted,
              :permission,
