@@ -25,6 +25,12 @@ jobs:
       - name: Boot dev image
         run: unbuffer d/boot_dev
 
+      - name: Create script
+        run: | 
+          touch tmp/script.rb
+          echo "User.create!(username:'smoke_user', password:'P4ssw0rd', admin:true)" >> tmp/script.rb
+          echo "SiteSetting.wizard_enabled = false" >> tmp/script.rb
+
       - name: tmp
         run: sudo chown -R 1000:1000 .
 
@@ -33,12 +39,6 @@ jobs:
 
       - name: Migrate
         run: unbuffer d/rake db:migrate
-
-      - name: Create script
-        run: | 
-          sudo touch tmp/script.rb
-          sudo echo "User.create!(username:'smoke_user', password:'P4ssw0rd', admin:true)" >> tmp/script.rb
-          sudo echo "SiteSetting.wizard_enabled = false" >> tmp/script.rb
 
       - name: Run script
         run: unbuffer d/rails runner tmp/script.rb
