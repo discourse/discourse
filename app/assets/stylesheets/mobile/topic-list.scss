@@ -287,9 +287,8 @@ tr.category-topic-link {
   border-left: 6px solid;
   border-top: 1px solid;
 
-  h3 {
+  h3, h4 {
     max-width: 100%;
-    font-size: $font-up-2;
     padding: 0 0 0 10px;
     .d-icon {
       margin-right: 5px;
@@ -299,16 +298,12 @@ tr.category-topic-link {
     }
   }
 
+  h3 {
+    font-size: $font-up-2;
+  }
+
   h4 {
-    max-width: 100%;
     font-size: $font-up-1;
-    padding: 0 0 0 10px;
-    .d-icon {
-      margin-right: 5px;
-    }
-    a[href] {
-      color: $primary;
-    }
   }
 
   .category-name {
