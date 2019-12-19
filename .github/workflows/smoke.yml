@@ -27,6 +27,7 @@ jobs:
 
       - name: Create script
         run: | 
+          mkdir tmp
           touch tmp/script.rb
           echo "User.create!(username:'smoke_user', password:'P4ssw0rd', admin:true)" >> tmp/script.rb
           echo "SiteSetting.wizard_enabled = false" >> tmp/script.rb
