@@ -21,9 +21,9 @@
             {{#if c.isGrandParent}}
               <table class="category-list">
                 {{#each c.subcategories as |subcategory|}}
-                  <tr data-category-id={{subcategory.id}} class="no-description {{if subcategory.uploaded_logo.url 'has-logo' 'no-logo'}}">
+                  <tr data-category-id={{subcategory.id}} class="{{if subcategory.description_excerpt 'has-description' 'no-description'}} {{if subcategory.uploaded_logo.url 'has-logo' 'no-logo'}}">
                     <td class="category" style={{border-color subcategory.color}}>
-                      {{category-title-link category=subcategory}}
+                      {{category-title-link tagName="h4" category=subcategory}}
 
                       {{#if subcategory.subcategories}}
                         <div class='subcategories'>
@@ -35,6 +35,10 @@
                               </span>
                             {{/unless}}
                           {{/each}}
+                        </div>
+                      {{else}}
+                        <div class="category-description">
+                          {{{dir-span subcategory.description_excerpt}}}
                         </div>
                       {{/if}}
                     </td>

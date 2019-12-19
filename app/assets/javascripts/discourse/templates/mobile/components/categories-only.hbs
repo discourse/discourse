@@ -23,7 +23,27 @@
             {{/each}}
           {{/if}}
 
-          {{#if c.subcategories}}
+          {{#if c.isGrandParent}}
+            {{#each c.subcategories as |subcategory|}}
+              <tr data-category-id={{c.id}} class='subcategory-list-item category' style={{border-color subcategory.color}}>
+                <td>
+                  {{category-title-link tagName="h4" category=subcategory}}
+
+                  <div class="subcategories-list">
+                    {{#if subcategory.subcategories}}
+                      <div class='subcategories'>
+                        {{#each subcategory.subcategories as |subsubcategory|}}
+                          {{#unless subsubcategory.isMuted}}
+                            {{category-link subsubcategory}}
+                          {{/unless}}
+                        {{/each}}
+                      </div>
+                    {{/if}}
+                  </div>
+                </td>
+              </tr>
+            {{/each}}
+          {{else if c.subcategories}}
             <tr class="subcategories-list">
               <td>
                 <div class='subcategories'>
