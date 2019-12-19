@@ -95,7 +95,8 @@
   tbody {
     .category {
       border-left: 6px solid;
-      h3, h4 {
+      h3,
+      h4 {
         line-height: $line-height-medium;
         a[href] {
           color: $primary;
