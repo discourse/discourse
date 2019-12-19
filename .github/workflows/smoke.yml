@@ -56,9 +56,7 @@ jobs:
         run: unbuffer d/rails s &
 
       - name: Run smoke test
-        run: unbuffer d/rake smoke:test
-        env:
-          URL: http://localhost:3000
+        run: URL="http://localhost:3000" unbuffer d/rake smoke:test
 
       - uses: actions/upload-artifact@v1
         if: failure()
