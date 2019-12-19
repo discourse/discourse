@@ -32,7 +32,14 @@ end
 
 task 'db:create' => [:load_config] do |_, args|
   if MultisiteTestHelpers.create_multisite?
-    system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
+    unless system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
+
+      STDERR.puts "-" * 80
+      STDERR.puts "ERROR: Could not create multisite DB. A common cause of this is a plugin"
+      STDERR.puts "checking the column structure when initializing, which raises an error."
+      STDERR.puts "-" * 80
+      raise "Could not initialize discourse_test_multisite"
+    end
   end
 end
 
