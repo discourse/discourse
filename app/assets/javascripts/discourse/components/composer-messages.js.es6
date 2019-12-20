@@ -97,11 +97,16 @@ export default Component.extend({
 
     const composer = this.composer;
     if (composer.get("privateMessage")) {
-      const recipients = composer.targetRecipientsArray;
+      let usernames = composer.get("targetUsernames");
+
+      if (usernames) {
+        usernames = usernames.split(",");
+      }
 
       if (
-        recipients.length > 0 &&
-        recipients.every(r => r.name === this.currentUser.get("username"))
+        usernames &&
+        usernames.length === 1 &&
+        usernames[0] === this.currentUser.get("username")
       ) {
         const message =
           this._yourselfConfirm ||
