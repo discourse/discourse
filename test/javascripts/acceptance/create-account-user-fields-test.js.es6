@@ -44,12 +44,9 @@ QUnit.test("create account with user fields", async assert => {
   await fillIn("#new-account-email", "good.tuna@test.com");
   await fillIn("#new-account-username", "goodtuna");
 
+  assert.ok(!exists("#username-validation"), "the username validation is good");
   assert.ok(
-    exists("#username-validation.good"),
-    "the username validation is good"
-  );
-  assert.ok(
-    exists("#account-email-validation.good"),
+    !exists("#account-email-validation"),
     "the email validation is good"
   );
   assert.ok(
