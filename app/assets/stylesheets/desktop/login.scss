@@ -270,7 +270,7 @@
 .login-form {
   .instructions {
     .tip,
-    :not(.tip) + td:not(:empty) {
+    td:not(:empty) {
       min-height: 1.75em;
       margin-top: 0.25em;
       &.bad .svg-icon {
