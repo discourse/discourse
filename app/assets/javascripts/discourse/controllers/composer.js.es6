@@ -25,7 +25,6 @@ import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
 import ENV from "discourse-common/config/environment";
 import EmberObject, { computed } from "@ember/object";
-import deprecated from "discourse-common/lib/deprecated";
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -130,7 +129,7 @@ export default Controller.extend({
   @discourseComputed(
     "model.replyingToTopic",
     "model.creatingPrivateMessage",
-    "model.targetRecipients",
+    "model.targetUsernames",
     "model.composeState"
   )
   focusTarget(replyingToTopic, creatingPM, usernames, composeState) {
@@ -295,7 +294,7 @@ export default Controller.extend({
     }
   },
 
-  @discourseComputed("model.creatingPrivateMessage", "model.targetRecipients")
+  @discourseComputed("model.creatingPrivateMessage", "model.targetUsernames")
   showWarning(creatingPrivateMessage, usernames) {
     if (!this.get("currentUser.staff")) {
       return false;
@@ -910,24 +909,19 @@ export default Controller.extend({
       isWarning: false
     });
 
-    if (!this.model.targetRecipients) {
-      if (opts.usernames) {
-        deprecated("`usernames` is deprecated, use `recipients` instead.");
-        this.model.set("targetRecipients", opts.usernames);
-      } else if (opts.recipients) {
-        this.model.set("targetRecipients", opts.recipients);
-      }
+    if (opts.usernames && !this.get("model.targetUsernames")) {
+      this.set("model.targetUsernames", opts.usernames);
     }
 
     if (
       opts.topicTitle &&
       opts.topicTitle.length <= this.siteSettings.max_topic_title_length
     ) {
-      this.model.set("title", opts.topicTitle);
+      this.set("model.title", opts.topicTitle);
     }
 
     if (opts.topicCategoryId) {
-      this.model.set("categoryId", opts.topicCategoryId);
+      this.set("model.categoryId", opts.topicCategoryId);
     }
 
     if (opts.topicTags && !this.site.mobileView && this.site.can_tag_topics) {
@@ -940,11 +934,11 @@ export default Controller.extend({
           (array[index] = tag.substring(0, this.siteSettings.max_tag_length))
       );
 
-      this.model.set("tags", tags);
+      this.set("model.tags", tags);
     }
 
     if (opts.topicBody) {
-      this.model.set("reply", opts.topicBody);
+      this.set("model.reply", opts.topicBody);
     }
   },
 

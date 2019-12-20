@@ -14,18 +14,13 @@ import {
   observes,
   on
 } from "discourse-common/utils/decorators";
-import {
-  escapeExpression,
-  tinyAvatar,
-  emailValid
-} from "discourse/lib/utilities";
+import { escapeExpression, tinyAvatar } from "discourse/lib/utilities";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { throttle } from "@ember/runloop";
 import { Promise } from "rsvp";
 import { set } from "@ember/object";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import deprecated from "discourse-common/lib/deprecated";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
@@ -56,7 +51,7 @@ const CLOSED = "closed",
     is_warning: "isWarning",
     whisper: "whisper",
     archetype: "archetypeId",
-    target_recipients: "targetRecipients",
+    target_usernames: "targetUsernames",
     typing_duration_msecs: "typingTime",
     composer_open_duration_msecs: "composerTime",
     tags: "tags",
@@ -82,9 +77,7 @@ const CLOSED = "closed",
     composerTime: "composerTime",
     typingTime: "typingTime",
     postId: "post.id",
-    // TODO remove together with 'targetUsername' deprecations
-    usernames: "targetUsernames",
-    recipients: "targetRecipients"
+    usernames: "targetUsernames"
   },
   _add_draft_fields = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
@@ -347,35 +340,11 @@ const Composer = RestModel.extend({
     return options;
   },
 
-  @discourseComputed("targetRecipients")
-  targetUsernames(targetRecipients) {
-    deprecated(
-      "`targetUsernames` is deprecated, use `targetRecipients` instead."
-    );
-    return targetRecipients;
-  },
-
-  @discourseComputed("targetRecipients")
-  targetRecipientsArray(targetRecipients) {
-    const recipients = targetRecipients ? targetRecipients.split(",") : [];
-    const groups = new Set(this.site.groups.map(g => g.name));
-
-    return recipients.map(item => {
-      if (groups.has(item)) {
-        return { type: "group", name: item };
-      } else if (emailValid(item)) {
-        return { type: "email", name: item };
-      } else {
-        return { type: "user", name: item };
-      }
-    });
-  },
-
   @discourseComputed(
     "loading",
     "canEditTitle",
     "titleLength",
-    "targetRecipientsArray",
+    "targetUsernames",
     "replyLength",
     "categoryId",
     "missingReplyCharacters",
@@ -388,7 +357,7 @@ const Composer = RestModel.extend({
     loading,
     canEditTitle,
     titleLength,
-    targetRecipientsArray,
+    targetUsernames,
     replyLength,
     categoryId,
     missingReplyCharacters,
@@ -433,7 +402,9 @@ const Composer = RestModel.extend({
 
     if (this.privateMessage) {
       // need at least one user when sending a PM
-      return targetRecipientsArray.length === 0;
+      return (
+        targetUsernames && (targetUsernames.trim() + ",").indexOf(",") === 0
+      );
     } else {
       // has a category? (when needed)
       return this.requiredCategoryMissing;
@@ -696,17 +667,13 @@ const Composer = RestModel.extend({
       throw new Error("draft sequence is required");
     }
 
-    if (opts.usernames) {
-      deprecated("`usernames` is deprecated, use `recipients` instead.");
-    }
-
     this.setProperties({
       draftKey: opts.draftKey,
       draftSequence: opts.draftSequence,
       composeState: opts.composerState || OPEN,
       action: opts.action,
       topic: opts.topic,
-      targetRecipients: opts.usernames || opts.recipients,
+      targetUsernames: opts.usernames,
       composerTotalOpened: opts.composerTime,
       typingTime: opts.typingTime,
       whisper: opts.whisper,
