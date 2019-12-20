@@ -93,7 +93,7 @@ QUnit.test("formating medium length dates", assert => {
   assert.equal(strip(formatDays(10)), shortDateYear(10));
 });
 
-QUnit.test("formating tiny dates", assert => {
+QUnit.test("formatting tiny dates", assert => {
   var shortDateYear = function(days) {
     return moment()
       .subtract(days, "days")
@@ -101,15 +101,15 @@ QUnit.test("formating tiny dates", assert => {
   };
 
   format = "tiny";
-  assert.equal(formatMins(0), "1m");
-  assert.equal(formatMins(1), "1m");
-  assert.equal(formatMins(2), "2m");
-  assert.equal(formatMins(60), "1h");
-  assert.equal(formatHours(4), "4h");
-  assert.equal(formatHours(23), "23h");
-  assert.equal(formatHours(23.5), "1d");
-  assert.equal(formatDays(1), "1d");
-  assert.equal(formatDays(14), "14d");
+  assert.equal(formatMins(0), "1&nbsp;min");
+  assert.equal(formatMins(1), "1&nbsp;min");
+  assert.equal(formatMins(2), "2&nbsp;min");
+  assert.equal(formatMins(60), "1&nbsp;h");
+  assert.equal(formatHours(4), "4&nbsp;h");
+  assert.equal(formatHours(23), "23&nbsp;h");
+  assert.equal(formatHours(23.5), "1&nbsp;d");
+  assert.equal(formatDays(1), "1&nbsp;d");
+  assert.equal(formatDays(14), "14&nbsp;d");
   assert.equal(formatDays(15), shortDate(15));
   assert.equal(formatDays(92), shortDate(92));
   assert.equal(formatDays(364), shortDate(364));
@@ -120,25 +120,25 @@ QUnit.test("formating tiny dates", assert => {
 
   var originalValue = Discourse.SiteSettings.relative_date_duration;
   Discourse.SiteSettings.relative_date_duration = 7;
-  assert.equal(formatDays(7), "7d");
+  assert.equal(formatDays(7), "7&nbsp;d");
   assert.equal(formatDays(8), shortDate(8));
 
   Discourse.SiteSettings.relative_date_duration = 1;
-  assert.equal(formatDays(1), "1d");
+  assert.equal(formatDays(1), "1&nbsp;d");
   assert.equal(formatDays(2), shortDate(2));
 
   Discourse.SiteSettings.relative_date_duration = 0;
-  assert.equal(formatMins(0), "1m");
-  assert.equal(formatMins(1), "1m");
-  assert.equal(formatMins(2), "2m");
-  assert.equal(formatMins(60), "1h");
+  assert.equal(formatMins(0), "1&nbsp;min");
+  assert.equal(formatMins(1), "1&nbsp;min");
+  assert.equal(formatMins(2), "2&nbsp;min");
+  assert.equal(formatMins(60), "1&nbsp;h");
   assert.equal(formatDays(1), shortDate(1));
   assert.equal(formatDays(2), shortDate(2));
   assert.equal(formatDays(366), shortDateYear(366));
 
   Discourse.SiteSettings.relative_date_duration = null;
-  assert.equal(formatDays(1), "1d");
-  assert.equal(formatDays(14), "14d");
+  assert.equal(formatDays(1), "1&nbsp;d");
+  assert.equal(formatDays(14), "14&nbsp;d");
   assert.equal(formatDays(15), shortDate(15));
 
   Discourse.SiteSettings.relative_date_duration = 14;
@@ -146,15 +146,15 @@ QUnit.test("formating tiny dates", assert => {
   clock.restore();
   clock = sinon.useFakeTimers(new Date(2012, 0, 12, 12, 0).getTime()); // Jan 12, 2012
 
-  assert.equal(formatDays(11), "11d");
-  assert.equal(formatDays(14), "14d");
+  assert.equal(formatDays(11), "11&nbsp;d");
+  assert.equal(formatDays(14), "14&nbsp;d");
   assert.equal(formatDays(15), shortDateYear(15));
   assert.equal(formatDays(366), shortDateYear(366));
 
   clock.restore();
   clock = sinon.useFakeTimers(new Date(2012, 0, 20, 12, 0).getTime()); // Jan 20, 2012
 
-  assert.equal(formatDays(14), "14d");
+  assert.equal(formatDays(14), "14&nbsp;d");
   assert.equal(formatDays(15), shortDate(15));
   assert.equal(formatDays(20), shortDateYear(20));
 
@@ -200,7 +200,7 @@ QUnit.test("updateRelativeAge", assert => {
 
   updateRelativeAge($elem);
 
-  assert.equal($elem.html(), "2m");
+  assert.equal($elem.html(), "2&nbsp;min");
 
   d = new Date();
   $elem = $(autoUpdatingRelativeAge(d, { format: "medium", leaveAgo: true }));
@@ -262,31 +262,47 @@ QUnit.test("number", assert => {
 QUnit.test("durationTiny", assert => {
   assert.equal(durationTiny(), "&mdash;", "undefined is a dash");
   assert.equal(durationTiny(null), "&mdash;", "null is a dash");
-  assert.equal(durationTiny(0), "< 1m", "0 seconds shows as < 1m");
-  assert.equal(durationTiny(59), "< 1m", "59 seconds shows as < 1m");
-  assert.equal(durationTiny(60), "1m", "60 seconds shows as 1m");
-  assert.equal(durationTiny(90), "2m", "90 seconds shows as 2m");
-  assert.equal(durationTiny(120), "2m", "120 seconds shows as 2m");
-  assert.equal(durationTiny(60 * 45), "1h", "45 minutes shows as 1h");
-  assert.equal(durationTiny(60 * 60), "1h", "60 minutes shows as 1h");
-  assert.equal(durationTiny(60 * 90), "2h", "90 minutes shows as 2h");
-  assert.equal(durationTiny(3600 * 23), "23h", "23 hours shows as 23h");
+  assert.equal(durationTiny(0), "< 1&nbsp;min", "0 seconds shows as < 1 min");
+  assert.equal(durationTiny(59), "< 1&nbsp;min", "59 seconds shows as < 1 min");
+  assert.equal(durationTiny(60), "1&nbsp;min", "60 seconds shows as 1 min");
+  assert.equal(durationTiny(90), "2&nbsp;min", "90 seconds shows as 2 min");
+  assert.equal(durationTiny(120), "2&nbsp;min", "120 seconds shows as 2 min");
+  assert.equal(durationTiny(60 * 45), "1&nbsp;h", "45 minutes shows as 1 h");
+  assert.equal(durationTiny(60 * 60), "1&nbsp;h", "60 minutes shows as 1 h");
+  assert.equal(durationTiny(60 * 90), "2&nbsp;h", "90 minutes shows as 2 h");
+  assert.equal(durationTiny(3600 * 23), "23&nbsp;h", "23 hours shows as 23 h");
   assert.equal(
     durationTiny(3600 * 24 - 29),
-    "1d",
-    "23 hours 31 mins shows as 1d"
+    "1&nbsp;d",
+    "23 hours 31 mins shows as 1 d"
   );
-  assert.equal(durationTiny(3600 * 24 * 89), "89d", "89 days shows as 89d");
+  assert.equal(
+    durationTiny(3600 * 24 * 89),
+    "89&nbsp;d",
+    "89 days shows as 89 d"
+  );
   assert.equal(
     durationTiny(60 * (525600 - 1)),
-    "12mon",
-    "364 days shows as 12mon"
+    "12&nbsp;mo",
+    "364 days shows as 12 mo"
   );
-  assert.equal(durationTiny(60 * 525600), "1y", "365 days shows as 1y");
-  assert.equal(durationTiny(86400 * 456), "1y", "456 days shows as 1y");
-  assert.equal(durationTiny(86400 * 457), "> 1y", "457 days shows as > 1y");
-  assert.equal(durationTiny(86400 * 638), "> 1y", "638 days shows as > 1y");
-  assert.equal(durationTiny(86400 * 639), "2y", "639 days shows as 2y");
-  assert.equal(durationTiny(86400 * 821), "2y", "821 days shows as 2y");
-  assert.equal(durationTiny(86400 * 822), "> 2y", "822 days shows as > 2y");
+  assert.equal(durationTiny(60 * 525600), "1&nbsp;y", "365 days shows as 1 y");
+  assert.equal(durationTiny(86400 * 456), "1&nbsp;y", "456 days shows as 1 y");
+  assert.equal(
+    durationTiny(86400 * 457),
+    "> 1&nbsp;y",
+    "457 days shows as > 1 y"
+  );
+  assert.equal(
+    durationTiny(86400 * 638),
+    "> 1&nbsp;y",
+    "638 days shows as > 1 y"
+  );
+  assert.equal(durationTiny(86400 * 639), "2&nbsp;y", "639 days shows as 2 y");
+  assert.equal(durationTiny(86400 * 821), "2&nbsp;y", "821 days shows as 2 y");
+  assert.equal(
+    durationTiny(86400 * 822),
+    "> 2&nbsp;y",
+    "822 days shows as > 2 y"
+  );
 });

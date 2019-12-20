@@ -482,7 +482,7 @@ QUnit.test("computed labels", assert => {
   assert.equal(timeReadLabel.title, "Time read");
   assert.equal(timeReadLabel.type, "seconds");
   const computedTimeReadLabel = timeReadLabel.compute(row);
-  assert.equal(computedTimeReadLabel.formatedValue, "3d");
+  assert.equal(computedTimeReadLabel.formatedValue, "3&nbsp;d");
   assert.equal(computedTimeReadLabel.value, 287362);
 
   const noteLabel = computedLabels[3];

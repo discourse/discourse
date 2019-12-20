@@ -71,37 +71,37 @@ en:
       wrap_ago: "%{date} ago"
 
       tiny:
-        half_a_minute: "< 1m"
+        half_a_minute: "< 1&nbsp;min"
         less_than_x_seconds:
-          one: "< %{count}s"
-          other: "< %{count}s"
+          one: "< %{count}&nbsp;s"
+          other: "< %{count}&nbsp;s"
         x_seconds:
-          one: "%{count}s"
-          other: "%{count}s"
+          one: "%{count}&nbsp;s"
+          other: "%{count}&nbsp;s"
         less_than_x_minutes:
-          one: "< %{count}m"
-          other: "< %{count}m"
+          one: "< %{count}&nbsp;min"
+          other: "< %{count}&nbsp;min"
         x_minutes:
-          one: "%{count}m"
-          other: "%{count}m"
+          one: "%{count}&nbsp;min"
+          other: "%{count}&nbsp;min"
         about_x_hours:
-          one: "%{count}h"
-          other: "%{count}h"
+          one: "%{count}&nbsp;h"
+          other: "%{count}&nbsp;h"
         x_days:
-          one: "%{count}d"
-          other: "%{count}d"
+          one: "%{count}&nbsp;d"
+          other: "%{count}&nbsp;d"
         x_months:
-          one: "%{count}mon"
-          other: "%{count}mon"
+          one: "%{count}&nbsp;mo"
+          other: "%{count}&nbsp;mo"
         about_x_years:
-          one: "%{count}y"
-          other: "%{count}y"
+          one: "%{count}&nbsp;y"
+          other: "%{count}&nbsp;y"
         over_x_years:
-          one: "> %{count}y"
-          other: "> %{count}y"
+          one: "> %{count}&nbsp;y"
+          other: "> %{count}&nbsp;y"
         almost_x_years:
-          one: "%{count}y"
-          other: "%{count}y"
+          one: "%{count}&nbsp;y"
+          other: "%{count}&nbsp;y"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_month: "D MMM"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
