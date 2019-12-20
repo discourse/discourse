@@ -790,7 +790,9 @@ Discourse::Application.routes.draw do
   get "/posts/:id/raw-email" => "posts#raw_email"
   get "raw/:topic_id(/:post_number)" => "posts#markdown_num"
 
-  resources :invites
+  resources :invites, except: [:show]
+  get "/invites/:id" => "invites#show", constraints: { format: :html }
+
   post "invites/upload_csv" => "invites#upload_csv"
   post "invites/rescind-all" => "invites#rescind_all_invites"
   post "invites/reinvite" => "invites#resend_invite"
