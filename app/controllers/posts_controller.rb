@@ -685,15 +685,16 @@ class PostsController < ApplicationController
     ]
 
     Post.plugin_permitted_create_params.each do |key, value|
-      permission =  case value[:type]
-                    when :string
-                      key.to_sym
-                    when :array
-                      { key => [] }
-                    when :hash
-                      { key => {} }
+      if value[:plugin].enabled?
+        permitted <<  case value[:type]
+                      when :string
+                        key.to_sym
+                      when :array
+                        { key => [] }
+                      when :hash
+                        { key => {} }
+        end
       end
-      permitted << permission if value[:plugin].enabled?
     end
 
     # param munging for WordPress
