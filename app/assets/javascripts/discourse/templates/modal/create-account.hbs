@@ -68,9 +68,11 @@
 
           {{#if passwordRequired}}
             <tr class="input">
-              <td class="label"><label for='new-account-password'>{{i18n 'user.password.title'}}</label></td>
+              <td class="label">
+                <label for='new-account-password'>{{i18n 'user.password.title'}}</label>
+              </td>
               <td>
-              {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
+                {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
               </td>
             </tr>
             <tr class="instructions">
