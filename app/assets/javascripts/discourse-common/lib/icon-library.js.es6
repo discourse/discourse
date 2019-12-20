@@ -29,7 +29,7 @@ const REPLACEMENTS = {
   "notification.invited_to_private_message": "far-envelope",
   "notification.invited_to_topic": "hand-point-right",
   "notification.invitee_accepted": "user",
-  "notification.moved_post": "sign-out",
+  "notification.moved_post": "sign-out-alt",
   "notification.linked": "link",
   "notification.granted_badge": "certificate",
   "notification.topic_reminder": "far-clock",
