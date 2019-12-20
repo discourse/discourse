@@ -236,11 +236,8 @@ class TopicView
   end
 
   def image_url
-    if @post_number > 1 && @desired_post.present?
-      @desired_post.image_url
-    else
-      @topic.image_url
-    end
+    url = @desired_post&.image_url if @post_number > 1
+    url || @topic.image_url
   end
 
   def filter_posts(opts = {})
