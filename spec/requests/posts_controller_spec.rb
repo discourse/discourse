@@ -1910,7 +1910,7 @@ describe PostsController do
         request.call
         expect(@controller.send(:create_params)).not_to include(hash_arg: { key1: 'val' })
 
-        instance.add_permitted_post_create_param(:hash_arg, {})
+        instance.add_permitted_post_create_param(:hash_arg, :hash)
         request.call
         expect(@controller.send(:create_params)).to include(hash_arg: { key1: 'val' })
       end
@@ -1920,7 +1920,7 @@ describe PostsController do
         request.call
         expect(@controller.send(:create_params)).not_to include(array_arg: ['1', '2', '3'])
 
-        instance.add_permitted_post_create_param(:array_arg, [])
+        instance.add_permitted_post_create_param(:array_arg, :array)
         request.call
         expect(@controller.send(:create_params)).to include(array_arg: ['1', '2', '3'])
       end

@@ -250,7 +250,7 @@ class Plugin::Instance
   end
 
   # Add a permitted_create_param to Post, respecting if the plugin is enabled
-  def add_permitted_post_create_param(name, type = "")
+  def add_permitted_post_create_param(name, type = :string)
     reloadable_patch do |plugin|
       ::Post.plugin_permitted_create_params[name] = { plugin: plugin, type: type }
     end

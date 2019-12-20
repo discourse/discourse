@@ -685,12 +685,12 @@ class PostsController < ApplicationController
     ]
 
     Post.plugin_permitted_create_params.each do |key, value|
-      permission =  case value[:type].class.name
-                    when "String"
+      permission =  case value[:type]
+                    when :string
                       key.to_sym
-                    when "Array"
+                    when :array
                       { key => [] }
-                    when "Hash"
+                    when :hash
                       { key => {} }
       end
       permitted << permission if value[:plugin].enabled?
