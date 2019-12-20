@@ -69,12 +69,6 @@
     }
   }
 
-  .tip {
-    &:not(:empty) + td {
-      display: none;
-    }
-  }
-
   .modal-body input[type="text"],
   .modal-body input[type="email"],
   .modal-body input[type="password"],

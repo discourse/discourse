@@ -1,1 +1,5 @@
-{{tipIcon}} {{tipReason}}
+{{#if tipReason}}
+  <div class="tip {{if good 'good' ''}} {{if bad 'bad' ''}}">
+    {{tipIcon}}<span class="tip-reason">{{tipReason}}</span>
+  </div>
+{{/if}}

@@ -13,24 +13,28 @@
           <table>
 
           <tr class="input create-account-email">
-                <td class="label"><label for='new-account-email'>{{i18n 'user.email.title'}}</label></td>
-                <td>
-                {{input type="email" value=accountEmail id="new-account-email" disabled=emailValidated name="email" autofocus="autofocus"}}
-                </td>
+            <td class="label">
+              <label for='new-account-email'>{{i18n 'user.email.title'}}</label>
+            </td>
+            <td>
+              {{input type="email" value=accountEmail id="new-account-email" disabled=emailValidated name="email" autofocus="autofocus"}}
+            </td>
           </tr>
 
           <tr class="instructions create-account-email">
             <td></td>
-                {{input-tip validation=emailValidation id="account-email-validation"}}
-                <td><label>{{i18n 'user.email.instructions'}}</label></td>
+            {{input-tip validation=emailValidation id="account-email-validation"}}
+            <td><label>{{i18n 'user.email.instructions'}}</label></td>
           </tr>
 
           {{#if usernameRequired}}
             <tr class="input">
-                  <td class="label"><label for='new-account-username'>{{i18n 'user.username.title'}}</label></td>
-                  <td>
-                  {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
-                  </td>
+              <td class="label"><label for='new-account-username'>
+                {{i18n 'user.username.title'}}</label>
+              </td>
+              <td>
+                {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
+              </td>
             </tr>
             <tr class="instructions">
               <td></td>
@@ -64,10 +68,10 @@
 
           {{#if passwordRequired}}
             <tr class="input">
-                <td class="label"><label for='new-account-password'>{{i18n 'user.password.title'}}</label></td>
-                <td>
-                {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
-                </td>
+              <td class="label"><label for='new-account-password'>{{i18n 'user.password.title'}}</label></td>
+              <td>
+              {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
+              </td>
             </tr>
             <tr class="instructions">
               <td></td>
@@ -104,7 +108,6 @@
               {{/each}}
             </div>
           {{/if}}
-
           </form>
         </div>
       {{/if}}

@@ -3,10 +3,9 @@ import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Component.extend({
-  classNameBindings: [":tip", "good", "bad"],
-  rerenderTriggers: ["validation"],
   tipIcon: null,
   tipReason: null,
+  tagName: "",
 
   bad: alias("validation.failed"),
   good: not("bad"),
