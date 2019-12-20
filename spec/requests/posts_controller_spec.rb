@@ -1871,4 +1871,60 @@ describe PostsController do
       expect(public_post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
     end
   end
+
+  describe Plugin::Instance do
+    describe '#add_permitted_post_create_param' do
+      fab!(:user) { Fabricate(:user) }
+      let(:instance) { Plugin::Instance.new }
+      let(:request) do
+        Proc.new {
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic',
+            composer_open_duration_msecs: 204,
+            typing_duration_msecs: 100,
+            reply_to_post_number: 123,
+            string_arg: '123',
+            hash_arg: { key1: 'val' },
+            array_arg: ['1', '2', '3']
+          }
+        }
+      end
+
+      before do
+        sign_in(user)
+        SiteSetting.min_first_post_typing_time = 0
+      end
+
+      it 'allows strings to be added' do
+        request.call
+        expect(@controller.send(:create_params)).not_to include(string_arg: '123')
+
+        instance.add_permitted_post_create_param(:string_arg)
+        request.call
+        expect(@controller.send(:create_params)).to include(string_arg: '123')
+      end
+
+      it 'allows hashes to be added' do
+        instance.add_permitted_post_create_param(:hash_arg)
+        request.call
+        expect(@controller.send(:create_params)).not_to include(hash_arg: { key1: 'val' })
+
+        instance.add_permitted_post_create_param(:hash_arg, :hash)
+        request.call
+        expect(@controller.send(:create_params)).to include(hash_arg: { key1: 'val' })
+      end
+
+      it 'allows strings to be added' do
+        instance.add_permitted_post_create_param(:array_arg)
+        request.call
+        expect(@controller.send(:create_params)).not_to include(array_arg: ['1', '2', '3'])
+
+        instance.add_permitted_post_create_param(:array_arg, :array)
+        request.call
+        expect(@controller.send(:create_params)).to include(array_arg: ['1', '2', '3'])
+      end
+
+    end
+  end
 end
