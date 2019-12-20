@@ -1,4 +1,4 @@
-import { alias, not } from "@ember/object/computed";
+import { reads, not } from "@ember/object/computed";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
@@ -6,24 +6,27 @@ export default Component.extend({
   tipIcon: null,
   tipReason: null,
   tagName: "",
-
-  bad: alias("validation.failed"),
+  bad: reads("validation.failed"),
   good: not("bad"),
 
   tipIconHTML() {
-    let icon = iconHTML(this.good ? "check" : "times");
-    return `${icon}`.htmlSafe();
+    return iconHTML(this.good ? "check" : "times").htmlSafe();
   },
 
   didReceiveAttrs() {
     this._super(...arguments);
-    let reason = this.get("validation.reason");
-    if (reason) {
-      this.set("tipIcon", this.tipIconHTML());
-      this.set("tipReason", reason);
+
+    const tipReason = this.get("validation.reason");
+    if (tipReason) {
+      this.setProperties({
+        tipIcon: this.tipIconHTML(),
+        tipReason
+      });
     } else {
-      this.set("tipIcon", null);
-      this.set("tipReason", null);
+      this.setProperties({
+        tipIcon: null,
+        tipReason: null
+      });
     }
   }
 });
