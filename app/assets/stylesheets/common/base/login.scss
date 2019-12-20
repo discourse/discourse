@@ -12,17 +12,6 @@
   display: none;
 }
 
-.login-form .tip {
-  .d-icon {
-    margin-right: 0.25em;
-  }
-  &:not(:empty) {
-    + td {
-      display: none;
-    }
-  }
-}
-
 #login-form {
   table {
     width: 100%;
@@ -83,6 +72,9 @@
       margin-bottom: 0;
       padding-top: 5px;
     }
+    &:first-of-type > label {
+      margin-top: 0;
+    }
 
     input[type="text"] {
       margin-bottom: 0;
@@ -101,7 +93,7 @@
         font-weight: normal;
       }
       .instructions {
-        margin-top: 0.4em;
+        margin-top: 0.15em;
         color: $primary-medium;
         line-height: $line-height-medium;
       }
