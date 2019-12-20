@@ -14,17 +14,23 @@
         <tr data-category-id={{c.id}} class="{{if c.description_excerpt 'has-description' 'no-description'}} {{if c.uploaded_logo.url 'has-logo' 'no-logo'}}">
           <td class="category" style={{border-color c.color}}>
             {{category-title-link category=c}}
-            <div class="category-description">
-              {{{dir-span c.description_excerpt}}}
-            </div>
-
+            {{#if c.description_excerpt}}
+              <div class="category-description">
+                {{{dir-span c.description_excerpt}}}
+              </div>
+            {{/if}}
             {{#if c.isGrandParent}}
-              <table class="category-list">
+              <table class="category-list subcategories-with-subcategories">
                 {{#each c.subcategories as |subcategory|}}
                   <tr data-category-id={{subcategory.id}} class="{{if subcategory.description_excerpt 'has-description' 'no-description'}} {{if subcategory.uploaded_logo.url 'has-logo' 'no-logo'}}">
                     <td class="category" style={{border-color subcategory.color}}>
                       {{category-title-link tagName="h4" category=subcategory}}
-
+                      {{log subcategory}}
+                      {{#if subcategory.description_excerpt}}
+                        <div class="category-description subcategory-description">
+                          {{{dir-span subcategory.description_excerpt}}}
+                        </div>
+                      {{/if}}
                       {{#if subcategory.subcategories}}
                         <div class='subcategories'>
                           {{#each subcategory.subcategories as |subsubcategory|}}
@@ -37,9 +43,11 @@
                           {{/each}}
                         </div>
                       {{else}}
-                        <div class="category-description">
-                          {{{dir-span subcategory.description_excerpt}}}
-                        </div>
+                        {{#if subcategory.description_excerpt}}
+                          <div class="category-description subcategory-description">
+                            {{{dir-span subcategory.description_excerpt}}}
+                          </div>
+                        {{/if}}
                       {{/if}}
                     </td>
                   </tr>

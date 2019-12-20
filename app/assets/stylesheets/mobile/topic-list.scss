@@ -218,7 +218,6 @@
 // Category list
 // --------------------------------------------------
 .categories-list .category-list {
-  margin-left: -10px;
   margin-bottom: 2em;
 
   td {
@@ -265,10 +264,22 @@
 }
 
 .subcategory-list-item.category {
+  display: block;
+  width: calc(100% + 20px);
+  margin: 1.25em 10px 0;
+  border-bottom: none !important;
+  border-top: 1px solid $primary-low !important;
+  &:last-of-type {
+    margin-top: 0;
+    margin-bottom: 1.25em;
+    border-bottom: 1px solid $primary-low !important;
+  }
   td:first-of-type {
     padding: 12px 0px;
   }
-
+  .category-logo.aspect-image {
+    display: none;
+  }
   .subcategories {
     padding-left: 10px;
   }
@@ -283,9 +294,8 @@ tr.category-topic-link {
 
 .category-list-item,
 .subcategory-list-item {
-  padding: 5px 0 2px 3px;
+  padding: 0 0 0 3px;
   border-left: 6px solid;
-  border-top: 1px solid;
 
   h3,
   h4 {
@@ -326,8 +336,11 @@ tr.category-topic-link {
     padding-bottom: 15px;
   }
 
-  .subcategories-list td {
-    padding-top: 15px;
+  .subcategories-list {
+    border-bottom: none;
+    td {
+      padding-top: 15px;
+    }
   }
 
   .topic-list > tbody > tr {
@@ -374,6 +387,13 @@ tr.category-topic-link {
       margin-left: 7px;
     }
   }
+}
+
+.category-list-item {
+  padding: 0.5em 0 0.25em;
+  border-top: 1px solid $primary-low !important;
+  border-bottom: 1px solid $primary-low !important;
+  margin-bottom: 2em;
 }
 
 .category-box {
