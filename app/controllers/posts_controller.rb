@@ -684,8 +684,17 @@ class PostsController < ApplicationController
       :draft_key
     ]
 
-    Post.plugin_permitted_create_params.each do |key, plugin|
-      permitted << key if plugin.enabled?
+    Post.plugin_permitted_create_params.each do |key, value|
+      if value[:plugin].enabled?
+        permitted <<  case value[:type]
+                      when :string
+                        key.to_sym
+                      when :array
+                        { key => [] }
+                      when :hash
+                        { key => {} }
+        end
+      end
     end
 
     # param munging for WordPress
