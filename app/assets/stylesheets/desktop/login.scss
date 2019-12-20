@@ -222,6 +222,10 @@
       margin-top: 5px;
     }
 
+    &:first-of-type > label {
+      margin-top: 0;
+    }
+
     > label {
       width: auto;
     }
@@ -265,12 +269,14 @@
 
 .login-form {
   .tip {
-    &:not(:empty) + td {
+    &:empty {
       display: none;
     }
+
     &:not(:empty),
     &:empty + td {
       min-height: 1.75em;
+      margin-top: 0.25em;
       &.bad .svg-icon {
         vertical-align: middle;
       }
