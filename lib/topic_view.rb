@@ -236,16 +236,8 @@ class TopicView
   end
 
   def image_url
-    if @post_number > 1 && @desired_post.present?
-      if @desired_post.image_url.present?
-        @desired_post.image_url
-      elsif @desired_post.user
-        # show poster avatar
-        @desired_post.user.avatar_template_url.gsub("{size}", "200")
-      end
-    else
-      @topic.image_url
-    end
+    url = desired_post&.image_url if @post_number > 1
+    url || @topic.image_url
   end
 
   def filter_posts(opts = {})
