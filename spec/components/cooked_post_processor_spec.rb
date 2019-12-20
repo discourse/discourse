@@ -1662,6 +1662,24 @@ describe CookedPostProcessor do
       RAW
     end
 
+    let(:raw3) do
+      <<~RAW.strip
+      [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
+
+      this is the “first” post
+
+      [/quote]
+
+      [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
+
+      this is the “first” post
+
+      [/quote]
+
+      and this is the third reply
+      RAW
+    end
+
     before do
       SiteSetting.remove_full_quote = true
     end
@@ -1684,6 +1702,13 @@ describe CookedPostProcessor do
         expect(reply.revisions.first.modifications["raw"]).to eq([raw, reply.raw])
         expect(reply.revisions.first.modifications["edit_reason"][1]).to eq(I18n.t(:removed_direct_reply_full_quotes))
       end
+    end
+
+    it 'does nothing if there are multiple quotes' do
+      reply = Fabricate(:post, topic: topic, raw: raw3)
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+      expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
+      expect(reply.raw).to eq(raw3)
     end
 
     it 'does not delete quote if not first paragraph' do
@@ -1715,6 +1740,19 @@ describe CookedPostProcessor do
       expect(reply.raw).to eq("and this is the third reply")
     end
 
+    it "works with nested quotes" do
+      reply1 = Fabricate(:post, topic: topic, raw: raw)
+      reply2 = Fabricate(:post, topic: topic, raw: <<~RAW.strip)
+        [quote="#{reply1.user.username}, post:#{reply1.post_number}, topic:#{topic.id}"]
+        #{raw}
+        [/quote]
+
+        quoting a post with a quote
+      RAW
+
+      CookedPostProcessor.new(reply2).remove_full_quote_on_direct_reply
+      expect(reply2.raw).to eq('quoting a post with a quote')
+    end
   end
 
 end
