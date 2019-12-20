@@ -236,7 +236,7 @@ class TopicView
   end
 
   def image_url
-    url = @desired_post&.image_url if @post_number > 1
+    url = desired_post&.image_url if @post_number > 1
     url || @topic.image_url
   end
 
