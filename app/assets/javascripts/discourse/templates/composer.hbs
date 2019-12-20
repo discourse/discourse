@@ -53,7 +53,7 @@
                 {{#if model.creatingPrivateMessage}}
                   <div class='user-selector'>
                     {{composer-user-selector topicId=topicModel.id
-                                             usernames=model.targetUsernames
+                                             usernames=model.targetRecipients
                                              hasGroups=model.hasTargetGroups
                                              focusTarget=focusTarget
                                              class="users-input"}}
