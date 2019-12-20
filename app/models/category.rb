@@ -180,6 +180,26 @@ class Category < ActiveRecord::Base
   end
 
   def self.update_stats
+    topics_with_post_count = Topic
+      .select("topics.category_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
+      .where("topics.id NOT IN (select cc.topic_id from categories cc WHERE topic_id IS NOT NULL)")
+      .group("topics.category_id")
+      .visible.to_sql
+
+    DB.exec <<~SQL
+      UPDATE categories c
+         SET topic_count = COALESCE(x.topic_count, 0),
+             post_count = COALESCE(x.post_count, 0)
+        FROM (
+              SELECT ccc.id as category_id, stats.topic_count, stats.post_count
+              FROM categories ccc
+              LEFT JOIN (#{topics_with_post_count}) stats
+              ON stats.category_id = ccc.id
+             ) x
+       WHERE x.category_id = c.id
+         AND (c.topic_count <> COALESCE(x.topic_count, 0) OR c.post_count <> COALESCE(x.post_count, 0))
+    SQL
+
     # Yes, there are a lot of queries happening below.
     # Performing a lot of queries is actually faster than using one big update
     # statement with sub-selects on large databases with many categories,
@@ -193,14 +213,12 @@ class Category < ActiveRecord::Base
     Category.all.each do |c|
       topics = c.topics.visible
       topics = topics.where(['topics.id <> ?', c.topic_id]) if c.topic_id
-      c.topic_count = topics.count
       c.topics_year  = topics.created_since(1.year.ago).count
       c.topics_month = topics.created_since(1.month.ago).count
       c.topics_week  = topics.created_since(1.week.ago).count
       c.topics_day   = topics.created_since(1.day.ago).count
 
       posts = c.visible_posts
-      c.post_count  = posts.count
       c.posts_year  = posts.created_since(1.year.ago).count
       c.posts_month = posts.created_since(1.month.ago).count
       c.posts_week  = posts.created_since(1.week.ago).count
