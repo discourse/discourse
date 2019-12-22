@@ -39,6 +39,12 @@ export default (filterArg, params) => {
             .filter(x => x)
             .join("/");
         }
+      } else if (Discourse.SiteSettings.slug_generation_method === "encoded") {
+        let separator = "/";
+        modelParams.category_slug_path_with_id = modelParams.category_slug_path_with_id
+          .split(separator)
+          .map(urlPart => decodeURI(urlPart))
+          .join(separator);
       }
 
       return modelParams;
