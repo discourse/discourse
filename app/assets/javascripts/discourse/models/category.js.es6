@@ -308,11 +308,10 @@ Category.reopenClass({
   },
 
   findBySlugAndParent(slug, parentCategory) {
+    if (Discourse.SiteSettings.slug_generation_method === "encoded") {
+      slug = encodeURI(slug);
+    }
     return Category.list().find(category => {
-      if (Discourse.SiteSettings.slug_generation_method === "encoded") {
-        slug = encodeURI(slug);
-      }
-
       return (
         category.slug === slug &&
         (category.parentCategory || null) === parentCategory
