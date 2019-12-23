@@ -4298,19 +4298,19 @@ en:
         This badge is granted when you receive at least 5 likes on 300 different posts. Wow! The community admires your frequent, high quality contributions to the conversations here.
     out_of_love:
       name: Out of Love
-      description: Used 50 likes in a day
+      description: Used %{max_likes_per_day} likes in a day
       long_description: |
-        This badge is granted when you use all 50 of your daily likes. Remembering to take a moment and like the posts you enjoy and appreciate encourages your fellow community members to create even more great discussions in the future.
+        This badge is granted when you use all %{max_likes_per_day} of your daily likes. Remembering to take a moment and like the posts you enjoy and appreciate encourages your fellow community members to create even more great discussions in the future.
     higher_love:
       name: Higher Love
-      description: Used 50 likes in a day 5 times
+      description: Used %{max_likes_per_day} likes in a day 5 times
       long_description: |
-        This badge is granted when you use all 50 of your daily likes for 5 days. Thanks for taking the time actively encouraging the best conversations every day!
+        This badge is granted when you use all %{max_likes_per_day} of your daily likes for 5 days. Thanks for taking the time actively encouraging the best conversations every day!
     crazy_in_love:
       name: Crazy in Love
       description: Used 50 likes in a day 20 times
       long_description: |
-        This badge is granted when you use all 50 of your daily likes for 20 days. Wow! You’re a role model for encouraging your fellow community members!
+        This badge is granted when you use all %{max_likes_per_day} of your daily likes for 20 days. Wow! You’re a role model for encouraging your fellow community members!
     thank_you:
       name: Thank You
       description: Has 20 liked posts and gave 10 likes
