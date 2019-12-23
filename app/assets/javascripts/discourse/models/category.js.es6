@@ -334,7 +334,11 @@ Category.reopenClass({
   },
 
   findBySlugPathWithID(slugPathWithID) {
-    const parts = slugPathWithID.split("/");
+    let parts = slugPathWithID.split("/");
+    // slugs found by star/glob pathing in emeber do not automatically url decode - ensure that these are decoded
+    if (Discourse.SiteSettings.slug_generation_method === "encoded") {
+      parts = parts.map(urlPart => decodeURI(urlPart));
+    }
     let category = null;
 
     if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
