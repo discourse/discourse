@@ -1943,6 +1943,14 @@ describe UsersController do
       expect(user.user_profile.granted_title_badge_id).to eq(nil)
     end
 
+    it "is not raising an erroring when user revokes title" do
+      sign_in(user)
+      badge.update allow_title: true
+      put "/u/#{user.username}/preferences/badge_title.json", params: { user_badge_id: user_badge.id }
+      put "/u/#{user.username}/preferences/badge_title.json", params: { user_badge_id: 0 }
+      expect(response.status).to eq(200)
+    end
+
     context "with overrided name" do
       fab!(:badge) { Fabricate(:badge, name: 'Demogorgon', allow_title: true) }
       let(:user_badge) { BadgeGranter.grant(badge, user) }
