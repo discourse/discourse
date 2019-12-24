@@ -90,7 +90,7 @@ export default Controller.extend(ModalFunctionality, {
   nextWeekFormatted() {
     return htmlSafe(
       I18n.t("bookmarks.reminders.next_week", {
-        date: this.nextWeek().format(I18n.t("dates.month_day_time"))
+        date: this.nextWeek().format(I18n.t("dates.long_no_year"))
       })
     );
   },
@@ -99,7 +99,7 @@ export default Controller.extend(ModalFunctionality, {
   nextMonthFormatted() {
     return htmlSafe(
       I18n.t("bookmarks.reminders.next_month", {
-        date: this.nextMonth().format(I18n.t("dates.month_day_time"))
+        date: this.nextMonth().format(I18n.t("dates.long_no_year"))
       })
     );
   },

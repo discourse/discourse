@@ -40,9 +40,7 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time: "HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      time_short_day: "ddd HH:mm a"
-      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      month_day_time: "MMM D, HH:mm a"
+      time_short_day: "ddd, HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
@@ -311,7 +309,7 @@ en:
       remove: "Remove Bookmark"
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
       save: "Save"
-      no_timezone: "You have not set a timezone yet. You will not be able to set reminders. Set one up <a href=\"%{basePath}/my/preferences/profile\">in your profile</a>."
+      no_timezone: 'You have not set a timezone yet. You will not be able to set reminders. Set one up <a href="%{basePath}/my/preferences/profile">in your profile</a>.'
       reminders:
         at_desktop: "Next time I'm at my desktop"
         later_today: "Later today <br/>{{date}}"
