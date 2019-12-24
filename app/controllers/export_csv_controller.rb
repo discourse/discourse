@@ -10,7 +10,7 @@ class ExportCsvController < ApplicationController
     StaffActionLogger.new(current_user).log_entity_export(export_params[:entity])
     render json: success_json
   rescue Discourse::InvalidAccess
-    return render_json_error I18n.t("csv_export.rate_limit_error")
+    render_json_error I18n.t("csv_export.rate_limit_error")
   end
 
   private
