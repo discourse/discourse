@@ -1,4 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+
 function exportEntityByType(type, entity, args) {
   return ajax("/export_csv/export_entity.json", {
     method: "POST",
@@ -11,9 +13,7 @@ export function exportUserArchive() {
     .then(function() {
       bootbox.alert(I18n.t("user.download_archive.success"));
     })
-    .catch(function() {
-      bootbox.alert(I18n.t("user.download_archive.rate_limit_error"));
-    });
+    .catch(popupAjaxError);
 }
 
 export function exportEntity(entity, args) {
