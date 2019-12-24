@@ -575,7 +575,6 @@ en:
           attributes:
             word:
               too_many: "Too many words for that action"
-              
 
   uncategorized_category_name: "Uncategorized"
 
@@ -3760,6 +3759,7 @@ en:
   csv_export:
     boolean_yes: "Yes"
     boolean_no: "No"
+    rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
 
   static_topic_first_reply: |
     Edit the first post in this topic to change the contents of the %{page_name} page.
