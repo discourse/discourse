@@ -21,13 +21,13 @@ describe ExportCsvController do
       it "should not enqueue export job if rate limit is reached" do
         UserExport.create(file_name: "user-archive-codinghorror-150116-003249", user_id: user.id)
         post "/export_csv/export_entity.json", params: { entity: "user_archive" }
-        expect(response).to be_forbidden
+        expect(response.status).to eq(422)
         expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
       end
 
       it "returns 404 when normal user tries to export admin entity" do
         post "/export_csv/export_entity.json", params: { entity: "staff_action" }
-        expect(response).to be_forbidden
+        expect(response.status).to eq(422)
         expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
       end
 
@@ -87,7 +87,7 @@ describe ExportCsvController do
     describe '#export_entity' do
       it 'does not allow moderators to export user_list' do
         post '/export_csv/export_entity.json', params: { entity: 'user_list' }
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(422)
       end
 
       it 'allows moderator to export other entities' do
