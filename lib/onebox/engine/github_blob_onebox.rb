@@ -20,7 +20,7 @@ module Onebox
         "https://raw.githubusercontent.com/#{m[:user]}/#{m[:repo]}/#{m[:sha1]}/#{m[:file]}"
       end
       def title
-        Sanitize.fragment(URI.unescape(link).sub(/^https?\:\/\/github\.com\//, ''))
+        Sanitize.fragment(Onebox::Helpers.uri_unencode(link).sub(/^https?\:\/\/github\.com\//, ''))
       end
     end
   end

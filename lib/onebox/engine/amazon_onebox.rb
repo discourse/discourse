@@ -15,7 +15,7 @@ module Onebox
 
       def url
         if match && match[:id]
-          return "https://www.amazon.#{tld}/gp/aw/d/#{URI::encode(match[:id])}"
+          return "https://www.amazon.#{tld}/gp/aw/d/#{Onebox::Helpers.uri_encode(match[:id])}"
         end
 
         @url

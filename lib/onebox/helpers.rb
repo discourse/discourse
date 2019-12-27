@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "addressable"
+
 module Onebox
   module Helpers
 
@@ -217,9 +219,7 @@ module Onebox
 
       # path requires space to be encoded as %20 (NEVER +)
       # + should be left unencoded
-      # URI::parse and URI::Generic.build don't like paths encoded with CGI.escape
-      # URI.escape does not change / to %2F and : to %3A like CGI.escape
-      encoded += URI.escape(parts[:path]) unless parts[:path].nil?
+      encoded += Addressable::URI.encode(parts[:path]) unless parts[:path].nil?
       encoded.gsub!(DOUBLE_ESCAPED_REGEXP, '%\1')
 
       # each query parameter
@@ -238,6 +238,10 @@ module Onebox
       end
 
       encoded
+    end
+
+    def self.uri_unencode(url)
+      Addressable::URI.unencode(url)
     end
 
     def self.video_placeholder_html

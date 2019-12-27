@@ -13,11 +13,11 @@ module Onebox
         og = get_opengraph
 
         if !og.image.nil?
-          return image_html(og)
+          image_html(og)
         elsif og.title.to_s[/\.(mp4|ogv|webm)$/]
-          return video_html(og)
+          video_html(og)
         else
-          return link_html(og)
+          link_html(og)
         end
       end
 

@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files`.split($/).reject { |s| s =~ /^(spec|web)/ }
   spec.require_paths = ['lib']
 
+  spec.add_runtime_dependency 'addressable', '~> 2.7.0'
   spec.add_runtime_dependency 'multi_json', '~> 1.11'
   spec.add_runtime_dependency 'mustache'
   spec.add_runtime_dependency 'nokogiri', '~> 1.7'
@@ -32,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'fakeweb', '~> 1.3'
   spec.add_development_dependency 'pry', '~> 0.10'
   spec.add_development_dependency 'mocha', '~> 1.1'
-  spec.add_development_dependency 'rubocop', '~> 0.69.0'
+  spec.add_development_dependency 'rubocop', '~> 0.78.0'
   spec.add_development_dependency 'rubocop-discourse', '~> 1.0.1'
   spec.add_development_dependency 'twitter', '~> 4.8'
   spec.add_development_dependency 'guard-rspec', '~> 4.2.8'
