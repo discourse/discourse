@@ -3,9 +3,7 @@
 //= require env
 //= require jquery.debug
 //= require jquery.ui.widget
-//= require handlebars
 //= require ember.debug
-//= require ember-template-compiler
 //= require message-bus
 //= require qunit/qunit/qunit
 //= require ember-qunit
@@ -25,6 +23,11 @@
 //= require markdown-it-bundle
 //= require application
 //= require admin
+
+// These are not loaded in prod or development
+// But we need them for testing handlebars templates in qunit
+//= require handlebars
+//= require ember-template-compiler
 
 //= require sinon/pkg/sinon
 
