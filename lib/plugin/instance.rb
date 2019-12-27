@@ -127,8 +127,7 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def replace_flags
-    settings = ::FlagSettings.new
+  def replace_flags(settings: ::FlagSettings.new)
     yield settings
 
     reloadable_patch do |plugin|
