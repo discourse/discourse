@@ -39,14 +39,15 @@ createWidget("topic-admin-menu-button", {
       fixed: attrs.fixed,
       topic: attrs.topic,
       openUpwards: attrs.openUpwards,
-      rightSide: attrs.rightSide,
+      rightSide: !this.site.mobileView && attrs.rightSide,
       actionButtons: []
     });
 
-    // We don't show the button when expanded on the right side
+    // We don't show the button when expanded on the right side on desktop
     if (
-      menu.attrs.actionButtons.length &&
-      !(attrs.rightSide && state.expanded)
+      (menu.attrs.actionButtons.length &&
+        !(attrs.rightSide && state.expanded)) ||
+      this.site.mobileView
     ) {
       result.push(
         this.attach("button", {
@@ -250,7 +251,7 @@ export default createWidget("topic-admin-menu", {
 
   buildAttributes(attrs) {
     let { top, left, outerHeight } = attrs.position;
-    const position = attrs.fixed ? "fixed" : "absolute";
+    const position = attrs.fixed || this.site.mobileView ? "fixed" : "absolute";
 
     if (attrs.rightSide) {
       return;
@@ -263,6 +264,11 @@ export default createWidget("topic-admin-menu", {
 
       if (documentHeight > mainHeight) {
         bottom = bottom - (documentHeight - mainHeight) - outerHeight;
+      }
+
+      if (this.site.mobileView) {
+        bottom = 0;
+        left = 0;
       }
 
       return {
@@ -287,7 +293,17 @@ export default createWidget("topic-admin-menu", {
       this.state
     );
     return [
-      h("h3", I18n.t("topic.actions.title")),
+      h("div.header", [
+        h("h3", I18n.t("topic.actions.title")),
+        h(
+          "div",
+          this.attach("button", {
+            action: "clickOutside",
+            icon: "close",
+            className: "close-button"
+          })
+        )
+      ]),
       h(
         "ul",
         attrs.actionButtons
