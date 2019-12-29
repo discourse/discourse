@@ -1,6 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
+import { schedule } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { findRawTemplate } from "discourse/lib/raw-templates";
@@ -197,12 +198,18 @@ export const ListItemDefaults = {
   navigateToTopic,
 
   highlight(opts = { isLastViewedTopic: false }) {
-    const $topic = $(this.element);
-    $topic
-      .addClass("highlighted")
-      .attr("data-islastviewedtopic", opts.isLastViewedTopic);
+    schedule("afterRender", () => {
+      if (!this.element || this.isDestroying || this.isDestroyed) {
+        return;
+      }
 
-    $topic.on("animationend", () => $topic.removeClass("highlighted"));
+      const $topic = $(this.element);
+      $topic
+        .addClass("highlighted")
+        .attr("data-islastviewedtopic", opts.isLastViewedTopic);
+
+      $topic.on("animationend", () => $topic.removeClass("highlighted"));
+    });
   },
 
   _highlightIfNeeded: on("didInsertElement", function() {
