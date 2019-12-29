@@ -130,7 +130,7 @@ export default Component.extend({
       ) {
         notices.push(
           Notice.create({
-            text: this.siteSettings.global_notice,
+            text: this.siteSettings.global_notice.htmlSafe(),
             id: "alert-global-notice"
           })
         );
