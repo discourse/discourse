@@ -77,10 +77,20 @@ describe Report do
       before do
         Report.clear_cache
         freeze_time DateTime.parse('2017-03-01 12:00')
-
-        ((0..32).to_a + [60, 61, 62, 63]).each do |i|
-          Fabricate(:topic, created_at: i.days.ago)
+        user = Fabricate(:user)
+        topics = ((0..32).to_a + [60, 61, 62, 63]).map do |i|
+          date = i.days.ago
+          {
+            user_id: user.id,
+            last_post_user_id: user.id,
+            title: "topic #{i}",
+            category_id: SiteSetting.uncategorized_category_id,
+            bumped_at: date,
+            created_at: date,
+            updated_at: date
+          }
         end
+        Topic.insert_all(topics)
       end
 
       it "counts the correct records" do
