@@ -51,15 +51,17 @@ describe Report do
         freeze_time DateTime.parse('2017-03-01 12:00')
 
         # today, an incomplete day:
-        ApplicationRequest.create(date: 0.days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 1)
+        application_requests = [{ date: 0.days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 1 }]
 
         # 60 complete days:
-        30.times do |i|
-          ApplicationRequest.create(date: (i + 1).days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 10)
+        30.times.each_with_object(application_requests) do |i|
+          application_requests.concat([{ date: (i + 1).days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 10  }])
         end
-        30.times do |i|
-          ApplicationRequest.create(date: (31 + i).days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 100)
+        30.times.each_with_object(application_requests) do |i|
+          application_requests.concat([{ date: (31 + i).days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 100 }])
         end
+
+        ApplicationRequest.insert_all(application_requests)
       end
 
       subject(:json) { Report.find("http_total_reqs").as_json }
