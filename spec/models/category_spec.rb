@@ -642,6 +642,22 @@ describe Category do
         expect(@uncategorized.posts_week).to eq(1)
       end
     end
+
+    context 'when there are no topics left' do
+      let!(:topic) { create_post(user: @category.user, category: @category.id).reload.topic }
+
+      it 'can update the topic count to zero' do
+        @category.reload
+        expect(@category.topic_count).to eq(1)
+        expect(@category.topics.count).to eq(2)
+        topic.delete # Delete so the post trash/destroy hook doesn't fire
+
+        Category.update_stats
+        @category.reload
+        expect(@category.topics.count).to eq(1)
+        expect(@category.topic_count).to eq(0)
+      end
+    end
   end
 
   describe "#url" do
