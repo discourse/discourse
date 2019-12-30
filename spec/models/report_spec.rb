@@ -3,9 +3,10 @@
 require 'rails_helper'
 
 describe Report do
-  let(:c0) { Fabricate(:category) }  # id: 3
-  let(:c1) { Fabricate(:category, parent_category: c0) }  # id: 2
-  let(:c2) { Fabricate(:category) }  # id: 4
+  let(:user) { Fabricate(:user) }  # id: 3
+  let(:c0) { Fabricate(:category, user: user) }  # id: 3
+  let(:c1) { Fabricate(:category, parent_category: c0, user: user) }  # id: 2
+  let(:c2) { Fabricate(:category, user: user) }  # id: 4
 
   shared_examples 'no data' do
     context "with no data" do
@@ -177,7 +178,8 @@ describe Report do
 
           if arg == :flag
             user = Fabricate(:user)
-            builder = -> (dt) { PostActionCreator.create(user, Fabricate(:post), :spam, created_at: dt) }
+            topic = Fabricate(:topic, user: user)
+            builder = -> (dt) { PostActionCreator.create(user, Fabricate(:post, topic: topic, user: user), :spam, created_at: dt) }
           elsif arg == :signup
             builder = -> (dt) { Fabricate(:user, created_at: dt) }
           else
@@ -257,10 +259,12 @@ describe Report do
 
   describe 'user to user private messages with replies' do
     let(:report) { Report.find('user_to_user_private_messages_with_replies') }
+    let(:user) { Fabricate(:user) }
+    let(:topic) { Fabricate(:topic, created_at: 1.hour.ago, user: user) }
 
     it 'topic report).to not include private messages' do
-      Fabricate(:private_message_topic, created_at: 1.hour.ago)
-      Fabricate(:topic, created_at: 1.hour.ago)
+      Fabricate(:private_message_topic, created_at: 1.hour.ago, user: user)
+      topic
       report = Report.find('topics')
       expect(report.data[0][:y]).to eq(1)
       expect(report.total).to eq(1)
@@ -281,7 +285,7 @@ describe Report do
 
       context 'some public posts' do
         it 'returns an empty report' do
-          Fabricate(:post); Fabricate(:post)
+          Fabricate(:post, topic: topic, user: user); Fabricate(:post, topic: topic, user: user)
           expect(report.data).to be_blank
           expect(report.total).to eq 0
         end
@@ -290,9 +294,9 @@ describe Report do
 
     context 'some private messages' do
       before do
-        Fabricate(:private_message_post, created_at: 25.hours.ago)
-        Fabricate(:private_message_post, created_at: 1.hour.ago)
-        Fabricate(:private_message_post, created_at: 1.hour.ago)
+        Fabricate(:private_message_post, created_at: 25.hours.ago, user: user)
+        Fabricate(:private_message_post, created_at: 1.hour.ago, user: user)
+        Fabricate(:private_message_post, created_at: 1.hour.ago, user: user)
       end
 
       it 'returns correct data' do
@@ -303,7 +307,8 @@ describe Report do
 
       context 'and some public posts' do
         before do
-          Fabricate(:post); Fabricate(:post)
+          Fabricate(:post, user: user, topic: topic)
+          Fabricate(:post, user: user, topic: topic)
         end
 
         it 'returns correct data' do
@@ -522,7 +527,7 @@ describe Report do
 
     context "with flags" do
       let(:flagger) { Fabricate(:user) }
-      let(:post) { Fabricate(:post) }
+      let(:post) { Fabricate(:post, user: flagger) }
 
       before do
         freeze_time
@@ -700,7 +705,6 @@ describe Report do
       context "private messages" do
         before do
           Fabricate(:post, user: sam)
-          Fabricate(:topic, user: sam)
           Fabricate(:post, user: jeff)
           Fabricate(:private_message_post, user: jeff)
         end
@@ -761,10 +765,11 @@ describe Report do
 
       before(:each) do
         user = Fabricate(:user)
-        post0 = Fabricate(:post)
-        post1 = Fabricate(:post, topic: Fabricate(:topic, category: c1))
-        post2 = Fabricate(:post)
-        post3 = Fabricate(:post)
+        topic = Fabricate(:topic, user: user)
+        post0 = Fabricate(:post, topic: topic, user: user)
+        post1 = Fabricate(:post, topic: Fabricate(:topic, category: c1, user: user), user: user)
+        post2 = Fabricate(:post, topic: topic, user: user)
+        post3 = Fabricate(:post, topic: topic, user: user)
         PostActionCreator.off_topic(user, post0)
         PostActionCreator.off_topic(user, post1)
         PostActionCreator.off_topic(user, post2)
@@ -794,10 +799,11 @@ describe Report do
       include_examples 'with data x/y'
 
       before(:each) do
-        Fabricate(:topic)
-        Fabricate(:topic, category: c1)
-        Fabricate(:topic)
-        Fabricate(:topic, created_at: 45.days.ago)
+        user = Fabricate(:user)
+        Fabricate(:topic, user: user)
+        Fabricate(:topic, category: c1, user: user)
+        Fabricate(:topic, user: user)
+        Fabricate(:topic, created_at: 45.days.ago, user: user)
       end
 
       context "with category filtering" do
@@ -882,12 +888,13 @@ describe Report do
       include_examples 'with data x/y'
 
       before(:each) do
-        topic = Fabricate(:topic)
-        topic_with_category_id = Fabricate(:topic, category: c1)
-        Fabricate(:post, topic: topic)
-        Fabricate(:post, topic: topic_with_category_id)
-        Fabricate(:post, topic: topic)
-        Fabricate(:post, created_at: 45.days.ago, topic: topic)
+        user = Fabricate(:user)
+        topic = Fabricate(:topic, user: user)
+        topic_with_category_id = Fabricate(:topic, category: c1, user: user)
+        Fabricate(:post, topic: topic, user: user)
+        Fabricate(:post, topic: topic_with_category_id, user: user)
+        Fabricate(:post, topic: topic, user: user)
+        Fabricate(:post, created_at: 45.days.ago, topic: topic, user: user)
       end
 
       context "with category filtering" do
@@ -915,10 +922,11 @@ describe Report do
       include_examples 'with data x/y'
 
       before(:each) do
-        Fabricate(:topic, category: c1)
-        Fabricate(:post, topic: Fabricate(:topic))
-        Fabricate(:topic)
-        Fabricate(:topic, created_at: 45.days.ago)
+        user = Fabricate(:user)
+        Fabricate(:topic, category: c1, user: user)
+        Fabricate(:post, topic: Fabricate(:topic, user: user), user: user)
+        Fabricate(:topic, user: user)
+        Fabricate(:topic, created_at: 45.days.ago, user: user)
       end
 
       context "with category filtering" do
@@ -975,21 +983,23 @@ describe Report do
     let(:joffrey) { Fabricate(:user, username: "joffrey") }
     let(:robin) { Fabricate(:user, username: "robin") }
     let(:moderator) { Fabricate(:moderator) }
+    let(:user) { Fabricate(:user) }
 
     context 'with data' do
       it "it works" do
-        10.times do
-          post_disagreed = Fabricate(:post)
+        topic = Fabricate(:topic, user: user)
+        2.times do
+          post_disagreed = Fabricate(:post, topic: topic, user: user)
           result = PostActionCreator.spam(joffrey, post_disagreed)
           result.reviewable.perform(moderator, :disagree)
         end
 
         3.times do
-          post_disagreed = Fabricate(:post)
+          post_disagreed = Fabricate(:post, topic: topic, user: user)
           result = PostActionCreator.spam(robin, post_disagreed)
           result.reviewable.perform(moderator, :disagree)
         end
-        post_agreed = Fabricate(:post)
+        post_agreed = Fabricate(:post, user: user, topic: topic)
         result = PostActionCreator.off_topic(robin, post_agreed)
         result.reviewable.perform(moderator, :agree_and_keep)
 
@@ -997,9 +1007,9 @@ describe Report do
 
         first = report.data[0]
         expect(first[:username]).to eq("joffrey")
-        expect(first[:score]).to eq(10)
+        expect(first[:score]).to eq(2)
         expect(first[:agreed_flags]).to eq(0)
-        expect(first[:disagreed_flags]).to eq(10)
+        expect(first[:disagreed_flags]).to eq(2)
 
         second = report.data[1]
         expect(second[:username]).to eq("robin")
