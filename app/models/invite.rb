@@ -283,4 +283,5 @@ end
 #  index_invites_on_email_and_invited_by_id  (email,invited_by_id)
 #  index_invites_on_emailed_status           (emailed_status)
 #  index_invites_on_invite_key               (invite_key) UNIQUE
+#  index_invites_on_invited_by_id            (invited_by_id)
 #

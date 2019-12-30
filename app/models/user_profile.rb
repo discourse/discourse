@@ -167,6 +167,7 @@ end
 #  profile_background_upload_id :integer
 #  card_background_upload_id    :integer
 #  granted_title_badge_id       :bigint
+#  featured_topic_id            :integer
 #
 # Indexes
 #
