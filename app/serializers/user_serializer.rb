@@ -255,11 +255,13 @@ class UserSerializer < BasicUserSerializer
   end
 
   def ignored
-    IgnoredUser.where(user_id: scope.user&.id, ignored_user_id: object.id).exists?
+    scope_ignored_user_ids = scope.user&.ignored_user_ids || []
+    scope_ignored_user_ids.include?(object.id)
   end
 
   def muted
-    MutedUser.where(user_id: scope.user&.id, muted_user_id: object.id).exists?
+    scope_muted_user_ids = scope.user&.muted_user_ids || []
+    scope_muted_user_ids.include?(object.id)
   end
 
   def can_mute_user

@@ -83,6 +83,9 @@ class User < ActiveRecord::Base
   has_many :muted_user_records, class_name: 'MutedUser'
   has_many :muted_users, through: :muted_user_records
 
+  has_many :ignored_user_records, class_name: 'IgnoredUser'
+  has_many :ignored_users, through: :ignored_user_records
+
   has_many :api_keys, dependent: :destroy
 
   has_many :push_subscriptions, dependent: :destroy
@@ -468,7 +471,17 @@ class User < ActiveRecord::Base
     @unread_total_notifications = nil
     @unread_pms = nil
     @user_fields = nil
+    @ignored_user_ids = nil
+    @muted_user_ids = nil
     super
+  end
+
+  def ignored_user_ids
+    @ignored_user_ids ||= ignored_users.pluck(:id)
+  end
+
+  def muted_user_ids
+    @muted_user_ids ||= muted_users.pluck(:id)
   end
 
   def unread_notifications_of_type(notification_type)
