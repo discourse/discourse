@@ -126,7 +126,7 @@ export default Mixin.create({
       if (wantsNewWindow(e)) {
         return;
       }
-      const $target = $(e.target);
+      const $target = $(e.currentTarget);
       return this._show($target.text().replace(/^@/, ""), $target);
     });
 
