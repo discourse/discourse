@@ -217,11 +217,14 @@ describe Report do
       context "with #{request_type}" do
         before(:each) do
           freeze_time DateTime.parse('2017-03-01 12:00')
-          ApplicationRequest.create(date: 35.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 35)
-          ApplicationRequest.create(date: 7.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 8)
-          ApplicationRequest.create(date: Time.now, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1)
-          ApplicationRequest.create(date: 1.day.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 2)
-          ApplicationRequest.create(date: 2.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 3)
+          application_requests = [
+            { date: 35.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 35 },
+            { date: 7.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 8 },
+            { date: Time.now, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1 },
+            { date: 1.day.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 2 },
+            { date: 2.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 3 }
+          ]
+          ApplicationRequest.insert_all(application_requests)
         end
 
         context 'returns a report with data' do
@@ -237,7 +240,7 @@ describe Report do
           end
 
           it "returns today's data" do
-            expect(report.data.select { |value| value[:x] == Date.today }).to be_present
+            expect(report.data.find { |value| value[:x] == Date.today }).to be_present
           end
 
           it 'returns total data' do
