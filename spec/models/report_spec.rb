@@ -133,7 +133,6 @@ describe Report do
         expect(report.data.select { |v| v[:x].today? }).to be_present
         expect(report.prev30Days).to eq(2)
       end
-
     end
   end
 
@@ -179,9 +178,12 @@ describe Report do
           if arg == :flag
             user = Fabricate(:user)
             builder = -> (dt) { PostActionCreator.create(user, Fabricate(:post), :spam, created_at: dt) }
+          elsif arg == :signup
+            builder = -> (dt) { Fabricate(:user, created_at: dt) }
           else
-            factories = { signup: :user, email: :email_log }
-            builder = -> (dt) { Fabricate(factories[arg] || arg, created_at: dt) }
+            user = Fabricate(:user)
+            factories = { email: :email_log }
+            builder = -> (dt) { Fabricate(factories[arg] || arg, created_at: dt, user: user) }
           end
 
           [DateTime.now, 1.hour.ago, 1.hour.ago, 1.day.ago, 2.days.ago, 30.days.ago, 35.days.ago].each(&builder)
