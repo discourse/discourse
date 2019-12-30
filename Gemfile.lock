@@ -301,7 +301,7 @@ GEM
     rake-compiler (1.0.8)
       rake
     rb-fsevent (0.10.3)
-    rb-inotify (0.10.0)
+    rb-inotify (0.10.1)
       ffi (~> 1.0)
     rbtrace (0.4.11)
       ffi (>= 1.0.6)
