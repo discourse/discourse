@@ -86,7 +86,7 @@ GEM
     colored2 (3.1.2)
     concurrent-ruby (1.1.5)
     connection_pool (2.2.2)
-    cose (0.9.0)
+    cose (0.10.0)
       cbor (~> 0.5.9)
     cppjieba_rb (0.3.3)
     crack (0.4.3)
