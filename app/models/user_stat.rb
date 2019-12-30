@@ -6,6 +6,7 @@ class UserStat < ActiveRecord::Base
 
   def self.ensure_consistency!(last_seen = 1.hour.ago)
     reset_bounce_scores
+    update_distinct_badge_count
     update_view_counts(last_seen)
     update_first_unread(last_seen)
   end
@@ -124,6 +125,29 @@ class UserStat < ActiveRecord::Base
        WHERE X.user_id = user_stats.user_id AND
              X.c <> posts_read_count
     SQL
+  end
+
+  def self.update_distinct_badge_count(user_id = nil)
+    sql = <<~SQL
+      UPDATE user_stats
+      SET distinct_badge_count = x.distinct_badge_count
+      FROM (
+        SELECT users.id user_id, COUNT(distinct user_badges.badge_id) distinct_badge_count
+        FROM users
+        LEFT JOIN user_badges ON user_badges.user_id = users.id
+                              AND (user_badges.badge_id IN (SELECT id FROM badges WHERE enabled))
+        GROUP BY users.id
+      ) x
+      WHERE user_stats.user_id = x.user_id AND user_stats.distinct_badge_count <> x.distinct_badge_count
+    SQL
+
+    sql = sql + " AND user_stats.user_id = #{user_id.to_i}" if user_id
+
+    DB.exec sql
+  end
+
+  def update_distinct_badge_count
+    self.class.update_distinct_badge_count(self.user_id)
   end
 
   # topic_reply_count is a count of posts in other users' topics
