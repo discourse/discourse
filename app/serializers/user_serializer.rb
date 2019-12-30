@@ -265,11 +265,11 @@ class UserSerializer < BasicUserSerializer
   end
 
   def can_mute_user
-    scope.can_mute_user?(object.id)
+    scope.can_mute_user?(object)
   end
 
   def can_ignore_user
-    scope.can_ignore_user?(object.id)
+    scope.can_ignore_user?(object)
   end
 
   # Needed because 'send_private_message_to_user' will always return false
