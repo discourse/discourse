@@ -380,7 +380,7 @@ GEM
       activesupport (>= 3.1)
     shoulda-matchers (4.1.2)
       activesupport (>= 4.2.0)
-    sidekiq (6.0.3)
+    sidekiq (6.0.4)
       connection_pool (>= 2.2.2)
       rack (>= 2.0.0)
       rack-protection (>= 2.0.0)
