@@ -10,7 +10,9 @@ QUnit.test("user card", async assert => {
   await click("a[data-user-card=eviltrout]:first");
   assert.ok(visible("#user-card"), "card should appear");
   assert.equal(
-    find("#user-card .username").text().trim(),
+    find("#user-card .username")
+      .text()
+      .trim(),
     "eviltrout",
     "user card contains the data"
   );
@@ -25,7 +27,9 @@ QUnit.test("user card", async assert => {
   await click("a[data-user-card=charlie]:first");
   assert.ok(visible("#user-card"), "card should appear");
   assert.equal(
-    find("#user-card .username").text().trim(),
+    find("#user-card .username")
+      .text()
+      .trim(),
     "charlie",
     "user card contains the data"
   );
@@ -43,7 +47,9 @@ QUnit.test("user card", async assert => {
   await click("a.mention .icon");
   assert.ok(visible("#user-card"), "card should appear");
   assert.equal(
-    find("#user-card .username").text().trim(),
+    find("#user-card .username")
+      .text()
+      .trim(),
     "eviltrout",
     "user card contains the data"
   );
