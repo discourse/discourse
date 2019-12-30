@@ -593,6 +593,19 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe '#deactivate' do
+    fab!(:reg_user) { Fabricate(:active_user) }
+
+    it "returns success" do
+      put "/admin/users/#{reg_user.id}/deactivate.json"
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json['success']).to eq("OK")
+      reg_user.reload
+      expect(reg_user.active).to eq(false)
+    end
+  end
+
   describe '#log_out' do
     fab!(:reg_user) { Fabricate(:user) }
 
