@@ -190,54 +190,21 @@ module Onebox
       src
     end
 
-    RFC_3986_URI_REGEX ||= /^(?<scheme>([^:\/?#]+):)?(?<authority>\/\/([^\/?#]*))?(?<path>[^?#]*)(\?(?<query>[^#]*))?(#(?<fragment>.*))?$/
-    DOUBLE_ESCAPED_REGEXP ||= /%25([0-9a-f]{2})/i
-
-    # Percent-encodes a URI query parameter per RFC3986 - https://tools.ietf.org/html/rfc3986
-    def self.uri_query_encode(query_string)
-      return "" unless query_string
-
-      # query can encode space to %20 OR +
-      # + MUST be encoded as %2B
-      # in RFC3968 both query and fragment are defined as:
-      # = *( pchar / "/" / "?" )
-      # CGI.escape turns space into + which is the most backward compatible
-      # however it doesn't roundtrip through URI.unescape which prefers %20
-      CGI.escape(query_string).gsub('%25', '%').gsub('+', '%20')
-    end
-
     # Percent-encodes a URI string per RFC3986 - https://tools.ietf.org/html/rfc3986
     def self.uri_encode(url)
       return "" unless url
 
-      # parse uri into named matches, then reassemble properly encoded
-      parts = url.match(RFC_3986_URI_REGEX)
+      uri = Addressable::URI.parse(url)
 
-      encoded = ""
-      encoded += parts[:scheme] unless parts[:scheme].nil?
-      encoded += parts[:authority] unless parts[:authority].nil?
+      encoded_uri = Addressable::URI.new(
+        scheme: Addressable::URI.encode_component(uri.scheme, Addressable::URI::CharacterClasses::SCHEME),
+        authority: Addressable::URI.encode_component(uri.authority, Addressable::URI::CharacterClasses::AUTHORITY),
+        path: Addressable::URI.encode_component(uri.path, Addressable::URI::CharacterClasses::PATH + "\\%"),
+        query: Addressable::URI.encode_component(uri.query, "a-zA-Z0-9\\-\\.\\_\\~\\$\\&\\*\\,\\=\\:\\@\\?\\%"),
+        fragment: Addressable::URI.encode_component(uri.fragment, "a-zA-Z0-9\\-\\.\\_\\~\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=\\:\\/\\?\\%")
+      )
 
-      # path requires space to be encoded as %20 (NEVER +)
-      # + should be left unencoded
-      encoded += Addressable::URI.encode(parts[:path]) unless parts[:path].nil?
-      encoded.gsub!(DOUBLE_ESCAPED_REGEXP, '%\1')
-
-      # each query parameter
-      if !parts[:query].nil?
-        query_string = parts[:query].split('&').map do |pair|
-          # can optionally be separated by an =
-          pair.split('=').map do |v|
-            uri_query_encode(v)
-          end.join('=')
-        end.join('&')
-        encoded += '?' + query_string
-      end
-
-      unless parts[:fragment].nil?
-        encoded += '#' + uri_query_encode(parts[:fragment])&.gsub('%21%2F', '!/')
-      end
-
-      encoded
+      encoded_uri.to_s
     end
 
     def self.uri_unencode(url)

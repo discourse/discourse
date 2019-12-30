@@ -93,5 +93,6 @@ RSpec.describe Onebox::Helpers do
 
     it { expect(described_class.uri_encode("https://example.com/random%2Bpath?q=random%2Bquery")).to eq("https://example.com/random%2Bpath?q=random%2Bquery") }
     it { expect(described_class.uri_encode("https://glitch.com/edit/#!/equinox-watch")).to eq("https://glitch.com/edit/#!/equinox-watch") }
+    it { expect(described_class.uri_encode("https://gitpod.io/#https://github.com/eclipse-theia/theia")).to eq("https://gitpod.io/#https://github.com/eclipse-theia/theia") }
   end
 end
