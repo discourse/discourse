@@ -301,7 +301,7 @@ class Admin::UsersController < Admin::AdminController
     @user.deactivate(current_user)
     StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'), params.slice(:context))
     refresh_browser @user
-    render body: nil
+    render json: success_json
   end
 
   def silence
