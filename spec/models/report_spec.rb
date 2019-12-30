@@ -191,15 +191,9 @@ describe Report do
           [DateTime.now, 1.hour.ago, 1.hour.ago, 1.day.ago, 2.days.ago, 30.days.ago, 35.days.ago].each(&builder)
         end
 
-        it "returns today's data" do
+        it "returns today's, total and previous 30 day's data" do
           expect(report.data.select { |v| v[:x].today? }).to be_present
-        end
-
-        it 'returns total data' do
           expect(report.total).to eq 7
-        end
-
-        it "returns previous 30 day's data" do
           expect(report.prev30Days).to be_present
         end
       end
@@ -229,29 +223,24 @@ describe Report do
           ApplicationRequest.insert_all(application_requests)
         end
 
-        context 'returns a report with data' do
-          it "returns expected number of recoords" do
-            expect(report.data.count).to eq 4
-          end
+        it 'returns a report with data' do
+          # expected number of recoords
+          expect(report.data.count).to eq 4
 
-          it 'sorts the data from oldest to latest dates' do
-            expect(report.data[0][:y]).to eq(8) # 7 days ago
-            expect(report.data[1][:y]).to eq(3) # 2 days ago
-            expect(report.data[2][:y]).to eq(2) # 1 day ago
-            expect(report.data[3][:y]).to eq(1) # today
-          end
+          # sorts the data from oldest to latest dates
+          expect(report.data[0][:y]).to eq(8) # 7 days ago
+          expect(report.data[1][:y]).to eq(3) # 2 days ago
+          expect(report.data[2][:y]).to eq(2) # 1 day ago
+          expect(report.data[3][:y]).to eq(1) # today
 
-          it "returns today's data" do
-            expect(report.data.find { |value| value[:x] == Date.today }).to be_present
-          end
+          # today's data
+          expect(report.data.find { |value| value[:x] == Date.today }).to be_present
 
-          it 'returns total data' do
-            expect(report.total).to eq 49
-          end
+          # total data
+          expect(report.total).to eq 49
 
-          it 'returns previous 30 days of data' do
-            expect(report.prev30Days).to eq 35
-          end
+          #previous 30 days of data
+          expect(report.prev30Days).to eq 35
         end
       end
     end
