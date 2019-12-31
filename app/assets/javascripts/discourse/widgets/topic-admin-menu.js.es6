@@ -308,7 +308,7 @@ export default createWidget("topic-admin-menu", {
           "div",
           this.attach("button", {
             action: "clickOutside",
-            icon: "close",
+            icon: "times",
             className: "close-button"
           })
         )
