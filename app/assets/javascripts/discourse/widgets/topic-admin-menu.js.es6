@@ -74,9 +74,8 @@ createWidget("topic-admin-menu-button", {
     this.state.expanded = false;
     this.state.position = null;
 
-    if (this.site.mobileView) {
-      $("#topic-progress-wrapper").css("z-index", "");
-      $(".header-cloak").hide();
+    if (this.site.mobileView && !this.attrs.rightSide) {
+      $(".header-cloak").css("display", "");
     }
   },
 
@@ -104,9 +103,8 @@ createWidget("topic-admin-menu-button", {
       position.left += $button.width() - 203;
     }
 
-    if (this.site.mobileView) {
-      $("#topic-progress-wrapper").css("z-index", "auto");
-      $(".header-cloak").show();
+    if (this.site.mobileView && !this.attrs.rightSide) {
+      $(".header-cloak").css("display", "block");
     }
 
     this.state.position = position;
