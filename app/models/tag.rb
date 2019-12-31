@@ -192,6 +192,7 @@ end
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  pm_topic_count :integer          default(0), not null
+#  target_tag_id  :integer
 #
 # Indexes
 #

@@ -15,8 +15,9 @@ class ContentSecurityPolicy
       ContentSecurityPolicy.base_url = request.host_with_port if Rails.env.development?
 
       theme_ids = env[:resolved_theme_ids]
-      headers['Content-Security-Policy'] = policy(theme_ids) if SiteSetting.content_security_policy
-      headers['Content-Security-Policy-Report-Only'] = policy(theme_ids) if SiteSetting.content_security_policy_report_only
+
+      headers['Content-Security-Policy'] = policy(theme_ids, path_info: env["PATH_INFO"]) if SiteSetting.content_security_policy
+      headers['Content-Security-Policy-Report-Only'] = policy(theme_ids, path_info: env["PATH_INFO"]) if SiteSetting.content_security_policy_report_only
 
       response
     end

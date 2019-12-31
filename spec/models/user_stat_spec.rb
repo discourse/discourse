@@ -130,4 +130,56 @@ describe UserStat do
     end
 
   end
+
+  describe 'update_distinct_badge_count' do
+    fab!(:user) { Fabricate(:user) }
+    let(:stat) { user.user_stat }
+    fab!(:badge1) { Fabricate(:badge) }
+    fab!(:badge2) { Fabricate(:badge) }
+
+    it "updates counts correctly" do
+      expect(stat.reload.distinct_badge_count).to eq(0)
+      BadgeGranter.grant(badge1, user)
+      expect(stat.reload.distinct_badge_count).to eq(1)
+      BadgeGranter.grant(badge1, user)
+      expect(stat.reload.distinct_badge_count).to eq(1)
+      BadgeGranter.grant(badge2, user)
+      expect(stat.reload.distinct_badge_count).to eq(2)
+      user.reload.user_badges.destroy_all
+      expect(stat.reload.distinct_badge_count).to eq(0)
+    end
+
+    it "can update counts for all users simultaneously" do
+      user2 = Fabricate(:user)
+      stat2 = user2.user_stat
+
+      BadgeGranter.grant(badge1, user)
+      BadgeGranter.grant(badge1, user)
+      BadgeGranter.grant(badge2, user)
+
+      BadgeGranter.grant(badge1, user2)
+
+      # Set some clearly incorrect values
+      stat.update(distinct_badge_count: 999)
+      stat2.update(distinct_badge_count: 999)
+
+      UserStat.ensure_consistency!
+
+      expect(stat.reload.distinct_badge_count).to eq(2)
+      expect(stat2.reload.distinct_badge_count).to eq(1)
+    end
+
+    it "ignores disabled badges" do
+      BadgeGranter.grant(badge1, user)
+      BadgeGranter.grant(badge2, user)
+      expect(stat.reload.distinct_badge_count).to eq(2)
+
+      badge2.update(enabled: false)
+      expect(stat.reload.distinct_badge_count).to eq(1)
+
+      badge2.update(enabled: true)
+      expect(stat.reload.distinct_badge_count).to eq(2)
+    end
+
+  end
 end

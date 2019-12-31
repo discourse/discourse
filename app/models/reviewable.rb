@@ -604,7 +604,7 @@ protected
     return partial_result if status == :all
 
     if status == :reviewed
-      partial_result.where(status: [statuses[:approved], statuses[:rejected], statuses[:ignored]])
+      partial_result.where(status: statuses.except(:pending).values)
     else
       partial_result.where(status: statuses[status])
     end
