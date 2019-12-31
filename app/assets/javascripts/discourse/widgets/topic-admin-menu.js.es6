@@ -73,6 +73,11 @@ createWidget("topic-admin-menu-button", {
   hideAdminMenu() {
     this.state.expanded = false;
     this.state.position = null;
+
+    if (this.site.mobileView) {
+      $("#topic-progress-wrapper").css("z-index", "");
+      $(".header-cloak").hide();
+    }
   },
 
   showAdminMenu(e) {
@@ -98,6 +103,12 @@ createWidget("topic-admin-menu-button", {
     if (this.attrs.fixed) {
       position.left += $button.width() - 203;
     }
+
+    if (this.site.mobileView) {
+      $("#topic-progress-wrapper").css("z-index", "auto");
+      $(".header-cloak").show();
+    }
+
     this.state.position = position;
   },
 
