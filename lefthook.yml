@@ -9,6 +9,8 @@ pre-commit:
       run: yarn eslint --ext .es6 -f compact {staged_files}
     yaml-syntax:
       glob: "*.{yaml,yml}"
+      # database.yml is an erb file not a yaml file
+      exclude: "database.yml"
       run: bundle exec yaml-lint {staged_files}
 
 commands: &commands
