@@ -3,25 +3,18 @@
   background-color: $danger-low;
   color: $primary;
   position: relative;
-  display: flex;
 
   .close {
     font-size: $font-up-3;
-    align-self: flex-start;
-    margin-left: auto;
+    position: absolute;
+    top: 8px;
+    right: 8px;
 
     .d-icon {
       color: $primary-low-mid;
     }
   }
 
-  .text {
-    flex: 1 1 auto;
-
-    & + .close {
-      margin-left: 0.5em;
-    }
-  }
 
   &.alert-success {
     background-color: $success-low;
