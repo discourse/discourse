@@ -343,7 +343,7 @@ GEM
       rspec-expectations (~> 3.8)
       rspec-mocks (~> 3.8)
       rspec-support (~> 3.8)
-    rspec-support (3.9.0)
+    rspec-support (3.9.2)
     rtlit (0.0.5)
     rubocop (0.78.0)
       jaro_winkler (~> 1.5.1)
