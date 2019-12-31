@@ -14,6 +14,7 @@ module Webauthn
 
   class SecurityKeyError < StandardError; end
 
+  class InvalidArgumentError < SecurityKeyError; end
   class InvalidOriginError < SecurityKeyError; end
   class InvalidRelyingPartyIdError < SecurityKeyError; end
   class UserVerificationError < SecurityKeyError; end

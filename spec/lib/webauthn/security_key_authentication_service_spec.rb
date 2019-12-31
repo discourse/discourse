@@ -62,6 +62,13 @@ describe Webauthn::SecurityKeyAuthenticationService do
     expect(security_key.reload.last_used).not_to eq(nil)
   end
 
+  context "when the credential params are nil" do
+    let(:params) { nil }
+    it "raises a Webauthn::InvalidArgumentError error" do
+      expect { subject.authenticate_security_key }.to raise_error(Webauthn::InvalidArgumentError)
+    end
+  end
+
   context 'when the credential ID does not match any user security key in the database' do
     let(:credential_id) { 'badid' }
 

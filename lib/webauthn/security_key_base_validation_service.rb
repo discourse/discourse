@@ -6,6 +6,10 @@ module Webauthn
       @current_user = current_user
       @params = params
       @challenge_params = challenge_params
+
+      raise Webauthn::InvalidArgumentError if [
+        @params, @challenge_params, @current_user
+      ].any?(&:blank?)
     end
 
     def validate_webauthn_type(type_to_check)
