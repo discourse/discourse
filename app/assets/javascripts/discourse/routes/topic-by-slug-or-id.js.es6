@@ -1,5 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import { default as Topic, ID_CONSTRAINT } from "discourse/models/topic";
+import Topic, { ID_CONSTRAINT } from "discourse/models/topic";
 import DiscourseURL from "discourse/lib/url";
 
 export default DiscourseRoute.extend({

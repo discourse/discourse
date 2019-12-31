@@ -1,4 +1,4 @@
-import { default as discourseComputed, observes } from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse/lib/computed";

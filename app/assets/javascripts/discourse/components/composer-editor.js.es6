@@ -5,8 +5,7 @@ import { scheduleOnce } from "@ember/runloop";
 import { later } from "@ember/runloop";
 import Component from "@ember/component";
 import userSearch from "discourse/lib/user-search";
-import {
-  default as discourseComputed,
+import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";

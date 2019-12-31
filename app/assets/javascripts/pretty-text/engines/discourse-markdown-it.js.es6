@@ -1,4 +1,4 @@
-import { default as WhiteLister } from "pretty-text/white-lister";
+import WhiteLister from "pretty-text/white-lister";
 import { sanitize } from "pretty-text/sanitizer";
 import guid from "pretty-text/guid";
 

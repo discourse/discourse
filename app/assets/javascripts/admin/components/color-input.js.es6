@@ -1,6 +1,6 @@
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
-import { default as loadScript, loadCSS } from "discourse/lib/load-script";
+import loadScript, { loadCSS } from "discourse/lib/load-script";
 import { observes } from "discourse-common/utils/decorators";
 
 /**

@@ -1,7 +1,7 @@
 import { alias } from "@ember/object/computed";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["group-dropdown"],

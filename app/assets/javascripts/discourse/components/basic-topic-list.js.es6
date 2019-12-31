@@ -1,4 +1,4 @@
-import { default as discourseComputed, observes } from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { alias, not } from "@ember/object/computed";
 import Component from "@ember/component";
 

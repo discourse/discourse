@@ -1,6 +1,6 @@
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 
 export default Component.extend({

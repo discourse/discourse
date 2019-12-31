@@ -1,10 +1,7 @@
 import { equal, gte, none, alias } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Controller from "@ember/controller";
-import {
-  on,
-  default as discourseComputed
-} from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 const ButtonBackBright = {
     classes: "btn-primary",
