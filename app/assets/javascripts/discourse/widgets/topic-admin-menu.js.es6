@@ -45,9 +45,8 @@ createWidget("topic-admin-menu-button", {
 
     // We don't show the button when expanded on the right side on desktop
     if (
-      (menu.attrs.actionButtons.length &&
-        !(attrs.rightSide && state.expanded)) ||
-      this.site.mobileView
+      menu.attrs.actionButtons.length &&
+      (!(attrs.rightSide && state.expanded) || this.site.mobileView)
     ) {
       result.push(
         this.attach("button", {
