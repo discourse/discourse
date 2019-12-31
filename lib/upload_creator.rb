@@ -63,22 +63,31 @@ class UploadCreator
         image_type = @image_info.type.to_s
       end
 
-      # compute the sha of the file
+      # compute the sha of the file and generate a unique access_hash
+      # which is only used for secure uploads
       sha1 = Upload.generate_digest(@file)
+      access_hash = SecureRandom.hex(20) if SiteSetting.secure_media
 
-      # do we already have that upload?
-      @upload = Upload.find_by(sha1: sha1)
+      # we do not check for duplicate uploads if secure media is
+      # enabled because we use a unique access hash to differentiate
+      # between uploads instead of the sha1, and to get around various
+      # access/permission issues for uploads
+      if !SiteSetting.secure_media
 
-      # make sure the previous upload has not failed
-      if @upload && @upload.url.blank?
-        @upload.destroy
-        @upload = nil
-      end
+        # do we already have that upload?
+        @upload = Upload.find_by(sha1: sha1)
 
-      # return the previous upload if any
-      if @upload
-        UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
-        return @upload
+        # make sure the previous upload has not failed
+        if @upload && @upload.url.blank?
+          @upload.destroy
+          @upload = nil
+        end
+
+        # return the previous upload if any
+        if @upload
+          UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
+          return @upload
+        end
       end
 
       fixed_original_filename = nil
@@ -102,6 +111,7 @@ class UploadCreator
       @upload.original_filename = fixed_original_filename || @filename
       @upload.filesize          = filesize
       @upload.sha1              = sha1
+      @upload.access_hash       = access_hash
       @upload.url               = ""
       @upload.origin            = @opts[:origin][0...1000] if @opts[:origin]
       @upload.extension         = image_type || File.extname(@filename)[1..10]
@@ -117,12 +127,16 @@ class UploadCreator
       @upload.for_export          = true if @opts[:for_export]
       @upload.for_site_setting    = true if @opts[:for_site_setting]
       @upload.for_gravatar        = true if @opts[:for_gravatar]
+      uploading_in_public_context = @upload.for_theme || @upload.for_site_setting || @opts[:type] == "avatar"
 
-      if !FileHelper.is_supported_media?(@filename) &&
-        !@upload.for_theme &&
-        !@upload.for_site_setting &&
-        SiteSetting.prevent_anons_from_downloading_files
-        @upload.secure = true
+      # determine whether upload should be secure when first created
+      if !uploading_in_public_context
+        supported_media = FileHelper.is_supported_media?(@filename)
+        secure_attachment = !supported_media && SiteSetting.prevent_anons_from_downloading_files
+        secure_media = SiteSetting.secure_media? && supported_media && \
+          (@opts[:type] == "composer" || @upload.for_private_message || SiteSetting.login_required?)
+
+        @upload.secure = secure_attachment || secure_media
       end
 
       return @upload unless @upload.save
@@ -145,6 +159,21 @@ class UploadCreator
 
       if @upload.errors.empty?
         UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
+
+        if @upload.secure && !uploading_in_public_context
+          secure_reason = if secure_attachment
+            "it is a secure attachment, prevent_anons_from_downloading_files active"
+          elsif secure_media
+            if @opts[:type] == "composer"
+              "it is secure media uploaded in the composer"
+            elsif @upload.for_private_message
+              "it is secure media uploaded in a private message"
+            elsif SiteSetting.login_required?
+              "it is secure media, login_required active"
+            end
+          end
+          Rails.logger.info("marked upload id #{@upload.id} as secure because #{secure_reason}")
+        end
       end
 
       @upload

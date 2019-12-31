@@ -30,6 +30,11 @@ Fabricator(:video_upload, from: :upload) do
   extension "mp4"
 end
 
+Fabricator(:secure_upload, from: :upload) do
+  secure { true }
+  access_hash { SecureRandom.hex(20) }
+end
+
 Fabricator(:upload_s3, from: :upload) do
   url do |attrs|
     sequence(:url) do |n|
