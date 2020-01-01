@@ -131,4 +131,16 @@ describe Webauthn::SecurityKeyAuthenticationService do
       )
     end
   end
+
+  context 'when the COSE algorithm used cannot be found' do
+    before do
+      COSE::Algorithm.expects(:find).returns(nil)
+    end
+
+    it 'raises a UnknownCOSEAlgorithmError' do
+      expect { subject.authenticate_security_key }.to raise_error(
+        Webauthn::UnknownCOSEAlgorithmError, I18n.t('webauthn.validation.unknown_cose_algorithm_error')
+      )
+    end
+  end
 end
