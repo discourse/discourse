@@ -25,10 +25,10 @@ en:
     tl2_promotion_message:
       subject_template: "Congratulations on your trust level promotion!"
       text_body_template: |
-        Now that you’ve been promoted, it’s time to learn about some advanced features! 
+        Now that you’ve been promoted, it’s time to learn about some advanced features!
 
-        Reply to this message with `@discobot start advanced tutorial` to find out more about what you can do. 
- 
+        Reply to this message with `@%{discobot_username} %{reset_trigger}` to find out more about what you can do.
+
         We invite you to keep getting involved – we enjoy having you around.
 
     timeout:

@@ -31,7 +31,7 @@ es:
       text_body_template: |
         ¡Ahora que has sido promovido, es tiempo de que aprendas sobre las características avanzadas!
 
-        Responde a este mensaje con `@discobot start advanced tutorial` para saber más sobre lo que puedes hacer.
+        Responde a este mensaje con `@%{discobot_username} %{reset_trigger}` para saber más sobre lo que puedes hacer.
 
         Te invitamos a que sigas participando  – disfrutamos tenerte cerca.
     timeout:

@@ -31,7 +31,7 @@ pl_PL:
       text_body_template: |
         Jako że wszedłeś na wyższy poziom zaufania, czas nauczyć się czegoś o zaawansowanych funkcjach!
 
-        Odpisz na tę wiadomość tekstem "@discobot start advanced tutorial", aby dowiedzieć się, co możesz zrobić.
+        Odpisz na tę wiadomość tekstem `@%{discobot_username} %{reset_trigger}`, aby dowiedzieć się, co możesz zrobić.
 
         Zapraszamy do bycia zaangażowanym - cieszymy się, że jesteś z nami.
     timeout:
