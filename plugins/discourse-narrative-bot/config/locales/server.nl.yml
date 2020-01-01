@@ -31,7 +31,7 @@ nl:
       text_body_template: |
         Nu u bent gepromoveerd, is het tijd voor wat geavanceerde functies!
 
-        Beantwoord dit bericht met `@discobot start advanced tutorial` om meer te lezen over wat u kunt doen.
+        Beantwoord dit bericht met `@%{discobot_username} %{reset_trigger}` om meer te lezen over wat u kunt doen.
 
         U bent van harte uitgenodigd om mee te blijven werken – we genieten van uw aanwezigheid.
     dice:
