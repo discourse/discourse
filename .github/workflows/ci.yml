@@ -10,14 +10,14 @@ on:
     
 jobs:
   build:
-    name: "${{ matrix.target }}-${{ matrix.build_types }}"
+    name: "${{ matrix.target }}-${{ matrix.build_type }}"
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
 
     env:
       DISCOURSE_HOSTNAME: www.example.com
       RUBY_GLOBAL_METHOD_CACHE_SIZE: 131072
-      BUILD_TYPE: ${{ matrix.build_types }}
+      BUILD_TYPE: ${{ matrix.build_type }}
       TARGET: ${{ matrix.target }}
       RAILS_ENV: test
       PGHOST: localhost
@@ -28,7 +28,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_types: [ 'BACKEND', 'FRONTEND', 'LINT' ]
+        build_type: [ 'BACKEND', 'FRONTEND', 'LINT' ]
         target: [ 'PLUGINS', 'CORE' ]
         os: [ ubuntu-latest ]
         ruby: [ '2.6.3' ]
