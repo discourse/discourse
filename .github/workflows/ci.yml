@@ -36,7 +36,7 @@ jobs:
         redis: [ '4.x' ]
         exclude:
           - build_type: 'LINT'
-          - target: 'PLUGINS'
+            target: 'PLUGINS'
 
     services:
       postgres:
