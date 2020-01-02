@@ -32,7 +32,8 @@ end
 
 Fabricator(:secure_upload, from: :upload) do
   secure { true }
-  access_hash { SecureRandom.hex(20) }
+  sha1 { SecureRandom.hex(20) }
+  original_sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest(n.to_s) } }
 end
 
 Fabricator(:upload_s3, from: :upload) do

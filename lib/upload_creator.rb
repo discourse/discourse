@@ -63,10 +63,10 @@ class UploadCreator
         image_type = @image_info.type.to_s
       end
 
-      # compute the sha of the file and generate a unique access_hash
+      # compute the sha of the file and generate a unique hash
       # which is only used for secure uploads
       sha1 = Upload.generate_digest(@file)
-      access_hash = SecureRandom.hex(20) if SiteSetting.secure_media
+      unique_hash = SecureRandom.hex(20) if SiteSetting.secure_media
 
       # we do not check for duplicate uploads if secure media is
       # enabled because we use a unique access hash to differentiate
@@ -110,8 +110,8 @@ class UploadCreator
       @upload.user_id           = user_id
       @upload.original_filename = fixed_original_filename || @filename
       @upload.filesize          = filesize
-      @upload.sha1              = sha1
-      @upload.access_hash       = access_hash
+      @upload.sha1              = SiteSetting.secure_media? ? unique_hash : sha1
+      @upload.original_sha1     = SiteSetting.secure_media? ? sha1 : nil
       @upload.url               = ""
       @upload.origin            = @opts[:origin][0...1000] if @opts[:origin]
       @upload.extension         = image_type || File.extname(@filename)[1..10]

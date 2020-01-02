@@ -247,8 +247,8 @@ RSpec.describe UploadCreator do
         expect(result).to eq(existing_upload)
       end
 
-      it "does not set an access_hash normally" do
-        expect(result.access_hash).to eq(nil)
+      it "does not set an original_sha1 normally" do
+        expect(result.original_sha1).to eq(nil)
       end
 
       it "creates a userupload record" do
@@ -291,8 +291,8 @@ RSpec.describe UploadCreator do
           SiteSetting.secure_media = true
         end
 
-        it "sets an access_hash on the upload created" do
-          expect(result.access_hash).not_to eq(nil)
+        it "sets an original_sha1 on the upload created because the sha1 column is securerandom in this case" do
+          expect(result.original_sha1).not_to eq(nil)
         end
 
         context "when uploading in a public context (theme, site setting, avatar)" do

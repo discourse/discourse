@@ -389,39 +389,4 @@ describe Upload do
       expect(upload2.reload.extension).to eq("png")
     end
   end
-
-  describe "#unique_hash" do
-    let!(:upload) { Fabricate(:upload) }
-
-    it "returns the sha1" do
-      expect(upload.unique_hash).to eq(upload.sha1)
-    end
-
-    context "when the access_hash is present, because of secure media" do
-      let(:access_hash) { SecureRandom.hex(20) }
-      before do
-        upload.update(access_hash: access_hash)
-      end
-
-      it "returns the access_hash" do
-        expect(upload.unique_hash).to eq(upload.access_hash)
-      end
-    end
-  end
-
-  describe "#find_by_unique_hash" do
-    let!(:upload) { Fabricate(:upload, access_hash: SecureRandom.hex(20)) }
-
-    it "finds an upload by the sha1" do
-      expect(Upload.find_by_unique_hash(upload.sha1)).to eq(upload)
-    end
-
-    it "finds an upload by the access_hash" do
-      expect(Upload.find_by_unique_hash(upload.access_hash)).to eq(upload)
-    end
-
-    it "returns nil when no uploads are found" do
-      expect(Upload.find_by_unique_hash("badhash123")).to eq(nil)
-    end
-  end
 end

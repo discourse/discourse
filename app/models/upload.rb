@@ -39,24 +39,6 @@ class Upload < ActiveRecord::Base
 
   scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
 
-  # access_hash is only present when the upload is secure,
-  # because we generate a unique random hash instead of the
-  # sha1 to avoid upload collisions, because we allow duplicate
-  # uploads when secure media is enabled
-  def unique_hash
-    self.access_hash || self.sha1
-  end
-
-  # sometimes e.g. from a URL we don't know whether we have
-  # the sha1 or the access_hash, and the two are extremely
-  # unlikely to ever collide
-  def self.find_by_unique_hash(hash)
-    Upload.where(<<-SQL, hash: hash).first
-      (sha1 = :hash AND sha1 IS NOT NULL) OR
-      (access_hash = :hash AND access_hash IS NOT NULL)
-    SQL
-  end
-
   def to_s
     self.url
   end
@@ -429,15 +411,15 @@ end
 #  etag                   :string
 #  secure                 :boolean          default(FALSE), not null
 #  access_control_post_id :bigint
-#  access_hash            :string
+#  original_sha1          :string
 #
 # Indexes
 #
 #  index_uploads_on_access_control_post_id  (access_control_post_id)
-#  index_uploads_on_access_hash             (access_hash)
 #  index_uploads_on_etag                    (etag)
 #  index_uploads_on_extension               (lower((extension)::text))
 #  index_uploads_on_id_and_url              (id,url)
+#  index_uploads_on_original_sha1           (original_sha1)
 #  index_uploads_on_sha1                    (sha1) UNIQUE
 #  index_uploads_on_url                     (url)
 #  index_uploads_on_user_id                 (user_id)
