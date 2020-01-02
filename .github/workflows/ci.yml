@@ -34,6 +34,9 @@ jobs:
         ruby: [ '2.6.3' ]
         postgres: [ '10' ]
         redis: [ '4.x' ]
+        exclude:
+          - build_type: 'LINT'
+          - target: 'PLUGINS'
 
     services:
       postgres:
