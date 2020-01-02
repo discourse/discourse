@@ -1118,7 +1118,7 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
 
     if params[:notification_level] == "ignore"
-      guardian.ensure_can_ignore_user!(user.id)
+      guardian.ensure_can_ignore_user!(user)
       MutedUser.where(user: current_user, muted_user: user).delete_all
       ignored_user = IgnoredUser.find_by(user: current_user, ignored_user: user)
       if ignored_user.present?
@@ -1127,7 +1127,7 @@ class UsersController < ApplicationController
         IgnoredUser.create!(user: current_user, ignored_user: user, expiring_at: Time.parse(params[:expiring_at]))
       end
     elsif params[:notification_level] == "mute"
-      guardian.ensure_can_mute_user!(user.id)
+      guardian.ensure_can_mute_user!(user)
       IgnoredUser.where(user: current_user, ignored_user: user).delete_all
       MutedUser.find_or_create_by!(user: current_user, muted_user: user)
     elsif params[:notification_level] == "normal"
