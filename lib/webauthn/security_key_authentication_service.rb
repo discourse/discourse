@@ -64,7 +64,14 @@ module Webauthn
 
       # 17. Using credentialPublicKey, verify that sig is a valid signature over the binary concatenation of authData and hash.
       cose_key = COSE::Key.deserialize(Base64.decode64(security_key.public_key))
-      if !cose_key.to_pkey.verify(COSE::Algorithm.find(cose_key.alg).hash_function, signature, auth_data + client_data_hash)
+      cose_algorithm = COSE::Algorithm.find(cose_key.alg)
+
+      if cose_algorithm.blank?
+        Rails.logger.error("Unknown COSE algorithm encountered. alg: #{cose_key.alg}. user_id: #{@current_user.id}. params: #{@params.inspect}")
+        raise(UnknownCOSEAlgorithmError, I18n.t('webauthn.validation.unknown_cose_algorithm_error'))
+      end
+
+      if !cose_key.to_pkey.verify(cose_algorithm.hash_function, signature, auth_data + client_data_hash)
         raise(PublicKeyError, I18n.t('webauthn.validation.public_key_error'))
       end
 
