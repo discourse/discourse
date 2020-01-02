@@ -47,12 +47,12 @@ Discourse::Application.configure do
 
   config.eager_load = false
 
-  unless ENV['RAILS_ENABLE_TEST_LOG']
-    config.logger = Logger.new(nil)
-    config.log_level = :fatal
-  else
+  if ENV['RAILS_ENABLE_TEST_LOG']
     config.logger = Logger.new(STDOUT)
     config.log_level = ENV['RAILS_TEST_LOG_LEVEL'].present? ? ENV['RAILS_TEST_LOG_LEVEL'].to_sym : :info
+  else
+    config.logger = Logger.new(nil)
+    config.log_level = :fatal
   end
 
   if defined? RspecErrorTracker
