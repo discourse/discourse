@@ -62,7 +62,7 @@ class ReviewableScore < ActiveRecord::Base
   #   if > 5 flags => (agreed flags / total flags) * 5.0
   def self.user_accuracy_bonus(user)
     user_stat = user&.user_stat
-    return 0.0 if user_stat.blank?
+    return 0.0 if user_stat.blank? || user.bot?
 
     calc_user_accuracy_bonus(user_stat.flags_agreed, user_stat.flags_disagreed)
   end
