@@ -26,4 +26,5 @@ module Webauthn
   class NotFoundError < SecurityKeyError; end
   class OwnershipError < SecurityKeyError; end
   class PublicKeyError < SecurityKeyError; end
+  class UnknownCOSEAlgorithmError < SecurityKeyError; end
 end

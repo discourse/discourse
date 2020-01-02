@@ -39,6 +39,18 @@
   @include breakpoint(mobile-extra-large) {
     width: 100%;
     padding: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 1000;
+
+    @keyframes slideUp {
+      0% {
+        transform: translateY(100%);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    animation: slideUp 0.3s;
 
     .header {
       padding: 10px 0 0 10px;

@@ -943,6 +943,7 @@ en:
       public_key_error: "The public key verification for the credential failed."
       ownership_error: "The security key is not owned by the user."
       not_found_error: "A security key with the provided credential ID could not be found."
+      unknown_cose_algorithm_error: "The algorithm used for the security key is not recognized."
 
   topic_flag_types:
     spam:

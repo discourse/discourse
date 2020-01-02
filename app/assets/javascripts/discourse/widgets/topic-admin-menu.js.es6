@@ -45,9 +45,8 @@ createWidget("topic-admin-menu-button", {
 
     // We don't show the button when expanded on the right side on desktop
     if (
-      (menu.attrs.actionButtons.length &&
-        !(attrs.rightSide && state.expanded)) ||
-      this.site.mobileView
+      menu.attrs.actionButtons.length &&
+      (!(attrs.rightSide && state.expanded) || this.site.mobileView)
     ) {
       result.push(
         this.attach("button", {
@@ -73,6 +72,10 @@ createWidget("topic-admin-menu-button", {
   hideAdminMenu() {
     this.state.expanded = false;
     this.state.position = null;
+
+    if (this.site.mobileView && !this.attrs.rightSide) {
+      $(".header-cloak").css("display", "");
+    }
   },
 
   showAdminMenu(e) {
@@ -98,6 +101,11 @@ createWidget("topic-admin-menu-button", {
     if (this.attrs.fixed) {
       position.left += $button.width() - 203;
     }
+
+    if (this.site.mobileView && !this.attrs.rightSide) {
+      $(".header-cloak").css("display", "block");
+    }
+
     this.state.position = position;
   },
 
@@ -299,7 +307,7 @@ export default createWidget("topic-admin-menu", {
           "div",
           this.attach("button", {
             action: "clickOutside",
-            icon: "close",
+            icon: "times",
             className: "close-button"
           })
         )
