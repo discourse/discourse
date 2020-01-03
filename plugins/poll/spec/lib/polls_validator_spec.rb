@@ -124,6 +124,36 @@ describe ::DiscoursePoll::PollsValidator do
       )
     end
 
+    it "ensures that polls do not have any blank options" do
+      raw = <<~RAW
+      [poll]
+      * 1
+      *
+      [/poll]
+      RAW
+
+      post.raw = raw
+      expect(post.valid?).to eq(false)
+
+      expect(post.errors[:base]).to include(
+        I18n.t("poll.default_poll_must_not_have_any_empty_options")
+      )
+
+      raw = <<~RAW
+      [poll name=test]
+      *
+      * 1
+      [/poll]
+      RAW
+
+      post.raw = raw
+      expect(post.valid?).to eq(false)
+
+      expect(post.errors[:base]).to include(
+        I18n.t("poll.named_poll_must_not_have_any_empty_options", name: "test")
+      )
+    end
+
     it "ensure that polls have at least 2 options" do
       raw = <<~RAW
       [poll]

@@ -43,6 +43,9 @@ en:
     default_poll_must_have_different_options: "Poll must have different options."
     named_poll_must_have_different_options: "Poll named <strong>%{name}</strong> must have different options."
 
+    default_poll_must_not_have_any_empty_options: "Poll must not have any empty options."
+    named_poll_must_not_have_any_empty_options: "Poll named <strong>%{name}</strong> must not have any empty options."
+
     default_poll_with_multiple_choices_has_invalid_parameters: "Poll with multiple choices has invalid parameters."
     named_poll_with_multiple_choices_has_invalid_parameters: "Poll named <strong>%{name}</strong> with multiple choice has invalid parameters."
 

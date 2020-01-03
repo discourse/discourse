@@ -17,6 +17,7 @@ module DiscoursePoll
         return false unless valid_numbers?(poll)
         return false unless unique_poll_name?(polls, poll)
         return false unless unique_options?(poll)
+        return false unless any_blank_options?(poll)
         return false unless at_least_two_options?(poll)
         return false unless valid_number_of_options?(poll)
         return false unless valid_multiple_choice_settings?(poll)
@@ -69,6 +70,20 @@ module DiscoursePoll
           @post.errors.add(:base, I18n.t("poll.default_poll_must_have_different_options"))
         else
           @post.errors.add(:base, I18n.t("poll.named_poll_must_have_different_options", name: poll["name"]))
+        end
+
+        return false
+      end
+
+      true
+    end
+
+    def any_blank_options?(poll)
+      if poll["options"].any? { |o| o["html"].blank? }
+        if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
+          @post.errors.add(:base, I18n.t("poll.default_poll_must_not_have_any_empty_options"))
+        else
+          @post.errors.add(:base, I18n.t("poll.named_poll_must_not_have_any_empty_options", name: poll["name"]))
         end
 
         return false
