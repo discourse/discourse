@@ -250,8 +250,11 @@ class Upload < ActiveRecord::Base
           # if that post is with_secure_media? then the upload should also be secure.
           # this may change to false if the upload was set to secure on upload e.g. in
           # a post composer then it turned out that the post itself was not in a secure context
-          access_control_post = Post.find_by(id: self.access_control_post_id)
-          mark_secure = access_control_post ? access_control_post.with_secure_media? : false
+          #
+          # if there is no access control post id and the upload is currently secure, we
+          # do not want to make it un-secure to avoid unintentionally exposing it
+          access_control_post = self.access_control_post_id.present? ? Post.find_by(id: self.access_control_post_id) : nil
+          mark_secure = access_control_post ? access_control_post.with_secure_media? : self.secure?
         end
       else
         mark_secure = false
