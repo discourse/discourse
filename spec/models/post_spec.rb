@@ -156,6 +156,45 @@ describe Post do
 
   end
 
+  describe "with_secure_media?" do
+    let(:topic) { Fabricate(:topic) }
+    let!(:post) { Fabricate(:post, topic: topic) }
+    it "returns false if secure media is not enabled" do
+      expect(post.with_secure_media?).to eq(false)
+    end
+
+    context "when secure media is enabled" do
+      before { enable_secure_media_and_s3 }
+
+      context "if login_required" do
+        before { SiteSetting.login_required = true }
+
+        it "returns true" do
+          expect(post.with_secure_media?).to eq(true)
+        end
+      end
+
+      context "if the topic category is read_restricted" do
+        let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        before do
+          topic.change_category_to_id(category.id)
+        end
+
+        it "returns true" do
+          expect(post.with_secure_media?).to eq(true)
+        end
+      end
+
+      context "if the post is in a PM topic" do
+        let(:topic) { Fabricate(:private_message_topic) }
+
+        it "returns true" do
+          expect(post.with_secure_media?).to eq(true)
+        end
+      end
+    end
+  end
+
   describe 'flagging helpers' do
     fab!(:post) { Fabricate(:post) }
     fab!(:user) { Fabricate(:coding_horror) }
@@ -1324,12 +1363,7 @@ describe Post do
       end
 
       before do
-        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-        SiteSetting.s3_access_key_id = "some key"
-        SiteSetting.s3_secret_access_key = "some secret key"
-        SiteSetting.secure_media = true
+        enable_secure_media_and_s3
         attachment_upload.update!(original_filename: "hello.csv")
 
         stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
@@ -1532,4 +1566,12 @@ describe Post do
     end
   end
 
+  def enable_secure_media_and_s3
+    SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+    SiteSetting.enable_s3_uploads = true
+    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+    SiteSetting.s3_access_key_id = "some key"
+    SiteSetting.s3_secret_access_key = "some secret key"
+    SiteSetting.secure_media = true
+  end
 end

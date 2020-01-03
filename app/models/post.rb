@@ -505,8 +505,9 @@ class Post < ActiveRecord::Base
   end
 
   def with_secure_media?
-    return false unless SiteSetting.secure_media?
-    topic&.private_message? || SiteSetting.login_required?
+    return false if !SiteSetting.secure_media?
+    SiteSetting.login_required? || \
+      (topic.present? && (topic.private_message? || topic.category&.read_restricted))
   end
 
   def hide!(post_action_type_id, reason = nil)
