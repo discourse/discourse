@@ -25,10 +25,19 @@ class DiscourseIpInfo
   end
 
   def self.mmdb_download(name)
+
+    if GlobalSetting.maxmind_license_key.blank?
+      STDERR.puts "MaxMind IP database updates require a license"
+      STDERR.puts "Please set DISCOURSE_MAXMIND_LICENSE_KEY to one you generated at https://www.maxmind.com"
+      return
+    end
+
     FileUtils.mkdir_p(path)
 
+    url = "https://download.maxmind.com/app/geoip_download?license_key=#{GlobalSetting.maxmind_license_key}&edition_id=#{name}&suffix=tar.gz"
+
     gz_file = FileHelper.download(
-      "https://geolite.maxmind.com/geoip/databases/#{name}/update",
+      url,
       max_file_size: 100.megabytes,
       tmp_file_name: "#{name}.gz",
       validate_uri: false,
