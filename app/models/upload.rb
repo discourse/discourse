@@ -245,10 +245,13 @@ class Upload < ActiveRecord::Base
       if SiteSetting.secure_media?
         mark_secure = true if SiteSetting.login_required?
         unless SiteSetting.login_required?
-          # first post associated with upload determines secure status
-          # i.e. an already public upload will stay public even if added to a new PM
-          first_post_with_upload = self.posts.order(sort_order: :asc).first
-          mark_secure = first_post_with_upload ? first_post_with_upload.with_secure_media? : false
+          # whether the upload should remain secure or not depends on its context,
+          # which is based on the post it is linked to via access_control_post_id.
+          # if that post is with_secure_media? then the upload should also be secure.
+          # this may change to false if the upload was set to secure on upload e.g. in
+          # a post composer then it turned out that the post itself was not in a secure context
+          access_control_post = Post.find_by(id: self.access_control_post_id)
+          mark_secure = access_control_post ? access_control_post.with_secure_media? : false
         end
       else
         mark_secure = false

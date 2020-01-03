@@ -1350,6 +1350,23 @@ describe Post do
           post_uploads_ids
         )
       end
+
+      context "when secure media is enabled" do
+        before { enable_secure_media_and_s3 }
+
+        it "sets the access_control_post_id on uploads in the post that don't already have the value set" do
+          other_post = Fabricate(:post)
+          video_upload.update(access_control_post_id: other_post.id)
+          audio_upload.update(access_control_post_id: other_post.id)
+
+          post.link_post_uploads
+
+          image_upload.reload
+          video_upload.reload
+          expect(image_upload.access_control_post_id).to eq(post.id)
+          expect(video_upload.access_control_post_id).not_to eq(post.id)
+        end
+      end
     end
 
     context '#update_uploads_secure_status' do
