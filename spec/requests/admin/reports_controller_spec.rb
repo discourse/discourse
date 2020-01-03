@@ -47,6 +47,24 @@ describe Admin::ReportsController do
             expect(JSON.parse(response.body)["reports"][1]["type"]).to eq("not_found")
           end
         end
+
+        context "invalid start or end dates" do
+          it "doesn't return 500 error" do
+            get "/admin/reports/bulk.json", params: {
+              reports: {
+                topics: { limit: 10, start_date: "2015-0-1" }
+              }
+            }
+            expect(response.status).to eq(400)
+
+            get "/admin/reports/bulk.json", params: {
+              reports: {
+                topics: { limit: 10, end_date: "2015-0-1" }
+              }
+            }
+            expect(response.status).to eq(400)
+          end
+        end
       end
     end
 
