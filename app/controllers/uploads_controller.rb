@@ -117,7 +117,20 @@ class UploadsController < ApplicationController
     return xhr_not_allowed if request.xhr?
 
     if SiteSetting.secure_media?
-      redirect_to Discourse.store.signed_url_for_path("#{params[:path]}.#{params[:extension]}")
+      path_with_ext = "#{params[:path]}.#{params[:extension]}"
+      sha1 = File.basename(path_with_ext, File.extname(path_with_ext))
+
+      # this takes care of optimized image requests
+      sha1 = sha1.partition("_").first if sha1.include?("_")
+
+      upload = Upload.find_by(sha1: sha1)
+      return render_404 if upload.blank?
+
+      if upload.access_control_post_id.present?
+        raise Discourse::InvalidAccess if !guardian.can_see?(upload.access_control_post)
+      end
+
+      redirect_to Discourse.store.signed_url_for_path(path_with_ext)
     else
       render_404
     end
