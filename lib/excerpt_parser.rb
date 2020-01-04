@@ -19,6 +19,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @keep_emoji_images = options[:keep_emoji_images] == true
     @keep_onebox_source = options[:keep_onebox_source] == true
     @keep_onebox_body = options[:keep_onebox_body] == true
+    @keep_quotes = options[:keep_quotes] == true
     @remap_emoji = options[:remap_emoji] == true
     @start_excerpt = false
     @in_details_depth = 0
@@ -100,8 +101,10 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         @in_quote = true
       end
 
-      if @keep_onebox_body && attributes['class'].include?('quote') && attributes['data-topic'].present?
-        @in_quote = false
+      if attributes['class'].include?('quote')
+        if @keep_quotes || (@keep_onebox_body && attributes['data-topic'].present?)
+          @in_quote = false
+        end
       end
 
     when 'article'
