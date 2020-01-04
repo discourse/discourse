@@ -88,6 +88,8 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
       exit 1
     end
     puts "Rails server is warmed up"
+    puts "Turning off CSP to allow qunit to run"
+    SiteSetting.content_security_policy = false
 
     sh(cmd)
 
