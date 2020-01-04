@@ -102,6 +102,10 @@ export class Tag {
     ];
   }
 
+  static whitelists() {
+    return ["ins", "del", "small", "big", "kbd", "ruby", "rt", "rb", "rp"];
+  }
+
   static block(name, prefix, suffix) {
     return class extends Tag {
       constructor() {
@@ -149,7 +153,7 @@ export class Tag {
     };
   }
 
-  static keep(name) {
+  static whitelist(name) {
     return class extends Tag {
       constructor() {
         super(name, `<${name}>`, `</${name}>`);
@@ -479,18 +483,12 @@ function tags() {
     ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
     ...Tag.slices().map(s => Tag.slice(s, "\n")),
     ...Tag.emphases().map(e => Tag.emphasis(e[0], e[1])),
+    ...Tag.whitelists().map(t => Tag.whitelist(t)),
     Tag.cell("td"),
     Tag.cell("th"),
     Tag.replace("br", "\n"),
     Tag.replace("hr", "\n---\n"),
     Tag.replace("head", ""),
-    Tag.keep("ins"),
-    Tag.keep("del"),
-    Tag.keep("small"),
-    Tag.keep("big"),
-    Tag.keep("kbd"),
-    Tag.keep("ruby"),
-    Tag.keep("rt"),
     Tag.li(),
     Tag.link(),
     Tag.image(),
