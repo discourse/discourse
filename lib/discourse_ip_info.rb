@@ -44,11 +44,33 @@ class DiscourseIpInfo
       follow_redirect: false
     )
 
-    Discourse::Utils.execute_command("gunzip", gz_file.path)
+    filename = File.basename(gz_file.path)
 
-    path = gz_file.path.sub(/\.gz\z/, "")
-    FileUtils.mv(path, mmdb_path(name))
+    dir = "#{Dir.tmpdir}/#{SecureRandom.hex}"
+
+    Discourse::Utils.execute_command(
+      "mkdir", "-p", dir
+    )
+
+    Discourse::Utils.execute_command(
+      "cp",
+      gz_file.path,
+      "#{dir}/#{filename}"
+    )
+
+    Discourse::Utils.execute_command(
+      "tar",
+      "-xzvf",
+      "#{dir}/#{filename}",
+      chdir: dir
+    )
+
+    Dir["#{dir}/**/*.mmdb"].each do |f|
+      FileUtils.mv(f, mmdb_path(name))
+    end
+
   ensure
+    FileUtils.rm_r(dir, force: true) if dir
     gz_file&.close!
   end
 
