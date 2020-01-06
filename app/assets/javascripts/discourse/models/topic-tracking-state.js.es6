@@ -381,14 +381,6 @@ const TopicTrackingState = EmberObject.extend({
       .value().length;
   },
 
-  resetNew() {
-    Object.keys(this.states).forEach(id => {
-      if (this.states[id].last_read_post_number === null) {
-        delete this.states[id];
-      }
-    });
-  },
-
   countUnread(category_id) {
     return _.chain(this.states)
       .filter(isUnread)
