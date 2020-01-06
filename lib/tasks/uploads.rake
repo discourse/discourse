@@ -997,9 +997,7 @@ def update_acls_and_rebake_upload_posts(uploads_with_supported_media, mark_secur
       upload_with_supported_media.posts.each { |post| post.rebake! }
 
       if mark_secure_in_loop_because_no_login_required
-        first_post_with_upload = upload_with_supported_media.posts.order(sort_order: :asc).first
-        mark_secure = first_post_with_upload ? first_post_with_upload.with_secure_media? : false
-        upload_ids_to_mark_as_secure << upload_with_supported_media.id if mark_secure
+        upload_ids_to_mark_as_secure << upload_with_supported_media.should_be_secure?
       end
     rescue => e
       uploads_skipped_because_of_error << "#{upload_with_supported_media.original_filename} (#{upload_with_supported_media.url}) #{e.message}"
