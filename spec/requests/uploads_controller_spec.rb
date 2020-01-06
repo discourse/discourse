@@ -344,6 +344,13 @@ describe UploadsController do
         expect(response.status).to eq(404)
       end
 
+      it "returns uploads with underscore in extension correctly" do
+        fake_upload = upload_file("fake.not_image")
+        get fake_upload.short_path
+
+        expect(response.status).to eq(200)
+      end
+
       it "returns the right response when anon tries to download a file " \
          "when prevent_anons_from_downloading_files is true" do
 

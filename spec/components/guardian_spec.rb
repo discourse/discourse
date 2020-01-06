@@ -2759,7 +2759,7 @@ describe Guardian do
 
     context "when ignored user is the same as guardian user" do
       it 'does not allow ignoring user' do
-        expect(guardian.can_ignore_user?(trust_level_2.id)).to eq(false)
+        expect(guardian.can_ignore_user?(trust_level_2)).to eq(false)
       end
     end
 
@@ -2767,13 +2767,13 @@ describe Guardian do
       let!(:admin) { Fabricate(:user, admin: true) }
 
       it 'does not allow ignoring user' do
-        expect(guardian.can_ignore_user?(admin.id)).to eq(false)
+        expect(guardian.can_ignore_user?(admin)).to eq(false)
       end
     end
 
     context "when ignored user is a normal user" do
       it 'allows ignoring user' do
-        expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
+        expect(guardian.can_ignore_user?(another_user)).to eq(true)
       end
     end
 
@@ -2782,7 +2782,7 @@ describe Guardian do
       let!(:trust_level_1) { build(:user, trust_level: 1) }
 
       it 'does not allow ignoring user' do
-        expect(guardian.can_ignore_user?(another_user.id)).to eq(false)
+        expect(guardian.can_ignore_user?(another_user)).to eq(false)
       end
     end
 
@@ -2790,7 +2790,7 @@ describe Guardian do
       let(:guardian) { Guardian.new(admin) }
 
       it 'allows ignoring user' do
-        expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
+        expect(guardian.can_ignore_user?(another_user)).to eq(true)
       end
     end
 
@@ -2798,7 +2798,7 @@ describe Guardian do
       let(:guardian) { Guardian.new(trust_level_2) }
 
       it 'allows ignoring user' do
-        expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
+        expect(guardian.can_ignore_user?(another_user)).to eq(true)
       end
     end
   end
@@ -2809,7 +2809,7 @@ describe Guardian do
 
     context "when muted user is the same as guardian user" do
       it 'does not allow muting user' do
-        expect(guardian.can_mute_user?(trust_level_1.id)).to eq(false)
+        expect(guardian.can_mute_user?(trust_level_1)).to eq(false)
       end
     end
 
@@ -2817,13 +2817,13 @@ describe Guardian do
       let!(:admin) { Fabricate(:user, admin: true) }
 
       it 'does not allow muting user' do
-        expect(guardian.can_mute_user?(admin.id)).to eq(false)
+        expect(guardian.can_mute_user?(admin)).to eq(false)
       end
     end
 
     context "when muted user is a normal user" do
       it 'allows muting user' do
-        expect(guardian.can_mute_user?(another_user.id)).to eq(true)
+        expect(guardian.can_mute_user?(another_user)).to eq(true)
       end
     end
 
@@ -2832,7 +2832,7 @@ describe Guardian do
       let!(:trust_level_0) { build(:user, trust_level: 0) }
 
       it 'does not allow muting user' do
-        expect(guardian.can_mute_user?(another_user.id)).to eq(false)
+        expect(guardian.can_mute_user?(another_user)).to eq(false)
       end
     end
 
@@ -2840,7 +2840,7 @@ describe Guardian do
       let(:guardian) { Guardian.new(admin) }
 
       it 'allows muting user' do
-        expect(guardian.can_mute_user?(another_user.id)).to eq(true)
+        expect(guardian.can_mute_user?(another_user)).to eq(true)
       end
     end
 
@@ -2848,7 +2848,7 @@ describe Guardian do
       let(:guardian) { Guardian.new(trust_level_1) }
 
       it 'allows muting user' do
-        expect(guardian.can_mute_user?(another_user.id)).to eq(true)
+        expect(guardian.can_mute_user?(another_user)).to eq(true)
       end
     end
   end

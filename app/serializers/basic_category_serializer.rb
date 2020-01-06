@@ -43,8 +43,16 @@ class BasicCategorySerializer < ApplicationSerializer
     object.uncategorized? ? I18n.t('uncategorized_category_name', locale: SiteSetting.default_locale) : object.name
   end
 
+  def description_text
+    object.uncategorized? ? I18n.t('category.uncategorized_description', locale: SiteSetting.default_locale) : object.description_text
+  end
+
   def description
     object.uncategorized? ? I18n.t('category.uncategorized_description', locale: SiteSetting.default_locale) : object.description
+  end
+
+  def description_excerpt
+    object.uncategorized? ? I18n.t('category.uncategorized_description', locale: SiteSetting.default_locale) : object.description_excerpt
   end
 
   def can_edit

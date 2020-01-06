@@ -81,4 +81,17 @@ describe ExcerptParser do
       HTML
     end
   end
+
+  describe "keep_quotes parameter" do
+    it "should keep the quoted content in html" do
+      html = <<~HTML.strip
+        <aside class="quote">
+          <blockquote>
+            This is a quoted text.
+          </blockquote>
+        </aside>
+      HTML
+      expect(ExcerptParser.get_excerpt(html, 100, keep_quotes: true)).to eq("This is a quoted text.")
+    end
+  end
 end
