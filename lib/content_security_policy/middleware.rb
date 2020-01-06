@@ -12,7 +12,7 @@ class ContentSecurityPolicy
       _, headers, _ = response = @app.call(env)
 
       return response unless html_response?(headers)
-      ContentSecurityPolicy.base_url = request.host_with_port if Rails.env.development?
+      ContentSecurityPolicy.base_url = request.host_with_port if !Rails.env.production?
 
       theme_ids = env[:resolved_theme_ids]
 

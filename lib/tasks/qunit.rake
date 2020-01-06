@@ -7,9 +7,6 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
   require "socket"
   require 'rbconfig'
 
-  puts "Turning off CSP to allow qunit to run"
-  SiteSetting.content_security_policy = false
-
   if RbConfig::CONFIG['host_os'][/darwin|mac os/]
     google_chrome_cli = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
   else

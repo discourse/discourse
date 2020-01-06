@@ -224,7 +224,7 @@ module Discourse
     # supports etags (post 1.7)
     config.middleware.delete Rack::ETag
 
-    unless Rails.env.development?
+    if Rails.env.production?
       require 'middleware/enforce_hostname'
       config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
     end
