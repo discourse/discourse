@@ -353,6 +353,19 @@ describe TopicTrackingState do
     expect(report.length).to eq(1)
   end
 
+  it "correctly handles category_users with null notification level" do
+    user = Fabricate(:user)
+    post
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(1)
+
+    CategoryUser.create!(user_id: user.id, category_id: post.topic.category_id)
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(1)
+  end
+
   context 'muted tags' do
     it "remove_muted_tags_from_latest is set to always" do
       SiteSetting.remove_muted_tags_from_latest = 'always'

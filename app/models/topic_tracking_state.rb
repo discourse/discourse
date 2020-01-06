@@ -306,7 +306,7 @@ class TopicTrackingState
           #{tags_filter}
           topics.deleted_at IS NULL AND
           #{category_filter}
-          (category_users.id IS NULL OR
+          (category_users.notification_level IS NULL OR
           last_read_post_number IS NOT NULL OR
           category_users.notification_level <> #{CategoryUser.notification_levels[:muted]})
 SQL
