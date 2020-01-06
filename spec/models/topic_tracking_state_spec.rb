@@ -366,6 +366,26 @@ describe TopicTrackingState do
     expect(report.length).to eq(1)
   end
 
+  it "works when categories are default muted" do
+    SiteSetting.mute_all_categories_by_default = true
+
+    user = Fabricate(:user)
+    post
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(0)
+
+    CategoryUser.create!(user_id: user.id,
+                         notification_level: CategoryUser.notification_levels[:regular],
+                         category_id: post.topic.category_id
+                         )
+
+    create_post(topic_id: post.topic_id)
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(1)
+  end
+
   context 'muted tags' do
     it "remove_muted_tags_from_latest is set to always" do
       SiteSetting.remove_muted_tags_from_latest = 'always'

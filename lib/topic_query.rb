@@ -857,8 +857,6 @@ class TopicQuery
     category_id = get_category_id(opts[:exclude]) if opts
 
     if user
-      default_notification_level = SiteSetting.mute_all_categories_by_default ? CategoryUser.notification_levels[:muted] : CategoryUser.notification_levels[:regular]
-
       list = list
         .references("cu")
         .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
@@ -866,7 +864,7 @@ class TopicQuery
                 OR COALESCE(category_users.notification_level, :default) <> :muted
                 OR tu.notification_level > :regular",
                 category_id: category_id || -1,
-                default: default_notification_level,
+                default: CategoryUser.default_notification_level,
                 muted: CategoryUser.notification_levels[:muted],
                 regular: TopicUser.notification_levels[:regular])
     elsif SiteSetting.mute_all_categories_by_default

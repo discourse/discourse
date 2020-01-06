@@ -306,9 +306,10 @@ class TopicTrackingState
           #{tags_filter}
           topics.deleted_at IS NULL AND
           #{category_filter}
-          (category_users.notification_level IS NULL OR
-          last_read_post_number IS NOT NULL OR
-          category_users.notification_level <> #{CategoryUser.notification_levels[:muted]})
+          NOT (
+            last_read_post_number IS NULL AND
+            COALESCE(category_users.notification_level, #{CategoryUser.default_notification_level}) = #{CategoryUser.notification_levels[:muted]}
+          )
 SQL
 
     if opts[:topic_id]
