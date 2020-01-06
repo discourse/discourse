@@ -2200,7 +2200,7 @@ en:
       category_search_priority:
         very_low_weight_invalid: "You cannot set the weight to be greater than 'category_search_priority_low_weight'."
         low_weight_invalid: "You cannot set the weight to be greater or equal to 1 or smaller than 'category_search_priority_very_low_weight'."
-        high_weight_invalid: "You cannot set the weight to be greater or equal to 1 or greater than 'category_search_priority_very_high_weight'."
+        high_weight_invalid: "You cannot set the weight to be smaller or equal to 1 or greater than 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "You cannot set the weight to be smaller than 'category_search_priority_high_weight'."
       unicode_username_whitelist:
         regex_invalid: "The regular expression is invalid: %{error}"
