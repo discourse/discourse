@@ -1396,7 +1396,7 @@ security:
     list_type: compact
   slow_down_crawler_rate: 60
   content_security_policy:
-    default: false
+    default: true
   content_security_policy_report_only:
     default: false
   content_security_policy_collect_reports:
