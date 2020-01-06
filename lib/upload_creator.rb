@@ -172,7 +172,7 @@ class UploadCreator
               "it is secure media, login_required active"
             end
           end
-          Rails.logger.info("marked upload id #{@upload.id} as secure because #{secure_reason}")
+          Rails.logger.debug("marked upload id #{@upload.id} as secure because #{secure_reason}")
         end
       end
 
