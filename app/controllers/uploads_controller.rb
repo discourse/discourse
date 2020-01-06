@@ -102,6 +102,8 @@ class UploadsController < ApplicationController
     sha1 = Upload.sha1_from_base62_encoded(params[:base62])
 
     if upload = Upload.find_by(sha1: sha1)
+      return handle_secure_upload_request(upload, Discourse.store.get_path_for_upload(upload)) if upload.secure? && SiteSetting.secure_media?
+
       if Discourse.store.internal?
         send_file_local_upload(upload)
       else
@@ -126,14 +128,18 @@ class UploadsController < ApplicationController
       upload = Upload.find_by(sha1: sha1)
       return render_404 if upload.blank?
 
-      if upload.access_control_post_id.present?
-        raise Discourse::InvalidAccess if !guardian.can_see?(upload.access_control_post)
-      end
-
-      redirect_to Discourse.store.signed_url_for_path(path_with_ext)
+      handle_secure_upload_request(upload, path_with_ext)
     else
       render_404
     end
+  end
+
+  def handle_secure_upload_request(upload, path_with_ext)
+    if upload.access_control_post_id.present?
+      raise Discourse::InvalidAccess if !guardian.can_see?(upload.access_control_post)
+    end
+
+    redirect_to Discourse.store.signed_url_for_path(path_with_ext)
   end
 
   def metadata

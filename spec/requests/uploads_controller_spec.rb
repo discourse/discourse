@@ -377,6 +377,30 @@ describe UploadsController do
 
         expect(response).to redirect_to(upload.url)
       end
+
+      context "when upload is secure and secure media enabled" do
+        before do
+          SiteSetting.secure_media = true
+          upload.update(secure: true)
+          stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+        end
+
+        it "redirects to the signed_url_for_path" do
+          get upload.short_path
+
+          expect(response).to redirect_to(Discourse.store.signed_url_for_path(Discourse.store.get_path_for_upload(upload)))
+        end
+
+        it "raises invalid access if the user cannot access the upload access control post" do
+          post = Fabricate(:post)
+          post.topic.change_category_to_id(Fabricate(:private_category, group: Fabricate(:group)).id)
+          upload.update(access_control_post: post)
+
+          get upload.short_path
+
+          expect(response.code).to eq("403")
+        end
+      end
     end
   end
 
