@@ -39,10 +39,10 @@ export default Mixin.create({
     });
   },
 
-  openComposerWithMessageParams(usernames, topicTitle, topicBody) {
+  openComposerWithMessageParams(recipients, topicTitle, topicBody) {
     this.controllerFor("composer").open({
       action: Composer.PRIVATE_MESSAGE,
-      usernames,
+      recipients,
       topicTitle,
       topicBody,
       archetypeId: "private_message",
