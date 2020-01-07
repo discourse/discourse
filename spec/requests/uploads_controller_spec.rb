@@ -431,6 +431,23 @@ describe UploadsController do
         result = JSON.parse(response.body)
         expect(result[0]["url"]).to match("secure-media-uploads")
       end
+
+      context "when secure media is disabled" do
+        before do
+          SiteSetting.secure_media = false
+        end
+
+        it "should redirect to the regular show route" do
+          secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
+          sign_in(user)
+          stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+          get secure_url
+
+          expect(response.status).to eq(302)
+          expect(response.redirect_url).to eq(Discourse.store.cdn_url(upload.url))
+        end
+      end
     end
   end
 

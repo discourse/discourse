@@ -909,6 +909,43 @@ task "uploads:recover" => :environment do
   end
 end
 
+task "uploads:disable_secure_media" => :environment do
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    unless Discourse.store.external?
+      puts "This task only works for external storage."
+      exit 1
+    end
+
+    puts "Disabling secure media and resetting uploads to not secure in #{db}...", ""
+
+    SiteSetting.secure_media = false
+
+    secure_uploads = Upload.includes(:posts).where(secure: true)
+    secure_upload_count = secure_uploads.count
+
+    i = 0
+    secure_uploads.find_each(batch_size: 20).each do |upload|
+      Upload.transaction do
+        upload.secure = false
+
+        RakeHelpers.print_status_with_label("Updating ACL for upload #{upload.id}.......", i, secure_upload_count)
+        Discourse.store.update_upload_ACL(upload)
+
+        RakeHelpers.print_status_with_label("Rebaking posts for upload #{upload.id}.......", i, secure_upload_count)
+        upload.posts.each(&:rebake!)
+        upload.save
+
+        i += 1
+      end
+    end
+
+    RakeHelpers.print_status_with_label("Rebaking and updating complete!            ", i, secure_upload_count)
+    puts ""
+  end
+
+  puts "Secure media is now disabled!", ""
+end
+
 ##
 # Run this task whenever the secure_media or login_required
 # settings are changed for a Discourse instance to update
