@@ -922,6 +922,7 @@ task "uploads:disable_secure_media" => :environment do
 
     secure_uploads = Upload.includes(:posts).where(secure: true)
     secure_upload_count = secure_uploads.count
+
     i = 0
     secure_uploads.find_each(batch_size: 20).each do |upload|
       Upload.transaction do
