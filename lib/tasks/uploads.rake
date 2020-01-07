@@ -918,44 +918,28 @@ task "uploads:disable_secure_media" => :environment do
 
     puts "Disabling secure media and resetting uploads to not secure in #{db}...", ""
 
-    Upload.transaction do
-      SiteSetting.secure_media = false
+    SiteSetting.secure_media = false
 
-      secure_uploads = Upload.where(secure: true)
-      secure_upload_ids = secure_uploads.pluck(:id)
-
-      puts "Updating all uploads to secure: false."
-      secure_uploads.update_all(secure: false)
-
-      puts "Changing ACLs for all previously secure uploads to public.", ""
-
-      i = 0
-      secure_uploads.find_each(batch_size: 10) do |upload|
-        RakeHelpers.print_status_with_label("Updating ACL for upload.......", i, secure_upload_ids.length)
-
+    secure_uploads = Upload.includes(:posts).where(secure: true)
+    secure_upload_count = secure_uploads.count
+    i = 0
+    secure_uploads.find_each(batch_size: 20).each do |upload|
+      Upload.transaction do
         upload.secure = false
+
+        RakeHelpers.print_status_with_label("Updating ACL for upload #{upload.id}.......", i, secure_upload_count)
         Discourse.store.update_upload_ACL(upload)
 
-        i += 1
-      end
-
-      i = 0
-      post_ids_with_secure_uploads = DB.query(
-        "SELECT DISTINCT post_id FROM post_uploads WHERE upload_id IN (:upload_ids)",
-        upload_ids: secure_upload_ids
-      ).map(&:post_id)
-
-      Post.where(id: post_ids_with_secure_uploads).find_each(batch_size: 10) do |post|
-        RakeHelpers.print_status_with_label("Rebaking post id #{post.id} which had secure upload...", i, post_ids_with_secure_uploads.length)
-
-        post.rebake!
+        RakeHelpers.print_status_with_label("Rebaking posts for upload #{upload.id}.......", i, secure_upload_count)
+        upload.posts.each(&:rebake!)
+        upload.save
 
         i += 1
       end
-
-      RakeHelpers.print_status_with_label("Rebaking complete!            ", i, post_ids_with_secure_uploads.length)
-      puts ""
     end
+
+    RakeHelpers.print_status_with_label("Rebaking and updating complete!            ", i, secure_upload_count)
+    puts ""
   end
 
   puts "Secure media is now disabled!", ""
