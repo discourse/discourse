@@ -57,6 +57,7 @@
     @supports (--custom: property) {
       .logo.aspect-image img {
         --height: 40px;
+        height: var(--height);
         width: calc(var(--height) * var(--aspect-ratio));
         max-width: 100%;
       }
@@ -128,6 +129,46 @@
     overflow: hidden;
   }
 
+  h4 a {
+    color: $primary;
+  }
+
+  .subcategory.with-subcategories {
+    border: none;
+    border-left-width: 4px;
+    border-left-style: solid;
+    margin-bottom: 0.25em;
+
+    .category-title-link {
+      display: flex;
+      .category-logo {
+        flex: 1 0 auto;
+        margin: 0.25em 0.5em 0.5em 0;
+        --max-height: 40px;
+      }
+      .category-text-title {
+        order: 2;
+        line-height: $line-height-medium;
+        overflow: hidden;
+        word-wrap: break-word;
+      }
+    }
+
+    .subcategory-box-inner {
+      border: 1px solid $primary-low;
+      border-left: none;
+      padding: 0.75em 0.5em 0.4em 0.5em;
+    }
+
+    &:not(:last-of-type) {
+      margin-bottom: 1em;
+    }
+
+    .subcategory {
+      margin-bottom: 0.25em;
+    }
+  }
+
   .subcategories {
     display: flex;
     flex-flow: wrap;
@@ -135,11 +176,14 @@
       display: flex;
       align-items: center;
       @include ellipsis;
-      margin-right: 1em;
       margin-bottom: 0.6em;
+      .badge-wrapper {
+        overflow: hidden;
+      }
       .subcategory-image-placeholder {
         display: inline-block;
         margin-right: 0.6em;
+        flex: 1 0 auto;
       }
       .subcategory-link {
         min-width: 0;
@@ -147,8 +191,9 @@
       }
       .logo img {
         display: inline-block;
-        height: 20px;
-        width: 20px;
+        --height: 20px;
+        height: var(--height);
+        width: calc(var(--height) * var(--aspect-ratio));
         margin: 0;
       }
     }
@@ -210,7 +255,7 @@
       height: 0.76em;
       width: 0.76em;
       vertical-align: baseline;
-      margin-right: 0.15em;
+      margin-right: 0.1em;
     }
   }
   .category-description {
