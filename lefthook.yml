@@ -6,6 +6,7 @@ pre-commit:
       run: bundle exec rubocop {staged_files}
     eslint:
       glob: "*.{js,es6}"
+      exclude: 'vendor/*'
       run: yarn eslint --ext .es6 -f compact {staged_files}
     yaml-syntax:
       glob: "*.{yaml,yml}"
