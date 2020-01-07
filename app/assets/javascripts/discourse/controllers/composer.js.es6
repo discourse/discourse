@@ -246,7 +246,7 @@ export default Controller.extend({
   },
 
   _setupPopupMenuOption(callback) {
-    let option = callback();
+    let option = callback(this);
     if (typeof option === "undefined") {
       return null;
     }
