@@ -277,10 +277,10 @@ describe Email::AuthenticationResults do
   end
 
   describe "#action" do
-    it "hides a fail verdict" do
+    it "enqueues a fail verdict" do
       results = described_class.new("")
       results.expects(:verdict).returns(:fail)
-      expect(results.action).to eq (:hide)
+      expect(results.action).to eq (:enqueue)
     end
 
     it "accepts a pass verdict" do

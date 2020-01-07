@@ -32,7 +32,7 @@ module Email
 
     def calc_action
       if verdict == :fail
-        :hide
+        :enqueue
       else
         :accept
       end
