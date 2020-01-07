@@ -961,28 +961,8 @@ class User < ActiveRecord::Base
     user_stat&.distinct_badge_count
   end
 
-  def featured_user_badges(limit = 3)
-    tl_badge_ids = Badge.trust_level_badge_ids
-
-    query = user_badges
-      .group(:badge_id)
-      .select(UserBadge.attribute_names.map { |x| "MAX(user_badges.#{x}) AS #{x}" },
-                      'COUNT(*) AS "count"',
-                      'MAX(badges.badge_type_id) AS badges_badge_type_id',
-                      'MAX(badges.grant_count) AS badges_grant_count')
-      .joins(:badge)
-      .order('badges_badge_type_id ASC, badges_grant_count ASC, badge_id DESC')
-      .includes(:user, :granted_by, { badge: :badge_type }, post: :topic)
-
-    tl_badge = query.where("user_badges.badge_id IN (:tl_badge_ids)",
-                           tl_badge_ids: tl_badge_ids)
-      .limit(1)
-
-    other_badges = query.where("user_badges.badge_id NOT IN (:tl_badge_ids)",
-                               tl_badge_ids: tl_badge_ids)
-      .limit(limit)
-
-    (tl_badge + other_badges).take(limit)
+  def featured_user_badges(limit = DEFAULT_FEATURED_BADGE_COUNT)
+    user_badges.grouped_with_count.where("featured_rank <= ?", limit)
   end
 
   def self.count_by_signup_date(start_date = nil, end_date = nil, group_id = nil)
