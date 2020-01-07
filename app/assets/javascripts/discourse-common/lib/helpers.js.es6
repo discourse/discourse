@@ -1,5 +1,6 @@
 import { get } from "@ember/object";
 import Helper from "@ember/component/helper";
+import RawHandlebars from "discourse-common/lib/raw-handlebars";
 
 export function makeArray(obj) {
   if (obj === null || obj === undefined) {
@@ -88,5 +89,5 @@ export function registerUnbound(name, fn) {
   _helpers[name] = Helper.extend({
     compute: (params, args) => fn(...params, args)
   });
-  Handlebars.registerHelper(name, func);
+  RawHandlebars.registerHelper(name, func);
 }
