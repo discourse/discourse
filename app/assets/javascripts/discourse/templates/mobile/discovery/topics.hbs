@@ -1,4 +1,5 @@
-{{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount}}
+{{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount as |discoveryTopicList|}}
+  {{log discoveryTopicList}}
   {{#if top}}
     <div class='top-lists'>
       {{period-chooser period=period action=(action "changePeriod")}}
@@ -22,6 +23,7 @@
       expandGloballyPinned=expandGloballyPinned
       expandAllPinned=expandAllPinned
       scrollOnLoad=true
+      onScroll=discoveryTopicList.saveScrollPosition
       category=category}}
   {{/if}}
 {{/discovery-topics-list}}
