@@ -252,10 +252,6 @@ RSpec.configure do |config|
     ActiveRecord::Base.establish_connection
   end
 
-  config.before(:each, type: :request) do
-    host! "test.localhost"
-  end
-
   class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
     def log_on_user(user, session, cookies, opts = {})
       session[:current_user_id] = user.id
