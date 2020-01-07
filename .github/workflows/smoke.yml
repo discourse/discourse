@@ -1,4 +1,4 @@
-name: Smoke Test
+name: SMOKE TEST
    
 on:
   push:
@@ -10,7 +10,7 @@ on:
     
 jobs:
   smoke_test:
-    name: "smoke test"
+    name: "CORE"
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
