@@ -25,7 +25,6 @@
                   <tr data-category-id={{subcategory.id}} class="{{if subcategory.description_excerpt 'has-description' 'no-description'}} {{if subcategory.uploaded_logo.url 'has-logo' 'no-logo'}}">
                     <td class="category" style={{border-color subcategory.color}}>
                       {{category-title-link tagName="h4" category=subcategory}}
-                      {{log subcategory}}
                       {{#if subcategory.description_excerpt}}
                         <div class="category-description subcategory-description">
                           {{{dir-span subcategory.description_excerpt}}}
