@@ -1,7 +1,7 @@
 /**!
 
  @license
- handlebars v4.1.2
+ handlebars v4.3.0
 
 Copyright (C) 2011-2017 by Yehuda Katz
 
@@ -98,13 +98,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _handlebarsCompilerBase = __webpack_require__(36);
 
-	var _handlebarsCompilerCompiler = __webpack_require__(41);
+	var _handlebarsCompilerCompiler = __webpack_require__(43);
 
-	var _handlebarsCompilerJavascriptCompiler = __webpack_require__(42);
+	var _handlebarsCompilerJavascriptCompiler = __webpack_require__(44);
 
 	var _handlebarsCompilerJavascriptCompiler2 = _interopRequireDefault(_handlebarsCompilerJavascriptCompiler);
 
-	var _handlebarsCompilerVisitor = __webpack_require__(39);
+	var _handlebarsCompilerVisitor = __webpack_require__(41);
 
 	var _handlebarsCompilerVisitor2 = _interopRequireDefault(_handlebarsCompilerVisitor);
 
@@ -275,9 +275,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _logger2 = _interopRequireDefault(_logger);
 
-	var VERSION = '4.1.2';
+	var VERSION = '4.3.0';
 	exports.VERSION = VERSION;
-	var COMPILER_REVISION = 7;
+	var COMPILER_REVISION = 8;
 
 	exports.COMPILER_REVISION = COMPILER_REVISION;
 	var REVISION_CHANGES = {
@@ -287,7 +287,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  4: '== 1.x.x',
 	  5: '== 2.0.0-alpha.x',
 	  6: '>= 2.0.0-beta.1',
-	  7: '>= 4.0.0'
+	  7: '>= 4.0.0 <4.3.0',
+	  8: '>= 4.3.0'
 	};
 
 	exports.REVISION_CHANGES = REVISION_CHANGES;
@@ -371,6 +372,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.createFrame = createFrame;
 	exports.blockParams = blockParams;
 	exports.appendContextPath = appendContextPath;
+
 	var escape = {
 	  '&': '&amp;',
 	  '<': '&lt;',
@@ -588,6 +590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.__esModule = true;
 	exports.registerDefaultHelpers = registerDefaultHelpers;
+	exports.moveHelperToHooks = moveHelperToHooks;
 
 	var _helpersBlockHelperMissing = __webpack_require__(11);
 
@@ -625,6 +628,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _helpersLog2['default'](instance);
 	  _helpersLookup2['default'](instance);
 	  _helpersWith2['default'](instance);
+	}
+
+	function moveHelperToHooks(instance, helperName, keepHelper) {
+	  if (instance.helpers[helperName]) {
+	    instance.hooks[helperName] = instance.helpers[helperName];
+	    if (!keepHelper) {
+	      delete instance.helpers[helperName];
+	    }
+	  }
 	}
 
 /***/ }),
@@ -1069,6 +1081,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _base = __webpack_require__(4);
 
+	var _helpers = __webpack_require__(10);
+
 	function checkRevision(compilerInfo) {
 	  var compilerRevision = compilerInfo && compilerInfo[0] || 1,
 	      currentRevision = _base.COMPILER_REVISION;
@@ -1086,6 +1100,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function template(templateSpec, env) {
+
 	  /* istanbul ignore next */
 	  if (!env) {
 	    throw new _exception2['default']('No environment passed to template');
@@ -1097,7 +1112,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  templateSpec.main.decorator = templateSpec.main_d;
 
 	  // Note: Using env.VM references rather than local var references throughout this section to allow
-	  // for external users to override these as psuedo-supported APIs.
+	  // for external users to override these as pseudo-supported APIs.
 	  env.VM.checkRevision(templateSpec.compiler);
 
 	  function invokePartialWrapper(partial, context, options) {
@@ -1107,13 +1122,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        options.ids[0] = true;
 	      }
 	    }
-
 	    partial = env.VM.resolvePartial.call(this, partial, context, options);
-	    var result = env.VM.invokePartial.call(this, partial, context, options);
+
+	    var optionsWithHooks = Utils.extend({}, options, { hooks: this.hooks });
+
+	    var result = env.VM.invokePartial.call(this, partial, context, optionsWithHooks);
 
 	    if (result == null && env.compile) {
 	      options.partials[options.name] = env.compile(partial, templateSpec.compilerOptions, env);
-	      result = options.partials[options.name](context, options);
+	      result = options.partials[options.name](context, optionsWithHooks);
 	    }
 	    if (result != null) {
 	      if (options.indent) {
@@ -1180,15 +1197,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      return value;
 	    },
-	    merge: function merge(param, common) {
-	      var obj = param || common;
-
-	      if (param && common && param !== common) {
-	        obj = Utils.extend({}, common, param);
-	      }
-
-	      return obj;
-	    },
 	    // An empty object to use as replacement for null-contexts
 	    nullContext: _Object$seal({}),
 
@@ -1225,18 +1233,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  ret._setup = function (options) {
 	    if (!options.partial) {
-	      container.helpers = container.merge(options.helpers, env.helpers);
+	      container.helpers = Utils.extend({}, env.helpers, options.helpers);
 
 	      if (templateSpec.usePartial) {
-	        container.partials = container.merge(options.partials, env.partials);
+	        container.partials = Utils.extend({}, env.partials, options.partials);
 	      }
 	      if (templateSpec.usePartial || templateSpec.useDecorators) {
-	        container.decorators = container.merge(options.decorators, env.decorators);
+	        container.decorators = Utils.extend({}, env.decorators, options.decorators);
 	      }
+
+	      container.hooks = {};
+	      var keepHelper = options.allowCallsToHelperMissing;
+	      _helpers.moveHelperToHooks(container, 'helperMissing', keepHelper);
+	      _helpers.moveHelperToHooks(container, 'blockHelperMissing', keepHelper);
 	    } else {
 	      container.helpers = options.helpers;
 	      container.partials = options.partials;
 	      container.decorators = options.decorators;
+	      container.hooks = options.hooks;
 	    }
 	  };
 
@@ -1272,6 +1286,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  prog.blockParams = declaredBlockParams || 0;
 	  return prog;
 	}
+
+	/**
+	 * This is currently part of the official API, therefore implementation details should not be changed.
+	 */
 
 	function resolvePartial(partial, context, options) {
 	  if (!partial) {
@@ -1588,11 +1606,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parser2 = _interopRequireDefault(_parser);
 
-	var _whitespaceControl = __webpack_require__(38);
+	var _whitespaceControl = __webpack_require__(40);
 
 	var _whitespaceControl2 = _interopRequireDefault(_whitespaceControl);
 
-	var _helpers = __webpack_require__(40);
+	var _helpers = __webpack_require__(42);
 
 	var Helpers = _interopRequireWildcard(_helpers);
 
@@ -1622,20 +1640,131 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 37 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	// File ignored in coverage tests via setting in .istanbul.yml
-	/* Jison generated parser */
+	/* parser generated by jison 0.4.16 */
+	/*
+	  Returns a Parser object of the following structure:
+
+	  Parser: {
+	    yy: {}
+	  }
+
+	  Parser.prototype: {
+	    yy: {},
+	    trace: function(),
+	    symbols_: {associative list: name ==> number},
+	    terminals_: {associative list: number ==> name},
+	    productions_: [...],
+	    performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate, $$, _$),
+	    table: [...],
+	    defaultActions: {...},
+	    parseError: function(str, hash),
+	    parse: function(input),
+
+	    lexer: {
+	        EOF: 1,
+	        parseError: function(str, hash),
+	        setInput: function(input),
+	        input: function(),
+	        unput: function(str),
+	        more: function(),
+	        less: function(n),
+	        pastInput: function(),
+	        upcomingInput: function(),
+	        showPosition: function(),
+	        test_match: function(regex_match_array, rule_index),
+	        next: function(),
+	        lex: function(),
+	        begin: function(condition),
+	        popState: function(),
+	        _currentRules: function(),
+	        topState: function(),
+	        pushState: function(condition),
+
+	        options: {
+	            ranges: boolean           (optional: true ==> token location info will include a .range[] member)
+	            flex: boolean             (optional: true ==> flex-like lexing behaviour where the rules are tested exhaustively to find the longest match)
+	            backtrack_lexer: boolean  (optional: true ==> lexer regexes are tested in order and for each matching regex the action code is invoked; the lexer terminates the scan when a token is returned by the action code)
+	        },
+
+	        performAction: function(yy, yy_, $avoiding_name_collisions, YY_START),
+	        rules: [...],
+	        conditions: {associative list: name ==> set},
+	    }
+	  }
+
+
+	  token location info (@$, _$, etc.): {
+	    first_line: n,
+	    last_line: n,
+	    first_column: n,
+	    last_column: n,
+	    range: [start_number, end_number]       (where the numbers are indexes into the input string, regular zero-based)
+	  }
+
+
+	  the parseError function receives a 'hash' object with these members for lexer and parser errors: {
+	    text:        (matched text)
+	    token:       (the produced terminal token, if any)
+	    line:        (yylineno)
+	  }
+	  while parser (grammar) errors will also provide these members, i.e. parser errors deliver a superset of attributes: {
+	    loc:         (yylloc)
+	    expected:    (string describing the set of expected tokens)
+	    recoverable: (boolean: TRUE when the parser has a error recovery rule available for this particular error)
+	  }
+	*/
 	"use strict";
+
+	var _Object$create = __webpack_require__(38)["default"];
 
 	exports.__esModule = true;
 	var handlebars = (function () {
+	    var o = function o(k, v, _o, l) {
+	        for (_o = _o || {}, l = k.length; l--; _o[k[l]] = v);return _o;
+	    },
+	        $V0 = [2, 46],
+	        $V1 = [1, 20],
+	        $V2 = [5, 14, 15, 19, 29, 34, 39, 44, 47, 48, 51, 55, 60],
+	        $V3 = [1, 35],
+	        $V4 = [1, 28],
+	        $V5 = [1, 29],
+	        $V6 = [1, 30],
+	        $V7 = [1, 31],
+	        $V8 = [1, 32],
+	        $V9 = [1, 34],
+	        $Va = [14, 15, 19, 29, 34, 39, 44, 47, 48, 51, 55, 60],
+	        $Vb = [14, 15, 19, 29, 34, 44, 47, 48, 51, 55, 60],
+	        $Vc = [1, 44],
+	        $Vd = [14, 15, 19, 29, 34, 47, 48, 51, 55, 60],
+	        $Ve = [33, 65, 72, 80, 81, 82, 83, 84, 85],
+	        $Vf = [23, 33, 54, 65, 68, 72, 75, 80, 81, 82, 83, 84, 85],
+	        $Vg = [1, 51],
+	        $Vh = [23, 33, 54, 65, 68, 72, 75, 80, 81, 82, 83, 84, 85, 87],
+	        $Vi = [2, 45],
+	        $Vj = [54, 65, 72, 80, 81, 82, 83, 84, 85],
+	        $Vk = [1, 58],
+	        $Vl = [1, 59],
+	        $Vm = [15, 18],
+	        $Vn = [1, 67],
+	        $Vo = [33, 65, 72, 75, 80, 81, 82, 83, 84, 85],
+	        $Vp = [23, 65, 72, 80, 81, 82, 83, 84, 85],
+	        $Vq = [1, 79],
+	        $Vr = [65, 68, 72, 80, 81, 82, 83, 84, 85],
+	        $Vs = [33, 75],
+	        $Vt = [23, 33, 54, 68, 72, 75],
+	        $Vu = [1, 109],
+	        $Vv = [1, 121],
+	        $Vw = [72, 77];
 	    var parser = { trace: function trace() {},
 	        yy: {},
 	        symbols_: { "error": 2, "root": 3, "program": 4, "EOF": 5, "program_repetition0": 6, "statement": 7, "mustache": 8, "block": 9, "rawBlock": 10, "partial": 11, "partialBlock": 12, "content": 13, "COMMENT": 14, "CONTENT": 15, "openRawBlock": 16, "rawBlock_repetition_plus0": 17, "END_RAW_BLOCK": 18, "OPEN_RAW_BLOCK": 19, "helperName": 20, "openRawBlock_repetition0": 21, "openRawBlock_option0": 22, "CLOSE_RAW_BLOCK": 23, "openBlock": 24, "block_option0": 25, "closeBlock": 26, "openInverse": 27, "block_option1": 28, "OPEN_BLOCK": 29, "openBlock_repetition0": 30, "openBlock_option0": 31, "openBlock_option1": 32, "CLOSE": 33, "OPEN_INVERSE": 34, "openInverse_repetition0": 35, "openInverse_option0": 36, "openInverse_option1": 37, "openInverseChain": 38, "OPEN_INVERSE_CHAIN": 39, "openInverseChain_repetition0": 40, "openInverseChain_option0": 41, "openInverseChain_option1": 42, "inverseAndProgram": 43, "INVERSE": 44, "inverseChain": 45, "inverseChain_option0": 46, "OPEN_ENDBLOCK": 47, "OPEN": 48, "mustache_repetition0": 49, "mustache_option0": 50, "OPEN_UNESCAPED": 51, "mustache_repetition1": 52, "mustache_option1": 53, "CLOSE_UNESCAPED": 54, "OPEN_PARTIAL": 55, "partialName": 56, "partial_repetition0": 57, "partial_option0": 58, "openPartialBlock": 59, "OPEN_PARTIAL_BLOCK": 60, "openPartialBlock_repetition0": 61, "openPartialBlock_option0": 62, "param": 63, "sexpr": 64, "OPEN_SEXPR": 65, "sexpr_repetition0": 66, "sexpr_option0": 67, "CLOSE_SEXPR": 68, "hash": 69, "hash_repetition_plus0": 70, "hashSegment": 71, "ID": 72, "EQUALS": 73, "blockParams": 74, "OPEN_BLOCK_PARAMS": 75, "blockParams_repetition_plus0": 76, "CLOSE_BLOCK_PARAMS": 77, "path": 78, "dataName": 79, "STRING": 80, "NUMBER": 81, "BOOLEAN": 82, "UNDEFINED": 83, "NULL": 84, "DATA": 85, "pathSegments": 86, "SEP": 87, "$accept": 0, "$end": 1 },
 	        terminals_: { 2: "error", 5: "EOF", 14: "COMMENT", 15: "CONTENT", 18: "END_RAW_BLOCK", 19: "OPEN_RAW_BLOCK", 23: "CLOSE_RAW_BLOCK", 29: "OPEN_BLOCK", 33: "CLOSE", 34: "OPEN_INVERSE", 39: "OPEN_INVERSE_CHAIN", 44: "INVERSE", 47: "OPEN_ENDBLOCK", 48: "OPEN", 51: "OPEN_UNESCAPED", 54: "CLOSE_UNESCAPED", 55: "OPEN_PARTIAL", 60: "OPEN_PARTIAL_BLOCK", 65: "OPEN_SEXPR", 68: "CLOSE_SEXPR", 72: "ID", 73: "EQUALS", 75: "OPEN_BLOCK_PARAMS", 77: "CLOSE_BLOCK_PARAMS", 80: "STRING", 81: "NUMBER", 82: "BOOLEAN", 83: "UNDEFINED", 84: "NULL", 85: "DATA", 87: "SEP" },
 	        productions_: [0, [3, 2], [4, 1], [7, 1], [7, 1], [7, 1], [7, 1], [7, 1], [7, 1], [7, 1], [13, 1], [10, 3], [16, 5], [9, 4], [9, 4], [24, 6], [27, 6], [38, 6], [43, 2], [45, 3], [45, 1], [26, 3], [8, 5], [8, 5], [11, 5], [12, 3], [59, 5], [63, 1], [63, 1], [64, 5], [69, 1], [71, 3], [74, 3], [20, 1], [20, 1], [20, 1], [20, 1], [20, 1], [20, 1], [20, 1], [56, 1], [56, 1], [79, 2], [78, 1], [86, 3], [86, 1], [6, 0], [6, 2], [17, 1], [17, 2], [21, 0], [21, 2], [22, 0], [22, 1], [25, 0], [25, 1], [28, 0], [28, 1], [30, 0], [30, 2], [31, 0], [31, 1], [32, 0], [32, 1], [35, 0], [35, 2], [36, 0], [36, 1], [37, 0], [37, 1], [40, 0], [40, 2], [41, 0], [41, 1], [42, 0], [42, 1], [46, 0], [46, 1], [49, 0], [49, 2], [50, 0], [50, 1], [52, 0], [52, 2], [53, 0], [53, 1], [57, 0], [57, 2], [58, 0], [58, 1], [61, 0], [61, 2], [62, 0], [62, 1], [66, 0], [66, 2], [67, 0], [67, 1], [70, 1], [70, 2], [76, 1], [76, 2]],
-	        performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate, $$, _$) {
+	        performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate, /* action[1] */$$, /* vstack */_$ /* lstack */) {
+	            /* this == yyval */
 
 	            var $0 = $$.length - 1;
 	            switch (yystate) {
@@ -1645,25 +1774,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                case 2:
 	                    this.$ = yy.prepareProgram($$[$0]);
 	                    break;
-	                case 3:
-	                    this.$ = $$[$0];
-	                    break;
-	                case 4:
-	                    this.$ = $$[$0];
-	                    break;
-	                case 5:
-	                    this.$ = $$[$0];
-	                    break;
-	                case 6:
-	                    this.$ = $$[$0];
-	                    break;
-	                case 7:
-	                    this.$ = $$[$0];
-	                    break;
-	                case 8:
+	                case 3:case 4:case 5:case 6:case 7:case 8:case 20:case 27:case 28:case 33:case 34:case 40:case 41:
 	                    this.$ = $$[$0];
 	                    break;
 	                case 9:
+
 	                    this.$ = {
 	                        type: 'CommentStatement',
 	                        value: yy.stripComment($$[$0]),
@@ -1673,6 +1788,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                    break;
 	                case 10:
+
 	                    this.$ = {
 	                        type: 'ContentStatement',
 	                        original: $$[$0],
@@ -1696,16 +1812,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                case 15:
 	                    this.$ = { open: $$[$0 - 5], path: $$[$0 - 4], params: $$[$0 - 3], hash: $$[$0 - 2], blockParams: $$[$0 - 1], strip: yy.stripFlags($$[$0 - 5], $$[$0]) };
 	                    break;
-	                case 16:
-	                    this.$ = { path: $$[$0 - 4], params: $$[$0 - 3], hash: $$[$0 - 2], blockParams: $$[$0 - 1], strip: yy.stripFlags($$[$0 - 5], $$[$0]) };
-	                    break;
-	                case 17:
+	                case 16:case 17:
 	                    this.$ = { path: $$[$0 - 4], params: $$[$0 - 3], hash: $$[$0 - 2], blockParams: $$[$0 - 1], strip: yy.stripFlags($$[$0 - 5], $$[$0]) };
 	                    break;
 	                case 18:
 	                    this.$ = { strip: yy.stripFlags($$[$0 - 1], $$[$0 - 1]), program: $$[$0] };
 	                    break;
 	                case 19:
+
 	                    var inverse = yy.prepareBlock($$[$0 - 2], $$[$0 - 1], $$[$0], $$[$0], false, this._$),
 	                        program = yy.prepareProgram([inverse], $$[$0 - 1].loc);
 	                    program.chained = true;
@@ -1713,19 +1827,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    this.$ = { strip: $$[$0 - 2].strip, program: program, chain: true };
 
 	                    break;
-	                case 20:
-	                    this.$ = $$[$0];
-	                    break;
 	                case 21:
 	                    this.$ = { path: $$[$0 - 1], strip: yy.stripFlags($$[$0 - 2], $$[$0]) };
 	                    break;
-	                case 22:
-	                    this.$ = yy.prepareMustache($$[$0 - 3], $$[$0 - 2], $$[$0 - 1], $$[$0 - 4], yy.stripFlags($$[$0 - 4], $$[$0]), this._$);
-	                    break;
-	                case 23:
+	                case 22:case 23:
 	                    this.$ = yy.prepareMustache($$[$0 - 3], $$[$0 - 2], $$[$0 - 1], $$[$0 - 4], yy.stripFlags($$[$0 - 4], $$[$0]), this._$);
 	                    break;
 	                case 24:
+
 	                    this.$ = {
 	                        type: 'PartialStatement',
 	                        name: $$[$0 - 3],
@@ -1743,13 +1852,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                case 26:
 	                    this.$ = { path: $$[$0 - 3], params: $$[$0 - 2], hash: $$[$0 - 1], strip: yy.stripFlags($$[$0 - 4], $$[$0]) };
 	                    break;
-	                case 27:
-	                    this.$ = $$[$0];
-	                    break;
-	                case 28:
-	                    this.$ = $$[$0];
-	                    break;
 	                case 29:
+
 	                    this.$ = {
 	                        type: 'SubExpression',
 	                        path: $$[$0 - 3],
@@ -1768,12 +1872,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                case 32:
 	                    this.$ = yy.id($$[$0 - 1]);
 	                    break;
-	                case 33:
-	                    this.$ = $$[$0];
-	                    break;
-	                case 34:
-	                    this.$ = $$[$0];
-	                    break;
 	                case 35:
 	                    this.$ = { type: 'StringLiteral', value: $$[$0], original: $$[$0], loc: yy.locInfo(this._$) };
 	                    break;
@@ -1789,12 +1887,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                case 39:
 	                    this.$ = { type: 'NullLiteral', original: null, value: null, loc: yy.locInfo(this._$) };
 	                    break;
-	                case 40:
-	                    this.$ = $$[$0];
-	                    break;
-	                case 41:
-	                    this.$ = $$[$0];
-	                    break;
 	                case 42:
 	                    this.$ = yy.preparePath(true, $$[$0], this._$);
 	                    break;
@@ -1807,125 +1899,81 @@ return /******/ (function(modules) { // webpackBootstrap
 	                case 45:
 	                    this.$ = [{ part: yy.id($$[$0]), original: $$[$0] }];
 	                    break;
-	                case 46:
+	                case 46:case 50:case 58:case 64:case 70:case 78:case 82:case 86:case 90:case 94:
 	                    this.$ = [];
 	                    break;
-	                case 47:
+	                case 47:case 49:case 51:case 59:case 65:case 71:case 79:case 83:case 87:case 91:case 95:case 99:case 101:
 	                    $$[$0 - 1].push($$[$0]);
 	                    break;
-	                case 48:
+	                case 48:case 98:case 100:
 	                    this.$ = [$$[$0]];
-	                    break;
-	                case 49:
-	                    $$[$0 - 1].push($$[$0]);
-	                    break;
-	                case 50:
-	                    this.$ = [];
-	                    break;
-	                case 51:
-	                    $$[$0 - 1].push($$[$0]);
-	                    break;
-	                case 58:
-	                    this.$ = [];
-	                    break;
-	                case 59:
-	                    $$[$0 - 1].push($$[$0]);
-	                    break;
-	                case 64:
-	                    this.$ = [];
-	                    break;
-	                case 65:
-	                    $$[$0 - 1].push($$[$0]);
-	                    break;
-	                case 70:
-	                    this.$ = [];
-	                    break;
-	                case 71:
-	                    $$[$0 - 1].push($$[$0]);
-	                    break;
-	                case 78:
-	                    this.$ = [];
-	                    break;
-	                case 79:
-	                    $$[$0 - 1].push($$[$0]);
-	                    break;
-	                case 82:
-	                    this.$ = [];
-	                    break;
-	                case 83:
-	                    $$[$0 - 1].push($$[$0]);
-	                    break;
-	                case 86:
-	                    this.$ = [];
-	                    break;
-	                case 87:
-	                    $$[$0 - 1].push($$[$0]);
-	                    break;
-	                case 90:
-	                    this.$ = [];
-	                    break;
-	                case 91:
-	                    $$[$0 - 1].push($$[$0]);
-	                    break;
-	                case 94:
-	                    this.$ = [];
-	                    break;
-	                case 95:
-	                    $$[$0 - 1].push($$[$0]);
-	                    break;
-	                case 98:
-	                    this.$ = [$$[$0]];
-	                    break;
-	                case 99:
-	                    $$[$0 - 1].push($$[$0]);
-	                    break;
-	                case 100:
-	                    this.$ = [$$[$0]];
-	                    break;
-	                case 101:
-	                    $$[$0 - 1].push($$[$0]);
 	                    break;
 	            }
 	        },
-	        table: [{ 3: 1, 4: 2, 5: [2, 46], 6: 3, 14: [2, 46], 15: [2, 46], 19: [2, 46], 29: [2, 46], 34: [2, 46], 48: [2, 46], 51: [2, 46], 55: [2, 46], 60: [2, 46] }, { 1: [3] }, { 5: [1, 4] }, { 5: [2, 2], 7: 5, 8: 6, 9: 7, 10: 8, 11: 9, 12: 10, 13: 11, 14: [1, 12], 15: [1, 20], 16: 17, 19: [1, 23], 24: 15, 27: 16, 29: [1, 21], 34: [1, 22], 39: [2, 2], 44: [2, 2], 47: [2, 2], 48: [1, 13], 51: [1, 14], 55: [1, 18], 59: 19, 60: [1, 24] }, { 1: [2, 1] }, { 5: [2, 47], 14: [2, 47], 15: [2, 47], 19: [2, 47], 29: [2, 47], 34: [2, 47], 39: [2, 47], 44: [2, 47], 47: [2, 47], 48: [2, 47], 51: [2, 47], 55: [2, 47], 60: [2, 47] }, { 5: [2, 3], 14: [2, 3], 15: [2, 3], 19: [2, 3], 29: [2, 3], 34: [2, 3], 39: [2, 3], 44: [2, 3], 47: [2, 3], 48: [2, 3], 51: [2, 3], 55: [2, 3], 60: [2, 3] }, { 5: [2, 4], 14: [2, 4], 15: [2, 4], 19: [2, 4], 29: [2, 4], 34: [2, 4], 39: [2, 4], 44: [2, 4], 47: [2, 4], 48: [2, 4], 51: [2, 4], 55: [2, 4], 60: [2, 4] }, { 5: [2, 5], 14: [2, 5], 15: [2, 5], 19: [2, 5], 29: [2, 5], 34: [2, 5], 39: [2, 5], 44: [2, 5], 47: [2, 5], 48: [2, 5], 51: [2, 5], 55: [2, 5], 60: [2, 5] }, { 5: [2, 6], 14: [2, 6], 15: [2, 6], 19: [2, 6], 29: [2, 6], 34: [2, 6], 39: [2, 6], 44: [2, 6], 47: [2, 6], 48: [2, 6], 51: [2, 6], 55: [2, 6], 60: [2, 6] }, { 5: [2, 7], 14: [2, 7], 15: [2, 7], 19: [2, 7], 29: [2, 7], 34: [2, 7], 39: [2, 7], 44: [2, 7], 47: [2, 7], 48: [2, 7], 51: [2, 7], 55: [2, 7], 60: [2, 7] }, { 5: [2, 8], 14: [2, 8], 15: [2, 8], 19: [2, 8], 29: [2, 8], 34: [2, 8], 39: [2, 8], 44: [2, 8], 47: [2, 8], 48: [2, 8], 51: [2, 8], 55: [2, 8], 60: [2, 8] }, { 5: [2, 9], 14: [2, 9], 15: [2, 9], 19: [2, 9], 29: [2, 9], 34: [2, 9], 39: [2, 9], 44: [2, 9], 47: [2, 9], 48: [2, 9], 51: [2, 9], 55: [2, 9], 60: [2, 9] }, { 20: 25, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 36, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 4: 37, 6: 3, 14: [2, 46], 15: [2, 46], 19: [2, 46], 29: [2, 46], 34: [2, 46], 39: [2, 46], 44: [2, 46], 47: [2, 46], 48: [2, 46], 51: [2, 46], 55: [2, 46], 60: [2, 46] }, { 4: 38, 6: 3, 14: [2, 46], 15: [2, 46], 19: [2, 46], 29: [2, 46], 34: [2, 46], 44: [2, 46], 47: [2, 46], 48: [2, 46], 51: [2, 46], 55: [2, 46], 60: [2, 46] }, { 13: 40, 15: [1, 20], 17: 39 }, { 20: 42, 56: 41, 64: 43, 65: [1, 44], 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 4: 45, 6: 3, 14: [2, 46], 15: [2, 46], 19: [2, 46], 29: [2, 46], 34: [2, 46], 47: [2, 46], 48: [2, 46], 51: [2, 46], 55: [2, 46], 60: [2, 46] }, { 5: [2, 10], 14: [2, 10], 15: [2, 10], 18: [2, 10], 19: [2, 10], 29: [2, 10], 34: [2, 10], 39: [2, 10], 44: [2, 10], 47: [2, 10], 48: [2, 10], 51: [2, 10], 55: [2, 10], 60: [2, 10] }, { 20: 46, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 47, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 48, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 42, 56: 49, 64: 43, 65: [1, 44], 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 33: [2, 78], 49: 50, 65: [2, 78], 72: [2, 78], 80: [2, 78], 81: [2, 78], 82: [2, 78], 83: [2, 78], 84: [2, 78], 85: [2, 78] }, { 23: [2, 33], 33: [2, 33], 54: [2, 33], 65: [2, 33], 68: [2, 33], 72: [2, 33], 75: [2, 33], 80: [2, 33], 81: [2, 33], 82: [2, 33], 83: [2, 33], 84: [2, 33], 85: [2, 33] }, { 23: [2, 34], 33: [2, 34], 54: [2, 34], 65: [2, 34], 68: [2, 34], 72: [2, 34], 75: [2, 34], 80: [2, 34], 81: [2, 34], 82: [2, 34], 83: [2, 34], 84: [2, 34], 85: [2, 34] }, { 23: [2, 35], 33: [2, 35], 54: [2, 35], 65: [2, 35], 68: [2, 35], 72: [2, 35], 75: [2, 35], 80: [2, 35], 81: [2, 35], 82: [2, 35], 83: [2, 35], 84: [2, 35], 85: [2, 35] }, { 23: [2, 36], 33: [2, 36], 54: [2, 36], 65: [2, 36], 68: [2, 36], 72: [2, 36], 75: [2, 36], 80: [2, 36], 81: [2, 36], 82: [2, 36], 83: [2, 36], 84: [2, 36], 85: [2, 36] }, { 23: [2, 37], 33: [2, 37], 54: [2, 37], 65: [2, 37], 68: [2, 37], 72: [2, 37], 75: [2, 37], 80: [2, 37], 81: [2, 37], 82: [2, 37], 83: [2, 37], 84: [2, 37], 85: [2, 37] }, { 23: [2, 38], 33: [2, 38], 54: [2, 38], 65: [2, 38], 68: [2, 38], 72: [2, 38], 75: [2, 38], 80: [2, 38], 81: [2, 38], 82: [2, 38], 83: [2, 38], 84: [2, 38], 85: [2, 38] }, { 23: [2, 39], 33: [2, 39], 54: [2, 39], 65: [2, 39], 68: [2, 39], 72: [2, 39], 75: [2, 39], 80: [2, 39], 81: [2, 39], 82: [2, 39], 83: [2, 39], 84: [2, 39], 85: [2, 39] }, { 23: [2, 43], 33: [2, 43], 54: [2, 43], 65: [2, 43], 68: [2, 43], 72: [2, 43], 75: [2, 43], 80: [2, 43], 81: [2, 43], 82: [2, 43], 83: [2, 43], 84: [2, 43], 85: [2, 43], 87: [1, 51] }, { 72: [1, 35], 86: 52 }, { 23: [2, 45], 33: [2, 45], 54: [2, 45], 65: [2, 45], 68: [2, 45], 72: [2, 45], 75: [2, 45], 80: [2, 45], 81: [2, 45], 82: [2, 45], 83: [2, 45], 84: [2, 45], 85: [2, 45], 87: [2, 45] }, { 52: 53, 54: [2, 82], 65: [2, 82], 72: [2, 82], 80: [2, 82], 81: [2, 82], 82: [2, 82], 83: [2, 82], 84: [2, 82], 85: [2, 82] }, { 25: 54, 38: 56, 39: [1, 58], 43: 57, 44: [1, 59], 45: 55, 47: [2, 54] }, { 28: 60, 43: 61, 44: [1, 59], 47: [2, 56] }, { 13: 63, 15: [1, 20], 18: [1, 62] }, { 15: [2, 48], 18: [2, 48] }, { 33: [2, 86], 57: 64, 65: [2, 86], 72: [2, 86], 80: [2, 86], 81: [2, 86], 82: [2, 86], 83: [2, 86], 84: [2, 86], 85: [2, 86] }, { 33: [2, 40], 65: [2, 40], 72: [2, 40], 80: [2, 40], 81: [2, 40], 82: [2, 40], 83: [2, 40], 84: [2, 40], 85: [2, 40] }, { 33: [2, 41], 65: [2, 41], 72: [2, 41], 80: [2, 41], 81: [2, 41], 82: [2, 41], 83: [2, 41], 84: [2, 41], 85: [2, 41] }, { 20: 65, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 26: 66, 47: [1, 67] }, { 30: 68, 33: [2, 58], 65: [2, 58], 72: [2, 58], 75: [2, 58], 80: [2, 58], 81: [2, 58], 82: [2, 58], 83: [2, 58], 84: [2, 58], 85: [2, 58] }, { 33: [2, 64], 35: 69, 65: [2, 64], 72: [2, 64], 75: [2, 64], 80: [2, 64], 81: [2, 64], 82: [2, 64], 83: [2, 64], 84: [2, 64], 85: [2, 64] }, { 21: 70, 23: [2, 50], 65: [2, 50], 72: [2, 50], 80: [2, 50], 81: [2, 50], 82: [2, 50], 83: [2, 50], 84: [2, 50], 85: [2, 50] }, { 33: [2, 90], 61: 71, 65: [2, 90], 72: [2, 90], 80: [2, 90], 81: [2, 90], 82: [2, 90], 83: [2, 90], 84: [2, 90], 85: [2, 90] }, { 20: 75, 33: [2, 80], 50: 72, 63: 73, 64: 76, 65: [1, 44], 69: 74, 70: 77, 71: 78, 72: [1, 79], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 72: [1, 80] }, { 23: [2, 42], 33: [2, 42], 54: [2, 42], 65: [2, 42], 68: [2, 42], 72: [2, 42], 75: [2, 42], 80: [2, 42], 81: [2, 42], 82: [2, 42], 83: [2, 42], 84: [2, 42], 85: [2, 42], 87: [1, 51] }, { 20: 75, 53: 81, 54: [2, 84], 63: 82, 64: 76, 65: [1, 44], 69: 83, 70: 77, 71: 78, 72: [1, 79], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 26: 84, 47: [1, 67] }, { 47: [2, 55] }, { 4: 85, 6: 3, 14: [2, 46], 15: [2, 46], 19: [2, 46], 29: [2, 46], 34: [2, 46], 39: [2, 46], 44: [2, 46], 47: [2, 46], 48: [2, 46], 51: [2, 46], 55: [2, 46], 60: [2, 46] }, { 47: [2, 20] }, { 20: 86, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 4: 87, 6: 3, 14: [2, 46], 15: [2, 46], 19: [2, 46], 29: [2, 46], 34: [2, 46], 47: [2, 46], 48: [2, 46], 51: [2, 46], 55: [2, 46], 60: [2, 46] }, { 26: 88, 47: [1, 67] }, { 47: [2, 57] }, { 5: [2, 11], 14: [2, 11], 15: [2, 11], 19: [2, 11], 29: [2, 11], 34: [2, 11], 39: [2, 11], 44: [2, 11], 47: [2, 11], 48: [2, 11], 51: [2, 11], 55: [2, 11], 60: [2, 11] }, { 15: [2, 49], 18: [2, 49] }, { 20: 75, 33: [2, 88], 58: 89, 63: 90, 64: 76, 65: [1, 44], 69: 91, 70: 77, 71: 78, 72: [1, 79], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 65: [2, 94], 66: 92, 68: [2, 94], 72: [2, 94], 80: [2, 94], 81: [2, 94], 82: [2, 94], 83: [2, 94], 84: [2, 94], 85: [2, 94] }, { 5: [2, 25], 14: [2, 25], 15: [2, 25], 19: [2, 25], 29: [2, 25], 34: [2, 25], 39: [2, 25], 44: [2, 25], 47: [2, 25], 48: [2, 25], 51: [2, 25], 55: [2, 25], 60: [2, 25] }, { 20: 93, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 75, 31: 94, 33: [2, 60], 63: 95, 64: 76, 65: [1, 44], 69: 96, 70: 77, 71: 78, 72: [1, 79], 75: [2, 60], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 75, 33: [2, 66], 36: 97, 63: 98, 64: 76, 65: [1, 44], 69: 99, 70: 77, 71: 78, 72: [1, 79], 75: [2, 66], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 75, 22: 100, 23: [2, 52], 63: 101, 64: 76, 65: [1, 44], 69: 102, 70: 77, 71: 78, 72: [1, 79], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 75, 33: [2, 92], 62: 103, 63: 104, 64: 76, 65: [1, 44], 69: 105, 70: 77, 71: 78, 72: [1, 79], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 33: [1, 106] }, { 33: [2, 79], 65: [2, 79], 72: [2, 79], 80: [2, 79], 81: [2, 79], 82: [2, 79], 83: [2, 79], 84: [2, 79], 85: [2, 79] }, { 33: [2, 81] }, { 23: [2, 27], 33: [2, 27], 54: [2, 27], 65: [2, 27], 68: [2, 27], 72: [2, 27], 75: [2, 27], 80: [2, 27], 81: [2, 27], 82: [2, 27], 83: [2, 27], 84: [2, 27], 85: [2, 27] }, { 23: [2, 28], 33: [2, 28], 54: [2, 28], 65: [2, 28], 68: [2, 28], 72: [2, 28], 75: [2, 28], 80: [2, 28], 81: [2, 28], 82: [2, 28], 83: [2, 28], 84: [2, 28], 85: [2, 28] }, { 23: [2, 30], 33: [2, 30], 54: [2, 30], 68: [2, 30], 71: 107, 72: [1, 108], 75: [2, 30] }, { 23: [2, 98], 33: [2, 98], 54: [2, 98], 68: [2, 98], 72: [2, 98], 75: [2, 98] }, { 23: [2, 45], 33: [2, 45], 54: [2, 45], 65: [2, 45], 68: [2, 45], 72: [2, 45], 73: [1, 109], 75: [2, 45], 80: [2, 45], 81: [2, 45], 82: [2, 45], 83: [2, 45], 84: [2, 45], 85: [2, 45], 87: [2, 45] }, { 23: [2, 44], 33: [2, 44], 54: [2, 44], 65: [2, 44], 68: [2, 44], 72: [2, 44], 75: [2, 44], 80: [2, 44], 81: [2, 44], 82: [2, 44], 83: [2, 44], 84: [2, 44], 85: [2, 44], 87: [2, 44] }, { 54: [1, 110] }, { 54: [2, 83], 65: [2, 83], 72: [2, 83], 80: [2, 83], 81: [2, 83], 82: [2, 83], 83: [2, 83], 84: [2, 83], 85: [2, 83] }, { 54: [2, 85] }, { 5: [2, 13], 14: [2, 13], 15: [2, 13], 19: [2, 13], 29: [2, 13], 34: [2, 13], 39: [2, 13], 44: [2, 13], 47: [2, 13], 48: [2, 13], 51: [2, 13], 55: [2, 13], 60: [2, 13] }, { 38: 56, 39: [1, 58], 43: 57, 44: [1, 59], 45: 112, 46: 111, 47: [2, 76] }, { 33: [2, 70], 40: 113, 65: [2, 70], 72: [2, 70], 75: [2, 70], 80: [2, 70], 81: [2, 70], 82: [2, 70], 83: [2, 70], 84: [2, 70], 85: [2, 70] }, { 47: [2, 18] }, { 5: [2, 14], 14: [2, 14], 15: [2, 14], 19: [2, 14], 29: [2, 14], 34: [2, 14], 39: [2, 14], 44: [2, 14], 47: [2, 14], 48: [2, 14], 51: [2, 14], 55: [2, 14], 60: [2, 14] }, { 33: [1, 114] }, { 33: [2, 87], 65: [2, 87], 72: [2, 87], 80: [2, 87], 81: [2, 87], 82: [2, 87], 83: [2, 87], 84: [2, 87], 85: [2, 87] }, { 33: [2, 89] }, { 20: 75, 63: 116, 64: 76, 65: [1, 44], 67: 115, 68: [2, 96], 69: 117, 70: 77, 71: 78, 72: [1, 79], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 33: [1, 118] }, { 32: 119, 33: [2, 62], 74: 120, 75: [1, 121] }, { 33: [2, 59], 65: [2, 59], 72: [2, 59], 75: [2, 59], 80: [2, 59], 81: [2, 59], 82: [2, 59], 83: [2, 59], 84: [2, 59], 85: [2, 59] }, { 33: [2, 61], 75: [2, 61] }, { 33: [2, 68], 37: 122, 74: 123, 75: [1, 121] }, { 33: [2, 65], 65: [2, 65], 72: [2, 65], 75: [2, 65], 80: [2, 65], 81: [2, 65], 82: [2, 65], 83: [2, 65], 84: [2, 65], 85: [2, 65] }, { 33: [2, 67], 75: [2, 67] }, { 23: [1, 124] }, { 23: [2, 51], 65: [2, 51], 72: [2, 51], 80: [2, 51], 81: [2, 51], 82: [2, 51], 83: [2, 51], 84: [2, 51], 85: [2, 51] }, { 23: [2, 53] }, { 33: [1, 125] }, { 33: [2, 91], 65: [2, 91], 72: [2, 91], 80: [2, 91], 81: [2, 91], 82: [2, 91], 83: [2, 91], 84: [2, 91], 85: [2, 91] }, { 33: [2, 93] }, { 5: [2, 22], 14: [2, 22], 15: [2, 22], 19: [2, 22], 29: [2, 22], 34: [2, 22], 39: [2, 22], 44: [2, 22], 47: [2, 22], 48: [2, 22], 51: [2, 22], 55: [2, 22], 60: [2, 22] }, { 23: [2, 99], 33: [2, 99], 54: [2, 99], 68: [2, 99], 72: [2, 99], 75: [2, 99] }, { 73: [1, 109] }, { 20: 75, 63: 126, 64: 76, 65: [1, 44], 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 5: [2, 23], 14: [2, 23], 15: [2, 23], 19: [2, 23], 29: [2, 23], 34: [2, 23], 39: [2, 23], 44: [2, 23], 47: [2, 23], 48: [2, 23], 51: [2, 23], 55: [2, 23], 60: [2, 23] }, { 47: [2, 19] }, { 47: [2, 77] }, { 20: 75, 33: [2, 72], 41: 127, 63: 128, 64: 76, 65: [1, 44], 69: 129, 70: 77, 71: 78, 72: [1, 79], 75: [2, 72], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 5: [2, 24], 14: [2, 24], 15: [2, 24], 19: [2, 24], 29: [2, 24], 34: [2, 24], 39: [2, 24], 44: [2, 24], 47: [2, 24], 48: [2, 24], 51: [2, 24], 55: [2, 24], 60: [2, 24] }, { 68: [1, 130] }, { 65: [2, 95], 68: [2, 95], 72: [2, 95], 80: [2, 95], 81: [2, 95], 82: [2, 95], 83: [2, 95], 84: [2, 95], 85: [2, 95] }, { 68: [2, 97] }, { 5: [2, 21], 14: [2, 21], 15: [2, 21], 19: [2, 21], 29: [2, 21], 34: [2, 21], 39: [2, 21], 44: [2, 21], 47: [2, 21], 48: [2, 21], 51: [2, 21], 55: [2, 21], 60: [2, 21] }, { 33: [1, 131] }, { 33: [2, 63] }, { 72: [1, 133], 76: 132 }, { 33: [1, 134] }, { 33: [2, 69] }, { 15: [2, 12] }, { 14: [2, 26], 15: [2, 26], 19: [2, 26], 29: [2, 26], 34: [2, 26], 47: [2, 26], 48: [2, 26], 51: [2, 26], 55: [2, 26], 60: [2, 26] }, { 23: [2, 31], 33: [2, 31], 54: [2, 31], 68: [2, 31], 72: [2, 31], 75: [2, 31] }, { 33: [2, 74], 42: 135, 74: 136, 75: [1, 121] }, { 33: [2, 71], 65: [2, 71], 72: [2, 71], 75: [2, 71], 80: [2, 71], 81: [2, 71], 82: [2, 71], 83: [2, 71], 84: [2, 71], 85: [2, 71] }, { 33: [2, 73], 75: [2, 73] }, { 23: [2, 29], 33: [2, 29], 54: [2, 29], 65: [2, 29], 68: [2, 29], 72: [2, 29], 75: [2, 29], 80: [2, 29], 81: [2, 29], 82: [2, 29], 83: [2, 29], 84: [2, 29], 85: [2, 29] }, { 14: [2, 15], 15: [2, 15], 19: [2, 15], 29: [2, 15], 34: [2, 15], 39: [2, 15], 44: [2, 15], 47: [2, 15], 48: [2, 15], 51: [2, 15], 55: [2, 15], 60: [2, 15] }, { 72: [1, 138], 77: [1, 137] }, { 72: [2, 100], 77: [2, 100] }, { 14: [2, 16], 15: [2, 16], 19: [2, 16], 29: [2, 16], 34: [2, 16], 44: [2, 16], 47: [2, 16], 48: [2, 16], 51: [2, 16], 55: [2, 16], 60: [2, 16] }, { 33: [1, 139] }, { 33: [2, 75] }, { 33: [2, 32] }, { 72: [2, 101], 77: [2, 101] }, { 14: [2, 17], 15: [2, 17], 19: [2, 17], 29: [2, 17], 34: [2, 17], 39: [2, 17], 44: [2, 17], 47: [2, 17], 48: [2, 17], 51: [2, 17], 55: [2, 17], 60: [2, 17] }],
+	        table: [o([5, 14, 15, 19, 29, 34, 48, 51, 55, 60], $V0, { 3: 1, 4: 2, 6: 3 }), { 1: [3] }, { 5: [1, 4] }, o([5, 39, 44, 47], [2, 2], { 7: 5, 8: 6, 9: 7, 10: 8, 11: 9, 12: 10, 13: 11, 24: 15, 27: 16, 16: 17, 59: 19, 14: [1, 12], 15: $V1, 19: [1, 23], 29: [1, 21], 34: [1, 22], 48: [1, 13], 51: [1, 14], 55: [1, 18], 60: [1, 24] }), { 1: [2, 1] }, o($V2, [2, 47]), o($V2, [2, 3]), o($V2, [2, 4]), o($V2, [2, 5]), o($V2, [2, 6]), o($V2, [2, 7]), o($V2, [2, 8]), o($V2, [2, 9]), { 20: 25, 72: $V3, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, { 20: 36, 72: $V3, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, o($Va, $V0, { 6: 3, 4: 37 }), o($Vb, $V0, { 6: 3, 4: 38 }), { 13: 40, 15: $V1, 17: 39 }, { 20: 42, 56: 41, 64: 43, 65: $Vc, 72: $V3, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, o($Vd, $V0, { 6: 3, 4: 45 }), o([5, 14, 15, 18, 19, 29, 34, 39, 44, 47, 48, 51, 55, 60], [2, 10]), { 20: 46, 72: $V3, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, { 20: 47, 72: $V3, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, { 20: 48, 72: $V3, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, { 20: 42, 56: 49, 64: 43, 65: $Vc, 72: $V3, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, o($Ve, [2, 78], { 49: 50 }), o($Vf, [2, 33]), o($Vf, [2, 34]), o($Vf, [2, 35]), o($Vf, [2, 36]), o($Vf, [2, 37]), o($Vf, [2, 38]), o($Vf, [2, 39]), o($Vf, [2, 43], { 87: $Vg }), { 72: $V3, 86: 52 }, o($Vh, $Vi), o($Vj, [2, 82], { 52: 53 }), { 25: 54, 38: 56, 39: $Vk, 43: 57, 44: $Vl, 45: 55, 47: [2, 54] }, { 28: 60, 43: 61, 44: $Vl, 47: [2, 56] }, { 13: 63, 15: $V1, 18: [1, 62] }, o($Vm, [2, 48]), o($Ve, [2, 86], { 57: 64 }), o($Ve, [2, 40]), o($Ve, [2, 41]), { 20: 65, 72: $V3, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, { 26: 66, 47: $Vn }, o($Vo, [2, 58], { 30: 68 }), o($Vo, [2, 64], { 35: 69 }), o($Vp, [2, 50], { 21: 70 }), o($Ve, [2, 90], { 61: 71 }), { 20: 75, 33: [2, 80], 50: 72, 63: 73, 64: 76, 65: $Vc, 69: 74, 70: 77, 71: 78, 72: $Vq, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, { 72: [1, 80] }, o($Vf, [2, 42], { 87: $Vg }), { 20: 75, 53: 81, 54: [2, 84], 63: 82, 64: 76, 65: $Vc, 69: 83, 70: 77, 71: 78, 72: $Vq, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, { 26: 84, 47: $Vn }, { 47: [2, 55] }, o($Va, $V0, { 6: 3, 4: 85 }), { 47: [2, 20] }, { 20: 86, 72: $V3, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, o($Vd, $V0, { 6: 3, 4: 87 }), { 26: 88, 47: $Vn }, { 47: [2, 57] }, o($V2, [2, 11]), o($Vm, [2, 49]), { 20: 75, 33: [2, 88], 58: 89, 63: 90, 64: 76, 65: $Vc, 69: 91, 70: 77, 71: 78, 72: $Vq, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, o($Vr, [2, 94], { 66: 92 }), o($V2, [2, 25]), { 20: 93, 72: $V3, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, o($Vs, [2, 60], { 78: 26, 79: 27, 86: 33, 20: 75, 64: 76, 70: 77, 71: 78, 31: 94, 63: 95, 69: 96, 65: $Vc, 72: $Vq, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9 }), o($Vs, [2, 66], { 78: 26, 79: 27, 86: 33, 20: 75, 64: 76, 70: 77, 71: 78, 36: 97, 63: 98, 69: 99, 65: $Vc, 72: $Vq, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9 }), { 20: 75, 22: 100, 23: [2, 52], 63: 101, 64: 76, 65: $Vc, 69: 102, 70: 77, 71: 78, 72: $Vq, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, { 20: 75, 33: [2, 92], 62: 103, 63: 104, 64: 76, 65: $Vc, 69: 105, 70: 77, 71: 78, 72: $Vq, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, { 33: [1, 106] }, o($Ve, [2, 79]), { 33: [2, 81] }, o($Vf, [2, 27]), o($Vf, [2, 28]), o([23, 33, 54, 68, 75], [2, 30], { 71: 107, 72: [1, 108] }), o($Vt, [2, 98]), o($Vh, $Vi, { 73: $Vu }), o($Vh, [2, 44]), { 54: [1, 110] }, o($Vj, [2, 83]), { 54: [2, 85] }, o($V2, [2, 13]), { 38: 56, 39: $Vk, 43: 57, 44: $Vl, 45: 112, 46: 111, 47: [2, 76] }, o($Vo, [2, 70], { 40: 113 }), { 47: [2, 18] }, o($V2, [2, 14]), { 33: [1, 114] }, o($Ve, [2, 87]), { 33: [2, 89] }, { 20: 75, 63: 116, 64: 76, 65: $Vc, 67: 115, 68: [2, 96], 69: 117, 70: 77, 71: 78, 72: $Vq, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, { 33: [1, 118] }, { 32: 119, 33: [2, 62], 74: 120, 75: $Vv }, o($Vo, [2, 59]), o($Vs, [2, 61]), { 33: [2, 68], 37: 122, 74: 123, 75: $Vv }, o($Vo, [2, 65]), o($Vs, [2, 67]), { 23: [1, 124] }, o($Vp, [2, 51]), { 23: [2, 53] }, { 33: [1, 125] }, o($Ve, [2, 91]), { 33: [2, 93] }, o($V2, [2, 22]), o($Vt, [2, 99]), { 73: $Vu }, { 20: 75, 63: 126, 64: 76, 65: $Vc, 72: $V3, 78: 26, 79: 27, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9, 86: 33 }, o($V2, [2, 23]), { 47: [2, 19] }, { 47: [2, 77] }, o($Vs, [2, 72], { 78: 26, 79: 27, 86: 33, 20: 75, 64: 76, 70: 77, 71: 78, 41: 127, 63: 128, 69: 129, 65: $Vc, 72: $Vq, 80: $V4, 81: $V5, 82: $V6, 83: $V7, 84: $V8, 85: $V9 }), o($V2, [2, 24]), { 68: [1, 130] }, o($Vr, [2, 95]), { 68: [2, 97] }, o($V2, [2, 21]), { 33: [1, 131] }, { 33: [2, 63] }, { 72: [1, 133], 76: 132 }, { 33: [1, 134] }, { 33: [2, 69] }, { 15: [2, 12] }, o($Vd, [2, 26]), o($Vt, [2, 31]), { 33: [2, 74], 42: 135, 74: 136, 75: $Vv }, o($Vo, [2, 71]), o($Vs, [2, 73]), o($Vf, [2, 29]), o($Va, [2, 15]), { 72: [1, 138], 77: [1, 137] }, o($Vw, [2, 100]), o($Vb, [2, 16]), { 33: [1, 139] }, { 33: [2, 75] }, { 33: [2, 32] }, o($Vw, [2, 101]), o($Va, [2, 17])],
 	        defaultActions: { 4: [2, 1], 55: [2, 55], 57: [2, 20], 61: [2, 57], 74: [2, 81], 83: [2, 85], 87: [2, 18], 91: [2, 89], 102: [2, 53], 105: [2, 93], 111: [2, 19], 112: [2, 77], 117: [2, 97], 120: [2, 63], 123: [2, 69], 124: [2, 12], 136: [2, 75], 137: [2, 32] },
 	        parseError: function parseError(str, hash) {
-	            throw new Error(str);
+	            if (hash.recoverable) {
+	                this.trace(str);
+	            } else {
+	                var _parseError = function _parseError(msg, hash) {
+	                    this.message = msg;
+	                    this.hash = hash;
+	                };
+
+	                _parseError.prototype = new Error();
+
+	                throw new _parseError(str, hash);
+	            }
 	        },
 	        parse: function parse(input) {
 	            var self = this,
 	                stack = [0],
+	                tstack = [],
 	                vstack = [null],
 	                lstack = [],
 	                table = this.table,
-	                yytext = "",
+	                yytext = '',
 	                yylineno = 0,
 	                yyleng = 0,
 	                recovering = 0,
 	                TERROR = 2,
 	                EOF = 1;
-	            this.lexer.setInput(input);
-	            this.lexer.yy = this.yy;
-	            this.yy.lexer = this.lexer;
-	            this.yy.parser = this;
-	            if (typeof this.lexer.yylloc == "undefined") this.lexer.yylloc = {};
-	            var yyloc = this.lexer.yylloc;
+	            var args = lstack.slice.call(arguments, 1);
+	            var lexer = _Object$create(this.lexer);
+	            var sharedState = { yy: {} };
+	            for (var k in this.yy) {
+	                if (Object.prototype.hasOwnProperty.call(this.yy, k)) {
+	                    sharedState.yy[k] = this.yy[k];
+	                }
+	            }
+	            lexer.setInput(input, sharedState.yy);
+	            sharedState.yy.lexer = lexer;
+	            sharedState.yy.parser = this;
+	            if (typeof lexer.yylloc == 'undefined') {
+	                lexer.yylloc = {};
+	            }
+	            var yyloc = lexer.yylloc;
 	            lstack.push(yyloc);
-	            var ranges = this.lexer.options && this.lexer.options.ranges;
-	            if (typeof this.yy.parseError === "function") this.parseError = this.yy.parseError;
+	            var ranges = lexer.options && lexer.options.ranges;
+	            if (typeof sharedState.yy.parseError === 'function') {
+	                this.parseError = sharedState.yy.parseError;
+	            } else {
+	                this.parseError = Object.getPrototypeOf(this).parseError;
+	            }
 	            function popStack(n) {
 	                stack.length = stack.length - 2 * n;
 	                vstack.length = vstack.length - n;
 	                lstack.length = lstack.length - n;
 	            }
-	            function lex() {
+	            _token_stack: var lex = function lex() {
 	                var token;
-	                token = self.lexer.lex() || 1;
-	                if (typeof token !== "number") {
+	                token = lexer.lex() || EOF;
+	                if (typeof token !== 'number') {
 	                    token = self.symbols_[token] || token;
 	                }
 	                return token;
-	            }
+	            };
 	            var symbol,
 	                preErrorSymbol,
 	                state,
@@ -1942,42 +1990,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (this.defaultActions[state]) {
 	                    action = this.defaultActions[state];
 	                } else {
-	                    if (symbol === null || typeof symbol == "undefined") {
+	                    if (symbol === null || typeof symbol == 'undefined') {
 	                        symbol = lex();
 	                    }
 	                    action = table[state] && table[state][symbol];
 	                }
-	                if (typeof action === "undefined" || !action.length || !action[0]) {
-	                    var errStr = "";
-	                    if (!recovering) {
-	                        expected = [];
-	                        for (p in table[state]) if (this.terminals_[p] && p > 2) {
-	                            expected.push("'" + this.terminals_[p] + "'");
+	                if (typeof action === 'undefined' || !action.length || !action[0]) {
+	                    var errStr = '';
+	                    expected = [];
+	                    for (p in table[state]) {
+	                        if (this.terminals_[p] && p > TERROR) {
+	                            expected.push('\'' + this.terminals_[p] + '\'');
 	                        }
-	                        if (this.lexer.showPosition) {
-	                            errStr = "Parse error on line " + (yylineno + 1) + ":\n" + this.lexer.showPosition() + "\nExpecting " + expected.join(", ") + ", got '" + (this.terminals_[symbol] || symbol) + "'";
-	                        } else {
-	                            errStr = "Parse error on line " + (yylineno + 1) + ": Unexpected " + (symbol == 1 ? "end of input" : "'" + (this.terminals_[symbol] || symbol) + "'");
-	                        }
-	                        this.parseError(errStr, { text: this.lexer.match, token: this.terminals_[symbol] || symbol, line: this.lexer.yylineno, loc: yyloc, expected: expected });
 	                    }
+	                    if (lexer.showPosition) {
+	                        errStr = 'Parse error on line ' + (yylineno + 1) + ':\n' + lexer.showPosition() + '\nExpecting ' + expected.join(', ') + ', got \'' + (this.terminals_[symbol] || symbol) + '\'';
+	                    } else {
+	                        errStr = 'Parse error on line ' + (yylineno + 1) + ': Unexpected ' + (symbol == EOF ? 'end of input' : '\'' + (this.terminals_[symbol] || symbol) + '\'');
+	                    }
+	                    this.parseError(errStr, {
+	                        text: lexer.match,
+	                        token: this.terminals_[symbol] || symbol,
+	                        line: lexer.yylineno,
+	                        loc: yyloc,
+	                        expected: expected
+	                    });
 	                }
 	                if (action[0] instanceof Array && action.length > 1) {
-	                    throw new Error("Parse Error: multiple actions possible at state: " + state + ", token: " + symbol);
+	                    throw new Error('Parse Error: multiple actions possible at state: ' + state + ', token: ' + symbol);
 	                }
 	                switch (action[0]) {
 	                    case 1:
 	                        stack.push(symbol);
-	                        vstack.push(this.lexer.yytext);
-	                        lstack.push(this.lexer.yylloc);
+	                        vstack.push(lexer.yytext);
+	                        lstack.push(lexer.yylloc);
 	                        stack.push(action[1]);
 	                        symbol = null;
 	                        if (!preErrorSymbol) {
-	                            yyleng = this.lexer.yyleng;
-	                            yytext = this.lexer.yytext;
-	                            yylineno = this.lexer.yylineno;
-	                            yyloc = this.lexer.yylloc;
-	                            if (recovering > 0) recovering--;
+	                            yyleng = lexer.yyleng;
+	                            yytext = lexer.yytext;
+	                            yylineno = lexer.yylineno;
+	                            yyloc = lexer.yylloc;
+	                            if (recovering > 0) {
+	                                recovering--;
+	                            }
 	                        } else {
 	                            symbol = preErrorSymbol;
 	                            preErrorSymbol = null;
@@ -1986,12 +2042,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    case 2:
 	                        len = this.productions_[action[1]][1];
 	                        yyval.$ = vstack[vstack.length - len];
-	                        yyval._$ = { first_line: lstack[lstack.length - (len || 1)].first_line, last_line: lstack[lstack.length - 1].last_line, first_column: lstack[lstack.length - (len || 1)].first_column, last_column: lstack[lstack.length - 1].last_column };
+	                        yyval._$ = {
+	                            first_line: lstack[lstack.length - (len || 1)].first_line,
+	                            last_line: lstack[lstack.length - 1].last_line,
+	                            first_column: lstack[lstack.length - (len || 1)].first_column,
+	                            last_column: lstack[lstack.length - 1].last_column
+	                        };
 	                        if (ranges) {
 	                            yyval._$.range = [lstack[lstack.length - (len || 1)].range[0], lstack[lstack.length - 1].range[1]];
 	                        }
-	                        r = this.performAction.call(yyval, yytext, yyleng, yylineno, this.yy, action[1], vstack, lstack);
-	                        if (typeof r !== "undefined") {
+	                        r = this.performAction.apply(yyval, [yytext, yyleng, yylineno, sharedState.yy, action[1], vstack, lstack].concat(args));
+	                        if (typeof r !== 'undefined') {
 	                            return r;
 	                        }
 	                        if (len) {
@@ -2010,11 +2071,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	            return true;
-	        }
-	    };
-	    /* Jison generated lexer */
+	        } };
+	    /* generated by jison-lex 0.3.4 */
 	    var lexer = (function () {
-	        var lexer = { EOF: 1,
+	        var lexer = {
+
+	            EOF: 1,
+
 	            parseError: function parseError(str, hash) {
 	                if (this.yy.parser) {
 	                    this.yy.parser.parseError(str, hash);
@@ -2022,17 +2085,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    throw new Error(str);
 	                }
 	            },
-	            setInput: function setInput(input) {
+
+	            // resets the lexer, sets new input
+	            setInput: function setInput(input, yy) {
+	                this.yy = yy || this.yy || {};
 	                this._input = input;
-	                this._more = this._less = this.done = false;
+	                this._more = this._backtrack = this.done = false;
 	                this.yylineno = this.yyleng = 0;
 	                this.yytext = this.matched = this.match = '';
 	                this.conditionStack = ['INITIAL'];
-	                this.yylloc = { first_line: 1, first_column: 0, last_line: 1, last_column: 0 };
-	                if (this.options.ranges) this.yylloc.range = [0, 0];
+	                this.yylloc = {
+	                    first_line: 1,
+	                    first_column: 0,
+	                    last_line: 1,
+	                    last_column: 0
+	                };
+	                if (this.options.ranges) {
+	                    this.yylloc.range = [0, 0];
+	                }
 	                this.offset = 0;
 	                return this;
 	            },
+
+	            // consumes and returns one char from the input
 	            input: function input() {
 	                var ch = this._input[0];
 	                this.yytext += ch;
@@ -2047,27 +2122,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } else {
 	                    this.yylloc.last_column++;
 	                }
-	                if (this.options.ranges) this.yylloc.range[1]++;
+	                if (this.options.ranges) {
+	                    this.yylloc.range[1]++;
+	                }
 
 	                this._input = this._input.slice(1);
 	                return ch;
 	            },
+
+	            // unshifts one char (or a string) into the input
 	            unput: function unput(ch) {
 	                var len = ch.length;
 	                var lines = ch.split(/(?:\r\n?|\n)/g);
 
 	                this._input = ch + this._input;
-	                this.yytext = this.yytext.substr(0, this.yytext.length - len - 1);
+	                this.yytext = this.yytext.substr(0, this.yytext.length - len);
 	                //this.yyleng -= len;
 	                this.offset -= len;
 	                var oldLines = this.match.split(/(?:\r\n?|\n)/g);
 	                this.match = this.match.substr(0, this.match.length - 1);
 	                this.matched = this.matched.substr(0, this.matched.length - 1);
 
-	                if (lines.length - 1) this.yylineno -= lines.length - 1;
+	                if (lines.length - 1) {
+	                    this.yylineno -= lines.length - 1;
+	                }
 	                var r = this.yylloc.range;
 
-	                this.yylloc = { first_line: this.yylloc.first_line,
+	                this.yylloc = {
+	                    first_line: this.yylloc.first_line,
 	                    last_line: this.yylineno + 1,
 	                    first_column: this.yylloc.first_column,
 	                    last_column: lines ? (lines.length === oldLines.length ? this.yylloc.first_column : 0) + oldLines[oldLines.length - lines.length].length - lines[0].length : this.yylloc.first_column - len
@@ -2076,19 +2158,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (this.options.ranges) {
 	                    this.yylloc.range = [r[0], r[0] + this.yyleng - len];
 	                }
+	                this.yyleng = this.yytext.length;
 	                return this;
 	            },
+
+	            // When called from action, caches matched text and appends it on next action
 	            more: function more() {
 	                this._more = true;
 	                return this;
 	            },
+
+	            // When called from action, signals the lexer that this rule fails to match the input, so the next matching rule (regex) should be tested instead.
+	            reject: function reject() {
+	                if (this.options.backtrack_lexer) {
+	                    this._backtrack = true;
+	                } else {
+	                    return this.parseError('Lexical error on line ' + (this.yylineno + 1) + '. You can only invoke reject() in the lexer when the lexer is of the backtracking persuasion (options.backtrack_lexer = true).\n' + this.showPosition(), {
+	                        text: "",
+	                        token: null,
+	                        line: this.yylineno
+	                    });
+	                }
+	                return this;
+	            },
+
+	            // retain first n characters of the match
 	            less: function less(n) {
 	                this.unput(this.match.slice(n));
 	            },
+
+	            // displays already matched input, i.e. for error messages
 	            pastInput: function pastInput() {
 	                var past = this.matched.substr(0, this.matched.length - this.match.length);
 	                return (past.length > 20 ? '...' : '') + past.substr(-20).replace(/\n/g, "");
 	            },
+
+	            // displays upcoming input, i.e. for error messages
 	            upcomingInput: function upcomingInput() {
 	                var next = this.match;
 	                if (next.length < 20) {
@@ -2096,18 +2201,92 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	                return (next.substr(0, 20) + (next.length > 20 ? '...' : '')).replace(/\n/g, "");
 	            },
+
+	            // displays the character position where the lexing error occurred, i.e. for error messages
 	            showPosition: function showPosition() {
 	                var pre = this.pastInput();
 	                var c = new Array(pre.length + 1).join("-");
 	                return pre + this.upcomingInput() + "\n" + c + "^";
 	            },
+
+	            // test the lexed token: return FALSE when not a match, otherwise return token
+	            test_match: function test_match(match, indexed_rule) {
+	                var token, lines, backup;
+
+	                if (this.options.backtrack_lexer) {
+	                    // save context
+	                    backup = {
+	                        yylineno: this.yylineno,
+	                        yylloc: {
+	                            first_line: this.yylloc.first_line,
+	                            last_line: this.last_line,
+	                            first_column: this.yylloc.first_column,
+	                            last_column: this.yylloc.last_column
+	                        },
+	                        yytext: this.yytext,
+	                        match: this.match,
+	                        matches: this.matches,
+	                        matched: this.matched,
+	                        yyleng: this.yyleng,
+	                        offset: this.offset,
+	                        _more: this._more,
+	                        _input: this._input,
+	                        yy: this.yy,
+	                        conditionStack: this.conditionStack.slice(0),
+	                        done: this.done
+	                    };
+	                    if (this.options.ranges) {
+	                        backup.yylloc.range = this.yylloc.range.slice(0);
+	                    }
+	                }
+
+	                lines = match[0].match(/(?:\r\n?|\n).*/g);
+	                if (lines) {
+	                    this.yylineno += lines.length;
+	                }
+	                this.yylloc = {
+	                    first_line: this.yylloc.last_line,
+	                    last_line: this.yylineno + 1,
+	                    first_column: this.yylloc.last_column,
+	                    last_column: lines ? lines[lines.length - 1].length - lines[lines.length - 1].match(/\r?\n?/)[0].length : this.yylloc.last_column + match[0].length
+	                };
+	                this.yytext += match[0];
+	                this.match += match[0];
+	                this.matches = match;
+	                this.yyleng = this.yytext.length;
+	                if (this.options.ranges) {
+	                    this.yylloc.range = [this.offset, this.offset += this.yyleng];
+	                }
+	                this._more = false;
+	                this._backtrack = false;
+	                this._input = this._input.slice(match[0].length);
+	                this.matched += match[0];
+	                token = this.performAction.call(this, this.yy, this, indexed_rule, this.conditionStack[this.conditionStack.length - 1]);
+	                if (this.done && this._input) {
+	                    this.done = false;
+	                }
+	                if (token) {
+	                    return token;
+	                } else if (this._backtrack) {
+	                    // recover context
+	                    for (var k in backup) {
+	                        this[k] = backup[k];
+	                    }
+	                    return false; // rule action called reject() implying the next rule should be tested instead.
+	                }
+	                return false;
+	            },
+
+	            // return next match in input
 	            next: function next() {
 	                if (this.done) {
 	                    return this.EOF;
 	                }
-	                if (!this._input) this.done = true;
+	                if (!this._input) {
+	                    this.done = true;
+	                }
 
-	                var token, match, tempMatch, index, col, lines;
+	                var token, match, tempMatch, index;
 	                if (!this._more) {
 	                    this.yytext = '';
 	                    this.match = '';
@@ -2118,245 +2297,282 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    if (tempMatch && (!match || tempMatch[0].length > match[0].length)) {
 	                        match = tempMatch;
 	                        index = i;
-	                        if (!this.options.flex) break;
+	                        if (this.options.backtrack_lexer) {
+	                            token = this.test_match(tempMatch, rules[i]);
+	                            if (token !== false) {
+	                                return token;
+	                            } else if (this._backtrack) {
+	                                match = false;
+	                                continue; // rule action called reject() implying a rule MISmatch.
+	                            } else {
+	                                    // else: this is a lexer rule which consumes input without producing a token (e.g. whitespace)
+	                                    return false;
+	                                }
+	                        } else if (!this.options.flex) {
+	                            break;
+	                        }
 	                    }
 	                }
 	                if (match) {
-	                    lines = match[0].match(/(?:\r\n?|\n).*/g);
-	                    if (lines) this.yylineno += lines.length;
-	                    this.yylloc = { first_line: this.yylloc.last_line,
-	                        last_line: this.yylineno + 1,
-	                        first_column: this.yylloc.last_column,
-	                        last_column: lines ? lines[lines.length - 1].length - lines[lines.length - 1].match(/\r?\n?/)[0].length : this.yylloc.last_column + match[0].length };
-	                    this.yytext += match[0];
-	                    this.match += match[0];
-	                    this.matches = match;
-	                    this.yyleng = this.yytext.length;
-	                    if (this.options.ranges) {
-	                        this.yylloc.range = [this.offset, this.offset += this.yyleng];
+	                    token = this.test_match(match, rules[index]);
+	                    if (token !== false) {
+	                        return token;
 	                    }
-	                    this._more = false;
-	                    this._input = this._input.slice(match[0].length);
-	                    this.matched += match[0];
-	                    token = this.performAction.call(this, this.yy, this, rules[index], this.conditionStack[this.conditionStack.length - 1]);
-	                    if (this.done && this._input) this.done = false;
-	                    if (token) return token;else return;
+	                    // else: this is a lexer rule which consumes input without producing a token (e.g. whitespace)
+	                    return false;
 	                }
 	                if (this._input === "") {
 	                    return this.EOF;
 	                } else {
-	                    return this.parseError('Lexical error on line ' + (this.yylineno + 1) + '. Unrecognized text.\n' + this.showPosition(), { text: "", token: null, line: this.yylineno });
+	                    return this.parseError('Lexical error on line ' + (this.yylineno + 1) + '. Unrecognized text.\n' + this.showPosition(), {
+	                        text: "",
+	                        token: null,
+	                        line: this.yylineno
+	                    });
 	                }
 	            },
+
+	            // return next match that has a token
 	            lex: function lex() {
 	                var r = this.next();
-	                if (typeof r !== 'undefined') {
+	                if (r) {
 	                    return r;
 	                } else {
 	                    return this.lex();
 	                }
 	            },
+
+	            // activates a new lexer condition state (pushes the new lexer condition state onto the condition stack)
 	            begin: function begin(condition) {
 	                this.conditionStack.push(condition);
 	            },
+
+	            // pop the previously active lexer condition state off the condition stack
 	            popState: function popState() {
-	                return this.conditionStack.pop();
+	                var n = this.conditionStack.length - 1;
+	                if (n > 0) {
+	                    return this.conditionStack.pop();
+	                } else {
+	                    return this.conditionStack[0];
+	                }
 	            },
+
+	            // produce the lexer rule set which is active for the currently active lexer condition state
 	            _currentRules: function _currentRules() {
-	                return this.conditions[this.conditionStack[this.conditionStack.length - 1]].rules;
+	                if (this.conditionStack.length && this.conditionStack[this.conditionStack.length - 1]) {
+	                    return this.conditions[this.conditionStack[this.conditionStack.length - 1]].rules;
+	                } else {
+	                    return this.conditions["INITIAL"].rules;
+	                }
 	            },
-	            topState: function topState() {
-	                return this.conditionStack[this.conditionStack.length - 2];
+
+	            // return the currently active lexer condition state; when an index argument is provided it produces the N-th previous condition state, if available
+	            topState: function topState(n) {
+	                n = this.conditionStack.length - 1 - Math.abs(n || 0);
+	                if (n >= 0) {
+	                    return this.conditionStack[n];
+	                } else {
+	                    return "INITIAL";
+	                }
 	            },
-	            pushState: function begin(condition) {
+
+	            // alias for begin(condition)
+	            pushState: function pushState(condition) {
 	                this.begin(condition);
-	            } };
-	        lexer.options = {};
-	        lexer.performAction = function anonymous(yy, yy_, $avoiding_name_collisions, YY_START) {
+	            },
 
-	            function strip(start, end) {
-	                return yy_.yytext = yy_.yytext.substring(start, yy_.yyleng - end + start);
-	            }
+	            // return the number of states currently on the stack
+	            stateStackSize: function stateStackSize() {
+	                return this.conditionStack.length;
+	            },
+	            options: {},
+	            performAction: function anonymous(yy, yy_, $avoiding_name_collisions, YY_START) {
 
-	            var YYSTATE = YY_START;
-	            switch ($avoiding_name_collisions) {
-	                case 0:
-	                    if (yy_.yytext.slice(-2) === "\\\\") {
-	                        strip(0, 1);
-	                        this.begin("mu");
-	                    } else if (yy_.yytext.slice(-1) === "\\") {
-	                        strip(0, 1);
-	                        this.begin("emu");
-	                    } else {
-	                        this.begin("mu");
-	                    }
-	                    if (yy_.yytext) return 15;
+	                function strip(start, end) {
+	                    return yy_.yytext = yy_.yytext.substring(start, yy_.yyleng - end + start);
+	                }
 
-	                    break;
-	                case 1:
-	                    return 15;
-	                    break;
-	                case 2:
-	                    this.popState();
-	                    return 15;
+	                var YYSTATE = YY_START;
+	                switch ($avoiding_name_collisions) {
+	                    case 0:
+	                        if (yy_.yytext.slice(-2) === "\\\\") {
+	                            strip(0, 1);
+	                            this.begin("mu");
+	                        } else if (yy_.yytext.slice(-1) === "\\") {
+	                            strip(0, 1);
+	                            this.begin("emu");
+	                        } else {
+	                            this.begin("mu");
+	                        }
+	                        if (yy_.yytext) return 15;
 
-	                    break;
-	                case 3:
-	                    this.begin('raw');return 15;
-	                    break;
-	                case 4:
-	                    this.popState();
-	                    // Should be using `this.topState()` below, but it currently
-	                    // returns the second top instead of the first top. Opened an
-	                    // issue about it at https://github.com/zaach/jison/issues/291
-	                    if (this.conditionStack[this.conditionStack.length - 1] === 'raw') {
+	                        break;
+	                    case 1:
 	                        return 15;
-	                    } else {
-	                        strip(5, 9);
-	                        return 'END_RAW_BLOCK';
-	                    }
+	                        break;
+	                    case 2:
+	                        this.popState();
+	                        return 15;
 
-	                    break;
-	                case 5:
-	                    return 15;
-	                    break;
-	                case 6:
-	                    this.popState();
-	                    return 14;
+	                        break;
+	                    case 3:
+	                        this.begin('raw');return 15;
+	                        break;
+	                    case 4:
+	                        this.popState();
+	                        // Should be using `this.topState()` below, but it currently
+	                        // returns the second top instead of the first top. Opened an
+	                        // issue about it at https://github.com/zaach/jison/issues/291
+	                        if (this.conditionStack[this.conditionStack.length - 1] === 'raw') {
+	                            return 15;
+	                        } else {
+	                            strip(5, 9);
+	                            return 18;
+	                        }
 
-	                    break;
-	                case 7:
-	                    return 65;
-	                    break;
-	                case 8:
-	                    return 68;
-	                    break;
-	                case 9:
-	                    return 19;
-	                    break;
-	                case 10:
-	                    this.popState();
-	                    this.begin('raw');
-	                    return 23;
+	                        break;
+	                    case 5:
+	                        return 15;
+	                        break;
+	                    case 6:
+	                        this.popState();
+	                        return 14;
 
-	                    break;
-	                case 11:
-	                    return 55;
-	                    break;
-	                case 12:
-	                    return 60;
-	                    break;
-	                case 13:
-	                    return 29;
-	                    break;
-	                case 14:
-	                    return 47;
-	                    break;
-	                case 15:
-	                    this.popState();return 44;
-	                    break;
-	                case 16:
-	                    this.popState();return 44;
-	                    break;
-	                case 17:
-	                    return 34;
-	                    break;
-	                case 18:
-	                    return 39;
-	                    break;
-	                case 19:
-	                    return 51;
-	                    break;
-	                case 20:
-	                    return 48;
-	                    break;
-	                case 21:
-	                    this.unput(yy_.yytext);
-	                    this.popState();
-	                    this.begin('com');
+	                        break;
+	                    case 7:
+	                        return 65;
+	                        break;
+	                    case 8:
+	                        return 68;
+	                        break;
+	                    case 9:
+	                        return 19;
+	                        break;
+	                    case 10:
+	                        this.popState();
+	                        this.begin('raw');
+	                        return 23;
 
-	                    break;
-	                case 22:
-	                    this.popState();
-	                    return 14;
+	                        break;
+	                    case 11:
+	                        return 55;
+	                        break;
+	                    case 12:
+	                        return 60;
+	                        break;
+	                    case 13:
+	                        return 29;
+	                        break;
+	                    case 14:
+	                        return 47;
+	                        break;
+	                    case 15:
+	                        this.popState();return 44;
+	                        break;
+	                    case 16:
+	                        this.popState();return 44;
+	                        break;
+	                    case 17:
+	                        return 34;
+	                        break;
+	                    case 18:
+	                        return 39;
+	                        break;
+	                    case 19:
+	                        return 51;
+	                        break;
+	                    case 20:
+	                        return 48;
+	                        break;
+	                    case 21:
+	                        this.unput(yy_.yytext);
+	                        this.popState();
+	                        this.begin('com');
 
-	                    break;
-	                case 23:
-	                    return 48;
-	                    break;
-	                case 24:
-	                    return 73;
-	                    break;
-	                case 25:
-	                    return 72;
-	                    break;
-	                case 26:
-	                    return 72;
-	                    break;
-	                case 27:
-	                    return 87;
-	                    break;
-	                case 28:
-	                    // ignore whitespace
-	                    break;
-	                case 29:
-	                    this.popState();return 54;
-	                    break;
-	                case 30:
-	                    this.popState();return 33;
-	                    break;
-	                case 31:
-	                    yy_.yytext = strip(1, 2).replace(/\\"/g, '"');return 80;
-	                    break;
-	                case 32:
-	                    yy_.yytext = strip(1, 2).replace(/\\'/g, "'");return 80;
-	                    break;
-	                case 33:
-	                    return 85;
-	                    break;
-	                case 34:
-	                    return 82;
-	                    break;
-	                case 35:
-	                    return 82;
-	                    break;
-	                case 36:
-	                    return 83;
-	                    break;
-	                case 37:
-	                    return 84;
-	                    break;
-	                case 38:
-	                    return 81;
-	                    break;
-	                case 39:
-	                    return 75;
-	                    break;
-	                case 40:
-	                    return 77;
-	                    break;
-	                case 41:
-	                    return 72;
-	                    break;
-	                case 42:
-	                    yy_.yytext = yy_.yytext.replace(/\\([\\\]])/g, '$1');return 72;
-	                    break;
-	                case 43:
-	                    return 'INVALID';
-	                    break;
-	                case 44:
-	                    return 5;
-	                    break;
-	            }
+	                        break;
+	                    case 22:
+	                        this.popState();
+	                        return 14;
+
+	                        break;
+	                    case 23:
+	                        return 48;
+	                        break;
+	                    case 24:
+	                        return 73;
+	                        break;
+	                    case 25:
+	                        return 72;
+	                        break;
+	                    case 26:
+	                        return 72;
+	                        break;
+	                    case 27:
+	                        return 87;
+	                        break;
+	                    case 28:
+	                        // ignore whitespace
+	                        break;
+	                    case 29:
+	                        this.popState();return 54;
+	                        break;
+	                    case 30:
+	                        this.popState();return 33;
+	                        break;
+	                    case 31:
+	                        yy_.yytext = strip(1, 2).replace(/\\"/g, '"');return 80;
+	                        break;
+	                    case 32:
+	                        yy_.yytext = strip(1, 2).replace(/\\'/g, "'");return 80;
+	                        break;
+	                    case 33:
+	                        return 85;
+	                        break;
+	                    case 34:
+	                        return 82;
+	                        break;
+	                    case 35:
+	                        return 82;
+	                        break;
+	                    case 36:
+	                        return 83;
+	                        break;
+	                    case 37:
+	                        return 84;
+	                        break;
+	                    case 38:
+	                        return 81;
+	                        break;
+	                    case 39:
+	                        return 75;
+	                        break;
+	                    case 40:
+	                        return 77;
+	                        break;
+	                    case 41:
+	                        return 72;
+	                        break;
+	                    case 42:
+	                        yy_.yytext = yy_.yytext.replace(/\\([\\\]])/g, '$1');return 72;
+	                        break;
+	                    case 43:
+	                        return 'INVALID';
+	                        break;
+	                    case 44:
+	                        return 5;
+	                        break;
+	                }
+	            },
+	            rules: [/^(?:[^\x00]*?(?=(\{\{)))/, /^(?:[^\x00]+)/, /^(?:[^\x00]{2,}?(?=(\{\{|\\\{\{|\\\\\{\{|$)))/, /^(?:\{\{\{\{(?=[^\/]))/, /^(?:\{\{\{\{\/[^\s!"#%-,\.\/;->@\[-\^`\{-~]+(?=[=}\s\/.])\}\}\}\})/, /^(?:[^\x00]*?(?=(\{\{\{\{)))/, /^(?:[\s\S]*?--(~)?\}\})/, /^(?:\()/, /^(?:\))/, /^(?:\{\{\{\{)/, /^(?:\}\}\}\})/, /^(?:\{\{(~)?>)/, /^(?:\{\{(~)?#>)/, /^(?:\{\{(~)?#\*?)/, /^(?:\{\{(~)?\/)/, /^(?:\{\{(~)?\^\s*(~)?\}\})/, /^(?:\{\{(~)?\s*else\s*(~)?\}\})/, /^(?:\{\{(~)?\^)/, /^(?:\{\{(~)?\s*else\b)/, /^(?:\{\{(~)?\{)/, /^(?:\{\{(~)?&)/, /^(?:\{\{(~)?!--)/, /^(?:\{\{(~)?![\s\S]*?\}\})/, /^(?:\{\{(~)?\*?)/, /^(?:=)/, /^(?:\.\.)/, /^(?:\.(?=([=~}\s\/.)|])))/, /^(?:[\/.])/, /^(?:\s+)/, /^(?:\}(~)?\}\})/, /^(?:(~)?\}\})/, /^(?:"(\\["]|[^"])*")/, /^(?:'(\\[']|[^'])*')/, /^(?:@)/, /^(?:true(?=([~}\s)])))/, /^(?:false(?=([~}\s)])))/, /^(?:undefined(?=([~}\s)])))/, /^(?:null(?=([~}\s)])))/, /^(?:-?[0-9]+(?:\.[0-9]+)?(?=([~}\s)])))/, /^(?:as\s+\|)/, /^(?:\|)/, /^(?:([^\s!"#%-,\.\/;->@\[-\^`\{-~]+(?=([=~}\s\/.)|]))))/, /^(?:\[(\\\]|[^\]])*\])/, /^(?:.)/, /^(?:$)/],
+	            conditions: { "mu": { "rules": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44], "inclusive": false }, "emu": { "rules": [2], "inclusive": false }, "com": { "rules": [6], "inclusive": false }, "raw": { "rules": [3, 4, 5], "inclusive": false }, "INITIAL": { "rules": [0, 1, 44], "inclusive": true } }
 	        };
-	        lexer.rules = [/^(?:[^\x00]*?(?=(\{\{)))/, /^(?:[^\x00]+)/, /^(?:[^\x00]{2,}?(?=(\{\{|\\\{\{|\\\\\{\{|$)))/, /^(?:\{\{\{\{(?=[^\/]))/, /^(?:\{\{\{\{\/[^\s!"#%-,\.\/;->@\[-\^`\{-~]+(?=[=}\s\/.])\}\}\}\})/, /^(?:[^\x00]*?(?=(\{\{\{\{)))/, /^(?:[\s\S]*?--(~)?\}\})/, /^(?:\()/, /^(?:\))/, /^(?:\{\{\{\{)/, /^(?:\}\}\}\})/, /^(?:\{\{(~)?>)/, /^(?:\{\{(~)?#>)/, /^(?:\{\{(~)?#\*?)/, /^(?:\{\{(~)?\/)/, /^(?:\{\{(~)?\^\s*(~)?\}\})/, /^(?:\{\{(~)?\s*else\s*(~)?\}\})/, /^(?:\{\{(~)?\^)/, /^(?:\{\{(~)?\s*else\b)/, /^(?:\{\{(~)?\{)/, /^(?:\{\{(~)?&)/, /^(?:\{\{(~)?!--)/, /^(?:\{\{(~)?![\s\S]*?\}\})/, /^(?:\{\{(~)?\*?)/, /^(?:=)/, /^(?:\.\.)/, /^(?:\.(?=([=~}\s\/.)|])))/, /^(?:[\/.])/, /^(?:\s+)/, /^(?:\}(~)?\}\})/, /^(?:(~)?\}\})/, /^(?:"(\\["]|[^"])*")/, /^(?:'(\\[']|[^'])*')/, /^(?:@)/, /^(?:true(?=([~}\s)])))/, /^(?:false(?=([~}\s)])))/, /^(?:undefined(?=([~}\s)])))/, /^(?:null(?=([~}\s)])))/, /^(?:-?[0-9]+(?:\.[0-9]+)?(?=([~}\s)])))/, /^(?:as\s+\|)/, /^(?:\|)/, /^(?:([^\s!"#%-,\.\/;->@\[-\^`\{-~]+(?=([=~}\s\/.)|]))))/, /^(?:\[(\\\]|[^\]])*\])/, /^(?:.)/, /^(?:$)/];
-	        lexer.conditions = { "mu": { "rules": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44], "inclusive": false }, "emu": { "rules": [2], "inclusive": false }, "com": { "rules": [6], "inclusive": false }, "raw": { "rules": [3, 4, 5], "inclusive": false }, "INITIAL": { "rules": [0, 1, 44], "inclusive": true } };
 	        return lexer;
 	    })();
 	    parser.lexer = lexer;
 	    function Parser() {
 	        this.yy = {};
-	    }Parser.prototype = parser;parser.Parser = Parser;
+	    }
+	    Parser.prototype = parser;parser.Parser = Parser;
 	    return new Parser();
 	})();exports["default"] = handlebars;
 	module.exports = exports["default"];
@@ -2365,13 +2581,28 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	module.exports = { "default": __webpack_require__(39), __esModule: true };
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var $ = __webpack_require__(9);
+	module.exports = function create(P, D){
+	  return $.create(P, D);
+	};
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	var _interopRequireDefault = __webpack_require__(1)['default'];
 
 	exports.__esModule = true;
 
-	var _visitor = __webpack_require__(39);
+	var _visitor = __webpack_require__(41);
 
 	var _visitor2 = _interopRequireDefault(_visitor);
 
@@ -2575,7 +2806,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return;
 	  }
 
-	  // We omit the last node if it's whitespace only and not preceeded by a non-content node.
+	  // We omit the last node if it's whitespace only and not preceded by a non-content node.
 	  var original = current.value;
 	  current.value = current.value.replace(multiple ? /\s+$/ : /[ \t]+$/, '');
 	  current.leftStripped = current.value !== original;
@@ -2586,7 +2817,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2729,7 +2960,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2960,7 +3191,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* eslint-disable new-cap */
@@ -3536,7 +3767,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3553,7 +3784,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils = __webpack_require__(5);
 
-	var _codeGen = __webpack_require__(43);
+	var _codeGen = __webpack_require__(45);
 
 	var _codeGen2 = _interopRequireDefault(_codeGen);
 
@@ -3867,7 +4098,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // replace it on the stack with the result of properly
 	  // invoking blockHelperMissing.
 	  blockValue: function blockValue(name) {
-	    var blockHelperMissing = this.aliasable('helpers.blockHelperMissing'),
+	    var blockHelperMissing = this.aliasable('container.hooks.blockHelperMissing'),
 	        params = [this.contextName(0)];
 	    this.setupHelperArgs(name, 0, params);
 
@@ -3885,7 +4116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // On stack, after, if lastHelper: value
 	  ambiguousBlockValue: function ambiguousBlockValue() {
 	    // We're being a bit cheeky and reusing the options value from the prior exec
-	    var blockHelperMissing = this.aliasable('helpers.blockHelperMissing'),
+	    var blockHelperMissing = this.aliasable('container.hooks.blockHelperMissing'),
 	        params = [this.contextName(0)];
 	    this.setupHelperArgs('', 0, params, true);
 
@@ -4176,18 +4407,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // If the helper is not found, `helperMissing` is called.
 	  invokeHelper: function invokeHelper(paramSize, name, isSimple) {
 	    var nonHelper = this.popStack(),
-	        helper = this.setupHelper(paramSize, name),
-	        simple = isSimple ? [helper.name, ' || '] : '';
+	        helper = this.setupHelper(paramSize, name);
 
-	    var lookup = ['('].concat(simple, nonHelper);
-	    if (!this.options.strict) {
-	      lookup.push(' || ', this.aliasable('helpers.helperMissing'));
+	    var possibleFunctionCalls = [];
+
+	    if (isSimple) {
+	      // direct call to helper
+	      possibleFunctionCalls.push(helper.name);
 	    }
-	    lookup.push(')');
+	    // call a function from the input object
+	    possibleFunctionCalls.push(nonHelper);
+	    if (!this.options.strict) {
+	      possibleFunctionCalls.push(this.aliasable('container.hooks.helperMissing'));
+	    }
 
-	    this.push(this.source.functionCall(lookup, 'call', helper.callParams));
+	    var functionLookupCode = ['(', this.itemsSeparatedBy(possibleFunctionCalls, '||'), ')'];
+	    var functionCall = this.source.functionCall(functionLookupCode, 'call', helper.callParams);
+	    this.push(functionCall);
 	  },
 
+	  itemsSeparatedBy: function itemsSeparatedBy(items, separator) {
+	    var result = [];
+	    result.push(items[0]);
+	    for (var i = 1; i < items.length; i++) {
+	      result.push(separator, items[i]);
+	    }
+	    return result;
+	  },
 	  // [invokeKnownHelper]
 	  //
 	  // On stack, before: hash, inverse, program, params..., ...
@@ -4225,7 +4471,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var lookup = ['(', '(helper = ', helperName, ' || ', nonHelper, ')'];
 	    if (!this.options.strict) {
 	      lookup[0] = '(helper = ';
-	      lookup.push(' != null ? helper : ', this.aliasable('helpers.helperMissing'));
+	      lookup.push(' != null ? helper : ', this.aliasable('container.hooks.helperMissing'));
 	    }
 
 	    this.push(['(', lookup, helper.paramsInit ? ['),(', helper.paramsInit] : [], '),', '(typeof helper === ', this.aliasable('"function"'), ' ? ', this.source.functionCall('helper', 'call', helper.callParams), ' : helper))']);
@@ -4670,7 +4916,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* global define */

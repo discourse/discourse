@@ -1,12 +1,17 @@
 import { get } from "@ember/object";
 
 export function registerRawHelpers(hbs, handlebarsClass) {
-  hbs.helper = function() {};
-  hbs.helpers = Object.create(handlebarsClass.helpers);
+  if (!hbs.helpers) {
+    hbs.helpers = Object.create(handlebarsClass.helpers);
+  }
 
   hbs.helpers["get"] = function(context, options) {
-    var firstContext = options.contexts[0];
-    var val = firstContext[context];
+    if (!options.contexts) {
+      return;
+    }
+
+    let firstContext = options.contexts[0];
+    let val = firstContext[context];
 
     if (context.indexOf("controller.") === 0) {
       context = context.slice(context.indexOf(".") + 1);
