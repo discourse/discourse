@@ -44,14 +44,16 @@ If you're looking for business class hosting, see [discourse.org/buy](https://ww
 
 ## Requirements
 
-Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
+Discourse is built for the *next* 10 years of the Internet, so our requirements are high.
+
+Discourse supports the **latest, stable releases** of all major browsers and platforms:
 
 | Browsers              | Tablets      | Phones       |
 | --------------------- | ------------ | ------------ |
-| Safari 10+           | iPad 4+      | iOS 10+       |
-| Google Chrome 57+     | Android 4.4+ | Android 4.4+ |
-| Internet Explorer 11+ |              |              |
-| Firefox 52+           |              |              |
+| Apple Safari          | iPadOS       | iOS          |
+| Google Chrome         | Android      | Android      |
+| Microsoft Edge        |              |              |
+| Mozilla Firefox       |              |              |
 
 ## Built With
 
