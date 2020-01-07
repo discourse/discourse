@@ -99,7 +99,7 @@ const DiscourseURL = EmberObject.extend({
       let holder;
 
       if (opts.jumpEnd) {
-        let $holder      = $(holderId);
+        let $holder = $(holderId);
         let holderHeight = $holder.height();
         let windowHeight = $(window).height() - offsetCalculator();
 
