@@ -226,7 +226,6 @@ module Discourse
 
     if !(Rails.env.development? || ENV['SKIP_ENFORCE_HOSTNAME'] == "1")
       require 'middleware/enforce_hostname'
-      puts "enforcing hostname"
       config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
     end
 
