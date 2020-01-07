@@ -2,13 +2,9 @@
 
 desc "Runs the qunit test suite"
 
-task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
-  require "rack"
+task "qunit:test", [:timeout, :qunit_path] do |_, args|
   require "socket"
   require 'rbconfig'
-
-  puts "Turning off CSP to allow qunit to run"
-  SiteSetting.content_security_policy = false
 
   if RbConfig::CONFIG['host_os'][/darwin|mac os/]
     google_chrome_cli = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
@@ -45,14 +41,16 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
     port += 1
   end
 
-  unless pid = fork
-    Discourse.after_fork
-    Rack::Server.start(config: "config.ru",
-                       AccessLog: [],
-                       environment: 'test',
-                       Port: port)
-    exit
-  end
+  pid = Process.spawn(
+    {
+      "RAILS_ENV" => "test",
+      "SKIP_ENFORCE_HOSTNAME" => "1",
+      "UNICORN_PID_PATH" => "#{Rails.root}/tmp/pids/unicorn_test.pid", # So this can run alongside development
+      "UNICORN_PORT" => port.to_s,
+      "UNICORN_SIDEKIQS" => "0"
+    },
+    "#{Rails.root}/bin/unicorn -c config/unicorn.conf.rb"
+  )
 
   begin
     success = true
