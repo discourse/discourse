@@ -6,14 +6,18 @@ export function registerRawHelpers(hbs, handlebarsClass) {
   }
 
   hbs.helpers["get"] = function(context, options) {
-    if (!options.contexts) {
+    if (!context || !options.contexts) {
       return;
+    }
+
+    if (typeof context !== "string") {
+      return context;
     }
 
     let firstContext = options.contexts[0];
     let val = firstContext[context];
 
-    if (context.indexOf("controller.") === 0) {
+    if (context.toString().indexOf("controller.") === 0) {
       context = context.slice(context.indexOf(".") + 1);
     }
 
