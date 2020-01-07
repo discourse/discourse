@@ -437,15 +437,38 @@ describe UploadsController do
           SiteSetting.secure_media = false
         end
 
-        it "should redirect to the regular show route" do
-          secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
-          sign_in(user)
-          stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+        context "if the upload is secure false, meaning the ACL is probably public" do
+          before do
+            upload.update(secure: false)
+          end
 
-          get secure_url
+          it "should redirect to the regular show route" do
+            secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
+            sign_in(user)
+            stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
 
-          expect(response.status).to eq(302)
-          expect(response.redirect_url).to eq(Discourse.store.cdn_url(upload.url))
+            get secure_url
+
+            expect(response.status).to eq(302)
+            expect(response.redirect_url).to eq(Discourse.store.cdn_url(upload.url))
+          end
+        end
+
+        context "if the upload is secure true, meaning the ACL is probably private" do
+          before do
+            upload.update(secure: true)
+          end
+
+          it "should redirect to the presigned URL still otherwise we will get a 403" do
+            secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
+            sign_in(user)
+            stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+            get secure_url
+
+            expect(response.status).to eq(302)
+            expect(response.redirect_url).to match("Amz-Expires")
+          end
         end
       end
     end
