@@ -909,6 +909,59 @@ task "uploads:recover" => :environment do
   end
 end
 
+task "uploads:disable_secure_media" => :environment do
+  # loc sec up  [-6, -5, 67, 69, 28, -4, -3, -2, -1, 1, 27, 26, 33, 38, 31, 34, 35, 65, 39, 29, 40, 30, 32, 36, 49, 66, 41, 52, 54]
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    unless Discourse.store.external?
+      puts "This task only works for external storage."
+      exit 1
+    end
+
+    puts "Disabling secure media and resetting uploads to not secure in #{db}...", ""
+
+    Upload.transaction do
+      SiteSetting.secure_media = false
+
+      secure_uploads = Upload.where(id: [-6, -5, 67, 69, 28, -4, -3, -2, -1, 1, 27, 26, 33, 38, 31, 34, 35, 65, 39, 29, 40, 30, 32, 36, 49, 66, 41, 52, 54]) # Upload.where(secure: true)
+      secure_upload_ids = secure_uploads.pluck(:id)
+
+      puts "Updating all uploads to secure: false."
+      secure_uploads.update_all(secure: false)
+
+      puts "Changing ACLs for all previously secure uploads to public.", ""
+
+      i = 0
+      secure_uploads.find_each(batch_size: 10) do |upload|
+        RakeHelpers.print_status_with_label("Updating ACL for upload.......", i, secure_upload_ids.length)
+
+        upload.secure = false
+        Discourse.store.update_upload_ACL(upload)
+
+        i += 1
+      end
+
+      i = 0
+      post_ids_with_secure_uploads = DB.query(
+        "SELECT DISTINCT post_id FROM post_uploads WHERE upload_id IN (:upload_ids)",
+        upload_ids: secure_upload_ids
+      ).map(&:post_id)
+
+      Post.where(id: post_ids_with_secure_uploads).find_each(batch_size: 10) do |post|
+        RakeHelpers.print_status_with_label("Rebaking post id #{post.id} which had secure upload...", i, post_ids_with_secure_uploads.length)
+
+        post.rebake!
+
+        i += 1
+      end
+
+      RakeHelpers.print_status_with_label("Rebaking complete!            ", i, post_ids_with_secure_uploads.length)
+      puts ""
+    end
+  end
+
+  puts "Secure media is now disabled!", ""
+end
+
 ##
 # Run this task whenever the secure_media or login_required
 # settings are changed for a Discourse instance to update
