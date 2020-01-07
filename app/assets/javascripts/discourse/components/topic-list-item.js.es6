@@ -42,6 +42,7 @@ export default Component.extend({
     this.renderTopicListItem();
   },
 
+  @observes("topic.pinned")
   renderTopicListItem() {
     const template = findRawTemplate("list/topic-list-item");
     if (template) {
@@ -73,11 +74,6 @@ export default Component.extend({
     if (this.includeUnreadIndicator) {
       this.messageBus.unsubscribe(this.unreadIndicatorChannel);
     }
-  },
-
-  @observes("topic.pinned")
-  rerenderTriggers() {
-    this.renderTopicListItem();
   },
 
   @discourseComputed("topic.id")
