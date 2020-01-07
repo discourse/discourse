@@ -910,7 +910,6 @@ task "uploads:recover" => :environment do
 end
 
 task "uploads:disable_secure_media" => :environment do
-  # loc sec up  [-6, -5, 67, 69, 28, -4, -3, -2, -1, 1, 27, 26, 33, 38, 31, 34, 35, 65, 39, 29, 40, 30, 32, 36, 49, 66, 41, 52, 54]
   RailsMultisite::ConnectionManagement.each_connection do |db|
     unless Discourse.store.external?
       puts "This task only works for external storage."
@@ -922,7 +921,7 @@ task "uploads:disable_secure_media" => :environment do
     Upload.transaction do
       SiteSetting.secure_media = false
 
-      secure_uploads = Upload.where(id: [-6, -5, 67, 69, 28, -4, -3, -2, -1, 1, 27, 26, 33, 38, 31, 34, 35, 65, 39, 29, 40, 30, 32, 36, 49, 66, 41, 52, 54]) # Upload.where(secure: true)
+      secure_uploads = Upload.where(secure: true)
       secure_upload_ids = secure_uploads.pluck(:id)
 
       puts "Updating all uploads to secure: false."
