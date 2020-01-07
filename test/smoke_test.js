@@ -126,7 +126,7 @@ const path = require("path");
   });
 
   await exec("expect a log in button in the header", () => {
-    return page.waitForSelector("header .login-button", { visible: true });
+    return page.waitForSelector("header .login-button");
   });
 
   if (process.env.LOGIN_AT_BEGINNING) {
@@ -171,7 +171,9 @@ const path = require("path");
     }
 
     await exec("go home", () => {
-      let promise = page.waitForSelector("#site-logo, #site-text-logo", { visible: true });
+      let promise = page.waitForSelector("#site-logo, #site-text-logo", {
+        visible: true
+      });
 
       promise = promise.then(() => {
         return page.click("#site-logo, #site-text-logo");
