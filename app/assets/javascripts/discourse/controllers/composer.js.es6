@@ -247,7 +247,10 @@ export default Controller.extend({
   },
 
   _setupPopupMenuOption(callback) {
-    let option = callback();
+    let option = callback(this);
+    if (typeof option === "undefined") {
+      return null;
+    }
 
     if (typeof option.condition === "undefined") {
       option.condition = true;
@@ -288,9 +291,9 @@ export default Controller.extend({
       );
 
       return options.concat(
-        _popupMenuOptionsCallbacks.map(callback =>
-          this._setupPopupMenuOption(callback)
-        )
+        _popupMenuOptionsCallbacks
+          .map(callback => this._setupPopupMenuOption(callback))
+          .filter(o => o)
       );
     }
   },
