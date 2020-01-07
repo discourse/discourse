@@ -126,14 +126,17 @@ class UploadsController < ApplicationController
     upload = Upload.find_by(sha1: sha1)
     return render_404 if upload.blank?
 
-    if SiteSetting.secure_media?
-      return redirect_to Discourse.store.signed_url_for_path(path_with_ext)
-    end
+    signed_secure_url = Discourse.store.signed_url_for_path(path_with_ext)
+    return redirect_to signed_secure_url if SiteSetting.secure_media?
 
     # we don't want to 404 here if secure media gets disabled
     # because all posts with secure uploads will show broken media
     # until rebaked, which could take some time
-    redirect_to Discourse.store.cdn_url(upload.url)
+    #
+    # if the upload is still secure, that means the ACL is probably still
+    # private, so we don't want to go to the CDN url just yet otherwise we
+    # will get a 403. if the upload is not secure we assume the ACL is public
+    redirect_to upload.secure? ? signed_secure_url : Discourse.store.cdn_url(upload.url)
   end
 
   def metadata
