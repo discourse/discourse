@@ -122,14 +122,11 @@ const path = require("path");
   };
 
   await exec("go to site", () => {
-    return page.goto(url, { timeout: 60000 });
+    return page.goto(url);
   });
 
   await exec("expect a log in button in the header", () => {
-    return page.waitForSelector("header .login-button", {
-      visible: true,
-      timeout: 60000
-    });
+    return page.waitForSelector("header .login-button");
   });
 
   if (process.env.LOGIN_AT_BEGINNING) {
@@ -174,7 +171,9 @@ const path = require("path");
     }
 
     await exec("go home", () => {
-      let promise = page.waitForSelector("#site-logo, #site-text-logo", { visible: true });
+      let promise = page.waitForSelector("#site-logo, #site-text-logo", {
+        visible: true
+      });
 
       promise = promise.then(() => {
         return page.click("#site-logo, #site-text-logo");

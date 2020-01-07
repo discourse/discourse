@@ -49,6 +49,9 @@ jobs:
       - name: Start Server
         run: unbuffer d/rails s &
 
+      - name: Warm Up Server
+        run: curl -I --retry 10 --retry-delay 1 --max-time 60 http://localhost:3000
+
       - name: Run smoke test
         run: unbuffer d/rake smoke:test
 
