@@ -19,7 +19,7 @@ function dataFor(status) {
     case IGNORED:
       return { icon: "external-link-alt", name: "ignored" };
     case DELETED:
-      return { icon: "trash", name: "deleted" };
+      return { icon: "trash-alt", name: "deleted" };
   }
 }
 

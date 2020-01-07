@@ -83,7 +83,6 @@ const controllerOpts = {
     },
 
     resetNew() {
-      this.topicTrackingState.resetNew();
       Topic.resetNew(this.category, !this.noSubcategories).then(() =>
         this.send("refresh")
       );
