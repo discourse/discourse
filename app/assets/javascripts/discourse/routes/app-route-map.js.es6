@@ -238,14 +238,6 @@ export default function() {
     this.route("intersection", {
       path: "intersection/:tag_id/*additional_tags"
     });
-
-    // legacy routes
-    this.route("show", { path: "/:tag_id" });
-    Site.currentProp("filters").forEach(filter => {
-      this.route("show" + filter.capitalize(), {
-        path: "/:tag_id/l/" + filter
-      });
-    });
   });
 
   this.route(

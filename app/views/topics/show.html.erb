@@ -26,7 +26,7 @@
       <div class='crawler-tags-list' itemscope itemtype='http://schema.org/DiscussionForumPosting'>
         <% @tags.each_with_index do |tag, i| %>
           <div itemprop='keywords'>
-            <a  href='<%= "#{Discourse.base_url}/tags/#{tag.name}" %>' rel="tag">
+            <a  href='<%= "#{Discourse.base_url}/tag/#{tag.name}" %>' rel="tag">
               <span itemprop='headline'><%= tag.name -%></span>
             </a>
           </div>

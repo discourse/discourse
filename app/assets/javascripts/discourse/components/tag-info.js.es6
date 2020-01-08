@@ -76,7 +76,7 @@ export default Component.extend({
     },
 
     unlinkSynonym(tag) {
-      ajax(`/tags/${this.tagInfo.name}/synonyms/${tag.id}`, {
+      ajax(`/tag/${this.tagInfo.name}/synonyms/${tag.id}`, {
         type: "DELETE"
       })
         .then(() => this.tagInfo.synonyms.removeObject(tag))
@@ -98,7 +98,7 @@ export default Component.extend({
     },
 
     addSynonyms() {
-      ajax(`/tags/${this.tagInfo.name}/synonyms`, {
+      ajax(`/tag/${this.tagInfo.name}/synonyms`, {
         type: "POST",
         data: {
           synonyms: this.newSynonyms

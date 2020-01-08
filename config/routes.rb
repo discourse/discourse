@@ -847,7 +847,7 @@ Discourse::Application.routes.draw do
 
   scope '/tag/:tag_id' do
     constraints format: :json do
-      get '/' => 'tags#show'
+      get '/' => 'tags#show', as: 'tag_show'
       get '/info' => 'tags#info'
       get '/notifications' => 'tags#notifications'
       put '/notifications' => 'tags#update_notifications'
@@ -857,7 +857,7 @@ Discourse::Application.routes.draw do
       delete '/synonyms/:synonym_id' => 'tags#destroy_synonym'
 
       Discourse.filters.each do |filter|
-        get "/l/#{filter}" => "tags#show_#{filter}"
+        get "/l/#{filter}" => "tags#show_#{filter}", as: "tag_show_#{filter}"
       end
     end
 
@@ -892,23 +892,6 @@ Discourse::Application.routes.draw do
       end
 
       get '/intersection/:tag_id/*additional_tag_ids' => 'tags#show', as: 'tag_intersection'
-    end
-
-    # legacy routes
-    constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
-      get '/:tag_id.rss' => 'tags#tag_feed'
-      get '/:tag_id' => 'tags#show', as: 'tag_show'
-      get '/:tag_id/info' => 'tags#info'
-      get '/:tag_id/notifications' => 'tags#notifications'
-      put '/:tag_id/notifications' => 'tags#update_notifications'
-      put '/:tag_id' => 'tags#update'
-      delete '/:tag_id' => 'tags#destroy'
-      post '/:tag_id/synonyms' => 'tags#create_synonyms'
-      delete '/:tag_id/synonyms/:synonym_id' => 'tags#destroy_synonym'
-
-      Discourse.filters.each do |filter|
-        get "/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_show_#{filter}"
-      end
     end
   end
 
