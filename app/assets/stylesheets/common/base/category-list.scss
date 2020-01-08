@@ -150,6 +150,7 @@
         order: 2;
         line-height: $line-height-medium;
         overflow: hidden;
+        margin-bottom: 0.25em;
         word-wrap: break-word;
       }
     }
@@ -157,11 +158,11 @@
     .subcategory-box-inner {
       border: 1px solid $primary-low;
       border-left: none;
-      padding: 0.75em 0.5em 0.4em 0.5em;
+      padding: 0.5em 0.5em 0.4em 0.5em;
     }
 
     &:not(:last-of-type) {
-      margin-bottom: 1em;
+      margin-bottom: 0.75em;
     }
 
     .subcategory {
