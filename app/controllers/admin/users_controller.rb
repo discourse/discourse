@@ -423,6 +423,8 @@ class Admin::UsersController < Admin::AdminController
       render_serialized(user, AdminDetailedUserSerializer, root: false)
     rescue ActiveRecord::RecordInvalid => ex
       render json: failed_json.merge(message: ex.message), status: 403
+    rescue DiscourseSingleSignOn::BlankExternalId => ex
+      render json: failed_json.merge(message: I18n.t('sso.blank_id_error')), status: 422
     end
   end
 

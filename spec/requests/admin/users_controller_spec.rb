@@ -872,6 +872,16 @@ RSpec.describe Admin::UsersController do
       expect(JSON.parse(response.body)["message"]).to include(I18n.t('sso.login_error'))
       expect(JSON.parse(response.body)["message"]).not_to include(correct_payload["sig"])
     end
+
+    it "returns 404 if the external id does not exist" do
+      sso.name = "Dr. Claw"
+      sso.username = "dr_claw"
+      sso.email = "dr@claw.com"
+      sso.external_id = ""
+      post "/admin/users/sync_sso.json", params: Rack::Utils.parse_query(sso.payload)
+      expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)["message"]).to include(I18n.t('sso.blank_id_error'))
+    end
   end
 
   describe '#disable_second_factor' do
