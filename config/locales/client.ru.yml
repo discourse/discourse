@@ -854,7 +854,7 @@ ru:
       dismiss_notifications: "Отложить все"
       dismiss_notifications_tooltip: "Пометить все непрочитанные уведомления прочитанными"
       first_notification: "Ваше первое уведомление! Выберите его, чтобы начать."
-      dynamic_favicon: "Показывать количество на значке браузера"
+      dynamic_favicon: "Показывать количество новых/обновлённых тем на иконке вкладки"
       theme_default_on_all_devices: "Сделать эту тему по умолчанию на всех моих устройствах"
       text_size_default_on_all_devices: "Сделать это размер текста по умолчанию на всех моих устройствах"
       allow_private_messages: "Разрешить другим пользователям отправлять мне личные сообщения"
@@ -864,9 +864,9 @@ ru:
       change: "изменить"
       featured_topic: "Избранная Тема"
       moderator: "{{user}} — модератор"
-      admin: "{{user}} — админ"
+      admin: "{{user}} — администратор"
       moderator_tooltip: "Этот пользователь модератор"
-      admin_tooltip: "{{user}} — админ"
+      admin_tooltip: "{{user}} — администратор"
       silenced_tooltip: "Этот пользователь отключённый"
       suspended_notice: "Пользователь заморожен до {{date}}."
       suspended_permanently: "Этот пользователь заморожен."
@@ -1045,9 +1045,10 @@ ru:
         instructions: "Шапка профиля будут отцентрирована и по-умолчанию имеют ширину 1110 пикселей."
       change_card_background:
         title: "Фон карточки пользователя"
-        instructions: "Картинки фона будут отцентрированы и по-умолчанию имеют ширину 590 пикселей."
+        instructions: "Картинки фона будут отцентрированы и по умолчанию имеют ширину 590 пикселей."
       change_featured_topic:
         title: "Избранная Тема"
+        instructions: "Ссылка на тему будет отображена в карточке пользователя и в профиле."
       email:
         title: "E-mail"
         primary: "Основной адрес электронной почты"
@@ -1070,10 +1071,10 @@ ru:
         revoke: "Отозвать"
         cancel: "Отмена"
         not_connected: "(не связанный)"
-        confirm_modal_title: "Подключить%{provider} аккаунт"
+        confirm_modal_title: "Подключить %{provider} аккаунт"
         confirm_description:
           account_specific: "Ваш %{provider} аккаунт '%{account_description}' будет использоваться для аутентификации."
-          generic: "Ваша%{provider} учетная запись будет использоваться для аутентификации."
+          generic: "Ваша %{provider} учетная запись будет использоваться для аутентификации."
       name:
         title: "Имя"
         instructions: "ваше полное имя (опционально)"
@@ -1671,7 +1672,7 @@ ru:
       upload_title: "Вставить картинку или прикрепить файл"
       upload_description: "Впишите сюда описание файла"
       olist_title: "Нумерованный список"
-      ulist_title: "Ненумерованный список"
+      ulist_title: "Маркированный список"
       list_item: "Пункт первый"
       toggle_direction: "Переключить Направление"
       help: "Справка по форматированию (Markdown)"
@@ -1713,7 +1714,7 @@ ru:
           desc: "Проект темы, которая будет видна только сотрудникам"
         toggle_topic_bump:
           label: "Не поднимать тему"
-          desc: "Ответить без изменения даты последнего ответа"
+          desc: "Ответить без изменения дату последнего ответа"
     notifications:
       tooltip:
         regular:
@@ -1800,7 +1801,7 @@ ru:
         post_approved: "сообщение утверждено"
         membership_request_consolidated: "новые запросы на вступление"
     upload_selector:
-      title: "Add an image"
+      title: "Загрузка изображений или файлов"
       title_with_attachments: "Добавить изображение или файл"
       from_my_computer: "С моего устройства"
       from_the_web: "С интернета"
@@ -1808,8 +1809,8 @@ ru:
       remote_tip_with_attachments: "ссылка на изображение или файл {{authorized_extensions}}"
       local_tip: "выбрать изображения с вашего устройства"
       local_tip_with_attachments: "выбрать изображения или файлы с вашего устройства {{authorized_extensions}}"
-      hint: "(вы так же можете перетащить объект в редактор для его загрузки)"
-      hint_for_supported_browsers: "вы так же можете перетащить или скопировать изображения в редактор"
+      hint: "(вы также можете перетащить объект в редактор для его загрузки)"
+      hint_for_supported_browsers: "вы также можете перетащить или скопировать изображения в редактор"
       uploading: "Загрузка"
       select_file: "Выбрать файл"
       default_image_alt_text: изображение
@@ -3352,7 +3353,7 @@ ru:
         new_key: Новый API ключ
         revoked: Отозвать
         delete: Окончательно Удалить
-        continue: Продолжать
+        continue: Продолжить
       web_hooks:
         title: "Webhooks"
         none: "Сейчас нет веб-перехватчиков."
