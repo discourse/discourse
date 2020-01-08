@@ -312,7 +312,13 @@ class Guardian
     return false if title.nil?
     return true if title.empty? # A title set to '(none)' in the UI is an empty string
     return false if user != @user
-    return true if user.badges.where(name: title, allow_title: true).exists?
+
+    return true if user.badges
+      .where(allow_title: true)
+      .pluck(:name)
+      .map { |name| Badge.display_name(name) }
+      .include?(title)
+
     user.groups.where(title: title).exists?
   end
 

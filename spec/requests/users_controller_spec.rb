@@ -1746,10 +1746,24 @@ describe UsersController do
         end
 
         context 'a locale is chosen that differs from I18n.locale' do
+          before do
+            SiteSetting.allow_user_locale = true
+          end
+
           it "updates the user's locale" do
-            I18n.stubs(:locale).returns('fr')
+            I18n.locale = :fr
             put "/u/#{user.username}.json", params: { locale: :fa_IR }
-            expect(User.find_by(username: user.username).locale).to eq('fa_IR')
+            expect(user.reload.locale).to eq('fa_IR')
+          end
+
+          it "updates the title" do
+            user.update!(locale: :fr)
+            user.change_trust_level!(TrustLevel[4])
+            BadgeGranter.process_queue!
+
+            leader_title = I18n.t("badges.leader.name", locale: :fr)
+            put "/u/#{user.username}.json", params: { title: leader_title }
+            expect(user.reload.title).to eq(leader_title)
           end
         end
 
@@ -1951,7 +1965,7 @@ describe UsersController do
       expect(response.status).to eq(200)
     end
 
-    context "with overrided name" do
+    context "with overridden name" do
       fab!(:badge) { Fabricate(:badge, name: 'Demogorgon', allow_title: true) }
       let(:user_badge) { BadgeGranter.grant(badge, user) }
 
