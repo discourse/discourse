@@ -316,8 +316,7 @@ class Guardian
     return true if user.badges
       .where(allow_title: true)
       .pluck(:name)
-      .map { |name| Badge.display_name(name) }
-      .include?(title)
+      .any? { |name| Badge.display_name(name) == title }
 
     user.groups.where(title: title).exists?
   end
