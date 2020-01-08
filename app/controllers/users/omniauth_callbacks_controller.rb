@@ -53,7 +53,9 @@ class Users::OmniauthCallbacksController < ApplicationController
       rescue URI::Error
       end
 
-      if parsed && (parsed.host == nil || parsed.host == Discourse.current_hostname)
+      if parsed && # Valid
+         (parsed.host == nil || parsed.host == Discourse.current_hostname) && # Local
+         !parsed.path.starts_with?(Discourse.base_uri("/auth/")) # Not /auth URL
         @origin = +"#{parsed.path}"
         @origin << "?#{parsed.query}" if parsed.query
       end
