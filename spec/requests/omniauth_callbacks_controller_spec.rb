@@ -459,6 +459,17 @@ RSpec.describe Users::OmniauthCallbacksController do
           expect(cookie_data["destination_url"]).to eq('/t/123')
         end
 
+        it "never redirects to /auth/ origin" do
+          post "/auth/google_oauth2?origin=http://test.localhost/auth/google_oauth2"
+          get "/auth/google_oauth2/callback"
+
+          expect(response.status).to eq 302
+          expect(response.location).to eq "http://test.localhost/"
+
+          cookie_data = JSON.parse(response.cookies['authentication_data'])
+          expect(cookie_data["destination_url"]).to eq('/')
+        end
+
         it "redirects to relative origin" do
           post "/auth/google_oauth2?origin=/t/123"
           get "/auth/google_oauth2/callback"
