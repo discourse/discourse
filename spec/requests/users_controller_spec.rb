@@ -2904,6 +2904,8 @@ describe UsersController do
       it 'returns success' do
         get "/u/#{user.username}.json"
         expect(response.status).to eq(200)
+        expect(response.headers['X-Robots-Tag']).to eq('noindex')
+
         json = JSON.parse(response.body)
 
         expect(json["user"]["has_title_badges"]).to eq(false)
