@@ -295,6 +295,8 @@ Discourse::Application.routes.draw do
 
     resources :badges, constraints: AdminConstraint.new do
       collection do
+        get "/award/:badge_id" => "badges#award"
+        post "/award/:badge_id" => "badges#mass_award"
         get "types" => "badges#badge_types"
         post "badge_groupings" => "badges#save_badge_groupings"
         post "preview" => "badges#preview"

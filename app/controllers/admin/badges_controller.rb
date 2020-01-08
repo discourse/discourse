@@ -33,6 +33,12 @@ class Admin::BadgesController < Admin::AdminController
   def show
   end
 
+  def award
+  end
+
+  def mass_award
+  end
+
   def badge_types
     badge_types = BadgeType.all.to_a
     render_serialized(badge_types, BadgeTypeSerializer, root: "badge_types")
