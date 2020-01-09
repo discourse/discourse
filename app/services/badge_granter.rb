@@ -12,6 +12,38 @@ class BadgeGranter
     BadgeGranter.new(badge, user, opts).grant
   end
 
+  def self.mass_grant(badge, users)
+    system_user_id = Discourse.system_user.id
+    user_badges = users.map { |u| { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: Time.now } }
+    granted_badges = UserBadge.insert_all(user_badges, returning: %i[user_id])
+
+    users_to_notify = users.each do |user|
+      use_default_locale = !SiteSetting.allow_user_locale && user.locale.blank?
+      notification_locale = use_default_locale ? SiteSetting.default_locale : user.locale
+
+      notification = I18n.with_locale(notification_locale) do
+        Notification.create!(
+          user_id: user.id,
+          notification_type: Notification.types[:granted_badge],
+          data: {
+            badge_id: badge.id,
+            badge_name: badge.display_name,
+            badge_slug: badge.slug,
+            badge_title: badge.allow_title,
+            username: user.username
+          }.to_json
+        )
+      end
+
+      DB.exec(
+        "UPDATE user_badges SET notification_id = :notification_id WHERE notification_id IS NULL AND user_id = :user_id AND badge_id = :badge_id",
+        notification_id: notification.id,
+        user_id: user.id,
+        badge_id: badge.id
+      )
+    end
+  end
+
   def grant
     return if @granted_by && !Guardian.new(@granted_by).can_grant_badges?(@user)
     return unless @badge.enabled?
