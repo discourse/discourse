@@ -30,21 +30,31 @@
   width: 100%;
 
   .category-box {
+    position: relative;
     display: flex;
     flex-direction: row;
     align-content: flex-start;
-    cursor: pointer;
-
     box-sizing: border-box;
-
     border-width: 0;
     border-left-width: 6px;
-
     border-style: solid;
     border-color: $primary-low;
 
     .mobile-view & {
       width: 100%;
+    }
+
+    .parent-box-link {
+      // This avoids an issue with nested links by layering links instead
+      &:before {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
     }
 
     .logo.aspect-image img {
@@ -134,6 +144,7 @@
   }
 
   .subcategory.with-subcategories {
+    position: relative;
     border: none;
     border-left-width: 4px;
     border-left-style: solid;
@@ -152,6 +163,16 @@
         overflow: hidden;
         margin-bottom: 0.25em;
         word-wrap: break-word;
+      }
+      &:before {
+        // This avoids an issue with nested links by layering links instead
+        content: "";
+        position: absolute;
+        z-index: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
       }
     }
 
