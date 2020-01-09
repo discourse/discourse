@@ -892,7 +892,7 @@ export default Component.extend({
       }
     }
 
-    if (handled || (!handled && canUpload)) {
+    if (handled || canUpload) {
       e.preventDefault();
     }
   },
