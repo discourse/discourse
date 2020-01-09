@@ -6,7 +6,10 @@ class ReviewableClaimedTopicsController < ApplicationController
   def create
     topic = Topic.find_by(id: params[:reviewable_claimed_topic][:topic_id])
     guardian.ensure_can_claim_reviewable_topic!(topic)
-    ReviewableClaimedTopic.create!(user_id: current_user.id, topic_id: topic.id)
+    ReviewableClaimedTopic.create(user_id: current_user.id, topic_id: topic.id)
+    render json: success_json
+  rescue ActiveRecord::RecordNotUnique
+    # This is just in case the validation fails under concurrency
     render json: success_json
   end
 
