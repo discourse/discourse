@@ -73,6 +73,8 @@ class UsersController < ApplicationController
       track_visit_to_user_profile
     end
 
+    response.headers['X-Robots-Tag'] = 'noindex'
+
     # This is a hack to get around a Rails issue where values with periods aren't handled correctly
     # when used as part of a route.
     if params[:external_id] && params[:external_id].ends_with?('.json')

@@ -156,4 +156,3 @@ jobs:
         if: env.BUILD_TYPE == 'FRONTEND'
         run: bundle exec rake plugin:qunit
         timeout-minutes: 30
-        

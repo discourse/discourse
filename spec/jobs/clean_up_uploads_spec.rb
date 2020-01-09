@@ -298,6 +298,15 @@ describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: upload2.id)).to eq(true)
   end
 
+  it "does not delete uploads with an access control post ID (secure uploads)" do
+    upload = fabricate_upload(access_control_post_id: Fabricate(:post).id, secure: true)
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
+    expect(Upload.exists?(id: upload.id)).to eq(true)
+  end
+
   it "does not delete custom emojis" do
     upload = fabricate_upload
     CustomEmoji.create!(name: 'test', upload: upload)

@@ -78,6 +78,7 @@ module Jobs
         .where("tf.upload_id IS NULL")
         .where("ue.upload_id IS NULL")
         .where("ss.value IS NULL")
+        .where("uploads.access_control_post_id IS NULL")
 
       result = result.where("uploads.url NOT IN (?)", ignore_urls) if ignore_urls.present?
 

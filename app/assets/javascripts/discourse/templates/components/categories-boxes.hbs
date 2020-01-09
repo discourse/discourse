@@ -26,8 +26,27 @@
         <div class='description'>
           {{{text-overflow class="overflow" text=c.description_excerpt}}}
         </div>
-
-        {{#if c.subcategories}}
+        {{#if c.isGrandParent}}
+          {{#each c.subcategories as |subcategory|}}
+            <div data-category-id={{subcategory.id}}  style={{border-color subcategory.color}} class="subcategory with-subcategories {{if subcategory.uploaded_logo.url 'has-logo' 'no-logo'}}">
+              <div class="subcategory-box-inner">
+                {{category-title-link tagName="h4" category=subcategory}}
+                {{#if subcategory.subcategories}}
+                  <div class='subcategories'>
+                    {{#each subcategory.subcategories as |subsubcategory|}}
+                      {{#unless subsubcategory.isMuted}}
+                        <span class='subcategory'>
+                          {{category-title-before category=subsubcategory}}
+                          {{category-link subsubcategory hideParent="true"}}
+                        </span>
+                      {{/unless}}
+                    {{/each}}
+                  </div>
+                {{/if}}
+            </div>
+           </div>
+          {{/each}}
+        {{else if c.subcategories}}
           <div class='subcategories'>
             {{#each c.subcategories as |sc|}}
               <a class="subcategory" href={{sc.url}}>
@@ -38,7 +57,7 @@
                       width=sc.uploaded_logo.width
                       height=sc.uploaded_logo.height}}
                 </span>
-                <span class="subcategory-link">{{sc.name}}</span>
+                {{category-link sc hideParent="true"}}
               </a>
             {{/each}}
           </div>

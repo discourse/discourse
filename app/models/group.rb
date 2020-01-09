@@ -48,7 +48,6 @@ class Group < ActiveRecord::Base
   end
 
   def remove_review_groups
-    puts self.id!
     Category.where(review_group_id: self.id).update_all(review_group_id: nil)
     Category.where(review_group_id: self.id).update_all(review_group_id: nil)
   end
