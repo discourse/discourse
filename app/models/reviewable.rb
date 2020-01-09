@@ -138,23 +138,47 @@ class Reviewable < ActiveRecord::Base
       potential_spam: potential_spam
     )
     reviewable.created_new!
-    reviewable.save!
-    reviewable
 
-  rescue ActiveRecord::RecordNotUnique
+    if target.blank?
+      # If there is no target there's no chance of a conflict
+      reviewable.save!
+    else
+      # In this case, a reviewable might already exist for this (type, target_id) index.
+      # ActiveRecord can only validate indexes using a SELECT before the INSERT which
+      # is not safe under concurrency. Instead, we perform an UPDATE on the status, and return
+      # the previous value. We then know:
+      #
+      #   a) if a previous row existed
+      #   b) if it was changed
+      #
+      # And that allows us to complete our logic.
 
-    row_count = DB.exec(<<~SQL, status: statuses[:pending], id: target.id, type: target.class.name)
-      UPDATE reviewables
-      SET status = :status
-      WHERE status <> :status
-        AND target_id = :id
-        AND target_type = :type
-    SQL
+      update_args = {
+        status: statuses[:pending],
+        id: target.id,
+        type: target.class.name,
+        potential_spam: potential_spam == true ? true : nil
+      }
 
-    where(target: target).update_all(potential_spam: true) if potential_spam
+      row = DB.query_single(<<~SQL, update_args)
+        UPDATE reviewables
+        SET status = :status,
+          potential_spam = COALESCE(:potential_spam, reviewables.potential_spam)
+        FROM reviewables AS old_reviewables
+        WHERE reviewables.target_id = :id
+          AND reviewables.target_type = :type
+        RETURNING old_reviewables.status
+      SQL
+      old_status = row[0]
 
-    reviewable = find_by(target: target)
-    reviewable.log_history(:transitioned, created_by) if row_count > 0
+      if old_status.blank?
+        reviewable.save!
+      else
+        reviewable = find_by(target: target)
+        reviewable.log_history(:transitioned, created_by) if old_status != statuses[:pending]
+      end
+    end
+
     reviewable
   end
 
