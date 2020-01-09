@@ -2,7 +2,7 @@ import componentTest from "helpers/component-test";
 
 moduleForComponent("user-selector", { integration: true });
 
-const paste = (element, text) => {
+function paste(element, text) {
   let e = new Event("paste");
   e.clipboardData = { getData: () => text };
   element.dispatchEvent(e);
