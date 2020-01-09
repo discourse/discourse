@@ -83,9 +83,8 @@ module Compression
       end
 
       ::File.open(entry_path, 'wb') do |os|
-        buf = ''.dup
         while (buf = entry.read(chunk_size))
-          remaining_size -= chunk_size
+          remaining_size -= buf.size
           raise ExtractFailed if remaining_size.negative?
           os << buf
         end
