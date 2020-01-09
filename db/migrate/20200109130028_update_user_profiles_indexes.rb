@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UpdateUserProfilesIndexes < ActiveRecord::Migration[6.0]
   def change
     remove_index :user_profiles, :card_background
