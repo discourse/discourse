@@ -185,12 +185,12 @@ export default ComboBoxComponent.extend(TagsMixin, {
       } else if (tagId === "no-tags") {
         url = Discourse.getURL(this.noTagsUrl);
       } else {
-        url = "/tags";
-
         if (this.currentCategory) {
-          url += `/c/${Category.slugFor(this.currentCategory)}/${
+          url = `/tags/c/${Category.slugFor(this.currentCategory)}/${
             this.currentCategory.id
           }`;
+        } else {
+          url = "/tag";
         }
 
         if (tag && tag.targetTagId) {
