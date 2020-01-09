@@ -9,20 +9,27 @@ export default Controller.extend({
     massAward() {
       const file = document.querySelector("#massAwardCSVUpload").files[0];
 
-      const options = {
-        type: "POST",
-        processData: false,
-        contentType: false,
-        data: new FormData()
-      };
+      if (this.model && file) {
+        const options = {
+          type: "POST",
+          processData: false,
+          contentType: false,
+          data: new FormData()
+        };
 
-      options.data.append("file", file);
+        options.data.append("file", file);
 
-      this.set("saving", false);
+        this.set("saving", true);
 
-      ajax(`/admin/badges/award/${this.model.id}`, options)
-        .then(() => this.set("saving", false))
-        .catch(popupAjaxError);
+        ajax(`/admin/badges/award/${this.model.id}`, options)
+          .then(() => {
+            bootbox.alert(I18n.t("admin.badges.mass_award.success"));
+          })
+          .catch(popupAjaxError)
+          .finally(() => this.set("saving", false));
+      } else {
+        bootbox.alert(I18n.t("admin.badges.mass_award.aborted"));
+      }
     }
   }
 });
