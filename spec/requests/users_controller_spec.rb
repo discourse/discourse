@@ -384,47 +384,43 @@ describe UsersController do
       end
 
       context 'security key authentication required' do
-        let!(:security_key) { Fabricate(:user_security_key, user: user, factor_type: UserSecurityKey.factor_types[:second_factor]) }
+        let!(:user_security_key) do
+          Fabricate(
+            :user_security_key,
+            user: user,
+            credential_id: valid_security_key_data[:credential_id],
+            public_key: valid_security_key_data[:public_key]
+          )
+        end
+        let(:token) { user.email_tokens.create!(email: user.email).token }
+
+        before do
+          simulate_localhost_webauthn_challenge
+
+          # store challenge in secure session by visiting the email login page
+          get "/u/password-reset/#{token}"
+        end
 
         it 'preloads with a security key challenge and allowed credential ids' do
-          token = user.email_tokens.create!(email: user.email).token
-
-          get "/u/password-reset/#{token}"
-
           expect(response.body).to have_tag("div#data-preloaded") do |element|
             json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
             password_reset = JSON.parse(json['password_reset'])
             expect(password_reset['challenge']).not_to eq(nil)
-            expect(password_reset['allowed_credential_ids']).to eq([security_key.credential_id])
+            expect(password_reset['allowed_credential_ids']).to eq([user_security_key.credential_id])
             expect(password_reset['security_key_required']).to eq(true)
           end
         end
 
         it 'stages a webauthn challenge and rp-id for the user' do
-          token = user.email_tokens.create!(email: user.email).token
-
-          get "/u/password-reset/#{token}"
-
           secure_session = SecureSession.new(session["secure_session_id"])
-          expect(secure_session["staged-webauthn-challenge-#{user.id}"]).not_to eq(nil)
-          expect(secure_session["staged-webauthn-rp-id-#{user.id}"]).to eq(Discourse.current_hostname)
+          expect(Webauthn.challenge(user, secure_session)).not_to eq(nil)
+          expect(Webauthn.rp_id(user, secure_session)).to eq(Discourse.current_hostname)
         end
 
         it 'changes password with valid security key challenge and authentication' do
-          token = user.email_tokens.create(email: user.email).token
-
-          get "/u/password-reset/#{token}"
-
-          ::Webauthn::SecurityKeyAuthenticationService.any_instance.stubs(:authenticate_security_key).returns(true)
-
-          put "/u/password-reset/#{token}", params: {
+          put "/u/password-reset/#{token}.json", params: {
             password: 'hg9ow8yHG32O',
-            security_key_credential: {
-              signature: 'test',
-              clientData: 'test',
-              authenticatorData: 'test',
-              credentialId: 'test'
-            },
+            security_key_credential: valid_security_key_auth_post_data,
             second_factor_method: UserSecondFactor.methods[:security_key]
           }
 
@@ -432,6 +428,26 @@ describe UsersController do
           expect(response.status).to eq(200)
           expect(user.confirm_password?('hg9ow8yHG32O')).to eq(true)
           expect(user.user_auth_tokens.count).to eq(1)
+        end
+
+        context "when security key authentication fails" do
+          it 'shows an error message and does not change password' do
+            put "/u/password-reset/#{token}", params: {
+              password: 'hg9ow8yHG32O',
+              security_key_credential: {
+                signature: 'bad',
+                clientData: 'bad',
+                authenticatorData: 'bad',
+                credentialId: 'bad'
+              },
+              second_factor_method: UserSecondFactor.methods[:security_key]
+            }
+
+            user.reload
+            expect(user.confirm_password?('hg9ow8yHG32O')).to eq(false)
+            expect(response.status).to eq(200)
+            expect(JSON.parse(response.body)['errors']).to include(I18n.t("webauthn.validation.not_found_error"))
+          end
         end
       end
     end
@@ -590,12 +606,24 @@ describe UsersController do
       end
 
       describe 'when security key authentication required' do
-        fab!(:security_key) { Fabricate(:user_security_key, user: admin) }
         fab!(:email_token) { Fabricate(:email_token, user: admin) }
+        let!(:security_key) do
+          Fabricate(
+            :user_security_key,
+            user: admin,
+            credential_id: valid_security_key_data[:credential_id],
+            public_key: valid_security_key_data[:public_key]
+          )
+        end
+
+        before do
+          simulate_localhost_webauthn_challenge
+
+          # store challenge in secure session by visiting the admin login page
+          get "/u/admin-login/#{email_token.token}"
+        end
 
         it 'does not log in when token required' do
-          security_key
-          get "/u/admin-login/#{email_token.token}"
           expect(response).not_to redirect_to('/')
           expect(session[:current_user_id]).not_to eq(admin.id)
           expect(response.body).to include(I18n.t('login.security_key_authenticate'))
@@ -603,33 +631,24 @@ describe UsersController do
 
         describe 'invalid security key' do
           it 'should display the right error' do
-            ::Webauthn::SecurityKeyAuthenticationService.any_instance.stubs(:authenticate_security_key).returns(false)
-
             put "/u/admin-login/#{email_token.token}", params: {
               security_key_credential: {
-                signature: 'test',
-                clientData: 'test',
-                authenticatorData: 'test',
-                credentialId: 'test'
+                signature: 'bad',
+                clientData: 'bad',
+                authenticatorData: 'bad',
+                credentialId: 'bad'
               }.to_json,
               second_factor_method: UserSecondFactor.methods[:security_key]
             }
 
             expect(response.status).to eq(200)
-            expect(response.body).to include(I18n.t('login.security_key_invalid'))
+            expect(response.body).to include(I18n.t('webauthn.validation.not_found_error'))
           end
         end
 
         it 'logs in when a valid security key is given' do
-          ::Webauthn::SecurityKeyAuthenticationService.any_instance.stubs(:authenticate_security_key).returns(true)
-
           put "/u/admin-login/#{email_token.token}", params: {
-            security_key_credential: {
-              signature: 'test',
-              clientData: 'test',
-              authenticatorData: 'test',
-              credentialId: 'test'
-            }.to_json,
+            security_key_credential: valid_security_key_auth_post_data.to_json,
             second_factor_method: UserSecondFactor.methods[:security_key]
           }
 
@@ -3642,6 +3661,77 @@ describe UsersController do
     end
   end
 
+  describe "#create_second_factor_security_key" do
+    it "stores the challenge in the session and returns challenge data, user id, and supported algorithms" do
+      create_second_factor_security_key
+      secure_session = read_secure_session
+      response_parsed = JSON.parse(response.body)
+      expect(response_parsed["challenge"]).to eq(
+        Webauthn.challenge(user, secure_session)
+      )
+      expect(response_parsed["rp_id"]).to eq(
+        Webauthn.rp_id(user, secure_session)
+      )
+      expect(response_parsed["rp_name"]).to eq(
+        Webauthn.rp_name(user, secure_session)
+      )
+      expect(response_parsed["user_secure_id"]).to eq(
+        user.reload.create_or_fetch_secure_identifier
+      )
+      expect(response_parsed["supported_algoriths"]).to eq(
+        ::Webauthn::SUPPORTED_ALGORITHMS
+      )
+    end
+
+    context "if the user has security key credentials already" do
+      let!(:user_security_key) { Fabricate(:user_security_key_with_random_credential, user: user) }
+
+      it "returns those existing active credentials" do
+        create_second_factor_security_key
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["existing_active_credential_ids"]).to eq(
+          [user_security_key.credential_id]
+        )
+      end
+    end
+  end
+
+  describe "#register_second_factor_security_key" do
+    context "when creation parameters are valid" do
+      it "creates a security key for the user" do
+        simulate_localhost_webauthn_challenge
+        create_second_factor_security_key
+        response_parsed = JSON.parse(response.body)
+
+        post "/u/register_second_factor_security_key.json", params: valid_security_key_create_post_data
+
+        expect(user.security_keys.count).to eq(1)
+        expect(user.security_keys.last.credential_id).to eq(valid_security_key_create_post_data[:rawId])
+        expect(user.security_keys.last.name).to eq(valid_security_key_create_post_data[:name])
+      end
+    end
+
+    context "when the creation parameters are invalid" do
+      it "shows a security key error and does not create a key" do
+        stub_as_dev_localhost
+        create_second_factor_security_key
+        response_parsed = JSON.parse(response.body)
+
+        post "/u/register_second_factor_security_key.json", params: {
+          id: "bad id",
+          rawId: "bad rawId",
+          type: "public-key",
+          attestation: "bad attestation",
+          clientData: Base64.encode64('{"bad": "json"}'),
+          name: "My Bad Key"
+        }
+
+        expect(user.security_keys.count).to eq(0)
+        expect(JSON.parse(response.body)["error"]).to eq(I18n.t("webauthn.validation.invalid_type_error"))
+      end
+    end
+  end
+
   describe '#revoke_account' do
     fab!(:other_user) { Fabricate(:user) }
     it 'errors for unauthorised users' do
@@ -3948,5 +4038,11 @@ describe UsersController do
       expect(response.status).to eq(200)
       expect(user.user_profile.featured_topic).to eq nil
     end
+  end
+
+  def create_second_factor_security_key
+    sign_in(user)
+    UsersController.any_instance.stubs(:secure_session_confirmed?).returns(true)
+    post "/u/create_second_factor_security_key.json"
   end
 end

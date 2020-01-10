@@ -141,6 +141,7 @@ export default Controller.extend(ModalFunctionality, {
               document.getElementById("modal-alert").style.display = "none";
 
               this.setProperties({
+                otherMethodAllowed: result.multiple_second_factor_methods,
                 secondFactorRequired: true,
                 showLoginButtons: false,
                 backupEnabled: result.backup_enabled,

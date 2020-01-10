@@ -20,6 +20,7 @@ class UserSecondFactor < ActiveRecord::Base
     @methods ||= Enum.new(
       totp: 1,
       backup_codes: 2,
+      security_key: 3,
     )
   end
 

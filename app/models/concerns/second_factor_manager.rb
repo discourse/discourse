@@ -67,6 +67,10 @@ module SecondFactorManager
       self&.security_keys.where(factor_type: UserSecurityKey.factor_types[:second_factor], enabled: true).exists?
   end
 
+  def has_multiple_second_factor_methods?
+    security_keys_enabled? && (totp_enabled? || backup_codes_enabled?)
+  end
+
   def remaining_backup_codes
     self&.user_second_factors&.backup_codes&.count
   end
@@ -76,6 +80,11 @@ module SecondFactorManager
       authenticate_totp(token)
     elsif second_factor_method == UserSecondFactor.methods[:backup_codes]
       authenticate_backup_code(token)
+    elsif second_factor_method == UserSecondFactor.methods[:security_key]
+      # some craziness has happened if we have gotten here...like the user
+      # switching around their second factor types then continuing an already
+      # started login attempt
+      false
     end
   end
 
