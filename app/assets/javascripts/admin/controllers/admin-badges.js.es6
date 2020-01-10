@@ -8,12 +8,10 @@ export default Controller.extend({
   actions: {
     showBadge() {
       this.set("selectedRoute", "adminBadges.show");
-      this.router.transitionTo("adminBadges.show", "new");
     },
 
     massAward() {
       this.set("selectedRoute", "adminBadges.award");
-      this.router.transitionTo("adminBadges.award", "new");
     }
   }
 });

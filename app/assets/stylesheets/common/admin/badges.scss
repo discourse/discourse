@@ -124,7 +124,7 @@
   float: left;
 
   .badge-preview {
-    min-height: 130px;
+    min-height: 110px;
     max-width: 300px;
     display: flex;
     align-items: center;
@@ -134,8 +134,8 @@
 
     img,
     svg {
-      width: 95px;
-      height: 95px;
+      width: 60px;
+      height: 60px;
     }
 
     .badge-display-name {

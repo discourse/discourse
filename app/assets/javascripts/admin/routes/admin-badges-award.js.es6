@@ -8,5 +8,10 @@ export default Route.extend({
         parseInt(params.badge_id, 10)
       );
     }
+  },
+
+  setupController() {
+    const badgesController = this.controllerFor("adminBadges");
+    badgesController.set("selectedRoute", "adminBadges.award");
   }
 });

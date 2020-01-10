@@ -19,23 +19,8 @@ class BadgeGranter
     user_badges = users.map { |u| { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: Time.now } }
     granted_badges = UserBadge.insert_all(user_badges, returning: %i[user_id])
 
-    users_to_notify = users.each do |user|
-      use_default_locale = !SiteSetting.allow_user_locale && user.locale.blank?
-      notification_locale = use_default_locale ? SiteSetting.default_locale : user.locale
-
-      notification = I18n.with_locale(notification_locale) do
-        Notification.create!(
-          user_id: user.id,
-          notification_type: Notification.types[:granted_badge],
-          data: {
-            badge_id: badge.id,
-            badge_name: badge.display_name,
-            badge_slug: badge.slug,
-            badge_title: badge.allow_title,
-            username: user.username
-          }.to_json
-        )
-      end
+    users.each do |user|
+      notification = send_notification(user.id, user.username, user.locale, badge)
 
       DB.exec(
         "UPDATE user_badges SET notification_id = :notification_id WHERE notification_id IS NULL AND user_id = :user_id AND badge_id = :badge_id",
@@ -80,17 +65,9 @@ class BadgeGranter
 
         if SiteSetting.enable_badges?
           unless @badge.badge_type_id == BadgeType::Bronze && user_badge.granted_at < 2.days.ago
-            I18n.with_locale(@user.effective_locale) do
-              notification = @user.notifications.create(
-                notification_type: Notification.types[:granted_badge],
-                data: { badge_id: @badge.id,
-                        badge_name: @badge.display_name,
-                        badge_slug: @badge.slug,
-                        badge_title: @badge.allow_title,
-                        username: @user.username }.to_json
-              )
-              user_badge.update notification_id: notification.id
-            end
+            notification = self.class.send_notification(@user.id, @user.username, @user.effective_locale, @badge)
+
+            user_badge.update notification_id: notification.id
           end
         end
       end
@@ -365,29 +342,9 @@ class BadgeGranter
 
       # old bronze badges do not matter
       next if badge.badge_type_id == BadgeType::Bronze && row.granted_at < 2.days.ago
-
-      # Try to use user locale in the badge notification if possible without too much resources
-      notification_locale = if SiteSetting.allow_user_locale && row.locale.present?
-        row.locale
-      else
-        SiteSetting.default_locale
-      end
-
       next if row.staff && badge.awarded_for_trust_level?
 
-      notification = I18n.with_locale(notification_locale) do
-        Notification.create!(
-          user_id: row.user_id,
-          notification_type: Notification.types[:granted_badge],
-          data: {
-            badge_id: badge.id,
-            badge_name: badge.display_name,
-            badge_slug: badge.slug,
-            badge_title: badge.allow_title,
-            username: row.username
-          }.to_json
-        )
-      end
+      notification = send_notification(row.user_id, row.username, row.locale, badge)
 
       DB.exec(
         "UPDATE user_badges SET notification_id = :notification_id WHERE id = :id",
@@ -419,6 +376,25 @@ class BadgeGranter
               badges.id IN (SELECT badge_id FROM user_badges ub where ub.user_id = users.id)
         )
     SQL
+  end
+
+  def self.send_notification(user_id, username, locale, badge)
+    use_default_locale = !SiteSetting.allow_user_locale && locale.blank?
+    notification_locale = use_default_locale ? SiteSetting.default_locale : locale
+
+    I18n.with_locale(notification_locale) do
+      Notification.create!(
+        user_id: user_id,
+        notification_type: Notification.types[:granted_badge],
+        data: {
+          badge_id: badge.id,
+          badge_name: badge.display_name,
+          badge_slug: badge.slug,
+          badge_title: badge.allow_title,
+          username: username
+        }.to_json
+      )
+    end
   end
 
 end
