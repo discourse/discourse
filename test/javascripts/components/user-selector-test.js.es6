@@ -6,7 +6,7 @@ function paste(element, text) {
   let e = new Event("paste");
   e.clipboardData = { getData: () => text };
   element.dispatchEvent(e);
-};
+}
 
 componentTest("pasting a list of usernames", {
   template: `{{user-selector usernames=usernames class="test-selector"}}`,
