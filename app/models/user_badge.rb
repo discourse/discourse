@@ -100,6 +100,7 @@ end
 #  post_id         :integer
 #  notification_id :integer
 #  seq             :integer          default(0), not null
+#  featured_rank   :integer
 #
 # Indexes
 #
