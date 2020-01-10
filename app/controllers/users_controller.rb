@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-
   skip_before_action :authorize_mini_profiler, only: [:avatar]
 
   requires_login only: [
@@ -536,8 +535,8 @@ class UsersController < ApplicationController
       security_key_authenticated = ::Webauthn::SecurityKeyAuthenticationService.new(
         @user,
         security_key_credential,
-        challenge: secure_session["staged-webauthn-challenge-#{@user.id}"],
-        rp_id: secure_session["staged-webauthn-rp-id-#{@user.id}"],
+        challenge: Webauthn.challenge(@user, secure_session),
+        rp_id: Webauthn.rp_id(@user, secure_session),
         origin: Discourse.base_url
       ).authenticate_security_key
     end
@@ -561,6 +560,9 @@ class UsersController < ApplicationController
       if !valid_second_factor
         @user.errors.add(:user_second_factors, :invalid)
         @error = I18n.t('login.invalid_second_factor_code')
+      elsif !valid_security_key
+        @user.errors.add(:security_keys, :invalid)
+        @error = I18n.t('login.invalid_security_key')
       elsif @invalid_password = params[:password].blank? || params[:password].size > User.max_password_length
         @user.errors.add(:password, :invalid)
       else
@@ -586,7 +588,7 @@ class UsersController < ApplicationController
         if @error
           render layout: 'no_ember'
         else
-          stage_webauthn_security_key_challenge(@user)
+          Webauthn.stage_challenge(@user, secure_session)
           store_preloaded(
             "password_reset",
             MultiJson.dump(
@@ -596,7 +598,7 @@ class UsersController < ApplicationController
                 second_factor_required: !valid_second_factor,
                 security_key_required: !valid_security_key,
                 backup_enabled: @user.backup_codes_enabled?
-              }.merge(webauthn_security_key_challenge_and_allowed_credentials(@user))
+              }.merge(Webauthn.allowed_credentials(@user, secure_session))
             )
           )
         end
@@ -629,14 +631,14 @@ class UsersController < ApplicationController
               errors: @user&.errors&.to_hash
             }
           else
-            stage_webauthn_security_key_challenge(@user) if !valid_security_key && !security_key_credential.present?
+            Webauthn.stage_challenge(@user, secure_session) if !valid_security_key && !security_key_credential.present?
             render json: {
               is_developer: UsernameCheckerService.is_developer?(@user.email),
               admin: @user.admin?,
               second_factor_required: !valid_second_factor,
               security_key_required: !valid_security_key,
               backup_enabled: @user.backup_codes_enabled?
-            }.merge(webauthn_security_key_challenge_and_allowed_credentials(@user))
+            }.merge(Webauthn.allowed_credentials(@user, secure_session))
           end
         end
       end
@@ -699,8 +701,8 @@ class UsersController < ApplicationController
         @security_key_required = security_keys_enabled
 
         if security_keys_enabled && params[:security_key_credential].blank?
-          stage_webauthn_security_key_challenge(email_token_user)
-          challenge_and_credentials = webauthn_security_key_challenge_and_allowed_credentials(email_token_user)
+          Webauthn.stage_challenge(email_token_user, secure_session)
+          challenge_and_credentials = Webauthn.allowed_credentials(email_token_user, secure_session)
           @security_key_challenge = challenge_and_credentials[:challenge]
           @security_key_allowed_credential_ids = challenge_and_credentials[:allowed_credential_ids].join(",")
         end
@@ -708,9 +710,11 @@ class UsersController < ApplicationController
         if security_keys_enabled && params[:security_key_credential].present?
           credential = JSON.parse(params[:security_key_credential]).with_indifferent_access
 
-          confirm_email = ::Webauthn::SecurityKeyAuthenticationService.new(email_token_user, credential,
-            challenge: secure_session["staged-webauthn-challenge-#{email_token_user&.id}"],
-            rp_id: secure_session["staged-webauthn-rp-id-#{email_token_user&.id}"],
+          confirm_email = ::Webauthn::SecurityKeyAuthenticationService.new(
+            email_token_user,
+            credential,
+            challenge: Webauthn.challenge(email_token_user, secure_session),
+            rp_id: Webauthn.rp_id(email_token_user, secure_session),
             origin: Discourse.base_url
           ).authenticate_security_key
           @message = I18n.t('login.security_key_invalid') if !confirm_email
@@ -1191,10 +1195,10 @@ class UsersController < ApplicationController
                         error: I18n.t("login.incorrect_password")
                       )
       end
-      secure_session["confirmed-password-#{current_user.id}"] = "true"
+      confirm_secure_session
     end
 
-    if secure_session["confirmed-password-#{current_user.id}"] == "true"
+    if secure_session_confirmed?
       totp_second_factors = current_user.totps
         .select(:id, :name, :last_used, :created_at, :method)
         .where(enabled: true).order(:created_at)
@@ -1238,15 +1242,11 @@ class UsersController < ApplicationController
   end
 
   def create_second_factor_security_key
-    challenge = SecureRandom.hex(30)
-    secure_session["staged-webauthn-challenge-#{current_user.id}"] = challenge
-    secure_session["staged-webauthn-rp-id-#{current_user.id}"] = Discourse.current_hostname
-    secure_session["staged-webauthn-rp-name-#{current_user.id}"] = SiteSetting.title
-
+    challenge_session = Webauthn.stage_challenge(current_user, secure_session)
     render json: success_json.merge(
-      challenge: challenge,
-      rp_id: Discourse.current_hostname,
-      rp_name: SiteSetting.title,
+      challenge: challenge_session.challenge,
+      rp_id: challenge_session.rp_id,
+      rp_name: challenge_session.rp_name,
       supported_algoriths: ::Webauthn::SUPPORTED_ALGORITHMS,
       user_secure_id: current_user.create_or_fetch_secure_identifier,
       existing_active_credential_ids: current_user.second_factor_security_key_credential_ids
@@ -1261,15 +1261,13 @@ class UsersController < ApplicationController
     ::Webauthn::SecurityKeyRegistrationService.new(
       current_user,
       params,
-      challenge: secure_session["staged-webauthn-challenge-#{current_user.id}"],
-      rp_id: secure_session["staged-webauthn-rp-id-#{current_user.id}"],
+      challenge: Webauthn.challenge(current_user, secure_session),
+      rp_id: Webauthn.rp_id(current_user, secure_session),
       origin: Discourse.base_url
     ).register_second_factor_security_key
     render json: success_json
   rescue ::Webauthn::SecurityKeyError => err
-    render json: failed_json.merge(
-      error: err.message
-    )
+    render json: failed_json.merge(error: err.message)
   end
 
   def update_security_key
@@ -1358,7 +1356,7 @@ class UsersController < ApplicationController
   def second_factor_check_confirmed_password
     raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
 
-    raise Discourse::InvalidAccess.new unless current_user && secure_session["confirmed-password-#{current_user.id}"] == "true"
+    raise Discourse::InvalidAccess.new unless current_user && secure_session_confirmed?
   end
 
   def revoke_account
@@ -1538,19 +1536,11 @@ class UsersController < ApplicationController
     end
   end
 
-  def stage_webauthn_security_key_challenge(user)
-    challenge = SecureRandom.hex(30)
-    secure_session["staged-webauthn-challenge-#{user.id}"] = challenge
-    secure_session["staged-webauthn-rp-id-#{user.id}"] = Discourse.current_hostname
+  def confirm_secure_session
+    secure_session["confirmed-password-#{current_user.id}"] = "true"
   end
 
-  def webauthn_security_key_challenge_and_allowed_credentials(user)
-    return {} if !user.security_keys_enabled?
-    credential_ids = user.second_factor_security_key_credential_ids
-    {
-      allowed_credential_ids: credential_ids,
-      challenge: secure_session["staged-webauthn-challenge-#{user.id}"]
-    }
+  def secure_session_confirmed?
+    secure_session["confirmed-password-#{current_user.id}"] == "true"
   end
-
 end

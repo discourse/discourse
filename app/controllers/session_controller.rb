@@ -295,22 +295,36 @@ class SessionController < ApplicationController
     if payload = login_error_check(user)
       render json: payload
     else
-      if (params[:second_factor_token].blank?)
-        security_key_valid = ::Webauthn::SecurityKeyAuthenticationService.new(user, params[:security_key_credential],
-          challenge: secure_session["staged-webauthn-challenge-#{user.id}"],
-          rp_id: secure_session["staged-webauthn-rp-id-#{user.id}"],
+      if user.security_keys_enabled? && params[:second_factor_token].blank?
+        security_key_valid = ::Webauthn::SecurityKeyAuthenticationService.new(
+          user,
+          params[:security_key_credential],
+          challenge: Webauthn.challenge(user, secure_session),
+          rp_id: Webauthn.rp_id(user, secure_session),
           origin: Discourse.base_url
         ).authenticate_security_key
-        return invalid_security_key(user) if user.security_keys_enabled? && !security_key_valid
+        return invalid_security_key(user) if !security_key_valid
+        return (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
       end
 
-      if user.totp_enabled? && \
-         !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i) &&
-         !params[:security_key_credential].present?
+      if user.totp_enabled?
+        invalid_second_factor = !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
+        if (params[:security_key_credential].blank? || !user.security_keys_enabled?) && invalid_second_factor
+          return render json: failed_json.merge(
+           error: I18n.t("login.invalid_second_factor_code"),
+           reason: "invalid_second_factor",
+           backup_enabled: user.backup_codes_enabled?,
+           multiple_second_factor_methods: user.has_multiple_second_factor_methods?
+         )
+        end
+      elsif user.security_keys_enabled?
+        # if we have gotten this far then the user has provided the totp
+        # params for a security-key-only account
         return render json: failed_json.merge(
           error: I18n.t("login.invalid_second_factor_code"),
           reason: "invalid_second_factor",
-          backup_enabled: user.backup_codes_enabled?
+          backup_enabled: user.backup_codes_enabled?,
+          multiple_second_factor_methods: user.has_multiple_second_factor_methods?
         )
       end
 
@@ -321,12 +335,13 @@ class SessionController < ApplicationController
   end
 
   def invalid_security_key(user, err_message = nil)
-    stage_webauthn_security_key_challenge(user) if !params[:security_key_credential]
+    Webauthn.stage_challenge(user, secure_session) if !params[:security_key_credential]
     render json: failed_json.merge(
       error: err_message || I18n.t("login.invalid_security_key"),
       reason: "invalid_security_key",
-      backup_enabled: user.backup_codes_enabled?
-    ).merge(webauthn_security_key_challenge_and_allowed_credentials(user))
+      backup_enabled: user.backup_codes_enabled?,
+      multiple_second_factor_methods: user.has_multiple_second_factor_methods?
+    ).merge(Webauthn.allowed_credentials(user, secure_session))
   end
 
   def email_login_info
@@ -351,9 +366,9 @@ class SessionController < ApplicationController
       end
 
       if matched_user&.security_keys_enabled?
-        stage_webauthn_security_key_challenge(matched_user)
+        Webauthn.stage_challenge(matched_user, secure_session)
         response.merge!(
-          webauthn_security_key_challenge_and_allowed_credentials(matched_user).merge(security_key_required: true)
+          Webauthn.allowed_credentials(matched_user, secure_session).merge(security_key_required: true)
         )
       end
 
@@ -376,9 +391,11 @@ class SessionController < ApplicationController
 
     if security_key_credential.present?
       if matched_token&.user&.security_keys_enabled?
-        security_key_valid = ::Webauthn::SecurityKeyAuthenticationService.new(matched_token&.user, params[:security_key_credential],
-          challenge: secure_session["staged-webauthn-challenge-#{matched_token&.user&.id}"],
-          rp_id: secure_session["staged-webauthn-rp-id-#{matched_token&.user&.id}"],
+        security_key_valid = ::Webauthn::SecurityKeyAuthenticationService.new(
+          matched_token&.user,
+          params[:security_key_credential],
+          challenge: Webauthn.challenge(matched_token&.user, secure_session),
+          rp_id: Webauthn.rp_id(matched_token&.user, secure_session),
           origin: Discourse.base_url
         ).authenticate_security_key
         return invalid_security_key(matched_token&.user) if !security_key_valid
@@ -391,6 +408,10 @@ class SessionController < ApplicationController
           RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
           return render json: { error: I18n.t('login.invalid_second_factor_code') }
         end
+      elsif matched_token&.user&.security_keys_enabled?
+        # this means the user only has security key enabled
+        # but has not provided credentials
+        return render json: { error: I18n.t('login.invalid_second_factor_code') }
       end
     end
 
@@ -407,7 +428,7 @@ class SessionController < ApplicationController
 
     render json: { error: I18n.t('email_login.invalid_token') }
   rescue ::Webauthn::SecurityKeyError => err
-    invalid_security_key(user, err.message)
+    invalid_security_key(matched_token&.user, err.message)
   end
 
   def one_time_password
@@ -576,22 +597,5 @@ class SessionController < ApplicationController
   # extension to allow plugins to customize the SSO URL
   def sso_url(sso)
     sso.to_url
-  end
-
-  def stage_webauthn_security_key_challenge(user)
-    challenge = SecureRandom.hex(30)
-    secure_session["staged-webauthn-challenge-#{user.id}"] = challenge
-    secure_session["staged-webauthn-rp-id-#{user.id}"] = Discourse.current_hostname
-  end
-
-  def webauthn_security_key_challenge_and_allowed_credentials(user)
-    return {} if !user.security_keys_enabled?
-    credential_ids = user.security_keys.select(:credential_id)
-      .where(factor_type: UserSecurityKey.factor_types[:second_factor])
-      .pluck(:credential_id)
-    {
-      allowed_credential_ids: credential_ids,
-      challenge: secure_session["staged-webauthn-challenge-#{user.id}"]
-    }
   end
 end
