@@ -309,16 +309,6 @@ class SessionController < ApplicationController
     (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
   end
 
-  def invalid_security_key(user, err_message = nil)
-    Webauthn.stage_challenge(user, secure_session) if !params[:security_key_credential]
-    render json: failed_json.merge(
-      error: err_message || I18n.t("login.invalid_security_key"),
-      reason: "invalid_security_key",
-      backup_enabled: user.backup_codes_enabled?,
-      multiple_second_factor_methods: user.has_multiple_second_factor_methods?
-    ).merge(Webauthn.allowed_credentials(user, secure_session))
-  end
-
   def email_login_info
     raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
 
