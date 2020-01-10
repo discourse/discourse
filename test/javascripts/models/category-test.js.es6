@@ -184,6 +184,30 @@ QUnit.test("findSingleBySlug", assert => {
   );
 });
 
+QUnit.test("findBySlugPathWithID", assert => {
+  const store = createStore();
+
+  const foo = store.createRecord("category", { id: 1, slug: "foo" });
+  const bar = store.createRecord("category", {
+    id: 2,
+    slug: "bar",
+    parentCategory: foo
+  });
+  const baz = store.createRecord("category", {
+    id: 3,
+    slug: "baz",
+    parentCategory: foo
+  });
+
+  const categoryList = [foo, bar, baz];
+  sandbox.stub(Category, "list").returns(categoryList);
+
+  assert.deepEqual(Category.findBySlugPathWithID("foo"), foo);
+  assert.deepEqual(Category.findBySlugPathWithID("foo/bar"), bar);
+  assert.deepEqual(Category.findBySlugPathWithID("foo/bar/"), bar);
+  assert.deepEqual(Category.findBySlugPathWithID("foo/baz/3"), baz);
+});
+
 QUnit.test("search with category name", assert => {
   const store = createStore(),
     category1 = store.createRecord("category", {
