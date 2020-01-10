@@ -316,7 +316,7 @@ RSpec.describe SessionController do
             expect(session[:current_user_id]).to eq(nil)
             response_body = JSON.parse(response.body)
             expect(response_body['error']).to eq(I18n.t(
-              'login.invalid_second_factor_code'
+              'login.invalid_security_key'
             ))
           end
         end
@@ -1173,7 +1173,7 @@ RSpec.describe SessionController do
             response_body = JSON.parse(response.body)
             expect(response_body["failed"]).to eq("FAILED")
             expect(response_body['error']).to eq(I18n.t(
-              'login.invalid_second_factor_code'
+              'login.invalid_security_key'
             ))
           end
         end

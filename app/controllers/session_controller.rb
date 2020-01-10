@@ -293,45 +293,20 @@ class SessionController < ApplicationController
     end
 
     if payload = login_error_check(user)
-      render json: payload
-    else
-      if user.security_keys_enabled? && params[:second_factor_token].blank?
-        security_key_valid = ::Webauthn::SecurityKeyAuthenticationService.new(
-          user,
-          params[:security_key_credential],
-          challenge: Webauthn.challenge(user, secure_session),
-          rp_id: Webauthn.rp_id(user, secure_session),
-          origin: Discourse.base_url
-        ).authenticate_security_key
-        return invalid_security_key(user) if !security_key_valid
-        return (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
-      end
-
-      if user.totp_enabled?
-        invalid_second_factor = !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
-        if (params[:security_key_credential].blank? || !user.security_keys_enabled?) && invalid_second_factor
-          return render json: failed_json.merge(
-           error: I18n.t("login.invalid_second_factor_code"),
-           reason: "invalid_second_factor",
-           backup_enabled: user.backup_codes_enabled?,
-           multiple_second_factor_methods: user.has_multiple_second_factor_methods?
-         )
-        end
-      elsif user.security_keys_enabled?
-        # if we have gotten this far then the user has provided the totp
-        # params for a security-key-only account
-        return render json: failed_json.merge(
-          error: I18n.t("login.invalid_second_factor_code"),
-          reason: "invalid_second_factor",
-          backup_enabled: user.backup_codes_enabled?,
-          multiple_second_factor_methods: user.has_multiple_second_factor_methods?
-        )
-      end
-
-      (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
+      return render json: payload
     end
-  rescue ::Webauthn::SecurityKeyError => err
-    invalid_security_key(user, err.message)
+
+    second_factor_authentication_result = user.authenticate_second_factor_method(params, secure_session)
+    if !second_factor_authentication_result.ok?
+      failure_payload = second_factor_authentication_result.to_h
+      if second_factor_authentication_result.reason == "invalid_security_key"
+        Webauthn.stage_challenge(user, secure_session)
+        failure_payload.merge!(Webauthn.allowed_credentials(user, secure_session))
+      end
+      return render json: failed_json.merge(failure_payload)
+    end
+
+    (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
   end
 
   def invalid_security_key(user, err_message = nil)
@@ -383,35 +358,19 @@ class SessionController < ApplicationController
 
   def email_login
     raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
-    second_factor_token = params[:second_factor_token]
-    second_factor_method = params[:second_factor_method].to_i
-    security_key_credential = params[:security_key_credential]
     token = params[:token]
     matched_token = EmailToken.confirmable(token)
 
-    if security_key_credential.present?
-      if matched_token&.user&.security_keys_enabled?
-        security_key_valid = ::Webauthn::SecurityKeyAuthenticationService.new(
-          matched_token&.user,
-          params[:security_key_credential],
-          challenge: Webauthn.challenge(matched_token&.user, secure_session),
-          rp_id: Webauthn.rp_id(matched_token&.user, secure_session),
-          origin: Discourse.base_url
-        ).authenticate_security_key
-        return invalid_security_key(matched_token&.user) if !security_key_valid
-      end
-    else
-      if matched_token&.user&.totp_enabled?
-        if !second_factor_token.present?
-          return render json: { error: I18n.t('login.invalid_second_factor_code') }
-        elsif !matched_token.user.authenticate_second_factor(second_factor_token, second_factor_method)
-          RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-          return render json: { error: I18n.t('login.invalid_second_factor_code') }
+    user = matched_token&.user
+    if user.present?
+      second_factor_authentication_result = user.authenticate_second_factor_method(params, secure_session)
+      if !second_factor_authentication_result.ok?
+        failure_payload = second_factor_authentication_result.to_h
+        if second_factor_authentication_result.reason == "invalid_security_key"
+          Webauthn.stage_challenge(user, secure_session)
+          failure_payload.merge!(Webauthn.allowed_credentials(user, secure_session))
         end
-      elsif matched_token&.user&.security_keys_enabled?
-        # this means the user only has security key enabled
-        # but has not provided credentials
-        return render json: { error: I18n.t('login.invalid_second_factor_code') }
+        return render json: failed_json.merge(failure_payload)
       end
     end
 
@@ -427,8 +386,6 @@ class SessionController < ApplicationController
     end
 
     render json: { error: I18n.t('email_login.invalid_token') }
-  rescue ::Webauthn::SecurityKeyError => err
-    invalid_security_key(matched_token&.user, err.message)
   end
 
   def one_time_password

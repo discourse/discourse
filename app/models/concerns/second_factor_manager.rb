@@ -5,6 +5,31 @@ module SecondFactorManager
 
   extend ActiveSupport::Concern
 
+  class SecondFactorAuthenticationResult
+    attr_reader :ok, :error, :reason, :backup_enabled, :multiple_second_factor_methods
+
+    def initialize(ok, params)
+      @ok = ok
+      @error = params[:error]
+      @reason = params[:reason]
+      @backup_enabled = params[:backup_enabled]
+      @multiple_second_factor_methods = params[:multiple_second_factor_methods]
+    end
+
+    def to_h
+      {
+        error: error,
+        reason: reason,
+        backup_enabled: backup_enabled,
+        multiple_second_factor_methods: multiple_second_factor_methods
+      }
+    end
+
+    def ok?
+      @ok
+    end
+  end
+
   def create_totp(opts = {})
     require_rotp
     UserSecondFactor.create!({
@@ -68,7 +93,19 @@ module SecondFactorManager
   end
 
   def has_multiple_second_factor_methods?
-    security_keys_enabled? && (totp_enabled? || backup_codes_enabled?)
+    security_keys_enabled? && totp_or_backup_codes_enabled?
+  end
+
+  def totp_or_backup_codes_enabled?
+    totp_enabled? || backup_codes_enabled?
+  end
+
+  def only_security_keys_enabled?
+    security_keys_enabled? && !totp_or_backup_codes_enabled?
+  end
+
+  def only_totp_or_backup_codes_enabled?
+    !security_keys_enabled? && totp_or_backup_codes_enabled?
   end
 
   def remaining_backup_codes
@@ -76,16 +113,76 @@ module SecondFactorManager
   end
 
   def authenticate_second_factor(token, second_factor_method)
+    second_factor_method = second_factor_method.to_i if !second_factor_method.is_a?(Integer)
     if second_factor_method == UserSecondFactor.methods[:totp]
       authenticate_totp(token)
     elsif second_factor_method == UserSecondFactor.methods[:backup_codes]
       authenticate_backup_code(token)
-    elsif second_factor_method == UserSecondFactor.methods[:security_key]
-      # some craziness has happened if we have gotten here...like the user
-      # switching around their second factor types then continuing an already
-      # started login attempt
-      false
     end
+  end
+
+  def authenticate_second_factor_method(params, secure_session)
+    ok_result = SecondFactorAuthenticationResult.new(true, {})
+    return ok_result if !security_keys_enabled? && !totp_or_backup_codes_enabled?
+
+    security_key_credential = params[:security_key_credential]
+    totp_or_backup_code_token = params[:second_factor_token]
+    second_factor_method = params[:second_factor_method]
+
+    if only_security_keys_enabled?
+      return authenticate_security_key(secure_session, security_key_credential) ? ok_result : invalid_security_key_result
+    end
+
+    if only_totp_or_backup_codes_enabled?
+      return authenticate_second_factor(totp_or_backup_code_token, second_factor_method) ? ok_result : invalid_totp_result
+    end
+
+    # from this point on we can assume the user has both TOTP and
+    # security keys enabled and we need to authenticate against
+    # whichever one makes sense
+    if totp_or_backup_code_token.blank?
+      return authenticate_security_key(secure_session, security_key_credential) ? ok_result : invalid_security_key_result
+    else
+      return authenticate_second_factor(totp_or_backup_code_token, second_factor_method) ? ok_result : invalid_totp_result
+    end
+
+    ok_result
+  rescue ::Webauthn::SecurityKeyError => err
+    invalid_security_key_result(err.message)
+  end
+
+  def authenticate_security_key(secure_session, security_key_credential)
+    ::Webauthn::SecurityKeyAuthenticationService.new(
+      self,
+      security_key_credential,
+      challenge: Webauthn.challenge(self, secure_session),
+      rp_id: Webauthn.rp_id(self, secure_session),
+      origin: Discourse.base_url
+    ).authenticate_security_key
+  end
+
+  def invalid_totp_result
+    invalid_second_factor_authentication_result(
+      I18n.t("login.invalid_second_factor_code"),
+      "invalid_second_factor"
+    )
+  end
+
+  def invalid_security_key_result(error_message = nil)
+    invalid_second_factor_authentication_result(
+      error_message || I18n.t("login.invalid_security_key"),
+      "invalid_security_key"
+    )
+  end
+
+  def invalid_second_factor_authentication_result(error_message, reason)
+    SecondFactorAuthenticationResult.new(
+      false,
+      error: error_message,
+      reason: reason,
+      backup_enabled: backup_codes_enabled?,
+      multiple_second_factor_methods: has_multiple_second_factor_methods?
+    )
   end
 
   def generate_backup_codes
