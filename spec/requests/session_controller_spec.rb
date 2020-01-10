@@ -61,9 +61,10 @@ RSpec.describe SessionController do
         it "includes that information in the response" do
           get "/session/email-login/#{email_token.token}.json"
 
-          expect(JSON.parse(response.body)["can_login"]).to eq(true)
-          expect(JSON.parse(response.body)["second_factor_required"]).to eq(true)
-          expect(JSON.parse(response.body)["backup_codes_enabled"]).to eq(true)
+          response_body_parsed = JSON.parse(response.body)
+          expect(response_body_parsed["can_login"]).to eq(true)
+          expect(response_body_parsed["second_factor_required"]).to eq(true)
+          expect(response_body_parsed["backup_codes_enabled"]).to eq(true)
         end
       end
 
@@ -73,14 +74,15 @@ RSpec.describe SessionController do
         it "includes that information in the response" do
           get "/session/email-login/#{email_token.token}.json"
 
-          expect(JSON.parse(response.body)["can_login"]).to eq(true)
-          expect(JSON.parse(response.body)["security_key_required"]).to eq(true)
-          expect(JSON.parse(response.body)["second_factor_required"]).to eq(nil)
-          expect(JSON.parse(response.body)["backup_codes_enabled"]).to eq(nil)
-          expect(JSON.parse(response.body)["allowed_credential_ids"]).to eq([user_security_key.credential_id])
+          response_body_parsed = JSON.parse(response.body)
+          expect(response_body_parsed["can_login"]).to eq(true)
+          expect(response_body_parsed["security_key_required"]).to eq(true)
+          expect(response_body_parsed["second_factor_required"]).to eq(nil)
+          expect(response_body_parsed["backup_codes_enabled"]).to eq(nil)
+          expect(response_body_parsed["allowed_credential_ids"]).to eq([user_security_key.credential_id])
           secure_session = SecureSession.new(session["secure_session_id"])
-          expect(JSON.parse(response.body)["challenge"]).to eq(secure_session["staged-webauthn-challenge-#{user.id}"])
-          expect(secure_session["staged-webauthn-rp-id-#{user.id}"]).to eq(Discourse.current_hostname)
+          expect(response_body_parsed["challenge"]).to eq(Webauthn.challenge(user, secure_session))
+          expect(Webauthn.rp_id(user, secure_session)).to eq(Discourse.current_hostname)
         end
       end
     end
@@ -281,6 +283,80 @@ RSpec.describe SessionController do
               expect(JSON.parse(response.body)["success"]).to eq("OK")
               expect(session[:current_user_id]).to eq(user.id)
             end
+          end
+        end
+      end
+
+      context "user has only security key enabled" do
+        let!(:user_security_key) do
+          Fabricate(
+            :user_security_key,
+            user: user,
+            credential_id: valid_security_key_data[:credential_id],
+            public_key: valid_security_key_data[:public_key]
+          )
+        end
+
+        before do
+          simulate_localhost_webauthn_challenge
+
+          # store challenge in secure session by visiting the email login page
+          get "/session/email-login/#{email_token.token}.json"
+        end
+
+        context "when the security key params are blank and a random second factor token is provided" do
+          it "shows an error message and denies login" do
+
+            post "/session/email-login/#{email_token.token}.json", params: {
+              second_factor_token: "XXXXXXX",
+              second_factor_method: UserSecondFactor.methods[:totp]
+            }
+
+            expect(response.status).to eq(200)
+            expect(session[:current_user_id]).to eq(nil)
+            response_body = JSON.parse(response.body)
+            expect(response_body['error']).to eq(I18n.t(
+              'login.invalid_second_factor_code'
+            ))
+          end
+        end
+        context "when the security key params are invalid" do
+          it" shows an error message and denies login" do
+
+            post "/session/email-login/#{email_token.token}.json", params: {
+              security_key_credential: {
+                signature: 'bad_sig',
+                clientData: 'bad_clientData',
+                credentialId: 'bad_credential_id',
+                authenticatorData: 'bad_authenticator_data'
+              },
+              second_factor_method: UserSecondFactor.methods[:security_key]
+            }
+
+            expect(response.status).to eq(200)
+            expect(session[:current_user_id]).to eq(nil)
+            response_body = JSON.parse(response.body)
+            expect(response_body["failed"]).to eq("FAILED")
+            expect(response_body['error']).to eq(I18n.t(
+              'webauthn.validation.not_found_error'
+            ))
+          end
+        end
+        context "when the security key params are valid" do
+          it "logs the user in" do
+
+            post "/session/email-login/#{email_token.token}.json", params: {
+              login: user.username,
+              password: 'myawesomepassword',
+              security_key_credential: valid_security_key_auth_post_data,
+              second_factor_method: UserSecondFactor.methods[:security_key]
+            }
+
+            expect(response.status).to eq(200)
+            user.reload
+
+            expect(session[:current_user_id]).to eq(user.id)
+            expect(user.user_auth_tokens.count).to eq(1)
           end
         end
       end
@@ -1061,7 +1137,114 @@ RSpec.describe SessionController do
         end
       end
 
-      context 'when user has 2-factor logins' do
+      context "when a user has security key-only 2FA login" do
+        let!(:user_security_key) do
+          Fabricate(
+            :user_security_key,
+            user: user,
+            credential_id: valid_security_key_data[:credential_id],
+            public_key: valid_security_key_data[:public_key]
+          )
+        end
+
+        before do
+          simulate_localhost_webauthn_challenge
+
+          # store challenge in secure session by failing login once
+          post "/session.json", params: {
+            login: user.username,
+            password: 'myawesomepassword'
+          }
+        end
+
+        context "when the security key params are blank and a random second factor token is provided" do
+          it "shows an error message and denies login" do
+
+            post "/session.json", params: {
+              login: user.username,
+              password: 'myawesomepassword',
+              security_key_credential: {},
+              second_factor_token: '99999999',
+              second_factor_method: UserSecondFactor.methods[:totp]
+            }
+
+            expect(response.status).to eq(200)
+            expect(session[:current_user_id]).to eq(nil)
+            response_body = JSON.parse(response.body)
+            expect(response_body["failed"]).to eq("FAILED")
+            expect(response_body['error']).to eq(I18n.t(
+              'login.invalid_second_factor_code'
+            ))
+          end
+        end
+        context "when the security key params are invalid" do
+          it" shows an error message and denies login" do
+
+            post "/session.json", params: {
+              login: user.username,
+              password: 'myawesomepassword',
+              security_key_credential: {
+                signature: 'bad_sig',
+                clientData: 'bad_clientData',
+                credentialId: 'bad_credential_id',
+                authenticatorData: 'bad_authenticator_data'
+              },
+              second_factor_method: UserSecondFactor.methods[:security_key]
+            }
+
+            expect(response.status).to eq(200)
+            expect(session[:current_user_id]).to eq(nil)
+            response_body = JSON.parse(response.body)
+            expect(response_body["failed"]).to eq("FAILED")
+            expect(response_body['error']).to eq(I18n.t(
+              'webauthn.validation.not_found_error'
+            ))
+          end
+        end
+        context "when the security key params are valid" do
+          it "logs the user in" do
+
+            post "/session.json", params: {
+              login: user.username,
+              password: 'myawesomepassword',
+              security_key_credential: valid_security_key_auth_post_data,
+              second_factor_method: UserSecondFactor.methods[:security_key]
+            }
+
+            expect(response.status).to eq(200)
+            user.reload
+
+            expect(session[:current_user_id]).to eq(user.id)
+            expect(user.user_auth_tokens.count).to eq(1)
+          end
+        end
+        context "when the security key is disabled in the background by the user and TOTP is enabled" do
+          before do
+            user_security_key.destroy!
+            Fabricate(:user_second_factor_totp, user: user)
+          end
+
+          it "shows an error message and denies login" do
+
+            post "/session.json", params: {
+              login: user.username,
+              password: 'myawesomepassword',
+              security_key_credential: valid_security_key_auth_post_data,
+              second_factor_method: UserSecondFactor.methods[:security_key]
+            }
+
+            expect(response.status).to eq(200)
+            expect(session[:current_user_id]).to eq(nil)
+            response_body = JSON.parse(response.body)
+            expect(response_body["failed"]).to eq("FAILED")
+            expect(JSON.parse(response.body)['error']).to eq(I18n.t(
+              'login.invalid_second_factor_code'
+            ))
+          end
+        end
+      end
+
+      context 'when user has TOTP-only 2FA login' do
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
         let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
 
