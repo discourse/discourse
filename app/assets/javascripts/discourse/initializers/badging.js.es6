@@ -4,7 +4,7 @@ export default {
   after: "message-bus",
 
   initialize(container) {
-    if (!window.ExperimentalBadge) return; // must have the Badging API
+    if (!navigator.setAppBadge) return; // must have the Badging API
 
     const user = container.lookup("current-user:main");
     if (!user) return; // must be logged in
@@ -18,6 +18,6 @@ export default {
   },
 
   _updateBadge() {
-    window.ExperimentalBadge.set(this.notifications);
+    navigator.setAppBadge(this.notifications);
   }
 };
