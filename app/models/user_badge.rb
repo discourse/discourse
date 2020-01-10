@@ -10,13 +10,12 @@ class UserBadge < ActiveRecord::Base
   scope :grouped_with_count, -> {
     group(:badge_id, :user_id)
       .select(UserBadge.attribute_names.map { |x| "MAX(user_badges.#{x}) AS #{x}" },
-                  'COUNT(*) AS "count"',
-                  'MAX(badges.badge_type_id) AS badges_badge_type_id',
-                  'MAX(badges.grant_count) AS badges_grant_count')
-      .joins(:badge)
-      .order('max(featured_rank) ASC')
+              'COUNT(*) AS "count"')
+      .order('MAX(featured_rank) ASC')
       .includes(:user, :granted_by, { badge: :badge_type }, post: :topic)
   }
+
+  scope :for_enabled_badges, -> { where('user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)') }
 
   validates :badge_id,
     presence: true,

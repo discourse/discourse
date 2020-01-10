@@ -20,8 +20,14 @@ class User < ActiveRecord::Base
   has_many :user_actions
   has_many :post_actions
 
-  has_many :user_badges, -> { where('user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)') }, dependent: :destroy
+  DEFAULT_FEATURED_BADGE_COUNT = 3
+
+  has_many :user_badges, -> { for_enabled_badges }, dependent: :destroy
   has_many :badges, through: :user_badges
+  has_many :default_featured_user_badges,
+            -> { for_enabled_badges.grouped_with_count.where("featured_rank <= ?", DEFAULT_FEATURED_BADGE_COUNT) },
+            class_name: "UserBadge"
+
   has_many :email_logs, dependent: :delete_all
   has_many :incoming_emails, dependent: :delete_all
   has_many :post_timings
@@ -962,7 +968,11 @@ class User < ActiveRecord::Base
   end
 
   def featured_user_badges(limit = DEFAULT_FEATURED_BADGE_COUNT)
-    user_badges.grouped_with_count.where("featured_rank <= ?", limit)
+    if limit == DEFAULT_FEATURED_BADGE_COUNT
+      default_featured_user_badges
+    else
+      user_badges.grouped_with_count.where("featured_rank <= ?", limit)
+    end
   end
 
   def self.count_by_signup_date(start_date = nil, end_date = nil, group_id = nil)
