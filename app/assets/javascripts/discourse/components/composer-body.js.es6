@@ -70,7 +70,7 @@ export default Component.extend(KeyEnterEscape, {
         return;
       }
 
-      const h = $("#reply-control").height() || 0;
+      const h = $("#reply-control:not(.saving)").height() || 0;
       this.movePanels(h);
     });
   },
