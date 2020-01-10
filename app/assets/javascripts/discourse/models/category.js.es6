@@ -334,7 +334,7 @@ Category.reopenClass({
   },
 
   findBySlugPathWithID(slugPathWithID) {
-    let parts = slugPathWithID.split("/");
+    let parts = slugPathWithID.split("/").filter(Boolean);
     // slugs found by star/glob pathing in emeber do not automatically url decode - ensure that these are decoded
     if (Discourse.SiteSettings.slug_generation_method === "encoded") {
       parts = parts.map(urlPart => decodeURI(urlPart));
