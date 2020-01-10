@@ -21,11 +21,6 @@ export default Route.extend({
     );
   },
 
-  setupController() {
-    const badgesController = this.controllerFor("adminBadges");
-    badgesController.set("selectedRoute", "adminBadges.show");
-  },
-
   actions: {
     saveError(e) {
       let msg = I18n.t("generic_error");

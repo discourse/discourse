@@ -1,17 +1,18 @@
 import Controller from "@ember/controller";
 import { inject as service } from "@ember/service";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
-  selectedRoute: "adminBadges.show",
-  router: service(),
+  routing: service("-routing"),
 
-  actions: {
-    showBadge() {
-      this.set("selectedRoute", "adminBadges.show");
-    },
-
-    massAward() {
-      this.set("selectedRoute", "adminBadges.award");
+  @discourseComputed("routing.currentRouteName")
+  selectedRoute() {
+    const currentRoute = this.routing.currentRouteName;
+    const indexRoute = "adminBadges.index";
+    if (currentRoute === indexRoute) {
+      return "adminBadges.show";
+    } else {
+      return this.routing.currentRouteName;
     }
   }
 });
