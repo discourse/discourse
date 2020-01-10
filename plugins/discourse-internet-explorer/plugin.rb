@@ -15,8 +15,8 @@ register_asset 'stylesheets/ie.scss'
 # been activated so it can be uploaded to CDNs.
 DiscourseEvent.on(:after_plugin_activation) do ||
   polyfill_path = "#{Plugin::Instance.js_path}/#{self.directory_name}-optional.js"
-  puts polyfill_path
   FileUtils.cp("#{Rails.root}/public/plugins/discourse-internet-explorer/js/ie.js", polyfill_path)
+  Rails.configuration.assets.precompile << "plugins/discourse-internet-explorer-optional.js"
 end
 
 after_initialize do
