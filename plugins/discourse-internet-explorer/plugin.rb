@@ -11,6 +11,14 @@ hide_plugin if self.respond_to?(:hide_plugin)
 
 register_asset 'stylesheets/ie.scss'
 
+# We can't use register asset for an optional resource. Instead copy it after plugins have
+# been activated so it can be uploaded to CDNs.
+DiscourseEvent.on(:after_plugin_activation) do ||
+  polyfill_path = "#{Plugin::Instance.js_path}/#{self.directory_name}-optional.js"
+  puts polyfill_path
+  FileUtils.cp("#{Rails.root}/public/plugins/discourse-internet-explorer/js/ie.js", polyfill_path)
+end
+
 after_initialize do
 
   # Conditionally load the stylesheet. There is unfortunately no easy way to do this via
@@ -47,7 +55,7 @@ after_initialize do
   # to be loaded before other files
   register_html_builder('server:before-script-load') do |controller|
     if BrowserDetection.browser(controller.request.env['HTTP_USER_AGENT']) == :ie
-      path = "#{Discourse.base_uri}/plugins/discourse-internet-explorer/js/ie.js"
+      path = controller.helpers.script_asset_path('plugins/discourse-internet-explorer-optional')
 
       <<~JAVASCRIPT
         <script src="#{path}"></script>

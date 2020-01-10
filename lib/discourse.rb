@@ -194,6 +194,7 @@ module Discourse
         STDERR.puts "Could not activate #{p.metadata.name}, discourse does not meet required version (#{v})"
       end
     end
+    DiscourseEvent.trigger(:after_plugin_activation)
   end
 
   def self.disabled_plugin_names
