@@ -60,16 +60,18 @@ export default TextField.extend({
       allowAny = bool("allowAny"),
       disabled = bool("disabled"),
       allowEmails = bool("allowEmails"),
-      fullWidthWrap = bool("fullWidthWrap");
+      fullWidthWrap = bool("fullWidthWrap"),
+      excludedUsernames = this.excludedUsernames || [];
 
-    const excludedUsernames = () => {
+    const allExcludedUsernames = () => {
       // hack works around some issues with allowAny eventing
-      const usernames = single ? [] : selected;
+      let usernames = single ? [] : selected;
 
       if (currentUser && excludeCurrentUser) {
-        return usernames.concat([currentUser.username]);
+        usernames.concat([currentUser.username]);
       }
-      return usernames;
+
+      return usernames.concat(excludedUsernames);
     };
 
     this.element.addEventListener("paste", this._paste);
@@ -90,7 +92,7 @@ export default TextField.extend({
           return userSearch({
             term,
             topicId: userSelectorComponent.topicId,
-            exclude: excludedUsernames(),
+            exclude: allExcludedUsernames(),
             includeGroups,
             allowedUsers,
             includeMentionableGroups,
@@ -107,7 +109,7 @@ export default TextField.extend({
             }
             return v.username || v.name;
           } else {
-            const excludes = excludedUsernames();
+            const excludes = allExcludedUsernames();
             return v.usernames.filter(item => excludes.indexOf(item) === -1);
           }
         },
@@ -158,7 +160,10 @@ export default TextField.extend({
 
     (text || "").split(/[, \n]+/).forEach(val => {
       val = val.replace(/^@+/, "").trim();
-      if (val.length > 0) {
+      if (
+        val.length > 0 &&
+        (!this.excludedUsernames || !this.excludedUsernames.includes(val))
+      ) {
         usernames.push(val);
       }
     });
