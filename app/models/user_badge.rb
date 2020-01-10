@@ -61,7 +61,8 @@ class UserBadge < ActiveRecord::Base
           user_badges.badge_id,
           RANK() OVER (
             PARTITION BY user_badges.user_id -- Do a separate rank for each user
-            ORDER BY MAX(featured_tl_badge.user_id) NULLS LAST, -- Best tl badge first
+            ORDER BY BOOL_OR(badges.enabled) DESC, -- Disabled badges last
+                    MAX(featured_tl_badge.user_id) NULLS LAST, -- Best tl badge first
                     CASE WHEN user_badges.badge_id IN (1,2,3,4) THEN 1 ELSE 0 END ASC, -- Non-featured tl badges last
                     MAX(badges.badge_type_id) ASC,
                     MAX(badges.grant_count) ASC,
