@@ -3,8 +3,8 @@
 module BackupRestore
   # @abstract
   class BackupStore
-    class BackupFileExists < RuntimeError; end
-    class StorageError < RuntimeError; end
+    BackupFileExists = Class.new(RuntimeError)
+    StorageError = Class.new(RuntimeError)
 
     # @return [BackupStore]
     def self.create(opts = {})

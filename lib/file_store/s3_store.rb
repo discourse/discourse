@@ -174,6 +174,32 @@ module FileStore
       @s3_helper.download_file(get_upload_key(upload), destination_path)
     end
 
+    def copy_from(source_path)
+      local_store = FileStore::LocalStore.new
+      public_upload_path = File.join(local_store.public_dir, local_store.upload_path)
+
+      # The migration to S3 and lots of other code expects files to exist in public/uploads,
+      # so lets move them there before executing the migration.
+      if public_upload_path != source_path
+        if Dir.exist?(public_upload_path)
+          old_upload_path = "#{public_upload_path}_#{SecureRandom.hex}"
+          FileUtils.mv(public_upload_path, old_upload_path)
+        end
+      end
+
+      FileUtils.mkdir_p(File.expand_path("..", public_upload_path))
+      FileUtils.symlink(source_path, public_upload_path)
+
+      FileStore::ToS3Migration.new(
+        s3_options: FileStore::ToS3Migration.s3_options_from_env,
+        migrate_to_multisite: Rails.configuration.multisite,
+      ).migrate
+
+    ensure
+      FileUtils.rm(public_upload_path) if File.symlink?(public_upload_path)
+      FileUtils.mv(old_upload_path, public_upload_path) if old_upload_path
+    end
+
     private
 
     def presigned_url(url, force_download: false, filename: false)

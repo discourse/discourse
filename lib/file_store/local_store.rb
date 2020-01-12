@@ -100,6 +100,16 @@ module FileStore
       list_missing(OptimizedImage) unless skip_optimized
     end
 
+    def copy_from(source_path)
+      FileUtils.mkdir_p(File.join(public_dir, upload_path))
+
+      Discourse::Utils.execute_command(
+        'rsync', '-a', '--safe-links', "#{source_path}/", "#{upload_path}/",
+        failure_message: "Failed to copy uploads.",
+        chdir: public_dir
+      )
+    end
+
     private
 
     def list_missing(model)
