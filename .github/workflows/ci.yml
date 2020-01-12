@@ -1,5 +1,5 @@
 name: CI
-   
+
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
   pull_request:
     branches-ignore:
       - 'tests-passed'
-    
+
 jobs:
   build:
     name: "${{ matrix.target }}-${{ matrix.build_types }}"
@@ -38,7 +38,7 @@ jobs:
     services:
       postgres:
         image: postgres:${{ matrix.postgres }}
-        ports: 
+        ports:
           - 5432:5432
         env:
           POSTGRES_USER: discourse
@@ -88,14 +88,14 @@ jobs:
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gem-
-      
+
       - name: Setup gems
         run: bundle install --without development --deployment --jobs 4 --retry 3
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
         run: echo "::set-output name=dir::$(yarn cache dir)"
-    
+
       - name: Yarn cache
         uses: actions/cache@v1
         id: yarn-cache
@@ -113,7 +113,7 @@ jobs:
         run: bin/rake plugin:install_all_official
 
       - name: Create database
-        if: env.BUILD_TYPE != 'LINT'    
+        if: env.BUILD_TYPE != 'LINT'
         run: bin/rake db:create && bin/rake db:migrate
 
       - name: Create parallel databases
@@ -123,7 +123,7 @@ jobs:
       - name: Rubocop
         if: env.BUILD_TYPE == 'LINT'
         run: bundle exec rubocop .
-      
+
       - name: ESLint
         if: env.BUILD_TYPE == 'LINT'
         run: yarn eslint app/assets/javascripts test/javascripts && yarn eslint --ext .es6 app/assets/javascripts test/javascripts plugins
@@ -133,7 +133,7 @@ jobs:
         run: |
           yarn prettier -v
           yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" "plugins/**/*.scss" "plugins/**/*.es6"
-        
+
       - name: Core RSpec
         if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'CORE'
         run: bin/turbo_rspec && bin/rake plugin:spec
@@ -146,12 +146,12 @@ jobs:
         if: env.BUILD_TYPE == 'FRONTEND' && env.TARGET == 'CORE'
         run: bundle exec rake qunit:test['1200000']
         timeout-minutes: 30
-      
+
       - name: Wizard QUnit
         if: env.BUILD_TYPE == 'FRONTEND' && env.TARGET == 'CORE'
         run: bundle exec rake qunit:test['1200000','/wizard/qunit']
         timeout-minutes: 30
-          
+
       - name: Plugin QUnit # Tests core plugins in TARGET=CORE, and all plugins in TARGET=PLUGINS
         if: env.BUILD_TYPE == 'FRONTEND'
         run: bundle exec rake plugin:qunit
