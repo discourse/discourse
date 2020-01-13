@@ -271,7 +271,7 @@ GEM
     puma (4.3.1)
       nio4r (~> 2.0)
     r2 (0.2.7)
-    rack (2.0.8)
+    rack (2.1.1)
     rack-mini-profiler (1.1.4)
       rack (>= 1.2.0)
     rack-openid (1.3.1)
