@@ -25,7 +25,8 @@ function categoryStripe(color, classes) {
     @param {String}  [opts.url] The url that we want the category badge to link to.
     @param {Boolean} [opts.allowUncategorized] If false, returns an empty string for the uncategorized category.
     @param {Boolean} [opts.link] If false, the category badge will not be a link.
-    @param {Boolean} [opts.hideParaent] If true, parent category will be hidden in the badge.
+    @param {Boolean} [opts.hideParent] If true, parent category will be hidden in the badge.
+    @param {Boolean} [opts.recursive] If true, the function will be called recursively for all parent categories
 **/
 export function categoryBadgeHTML(category, opts) {
   opts = opts || {};
@@ -37,6 +38,12 @@ export function categoryBadgeHTML(category, opts) {
       Discourse.SiteSettings.suppress_uncategorized_badge)
   )
     return "";
+
+  if (opts.recursive) {
+    const parentCategoryId = category.parent_category_id;
+    const parentCategory = Category.findById(parentCategoryId);
+    return categoryBadgeHTML(parentCategory, opts) + _renderer(category, opts);
+  }
 
   return _renderer(category, opts);
 }

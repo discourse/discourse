@@ -72,26 +72,12 @@ export default ComboBoxComponent.extend({
 
     if (this.hasSelection) {
       const category = Category.findById(content.value);
-      const parentCategoryId = category.get("parent_category_id");
-      const hasParentCategory = Ember.isPresent(parentCategoryId);
-
-      let badge = "";
-
-      if (hasParentCategory) {
-        const parentCategory = Category.findById(parentCategoryId);
-        badge += categoryBadgeHTML(parentCategory, {
-          link: false,
-          allowUncategorized: true
-        }).htmlSafe();
-      }
-
-      badge += categoryBadgeHTML(category, {
+      content.label = categoryBadgeHTML(category, {
         link: false,
-        hideParent: hasParentCategory ? true : false,
-        allowUncategorized: true
+        hideParent: !!category.parent_category_id,
+        allowUncategorized: true,
+        recursive: true
       }).htmlSafe();
-
-      content.label = badge;
     }
 
     return content;
