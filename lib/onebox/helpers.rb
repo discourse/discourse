@@ -35,8 +35,7 @@ module Onebox
       unless (ignore_canonical_tag && ignore_canonical_tag['content'].to_s == 'true') || should_ignore_canonical
         # prefer canonical link
         canonical_link = doc.at('//link[@rel="canonical"]/@href')
-        canonical_uri = URI(canonical_link)
-        if canonical_link && "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}"
+        if canonical_link && "#{URI(canonical_link).host}#{URI(canonical_link).path}" != "#{uri.host}#{uri.path}"
           response = (fetch_response(canonical_link, nil, nil, headers) rescue nil)
           doc = Nokogiri::HTML(response) if response
         end
