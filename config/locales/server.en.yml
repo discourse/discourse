@@ -4128,6 +4128,9 @@ en:
       This document is CC-BY-SA. It was last updated May 31, 2013.
 
   badges:
+    mass_award:
+      errors:
+        invalid_csv: We couldn't read that CSV file. Please confirm it has one email per line.
     editor:
       name: Editor
       description: First post edit
