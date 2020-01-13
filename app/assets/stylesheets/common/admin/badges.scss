@@ -119,6 +119,36 @@
   }
 }
 
+.award-badge {
+  margin: 15px 0 0 15px;
+  float: left;
+
+  .badge-preview {
+    min-height: 110px;
+    max-width: 300px;
+    display: flex;
+    align-items: center;
+    background-color: $primary-very-low;
+    border: 1px solid $primary-low;
+    padding: 0 10px 0 10px;
+
+    img,
+    svg {
+      width: 60px;
+      height: 60px;
+    }
+
+    .badge-display-name {
+      margin-left: 5px;
+    }
+
+    .badge-placeholder {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+
 // badge-grouping modal
 .badge-groupings-modal {
   .badge-groupings {
