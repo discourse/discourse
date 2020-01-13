@@ -677,13 +677,15 @@ class TopicQuery
       else
         sql = <<~SQL
             categories.id IN (
-              SELECT c2.id FROM categories c2 WHERE c2.parent_category_id = :category_id
-              UNION ALL
-              SELECT :category_id
-            ) AND
-            topics.id NOT IN (
-              SELECT c3.topic_id FROM categories c3 WHERE c3.parent_category_id = :category_id AND c3.topic_id IS NOT NULL
-            )
+              WITH RECURSIVE subcategories AS (
+                SELECT :category_id id
+                UNION
+                SELECT categories.id
+                FROM categories
+                JOIN subcategories ON subcategories.id = categories.parent_category_id
+              )
+              SELECT subcategories.id FROM subcategories
+            ) AND (categories.id = :category_id OR topics.id != categories.topic_id)
           SQL
         result = result.where(sql, category_id: category_id)
       end
