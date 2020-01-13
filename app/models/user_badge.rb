@@ -75,7 +75,7 @@ class UserBadge < ActiveRecord::Base
       )
       -- Now use that data to update the featured_rank column
       UPDATE user_badges SET featured_rank = rank_number
-      FROM ranks WHERE ranks.badge_id = user_badges.badge_id AND ranks.user_id = user_badges.user_id
+      FROM ranks WHERE ranks.badge_id = user_badges.badge_id AND ranks.user_id = user_badges.user_id AND featured_rank IS DISTINCT FROM rank_number
     SQL
 
     DB.exec query
