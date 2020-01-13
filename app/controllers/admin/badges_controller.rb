@@ -64,7 +64,7 @@ class Admin::BadgesController < Admin::AdminController
 
     head :ok
   rescue CSV::MalformedCSVError
-    raise Discourse::InvalidParameters
+    render_json_error I18n.t('badges.mass_award.errors.invalid_csv'), status: 400
   end
 
   def badge_types

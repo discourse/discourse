@@ -21,6 +21,10 @@
           action=(action 'massAward')
           disabled=saving
           label="admin.badges.mass_award.perform"}}
+      {{#link-to 'adminBadges.index' class="btn btn-danger"}}
+        {{d-icon "times"}}
+        <span>{{i18n 'cancel'}}</span>
+      {{/link-to}}
     </form>
   {{else}}
     <span class='badge-required'>{{I18n 'admin.badges.mass_award.no_badge_selected'}}</span>
