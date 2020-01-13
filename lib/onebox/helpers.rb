@@ -7,6 +7,8 @@ module Onebox
 
     class DownloadTooLarge < StandardError; end
 
+    IGNORE_CANONICAL_DOMAINS ||= ['www.instagram.com']
+
     def self.symbolize_keys(hash)
       return {} if hash.nil?
 
@@ -25,12 +27,16 @@ module Onebox
     def self.fetch_html_doc(url, headers = nil)
       response = (fetch_response(url, nil, nil, headers) rescue nil)
       doc = Nokogiri::HTML(response)
+      uri = URI(url)
 
-      ignore_canonical = doc.at('meta[property="og:ignore_canonical"]')
-      unless ignore_canonical && ignore_canonical['content'].to_s == 'true'
+      ignore_canonical_tag = doc.at('meta[property="og:ignore_canonical"]')
+      should_ignore_canonical = IGNORE_CANONICAL_DOMAINS.map { |hostname| uri.hostname.match?(hostname) }.any?
+
+      unless (ignore_canonical_tag && ignore_canonical_tag['content'].to_s == 'true') || should_ignore_canonical
         # prefer canonical link
         canonical_link = doc.at('//link[@rel="canonical"]/@href')
-        if canonical_link && "#{URI(canonical_link).host}#{URI(canonical_link).path}" != "#{URI(url).host}#{URI(url).path}"
+        canonical_uri = URI(canonical_link)
+        if canonical_link && "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}"
           response = (fetch_response(canonical_link, nil, nil, headers) rescue nil)
           doc = Nokogiri::HTML(response) if response
         end
