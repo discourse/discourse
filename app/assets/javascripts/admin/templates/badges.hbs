@@ -6,13 +6,18 @@
         {{d-icon "plus"}}
         <span>{{i18n 'admin.badges.new'}}</span>
       {{/link-to}}
+      
+      {{#link-to 'adminBadges.award' 'new' class="btn btn-primary"}}
+        {{d-icon "certificate"}}
+        <span>{{i18n 'admin.badges.mass_award.button'}}</span>
+      {{/link-to}}
     </div>
   </div>
   <div class='content-list'>
     <ul class="admin-badge-list">
       {{#each model as |badge|}}
         <li class="admin-badge-list-item">
-          {{#link-to 'adminBadges.show' badge.id}}
+          {{#link-to selectedRoute badge.id}}
             {{badge-button badge=badge}}
             {{#if badge.newBadge}}
               <span class="list-badge">{{i18n 'filters.new.lower_title'}}</span>

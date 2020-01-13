@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 class Admin::BadgesController < Admin::AdminController
 
   def index
@@ -31,6 +33,38 @@ class Admin::BadgesController < Admin::AdminController
   end
 
   def show
+  end
+
+  def award
+  end
+
+  def mass_award
+    csv_file = params.permit(:file).fetch(:file, nil)
+    badge = Badge.find_by(id: params[:badge_id])
+    raise Discourse::InvalidParameters if csv_file.try(:tempfile).nil? || badge.nil?
+
+    batch_number = 1
+    batch = []
+
+    File.open(csv_file) do |csv|
+      csv.each_line do |email_line|
+        batch.concat CSV.parse_line(email_line)
+
+        # Split the emails in batches of 200 elements.
+        full_batch = csv.lineno % (BadgeGranter::MAX_ITEMS_FOR_DELTA * batch_number) == 0
+        last_batch_item = full_batch || csv.eof?
+
+        if last_batch_item
+          Jobs.enqueue(:mass_award_badge, user_emails: batch, badge_id: badge.id)
+          batch = []
+          batch_number += 1
+        end
+      end
+    end
+
+    head :ok
+  rescue CSV::MalformedCSVError
+    raise Discourse::InvalidParameters
   end
 
   def badge_types

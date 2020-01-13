@@ -177,5 +177,38 @@ describe Admin::BadgesController do
         end
       end
     end
+
+    describe '#mass_award' do
+      it 'does nothing when there is no file' do
+        post "/admin/badges/award/#{badge.id}.json", params: { file: '' }
+
+        expect(response.status).to eq(400)
+      end
+
+      it 'does nothing when the badge id is not valid' do
+        post '/admin/badges/award/fake_id.json', params: { file: fixture_file_upload(Tempfile.new) }
+
+        expect(response.status).to eq(400)
+      end
+
+      it 'does nothing when the file is not a csv' do
+        file = file_from_fixtures('cropped.png')
+
+        post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(response.status).to eq(400)
+      end
+
+      it 'creates the badge for an existing user' do
+        Jobs.run_immediately!
+
+        user = Fabricate(:user, email: 'user1@test.com')
+        file = file_from_fixtures('user_emails.csv', 'csv')
+
+        post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(UserBadge.exists?(user: user, badge: badge)).to eq(true)
+      end
+    end
   end
 end

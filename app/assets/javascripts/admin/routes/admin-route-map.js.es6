@@ -190,6 +190,7 @@ export default function() {
       "adminBadges",
       { path: "/badges", resetNamespace: true },
       function() {
+        this.route("award", { path: "/award/:badge_id" });
         this.route("show", { path: "/:badge_id" });
       }
     );
