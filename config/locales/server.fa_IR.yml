@@ -1877,7 +1877,7 @@ fa_IR:
         اگر شما این درخواست را نداده‌اید، می‌توانید این ایمیل را نادیده بگیرید.
 
         برای ورود روی لینک کلیک کنید:
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "حساب کاربری ایجاد شد"
       subject_template: "[%{email_prefix}] حساب کاربری جدید شما"

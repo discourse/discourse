@@ -3563,7 +3563,7 @@ en:
         If you did not make this request, you can safely ignore this email.
 
         Click the following link to login:
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
 
     account_created:
       title: "Account Created"

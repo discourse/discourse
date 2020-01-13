@@ -2063,7 +2063,7 @@ el:
 
         Κάντε κλικ στον παρακάτω σύνδεσμο για να συνδεθείτε:
 
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Ο Λογαριασμός Δημιουργήθηκε"
       subject_template: "[%{email_prefix}] Ο νέος σας Λογαριασμός"

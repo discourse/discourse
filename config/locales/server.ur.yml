@@ -3013,7 +3013,7 @@ ur:
         اگر آپ نے یہ درخواست نہیں کی، تو آپ اِس ای میل کو آرام سے نظر انداز کر سکتے ہیں۔
 
         لاگ اِن کرنے کیلئے مندرجہ ذیل لِنک پر کلِک کریں:
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "اکاؤنٹ تشکیل"
       subject_template: "[%{email_prefix}] آپ کا نیا اکاؤنٹ"

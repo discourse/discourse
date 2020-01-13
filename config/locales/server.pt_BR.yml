@@ -2914,7 +2914,7 @@ pt_BR:
         Se você não fez essa solicitação, pode ignorar esse e-mail com segurança.
 
         Clique no link a seguir para fazer o login:
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Conta Criada"
       subject_template: "[%{email_prefix}] Sua Nova Conta"

@@ -1641,7 +1641,7 @@ sl:
         Če niste vi podali te zahteve, lahko zanemarite to e-sporočilo.
 
         Za prijavo sledite povezavi:
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Račun ustvarjen"
       subject_template: "[%{email_prefix}] Vaš nov uporabniški račun"
