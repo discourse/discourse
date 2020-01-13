@@ -3071,7 +3071,7 @@ fr:
 
         Cliquez sur le lien ci-dessous pour vous identifier :
 
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Compte Créé"
       subject_template: "[%{email_prefix}] Votre Nouveau Compte"

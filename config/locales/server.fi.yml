@@ -2895,7 +2895,7 @@ fi:
         Jos et ole pyynnön taustalla, voit huoletta jättää tämän viestin huomiotta.
 
         Kirjaudu sisään klikkaamalla linkkiä:
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Tili luotu"
       subject_template: "[%{email_prefix}] Uusi käyttäjätilisi"

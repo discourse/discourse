@@ -3019,7 +3019,7 @@ zh_CN:
         如果你没有提出此请求，你可以安全地忽略此邮件。
 
         点击以下链接登录：
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "账户已创建"
       subject_template: "[%{email_prefix}] 你的新账户"

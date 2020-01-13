@@ -684,88 +684,11 @@ class UsersController < ApplicationController
       else
         @message = I18n.t("admin_login.errors.unknown_email_address")
       end
-    elsif (token = params[:token]).present?
-      valid_token = EmailToken.valid_token_format?(token)
-
-      if valid_token
-        if params[:second_factor_token].present?
-          RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-        end
-
-        email_token_user = EmailToken.confirmable(token)&.user
-        totp_enabled = email_token_user&.totp_enabled?
-        security_keys_enabled = email_token_user&.security_keys_enabled?
-        second_factor_token = params[:second_factor_token]
-        second_factor_method = params[:second_factor_method].to_i
-        confirm_email = false
-        @security_key_required = security_keys_enabled
-
-        if security_keys_enabled && params[:security_key_credential].blank?
-          Webauthn.stage_challenge(email_token_user, secure_session)
-          challenge_and_credentials = Webauthn.allowed_credentials(email_token_user, secure_session)
-          @security_key_challenge = challenge_and_credentials[:challenge]
-          @security_key_allowed_credential_ids = challenge_and_credentials[:allowed_credential_ids].join(",")
-        end
-
-        if security_keys_enabled && params[:security_key_credential].present?
-          credential = JSON.parse(params[:security_key_credential]).with_indifferent_access
-
-          confirm_email = ::Webauthn::SecurityKeyAuthenticationService.new(
-            email_token_user,
-            credential,
-            challenge: Webauthn.challenge(email_token_user, secure_session),
-            rp_id: Webauthn.rp_id(email_token_user, secure_session),
-            origin: Discourse.base_url
-          ).authenticate_security_key
-          @message = I18n.t('login.security_key_invalid') if !confirm_email
-        elsif security_keys_enabled && second_factor_token.blank?
-          confirm_email = false
-          @message = I18n.t("login.second_factor_title")
-          if totp_enabled
-            @second_factor_required = true
-            @backup_codes_enabled = true
-          end
-        else
-          confirm_email =
-            if totp_enabled
-              @second_factor_required = true
-              @backup_codes_enabled = true
-              @message = I18n.t("login.second_factor_title")
-
-              if second_factor_token.present?
-                if email_token_user.authenticate_second_factor(second_factor_token, second_factor_method)
-                  true
-                else
-                  @error = I18n.t("login.invalid_second_factor_code")
-                  false
-                end
-              end
-            else
-              true
-            end
-        end
-
-        if confirm_email
-          @user = EmailToken.confirm(token)
-
-          if @user && @user.admin?
-            log_on_user(@user)
-            return redirect_to path("/")
-          else
-            @message = I18n.t("admin_login.errors.unknown_email_address")
-          end
-        end
-      else
-        @message = I18n.t("admin_login.errors.invalid_token")
-      end
     end
 
     render layout: 'no_ember'
   rescue RateLimiter::LimitExceeded
     @message = I18n.t("rate_limiter.slow_down")
-    render layout: 'no_ember'
-  rescue ::Webauthn::SecurityKeyError => err
-    @message = err.message
     render layout: 'no_ember'
   end
 

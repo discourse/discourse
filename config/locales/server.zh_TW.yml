@@ -2790,7 +2790,7 @@ zh_TW:
         如果你沒有做此請求，你可以直接忽略本郵件。
 
         點擊下面的連結以登入：
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "建立使用者"
       subject_template: "[%{email_prefix}] 你的新帳號"

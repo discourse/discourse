@@ -20,6 +20,19 @@ RSpec.describe SessionController do
       SiteSetting.enable_local_logins_via_email = true
     end
 
+    context "when local logins via email disabled" do
+      before { SiteSetting.enable_local_logins_via_email = false }
+
+      it "only works for admins" do
+        get "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(404)
+
+        user.update(admin: true)
+        get "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(200)
+      end
+    end
+
     context 'missing token' do
       it 'returns the right response' do
         get "/session/email-login"
@@ -91,6 +104,20 @@ RSpec.describe SessionController do
   describe '#email_login' do
     before do
       SiteSetting.enable_local_logins_via_email = true
+    end
+
+    context "when local logins via email disabled" do
+      before { SiteSetting.enable_local_logins_via_email = false }
+
+      it "only works for admins" do
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(404)
+
+        user.update(admin: true)
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(200)
+        expect(session[:current_user_id]).to eq(user.id)
+      end
     end
 
     context 'missing token' do

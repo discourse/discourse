@@ -2681,7 +2681,7 @@ hy:
         Եթե Դուք չեք խնդրել, Դուք հանգիստ կարող եք անտեսել այս նամակը:
 
         Սեղմեք հետևյալ հղմանը՝ մուտք գործելու համար՝
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Ստեղծված Հաշիվ"
       subject_template: "[%{email_prefix}] Ձեր Նոր Հաշիվը"

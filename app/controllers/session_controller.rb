@@ -345,10 +345,13 @@ class SessionController < ApplicationController
   end
 
   def email_login_info
-    raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
-
     token = params[:token]
     matched_token = EmailToken.confirmable(token)
+
+    if !SiteSetting.enable_local_logins_via_email &&
+          !matched_token.user.admin? # admin-login uses this route, so allow them even if disabled
+      raise Discourse::NotFound
+    end
 
     if matched_token
       response = {
@@ -382,12 +385,16 @@ class SessionController < ApplicationController
   end
 
   def email_login
-    raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
     second_factor_token = params[:second_factor_token]
     second_factor_method = params[:second_factor_method].to_i
     security_key_credential = params[:security_key_credential]
     token = params[:token]
     matched_token = EmailToken.confirmable(token)
+
+    if !SiteSetting.enable_local_logins_via_email &&
+          !matched_token&.user&.admin? # admin-login uses this route, so allow them even if disabled
+      raise Discourse::NotFound
+    end
 
     if security_key_credential.present?
       if matched_token&.user&.security_keys_enabled?

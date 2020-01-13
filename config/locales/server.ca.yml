@@ -2761,7 +2761,7 @@ ca:
     admin_login:
       title: "Inicia sessió d'administració"
       subject_template: "[%{email_prefix}] Inici de sessió"
-      text_body_template: "Algú ha demanat iniciar sessió en el vostre compte en [%{site_name}](%{base_url}). \n\nSi no heu fet aquesta sol·licitud, podeu ignorar aquest correu de manera segura. \n\nFeu clic en l'enllaç següent per a iniciar la sessió: \n%{base_url}/u/admin-login/%{email_token}\n"
+      text_body_template: "Algú ha demanat iniciar sessió en el vostre compte en [%{site_name}](%{base_url}). \n\nSi no heu fet aquesta sol·licitud, podeu ignorar aquest correu de manera segura. \n\nFeu clic en l'enllaç següent per a iniciar la sessió: \n%{base_url}/session/email-login/%{email_token}\n"
     account_created:
       title: "Compte creat"
       subject_template: "[%{email_prefix}] El vostre compte nou"

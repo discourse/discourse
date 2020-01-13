@@ -2845,7 +2845,7 @@ it:
         Se non sei stato tu a fare questa richiesta, puoi tranquillamente ignorare questa email.
 
         Clicca sul seguente collegamento per connetterti:
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Account Creato"
       subject_template: "[%{email_prefix}] Il Tuo Nuovo Account"
