@@ -160,7 +160,7 @@ export default Component.extend({
             return true;
           }
 
-          // banner has no persisten dismiss and should always show on load
+          // banner has no persistent dismiss and should always show on load
           if (!notice.options.persistentDismiss) {
             return true;
           }
