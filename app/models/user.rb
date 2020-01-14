@@ -20,8 +20,14 @@ class User < ActiveRecord::Base
   has_many :user_actions
   has_many :post_actions
 
-  has_many :user_badges, -> { where('user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)') }, dependent: :destroy
+  DEFAULT_FEATURED_BADGE_COUNT = 3
+
+  has_many :user_badges, -> { for_enabled_badges }, dependent: :destroy
   has_many :badges, through: :user_badges
+  has_many :default_featured_user_badges,
+            -> { for_enabled_badges.grouped_with_count.where("featured_rank <= ?", DEFAULT_FEATURED_BADGE_COUNT) },
+            class_name: "UserBadge"
+
   has_many :email_logs, dependent: :delete_all
   has_many :incoming_emails, dependent: :delete_all
   has_many :post_timings
@@ -961,28 +967,12 @@ class User < ActiveRecord::Base
     user_stat&.distinct_badge_count
   end
 
-  def featured_user_badges(limit = 3)
-    tl_badge_ids = Badge.trust_level_badge_ids
-
-    query = user_badges
-      .group(:badge_id)
-      .select(UserBadge.attribute_names.map { |x| "MAX(user_badges.#{x}) AS #{x}" },
-                      'COUNT(*) AS "count"',
-                      'MAX(badges.badge_type_id) AS badges_badge_type_id',
-                      'MAX(badges.grant_count) AS badges_grant_count')
-      .joins(:badge)
-      .order('badges_badge_type_id ASC, badges_grant_count ASC, badge_id DESC')
-      .includes(:user, :granted_by, { badge: :badge_type }, post: :topic)
-
-    tl_badge = query.where("user_badges.badge_id IN (:tl_badge_ids)",
-                           tl_badge_ids: tl_badge_ids)
-      .limit(1)
-
-    other_badges = query.where("user_badges.badge_id NOT IN (:tl_badge_ids)",
-                               tl_badge_ids: tl_badge_ids)
-      .limit(limit)
-
-    (tl_badge + other_badges).take(limit)
+  def featured_user_badges(limit = DEFAULT_FEATURED_BADGE_COUNT)
+    if limit == DEFAULT_FEATURED_BADGE_COUNT
+      default_featured_user_badges
+    else
+      user_badges.grouped_with_count.where("featured_rank <= ?", limit)
+    end
   end
 
   def self.count_by_signup_date(start_date = nil, end_date = nil, group_id = nil)
