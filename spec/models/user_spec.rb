@@ -1706,15 +1706,12 @@ describe User do
 
   describe "#featured_user_badges" do
     fab!(:user) { Fabricate(:user) }
-    let!(:user_badge_tl1) { UserBadge.create(badge_id: 1, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
-    let!(:user_badge_tl2) { UserBadge.create(badge_id: 2, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
+    let!(:user_badge_tl1) { UserBadge.create(badge_id: Badge::BasicUser, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
+    let!(:user_badge_tl2) { UserBadge.create(badge_id: Badge::Member, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
+    let!(:user_badge_like) { UserBadge.create(badge_id: Badge::FirstLike, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
 
-    it 'should display highest trust level badge first' do
-      expect(user.featured_user_badges[0].badge_id).to eq(2)
-    end
-
-    it 'should display only 1 trust level badge' do
-      expect(user.featured_user_badges.length).to eq(1)
+    it 'should display badges in the correct order' do
+      expect(user.featured_user_badges.map(&:badge_id)).to eq([Badge::Member, Badge::FirstLike, Badge::BasicUser])
     end
   end
 
