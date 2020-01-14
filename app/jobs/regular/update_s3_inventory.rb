@@ -7,7 +7,9 @@ module Jobs
   class UpdateS3Inventory < ::Jobs::Base
 
     def execute(args)
-      return unless SiteSetting.enable_s3_inventory? && SiteSetting.Upload.enable_s3_uploads
+      return unless SiteSetting.enable_s3_inventory? &&
+        SiteSetting.Upload.enable_s3_uploads &&
+        SiteSetting.s3_configure_inventory_policy
 
       [:upload, :optimized].each do |type|
         s3_inventory = S3Inventory.new(Discourse.store.s3_helper, type)

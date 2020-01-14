@@ -12,7 +12,7 @@ describe 'Bootstrapping the Discourse App' do
 
     it "does not include the IE stylesheet or Javascript" do
       get "/categories", headers: { "HTTP_USER_AGENT" => ie_agent }
-      expect(response.body).not_to match(/discourse-internet-explorer\/js\/ie.js/)
+      expect(response.body).not_to match(/discourse-internet-explorer-optional.js/)
       expect(response.body).not_to match(/stylesheets\/discourse-internet-explorer/)
     end
   end
@@ -24,13 +24,13 @@ describe 'Bootstrapping the Discourse App' do
 
     it "includes the IE js and css" do
       get "/categories", headers: { "HTTP_USER_AGENT" => ie_agent }
-      expect(response.body).to match(/discourse-internet-explorer\/js\/ie.js/)
+      expect(response.body).to match(/discourse-internet-explorer-optional.js/)
       expect(response.body).to match(/stylesheets\/discourse-internet-explorer/)
     end
 
     it "doesn't include IE stuff for non-IE browsers" do
       get "/categories", headers: { "HTTP_USER_AGENT" => "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36" }
-      expect(response.body).not_to match(/discourse-internet-explorer\/js\/ie.js/)
+      expect(response.body).not_to match(/discourse-internet-explorer-optional.js/)
       expect(response.body).not_to match(/stylesheets\/discourse-internet-explorer/)
     end
   end

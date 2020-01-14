@@ -115,6 +115,7 @@ class Badge < ActiveRecord::Base
   after_commit do
     SvgSprite.expire_cache
     UserStat.update_distinct_badge_count if saved_change_to_enabled?
+    UserBadge.ensure_consistency! if saved_change_to_enabled?
   end
 
   # fields that can not be edited on system badges

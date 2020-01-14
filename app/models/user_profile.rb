@@ -171,10 +171,10 @@ end
 #
 # Indexes
 #
-#  index_user_profiles_on_bio_cooked_version      (bio_cooked_version)
-#  index_user_profiles_on_card_background         (card_background)
-#  index_user_profiles_on_granted_title_badge_id  (granted_title_badge_id)
-#  index_user_profiles_on_profile_background      (profile_background)
+#  index_user_profiles_on_bio_cooked_version            (bio_cooked_version)
+#  index_user_profiles_on_card_background_upload_id     (card_background_upload_id)
+#  index_user_profiles_on_granted_title_badge_id        (granted_title_badge_id)
+#  index_user_profiles_on_profile_background_upload_id  (profile_background_upload_id)
 #
 # Foreign Keys
 #

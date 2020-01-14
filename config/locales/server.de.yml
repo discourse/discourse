@@ -3008,7 +3008,7 @@ de:
         Wenn du diese Anfrage nicht gestellt hast, kannst du diese E-Mail einfach ignorieren.
 
         Folge diesem Link, um dich anzumelden:
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Konto erstellt"
       subject_template: "[%{email_prefix}] Dein neues Konto"

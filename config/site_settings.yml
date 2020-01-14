@@ -1174,6 +1174,9 @@ files:
     default: true
   enable_s3_inventory:
     default: false
+  s3_configure_inventory_policy:
+    default: true
+    hidden: true
   allow_profile_backgrounds:
     client: true
     default: true

@@ -2347,7 +2347,7 @@ pl_PL:
         Jeśli to nie byłeś ty, możesz po prostu zignorować tą wiadomość.
 
         Naciśnij następujący link, aby się zalogować:
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Utworzono Konto"
       subject_template: "[%{site_name}] Twoje Nowe Konto"

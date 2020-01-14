@@ -3278,7 +3278,7 @@ he:
         אם לא אתם ביקשתם זאת, אתם יכולים פשוט להתעלם ממייל זה.
 
         לחצו על הקישור הבא כדי להתחבר:
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "חשבון נוצר"
       subject_template: "[%{email_prefix}] החשבון החדש שלך"

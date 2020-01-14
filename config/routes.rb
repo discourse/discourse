@@ -295,6 +295,8 @@ Discourse::Application.routes.draw do
 
     resources :badges, constraints: AdminConstraint.new do
       collection do
+        get "/award/:badge_id" => "badges#award"
+        post "/award/:badge_id" => "badges#mass_award"
         get "types" => "badges#badge_types"
         post "badge_groupings" => "badges#save_badge_groupings"
         post "preview" => "badges#preview"
@@ -393,8 +395,6 @@ Discourse::Application.routes.draw do
     post "#{root_path}/email-login" => "users#email_login"
     get "#{root_path}/admin-login" => "users#admin_login"
     put "#{root_path}/admin-login" => "users#admin_login"
-    get "#{root_path}/admin-login/:token" => "users#admin_login"
-    put "#{root_path}/admin-login/:token" => "users#admin_login"
     post "#{root_path}/toggle-anon" => "users#toggle_anon"
     post "#{root_path}/read-faq" => "users#read_faq"
     get "#{root_path}/search/users" => "users#search_users"

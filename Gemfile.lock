@@ -46,7 +46,7 @@ GEM
     ast (2.4.0)
     aws-eventstream (1.0.3)
     aws-partitions (1.262.0)
-    aws-sdk-core (3.86.0)
+    aws-sdk-core (3.87.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
@@ -91,7 +91,7 @@ GEM
     cppjieba_rb (0.3.3)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    crass (1.0.5)
+    crass (1.0.6)
     css_parser (1.7.1)
       addressable
     debug_inspector (0.0.3)
@@ -146,7 +146,7 @@ GEM
     hkdf (0.3.0)
     htmlentities (4.3.4)
     http_accept_language (2.1.1)
-    i18n (1.7.0)
+    i18n (1.8.0)
       concurrent-ruby (~> 1.0)
     image_size (1.5.0)
     in_threads (1.5.4)
@@ -194,7 +194,7 @@ GEM
     mini_sql (0.2.3)
     mini_suffix (0.3.0)
       ffi (~> 1.9)
-    minitest (5.13.0)
+    minitest (5.14.0)
     mocha (1.8.0)
       metaclass (~> 0.0.1)
     mock_redis (0.22.0)
@@ -243,7 +243,8 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.9.24)
+    onebox (1.9.25)
+      addressable (~> 2.7.0)
       htmlentities (~> 4.3)
       multi_json (~> 1.11)
       mustache
@@ -256,9 +257,9 @@ GEM
     parallel (1.19.1)
     parallel_tests (2.30.0)
       parallel
-    parser (2.7.0.1)
+    parser (2.7.0.2)
       ast (~> 2.4.0)
-    pg (1.2.1)
+    pg (1.2.2)
     progress (3.5.2)
     pry (0.12.2)
       coderay (~> 1.1.0)
@@ -267,7 +268,7 @@ GEM
       pry (>= 0.9.10, < 0.13.0)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
-    public_suffix (4.0.2)
+    public_suffix (4.0.3)
     puma (4.3.1)
       nio4r (~> 2.0)
     r2 (0.2.7)
@@ -378,7 +379,7 @@ GEM
     seed-fu (2.3.9)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
-    shoulda-matchers (4.1.2)
+    shoulda-matchers (4.2.0)
       activesupport (>= 4.2.0)
     sidekiq (6.0.4)
       connection_pool (>= 2.2.2)
@@ -399,7 +400,7 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
     stackprof (0.2.15)
-    test-prof (0.10.1)
+    test-prof (0.10.2)
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -511,6 +512,7 @@ DEPENDENCIES
   pry-rails
   puma
   r2
+  rack (= 2.0.8)
   rack-mini-profiler
   rack-protection
   rails_multisite

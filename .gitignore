@@ -32,6 +32,7 @@ config/discourse.conf
 # Ignore the default SQLite database and db dumps
 *.sql
 *.sql.gz
+!/spec/fixtures/**/*.sql
 /db/*.sqlite3
 /db/structure.sql
 /db/schema.rb

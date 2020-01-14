@@ -3166,7 +3166,7 @@ es:
         Si tú no realizaste esta petición, puedes ignorar este email.
 
         Haz clic en el siguiente enlace para iniciar sesión:
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Cuenta creada"
       subject_template: "[%{email_prefix}] Tu nueva cuenta"

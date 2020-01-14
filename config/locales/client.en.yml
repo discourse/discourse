@@ -4493,6 +4493,14 @@ en:
           title: "Select an existing badge or create a new one to get started"
           what_are_badges_title: "What are badges?"
           badge_query_examples_title: "Badge query examples"
+        mass_award:
+          title: Bulk Award
+          description: Award the same badge to many users at once.
+          no_badge_selected: Please select a badge to get started.
+          perform: "Award Badge to Users"
+          upload_csv: Upload a CSV with user emails
+          aborted: Please upload a CSV containing user emails
+          success: Your CSV was received and users will receive their badge shortly.
 
       emoji:
         title: "Emoji"

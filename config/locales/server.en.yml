@@ -3563,7 +3563,7 @@ en:
         If you did not make this request, you can safely ignore this email.
 
         Click the following link to login:
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
 
     account_created:
       title: "Account Created"
@@ -4128,6 +4128,9 @@ en:
       This document is CC-BY-SA. It was last updated May 31, 2013.
 
   badges:
+    mass_award:
+      errors:
+        invalid_csv: We couldn't read that CSV file. Please confirm it has one email per line.
     editor:
       name: Editor
       description: First post edit
