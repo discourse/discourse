@@ -4655,7 +4655,7 @@ en:
       category: "Posts in this category require manual approval by staff. See the category settings."
       must_approve_users: "All new users must be approved by staff. See `must_approve_users`."
       invite_only: "All new users should be invited. See `invite_only`."
-      email_auth_res_enqueue: "This email failed a DMARC check, it most likely isn\'t from whom it seems to be from. Check the raw email headers for more information."
+      email_auth_res_enqueue: "This email failed a DMARC check, it most likely isn't from whom it seems to be from. Check the raw email headers for more information."
       email_spam: "This email was flagged as spam by the header defined in `email_in_spam_header`."
 
     actions:
