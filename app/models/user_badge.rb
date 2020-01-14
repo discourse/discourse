@@ -51,7 +51,7 @@ class UserBadge < ActiveRecord::Base
         SELECT user_id, max(badge_id) as badge_id
         FROM user_badges
         WHERE badge_id IN (1,2,3,4)
-        #{"AND user_id = #{user_id}" if user_id}
+        #{"AND user_id = #{user_id.to_i}" if user_id}
         GROUP BY user_id
       ),
       ranks AS ( -- Take all user badges, group by user_id and badge_id, and calculate a rank for each one
@@ -70,7 +70,7 @@ class UserBadge < ActiveRecord::Base
         FROM user_badges
         INNER JOIN badges ON badges.id = user_badges.badge_id
         LEFT JOIN featured_tl_badge ON featured_tl_badge.user_id = user_badges.user_id AND featured_tl_badge.badge_id = user_badges.badge_id
-        #{"WHERE user_badges.user_id = #{user_id}" if user_id}
+        #{"WHERE user_badges.user_id = #{user_id.to_i}" if user_id}
         GROUP BY user_badges.user_id, user_badges.badge_id
       )
       -- Now use that data to update the featured_rank column
