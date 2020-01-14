@@ -28,6 +28,8 @@ class BadgeGranter
         user_id: user.id,
         badge_id: badge.id
       )
+
+      UserBadge.update_featured_ranks!(user.id)
     end
   end
 
