@@ -8,6 +8,7 @@ class SessionController < ApplicationController
 
   before_action :check_local_login_allowed, only: %i(create forgot_password email_login email_login_info)
   before_action :rate_limit_login, only: %i(create email_login)
+  before_action :rate_limit_second_factor_totp, only: %i(create email_login)
   skip_before_action :redirect_to_login_if_required
   skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy one_time_password)
 
@@ -258,10 +259,6 @@ class SessionController < ApplicationController
   end
 
   def create
-    unless params[:second_factor_token].blank?
-      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-    end
-
     params.require(:login)
     params.require(:password)
 
@@ -293,55 +290,14 @@ class SessionController < ApplicationController
     end
 
     if payload = login_error_check(user)
-      render json: payload
-    else
-      if user.security_keys_enabled? && params[:second_factor_token].blank?
-        security_key_valid = ::Webauthn::SecurityKeyAuthenticationService.new(
-          user,
-          params[:security_key_credential],
-          challenge: Webauthn.challenge(user, secure_session),
-          rp_id: Webauthn.rp_id(user, secure_session),
-          origin: Discourse.base_url
-        ).authenticate_security_key
-        return invalid_security_key(user) if !security_key_valid
-        return (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
-      end
-
-      if user.totp_enabled?
-        invalid_second_factor = !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
-        if (params[:security_key_credential].blank? || !user.security_keys_enabled?) && invalid_second_factor
-          return render json: failed_json.merge(
-           error: I18n.t("login.invalid_second_factor_code"),
-           reason: "invalid_second_factor",
-           backup_enabled: user.backup_codes_enabled?,
-           multiple_second_factor_methods: user.has_multiple_second_factor_methods?
-         )
-        end
-      elsif user.security_keys_enabled?
-        # if we have gotten this far then the user has provided the totp
-        # params for a security-key-only account
-        return render json: failed_json.merge(
-          error: I18n.t("login.invalid_second_factor_code"),
-          reason: "invalid_second_factor",
-          backup_enabled: user.backup_codes_enabled?,
-          multiple_second_factor_methods: user.has_multiple_second_factor_methods?
-        )
-      end
-
-      (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
+      return render json: payload
     end
-  rescue ::Webauthn::SecurityKeyError => err
-    invalid_security_key(user, err.message)
-  end
 
-  def invalid_security_key(user, err_message = nil)
-    Webauthn.stage_challenge(user, secure_session) if !params[:security_key_credential]
-    render json: failed_json.merge(
-      error: err_message || I18n.t("login.invalid_security_key"),
-      reason: "invalid_security_key",
-      backup_enabled: user.backup_codes_enabled?,
-      multiple_second_factor_methods: user.has_multiple_second_factor_methods?
-    ).merge(Webauthn.allowed_credentials(user, secure_session))
+    if !authenticate_second_factor(user)
+      return render(json: @second_factor_failure_payload)
+    end
+
+    (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
   end
 
   def email_login_info
@@ -385,41 +341,17 @@ class SessionController < ApplicationController
   end
 
   def email_login
-    second_factor_token = params[:second_factor_token]
-    second_factor_method = params[:second_factor_method].to_i
-    security_key_credential = params[:security_key_credential]
     token = params[:token]
     matched_token = EmailToken.confirmable(token)
 
     if !SiteSetting.enable_local_logins_via_email &&
-          !matched_token&.user&.admin? # admin-login uses this route, so allow them even if disabled
+      !matched_token&.user&.admin? # admin-login uses this route, so allow them even if disabled
       raise Discourse::NotFound
     end
 
-    if security_key_credential.present?
-      if matched_token&.user&.security_keys_enabled?
-        security_key_valid = ::Webauthn::SecurityKeyAuthenticationService.new(
-          matched_token&.user,
-          params[:security_key_credential],
-          challenge: Webauthn.challenge(matched_token&.user, secure_session),
-          rp_id: Webauthn.rp_id(matched_token&.user, secure_session),
-          origin: Discourse.base_url
-        ).authenticate_security_key
-        return invalid_security_key(matched_token&.user) if !security_key_valid
-      end
-    else
-      if matched_token&.user&.totp_enabled?
-        if !second_factor_token.present?
-          return render json: { error: I18n.t('login.invalid_second_factor_code') }
-        elsif !matched_token.user.authenticate_second_factor(second_factor_token, second_factor_method)
-          RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-          return render json: { error: I18n.t('login.invalid_second_factor_code') }
-        end
-      elsif matched_token&.user&.security_keys_enabled?
-        # this means the user only has security key enabled
-        # but has not provided credentials
-        return render json: { error: I18n.t('login.invalid_second_factor_code') }
-      end
+    user = matched_token&.user
+    if user.present? && !authenticate_second_factor(user)
+      return render(json: @second_factor_failure_payload)
     end
 
     if user = EmailToken.confirm(token)
@@ -434,8 +366,6 @@ class SessionController < ApplicationController
     end
 
     render json: { error: I18n.t('email_login.invalid_token') }
-  rescue ::Webauthn::SecurityKeyError => err
-    invalid_security_key(matched_token&.user, err.message)
   end
 
   def one_time_password
@@ -513,6 +443,21 @@ class SessionController < ApplicationController
   end
 
   private
+
+  def authenticate_second_factor(user)
+    second_factor_authentication_result = user.authenticate_second_factor(params, secure_session)
+    if !second_factor_authentication_result.ok
+      failure_payload = second_factor_authentication_result.to_h
+      if user.security_keys_enabled?
+        Webauthn.stage_challenge(user, secure_session)
+        failure_payload.merge!(Webauthn.allowed_credentials(user, secure_session))
+      end
+      @second_factor_failure_payload = failed_json.merge(failure_payload)
+      return false
+    end
+
+    true
+  end
 
   def login_error_check(user)
     return failed_to_login(user) if user.suspended?
@@ -594,6 +539,11 @@ class SessionController < ApplicationController
       SiteSetting.max_logins_per_ip_per_minute,
       1.minute
     ).performed!
+  end
+
+  def rate_limit_second_factor_totp
+    return if params[:second_factor_token].blank?
+    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
   end
 
   def render_sso_error(status:, text:)

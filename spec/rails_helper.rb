@@ -160,7 +160,7 @@ RSpec.configure do |config|
   config.include MessageBus
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
-  config.include WebauthnIntegrationHelpers, type: :request
+  config.include WebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
   config.mock_framework = :mocha
   config.order = 'random'

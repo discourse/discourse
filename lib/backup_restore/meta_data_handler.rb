@@ -19,6 +19,14 @@ module BackupRestore
     def validate
       metadata = extract_metadata
 
+      if metadata[:version].blank?
+        raise MetaDataError.new("Version not defined in metadata file.")
+      end
+
+      if !metadata[:version].is_a?(String) && !metadata[:version].is_a?(Integer)
+        raise MetaDataError.new("Version is not in a valid format.")
+      end
+
       log "Validating metadata..."
       log "  Current version: #{@current_version}"
       log "  Restored version: #{metadata[:version]}"
@@ -50,10 +58,10 @@ module BackupRestore
     end
 
     def load_metadata_file(path)
-      metadata = Oj.load_file(path, symbol_keys: true)
+      metadata = JSON.parse(File.read(path), symbolize_names: true)
       raise MetaDataError.new("Failed to load metadata file.") if metadata.blank?
       metadata
-    rescue Oj::ParseError
+    rescue JSON::ParserError
       raise MetaDataError.new("Failed to parse metadata file.")
     end
   end
