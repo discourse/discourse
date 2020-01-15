@@ -266,6 +266,7 @@ en:
     request_membership: "Request Membership"
     join_group: "Join Group"
   deleted_topic: "Oops! This topic has been deleted and is no longer available."
+  delete_topic_failed: "There was an error deleting that topic. Please contact the site's administrator."
 
   reading_time: "Reading time"
   likes: "Likes"
