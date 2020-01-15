@@ -120,7 +120,8 @@ export default Controller.extend(ModalFunctionality, {
         data: {
           login: this.loginName,
           password: this.loginPassword,
-          second_factor_token: this.securityKeyCredential || this.secondFactorToken,
+          second_factor_token:
+            this.securityKeyCredential || this.secondFactorToken,
           second_factor_method: this.secondFactorMethod,
           timezone: moment.tz.guess()
         }
