@@ -19,11 +19,7 @@ module BackupRestore
     def validate
       metadata = extract_metadata
 
-      if metadata[:version].blank?
-        raise MetaDataError.new("Version not defined in metadata file.")
-      end
-
-      if !metadata[:version].is_a?(String) && !metadata[:version].is_a?(Integer)
+      if !metadata[:version].is_a?(Integer)
         raise MetaDataError.new("Version is not in a valid format.")
       end
 
