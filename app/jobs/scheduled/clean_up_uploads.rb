@@ -54,6 +54,7 @@ module Jobs
       result = Upload.by_users
         .where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
         .where("uploads.created_at < ?", grace_period.hour.ago)
+        .where("uploads.access_control_post_id IS NULL")
         .joins(<<~SQL)
           LEFT JOIN site_settings ss
           ON NULLIF(ss.value, '')::integer = uploads.id
@@ -78,7 +79,6 @@ module Jobs
         .where("tf.upload_id IS NULL")
         .where("ue.upload_id IS NULL")
         .where("ss.value IS NULL")
-        .where("uploads.access_control_post_id IS NULL")
 
       result = result.where("uploads.url NOT IN (?)", ignore_urls) if ignore_urls.present?
 

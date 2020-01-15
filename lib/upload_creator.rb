@@ -127,17 +127,7 @@ class UploadCreator
       @upload.for_export          = true if @opts[:for_export]
       @upload.for_site_setting    = true if @opts[:for_site_setting]
       @upload.for_gravatar        = true if @opts[:for_gravatar]
-      uploading_in_public_context = @upload.for_theme || @upload.for_site_setting || @opts[:type] == "avatar"
-
-      # determine whether upload should be secure when first created
-      if !uploading_in_public_context
-        supported_media = FileHelper.is_supported_media?(@filename)
-        secure_attachment = !supported_media && SiteSetting.prevent_anons_from_downloading_files
-        secure_media = SiteSetting.secure_media? && supported_media && \
-          (@opts[:type] == "composer" || @upload.for_private_message || SiteSetting.login_required?)
-
-        @upload.secure = secure_attachment || secure_media
-      end
+      @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
 
       return @upload unless @upload.save
 
@@ -159,21 +149,6 @@ class UploadCreator
 
       if @upload.errors.empty?
         UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
-
-        if @upload.secure && !uploading_in_public_context
-          secure_reason = if secure_attachment
-            "it is a secure attachment, prevent_anons_from_downloading_files active"
-          elsif secure_media
-            if @opts[:type] == "composer"
-              "it is secure media uploaded in the composer"
-            elsif @upload.for_private_message
-              "it is secure media uploaded in a private message"
-            elsif SiteSetting.login_required?
-              "it is secure media, login_required active"
-            end
-          end
-          Rails.logger.debug("marked upload id #{@upload.id} as secure because #{secure_reason}")
-        end
       end
 
       @upload

@@ -233,36 +233,10 @@ class Upload < ActiveRecord::Base
 
   def update_secure_status(secure_override_value: nil)
     return false if self.for_theme || self.for_site_setting
-    mark_secure = secure_override_value.nil? ? should_be_secure? : secure_override_value
+    mark_secure = secure_override_value.nil? ? UploadSecurity.new(self).should_be_secure? : secure_override_value
 
     self.update_column("secure", mark_secure)
     Discourse.store.update_upload_ACL(self) if Discourse.store.external?
-  end
-
-  def should_be_secure?
-    mark_secure = false
-    if FileHelper.is_supported_media?(self.original_filename)
-      if SiteSetting.secure_media?
-        mark_secure = true if SiteSetting.login_required?
-        unless SiteSetting.login_required?
-          # whether the upload should remain secure or not depends on its context,
-          # which is based on the post it is linked to via access_control_post_id.
-          # if that post is with_secure_media? then the upload should also be secure.
-          # this may change to false if the upload was set to secure on upload e.g. in
-          # a post composer then it turned out that the post itself was not in a secure context
-          #
-          # if there is no access control post id and the upload is currently secure, we
-          # do not want to make it un-secure to avoid unintentionally exposing it
-          access_control_post = self.access_control_post_id.present? ? Post.find_by(id: self.access_control_post_id) : nil
-          mark_secure = access_control_post ? access_control_post.with_secure_media? : self.secure?
-        end
-      else
-        mark_secure = false
-      end
-    else
-      mark_secure = SiteSetting.prevent_anons_from_downloading_files?
-    end
-    mark_secure
   end
 
   def self.migrate_to_new_scheme(limit: nil)
