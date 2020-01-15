@@ -220,6 +220,14 @@ function applyEmoji(
 
       result.push(token);
 
+      if (i === 0 && i + offset === content.length) {
+        token.attrs.forEach(attr => {
+          if (attr[0] === "class") {
+            attr[1] = `${attr[1]} all-emoji`;
+          }
+        });
+      }
+
       end = start = i + offset;
       i += offset - 1;
     }
@@ -257,5 +265,10 @@ export function setup(helper) {
     );
   });
 
-  helper.whiteList(["img[class=emoji]", "img[class=emoji emoji-custom]"]);
+  helper.whiteList([
+    "img[class=emoji]",
+    "img[class=emoji emoji-custom]",
+    "img[class=emoji emoji-custom all-emoji]",
+    "img[class=emoji all-emoji]"
+  ]);
 }

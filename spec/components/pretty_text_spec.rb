@@ -109,6 +109,28 @@ describe PrettyText do
 
           expect(cook(md)).to eq(html.strip)
         end
+
+        it "adds an all-emoji class when a line has only one emoji" do
+          md = <<~MD
+            foo 😀
+            foo 😀 bar
+            :smile_cat:
+            :smile_cat: :smile_cat:
+            baz? :smile_cat:
+            😀
+          MD
+
+          html = <<~HTML
+            <p>foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:"><br>
+            foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:"> bar<br>
+            <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji all-emoji" alt=":smile_cat:"><br>
+            <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:"><br>
+            baz? <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:"><br>
+            <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji all-emoji" alt=":grinning:"></p>
+          HTML
+
+          expect(cook(md)).to eq(html.strip)
+        end
       end
 
       it "do off topic quoting of posts from secure categories" do
@@ -1076,7 +1098,7 @@ HTML
   end
 
   it "can handle emoji by translation" do
-    expected = "<p><img src=\"/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}\" title=\":wink:\" class=\"emoji\" alt=\":wink:\"></p>"
+    expected = "<p><img src=\"/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}\" title=\":wink:\" class=\"emoji all-emoji\" alt=\":wink:\"></p>"
     expect(PrettyText.cook(";)")).to eq(expected)
   end
 

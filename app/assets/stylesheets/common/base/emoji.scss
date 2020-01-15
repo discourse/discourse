@@ -4,6 +4,11 @@ img.emoji {
   vertical-align: middle;
 }
 
+img.emoji.all-emoji {
+  width: 32px;
+  height: 32px;
+}
+
 small img.emoji,
 sub img.emoji,
 sup img.emoji {
