@@ -220,7 +220,7 @@ module BackupRestore
             )
           end
 
-          data = Oj.load_file(@meta_filename)
+          data = JSON.parse File.read(@meta_filename)
           raise "Failed to load metadata file." if !data
           data
         else
