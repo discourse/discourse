@@ -52,7 +52,8 @@ export default Controller.extend(PasswordValidation, {
         type: "PUT",
         data: {
           password: this.accountPassword,
-          second_factor_token: this.securityKeyCredential || this.secondFactorToken,
+          second_factor_token:
+            this.securityKeyCredential || this.secondFactorToken,
           second_factor_method: this.secondFactorMethod
         }
       })
