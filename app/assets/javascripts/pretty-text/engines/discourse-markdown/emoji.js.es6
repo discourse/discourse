@@ -220,7 +220,7 @@ function applyEmoji(
 
       result.push(token);
 
-      if (i === 0 && i + offset === content.length) {
+      if (i === 0 && offset === content.length) {
         token.attrs.forEach(attr => {
           if (attr[0] === "class") {
             attr[1] = `${attr[1]} all-emoji`;
