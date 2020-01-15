@@ -74,7 +74,7 @@ export default Controller.extend(ModalFunctionality, {
 
   onShow() {
     this.setProperties({
-      "modal.modalClass": "move-to-modal",
+      "modal.modalClass": "choose-topic-modal",
       saving: false,
       selection: "new_topic",
       categoryId: null,

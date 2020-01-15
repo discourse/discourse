@@ -13,6 +13,10 @@ export default Controller.extend(ModalFunctionality, {
     this.set("newFeaturedTopic", null);
   },
 
+  onShow() {
+    this.set("modal.modalClass", "choose-topic-modal");
+  },
+
   actions: {
     save() {
       return ajax(`/u/${this.model.username}/feature-topic`, {
