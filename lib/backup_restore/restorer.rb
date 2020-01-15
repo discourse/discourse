@@ -148,7 +148,7 @@ module BackupRestore
     def extract_metadata
       metadata_path = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
       @metadata = if File.exists?(metadata_path)
-        data = Oj.load_file(@meta_filename)
+        data = JSON.parse File.read(metadata_path)
         raise "Failed to load metadata file." if !data
         data
       else
