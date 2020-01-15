@@ -67,6 +67,14 @@ describe BackupRestore::DatabaseRestorer do
       subject.restore("foo.sql")
     end
 
+    it "stores the date of the last restore" do
+      date_string = "2020-01-10T17:38:27Z"
+      freeze_time(Time.parse(date_string))
+      execute_stubbed_restore
+
+      expect(BackupMetadata.value_for(BackupMetadata::LAST_RESTORE_DATE)).to eq(date_string)
+    end
+
     context "with real psql" do
       after do
         psql = BackupRestore::DatabaseRestorer.psql_command
@@ -174,6 +182,55 @@ describe BackupRestore::DatabaseRestorer do
 
       Migration::BaseDropper.expects(:drop_readonly_function).with(:posts, :via_email)
       subject.clean_up
+    end
+  end
+
+  describe ".drop_backup_schema" do
+    subject { BackupRestore::DatabaseRestorer }
+
+    context "when no backup schema exists" do
+      it "doesn't do anything" do
+        ActiveRecord::Base.connection.expects(:schema_exists?).with("backup").returns(false)
+        ActiveRecord::Base.connection.expects(:drop_schema).never
+
+        subject.drop_backup_schema
+      end
+    end
+
+    context "when a backup schema exists" do
+      before do
+        ActiveRecord::Base.connection.expects(:schema_exists?).with("backup").returns(true)
+      end
+
+      it "drops the schema when the last restore was long ago" do
+        ActiveRecord::Base.connection.expects(:drop_schema).with("backup")
+
+        freeze_time(8.days.ago) do
+          subject.update_last_restore_date
+        end
+
+        subject.drop_backup_schema
+      end
+
+      it "doesn't drop the schema when the last restore was recently" do
+        ActiveRecord::Base.connection.expects(:drop_schema).with("backup").never
+
+        freeze_time(6.days.ago) do
+          subject.update_last_restore_date
+        end
+
+        subject.drop_backup_schema
+      end
+
+      it "stores the current date when there is no record of the last restore" do
+        ActiveRecord::Base.connection.expects(:drop_schema).with("backup").never
+
+        date_string = "2020-01-08T17:38:27Z"
+        freeze_time(Time.parse(date_string))
+
+        subject.drop_backup_schema
+        expect(BackupMetadata.value_for(BackupMetadata::LAST_RESTORE_DATE)).to eq(date_string)
+      end
     end
   end
 end
