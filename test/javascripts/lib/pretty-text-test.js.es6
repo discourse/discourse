@@ -1333,15 +1333,15 @@ QUnit.test("enable/disable features", assert => {
 QUnit.test("emoji", assert => {
   assert.cooked(
     ":smile:",
-    `<p><img src="/images/emoji/emoji_one/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:"></p>`
+    `<p><img src="/images/emoji/emoji_one/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
   );
   assert.cooked(
     ":(",
-    `<p><img src="/images/emoji/emoji_one/frowning.png?v=${v}" title=":frowning:" class="emoji" alt=":frowning:"></p>`
+    `<p><img src="/images/emoji/emoji_one/frowning.png?v=${v}" title=":frowning:" class="emoji only-emoji" alt=":frowning:"></p>`
   );
   assert.cooked(
     "8-)",
-    `<p><img src="/images/emoji/emoji_one/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>`
+    `<p><img src="/images/emoji/emoji_one/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji only-emoji" alt=":sunglasses:"></p>`
   );
 });
 
@@ -1363,7 +1363,7 @@ QUnit.test("emoji - emojiSet", assert => {
   assert.cookedOptions(
     ":smile:",
     { siteSettings: { emoji_set: "twitter" } },
-    `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:"></p>`
+    `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
   );
 });
 
