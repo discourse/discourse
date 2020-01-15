@@ -8,6 +8,7 @@ module BackupRestore
 
     MAIN_SCHEMA = "public"
     BACKUP_SCHEMA = "backup"
+    DROP_BACKUP_SCHEMA_AFTER_DAYS = 7
 
     def initialize(logger, current_db)
       @logger = logger
@@ -25,6 +26,8 @@ module BackupRestore
       restore_dump
       migrate_database
       reconnect_database
+
+      self.class.update_last_restore_date
     end
 
     def rollback
@@ -40,6 +43,20 @@ module BackupRestore
 
     def clean_up
       drop_created_discourse_functions
+    end
+
+    def self.drop_backup_schema
+      if backup_schema_dropable?
+        ActiveRecord::Base.connection.drop_schema(BACKUP_SCHEMA)
+      end
+    end
+
+    def self.update_last_restore_date
+      BackupMetadata.where(name: BackupMetadata::LAST_RESTORE_DATE).delete_all
+      BackupMetadata.create!(
+        name: BackupMetadata::LAST_RESTORE_DATE,
+        value: Time.zone.now.iso8601
+      )
     end
 
     protected
@@ -178,5 +195,20 @@ module BackupRestore
     rescue => ex
       log "Something went wrong while dropping functions from the discourse_functions schema", ex
     end
+
+    def self.backup_schema_dropable?
+      return false unless ActiveRecord::Base.connection.schema_exists?(BACKUP_SCHEMA)
+
+      last_restore_date = BackupMetadata.value_for(BackupMetadata::LAST_RESTORE_DATE)
+
+      if last_restore_date.present?
+        last_restore_date = Time.zone.parse(last_restore_date)
+        return last_restore_date + DROP_BACKUP_SCHEMA_AFTER_DAYS.days < Time.zone.now
+      end
+
+      update_last_restore_date
+      false
+    end
+    private_class_method :backup_schema_dropable?
   end
 end
