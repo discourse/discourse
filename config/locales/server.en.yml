@@ -2319,6 +2319,8 @@ en:
     auto_deleted_by_timer: "Automatically deleted by timer."
 
   login:
+    invalid_second_factor_method: "The selected second factor method is invalid."
+    not_enabled_second_factor_method: "The selected second factor method is not enabled for your account."
     security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
     security_key_alternative: "Try another way"
     security_key_authenticate: "Authenticate with Security Key"
@@ -2364,7 +2366,7 @@ en:
     invalid_second_factor_code: "Invalid authentication code. Each code can only be used once."
     invalid_security_key: "Invalid security key."
     second_factor_toggle:
-      totp: "Use an authenticator app instead"
+      totp: "Use an authenticator app or security key instead"
       backup_code: "Use a backup code instead"
 
   admin:

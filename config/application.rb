@@ -151,8 +151,8 @@ module Discourse
       wizard-start.js
       locales/i18n.js
       discourse/lib/webauthn.js
-      admin-login/admin-login.js
-      admin-login/admin-login.no-module.js
+      confirm-new-email/confirm-new-email.js
+      confirm-new-email/confirm-new-email.no-module.js
       onpopstate-handler.js
       embed-application.js
     }

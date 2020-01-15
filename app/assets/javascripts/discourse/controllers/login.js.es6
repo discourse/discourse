@@ -120,9 +120,8 @@ export default Controller.extend(ModalFunctionality, {
         data: {
           login: this.loginName,
           password: this.loginPassword,
-          second_factor_token: this.secondFactorToken,
+          second_factor_token: this.securityKeyCredential || this.secondFactorToken,
           second_factor_method: this.secondFactorMethod,
-          security_key_credential: this.securityKeyCredential,
           timezone: moment.tz.guess()
         }
       }).then(
@@ -130,12 +129,9 @@ export default Controller.extend(ModalFunctionality, {
           // Successful login
           if (result && result.error) {
             this.set("loggingIn", false);
-            const invalidSecurityKey = result.reason === "invalid_security_key";
-            const invalidSecondFactor =
-              result.reason === "invalid_second_factor";
 
             if (
-              (invalidSecondFactor || invalidSecurityKey) &&
+              (result.security_key_enabled || result.totp_enabled) &&
               !this.secondFactorRequired
             ) {
               document.getElementById("modal-alert").style.display = "none";
@@ -145,9 +141,9 @@ export default Controller.extend(ModalFunctionality, {
                 secondFactorRequired: true,
                 showLoginButtons: false,
                 backupEnabled: result.backup_enabled,
-                showSecondFactor: invalidSecondFactor,
-                showSecurityKey: invalidSecurityKey,
-                secondFactorMethod: invalidSecurityKey
+                showSecondFactor: result.totp_enabled,
+                showSecurityKey: result.security_key_enabled,
+                secondFactorMethod: result.security_key_enabled
                   ? SECOND_FACTOR_METHODS.SECURITY_KEY
                   : SECOND_FACTOR_METHODS.TOTP,
                 securityKeyChallenge: result.challenge,
