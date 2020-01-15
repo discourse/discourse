@@ -1,4 +1,4 @@
-import { alias, or } from "@ember/object/computed";
+import { alias, or, readOnly } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
@@ -18,6 +18,7 @@ export default Controller.extend(PasswordValidation, {
     "model.second_factor_required",
     "model.security_key_required"
   ),
+  otherMethodAllowed: readOnly("model.multiple_second_factor_methods"),
   @discourseComputed("model.security_key_required")
   secondFactorMethod(security_key_required) {
     return security_key_required
@@ -51,9 +52,8 @@ export default Controller.extend(PasswordValidation, {
         type: "PUT",
         data: {
           password: this.accountPassword,
-          second_factor_token: this.secondFactorToken,
-          second_factor_method: this.secondFactorMethod,
-          security_key_credential: this.securityKeyCredential
+          second_factor_token: this.securityKeyCredential || this.secondFactorToken,
+          second_factor_method: this.secondFactorMethod
         }
       })
         .then(result => {

@@ -105,7 +105,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def user_found(user)
-    if user.totp_enabled?
+    if user.has_any_second_factor_methods_enabled?
       @auth_result.omniauth_disallow_totp = true
       @auth_result.email = user.email
       return
