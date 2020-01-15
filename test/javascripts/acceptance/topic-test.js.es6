@@ -207,6 +207,14 @@ QUnit.test(
   }
 );
 
+QUnit.skip("Deleting a topic", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click(".topic-post:eq(0) button.show-more-actions");
+  await click(".widget-button.delete");
+
+  assert.ok(exists(".widget-button.recover"), "it shows the recover button");
+});
+
 acceptance("Topic featured links", {
   loggedIn: true,
   settings: {
