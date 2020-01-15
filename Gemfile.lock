@@ -91,7 +91,7 @@ GEM
     cppjieba_rb (0.3.3)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    crass (1.0.5)
+    crass (1.0.6)
     css_parser (1.7.1)
       addressable
     debug_inspector (0.0.3)
@@ -243,7 +243,8 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.9.24)
+    onebox (1.9.25)
+      addressable (~> 2.7.0)
       htmlentities (~> 4.3)
       multi_json (~> 1.11)
       mustache

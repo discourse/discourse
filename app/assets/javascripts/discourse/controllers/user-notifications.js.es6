@@ -2,9 +2,13 @@ import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { readOnly } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   application: inject(),
+  router: service(),
+  currentPath: readOnly("router._router.currentPath"),
 
   @observes("model.canLoadMore")
   _showFooter() {

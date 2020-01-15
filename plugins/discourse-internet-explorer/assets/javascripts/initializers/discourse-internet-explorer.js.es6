@@ -8,7 +8,7 @@ function initializeInternetExplorerDeprecation(api) {
       api.addGlobalNotice(
         I18n.t("discourse_internet_explorer.deprecation_warning"),
         "deprecate-internet-explorer",
-        { dismissable: true }
+        { dismissable: true, dismissDuration: moment.duration(1, "week") }
       );
     }
   }

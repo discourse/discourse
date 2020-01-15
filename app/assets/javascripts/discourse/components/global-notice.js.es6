@@ -9,7 +9,7 @@ export function addGlobalNotice(text, id, options = {}) {
   _pluginNotices.push(Notice.create({ text, id, options }));
 }
 
-const GLOBAL_NOTICE_DISMISSED_PROMPT_KEY = "dismissed-global-notice";
+const GLOBAL_NOTICE_DISMISSED_PROMPT_KEY = "dismissed-global-notice-v2";
 
 const Notice = EmberObject.extend({
   text: null,
@@ -20,12 +20,20 @@ const Notice = EmberObject.extend({
     this._super(...arguments);
 
     const defaults = {
+      // can this banner be hidden
       dismissable: false,
+      // prepend html content
       html: null,
+      // will define the style of the banner, follows alerts styling
       level: "info",
+      // should the banner be permanently hidden?
       persistentDismiss: true,
+      // callback function when dismissing a banner
       onDismiss: null,
-      visibility: null
+      // show/hide banner function, will take precedence over everything
+      visibility: null,
+      // how long before banner should show again, eg: moment.duration(1, "week")
+      dismissDuration: null
     };
 
     this.options = this.set(
@@ -145,7 +153,24 @@ export default Component.extend({
           return notice.options.visibility(notice);
         } else {
           const key = `${GLOBAL_NOTICE_DISMISSED_PROMPT_KEY}-${notice.id}`;
-          return !this.keyValueStore.get(key);
+          const value = this.keyValueStore.get(key);
+
+          // banner has never been dismissed
+          if (!value) {
+            return true;
+          }
+
+          // banner has no persistent dismiss and should always show on load
+          if (!notice.options.persistentDismiss) {
+            return true;
+          }
+
+          if (notice.options.dismissDuration) {
+            const resetAt = moment(value).add(notice.options.dismissDuration);
+            return moment().isAfter(resetAt);
+          } else {
+            return false;
+          }
         }
       });
     }
@@ -160,7 +185,7 @@ export default Component.extend({
       if (notice.options.persistentDismiss) {
         this.keyValueStore.set({
           key: `${GLOBAL_NOTICE_DISMISSED_PROMPT_KEY}-${notice.id}`,
-          value: true
+          value: moment().toISOString(true)
         });
       }
 

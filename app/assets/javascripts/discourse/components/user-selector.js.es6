@@ -60,8 +60,7 @@ export default TextField.extend({
       allowAny = bool("allowAny"),
       disabled = bool("disabled"),
       allowEmails = bool("allowEmails"),
-      fullWidthWrap = bool("fullWidthWrap"),
-      excludedUsernames = this.excludedUsernames || [];
+      fullWidthWrap = bool("fullWidthWrap");
 
     const allExcludedUsernames = () => {
       // hack works around some issues with allowAny eventing
@@ -71,7 +70,7 @@ export default TextField.extend({
         usernames.concat([currentUser.username]);
       }
 
-      return usernames.concat(excludedUsernames);
+      return usernames.concat(this.excludedUsernames || []);
     };
 
     this.element.addEventListener("paste", this._paste);
