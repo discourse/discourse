@@ -237,7 +237,8 @@ function applyEmoji(
     // we ensure line starts and ends with an emoji
     if (
       result[0].type === "emoji" &&
-      result[result.length - 1].type === "emoji"
+      result[result.length - 1].type === "emoji" &&
+      result.filter(r => r.type === "emoji").length <= 3
     ) {
       let allEmojiLine = true;
       let index = 0;
