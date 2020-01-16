@@ -70,6 +70,7 @@ class PostMover
     update_statistics
     update_user_actions
     update_last_post_stats
+    update_upload_security_status
 
     if moving_all_posts
       @original_topic.update_status('closed', true, @user)
@@ -495,6 +496,10 @@ class PostMover
       attrs[:updated_at] = Time.now
       destination_topic.update_columns(attrs)
     end
+  end
+
+  def update_upload_security_status
+    TopicUploadSecurityManager.new(@destination_topic).run
   end
 
   def watch_new_topic

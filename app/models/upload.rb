@@ -235,8 +235,11 @@ class Upload < ActiveRecord::Base
     return false if self.for_theme || self.for_site_setting
     mark_secure = secure_override_value.nil? ? UploadSecurity.new(self).should_be_secure? : secure_override_value
 
+    secure_status_did_change = self.secure? != mark_secure
     self.update_column("secure", mark_secure)
     Discourse.store.update_upload_ACL(self) if Discourse.store.external?
+
+    secure_status_did_change
   end
 
   def self.migrate_to_new_scheme(limit: nil)
