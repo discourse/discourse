@@ -1357,6 +1357,9 @@ describe PostCreator do
     fab!(:anonymous) { Fabricate(:anonymous) }
 
     it "generates post notices for new users" do
+      post = PostCreator.create!(user, title: "private message topic", raw: "private message post", archetype: Archetype.private_message, target_usernames: user.username)
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+
       post = PostCreator.create!(user, title: "one of my first topics", raw: "one of my first posts")
       expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:new_user])
 
@@ -1367,6 +1370,9 @@ describe PostCreator do
     it "generates post notices for returning users" do
       SiteSetting.returning_users_days = 30
       old_post = Fabricate(:post, user: user, created_at: 31.days.ago)
+
+      post = PostCreator.create!(user, title: "private message topic", raw: "private message post", archetype: Archetype.private_message, target_usernames: user.username)
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
 
       post = PostCreator.create!(user, title: "this is a returning topic", raw: "this is a post")
       expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:returning_user])

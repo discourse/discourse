@@ -153,6 +153,42 @@ RSpec.describe ApplicationController do
       get "/"
       expect(response.status).to eq(200)
     end
+
+    context "when enforcing second factor for staff" do
+      before do
+        SiteSetting.enforce_second_factor = "staff"
+        sign_in(admin)
+      end
+
+      context "when the staff member has not enabled TOTP or security keys" do
+        it "redirects the staff to the second factor preferences" do
+          get "/"
+          expect(response).to redirect_to("/u/#{admin.username}/preferences/second-factor")
+        end
+      end
+
+      context "when the staff member has enabled TOTP" do
+        before do
+          Fabricate(:user_second_factor_totp, user: admin)
+        end
+
+        it "does not redirects the staff to set up 2FA" do
+          get "/"
+          expect(response.status).to eq(200)
+        end
+      end
+
+      context "when the staff member has enabled security keys" do
+        before do
+          Fabricate(:user_security_key_with_random_credential, user: admin)
+        end
+
+        it "does not redirects the staff to set up 2FA" do
+          get "/"
+          expect(response.status).to eq(200)
+        end
+      end
+    end
   end
 
   describe 'invalid request params' do

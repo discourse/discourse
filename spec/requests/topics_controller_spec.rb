@@ -860,7 +860,7 @@ RSpec.describe TopicsController do
         it "raises an exception when the user doesn't have permission to delete the topic" do
           sign_in(user)
           delete "/t/#{topic.id}.json"
-          expect(response).to be_forbidden
+          expect(response.status).to eq(422)
         end
       end
 

@@ -91,10 +91,10 @@ module BackupRestore
     end
 
     def restore_dump_command
-      "#{sed_command} #{@db_dump_path} | #{psql_command} 2>&1"
+      "#{sed_command} #{@db_dump_path} | #{self.class.psql_command} 2>&1"
     end
 
-    def psql_command
+    def self.psql_command
       db_conf = BackupRestore.database_configuration
 
       password_argument = "PGPASSWORD='#{db_conf.password}'" if db_conf.password.present?

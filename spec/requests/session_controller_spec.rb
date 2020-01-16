@@ -312,6 +312,22 @@ RSpec.describe SessionController do
             end
           end
         end
+
+        context "if the security_key_param is provided but only TOTP is enabled" do
+          it "does not log in the user" do
+            post "/session/email-login/#{email_token.token}.json", params: {
+              second_factor_token: 'foo',
+              second_factor_method: UserSecondFactor.methods[:totp]
+            }
+
+            expect(response.status).to eq(200)
+
+            expect(JSON.parse(response.body)["error"]).to eq(
+              I18n.t("login.invalid_second_factor_code")
+            )
+            expect(session[:current_user_id]).to eq(nil)
+          end
+        end
       end
 
       context "user has only security key enabled" do
@@ -343,7 +359,7 @@ RSpec.describe SessionController do
             expect(session[:current_user_id]).to eq(nil)
             response_body = JSON.parse(response.body)
             expect(response_body['error']).to eq(I18n.t(
-              'login.invalid_second_factor_code'
+              'login.not_enabled_second_factor_method'
             ))
           end
         end
@@ -351,7 +367,7 @@ RSpec.describe SessionController do
           it" shows an error message and denies login" do
 
             post "/session/email-login/#{email_token.token}.json", params: {
-              security_key_credential: {
+              second_factor_token: {
                 signature: 'bad_sig',
                 clientData: 'bad_clientData',
                 credentialId: 'bad_credential_id',
@@ -375,7 +391,7 @@ RSpec.describe SessionController do
             post "/session/email-login/#{email_token.token}.json", params: {
               login: user.username,
               password: 'myawesomepassword',
-              security_key_credential: valid_security_key_auth_post_data,
+              second_factor_token: valid_security_key_auth_post_data,
               second_factor_method: UserSecondFactor.methods[:security_key]
             }
 
@@ -385,6 +401,46 @@ RSpec.describe SessionController do
             expect(session[:current_user_id]).to eq(user.id)
             expect(user.user_auth_tokens.count).to eq(1)
           end
+        end
+      end
+
+      context "user has security key and totp enabled" do
+        let!(:user_security_key) do
+          Fabricate(
+            :user_security_key,
+            user: user,
+            credential_id: valid_security_key_data[:credential_id],
+            public_key: valid_security_key_data[:public_key]
+          )
+        end
+        let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
+
+        it "doesnt allow logging in if the 2fa params are garbled" do
+          post "/session/email-login/#{email_token.token}.json", params: {
+            second_factor_method: UserSecondFactor.methods[:totp],
+            second_factor_token: "blah"
+          }
+
+          expect(response.status).to eq(200)
+          expect(session[:current_user_id]).to eq(nil)
+          response_body = JSON.parse(response.body)
+          expect(response_body['error']).to eq(I18n.t(
+            'login.invalid_second_factor_code'
+          ))
+        end
+
+        it "doesnt allow login if both of the 2fa params are blank" do
+          post "/session/email-login/#{email_token.token}.json", params: {
+            second_factor_method: UserSecondFactor.methods[:totp],
+            second_factor_token: ""
+          }
+
+          expect(response.status).to eq(200)
+          expect(session[:current_user_id]).to eq(nil)
+          response_body = JSON.parse(response.body)
+          expect(response_body['error']).to eq(I18n.t(
+            'login.invalid_second_factor_code'
+          ))
         end
       end
     end
@@ -1190,9 +1246,8 @@ RSpec.describe SessionController do
             post "/session.json", params: {
               login: user.username,
               password: 'myawesomepassword',
-              security_key_credential: {},
               second_factor_token: '99999999',
-              second_factor_method: UserSecondFactor.methods[:totp]
+              second_factor_method: UserSecondFactor.methods[:security_key]
             }
 
             expect(response.status).to eq(200)
@@ -1200,7 +1255,7 @@ RSpec.describe SessionController do
             response_body = JSON.parse(response.body)
             expect(response_body["failed"]).to eq("FAILED")
             expect(response_body['error']).to eq(I18n.t(
-              'login.invalid_second_factor_code'
+              'login.invalid_security_key'
             ))
           end
         end
@@ -1210,7 +1265,7 @@ RSpec.describe SessionController do
             post "/session.json", params: {
               login: user.username,
               password: 'myawesomepassword',
-              security_key_credential: {
+              second_factor_token: {
                 signature: 'bad_sig',
                 clientData: 'bad_clientData',
                 credentialId: 'bad_credential_id',
@@ -1234,7 +1289,7 @@ RSpec.describe SessionController do
             post "/session.json", params: {
               login: user.username,
               password: 'myawesomepassword',
-              security_key_credential: valid_security_key_auth_post_data,
+              second_factor_token: valid_security_key_auth_post_data,
               second_factor_method: UserSecondFactor.methods[:security_key]
             }
 
@@ -1256,7 +1311,7 @@ RSpec.describe SessionController do
             post "/session.json", params: {
               login: user.username,
               password: 'myawesomepassword',
-              security_key_credential: valid_security_key_auth_post_data,
+              second_factor_token: valid_security_key_auth_post_data,
               second_factor_method: UserSecondFactor.methods[:security_key]
             }
 
@@ -1265,7 +1320,7 @@ RSpec.describe SessionController do
             response_body = JSON.parse(response.body)
             expect(response_body["failed"]).to eq("FAILED")
             expect(JSON.parse(response.body)['error']).to eq(I18n.t(
-              'login.invalid_second_factor_code'
+              'login.not_enabled_second_factor_method'
             ))
           end
         end
@@ -1279,12 +1334,12 @@ RSpec.describe SessionController do
           it 'should return the right response' do
             post "/session.json", params: {
               login: user.username,
-              password: 'myawesomepassword',
+              password: 'myawesomepassword'
             }
 
             expect(response.status).to eq(200)
             expect(JSON.parse(response.body)['error']).to eq(I18n.t(
-              'login.invalid_second_factor_code'
+              'login.invalid_second_factor_method'
             ))
           end
         end

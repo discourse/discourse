@@ -323,9 +323,32 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(user.confirm_password?("securepassword")).to eq(false)
       end
 
-      context 'when user has second factor enabled' do
+      context 'when user has TOTP enabled' do
         before do
           user.create_totp(enabled: true)
+        end
+
+        it 'should return the right response' do
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+
+          data = JSON.parse(cookies[:authentication_data])
+
+          expect(data["email"]).to eq(user.email)
+          expect(data["omniauth_disallow_totp"]).to eq(true)
+
+          user.update!(email: 'different@user.email')
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+          expect(JSON.parse(cookies[:authentication_data])["email"]).to eq(user.email)
+        end
+      end
+
+      context 'when user has security key enabled' do
+        before do
+          Fabricate(:user_security_key_with_random_credential, user: user)
         end
 
         it 'should return the right response' do

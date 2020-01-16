@@ -104,47 +104,46 @@ class Group < ActiveRecord::Base
       groups = groups.where("groups.id > 0")
     end
 
-    unless user&.admin
+    if !user&.admin
       sql = <<~SQL
         groups.id IN (
-          SELECT g.id FROM groups g WHERE g.visibility_level = :public
+          SELECT id
+            FROM groups
+           WHERE visibility_level = :public
 
           UNION ALL
 
-          SELECT g.id FROM groups g
-          WHERE g.visibility_level = :logged_on_users AND :user_id IS NOT NULL
+          SELECT id
+            FROM groups
+           WHERE visibility_level = :logged_on_users
+             AND :user_id IS NOT NULL
 
           UNION ALL
 
-          SELECT g.id FROM groups g
-          JOIN group_users gu ON gu.group_id = g.id AND
-                                 gu.user_id = :user_id
-          WHERE g.visibility_level = :members
+          SELECT g.id
+            FROM groups g
+            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id
+           WHERE g.visibility_level = :members
 
           UNION ALL
 
-          SELECT g.id FROM groups g
-          LEFT JOIN group_users gu ON gu.group_id = g.id AND
-                                 gu.user_id = :user_id AND
-                                 gu.owner
-          WHERE g.visibility_level = :staff AND (gu.id IS NOT NULL OR :is_staff)
+          SELECT g.id
+            FROM groups g
+       LEFT JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+           WHERE g.visibility_level = :staff
+             AND (gu.id IS NOT NULL OR :is_staff)
 
           UNION ALL
 
-          SELECT g.id FROM groups g
-          JOIN group_users gu ON gu.group_id = g.id AND
-                                 gu.user_id = :user_id AND
-                                 gu.owner
-          WHERE g.visibility_level = :owners
-
+          SELECT g.id
+            FROM groups g
+            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+           WHERE g.visibility_level = :owners
         )
       SQL
 
-      groups = groups.where(
-        sql,
-        Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
-      )
-
+      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
+      groups = groups.where(sql, params)
     end
 
     groups
@@ -157,47 +156,46 @@ class Group < ActiveRecord::Base
       groups = groups.where("groups.id > 0")
     end
 
-    unless user&.admin
+    if !user&.admin
       sql = <<~SQL
         groups.id IN (
-          SELECT g.id FROM groups g WHERE g.members_visibility_level = :public
+          SELECT id
+            FROM groups
+           WHERE members_visibility_level = :public
 
           UNION ALL
 
-          SELECT g.id FROM groups g
-          WHERE g.members_visibility_level = :logged_on_users AND :user_id IS NOT NULL
+          SELECT id
+            FROM groups
+           WHERE members_visibility_level = :logged_on_users
+             AND :user_id IS NOT NULL
 
           UNION ALL
 
-          SELECT g.id FROM groups g
-          JOIN group_users gu ON gu.group_id = g.id AND
-                                 gu.user_id = :user_id
-          WHERE g.members_visibility_level = :members
+          SELECT g.id
+            FROM groups g
+            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id
+           WHERE g.members_visibility_level = :members
 
           UNION ALL
 
-          SELECT g.id FROM groups g
-          LEFT JOIN group_users gu ON gu.group_id = g.id AND
-                                 gu.user_id = :user_id AND
-                                 gu.owner
-          WHERE g.members_visibility_level = :staff AND (gu.id IS NOT NULL OR :is_staff)
+          SELECT g.id
+            FROM groups g
+       LEFT JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+           WHERE g.members_visibility_level = :staff
+             AND (gu.id IS NOT NULL OR :is_staff)
 
           UNION ALL
 
-          SELECT g.id FROM groups g
-          JOIN group_users gu ON gu.group_id = g.id AND
-                                 gu.user_id = :user_id AND
-                                 gu.owner
-          WHERE g.members_visibility_level = :owners
-
+          SELECT g.id
+            FROM groups g
+            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+           WHERE g.members_visibility_level = :owners
         )
       SQL
 
-      groups = groups.where(
-        sql,
-        Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
-      )
-
+      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
+      groups = groups.where(sql, params)
     end
 
     groups
@@ -243,22 +241,24 @@ class Group < ActiveRecord::Base
   end
 
   def self.alias_levels(user)
-    levels = [ALIAS_LEVELS[:everyone]]
-
-    if user && user.admin?
-      levels = [ALIAS_LEVELS[:everyone],
-                ALIAS_LEVELS[:only_admins],
-                ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins],
-                ALIAS_LEVELS[:owners_mods_and_admins]]
-    elsif user && user.moderator?
-      levels = [ALIAS_LEVELS[:everyone],
-                ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins],
-                ALIAS_LEVELS[:owners_mods_and_admins]]
+    if user&.admin?
+      [
+        ALIAS_LEVELS[:everyone],
+        ALIAS_LEVELS[:only_admins],
+        ALIAS_LEVELS[:mods_and_admins],
+        ALIAS_LEVELS[:members_mods_and_admins],
+        ALIAS_LEVELS[:owners_mods_and_admins],
+      ]
+    elsif user&.moderator?
+      [
+        ALIAS_LEVELS[:everyone],
+        ALIAS_LEVELS[:mods_and_admins],
+        ALIAS_LEVELS[:members_mods_and_admins],
+        ALIAS_LEVELS[:owners_mods_and_admins],
+      ]
+    else
+      [ALIAS_LEVELS[:everyone]]
     end
-
-    levels
   end
 
   def self.plugin_editable_group_custom_fields
@@ -724,9 +724,9 @@ class Group < ActiveRecord::Base
   end
 
   def self.member_of(groups, user)
-    groups.joins(
-      "LEFT JOIN group_users gu ON gu.group_id = groups.id
-    ").where("gu.user_id = ?", user.id)
+    groups
+      .joins("LEFT JOIN group_users gu ON gu.group_id = groups.id ")
+      .where("gu.user_id = ?", user.id)
   end
 
   def self.owner_of(groups, user)
@@ -747,7 +747,6 @@ class Group < ActiveRecord::Base
   protected
 
   def name_format_validator
-
     return if !name_changed?
 
     # avoid strip! here, it works now

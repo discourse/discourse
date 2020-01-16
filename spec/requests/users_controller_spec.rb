@@ -236,7 +236,7 @@ describe UsersController do
         expect(response.status).to eq(200)
         expect(response.body).to have_tag("div#data-preloaded") do |element|
           json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
-          expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false}')
+          expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}')
         end
 
         expect(session["password-#{token}"]).to be_blank
@@ -349,7 +349,7 @@ describe UsersController do
 
           expect(response.body).to have_tag("div#data-preloaded") do |element|
             json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
-            expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false}')
+            expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}')
           end
 
           put "/u/password-reset/#{token}", params: {
@@ -420,21 +420,34 @@ describe UsersController do
         it 'changes password with valid security key challenge and authentication' do
           put "/u/password-reset/#{token}.json", params: {
             password: 'hg9ow8yHG32O',
-            security_key_credential: valid_security_key_auth_post_data,
+            second_factor_token: valid_security_key_auth_post_data,
             second_factor_method: UserSecondFactor.methods[:security_key]
           }
 
           user.reload
           expect(response.status).to eq(200)
+
           expect(user.confirm_password?('hg9ow8yHG32O')).to eq(true)
           expect(user.user_auth_tokens.count).to eq(1)
+        end
+
+        it "does not change a password if a fake TOTP token is provided" do
+          put "/u/password-reset/#{token}.json", params: {
+            password: 'hg9ow8yHG32O',
+            second_factor_token: 'blah',
+            second_factor_method: UserSecondFactor.methods[:security_key]
+          }
+
+          user.reload
+          expect(response.status).to eq(200)
+          expect(user.confirm_password?('hg9ow8yHG32O')).to eq(false)
         end
 
         context "when security key authentication fails" do
           it 'shows an error message and does not change password' do
             put "/u/password-reset/#{token}", params: {
               password: 'hg9ow8yHG32O',
-              security_key_credential: {
+              second_factor_token: {
                 signature: 'bad',
                 clientData: 'bad',
                 authenticatorData: 'bad',
@@ -446,7 +459,7 @@ describe UsersController do
             user.reload
             expect(user.confirm_password?('hg9ow8yHG32O')).to eq(false)
             expect(response.status).to eq(200)
-            expect(JSON.parse(response.body)['errors']).to include(I18n.t("webauthn.validation.not_found_error"))
+            expect(response.body).to include(I18n.t("webauthn.validation.not_found_error"))
           end
         end
       end

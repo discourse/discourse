@@ -69,17 +69,8 @@ describe BackupRestore::DatabaseRestorer do
 
     context "with real psql" do
       after do
-        DB.exec <<~SQL
-          -- Drop table and execute a commit to make the drop stick,
-          -- otherwise rspec will rollback the drop at the end of each test.
-          -- The tests in this context do not change the DB, so this should be safe.
-          DROP TABLE IF EXISTS foo;
-          COMMIT;
-
-          -- Start a new transaction in order to suppress the
-          -- "there is no transaction in progress" warnings from rspec.
-          BEGIN TRANSACTION;
-        SQL
+        psql = BackupRestore::DatabaseRestorer.psql_command
+        system("#{psql} -c 'DROP TABLE IF EXISTS foo'", [:out, :err] => File::NULL)
       end
 
       def restore(filename, stub_migrate: true)
