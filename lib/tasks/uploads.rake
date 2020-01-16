@@ -72,7 +72,9 @@ task "uploads:backfill_shas" => :environment do
     Upload.where(sha1: nil).find_each do |u|
       begin
         path = Discourse.store.path_for(u)
-        u.sha1 = Upload.generate_digest(path)
+        sha1 = Upload.generate_digest(path)
+        u.sha1 = u.secure? ? SecureRandom.hex(20) : sha1
+        u.original_sha1 = u.secure? ? sha1 : nil
         u.save!
         putc "."
       rescue => e
@@ -732,9 +734,7 @@ def update_acls_and_rebake_upload_posts(uploads_with_supported_media, mark_secur
       upload_with_supported_media.posts.each { |post| post.rebake! }
 
       if mark_secure_in_loop_because_no_login_required
-        first_post_with_upload = upload_with_supported_media.posts.order(sort_order: :asc).first
-        mark_secure = first_post_with_upload ? first_post_with_upload.with_secure_media? : false
-        upload_ids_to_mark_as_secure << upload_with_supported_media.id if mark_secure
+        upload_ids_to_mark_as_secure << UploadSecurity.new(upload_with_supported_media).should_be_secure?
       end
     rescue => e
       uploads_skipped_because_of_error << "#{upload_with_supported_media.original_filename} (#{upload_with_supported_media.url}) #{e.message}"

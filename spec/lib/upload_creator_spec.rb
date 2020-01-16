@@ -210,17 +210,7 @@ RSpec.describe UploadCreator do
       let(:pdf_file) { file_from_fixtures(pdf_filename, "pdf") }
 
       before do
-        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-        SiteSetting.s3_access_key_id = "s3-access-key-id"
-        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-        SiteSetting.s3_region = 'us-west-1'
-        SiteSetting.enable_s3_uploads = true
-
-        store = FileStore::S3Store.new
-        s3_helper = store.instance_variable_get(:@s3_helper)
-        client = Aws::S3::Client.new(stub_responses: true)
-        s3_helper.stubs(:s3_client).returns(client)
-        Discourse.stubs(:store).returns(store)
+        enable_s3_uploads
       end
 
       it 'should store the file and return etag' do
@@ -246,6 +236,108 @@ RSpec.describe UploadCreator do
         expect(signed_url).to match(/Amz-Credential/)
       end
     end
+
+    context "when the upload already exists based on the sha1" do
+      let(:filename) { "small.pdf" }
+      let(:file) { file_from_fixtures(filename, "pdf") }
+      let!(:existing_upload) { Fabricate(:upload, sha1: Upload.generate_digest(file)) }
+      let(:result) { UploadCreator.new(file, filename).create_for(user.id) }
+
+      it "returns the existing upload" do
+        expect(result).to eq(existing_upload)
+      end
+
+      it "does not set an original_sha1 normally" do
+        expect(result.original_sha1).to eq(nil)
+      end
+
+      it "creates a userupload record" do
+        result
+        expect(UserUpload.exists?(user_id: user.id, upload_id: existing_upload.id)).to eq(true)
+      end
+
+      context "when the existing upload URL is blank (it has failed)" do
+        before do
+          existing_upload.update(url: '')
+        end
+
+        it "destroys the existing upload" do
+          result
+          expect(Upload.find_by(id: existing_upload.id)).to eq(nil)
+        end
+      end
+
+      context "when SiteSetting.secure_media is enabled" do
+        before do
+          enable_s3_uploads
+          SiteSetting.secure_media = true
+        end
+
+        it "does not return the existing upload, as duplicate uploads are allowed" do
+          expect(result).not_to eq(existing_upload)
+        end
+      end
+    end
+
+    context "secure media functionality" do
+      let(:filename) { "logo.jpg" }
+      let(:file) { file_from_fixtures(filename) }
+      let(:opts) { {} }
+      let(:result) { UploadCreator.new(file, filename, opts).create_for(user.id) }
+
+      context "when SiteSetting.secure_media enabled" do
+        before do
+          enable_s3_uploads
+          SiteSetting.secure_media = true
+        end
+
+        it "sets an original_sha1 on the upload created because the sha1 column is securerandom in this case" do
+          expect(result.original_sha1).not_to eq(nil)
+        end
+
+        context "when uploading in a public context (theme, site setting, avatar)" do
+          it "does not set the upload to secure" do
+            upload = UploadCreator.new(file_from_fixtures(filename), filename, for_site_setting: true).create_for(user.id)
+            expect(upload.secure).to eq(false)
+            upload.destroy!
+
+            upload = UploadCreator.new(file_from_fixtures(filename), filename, for_theme: true).create_for(user.id)
+            expect(upload.secure).to eq(false)
+            upload.destroy!
+
+            upload = UploadCreator.new(file_from_fixtures(filename), filename, type: "avatar").create_for(user.id)
+            expect(upload.secure).to eq(false)
+            upload.destroy!
+          end
+        end
+
+        context "if type of upload is in the composer" do
+          let(:opts) { { type: "composer" } }
+          it "sets the upload to secure and sets the original_sha1 column, because we don't know the context of the composer" do
+            expect(result.secure).to eq(true)
+            expect(result.original_sha1).not_to eq(nil)
+          end
+        end
+
+        context "if the upload is for a PM" do
+          let(:opts) { { for_private_message: true } }
+          it "sets the upload to secure and sets the original_sha1" do
+            expect(result.secure).to eq(true)
+            expect(result.original_sha1).not_to eq(nil)
+          end
+        end
+
+        context "if SiteSetting.login_required" do
+          before do
+            SiteSetting.login_required = true
+          end
+          it "sets the upload to secure and sets the original_sha1" do
+            expect(result.secure).to eq(true)
+            expect(result.original_sha1).not_to eq(nil)
+          end
+        end
+      end
+    end
   end
 
   describe '#whitelist_svg!' do
@@ -268,5 +360,19 @@ RSpec.describe UploadCreator do
         file.unlink
       end
     end
+  end
+
+  def enable_s3_uploads
+    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+    SiteSetting.s3_access_key_id = "s3-access-key-id"
+    SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+    SiteSetting.s3_region = 'us-west-1'
+    SiteSetting.enable_s3_uploads = true
+
+    store = FileStore::S3Store.new
+    s3_helper = store.instance_variable_get(:@s3_helper)
+    client = Aws::S3::Client.new(stub_responses: true)
+    s3_helper.stubs(:s3_client).returns(client)
+    Discourse.stubs(:store).returns(store)
   end
 end

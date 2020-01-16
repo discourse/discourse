@@ -102,6 +102,8 @@ class UploadsController < ApplicationController
     sha1 = Upload.sha1_from_base62_encoded(params[:base62])
 
     if upload = Upload.find_by(sha1: sha1)
+      return handle_secure_upload_request(upload, Discourse.store.get_path_for_upload(upload)) if upload.secure? && SiteSetting.secure_media?
+
       if Discourse.store.internal?
         send_file_local_upload(upload)
       else
@@ -127,7 +129,7 @@ class UploadsController < ApplicationController
     return render_404 if upload.blank?
 
     signed_secure_url = Discourse.store.signed_url_for_path(path_with_ext)
-    return redirect_to signed_secure_url if SiteSetting.secure_media?
+    return handle_secure_upload_request(upload, path_with_ext) if SiteSetting.secure_media?
 
     # we don't want to 404 here if secure media gets disabled
     # because all posts with secure uploads will show broken media
@@ -137,6 +139,14 @@ class UploadsController < ApplicationController
     # private, so we don't want to go to the CDN url just yet otherwise we
     # will get a 403. if the upload is not secure we assume the ACL is public
     redirect_to upload.secure? ? signed_secure_url : Discourse.store.cdn_url(upload.url)
+  end
+
+  def handle_secure_upload_request(upload, path_with_ext)
+    if upload.access_control_post_id.present?
+      raise Discourse::InvalidAccess if !guardian.can_see?(upload.access_control_post)
+    end
+
+    redirect_to Discourse.store.signed_url_for_path(path_with_ext)
   end
 
   def metadata
