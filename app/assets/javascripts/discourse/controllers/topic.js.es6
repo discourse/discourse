@@ -727,6 +727,10 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     jumpEnd() {
+      this.appEvents.trigger(
+        "topic:jump-to-post",
+        this.get("model.highest_post_number")
+      );
       DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
         jumpEnd: true
       });
