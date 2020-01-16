@@ -235,6 +235,7 @@ function applyEmoji(
   // EMOJI SPACE EMOJI SPACE EMOJI => 5 tokens
   if (result && result.length <= 5 && result.length > 0) {
     // we ensure line starts and ends with an emoji
+    // and has no more than 3 emojis
     if (
       result[0].type === "emoji" &&
       result[result.length - 1].type === "emoji" &&
