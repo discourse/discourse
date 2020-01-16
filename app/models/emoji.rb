@@ -8,7 +8,7 @@ class Emoji
 
   include ActiveModel::SerializerSupport
 
-  attr_accessor :name, :url, :tonable
+  attr_accessor :name, :url, :tonable, :group
 
   def self.all
     Discourse.cache.fetch(cache_key("all_emojis")) { standard | custom }
@@ -31,7 +31,8 @@ class Emoji
   end
 
   def self.custom
-    Discourse.cache.fetch(cache_key("custom_emojis")) { load_custom }
+    # Discourse.cache.fetch(cache_key("custom_emojis")) { load_custom }
+    load_custom
   end
 
   def self.tonable_emojis
@@ -104,15 +105,17 @@ class Emoji
         result << Emoji.new.tap do |e|
           e.name = emoji.name
           e.url = emoji.upload&.url
+          e.group = emoji.group || "default"
         end
       end
     end
 
-    Plugin::CustomEmoji.emojis.each do |name, url|
+    Plugin::CustomEmoji.emojis.each do |group, emoji|
       result << Emoji.new.tap do |e|
-        e.name = name
-        url = (Discourse.base_uri + url) if url[/^\/[^\/]/]
+        e.name = emoji.name
+        url = (Discourse.base_uri + emoji.url) if emoji.url[/^\/[^\/]/]
         e.url = url
+        e.group = group
       end
     end
 

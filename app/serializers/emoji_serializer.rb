@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 class EmojiSerializer < ApplicationSerializer
-  attributes :name, :url
+  attributes :name, :url, :group
 end

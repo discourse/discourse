@@ -10,9 +10,9 @@ import { IMAGE_VERSION } from "pretty-text/emoji/version";
 
 const extendedEmoji = {};
 
-export function registerEmoji(code, url) {
+export function registerEmoji(code, url, group) {
   code = code.toLowerCase();
-  extendedEmoji[code] = url;
+  extendedEmoji[code] = { url, group };
 }
 
 export function extendedEmojiList() {
@@ -161,11 +161,11 @@ export function buildEmojiUrl(code, opts) {
   let url;
   code = String(code).toLowerCase();
   if (extendedEmoji.hasOwnProperty(code)) {
-    url = extendedEmoji[code];
+    url = extendedEmoji[code].url;
   }
 
   if (opts && opts.customEmoji && opts.customEmoji[code]) {
-    url = opts.customEmoji[code];
+    url = opts.customEmoji[code].url || opts.customEmoji[code];
   }
 
   const noToneMatch = code.match(/([^:]+):?/);

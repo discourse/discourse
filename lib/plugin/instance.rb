@@ -14,13 +14,14 @@ class Plugin::CustomEmoji
     @@emojis ||= {}
   end
 
-  def self.register(name, url)
+  def self.register(name, url, group = "default")
     @@cache_key = Digest::SHA1.hexdigest(cache_key + name)[0..10]
-    emojis[name] = url
+    group = emojis[group] || {}
+    group[name] = url
   end
 
-  def self.unregister(name)
-    emojis.delete(name)
+  def self.unregister(name, group = "default")
+    emojis[group].delete(name)
   end
 
   def self.translations

@@ -8,6 +8,7 @@ export default Component.extend(UploadMixin, {
   uploadUrl: "/admin/customize/emojis",
   hasName: notEmpty("name"),
   addDisabled: not("hasName"),
+  group: "default",
 
   uploadOptions() {
     return {
@@ -15,9 +16,9 @@ export default Component.extend(UploadMixin, {
     };
   },
 
-  @discourseComputed("hasName", "name")
-  data(hasName, name) {
-    return hasName ? { name } : {};
+  @discourseComputed("hasName", "name", "group")
+  data(hasName, name, group) {
+    return hasName ? { name, group } : {};
   },
 
   validateUploadedFilesOptions() {
@@ -25,7 +26,7 @@ export default Component.extend(UploadMixin, {
   },
 
   uploadDone(upload) {
-    this.set("name", null);
+    this.setProperties({ name: null, group: "default" });
     this.done(upload);
   }
 });

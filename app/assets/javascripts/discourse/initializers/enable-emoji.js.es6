@@ -24,7 +24,7 @@ export default {
     });
 
     (PreloadStore.get("customEmoji") || []).forEach(emoji =>
-      registerEmoji(emoji.name, emoji.url)
+      registerEmoji(emoji.name, emoji.url, emoji.group)
     );
   }
 };

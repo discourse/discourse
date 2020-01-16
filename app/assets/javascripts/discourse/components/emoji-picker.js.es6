@@ -14,9 +14,28 @@ import ENV from "discourse-common/config/environment";
 const { run } = Ember;
 
 const PER_ROW = 11;
-const customEmojis = _.keys(extendedEmojiList()).map(code => {
-  return { code, src: emojiUrlFor(code) };
-});
+function customEmojis() {
+  const emojis = [];
+  const list = extendedEmojiList();
+
+  Object.keys(list).forEach(code => {
+    const { group } = list[code];
+    emojis.push({
+      code,
+      src: emojiUrlFor(code),
+      group,
+      key: `emoji_picker.${group}`
+    });
+  });
+
+  const groupedEmojis = emojis.reduce((acc, curr) => {
+    if (!acc[curr.group]) acc[curr.group] = [];
+    acc[curr.group].push(curr);
+    return acc;
+  }, {});
+
+  return Object.values(groupedEmojis);
+}
 
 export default Component.extend({
   automaticPositioning: true,
@@ -35,7 +54,9 @@ export default Component.extend({
   },
 
   show() {
-    const template = findRawTemplate("emoji-picker")({ customEmojis });
+    const template = findRawTemplate("emoji-picker")({
+      customEmojis: customEmojis()
+    });
     this.$picker.html(template);
 
     this.$filter = this.$picker.find(".filter");

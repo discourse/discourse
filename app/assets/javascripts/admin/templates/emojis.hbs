@@ -12,6 +12,7 @@
           <tr>
             <th>{{i18n "admin.emoji.image"}}</th>
             <th>{{i18n "admin.emoji.name"}}</th>
+            <th>{{i18n "admin.emoji.group"}}</th>
             <th></th>
           </tr>
         </thead>
@@ -20,6 +21,7 @@
             <tr>
               <th><img class="emoji emoji-custom" src="{{unbound e.url}}" title="{{unbound e.name}}"></th>
               <th>:{{e.name}}:</th>
+              <th>{{e.group}}</th>
               <th>
                 {{d-button
                   action=(action "destroy" e)
