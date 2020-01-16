@@ -177,7 +177,7 @@ class PostCreator
         update_topic_auto_close
         update_user_counts
         create_embedded_topic
-        link_post_uploads
+        @post.link_post_uploads
         update_uploads_secure_status
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message
@@ -370,14 +370,6 @@ class PostCreator
     return unless @opts[:embed_url].present?
     embed = TopicEmbed.new(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
     rollback_from_errors!(embed) unless embed.save
-  end
-
-  def link_post_uploads
-    disallowed_uploads = @post.link_post_uploads
-    if disallowed_uploads.is_a? Array
-      @post.errors.add(:base, I18n.t('secure_upload_not_allowed_in_public_topic', upload_filenames: disallowed_uploads.join(", ")))
-      rollback_from_errors!(@post)
-    end
   end
 
   def update_uploads_secure_status

@@ -1417,53 +1417,12 @@ describe PostCreator do
       )
     end
 
-    it "does not allow a secure image to be used in a public topic" do
+    it "links post uploads" do
       public_post = PostCreator.create(
         user,
         topic_id: public_topic.id,
         raw: "A public post with an image.\n![](#{image_upload.short_path})"
       )
-
-      expect(public_post.errors.count).to be(1)
-      expect(public_post.errors.full_messages).to include(I18n.t('secure_upload_not_allowed_in_public_topic', upload_filenames: image_upload.original_filename))
-
-      # secure upload CAN be used in another PM
-      pm = PostCreator.create(
-        user,
-        title: 'this is another private message',
-        raw: "with an upload: \n![](#{image_upload.short_path})",
-        archetype: Archetype.private_message,
-        target_usernames: [user2.username].join(',')
-      )
-
-      expect(pm.errors).to be_blank
     end
-
-    it "does not allow a secure video to be used in a public topic" do
-      video_upload = Fabricate(:upload_s3, extension: 'mp4', original_filename: "video.mp4", secure: true)
-
-      public_post = PostCreator.create(
-        user,
-        topic_id: public_topic.id,
-        raw: "A public post with a video onebox:\n#{video_upload.url}"
-      )
-
-      expect(public_post.errors.count).to be(1)
-      expect(public_post.errors.full_messages).to include(I18n.t('secure_upload_not_allowed_in_public_topic', upload_filenames: video_upload.original_filename))
-    end
-
-    it "allows an existing upload to be used again in nonPM topics in login_required sites" do
-      SiteSetting.login_required = true
-
-      public_post = PostCreator.create(
-        user,
-        topic_id: public_topic.id,
-        raw: "Reusing this image on a public topic in a login_required site:\n![](#{image_upload.short_path})"
-      )
-
-      expect(public_post.errors.count).to be(0)
-    end
-
   end
-
 end

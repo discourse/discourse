@@ -21,7 +21,14 @@ module FileStore
 
     def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(upload)
-      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true, private_acl: upload.secure?)
+      url, upload.etag = store_file(
+        file,
+        path,
+        filename: upload.original_filename,
+        content_type: content_type,
+        cache_locally: true,
+        private_acl: upload.secure?
+      )
       url
     end
 
