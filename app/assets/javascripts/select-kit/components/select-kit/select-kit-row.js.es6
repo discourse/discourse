@@ -1,9 +1,6 @@
 import { alias, or } from "@ember/object/computed";
 import Component from "@ember/component";
-import {
-  default as discourseComputed,
-  on
-} from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 const { run, isPresent, makeArray, isEmpty } = Ember;
 import UtilsMixin from "select-kit/mixins/utils";

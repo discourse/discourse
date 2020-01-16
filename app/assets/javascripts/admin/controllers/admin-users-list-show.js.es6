@@ -1,4 +1,4 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse/lib/computed";
@@ -29,9 +29,10 @@ export default Controller.extend(CanCheckEmails, {
     return I18n.t("admin.users.titles." + query);
   },
 
+  @observes("listFilter")
   _filterUsers: discourseDebounce(function() {
     this.resetFilters();
-  }, 250).observes("listFilter"),
+  }, 250),
 
   resetFilters() {
     this._page = 1;

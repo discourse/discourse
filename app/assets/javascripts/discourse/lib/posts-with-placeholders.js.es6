@@ -1,5 +1,5 @@
 import EmberObject from "@ember/object";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export function Placeholder(viewName) {
   this.viewName = viewName;

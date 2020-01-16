@@ -1,10 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import { equal, and, empty } from "@ember/object/computed";
 import Component from "@ember/component";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 

@@ -1,9 +1,6 @@
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
 import FilterModeMixin from "discourse/mixins/filter-mode";

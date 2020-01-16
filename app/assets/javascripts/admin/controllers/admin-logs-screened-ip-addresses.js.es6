@@ -3,18 +3,20 @@ import discourseDebounce from "discourse/lib/debounce";
 import { outputExportResult } from "discourse/lib/export-result";
 import { exportEntity } from "discourse/lib/export-csv";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   loading: false,
   filter: null,
   savedIpAddress: null,
 
+  @observes("filter")
   show: discourseDebounce(function() {
     this.set("loading", true);
     ScreenedIpAddress.findAll(this.filter).then(result => {
       this.setProperties({ model: result, loading: false });
     });
-  }, 250).observes("filter"),
+  }, 250),
 
   actions: {
     allow(record) {

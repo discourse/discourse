@@ -1,10 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import { empty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { setting, propertyEqual } from "discourse/lib/computed";
 import DiscourseURL from "discourse/lib/url";
 import { userPath } from "discourse/lib/url";

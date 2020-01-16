@@ -2,8 +2,7 @@ import { isEmpty } from "@ember/utils";
 import { alias, equal, or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
-import {
-  default as discourseComputed,
+import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";

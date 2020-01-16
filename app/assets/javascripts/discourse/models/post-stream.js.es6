@@ -5,7 +5,7 @@ import { ajax } from "discourse/lib/ajax";
 import DiscourseURL from "discourse/lib/url";
 import RestModel from "discourse/models/rest";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { loadTopicView } from "discourse/models/topic";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
