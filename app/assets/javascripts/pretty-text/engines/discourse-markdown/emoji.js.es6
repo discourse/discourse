@@ -220,14 +220,6 @@ function applyEmoji(
 
       result.push(token);
 
-      if (i === 0 && offset === content.length) {
-        token.attrs.forEach(attr => {
-          if (attr[0] === "class") {
-            attr[1] = `${attr[1]} only-emoji`;
-          }
-        });
-      }
-
       end = start = i + offset;
       i += offset - 1;
     }
@@ -239,7 +231,64 @@ function applyEmoji(
     result.push(text);
   }
 
+  // we check for a result <= 5 because we support maximum 3 large emojis
+  // EMOJI SPACE EMOJI SPACE EMOJI => 5 tokens
+  if (result && result.length <= 5 && result.length > 0) {
+    // we ensure line starts and ends with an emoji
+    if (
+      result[0].type === "emoji" &&
+      result[result.length - 1].type === "emoji"
+    ) {
+      let allEmojiLine = true;
+      let index = 0;
+
+      const checkNextToken = t => {
+        if (!t) {
+          return;
+        }
+
+        if (!["emoji", "text"].includes(t.type)) {
+          allEmojiLine = false;
+        }
+
+        // a text token should always have an emoji before
+        // and be a space
+        if (
+          t.type === "text" &&
+          ((result[index - 1] && result[index - 1].type !== "emoji") ||
+            t.content !== " ")
+        ) {
+          allEmojiLine = false;
+        }
+
+        // exit as soon as possible
+        if (allEmojiLine) {
+          index += 1;
+          checkNextToken(result[index]);
+        }
+      };
+
+      checkNextToken(result[index]);
+
+      if (allEmojiLine) {
+        result.forEach(r => {
+          if (r.type === "emoji") {
+            applyAllEmojiClass(r);
+          }
+        });
+      }
+    }
+  }
+
   return result;
+}
+
+function applyAllEmojiClass(token) {
+  token.attrs.forEach(attr => {
+    if (attr[0] === "class") {
+      attr[1] = `${attr[1]} only-emoji`;
+    }
+  });
 }
 
 export function setup(helper) {
