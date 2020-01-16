@@ -257,6 +257,28 @@ describe PostAlerter do
       end
       expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], linking_post])
     end
+
+    it "doesn't notify the linked user if the user is staged and the category is restricted" do
+      staged_user = Fabricate(:staged)
+      group = Fabricate(:group)
+      group_member = Fabricate(:user)
+      group.add(group_member)
+
+      private_category = Fabricate(
+        :private_category, group: group,
+                           email_in: 'test@test.com', email_in_allow_strangers: true
+      )
+
+      staged_user_post = create_post(user: staged_user, category: private_category)
+
+      linking = create_post(
+        user: group_member,
+        category: private_category,
+        raw: "my magic topic\n##{Discourse.base_url}#{staged_user_post.url}")
+
+      staged_user.reload
+      expect(staged_user.notifications.where(notification_type: Notification.types[:linked]).count).to eq(0)
+    end
   end
 
   context '@group mentions' do
