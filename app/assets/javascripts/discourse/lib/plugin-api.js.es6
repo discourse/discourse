@@ -48,6 +48,7 @@ import {
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
+import { on } from "@ember/object/evented";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = "0.8.37";
@@ -1059,12 +1060,12 @@ function decorate(klass, evt, cb, id) {
   }
 
   const mixin = {};
-  mixin["_decorate_" + _decorateId++] = function($elem) {
+  mixin["_decorate_" + _decorateId++] = on(evt, function($elem) {
     $elem = $elem || $(this.element);
     if ($elem) {
       cb($elem);
     }
-  }.on(evt);
+  });
   klass.reopen(mixin);
 }
 

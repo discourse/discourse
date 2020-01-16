@@ -1,10 +1,7 @@
 import { alias, not } from "@ember/object/computed";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNameBindings: [":popup-tip", "good", "bad", "lastShownAt::hide"],

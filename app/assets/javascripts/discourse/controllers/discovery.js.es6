@@ -3,6 +3,7 @@ import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   discoveryTopics: inject("discovery/topics"),
@@ -16,9 +17,10 @@ export default Controller.extend({
 
   loadedAllItems: not("discoveryTopics.model.canLoadMore"),
 
+  @observes("loadedAllItems")
   _showFooter: function() {
     this.set("application.showFooter", this.loadedAllItems);
-  }.observes("loadedAllItems"),
+  },
 
   showMoreUrl(period) {
     let url = "",

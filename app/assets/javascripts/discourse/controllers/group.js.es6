@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 import { readOnly } from "@ember/object/computed";
 

@@ -6,8 +6,7 @@ import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 /*global Mousetrap:true */
-import {
-  default as discourseComputed,
+import discourseComputed, {
   on,
   observes
 } from "discourse-common/utils/decorators";

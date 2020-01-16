@@ -1,8 +1,5 @@
 import NotificationOptionsComponent from "select-kit/components/notifications-button";
-import {
-  default as discourseComputed,
-  on
-} from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { topicLevels } from "discourse/lib/notification-levels";
 
 export default NotificationOptionsComponent.extend({

@@ -3,6 +3,7 @@ import { alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   filter: null,
@@ -43,10 +44,11 @@ export default Controller.extend({
     this.set("model", matchesByAction);
   },
 
+  @observes("filter")
   filterContent: discourseDebounce(function() {
     this.filterContentNow();
     this.set("filtered", !isEmpty(this.filter));
-  }, 250).observes("filter"),
+  }, 250),
 
   actions: {
     clearFilter() {

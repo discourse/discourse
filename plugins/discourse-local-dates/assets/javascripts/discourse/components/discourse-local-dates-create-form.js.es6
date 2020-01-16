@@ -4,9 +4,10 @@ import Component from "@ember/component";
 /* global Pikaday:true */
 import { propertyNotEqual } from "discourse/lib/computed";
 import loadScript from "discourse/lib/load-script";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import computed from "ember-addons/ember-computed-decorators";
 import { cookAsync } from "discourse/lib/text";
 import discourseDebounce from "discourse/lib/debounce";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   timeFormat: "HH:mm:ss",
@@ -51,6 +52,7 @@ export default Component.extend({
     });
   },
 
+  @observes("markup")
   _renderPreview: discourseDebounce(function() {
     const markup = this.markup;
 
@@ -62,7 +64,7 @@ export default Component.extend({
         );
       });
     }
-  }, 250).observes("markup"),
+  }, 250),
 
   @computed("date", "toDate", "toTime")
   isRange(date, toDate, toTime) {

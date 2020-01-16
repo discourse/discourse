@@ -1,6 +1,6 @@
 import { alias, equal } from "@ember/object/computed";
 import Component from "@ember/component";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import {
   PRIVATE_MESSAGE,
   CREATE_TOPIC,

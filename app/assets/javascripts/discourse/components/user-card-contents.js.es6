@@ -2,10 +2,7 @@ import { isEmpty } from "@ember/utils";
 import { alias, gte, and, gt, not, or } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import Component from "@ember/component";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import User from "discourse/models/user";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { durationTiny } from "discourse/lib/formatter";

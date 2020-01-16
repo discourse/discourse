@@ -3,8 +3,7 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import DiscourseURL from "discourse/lib/url";
 import { extractError } from "discourse/lib/ajax-error";
-import {
-  default as discourseComputed,
+import discourseComputed, {
   on,
   observes
 } from "discourse-common/utils/decorators";

@@ -1,7 +1,6 @@
 import { alias } from "@ember/object/computed";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import {
-  default as discourseComputed,
+import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";

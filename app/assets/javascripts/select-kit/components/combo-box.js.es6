@@ -1,8 +1,5 @@
 import SingleSelectComponent from "select-kit/components/single-select";
-import {
-  on,
-  default as discourseComputed
-} from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 export default SingleSelectComponent.extend({
   pluginApiIdentifiers: ["combo-box"],

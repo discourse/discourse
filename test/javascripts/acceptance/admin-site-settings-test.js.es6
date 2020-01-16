@@ -1,5 +1,5 @@
 import { acceptance } from "helpers/qunit-helpers";
-import { default as siteSettingFixture } from "fixtures/site_settings";
+import siteSettingFixture from "fixtures/site_settings";
 
 var titleOverride = undefined;
 

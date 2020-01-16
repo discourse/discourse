@@ -3,11 +3,7 @@ import { debounce } from "@ember/runloop";
 import { cancel } from "@ember/runloop";
 import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
-import {
-  default as computed,
-  observes,
-  on
-} from "ember-addons/ember-computed-decorators";
+import computed, { observes, on } from "ember-addons/ember-computed-decorators";
 
 export const keepAliveDuration = 10000;
 export const bufferTime = 3000;

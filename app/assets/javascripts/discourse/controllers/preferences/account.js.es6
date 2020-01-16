@@ -2,7 +2,7 @@ import { not, or, gt } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";

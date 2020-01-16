@@ -1,7 +1,7 @@
 import { alias, not } from "@ember/object/computed";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Site from "discourse/models/site";

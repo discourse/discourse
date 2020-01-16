@@ -1,8 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import {
-  default as EmailPreview,
-  oneWeekAgo
-} from "admin/models/email-preview";
+import EmailPreview, { oneWeekAgo } from "admin/models/email-preview";
 
 export default DiscourseRoute.extend({
   model() {
