@@ -80,6 +80,9 @@ class GroupsController < ApplicationController
       type_filters = type_filters - [:my, :owner]
     end
 
+    # count the total before doing pagination
+    total = groups.count
+
     page = params[:page].to_i
     page_size = MobileDetection.mobile_device?(request.user_agent) ? 15 : 36
     groups = groups.offset(page * page_size).limit(page_size)
@@ -93,14 +96,14 @@ class GroupsController < ApplicationController
       extras: {
         type_filters: type_filters
       },
-      total_rows_groups: groups.count,
+      total_rows_groups: total,
       load_more_groups: groups_path(
         page: page + 1,
         type: type,
         order: order,
         asc: params[:asc],
         filter: filter
-      ),
+      )
     )
   end
 
