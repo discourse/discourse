@@ -152,7 +152,9 @@ module TopicGuardian
       return authenticated? && topic.all_allowed_users.where(id: @user.id).exists?
     end
 
-    can_see_category?(topic.category)
+    category = topic.category
+    can_see_category?(category) &&
+      (!category.read_restricted || !is_staged? || topic.user == user)
   end
 
   def can_get_access_to_topic?(topic)
