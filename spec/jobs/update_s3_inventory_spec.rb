@@ -22,7 +22,7 @@ describe Jobs::UpdateS3Inventory do
 
     @client.expects(:put_bucket_policy).with(
       bucket: "bucket",
-      policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"InventoryAndAnalyticsPolicy\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":[\"s3:PutObject\"],\"Resource\":[\"arn:aws:s3:::bucket/#{path}/*\"],\"Condition\":{\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:s3:::bucket\"},\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}}}]}"
+      policy: %Q|{"Version":"2012-10-17","Statement":[{"Sid":"InventoryAndAnalyticsPolicy","Effect":"Allow","Principal":{"Service":"s3.amazonaws.com"},"Action":["s3:PutObject"],"Resource":["arn:aws:s3:::bucket/#{path}/*"],"Condition":{"ArnLike":{"aws:SourceArn":"arn:aws:s3:::bucket"},"StringEquals":{"s3:x-amz-acl":"bucket-owner-full-control"}}}]}|
     )
     @client.expects(:put_bucket_inventory_configuration)
     @client.expects(:put_bucket_inventory_configuration).with(
@@ -51,4 +51,12 @@ describe Jobs::UpdateS3Inventory do
     described_class.new.execute(nil)
   end
 
+  it "doesn't update the policy with s3_configure_inventory_policy disabled" do
+    SiteSetting.s3_configure_inventory_policy = false
+
+    @client.expects(:put_bucket_policy).never
+    @client.expects(:put_bucket_inventory_configuration).never
+
+    described_class.new.execute(nil)
+  end
 end
