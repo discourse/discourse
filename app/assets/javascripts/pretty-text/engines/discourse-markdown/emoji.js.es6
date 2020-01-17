@@ -241,7 +241,7 @@ function applyEmoji(
       result[result.length - 1].type === "emoji" &&
       result.filter(r => r.type === "emoji").length <= 3
     ) {
-      let allEmojiLine = true;
+      let onlyEmojiLine = true;
       let index = 0;
 
       const checkNextToken = t => {
@@ -250,7 +250,7 @@ function applyEmoji(
         }
 
         if (!["emoji", "text"].includes(t.type)) {
-          allEmojiLine = false;
+          onlyEmojiLine = false;
         }
 
         // a text token should always have an emoji before
@@ -260,11 +260,11 @@ function applyEmoji(
           ((result[index - 1] && result[index - 1].type !== "emoji") ||
             t.content !== " ")
         ) {
-          allEmojiLine = false;
+          onlyEmojiLine = false;
         }
 
         // exit as soon as possible
-        if (allEmojiLine) {
+        if (onlyEmojiLine) {
           index += 1;
           checkNextToken(result[index]);
         }
@@ -272,10 +272,10 @@ function applyEmoji(
 
       checkNextToken(result[index]);
 
-      if (allEmojiLine) {
+      if (onlyEmojiLine) {
         result.forEach(r => {
           if (r.type === "emoji") {
-            applyAllEmojiClass(r);
+            applyOnlyEmojiClass(r);
           }
         });
       }
@@ -285,7 +285,7 @@ function applyEmoji(
   return result;
 }
 
-function applyAllEmojiClass(token) {
+function applyOnlyEmojiClass(token) {
   token.attrs.forEach(attr => {
     if (attr[0] === "class") {
       attr[1] = `${attr[1]} only-emoji`;
