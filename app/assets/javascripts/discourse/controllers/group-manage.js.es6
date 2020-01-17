@@ -1,6 +1,6 @@
 import { inject as service } from "@ember/service";
 import Controller from "@ember/controller";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   router: service(),

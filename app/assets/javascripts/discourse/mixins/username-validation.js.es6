@@ -1,7 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import discourseDebounce from "discourse/lib/debounce";
 import { setting } from "discourse/lib/computed";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 import EmberObject from "@ember/object";
 import User from "discourse/models/user";

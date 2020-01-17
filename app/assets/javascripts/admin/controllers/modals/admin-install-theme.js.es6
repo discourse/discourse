@@ -4,10 +4,7 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { THEMES, COMPONENTS } from "admin/models/theme";
 import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
 import { set } from "@ember/object";

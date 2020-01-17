@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import showModal from "discourse/lib/show-modal";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   @discourseComputed("model.@each.id")

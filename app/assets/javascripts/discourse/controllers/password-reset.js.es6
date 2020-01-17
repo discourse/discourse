@@ -1,6 +1,6 @@
 import { alias, or, readOnly } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
 import PasswordValidation from "discourse/mixins/password-validation";

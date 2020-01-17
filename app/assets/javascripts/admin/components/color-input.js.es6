@@ -1,6 +1,7 @@
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
-import { default as loadScript, loadCSS } from "discourse/lib/load-script";
+import loadScript, { loadCSS } from "discourse/lib/load-script";
+import { observes } from "discourse-common/utils/decorators";
 
 /**
   An input field for a color.
@@ -11,6 +12,8 @@ import { default as loadScript, loadCSS } from "discourse/lib/load-script";
 **/
 export default Component.extend({
   classNames: ["color-picker"],
+
+  @observes("hexValue", "brightnessValue", "valid")
   hexValueChanged: function() {
     var hex = this.hexValue;
     let text = this.element.querySelector("input.hex-input");
@@ -33,7 +36,7 @@ export default Component.extend({
     } else {
       text.setAttribute("style", "");
     }
-  }.observes("hexValue", "brightnessValue", "valid"),
+  },
 
   didInsertElement() {
     loadScript("/javascripts/spectrum.js").then(() => {

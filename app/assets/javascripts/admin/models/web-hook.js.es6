@@ -2,10 +2,7 @@ import { isEmpty } from "@ember/utils";
 import RestModel from "discourse/models/rest";
 import Category from "discourse/models/category";
 import Group from "discourse/models/group";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Site from "discourse/models/site";
 
 export default RestModel.extend({

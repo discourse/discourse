@@ -5,8 +5,8 @@ import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { setting } from "discourse/lib/computed";
-import {
-  default as discourseComputed,
+import discourseComputed, {
+  observes,
   on
 } from "discourse-common/utils/decorators";
 import { emailValid } from "discourse/lib/utilities";
@@ -171,6 +171,7 @@ export default Controller.extend(
         : providerName;
     },
 
+    @observes("emailValidation", "accountEmail")
     prefillUsername: function() {
       if (this.prefilledUsername) {
         // If username field has been filled automatically, and email field just changed,
@@ -189,7 +190,7 @@ export default Controller.extend(
         // then look for a registered username that matches the email.
         this.fetchExistingUsername();
       }
-    }.observes("emailValidation", "accountEmail"),
+    },
 
     // Determines whether at least one login button is enabled
     @discourseComputed

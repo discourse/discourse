@@ -1,6 +1,6 @@
 import { or, and } from "@ember/object/computed";
 import EmberObject from "@ember/object";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default EmberObject.extend({
   postCountsPresent: or("topic.unread", "topic.displayNewPosts"),

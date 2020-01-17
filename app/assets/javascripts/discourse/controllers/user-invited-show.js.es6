@@ -3,10 +3,7 @@ import Controller from "@ember/controller";
 import Invite from "discourse/models/invite";
 import discourseDebounce from "discourse/lib/debounce";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   user: null,

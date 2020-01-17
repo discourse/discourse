@@ -509,7 +509,7 @@ class PostAlerter
 
   def notify_users(users, type, post, opts = {})
     users = [users] unless users.is_a?(Array)
-    users = users.reject { |u| u.staged? } if post.topic&.private_message?
+    users.reject!(&:staged?) if post.topic&.private_message?
 
     warn_if_not_sidekiq
 

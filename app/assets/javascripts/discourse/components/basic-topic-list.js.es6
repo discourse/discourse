@@ -1,4 +1,4 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { alias, not } from "@ember/object/computed";
 import Component from "@ember/component";
 
@@ -16,9 +16,10 @@ export default Component.extend({
     }
   },
 
+  @observes("topicList.[]")
   _topicListChanged: function() {
     this._initFromTopicList(this.topicList);
-  }.observes("topicList.[]"),
+  },
 
   _initFromTopicList(topicList) {
     if (topicList !== null) {

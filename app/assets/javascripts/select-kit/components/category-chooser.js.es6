@@ -3,7 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-const { get, isNone, isEmpty } = Ember;
+const { get, isPresent, isEmpty } = Ember;
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-chooser"],
@@ -55,15 +55,13 @@ export default ComboBoxComponent.extend({
 
   @discourseComputed("rootNone", "rootNoneLabel")
   none(rootNone, rootNoneLabel) {
-    if (
+    if (isPresent(rootNone)) {
+      return rootNoneLabel || "category.none";
+    } else if (
       this.siteSettings.allow_uncategorized_topics ||
       this.allowUncategorized
     ) {
-      if (!isNone(rootNone)) {
-        return rootNoneLabel || "category.none";
-      } else {
-        return Category.findUncategorized();
-      }
+      return Category.findUncategorized();
     } else {
       return "category.choose";
     }

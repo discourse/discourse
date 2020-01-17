@@ -111,9 +111,6 @@ a.badge-category {
     #edit-title {
       flex: 1 1 auto;
     }
-    .private-message-glyph {
-      margin: 5px 5px 0 0;
-    }
     .category-chooser,
     .mini-tag-chooser {
       flex: 1 1 49%;
@@ -131,20 +128,30 @@ a.badge-category {
   }
 }
 
-.private-message-glyph {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
-  margin-right: 5px;
-}
-
-.archetype-private_message #topic-title .edit-topic-title .tag-chooser {
-  margin-left: 19px;
-}
-
 .private_message {
   #topic-title {
+    .private-message-glyph {
+      display: inline-block;
+      color: dark-light-choose($primary-low-mid, $secondary-high);
+    }
     .edit-topic-title {
+      position: relative;
+      .private-message-glyph {
+        position: absolute;
+        left: 0.75em;
+        top: 5px;
+      }
       #edit-title {
         width: calc(100% - 50px);
+        padding-left: 2.25em;
+      }
+      .mini-tag-chooser {
+        margin-left: 0;
+        @include breakpoint(mobile-large, min-width) {
+          .selected-name {
+            max-width: 500px;
+          }
+        }
       }
     }
   }

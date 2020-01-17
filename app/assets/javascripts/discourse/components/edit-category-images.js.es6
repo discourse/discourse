@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default buildCategoryPanel("images").extend({
   @discourseComputed("category.uploaded_background.url")

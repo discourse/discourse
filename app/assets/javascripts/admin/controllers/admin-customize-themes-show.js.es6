@@ -7,7 +7,7 @@ import {
   notEmpty
 } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { url } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";

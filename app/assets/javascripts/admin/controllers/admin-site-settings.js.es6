@@ -2,6 +2,7 @@ import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   filter: null,
@@ -76,13 +77,14 @@ export default Controller.extend({
     );
   },
 
+  @observes("filter", "onlyOverridden", "model")
   filterContent: discourseDebounce(function() {
     if (this._skipBounce) {
       this.set("_skipBounce", false);
     } else {
       this.filterContentNow();
     }
-  }, 250).observes("filter", "onlyOverridden", "model"),
+  }, 250),
 
   actions: {
     clearFilter() {
