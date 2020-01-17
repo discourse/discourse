@@ -1,4 +1,10 @@
-<h3 class="suggested-topics-title">{{{suggestedTitle}}}</h3>
+<h3 class="suggested-topics-title">
+  {{private-message-glyph
+    link=suggestedTitleLink
+    label=suggestedTitleLabel
+  }}
+</h3>
+
 <div class="topics">
   {{#if topic.isPrivateMessage}}
     {{basic-topic-list
