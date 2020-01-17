@@ -301,6 +301,10 @@ RSpec.describe UploadCreator do
             expect(upload.secure).to eq(false)
             upload.destroy!
 
+            upload = UploadCreator.new(file_from_fixtures(filename), filename, for_gravatar: true).create_for(user.id)
+            expect(upload.secure).to eq(false)
+            upload.destroy!
+
             upload = UploadCreator.new(file_from_fixtures(filename), filename, for_theme: true).create_for(user.id)
             expect(upload.secure).to eq(false)
             upload.destroy!
@@ -340,6 +344,22 @@ RSpec.describe UploadCreator do
         context "if type of upload is in the composer" do
           let(:opts) { { type: "composer" } }
           it "sets the upload to secure and sets the original_sha1 column, because we don't know the context of the composer" do
+            expect(result.secure).to eq(true)
+            expect(result.original_sha1).not_to eq(nil)
+          end
+        end
+
+        context "if the upload is for a PM" do
+          let(:opts) { { for_private_message: true } }
+          it "sets the upload to secure and sets the original_sha1" do
+            expect(result.secure).to eq(true)
+            expect(result.original_sha1).not_to eq(nil)
+          end
+        end
+
+        context "if the upload is for a group message" do
+          let(:opts) { { for_group_message: true } }
+          it "sets the upload to secure and sets the original_sha1" do
             expect(result.secure).to eq(true)
             expect(result.original_sha1).not_to eq(nil)
           end

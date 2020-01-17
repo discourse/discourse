@@ -28,7 +28,7 @@ class UploadSecurity
   private
 
   def uploading_in_public_context?
-    @upload.for_theme || @upload.for_site_setting || public_type?
+    @upload.for_theme || @upload.for_site_setting || @upload.for_gravatar || public_type?
   end
 
   def supported_media?
@@ -48,7 +48,7 @@ class UploadSecurity
     if @upload.access_control_post_id.present?
       return access_control_post_has_secure_media?
     end
-    uploading_in_composer? || @upload.for_private_message || @upload.secure?
+    uploading_in_composer? || @upload.for_private_message || @upload.for_group_message || @upload.secure?
   end
 
   # whether the upload should remain secure or not after posting depends on its context,
