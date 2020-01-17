@@ -1,9 +1,15 @@
-<h3 class="suggested-topics-title">{{{relatedTitle}}}</h3>
+<h3 class="suggested-topics-title">
+  {{private-message-glyph
+    link=relatedTitleLink
+    label="related_messages.title"
+  }}
+</h3>
+
 <div class="topics">
-{{basic-topic-list
-  hideCategory="true"
-  showPosters="true"
-  topics=topic.relatedMessages}}
+  {{basic-topic-list
+    hideCategory="true"
+    showPosters="true"
+    topics=topic.relatedMessages}}
 </div>
 
 {{#if targetUser}}
