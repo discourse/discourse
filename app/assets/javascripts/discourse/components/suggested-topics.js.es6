@@ -17,10 +17,6 @@ export default Component.extend({
     }
   }),
 
-  suggestedTitleLink: computed("topic", function() {
-    return this.currentUser && this.currentUser.pmPath(this.topic);
-  }),
-
   @discourseComputed("topic", "topicTrackingState.messageCount")
   browseMoreMessage(topic) {
     // TODO decide what to show for pms

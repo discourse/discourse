@@ -18,6 +18,7 @@
         {{#if editingTopic}}
           <div class="edit-topic-title">
             {{private-message-glyph isVisible=model.isPrivateMessage}}
+
             {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
 
             {{#if showCategoryChooser}}
@@ -54,15 +55,14 @@
           <h1 data-topic-id="{{unbound model.id}}">
             {{#unless model.is_warning}}
               {{#if siteSettings.enable_personal_messages}}
-                {{#if model.isPrivateMessage}}
-                  <a href={{pmPath}} title="{{i18n 'topic_statuses.personal_message.title'}}" aria-label={{i18n 'user.messages.inbox'}}>
-                    <span class="private-message-glyph">{{d-icon "envelope"}}</span>
-                  </a>
-                {{/if}}
+                {{private-message-glyph
+                  isVisible=model.isPrivateMessage
+                  href=pmPath
+                  title="topic_statuses.personal_message.title"
+                  ariaLabel="user.messages.inbox"
+                }}
               {{else}}
-                {{#if model.isPrivateMessage}}
-                  <span class="private-message-glyph">{{d-icon "envelope"}}</span>
-                {{/if}}
+                {{private-message-glyph isVisible=model.isPrivateMessage}}
               {{/if}}
             {{/unless}}
 
