@@ -14,6 +14,13 @@ class ReviewableScore < ActiveRecord::Base
     )
   end
 
+  # When extending post action flags, we need to call this method in order to
+  # get the latests flags.
+  def self.reload_types
+    @types = nil
+    types
+  end
+
   def self.statuses
     @statuses ||= Enum.new(
       pending: 0,
