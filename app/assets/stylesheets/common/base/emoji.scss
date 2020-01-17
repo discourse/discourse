@@ -10,6 +10,13 @@ img.emoji.only-emoji {
   margin: 0.5em 0;
 }
 
+.md-table {
+  img.emoji.only-emoji {
+    width: 20px;
+    height: 20px;
+  }
+}
+
 small img.emoji,
 sub img.emoji,
 sup img.emoji {
