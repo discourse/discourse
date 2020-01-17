@@ -25,7 +25,23 @@ RSpec.describe SessionController do
 
       it "only works for admins" do
         get "/session/email-login/#{email_token.token}.json"
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(500)
+
+        user.update(admin: true)
+        get "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "when SSO enabled" do
+      before do
+        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.enable_sso = true
+      end
+
+      it "only works for admins" do
+        get "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(500)
 
         user.update(admin: true)
         get "/session/email-login/#{email_token.token}.json"
@@ -56,7 +72,7 @@ RSpec.describe SessionController do
 
         get "/session/email-login/#{email_token.token}.json"
 
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(500)
       end
 
       it 'fails when local logins is disabled' do
@@ -111,7 +127,7 @@ RSpec.describe SessionController do
 
       it "only works for admins" do
         post "/session/email-login/#{email_token.token}.json"
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(500)
 
         user.update(admin: true)
         post "/session/email-login/#{email_token.token}.json"
@@ -165,7 +181,7 @@ RSpec.describe SessionController do
 
         post "/session/email-login/#{email_token.token}.json"
 
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(500)
         expect(session[:current_user_id]).to eq(nil)
       end
 
@@ -1118,6 +1134,21 @@ RSpec.describe SessionController do
       it_behaves_like "failed to continue local login"
     end
 
+    context 'local login via email is disabled' do
+      before do
+        SiteSetting.enable_local_logins_via_email = false
+      end
+      it 'doesnt matter, logs in correctly' do
+        events = DiscourseEvent.track_events do
+          post "/session.json", params: {
+            login: user.username, password: 'myawesomepassword'
+          }
+        end
+
+        expect(response.status).to eq(200)
+      end
+    end
+
     context 'when email is confirmed' do
       before do
         token = user.email_tokens.find_by(email: user.email)
@@ -1765,6 +1796,28 @@ RSpec.describe SessionController do
           }
         end
         it_behaves_like "failed to continue local login"
+      end
+
+      context "local logins are disabled" do
+        before do
+          SiteSetting.enable_local_logins = false
+
+          post "/session.json", params: {
+            login: user.username, password: 'myawesomepassword'
+          }
+        end
+        it_behaves_like "failed to continue local login"
+      end
+
+      context "local logins via email are disabled" do
+        before do
+          SiteSetting.enable_local_logins_via_email = false
+        end
+        it "does not matter, generates a new token for a made up username" do
+          expect do
+            post "/session/forgot_password.json", params: { login: user.username }
+          end.to change(EmailToken, :count)
+        end
       end
 
       it "generates a new token for a made up username" do
