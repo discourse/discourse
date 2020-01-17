@@ -6,7 +6,7 @@ class SessionController < ApplicationController
     render body: nil, status: 500
   end
 
-  before_action :check_local_login_allowed, only: %i(create forgot_password email_login email_login_info)
+  before_action :check_local_login_allowed, only: %i(create forgot_password)
   before_action :rate_limit_login, only: %i(create email_login)
   before_action :rate_limit_second_factor_totp, only: %i(create email_login)
   skip_before_action :redirect_to_login_if_required
@@ -303,11 +303,9 @@ class SessionController < ApplicationController
   def email_login_info
     token = params[:token]
     matched_token = EmailToken.confirmable(token)
+    user = matched_token&.user
 
-    if !SiteSetting.enable_local_logins_via_email &&
-          !matched_token.user.admin? # admin-login uses this route, so allow them even if disabled
-      raise Discourse::NotFound
-    end
+    check_local_login_allowed(user: user, check_login_via_email: true)
 
     if matched_token
       response = {
@@ -343,13 +341,10 @@ class SessionController < ApplicationController
   def email_login
     token = params[:token]
     matched_token = EmailToken.confirmable(token)
-
-    if !SiteSetting.enable_local_logins_via_email &&
-      !matched_token&.user&.admin? # admin-login uses this route, so allow them even if disabled
-      raise Discourse::NotFound
-    end
-
     user = matched_token&.user
+
+    check_local_login_allowed(user: user, check_login_via_email: true)
+
     if user.present? && !authenticate_second_factor(user)
       return render(json: @second_factor_failure_payload)
     end
@@ -436,8 +431,13 @@ class SessionController < ApplicationController
 
   protected
 
-  def check_local_login_allowed
-    if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
+  def check_local_login_allowed(user: nil, check_login_via_email: false)
+    # admin-login can get around enabled SSO/disabled local logins
+    return if user&.admin?
+
+    if (check_login_via_email && !SiteSetting.enable_local_logins_via_email) ||
+        SiteSetting.enable_sso ||
+        !SiteSetting.enable_local_logins
       raise LocalLoginNotAllowed, "SSO takes over local login or the local login is disallowed."
     end
   end
