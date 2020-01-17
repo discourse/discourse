@@ -2,8 +2,6 @@
 
 class RenameReplyIdColumn < ActiveRecord::Migration[6.0]
   def up
-    Migration::ColumnDropper.mark_readonly(:post_replies, :reply_id)
-
     add_column :post_replies, :reply_post_id, :integer
 
     execute <<~SQL
