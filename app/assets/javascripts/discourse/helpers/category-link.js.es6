@@ -27,6 +27,7 @@ function categoryStripe(color, classes) {
     @param {Boolean} [opts.link] If false, the category badge will not be a link.
     @param {Boolean} [opts.hideParent] If true, parent category will be hidden in the badge.
     @param {Boolean} [opts.recursive] If true, the function will be called recursively for all parent categories
+    @param {Number}  [opts.depth] Current category depth, used for limiting recursive calls
 **/
 export function categoryBadgeHTML(category, opts) {
   opts = opts || {};
@@ -39,9 +40,10 @@ export function categoryBadgeHTML(category, opts) {
   )
     return "";
 
-  if (opts.recursive) {
-    const parentCategoryId = category.parent_category_id;
-    const parentCategory = Category.findById(parentCategoryId);
+  const depth = (opts.depth || 1) + 1;
+  if (opts.recursive && depth <= Discourse.SiteSettings.max_category_nesting) {
+    const parentCategory = Category.findById(category.parent_category_id);
+    opts.depth = depth;
     return categoryBadgeHTML(parentCategory, opts) + _renderer(category, opts);
   }
 
