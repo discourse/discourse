@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - v*
 
 jobs:
   build:
@@ -37,3 +39,16 @@ jobs:
 
       - name: RSpec
         run: bundle exec rspec
+
+  publish:
+    if: contains(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Release Gem
+        uses: cadwallion/publish-rubygems-action@5dfdb61
+        env:
+          RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
