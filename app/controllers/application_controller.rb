@@ -483,7 +483,7 @@ class ApplicationController < ActionController::Base
 
   def post_ids_including_replies
     post_ids  = params[:post_ids].map(&:to_i)
-    post_ids |= PostReply.where(post_id: params[:reply_post_ids]).pluck(:reply_id) if params[:reply_post_ids]
+    post_ids |= PostReply.where(post_id: params[:reply_post_ids]).pluck(:reply_post_id) if params[:reply_post_ids]
     post_ids
   end
 
