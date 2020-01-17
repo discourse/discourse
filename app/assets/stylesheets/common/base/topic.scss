@@ -128,13 +128,16 @@ a.badge-category {
   }
 }
 
+.private-message-glyph {
+  color: dark-light-choose($primary-low-mid, $secondary-high);
+}
+
 .private-message-glyph-wrapper {
   float: left;
 
   .private-message-glyph {
-    margin: 5px 5px 0 0;
+    margin: 0 5px 0 0;
     display: inline-block;
-    color: dark-light-choose($primary-low-mid, $secondary-high);
   }
 }
 
@@ -145,7 +148,7 @@ a.badge-category {
       .private-message-glyph {
         position: absolute;
         left: 0.75em;
-        top: 5px;
+        top: 6px;
       }
       #edit-title {
         width: calc(100% - 50px);
