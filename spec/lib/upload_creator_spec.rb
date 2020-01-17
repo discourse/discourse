@@ -295,8 +295,8 @@ RSpec.describe UploadCreator do
           expect(result.original_sha1).not_to eq(nil)
         end
 
-        context "when uploading in a public context (theme, site setting, avatar)" do
-          it "does not set the upload to secure" do
+        context "when uploading in a public context (theme, site setting, avatar, custom_emoji, profile_background, card_background)" do
+          def expect_no_public_context_uploads_to_be_secure
             upload = UploadCreator.new(file_from_fixtures(filename), filename, for_site_setting: true).create_for(user.id)
             expect(upload.secure).to eq(false)
             upload.destroy!
@@ -308,6 +308,32 @@ RSpec.describe UploadCreator do
             upload = UploadCreator.new(file_from_fixtures(filename), filename, type: "avatar").create_for(user.id)
             expect(upload.secure).to eq(false)
             upload.destroy!
+
+            upload = UploadCreator.new(file_from_fixtures(filename), filename, type: "custom_emoji").create_for(user.id)
+            expect(upload.secure).to eq(false)
+            upload.destroy!
+
+            upload = UploadCreator.new(file_from_fixtures(filename), filename, type: "profile_background").create_for(user.id)
+            expect(upload.secure).to eq(false)
+            upload.destroy!
+
+            upload = UploadCreator.new(file_from_fixtures(filename), filename, type: "card_background").create_for(user.id)
+            expect(upload.secure).to eq(false)
+            upload.destroy!
+          end
+
+          it "does not set the upload to secure" do
+            expect_no_public_context_uploads_to_be_secure
+          end
+
+          context "when login required" do
+            before do
+              SiteSetting.login_required = true
+            end
+
+            it "does not set the upload to secure" do
+              expect_no_public_context_uploads_to_be_secure
+            end
           end
         end
 
