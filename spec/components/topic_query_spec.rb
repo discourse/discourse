@@ -168,6 +168,12 @@ describe TopicQuery do
         Fabricate(:topic, category: subcategory)
         Fabricate(:topic, category: subsubcategory)
 
+        SiteSetting.max_category_nesting = 2
+        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(3)
+        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(3)
+        expect(TopicQuery.new(moderator, category: subsubcategory.id).list_latest.topics.size).to eq(2)
+
+        SiteSetting.max_category_nesting = 3
         expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(4)
         expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(3)
         expect(TopicQuery.new(moderator, category: subsubcategory.id).list_latest.topics.size).to eq(2)

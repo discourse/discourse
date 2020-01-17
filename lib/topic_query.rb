@@ -678,16 +678,17 @@ class TopicQuery
         sql = <<~SQL
             categories.id IN (
               WITH RECURSIVE subcategories AS (
-                SELECT :category_id id
+                SELECT :category_id id, 1 depth
                 UNION
-                SELECT categories.id
+                SELECT categories.id, (subcategories.depth + 1) depth
                 FROM categories
                 JOIN subcategories ON subcategories.id = categories.parent_category_id
-              )
+                WHERE subcategories.depth < :max_category_nesting
+            )
               SELECT subcategories.id FROM subcategories
             ) AND (categories.id = :category_id OR topics.id != categories.topic_id)
           SQL
-        result = result.where(sql, category_id: category_id)
+        result = result.where(sql, category_id: category_id, max_category_nesting: SiteSetting.max_category_nesting)
       end
       result = result.references(:categories)
 
