@@ -817,10 +817,10 @@ class Post < ActiveRecord::Base
       WITH RECURSIVE breadcrumb(id, level) AS (
         SELECT :post_id, 0
         UNION
-        SELECT reply_id, level + 1
+        SELECT reply_post_id, level + 1
         FROM post_replies AS r
           JOIN breadcrumb AS b ON (r.post_id = b.id)
-        WHERE r.post_id <> r.reply_id
+        WHERE r.post_id <> r.reply_post_id
               AND b.level < :max_reply_level
       ), breadcrumb_with_count AS (
           SELECT
@@ -828,8 +828,8 @@ class Post < ActiveRecord::Base
             level,
             COUNT(*) AS count
           FROM post_replies AS r
-            JOIN breadcrumb AS b ON (r.reply_id = b.id)
-          WHERE r.reply_id <> r.post_id
+            JOIN breadcrumb AS b ON (r.reply_post_id = b.id)
+          WHERE r.reply_post_id <> r.post_id
           GROUP BY id, level
       )
       SELECT id, level
@@ -1063,7 +1063,7 @@ class Post < ActiveRecord::Base
 
   def create_reply_relationship_with(post)
     return if post.nil? || self.deleted_at.present?
-    post_reply = post.post_replies.new(reply_id: id)
+    post_reply = post.post_replies.new(reply_post_id: id)
     if post_reply.save
       if Topic.visible_post_types.include?(self.post_type)
         Post.where(id: post.id).update_all ['reply_count = reply_count + 1']

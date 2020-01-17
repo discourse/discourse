@@ -162,7 +162,7 @@ RSpec.describe TopicsController do
             user = sign_in(moderator)
             p1 = Fabricate(:post, topic: topic, user: user)
             p2 = Fabricate(:post, topic: topic, user: user, reply_to_post_number: p1.post_number)
-            PostReply.create(post_id: p1.id, reply_id: p2.id)
+            PostReply.create(post_id: p1.id, reply_post_id: p2.id)
 
             post "/t/#{topic.id}/move-posts.json", params: {
               title: 'new topic title',
