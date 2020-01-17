@@ -128,12 +128,18 @@ a.badge-category {
   }
 }
 
+.private-message-glyph-wrapper {
+  float: left;
+
+  .private-message-glyph {
+    margin: 5px 5px 0 0;
+    display: inline-block;
+    color: dark-light-choose($primary-low-mid, $secondary-high);
+  }
+}
+
 .private_message {
   #topic-title {
-    .private-message-glyph {
-      display: inline-block;
-      color: dark-light-choose($primary-low-mid, $secondary-high);
-    }
     .edit-topic-title {
       position: relative;
       .private-message-glyph {

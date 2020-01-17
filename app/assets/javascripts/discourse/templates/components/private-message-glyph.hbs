@@ -1,0 +1,16 @@
+{{#if link}}
+  <a href={{link}} aria-label={{i18n "user.messages.inbox"}} class="private-message-glyph-wrapper">
+    {{d-icon "envelope" class="private-message-glyph"}}
+  </a>
+  {{#if label}}
+    <span>{{i18n label}}</span>
+  {{/if}}
+{{else}}
+  {{#if label}}
+    <span>{{i18n label}}</span>
+  {{else}}
+    <span class="private-message-glyph-wrapper">
+      {{d-icon "envelope" class="private-message-glyph"}}
+    </span>
+  {{/if}}
+{{/if}}
