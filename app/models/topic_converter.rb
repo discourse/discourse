@@ -99,6 +99,8 @@ class TopicConverter
   end
 
   def update_post_uploads_secure_status
-    TopicUploadSecurityManager.new(@topic).run
+    DB.after_commit do
+      Jobs.enqueue(:update_topic_upload_security, topic_id: @topic.id)
+    end
   end
 end

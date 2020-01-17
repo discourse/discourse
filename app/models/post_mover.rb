@@ -499,7 +499,9 @@ class PostMover
   end
 
   def update_upload_security_status
-    TopicUploadSecurityManager.new(@destination_topic).run
+    DB.after_commit do
+      Jobs.enqueue(:update_topic_upload_security, topic_id: @destination_topic.id)
+    end
   end
 
   def watch_new_topic
