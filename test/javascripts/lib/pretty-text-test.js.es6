@@ -395,7 +395,7 @@ QUnit.test("Quotes", assert => {
   assert.cookedOptions(
     '[quote="eviltrout, post: 1"]\na quote\n\nsecond line\n\nthird line\n[/quote]',
     { topicId: 2 },
-    `<aside class=\"quote no-group\" data-post=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"eviltrout\" data-post=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  eviltrout:</div>
@@ -411,7 +411,7 @@ QUnit.test("Quotes", assert => {
   assert.cookedOptions(
     '[quote="bob, post:1"]\nmy quote\n[/quote]',
     { topicId: 2, lookupAvatar: function() {} },
-    `<aside class=\"quote no-group\" data-post=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"bob\" data-post=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  bob:</div>
@@ -440,7 +440,7 @@ QUnit.test("Quotes", assert => {
   assert.cookedOptions(
     `[quote="bob, post:1, topic:1"]\ntest quote\n[/quote]`,
     { lookupPrimaryUserGroupByPostNumber: () => "aUserGroup" },
-    `<aside class="quote group-aUserGroup" data-post="1" data-topic="1">
+    `<aside class="quote group-aUserGroup" data-username="bob" data-post="1" data-topic="1">
 <div class="title">
 <div class="quote-controls"></div>
  bob:</div>
@@ -1190,7 +1190,7 @@ QUnit.test("quotes", assert => {
 QUnit.test("quote formatting", assert => {
   assert.cooked(
     '[quote="EvilTrout, post:123, topic:456, full:true"]\n[sam]\n[/quote]',
-    `<aside class=\"quote no-group\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
+    `<aside class=\"quote no-group\" data-username=\"EvilTrout\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  EvilTrout:</div>
@@ -1203,7 +1203,7 @@ QUnit.test("quote formatting", assert => {
 
   assert.cooked(
     '[quote="eviltrout, post:1, topic:1"]\nabc\n[/quote]',
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"eviltrout\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  eviltrout:</div>
@@ -1216,7 +1216,7 @@ QUnit.test("quote formatting", assert => {
 
   assert.cooked(
     '[quote="eviltrout, post:1, topic:1"]\nabc\n[/quote]\nhello',
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"eviltrout\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  eviltrout:</div>
@@ -1230,12 +1230,12 @@ QUnit.test("quote formatting", assert => {
 
   assert.cooked(
     '[quote="Alice, post:1, topic:1"]\n[quote="Bob, post:2, topic:1"]\n[/quote]\n[/quote]',
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"Alice\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Alice:</div>
 <blockquote>
-<aside class=\"quote no-group\" data-post=\"2\" data-topic=\"1\">
+<aside class=\"quote no-group\" data-username=\"Bob\" data-post=\"2\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Bob:</div>
@@ -1249,7 +1249,7 @@ QUnit.test("quote formatting", assert => {
   assert.cooked(
     '[quote="Alice, post:1, topic:1"]\n[quote="Bob, post:2, topic:1"]\n[/quote]',
     `<p>[quote=&quot;Alice, post:1, topic:1&quot;]</p>
-<aside class=\"quote no-group\" data-post=\"2\" data-topic=\"1\">
+<aside class=\"quote no-group\" data-username=\"Bob\" data-post=\"2\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Bob:</div>
@@ -1261,7 +1261,7 @@ QUnit.test("quote formatting", assert => {
 
   assert.cooked(
     "[quote=\"Alice, post:1, topic:1\"]\n```javascript\nvar foo ='foo';\nvar bar = 'bar';\n```\n[/quote]",
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"Alice\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Alice:</div>
@@ -1276,7 +1276,7 @@ var bar = 'bar';
 
   assert.cooked(
     "[quote=\"Alice, post:1, topic:1\"]\n\n```javascript\nvar foo ='foo';\nvar bar = 'bar';\n```\n[/quote]",
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"Alice\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Alice:</div>
@@ -1296,7 +1296,7 @@ QUnit.test("quotes with trailing formatting", assert => {
   );
   assert.equal(
     result,
-    `<aside class=\"quote no-group\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
+    `<aside class=\"quote no-group\" data-username=\"EvilTrout\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  EvilTrout:</div>

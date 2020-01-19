@@ -51,7 +51,7 @@ export default Component.extend({
     let opts;
     for (
       let element = selectedElement();
-      element;
+      element && element.tagName !== "ARTICLE";
       element = element.parentElement
     ) {
       if (element.tagName === "ASIDE" && element.classList.contains("quote")) {
