@@ -380,11 +380,13 @@ class BadgeGranter
     SQL
   end
 
-  def self.send_notification(user_id, username, locale, badge)
-    use_default_locale = !SiteSetting.allow_user_locale && locale.blank?
-    notification_locale = use_default_locale ? SiteSetting.default_locale : locale
+  def self.notification_locale(locale)
+    use_default_locale = !SiteSetting.allow_user_locale || locale.blank?
+    use_default_locale ? SiteSetting.default_locale : locale
+  end
 
-    I18n.with_locale(notification_locale) do
+  def self.send_notification(user_id, username, locale, badge)
+    I18n.with_locale(notification_locale(locale)) do
       Notification.create!(
         user_id: user_id,
         notification_type: Notification.types[:granted_badge],
