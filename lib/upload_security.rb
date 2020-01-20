@@ -17,6 +17,7 @@ class UploadSecurity
   def initialize(upload, opts = {})
     @upload = upload
     @opts = opts
+    @upload_type = @opts[:type]
   end
 
   def should_be_secure?
@@ -27,7 +28,7 @@ class UploadSecurity
   private
 
   def uploading_in_public_context?
-    @upload.for_theme || @upload.for_site_setting || avatar?
+    @upload.for_theme || @upload.for_site_setting || @upload.for_gravatar || public_type?
   end
 
   def supported_media?
@@ -47,7 +48,7 @@ class UploadSecurity
     if @upload.access_control_post_id.present?
       return access_control_post_has_secure_media?
     end
-    composer? || @upload.for_private_message || @upload.secure?
+    uploading_in_composer? || @upload.for_private_message || @upload.for_group_message || @upload.secure?
   end
 
   # whether the upload should remain secure or not after posting depends on its context,
@@ -62,11 +63,11 @@ class UploadSecurity
     Post.find_by(id: @upload.access_control_post_id).with_secure_media?
   end
 
-  def avatar?
-    @opts[:type] == "avatar"
+  def public_type?
+    %w[avatar custom_emoji profile_background card_background].include?(@upload_type)
   end
 
-  def composer?
-    @opts[:type] == "composer"
+  def uploading_in_composer?
+    @upload_type == "composer"
   end
 end

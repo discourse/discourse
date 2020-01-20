@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import TopicTimer from "discourse/models/topic-timer";
 import { popupAjaxError } from "discourse/lib/ajax-error";

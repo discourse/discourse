@@ -40,7 +40,14 @@ zh_CN:
       hide-results:
         title: "返回到你的投票"
         label: "显示投票"
+      group-results:
+        title: "按用户字段分组投票"
+        label: "显示错误"
+      ungroup-results:
+        title: "合并所有投票"
+        label: "隐藏错误"
       export-results:
+        title: "到处投票结果"
         label: "导出"
       open:
         title: "开启投票"
@@ -56,6 +63,7 @@ zh_CN:
       error_while_toggling_status: "对不起，改变投票状态时出错了。"
       error_while_casting_votes: "对不起，投票时出错了。"
       error_while_fetching_voters: "对不起，显示投票者时出错了。"
+      error_while_exporting_results: "抱歉，导出投票结果时出错。"
       ui_builder:
         title: 创建投票
         insert: 插入投票
@@ -74,6 +82,8 @@ zh_CN:
           vote: 投票
           closed: 关闭时
           staff: 仅管理人员
+        poll_chart_type:
+          label: 图表类型
         poll_config:
           max: 最大
           min: 最小

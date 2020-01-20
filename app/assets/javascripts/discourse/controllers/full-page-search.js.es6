@@ -9,10 +9,7 @@ import {
   getSearchKey,
   isValidSearchTerm
 } from "discourse/lib/search";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { escapeExpression } from "discourse/lib/utilities";
 import { setTransient } from "discourse/lib/page-tracker";

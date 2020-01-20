@@ -14,6 +14,30 @@ describe GroupsController do
       Fabricate(:group, name: 'staff_group', visibility_level: Group.visibility_levels[:staff])
     end
 
+    it "ensures that groups can be paginated" do
+      50.times { Fabricate(:group) }
+
+      get "/groups.json"
+
+      expect(response.status).to eq(200)
+
+      body = JSON.parse(response.body)
+
+      expect(body["groups"].size).to eq(36)
+      expect(body["total_rows_groups"]).to eq(50)
+      expect(body["load_more_groups"]).to eq("/groups?page=1")
+
+      get "/groups.json", params: { page: 1 }
+
+      expect(response.status).to eq(200)
+
+      body = JSON.parse(response.body)
+
+      expect(body["groups"].size).to eq(14)
+      expect(body["total_rows_groups"]).to eq(50)
+      expect(body["load_more_groups"]).to eq("/groups?page=2")
+    end
+
     context 'when group directory is disabled' do
       before do
         SiteSetting.enable_group_directory = false

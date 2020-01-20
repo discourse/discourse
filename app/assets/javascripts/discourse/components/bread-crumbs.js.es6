@@ -1,6 +1,6 @@
 import { filter } from "@ember/object/computed";
 import Component from "@ember/component";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import deprecated from "discourse-common/lib/deprecated";
 
 //  A breadcrumb including category drop downs

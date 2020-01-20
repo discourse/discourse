@@ -1,5 +1,5 @@
 import Category from "discourse/models/category";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import FilterComponent from "admin/components/report-filters/filter";
 
 export default FilterComponent.extend({

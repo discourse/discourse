@@ -620,6 +620,21 @@
 
 // move-to topic modal
 .choose-topic-modal {
+  #split-topic-name,
+  #choose-topic-title,
+  #choose-message-title {
+    width: 100%;
+  }
+
+  .category-chooser {
+    margin-bottom: 9px;
+    width: 100% !important;
+  }
+
+  .controls.existing-topic {
+    margin-bottom: 0.75em;
+  }
+
   // move to existing topic
   .existing-topic {
     .radio {

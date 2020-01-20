@@ -130,6 +130,7 @@ vi:
       banner:
         enabled: "chọn đây làm banner %{when}. Nó sẽ xuất hiện ở đầu mỗi trang đến khi bị ẩn đi bởi người dùng,"
         disabled: "xoá banner này %{when}. Nó sẽ không còn xuất hiện ở đầu mỗi trang."
+    topic_admin_menu: "hành động chủ đề"
     wizard_required: "Chào mừng bạn đến với Discourse! Hãy bắt đầu với <a href='%{url}' data-auto-route='true'>hướng dẫn cài đặt</a> ✨"
     emails_are_disabled: "Ban quản trị đã tắt mọi email gửi đi. Sẽ không có bất kỳ thông báo nào qua email được gửi đi."
     bootstrap_mode_enabled: "Để đơn giản hoá quá trình triển khai, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có mức độ tin cậy 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{min_users}"
@@ -156,6 +157,7 @@ vi:
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
         us_gov_east_1: "AWS GovCloud (US-East)"
+        us_gov_west_1: "AWS GovCloud (Hoa Kỳ-Tây)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "sửa tiêu đề và chuyên mục của chủ đề"
@@ -236,9 +238,19 @@ vi:
     bookmarks:
       created: "bạn đã đánh dấu bài viết này"
       not_bookmarked: "đánh dấu bài viết này"
+      created_with_reminder: "bạn đã đánh dấu bài đăng này bằng một lời nhắc tại %{date}"
       remove: "Xóa dấu trang"
       confirm_clear: "Bạn có chắc muốn xóa toàn bộ đánh dấu trong chủ đề này?"
       save: "Lưu"
+      no_timezone: 'Bạn chưa đặt múi giờ. Bạn sẽ không thể đặt lời nhắc. Thiết lập một <a href="%{basePath}/my/preferences/profile">trong hồ sơ của bạn</a> .'
+      reminders:
+        at_desktop: "Lần sau tôi ở máy tính để bàn của tôi"
+        later_today: "Sau ngày hôm nay <br/> {{date}}"
+        next_business_day: "Ngày làm việc tiếp theo <br/> {{date}}"
+        tomorrow: "Ngày mai <br/> {{date}}"
+        next_week: "Tuần tới <br/> {{date}}"
+        next_month: "Tháng tiếp theo <br/> {{date}}"
+        custom: "Ngày giờ tùy chỉnh"
     drafts:
       resume: "Làm lại"
       remove: "Xoá"
@@ -281,15 +293,46 @@ vi:
       install_banner: "Bạn có muốn <a href>cài đặt %{title} trên thiết bị này?</a> "
     choose_topic:
       none_found: "Không tìm thấy chủ đề nào"
+      title:
+        search: "Tìm kiếm một chủ đề"
+        placeholder: "nhập tiêu đề chủ đề, url hoặc id ở đây"
     choose_message:
       none_found: "Không tìm thấy tin nhắn nào."
+      title:
+        search: "Tìm kiếm một tin nhắn"
+        placeholder: "nhập tiêu đề tin nhắn, url hoặc id ở đây"
     review:
       order_by: "Lọc bởi"
       in_reply_to: "trong trả lời tới"
       explain:
+        why: "giải thích lý do tại sao mặt hàng này kết thúc trong hàng đợi"
+        title: "Chấm điểm"
+        formula: "Công thức"
+        subtotal: "Tổng phụ"
         total: "Tổng số"
+        min_score_visibility: "Điểm tối thiểu cho khả năng hiển thị"
+        score_to_hide: "Điểm để ẩn bài"
+        take_action_bonus:
+          name: "hanh động"
+          title: "Khi một nhân viên chọn hành động, cờ sẽ được thưởng."
+        user_accuracy_bonus:
+          name: "độ chính xác của người dùng"
+          title: "Người dùng có cờ đã được đồng ý trong lịch sử được tặng tiền thưởng."
+        trust_level_bonus:
+          name: "mức độ tin cậy"
+          title: "Các mục có thể xem lại được tạo bởi người dùng có mức độ tin cậy cao hơn có điểm cao hơn."
+        type_bonus:
+          name: "loại tiền thưởng"
+          title: "Một số loại có thể xem lại có thể được nhân viên chỉ định một phần thưởng để làm cho chúng có mức độ ưu tiên cao hơn."
       claim_help:
         optional: "Bạn có thể phàn nàn mục này để tránh những người khác đánh giá nó."
+        required: "Bạn phải yêu cầu các mục trước khi bạn có thể xem xét chúng."
+        claimed_by_you: "Bạn đã yêu cầu mặt hàng này và có thể xem xét nó."
+        claimed_by_other: "Mục này chỉ có thể được xem xét bởi <b>{{username}}</b> ."
+      claim:
+        title: "yêu cầu chủ đề này"
+      unclaim:
+        help: "xóa yêu cầu này"
       awaiting_approval: "Đang đợi Phê duyệt"
       delete: "Xóa"
       settings:
@@ -307,6 +350,7 @@ vi:
         other: "Chủ đề này có <b>{{count}}</b> bài viết đang cần phê duyệt"
       title: "Review"
       topic: "Chủ đề:"
+      filtered_topic: "Bạn đã lọc đến nội dung có thể xem lại trong một chủ đề."
       filtered_user: "Người dùng"
       show_all_topics: "hiển thị toàn bộ chủ đề"
       deleted_post: "(bài viết đã bị xóa)"
@@ -353,6 +397,7 @@ vi:
           priority: "Mức độ ưu tiên"
           priority_asc: "Mức độ ưu tiên (đảo ngược)"
           created_at: "Được tạo tại"
+          created_at_asc: "Tạo tại (đảo ngược)"
         priority:
           title: "Ưu tiên tối thiểu"
           low: "(bất kỳ)"
@@ -561,6 +606,7 @@ vi:
           description: "Bạn sẽ được thông báo khi có bài viết mới trong mỗi tin nhắn, và số lượng trả lời mới sẽ được hiển thị"
         watching_first_post:
           title: "Theo dõi chủ đề đầu tiên"
+          description: "Bạn sẽ được thông báo về tin nhắn mới trong nhóm này nhưng không trả lời tin nhắn."
         tracking:
           title: "Đang theo dõi"
           description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn, và số lượng trả lời mới sẽ được hiển thị"

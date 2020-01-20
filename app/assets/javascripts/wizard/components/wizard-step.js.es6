@@ -1,10 +1,7 @@
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import getUrl from "discourse-common/lib/get-url";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
 
 jQuery.fn.wiggle = function(times, duration) {

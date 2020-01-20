@@ -1,4 +1,4 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -27,10 +27,11 @@ export default Controller.extend(bufferedProperty("model"), {
     return modelQuery && modelQuery.trim().length > 0;
   },
 
+  @observes("model.id")
   _resetSaving: function() {
     this.set("saving", false);
     this.set("savingStatus", "");
-  }.observes("model.id"),
+  },
 
   actions: {
     save() {

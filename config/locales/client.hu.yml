@@ -95,6 +95,12 @@ hu:
         x_days:
           one: "%{count} napja"
           other: "%{count} napja"
+        x_months:
+          one: "%{count}hónapja"
+          other: "%{count}hónapja"
+        x_years:
+          one: "%{count}éve"
+          other: "%{count}éve"
       later:
         x_days:
           one: "%{count} nappal később"
@@ -146,6 +152,7 @@ hu:
       banner:
         enabled: "Kiemelve ekkor: %{when}. Amíg a felhasználó nem törli, minden oldal tetején megjelenik."
         disabled: "Kiemelés eltávolítva ekkor: %{when}. Többé nem jelenik meg minden oldal tetején."
+    topic_admin_menu: "témaműveletek"
     wizard_required: "Üdvözöljük az új Discourse-on. Kezdjük a <a href='%{url}' data-auto-route='true'>beállításvarázslóval</a>. ✨"
     emails_are_disabled: "Egy adminisztrátor letiltotta a kimenő e-maileket. Semmilyen értesítő e-mail nem lesz elküldve."
     bootstrap_mode_enabled: "Hogy könnyebbé tegyük az új oldala elindítását, most előkészítési módban van. Minden új felhasználó 1-es szintet kap és be lesz állítva, hogy napi kivonat e-mailt kapjanak. Ez a beállítás automatikusan kikapcsol, ha legalább %{min_users} felhasználó regisztrált."
@@ -301,8 +308,14 @@ hu:
       edit: "Kiemelés szerkesztése >>"
     choose_topic:
       none_found: "Nem találhatók témák."
+      title:
+        search: "Téma keresése"
+        placeholder: "ide írd a témakör címét, URL-jét vagy azonosítóját"
     choose_message:
       none_found: "Nem található üzenet."
+      title:
+        search: "Üzenet keresése"
+        placeholder: "ide írd az üzenet címét, URL-jét vagy azonosítóját"
     review:
       order_by: "Rendezés:"
       in_reply_to: "válasz erre:"
@@ -585,6 +598,7 @@ hu:
         remove_owner: "Eltávolítás tulajdonosként"
         remove_owner_description: "<b>%{username}</b> eltávolítása a csoportból csoporttulajdonoként"
         owner: "Tulajdonos"
+        forbidden: "Nincs jogod megnézni a tagokat."
       topics: "Témák"
       posts: "Bejegyzések"
       mentions: "Említések"
@@ -597,6 +611,7 @@ hu:
         only_admins: "Csak az adminisztrátorok"
         mods_and_admins: "Csak a moderátorok és az adminisztrátorok"
         members_mods_and_admins: "Csak a csoporttagok, a moderátorok és az adminisztrátorok"
+        owners_mods_and_admins: "Csak a csoport tulajdonosok, moderátorok és adminisztrátorok"
         everyone: "Mindenki"
       notifications:
         watching:
@@ -715,6 +730,9 @@ hu:
       activity_stream: "Aktivitás"
       preferences: "Beállítások"
       feature_topic_on_profile:
+        open_search: "Új téma kiválasztása"
+        title: "Téma kiválasztása"
+        search_label: "Téma keresése cím alapján"
         save: "Mentés"
         clear:
           title: "Törlés"
@@ -806,6 +824,7 @@ hu:
       revoke_access: "Hozzáférés visszavonása"
       undo_revoke_access: "Hozzáférés visszaállítása"
       api_approved: "Jóváhagyva:"
+      api_last_used_at: "Utoljára használva:"
       theme: "Stílus"
       home: "Alap főoldal"
       staged: "Lépcsőzetes"
@@ -846,6 +865,7 @@ hu:
         choose_new: "Új jelszó"
         choose: "Új jelszó"
       second_factor_backup:
+        title: "Kétlépcsős biztonsági mentés kódok"
         regenerate: "Újragenerálás"
         disable: "Kikapcsol"
         enable: "Engedélyez"
@@ -853,12 +873,14 @@ hu:
         copy_to_clipboard_error: "Hiba az adat Vágólapra másolása során"
       second_factor:
         title: "Két-faktoros hitelesítés"
+        forgot_password: "Elfelejtetted a jelszavad?"
         confirm_password_description: "Kérlek erősítsd meg a jelszavad a továbbhaladáshoz"
         name: "Név"
         label: "Kód"
         disable_description: "Írd be az azonosító kódodat az alkalmazásból"
         show_key_description: "Manuális beírás"
         oauth_enabled_warning: "A közösségi bejelentkezések nem lesznek elérhetőek a fét-faktoros azonosítás aktiválása után a fiókhoz."
+        disable: "kikapcsolás"
         edit: "Szerkesztés"
         security_key:
           register: "Regisztráció"
@@ -937,6 +959,8 @@ hu:
         active: "most aktív"
         not_you: "Nem te vagy?"
         show_all: "Összes megjelenítése ({{count}})"
+        show_few: "Kevesebb megjelenítése"
+        was_this_you: "Te voltál?"
         latest_post: "Legutóbbi bejegyzésed..."
       last_posted: "Utolsó hozzászólás"
       last_emailed: "Utolsó email"
@@ -958,7 +982,7 @@ hu:
       like_notification_frequency:
         title: "Kedvelés esetén értesítsen"
         always: "Mindig"
-        first_time: "Első alkalommal like-olt egy postot"
+        first_time: "Első alkalommal kedvelt egy bejegyzést"
         never: "Soha"
       email_previous_replies:
         title: "Az e-mailek vége tartalmazza a korábbi válaszokat"

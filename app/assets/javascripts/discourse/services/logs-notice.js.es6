@@ -1,7 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
-import {
-  default as discourseComputed,
+import discourseComputed, {
   on,
   observes
 } from "discourse-common/utils/decorators";

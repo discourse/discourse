@@ -1028,7 +1028,6 @@ hu:
       subject_template: "[%{email_prefix}] Összefoglaló"
       your_email_settings: "e-mail beállítások"
       click_here: "kattintson ide"
-      from: "%{site_name} összefoglaló"
     forgot_password:
       title: "Elfelejtett jelszó"
       subject_template: "[%{email_prefix}] Jelszó visszaállítás"
@@ -1074,6 +1073,7 @@ hu:
   csv_export:
     boolean_yes: "Igen"
     boolean_no: "Nem"
+    rate_limit_error: "A bejegyzések naponta csak egyszer töltetők le. Kérünk, próbáld újra holnap."
   guidelines_topic:
     title: "GYIK/Irányelvek"
   tos_topic:

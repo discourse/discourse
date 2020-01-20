@@ -1155,6 +1155,7 @@ bg:
   csv_export:
     boolean_yes: "Да"
     boolean_no: "Не"
+    rate_limit_error: "Публикации могат да бъдат сваляни веднъж дневно, моля опитайте отново утре."
   static_topic_first_reply: |
     Редактирайте първата публикация в тази тема за да промените съдаржанието на страница %{page_name}.
   guidelines_topic:

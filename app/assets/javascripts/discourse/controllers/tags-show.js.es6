@@ -1,12 +1,9 @@
 import { alias } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
-import { default as NavItem } from "discourse/models/nav-item";
+import NavItem from "discourse/models/nav-item";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 
 export default Controller.extend(BulkTopicSelection, FilterModeMixin, {

@@ -9,8 +9,7 @@ import Topic from "discourse/models/topic";
 import { throwAjaxError } from "discourse/lib/ajax-error";
 import Quote from "discourse/lib/quote";
 import Draft from "discourse/models/draft";
-import {
-  default as discourseComputed,
+import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";

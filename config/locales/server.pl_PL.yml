@@ -1761,7 +1761,6 @@ pl_PL:
     second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
     second_factor_backup_title: "Kod zapasowy weryfikacji dwuskładnikowej"
     second_factor_toggle:
-      totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
       backup_code: "Zamiast tego użyj kodu zapasowego"
   admin:
     email:
@@ -2314,7 +2313,6 @@ pl_PL:
       subject_template: "[%{email_prefix}] Podsumowanie"
       your_email_settings: "twoje ustawienia e‐mail"
       click_here: "kliknij tutaj"
-      from: "%{site_name} podsumowanie"
       preheader: "Podsumowanie aktywności od Twojej ostatniej wizyty w dniu %{last_seen_at}"
     forgot_password:
       title: "Zapomniane hasło"
@@ -2341,13 +2339,6 @@ pl_PL:
     admin_login:
       title: "Logowanie administratora. "
       subject_template: "[%{site_name}] Login"
-      text_body_template: |
-        Ktoś próbował się zalogować na twoje konto [%{site_name}](%{base_url}).
-
-        Jeśli to nie byłeś ty, możesz po prostu zignorować tą wiadomość.
-
-        Naciśnij następujący link, aby się zalogować:
-        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Utworzono Konto"
       subject_template: "[%{site_name}] Twoje Nowe Konto"
@@ -2452,6 +2443,7 @@ pl_PL:
   csv_export:
     boolean_yes: "Tak"
     boolean_no: "Nie"
+    rate_limit_error: "Wpisy mogą być pobierane raz dziennie, spróbuj ponownie jutro."
   static_topic_first_reply: |
     Edytuj pierwszy post w tym temacie by zmienić zawartość strony %{page_name}.
   guidelines_topic:
@@ -2779,14 +2771,8 @@ pl_PL:
         Ta odznaka jest przyznawana, gdy otrzymasz przynajmniej 5 polubień na 300 różnych postach. Wow! Społeczność docenia twój częsty i wysokiej jakości wkład w konwersacje.
     out_of_love:
       name: Z miłości
-      description: Użyto 50 polubień w dzień
-      long_description: |
-        Ta odznaka jest przyznawana, gdy wykorzystasz wszystkie 50 polubień danego dnia. Warto zatrzymać się na chwilę i polubić posty, które przypadły ci do gusty i docenić zaangażowanie innych członków społeczności. Tak aby tworzyć coraz lepsze dyskusje w przyszłości.
     higher_love:
       name: Wyższa miłość
-      description: Użyto 50 polubień w dzień 5 razy
-      long_description: |
-        Ta odznaka jest przyznawana, gdy wykorzystasz wszystkie 5 polubień w 5 dni. Dziękujemy, że przyczyniasz się do rozwoju jak najlepszych konwersacji każdego dnia!
     crazy_in_love:
       name: Szaleńczo zakochany
       description: Użyto 50 polubień w dzień 20 razy

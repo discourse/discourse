@@ -15,10 +15,7 @@ import Topic from "discourse/models/topic";
 import discourseDebounce from "discourse/lib/debounce";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { ajax } from "discourse/lib/ajax";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";

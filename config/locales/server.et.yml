@@ -844,7 +844,6 @@ et:
       subject_template: "[%{email_prefix}] Kokkuvõte"
       your_email_settings: "sinu e-posti seaded"
       click_here: "kliki siia"
-      from: "%{site_name} kokkuvõte"
     forgot_password:
       title: "Unustasin parooli"
       subject_template: "[%{email_prefix}] Parooli taastamine"
@@ -885,6 +884,7 @@ et:
   csv_export:
     boolean_yes: "Jah"
     boolean_no: "Ei"
+    rate_limit_error: "Postitusi saab alla laadida üks kord ööpäevas. Palun proovi homme uuesti."
   tos_topic:
     title: "Teenuse tingimused"
   privacy_topic:

@@ -1,6 +1,8 @@
 import { empty } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
+import { observes } from "discourse-common/utils/decorators";
+
 export default Controller.extend({
   /**
     Is the "send test email" button disabled?
@@ -14,9 +16,10 @@ export default Controller.extend({
 
     @method testEmailAddressChanged
   **/
+  @observes("testEmailAddress")
   testEmailAddressChanged: function() {
     this.set("sentTestEmail", false);
-  }.observes("testEmailAddress"),
+  },
 
   actions: {
     /**
