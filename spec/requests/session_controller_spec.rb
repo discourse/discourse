@@ -11,7 +11,7 @@ RSpec.describe SessionController do
   shared_examples 'failed to continue local login' do
     it 'should return the right response' do
       expect(response).not_to be_successful
-      expect(response.status).to eq(500)
+      expect(response.status).to eq(403)
     end
   end
 
@@ -25,7 +25,7 @@ RSpec.describe SessionController do
 
       it "only works for admins" do
         get "/session/email-login/#{email_token.token}.json"
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(403)
 
         user.update(admin: true)
         get "/session/email-login/#{email_token.token}.json"
@@ -41,7 +41,7 @@ RSpec.describe SessionController do
 
       it "only works for admins" do
         get "/session/email-login/#{email_token.token}.json"
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(403)
 
         user.update(admin: true)
         get "/session/email-login/#{email_token.token}.json"
@@ -72,7 +72,7 @@ RSpec.describe SessionController do
 
         get "/session/email-login/#{email_token.token}.json"
 
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(403)
       end
 
       it 'fails when local logins is disabled' do
@@ -80,7 +80,7 @@ RSpec.describe SessionController do
 
         get "/session/email-login/#{email_token.token}.json"
 
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(403)
       end
 
       context 'user has 2-factor logins' do
@@ -127,7 +127,7 @@ RSpec.describe SessionController do
 
       it "only works for admins" do
         post "/session/email-login/#{email_token.token}.json"
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(403)
 
         user.update(admin: true)
         post "/session/email-login/#{email_token.token}.json"
@@ -181,7 +181,7 @@ RSpec.describe SessionController do
 
         post "/session/email-login/#{email_token.token}.json"
 
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(403)
         expect(session[:current_user_id]).to eq(nil)
       end
 
@@ -190,7 +190,7 @@ RSpec.describe SessionController do
 
         post "/session/email-login/#{email_token.token}.json"
 
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(403)
         expect(session[:current_user_id]).to eq(nil)
       end
 
