@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class Invite < ActiveRecord::Base
-  self.ignored_columns = %w{
-    via_email
-  }
-
   class UserExists < StandardError; end
   include RateLimiter::OnCreateRecord
   include Trashable
