@@ -12,6 +12,8 @@ ru:
         today: Сегодня %{time}
         tomorrow: Завтра %{time}
         yesterday: 'Вчера %{time} '
+        countdown:
+          passed: дата прошла
       title: Введите дату / время
       create:
         form:

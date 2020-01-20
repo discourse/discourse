@@ -31,6 +31,7 @@ ar:
         millions: "{{number}} مليون"
     dates:
       time: "h:mm a"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
@@ -60,6 +61,13 @@ ar:
           few: "%{count}ث"
           many: "%{count}ث"
           other: "%{count}ث"
+        less_than_x_minutes:
+          zero: "< %{count}ش"
+          one: "< %{count}ش"
+          two: "< %{count}ش"
+          few: "< %{count}ش"
+          many: "< %{count}ش"
+          other: "< %{count}ش"
         x_minutes:
           zero: "%{count}د"
           one: "%{count}د"
@@ -81,6 +89,13 @@ ar:
           few: "%{count}ي"
           many: "%{count}ي"
           other: "%{count}ي"
+        x_months:
+          zero: "%{count}شهر"
+          one: "%{count}شهر"
+          two: "%{count}شهران"
+          few: "%{count}أشهر"
+          many: "%{count}أشهر"
+          other: "%{count}أشهر"
         about_x_years:
           zero: "%{count}ع"
           one: "%{count}ع"
@@ -149,6 +164,20 @@ ar:
           few: "قبل %{count} أيام"
           many: "قبل %{count} يوما"
           other: "قبل %{count} يوما"
+        x_months:
+          zero: "قبل %{count} شهر"
+          one: "قبل %{count} شهر"
+          two: "قبل %{count} شهران"
+          few: "قبل %{count} أشهر"
+          many: "قبل %{count} أشهر"
+          other: "قبل %{count} أشهر"
+        x_years:
+          zero: "قبل %{count} سنة"
+          one: "قبل %{count} سنة"
+          two: "قبل %{count} سنتان"
+          few: "قبل %{count} سنوات"
+          many: "قبل %{count} سنوات"
+          other: "قبل %{count} سنوات"
       later:
         x_days:
           zero: "بعد أقل من يوم"
@@ -175,6 +204,7 @@ ar:
       next_month: "الشهر القادم"
       placeholder: التاريخ
     share:
+      topic_html: 'الموضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "المنشور رقم %{postNumber}"
       close: "أغلق"
       twitter: "شارك هذا رابط على تويتر"
@@ -189,6 +219,7 @@ ar:
       user_left: "%{who}أزال نفسه من هذه الرسالة %{when}"
       removed_user: "اُقصي %{who} %{when}"
       removed_group: "اُقصي %{who} %{when}"
+      autobumped: "رفع مبرمج %{when}"
       autoclosed:
         enabled: "أُغلق %{when}"
         disabled: "فُتح %{when}"
@@ -210,10 +241,14 @@ ar:
       banner:
         enabled: "اجعل هذا إعلانا %{when}. سوف يظهر اعلى جميع الصفحات حتى يتم الغاؤه بواسطة المستخدم."
         disabled: "أزل هذا الإعلان %{when}. لن يظهر بعد الآن في أعلى كلّ صفحة."
+    topic_admin_menu: "عمليات الموضوع"
     wizard_required: "مرحبًا في نسختك الجديدة من دسكورس! فلنبدأ مع <a href='%{url}' data-auto-route='true'>مُرشد الإعدادات</a> ✨"
     emails_are_disabled: "لقد عطّل أحد المدراء الرّسائل الصادرة للجميع. لن تُرسل إشعارات عبر البريد الإلكتروني أيا كان نوعها."
+    bootstrap_mode_enabled: "لكى تتمكن من اطلاق موقعك الجديد بسهولة, الموقع اﻷن علي الوضع التمهيدي. كل المستخدمين الجدد سيحصلون علي مستوي الثقة 1 وسيكون خيار ارسال الملخص اليومى عن طريق البريد الالكترونى مفعل. سيتم الغاء الوضع التمهيدي تلقائيا عندما يشترك %{min_users} عضو."
+    bootstrap_mode_disabled: "سيتوقف الوضع التمهيدي خلال 24 ساعة."
     themes:
       default_description: "افتراضى"
+      broken_theme_alert: "قد لا يعمل موقعك لأن القالب / المكون %{theme} به أخطاء. ألغه في %{path}."
     s3:
       regions:
         ap_northeast_1: "آسيا والمحيط الهادئ (طوكيو)"
@@ -221,12 +256,19 @@ ar:
         ap_south_1: "آسيا والمحيط الهادئ (مومباي)"
         ap_southeast_1: "آسيا والمحيط الهادئ (سنغافورة)"
         ap_southeast_2: "آسيا والمحيط الهادئ (سيدني)"
+        ca_central_1: "كندا (وسط)"
         cn_north_1: "الصين (بكين)"
+        cn_northwest_1: "الصين (نيجكسا)"
         eu_central_1: "الاتحاد الأوروبي (فرانكفورت)"
+        eu_north_1: "الاتحاد الأوربي (ستوكهولم)"
         eu_west_1: "الاتحاد الأوروبي (أيرلندا)"
         eu_west_2: "الاتحاد الأوروبي (لندن)"
+        eu_west_3: "الاتحاد الأوربي (باريس)"
+        sa_east_1: "أمريكا الجنوبية (ساو باولو)"
         us_east_1: "شرق الولايات المتحدة (فرجينيا الشمالية)"
         us_east_2: "غرب الولايات المتحدة (اوهايو)"
+        us_gov_east_1: "إستضافة أمازون السحابية AWS GovCloud (US-East)"
+        us_gov_west_1: "إستضافة أمازون السحابية AWS GovCloud (US-West)"
         us_west_1: "غرب الولايات المتحدة (كاليفورنيا الشمالية)"
         us_west_2: "غرب الولايات المتحدة (أوريغون)"
     edit: "عدل عنوان و قسم هذا الموضوع"
@@ -259,6 +301,7 @@ ar:
     privacy: "الخصوصية "
     tos: "شروط الخدمة"
     rules: "الشروط"
+    conduct: "قواعد السلوك"
     mobile_view: "نسخة الهواتف"
     desktop_view: "نسخة سطح المكتب"
     you: "انت"
@@ -285,6 +328,7 @@ ar:
       other: "{{count}} حرف"
     related_messages:
       title: "الرسائل ذات الصلة"
+      see_all: 'شاهد <a href="%{path}">كل الرسائل</a> من @%{username}...'
     suggested_topics:
       title: "المواضيع المقترحة"
       pm_title: "رسائل مقترحة "
@@ -314,9 +358,14 @@ ar:
         unbookmark: "انقر لإزالة كلّ العلامات المرجعية في هذا الموضوع"
     bookmarks:
       created: "لقد وضعت علامة مرجعية علي هذا المنشور"
+      not_bookmarked: "أشر هذا المكتوب"
+      created_with_reminder: "لقد أشرت هذا المكتوب بتذكير عند %{date}"
       remove: "أزل العلامة المرجعية"
       confirm_clear: "هل أنت متأكد من مسح جميع الاشعارات المرجعية من هذا الموضوع؟"
       save: "احفظ"
+      no_timezone: 'لم تحدد منظقتك الزمنية بعد. لن تتمكن من تفعيل التذكيرات. حددها <a href="%{basePath}/my/preferences/profile">في ملفك الشخصي</a>.'
+      reminders:
+        at_desktop: "في المرة القادمة سأكون عند مكتبي"
     drafts:
       resume: "أكمل"
       remove: "احذف"

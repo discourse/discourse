@@ -1834,7 +1834,6 @@ it:
       category_search_priority:
         very_low_weight_invalid: "Non puoi impostare un peso maggiore di 'category_search_priority_low_weight'."
         low_weight_invalid: "Non puoi impostare un peso maggiore o uguale a 1 o inferiore a 'category_search_priority_very_low_weight'"
-        high_weight_invalid: "Non puoi impostare il peso in modo che sia maggiore o uguale a 1 o maggiore di 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "Non puoi impostare il peso in modo che sia inferiore a 'category_search_priority_high_weight'."
       unicode_username_whitelist:
         regex_invalid: "L'espressione regolare non è valida: %{error}"
@@ -1980,7 +1979,6 @@ it:
     second_factor_backup_title: "Codice di backup per l'autenticazione a due fattori"
     invalid_second_factor_code: "Codice di autenticazione non valido Ogni codice può essere utilizzato solo una volta."
     second_factor_toggle:
-      totp: "Utilizzare un'app di autenticazione"
       backup_code: "Utilizza un codice di backup"
   admin:
     email:
@@ -2810,7 +2808,6 @@ it:
       unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Modifica %{email_preferences_link}, o %{unsubscribe_link} per annullare l'iscrizione."
       your_email_settings: "le tue impostazioni email"
       click_here: "clicca qui"
-      from: "%{site_name} riepilogo"
       preheader: "Un breve riepilogo dall'ultima tua visita il %{last_seen_at}"
     forgot_password:
       title: "Password Dimenticata"
@@ -2839,13 +2836,6 @@ it:
     admin_login:
       title: "Login Amministratore"
       subject_template: "[%{email_prefix}] Login"
-      text_body_template: |
-        Qualcuno ha richiesto di connettersi con il tuo account su [%{site_name}](%{base_url}).
-
-        Se non sei stato tu a fare questa richiesta, puoi tranquillamente ignorare questa email.
-
-        Clicca sul seguente collegamento per connetterti:
-        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Account Creato"
       subject_template: "[%{email_prefix}] Il Tuo Nuovo Account"
@@ -2988,6 +2978,7 @@ it:
   csv_export:
     boolean_yes: "Sì"
     boolean_no: "No"
+    rate_limit_error: "I messaggi possono essere scaricati una volta al giorno, riprova domani."
   static_topic_first_reply: |
     Modifica il primo messaggio in questo argomento per cambiare il contenuto della pagina %{page_name}.
   guidelines_topic:
@@ -3349,19 +3340,11 @@ it:
         Questo distintivo è assegnato quando ricevi almeno 5 "Mi piace" su 300 messaggi differenti. Wow! La comunità ammira i tuoi contributi frequenti e di alta qualità nelle conversazioni.
     out_of_love:
       name: Amato
-      description: Ha messo 50 mi piace in un giorno
-      long_description: |
-        Questo distintivo è assegnato quando usi tutti i 50 "Mi piace" che hai a disposizione giornalmente. Ricorda di prenderti un momento per mettere "Mi piace" ai messaggi che ti piacciono e che apprezzi, così incoraggerai i membri della comunità a creare discussioni ancora migliori in futuro.
     higher_love:
       name: Pieno d'Amore
-      description: Ha messo 50 mi piace al giorno per 5 volte
-      long_description: |
-        Questo distintivo è assegnato quando usi tutti i 50 mi piace giornalieri per 5 giorni. Grazie per aver dedicato del tempo ad incoraggiare le migliori conversazioni ogni giorno!
     crazy_in_love:
       name: Pazzo d’Amore
       description: Ha messo 50 mi piace al giorno per 20 volte
-      long_description: |
-        Questo distintivo è assegnato quando usi tutti i 50 mi piace giornalieri per 20 giorni. Wow, sei davvero un modello di comportamento per tutti i tuoi compagni di comunità!
     thank_you:
       name: Grazie
       description: Ha ricevuto 20 mi piace sui messaggi e dato 10 mi piace

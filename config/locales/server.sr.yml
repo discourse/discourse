@@ -290,6 +290,7 @@ sr:
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Ne"
+    rate_limit_error: "Poruke mogu biti preuzimate jednom na dan, molimo pokušajte sutra."
   tos_topic:
     title: "Uslovi Korišćenja"
   privacy_topic:

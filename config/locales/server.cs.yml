@@ -616,6 +616,8 @@ cs:
       every_hour: "každou hodinu"
       daily: "denně"
       weekly: "týdně"
+      every_month: "každý měsíc"
+      every_six_months: "každých šest měsíců"
   user_api_key:
     otp_confirmation:
       confirm_title: "Pokračovat na %{site_name}"
@@ -964,7 +966,6 @@ cs:
       popular_posts: "Populární příspěvky"
       subject_template: "[%{email_prefix}] Přehled"
       click_here: "klikněte zde"
-      from: "%{site_name} - přehled"
       preheader: "Krátký souhrn od poslední návštěvy v %{last_seen_at}"
     forgot_password:
       title: "Zapomenuté heslo"
@@ -1011,6 +1012,7 @@ cs:
   csv_export:
     boolean_yes: "Ano"
     boolean_no: "Ne"
+    rate_limit_error: "Příspěvky mohou být staženy jen jednou za den. Zkus to, prosím, zítra."
   guidelines_topic:
     title: "FAQ/Pokyny"
   tos_topic:

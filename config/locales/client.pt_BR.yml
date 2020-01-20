@@ -27,6 +27,7 @@ pt_BR:
         millions: "{{number}}M"
     dates:
       time: "H:mm"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM H:mm"
       long_no_year_no_time: "D MMM"
@@ -266,7 +267,7 @@ pt_BR:
       remove: "Remover Favorito"
       confirm_clear: "Você tem certeza de que deseja apagar todos os seus favoritos deste tópico?"
       save: "Salvar"
-      no_timezone: "Você ainda não definiu um fuso horário. VOcê não poderá definir lembretes. Configure um <a href=\"%{basePath}/my/preferences/profile\">no seu perfil</a>."
+      no_timezone: 'Você ainda não definiu um fuso horário. VOcê não poderá definir lembretes. Configure um <a href="%{basePath}/my/preferences/profile">no seu perfil</a>.'
       reminders:
         at_desktop: "Da próxima vez que estiver na minha área de trabalho"
         later_today: "Hoje mais tarde <br/>{{date}}"
@@ -350,6 +351,7 @@ pt_BR:
           title: "Itens revisáveis criados por usuários com nível de confiança mais alto têm uma pontuação mais alta."
         type_bonus:
           name: "tipo de bônus"
+          title: "Certos tipos passíveis de revisão podem receber um bônus da equipe para torná-los uma prioridade mais alta."
       claim_help:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
         required: "Você precisa reivindicar itens antes de poder revisá-los."
@@ -621,6 +623,7 @@ pt_BR:
         remove_owner: "Remover como Proprietário"
         remove_owner_description: "Remover <b>%{username}</b> como um proprietário deste grupo"
         owner: "Proprietário"
+        forbidden: "Você não tem permissão para visualizar os membros."
       topics: "Tópicos"
       posts: "Postagens"
       mentions: "Menções"
@@ -752,9 +755,13 @@ pt_BR:
       activity_stream: "Atividade"
       preferences: "Preferências"
       feature_topic_on_profile:
+        open_search: "Selecione um Novo Tópico"
+        title: "Selecione um Tópico"
+        search_label: "Pesquisar tópico por título"
         save: "Salvar"
         clear:
           title: "Limpo"
+          warning: "Tem certeza de que deseja limpar o tópico em destaque?"
       profile_hidden: "O perfil público deste usuário está oculto."
       expand_profile: "Expandir"
       collapse_profile: "Recolher"
@@ -787,6 +794,7 @@ pt_BR:
       enable_quoting: "Habilitar resposta citando o texto destacado"
       enable_defer: "Habilitar adiar para marcar tópicos não lidos"
       change: "alterar"
+      featured_topic: "Tópico em Destaque"
       moderator: "{{user}} é um moderador"
       admin: "{{user}} é um administrador"
       moderator_tooltip: "Este usuário é um moderador"
@@ -894,6 +902,7 @@ pt_BR:
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro ao copiar dados para a Área de Transferência"
         remaining_codes: "Você tem <strong>{{count}}</strong> códigos de backup restantes."
+        use: "Use um código de backup"
         enable_prerequisites: "Você deve habilitar um segundo fator primário antes de gerar códigos de backup."
         codes:
           title: "Códigos de Backup Gerados"
@@ -901,6 +910,7 @@ pt_BR:
       second_factor:
         title: "Autenticação de Dois Fatores"
         enable: "Gerenciar Autenticação de Dois Fatores"
+        forgot_password: "Esqueceu a senha?"
         confirm_password_description: "Por favor, confirme sua senha para continuar"
         name: "Nome"
         label: "Código"
@@ -914,6 +924,7 @@ pt_BR:
         extended_description: |
           A autenticação de dois fatores adiciona segurança extra à sua conta, exigindo um token único além da sua senha. Tokens podem ser gerados em dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Por favor, observe que os logins sociais serão desabilitados quando a autenticação de dois fatores for habilitada na sua conta."
+        use: "Use o Aplicativo Autenticador"
         enforced_notice: "Você precisa ativar a autenticação de dois fatores antes de acessar este site."
         disable: "Desabilitar"
         disable_title: "Desabilitar Segundo Fator"
@@ -921,12 +932,20 @@ pt_BR:
         edit: "Editar"
         edit_title: "Editar Segundo Fator"
         edit_description: "Nome do Segundo Fator"
+        enable_security_key_description: "Quando você tiver sua chave de segurança física preparada, pressione o botão Registrar abaixo."
         totp:
           title: "Autenticadores Baseados em Token"
           add: "Novo Autenticador"
           default_name: "Meu Autenticador"
         security_key:
           register: "Registro"
+          title: "Chaves de Segurança"
+          add: "Registrar Chave de Segurança"
+          default_name: "Chave de Segurança Principal"
+          not_allowed_error: "O processo de registro da chave de segurança atingiu o tempo limite ou foi cancelado."
+          already_added_error: "Você já registrou esta chave de segurança.\nVocê não tem que registrá-la novamente."
+          edit: "Editar Chave de Segurança"
+          edit_description: "Nome da Chave de Segurança"
           delete: "Excluir"
       change_about:
         title: "Modificar Sobre Mim"
@@ -953,9 +972,15 @@ pt_BR:
         uploaded_avatar_empty: "Adicionar uma imagem personalizada"
         upload_title: "Enviar sua imagem"
         image_is_not_a_square: "Aviso: nós cortamos a sua imagem; largura e altura não eram iguais."
+      change_profile_background:
+        title: "Cabeçalho do Perfil"
+        instructions: "Os cabeçalhos do perfil serão centralizados e terão uma largura padrão de 1110px."
       change_card_background:
         title: "Plano de Fundo do Cartão de Usuário"
         instructions: "Imagens de plano de fundo serão centralizadas e terão uma largura padrão de 590px."
+      change_featured_topic:
+        title: "Tópico em Destaque"
+        instructions: "Um link para este tópico estará no seu cartão de usuário e no seu perfil."
       email:
         title: "E-mail"
         primary: "E-mail Primário"
@@ -1091,6 +1116,7 @@ pt_BR:
         search: "digite para pesquisar convites..."
         title: "Convites"
         user: "Usuário Convidado"
+        sent: "Último envio"
         none: "Não há convites para exibir."
         truncated:
           one: "Mostrando o primeiro convite."
@@ -1231,6 +1257,9 @@ pt_BR:
       enabled: "Este site está em modo de somente leitura. Por favor, continue a navegar, mas respostas, curtidas e outras ações estão desabilitadas por enquanto."
       login_disabled: "O login é desabilitado enquanto o site está em modo de somente leitura."
       logout_disabled: "O logout é desabilitado enquanto o site está em modo de somente leitura."
+    too_few_topics_and_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>iniciar a discussão!</a> Há <strong>%{currentTopics}</strong> tópicos e <strong>%{currentPosts}</strong> postagens. Os visitantes precisam de mais informações para ler e responder - nós recomendamos pelo menos <strong>%{requiredTopics}</strong> tópicos e <strong>%{requiredPosts}</strong> posts. Somente funcionários podem ver esta mensagem."
+    too_few_topics_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>iniciar a discussão!</a> Há <strong>%{currentTopics}</strong> tópicos. Os visitantes precisam de mais informações para ler e responder - nós recomendamos pelo menos <strong>%{requiredTopics}</strong> tópicos. Somente funcionários podem ver esta mensagem."
+    too_few_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>inicar a discussão!</a> Há <strong>%{currentPosts}</strong> postagens. Os visitantes precisam de mais informações para ler e responder - nós recomendamos pelo menos <strong>%{requiredPosts}</strong> postagens. Somente funcionários podem ver esta mensagem."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/hora} other {# erros/hora}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
@@ -1326,8 +1355,16 @@ pt_BR:
       password: "Senha"
       second_factor_title: "Autenticação de Dois Fatores"
       second_factor_description: "Por favor, digite o código de autenticação do seu aplicativo:"
+      second_factor_backup: "Efetuar log in usando um código de backup"
       second_factor_backup_title: "Backup de Dois Fatores"
       second_factor_backup_description: "Por favor, insira um dos seus códigos de backup:"
+      second_factor: "Efetuar log in usando um Aplicativo de Autenticação."
+      security_key_description: "Quando você tiver uma chave física de segurança preparada, pressione o Anti\n\nQuando sua chave de segurança física estiver pronta, pressione o botão \"Autenticar com Chave de Segurança\" abaixo."
+      security_key_alternative: "Tente outra maneira"
+      security_key_authenticate: "Autenticar com Chave de Segurança"
+      security_key_not_allowed_error: "O processo de autenticação de chave de segurança atingiu o limite de tempo ou foi cancelado."
+      security_key_no_matching_credential_error: "Nenhuma credencial correspondente pôde ser encontrada na chave de segurança fornecida."
+      security_key_support_missing_error: "Seu dispositivo atual ou navegador não suportam o uso de chaves de segurança. Por favor, use um método diferente."
       email_placeholder: "e-mail ou nome de usuário"
       caps_lock_warning: "Caps Lock está ativado"
       error: "Erro desconhecido"
@@ -1374,6 +1411,7 @@ pt_BR:
         title: "com GitHub"
       discord:
         name: "Discord"
+        title: "com Discórdia"
       second_factor_toggle:
         totp: "Use um aplicativo autenticador"
         backup_code: "Use um código de backup"
@@ -1394,6 +1432,7 @@ pt_BR:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
+      emoji_one: "JoyPixels (anteriormente EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1484,10 +1523,12 @@ pt_BR:
         title_missing: "Título é obrigatório"
         title_too_short: "Título precisa ter no mínimo {{min}} caracteres"
         title_too_long: "Título não pode ter mais de {{max}} caracteres"
+        post_missing: "A postagem não pode estar vazia"
         post_length: "Postagem precisa ter no mínimo {{min}} caracteres"
         try_like: "Você já tentou o botão {{heart}}?"
         category_missing: "Você precisa escolher uma categoria"
         tags_missing: "Você precisa escolher pelo menos {{count}} etiquetas"
+        topic_template_not_modified: "Por favor, adicione detalhes e especificações ao seu tópico editando o modelo do tópico."
       save_edit: "Salvar Edição"
       overwrite_edit: "Sobrescrever Edição"
       reply_original: "Responder no Tópico Original"
@@ -1527,6 +1568,7 @@ pt_BR:
       link_description: "digite a descrição do link aqui"
       link_dialog_title: "Inserir Hyperlink"
       link_optional_text: "título opcional"
+      link_url_placeholder: "Cole uma URL ou digite para pesquisar tópicos"
       quote_title: "Bloco de Citação"
       quote_text: "Bloco de Citação"
       code_title: "Texto pré-formatado"
@@ -1616,6 +1658,7 @@ pt_BR:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Novo Tópico</span> {{description}}"
       membership_request_accepted: "Afiliação aceita em '{{group_name}}'"
+      membership_request_consolidated: "{{count}} abre solicitações de associação para '{{group_name}}'"
       group_message_summary:
         one: "{{count}} mensagem na caixa de entrada de {{group_name}}"
         other: "{{count}} mensagens na caixa de entrada de {{group_name}}"
@@ -1651,6 +1694,7 @@ pt_BR:
         topic_reminder: "lembrete de tópico"
         liked_consolidated: "novas curtidas"
         post_approved: "publicação aprovada"
+        membership_request_consolidated: "novas solicitações de associação"
     upload_selector:
       title: "Adicionar uma imagem"
       title_with_attachments: "Adicionar uma imagem ou um arquivo"
@@ -1695,6 +1739,7 @@ pt_BR:
       context:
         user: "Pesquisar postagens por @{{username}}"
         category: "Pesquisar a categoria #{{category}}"
+        tag: "Pesquisar a #{{tag}} etiqueta"
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
       advanced:
@@ -1714,6 +1759,7 @@ pt_BR:
           title: Correspondência somente no título
           likes: Eu curti
           posted: Eu postei em
+          created: Eu criei
           watching: Eu estou observando
           tracking: Eu estou acompanhando
           private: Nas minhas mensagens
@@ -1730,6 +1776,7 @@ pt_BR:
           label: Onde tópicos
           open: estão abertos
           closed: estão fechados
+          public: são públicos
           archived: estão arquivados
           noreplies: não possuem respostas
           single_user: contém um único usuário
@@ -1745,6 +1792,7 @@ pt_BR:
     go_back: "voltar"
     not_logged_in_user: "página do usuário com resumo de atividades e preferências atuais"
     current_user: "ir para a sua página de usuário"
+    view_all: "ver tudo"
     topics:
       new_messages_marker: "última visita"
       bulk:
@@ -1816,6 +1864,13 @@ pt_BR:
       defer:
         help: "Marcar como não lido"
         title: "Delegar"
+      feature_on_profile:
+        help: "Adicionar um link para este tópico em seu cartão de usuário e perfil"
+        title: "Recurso no Perfil"
+      remove_from_profile:
+        warning: "Seu perfil já tem um tópico em destaque. Se você continuar, este tópico substituirá o tópico existente."
+        help: "Remover o link para este tópico no seu perfil de usuário"
+        title: "Remover do Perfil"
       list: "Tópicos"
       new: "novo tópico"
       unread: "não lido"
@@ -1857,6 +1912,7 @@ pt_BR:
       group_request: "Você precisa solicitar filiação ao grupo `{{name}}` para ver este tópico"
       group_join: "Você precisa juntar-se ao grupo `{{name}}` para ver este tópico"
       group_request_sent: "Sua solicitação de filiação ao grupo foi enviada. Você será informado(a) quando ela for aceita."
+      unread_indicator: "Nenhum membro leu a última postagem deste tópico ainda."
       read_more_MF: "Há { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 não lido</a> } other { <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {veja outros tópicos em {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Ver todas as categorias
       view_latest_topics: ver últimos tópicos
@@ -2216,8 +2272,10 @@ pt_BR:
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários novos não podem enviar anexos."
         attachment_download_requires_login: "Desculpe, você precisa estar logado para baixar arquivos anexos."
       abandon_edit:
+        confirm: "Você tem certeza que deseja descartar suas alterações?"
         no_value: "Não, manter."
         no_save_draft: "Não, salvar rascunho"
+        yes_value: "Sim, descartar edição"
       abandon:
         confirm: "Tem certeza que quer abandonar a sua mensagem?"
         no_value: "Não, manter"
@@ -2235,6 +2293,7 @@ pt_BR:
         reply: "começar a escrever uma resposta para esta postagem"
         like: "curtir esta resposta"
         has_liked: "você curtiu esta resposta"
+        read_indicator: "membros que leram esta postagem"
         undo_like: "desfazer curtida"
         edit: "editar esta resposta"
         edit_action: "Editar"
@@ -2290,9 +2349,18 @@ pt_BR:
           notify_moderators: "notificaram os moderadores"
           notify_user: "enviou uma mensagem"
           bookmark: "favoritaram isto"
+          like:
+            one: "gostou disto"
+            other: "gostaram disto"
+          read:
+            one: "leu isto"
+            other: "Leram isto"
           like_capped:
             one: "e {{count}} outro gostou disto"
             other: "e {{count}} outros gostaram disto"
+          read_capped:
+            one: "e {{count}} outra leu isto"
+            other: "e {{count}} outras leram isto"
         by_you:
           off_topic: "Você sinalizou isto como off-topic"
           spam: "Você sinalizou isto como spam"
@@ -2343,7 +2411,10 @@ pt_BR:
             title: "Mostrar texto html do e-mail"
             button: "HTML"
       bookmarks:
+        create: "Criar marcador"
         name: "Nome"
+        name_placeholder: "Nomeie o marcador para ajudar a melhorar sua memória"
+        set_reminder: "Definir um lembrete"
     category:
       can: "pode&hellip; "
       none: "(sem categoria)"
@@ -2359,9 +2430,14 @@ pt_BR:
       tags_allowed_tags: "Restringir estas etiquetas a esta categoria:"
       tags_allowed_tag_groups: "Restringir estes grupos de etiquetas a esta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
+      tags_tab_description: "As etiquetas e grupos de etiquetas especificadas acima estarão disponíveis apenas nesta categoria e em outras categorias que também as especificarem. Elas não estarão disponíveis para uso em outras categorias."
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       manage_tag_groups_link: "Gerencie grupos de etiquetas aqui."
       allow_global_tags_label: "Permitir também outras etiquetas"
+      tag_group_selector_placeholder: "(Opcional) Grupo de etiquetas"
+      required_tag_group_description: "Exija que novos tópicos tenham etiquetas de um grupo de etiquetas:"
+      min_tags_from_required_group_label: "Número de Etiquetas:"
+      required_tag_group_label: "Grupo de etiquetas:"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
       delete: "Apagar categoria"
       create: "Nova categoria"
@@ -2720,6 +2796,7 @@ pt_BR:
         mark_watching: "%{shortcut} Observar o tópico"
         print: "%{shortcut} Imprimir tópico"
         defer: "%{shortcut} Adiar tópico"
+        topic_admin_actions: "%{shortcut} Abrir ações de administração de tópicos"
     badges:
       earned_n_times:
         one: "Emblema adquirido %{count} vez"
@@ -2769,12 +2846,30 @@ pt_BR:
       changed: "etiquetas alteradas:"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
+      info: "Informações"
+      default_info: "Esta etiqueta não está restrita a nenhuma categorias e não possui sinônimos."
+      synonyms: "Sinônimos"
+      synonyms_description: "Quando as seguintes etiquetas forem usadas, eles serão substituídas por <b>%{base_tag_name}</b>."
+      tag_groups_info:
+        one: 'Esta etiqueta pertence a este grupo: {{tag_groups}}.'
+        other: "Esta etiqueta pertence a estes grupos: {{tag_groups}}."
+      category_restrictions:
+        one: "Pode ser usada nesta categoria:"
+        other: "Pode ser usada nestas categorias:"
+      edit_synonyms: "Gerenciar sinônimos"
+      add_synonyms_label: "Adicionar sinônimos:"
       add_synonyms: "Adicionar"
+      add_synonyms_failed: "As seguintes etiquetas não podem ser adicionadas como sinônimos: <b>%{tag_names}</b>. Se assegure de que elas não tenham sinônimos e não sejam sinônimos de outras etiquetas."
+      remove_synonym: "Remover sinônimo"
+      delete_synonym_confirm: 'Você tem certeza que deseja excluir o sinônimo "%{tag_name}"?'
       delete_tag: "Apagar marcação"
       delete_confirm:
         one: "Tem certeza de que deseja excluir esta tag e removê-la de um tópico para o qual ela está atribuída?"
         other: "Tem certeza de que deseja excluir esta tag e removê-la de {{count}} tópicos aos quais ela está atribuída?"
       delete_confirm_no_topics: "Tem certeza de que deseja excluir esta tag?"
+      delete_confirm_synonyms:
+        one: "O sinônimo dela também será excluído."
+        other: "Os {{count}} sinônimos dela também serão excluídos."
       rename_tag: "Renomear marcador"
       rename_instructions: "Escolha um novo nome para o marcador"
       sort_by: "Ordenar por"
@@ -2827,6 +2922,7 @@ pt_BR:
         parent_tag_description: "Etiquetas deste grupo não podem ser usadas a menos que a etiqueta principal esteja presente."
         one_per_topic_label: "Limite uma etiqueta por tópico deste grupo"
         new_name: "Novo Grupo de Etiquetas"
+        name_placeholder: "Nome do grupo de etiquetas"
         save: "Salvar"
         delete: "Apagar"
         confirm_delete: "Tem certeza de que deseja remover este grupo de etiquetas?"
@@ -2989,9 +3085,14 @@ pt_BR:
               staff: "Proprietários e funcionários do grupo"
               owners: "Proprietários do grupo"
               description: "Administradores podem ver todos os grupos."
+            members_visibility_levels:
+              title: "Quem pode ver os membros deste grupo?"
+              description: "Administradores podem ver os membros de todos os grupos."
+            publish_read_state: "Em mensagens de grupo, publique o estado de leitura do grupo"
           membership:
             automatic: Automático
             trust_levels_title: "Nível de confiança concedido automaticamente aos membros quando eles são adicionados:"
+            effects: Efeitos
             trust_levels_none: "Nenhum"
             automatic_membership_email_domains: "Os usuários que se registrarem em um domínio de e-mail que corresponda exatamente a um nesta lista serão adicionados automaticamente a este grupo:"
             automatic_membership_retroactive: "Aplicar a mesma regra de domínio de e-mail para adicionar usuários registrados existentes"
@@ -3024,12 +3125,29 @@ pt_BR:
         title: "API"
         key: "Chave"
         created: Criado
+        updated: Atualizado
+        last_used: Últimos usados
+        never_used: (nunca)
         generate: "Gerar"
+        undo_revoke: "Desfazer Revogação"
         revoke: "Revogar"
         all_users: "Todos os Usuários"
+        active_keys: "Chaves de API Ativas"
+        manage_keys: Gerenciar Chaves
         show_details: Detalhes
         description: Descrição
+        no_description: (sem descrição)
+        all_api_keys: Todas Chaves de API
+        user_mode: Nível de Usuário
+        impersonate_all_users: Representar qualquer usuário
+        single_user: "Único Usuário"
+        user_placeholder: Insira o nome de usuário
+        description_placeholder: "Para que esta chave será usada?"
         save: Salvar
+        new_key: Nova Chave de API
+        revoked: Revogada
+        delete: Permanentemente excluída
+        not_shown_again: Esta chave não será exibida novamente. Certifique-se de tirar uma cópia antes de continuar.
         continue: Continuar
       web_hooks:
         title: "Webhooks"
@@ -3092,6 +3210,9 @@ pt_BR:
         reviewable_event:
           name: "Evento Revisável"
           details: "Quando um novo item está pronto para revisão e quando seu status é atualizado."
+        notification_event:
+          name: "Evento de Notificação"
+          details: "Quando um usuário recebe uma notificação no feed dele."
         delivery_status:
           title: "Status de Entrega"
           inactive: "Inativo"
@@ -3270,6 +3391,7 @@ pt_BR:
           color_scheme_select: "Selecione as cores a serem usadas pelo tema"
           custom_sections: "Seções personalizadas:"
           theme_components: "Componentes do Tema"
+          add_all_themes: "Adicionar todos os temas"
           convert: "Converter"
           convert_component_alert: "Você tem certeza de que deseja converter este componente em tema? Ele será removido como um componente de %{relatives}."
           convert_component_tooltip: "Converter este componente em tema"
@@ -3296,12 +3418,16 @@ pt_BR:
           upload: "Upload"
           select_component: "Selecionar um componente…"
           unsaved_changes_alert: "Você ainda não salvou as suas modificações, você deseja descartá-las e prosseguir?"
+          unsaved_parent_themes: "Você não atribuiu o componente a temas. Deseja seguir em frente?"
           discard: "Descartar"
           stay: "Permanecer"
           css_html: "CSS / HTML personalizado"
           edit_css_html: "Editar CSS/HTML"
           edit_css_html_help: "Você não editou nenhum CSS ou HTML"
           delete_upload_confirm: "Excluir este upload? (CSS tema pode parar de funcionar!)"
+          component_on_themes: "Incluir componente nestes temas."
+          included_components: "Componentes incluídos"
+          add_all: "Adicionar todos"
           import_web_tip: "Repositório contendo tema"
           import_web_advanced: "Avançado…"
           import_file_tip: "Arquivo .tar.gz, .zip ou .dcstyle.json contendo tema"
@@ -3342,6 +3468,7 @@ pt_BR:
             other: "o tema é {{count}} confirmado por trás"
           compare_commits: "(Ver novos commits)"
           repo_unreachable: "Não foi possível contatar o repositório Git deste tema. Mensagem de erro:"
+          imported_from_archive: "Este tema foi importado de um arquivo \".zip\""
           scss:
             text: "CSS"
             title: "Digite CSS personalizado, aceitamos todos os estilos CSS e SCSS válidos"
@@ -3609,6 +3736,12 @@ pt_BR:
             change_theme_setting: "alterar configurações do tema"
             disable_theme_component: "desabilitar componente de tema"
             enable_theme_component: "habilitar componente de tema"
+            revoke_title: "Revogar título"
+            change_title: "Mudar título"
+            api_key_create: "Criar Chave de API"
+            api_key_update: "Atualizar Chave de API"
+            api_key_destroy: "Destruir Chave de API"
+            override_upload_secure_status: "Sobrescrever o status seguro do upload"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta cria uma nova conta, os seguintes endereços de e-mail serão verificados e o registro será bloqueado, ou outra ação será executada."
@@ -3999,7 +4132,9 @@ pt_BR:
         secret_list:
           invalid_input: "Campos de entrada não podem ser vazios ou conter o caractere de barra vertical."
         default_categories:
+          modal_description: "Você gostaria de aplicar esta alteração historicamente? Isto mudará as preferências de %{count} usuários existentes."
           modal_yes: "Sim"
+          modal_no: "Não, apenas aplique alterações daqui para frente"
       badges:
         title: Emblemas
         new_badge: Novo Emblema

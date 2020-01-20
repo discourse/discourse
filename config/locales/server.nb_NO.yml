@@ -1226,7 +1226,6 @@ nb_NO:
       popular_posts: "Populære innlegg"
       more_new: "Nytt for deg"
       click_here: "trykk her"
-      from: "%{site_name} oppsummering"
       preheader: "En kort oppsummering siden ditt siste besøk på %{last_seen_at}"
     forgot_password:
       title: "Glemt passord"
@@ -1266,6 +1265,7 @@ nb_NO:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nei"
+    rate_limit_error: "Innlegg kan lastes ned en gang om dagen, prøv igjen i morgen."
   guidelines_topic:
     title: "O-S-S/retningslinjer"
   tos_topic:

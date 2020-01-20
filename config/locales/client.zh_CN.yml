@@ -26,10 +26,9 @@ zh_CN:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
-      time_short_day: "ddd HH:mm a"
-      month_day_time: "M[月]D[日] HH:mm a"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "YYYY[年]M[月]"
-      long_no_year: "M月D日 HH:mm"
+      long_no_year: "M[月]D[日] HH:mm"
       long_no_year_no_time: "M月D日"
       full_no_year_no_time: "M月D日"
       long_with_year: "YYYY年M月D日 HH:mm"
@@ -40,57 +39,57 @@ zh_CN:
       long_date_with_year_without_time: "YY年M月D日"
       long_date_without_year_with_linebreak: "M月D日 <br/>LT"
       long_date_with_year_with_linebreak: "YY年M月D日 <br/>LT"
-      wrap_ago: "%{date}之前"
+      wrap_ago: "%{date} 前"
       tiny:
-        half_a_minute: "1分钟内"
+        half_a_minute: "< 1 分钟"
         less_than_x_seconds:
-          other: "%{count}秒内"
+          other: "< %{count} 秒"
         x_seconds:
-          other: "%{count}秒"
+          other: "%{count} 秒"
         less_than_x_minutes:
-          other: "%{count}分钟内"
+          other: "< %{count} 分钟"
         x_minutes:
-          other: "%{count}分钟"
+          other: "%{count} 分钟"
         about_x_hours:
-          other: "约%{count}小时"
+          other: "约 %{count} 小时"
         x_days:
-          other: "%{count}天"
+          other: "%{count} 天"
         x_months:
           other: "%{count} 个月"
         about_x_years:
-          other: "%{count}年内"
+          other: "约 %{count} 年"
         over_x_years:
-          other: "> %{count}年"
+          other: "> %{count} 年"
         almost_x_years:
-          other: "近%{count}年"
+          other: "近 %{count} 年"
         date_month: "M月D日"
         date_year: "YY年M月"
       medium:
         x_minutes:
-          other: "%{count}分钟"
+          other: "%{count} 分钟"
         x_hours:
-          other: "%{count}小时"
+          other: "%{count} 小时"
         x_days:
-          other: "%{count}天"
+          other: "%{count} 天"
         date_year: "YY年M月"
       medium_with_ago:
         x_minutes:
-          other: "%{count}分钟前"
+          other: "%{count} 分钟前"
         x_hours:
           other: "%{count}小时前"
         x_days:
-          other: "%{count}天前"
+          other: "%{count} 天前"
         x_months:
-          other: "%{count}个月前"
+          other: "%{count} 个月前"
         x_years:
-          other: "%{count}年前"
+          other: "%{count} 年前"
       later:
         x_days:
-          other: "%{count}天后"
+          other: "%{count} 天后"
         x_months:
-          other: "%{count}个月后"
+          other: "%{count} 个月后"
         x_years:
-          other: "%{count}年后"
+          other: "%{count} 年后"
       previous_month: "上个月"
       next_month: "下个月"
       placeholder: 日期
@@ -98,19 +97,19 @@ zh_CN:
       topic_html: '主题: <span class="topic-title">%{topicTitle}</span>'
       post: "帖子 #%{postNumber}"
       close: "关闭"
-      twitter: "分享至 Twitter"
-      facebook: "分享至 Facebook"
-      email: "通过电子邮件分享"
+      twitter: "分享此链接至 Twitter"
+      facebook: "分享此链接至 Facebook"
+      email: "通过电子邮件分享此链接"
     action_codes:
-      public_topic: "于%{when}设置为公共主题"
-      private_topic: "于%{when}将该话题转换为私信"
-      split_topic: "于%{when}分割了该主题"
-      invited_user: "于%{when}邀请了%{who}"
-      invited_group: "于%{when}邀请了%{who}"
-      user_left: "%{who}于%{when}离开了该私信"
-      removed_user: "于%{when}移除了%{who}"
+      public_topic: "于%{when}将此主题设为公开"
+      private_topic: "于%{when}将该次主题转换为私信"
+      split_topic: "于%{when}拆分了此主题"
+      invited_user: "于%{when}邀请了 %{who}"
+      invited_group: "于%{when}邀请了 %{who}"
+      user_left: "%{who} 于%{when}离开了该私信"
+      removed_user: "于%{when}移除了 %{who}"
       removed_group: "于%{when}移除了%{who}"
-      autobumped: "%{when}自动顶帖"
+      autobumped: "于%{when}自动顶帖"
       autoclosed:
         enabled: "于%{when}关闭"
         disabled: "于%{when}打开"
@@ -127,14 +126,15 @@ zh_CN:
         enabled: "于%{when}全站置顶"
         disabled: "于%{when}解除全站置顶"
       visible:
-        enabled: "%{when}列出"
-        disabled: "于%{when}隐藏"
+        enabled: "于%{when}列出"
+        disabled: "于%{when}除名"
       banner:
-        enabled: "%{when}将其设置为横幅。在用户关闭横幅前，横幅将显示在每一页的顶部。"
-        disabled: "%{when}撤销了该横幅。横幅将不在显示每一页的顶部。"
-    wizard_required: "欢迎来到你新安装的Discourse！让我们开始<a href='%{url}' data-auto-route='true'>设置向导</a>✨"
+        enabled: "于%{when}将此设置为横幅。用户关闭横幅前，横幅将显示在每一页的顶部。"
+        disabled: "于%{when}移除了该横幅。横幅将不再显示在每一页的顶部。"
+    topic_admin_menu: "管理主题"
+    wizard_required: "欢迎来到你新安装的 Discourse！让我们开始<a href='%{url}' data-auto-route='true'>设置向导</a>✨"
     emails_are_disabled: "出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
-    bootstrap_mode_enabled: "为方便站点准备发布，其正处于初始化模式中。所有新用户将被授予信任等级1，并为他们设置接受每日邮件摘要。初始化模式会在用户数超过%{min_users}个时关闭。"
+    bootstrap_mode_enabled: "为方便站点准备发布，其正处于初始化模式中。所有新用户将被授予信任等级 1，并为他们设置接受每日邮件摘要。初始化模式会在用户数超过%{min_users}个时关闭。"
     bootstrap_mode_disabled: "初始化模式将会在24小时后关闭。"
     themes:
       default_description: "默认"
@@ -157,8 +157,8 @@ zh_CN:
         sa_east_1: "南美（圣保罗）"
         us_east_1: "美国东部（N. Virginia）"
         us_east_2: "美国东部（俄亥俄州）"
-        us_gov_east_1: "AWS政府专用（US-East）"
-        us_gov_west_1: "AWS GovCloud (US-West)"
+        us_gov_east_1: "AWS 政府云（US-East）"
+        us_gov_west_1: "AWS 政府云（US-West）"
         us_west_1: "美国西部（N. California）"
         us_west_2: "美国西部（Oregon）"
     edit: "编辑标题和分类"
@@ -208,7 +208,7 @@ zh_CN:
       other: "%{count} 个字符"
     related_messages:
       title: "相关消息"
-      see_all: '查看来自@ %{username}的<a href="%{path}">所有消息</a> ...'
+      see_all: '查看来自 @%{username} 的<a href="%{path}">所有消息</a> ...'
     suggested_topics:
       title: "推荐主题"
       pm_title: "推荐私信"
@@ -243,7 +243,7 @@ zh_CN:
       remove: "取消收藏"
       confirm_clear: "你确定要清空这个主题中的所有收藏？"
       save: "保存"
-      no_timezone: "你尚未设置时区。您将无法设置提醒。在 <a href=\"%{basePath}/my/preferences/profile\">你的个人资料中</a>设置。"
+      no_timezone: '你尚未设置时区。您将无法设置提醒。在 <a href="%{basePath}/my/preferences/profile">你的个人资料中</a>设置。'
       reminders:
         at_desktop: "下次我使用桌面设备时"
         later_today: "今天晚些时候<br/> {{date}}"
@@ -296,7 +296,7 @@ zh_CN:
       none_found: "没有找到主题。"
       title:
         search: "搜索主题"
-        placeholder: "在此处输入主题标题、URL或ID"
+        placeholder: "在此处输入主题标题、URL 或 ID"
     choose_message:
       none_found: "无符合的结果"
       title:
@@ -540,6 +540,7 @@ zh_CN:
       leave: "离开"
       request: "请求"
       message: "私信"
+      confirm_leave: "你确定你要离开这个团队吗？"
       allow_membership_requests: "允许用户向群组拥有者发送成员请求"
       membership_request_template: "用户发送会员请求时向其显示的自定义模板"
       membership_request:
@@ -1075,6 +1076,7 @@ zh_CN:
         search: "输入以搜索邀请…"
         title: "邀请"
         user: "邀请用户"
+        sent: "上次发送"
         none: "无邀请显示。"
         truncated:
           other: "只显示前 {{count}} 个邀请。"
@@ -2095,18 +2097,18 @@ zh_CN:
         radio_label: "发新私信"
         participants: "参与者"
         instructions:
-          other: "您即将创建一条新私信，并使用您选择的<b>{{count}}</b>张帖子填充该私信。"
+          other: "你正在发送<b>{{count}}</b>篇帖子到一条新的私信/消息。"
       move_to_existing_message:
-        title: "移动到已有信息"
-        action: "移动到已有信息"
-        radio_label: "已有信息"
+        title: "移动到已有私信/消息"
+        action: "移动到已有私信/消息"
+        radio_label: "已有私信/消息"
         participants: "参与者"
         instructions:
-          other: "请选择您要将这<b>{{count}}</b>帖子移动到的私信。"
+          other: "请你选择一个私信/消息以便移动到<b>{{count}}</b>。"
       merge_posts:
         title: "合并选择的帖子"
         action: "合并选择的帖子"
-        error: "合并选择的帖子试出错。"
+        error: "合并帖子时发生了错误。"
       change_owner:
         title: "更改所有者"
         action: "更改作者"
@@ -2171,7 +2173,7 @@ zh_CN:
         other: "{{count}} 回复"
       has_likes_title:
         other: "{{count}} 人赞了该贴"
-      has_likes_title_only_you: "你赞了该贴"
+      has_likes_title_only_you: "你喜欢了这个帖子"
       has_likes_title_you:
         other: "你和其他 {{count}} 人赞了该贴"
       errors:
@@ -2386,7 +2388,7 @@ zh_CN:
       sort_order: "主题排序依据："
       default_view: "默认主题列表："
       default_top_period: "默认热门时长："
-      allow_badges_label: "允许在这个分类中授予徽章"
+      allow_badges_label: "允许在此分类中授予徽章"
       edit_permissions: "编辑权限"
       reviewable_by_group: "除了工作人员之外，也可以审核该分类中的帖子和标记的人："
       review_group_name: "群组名"
@@ -2481,7 +2483,7 @@ zh_CN:
       action: "标记帖子"
       notify_action: "私信"
     topic_map:
-      title: "主题概要"
+      title: "主题摘要"
       participants_title: "主要发帖者"
       links_title: "热门链接"
       links_shown: "显示更多链接…"
@@ -2617,7 +2619,7 @@ zh_CN:
       download: "下载"
       previous: "之前的（左方向键）"
       next: "继续（右方向键）"
-      counter: "%当前/%总数"
+      counter: "%curr% / %total%"
       close: "关闭(Esc)"
       content_load_error: '<a href="%url%">内容</a>无法加载'
       image_load_error: '<a href="%url%">图像</a>无法加载'
@@ -2685,26 +2687,27 @@ zh_CN:
         mark_watching: "%{shortcut} 看主题"
         print: "%{shortcut} 打印主题"
         defer: "%{shortcut}延迟主题"
+        topic_admin_actions: "%{shortcut}打开主题管理"
     badges:
       earned_n_times:
-        other: "授予徽章 %{count} 次"
+        other: "已获得此徽章 %{count} 次"
       granted_on: "授予于%{date}"
       others_count: "其他有该徽章的人（%{count}）"
       title: 徽章
       allow_title: "你可以将该徽章设为头衔"
-      multiple_grant: "可多次赢得"
+      multiple_grant: "可多次获得"
       badge_count:
-        other: "%{count} Badges"
+        other: "%{count} 个徽章"
       more_badges:
         other: "+%{count} 更多"
       granted:
-        other: "%{count} 授予"
+        other: "%{count} 已授予"
       select_badge_for_title: 选择一个徽章作为你的头衔使用
       none: "（无）"
-      successfully_granted: "成功将%{badge}授予%{username}"
+      successfully_granted: "成功将 %{badge} 授予 %{username}"
       badge_grouping:
         getting_started:
-          name: 开始
+          name: 入门指南
         community:
           name: 社区
         trust_level:
@@ -2730,6 +2733,7 @@ zh_CN:
       changed: "标签被修改："
       tags: "标签"
       choose_for_topic: "可选标签"
+      info: "详情"
       default_info: "该标签不限于任何类别，并且没有同义词。"
       tag_groups_info:
         other: "此标签属于这些标签组：{{tag_groups}}。"
@@ -3013,6 +3017,7 @@ zh_CN:
         new_key: 新建API密钥
         revoked: 已撤销
         delete: 永久删除
+        not_shown_again: 此key只展示一次，请妥善保存。
         continue: 继续
       web_hooks:
         title: "Webhooks"
@@ -3184,9 +3189,9 @@ zh_CN:
         button_title:
           user: "以CSV格式导出所有用户列表"
           staff_action: "以CSV格式导出所有管理人员操作历史记录"
-          screened_email: "以 CSV 格式导出所有已显示的电子邮件列表。"
-          screened_ip: "以 CSV 格式导出所有已显示的IP地址列表。"
-          screened_url: "以 CSV 格式导出所有已显示的URL列表。"
+          screened_email: "以 CSV 格式导出所有已屏蔽的电子邮件列表。"
+          screened_ip: "以 CSV 格式导出所有已屏蔽的 IP 地址列表。"
+          screened_url: "以 CSV 格式导出所有已屏蔽的 URL 列表。"
       export_json:
         button_text: "导出"
       invite:
@@ -3200,7 +3205,7 @@ zh_CN:
         save: "保存"
         new: "新建"
         new_style: "新样式"
-        install: "已安装"
+        install: "安装"
         delete: "删除"
         delete_confirm: '你确定要删除“%{theme_name}”？'
         color: "颜色"
@@ -3254,6 +3259,7 @@ zh_CN:
           color_scheme_select: "选择主题使用的颜色"
           custom_sections: "自定义段落："
           theme_components: "主题组件"
+          add_all_themes: "添加所有主题"
           convert: "转换"
           convert_component_alert: "你确定转换此组件到主题吗？将会从组件%{relatives}中移除。"
           convert_component_tooltip: "转换此组件到主题"
@@ -3286,6 +3292,8 @@ zh_CN:
           edit_css_html: "编辑 CSS/HTML"
           edit_css_html_help: "你还未编辑任何 CSS 或 HTML"
           delete_upload_confirm: "删除这个上传？（主题 CSS 可能会出问题！）"
+          included_components: "包含的组件"
+          add_all: "添加所有"
           import_web_tip: "目录包含主题"
           import_web_advanced: "高级..."
           import_file_tip: "包含主题的.tar.gz、.zip或.dcstyle.json文件"
@@ -3600,21 +3608,21 @@ zh_CN:
             api_key_destroy: "销毁api密钥"
             override_upload_secure_status: "覆盖上传安全状态"
         screened_emails:
-          title: "被屏蔽的邮件地址"
+          title: "已屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
           email: "邮件地址"
           actions:
             allow: "允许"
         screened_urls:
-          title: "被屏蔽的 URL"
+          title: "已屏蔽的 URL"
           description: "以下是垃圾信息发布者使用过的 URL。"
           url: "URL"
           domain: "域名"
         screened_ips:
-          title: "被屏蔽的 IP"
+          title: "已屏蔽的 IP"
           description: '受监视的 IP 地址，使用“放行”可将 IP 地址加入白名单。'
           delete_confirm: "确定要撤销对 IP 地址为 %{ip_address} 的规则？"
-          roll_up_confirm: "你确定要将常用的 IP 地址归类为子网地址吗？"
+          roll_up_confirm: "你确定要将常用的已屏蔽的 IP 地址归类为子网地址吗？"
           rolled_up_some_subnets: "成功地折叠了 IP 封禁记录至这些子网： %{subnets}。"
           rolled_up_no_subnet: "没有可折叠内容。"
           actions:
@@ -3705,7 +3713,7 @@ zh_CN:
           staged: "暂存"
         approved: "已批准？"
         titles:
-          active: "已激活用户"
+          active: "活跃用户"
           new: "新用户"
           pending: "等待审核用户"
           newuser: "信任等级为0的用户（新用户）"
@@ -3955,7 +3963,7 @@ zh_CN:
         categories:
           all_results: "全部"
           required: "必填"
-          branding: "品牌"
+          branding: "站点图标"
           basic: "基本设置"
           users: "用户"
           posting: "发帖"
@@ -4014,7 +4022,7 @@ zh_CN:
         grant_badge: 授予徽章
         granted_badges: 已授予的徽章
         grant: 授予
-        no_user_badges: "%{name}尚未被授予任何徽章。"
+        no_user_badges: "%{name} 尚未被授予任何徽章。"
         no_badges: 没有可供授予的徽章。
         none_selected: "选择一个徽章开始"
         allow_title: 允许将徽章用作头衔
@@ -4023,13 +4031,13 @@ zh_CN:
         enabled: 启用徽章系统
         icon: 图标
         image: 图片
-        icon_help: "输入一个Font Awsome图标的名称（使用前缀“far-”表示常规图标，“fab-”表示品牌图标）"
-        image_help: "输入图像的URL（如果两者都设置，则覆盖图标）"
+        icon_help: "输入一个 Font Awsome 图标的名称（使用前缀“far-”表示常规图标，“fab-”表示品牌图标）"
+        image_help: "输入图像的 URL（如果同时设置了 URL 和图标，则覆 URL 会覆盖图标）"
         query: 徽章查询（SQL）
         target_posts: 查询到的帖子
         auto_revoke: 每天运行撤销查询
         show_posts: 在徽章页面显示被授予帖子的徽章
-        trigger: 开关
+        trigger: 触发条件
         trigger_type:
           none: "每日更新"
           post_action: "当用户操作一个帖子时"
@@ -4045,7 +4053,7 @@ zh_CN:
           error_help: "查看下列关于徽章查询的帮助链接。"
           bad_count_warning:
             header: "警告！"
-            text: "有授予的样本消失。这在徽章查询返回用户 ID 或者帖子 ID 不存在的时候发生。这可能导致未预期的结果发生——请再次检查你的查询。"
+            text: "缺少授予徽章的样本。这在徽章查询返回用户 ID 或者帖子 ID 不存在的时候发生。这可能导致未预期的结果发生——请再次检查你的查询。"
           no_grant_count: "没有徽章可以被授予。"
           grant_count:
             other: "已授予 <b>%{count}</b> 个徽章。"
@@ -4053,12 +4061,15 @@ zh_CN:
           grant:
             with: "<span class=\"username\">%{username}</span>"
             with_post: "<span class=\"username\">%{username}</span>因 %{link} 帖子"
-            with_post_time: "<span class=\"username\">%{username}</span>因在<span class=\"time\">%{time}</span>时的 %{link} 帖子"
-            with_time: "<span class=\"username\">%{username}</span>在<span class=\"time\">%{time}</span>"
+            with_post_time: "<span class=\"username\">%{username}</span> 因在 <span class=\"time\">%{time}</span> 时的 %{link} 帖子"
+            with_time: "<span class=\"username\">%{username}</span> 在 <span class=\"time\">%{time}</span>"
         badge_intro:
           title: "选择现有徽章或创建新徽章来开始"
-          what_are_badges_title: "徽章是什么？"
+          what_are_badges_title: "什么是徽章？"
           badge_query_examples_title: "徽章查询示例"
+        mass_award:
+          upload_csv: 上传包含用户邮箱的csv文件
+          aborted: 请上传一个包含用户邮箱的csv文件
       emoji:
         title: "Emoji"
         help: "增加所有人可用的 emoji。（高端技巧：一次性拖进多个文件）"

@@ -1853,7 +1853,6 @@ de:
       category_search_priority:
         very_low_weight_invalid: "Die Gewichtung kann nicht größer als 'category_search_priority_low_weight' sein."
         low_weight_invalid: "Die Gewichtung kann nicht größer oder gleich 1, oder kleiner als 'category_search_priority_very_low_weight' sein. "
-        high_weight_invalid: "Die Gewichtung kann nicht größer oder gleich 1 oder größer als 'category_search_priority_very_high_weight' sein. "
         very_high_weight_invalid: "Die Gewichtung kann nicht kleiner als 'category_search_priority_high_weight' sein. "
       unicode_username_whitelist:
         regex_invalid: "Der reguläre Ausdruck ist ungültig: %{error}"
@@ -2000,7 +1999,6 @@ de:
     second_factor_backup_title: "Zwei-Faktor-Wiederherstellungs-Code"
     invalid_second_factor_code: "Ungültiger Authentifizierungscode. Jeder Code kann nur einmal benutzt werden."
     second_factor_toggle:
-      totp: "Benutze stattdessen eine Authentifizierungs-App"
       backup_code: "Benutze stattdessen einen Backup Code"
   admin:
     email:
@@ -2967,7 +2965,6 @@ de:
       unsubscribe: "Diese Zusammenfassung wird von %{site_link} versendet, wenn wir dich einige Zeit lang nicht gesehen haben. Ändere %{email_preferences_link} oder %{unsubscribe_link} zum Abbestellen."
       your_email_settings: "deine E-Mail-Einstellungen"
       click_here: "klicke hier"
-      from: "Zusammenfassung für %{site_name}"
       preheader: "Eine kurze Zusammenfassung seit deinem letzten Besuch am %{last_seen_at}"
     forgot_password:
       title: "Passwort vergessen"
@@ -3002,13 +2999,6 @@ de:
     admin_login:
       title: "Administrator-Anmeldung"
       subject_template: "[%{email_prefix}] Anmeldung"
-      text_body_template: |
-        Jemand hat angefordert, sich mit deinem Konto auf [%{site_name}](%{base_url}) anzumelden.
-
-        Wenn du diese Anfrage nicht gestellt hast, kannst du diese E-Mail einfach ignorieren.
-
-        Folge diesem Link, um dich anzumelden:
-        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Konto erstellt"
       subject_template: "[%{email_prefix}] Dein neues Konto"
@@ -3171,6 +3161,7 @@ de:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nein"
+    rate_limit_error: "Beiträge können pro Tag nur einmal heruntergeladen werden. Bitte versuch es morgen wieder."
   static_topic_first_reply: |
     Bearbeite den ersten Beitrag in diesem Thema, um den Inhalt von %{page_name} zu ändern.
   guidelines_topic:
@@ -3704,19 +3695,11 @@ de:
         Das Abzeichen wird verliehen, wenn 300 deiner Beiträge mindestens 5 Likes erhalten. Wow! Die Community bewundert deine regelmäßigen, hochwertigen Beiträge zu den Dialogen!
     out_of_love:
       name: Out of Love
-      description: Hat 50 Likes an einem Tag vergeben
-      long_description: |
-        Das Abzeichen wird verliehen, wenn du alle deiner 50 täglichen Likes nutzt. Daran zu denken, sich einen Moment zu nehmen und die Beiträge mit „Gefällt mir“ zu markieren, die du genießt und schätzt, ermuntert deine Community-Kollegen, in der Zukunft noch großartigere Diskussionen zu erstellen.
     higher_love:
       name: Higher Love
-      description: Hat fünfmal je 50 Likes an einem Tag vergeben
-      long_description: |
-        Das Abzeichen wird verliehen, wenn du fünf Tage lang alle deiner 50 täglichen Likes nutzt. Danke, dass du dir die Zeit nimmst, die besten Dialoge täglich zu fördern!
     crazy_in_love:
       name: Crazy in Love
       description: Hat 20-mal je 50 Likes an einem Tag vergeben
-      long_description: |
-        Dieses Abzeichen wird verliehen, wenn du 20 Tage lang alle deiner 50 täglichen Likes nutzt. Wow! Du bist ein Vorbild, das deine Community-Kollegen ermutigt!
     thank_you:
       name: Dankeschön
       description: Hat 20 Likes für Beiträge erhalten und 10 Likes vergeben

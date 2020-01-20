@@ -233,6 +233,7 @@ he:
     request_membership: "בקשת חברות"
     join_group: "הצטרפות לקבוצה"
   deleted_topic: "אופס! נושא זה נמחק ואינו זמין עוד."
+  delete_topic_failed: "אירעה שגיאה במחיקת הנושא הזה. נא ליצור קשר עם הנהלת האתר."
   reading_time: "זמן קריאה"
   likes: "לייקים"
   too_many_replies:
@@ -918,6 +919,7 @@ he:
       public_key_error: "אימות המפתח הציבורי עבור פרטי הגישה נכשל."
       ownership_error: "מפתח האבטחה אינו בבעלות המשתמש."
       not_found_error: "לא ניתן למצוא מפתח אבטחה עם מזהה פרטי הגישה שסופק."
+      unknown_cose_algorithm_error: "האלגוריתם בו נעשה שימוש למפתח האבטחה אינו מוכר."
   topic_flag_types:
     spam:
       title: "ספאם"
@@ -2014,7 +2016,7 @@ he:
       category_search_priority:
         very_low_weight_invalid: "לא ניתן להגדיר משקל מעבר ל־‚category_search_priority_low_weight’ (משקל נמוך לעדיפות חיפוש בקטגוריות)."
         low_weight_invalid: "לא ניתן להגדיר משקל שווה או גדול מ־1 או קטן מ־‚category_search_priority_very_low_weight’."
-        high_weight_invalid: "לא ניתן להגדיר את המשקל ל־1 או מעל ‚category_search_priority_very_high_weight’ (משקל גבוה מאוד לחיפוש בקטגוריות)."
+        high_weight_invalid: "לא ניתן להגדיר את המשקל לפחות או שווה ל־1 או מעל ‚category_search_priority_very_high_weight’ (משקל כבד מאוד לעדיפות חיפוש בקטגוריה)"
         very_high_weight_invalid: "לא ניתן להגדיר משקל מתחת ל־‚category_search_priority_high_weight’ (משקל גבוה לעדיפות חיפוש בקטגוריות)."
       unicode_username_whitelist:
         regex_invalid: "הביטוי הרגולרי שגוי: %{error}"
@@ -2042,6 +2044,7 @@ he:
     unknown_error: "יש בעיה עם החשבון שלכם. אנא צרו קשר עם מנהל האתר."
     timeout_expired: "הכניסה לחשבון פקעה, אנא נסו להתחבר שוב."
     no_email: "לא סופקה כתובת דוא״ל. נא ליצור קשר עם מנהל האתר."
+    blank_id_error: "ה־`external_id` (מזהה חיצוני) נדרש אבל נותר ריק"
     email_error: "לא ניתן לרשום חשבון עם כתובת המייל <b>%{email}</b>. בבקשה צרו קשר עם האדמיניסטרטור של האתר."
     missing_secret: "הזדהות SSO נכשלה בשל secret חסר. יש ליצור קשר עם מנהלי האתר כדי לתקן בעיה זו."
   original_poster: "מפרסמים מקוריים"
@@ -2158,6 +2161,8 @@ he:
     autoclosed_disabled_lastpost: "הנושא הזה נפתח. ניתן להגיב תגובות חדשות."
     auto_deleted_by_timer: "יימחק אוטומטית על ידי שעון."
   login:
+    invalid_second_factor_method: "שיטת האימות הדו־שלבי שנבחרה שגויה."
+    not_enabled_second_factor_method: "שיטת האימות הדו־שלבי שנבחרה אינה מופעלת בחשבונך."
     security_key_description: "כשמפתח האבטחה הפיזי שלך מוכן יש ללחוץ על כפתור האימות עם מפתח האבטחה שלהלן."
     security_key_alternative: "לנסות דרך אחרת"
     security_key_authenticate: "אימות עם מפתח אבטחה"
@@ -2203,7 +2208,7 @@ he:
     invalid_second_factor_code: "קוד האימות שגוי. מותר להשתמש בכל קוד פעם אחת בלבד."
     invalid_security_key: "מפתח אבטחה שגוי."
     second_factor_toggle:
-      totp: "להשתמש ביישומון אימות במקום"
+      totp: "יש להשתמש ביישומון מאמת או במפתח אבטחה במקום"
       backup_code: "להשתמש בקוד גיבוי במקום"
   admin:
     email:
@@ -3237,7 +3242,6 @@ he:
       unsubscribe: "סיכום זה נשלח ממערכת %{site_link} כאשר לא נרשמת פעילות במשך זה מה. ניתן לשנות את %{email_preferences_link} או %{unsubscribe_link} כדי לבטל את המינוי. "
       your_email_settings: "הגדרות הדוא״ל שלך"
       click_here: "ללחוץ כאן"
-      from: "סיכום %{site_name}"
       preheader: "סיכום קצר מאז ביקורכם האחרון ב-%{last_seen_at}"
     forgot_password:
       title: "שכח/ה סיסמה"
@@ -3273,11 +3277,11 @@ he:
       title: "התחברות אדמיניסטרטור"
       subject_template: "[%{email_prefix}] התחברות"
       text_body_template: |
-        מישהו ניסה להתחבר לחשבון שלכם ב-[%{site_name}](%{base_url}).
+        התקבלה בקשה להיכנס לחשבון שלך אצל [%{site_name}](%{base_url}).
 
-        אם לא אתם ביקשתם זאת, אתם יכולים פשוט להתעלם ממייל זה.
+        אם הבקשה הזאת לא בוצעה על ידיך, אפשר להתעלם מההודעה הזאת.
 
-        לחצו על הקישור הבא כדי להתחבר:
+        יש ללחוץ על הקישור הבא כדי להיכנס:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "חשבון נוצר"
@@ -3454,6 +3458,7 @@ he:
   csv_export:
     boolean_yes: "כן"
     boolean_no: "לא"
+    rate_limit_error: "ניתן להוריד פוסטים פעם ביום, אנא נסו שוב מחר."
   static_topic_first_reply: |
     ערכו את הפוסט הראשון בנושא זה כדי לשנות את התכנים של העמוד %{page_name}.
   guidelines_topic:
@@ -3653,6 +3658,9 @@ he:
 
       מסמך זה הוא CC-BY-SA. הוא עודכן לאחרונה ב 25 לספטמבר 2016.
   badges:
+    mass_award:
+      errors:
+        invalid_csv: לא הצלחנו לקרוא את ה־CSV הזה. נא לוודא שמופיעה בו כתובת דוא״ל אחת בלבד בכל שורה.
     editor:
       name: עורכים
       description: עריכת פוסט ראשונה
@@ -3825,19 +3833,19 @@ he:
         עיטור זה מוענק כאשר אתם מקבלים לפחות 5 לייקים על 300 פוסטים שונים. וואו! הקהילה מעריצה את תרומותיכם התכופות והאיכותיות לדיונים פה.
     out_of_love:
       name: באו מאהבה
-      description: שימוש ב־50 לייקים ביום
+      description: "שימוש ב־%{max_likes_per_day} לייקים ביום"
       long_description: |
-        עיטור זה מוענק עקב שימוש בכל 50 הלייקים היומיים. כדאי לזכור לקחת את הזמן כדי לעשות לייק לפוסטים מהנים ומוערכים בעיניכם - מעודד את חבריך לקהילה לפתח דיונים אף טובים יותר בעתיד.
+        עיטור זה מוענק עקב שימוש בכל %{max_likes_per_day} הלייקים היומיים. כדאי לזכור להשקיע זמן כדי לעשות לייק לפוסטים מהנים ומוערכים בעיניך - מעודד את חבריך לקהילה לפתח דיונים אף טובים יותר בעתיד.
     higher_love:
       name: אהבה עליונה
-      description: השתמשו ב 50 לייקים ליום 5 פעמים
+      description: "שימוש ב־%{max_likes_per_day} לייקים ביום 5 פעמים"
       long_description: |
-        עיטור זה מוענק כאשר אתם משתמשים בכל 50 הלייקים היומיים שלכם ב 5 ימים. תודה על שהשקעתם את הזמן בלעודד, אקטיבית, את השיחות הטובות ביותר בכל יום!
+        עיטור זה מוענק עקב שימוש בכל %{max_likes_per_day} הלייקים היומיים שלכם במשך 5 ימים. תודה על שהשקעת את הזמן כדי לעודד את הדיונים הטובים ביותר בכל יום!
     crazy_in_love:
       name: מאוהבים בטירוף
       description: השתמשו ב 50 לייקים ביום 20 פעם
       long_description: |
-        עיטור זה מוענק לך לאחר שהשתמשת בכל 50 הלייקים היומיים שלך במשך 20 ימים. חבל על הזמן! התנהגותך היא מופת לחברי הקהילה האחרים!
+        עיטור זה מוענק לך לאחר שהשתמשת בכל %{max_likes_per_day} הלייקים היומיים שלך במשך 20 ימים. חבל על הזמן! התנהגותך היא מופת לחברי הקהילה האחרים!
     thank_you:
       name: תודה רבה
       description: יש לכם 20 פוסטים שנאהבו ונתתם 10 לייקים

@@ -37,7 +37,7 @@ zh_CN:
   anonymous: "匿名"
   remove_posts_deleted_by_author: "被作者删除"
   redirect_warning: "我们无法验证你选择的链接是否已实际发布到论坛。如果您仍想继续，请选择以下链接。"
-  on_another_topic: "在另外的主题"
+  on_another_topic: "在另外的主题中"
   themes:
     bad_color_scheme: "无法更新主题，无效的调色板"
     other_error: "更新主题时出错"
@@ -45,9 +45,9 @@ zh_CN:
       unrecognized_extension: "无法识别的文件扩展名：%{extension}"
     import_error:
       generic: 导入该主题时发生错误
-      about_json: "导入错误：about.json不存在或是无效的"
-      about_json_values: "about.json包含无效值：%{errors}"
-      git: "克隆 git 版本库时出错，访问被拒绝或找不到版本库"
+      about_json: "导入错误：about.json 不存在或无效"
+      about_json_values: "about.json 包含无效值：%{errors}"
+      git: "克隆 git 储存库时出错，访问被拒绝或找不到存储库"
       unpack_failed: "无法解压缩文件"
       file_too_big: "未压缩的文件太大。"
       unknown_file_type: "你上传的文件似乎不是可用的 Discourse 主题。"
@@ -56,53 +56,55 @@ zh_CN:
       component_no_default: "主题组件不能是默认主题"
       component_no_color_scheme: "主题组件不能有调色板"
       no_multilevels_components: "具有子主题的主题本身不能是子主题"
+      optimized_link: 优化的图像链接是暂时的，不应包含在主题源代码中。
     settings_errors:
-      invalid_yaml: "填写的 YAML 无效"
-      data_type_not_a_number: "不支持设置`%{name}`类型。 支持的类型是`integer`，`bool`，`list`和`enum`"
-      name_too_long: "设置名称太长。最大长度255"
-      default_value_missing: "设置`%{name}`无默认值"
-      default_not_match_type: "设置`%{name}`默认值的类型不匹配设置类型。"
-      default_out_range: "设置`%{name}`默认值不在指定范围内。"
+      invalid_yaml: "提供的 YAML 无效"
+      data_type_not_a_number: "不支持设置 `%{name}` 类型。 支持的类型是 `integer`，`bool`，`list` 和 `enum`"
+      name_too_long: "有一个设置的名字太长了。名称的最大长度为 255"
+      default_value_missing: "设置 `%{name}` 无默认值"
+      default_not_match_type: "设置 `%{name}` 默认值的类型不匹配设置类型。"
+      default_out_range: "设置 `%{name}` 的默认值不在指定范围内。"
       enum_value_not_valid: "选择的值不是枚举选项之一。"
       number_value_not_valid: "新值不在允许的范围内。"
-      number_value_not_valid_min_max: "它必须介于%{min}和%{max}之间。"
-      number_value_not_valid_min: "它必须大于或等于%{min}。"
-      number_value_not_valid_max: "它必须小于或等于%{max}。"
+      number_value_not_valid_min_max: "它必须介于 %{min} 和 %{max} 之间。"
+      number_value_not_valid_min: "它必须大于或等于 %{min}。"
+      number_value_not_valid_max: "它必须小于或等于 %{max}。"
       string_value_not_valid: "新值长度不在允许的范围内。"
-      string_value_not_valid_min_max: "它的字符长度必须介于%{min}和%{max}之间。"
-      string_value_not_valid_min: "它必须至少为%{min}个字符。"
-      string_value_not_valid_max: "它必须至多为%{max}个字符。"
+      string_value_not_valid_min_max: "它的字符长度必须介于 %{min} 和 %{max} 之间。"
+      string_value_not_valid_min: "它必须至少为 %{min} 个字符。"
+      string_value_not_valid_max: "它必须至多为 %{max} 个字符。"
     locale_errors:
       top_level_locale: "语言环境文件中的顶级键必须与语言环境名称匹配"
-      invalid_yaml: "翻译 YAML 无效"
+      invalid_yaml: "本地化翻译 YAML 文件无效"
   emails:
     incoming:
-      default_subject: "这个主题需要个标题"
+      default_subject: "此主题需要一个标题"
       show_trimmed_content: "显示被截短的内容"
-      maximum_staged_user_per_email_reached: "为邮件创建的暂存用户数达到上限。"
+      maximum_staged_user_per_email_reached: "已达到每个电子邮件可以创建暂存用户的上限。"
       no_subject: "（无主题）"
       no_body: "（无正文）"
-      missing_attachment: "（缺少附件%{filename}）"
+      missing_attachment: "（缺少附件 %{filename}）"
       errors:
         empty_email_error: "收到空白邮件。"
         no_message_id_error: "邮件头部没有“Message-Id”。"
-        auto_generated_email_error: "邮件头部的“precedence”为：list、junk、bulk 或 auto_reply，或者头部包含了：auto-submitted、auto-replied 或 auto-generated。"
+        auto_generated_email_error: "邮件头部的优先级(precedence)设置为为：list、junk、bulk 或 auto_reply，或者头部的其他部分包含了：auto-submitted、auto-replied 或 auto-generated。"
         no_body_detected_error: "无法解析正文并且没有附件。"
-        no_sender_detected_error: "当无法在来源信息中找到有效邮件地址时发生。"
-        from_reply_by_address_error: "当From标头与电子邮件地址的回复匹配时发生。"
-        inactive_user_error: "发送者未激活。"
+        no_sender_detected_error: "当无法在邮件头中找到有效邮件地址时发生。"
+        from_reply_by_address_error: "当 From 标头与回复的电子邮件地址匹配时发生。"
+        inactive_user_error: "发件人未激活。"
         silenced_user_error: "当发件人被禁言时发生。"
-        bad_destination_address: "当“收件人/抄送”字段中的电子邮件地址与配置的传入电子邮件地址不匹配时发生。"
+        bad_destination_address: "当没有一个“收件人/抄送”字段中的电子邮件地址能与与配置的传入电子邮件地址匹配时发生。"
         strangers_not_allowed_error: "用户尝试在非成员分类中创建主题。"
-        insufficient_trust_level_error: "用户尝试在用户等级不满足分类要求时发帖。"
+        insufficient_trust_level_error: "用户尝试在不满足信任等级要求的分类下发表主题。"
         reply_user_not_matching_error: "回复邮箱地址与通知发送至的邮件地址不同。"
         topic_not_found_error: "回复到已经删除的主题。"
         topic_closed_error: "回复到已经锁定的主题。"
         bounced_email_error: "邮件是投递失败的错误报告。"
-        screened_email_error: "发件人邮箱已经被封禁。"
+        screened_email_error: "发件人邮箱已经被屏蔽。"
         unsubscribe_not_allowed: "当用户不能通过邮件退订时发生。"
         email_not_allowed: "当用户邮件不在白名单或在黑名单时发生。"
       unrecognized_error: "无法识别的错误"
+    secure_media_placeholder: "已编辑：该站点已启用安全媒体，请访问主题以查看随附的图像/音频/视频。"
   errors: &errors
     format: "%{attribute}%{message}"
     format_with_full_message: "<b>%{attribute}</b>：%{message}"
@@ -305,6 +307,9 @@ zh_CN:
   revert_version_same: "目前的版本和你想要回退至的版本一样。"
   excerpt_image: "图片"
   bookmarks:
+    errors:
+      already_bookmarked_post: "你不能将同一帖子收藏两次。"
+      time_must_be_provided: "必须为除“ %{reminder_type}”以外的所有提醒提供时间"
     reminders:
       at_desktop: "下次我使用桌面设备时"
       later_today: "晚于今天的<br/>{{date}}"
@@ -832,6 +837,8 @@ zh_CN:
     description: "<b>%{email}</b>的电子邮件设置已更新。要更改你的电子邮件设置，访问<a href='%{url}'>你的用户设置页面</a>。"
     topic_description: "点击链接 %{link} 重新订阅，或是使用主题底部或右侧的通知控制。"
     private_topic_description: "使用主题底部或右侧的通知控制重新订阅。"
+  uploads:
+    marked_insecure_from_theme_component_reason: "在主题组件中使用的上传"
   unsubscribe:
     title: "退订"
     stop_watching_topic: "不再关注该主题，%{link}"
@@ -1214,6 +1221,7 @@ zh_CN:
       other: "邮件轮询在过去的 24 小时内出现了 %{count} 个错误。看一看<a href='%{base_path}/logs' target='_blank'>日志</a>寻找详情。"
     missing_mailgun_api_key: "服务器设置使用Mailgun发送邮件，但并未设置验证webhook私信的API密钥。"
     bad_favicon_url: "网站图标无法载入。检查<a href='%{base_path}/admin/site_settings'>站点设置</a>中的图标设置。"
+    deprecated_api_usage: "我们检测到了不建议使用的身份验证方法的API请求。请更新以使用<a href='https://meta.discourse.org/t/-/22706'>基于header的认证</a> 。更新后，此消息可能需要24小时才能消失。"
     poll_pop3_timeout: "至 POP3 服务器的连接超时。无法获取进站邮件。请检查<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>和服务商。"
     poll_pop3_auth_error: "至 POP3 服务器的连接验证失败。请检查<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>。"
     force_https_warning: "你的网站使用了SSL。但是，你的网站设置中尚未启用`<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>`。"
@@ -1344,7 +1352,7 @@ zh_CN:
     enable_escaped_fragments: "如果未检测到webcrawler，则回退到Google的Ajax-Crawling API。请参阅<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "允许版主创建新的分类"
     cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
-    use_admin_ip_whitelist: "当目前的IP刚好处于IP段禁止名单(Admin > Logs > Screened Ips)中的时候，只有管理员才可登入。"
+    use_admin_ip_whitelist: "管理员只能在已屏蔽的 IP 列表（管理 > 日志 > 已屏蔽的 IP）中定义放行的 IP 处才能登陆。"
     blacklist_ip_blocks: "Discourse 不会访问抓取的保密 IP 封禁列表"
     whitelist_internal_hosts: "discourse 可以安全抓取以用于 Onebox 和其他目的的内部主机列表"
     allowed_iframes: "可以令 Discourse 在主题中安全地发布的 iframe src 域名前缀列表"
@@ -1355,7 +1363,9 @@ zh_CN:
     content_security_policy: "启用内容安全策略"
     content_security_policy_report_only: "只启用内容安全报告策略"
     content_security_policy_collect_reports: "在/csp_reports上启用内容安全策略违规报告收集"
+    content_security_policy_script_src: "其它脚本来源白名单。默认包含当前主机和CDN。<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略缓解XSS攻击</a>"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问过网站的管理员帐户需要在登录前重新验证邮件地址。设置为0禁用。"
+    allow_embedding_site_in_an_iframe: "启用将网站嵌入iframe中。"
     top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "帖子菜单中默认隐藏的按钮，点击省略号后显示。"
@@ -1379,6 +1389,7 @@ zh_CN:
     email_token_valid_hours: "“忘记密码”/“激活账户”令牌有效的小时数。"
     enable_badges: "启用徽章系统"
     enable_whispers: "允许管理人员在主题中私密交流。"
+    allow_index_in_robots_txt: "在robots.txt中指定允许网络搜索引擎建立该网站的索引。在特殊情况下，你可以永久<a href='%{base_path}/admin/customize/robots'>覆盖robots.txt</a> 。"
     email_domains_blacklist: "用管道符“|”分隔的邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "用管道符“|”分隔的电子邮箱域名的列表，用户必须使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
     hide_email_address_taken: "通过邮件地址注册账户或忘记密码时不反馈用户账户是否存在的信息。"
@@ -1601,8 +1612,8 @@ zh_CN:
     levenshtein_distance_spammer_emails: "当匹配广告邮件时，模糊匹配判断差异的字符数。"
     max_new_accounts_per_registration_ip: "如果已经有了从这个 IP 创建的(n)个信任等级0的账户（并且没有一个是管理人员或者是信任等级2以上的用户），不再允许来自该 IP 地址的注册请求。"
     min_ban_entries_for_roll_up: "当点击折叠按钮时，且至少 (N) 条记录时，将会创建一个子网封禁记录"
-    max_age_unmatched_emails: "在 (N) 天后删除不匹配的邮件地址。"
-    max_age_unmatched_ips: "在 (N) 天后删除不匹配的 IP 记录。"
+    max_age_unmatched_emails: "在 (N) 天后删除不匹配的已屏蔽的邮件地址。"
+    max_age_unmatched_ips: "在 (N) 天后删除不匹配的已屏蔽的 IP 记录。"
     num_flaggers_to_close_topic: "要自动终止一个主题的讨论并介入时所需的最小数量的独立标记者"
     num_hours_to_close_topic: "暂停主题以介入处理的小时数"
     auto_respond_to_flag_actions: "当处理标记时启用自动回复。"
@@ -1868,7 +1879,6 @@ zh_CN:
       category_search_priority:
         very_low_weight_invalid: "你不能将权重设置为大于'category_search_priority_low_weight'。"
         low_weight_invalid: "你不能将权重设置为大于或小于1且小于'category_search_priority_very_low_weight'"
-        high_weight_invalid: "你不能将权重设置为大于或等于1且大于'category_search_priority_very_high_weight'。"
         very_high_weight_invalid: "你不能将权重设置为小于'category_search_priority_high_weight'。"
       unicode_username_whitelist:
         regex_invalid: "该正则表达式无效：%{error}"
@@ -1912,9 +1922,9 @@ zh_CN:
       different_users: "无法合并不同用户的帖子。"
   move_posts:
     new_topic_moderator_post:
-      other: "%{count} 个帖子被分离到新主题 %{topic_link}"
+      other: "%{count} 个帖子被拆分到新主题：%{topic_link}"
     new_message_moderator_post:
-      other: "%{count}个帖子被分拆到新私信：%{topic_link}"
+      other: "%{count} 个帖子被分拆到新私信：%{topic_link}"
     existing_topic_moderator_post:
       other: "%{count} 个帖子已被合并到了现有主题：%{topic_link}"
     existing_message_moderator_post:
@@ -1999,7 +2009,6 @@ zh_CN:
     invalid_second_factor_code: "验证码无效。每个代码只能使用一次。"
     invalid_security_key: "无效的安全密钥。"
     second_factor_toggle:
-      totp: "改用身份验证APP"
       backup_code: "使用备份码"
   admin:
     email:
@@ -2148,9 +2157,11 @@ zh_CN:
     title: "测试发件人"
     subject_template: "[%{email_prefix}] 邮件可达性测试"
     text_body_template: |
-      这是来自的测试电子邮件
+      这是来自
 
       [**%{base_url}**][0]
+
+      的测试电子邮件
 
       电子邮件传送能力很复杂。以下是您应该首先检查的一些重要事项：
 
@@ -2174,7 +2185,7 @@ zh_CN:
 
       祝好运，
 
-      您在[discourse]的朋友（https://www.discourse.org）
+      您在[discourse](https://www.discourse.org)的朋友
 
       [0]：%{base_url}
       [1]：https://www.kitterman.com/spf/validate.html
@@ -2239,16 +2250,42 @@ zh_CN:
     post_hidden:
       title: "帖子隐藏"
       subject_template: "帖子因社区标记隐藏"
+      text_body_template: |
+        你好，
+
+        这是%{site_name}通知你的帖子已被隐藏的自动消息。
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        这个帖子被隐藏是因为被社区成员所标记，所以请考虑根据他们的反馈修改你的帖子。**你可以在 %{edit_delay} 分钟后开始编辑你的帖子，然后它将重新被显示。**
+
+        然而，如果帖子再次被社区成员标记并隐藏，它将被隐藏至版主处理后。
+
+        想了解更多，请查看我们的[社区指引](%{base_url}/guidelines)。
     post_hidden_again:
       title: "再次发布隐藏"
       subject_template: "被社区标记所隐藏，已通知管理人员"
+      text_body_template: |
+        你好，
+
+        这是%{site_name}通知你的帖子再次被隐藏了的自动消息。
+
+        <%{base_url}}%{url}>
+
+        %{flag_reason}
+
+        社区成员标记了该帖子，现已被隐藏。**由于此帖子已被隐藏超过一次，你的帖子现在将持续隐藏，直到由工作人员作出处理。**
+
+        有关其他指导，请参阅我们的[社区指引](%{base_url}/guidelines)。
     flags_disagreed:
       title: "管理人员恢复了被标记的帖子"
       subject_template: "管理人员恢复了被标记的帖子"
       text_body_template: |
         你好，
 
-        这是来自%{site_name}的自动消息，[你的贴子](%{base_url}%{url})已被恢复。
+        这是%{site_name}通知[你的贴子](%{base_url}%{url})已被恢复的自动消息。
 
         此贴曾被社区标记过，管理人员选择将其恢复。
 
@@ -2263,7 +2300,7 @@ zh_CN:
       text_body_template: |
         你好，
 
-        这是来自%{site_name}的自动消息，通知你[你的帖子](%{base_url}%{url})已被删除。
+        这是%{site_name}通知你[你的帖子](%{base_url}%{url})已被删除的自动消息。
 
         %{flag_reason}
 
@@ -2408,7 +2445,7 @@ zh_CN:
 
         你发送回复的邮件地址是未知的邮件地址。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_screened_email:
-      title: "Email被拒绝：被屏蔽的Email地址"
+      title: "Email 被拒绝：已屏蔽的 Email 地址"
       subject_template: "[%{email_prefix}] 邮件问题 -- 被封禁的邮件地址"
       text_body_template: |
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
@@ -2601,7 +2638,7 @@ zh_CN:
       text_body_template: |
         您好，
 
-        这是一条来自 %{site_name} 的自动消息，告知您 @%{username} 已被 %{ignores_threshold} 名用户忽略。这可能表示您的社区已开始产生问题。
+        这是 %{site_name} 告知您 @%{username} 已被 %{ignores_threshold} 名用户忽略的自动消息。这可能表示您的社区已开始产生问题。
 
         您可能想查阅[此用户的近期发帖](%{base_url}/u/%{username}/summary)和[忽略及禁言汇报](%{base_url}/admin/reports/top_ignored_users)中的其他用户。
 
@@ -2612,7 +2649,7 @@ zh_CN:
       text_body_template: |
         你好，
 
-        这是来自%{site_name}的自动消息，通知你，你的帖子已暂时隐藏，因为它们已被社区标记。
+        这是%{site_name}通知你的帖子因被社区成员标记已被暂时隐藏的自动消息
 
         作为预防措施，你的新帐户已被停用，并且在管理人员可以审核你的帐户之前无法创建回复或主题。我们对此深表抱歉。
 
@@ -2623,7 +2660,7 @@ zh_CN:
       text_body_template: |
         你好，
 
-        这是%{site_name}自动发出的邮件。你的帖子因社区标记而被临时禁用。
+        这是%{site_name}通知你的帖子因社区标记而被临时禁用的自动消息。
 
         出于谨慎的考虑，在管理人员审核通过前，你的新账户不能再发表新的回复或者主题。我们对此带来的不便表示歉意。
 
@@ -2634,7 +2671,7 @@ zh_CN:
       text_body_template: |
         你好，
 
-        这是%{site_name}自动发出的邮件。出于谨慎的考虑，你的帐户临时暂停使用。
+        这是%{site_name}通知你的帐户因出于谨慎考虑被临时暂停使用的通知。
 
         请继续浏览，但在管理人员审核通过前，你的账户不能再发表新的回复或者主题。我们对此带来的不便表示歉意。
 
@@ -2643,7 +2680,7 @@ zh_CN:
       title: "用户自动被禁用"
       subject_template: "新用户%{username}因社区标记被封禁"
       text_body_template: |
-        这是自动发出的邮件。
+        这是自动发出消息。
 
         因多位用户标记%{username}的帖子，新用户[%{username}](%{user_url})已被自动禁言。
 
@@ -2667,7 +2704,7 @@ zh_CN:
       text_body_template: |
         你好，
 
-        这是%{site_name}自动发出的邮件。管理人员审核你的帐户后，你的帐户不再受到限制。
+        这是%{site_name}通知你的帐户在管理人员审核后不再受到限制的自动消息。
 
         你现在可以创建新回复和主题了。感谢你的耐心等待。
     pending_users_reminder:
@@ -2978,7 +3015,6 @@ zh_CN:
       unsubscribe: "这是来自%{site_link}的摘要邮件，因为你长时间没有访问站点而发送。修改你的邮件设置%{email_preferences_link}，或%{unsubscribe_link}取消订阅。"
       your_email_settings: "你的邮件设置"
       click_here: "点击此处"
-      from: "%{site_name}的摘要"
       preheader: "在你上次于%{last_seen_at}访问后的新内容摘要"
     forgot_password:
       title: "忘记密码"
@@ -3013,13 +3049,6 @@ zh_CN:
     admin_login:
       title: "管理员登录"
       subject_template: "[%{email_prefix}] 登录"
-      text_body_template: |
-        在[%{site_name}](%{base_url})上有人要求登录你的账户。
-
-        如果你没有提出此请求，你可以安全地忽略此邮件。
-
-        点击以下链接登录：
-        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "账户已创建"
       subject_template: "[%{email_prefix}] 你的新账户"
@@ -3193,6 +3222,7 @@ zh_CN:
   csv_export:
     boolean_yes: "是"
     boolean_no: "否"
+    rate_limit_error: "帖子只能每天下载一次，请明天再重试。"
   static_topic_first_reply: |
     编辑本主题的第一帖以改变 %{page_name} 页面的内容。
   guidelines_topic:
@@ -3559,7 +3589,7 @@ zh_CN:
       long_description: |
         该徽章授予给第一次编辑自己帖子的你。虽然你不能永远在编辑自己的帖子，但鼓励编辑 - 你可以改进格式，修正小错误，或者是增补你原来没有写的内容。编辑能让你的帖子质量变得更好！
     wiki_editor:
-      name: 维基编辑器
+      name: 维基编者
       description: 首次编辑维基
       long_description: |
         该徽章授予给第一次编辑维基帖子的你。
@@ -3569,7 +3599,7 @@ zh_CN:
       long_description: |
         该徽章授予给用户等级达到 1 的成员。感谢你在社区里花了一些时间并且阅读了一些帖子，了解了我们的社区。你的新用户限制已经被取消；并且你已经被授予了所有基本的社区权限，必须个人私信、标记、维基编辑和发布多张图片和多个链接的能力。
     member:
-      name: 成员
+      name: 社区成员
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">授予</a>邀请、群组消息和更多的赞"
       long_description: |
         该徽章授予给达到用户等级2的你。感谢你在社区待了几周，真正融入到了社区中。你现在可以在你的用户页或者主题中邀请他人或者创建群组消息了。每天你也可以点更多次赞了。
@@ -3580,7 +3610,7 @@ zh_CN:
         该徽章授予给达到用户等级 3 的你。感谢你在这几个月持续地参与社区。你现在是我们之中最活跃的读者之一了，你持续的贡献极大地帮助了我们的社区。你现在可以重新分类或者重命名主题、使用能力强大的垃圾标记功能以及访问隐藏的贵宾分类了。而且每天你可以点更多次赞了。
     leader:
       name: 资深
-      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">授予</a>全局编辑、固定、关闭、存档、分割、合并和更多的赞"
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">授予</a>全局编辑、固定、关闭、存档、分割、合并帖子的权限和更高的每日点赞上限"
       long_description: |
         当你达到信任等级 4 时，将被授予此徽章。你是管理人员选作的社区中的领导者，你的行为和言辞，为社区中的其他人树立了积极的榜样。 你现在可以编辑所有的帖子，使用常见的主题管理操作，例如置顶，关闭，不在列表中显示，存档，分割和合并。
     welcome:
@@ -3604,7 +3634,7 @@ zh_CN:
       long_description: |
         该徽章授予给回复被赞了 10 次的你。你的回复给社区成员们留下了印象，并且你推动了讨论的进程。
     good_post:
-      name: 很好的回复
+      name: 很棒的回复
       description: 回复被赞了 25 次
       long_description: |
         该徽章授予给回复被赞了 25 次的你。你的回复很杰出，而且让讨论更有意思了。
@@ -3725,19 +3755,19 @@ zh_CN:
         该徽章授予给 300 个不同的帖子都收到了至少 5 个赞的你。哇！社区敬仰你在讨论中频繁和高质量的贡献。
     out_of_love:
       name: 热情
-      description: 1 天内赞了 50 次
+      description: "1天内赞了%{max_likes_per_day}次"
       long_description: |
-        该徽章授予给一天内赞了 50 次的你。别忘记休息一下。赞你喜欢的帖子能鼓励成员不断改进讨论的内容。
+        该徽章授予给一天内赞了 %{max_likes_per_day} 次的你。别忘记休息一下。赞你喜欢的帖子能鼓励社区将来创建更多更精彩的讨论。
     higher_love:
       name: 激情
-      description: 5 天都赞过 50 次
+      description: "5次每天都赞了 %{max_likes_per_day} 次"
       long_description: |
-        该徽章授予给 5 天赞过 50 次的你。感谢你每天都花点时间鼓励讨论的进行！
+        此徽章授予给连续5天用完所有每日 %{max_likes_per_day} “赞”的你。感谢您每天花时间积极鼓励最好的交流！
     crazy_in_love:
       name: 狂热
       description: 20 天都赞过 50 次
       long_description: |
-        该徽章授予给 20 天赞过 50 次的你。哇！你为社区成员们树立了一个令人鼓舞的模范！
+        此徽章授予给每天都送完所有的每日 %{max_likes_per_day} 赞的你。哇！你是鼓励社区成员的榜样！
     thank_you:
       name: 感谢你
       description: 有 20 个被赞的帖子，给出过 10 个赞
@@ -3750,7 +3780,7 @@ zh_CN:
         该徽章授予给收到了 100 个赞，且赞过别人至少 100 次的你。感谢你分享感激！
     empathetic:
       name: 感性
-      description: 有 500 个被赞的帖子，给出过 1000 个赞
+      description: 有 500 个被赞的帖子，并给出过 1000 个赞
       long_description: |
         该徽章授予给收到了 500 个赞，且赞过别人至少 1000 次的你。哇！你是一个富有同情心且会换位思考的模范。 :two_hearts:
     first_emoji:
@@ -3767,7 +3797,7 @@ zh_CN:
       name: 首个Onebox
       description: 发布过 oneboxed 链接
       long_description: |
-        该徽章授予给第一次在空行中发表链接的你，链接将被展开成 onebox。其中有摘要、标题和（如果有）图片。
+        该徽章授予给第一次发表单独一行链接的你。链接将展开成一个标签盒，其中包含摘要、标题和（可能的）图片。
     first_reply_by_email:
       name: 首次邮件回复
       description: 通过邮件回复
@@ -3817,8 +3847,12 @@ zh_CN:
       in_this_category: '"%{tag_name}不能用于此类别"'
       restricted_to:
         other: '“%{tag_name}”被限制在以下分类：%{category_names}'
+      synonym: '不允许使用同义词。使用“ %{tag_name}”代替。'
+      has_synonyms: '无法使用“ %{tag_name}”，因为有同义词。'
     required_tags_from_group:
       other: "你必须选择至少%{count}个%{tag_group_name}标签。"
+    invalid_target_tag: "不能是同义词的同义词"
+    synonyms_exist: "存在同义词时不允许"
   rss_by_tag: "主题标签 %{tag}"
   finish_installation:
     congratulations: "祝贺，你已经安装好了 Discourse！"

@@ -1886,7 +1886,6 @@ uk:
       category_search_priority:
         very_low_weight_invalid: "Ви не можете встановити, що вага перевищує  'category_search_priority_low_weight'."
         low_weight_invalid: "Ви не можете встановити, що вага буде більшою або рівна 1 або менша, ніж 'category_search_priority_very_low_weight'."
-        high_weight_invalid: "Ви не можете встановити, що вага буде більше або дорівнюватиме 1 або більше, ніж 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "Ви не можете встановити вагу менше ніж  'category_search_priority_high_weight'."
       unicode_username_whitelist:
         regex_invalid: "Регулярний вираз недійсний: %{error}"
@@ -2048,7 +2047,6 @@ uk:
     invalid_second_factor_code: "Недійсний код аутентифікації Кожен код може бути використаний лише один раз."
     invalid_security_key: "Недійсний ключ безпеки."
     second_factor_toggle:
-      totp: "Використовуйте замість програми автентифікатора"
       backup_code: "Використовуйте замість цього резервний код"
   admin:
     email:
@@ -2482,7 +2480,6 @@ uk:
       unsubscribe: "Цей підсумок надсилається з %{site_link}, коли ми вас не бачили певний час. Змініть %{email_preferences_link} або %{unsubscribe_link}, щоб скасувати підписку."
       your_email_settings: "налаштування електронної пошти"
       click_here: "натисніть тут"
-      from: "%{site_name} підсумок "
       preheader: "Короткий підсумок з часу останнього візиту на %{last_seen_at}"
     forgot_password:
       title: "Забув(ла) пароль"
@@ -2603,6 +2600,7 @@ uk:
   csv_export:
     boolean_yes: "Так"
     boolean_no: "Ні"
+    rate_limit_error: "Дописи можна завантажити раз на день, будь ласка, спробуйте завтра."
   static_topic_first_reply: |
     Відредагуйте перший допис в цій темі, щоб змінити вміст сторінки %{page_name}.
   guidelines_topic:
@@ -2732,15 +2730,11 @@ uk:
       description: Отримав 5 лайків у 300 дописах
     out_of_love:
       name: Любов
-      description: Використав 50 лайків протягом дня
     higher_love:
       name: Вища любов
-      description: Використав 50 лайків протягом дня 5 разів поспіль
     crazy_in_love:
       name: Шалене кохання
       description: Використав 50 лайків протягом дня 20 днів поспіль
-      long_description: |
-        Цей знак надається, коли ви використовуєте всі 50 своїх щоденних лайків протягом 20 днів. Оце Так! Ви є прикладом для наслідування та заохочення членів спільноти!
     thank_you:
       name: Дякуємо
       description: Отримав лайки у 20 дописах та надав 10 лайків іншим

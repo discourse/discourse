@@ -23,9 +23,11 @@ ru:
         title: "Голосов <strong>публичных</strong>."
       results:
         vote:
-          title: "Результаты будут показаны на <strong>голос</strong>."
+          title: "Результаты будут показаны при <strong>голосовании</strong>."
         closed:
-          title: "Результаты будут показаны один раз <strong>закрыто</strong>."
+          title: "Результаты будут показаны после <strong>завершения опроса</strong>."
+        staff:
+          title: "Результаты будут показаны только <strong>персоналу</strong>."
       multiple:
         help:
           at_least_min_options:
@@ -53,6 +55,7 @@ ru:
       hide-results:
         title: "Вернуться к опросу"
       export-results:
+        title: "Экспорт результатов опроса"
         label: "Экспорт"
       open:
         title: "Снова начать принимать новые голоса"
@@ -68,6 +71,7 @@ ru:
       error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
       error_while_casting_votes: "Произошла ошибка в процессе обработки вашего голоса."
       error_while_fetching_voters: "В процессе получения списка проголосовавших произошла ошибка."
+      error_while_exporting_results: "В процессе экспорта списка проголосовавших в опросе произошла ошибка."
       ui_builder:
         title: Создать опрос
         insert: Вставить опрос в сообщение
@@ -82,9 +86,12 @@ ru:
           number: Шкала из чисел
         poll_result:
           label: Результаты
-          always: Всегда видимый
-          vote: На голосование
+          always: Показывать всегда
+          vote: При голосовании
           closed: При закрытии
+          staff: Только для персонала
+        poll_chart_type:
+          label: Тип диаграммы
         poll_config:
           max: Макс.
           min: Мин.
@@ -94,4 +101,4 @@ ru:
         poll_options:
           label: Введите варианты ответа, по одному на строку
         automatic_close:
-          label: Автоматически закрывать опрос
+          label: Автоматически закрыть опрос

@@ -1149,7 +1149,6 @@ sq:
       join_the_discussion: "Më shumë"
       subject_template: "[%{email_prefix}] Përmbledhja"
       click_here: "klikoni këtu"
-      from: "%{site_name} - përmbledhja"
       preheader: "Një përmbledhe e shkurtër e faqes që nga vizita juaj e fundit më %{last_seen_at}"
     forgot_password:
       title: "Harruat Fjalëkalimin"
@@ -1218,6 +1217,7 @@ sq:
   csv_export:
     boolean_yes: "Po"
     boolean_no: "Jo"
+    rate_limit_error: "Postimet mund të shkarkohen një herë në ditë, provoni përsëri nesër. "
   static_topic_first_reply: |
     Modifiko postimin e parë të kësaj teme puer të ndryshuar përmbajtjen e faqes %{page_name}.
   guidelines_topic:
@@ -1344,14 +1344,8 @@ sq:
         Kjo stemë jepet kur merrni të paktën 5 pëlqime në 300 postime të ndryshme. Uau! Komuniteti e admiron mundin e shpeshtë dhe të një cilësie të lartë për bisedimet këtu.
     out_of_love:
       name: Me zemër të zbrazur
-      description: Përdori 50 pëlqime në një ditë
-      long_description: |
-        Kjo stemë jepet kur ju përdorni të gjitha nga 50 pëlqimet tuaja ditore. Kur kujtohesh të gjesh kohë dhe të pelqesh postimet që ju pëlqejnë dhe vlerësoni, nxit anëtarët e komunitetit të krijojnë akoma më shumë biseda të mira në të ardhmen.
     higher_love:
       name: Zemërhapur
-      description: Dha 50 pëlqime në ditë për 5 ditë rresht
-      long_description: |
-        Kjo stemë jepet kur ju pëlqeni 50 postime në 5 ditë. Faleminderit që merrni nga koha juaj për të nxitur bisedat më të mira çdo ditë!
     crazy_in_love:
       name: Zemërluan
       description: Ka dhënë 50 pëlqime në ditë mbi 20 herë

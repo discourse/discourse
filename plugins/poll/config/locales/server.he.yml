@@ -32,6 +32,8 @@ he:
       other: "לסקר בשם <strong>%{name}</strong> צריכות להיות פחות מ-%{count} אפשרויות."
     default_poll_must_have_different_options: "לסקר צריך שתהיינה אפשרויות שונות. "
     named_poll_must_have_different_options: "לסקר בשם <strong>%{name}</strong> צריך שתהינה אפשרויות שונות."
+    default_poll_must_not_have_any_empty_options: "לסקר לא יכולות להיות אפשרויות ריקות."
+    named_poll_must_not_have_any_empty_options: "לסקר בשם <strong>%{name}</strong> לא יכולות להיות אפשרויות ריקות."
     default_poll_with_multiple_choices_has_invalid_parameters: "לסקר עם בחירה מרובה יש פרמטרים לא תקינים."
     named_poll_with_multiple_choices_has_invalid_parameters: "לסקר בשם <strong>%{name}</strong> עם בחירה מרובה יש פרמטרים לא תקינים."
     requires_at_least_1_valid_option: "עליך לבחור לפחות אפשרות אחת תקינה."
