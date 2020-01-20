@@ -550,7 +550,7 @@ class PostAlerter
     end
   end
 
-  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true)
+  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true, new_record: true)
     return unless post.topic
 
     warn_if_not_sidekiq
@@ -607,9 +607,12 @@ class PostAlerter
     notify = notify.where("id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
+
+    notification_type = new_record ? Notification.types[:posted] : Notification.types[:edited]
+
     notify.pluck(:id).each do |user_id|
       user = User.find_by(id: user_id)
-      create_notification(user, Notification.types[:posted], post)
+      create_notification(user, notification_type, post)
     end
   end
 
