@@ -1663,7 +1663,6 @@ pt:
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
       click_here: "clique aqui"
-      from: "resumo de %{site_name}"
       preheader: "Um breve sumário desde a sua última visita em %{last_seen_at}"
     forgot_password:
       title: "Esqueci a palavra-passe"
@@ -1732,6 +1731,7 @@ pt:
   csv_export:
     boolean_yes: "Sim"
     boolean_no: "Não"
+    rate_limit_error: "As publicações podem ser transferidas uma vez por dia, por favor, tente novamente amanhã."
   static_topic_first_reply: |2
 
     Edite a primeira mensagem neste tópico para alterar os conteúdos da página %{page_name}.
@@ -1961,16 +1961,8 @@ pt:
         Este distintivo é concedido quando recebe pelo menos 5 gostos em 300 publicações diferentes. Uau! Aqui a comunidade admira as suas frequentes contribuições de alta qualidade para as conversas.
     out_of_love:
       name: Amor esgotado
-      description: Utilizou 50 gostos num dia
-      long_description: |2
-
-        Este distintivo é concedido quando utiliza todos os seus 50 gostos diários. Lembrar-se de parar um momento e gostar das publicações de que disfruta e que aprecia encoraja as pessoas a criar melhores discussões no futuro.
     higher_love:
       name: Amor superior
-      description: Utilizou 50 gostos num dia 5 vezes
-      long_description: |2
-
-        Este distintivo é concedido quando utiliza todos os seus 50 gostos diários durante 5 dias. Obrigado por dedicar parte do seu tempo a encorajar as melhores conversas cada dia!
     crazy_in_love:
       name: Amando Loucamente
       description: Utilizou 50 gostos num dia 20 vezes

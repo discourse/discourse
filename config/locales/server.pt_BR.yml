@@ -49,12 +49,14 @@ pt_BR:
       about_json_values: "about.json contém valores inválidos: %{errors}"
       git: "Erro ao clonar o repositório git, o acesso foi negado ou o repositório não foi encontrado"
       unpack_failed: "Falha ao descompactar o arquivo"
+      file_too_big: "O arquivo não-comprimido é muito grande."
       unknown_file_type: "O arquivo que você enviou não parece ser um tema válido do Discourse."
     errors:
       component_no_user_selectable: "Componentes do tema não podem ser selecionados pelo usuário"
       component_no_default: "Componentes do tema não podem ser o tema padrão"
       component_no_color_scheme: "Componentes do tema não podem ter paletas de cores"
       no_multilevels_components: "Temas com temas filhos não podem ser temas filhos em si"
+      optimized_link: Links otimizados de imagem são efêmeros e não devem ser incluídos no código-fonte do tema.
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido."
       data_type_not_a_number: "Definindo`%{name}` tipo não é suportado. Tipos suportados são `integer`,` bool`, `list` e` enum`"
@@ -91,6 +93,7 @@ pt_BR:
         from_reply_by_address_error: "Acontece quando o cabeçalho De corresponde à resposta por endereço de e-mail."
         inactive_user_error: "Ocorre quando o remetente não está ativo."
         silenced_user_error: "Acontece quando o remetente foi silenciado."
+        bad_destination_address: "Ocorre quando nenhum dos endereços de e-mail nos campos Para/Cc/Cco correspondeu ao endereço de e-mail recebido."
         strangers_not_allowed_error: "Ocorre quando um usuário tentou criar um novo tópico em uma categoria da qual não é membro."
         insufficient_trust_level_error: "Ocorre quando um usuário tenta criar um novo tópico em uma categoria onde não possui nível de confiança necessário."
         reply_user_not_matching_error: "Ocorre quando uma resposta chega em um endereço de email diferente ao da notificação enviada."
@@ -122,6 +125,7 @@ pt_BR:
       inclusion: não está incluído na lista
       invalid: é inválido
       is_invalid: "parece pouco claro; é uma frase completa?"
+      invalid_timezone: "'%{tz}' não é um fuso horário válido"
       contains_censored_words: "contém as seguintes palavras censuradas: %{censored_words}"
       less_than: "precisa ser menor que %{count}"
       less_than_or_equal_to: "deve ser menor ou igual à %{count}"
@@ -145,6 +149,7 @@ pt_BR:
         one: tem o tamanho errado (precisa ter %{count} caractere)
         other: tem o tamanho errado (precisa ser %{count} caracteres)
       other_than: "precisa ser outro que não %{count}"
+      sso_overrides_username: "O nome de usuário deve ser atualizado no provedor de SSO, visto que a configuração 'sso_overrides_username' está habilitada."
     template:
       body: "Houve problemas com os seguintes campos:"
       header:
@@ -158,10 +163,13 @@ pt_BR:
         one: "Você especificou a escolha inválida %{name}"
         other: "Você especificou a escolha inválida %{name}"
       default_categories_already_selected: "Você não pode selecionar uma categoria usada noutra lista."
+      default_tags_already_selected: "Você não pode selecionar uma etiqueta usada em outra lista."
       s3_upload_bucket_is_required: "Você não pode habilitar uploads para o S3 a não ser que tenha provido o 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Você não pode habilitar o inventário para o S3 a não ser que tenha habilitado os uploads para o S3"
       s3_backup_requires_s3_settings: "Você não pode usar o S3 como local de backup não ser que você tenha provido o '%{setting_name}'."
       s3_bucket_reused: "Você não pode usar o mesmo bucket para 's3_upload_bucket' e 's3_backup_bucket'. Escolha um bucket diferente ou use um caminho diferente para cada bucket."
+      secure_media_requirements: "Uploads S3 devem ser habilitados antes da habilitação de media segura."
+      second_factor_cannot_be_enforced_with_disabled_local_login: "Você não pode forçar 2FA se a autenticação local está desabilitada."
     conflicting_google_user_id: 'O ID da Conta do Google para esta conta foi alterado. A intervenção do pessoal é necessária por razões de segurança. Por favor contate a equipe e aponte-os para <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
@@ -204,6 +212,8 @@ pt_BR:
   email_template_cant_be_modified: "Este modelo de e-mail não pode ser modificado"
   invalid_whisper_access: "Os sussurros não estão habilitados ou você não tem acesso para criar postagens de sussurro"
   not_in_group:
+    title_topic: "Você precisa estar em um grupo para ver este tópico."
+    request_membership: "Pedir para participar"
     join_group: "Entrar no Grupo"
   reading_time: "Tempo de leitura"
   likes: "Curtidas"
@@ -231,7 +241,12 @@ pt_BR:
     replies:
       one: "%{count} resposta"
       other: "%{count} respostas"
+    likes:
+      one: "%{count}curtida"
+      other: "%{count} curtidas"
+    last_reply: "Última resposta"
     created: "Criado"
+    new_topic: "Criar um novo tópico"
   no_mentions_allowed: "Desculpe, você não pode mencionar outros usuários."
   too_many_mentions:
     one: "Desculpe, você pode mencionar apenas %{count} usuário em um post."
@@ -708,6 +723,14 @@ pt_BR:
     error: "Houve um erro ao alterar o seu endereço de email. Talvez o endereço já esteja sendo utilizado?"
     error_staged: "Houve um erro ao alterar o seu endereço de email. O endereço já está usado por outro usuário que ainda não confirmou seu email."
     already_done: "Desculpe, este link de confirmação não está mais válido. Talvez o seu e-mail já foi alterado?"
+    confirm: "Confirmar"
+    authorizing_new:
+      title: "Confirme seu novo e-mail"
+    authorizing_old:
+      title: "Troque seu endereço de e-mail"
+      old_email: "E-mail antigo: %{email}"
+      new_email: "Novo e-mail: %{email}"
+      almost_done_title: "Confirmando seu novo endereço de e-mail"
   associated_accounts:
     revoke_failed: "Falha ao revogar sua conta com %{provider_name}."
     connected: "(conectado)"
@@ -770,6 +793,11 @@ pt_BR:
       description: "Curtir esta postagem"
       short_description: "Curtir esta publicação"
       long_form: "curtiu isto"
+  draft:
+    sequence_conflict_error:
+      title: "erro no rascunho"
+  draft_backup:
+    pm_body: "Tópico contém rascunhos salvos"
   user_activity:
     no_default:
       self: "Você não tem nenhuma atividade ainda."
@@ -785,6 +813,9 @@ pt_BR:
       others: "Sem Respostas."
     no_drafts:
       self: "Você não tem rascunhos; comece a compor uma resposta em qualquer tópico e ela será salva automaticamente como um novo rascunho."
+  webauthn:
+    validation:
+      user_verification_error: "Verificação de usuário é requerida."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1420,6 +1451,7 @@ pt_BR:
     enable_github_logins: "Habilitar a autenticação do Github, requer github_client_id e github_client_secret. Veja <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
     github_client_id: "ID do cliente para autenticação do Github, registrado em <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Segredo do cliente para autenticação do Github, registrado em <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    discord_secret: "Chave Secreta do Discord"
     readonly_mode_during_backup: "Habilitar modo de apenas leitura quando estiver realizando um backup"
     enable_backups: "Permitir que administradores criem backups do fórum"
     allow_restore: "Permitir restauração, que pode substituir todos os dados do site! Deixe falsa, a menos que você pretenda restaurar um backup"
@@ -1838,7 +1870,6 @@ pt_BR:
       category_search_priority:
         very_low_weight_invalid: "Você não pode definir o peso para ser maior que 'category_search_priority_low_weight'."
         low_weight_invalid: "Você não pode definir o peso como maior ou igual a 1 ou menor que 'category_search_priority_very_low_weight'."
-        high_weight_invalid: "Você não pode definir o peso como maior ou igual a 1 ou maior que 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "Você não pode definir o peso para ser menor que 'category_search_priority_high_weight'."
       unicode_username_whitelist:
         regex_invalid: "A expressão regular é inválida: %{error}"
@@ -1940,6 +1971,12 @@ pt_BR:
     autoclosed_disabled_lastpost: "Este tópico está aberto agora. Novas respostas estão permitidas."
     auto_deleted_by_timer: "Excluído automaticamente pelo temporizador."
   login:
+    security_key_description: "Quando você tiver uma chave física de segurança preparada, pressione o Anti\n\nQuando sua chave de segurança física estiver pronta, pressione o botão \"Autenticar com Chave de Segurança\" abaixo."
+    security_key_alternative: "T"
+    security_key_authenticate: "Autenticar com Chave de Segurança"
+    security_key_not_allowed_error: "O processo de autenticação de chave de segurança atingiu o limite de tempo ou foi cancelado."
+    security_key_no_matching_credential_error: "Nenhuma credencial correspondente pôde ser encontrada na chave de segurança fornecida."
+    security_key_support_missing_error: "Seu dispositivo atual ou navegador não suportam o uso de chaves de segurança. Por favor, use um método diferente."
     not_approved: "A sua conta ainda não foi aprovada. Vais ser notificado por email assim que estiver pronto para fazeres log in."
     incorrect_username_email_or_password: "Usuário, email ou senha incorretos"
     incorrect_password: "senha incorreta"
@@ -1971,7 +2008,6 @@ pt_BR:
     second_factor_backup_title: "Código de Backup de Dois Fatores"
     invalid_second_factor_code: "Código de autenticação inválido. Cada código só pode ser usado uma vez."
     second_factor_toggle:
-      totp: "Use um aplicativo autenticador"
       backup_code: "Use um código de backup"
   admin:
     email:
@@ -2879,7 +2915,6 @@ pt_BR:
       unsubscribe: "Este resumo é enviado de %{site_link} quando não te vemos há algum tempo. Mude%{email_preferences_link}, ou%{unsubscribe_link} para cancelar a inscrição."
       your_email_settings: "suas configurações de e-mail"
       click_here: "clique aqui"
-      from: "resumo do site %{site_name} "
       preheader: "Um breve resumo do que aconteceu no fórum desde a sua última visita no dia %{last_seen_at}"
     forgot_password:
       title: "Esqueceu a senha"
@@ -2908,13 +2943,6 @@ pt_BR:
     admin_login:
       title: "Login de administrador"
       subject_template: "[%{email_prefix}] Login"
-      text_body_template: |
-        Alguém pediu para fazer login na sua conta [%{site_name}](%{base_url}).
-
-        Se você não fez essa solicitação, pode ignorar esse e-mail com segurança.
-
-        Clique no link a seguir para fazer o login:
-        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Conta Criada"
       subject_template: "[%{email_prefix}] Sua Nova Conta"
@@ -3078,6 +3106,7 @@ pt_BR:
   csv_export:
     boolean_yes: "Sim"
     boolean_no: "Não"
+    rate_limit_error: "Postagens podem ser baixadas somente uma vez por dia, por favor tente novamente amanhã."
   static_topic_first_reply: |
     Altere o primeiro post desse tópico para mudar seu conteúdo na página de %{page_name}
   guidelines_topic:
@@ -3342,19 +3371,11 @@ pt_BR:
         Esse selo é concedido quando você recebe pelo menos cinco curtidas em 300 postagens diferentes. Uau! A comunidade admira suas contribuições freqüentes e de alta qualidade para as conversas aqui.
     out_of_love:
       name: Por Amor
-      description: Usou 50 likes no mesmo dia
-      long_description: |
-        Este emblema é concedido quando você usa todos os 50 dos seus gostos diários. Lembrar-se de ter um momento e gostar das postagens que você aprecia e aprecia incentiva os membros da sua comunidade a criarem ainda mais discussões importantes no futuro.
     higher_love:
       name: Amor Maior
-      description: Deu 50 curtidas no mesmo dia 5 vezes
-      long_description: |
-        Esse selo é concedido quando você usa todos os 50 gostos diários por cinco dias. Obrigado por tomar o tempo ativamente incentivando as melhores conversas todos os dias!
     crazy_in_love:
       name: Apaixonado
       description: Deu 50 curtidas no mesmo dia 20 vezes
-      long_description: |
-        Esse selo é concedido quando você usa todos os 50 gostos diários por 20 dias. Uau! Você é um exemplo para incentivar os membros de sua comunidade!
     thank_you:
       name: Obrigado
       description: Teve 20 mensagens curtidas e curtiu 10 mensagens
@@ -3610,6 +3631,8 @@ pt_BR:
     user_merged: "%{username} foi mesclado nessa conta"
     user_delete_self: "Excluído por si mesmo de %{url}"
     webhook_deactivation_reason: "Seu webhook foi desativado automaticamente. Recebemos várias respostas de falha de status HTTP '%{status}'."
+    api_key:
+      revoked: Regovado
   reviewables:
     priorities:
       low: "Baixo"
@@ -3641,6 +3664,9 @@ pt_BR:
       agree_and_keep:
         title: "Manter Post"
         description: "Concorde com o sinalizador e mantenha a postagem inalterada."
+      agree_and_keep_hidden:
+        title: "Manter Postagem Escondida"
+        description: "Concordar com o sinalizador e manter a postagem escondida"
       agree_and_suspend:
         title: "Suspender usuário"
         description: "Concordar com o sinalizador e suspender o usuário."
@@ -3705,3 +3731,7 @@ pt_BR:
         title: "Excluir Usuário"
         confirm: "Você tem certeza de que deseja excluir este usuário? Isso removerá todas as suas postagens e bloqueará seus e-mails e endereços IP."
         reason: "Excluído via fila de revisão"
+  email_style:
+    html_missing_placeholder: "O modelo HTML deve incluir %{placeholder}"
+  discord:
+    not_in_allowed_guild: "Falha na autenticação. Você não é um membro de uma guilda Discord com permissões."

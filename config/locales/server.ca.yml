@@ -1912,7 +1912,6 @@ ca:
       category_search_priority:
         very_low_weight_invalid: "No podeu establir un pes més gran que 'category_search_priority_low_weight'."
         low_weight_invalid: "No podeu establir que el pes sigui més gran que o igual a 1 o més petit que 'category_search_priority_very_low_weight'."
-        high_weight_invalid: "No podeu establir que el pes sigui més gran que o igual a 1 o més gran que 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "No podeu establir que el pes sigui més petit que 'category_search_priority_high_weight'."
       unicode_username_whitelist:
         regex_invalid: "L'expressió regular no és vàlida: %{error}"
@@ -2063,7 +2062,6 @@ ca:
     invalid_second_factor_code: "Codi d'autenticació no vàlid. Cada codi només es pot utilitzar una vegada."
     invalid_security_key: "Clau de seguretat no vàlida."
     second_factor_toggle:
-      totp: "Utilitzeu una aplicació d'autenticació en comptes d'això"
       backup_code: "Utilitzeu un codi de còpia de seguretat en comptes d'això"
   admin:
     email:
@@ -2744,7 +2742,6 @@ ca:
       unsubscribe: "Aquest resum és enviat des de %{site_link} quan no us hem vist en molt de temps. Canvieu %{email_preferences_link} o %{unsubscribe_link} per a cancel·lar la subscripció."
       your_email_settings: "la vostra configuració de correu"
       click_here: "feu clic aquí"
-      from: "%{site_name} resum"
       preheader: "Un resum breu des de la vostra darrera visita el %{last_seen_at}"
     forgot_password:
       title: "Contrasenya oblidada"
@@ -2761,7 +2758,6 @@ ca:
     admin_login:
       title: "Inicia sessió d'administració"
       subject_template: "[%{email_prefix}] Inici de sessió"
-      text_body_template: "Algú ha demanat iniciar sessió en el vostre compte en [%{site_name}](%{base_url}). \n\nSi no heu fet aquesta sol·licitud, podeu ignorar aquest correu de manera segura. \n\nFeu clic en l'enllaç següent per a iniciar la sessió: \n%{base_url}/session/email-login/%{email_token}\n"
     account_created:
       title: "Compte creat"
       subject_template: "[%{email_prefix}] El vostre compte nou"
@@ -2886,6 +2882,7 @@ ca:
   csv_export:
     boolean_yes: "Sí"
     boolean_no: "No"
+    rate_limit_error: "Les publicacions es poden descarregar una vegada al dia. Torneu a provar-ho demà."
   static_topic_first_reply: |
     Edita la primera publicació en aquest tema per a canviar els continguts de la pàgina %{page_name}.
   guidelines_topic:
@@ -3069,19 +3066,11 @@ ca:
         Aquesta insígnia es concedeix quan rebeu 5 'M'agrada' en 300 publicacions diferents. Molt bé! La comunitat admira les vostres aportacions freqüents i d'alta gran qualitat a les converses!
     out_of_love:
       name: Sense amor
-      description: Ha gastat 50 'M'agrada' en un dia
-      long_description: |
-        Aquesta insígnia es concedeix quan gasteu els 50 'M'agrada' diaris. Prendre un temps per a mostrar estima per les publicacions que us han agradat encoratja els membres de la comunitat a crear discussions encara millors en el futur.
     higher_love:
       name: Un amor més elevat
-      description: Ha fet servir 50 'M'agrada' en un dia 5 vegades
-      long_description: |
-        Aquesta insígnia es concedeix quan gasteu els 50 'M'agrada' diaris durant 5 dies. Gràcies per animar activament les millors converses cada dia.
     crazy_in_love:
       name: Boig d'amor
       description: Ha fet servir 50 'M'agrada' en un dia 20 vegades
-      long_description: |
-        Aquesta insígnia es concedeix quan utilitzeu tots els vostres 50 'm'agrada' diaris durant 20 dies. Oh! Sou un model per a animar els companys de comunitat!
     thank_you:
       name: Gràcies
       description: Té 20 publicacions amb 'm'agrada' i ha donat 10 'm'agrada'

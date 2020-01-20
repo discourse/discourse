@@ -30,6 +30,8 @@ ru:
       other: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{max} вариантов ответов."
     default_poll_must_have_different_options: "В опросе не должно быть одинаковых вариантов ответов."
     named_poll_must_have_different_options: "В опросе <strong>%{name}</strong> не должно быть одинаковых ответов."
+    default_poll_must_not_have_any_empty_options: "Настройки опроса не могут быть пустыми."
+    named_poll_must_not_have_any_empty_options: "Настройки опроса <strong>%{name}</strong> не могут быть пустыми."
     default_poll_with_multiple_choices_has_invalid_parameters: "Опрос с множественным выбором вариантов ответов содержит неправильные параметры."
     named_poll_with_multiple_choices_has_invalid_parameters: "Опрос под названием <strong>%{name}</strong> с множественным выбором вариантов ответов содержит неправильные параметры."
     requires_at_least_1_valid_option: "Выберите хотя бы 1 вариант ответа."
@@ -46,3 +48,5 @@ ru:
     insufficient_rights_to_create: "Вы не сможете создавать опросы."
     email:
       link_to_poll: "Нажмите чтобы открыть опрос."
+    user_field:
+      no_data: "Нет информации"

@@ -858,7 +858,6 @@ sl:
     second_factor_backup_title: "Rezervna potrditvena koda"
     invalid_second_factor_code: "Neustrezna potrditvena koda. Vsaka potrditvena koda je lahko uporabljena samo enkrat."
     second_factor_toggle:
-      totp: "Namesto tega uporabite authenticator aplikacijo"
       backup_code: "Namesto tega uporabite rezervno potrditveno kodo"
   user:
     ip_address:
@@ -1600,7 +1599,6 @@ sl:
       unsubscribe: "Ta povzetek je poslan s strani %{site_link}, ker vas nekaj časa ni bilo na strani. Spremenite %{email_preferences_link} ali %{unsubscribe_link} za odjavo."
       your_email_settings: "vaše nastavitve e-pošte"
       click_here: "kliknite tukaj"
-      from: "%{site_name} Povzetek"
       preheader: "Strnjen povzetek od vašega zadnjega obiska %{last_seen_at}"
     forgot_password:
       title: "Pozabljeno geslo"
@@ -1635,13 +1633,6 @@ sl:
     admin_login:
       title: "Admin prijava"
       subject_template: "[%{email_prefix}] Prijava"
-      text_body_template: |
-        Nekdo je zahteval prijavo na vaš račun pri [%{site_name}](%{base_url}).
-
-        Če niste vi podali te zahteve, lahko zanemarite to e-sporočilo.
-
-        Za prijavo sledite povezavi:
-        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Račun ustvarjen"
       subject_template: "[%{email_prefix}] Vaš nov uporabniški račun"
@@ -1743,6 +1734,7 @@ sl:
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Ne"
+    rate_limit_error: "Prispevki so lahko prevešene enkrat dnevno, poskusi ponovno jutri."
   static_topic_first_reply: |
     Uredite prvi prispevek v tej temi da spremenite vsebino %{page_name} strani.
   guidelines_topic:
@@ -1923,18 +1915,11 @@ sl:
         Ta značka vam je podeljena, ker ste prejeli vsaj 5 všečkov na 300 različnih prispevkih. Neverjetno! Skupnost občuduje vaše pogoste in zelo kvalitetne prispevke v pogovorih!
     out_of_love:
       name: Zmanjkalo ljubezni
-      description: Podelili 50 všečkov v enem dnevu
-      long_description: |
-        Ta značka vam je podeljena, ker ste podelili vseh 50 všečkov v enem dnevu. Lepo je da se spomnite všečkati prispevke katere cenite in v njih uživate. Tako vzpodbujate ostale člane skupnosti da v bodoče prispevajo k še boljšim pogovorom.
     higher_love:
       name: Radodarni v ljubezni
-      description: 5 krat ste podelili 50 všečkov v enem dnevu
-      long_description: |
-        Ta značka vam je podeljena, ker ste že petič podelili vseh 50 všečkov v enem dnevu. Hvala, ker aktivno vspodbujate najboljše pogovore vsak dan!
     crazy_in_love:
       name: Trapasto zaljubljen
       description: 20 krat ste podelili 50 všečkov v enem dnevu
-      long_description: "Ta značka vam je podeljena, ker ste že dvajsetič podelili vseh 50 všečkov v enem dnevu. Neverjetno! Ste najboljši vzgled kako se vzpodbuja ostale člane skupnosti. \n"
     thank_you:
       name: Zahvala
       description: Za 20 prispevkov ste prejeli všečke in podelili ste 10 všečkov.

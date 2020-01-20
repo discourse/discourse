@@ -825,8 +825,10 @@ fr:
   webauthn:
     validation:
       invalid_origin_error: "L'origine de la requête d'authentification ne correspond pas à l'origine du serveur."
+      user_verification_error: "Une vérification de l'utilisateur est requise."
       unsupported_public_key_algorithm_error: "L'algorithme de clé publique fournie n'est pas supporté par le serveur."
       ownership_error: "La clé de sécurité n'appartient pas à l'utilisateur."
+      unknown_cose_algorithm_error: "L'algorithme utilisé pour la clé de sécurité n'est pas reconnu."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1904,7 +1906,6 @@ fr:
       category_search_priority:
         very_low_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur supérieure à 'category_search_priority_low_weight'."
         low_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur supérieure ou égale à 1 ou inférieure à 'category_search_priority_very_low_weight'."
-        high_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur supérieure ou égale à 1 ou supérieure à 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur inférieure à 'category_search_priority_high_weight'."
       unicode_username_whitelist:
         regex_invalid: "L'expression régulière n'est pas valide : %{error}"
@@ -2055,7 +2056,6 @@ fr:
     invalid_second_factor_code: "Code d'authentification invalide. Chaque code ne peut être utilisé qu'une fois."
     invalid_security_key: "Clé de sécurité invalide."
     second_factor_toggle:
-      totp: "Utilisez plutôt une application d'authentification"
       backup_code: "Utilisez plutôt un code de secours"
   admin:
     email:
@@ -3026,7 +3026,6 @@ fr:
       unsubscribe: "Ce résumé est envoyé depuis %{site_link} quand nous ne vous avons plus vu depuis un moment. Changez %{email_preferences_link}, ou %{unsubscribe_link} pour se désabonner."
       your_email_settings: "vos préférences de courriel"
       click_here: "cliquez ici"
-      from: "résumé de %{site_name}"
       preheader: "Un bref résumé depuis votre dernière visite le %{last_seen_at}"
     forgot_password:
       title: "Mot de passe oublié"
@@ -3064,14 +3063,6 @@ fr:
     admin_login:
       title: "Identifiant Administrateur"
       subject_template: "[%{email_prefix}] Identification"
-      text_body_template: |
-        Quelqu'un a demandé à se connecter sur votre compte sur [%{site_name}](%{base_url}).
-
-        Si vous n'avez pas fait cette demande, vous pouvez ignorer cet email.
-
-        Cliquez sur le lien ci-dessous pour vous identifier :
-
-        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Compte Créé"
       subject_template: "[%{email_prefix}] Votre Nouveau Compte"
@@ -3246,6 +3237,7 @@ fr:
   csv_export:
     boolean_yes: "Oui"
     boolean_no: "Non"
+    rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez ressayer demain."
   static_topic_first_reply: |2
 
     Modifier le premier message de ce sujet pour changer le contenu de la page %{page_name}.
@@ -3805,21 +3797,11 @@ fr:
         Ce badge est accordé lorsque vous recevez au moins 5 J'aime sur 300 messages différents. Whaou ! La communauté admire vos fréquentes contributions de haute qualité aux conversations.
     out_of_love:
       name: Trop d'amour
-      description: A utilisé 50 J'aime en une journée
-      long_description: |2
-
-        Ce badge est accordé lorsque vous utilisez la totalité de vos 50 J'aime quotidiens. Rappelez-vous de prendre un moment pour aimer les messages qui vous plaisent et que vous appréciez. Cela encourage les autres membres de la communauté à créer encore plus de discussions de qualité à l'avenir.
     higher_love:
       name: Amour plus fort
-      description: A utilisé 50 J'aime en un jour 5 fois
-      long_description: |
-        Ce badge est accordé lorsque vous utilisez la totalité de vos 50 J'aime par jour pendant 5 jours. Merci de prendre le temps d'encourager activement les meilleures conversations chaque jour !
     crazy_in_love:
       name: Fou amoureux
       description: A utilisé 50 likes en un jour 20 fois
-      long_description: |2
-
-        Ce badge est accordé lorsque vous utilisez la totalité vos 50 J'aime par jour pendant 20 jours. Whaou ! Vous êtes un modèle d'encouragement pour les membres de la communauté !
     thank_you:
       name: "Merci "
       description: A 20 messages ayant reçu un J'aime et a donné 10 j'aime

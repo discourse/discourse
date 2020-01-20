@@ -870,6 +870,7 @@ lt:
   csv_export:
     boolean_yes: "Taip"
     boolean_no: "Ne"
+    rate_limit_error: "Įrašai gali būti atsiunčiami vieną kartą per dieną, prašome pakartoti operaciją rytoj."
   static_topic_first_reply: |
     Redaguoti pirmutinį įrašą kad pakeisti turinį %{page_name} puslapio.
   guidelines_topic:
@@ -961,7 +962,6 @@ lt:
       name: Gerbiamas
     out_of_love:
       name: Nebeliko meilės
-      description: Pamėgai 50 įrašų per dieną
     crazy_in_love:
       name: Įsimylėjas
     first_emoji:

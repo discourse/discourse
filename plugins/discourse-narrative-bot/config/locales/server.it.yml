@@ -266,11 +266,11 @@ it:
 
           Prova a cercare il termine "capi&#8203;bara" in questo argomento
         hidden_message: |-
-            Come hai fatto a perderti questo capibara? :wink:
+          Come hai fatto a perderti questo capibara? :wink:
 
-            <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-            Hai notato che sei tornato all'inizio dell'argomento? Dai da mangiare a questo povero capibara affamato **rispondendo con la emoji %{search_answer}** e tornerai automaticamente in fondo alla discussione.
+          Hai notato che sei tornato all'inizio dell'argomento? Dai da mangiare a questo povero capibara affamato **rispondendo con la emoji %{search_answer}** e tornerai automaticamente in fondo alla discussione.
         reply: |-
           Hey l'hai trovato :tada:
 

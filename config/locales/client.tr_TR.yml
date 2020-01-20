@@ -27,6 +27,7 @@ tr_TR:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      time_short_day: "ggg, SS:dd"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
@@ -152,6 +153,7 @@ tr_TR:
       banner:
         enabled: "Bunu pankart yaptı %{when}. Kullanıcı tarafından yoksayılana kadar her sayfanın en üstünde belirecek."
         disabled: "Pankart kaldırıldı %{when}. Bundan sonra her sayfanın en üstünde gözükmeyecek. "
+    topic_admin_menu: "konu eylemleri"
     wizard_required: "Yeni Discourse'una hoşgeldin! Haydi kuruluma başlayalım! <a href='%{url}' data-auto-route='true'>Kurulum Sihirbazı</a> ✨"
     emails_are_disabled: "Giden tüm e-postalar yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     bootstrap_mode_enabled: "Yeni sitenizi daha kolay başlatmak için önyükleme modundasınız. Tüm yeni kullanıcılara güven düzeyi 1 verilir ve günlük e-posta özet güncellemeleri etkinleştirilir. Bu,%{min_users} kullanıcının katıldığı zaman otomatik olarak kapatılacaktır."
@@ -261,9 +263,11 @@ tr_TR:
     bookmarks:
       created: "bu gönderiyi işaretledin"
       not_bookmarked: "bu yazıya yer işareti koy"
+      created_with_reminder: "bu gönderiyi %{date} adresinde bir hatırlatıcı ile yer işaretlerine eklediniz"
       remove: "İşareti Kaldır"
       confirm_clear: "Bu konudaki tüm yer işaretlerinizi silmek istediğinizden emin misiniz?"
       save: "Kaydet"
+      no_timezone: 'Henüz bir saat dilimi belirlemediniz. Hatırlatıcı ayarlayamazsınız. <a href="%{basePath}/my/preferences/profile">Profilinizde</a> bir tane oluşturun.'
       reminders:
         at_desktop: "Bir dahaki sefere masaüstümdeyim"
         later_today: "Bugün daha sonra <br/> {{date}}"
@@ -317,8 +321,14 @@ tr_TR:
       install_banner: "Bu cihazda <a href>güncellemek %{title} ister misiniz?</a>"
     choose_topic:
       none_found: "Hiçbir konu bulunamadı."
+      title:
+        search: "Konu Ara"
+        placeholder: "konu başlığını, url&#39;yi veya kimliği buraya yazın"
     choose_message:
       none_found: "Mesaj bulunamadı."
+      title:
+        search: "Mesaj Arama"
+        placeholder: "mesaj başlığını, url&#39;yi veya kimliği buraya yazın"
     review:
       order_by: "Sırala"
       in_reply_to: "cevap olarak"
@@ -745,9 +755,13 @@ tr_TR:
       activity_stream: "Aktivite"
       preferences: "Tercihler"
       feature_topic_on_profile:
+        open_search: "Yeni Bir Konu Seçin"
+        title: "Bir konu seç"
+        search_label: "Başlığı konuya göre ara"
         save: "Kaydet"
         clear:
           title: "Temizle"
+          warning: "Öne çıkmış olan konunuzu silmek istediğinizden emin misiniz?"
       profile_hidden: "Bu kullanıcının genel profili gizli."
       expand_profile: "Genişlet"
       collapse_profile: "Daralt"
@@ -780,6 +794,7 @@ tr_TR:
       enable_quoting: "Bahsedilen konu için yanıtlama özelliğini etkinleştir"
       enable_defer: "Okunmamış konuları işaretlemek için ertelemeyi aktif edin"
       change: "değiştir"
+      featured_topic: "Öne Çıkan Konu"
       moderator: "{{user}} moderatördür"
       admin: "{{user}} yöneticidir"
       moderator_tooltip: "Bu kullanıcı moderatördür"
@@ -961,6 +976,9 @@ tr_TR:
       change_card_background:
         title: "Kullanıcı Kartı Arkaplanı"
         instructions: "Profil arkaplanları ortalanacak ve genişliği 590px olacak. "
+      change_featured_topic:
+        title: "Öne Çıkan Konu"
+        instructions: "Bu konunun bağlantısı kullanıcı kartınızda ve profilinizde olacaktır."
       email:
         title: "E-posta"
         primary: "Öncelikli E-posta"
@@ -1096,6 +1114,7 @@ tr_TR:
         search: "davet etmek için yaz..."
         title: "Davetler"
         user: "Davet Edilen Kullanıcı"
+        sent: "Son Gönderilen"
         none: "Görüntülenebilecek bir davet mevcut değil."
         truncated:
           one: "İlk {{count}} davet gösteriliyor."
@@ -1738,6 +1757,7 @@ tr_TR:
           title: Sadece başlıkta eşleştirme
           likes: beğendiğim
           posted: gönderide bulunduğum
+          created: ben yarattım
           watching: İzlediğim
           tracking: Takip ettiğim
           private: Mesajlarımda
@@ -1754,6 +1774,7 @@ tr_TR:
           label: Şu şekildeki konular
           open: açık
           closed: kapalı
+          public: halka açık
           archived: arşivlenmiş
           noreplies: sıfır cevabı olan
           single_user: tek kullanıcı içeren
@@ -1841,6 +1862,13 @@ tr_TR:
       defer:
         help: "okunmamış olarak işaretle"
         title: "Ertele"
+      feature_on_profile:
+        help: "Kullanıcı kartı ve profiliniz üzerinden bu konuya bir bağlantı ekleyin"
+        title: "Profil Özelliği"
+      remove_from_profile:
+        warning: "Profilinizde zaten öne çıkan bir konu var. Devam ederseniz, bu konu mevcut konunun yerine öne çıkacaktır."
+        help: "Kullanıcı profilinizdeki bu konunun bağlantısını kaldırın"
+        title: "Profilden Kaldır"
       list: "Konular"
       new: "yeni konu"
       unread: "okunmamış"
@@ -2319,9 +2347,18 @@ tr_TR:
           notify_moderators: "bilgilendirilen moderatörler "
           notify_user: "mesaj gönderdi"
           bookmark: "bunu işaretledi"
+          like:
+            one: "bu beğenildi"
+            other: "bunlar beğenildi"
+          read:
+            one: "bunu oku"
+            other: " bunları oku"
           like_capped:
             one: "ve {{count}} diğer kişi bunu beğendi"
             other: "ve {{count}} diğerleri bunu beğendi"
+          read_capped:
+            one: "ve {{count}} tanesini daha okuyun"
+            other: "ve {{count}}tanesini daha okuyun"
         by_you:
           off_topic: "Bunu bayrakla \"konu dışı\" olarak işaretledin"
           spam: "Bunu bayrakla \"istenmeyen e-posta\" olarak işaretledin"
@@ -2372,7 +2409,10 @@ tr_TR:
             title: "E-postanın html bölümünü göster"
             button: "HTML"
       bookmarks:
+        create: "Yer işareti oluştur"
         name: "İsim"
+        name_placeholder: "Daha kolay hatırlayabilmeniz için yer işaretini adlandırın"
+        set_reminder: "Hatırlatıcı kur"
     category:
       can: "yapabilir&hellip;"
       none: "(kategori yok)"
@@ -2754,6 +2794,7 @@ tr_TR:
         mark_watching: "%{shortcut} Konuyu izle"
         print: "%{shortcut} Konuyu yazdır"
         defer: "%{shortcut}Konuyu ertele"
+        topic_admin_actions: "%{shortcut} Açık konu yönetici işlemleri"
     badges:
       earned_n_times:
         one: "Bu rozet %{count} defa kazanılmış"
@@ -3104,6 +3145,7 @@ tr_TR:
         new_key: Yeni API Anahtarı
         revoked: İptal edilmiş
         delete: Kalıcı Sil
+        not_shown_again: Bu anahtar bir daha gösterilmez. Devam etmeden önce bir kopyasını aldığınızdan emin olun.
         continue: Devam et
       web_hooks:
         title: "Web Kancaları"
@@ -3374,6 +3416,7 @@ tr_TR:
           upload: "Yükle"
           select_component: "Bir bileşen seçin..."
           unsaved_changes_alert: "Değişikliklerinizi henüz kaydetmediniz, Silmek ve devam etmek istediğinize emin misiniz?"
+          unsaved_parent_themes: "Bileşeni temalara atamadınız, devam etmek istiyor musunuz?"
           discard: "At"
           stay: "Kalmak"
           css_html: "İsteğe uyarlanmış CSS/HTML"

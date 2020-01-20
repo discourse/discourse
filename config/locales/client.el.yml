@@ -194,11 +194,14 @@ el:
     every_hour: "κάθε ώρα"
     daily: "καθημερινά"
     weekly: "κάθε εβδομάδα"
+    every_month: "κάθε μήνα"
     max_of_count: "μέγιστο {{count}}"
     alternation: "ή"
     character_count:
       one: "{{count}} χαρακτήρα"
       other: "{{count}} χαρακτήρες"
+    related_messages:
+      title: "Σχετικά Μηνύματα"
     suggested_topics:
       title: "Προτεινόμενα Νήματα"
       pm_title: "Προτεινόμενα Μηνύματα"
@@ -258,6 +261,7 @@ el:
         total: "Σύνολο"
       delete: "Σβήσιμο"
       settings:
+        saved: "Αποθηκεύτηκε! "
         save_changes: "Αποθήκευση Αλλαγών"
         title: "Ρυθμίσεις"
       topic: "Νήμα:"
@@ -266,6 +270,7 @@ el:
         username: "Όνομα Χρήστη"
         email: "Διεύθυνση Email"
         name: "Όνομα"
+        fields: "Πεδία"
       topics:
         topic: "Νήμα"
         details: "λεπτομέρειες"
@@ -282,8 +287,14 @@ el:
       statuses:
         pending:
           title: "Εκκρεμή"
+        approved:
+          title: "Εγκρίθηκε "
         rejected:
           title: "Απορρίφθηκε"
+        ignored:
+          title: "Αγνοήθηκε "
+        deleted:
+          title: "Διαγράφηκε"
       types:
         reviewable_user:
           title: "Χρήστης"
@@ -501,6 +512,7 @@ el:
       user_notifications:
         ignore_duration_username: "Όνομα Χρήστη"
         ignore_duration_save: "Αγνόηση"
+        ignore_option: "Αγνοήθηκε "
         mute_option: "Σίγαση"
         normal_option: "Φυσιολογικά"
       activity_stream: "Δραστηριότητα"
@@ -578,6 +590,7 @@ el:
       users: "Χρήστες"
       muted_users: "Σε σίγαση"
       muted_users_instructions: "Αποσιώπησε όλες τις ειδοποιήσεις από αυτούς τους χρήστες."
+      ignored_users: "Αγνοήθηκε "
       tracked_topics_link: "Δείξε"
       automatically_unpin_topics: "Τα νήματα ξεκαρφιτσώνονται αυτόματα όταν φτάνω στο κάτω μέρος."
       apps: "Εφαρμογές"
@@ -725,6 +738,7 @@ el:
         every_hour: "ωριαία"
         daily: "καθημερινά"
         weekly: "εβδομαδιαία"
+        every_month: "κάθε μήνα"
       email_level:
         title: "Στείλε μου ένα email όταν κάποιος παραθέσει ανάρτησή μου, απαντήσει σε ανάρτησή μου, αναφέρει το @username μου ή με προσκαλεί σε ένα νήμα."
         always: "πάντα"

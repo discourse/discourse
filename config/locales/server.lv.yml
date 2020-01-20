@@ -316,6 +316,7 @@ lv:
   csv_export:
     boolean_yes: "Jā"
     boolean_no: "Nē"
+    rate_limit_error: "Ierakstus var lejuplādēt reizi dienā, lūdzu mēģiniet atkal rītdien."
   guidelines_topic:
     title: "BUJ/Vadlīnijas"
   tos_topic:

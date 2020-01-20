@@ -26,6 +26,14 @@ fi:
         Tämä ansiomerkki myönnetään, kun suoritat menestyksellä vuorovaikutteisen palstan käytön jatkokurssin. Olet omaksunut edistyneemmätkin toiminnot, ja olet taitosi osoittanut.
   discourse_narrative_bot:
     bio: "Moi! En ole ihminen. Olen botti, ja tarjoan opetusta sivuston käyttämisestä. Jos haluat jutella, lähetä yksityisviesti tai mainitse **`@%{discobot_username}`** missä vain."
+    tl2_promotion_message:
+      subject_template: "Onnittelut luottamustasonoususta!"
+      text_body_template: |
+        Nyt kun olet noussut, on aika oppia joitakin kehittyneempiä ominaisuuksia!
+
+        Vastaa tähän viestiin `@%{discobot_username} %{reset_trigger}` niin opit lisää, mitä kaikkia valtuuksia sinulla on.
+
+        Toivon mukaan jatkat osallistumista – on mukavaa että olet täällä.
     timeout:
       message: |-
         Hei @%{username}, kyselen kuulumisia, kun en ole kuullut sinusta hetkeen.
@@ -118,6 +126,15 @@ fi:
 
           `@%{discobot_username}%{reset_trigger}{name-of-tutorial}`
           > Aloittaa interaktiivisen kurssin. `{name-of-tutorial} ` voi olla jokin seuraavista: `%{tracks}`.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Voit laskea sen varaan
       do_not_understand:
         first_response: |-
           Hei, kiitos kun vastasit!
@@ -265,6 +282,12 @@ fi:
           _psst_ … I’ve hidden a surprise in this topic. If you’re up for the challenge, **select the search icon** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> at the top right &#8599; to search for it.
 
           Try searching for the term "capy&#8203;bara" in this topic
+        hidden_message: |-
+          Miten sinulta jäi tämä kapybara huomaamatta? :wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Huomasitko, että palasit takaisin alkuun? Ruoki söpöä nälkäistä kapybaraa **vastaamalla  %{search_answer}-emojilla** niin sinut palautetaan automaattisesti takaisin loppuun.
         reply: |-
           Jes, löysit sen :tada:
 

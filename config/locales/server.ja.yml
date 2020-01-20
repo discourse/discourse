@@ -1265,7 +1265,6 @@ ja:
       unsubscribe: "このまとめは、しばらくサイトを訪れていないため、%{site_link}から送られました。%{email_preferences_link}を変更するか、%{unsubscribe_link}購読を中止できます。"
       your_email_settings: "メール設定"
       click_here: "こちらをクリック"
-      from: "%{site_name}まとめ"
       preheader: "%{last_seen_at}の最後の訪問以降の簡単な要約"
     forgot_password:
       title: "パスワードを忘れた"
@@ -1356,6 +1355,7 @@ ja:
   csv_export:
     boolean_yes: "はい"
     boolean_no: "いいえ"
+    rate_limit_error: "投稿者は1日1回ダウンロードすることが可能です、明日再度お試しください。"
   static_topic_first_reply: |
     %{page_name}ページのコンテンツを編集するには、このトピックの最初の投稿を編集してください
   guidelines_topic:
@@ -1564,14 +1564,8 @@ ja:
         このバッジは、300の異なる投稿で少なくとも5つの好きなものを受け取ったときに付与されます。 うわー！ コミュニティーは、あなたの頻繁で質の高い貢献をここにて賞賛します。
     out_of_love:
       name: 心から
-      description: 一日に50いいねしました
-      long_description: |
-        このバッジは、あなたが50ものいいね！をすべてを使用すると付与されます。 あなたが楽しんで感謝するポストのように、あなたの仲間のコミュニティのメンバーが今後さらに偉大な議論を生み出すことを奨励します。
     higher_love:
       name: より多くの愛
-      description: 50いいねを5日以上使用
-      long_description: |
-        このバッジは、あなたが1日に50回ものいいね！を5日間使用すると付与されます。 毎日最高の会話を積極的に励ます時間をとってくれてありがとう！
     crazy_in_love:
       name: 愛
       description: 50いいね！を20日間

@@ -151,6 +151,9 @@ cs:
     share:
       post: "příspěvek #%{postNumber}"
       close: "zavřít"
+      twitter: "Sdílet odkaz na Twitteru"
+      facebook: "Sdílet odkaz na Facebooku"
+      email: "Odeslat odkaz emailem"
     action_codes:
       public_topic: "Téma zveřejněno %{when}"
       private_topic: "Téma změněno na osobní zprávu %{when}"
@@ -245,6 +248,8 @@ cs:
     every_hour: "každou hodinu"
     daily: "denně"
     weekly: "týdně"
+    every_month: "každý měsíc"
+    every_six_months: "každých šest měsíců"
     max_of_count: "max z"
     alternation: "nebo"
     character_count:
@@ -254,6 +259,7 @@ cs:
       other: "{{count}} znaků"
     related_messages:
       title: "Související zprávy"
+      see_all: 'Zobrazit <a href="%{path}">všechny zprávy</a>od @%{username}'
     suggested_topics:
       title: "Doporučená témata"
       pm_title: "Doporučené zprávy"
@@ -889,6 +895,8 @@ cs:
         every_hour: "každou hodinu"
         daily: "denně"
         weekly: "týdně"
+        every_month: "každý měsíc"
+        every_six_months: "každých šest měsíců"
       email_level:
         title: "Zašli mi email, pokud mě někde cituje, odpoví na můj příspěvek, zmíní mé @jméno nebo mě pozve do tématu."
         always: "vždy"

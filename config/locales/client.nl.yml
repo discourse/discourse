@@ -27,8 +27,7 @@ nl:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
-      time_short_day: "ddd HH:mm"
-      month_day_time: "D MMM, HH:mm"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM HH:mm"
       long_no_year_no_time: "D MMM"
@@ -268,7 +267,7 @@ nl:
       remove: "Bladwijzer verwijderen"
       confirm_clear: "Weet u zeker dat u alle bladwijzers van dit topic wilt verwijderen?"
       save: "Opslaan"
-      no_timezone: "U hebt nog geen tijdzone ingesteld. Hierdoor kunt u geen herinneringen instellen. Stel er een in <a href=\"%{basePath}/my/preferences/profile\">in uw profiel</a>."
+      no_timezone: 'U hebt nog geen tijdzone ingesteld. Hierdoor kunt u geen herinneringen instellen. Stel er een in <a href="%{basePath}/my/preferences/profile">in uw profiel</a>.'
       reminders:
         at_desktop: "De volgende keer vanaf mijn computer"
         later_today: "Later vandaag <br/>{{date}}"
@@ -577,6 +576,7 @@ nl:
       leave: "Verlaten"
       request: "Aanvraag"
       message: "Bericht"
+      confirm_leave: "Weet u zeker dat u deze groep wilt verlaten?"
       allow_membership_requests: "Gebruikers mogen lidmaatschapsaanvragen naar groepseigenaren sturen"
       membership_request_template: "Aangepaste sjabloon om weer te geven voor gebruikers bij het sturen van een lidmaatschapsaanvraag"
       membership_request:
@@ -2797,6 +2797,7 @@ nl:
         mark_watching: "%{shortcut} Topic in de gaten houden"
         print: "%{shortcut} Topic afdrukken"
         defer: "%{shortcut} Topic negeren"
+        topic_admin_actions: "%{shortcut} Beheeracties voor topic openen"
     badges:
       earned_n_times:
         one: "Deze badge is %{count} keer verdiend"
@@ -4208,6 +4209,14 @@ nl:
           title: "Selecteer een bestaande badge of maak een nieuwe om te beginnen"
           what_are_badges_title: "Wat zijn badges?"
           badge_query_examples_title: "Voorbeelden van badgequery's"
+        mass_award:
+          title: Bulktoekenning
+          description: Dezelfde badge aan meerdere gebruikers tegelijk toekennen.
+          no_badge_selected: Selecteer een badge om te beginnen.
+          perform: "Badge aan gebruikers toekennen"
+          upload_csv: Een CSV met gebruikers-e-mailadressen uploaden
+          aborted: Upload een CSV dat gebruikers-e-mailadressen bevat
+          success: Uw CSV is ontvangen en gebruikers ontvangen binnenkort hun badge.
       emoji:
         title: "Emoji"
         help: "Nieuwe emoji toevoegen die voor iedereen beschikbaar zal zijn. (PROTIP: versleep meerdere bestanden tegelijk)"
