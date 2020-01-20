@@ -236,7 +236,7 @@ describe PostsController do
 
       describe "can delete replies" do
         before do
-          PostReply.create(post_id: post1.id, reply_id: post2.id)
+          PostReply.create(post_id: post1.id, reply_post_id: post2.id)
         end
 
         it "deletes the post and the reply to it" do

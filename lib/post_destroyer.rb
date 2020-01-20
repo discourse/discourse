@@ -307,10 +307,10 @@ class PostDestroyer
   end
 
   def remove_associated_replies
-    post_ids = PostReply.where(reply_id: @post.id).pluck(:post_id)
+    post_ids = PostReply.where(reply_post_id: @post.id).pluck(:post_id)
 
     if post_ids.present?
-      PostReply.where(reply_id: @post.id).delete_all
+      PostReply.where(reply_post_id: @post.id).delete_all
       Post.where(id: post_ids).each { |p| p.update_column :reply_count, p.replies.count }
     end
   end

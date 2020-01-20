@@ -69,8 +69,10 @@ export default createWidget("header-topic-info", {
         heading.push(
           h(
             "a.private-message-glyph-wrapper",
-            { attributes: { href } },
-            h("span.private-message-glyph", iconNode("envelope"))
+            {
+              attributes: { href, "aria-label": I18n.t("user.messages.inbox") }
+            },
+            iconNode("envelope", { class: "private-message-glyph" })
           )
         );
       }

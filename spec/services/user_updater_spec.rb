@@ -272,6 +272,26 @@ describe UserUpdater do
         user.reload
         expect(user.primary_group_id).to eq nil
       end
+
+      it 'can be removed by the user when setting is enabled' do
+        SiteSetting.user_selected_primary_groups = true
+        user.groups << new_group
+        user.update(primary_group_id: new_group.id)
+        UserUpdater.new(acting_user, user).update(primary_group_id: '')
+
+        user.reload
+        expect(user.primary_group_id).to eq nil
+      end
+
+      it 'cannot be removed by the user when setting is disabled' do
+        SiteSetting.user_selected_primary_groups = false
+        user.groups << new_group
+        user.update(primary_group_id: new_group.id)
+        UserUpdater.new(acting_user, user).update(primary_group_id: '')
+
+        user.reload
+        expect(user.primary_group_id).to eq new_group.id
+      end
     end
 
     context 'when update fails' do

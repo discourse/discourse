@@ -3499,7 +3499,7 @@ en:
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. Change %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       your_email_settings: "your email settings"
       click_here: "click here"
-      from: "%{site_name} summary"
+      from: "%{site_name}"
       preheader: "A brief summary since your last visit on %{last_seen_at}"
       custom:
         html:

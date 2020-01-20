@@ -128,18 +128,27 @@ a.badge-category {
   }
 }
 
+.private-message-glyph {
+  color: dark-light-choose($primary-low-mid, $secondary-high);
+}
+
+.private-message-glyph-wrapper {
+  float: left;
+
+  .private-message-glyph {
+    margin: 0 5px 0 0;
+    display: inline-block;
+  }
+}
+
 .private_message {
   #topic-title {
-    .private-message-glyph {
-      display: inline-block;
-      color: dark-light-choose($primary-low-mid, $secondary-high);
-    }
     .edit-topic-title {
       position: relative;
       .private-message-glyph {
         position: absolute;
         left: 0.75em;
-        top: 5px;
+        top: 6px;
       }
       #edit-title {
         width: calc(100% - 50px);

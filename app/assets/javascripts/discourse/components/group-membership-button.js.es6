@@ -31,6 +31,14 @@ export default Component.extend({
     $.cookie("destination_url", window.location.href);
   },
 
+  removeFromGroup() {
+    this.model
+      .removeMember(this.currentUser)
+      .then(() => this.model.set("is_group_user", false))
+      .catch(popupAjaxError)
+      .finally(() => this.set("updatingMembership", false));
+  },
+
   actions: {
     joinGroup() {
       if (this.currentUser) {
@@ -53,17 +61,21 @@ export default Component.extend({
 
     leaveGroup() {
       this.set("updatingMembership", true);
-      const model = this.model;
 
-      model
-        .removeMember(this.currentUser)
-        .then(() => {
-          model.set("is_group_user", false);
-        })
-        .catch(popupAjaxError)
-        .finally(() => {
-          this.set("updatingMembership", false);
-        });
+      if (this.model.public_admission) {
+        this.removeFromGroup();
+      } else {
+        return bootbox.confirm(
+          I18n.t("groups.confirm_leave"),
+          I18n.t("no_value"),
+          I18n.t("yes_value"),
+          result => {
+            result
+              ? this.removeFromGroup()
+              : this.set("updatingMembership", false);
+          }
+        );
+      }
     },
 
     showRequestMembershipForm() {
