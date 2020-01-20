@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class SessionController < ApplicationController
-  class LocalLoginNotAllowed < StandardError; end
-  rescue_from LocalLoginNotAllowed do
-    render body: nil, status: 500
-  end
-
   before_action :check_local_login_allowed, only: %i(create forgot_password)
   before_action :rate_limit_login, only: %i(create email_login)
   before_action :rate_limit_second_factor_totp, only: %i(create email_login)
@@ -438,7 +433,7 @@ class SessionController < ApplicationController
     if (check_login_via_email && !SiteSetting.enable_local_logins_via_email) ||
         SiteSetting.enable_sso ||
         !SiteSetting.enable_local_logins
-      raise LocalLoginNotAllowed, "SSO takes over local login or the local login is disallowed."
+      raise Discourse::InvalidAccess, "SSO takes over local login or the local login is disallowed."
     end
   end
 
