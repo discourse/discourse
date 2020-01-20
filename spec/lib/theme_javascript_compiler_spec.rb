@@ -83,7 +83,7 @@ describe ThemeJavascriptCompiler do
     end
 
     # might change/break when updating ember
-    EMBER_INTERNAL_ID = 29
+    EMBER_INTERNAL_ID = 28
     it 'adds the theme id to the helpers' do
       expect(statement("{{theme-prefix 'translation_key'}}")).
         to eq([[1, [EMBER_INTERNAL_ID, "theme-prefix", [22, "translation_key"], nil], false]])
