@@ -462,26 +462,6 @@ describe UsersController do
             expect(response.body).to include(I18n.t("webauthn.validation.not_found_error"))
           end
         end
-
-        context "when security key authentication fails" do
-          it 'shows an error message and does not change password' do
-            put "/u/password-reset/#{token}", params: {
-              password: 'hg9ow8yHG32O',
-              security_key_credential: {
-                signature: 'bad',
-                clientData: 'bad',
-                authenticatorData: 'bad',
-                credentialId: 'bad'
-              },
-              second_factor_method: UserSecondFactor.methods[:security_key]
-            }
-
-            user.reload
-            expect(user.confirm_password?('hg9ow8yHG32O')).to eq(false)
-            expect(response.status).to eq(200)
-            expect(JSON.parse(response.body)['errors']).to include(I18n.t("webauthn.validation.not_found_error"))
-          end
-        end
       end
     end
 
