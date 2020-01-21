@@ -1110,6 +1110,22 @@ describe PostsController do
         expect(new_topic.allowed_users).to contain_exactly(user, user_2, user_3)
       end
 
+      context "when target_recipients not provided" do
+        it "errors when creating a private post" do
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            archetype: 'private_message',
+            title: "this is some post",
+            target_recipients: ""
+          }
+
+          expect(response.status).to eq(422)
+          expect(JSON.parse(response.body)["errors"]).to include(
+            I18n.t("activerecord.errors.models.topic.attributes.base.no_user_selected")
+          )
+        end
+      end
+
       context "errors" do
         it "does not succeed" do
           post "/posts.json", params: { raw: 'test' }
