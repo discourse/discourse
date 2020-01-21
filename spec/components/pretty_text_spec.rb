@@ -1056,7 +1056,7 @@ describe PrettyText do
     [
       "<span class=\"hashtag\">#unknown::tag</span>",
       "<a class=\"hashtag\" href=\"#{category2.url_with_id}\">#<span>known</span></a>",
-      "<a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a>",
+      "<a class=\"hashtag\" href=\"http://test.localhost/tag/known\">#<span>known</span></a>",
       "<a class=\"hashtag\" href=\"#{category.url_with_id}\">#<span>testing</span></a>"
     ].each do |element|
 
@@ -1077,7 +1077,7 @@ describe PrettyText do
 
     cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag")
     html = <<~HTML
-      <p><a href="/a">test</a> <a class="hashtag" href="http://test.localhost/tags/known">#<span>known</span></a></p>
+      <p><a href="/a">test</a> <a class="hashtag" href="http://test.localhost/tag/known">#<span>known</span></a></p>
     HTML
 
     expect(cooked).to eq(html.strip)
