@@ -22,11 +22,11 @@ componentTest("default", {
   },
 
   test(assert) {
-    assert.equal(
-      find(".overflow")
-        .text()
-        .trim(),
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\nFusce convallis faucibus tortor quis vestibulum. Phasellus pharetra dolor eget imperdiet..."
-    );
+    const text = find(".overflow")
+      .text()
+      .trim();
+
+    assert.ok(text.startsWith("Lorem ipsum dolor sit amet"));
+    assert.ok(text.endsWith("..."));
   }
 });
