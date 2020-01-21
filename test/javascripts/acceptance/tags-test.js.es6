@@ -91,7 +91,7 @@ QUnit.test("list the tags in groups", async assert => {
       .map(i => {
         return $(i).attr("href");
       }),
-    ["/tags/focus", "/tags/escort"],
+    ["/tag/focus", "/tag/escort"],
     "always uses lowercase URLs for mixed case tags"
   );
   assert.equal(
@@ -103,13 +103,13 @@ QUnit.test("list the tags in groups", async assert => {
 
 test("new topic button is not available for staff-only tags", async assert => {
   /* global server */
-  server.get("/tags/regular-tag/notifications", () => [
+  server.get("/tag/regular-tag/notifications", () => [
     200,
     { "Content-Type": "application/json" },
     { tag_notification: { id: "regular-tag", notification_level: 1 } }
   ]);
 
-  server.get("/tags/regular-tag/l/latest.json", () => [
+  server.get("/tag/regular-tag/l/latest.json", () => [
     200,
     { "Content-Type": "application/json" },
     {
@@ -133,13 +133,13 @@ test("new topic button is not available for staff-only tags", async assert => {
     }
   ]);
 
-  server.get("/tags/staff-only-tag/notifications", () => [
+  server.get("/tag/staff-only-tag/notifications", () => [
     200,
     { "Content-Type": "application/json" },
     { tag_notification: { id: "staff-only-tag", notification_level: 1 } }
   ]);
 
-  server.get("/tags/staff-only-tag/l/latest.json", () => [
+  server.get("/tag/staff-only-tag/l/latest.json", () => [
     200,
     { "Content-Type": "application/json" },
     {
@@ -166,18 +166,18 @@ test("new topic button is not available for staff-only tags", async assert => {
 
   updateCurrentUser({ moderator: false, admin: false });
 
-  await visit("/tags/regular-tag");
+  await visit("/tag/regular-tag");
   assert.ok(find("#create-topic:disabled").length === 0);
 
-  await visit("/tags/staff-only-tag");
+  await visit("/tag/staff-only-tag");
   assert.ok(find("#create-topic:disabled").length === 1);
 
   updateCurrentUser({ moderator: true });
 
-  await visit("/tags/regular-tag");
+  await visit("/tag/regular-tag");
   assert.ok(find("#create-topic:disabled").length === 0);
 
-  await visit("/tags/staff-only-tag");
+  await visit("/tag/staff-only-tag");
   assert.ok(find("#create-topic:disabled").length === 0);
 });
 
@@ -187,13 +187,13 @@ acceptance("Tag info", {
     tags_listed_by_group: true
   },
   pretend(server, helper) {
-    server.get("/tags/planters/notifications", () => {
+    server.get("/tag/planters/notifications", () => {
       return helper.response({
         tag_notification: { id: "planters", notification_level: 1 }
       });
     });
 
-    server.get("/tags/planters/l/latest.json", () => {
+    server.get("/tag/planters/l/latest.json", () => {
       return helper.response({
         users: [],
         primary_groups: [],
@@ -215,7 +215,7 @@ acceptance("Tag info", {
       });
     });
 
-    server.get("/tags/planters/info", () => {
+    server.get("/tag/planters/info", () => {
       return helper.response({
         __rest_serializer: "1",
         tag_info: {
@@ -261,7 +261,7 @@ acceptance("Tag info", {
 test("tag info can show synonyms", async assert => {
   updateCurrentUser({ moderator: false, admin: false });
 
-  await visit("/tags/planters");
+  await visit("/tag/planters");
   assert.ok(find("#show-tag-info").length === 1);
 
   await click("#show-tag-info");
@@ -286,7 +286,7 @@ test("tag info can show synonyms", async assert => {
 });
 
 test("admin can manage tags", async assert => {
-  server.delete("/tags/planters/synonyms/containers", () => [
+  server.delete("/tag/planters/synonyms/containers", () => [
     200,
     { "Content-Type": "application/json" },
     { success: true }
@@ -294,7 +294,7 @@ test("admin can manage tags", async assert => {
 
   updateCurrentUser({ moderator: false, admin: true });
 
-  await visit("/tags/planters");
+  await visit("/tag/planters");
   assert.ok(find("#show-tag-info").length === 1);
 
   await click("#show-tag-info");

@@ -82,30 +82,30 @@ describe TagsController do
     fab!(:tag) { Fabricate(:tag, name: 'test') }
 
     it "should return the right response" do
-      get "/tags/test"
+      get "/tag/test"
       expect(response.status).to eq(200)
     end
 
     it "should handle invalid tags" do
-      get "/tags/%2ftest%2f"
+      get "/tag/%2ftest%2f"
       expect(response.status).to eq(404)
     end
 
     it "should handle synonyms" do
       synonym = Fabricate(:tag, target_tag: tag)
-      get "/tags/#{synonym.name}"
+      get "/tag/#{synonym.name}"
       expect(response.status).to eq(200)
     end
 
     it "does not show staff-only tags" do
       tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
 
-      get "/tags/test"
+      get "/tag/test"
       expect(response.status).to eq(404)
 
       sign_in(admin)
 
-      get "/tags/test"
+      get "/tag/test"
       expect(response.status).to eq(200)
     end
 
@@ -181,12 +181,12 @@ describe TagsController do
     let(:synonym) { Fabricate(:tag, name: 'synonym', target_tag: tag) }
 
     it "returns 404 if tag not found" do
-      get "/tags/nope/info.json"
+      get "/tag/nope/info.json"
       expect(response.status).to eq(404)
     end
 
     it "can handle tag with no synonyms" do
-      get "/tags/#{tag.name}/info.json"
+      get "/tag/#{tag.name}/info.json"
       expect(response.status).to eq(200)
       expect(json.dig('tag_info', 'name')).to eq(tag.name)
       expect(json.dig('tag_info', 'synonyms')).to be_empty
@@ -194,7 +194,7 @@ describe TagsController do
     end
 
     it "can handle a synonym" do
-      get "/tags/#{synonym.name}/info.json"
+      get "/tag/#{synonym.name}/info.json"
       expect(response.status).to eq(200)
       expect(json.dig('tag_info', 'name')).to eq(synonym.name)
       expect(json.dig('tag_info', 'synonyms')).to be_empty
@@ -203,21 +203,21 @@ describe TagsController do
 
     it "can return a tag's synonyms" do
       synonym
-      get "/tags/#{tag.name}/info.json"
+      get "/tag/#{tag.name}/info.json"
       expect(response.status).to eq(200)
       expect(json.dig('tag_info', 'synonyms').map { |t| t['text'] }).to eq([synonym.name])
     end
 
     it "returns 404 if tag is staff-only" do
       tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
-      get "/tags/test/info.json"
+      get "/tag/test/info.json"
       expect(response.status).to eq(404)
     end
 
     it "staff-only tags can be retrieved for staff user" do
       sign_in(admin)
       tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
-      get "/tags/test/info.json"
+      get "/tag/test/info.json"
       expect(response.status).to eq(200)
     end
 
@@ -227,7 +227,7 @@ describe TagsController do
       tag_group = Fabricate(:tag_group, tags: [tag])
       category2.update!(tag_groups: [tag_group])
       staff_category = Fabricate(:private_category, group: Fabricate(:group), tags: [tag])
-      get "/tags/#{tag.name}/info.json"
+      get "/tag/#{tag.name}/info.json"
       expect(json.dig('tag_info', 'category_ids')).to contain_exactly(category.id, category2.id)
       expect(json['categories']).to be_present
     end
@@ -237,13 +237,13 @@ describe TagsController do
 
       it "returns tag groups if tag groups are visible" do
         SiteSetting.tags_listed_by_group = true
-        get "/tags/#{tag.name}/info.json"
+        get "/tag/#{tag.name}/info.json"
         expect(json.dig('tag_info', 'tag_group_names')).to eq([tag_group.name])
       end
 
       it "doesn't return tag groups if tag groups aren't visible" do
         SiteSetting.tags_listed_by_group = false
-        get "/tags/#{tag.name}/info.json"
+        get "/tag/#{tag.name}/info.json"
         expect(json['tag_info'].has_key?('tag_group_names')).to eq(false)
       end
     end
@@ -272,7 +272,7 @@ describe TagsController do
 
     it "triggers a extensibility event" do
       event = DiscourseEvent.track_events {
-        put "/tags/#{tag.name}.json", params: {
+        put "/tag/#{tag.name}.json", params: {
           tag: {
             id: 'hello'
           }
@@ -365,7 +365,7 @@ describe TagsController do
     context 'tagging disabled' do
       it "returns 404" do
         SiteSetting.tagging_enabled = false
-        get "/tags/#{tag.name}/l/latest.json"
+        get "/tag/#{tag.name}/l/latest.json"
         expect(response.status).to eq(404)
       end
     end
@@ -377,14 +377,14 @@ describe TagsController do
       end
 
       it "can filter by tag" do
-        get "/tags/#{tag.name}/l/latest.json"
+        get "/tag/#{tag.name}/l/latest.json"
         expect(response.status).to eq(200)
       end
 
       it "can filter by two tags" do
         single_tag_topic; multi_tag_topic; all_tag_topic
 
-        get "/tags/#{tag.name}/l/latest.json", params: {
+        get "/tag/#{tag.name}/l/latest.json", params: {
           additional_tag_ids: other_tag.name
         }
 
@@ -399,7 +399,7 @@ describe TagsController do
       it "can filter by multiple tags" do
         single_tag_topic; multi_tag_topic; all_tag_topic
 
-        get "/tags/#{tag.name}/l/latest.json", params: {
+        get "/tag/#{tag.name}/l/latest.json", params: {
           additional_tag_ids: "#{other_tag.name}/#{third_tag.name}"
         }
 
@@ -414,7 +414,7 @@ describe TagsController do
       it "does not find any tags when a tag which doesn't exist is passed" do
         single_tag_topic
 
-        get "/tags/#{tag.name}/l/latest.json", params: {
+        get "/tag/#{tag.name}/l/latest.json", params: {
           additional_tag_ids: "notatag"
         }
 
@@ -462,7 +462,7 @@ describe TagsController do
         end
 
         it "can filter by bookmarked" do
-          get "/tags/#{tag.name}/l/bookmarks.json"
+          get "/tag/#{tag.name}/l/bookmarks.json"
 
           expect(response.status).to eq(200)
         end
@@ -479,7 +479,7 @@ describe TagsController do
           it "includes topics when filtered by muted tag" do
             single_tag_topic
 
-            get "/tags/#{tag.name}/l/latest.json"
+            get "/tag/#{tag.name}/l/latest.json"
             expect(response.status).to eq(200)
 
             topic_ids = parse_topic_ids
@@ -642,7 +642,7 @@ describe TagsController do
       context 'with an existent tag name' do
         it 'deletes the tag' do
           tag = Fabricate(:tag)
-          delete "/tags/#{tag.name}.json"
+          delete "/tag/#{tag.name}.json"
           expect(response.status).to eq(200)
           expect(Tag.where(id: tag.id)).to be_empty
         end
@@ -650,7 +650,7 @@ describe TagsController do
 
       context 'with a nonexistent tag name' do
         it 'returns a tag not found message' do
-          delete "/tags/doesntexists.json"
+          delete "/tag/doesntexists.json"
           expect(response).not_to be_successful
           expect(json['error_type']).to eq('not_found')
         end
@@ -746,13 +746,13 @@ describe TagsController do
     fab!(:tag) { Fabricate(:tag) }
 
     it 'fails if not logged in' do
-      post "/tags/#{tag.name}/synonyms.json", params: { synonyms: ['synonym1'] }
+      post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ['synonym1'] }
       expect(response.status).to eq(403)
     end
 
     it 'fails if not staff user' do
       sign_in(user)
-      post "/tags/#{tag.name}/synonyms.json", params: { synonyms: ['synonym1'] }
+      post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ['synonym1'] }
       expect(response.status).to eq(403)
     end
 
@@ -762,7 +762,7 @@ describe TagsController do
       it 'can make a tag a synonym of another tag' do
         tag2 = Fabricate(:tag)
         expect {
-          post "/tags/#{tag.name}/synonyms.json", params: { synonyms: [tag2.name] }
+          post "/tag/#{tag.name}/synonyms.json", params: { synonyms: [tag2.name] }
         }.to_not change { Tag.count }
         expect(response.status).to eq(200)
         expect(tag2.reload.target_tag).to eq(tag)
@@ -770,7 +770,7 @@ describe TagsController do
 
       it 'can create new tags at the same time' do
         expect {
-          post "/tags/#{tag.name}/synonyms.json", params: { synonyms: ['synonym'] }
+          post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ['synonym'] }
         }.to change { Tag.count }.by(1)
         expect(response.status).to eq(200)
         expect(Tag.find_by_name('synonym')&.target_tag).to eq(tag)
@@ -779,7 +779,7 @@ describe TagsController do
       it 'can return errors' do
         tag2 = Fabricate(:tag, target_tag: tag)
         tag3 = Fabricate(:tag)
-        post "/tags/#{tag3.name}/synonyms.json", params: { synonyms: [tag.name] }
+        post "/tag/#{tag3.name}/synonyms.json", params: { synonyms: [tag.name] }
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
         expect(json['failed']).to be_present
@@ -791,7 +791,7 @@ describe TagsController do
   describe '#destroy_synonym' do
     fab!(:tag) { Fabricate(:tag) }
     fab!(:synonym) { Fabricate(:tag, target_tag: tag, name: 'synonym') }
-    subject { delete("/tags/#{tag.name}/synonyms/#{synonym.name}.json") }
+    subject { delete("/tag/#{tag.name}/synonyms/#{synonym.name}.json") }
 
     it 'fails if not logged in' do
       subject
@@ -815,13 +815,13 @@ describe TagsController do
       end
 
       it "returns error if tag isn't a synonym" do
-        delete "/tags/#{Fabricate(:tag).name}/synonyms/#{synonym.name}.json"
+        delete "/tag/#{Fabricate(:tag).name}/synonyms/#{synonym.name}.json"
         expect(response.status).to eq(400)
         expect_same_tag_names(tag.reload.synonyms, [synonym])
       end
 
       it "returns error if synonym not found" do
-        delete "/tags/#{Fabricate(:tag).name}/synonyms/nope.json"
+        delete "/tag/#{Fabricate(:tag).name}/synonyms/nope.json"
         expect(response.status).to eq(404)
         expect_same_tag_names(tag.reload.synonyms, [synonym])
       end
