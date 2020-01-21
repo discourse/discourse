@@ -1,6 +1,6 @@
 import { escapeExpression } from "discourse/lib/utilities";
 import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default SelectKitRowComponent.extend({
   layoutName:

@@ -225,7 +225,10 @@ function uploadLocation(url) {
     url = Discourse.getURLWithCDN(url);
     return /^\/\//.test(url) ? "http:" + url : url;
   } else if (Discourse.S3BaseUrl) {
-    return "https:" + url;
+    if (url.indexOf("secure-media-uploads") === -1) {
+      return "https:" + url;
+    }
+    return window.location.protocol + url;
   } else {
     var protocol = window.location.protocol + "//",
       hostname = window.location.hostname,

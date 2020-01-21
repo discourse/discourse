@@ -13,8 +13,7 @@ import { censor } from "pretty-text/censored-words";
 import { emojiUnescape } from "discourse/lib/text";
 import PreloadStore from "preload-store";
 import { userPath } from "discourse/lib/url";
-import {
-  default as discourseComputed,
+import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";
@@ -467,16 +466,19 @@ const Topic = RestModel.extend({
 
   // Delete this topic
   destroy(deleted_by) {
-    this.setProperties({
-      deleted_at: new Date(),
-      deleted_by: deleted_by,
-      "details.can_delete": false,
-      "details.can_recover": true
-    });
     return ajax(`/t/${this.id}`, {
       data: { context: window.location.pathname },
       type: "DELETE"
-    });
+    })
+      .then(() => {
+        this.setProperties({
+          deleted_at: new Date(),
+          deleted_by: deleted_by,
+          "details.can_delete": false,
+          "details.can_recover": true
+        });
+      })
+      .catch(popupAjaxError);
   },
 
   // Recover this topic if deleted

@@ -1,4 +1,4 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 
@@ -22,9 +22,10 @@ export default Controller.extend({
     this.session.set("topicListScrollPosition", $(window).scrollTop());
   },
 
+  @observes("model.canLoadMore")
   _showFooter: function() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
-  }.observes("model.canLoadMore"),
+  },
 
   @discourseComputed("incomingCount")
   hasIncoming(incomingCount) {

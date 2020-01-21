@@ -1404,7 +1404,7 @@ describe Topic do
               user_id: user.id,
               topic_id: topic.id,
               post_number: 1,
-              notification_type: Notification.types[:posted]
+              notification_type: Notification.types[:edited]
             ).exists?).to eq(true)
 
             expect(Notification.where(

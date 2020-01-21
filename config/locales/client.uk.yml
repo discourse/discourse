@@ -29,8 +29,6 @@ uk:
         millions: "{{number}} млн."
     dates:
       time: "HH:mm"
-      time_short_day: "ddd HH: мм а"
-      month_day_time: "МММ D, HH: мм а"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM HH:mm"
       long_no_year_no_time: "D MMM"
@@ -316,7 +314,7 @@ uk:
       remove: "Вилучити закладку"
       confirm_clear: "Ви впевнені, що хочете вилучити всі закладки з цієї теми?"
       save: "Зберегти"
-      no_timezone: "Ви ще не встановили часовий пояс. Ви не зможете встановити нагадування. Налаштуйте його <a href=\"%{basePath}/my/preferences/profile\">у своєму профілі</a> ."
+      no_timezone: 'Ви ще не встановили часовий пояс. Ви не зможете встановити нагадування. Налаштуйте його <a href="%{basePath}/my/preferences/profile">у своєму профілі</a> .'
       reminders:
         at_desktop: "Наступного разу на мій робочий стіл"
         later_today: "Пізніше сьогодні <br/> {{date}}"

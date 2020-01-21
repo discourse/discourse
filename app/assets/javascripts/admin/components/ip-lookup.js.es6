@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { later } from "@ember/runloop";
 import Component from "@ember/component";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
 import copyText from "discourse/lib/copy-text";

@@ -3,7 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-const { get, isNone, isEmpty } = Ember;
+const { get, isPresent, isEmpty } = Ember;
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-chooser"],
@@ -55,15 +55,13 @@ export default ComboBoxComponent.extend({
 
   @discourseComputed("rootNone", "rootNoneLabel")
   none(rootNone, rootNoneLabel) {
-    if (
+    if (isPresent(rootNone)) {
+      return rootNoneLabel || "category.none";
+    } else if (
       this.siteSettings.allow_uncategorized_topics ||
       this.allowUncategorized
     ) {
-      if (!isNone(rootNone)) {
-        return rootNoneLabel || "category.none";
-      } else {
-        return Category.findUncategorized();
-      }
+      return Category.findUncategorized();
     } else {
       return "category.choose";
     }
@@ -74,26 +72,12 @@ export default ComboBoxComponent.extend({
 
     if (this.hasSelection) {
       const category = Category.findById(content.value);
-      const parentCategoryId = category.get("parent_category_id");
-      const hasParentCategory = Ember.isPresent(parentCategoryId);
-
-      let badge = "";
-
-      if (hasParentCategory) {
-        const parentCategory = Category.findById(parentCategoryId);
-        badge += categoryBadgeHTML(parentCategory, {
-          link: false,
-          allowUncategorized: true
-        }).htmlSafe();
-      }
-
-      badge += categoryBadgeHTML(category, {
+      content.label = categoryBadgeHTML(category, {
         link: false,
-        hideParent: hasParentCategory ? true : false,
-        allowUncategorized: true
+        hideParent: !!category.parent_category_id,
+        allowUncategorized: true,
+        recursive: true
       }).htmlSafe();
-
-      content.label = badge;
     }
 
     return content;

@@ -54,17 +54,16 @@ class SiteSerializer < ApplicationSerializer
 
   def post_action_types
     cache_fragment("post_action_types_#{I18n.locale}") do
-      types = PostActionType.types.values.map { |id| PostActionType.new(id: id) }
+      types = ordered_flags(PostActionType.types.values)
       ActiveModel::ArraySerializer.new(types).as_json
     end
   end
 
   def topic_flag_types
     cache_fragment("post_action_flag_types_#{I18n.locale}") do
-      types = PostActionType.topic_flag_types.values.map { |id| PostActionType.new(id: id) }
+      types = ordered_flags(PostActionType.topic_flag_types.values)
       ActiveModel::ArraySerializer.new(types, each_serializer: TopicFlagTypeSerializer).as_json
     end
-
   end
 
   def default_archetype
@@ -163,4 +162,16 @@ class SiteSerializer < ApplicationSerializer
     scope.can_create_shared_draft?
   end
 
+  private
+
+  def ordered_flags(flags)
+    notify_moderators_type = PostActionType.flag_types[:notify_moderators]
+    types = flags
+
+    if notify_moderators_flag = types.index(notify_moderators_type)
+      types.insert(types.length, types.delete_at(notify_moderators_flag))
+    end
+
+    types.map { |id| PostActionType.new(id: id) }
+  end
 end

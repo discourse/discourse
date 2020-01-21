@@ -73,7 +73,7 @@ componentTest("with allowUncategorized=null rootNone=true", {
 
   test(assert) {
     assert.equal(this.subject.header().value(), null);
-    assert.equal(this.subject.header().title(), "category");
+    assert.equal(this.subject.header().title(), "(no category)");
   }
 });
 
@@ -88,7 +88,7 @@ componentTest("with disallowed uncategorized, rootNone and rootNoneLabel", {
 
   test(assert) {
     assert.equal(this.subject.header().value(), null);
-    assert.equal(this.subject.header().title(), "category");
+    assert.equal(this.subject.header().title(), "root none label");
   }
 });
 

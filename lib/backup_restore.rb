@@ -4,10 +4,8 @@ module BackupRestore
 
   class OperationRunningError < RuntimeError; end
 
-  VERSION_PREFIX = "v".freeze
-  DUMP_FILE = "dump.sql.gz".freeze
-  OLD_DUMP_FILE = "dump.sql".freeze
-  METADATA_FILE = "meta.json"
+  VERSION_PREFIX = "v"
+  DUMP_FILE = "dump.sql.gz"
   LOGS_CHANNEL = "/admin/backups/logs"
 
   def self.backup!(user_id, opts = {})
@@ -19,7 +17,16 @@ module BackupRestore
   end
 
   def self.restore!(user_id, opts = {})
-    start! BackupRestore::Restorer.new(user_id, opts)
+    restorer = BackupRestore::Restorer.new(
+      user_id: user_id,
+      filename: opts[:filename],
+      factory: BackupRestore::Factory.new(
+        user_id: user_id,
+        client_id: opts[:client_id]
+      )
+    )
+
+    start! restorer
   end
 
   def self.rollback!
@@ -75,16 +82,18 @@ module BackupRestore
   end
 
   def self.move_tables_between_schemas(source, destination)
-    DB.exec(move_tables_between_schemas_sql(source, destination))
+    ActiveRecord::Base.transaction do
+      DB.exec(move_tables_between_schemas_sql(source, destination))
+    end
   end
 
   def self.move_tables_between_schemas_sql(source, destination)
-    <<-SQL
+    <<~SQL
       DO $$DECLARE row record;
       BEGIN
         -- create <destination> schema if it does not exists already
         -- NOTE: DROP & CREATE SCHEMA is easier, but we don't want to drop the public schema
-        -- ortherwise extensions (like hstore & pg_trgm) won't work anymore...
+        -- otherwise extensions (like hstore & pg_trgm) won't work anymore...
         CREATE SCHEMA IF NOT EXISTS #{destination};
         -- move all <source> tables to <destination> schema
         FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = '#{source}'
@@ -108,11 +117,17 @@ module BackupRestore
     config = ActiveRecord::Base.connection_pool.spec.config
     config = config.with_indifferent_access
 
+    # credentials for PostgreSQL in CI environment
+    if Rails.env.test?
+      username = ENV["PGUSER"]
+      password = ENV["PGPASSWORD"]
+    end
+
     DatabaseConfiguration.new(
       config["backup_host"] || config["host"],
       config["backup_port"] || config["port"],
-      config["username"] || ENV["USER"] || "postgres",
-      config["password"],
+      config["username"] || username || ENV["USER"] || "postgres",
+      config["password"] || password,
       config["database"]
     )
   end

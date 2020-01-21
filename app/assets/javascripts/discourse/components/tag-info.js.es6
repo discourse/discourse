@@ -1,7 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { reads, and } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
@@ -76,7 +76,7 @@ export default Component.extend({
     },
 
     unlinkSynonym(tag) {
-      ajax(`/tags/${this.tagInfo.name}/synonyms/${tag.id}`, {
+      ajax(`/tag/${this.tagInfo.name}/synonyms/${tag.id}`, {
         type: "DELETE"
       })
         .then(() => this.tagInfo.synonyms.removeObject(tag))
@@ -98,7 +98,7 @@ export default Component.extend({
     },
 
     addSynonyms() {
-      ajax(`/tags/${this.tagInfo.name}/synonyms`, {
+      ajax(`/tag/${this.tagInfo.name}/synonyms`, {
         type: "POST",
         data: {
           synonyms: this.newSynonyms

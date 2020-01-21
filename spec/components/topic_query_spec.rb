@@ -153,6 +153,7 @@ describe TopicQuery do
 
     context 'subcategories' do
       let!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+      let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
 
       it "works with subcategories" do
         expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(1)
@@ -160,6 +161,23 @@ describe TopicQuery do
         expect(TopicQuery.new(moderator, category: category.id, no_subcategories: true).list_latest.topics.size).to eq(1)
       end
 
+      it "works with subsubcategories" do
+        SiteSetting.max_category_nesting = 3
+
+        Fabricate(:topic, category: category)
+        Fabricate(:topic, category: subcategory)
+        Fabricate(:topic, category: subsubcategory)
+
+        SiteSetting.max_category_nesting = 2
+        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(3)
+        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(3)
+        expect(TopicQuery.new(moderator, category: subsubcategory.id).list_latest.topics.size).to eq(2)
+
+        SiteSetting.max_category_nesting = 3
+        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(4)
+        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(3)
+        expect(TopicQuery.new(moderator, category: subsubcategory.id).list_latest.topics.size).to eq(2)
+      end
     end
   end
 

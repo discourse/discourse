@@ -6,7 +6,7 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { movePosts, mergeTopic } from "discourse/models/topic";
 import DiscourseURL from "discourse/lib/url";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, {
@@ -74,7 +74,7 @@ export default Controller.extend(ModalFunctionality, {
 
   onShow() {
     this.setProperties({
-      "modal.modalClass": "move-to-modal",
+      "modal.modalClass": "choose-topic-modal",
       saving: false,
       selection: "new_topic",
       categoryId: null,

@@ -1,5 +1,5 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["timezone-input"],

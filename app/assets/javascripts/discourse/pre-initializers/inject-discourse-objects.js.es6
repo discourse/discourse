@@ -4,9 +4,8 @@ import Store from "discourse/models/store";
 import DiscourseLocation from "discourse/lib/discourse-location";
 import Discourse from "discourse";
 import SearchService from "discourse/services/search";
-import {
-  startTracking,
-  default as TopicTrackingState
+import TopicTrackingState, {
+  startTracking
 } from "discourse/models/topic-tracking-state";
 import ScreenTrack from "discourse/lib/screen-track";
 import Site from "discourse/models/site";

@@ -54,6 +54,7 @@ module Jobs
       result = Upload.by_users
         .where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
         .where("uploads.created_at < ?", grace_period.hour.ago)
+        .where("uploads.access_control_post_id IS NULL")
         .joins(<<~SQL)
           LEFT JOIN site_settings ss
           ON NULLIF(ss.value, '')::integer = uploads.id

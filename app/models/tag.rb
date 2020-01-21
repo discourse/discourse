@@ -144,7 +144,7 @@ class Tag < ActiveRecord::Base
   end
 
   def full_url
-    "#{Discourse.base_url}/tags/#{self.name}"
+    "#{Discourse.base_url}/tag/#{self.name}"
   end
 
   def index_search
@@ -192,6 +192,7 @@ end
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  pm_topic_count :integer          default(0), not null
+#  target_tag_id  :integer
 #
 # Indexes
 #

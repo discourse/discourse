@@ -99,9 +99,21 @@ const DiscourseURL = EmberObject.extend({
       let holder;
 
       if (opts.jumpEnd) {
-        $(window).scrollTop($(document).height() - $(window).height());
-        _transitioning = false;
-        return;
+        let $holder = $(holderId);
+        let holderHeight = $holder.height();
+        let windowHeight = $(window).height() - offsetCalculator();
+
+        // scroll to the bottom of the post and if the post is yuge we go back up the
+        // timeline by a small % of the post height so we can see the bottom of the text.
+        //
+        // otherwise just jump to the top of the post using the lock & holder method.
+        if (holderHeight > windowHeight) {
+          $(window).scrollTop(
+            $holder.offset().top + (holderHeight - holderHeight / 10)
+          );
+          _transitioning = false;
+          return;
+        }
       }
 
       if (postNumber === 1 && !opts.anchor) {

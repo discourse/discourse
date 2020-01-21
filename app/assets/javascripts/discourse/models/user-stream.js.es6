@@ -4,10 +4,7 @@ import RestModel from "discourse/models/rest";
 import UserAction from "discourse/models/user-action";
 import { emojiUnescape } from "discourse/lib/text";
 import { Promise } from "rsvp";
-import {
-  default as discourseComputed,
-  on
-} from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 export default RestModel.extend({
   loaded: false,

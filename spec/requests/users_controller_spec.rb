@@ -236,7 +236,7 @@ describe UsersController do
         expect(response.status).to eq(200)
         expect(response.body).to have_tag("div#data-preloaded") do |element|
           json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
-          expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false}')
+          expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}')
         end
 
         expect(session["password-#{token}"]).to be_blank
@@ -349,7 +349,7 @@ describe UsersController do
 
           expect(response.body).to have_tag("div#data-preloaded") do |element|
             json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
-            expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false}')
+            expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}')
           end
 
           put "/u/password-reset/#{token}", params: {
@@ -420,14 +420,47 @@ describe UsersController do
         it 'changes password with valid security key challenge and authentication' do
           put "/u/password-reset/#{token}.json", params: {
             password: 'hg9ow8yHG32O',
-            security_key_credential: valid_security_key_auth_post_data,
+            second_factor_token: valid_security_key_auth_post_data,
             second_factor_method: UserSecondFactor.methods[:security_key]
           }
 
           user.reload
           expect(response.status).to eq(200)
+
           expect(user.confirm_password?('hg9ow8yHG32O')).to eq(true)
           expect(user.user_auth_tokens.count).to eq(1)
+        end
+
+        it "does not change a password if a fake TOTP token is provided" do
+          put "/u/password-reset/#{token}.json", params: {
+            password: 'hg9ow8yHG32O',
+            second_factor_token: 'blah',
+            second_factor_method: UserSecondFactor.methods[:security_key]
+          }
+
+          user.reload
+          expect(response.status).to eq(200)
+          expect(user.confirm_password?('hg9ow8yHG32O')).to eq(false)
+        end
+
+        context "when security key authentication fails" do
+          it 'shows an error message and does not change password' do
+            put "/u/password-reset/#{token}", params: {
+              password: 'hg9ow8yHG32O',
+              second_factor_token: {
+                signature: 'bad',
+                clientData: 'bad',
+                authenticatorData: 'bad',
+                credentialId: 'bad'
+              },
+              second_factor_method: UserSecondFactor.methods[:security_key]
+            }
+
+            user.reload
+            expect(user.confirm_password?('hg9ow8yHG32O')).to eq(false)
+            expect(response.status).to eq(200)
+            expect(response.body).to include(I18n.t("webauthn.validation.not_found_error"))
+          end
         end
 
         context "when security key authentication fails" do
@@ -535,126 +568,6 @@ describe UsersController do
 
         expect(response_body).to match(I18n.t("admin_login.errors.unknown_email_address"))
         expect(response_body).to_not match(I18n.t("login.second_factor_description"))
-      end
-    end
-
-    context 'logs in admin' do
-      it 'does not log in admin with invalid token' do
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
-        get "/u/admin-login/invalid"
-        expect(session[:current_user_id]).to be_blank
-      end
-
-      context 'valid token' do
-        it 'does log in admin with SSO disabled' do
-          SiteSetting.enable_sso = false
-          token = admin.email_tokens.create(email: admin.email).token
-
-          get "/u/admin-login/#{token}"
-          expect(response).to redirect_to('/')
-          expect(session[:current_user_id]).to eq(admin.id)
-        end
-
-        it 'logs in admin with SSO enabled' do
-          SiteSetting.sso_url = "https://www.example.com/sso"
-          SiteSetting.enable_sso = true
-          token = admin.email_tokens.create(email: admin.email).token
-
-          get "/u/admin-login/#{token}"
-          expect(response).to redirect_to('/')
-          expect(session[:current_user_id]).to eq(admin.id)
-        end
-      end
-
-      describe 'when 2 factor authentication is enabled' do
-        fab!(:second_factor) { Fabricate(:user_second_factor_totp, user: admin) }
-        fab!(:email_token) { Fabricate(:email_token, user: admin) }
-
-        it 'does not log in when token required' do
-          second_factor
-          get "/u/admin-login/#{email_token.token}"
-          expect(response).not_to redirect_to('/')
-          expect(session[:current_user_id]).not_to eq(admin.id)
-          expect(response.body).to include(I18n.t('login.second_factor_description'))
-        end
-
-        describe 'invalid 2 factor token' do
-          it 'should display the right error' do
-            second_factor
-
-            put "/u/admin-login/#{email_token.token}", params: {
-              second_factor_token: '13213',
-              second_factor_method: UserSecondFactor.methods[:totp]
-            }
-
-            expect(response.status).to eq(200)
-            expect(response.body).to include(I18n.t('login.second_factor_description'))
-            expect(response.body).to include(I18n.t('login.invalid_second_factor_code'))
-          end
-        end
-
-        it 'logs in when a valid 2-factor token is given' do
-          put "/u/admin-login/#{email_token.token}", params: {
-            second_factor_token: ROTP::TOTP.new(second_factor.data).now,
-            second_factor_method: UserSecondFactor.methods[:totp]
-          }
-
-          expect(response).to redirect_to('/')
-          expect(session[:current_user_id]).to eq(admin.id)
-        end
-      end
-
-      describe 'when security key authentication required' do
-        fab!(:email_token) { Fabricate(:email_token, user: admin) }
-        let!(:security_key) do
-          Fabricate(
-            :user_security_key,
-            user: admin,
-            credential_id: valid_security_key_data[:credential_id],
-            public_key: valid_security_key_data[:public_key]
-          )
-        end
-
-        before do
-          simulate_localhost_webauthn_challenge
-
-          # store challenge in secure session by visiting the admin login page
-          get "/u/admin-login/#{email_token.token}"
-        end
-
-        it 'does not log in when token required' do
-          expect(response).not_to redirect_to('/')
-          expect(session[:current_user_id]).not_to eq(admin.id)
-          expect(response.body).to include(I18n.t('login.security_key_authenticate'))
-        end
-
-        describe 'invalid security key' do
-          it 'should display the right error' do
-            put "/u/admin-login/#{email_token.token}", params: {
-              security_key_credential: {
-                signature: 'bad',
-                clientData: 'bad',
-                authenticatorData: 'bad',
-                credentialId: 'bad'
-              }.to_json,
-              second_factor_method: UserSecondFactor.methods[:security_key]
-            }
-
-            expect(response.status).to eq(200)
-            expect(response.body).to include(I18n.t('webauthn.validation.not_found_error'))
-          end
-        end
-
-        it 'logs in when a valid security key is given' do
-          put "/u/admin-login/#{email_token.token}", params: {
-            security_key_credential: valid_security_key_auth_post_data.to_json,
-            second_factor_method: UserSecondFactor.methods[:security_key]
-          }
-
-          expect(response).to redirect_to('/')
-          expect(session[:current_user_id]).to eq(admin.id)
-        end
       end
     end
   end
@@ -1765,10 +1678,24 @@ describe UsersController do
         end
 
         context 'a locale is chosen that differs from I18n.locale' do
+          before do
+            SiteSetting.allow_user_locale = true
+          end
+
           it "updates the user's locale" do
-            I18n.stubs(:locale).returns('fr')
+            I18n.locale = :fr
             put "/u/#{user.username}.json", params: { locale: :fa_IR }
-            expect(User.find_by(username: user.username).locale).to eq('fa_IR')
+            expect(user.reload.locale).to eq('fa_IR')
+          end
+
+          it "updates the title" do
+            user.update!(locale: :fr)
+            user.change_trust_level!(TrustLevel[4])
+            BadgeGranter.process_queue!
+
+            leader_title = I18n.t("badges.leader.name", locale: :fr)
+            put "/u/#{user.username}.json", params: { title: leader_title }
+            expect(user.reload.title).to eq(leader_title)
           end
         end
 
@@ -1962,7 +1889,15 @@ describe UsersController do
       expect(user.user_profile.granted_title_badge_id).to eq(nil)
     end
 
-    context "with overrided name" do
+    it "is not raising an erroring when user revokes title" do
+      sign_in(user)
+      badge.update allow_title: true
+      put "/u/#{user.username}/preferences/badge_title.json", params: { user_badge_id: user_badge.id }
+      put "/u/#{user.username}/preferences/badge_title.json", params: { user_badge_id: 0 }
+      expect(response.status).to eq(200)
+    end
+
+    context "with overridden name" do
       fab!(:badge) { Fabricate(:badge, name: 'Demogorgon', allow_title: true) }
       let(:user_badge) { BadgeGranter.grant(badge, user) }
 
@@ -2915,6 +2850,8 @@ describe UsersController do
       it 'returns success' do
         get "/u/#{user.username}.json"
         expect(response.status).to eq(200)
+        expect(response.headers['X-Robots-Tag']).to eq('noindex')
+
         json = JSON.parse(response.body)
 
         expect(json["user"]["has_title_badges"]).to eq(false)
@@ -3631,7 +3568,8 @@ describe UsersController do
 
           response_body = JSON.parse(response.body)
 
-          expect(response_body['backup_codes'].length).to be(10)
+          # we use SecureRandom.hex(16) for backup codes, ensure this continues to be the case
+          expect(response_body['backup_codes'].map(&:length)).to eq([32] * 10)
         end
       end
     end

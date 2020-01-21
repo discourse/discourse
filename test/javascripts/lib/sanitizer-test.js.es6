@@ -1,4 +1,4 @@
-import { default as PrettyText, buildOptions } from "pretty-text/pretty-text";
+import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { hrefAllowed } from "pretty-text/sanitizer";
 
 QUnit.module("lib:sanitizer");

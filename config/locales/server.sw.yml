@@ -1667,7 +1667,6 @@ sw:
       unsubscribe: "Muhtasari huu umetumwa kutoka kwa %{site_link} kama hatujakuona kwa mda fulani. Badilisha %{email_preferences_link}, au %{unsubscribe_link} kujiengua."
       your_email_settings: "mipangilio yako ya barua pepe"
       click_here: "bofya hapa"
-      from: "Muhtasari wa %{site_name}"
       preheader: "Muhtasari mfupi toka mara ya mwisho ulivyotembelea %{last_seen_at}"
     forgot_password:
       title: "Nimesahau Nywila"
@@ -1702,13 +1701,6 @@ sw:
     admin_login:
       title: "Ingia Kiongozi"
       subject_template: "[%{email_prefix}] Ingia"
-      text_body_template: |
-        Mtu anataka kuingia kwenye akaunti yako kwenye [%{site_name}](%{base_url}).
-
-        Kama haujaanzisha ombi hili, unaweza kupuuzia barua pepe hii.
-
-        Bofya kiungo kifuatacho kuingia:
-        %{base_url}/u/admin-kuingia/%{email_token}
     account_created:
       title: "Akaunti Imetengenezwa"
       subject_template: "[%{email_prefix}] Akaunti Yako Mpya"
@@ -1826,6 +1818,7 @@ sw:
   csv_export:
     boolean_yes: "Ndiyo"
     boolean_no: "Hapana"
+    rate_limit_error: "Machapisho yanaweza kupakuliwa mara moja kwa siku, tafadhali jaribu tena kesho."
   static_topic_first_reply: |
     Hariri chapisho la kwanza la mada hii kubadilisha maandishi ya ukurasa %{page_name}.
   guidelines_topic:
@@ -2042,14 +2035,8 @@ sw:
         Hii beji inatolewa ukipata upendo 5 au zaidi kwenye machapisho 300 tofauti. Jukwaa linasifu na kuheshimu mchango wako mkubwa kwenye majadiliano hapa!
     out_of_love:
       name: Haina Upendo
-      description: Umetumia upendo 50 ndani ya siku moja
-      long_description: |
-        Hii bei inatolewa ukitumia upendo wako 50 wa siku. Kumbuka kuchukua mda na kupenda machapisho unayoyafurahia na kushukuru, vitendo hivi vinatia moyo wengine kwenye jukwaa kutengeneza majadiliano mengine mazuri zaidi ya baadae.
     higher_love:
       name: Upendo wa Hali ya Juu
-      description: Umetumia upendo 50 mara 5 ndani ya siku moja
-      long_description: |
-        Hii beji inatolewa ukitumia upendo wako 50 mara 5 kwa siku. Asante kwa kuchukua mda kuchochea maongezi mazuri kila siku!
     crazy_in_love:
       name: Imejaa Upendo
       description: Umetumia upendo 50 mara 20 ndani ya siku moja

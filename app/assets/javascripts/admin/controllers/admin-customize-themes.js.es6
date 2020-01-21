@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { THEMES } from "admin/models/theme";
 
 export default Controller.extend({

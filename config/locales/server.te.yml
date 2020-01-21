@@ -653,6 +653,7 @@ te:
   csv_export:
     boolean_yes: "అవును"
     boolean_no: "లేదు"
+    rate_limit_error: "టపాలు కేవలం రోజుకు ఒకసారి మాత్రమే దిగుమతించుకోగలరు. దయచేసి రేపు ప్రయత్నించండి."
   guidelines_topic:
     title: "తఅప్ర/మార్గదర్శకాలు"
   tos_topic:

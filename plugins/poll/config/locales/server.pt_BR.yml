@@ -11,6 +11,8 @@ pt_BR:
     poll_maximum_options: "Número máximo de opções permitidas em uma votação."
     poll_edit_window_mins: "Número de minutos após a criação de uma postagem durante os quais votações podem ser editadas."
     poll_minimum_trust_level_to_create: "Defina o nível de confiança mínimo necessário para criar votações."
+    poll_groupable_user_fields: "Um conjunto de nomes de campo de usuário que podem ser usados para agrupar e filtrar os resultados da pesquisa."
+    poll_export_data_explorer_query_id: "ID da Consulta do Explorador de Dados ao ser usado para exportar os resultados da pesquisa (0 para desabilitar)."
   poll:
     poll: "votação"
     invalid_argument: "Valor inválido '%{value}' para o argumento '%{argument}'."
@@ -26,6 +28,8 @@ pt_BR:
       other: "A votação de nome <strong>%{name}</strong> precisa ter menos de %{count} opções."
     default_poll_must_have_different_options: "A votação precisa ter opções diferentes."
     named_poll_must_have_different_options: "A votação de nome <strong>%{name}</strong> precisa ter opções diferentes."
+    default_poll_must_not_have_any_empty_options: "Enquetes não devem ter opções vazias."
+    named_poll_must_not_have_any_empty_options: "A enquete <strong>%{name}</strong> não pode ter nenhuma opção vazia. "
     default_poll_with_multiple_choices_has_invalid_parameters: "A votação com múltiplas opções tem parâmetros inválidos."
     named_poll_with_multiple_choices_has_invalid_parameters: "A votação de nome <strong>%{name}</strong> com múltiplas escolhas tem parâmetros inválidos."
     requires_at_least_1_valid_option: "Você precisa selecionar pelo menos 1 opção válida."
@@ -42,3 +46,5 @@ pt_BR:
     insufficient_rights_to_create: "Você não tem permissão para criar votações."
     email:
       link_to_poll: "Clique para ver a votação."
+    user_field:
+      no_data: "Sem Dados"

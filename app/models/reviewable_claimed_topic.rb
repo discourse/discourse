@@ -3,6 +3,7 @@
 class ReviewableClaimedTopic < ActiveRecord::Base
   belongs_to :topic
   belongs_to :user
+  validates_uniqueness_of :topic
 
   def self.claimed_hash(topic_ids)
     result = {}

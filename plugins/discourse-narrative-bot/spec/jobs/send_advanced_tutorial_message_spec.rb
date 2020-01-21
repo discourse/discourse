@@ -19,5 +19,10 @@ RSpec.describe Jobs::SendAdvancedTutorialMessage do
     expect(topic.topic_allowed_users.pluck(:user_id)).to contain_exactly(
       system_user.id, user.id
     )
+    expect(topic.first_post.raw).to eq(I18n.t(
+      'discourse_narrative_bot.tl2_promotion_message.text_body_template',
+      discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_user.username,
+      reset_trigger: "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}"
+    ).chomp)
   end
 end

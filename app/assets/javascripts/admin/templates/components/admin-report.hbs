@@ -160,17 +160,15 @@
           </div>
         {{/each}}
 
-        {{#if model.isTable}}
-          <div class="control">
-            <div class="input">
-              {{d-button
-                class="btn-default export-csv-btn"
-                action=(action "exportCsv")
-                label="admin.export_csv.button_text"
-                icon="download"}}
-            </div>
+        <div class="control">
+          <div class="input">
+            {{d-button
+              class="btn-default export-csv-btn"
+              action=(action "exportCsv")
+              label="admin.export_csv.button_text"
+              icon="download"}}
           </div>
-        {{/if}}
+        </div>
 
         {{#if showRefresh}}
           <div class="control">

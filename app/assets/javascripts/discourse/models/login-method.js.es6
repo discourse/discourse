@@ -21,7 +21,7 @@ const LoginMethod = EmberObject.extend({
     return this.message_override || I18n.t(`login.${this.name}.message`);
   },
 
-  doLogin({ reconnect = false } = {}) {
+  doLogin({ reconnect = false, params = {} } = {}) {
     if (this.customLogin) {
       this.customLogin();
       return Promise.resolve();
@@ -35,7 +35,15 @@ const LoginMethod = EmberObject.extend({
     let authUrl = Discourse.getURL(`/auth/${this.name}`);
 
     if (reconnect) {
-      authUrl += "?reconnect=true";
+      params["reconnect"] = true;
+    }
+
+    const paramKeys = Object.keys(params);
+    if (paramKeys.length > 0) {
+      authUrl += "?";
+      authUrl += paramKeys
+        .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
+        .join("&");
     }
 
     return LoginMethod.buildPostForm(authUrl).then(form => form.submit());

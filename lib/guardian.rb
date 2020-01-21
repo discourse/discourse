@@ -289,7 +289,12 @@ class Guardian
     return false if title.nil?
     return true if title.empty? # A title set to '(none)' in the UI is an empty string
     return false if user != @user
-    return true if user.badges.where(name: title, allow_title: true).exists?
+
+    return true if user.badges
+      .where(allow_title: true)
+      .pluck(:name)
+      .any? { |name| Badge.display_name(name) == title }
+
     user.groups.where(title: title).exists?
   end
 
@@ -440,10 +445,10 @@ class Guardian
     UserExport.where(user_id: @user.id, created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).count == 0
   end
 
-  def can_mute_user?(user_id)
+  def can_mute_user?(target_user)
     can_mute_users? &&
-      @user.id != user_id &&
-      User.where(id: user_id, admin: false, moderator: false).exists?
+      @user.id != target_user.id &&
+      !target_user.staff?
   end
 
   def can_mute_users?
@@ -451,8 +456,8 @@ class Guardian
     @user.staff? || @user.trust_level >= TrustLevel.levels[:basic]
   end
 
-  def can_ignore_user?(user_id)
-    can_ignore_users? && @user.id != user_id && User.where(id: user_id, admin: false, moderator: false).exists?
+  def can_ignore_user?(target_user)
+    can_ignore_users? && @user.id != target_user.id && !target_user.staff?
   end
 
   def can_ignore_users?

@@ -40,7 +40,18 @@ function show(image) {
         image.srcset = copyImg.srcset;
       }
       image.classList.remove("d-lazyload-hidden");
-      image.parentNode.removeChild(copyImg);
+
+      if (image.onload) {
+        // don't bother fighting with existing handler
+        // this can mean a slight flash on mobile
+        image.parentNode.removeChild(copyImg);
+      } else {
+        image.onload = () => {
+          image.parentNode.removeChild(copyImg);
+          image.onload = null;
+        };
+      }
+
       copyImg.onload = null;
     };
 
@@ -50,43 +61,23 @@ function show(image) {
       copyImg.srcset = imageData.srcset;
     }
 
+    // width of image may not match, use computed style which
+    // is the actual size of the image
+    const computedStyle = window.getComputedStyle(image);
+    const actualWidth = parseInt(computedStyle.width, 10);
+    const actualHeight = parseInt(computedStyle.height, 10);
+
     copyImg.style.position = "absolute";
     copyImg.style.top = `${image.offsetTop}px`;
     copyImg.style.left = `${image.offsetLeft}px`;
+    copyImg.style.width = `${actualWidth}px`;
+    copyImg.style.height = `${actualHeight}px`;
+
     copyImg.className = imageData.className;
 
-    let inOnebox = false;
-    let inQuote = false;
-    for (let element = image; element; element = element.parentElement) {
-      if (element.tagName === "ARTICLE" && element.dataset.postId) {
-        break;
-      }
-      if (element.classList.contains("onebox")) {
-        inOnebox = true;
-      }
-      if (element.tagName === "BLOCKQUOTE") {
-        inQuote = true;
-      }
-    }
-
-    if (!inOnebox) {
-      copyImg.style.width = `${imageData.width}px`;
-      copyImg.style.height = `${imageData.height}px`;
-    }
-
-    if (inQuote && imageData.width && imageData.height) {
-      const computedStyle = window.getComputedStyle(image);
-      const width = parseInt(computedStyle.width, 10);
-      const height = width * (imageData.height / imageData.width);
-
-      image.width = width;
-      image.height = height;
-
-      copyImg.style.width = `${width}px`;
-      copyImg.style.height = `${height}px`;
-    }
-
-    image.parentNode.insertBefore(copyImg, image);
+    // insert after the current element so styling still will
+    // apply to original image firstChild selectors
+    image.parentNode.insertBefore(copyImg, image.nextSibling);
   } else {
     image.classList.remove("d-lazyload-hidden");
   }

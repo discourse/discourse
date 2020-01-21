@@ -207,4 +207,15 @@ describe JsLocaleHelper do
     end
   end
 
+  describe ".find_message_format_locale" do
+    it "finds locale for en_US" do
+      locale, filename = JsLocaleHelper.find_message_format_locale([:en_US],  fallback_to_english: false)
+      expect(locale).to eq("en")
+      expect(filename).to end_with("/en.js")
+
+      locale, filename = JsLocaleHelper.find_message_format_locale(["en_US"],  fallback_to_english: false)
+      expect(locale).to eq("en")
+      expect(filename).to end_with("/en.js")
+    end
+  end
 end

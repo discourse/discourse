@@ -83,7 +83,7 @@ class CookedPostProcessor
   def remove_full_quote_on_direct_reply
     return if !SiteSetting.remove_full_quote
     return if @post.post_number == 1
-    return if @doc.css("aside.quote").size != 1
+    return if @doc.xpath("aside[contains(@class, 'quote')]").size != 1
 
     previous = Post
       .where("post_number < ? AND topic_id = ? AND post_type = ? AND NOT hidden", @post.post_number, @post.topic_id, Post.types[:regular])
@@ -99,7 +99,7 @@ class CookedPostProcessor
 
     return if previous_text.gsub(/(\s){2,}/, '\1') != quoted_text.gsub(/(\s){2,}/, '\1')
 
-    quote_regexp = /\A\s*\[quote.+?\[\/quote\]/im
+    quote_regexp = /\A\s*\[quote.+\[\/quote\]/im
     quoteless_raw = @post.raw.sub(quote_regexp, "").strip
 
     return if @post.raw.strip == quoteless_raw

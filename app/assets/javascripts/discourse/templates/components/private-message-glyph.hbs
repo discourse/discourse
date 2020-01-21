@@ -1,0 +1,11 @@
+{{#if href}}
+  <a href={{href}} title={{i18n title}} aria-label={{i18n ariaLabel}}>
+    <span class="private-message-glyph-wrapper">
+      {{d-icon "envelope" class="private-message-glyph"}}
+    </span>
+  </a>
+{{else}}
+  <span class="private-message-glyph-wrapper">
+    {{d-icon "envelope" class="private-message-glyph"}}
+  </span>
+{{/if}}

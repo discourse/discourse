@@ -223,6 +223,7 @@ nl:
     request_membership: "Lidmaatschap aanvragen"
     join_group: "Deelnemen aan groep"
   deleted_topic: "Oeps! Dit topic is verwijderd en is niet meer beschikbaar."
+  delete_topic_failed: "Er is een fout opgetreden bij het verwijderen van dat topic. Neem contact op met de beheerder van de website."
   reading_time: "Leestijd"
   likes: "Likes"
   too_many_replies:
@@ -850,6 +851,7 @@ nl:
       public_key_error: "De verificatie van de openbare sleutel voor de referentie is mislukt."
       ownership_error: "De beveiligingssleutel behoort niet toe aan de gebruiker."
       not_found_error: "Er kon geen beveiligingssleutel met de opgegeven referentie-ID worden gevonden."
+      unknown_cose_algorithm_error: "Het voor de beveiligingssleutel gebruikte algoritme wordt niet herkend."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1503,7 +1505,7 @@ nl:
     discord_secret: "Geheime sleutel van Discord"
     discord_trusted_guilds: 'Alleen leden van deze Discord-guilds mogen zich aanmelden via Discord. Gebruik de numerieke ID voor de guild. Bekijk de instructies <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">hier</a> voor meer informatie. Laat dit leeg om alle guilds toe te staan.'
     readonly_mode_during_backup: "Alleen-lezenmodus tijdens het maken van een back-up inschakelen"
-    enable_backups: "Administrators mogen back-ups van het forum maken"
+    enable_backups: "Beheerders mogen back-ups van het forum maken"
     allow_restore: "Herstellen van gegevens toestaan, waarbij ALLE websitegegevens worden overschreven! Laat dit op 'false' staan, tenzij u een back-up wilt terugzetten."
     maximum_backups: "Het maximale aantal back-ups om op schijf te bewaren. Oudere back-ups worden automatisch verwijderd."
     automatic_backups_enabled: "Automatische back-ups uitvoeren volgens de opgegeven back-upfrequentie."
@@ -1944,7 +1946,7 @@ nl:
       category_search_priority:
         very_low_weight_invalid: "U kunt het gewicht niet groter instellen dan 'category_search_priority_low_weight'."
         low_weight_invalid: "U kunt het gewicht niet groter of gelijk aan 1 of kleiner instellen dan 'category_search_priority_very_low_weight'."
-        high_weight_invalid: "U kunt het gewicht niet groter dan of gelijk aan 1 of groter instellen dan 'category_search_priority_very_high_weight'."
+        high_weight_invalid: "U kunt het gewicht niet kleiner of gelijk aan 1 of groter instellen dan 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "U kunt het gewicht niet kleiner instellen dan 'category_search_priority_high_weight'."
       unicode_username_whitelist:
         regex_invalid: "De reguliere expressie is ongeldig: %{error}"
@@ -1972,6 +1974,7 @@ nl:
     unknown_error: "Er is een probleem met uw account. Neem contact op met de beheerder van de website."
     timeout_expired: "Time-out bij accountaanmelding, probeer u opnieuw aan te melden."
     no_email: "Er is geen e-mailadres opgegeven. Neem contact op met de beheerder van de website."
+    blank_id_error: "De `external_id` is vereist, maar was leeg"
     email_error: "Er kon geen account met het e-mailadres <b>%{email}</b> worden geregistreerd. Neem contact op met de beheerder van de website."
     missing_secret: "SSO-authenticatie mislukt vanwege ontbrekend geheim. Neem contact op met de websitebeheerders om dit probleem te verhelpen."
   original_poster: "Oorspronkelijk geplaatst door"
@@ -2050,6 +2053,8 @@ nl:
     autoclosed_disabled_lastpost: "Dit topic is nu geopend. Nieuwe reacties worden weer geaccepteerd."
     auto_deleted_by_timer: "Automatisch verwijderd door timer."
   login:
+    invalid_second_factor_method: "De geselecteerde twee-factormethode is ongeldig."
+    not_enabled_second_factor_method: "De geselecteerde twee-factormethode is niet ingeschakeld voor uw account."
     security_key_description: "Houd uw fysieke beveiligingssleutel gereed en klik op de onderstaande knop Authenticeren met beveiligingssleutel."
     security_key_alternative: "Andere manier proberen"
     security_key_authenticate: "Authenticeren met beveiligingssleutel"
@@ -2095,7 +2100,7 @@ nl:
     invalid_second_factor_code: "Ongeldige authenticatiecode. Elke code kan maar eenmaal worden gebruikt."
     invalid_security_key: "Ongeldige beveiligingssleutel."
     second_factor_toggle:
-      totp: "Een authenticator-app gebruiken"
+      totp: "Een authenticator-app of beveiligingssleutel gebruiken"
       backup_code: "Een back-upcode gebruiken"
   admin:
     email:
@@ -2170,6 +2175,10 @@ nl:
       Sorry, deze back-up-downloadkoppeling is al gebruikt of is verlopen.
   admin_confirmation_mailer:
     subject_template: "[%{email_prefix}] Bevestig nieuwe beheerdersaccount"
+    text_body_template: |
+      Bevestig dat u **%{target_username} (%{target_email})** als een beheerder voor uw forum wilt toevoegen.
+
+      [Beheerdersaccount bevestigen](%{admin_confirm_url})
   flag_reasons:
     off_topic: "Uw bericht is gemarkeerd als **off-topic**: de gemeenschap vindt dat het niet goed bij het onderwerp past, zoals momenteel bepaald door de titel en het eerste bericht."
     inappropriate: "Uw bericht is gemarkeerd als **ongepast**: de gemeenschap vindt het bericht beledigend, grof, of een schending van [onze gemeenschapsrichtlijnen](%{base_path}/guidelines)."
@@ -2186,6 +2195,9 @@ nl:
     post_hidden:
       title: "Bericht verborgen"
       subject_template: "Bericht verborgen door gemeenschapsmarkeringen"
+    flags_disagreed:
+      title: "Gemarkeerd bericht teruggezet door staflid"
+      subject_template: "Gemarkeerd bericht teruggezet door staflid"
     flags_agreed_and_post_deleted:
       title: "Gemarkeerd bericht verwijderd door staflid"
       subject_template: "Gemarkeerd bericht verwijderd door staflid"
@@ -2374,7 +2386,7 @@ nl:
       unsubscribe: "Deze samenvatting wordt vanaf %{site_link} als we u een tijd niet hebben gezien. Wijzig %{email_preferences_link}, of %{unsubscribe_link} om u uit te schrijven."
       your_email_settings: "uw e-mailinstellingen"
       click_here: "klik hier"
-      from: "samenvatting voor%{site_name}"
+      from: "%{site_name}"
       preheader: "Een korte samenvatting sinds uw laatste bezoek op %{last_seen_at}"
     forgot_password:
       title: "Wachtwoord vergeten"
@@ -2402,14 +2414,33 @@ nl:
     admin_login:
       title: "Beheerdersaanmelding"
       subject_template: "[%{email_prefix}] Aanmelding"
+      text_body_template: |
+        Iemand heeft om aanmelding gevraagd bij uw account op [%{site_name}](%{base_url}).
+
+        Als u deze aanvraag niet hebt gedaan, kunt u deze e-mail gewoon negeren.
+
+        Klik op de volgende koppeling om u aan te melden:
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Account gemaakt"
       subject_template: "[%{email_prefix}] Uw nieuwe account"
     confirm_new_email:
       title: "Nieuw e-mailadres bevestigen"
       subject_template: "[%{email_prefix}] Bevestig uw nieuwe e-mailadres"
+      text_body_template: |
+        Bevestig uw nieuwe e-mailadres voor %{site_name} door op de volgende koppeling te klikken:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       subject_template: "[%{email_prefix}] Bevestig uw huidige e-mailadres"
+      text_body_template: |
+        Voordat we uw e-mailadres kunnen wijzigen, dient u te bevestigen dat u de huidige
+        e-mailaccount beheert. Nadat u deze stap hebt voltooid, laten we u het nieuwe
+        e-mailadres bevestigen.
+
+        Bevestig uw huidige e-mailadres voor %{site_name} door op de volgende koppeling te klikken:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       subject_template: "[%{email_prefix}] Uw e-mailadres is gewijzigd"
     signup_after_approval:
@@ -2472,6 +2503,7 @@ nl:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nee"
+    rate_limit_error: "Berichten kunnen maar één keer per dag worden gedownload; probeer het morgen opnieuw."
   static_topic_first_reply: |
     Bewerk het eerste bericht in dit topic om de inhoud van de pagina %{page_name} te wijzigen.
   guidelines_topic:
@@ -2481,6 +2513,9 @@ nl:
   privacy_topic:
     title: "Privacybeleid"
   badges:
+    mass_award:
+      errors:
+        invalid_csv: Dat CSV-bestand kon niet worden gelezen. Bevestig dat het één e-mailadres per regel bevat.
     editor:
       name: Bewerker
       description: Eerste berichtbewerking
@@ -2551,6 +2586,17 @@ nl:
       name: Gewaardeerd
     respected:
       name: Gerespecteerd
+    out_of_love:
+      description: "%{max_likes_per_day} likes op een dag gebruikt"
+      long_description: |
+        Deze badge wordt toegekend wanneer u alle %{max_likes_per_day} van uw dagelijkse likes gebruikt. Door eraan te denken even de tijd te nemen en de berichten waar u plezier aan beleeft en die u waardeert te liken, worden uw medegemeenschapsleden aangemoedigd in de toekomst zelfs nog geweldigere discussies aan te maken.
+    higher_love:
+      description: "5 keer %{max_likes_per_day} likes op een dag gebruikt"
+      long_description: |
+        Deze badge wordt toegekend wanneer u 5 dagen lang alle %{max_likes_per_day} van uw dagelijkse likes gebruikt. Bedankt dat u de tijd neemt voor het dagelijks actief aanmoedigen van de beste conversaties!
+    crazy_in_love:
+      long_description: |
+        Deze badge wordt toegekend wanneer u 20 dagen lang alle %{max_likes_per_day} van uw dagelijkse likes gebruikt. Wow! U bent een rolmodel voor het aanmoedigen van uw medegemeenschapesleden!
     thank_you:
       name: Bedankt
     empathetic:
@@ -2569,6 +2615,7 @@ nl:
     success: "E-mail verstuurd"
     errors:
       unknown_email_address: "Onbekend e-mailadres."
+      invalid_token: "Ongeldig token."
     email_input: "E-mailadres van beheerder"
     submit_button: "E-mail versturen"
   performance_report:
@@ -2576,7 +2623,14 @@ nl:
     initial_topic_title: Performancerapportages van de website
   tags:
     title: "Tags"
+    minimum_required_tags:
+      one: "U moet minstens %{count} tag selecteren."
+      other: "U moet minstens %{count} tags selecteren."
+    upload_row_too_long: "Het CSV-bestand dient één tag per regel te bevatten. Optioneel kan de tag worden gevolgd door een komma, en dan de naam van de tag-groep."
     forbidden:
+      invalid:
+        one: "De geselecteerde tag kan niet worden gebruikt"
+        other: "Geen van de geselecteerde tags kan worden gebruikt"
       synonym: 'Synoniemen zijn niet toegestaan. Gebruik in plaats hiervan ''%{tag_name}''.'
       has_synonyms: '''%{tag_name}'' kan niet worden gebruikt, omdat deze geen synoniemen heeft.'
     invalid_target_tag: "kan geen synoniem van een synoniem zijn"
@@ -2710,7 +2764,11 @@ nl:
     unknown: "onbekend"
     user_merged: "%{username} is met deze account samengevoegd"
     api_key:
+      automatic_revoked:
+        one: "Automatisch ingetrokken, laatste activiteit meer dan %{count} dag geleden"
+        other: "Automatisch ingetrokken, laatste activiteit meer dan %{count} dagen geleden"
       revoked: Ingetrokken
+      restored: Teruggezet
   reviewables:
     priorities:
       low: "Laag"

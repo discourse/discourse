@@ -13,4 +13,9 @@ class UploadSerializer < ApplicationSerializer
              :short_url,
              :retain_hours,
              :human_filesize
+
+  def url
+    return object.url if !object.secure || !SiteSetting.secure_media?
+    UrlHelper.cook_url(object.url, secure: object.secure)
+  end
 end

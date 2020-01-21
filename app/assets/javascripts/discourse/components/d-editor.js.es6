@@ -6,8 +6,7 @@ import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 /*global Mousetrap:true */
-import {
-  default as discourseComputed,
+import discourseComputed, {
   on,
   observes
 } from "discourse-common/utils/decorators";
@@ -842,7 +841,7 @@ export default Component.extend({
     }
 
     const isComposer = $("#reply-control .d-editor-input").is(":focus");
-    let { clipboard, canPasteHtml } = clipboardData(e, isComposer);
+    let { clipboard, canPasteHtml, canUpload } = clipboardData(e, isComposer);
 
     let plainText = clipboard.getData("text/plain");
     let html = clipboard.getData("text/html");
@@ -892,7 +891,7 @@ export default Component.extend({
       }
     }
 
-    if (handled) {
+    if (handled || canUpload) {
       e.preventDefault();
     }
   },

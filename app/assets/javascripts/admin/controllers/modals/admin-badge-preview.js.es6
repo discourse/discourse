@@ -1,6 +1,6 @@
 import { alias, map } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export default Controller.extend({

@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { url } from "discourse/lib/computed";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   section: null,

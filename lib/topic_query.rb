@@ -677,15 +677,18 @@ class TopicQuery
       else
         sql = <<~SQL
             categories.id IN (
-              SELECT c2.id FROM categories c2 WHERE c2.parent_category_id = :category_id
-              UNION ALL
-              SELECT :category_id
-            ) AND
-            topics.id NOT IN (
-              SELECT c3.topic_id FROM categories c3 WHERE c3.parent_category_id = :category_id AND c3.topic_id IS NOT NULL
+              WITH RECURSIVE subcategories AS (
+                SELECT :category_id id, 1 depth
+                UNION
+                SELECT categories.id, (subcategories.depth + 1) depth
+                FROM categories
+                JOIN subcategories ON subcategories.id = categories.parent_category_id
+                WHERE subcategories.depth < :max_category_nesting
             )
+              SELECT subcategories.id FROM subcategories
+            ) AND (categories.id = :category_id OR topics.id != categories.topic_id)
           SQL
-        result = result.where(sql, category_id: category_id)
+        result = result.where(sql, category_id: category_id, max_category_nesting: SiteSetting.max_category_nesting)
       end
       result = result.references(:categories)
 
@@ -857,8 +860,6 @@ class TopicQuery
     category_id = get_category_id(opts[:exclude]) if opts
 
     if user
-      default_notification_level = SiteSetting.mute_all_categories_by_default ? CategoryUser.notification_levels[:muted] : CategoryUser.notification_levels[:regular]
-
       list = list
         .references("cu")
         .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
@@ -866,7 +867,7 @@ class TopicQuery
                 OR COALESCE(category_users.notification_level, :default) <> :muted
                 OR tu.notification_level > :regular",
                 category_id: category_id || -1,
-                default: default_notification_level,
+                default: CategoryUser.default_notification_level,
                 muted: CategoryUser.notification_levels[:muted],
                 regular: TopicUser.notification_levels[:regular])
     elsif SiteSetting.mute_all_categories_by_default
