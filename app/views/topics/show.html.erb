@@ -3,18 +3,16 @@
     <%= render_topic_title(@topic_view.topic) %>
   </h1>
 
-  <% @breadcrumbs = categories_breadcrumb(@topic_view.topic)
-      if @breadcrumbs.present? %>
-  <div id='breadcrumbs'>
-    <% @breadcrumbs.each_with_index do |c,i| %>
-      <div id="breadcrumb-<%=i%>" itemscope itemtype="http://data-vocabulary.org/Breadcrumb"
-        <%-if (i+1) < @breadcrumbs.length%>
-          itemref="breadcrumb-<%=(i+1)%>"
-        <%-end%>>
-        <a href="<%=c[:url]%>" itemprop="url" class='badge-wrapper bullet'>
+  <% @breadcrumbs = categories_breadcrumb(@topic_view.topic) %>
+  <% if @breadcrumbs.present? %>
+  <div id="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
+    <% @breadcrumbs.each_with_index do |c, i| %>
+      <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+        <a href="<%= Discourse.base_url %><%= c[:url] %>" class="badge-wrapper bullet" itemprop="item">
           <span class="badge-category-bg"></span>
-          <span itemprop="title" class='category-title'><%=c[:name]%></span>
+          <span class="category-title" itemprop="name"><%= c[:name] %></span>
         </a>
+        <meta itemprop="position" content="<%= i + 1 %>" />
       </div>
     <% end %>
   </div>
@@ -26,7 +24,7 @@
       <div class='crawler-tags-list' itemscope itemtype='http://schema.org/DiscussionForumPosting'>
         <% @tags.each_with_index do |tag, i| %>
           <div itemprop='keywords'>
-            <a  href='<%= "#{Discourse.base_url}/tag/#{tag.name}" %>' rel="tag">
+            <a href='<%= "#{Discourse.base_url}/tag/#{tag.name}" %>' rel="tag">
               <span itemprop='headline'><%= tag.name -%></span>
             </a>
           </div>
@@ -44,7 +42,7 @@
       <% if (u = post.user) %>
         <div class='crawler-post-meta'>
           <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            <a itemprop="url" href='<%= Discourse.base_uri %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
+            <a itemprop="url" href='<%= Discourse.base_url %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
             <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
             <%
               post_custom_fields = @topic_view.post_custom_fields[post.id] || {}
