@@ -139,6 +139,14 @@ export function extractDataAttribute(str) {
   return [key, value];
 }
 
+function videoHTML(token) {
+  const srcFile = token.attrGet("src");
+  const origSrcFile = token.attrGet("data-orig-src");
+  return `<video width="100%" height="100%" controls>
+    <source src="${srcFile}" data-orig-src="${origSrcFile}">
+  </video>`;
+}
+
 const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;
 function renderImage(tokens, idx, options, env, slf) {
   const token = tokens[idx];
@@ -146,6 +154,10 @@ function renderImage(tokens, idx, options, env, slf) {
 
   const split = alt.split("|");
   const altSplit = [];
+
+  if (split[1] === "video") {
+    return videoHTML(token);
+  }
 
   for (let i = 0, match, data; i < split.length; ++i) {
     if ((match = split[i].match(IMG_SIZE_REGEX)) && match[1] && match[2]) {

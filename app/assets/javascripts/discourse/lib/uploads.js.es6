@@ -6,7 +6,7 @@ function isGUID(value) {
   );
 }
 
-export function imageNameFromFileName(fileName) {
+export function markdownNameFromFileName(fileName) {
   let name = fileName.substr(0, fileName.lastIndexOf("."));
 
   if (isAppleDevice() && isGUID(name)) {
@@ -197,6 +197,14 @@ export function isAnImage(path) {
   return /\.(png|jpe?g|gif|svg|ico)$/i.test(path);
 }
 
+export function isVideo(path) {
+  return /\.(mov|mp4|webm|ogv|avi|mpeg|ogv)$/i.test(path);
+}
+
+export function isAudio(path) {
+  return /\.(mp3|ogg|wav|m4a)$/i.test(path);
+}
+
 function uploadTypeFromFileName(fileName) {
   return isAnImage(fileName) ? "image" : "attachment";
 }
@@ -237,20 +245,33 @@ function uploadLocation(url) {
   }
 }
 
+function imageMarkdown(upload) {
+  return `![${markdownNameFromFileName(upload.original_filename)}|${
+    upload.thumbnail_width
+  }x${upload.thumbnail_height}](${upload.short_url || upload.url})`;
+}
+
+function videoMarkdown(upload) {
+  return `![${markdownNameFromFileName(upload.original_filename)}|video](${
+    upload.short_url
+  })`;
+}
+
+function attachmentMarkdown(upload) {
+  return `[${upload.original_filename}|attachment](${
+    upload.short_url
+  }) (${I18n.toHumanSize(upload.filesize)})`;
+}
+
 export function getUploadMarkdown(upload) {
   if (isAnImage(upload.original_filename)) {
-    const name = imageNameFromFileName(upload.original_filename);
-    return `![${name}|${upload.thumbnail_width}x${
-      upload.thumbnail_height
-    }](${upload.short_url || upload.url})`;
-  } else if (
-    /\.(mov|mp4|webm|ogv|mp3|ogg|wav|m4a)$/i.test(upload.original_filename)
-  ) {
+    return imageMarkdown(upload);
+  } else if (isAudio(upload.original_filename)) {
     return uploadLocation(upload.url);
+  } else if (isVideo(upload.original_filename)) {
+    return videoMarkdown(upload);
   } else {
-    return `[${upload.original_filename}|attachment](${
-      upload.short_url
-    }) (${I18n.toHumanSize(upload.filesize)})`;
+    return attachmentMarkdown(upload);
   }
 }
 

@@ -78,6 +78,25 @@ function _loadCachedShortUrls($uploads) {
         }
 
         break;
+      case "SOURCE": // video tag > source tag
+        url = lookupCachedUploadUrl($upload.data("orig-src")).url;
+
+        if (url) {
+          $upload.removeAttr("data-orig-src");
+
+          if (url !== MISSING) {
+            if (url.startsWith(`//${window.location.host}`)) {
+              let hostRegex = new RegExp("//" + window.location.host, "g");
+              url = url.replace(hostRegex, "");
+            }
+            $upload.attr("src", window.location.origin + url);
+
+            // this is necessary, otherwise because of the src change the
+            // video just doesn't bother loading!
+            $upload.parent()[0].load();
+          }
+        }
+        break;
     }
   });
 }
@@ -94,7 +113,8 @@ function _loadShortUrls($uploads, ajax) {
 }
 
 export function resolveAllShortUrls(ajax) {
-  const attributes = "img[data-orig-src], a[data-orig-href]";
+  const attributes =
+    "img[data-orig-src], a[data-orig-href], source[data-orig-src]";
   let $shortUploadUrls = $(attributes);
 
   if ($shortUploadUrls.length > 0) {
