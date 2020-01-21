@@ -44,7 +44,6 @@ function rule(state) {
             token.attrs[srcIndex][1] = mapped.url;
             token.attrs.push(["data-base62-sha1", mapped.base62_sha1]);
           } else {
-
             // no point putting a transparent .png for audio/video
             if (token.content.match(/\|video|\|audio/)) {
               token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
