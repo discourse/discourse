@@ -39,63 +39,57 @@ export function resetCache() {
   _cache = {};
 }
 
-function _loadCachedShortUrls($uploads) {
-  $uploads.each((idx, upload) => {
-    const $upload = $(upload);
-    let url;
+function retrieveCachedUrl($upload, dataAttribute, callback) {
+  const cachedUpload = lookupCachedUploadUrl($upload.data(dataAttribute));
+  const url =
+    dataAttribute === "orig-href" ? cachedUpload.short_path : cachedUpload.url;
 
+  if (url && url !== MISSING) {
+    $upload.removeAttr(`data-${dataAttribute}`);
+    callback(url);
+  }
+}
+
+function _loadCachedShortUrls($uploads) {
+  $uploads.each((_idx, upload) => {
+    const $upload = $(upload);
     switch (upload.tagName) {
       case "A":
-        url = lookupCachedUploadUrl($upload.data("orig-href")).short_path;
+        retrieveCachedUrl($upload, "orig-href", url => {
+          $upload.attr("href", url);
 
-        if (url) {
-          $upload.removeAttr("data-orig-href");
-
-          if (url !== MISSING) {
-            $upload.attr("href", url);
-
-            // Replace "|attachment" with class='attachment'
-            // TODO: This is a part of the cooking process now and should be
-            // removed in the future.
-            const content = $upload.text().split("|");
-            if (content[1] === ATTACHMENT_CSS_CLASS) {
-              $upload.addClass(ATTACHMENT_CSS_CLASS);
-              $upload.text(content[0]);
-            }
+          // Replace "|attachment" with class='attachment'
+          // TODO: This is a part of the cooking process now and should be
+          // removed in the future.
+          const content = $upload.text().split("|");
+          if (content[1] === ATTACHMENT_CSS_CLASS) {
+            $upload.addClass(ATTACHMENT_CSS_CLASS);
+            $upload.text(content[0]);
           }
-        }
+        });
 
         break;
       case "IMG":
-        url = lookupCachedUploadUrl($upload.data("orig-src")).url;
-
-        if (url) {
-          $upload.removeAttr("data-orig-src");
-
-          if (url !== MISSING) {
-            $upload.attr("src", url);
-          }
-        }
+        retrieveCachedUrl($upload, "orig-src", url => {
+          $upload.attr("src", url);
+        });
 
         break;
       case "SOURCE": // video tag > source tag
-        url = lookupCachedUploadUrl($upload.data("orig-src")).url;
+        retrieveCachedUrl($upload, "orig-src", url => {
+          $upload.attr("src", url);
 
-        if (url) {
-          $upload.removeAttr("data-orig-src");
-
-          if (url !== MISSING) {
-            if (url.startsWith(`//${window.location.host}`)) {
-              let hostRegex = new RegExp("//" + window.location.host, "g");
-              url = url.replace(hostRegex, "");
-            }
-            $upload.attr("src", window.location.origin + url);
-
-            // this is necessary, otherwise because of the src change the
-            // video just doesn't bother loading!
-            $upload.parent()[0].load();
+          if (url.startsWith(`//${window.location.host}`)) {
+            let hostRegex = new RegExp("//" + window.location.host, "g");
+            url = url.replace(hostRegex, "");
           }
-        }
+          $upload.attr("src", window.location.origin + url);
+
+          // this is necessary, otherwise because of the src change the
+          // video just doesn't bother loading!
+          $upload.parent()[0].load();
+        });
+
         break;
     }
   });
