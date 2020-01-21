@@ -140,11 +140,19 @@ export function extractDataAttribute(str) {
 }
 
 function videoHTML(token) {
-  const srcFile = token.attrGet("src");
-  const origSrcFile = token.attrGet("data-orig-src");
+  const src = token.attrGet("src");
+  const origSrc = token.attrGet("data-orig-src");
   return `<video width="100%" height="100%" controls>
-    <source src="${srcFile}" data-orig-src="${origSrcFile}">
+    <source src="${src}" data-orig-src="${origSrc}">
+      <a href="${src}">${src}</a>
+    </source>
   </video>`;
+}
+
+function audioHTML(token) {
+  const src = token.attrGet("src");
+  const origSrc = token.attrGet("data-orig-src");
+  return `<audio controls><source src="${src}" data-orig-src="${origSrc}"><a href="${src}">${src}</a></audio>`;
 }
 
 const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;
@@ -157,6 +165,10 @@ function renderImage(tokens, idx, options, env, slf) {
 
   if (split[1] === "video") {
     return videoHTML(token);
+  }
+
+  if (split[1] === "audio") {
+    return audioHTML(token);
   }
 
   for (let i = 0, match, data; i < split.length; ++i) {

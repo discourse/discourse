@@ -198,11 +198,11 @@ export function isAnImage(path) {
 }
 
 export function isVideo(path) {
-  return /\.(mov|mp4|webm|ogv|avi|mpeg|ogv)$/i.test(path);
+  return /\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg|ogv)$/i.test(path);
 }
 
 export function isAudio(path) {
-  return /\.(mp3|ogg|wav|m4a)$/i.test(path);
+  return /\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)$/i.test(path);
 }
 
 function uploadTypeFromFileName(fileName) {
@@ -228,31 +228,14 @@ export function uploadIcon(staff) {
   return allowsAttachments(staff) ? "upload" : "far-image";
 }
 
-function uploadLocation(url) {
-  if (Discourse.CDN) {
-    url = Discourse.getURLWithCDN(url);
-    return /^\/\//.test(url) ? "http:" + url : url;
-  } else if (Discourse.S3BaseUrl) {
-    if (url.indexOf("secure-media-uploads") === -1) {
-      return "https:" + url;
-    }
-    return window.location.protocol + url;
-  } else {
-    var protocol = window.location.protocol + "//",
-      hostname = window.location.hostname,
-      port = window.location.port ? ":" + window.location.port : "";
-    return protocol + hostname + port + url;
-  }
-}
-
 function imageMarkdown(upload) {
   return `![${markdownNameFromFileName(upload.original_filename)}|${
     upload.thumbnail_width
   }x${upload.thumbnail_height}](${upload.short_url || upload.url})`;
 }
 
-function videoMarkdown(upload) {
-  return `![${markdownNameFromFileName(upload.original_filename)}|video](${
+function playableMediaMarkdown(upload, type) {
+  return `![${markdownNameFromFileName(upload.original_filename)}|${type}](${
     upload.short_url
   })`;
 }
@@ -267,9 +250,9 @@ export function getUploadMarkdown(upload) {
   if (isAnImage(upload.original_filename)) {
     return imageMarkdown(upload);
   } else if (isAudio(upload.original_filename)) {
-    return uploadLocation(upload.url);
+    return playableMediaMarkdown(upload, 'audio');
   } else if (isVideo(upload.original_filename)) {
-    return videoMarkdown(upload);
+    return playableMediaMarkdown(upload, 'video');
   } else {
     return attachmentMarkdown(upload);
   }
