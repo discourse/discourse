@@ -171,6 +171,8 @@ class TopicCreator
     topic.subtype = TopicSubtype.user_to_user unless topic.subtype
 
     unless @opts[:target_usernames].present? || @opts[:target_emails].present? || @opts[:target_group_names].present?
+      Rails.logger.debug("Topic PM cannot be created without recipients! opts: #{@opts.inspect}")
+
       rollback_with!(topic, :no_user_selected)
     end
 

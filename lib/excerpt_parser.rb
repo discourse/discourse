@@ -101,7 +101,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         @in_quote = true
       end
 
-      if attributes['class'].include?('quote')
+      if attributes['class']&.include?('quote')
         if @keep_quotes || (@keep_onebox_body && attributes['data-topic'].present?)
           @in_quote = false
         end
