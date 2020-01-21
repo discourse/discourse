@@ -250,9 +250,9 @@ export function getUploadMarkdown(upload) {
   if (isAnImage(upload.original_filename)) {
     return imageMarkdown(upload);
   } else if (isAudio(upload.original_filename)) {
-    return playableMediaMarkdown(upload, 'audio');
+    return playableMediaMarkdown(upload, "audio");
   } else if (isVideo(upload.original_filename)) {
-    return playableMediaMarkdown(upload, 'video');
+    return playableMediaMarkdown(upload, "video");
   } else {
     return attachmentMarkdown(upload);
   }
