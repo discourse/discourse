@@ -979,59 +979,33 @@ describe Email::Receiver do
     it "creates hidden topic for X-Spam-Flag" do
       SiteSetting.email_in_spam_header = 'X-Spam-Flag'
 
-      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:spam_x_spam_flag) }.to change { Topic.count }.by(1) # Topic created
-
-      topic = Topic.last
-      expect(topic.visible).to eq(false)
-
-      post = Post.last
-      expect(post.hidden).to eq(true)
-      expect(post.hidden_at).not_to eq(nil)
-      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_spam_flag) }.to change { ReviewableQueuedPost.count }.by(1)
+      expect(user.reload.silenced?).to be(true)
     end
 
     it "creates hidden topic for X-Spam-Status" do
       SiteSetting.email_in_spam_header = 'X-Spam-Status'
 
-      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:spam_x_spam_status) }.to change { Topic.count }.by(1) # Topic created
-
-      topic = Topic.last
-      expect(topic.visible).to eq(false)
-
-      post = Post.last
-      expect(post.hidden).to eq(true)
-      expect(post.hidden_at).not_to eq(nil)
-      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_spam_status) }.to change { ReviewableQueuedPost.count }.by(1)
+      expect(user.reload.silenced?).to be(true)
     end
 
     it "creates hidden topic for X-SES-Spam-Verdict" do
       SiteSetting.email_in_spam_header = 'X-SES-Spam-Verdict'
 
-      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:spam_x_ses_spam_verdict) }.to change { Topic.count }.by(1) # Topic created
-
-      topic = Topic.last
-      expect(topic.visible).to eq(false)
-
-      post = Post.last
-      expect(post.hidden).to eq(true)
-      expect(post.hidden_at).not_to eq(nil)
-      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_ses_spam_verdict) }.to change { ReviewableQueuedPost.count }.by(1)
+      expect(user.reload.silenced?).to be(true)
     end
 
     it "creates hidden topic for failed Authentication-Results header" do
-      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:dmarc_fail) }.to change { Topic.count }.by(1) # Topic created
+      SiteSetting.email_in_authserv_id = 'example.com'
 
-      topic = Topic.last
-      expect(topic.visible).to eq(false)
-
-      post = Post.last
-      expect(post.hidden).to eq(true)
-      expect(post.hidden_at).not_to eq(nil)
-      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_authentication_result_header])
+      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:dmarc_fail) }.to change { ReviewableQueuedPost.count }.by(1)
+      expect(user.reload.silenced?).to be(false)
     end
 
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
