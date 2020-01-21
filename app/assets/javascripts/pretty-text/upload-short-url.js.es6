@@ -44,9 +44,11 @@ function retrieveCachedUrl($upload, dataAttribute, callback) {
   const url =
     dataAttribute === "orig-href" ? cachedUpload.short_path : cachedUpload.url;
 
-  if (url && url !== MISSING) {
+  if (url) {
     $upload.removeAttr(`data-${dataAttribute}`);
-    callback(url);
+    if (url !== MISSING) {
+      callback(url);
+    }
   }
 }
 
