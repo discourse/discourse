@@ -144,15 +144,17 @@ function videoHTML(token) {
   const origSrc = token.attrGet("data-orig-src");
   return `<video width="100%" height="100%" controls>
     <source src="${src}" data-orig-src="${origSrc}">
-      <a href="${src}">${src}</a>
-    </source>
+    <a href="${src}">${src}</a>
   </video>`;
 }
 
 function audioHTML(token) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
-  return `<audio controls><source src="${src}" data-orig-src="${origSrc}"><a href="${src}">${src}</a></audio>`;
+  return `<audio controls>
+    <source src="${src}" data-orig-src="${origSrc}">
+    <a href="${src}">${src}</a>
+  </audio>`;
 }
 
 const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;

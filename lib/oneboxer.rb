@@ -195,8 +195,7 @@ module Oneboxer
         <div class="onebox video-onebox">
           <video width="100%" height="100%" controls="">
             <source src='#{url}'>
-              <a href='#{url}'>#{url}</a>
-            </source>
+            <a href='#{url}'>#{url}</a>
           </video>
         </div>
       HTML
