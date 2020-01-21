@@ -198,8 +198,25 @@ module Jobs
         end
       end
 
+      if report.modes == [:stacked_chart]
+        header = [:x]
+        data = {}
+
+        report.data.map do |series|
+          header << series[:label]
+          series[:data].each do |datapoint|
+            data[datapoint[:x]] ||= { x: datapoint[:x] }
+            data[datapoint[:x]][series[:label]] = datapoint[:y]
+          end
+        end
+
+        data = data.values
+      else
+        data = report.data
+      end
+
       yield header.map { |k| titles[k] || k }
-      report.data.each { |row| yield row.values_at(*header).map(&:to_s) }
+      data.each { |row| yield row.values_at(*header).map(&:to_s) }
     end
 
     def get_header
