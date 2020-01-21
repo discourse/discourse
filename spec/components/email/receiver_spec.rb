@@ -1001,6 +1001,8 @@ describe Email::Receiver do
     end
 
     it "creates hidden topic for failed Authentication-Results header" do
+      SiteSetting.email_in_authserv_id = 'example.com'
+
       user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
       expect { process(:dmarc_fail) }.to change { ReviewableQueuedPost.count }.by(1)
       expect(user.reload.silenced?).to be(false)

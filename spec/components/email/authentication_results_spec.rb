@@ -239,7 +239,7 @@ describe Email::AuthenticationResults do
 
         context "with a fail" do
           let(:headers) { "foobar.com; dmarc=fail" }
-          include_examples "is verdict", :fail
+          include_examples "is verdict", :gray
         end
 
         context "with a pass" do
