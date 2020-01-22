@@ -7,6 +7,7 @@ export default Component.extend({
       const $this = $(this.element);
 
       if ($this) {
+        $this.find("br").replaceWith(" ");
         $this.find("hr").remove();
         $this.ellipsis();
       }

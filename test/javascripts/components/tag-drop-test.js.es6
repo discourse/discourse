@@ -71,7 +71,7 @@ componentTest("default", {
     await this.subject.fillInFilter("dav");
     await this.subject.keyboard("enter");
     assert.ok(
-      DiscourseURL.routeTo.calledWith("/tags/david"),
+      DiscourseURL.routeTo.calledWith("/tag/david"),
       "it uses lowercase URLs for tags"
     );
   }
@@ -107,7 +107,7 @@ componentTest("synonym", {
     await this.subject.fillInFilter("robin");
     await this.subject.keyboard("enter");
     assert.ok(
-      DiscourseURL.routeTo.calledWith("/tags/eviltrout"),
+      DiscourseURL.routeTo.calledWith("/tag/eviltrout"),
       "it routes to the target tag"
     );
   }
