@@ -280,12 +280,13 @@ class PostMover
   end
 
   def delete_post_replies
-    DB.exec <<~SQL
-      DELETE
-      FROM post_replies pr USING moved_posts mp, posts p, posts r
-      WHERE (pr.reply_post_id = mp.old_post_id OR pr.post_id = mp.old_post_id) AND
-        p.id = pr.post_id AND r.id = pr.reply_post_id AND p.topic_id <> r.topic_id
-    SQL
+    post_replies = ActiveRecord::Base.connection.execute("SELECT post_id, reply_post_id FROM post_replies pr INNER JOIN moved_posts mp ON (pr.reply_post_id = mp.old_post_id OR pr.post_id = mp.old_post_id)")
+    post_replies.each do |post_reply|
+      post1 = Post.find_by(id: post_reply['post_id'])
+      post2 = Post.find_by(id: post_reply['reply_post_id'])
+      next if !post1 || !post2
+      PostReply.delete_by(post_id: post_reply['post_id'], reply_post_id: post_reply['reply_post_id']) if post1.topic_id != post2.topic_id
+    end
   end
 
   def copy_first_post_timings
