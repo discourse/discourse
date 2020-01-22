@@ -104,6 +104,27 @@ class BadgeGranter
     end
   end
 
+  def self.revoke_all(badge)
+    custom_badge_name = TranslationOverride.where(translation_key: badge.translation_key).pluck(:value)
+    custom_badge_name = custom_badge_name.reduce("") { |m, v| m += "'#{v}'," }.delete_suffix(',')
+
+    title_filter = "users.title = '#{badge.name}'"
+    title_filter += " OR users.title IN (#{custom_badge_name})" unless custom_badge_name.empty?
+
+    DB.exec <<~SQL
+      UPDATE users
+      SET title = NULL
+      FROM user_badges
+      WHERE #{title_filter} AND
+      user_badges.badge_id = #{badge.id} AND
+      user_badges.user_id = users.id
+    SQL
+
+    DB.exec <<~SQL
+      DELETE FROM user_badges WHERE user_badges.badge_id = #{badge.id}
+    SQL
+  end
+
   def self.queue_badge_grant(type, opt)
     return unless SiteSetting.enable_badges
     payload = nil
