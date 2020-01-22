@@ -1021,6 +1021,7 @@ describe CookedPostProcessor do
           SiteSetting.login_required = true
           s3_setup
           SiteSetting.secure_media = true
+          stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
         end
 
         it "does not use the direct URL, uses the cooked URL instead (because of the private ACL preventing w/h fetch)" do
