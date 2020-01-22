@@ -3,11 +3,17 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { none } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend(ModalFunctionality, {
   newFeaturedTopic: null,
   saving: false,
   noTopicSelected: none("newFeaturedTopic"),
+
+  @discourseComputed("model")
+  additionalFilters(model) {
+    return `status:public created:@${model.username}`;
+  },
 
   onClose() {
     this.set("newFeaturedTopic", null);
