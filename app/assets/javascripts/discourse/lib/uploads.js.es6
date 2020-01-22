@@ -6,7 +6,7 @@ function isGUID(value) {
   );
 }
 
-export function imageNameFromFileName(fileName) {
+export function markdownNameFromFileName(fileName) {
   let name = fileName.substr(0, fileName.lastIndexOf("."));
 
   if (isAppleDevice() && isGUID(name)) {
@@ -68,7 +68,7 @@ function validateUploadedFile(file, opts) {
   }
 
   if (opts.imagesOnly) {
-    if (!isAnImage(name) && !isAuthorizedImage(name, staff)) {
+    if (!isImage(name) && !isAuthorizedImage(name, staff)) {
       bootbox.alert(
         I18n.t("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedImagesExtensions(staff)
@@ -193,12 +193,20 @@ export function authorizesOneOrMoreImageExtensions(staff) {
   return imagesExtensions(staff).length > 0;
 }
 
-export function isAnImage(path) {
+export function isImage(path) {
   return /\.(png|jpe?g|gif|svg|ico)$/i.test(path);
 }
 
+export function isVideo(path) {
+  return /\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg|ogv)$/i.test(path);
+}
+
+export function isAudio(path) {
+  return /\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)$/i.test(path);
+}
+
 function uploadTypeFromFileName(fileName) {
-  return isAnImage(fileName) ? "image" : "attachment";
+  return isImage(fileName) ? "image" : "attachment";
 }
 
 export function allowsImages(staff) {
@@ -220,37 +228,33 @@ export function uploadIcon(staff) {
   return allowsAttachments(staff) ? "upload" : "far-image";
 }
 
-function uploadLocation(url) {
-  if (Discourse.CDN) {
-    url = Discourse.getURLWithCDN(url);
-    return /^\/\//.test(url) ? "http:" + url : url;
-  } else if (Discourse.S3BaseUrl) {
-    if (url.indexOf("secure-media-uploads") === -1) {
-      return "https:" + url;
-    }
-    return window.location.protocol + url;
-  } else {
-    var protocol = window.location.protocol + "//",
-      hostname = window.location.hostname,
-      port = window.location.port ? ":" + window.location.port : "";
-    return protocol + hostname + port + url;
-  }
+function imageMarkdown(upload) {
+  return `![${markdownNameFromFileName(upload.original_filename)}|${
+    upload.thumbnail_width
+  }x${upload.thumbnail_height}](${upload.short_url || upload.url})`;
+}
+
+function playableMediaMarkdown(upload, type) {
+  return `![${markdownNameFromFileName(upload.original_filename)}|${type}](${
+    upload.short_url
+  })`;
+}
+
+function attachmentMarkdown(upload) {
+  return `[${upload.original_filename}|attachment](${
+    upload.short_url
+  }) (${I18n.toHumanSize(upload.filesize)})`;
 }
 
 export function getUploadMarkdown(upload) {
-  if (isAnImage(upload.original_filename)) {
-    const name = imageNameFromFileName(upload.original_filename);
-    return `![${name}|${upload.thumbnail_width}x${
-      upload.thumbnail_height
-    }](${upload.short_url || upload.url})`;
-  } else if (
-    /\.(mov|mp4|webm|ogv|mp3|ogg|wav|m4a)$/i.test(upload.original_filename)
-  ) {
-    return uploadLocation(upload.url);
+  if (isImage(upload.original_filename)) {
+    return imageMarkdown(upload);
+  } else if (isAudio(upload.original_filename)) {
+    return playableMediaMarkdown(upload, "audio");
+  } else if (isVideo(upload.original_filename)) {
+    return playableMediaMarkdown(upload, "video");
   } else {
-    return `[${upload.original_filename}|attachment](${
-      upload.short_url
-    }) (${I18n.toHumanSize(upload.filesize)})`;
+    return attachmentMarkdown(upload);
   }
 }
 
