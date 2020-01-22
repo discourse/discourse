@@ -3107,6 +3107,9 @@ en:
       edit_synonyms: "Manage Synonyms"
       add_synonyms_label: "Add synonyms:"
       add_synonyms: "Add"
+      add_synonyms_explanation:
+        one: "Any place that currently uses this tag will be changed to use <b>%{tag_name}</b> instead. Are you sure you want to make this change?"
+        other: "Any place that currently uses these tags will be changed to use <b>%{tag_name}</b> instead. Are you sure you want to make this change?"
       add_synonyms_failed: "The following tags couldn't be added as synonyms: <b>%{tag_names}</b>. Ensure they don't have synonyms and aren't synonyms of another tag."
       remove_synonym: "Remove Synonym"
       delete_synonym_confirm: 'Are you sure you want to delete the synonym "%{tag_name}"?'
