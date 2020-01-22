@@ -382,6 +382,11 @@ class Search
     posts.where(user_id: @guardian.user.id, post_number: 1) if @guardian.user
   end
 
+  advanced_filter(/^created:@(.*)$/) do |posts, match|
+    user_id = User.where(username: match.downcase).pluck_first(:id)
+    posts.where(user_id: user_id, post_number: 1)
+  end
+
   advanced_filter(/^in:(watching|tracking)$/) do |posts, match|
     if @guardian.user
       level = TopicUser.notification_levels[match.to_sym]
