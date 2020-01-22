@@ -68,7 +68,7 @@ function validateUploadedFile(file, opts) {
   }
 
   if (opts.imagesOnly) {
-    if (!isAnImage(name) && !isAuthorizedImage(name, staff)) {
+    if (!isImage(name) && !isAuthorizedImage(name, staff)) {
       bootbox.alert(
         I18n.t("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedImagesExtensions(staff)
@@ -193,7 +193,7 @@ export function authorizesOneOrMoreImageExtensions(staff) {
   return imagesExtensions(staff).length > 0;
 }
 
-export function isAnImage(path) {
+export function isImage(path) {
   return /\.(png|jpe?g|gif|svg|ico)$/i.test(path);
 }
 
@@ -206,7 +206,7 @@ export function isAudio(path) {
 }
 
 function uploadTypeFromFileName(fileName) {
-  return isAnImage(fileName) ? "image" : "attachment";
+  return isImage(fileName) ? "image" : "attachment";
 }
 
 export function allowsImages(staff) {
@@ -247,7 +247,7 @@ function attachmentMarkdown(upload) {
 }
 
 export function getUploadMarkdown(upload) {
-  if (isAnImage(upload.original_filename)) {
+  if (isImage(upload.original_filename)) {
     return imageMarkdown(upload);
   } else if (isAudio(upload.original_filename)) {
     return playableMediaMarkdown(upload, "audio");
