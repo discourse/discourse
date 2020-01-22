@@ -1044,12 +1044,20 @@ describe Search do
 
       expect(Search.execute('test in:posted', guardian: Guardian.new(topic.user)).posts.length).to eq(2)
 
-      expect(Search.execute('test in:created', guardian: Guardian.new(topic.user)).posts.length).to eq(1)
+      in_created = Search.execute('test in:created', guardian: Guardian.new(topic.user)).posts
+      created_by_user = Search.execute("test created:@#{topic.user.username}", guardian: Guardian.new(topic.user)).posts
+      expect(in_created.length).to eq(1)
+      expect(created_by_user.length).to eq(1)
+      expect(in_created).to eq(created_by_user)
+
+      expect(Search.execute("test created:@#{second_topic.user.username}", guardian: Guardian.new(topic.user)).posts.length).to eq(1)
+
+      new_user = Fabricate(:user)
+      expect(Search.execute("test created:@#{new_user.username}", guardian: Guardian.new(topic.user)).posts.length).to eq(0)
 
       TopicUser.change(topic.user.id, topic.id, notification_level: TopicUser.notification_levels[:tracking])
       expect(Search.execute('test in:watching', guardian: Guardian.new(topic.user)).posts.length).to eq(0)
       expect(Search.execute('test in:tracking', guardian: Guardian.new(topic.user)).posts.length).to eq(1)
-
     end
 
     it 'can find posts with images' do
