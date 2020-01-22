@@ -359,7 +359,7 @@ describe UsernameChanger do
 
           expect(post.cooked).to match_html(<<~HTML)
             <p>Lorem ipsum</p>
-            <aside class="quote no-group" data-post="1" data-topic="#{quoted_post.topic.id}">
+            <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
             <div class="quote-controls"></div>
             <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
@@ -367,7 +367,7 @@ describe UsernameChanger do
             <p>quoted post</p>
             </blockquote>
             </aside>
-            <aside class="quote no-group">
+            <aside class="quote no-group" data-username="bar">
             <div class="title">
             <div class="quote-controls"></div>
             <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
@@ -375,7 +375,7 @@ describe UsernameChanger do
             <p>quoted post</p>
             </blockquote>
             </aside>
-            <aside class="quote no-group" data-post="1" data-topic="#{quoted_post.topic.id}">
+            <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
             <div class="quote-controls"></div>
             <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
@@ -410,7 +410,7 @@ describe UsernameChanger do
           let(:expected_cooked) do
             <<~HTML
               <p>Lorem ipsum</p>
-              <aside class="quote no-group" data-post="1" data-topic="#{quoted_post.topic.id}">
+              <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
               <div class="title">
               <div class="quote-controls"></div>
               <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
