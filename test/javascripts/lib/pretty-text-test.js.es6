@@ -973,6 +973,28 @@ QUnit.test("images", assert => {
   );
 });
 
+QUnit.test("video", assert => {
+  assert.cooked(
+    "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
+    `<p><video width="100%" height="100%" controls>
+    <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
+    <a href="/404">/404</a>
+  </video></p>`,
+    "It returns the correct video player HTML"
+  );
+});
+
+QUnit.test("audio", assert => {
+  assert.cooked(
+    "![young americans|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
+    `<p><audio controls>
+    <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3">
+    <a href="/404">/404</a>
+  </audio></p>`,
+    "It returns the correct audio player HTML"
+  );
+});
+
 QUnit.test("censoring", assert => {
   assert.cookedOptions(
     "Pleased to meet you, but pleeeease call me later, xyz123",
