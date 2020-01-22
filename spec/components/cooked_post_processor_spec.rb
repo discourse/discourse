@@ -976,7 +976,8 @@ describe CookedPostProcessor do
     let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
 
     before do
-      Oneboxer.expects(:onebox)
+      Oneboxer
+        .expects(:onebox)
         .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
         .returns("<div>GANGNAM STYLE</div>")
 
@@ -988,28 +989,59 @@ describe CookedPostProcessor do
       expect(cpp.html).to match_html "<div>GANGNAM STYLE</div>"
     end
 
-    it "replaces downloaded onebox image" do
-      url = 'https://image.com/my-avatar'
-      image_url = 'https://image.com/avatar.png'
+    describe "replacing downloaded onebox image" do
+      let(:url) { 'https://image.com/my-avatar' }
+      let(:image_url) { 'https://image.com/avatar.png' }
 
-      Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='#{image_url}' />")
+      it "successfully replaces the image" do
+        Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='#{image_url}' />")
 
-      post = Fabricate(:post, raw: url)
-      upload.update!(url: "https://test.s3.amazonaws.com/something.png")
+        post = Fabricate(:post, raw: url)
+        upload.update!(url: "https://test.s3.amazonaws.com/something.png")
 
-      post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
-      post.save_custom_fields
+        post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
+        post.save_custom_fields
 
-      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
-      cpp.post_process_oneboxes
+        cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+        cpp.post_process_oneboxes
 
-      expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{upload.url}\" width=\"\" height=\"\"></p>")
+        expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{upload.url}\" width=\"\" height=\"\"></p>")
 
-      upload.destroy!
-      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
-      cpp.post_process_oneboxes
+        upload.destroy!
+        cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+        cpp.post_process_oneboxes
 
-      expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{image_url}\" width=\"\" height=\"\"></p>")
+        expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{image_url}\" width=\"\" height=\"\"></p>")
+        Oneboxer.unstub(:onebox)
+      end
+
+      context "when the post is with_secure_media and the upload is secure and secure media is enabled" do
+        before do
+          upload.update(secure: true)
+          SiteSetting.login_required = true
+          s3_setup
+          SiteSetting.secure_media = true
+          stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+        end
+
+        it "does not use the direct URL, uses the cooked URL instead (because of the private ACL preventing w/h fetch)" do
+          Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='#{image_url}' />")
+
+          post = Fabricate(:post, raw: url)
+          upload.update!(url: "https://test.s3.amazonaws.com/something.png")
+
+          post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
+          post.save_custom_fields
+
+          cooked_url = "https://localhost/secure-media-uploads/test.png"
+          UrlHelper.expects(:cook_url).with(upload.url, secure: true).returns(cooked_url)
+
+          cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+          cpp.post_process_oneboxes
+
+          expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{cooked_url}\" width=\"\" height=\"\"></p>")
+        end
+      end
     end
 
     it "replaces large image placeholder" do
