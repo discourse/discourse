@@ -98,27 +98,37 @@ export default Component.extend({
     },
 
     addSynonyms() {
-      ajax(`/tag/${this.tagInfo.name}/synonyms`, {
-        type: "POST",
-        data: {
-          synonyms: this.newSynonyms
+      bootbox.confirm(
+        I18n.t("tagging.add_synonyms_explanation", {
+          count: this.newSynonyms.length,
+          tag_name: this.tagInfo.name
+        }),
+        result => {
+          if (!result) return;
+
+          ajax(`/tag/${this.tagInfo.name}/synonyms`, {
+            type: "POST",
+            data: {
+              synonyms: this.newSynonyms
+            }
+          })
+            .then(response => {
+              if (response.success) {
+                this.set("newSynonyms", null);
+                this.loadTagInfo();
+              } else if (response.failed_tags) {
+                bootbox.alert(
+                  I18n.t("tagging.add_synonyms_failed", {
+                    tag_names: Object.keys(response.failed_tags).join(", ")
+                  })
+                );
+              } else {
+                bootbox.alert(I18n.t("generic_error"));
+              }
+            })
+            .catch(popupAjaxError);
         }
-      })
-        .then(result => {
-          if (result.success) {
-            this.set("newSynonyms", null);
-            this.loadTagInfo();
-          } else if (result.failed_tags) {
-            bootbox.alert(
-              I18n.t("tagging.add_synonyms_failed", {
-                tag_names: Object.keys(result.failed_tags).join(", ")
-              })
-            );
-          } else {
-            bootbox.alert(I18n.t("generic_error"));
-          }
-        })
-        .catch(popupAjaxError);
+      );
     }
   }
 });
