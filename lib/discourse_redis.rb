@@ -100,25 +100,26 @@ class DiscourseRedis
       end
     end
 
+    def start_reset
+      @mutex.synchronize do
+        if @master
+          @master = false
+          trigger(:down)
+          true
+        else
+          false
+        end
+      end
+    end
+
     def use_master?
       master = @mutex.synchronize { @master }
       if !master
-        return false
+        false
       elsif safe_master_alive?
-        return true
+        true
       else
-        was_reset =
-          @mutex.synchronize do
-            if @master
-              @master = false
-              trigger(:down)
-              true
-            else
-              false
-            end
-          end
-
-        if was_reset
+        if start_reset
           @execution.spawn do
             loop do
               @execution.sleep 5
@@ -135,7 +136,7 @@ class DiscourseRedis
           end
         end
 
-        return false
+        false
       end
     end
 
@@ -193,11 +194,6 @@ class DiscourseRedis
 
     def initialize
       @mutex = Mutex.new
-      @fallback_handlers = {}
-    end
-
-    # Used by tests
-    def reset
       @fallback_handlers = {}
     end
 

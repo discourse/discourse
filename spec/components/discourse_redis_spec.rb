@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe DiscourseRedis do
   before do
-    DiscourseRedis::FallbackHandlers.instance.reset
+    DiscourseRedis::FallbackHandlers.instance.instance_variable_set(:@fallback_handlers, {})
   end
 
   let(:slave_host) { 'testhost' }
