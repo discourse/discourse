@@ -1,5 +1,5 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { empty, and } from "@ember/object/computed";
+import { empty, alias, and } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
@@ -13,7 +13,7 @@ export function addCategorySortCriteria(criteria) {
 export default buildCategoryPanel("settings", {
   emailInEnabled: setting("email_in"),
   showPositionInput: setting("fixed_category_positions"),
-  isParentCategory: empty("category.parent_category_id"),
+  isParentCategory: alias("category.isParent"),
   showSubcategoryListStyle: and(
     "category.show_subcategory_list",
     "isParentCategory"
