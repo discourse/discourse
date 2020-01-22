@@ -143,6 +143,13 @@ export function selectedText() {
   return toMarkdown($div.html());
 }
 
+export function selectedElement() {
+  const selection = window.getSelection();
+  if (selection.rangeCount > 0) {
+    return selection.getRangeAt(0).startContainer.parentElement;
+  }
+}
+
 // Determine the row and col of the caret in an element
 export function caretRowCol(el) {
   var cp = caretPosition(el);

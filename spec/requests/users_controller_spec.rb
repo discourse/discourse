@@ -3548,7 +3548,8 @@ describe UsersController do
 
           response_body = JSON.parse(response.body)
 
-          expect(response_body['backup_codes'].length).to be(10)
+          # we use SecureRandom.hex(16) for backup codes, ensure this continues to be the case
+          expect(response_body['backup_codes'].map(&:length)).to eq([32] * 10)
         end
       end
     end

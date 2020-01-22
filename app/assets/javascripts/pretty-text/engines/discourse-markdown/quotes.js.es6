@@ -73,6 +73,10 @@ const rule = {
       token.attrs.push(["class", "quote no-group"]);
     }
 
+    if (username) {
+      token.attrs.push(["data-username", username]);
+    }
+
     if (postNumber) {
       token.attrs.push(["data-post", postNumber]);
     }

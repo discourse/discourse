@@ -13,6 +13,6 @@ export default Component.extend({
 
   @discourseComputed("tagRecord.id")
   href(tagRecordId) {
-    return Discourse.getURL("/tags/" + tagRecordId);
+    return Discourse.getURL("/tag/" + tagRecordId);
   }
 });

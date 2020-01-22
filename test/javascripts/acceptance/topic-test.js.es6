@@ -315,3 +315,21 @@ QUnit.test("View Hidden Replies", async assert => {
 
   assert.equal(find(".gap").length, 0, "it hides gap");
 });
+
+QUnit.test("Quoting a quote keeps the original poster name", async assert => {
+  await visit("/t/internationalization-localization/280");
+
+  const selection = window.getSelection();
+  const range = document.createRange();
+  range.selectNodeContents($("#post_5 blockquote")[0]);
+  selection.removeAllRanges();
+  selection.addRange(range);
+
+  await click(".quote-button");
+
+  assert.ok(
+    find(".d-editor-input")
+      .val()
+      .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+  );
+});

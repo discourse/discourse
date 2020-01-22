@@ -8,6 +8,7 @@ export default {
     }
 
     if (!contents) contents = "";
+    if (!opts) opts = {};
 
     const sansQuotes = contents.replace(this.REGEXP, "").trim();
     if (sansQuotes.length === 0) {
@@ -26,9 +27,9 @@ export default {
       stripped.replace(/\W/g, "") === contents.replace(/\W/g, "");
 
     const params = [
-      post.get("username"),
-      `post:${post.get("post_number")}`,
-      `topic:${post.get("topic_id")}`
+      opts.username || post.username,
+      `post:${opts.post || post.post_number}`,
+      `topic:${opts.topic || post.topic_id}`
     ];
 
     opts = opts || {};
