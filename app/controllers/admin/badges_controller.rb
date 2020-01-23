@@ -43,6 +43,9 @@ class Admin::BadgesController < Admin::AdminController
     badge = Badge.find_by(id: params[:badge_id])
     raise Discourse::InvalidParameters if csv_file.try(:tempfile).nil? || badge.nil?
 
+    replace_badge_owners = params[:replace_badge_owners] == 'true'
+    BadgeGranter.revoke_all(badge) if replace_badge_owners
+
     batch_number = 1
     line_number = 1
     batch = []
