@@ -5,7 +5,12 @@ module Jobs
   class UpdateTopicUploadSecurity < ::Jobs::Base
 
     def execute(args)
-      TopicUploadSecurityManager.new(Topic.find(args[:topic_id])).run
+      topic = Topic.find_by(id: args[:topic_id])
+      if topic.blank?
+        Rails.logger.info("Could not find topic #{args[:topic_id]} for topic upload security updater.")
+        return
+      end
+      TopicUploadSecurityManager.new(topic).run
     end
   end
 end
