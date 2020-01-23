@@ -265,7 +265,13 @@ class TopicQuery
   end
 
   def list_bookmarks
-    create_list(:bookmarks) { |l| l.where('tu.bookmarked') }
+    create_list(:bookmarks) do |l|
+      if SiteSetting.enable_bookmarks_with_reminders?
+        l.where.not(bm: { id: nil })
+      else
+        l.where('tu.bookmarked')
+      end
+    end
   end
 
   def list_top_for(period)
@@ -667,6 +673,17 @@ class TopicQuery
     if @user
       result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
         .references('tu')
+
+      if SiteSetting.enable_bookmarks_with_reminders?
+        result = result.joins("LEFT OUTER JOIN bookmarks AS bm ON (topics.id = bm.topic_id AND bm.user_id = #{@user.id.to_i})")
+        result = result.joins("LEFT OUTER JOIN posts AS bp ON (bm.post_id = bp.id)")
+        result = result.select(
+          <<-SQL
+            topics.*, bm.id AS bookmark_id, bm.reminder_at AS bookmark_reminder_at,
+            bp.post_number AS bookmark_post_number, bm.name AS bookmark_name
+          SQL
+        )
+      end
     end
 
     category_id = get_category_id(options[:category])

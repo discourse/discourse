@@ -121,6 +121,51 @@ describe TopicQuery do
     end
   end
 
+  context "#list_bookmarks" do
+    it "lists the topics bookmarked by the user" do
+      post = Fabricate(:post)
+      reply = Fabricate(:post, topic: post.topic)
+      post2 = Fabricate(:post)
+
+      PostActionCreator.create(user, post, :bookmark)
+      TopicUser.change(user, post.topic, notification_level: 1)
+      TopicUser.update_post_action_cache(
+        user_id: user.id,
+        topic_id: post.topic.id,
+        post_action_type: :bookmark
+      )
+
+      query = TopicQuery.new(user).list_bookmarks
+
+      expect(query.topics.length).to eq(1)
+      expect(query.topics.first.id).to eq(post.topic.id)
+    end
+
+    context "when bookmarks with reminders is enabled" do
+      before do
+        SiteSetting.enable_bookmarks_with_reminders = true
+      end
+
+      it "lists topics bookmarked by the user with the correct attributes" do
+        post = Fabricate(:post)
+        reply = Fabricate(:post, topic: post.topic)
+        post2 = Fabricate(:post)
+
+        bookmark1 = Fabricate(:bookmark, post: post, topic: post.topic, user: user)
+        bookmark2 = Fabricate(:bookmark_next_business_day_reminder, post: reply, topic: reply.topic, user: user, name: "Test")
+
+        query = TopicQuery.new(user).list_bookmarks
+
+        expect(query.topics.length).to eq(2)
+        expect(query.topics.first.id).to eq(post.topic.id)
+        expect(query.topics.second.bookmark_id).to eq(bookmark2.id)
+        expect(query.topics.second.bookmark_post_number).to eq(2)
+        expect(query.topics.second.bookmark_reminder_at).not_to eq(nil)
+        expect(query.topics.second.bookmark_name).to eq("Test")
+      end
+    end
+  end
+
   context 'deleted filter' do
     it "filters deleted topics correctly" do
       _topic = Fabricate(:topic, deleted_at: 1.year.ago)
