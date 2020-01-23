@@ -1,5 +1,20 @@
 # frozen_string_literal: true
 
+##
+# There are certain conditions with secure media when the security of
+# uploads will need to change depending on the context they reside in.
+#
+# For example on these conditions:
+#  * Topic category change
+#  * Topic switching between PM and public topic
+#  * Post moving between topics
+#
+# We need to go through all of the posts in that topic that
+# own uploads via access_control_post_id, then for those uploads determine
+# if they still need to be secure or not. For example an upload could be
+# secure if it is in a PM, and then when the topic gets converted to a public
+# topic the upload no longer needs to remain secure as it is no longer in
+# a secure context.
 class TopicUploadSecurityManager
   def initialize(topic)
     @topic = topic
