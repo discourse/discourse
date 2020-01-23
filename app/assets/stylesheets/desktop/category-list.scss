@@ -95,12 +95,20 @@
   tbody {
     .category {
       border-left: 6px solid;
-      h3 {
-        font-size: $font-up-2;
+      h3,
+      h4 {
         line-height: $line-height-medium;
         a[href] {
           color: $primary;
         }
+      }
+
+      h3 {
+        font-size: $font-up-2;
+      }
+
+      h4 {
+        font-size: $font-up-1;
       }
     }
 
@@ -142,5 +150,11 @@
 
   .topic-featured-link {
     padding-left: 8px;
+  }
+
+  .subcategories-with-subcategories {
+    .category-description {
+      display: none;
+    }
   }
 }

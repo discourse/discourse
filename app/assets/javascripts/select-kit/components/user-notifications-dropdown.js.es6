@@ -26,7 +26,7 @@ export default DropdownSelectBox.extend({
 
     if (this.get("user.can_ignore_user")) {
       content.push({
-        icon: "eye-slash",
+        icon: "far-eye-slash",
         id: "changeToIgnored",
         description: I18n.t("user.user_notifications.ignore_option_title"),
         label: I18n.t("user.user_notifications.ignore_option")

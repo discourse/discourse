@@ -1,7 +1,7 @@
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseDebounce from "discourse/lib/debounce";
-import { selectedText } from "discourse/lib/utilities";
+import { selectedText, selectedElement } from "discourse/lib/utilities";
 
 export default Component.extend({
   classNames: ["quote-button"],
@@ -48,8 +48,28 @@ export default Component.extend({
       }
     }
 
+    let opts;
+    for (
+      let element = selectedElement();
+      element && element.tagName !== "ARTICLE";
+      element = element.parentElement
+    ) {
+      if (element.tagName === "ASIDE" && element.classList.contains("quote")) {
+        opts = {
+          username:
+            element.dataset.username ||
+            element
+              .querySelector(".title")
+              .textContent.trim()
+              .replace(/:$/, ""),
+          post: element.dataset.post,
+          topic: element.dataset.topic
+        };
+      }
+    }
+
     const _selectedText = selectedText();
-    quoteState.selected(postId, _selectedText);
+    quoteState.selected(postId, _selectedText, opts);
     this.set("visible", quoteState.buffer.length > 0);
 
     // avoid hard loops in quote selection unconditionally
@@ -165,8 +185,8 @@ export default Component.extend({
   },
 
   click() {
-    const { postId, buffer } = this.quoteState;
-    this.attrs.selectText(postId, buffer).then(() => this._hideButton());
+    const { postId, buffer, opts } = this.quoteState;
+    this.attrs.selectText(postId, buffer, opts).then(() => this._hideButton());
     return false;
   }
 });

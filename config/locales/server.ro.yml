@@ -1595,7 +1595,6 @@ ro:
       join_the_discussion: "Citește mai mult"
       popular_posts: "Postări notorii"
       click_here: "click aici"
-      from: "%{site_name} rezumat"
       preheader: "Un scurt rezumat de la ultima ta vizită din %{last_seen_at}"
     forgot_password:
       title: "Parolă uitată"
@@ -1659,6 +1658,7 @@ ro:
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Nu"
+    rate_limit_error: "Postările pot fi descărcate doar o singură dată pe zi, te rugăm să încerci din nou mâine."
   static_topic_first_reply: |
     Editează prima postare în acest subiect pentru a schimba conținutul paginii %{page_name}.
   guidelines_topic:
@@ -1868,14 +1868,8 @@ ro:
         Acest ecuson se acordă când primești cel puțin câte 5 aprecieri în 300 de postări diferite. Wow! Comunitatea îți admiră contribuțiile frecvente și de înaltă calitate.
     out_of_love:
       name: Toată stima
-      description: Ai folosit 50 de aprecieri într-o zi
-      long_description: |
-        Acest ecuson se acordă atunci când îți folosești toate cele 50 de aprecieri zilnice. Faptul că îți amintești să îți rezervi un pic de timp pentru a aprecia postările de care te-ai bucurat și pe are le-ai prețuit încurajează colegii tăi de comunitate să creeze pe viitor discuții și mai interesante.
     higher_love:
       name: Înaltă stimă
-      description: Ai folosit de 5 ori 50 de aprecieri pe zi
-      long_description: |
-        Acest ecuson se acordă când îți folosești de 5 ori toate cele 50 de aprecieri zilnice. Îți mulțumim că îți aloci timp zilnic pentru a încuraja cele mai bune conversații.
     crazy_in_love:
       name: Maximă stimă
       description: Ai folosit de 20 de ori 50 de aprecieri pe zi

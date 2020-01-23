@@ -23,15 +23,13 @@ export default Controller.extend({
 
   actions: {
     finishLogin() {
-      let data = {};
+      let data = { second_factor_method: this.secondFactorMethod };
       if (this.securityKeyCredential) {
-        data = { security_key_credential: this.securityKeyCredential };
+        data.second_factor_token = this.securityKeyCredential;
       } else {
-        data = {
-          second_factor_token: this.secondFactorToken,
-          second_factor_method: this.secondFactorMethod
-        };
+        data.second_factor_token = this.secondFactorToken;
       }
+
       ajax({
         url: `/session/email-login/${this.model.token}`,
         type: "POST",

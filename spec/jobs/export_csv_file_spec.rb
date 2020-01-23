@@ -89,6 +89,28 @@ describe Jobs::ExportCsvFile do
       expect(report.second).to contain_exactly(user.username, "Earth", "2010-01-01 00:00:00 UTC")
     end
 
+    it 'works with stacked_chart reports' do
+      ApplicationRequest.create!(date: '2010-01-01', req_type: 'page_view_logged_in', count: 1)
+      ApplicationRequest.create!(date: '2010-01-02', req_type: 'page_view_logged_in', count: 2)
+      ApplicationRequest.create!(date: '2010-01-03', req_type: 'page_view_logged_in', count: 3)
+
+      ApplicationRequest.create!(date: '2010-01-01', req_type: 'page_view_anon', count: 4)
+      ApplicationRequest.create!(date: '2010-01-02', req_type: 'page_view_anon', count: 5)
+      ApplicationRequest.create!(date: '2010-01-03', req_type: 'page_view_anon', count: 6)
+
+      ApplicationRequest.create!(date: '2010-01-01', req_type: 'page_view_crawler', count: 7)
+      ApplicationRequest.create!(date: '2010-01-02', req_type: 'page_view_crawler', count: 8)
+      ApplicationRequest.create!(date: '2010-01-03', req_type: 'page_view_crawler', count: 9)
+
+      exporter.instance_variable_get(:@extra)['name'] = 'consolidated_page_views'
+      report = exporter.report_export.to_a
+
+      expect(report[0]).to contain_exactly("Day", "Logged in users", "Anonymous users", "Crawlers")
+      expect(report[1]).to contain_exactly("2010-01-01", "1", "4", "7")
+      expect(report[2]).to contain_exactly("2010-01-02", "2", "5", "8")
+      expect(report[3]).to contain_exactly("2010-01-03", "3", "6", "9")
+    end
+
   end
 
   let(:user_list_header) {

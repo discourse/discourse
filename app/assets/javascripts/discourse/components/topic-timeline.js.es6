@@ -102,5 +102,6 @@ export default MountWidget.extend(Docking, {
     }
 
     this.dispatch("topic:current-post-scrolled", "timeline-scrollarea");
+    this.dispatch("topic:toggle-actions", "topic-admin-menu-button");
   }
 });

@@ -2,7 +2,7 @@ import { alias, equal } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { setting, i18n } from "discourse/lib/computed";
 
 export default Controller.extend({

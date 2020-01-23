@@ -1,10 +1,7 @@
 import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import {
-  default as discourseComputed,
-  on
-} from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import PreloadStore from "preload-store";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
@@ -76,15 +73,6 @@ const TopicTrackingState = EmberObject.extend({
         const mutedTagIds = User.currentProp("muted_tag_ids");
         if (hasMutedTags(data.payload.topic_tag_ids, mutedTagIds)) {
           return;
-        }
-      }
-
-      // fill parent_category_id we need it for counting new/unread
-      if (data.payload && data.payload.category_id) {
-        var category = Category.findById(data.payload.category_id);
-
-        if (category && category.parent_category_id) {
-          data.payload.parent_category_id = category.parent_category_id;
         }
       }
 
@@ -367,38 +355,43 @@ const TopicTrackingState = EmberObject.extend({
     this.incrementProperty("messageCount");
   },
 
-  countNew(category_id) {
+  getSubCategoryIds(categoryId) {
+    const result = [categoryId];
+    const categories = Category.list();
+
+    for (let i = 0; i < result.length; ++i) {
+      for (let j = 0; j < categories.length; ++j) {
+        if (result[i] === categories[j].parent_category_id) {
+          result[result.length] = categories[j].id;
+        }
+      }
+    }
+
+    return new Set(result);
+  },
+
+  countNew(categoryId) {
+    const subcategoryIds = this.getSubCategoryIds(categoryId);
     return _.chain(this.states)
       .filter(isNew)
       .filter(
         topic =>
           topic.archetype !== "private_message" &&
           !topic.deleted &&
-          (topic.category_id === category_id ||
-            topic.parent_category_id === category_id ||
-            !category_id)
+          (!categoryId || subcategoryIds.has(topic.category_id))
       )
       .value().length;
   },
 
-  resetNew() {
-    Object.keys(this.states).forEach(id => {
-      if (this.states[id].last_read_post_number === null) {
-        delete this.states[id];
-      }
-    });
-  },
-
-  countUnread(category_id) {
+  countUnread(categoryId) {
+    const subcategoryIds = this.getSubCategoryIds(categoryId);
     return _.chain(this.states)
       .filter(isUnread)
       .filter(
         topic =>
           topic.archetype !== "private_message" &&
           !topic.deleted &&
-          (topic.category_id === category_id ||
-            topic.parent_category_id === category_id ||
-            !category_id)
+          (!categoryId || subcategoryIds.has(topic.category_id))
       )
       .value().length;
   },
@@ -445,10 +438,6 @@ const TopicTrackingState = EmberObject.extend({
     // I am taking some shortcuts here to avoid 500 gets for a large list
     if (data) {
       data.forEach(topic => {
-        let category = Category.findById(topic.category_id);
-        if (category && category.parent_category_id) {
-          topic.parent_category_id = category.parent_category_id;
-        }
         states["t" + topic.topic_id] = topic;
       });
     }

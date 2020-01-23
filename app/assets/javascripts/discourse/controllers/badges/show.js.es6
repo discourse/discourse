@@ -3,10 +3,7 @@ import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   queryParams: ["username"],

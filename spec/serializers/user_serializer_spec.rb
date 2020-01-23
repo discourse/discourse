@@ -192,6 +192,41 @@ describe UserSerializer do
         end
       end
     end
+
+    describe "ignored and muted" do
+      fab!(:viewing_user) { Fabricate(:user) }
+      let(:scope) { Guardian.new(viewing_user) }
+
+      it 'returns false values for muted and ignored' do
+        expect(json[:ignored]).to eq(false)
+        expect(json[:muted]).to eq(false)
+      end
+
+      context 'when ignored' do
+        before do
+          Fabricate(:ignored_user, user: viewing_user, ignored_user: user)
+          viewing_user.reload
+        end
+
+        it 'returns true for ignored' do
+          expect(json[:ignored]).to eq(true)
+          expect(json[:muted]).to eq(false)
+        end
+      end
+
+      context 'when muted' do
+        before do
+          Fabricate(:muted_user, user: viewing_user, muted_user: user)
+          viewing_user.reload
+        end
+
+        it 'returns true for muted' do
+          expect(json[:muted]).to eq(true)
+          expect(json[:ignored]).to eq(false)
+        end
+      end
+
+    end
   end
 
   context "with custom_fields" do

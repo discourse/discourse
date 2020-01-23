@@ -151,8 +151,8 @@ module Discourse
       wizard-start.js
       locales/i18n.js
       discourse/lib/webauthn.js
-      admin-login/admin-login.js
-      admin-login/admin-login.no-module.js
+      confirm-new-email/confirm-new-email.js
+      confirm-new-email/confirm-new-email.no-module.js
       onpopstate-handler.js
       embed-application.js
     }
@@ -224,7 +224,7 @@ module Discourse
     # supports etags (post 1.7)
     config.middleware.delete Rack::ETag
 
-    unless Rails.env.development?
+    if !(Rails.env.development? || ENV['SKIP_ENFORCE_HOSTNAME'] == "1")
       require 'middleware/enforce_hostname'
       config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
     end

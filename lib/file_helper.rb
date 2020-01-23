@@ -14,11 +14,11 @@ class FileHelper
   end
 
   def self.is_supported_image?(filename)
-    filename =~ supported_images_regexp
+    (filename =~ supported_images_regexp).present?
   end
 
   def self.is_supported_media?(filename)
-    filename =~ supported_media_regexp
+    (filename =~ supported_media_regexp).present?
   end
 
   class FakeIO

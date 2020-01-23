@@ -16,7 +16,9 @@
   }
 
   .item + #private-message-users {
-    width: 150px;
+    width: unset;
+    min-width: 150px;
+    flex: 1 1 auto;
   }
 
   .select-kit.is-expanded {

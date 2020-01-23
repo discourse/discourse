@@ -4,7 +4,7 @@ import { makeArray } from "discourse-common/lib/helpers";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
 import TagsMixin from "select-kit/mixins/tags";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 const { isEmpty, run } = Ember;
 import Category from "discourse/models/category";
 import deprecated from "discourse-common/lib/deprecated";
@@ -185,12 +185,12 @@ export default ComboBoxComponent.extend(TagsMixin, {
       } else if (tagId === "no-tags") {
         url = Discourse.getURL(this.noTagsUrl);
       } else {
-        url = "/tags";
-
         if (this.currentCategory) {
-          url += `/c/${Category.slugFor(this.currentCategory)}/${
+          url = `/tags/c/${Category.slugFor(this.currentCategory)}/${
             this.currentCategory.id
           }`;
+        } else {
+          url = "/tag";
         }
 
         if (tag && tag.targetTagId) {

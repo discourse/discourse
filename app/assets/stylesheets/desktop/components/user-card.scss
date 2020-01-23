@@ -5,7 +5,7 @@
   z-index: z("usercard");
   &.fixed {
     position: fixed;
-    z-index: z("composer", "content") + 1;
+    z-index: z("header") + 1;
   }
   &.docked-card {
     z-index: z("header") + 1;

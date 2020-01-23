@@ -43,38 +43,6 @@
   }
 }
 
-.user-content-wrapper {
-  // IE11 Support
-  display: -ms-grid;
-  -ms-grid-columns: 1fr 5fr;
-  -ms-grid-rows: auto auto 1fr auto;
-  .user-primary-navigation {
-    -ms-grid-row: 1;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 2;
-  }
-  .user-secondary-navigation {
-    -ms-grid-row: 2;
-    -ms-grid-column: 1;
-  }
-  .solo-preference,
-  .user-content,
-  .spinner {
-    -ms-grid-row: 2;
-    -ms-grid-column: 2;
-    -ms-grid-column-span: 2;
-  }
-  .user-secondary-navigation + .user-content {
-    -ms-grid-column: 2;
-    -ms-grid-column-span: 1;
-  }
-  .user-additional-controls {
-    -ms-grid-row: 3;
-    -ms-grid-column-align: start;
-    -ms-grid-row-align: start;
-  }
-}
-
 .user-content {
   .list-actions {
     display: flex;
@@ -425,29 +393,6 @@
     grid-column-start: 2;
     grid-column-end: 3;
   }
-
-  // IE11 Support
-  .avatar-choice {
-    display: -ms-grid;
-    -ms-grid-columns: 2em 1fr auto;
-    -ms-grid-rows: auto auto;
-    input[type="radio"] {
-      -ms-grid-row: 1;
-      -ms-grid-column: 1;
-    }
-    label.radio {
-      -ms-grid-row: 1;
-      -ms-grid-column: 2;
-    }
-    span.avatar-uploader {
-      -ms-grid-row: 1;
-      -ms-grid-column: 3;
-    }
-    .error {
-      -ms-grid-row: 2;
-      -ms-grid-column-span: 3;
-    }
-  }
 }
 
 .top-section {
@@ -649,9 +594,9 @@
       .wrapper {
         display: inline-block;
         position: relative;
-        padding: 10px;
         border-radius: 3px;
         border: 1px solid $primary-low;
+        width: 100%;
       }
 
       .backup-codes-area {
@@ -659,11 +604,10 @@
         padding: 0;
         height: auto;
         text-align: center;
-        width: 250px;
+        width: 100%;
         background: white;
         border: 0;
         cursor: auto;
-        overflow: hidden;
         outline: none;
         font-family: monospace;
 

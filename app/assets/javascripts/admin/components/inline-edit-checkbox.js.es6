@@ -1,8 +1,5 @@
 import Component from "@ember/component";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["inline-edit"],

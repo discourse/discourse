@@ -8,6 +8,7 @@ import { includeAttributes } from "discourse/lib/transform-post";
 import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import { addGlobalNotice } from "discourse/components/global-notice";
 import {
   createWidget,
   reopenWidget,
@@ -47,9 +48,10 @@ import {
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
+import { on } from "@ember/object/evented";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.36";
+const PLUGIN_API_VERSION = "0.8.37";
 
 class PluginApi {
   constructor(version, container) {
@@ -969,6 +971,18 @@ class PluginApi {
   registerHighlightJSLanguage(name, fn) {
     registerHighlightJSLanguage(name, fn);
   }
+
+  /**
+   * Adds global notices to display.
+   *
+   * Example:
+   *
+   * api.addGlobalNotice("text", "foo", { html: "<p>bar</p>" })
+   *
+   **/
+  addGlobalNotice(id, text, options) {
+    addGlobalNotice(id, text, options);
+  }
 }
 
 let _pluginv01;
@@ -1046,12 +1060,12 @@ function decorate(klass, evt, cb, id) {
   }
 
   const mixin = {};
-  mixin["_decorate_" + _decorateId++] = function($elem) {
+  mixin["_decorate_" + _decorateId++] = on(evt, function($elem) {
     $elem = $elem || $(this.element);
     if ($elem) {
       cb($elem);
     }
-  }.on(evt);
+  });
   klass.reopen(mixin);
 }
 

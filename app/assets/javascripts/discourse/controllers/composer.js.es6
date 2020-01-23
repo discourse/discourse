@@ -8,8 +8,7 @@ import DiscourseURL from "discourse/lib/url";
 import Quote from "discourse/lib/quote";
 import Draft from "discourse/models/draft";
 import Composer from "discourse/models/composer";
-import {
-  default as discourseComputed,
+import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";
@@ -25,6 +24,7 @@ import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
 import ENV from "discourse-common/config/environment";
 import EmberObject, { computed } from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -129,7 +129,7 @@ export default Controller.extend({
   @discourseComputed(
     "model.replyingToTopic",
     "model.creatingPrivateMessage",
-    "model.targetUsernames",
+    "model.targetRecipients",
     "model.composeState"
   )
   focusTarget(replyingToTopic, creatingPM, usernames, composeState) {
@@ -246,7 +246,10 @@ export default Controller.extend({
   },
 
   _setupPopupMenuOption(callback) {
-    let option = callback();
+    let option = callback(this);
+    if (typeof option === "undefined") {
+      return null;
+    }
 
     if (typeof option.condition === "undefined") {
       option.condition = true;
@@ -287,14 +290,14 @@ export default Controller.extend({
       );
 
       return options.concat(
-        _popupMenuOptionsCallbacks.map(callback =>
-          this._setupPopupMenuOption(callback)
-        )
+        _popupMenuOptionsCallbacks
+          .map(callback => this._setupPopupMenuOption(callback))
+          .filter(o => o)
       );
     }
   },
 
-  @discourseComputed("model.creatingPrivateMessage", "model.targetUsernames")
+  @discourseComputed("model.creatingPrivateMessage", "model.targetRecipients")
   showWarning(creatingPrivateMessage, usernames) {
     if (!this.get("currentUser.staff")) {
       return false;
@@ -909,19 +912,24 @@ export default Controller.extend({
       isWarning: false
     });
 
-    if (opts.usernames && !this.get("model.targetUsernames")) {
-      this.set("model.targetUsernames", opts.usernames);
+    if (!this.model.targetRecipients) {
+      if (opts.usernames) {
+        deprecated("`usernames` is deprecated, use `recipients` instead.");
+        this.model.set("targetRecipients", opts.usernames);
+      } else if (opts.recipients) {
+        this.model.set("targetRecipients", opts.recipients);
+      }
     }
 
     if (
       opts.topicTitle &&
       opts.topicTitle.length <= this.siteSettings.max_topic_title_length
     ) {
-      this.set("model.title", opts.topicTitle);
+      this.model.set("title", opts.topicTitle);
     }
 
     if (opts.topicCategoryId) {
-      this.set("model.categoryId", opts.topicCategoryId);
+      this.model.set("categoryId", opts.topicCategoryId);
     }
 
     if (opts.topicTags && !this.site.mobileView && this.site.can_tag_topics) {
@@ -934,11 +942,11 @@ export default Controller.extend({
           (array[index] = tag.substring(0, this.siteSettings.max_tag_length))
       );
 
-      this.set("model.tags", tags);
+      this.model.set("tags", tags);
     }
 
     if (opts.topicBody) {
-      this.set("model.reply", opts.topicBody);
+      this.model.set("reply", opts.topicBody);
     }
   },
 

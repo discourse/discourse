@@ -5,6 +5,8 @@ require 'rails_helper'
 describe Post do
   before { Oneboxer.stubs :onebox }
 
+  let(:upload_path) { Discourse.store.upload_path }
+
   describe '#hidden_reasons' do
     context "verify enum sequence" do
       before do
@@ -152,6 +154,45 @@ describe Post do
       end
     end
 
+  end
+
+  describe "with_secure_media?" do
+    let(:topic) { Fabricate(:topic) }
+    let!(:post) { Fabricate(:post, topic: topic) }
+    it "returns false if secure media is not enabled" do
+      expect(post.with_secure_media?).to eq(false)
+    end
+
+    context "when secure media is enabled" do
+      before { enable_secure_media_and_s3 }
+
+      context "if login_required" do
+        before { SiteSetting.login_required = true }
+
+        it "returns true" do
+          expect(post.with_secure_media?).to eq(true)
+        end
+      end
+
+      context "if the topic category is read_restricted" do
+        let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        before do
+          topic.change_category_to_id(category.id)
+        end
+
+        it "returns true" do
+          expect(post.with_secure_media?).to eq(true)
+        end
+      end
+
+      context "if the post is in a PM topic" do
+        let(:topic) { Fabricate(:private_message_topic) }
+
+        it "returns true" do
+          expect(post.with_secure_media?).to eq(true)
+        end
+      end
+    end
   end
 
   describe 'flagging helpers' do
@@ -313,8 +354,8 @@ describe Post do
   describe "maximum attachments" do
     fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_no_attachments) { Fabricate.build(:post, post_args.merge(user: newuser)) }
-    let(:post_one_attachment) { post_with_body('<a class="attachment" href="/uploads/default/1/2082985.txt">file.txt</a>', newuser) }
-    let(:post_two_attachments) { post_with_body('<a class="attachment" href="/uploads/default/2/20947092.log">errors.log</a> <a class="attachment" href="/uploads/default/3/283572385.3ds">model.3ds</a>', newuser) }
+    let(:post_one_attachment) { post_with_body("<a class='attachment' href='/#{upload_path}/1/2082985.txt'>file.txt</a>", newuser) }
+    let(:post_two_attachments) { post_with_body("<a class='attachment' href='/#{upload_path}/2/20947092.log'>errors.log</a> <a class='attachment' href='/#{upload_path}/3/283572385.3ds'>model.3ds</a>", newuser) }
 
     it "returns 0 attachments for an empty post" do
       expect(Fabricate.build(:post).attachment_count).to eq(0)
@@ -729,11 +770,11 @@ describe Post do
   end
 
   describe 'before save' do
-    let(:cooked) { "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"//localhost:3000/uploads/default/34784374092783e2fef84b8bc96d9b54c11ceea0\" href=\"//localhost:3000/uploads/default/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" class=\"lightbox\" title=\"Sword reworks.gif\"><img src=\"//localhost:3000/uploads/default/optimized/1X/34784374092783e2fef84b8bc96d9b54c11ceea0_1_690x276.gif\" width=\"690\" height=\"276\"><div class=\"meta\">\n<span class=\"filename\">Sword reworks.gif</span><span class=\"informations\">1000x400 1000 KB</span><span class=\"expand\"></span>\n</div></a></div></p>" }
+    let(:cooked) { "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"//localhost:3000/#{upload_path}/34784374092783e2fef84b8bc96d9b54c11ceea0\" href=\"//localhost:3000/#{upload_path}/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" class=\"lightbox\" title=\"Sword reworks.gif\"><img src=\"//localhost:3000/#{upload_path}/optimized/1X/34784374092783e2fef84b8bc96d9b54c11ceea0_1_690x276.gif\" width=\"690\" height=\"276\"><div class=\"meta\">\n<span class=\"filename\">Sword reworks.gif</span><span class=\"informations\">1000x400 1000 KB</span><span class=\"expand\"></span>\n</div></a></div></p>" }
 
     let(:post) do
       Fabricate(:post,
-        raw: "<img src=\"/uploads/default/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" width=\"690\" height=\"276\">",
+        raw: "<img src=\"/#{upload_path}/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" width=\"690\" height=\"276\">",
         cooked: cooked
       )
     end
@@ -1282,7 +1323,7 @@ describe Post do
     context "#link_post_uploads" do
       it "finds all the uploads in the post" do
         post.custom_fields[Post::DOWNLOADED_IMAGES] = {
-          "/uploads/default/original/1X/1/1234567890123456.csv": attachment_upload.id
+          "/#{upload_path}/original/1X/1/1234567890123456.csv": attachment_upload.id
         }
 
         post.save_custom_fields
@@ -1309,6 +1350,23 @@ describe Post do
           post_uploads_ids
         )
       end
+
+      context "when secure media is enabled" do
+        before { enable_secure_media_and_s3 }
+
+        it "sets the access_control_post_id on uploads in the post that don't already have the value set" do
+          other_post = Fabricate(:post)
+          video_upload.update(access_control_post_id: other_post.id)
+          audio_upload.update(access_control_post_id: other_post.id)
+
+          post.link_post_uploads
+
+          image_upload.reload
+          video_upload.reload
+          expect(image_upload.access_control_post_id).to eq(post.id)
+          expect(video_upload.access_control_post_id).not_to eq(post.id)
+        end
+      end
     end
 
     context '#update_uploads_secure_status' do
@@ -1322,12 +1380,7 @@ describe Post do
       end
 
       before do
-        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-        SiteSetting.s3_access_key_id = "some key"
-        SiteSetting.s3_secret_access_key = "some secret key"
-        SiteSetting.secure_media = true
+        enable_secure_media_and_s3
         attachment_upload.update!(original_filename: "hello.csv")
 
         stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
@@ -1433,10 +1486,10 @@ describe Post do
   context "have_uploads" do
     it "should find all posts with the upload" do
       ids = []
-      ids << Fabricate(:post, cooked: "A post with upload <img src='/uploads/default/1/defghijklmno.png'>").id
-      ids << Fabricate(:post, cooked: "A post with optimized image <img src='/uploads/default/_optimized/601/961/defghijklmno.png'>").id
+      ids << Fabricate(:post, cooked: "A post with upload <img src='/#{upload_path}/1/defghijklmno.png'>").id
+      ids << Fabricate(:post, cooked: "A post with optimized image <img src='/#{upload_path}/_optimized/601/961/defghijklmno.png'>").id
       Fabricate(:post)
-      ids << Fabricate(:post, cooked: "A post with upload <img src='/uploads/default/original/1X/abc/defghijklmno.png'>").id
+      ids << Fabricate(:post, cooked: "A post with upload <img src='/#{upload_path}/original/1X/abc/defghijklmno.png'>").id
       ids << Fabricate(:post, cooked: "A post with upload link <a href='https://cdn.example.com/original/1X/abc/defghijklmno.png'>").id
       ids << Fabricate(:post, cooked: "A post with optimized image <img src='https://cdn.example.com/bucket/optimized/1X/abc/defghijklmno.png'>").id
       Fabricate(:post, cooked: "A post with external link <a href='https://example.com/wp-content/uploads/abcdef.gif'>")
@@ -1530,4 +1583,12 @@ describe Post do
     end
   end
 
+  def enable_secure_media_and_s3
+    SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+    SiteSetting.enable_s3_uploads = true
+    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+    SiteSetting.s3_access_key_id = "some key"
+    SiteSetting.s3_secret_access_key = "some secret key"
+    SiteSetting.secure_media = true
+  end
 end

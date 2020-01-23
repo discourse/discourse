@@ -171,7 +171,9 @@ const path = require("path");
     }
 
     await exec("go home", () => {
-      let promise = page.waitForSelector("#site-logo, #site-text-logo", { visible: true });
+      let promise = page.waitForSelector("#site-logo, #site-text-logo", {
+        visible: true
+      });
 
       promise = promise.then(() => {
         return page.click("#site-logo, #site-text-logo");

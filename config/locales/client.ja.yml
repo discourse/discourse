@@ -130,7 +130,6 @@ ja:
       banner:
         enabled: "この広告%{when}を作成して下さい。ユーザーが拒否するまで各ページの上部に表示されます。"
         disabled: "このバナー%{when}を削除すると、各ページの最上部に表示しません。"
-    topic_admin_menu: "トピックの管理"
     wizard_required: "Discourseへようこそ！ さあ<a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールアドレスの送信は管理者によって無効化されています。全てのメール通知は行われません"
     bootstrap_mode_enabled: "簡単にサイトを立ち上げられるように、ブートストラップモードにしました。\nすべての新規ユーザーはトラストレベル1、毎日のサマリーメールが有効な状態です。この設定は%{min_users}が参加した時に自動的に無効になります。"
@@ -240,6 +239,7 @@ ja:
       not_bookmarked: "この投稿をブックマークする"
       remove: "ブックマークを削除"
       confirm_clear: "このトピックのすべてのブックマークをクリアしますか?"
+      save: "保存"
     drafts:
       resume: "続ける"
       remove: "削除"
@@ -282,14 +282,8 @@ ja:
       install_banner: "<a href>このデバイスに%{title}をインストール</a>しますか？"
     choose_topic:
       none_found: "トピックが見つかりませんでした。"
-      title:
-        search: "タイトル、URL、IDでトピックを検索:"
-        placeholder: "トピックのタイトルを入力"
     choose_message:
       none_found: "メッセージは見つかりませんでした。"
-      title:
-        search: "タイトルでメッセージを検索:"
-        placeholder: "メッセージのタイトルをここに入力してください"
     review:
       order_by: "順"
       in_reply_to: "こちらへの回答"
@@ -652,6 +646,10 @@ ja:
         normal_option: "通常"
       activity_stream: "アクティビティ"
       preferences: "設定"
+      feature_topic_on_profile:
+        save: "保存"
+        clear:
+          title: "クリア"
       profile_hidden: "このユーザーの公開プロフィールは非公開です"
       expand_profile: "開く"
       collapse_profile: "折りたたむ"
@@ -950,7 +948,6 @@ ja:
         search: "招待履歴を検索"
         title: "招待"
         user: "招待したユーザ"
-        sent: "送信済み"
         none: "表示する招待はありません。"
         truncated:
           other: "{{count}} 件の招待を表示しています。"
@@ -1692,6 +1689,7 @@ ja:
           title: "ミュート"
           description: "このトピックに関するお知らせをすべて受け取りません。また、未読のタブにも通知されません。"
       actions:
+        title: "アクション"
         recover: "トピックの削除を取り消す"
         delete: "トピックを削除"
         open: "トピックをオープン"
@@ -1924,7 +1922,6 @@ ja:
           notify_moderators: "モデレータに通知"
           notify_user: "メッセージを送信しました。"
           bookmark: "これをブックマークしました。"
-          like: "「いいね！」しました"
         by_you:
           off_topic: "関係のない話題として通報しました"
           spam: "スパム報告として通報しました"
@@ -1968,6 +1965,8 @@ ja:
           html_part:
             title: "メールのHTML部分を表示"
             button: "HTML"
+      bookmarks:
+        name: "名前"
     category:
       can: "can&hellip; "
       none: "(カテゴリなし)"
@@ -2473,6 +2472,7 @@ ja:
         show_details: 詳細
         description: 説明
         save: 保存
+        continue: 続く
       web_hooks:
         title: "Webhooks"
         none: "現在、Webhooksはありません。"

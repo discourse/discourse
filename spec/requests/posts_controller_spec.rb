@@ -236,7 +236,7 @@ describe PostsController do
 
       describe "can delete replies" do
         before do
-          PostReply.create(post_id: post1.id, reply_id: post2.id)
+          PostReply.create(post_id: post1.id, reply_post_id: post2.id)
         end
 
         it "deletes the post and the reply to it" do
@@ -1110,6 +1110,22 @@ describe PostsController do
         expect(new_topic.allowed_users).to contain_exactly(user, user_2, user_3)
       end
 
+      context "when target_recipients not provided" do
+        it "errors when creating a private post" do
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            archetype: 'private_message',
+            title: "this is some post",
+            target_recipients: ""
+          }
+
+          expect(response.status).to eq(422)
+          expect(JSON.parse(response.body)["errors"]).to include(
+            I18n.t("activerecord.errors.models.topic.attributes.base.no_user_selected")
+          )
+        end
+      end
+
       context "errors" do
         it "does not succeed" do
           post "/posts.json", params: { raw: 'test' }
@@ -1869,6 +1885,62 @@ describe PostsController do
       public_post.reload
       expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
       expect(public_post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
+    end
+  end
+
+  describe Plugin::Instance do
+    describe '#add_permitted_post_create_param' do
+      fab!(:user) { Fabricate(:user) }
+      let(:instance) { Plugin::Instance.new }
+      let(:request) do
+        Proc.new {
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic',
+            composer_open_duration_msecs: 204,
+            typing_duration_msecs: 100,
+            reply_to_post_number: 123,
+            string_arg: '123',
+            hash_arg: { key1: 'val' },
+            array_arg: ['1', '2', '3']
+          }
+        }
+      end
+
+      before do
+        sign_in(user)
+        SiteSetting.min_first_post_typing_time = 0
+      end
+
+      it 'allows strings to be added' do
+        request.call
+        expect(@controller.send(:create_params)).not_to include(string_arg: '123')
+
+        instance.add_permitted_post_create_param(:string_arg)
+        request.call
+        expect(@controller.send(:create_params)).to include(string_arg: '123')
+      end
+
+      it 'allows hashes to be added' do
+        instance.add_permitted_post_create_param(:hash_arg)
+        request.call
+        expect(@controller.send(:create_params)).not_to include(hash_arg: { key1: 'val' })
+
+        instance.add_permitted_post_create_param(:hash_arg, :hash)
+        request.call
+        expect(@controller.send(:create_params)).to include(hash_arg: { key1: 'val' })
+      end
+
+      it 'allows strings to be added' do
+        instance.add_permitted_post_create_param(:array_arg)
+        request.call
+        expect(@controller.send(:create_params)).not_to include(array_arg: ['1', '2', '3'])
+
+        instance.add_permitted_post_create_param(:array_arg, :array)
+        request.call
+        expect(@controller.send(:create_params)).to include(array_arg: ['1', '2', '3'])
+      end
+
     end
   end
 end

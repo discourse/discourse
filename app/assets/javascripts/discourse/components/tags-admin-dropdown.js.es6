@@ -35,7 +35,7 @@ export default DropdownSelectBoxComponent.extend({
         id: "deleteUnusedTags",
         name: I18n.t("tagging.delete_unused"),
         description: I18n.t("tagging.delete_unused_description"),
-        icon: "trash",
+        icon: "trash-alt",
         __sk_row_type: "noopRow"
       }
     ];

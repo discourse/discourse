@@ -9,7 +9,7 @@ module FileStore
       store_file(file, path)
     end
 
-    def store_optimized_image(file, optimized_image)
+    def store_optimized_image(file, optimized_image, content_type = nil, secure: false)
       path = get_path_for_optimized_image(optimized_image)
       store_file(file, path)
     end
@@ -31,7 +31,11 @@ module FileStore
     end
 
     def upload_path
-      File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
+      path = File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
+      return path unless Discourse.is_parallel_test?
+
+      n = ENV['TEST_ENV_NUMBER'].presence || '1'
+      File.join(path, n)
     end
 
     def has_been_uploaded?(url)

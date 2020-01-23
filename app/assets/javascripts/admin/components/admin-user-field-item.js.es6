@@ -7,8 +7,7 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyEqual } from "discourse/lib/computed";
 import { i18n } from "discourse/lib/computed";
-import {
-  default as discourseComputed,
+import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";

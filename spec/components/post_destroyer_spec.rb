@@ -639,7 +639,7 @@ describe PostDestroyer do
     describe 'with a reply' do
 
       fab!(:reply) { Fabricate(:basic_reply, user: coding_horror, topic: post.topic) }
-      let!(:post_reply) { PostReply.create(post_id: post.id, reply_id: reply.id) }
+      let!(:post_reply) { PostReply.create(post_id: post.id, reply_post_id: reply.id) }
 
       it 'changes the post count of the topic' do
         post.reload

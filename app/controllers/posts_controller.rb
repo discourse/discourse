@@ -675,7 +675,9 @@ class PostsController < ApplicationController
       :topic_id,
       :archetype,
       :category,
+      # TODO remove together with 'targetUsername' deprecations
       :target_usernames,
+      :target_recipients,
       :reply_to_post_number,
       :auto_track,
       :typing_duration_msecs,
@@ -684,8 +686,17 @@ class PostsController < ApplicationController
       :draft_key
     ]
 
-    Post.plugin_permitted_create_params.each do |key, plugin|
-      permitted << key if plugin.enabled?
+    Post.plugin_permitted_create_params.each do |key, value|
+      if value[:plugin].enabled?
+        permitted <<  case value[:type]
+                      when :string
+                        key.to_sym
+                      when :array
+                        { key => [] }
+                      when :hash
+                        { key => {} }
+        end
+      end
     end
 
     # param munging for WordPress
@@ -749,15 +760,25 @@ class PostsController < ApplicationController
     result[:user_agent] = request.user_agent
     result[:referrer] = request.env["HTTP_REFERER"]
 
-    if usernames = result[:target_usernames]
-      usernames = usernames.split(",")
-      groups = Group.messageable(current_user).where('name in (?)', usernames).pluck('name')
-      usernames -= groups
-      emails = usernames.select { |user| user.match(/@/) }
-      usernames -= emails
-      result[:target_usernames] = usernames.join(",")
+    if recipients = result[:target_usernames]
+      Discourse.deprecate("`target_usernames` is deprecated, use `target_recipients` instead.", output_in_test: true)
+    else
+      recipients = result[:target_recipients]
+    end
+
+    if recipients
+      recipients = recipients.split(",")
+      groups = Group.messageable(current_user).where('name in (?)', recipients).pluck('name')
+      recipients -= groups
+      emails = recipients.select { |user| user.match(/@/) }
+      recipients -= emails
+      result[:target_usernames] = recipients.join(",")
       result[:target_emails] = emails.join(",")
       result[:target_group_names] = groups.join(",")
+    end
+
+    if (recipients.blank? || result[:target_usernames].blank?) && params[:archetype] == Archetype.private_message
+      Rails.logger.warn("Missing recipients for PM! result: #{result.inspect} | params: #{params.inspect}")
     end
 
     result.permit!

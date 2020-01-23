@@ -84,7 +84,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       filter = `tags/intersection/${tagId}/${this.additionalTags.join("/")}`;
     } else {
       this.set("category", null);
-      filter = `tags/${tagId}/l/${topicFilter}`;
+      filter = `tag/${tagId}/l/${topicFilter}`;
     }
 
     return findTopicList(this.store, this.topicTrackingState, filter, params, {

@@ -7,6 +7,7 @@ import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
 
 export default Component.extend(LoadMore, {
@@ -24,9 +25,10 @@ export default Component.extend(LoadMore, {
   eyelineSelector: ".user-stream .item",
   classNames: ["user-stream"],
 
+  @observes("stream.user.id")
   _scrollTopOnModelChange: function() {
     schedule("afterRender", () => $(document).scrollTop(0));
-  }.observes("stream.user.id"),
+  },
 
   _inserted: on("didInsertElement", function() {
     this.bindScrolling({ name: "user-stream-view" });

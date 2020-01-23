@@ -165,6 +165,15 @@ vi:
   too_late_to_edit: "Bài đăng đã được tạo từ rất lâu. Nó không thể được chỉnh sửa hoặc xóa nữa."
   revert_version_same: "Phiên bản hiện tại giống với phiên bản mà bạn muốn hoàn nguyên."
   excerpt_image: "hình ảnh"
+  bookmarks:
+    reminders:
+      at_desktop: "Lần sau tôi ở máy tính để bàn của tôi"
+      later_today: "Sau ngày hôm nay <br/> {{date}}"
+      next_business_day: "Ngày làm việc tiếp theo <br/> {{date}}"
+      tomorrow: "Ngày mai <br/> {{date}}"
+      next_week: "Tuần tới <br/> {{date}}"
+      next_month: "Tháng tiếp theo <br/> {{date}}"
+      custom: "Ngày giờ tùy chỉnh"
   groups:
     errors:
       can_not_modify_automatic: "Bạn không thể sửa một nhóm tự động"
@@ -1228,6 +1237,7 @@ vi:
   csv_export:
     boolean_yes: "Đồng ý"
     boolean_no: "Không"
+    rate_limit_error: "Bài viết chỉ được tải về một lần mỗi người, hãy thử lại vào ngày mai."
   static_topic_first_reply: |2
 
     Sửa bài viết đầu tiên trong chủ đề này để thay đổi nội dung của trang %{page_name}.
@@ -1363,16 +1373,8 @@ vi:
         Huy hiệu này được cấp khi bạn nhận được ít nhất 5 like cho 300 bài viết khác nhau. Tuyệt vời! Cộng đồng rất ngưỡng mộ các đóng góp thường xuyên có chất lượng cao của bạn trong các cuộc đối thoại.
     out_of_love:
       name: Vì yêu thích
-      description: Sử dụng 50 like trong 1 ngày
-      long_description: |2
-
-        Huy hiệu này được cấp khi bạn sử dụng tất cả 50 lượt like hàng ngày của bạn. Ghi nhớ một chút các bài viết mà bạn xem và khuyến khích các thành viên cộng đồng tạo ra các cuộc thảo luận lớn hơn trong tương lai.
     higher_love:
       name: Thích nhiều hơn
-      description: Sử dụng 50 like một ngày trong 5 ngày
-      long_description: |2
-
-        Huy hiệu này được cấp khi bạn sử dụng 50 lượt like một ngày trong 5 ngày liên tiếp. Cám ơn bạn đã dành thời gian để khuyến khích các cuộc hội thoại tốt nhất mỗi ngày!
     crazy_in_love:
       name: Thích nhiệt tình
       description: Sử dụng 50 like một ngày trong 20 ngày

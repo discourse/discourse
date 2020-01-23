@@ -379,7 +379,7 @@ class FakeInternalStore
     upload.url
   end
 
-  def store_optimized_image(file, optimized_image)
+  def store_optimized_image(file, optimized_image, content_type = nil, secure: false)
     "/internally/stored/optimized/image#{optimized_image.extension}"
   end
 

@@ -31,7 +31,7 @@ export default {
           avatar_template:
             "/user_avatar/meta.discourse.org/sam/{size}/102149_2.png",
           title: "co-founder",
-          last_seen_at: "2019-01-15T13:30:43.272Z"
+          last_seen_at: "2030-01-15T13:30:43.272Z"
         },
         {
           id: 32,
@@ -40,7 +40,7 @@ export default {
           avatar_template:
             "/user_avatar/meta.discourse.org/codinghorror/{size}/110067_2.png",
           title: "co-founder",
-          last_seen_at: "2019-01-15T13:21:56.592Z"
+          last_seen_at: "2030-01-15T13:21:56.592Z"
         },
         {
           id: 19,
@@ -49,7 +49,7 @@ export default {
           avatar_template:
             "/user_avatar/meta.discourse.org/eviltrout/{size}/5275_2.png",
           title: "co-founder",
-          last_seen_at: "2019-01-14T18:03:08.232Z"
+          last_seen_at: "2030-01-14T18:03:08.232Z"
         }
       ],
       moderators: [
@@ -60,7 +60,7 @@ export default {
           avatar_template:
             "/user_avatar/meta.discourse.org/sam/{size}/102149_2.png",
           title: "co-founder",
-          last_seen_at: "2019-01-15T13:30:43.272Z"
+          last_seen_at: "2030-01-15T13:30:43.272Z"
         },
         {
           id: 32,
@@ -69,7 +69,7 @@ export default {
           avatar_template:
             "/user_avatar/meta.discourse.org/codinghorror/{size}/110067_2.png",
           title: "co-founder",
-          last_seen_at: "2019-01-15T13:21:56.592Z"
+          last_seen_at: "2030-01-15T13:21:56.592Z"
         },
         {
           id: 19,
@@ -78,7 +78,7 @@ export default {
           avatar_template:
             "/user_avatar/meta.discourse.org/eviltrout/{size}/5275_2.png",
           title: "co-founder",
-          last_seen_at: "2019-01-14T18:03:08.232Z"
+          last_seen_at: "2030-01-14T18:03:08.232Z"
         }
       ]
     }

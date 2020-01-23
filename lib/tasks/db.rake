@@ -32,7 +32,14 @@ end
 
 task 'db:create' => [:load_config] do |_, args|
   if MultisiteTestHelpers.create_multisite?
-    system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
+    unless system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
+
+      STDERR.puts "-" * 80
+      STDERR.puts "ERROR: Could not create multisite DB. A common cause of this is a plugin"
+      STDERR.puts "checking the column structure when initializing, which raises an error."
+      STDERR.puts "-" * 80
+      raise "Could not initialize discourse_test_multisite"
+    end
   end
 end
 
@@ -61,20 +68,23 @@ end
 
 # we need to run seed_fu every time we run rake db:migrate
 task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
+
   ActiveRecord::Tasks::DatabaseTasks.migrate
 
-  Rake::Task['db:_dump'].invoke
+  if !Discourse.is_parallel_test?
+    Rake::Task['db:_dump'].invoke
+  end
 
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 
-  unless Discourse.skip_post_deployment_migrations?
+  if !Discourse.skip_post_deployment_migrations?
     puts
     print "Optimizing site icons... "
     SiteIconManager.ensure_optimized!
     puts "Done"
   end
 
-  if MultisiteTestHelpers.load_multisite?
+  if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
     system("RAILS_DB=discourse_test_multisite rake db:migrate")
   end
 end

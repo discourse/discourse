@@ -185,7 +185,6 @@ lt:
       banner:
         enabled: "padarė šią reklamjuostę %{when}. Ji pasirodys kiekvieno puslapio viršuje, kol jos neišjungs vartotojas."
         disabled: "pašalinta ši reklamjuostė %{when}. Ji nebebus rodomaa kiekvieno puslapio viršuje."
-    topic_admin_menu: "temos administravimo veiksmai"
     wizard_required: "Sveiki, tai jūsų naujasis Discourse! Pradėkime nuo<a href='%{url}' data-auto-route='true'>Instliacijos</a>✨"
     emails_are_disabled: "Visos išeinančios elektroninės žinutės buvo uždraustos administratoriaus. Jokių papildų įspėjamųjų žinučių nebus išsiųsta"
     bootstrap_mode_enabled: "Norėdami palengvinti naujos svetainės paleidimą, jūs esate paleidimo režime. Visiems naujiems vartotojams bus suteiktas 1 lygio pasitikėjimas ir bus įgalinti kasdieniniai elektroninio pašto santraukos atnaujinimai. Tai bus automatiškai išjungta, kai pasieksite %{min_users} vartotojų ribą."
@@ -287,6 +286,7 @@ lt:
     bookmarks:
       created: "jūs pažymėjot šį įrašą"
       remove: "Pašalinti Žymę"
+      save: "Saugoti"
     drafts:
       resume: "Grįžti"
       remove: "Pašalinti"
@@ -323,8 +323,6 @@ lt:
       edit: "Redaguoti banerį >>"
     choose_topic:
       none_found: "Nerasta temų."
-      title:
-        placeholder: "Įveskite temos pavadinimą čia"
     choose_message:
       none_found: "Žinučių nėra."
     review:
@@ -606,6 +604,10 @@ lt:
         normal_option: "Įprastas"
       activity_stream: "Aktyvumas"
       preferences: "Nustatymai"
+      feature_topic_on_profile:
+        save: "Saugoti"
+        clear:
+          title: "Išvalyti"
       expand_profile: "Praplėsti"
       collapse_profile: "Suskleisti"
       bookmarks: "Žymės"
@@ -870,7 +872,6 @@ lt:
         search: "įveskite, kad ieškotumete pakvietim"
         title: "Pakvietimai"
         user: "Pakviestas vartotojas"
-        sent: "Išsiųsti"
         truncated:
           one: "Rodomas pirmas pakvietimas"
           few: "Rodomi pirmi {{count}} pakvietimai."
@@ -1577,6 +1578,7 @@ lt:
           title: "Nutildytos"
           description: "Tau nebus siunčiami pranešimai susiję su šia žinute."
       actions:
+        title: "Veiksmai"
         recover: "Atstatyti ištrintą Temą"
         delete: "Ištrinti temą"
         open: "Atidaryti temą"
@@ -1834,7 +1836,6 @@ lt:
           like: "Anuliuoti Patinka"
         people:
           spam: "pažymėtas kaip šlamštas"
-          like: "mėgsta tai"
           like_capped:
             one: "ir {{count}}kitas mėgsta tai"
             few: "ir {{count}}kitų mėgsta tai"
@@ -1873,6 +1874,8 @@ lt:
             button: "Tekstas"
           html_part:
             button: "HTML"
+      bookmarks:
+        name: "Vardas"
     category:
       can: "galimas&hellip;"
       none: "(jokia kategorija)"
@@ -2430,6 +2433,7 @@ lt:
         show_details: Detalės
         description: Aprašymas
         save: Saugoti
+        continue: Tęsti
       web_hooks:
         create: "Sukurti"
         save: "Saugoti"

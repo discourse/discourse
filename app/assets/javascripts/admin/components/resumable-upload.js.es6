@@ -2,10 +2,7 @@ import { schedule } from "@ember/runloop";
 import { later } from "@ember/runloop";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import {
-  default as discourseComputed,
-  on
-} from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 /*global Resumable:true */
 

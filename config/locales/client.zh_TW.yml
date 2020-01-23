@@ -130,7 +130,6 @@ zh_TW:
       banner:
         enabled: "已於 %{when} 將其作為橫幅主題。它將一直顯示直至使用者關閉它。"
         disabled: "已於 %{when} 移除該橫幅主題。將不再出現於任何頁面。"
-    topic_admin_menu: "版區管理員操作"
     wizard_required: "是時候配置你的論壇啦！<a href='%{url}' data-auto-route='true'>點擊開始設置嚮導</a>！"
     emails_are_disabled: "管理員已停用了全域的外部信件功能。將不再寄出任何類型的電子郵件。"
     bootstrap_mode_enabled: "為了讓您更輕鬆地建設網站，您正處於初始模式。將會自動授予所有新註冊的使用者信任等級 1，並自動啟用每日摘要電子郵件。該功能將於 %{min_users} 個使用者註冊後自動關閉。"
@@ -238,6 +237,7 @@ zh_TW:
       not_bookmarked: "將此貼文加入書籤"
       remove: "移除書籤"
       confirm_clear: "確定要移除該話題上的所有書籤嗎？"
+      save: "儲存"
     drafts:
       resume: "恢復"
       remove: "移除"
@@ -280,14 +280,8 @@ zh_TW:
       install_banner: "你希望在此裝置上 <a href>安裝 %{title} 嗎？</a>"
     choose_topic:
       none_found: "未找到任何話題。"
-      title:
-        search: "透過標題、網址或ID尋找話題"
-        placeholder: "請在這裡輸入討論標題"
     choose_message:
       none_found: "沒有訊息"
-      title:
-        search: "以標題尋找訊息"
-        placeholder: "輸入訊息標題"
     review:
       order_by: "排序按照"
       in_reply_to: "回覆給"
@@ -663,6 +657,10 @@ zh_TW:
         normal_option_title: "如果有人@你或回覆你的帖子，將通知你。"
       activity_stream: "活動"
       preferences: "偏好設定"
+      feature_topic_on_profile:
+        save: "儲存"
+        clear:
+          title: "清除"
       profile_hidden: "該使用者的個人檔案已被設為隱藏。"
       expand_profile: "展開"
       collapse_profile: "收合"
@@ -979,7 +977,6 @@ zh_TW:
         search: "輸入要搜尋邀請的文字..."
         title: "邀請"
         user: "受邀請的使用者"
-        sent: "送出"
         none: "沒有可顯示的邀請"
         truncated:
           other: "只顯示前 {{count}} 個邀請。"
@@ -1810,6 +1807,7 @@ zh_TW:
           title: "靜音"
           description: "你不會收到此話題的任何通知，它也不會出現在“最新”話題列表。"
       actions:
+        title: "操作"
         recover: "復原已刪除的話題"
         delete: "刪除話題"
         open: "開放話題"
@@ -2091,7 +2089,6 @@ zh_TW:
           notify_moderators: "已通知的版主"
           notify_user: "已送出一則訊息"
           bookmark: "收藏"
-          like: "讚了它"
           like_capped:
             other: "和其他{{count}}人都說讚"
         by_you:
@@ -2141,6 +2138,8 @@ zh_TW:
           html_part:
             title: "顯示電子郵件HTML格式"
             button: "HTML"
+      bookmarks:
+        name: "名稱"
     category:
       can: "可以&hellip; "
       none: "( 無分類 )"
@@ -2782,6 +2781,7 @@ zh_TW:
         show_details: 詳細訊息
         description: 描述
         save: 儲存
+        continue: 繼續
       web_hooks:
         title: "Webhooks"
         none: "當前沒有 Webhooks。"

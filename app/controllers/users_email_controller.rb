@@ -56,11 +56,26 @@ class UsersEmailController < ApplicationController
 
     redirect_url = path("/u/confirm-new-email/#{params[:token]}")
 
-    if !@error && @user.totp_enabled? && !@user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
-      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-      flash[:invalid_second_factor] = true
-      redirect_to redirect_url
-      return
+    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed! if params[:second_factor_token].present?
+
+    if !@error
+      # this is needed becase the form posts this field as JSON and it can be a
+      # hash when authenticatong security key.
+      if params[:second_factor_method].to_i == UserSecondFactor.methods[:security_key]
+        begin
+          params[:second_factor_token] = JSON.parse(params[:second_factor_token])
+        rescue JSON::ParserError
+          raise Discourse::InvalidParameters
+        end
+      end
+
+      second_factor_authentication_result = @user.authenticate_second_factor(params, secure_session)
+      if !second_factor_authentication_result.ok
+        flash[:invalid_second_factor] = true
+        flash[:invalid_second_factor_message] = second_factor_authentication_result.error
+        redirect_to redirect_url
+        return
+      end
     end
 
     if !@error
@@ -92,14 +107,21 @@ class UsersEmailController < ApplicationController
     end
 
     @show_invalid_second_factor_error = flash[:invalid_second_factor]
+    @invalid_second_factor_message = flash[:invalid_second_factor_message]
 
     if !@error
-      if @user.totp_enabled?
-        @backup_codes_enabled = @user.backup_codes_enabled?
-        if params[:show_backup].to_s == "true" && @backup_codes_enabled
-          @show_backup_codes = true
-        else
+      @backup_codes_enabled = @user.backup_codes_enabled?
+      if params[:show_backup].to_s == "true" && @backup_codes_enabled
+        @show_backup_codes = true
+      else
+        if @user.totp_enabled?
           @show_second_factor = true
+        end
+        if @user.security_keys_enabled?
+          Webauthn.stage_challenge(@user, secure_session)
+          @show_security_key = params[:show_totp].to_s == "true" ? false : true
+          @security_key_challenge = Webauthn.challenge(@user, secure_session)
+          @security_key_allowed_credential_ids = Webauthn.allowed_credentials(@user, secure_session)[:allowed_credential_ids]
         end
       end
 

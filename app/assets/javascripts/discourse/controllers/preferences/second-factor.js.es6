@@ -1,8 +1,8 @@
 import { alias, and } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
-import { default as DiscourseURL, userPath } from "discourse/lib/url";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";

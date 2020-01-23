@@ -263,7 +263,7 @@ createWidget("timeline-scrollarea", {
     const position = this.position();
     this.state.scrolledPost = position.current;
 
-    if (position.current === position.scrollPosition || this.site.mobileView) {
+    if (position.current === position.scrollPosition) {
       this.sendWidgetAction("jumpToIndex", position.current);
     } else {
       this.sendWidgetAction("jumpEnd");
@@ -322,7 +322,12 @@ createWidget("timeline-controls", {
     const { fullScreen, currentUser, topic } = attrs;
 
     if (!fullScreen && currentUser) {
-      controls.push(this.attach("topic-admin-menu-button", { topic }));
+      controls.push(
+        this.attach("topic-admin-menu-button", {
+          topic,
+          addKeyboardTargetClass: true
+        })
+      );
     }
 
     return controls;

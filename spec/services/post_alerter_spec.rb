@@ -257,6 +257,28 @@ describe PostAlerter do
       end
       expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], linking_post])
     end
+
+    it "doesn't notify the linked user if the user is staged and the category is restricted and allows strangers" do
+      staged_user = Fabricate(:staged)
+      group = Fabricate(:group)
+      group_member = Fabricate(:user)
+      group.add(group_member)
+
+      private_category = Fabricate(
+        :private_category, group: group,
+                           email_in: 'test@test.com', email_in_allow_strangers: true
+      )
+
+      staged_user_post = create_post(user: staged_user, category: private_category)
+
+      linking = create_post(
+        user: group_member,
+        category: private_category,
+        raw: "my magic topic\n##{Discourse.base_url}#{staged_user_post.url}")
+
+      staged_user.reload
+      expect(staged_user.notifications.where(notification_type: Notification.types[:linked]).count).to eq(0)
+    end
   end
 
   context '@group mentions' do
@@ -967,6 +989,34 @@ describe PostAlerter do
         expect {
           PostAlerter.post_created(whispered_post)
         }.not_to add_notification(user, :posted)
+      end
+
+      it "notifies a staged user about a private post, but only if the user has access" do
+        staged_member = Fabricate(:staged)
+        staged_non_member = Fabricate(:staged)
+        group = Fabricate(:group)
+        group_member = Fabricate(:user)
+
+        group.add(group_member)
+        group.add(staged_member)
+
+        private_category = Fabricate(
+          :private_category, group: group,
+                             email_in: 'test@test.com', email_in_allow_strangers: false
+        )
+
+        level = CategoryUser.notification_levels[:watching]
+        CategoryUser.set_notification_level_for_category(group_member, level, private_category.id)
+        CategoryUser.set_notification_level_for_category(staged_member, level, private_category.id)
+        CategoryUser.set_notification_level_for_category(staged_non_member, level, private_category.id)
+
+        topic = Fabricate(:topic, category: private_category, user: group_member)
+        post = Fabricate(:post, topic: topic)
+
+        expect {
+          PostAlerter.post_created(post)
+        }.to add_notification(staged_member, :posted)
+          .and not_add_notification(staged_non_member, :posted)
       end
     end
   end

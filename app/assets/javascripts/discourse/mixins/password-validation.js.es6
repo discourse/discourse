@@ -1,5 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 import EmberObject from "@ember/object";
 

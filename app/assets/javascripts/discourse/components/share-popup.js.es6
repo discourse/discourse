@@ -4,10 +4,7 @@ import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { longDateNoYear } from "discourse/lib/formatter";
-import {
-  default as discourseComputed,
-  on
-} from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Sharing from "discourse/lib/sharing";
 import { nativeShare } from "discourse/lib/pwa-utils";
 

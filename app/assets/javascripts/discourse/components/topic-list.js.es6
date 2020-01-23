@@ -1,10 +1,7 @@
 import { alias, reads } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import LoadMore from "discourse/mixins/load-more";
 import { on } from "@ember/object/evented";
 

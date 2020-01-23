@@ -13,8 +13,7 @@ import { censor } from "pretty-text/censored-words";
 import { emojiUnescape } from "discourse/lib/text";
 import PreloadStore from "preload-store";
 import { userPath } from "discourse/lib/url";
-import {
-  default as discourseComputed,
+import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";
@@ -444,21 +443,6 @@ const Topic = RestModel.extend({
     });
   },
 
-  toggleFeaturedOnProfile(user) {
-    const removing = user.get("featured_topic.id") === this.id;
-    const path = removing ? "clear-featured-topic" : "feature-topic";
-    return ajax(`/u/${user.username}/${path}`, {
-      type: "PUT",
-      data: { topic_id: this.id }
-    })
-      .then(() => {
-        const featuredTopic = removing ? null : this;
-        user.set("featured_topic", featuredTopic);
-        return;
-      })
-      .catch(popupAjaxError);
-  },
-
   createGroupInvite(group) {
     return ajax(`/t/${this.id}/invite-group`, {
       type: "POST",
@@ -482,16 +466,19 @@ const Topic = RestModel.extend({
 
   // Delete this topic
   destroy(deleted_by) {
-    this.setProperties({
-      deleted_at: new Date(),
-      deleted_by: deleted_by,
-      "details.can_delete": false,
-      "details.can_recover": true
-    });
     return ajax(`/t/${this.id}`, {
       data: { context: window.location.pathname },
       type: "DELETE"
-    });
+    })
+      .then(() => {
+        this.setProperties({
+          deleted_at: new Date(),
+          deleted_by: deleted_by,
+          "details.can_delete": false,
+          "details.can_recover": true
+        });
+      })
+      .catch(popupAjaxError);
   },
 
   // Recover this topic if deleted

@@ -1488,7 +1488,6 @@ da:
       more_new: "Nyt for dig"
       subject_template: "[%{email_prefix}] Sammendrag"
       click_here: "klik her"
-      from: "%{site_name} resumé"
       preheader: "Et kort resume siden de sidste besøg %{last_seen_at}"
     forgot_password:
       title: "Glemt adgangskode"
@@ -1566,6 +1565,7 @@ da:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nej"
+    rate_limit_error: "Indlæg kan downloades en gang om dagen, prøv igen i morgen."
   static_topic_first_reply: |
     Rediger det første indlæg i dette emne for at ændre indholdet af siden %{page_name}
   guidelines_topic:
@@ -1674,10 +1674,8 @@ da:
         Dette badge bliver tildelt, når du har modtaget mindst 5 likes på 300 forskellige indlæg. Vild! Fællesskabet beundrer din hyppige, gode bidrag til samtalerne.
     out_of_love:
       name: Ren kærlighed
-      description: Tildelt 50 likes på en dag
     higher_love:
       name: Mere kærlighed
-      description: Tildelt 50 likes på en dag 5 gange
     crazy_in_love:
       name: Vildt forelsket
     thank_you:

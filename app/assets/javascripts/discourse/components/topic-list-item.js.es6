@@ -1,8 +1,8 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
+import { schedule } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
-import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { on } from "@ember/object/evented";
@@ -32,11 +32,24 @@ export function navigateToTopic(topic, href) {
   return false;
 }
 
-export const ListItemDefaults = {
+export default Component.extend({
   tagName: "tr",
   classNameBindings: [":topic-list-item", "unboundClassNames", "topic.visited"],
   attributeBindings: ["data-topic-id"],
   "data-topic-id": alias("topic.id"),
+
+  didReceiveAttrs() {
+    this._super(...arguments);
+    this.renderTopicListItem();
+  },
+
+  @observes("topic.pinned")
+  renderTopicListItem() {
+    const template = findRawTemplate("list/topic-list-item");
+    if (template) {
+      this.set("topicListItemContents", template(this).htmlSafe());
+    }
+  },
 
   didInsertElement() {
     this._super(...arguments);
@@ -194,15 +207,29 @@ export const ListItemDefaults = {
     return this.unhandledRowClick(e, topic);
   },
 
+  actions: {
+    toggleBookmark() {
+      this.topic.toggleBookmark().finally(() => this.renderTopicListItem());
+    }
+  },
+
+  unhandledRowClick() {},
+
   navigateToTopic,
 
   highlight(opts = { isLastViewedTopic: false }) {
-    const $topic = $(this.element);
-    $topic
-      .addClass("highlighted")
-      .attr("data-islastviewedtopic", opts.isLastViewedTopic);
+    schedule("afterRender", () => {
+      if (!this.element || this.isDestroying || this.isDestroyed) {
+        return;
+      }
 
-    $topic.on("animationend", () => $topic.removeClass("highlighted"));
+      const $topic = $(this.element);
+      $topic
+        .addClass("highlighted")
+        .attr("data-islastviewedtopic", opts.isLastViewedTopic);
+
+      $topic.on("animationend", () => $topic.removeClass("highlighted"));
+    });
   },
 
   _highlightIfNeeded: on("didInsertElement", function() {
@@ -216,27 +243,4 @@ export const ListItemDefaults = {
       this.highlight();
     }
   })
-};
-
-export default Component.extend(
-  ListItemDefaults,
-  bufferedRender({
-    rerenderTriggers: ["bulkSelectEnabled", "topic.pinned"],
-
-    actions: {
-      toggleBookmark() {
-        this.topic.toggleBookmark().finally(() => this.rerenderBuffer());
-      }
-    },
-
-    buildBuffer(buffer) {
-      const template = findRawTemplate("list/topic-list-item");
-      if (template) {
-        buffer.push(template(this));
-      }
-    },
-
-    // Can be overwritten by plugins to handle clicks on other parts of the row
-    unhandledRowClick() {}
-  })
-);
+});

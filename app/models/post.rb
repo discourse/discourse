@@ -505,8 +505,9 @@ class Post < ActiveRecord::Base
   end
 
   def with_secure_media?
-    return false unless SiteSetting.secure_media?
-    topic&.private_message? || SiteSetting.login_required?
+    return false if !SiteSetting.secure_media?
+    SiteSetting.login_required? || \
+      (topic.present? && (topic.private_message? || topic.category&.read_restricted))
   end
 
   def hide!(post_action_type_id, reason = nil)
@@ -816,10 +817,10 @@ class Post < ActiveRecord::Base
       WITH RECURSIVE breadcrumb(id, level) AS (
         SELECT :post_id, 0
         UNION
-        SELECT reply_id, level + 1
+        SELECT reply_post_id, level + 1
         FROM post_replies AS r
           JOIN breadcrumb AS b ON (r.post_id = b.id)
-        WHERE r.post_id <> r.reply_id
+        WHERE r.post_id <> r.reply_post_id
               AND b.level < :max_reply_level
       ), breadcrumb_with_count AS (
           SELECT
@@ -827,8 +828,8 @@ class Post < ActiveRecord::Base
             level,
             COUNT(*) AS count
           FROM post_replies AS r
-            JOIN breadcrumb AS b ON (r.reply_id = b.id)
-          WHERE r.reply_id <> r.post_id
+            JOIN breadcrumb AS b ON (r.reply_post_id = b.id)
+          WHERE r.reply_post_id <> r.post_id
           GROUP BY id, level
       )
       SELECT id, level
@@ -899,20 +900,21 @@ class Post < ActiveRecord::Base
     end
 
     upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
-
-    disallowed_uploads = []
-    if SiteSetting.secure_media? && !self.with_secure_media?
-      disallowed_uploads = Upload.where(id: upload_ids, secure: true).pluck(:original_filename)
+    post_uploads = upload_ids.map do |upload_id|
+      { post_id: self.id, upload_id: upload_id }
     end
-    return disallowed_uploads if disallowed_uploads.count > 0
-
-    values = upload_ids.map! { |upload_id| "(#{self.id},#{upload_id})" }.join(",")
 
     PostUpload.transaction do
       PostUpload.where(post_id: self.id).delete_all
 
-      if values.size > 0
-        DB.exec("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
+      if post_uploads.size > 0
+        PostUpload.insert_all(post_uploads)
+      end
+
+      if SiteSetting.secure_media?
+        Upload.where(id: upload_ids, access_control_post_id: nil).update_all(
+          access_control_post_id: self.id
+        )
       end
     end
   end
@@ -1042,6 +1044,10 @@ class Post < ActiveRecord::Base
     { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
   end
 
+  def owned_uploads_via_access_control
+    Upload.where(access_control_post_id: self.id)
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
@@ -1061,14 +1067,13 @@ class Post < ActiveRecord::Base
 
   def create_reply_relationship_with(post)
     return if post.nil? || self.deleted_at.present?
-    post_reply = post.post_replies.new(reply_id: id)
+    post_reply = post.post_replies.new(reply_post_id: id)
     if post_reply.save
       if Topic.visible_post_types.include?(self.post_type)
         Post.where(id: post.id).update_all ['reply_count = reply_count + 1']
       end
     end
   end
-
 end
 
 # == Schema Information

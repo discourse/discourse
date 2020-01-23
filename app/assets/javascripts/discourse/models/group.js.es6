@@ -1,10 +1,7 @@
 import EmberObject from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import Category from "discourse/models/category";
 import GroupHistory from "discourse/models/group-history";

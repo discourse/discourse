@@ -460,4 +460,12 @@ RSpec.describe Reviewable, type: :model do
       expect(results.first).to eq first_reviewable
     end
   end
+
+  describe '.by_status' do
+    it 'includes reviewables with deleted targets when passing the reviewed status' do
+      reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:deleted])
+
+      expect(Reviewable.by_status(Reviewable.all, :reviewed)).to contain_exactly(reviewable)
+    end
+  end
 end

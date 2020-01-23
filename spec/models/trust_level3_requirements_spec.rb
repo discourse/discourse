@@ -31,6 +31,17 @@ describe TrustLevel3Requirements do
         expect(tl3_requirements.penalty_counts.silenced).to eq(1)
         expect(tl3_requirements.penalty_counts.total).to eq(1)
         UserSilencer.new(user, moderator).unsilence
+        expect(tl3_requirements.penalty_counts.silenced).to eq(0)
+        expect(tl3_requirements.penalty_counts.total).to eq(0)
+      end
+
+      it "ignores system user unsilences" do
+        expect(tl3_requirements.penalty_counts.silenced).to eq(0)
+        expect(tl3_requirements.penalty_counts.total).to eq(0)
+        UserSilencer.new(user, moderator).silence
+        expect(tl3_requirements.penalty_counts.silenced).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(1)
+        UserSilencer.new(user, Discourse.system_user).unsilence
         expect(tl3_requirements.penalty_counts.silenced).to eq(1)
         expect(tl3_requirements.penalty_counts.total).to eq(1)
       end
@@ -43,6 +54,7 @@ describe TrustLevel3Requirements do
 
         UserHistory.create!(
           target_user_id: user.id,
+          acting_user_id: moderator.id,
           action: UserHistory.actions[:suspend_user]
         )
 
@@ -51,6 +63,32 @@ describe TrustLevel3Requirements do
 
         UserHistory.create!(
           target_user_id: user.id,
+          acting_user_id: moderator.id,
+          action: UserHistory.actions[:unsuspend_user]
+        )
+
+        expect(tl3_requirements.penalty_counts.suspended).to eq(0)
+        expect(tl3_requirements.penalty_counts.total).to eq(0)
+      end
+
+      it "ignores system user un-suspend" do
+        user.save!
+
+        expect(tl3_requirements.penalty_counts.suspended).to eq(0)
+        expect(tl3_requirements.penalty_counts.total).to eq(0)
+
+        UserHistory.create!(
+          target_user_id: user.id,
+          acting_user_id: Discourse.system_user.id,
+          action: UserHistory.actions[:suspend_user]
+        )
+
+        expect(tl3_requirements.penalty_counts.suspended).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(1)
+
+        UserHistory.create!(
+          target_user_id: user.id,
+          acting_user_id: Discourse.system_user.id,
           action: UserHistory.actions[:unsuspend_user]
         )
 

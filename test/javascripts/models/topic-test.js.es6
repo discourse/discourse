@@ -108,15 +108,6 @@ QUnit.test("updateFromJson", assert => {
   assert.equal(topic.get("category"), category);
 });
 
-QUnit.test("destroy", assert => {
-  const user = User.create({ username: "eviltrout" });
-  const topic = Topic.create({ id: 1234 });
-
-  topic.destroy(user);
-  assert.present(topic.get("deleted_at"), "deleted at is set");
-  assert.equal(topic.get("deleted_by"), user, "deleted by is set");
-});
-
 QUnit.test("recover", assert => {
   const user = User.create({ username: "eviltrout" });
   const topic = Topic.create({

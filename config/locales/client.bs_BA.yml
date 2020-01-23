@@ -174,7 +174,6 @@ bs_BA:
       banner:
         enabled: "postavi kao zastavicu %{when}. Pojavljivat će se na vrhu svake stranice sve dok je korisnik ne zatvori."
         disabled: "odkloni zastavicu %{when}.Neće se više prikazivati na vrhu svake stranice."
-    topic_admin_menu: "admin opcije teme"
     wizard_required: "Dobrodošli na vaš novi Discourse! Odpočnimo sa <a href='%{url}' data-auto-route='true'>čarobnjakom za postavke</a> ✨"
     emails_are_disabled: "Sve odlazeće email poruke su globalno onemogućene od strane administratora. Ni jedna notifikacija bilo koje vrste neće biti poslana."
     bootstrap_mode_enabled: "Kako bi olakšali lansiranje vaše nove web stranice, trenutačno ste u \"bootstrap\" načinu rada. Svim novim korisnicima će se dodjeljivati nivo povjerenja 1 i imati uključen dnevni izvještaj dešavanja na forumu preko email-a. Ovo će se automatski isključiti nakon što %{min_users} korisnika prijavi račun na forumu."
@@ -288,6 +287,7 @@ bs_BA:
       not_bookmarked: "sačuvaj ovaj post"
       remove: "Ukloni zabilješku"
       confirm_clear: "Dali ste sigurni dali želite izbrisati sve sačuvane stvari iz ove teme?"
+      save: "Sačuvaj"
     drafts:
       resume: "Nastavi"
       remove: "Ukloni"
@@ -334,14 +334,8 @@ bs_BA:
       edit: "Uredite ovu zastavicu >>"
     choose_topic:
       none_found: "Nema tema."
-      title:
-        search: "Traži temu prema naslovu, url-u ili id-u:"
-        placeholder: "ovdje unesite naslov teme"
     choose_message:
       none_found: "nisam našao nijednu poruku"
-      title:
-        search: "Traži poruku po naslovu:"
-        placeholder: "pišite naslov poruke ovdije"
     review:
       order_by: "Pordeak po"
       in_reply_to: "odgovori na"
@@ -759,6 +753,10 @@ bs_BA:
         normal_option_title: "Bićete obaviješteni ako vam ovaj korisnik odgovori , citira vas ili vas spomene."
       activity_stream: "Aktivnost"
       preferences: "Postavke"
+      feature_topic_on_profile:
+        save: "Sačuvaj"
+        clear:
+          title: "Clear"
       profile_hidden: "Javni profil ovog korisnika je skriven"
       expand_profile: "Proširi"
       collapse_profile: "Spusti"
@@ -1093,7 +1091,6 @@ bs_BA:
         search: "kucaj da potražiš pozivnice..."
         title: "Pozivnice"
         user: "Pozvan korisnik"
-        sent: "Poslano"
         none: "Nema pozivnica za prikazati"
         truncated:
           one: "Prikaz prve pozivnice."
@@ -2006,6 +2003,7 @@ bs_BA:
           title: "Mutirano"
           description: "Nećete biti nikad obavješteni o bilo čemu sa ove teme, i neće biti prikazana u Novije"
       actions:
+        title: "Akcije"
         recover: "Un-Delete Topic"
         delete: "Delete Topic"
         open: "Open Topic"
@@ -2329,7 +2327,6 @@ bs_BA:
           notify_moderators: "moderatori obavješteni"
           notify_user: "poruka poslata"
           bookmark: "ovo zabilježio"
-          like: "sviđa se"
           like_capped:
             one: "i {{count}} drugim se svidelo ovo"
             few: "i {{count}} drugima se ovo svidelo"
@@ -2385,6 +2382,8 @@ bs_BA:
           html_part:
             title: "Prikažite html dio e-maila"
             button: "HTML"
+      bookmarks:
+        name: "Ime"
     category:
       can: "can&hellip; "
       none: "(no category)"
@@ -3060,6 +3059,7 @@ bs_BA:
         show_details: Detalji
         description: Opis
         save: Sačuvaj
+        continue: Nastavi
       web_hooks:
         title: "Webhooks"
         none: "Trenutno nema web-hookova."

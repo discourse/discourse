@@ -483,7 +483,7 @@ class ApplicationController < ActionController::Base
 
   def post_ids_including_replies
     post_ids  = params[:post_ids].map(&:to_i)
-    post_ids |= PostReply.where(post_id: params[:reply_post_ids]).pluck(:reply_id) if params[:reply_post_ids]
+    post_ids |= PostReply.where(post_id: params[:reply_post_ids]).pluck(:reply_post_id) if params[:reply_post_ids]
     post_ids
   end
 
@@ -745,21 +745,20 @@ class ApplicationController < ActionController::Base
       return
     end
 
-    check_totp = current_user &&
-      !request.format.json? &&
-      !is_api? &&
-      !current_user.anonymous? &&
-      ((SiteSetting.enforce_second_factor == 'staff' && current_user.staff?) ||
-        SiteSetting.enforce_second_factor == 'all') &&
-      !current_user.totp_enabled?
+    return if !current_user
+    return if !should_enforce_2fa?
 
-    if check_totp
-      redirect_path = "#{GlobalSetting.relative_url_root}/u/#{current_user.username}/preferences/second-factor"
-      if !request.fullpath.start_with?(redirect_path)
-        redirect_to path(redirect_path)
-        nil
-      end
+    redirect_path = "#{GlobalSetting.relative_url_root}/u/#{current_user.username}/preferences/second-factor"
+    if !request.fullpath.start_with?(redirect_path)
+      redirect_to path(redirect_path)
+      nil
     end
+  end
+
+  def should_enforce_2fa?
+    disqualified_from_2fa_enforcement = request.format.json? || is_api? || current_user.anonymous?
+    enforcing_2fa = ((SiteSetting.enforce_second_factor == 'staff' && current_user.staff?) || SiteSetting.enforce_second_factor == 'all')
+    !disqualified_from_2fa_enforcement && enforcing_2fa && !current_user.has_any_second_factor_methods_enabled?
   end
 
   def block_if_readonly_mode

@@ -4,11 +4,14 @@ require 'rails_helper'
 
 RSpec.describe ReviewableClaimedTopic, type: :model do
 
-  it "ensures uniqueness" do
-    claimed = Fabricate(:reviewable_claimed_topic)
-    expect(-> {
-      ReviewableClaimedTopic.create!(topic_id: claimed.topic_id, user_id: Fabricate(:user).id)
-    }).to raise_error(ActiveRecord::RecordNotUnique)
+  it "respects the uniqueness constraint" do
+    topic = Fabricate(:topic)
+
+    ct = ReviewableClaimedTopic.new(topic_id: topic.id, user_id: Fabricate(:user).id)
+    expect(ct.save).to eq(true)
+
+    ct = ReviewableClaimedTopic.new(topic_id: topic.id, user_id: Fabricate(:user).id)
+    expect(ct.save).to eq(false)
   end
 
 end

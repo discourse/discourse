@@ -1,6 +1,5 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Component.extend({
   elementId: "related-messages",
@@ -31,14 +30,7 @@ export default Component.extend({
   },
 
   @discourseComputed("topic")
-  relatedTitle(topic) {
-    const href = this.currentUser && this.currentUser.pmPath(topic);
-    return href
-      ? `<a href="${href}" aria-label="${I18n.t(
-          "user.messages.inbox"
-        )}">${iconHTML("envelope", {
-          class: "private-message-glyph"
-        })}</a><span>${I18n.t("related_messages.title")}</span>`
-      : I18n.t("related_messages.title");
+  relatedTitleLink(topic) {
+    return this.currentUser && this.currentUser.pmPath(topic);
   }
 });

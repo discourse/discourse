@@ -2,7 +2,7 @@ import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { or, gt } from "@ember/object/computed";
 import RestModel from "discourse/models/rest";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";

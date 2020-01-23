@@ -70,7 +70,7 @@ for symlink in $(find $PLUGINS_DIR -type l); do
     # This deliberately does not use the `-f` option to canonicalize the value
     # because 1) the BSD `readlink` does not support the option, and 2) a
     # relative link would not work inside the container anyway.
-    symlink_value=$(readlink $symlink)
+    symlink_value=$(readlink -f $symlink)
     mount_plugin_symlinks+=" -v ${symlink_value}:${symlink_value}:delegated"
 done
 

@@ -30,7 +30,7 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     end
   end
 
-  Jobs.enqueue(:update_s3_inventory) if [:s3_inventory, :s3_upload_bucket].include?(name)
+  Jobs.enqueue(:update_s3_inventory) if [:enable_s3_inventory, :s3_upload_bucket].include?(name)
 
   Jobs.enqueue(:update_private_uploads_acl) if name == :prevent_anons_from_downloading_files
 

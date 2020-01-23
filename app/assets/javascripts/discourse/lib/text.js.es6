@@ -1,4 +1,4 @@
-import { default as PrettyText, buildOptions } from "pretty-text/pretty-text";
+import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { performEmojiUnescape, buildEmojiUrl } from "pretty-text/emoji";
 import WhiteLister from "pretty-text/white-lister";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";

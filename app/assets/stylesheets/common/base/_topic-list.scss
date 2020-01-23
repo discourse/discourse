@@ -20,7 +20,6 @@
     border: 1px solid $primary-medium;
     font-size: $font-0;
     transition: none;
-    height: 10px; // IE11 needs any height here for vertical centering, overriden elsewhere by min-height
   }
   .select-kit {
     align-self: center;
@@ -152,9 +151,6 @@
     align-items: center;
     .discourse-tags {
       flex-wrap: wrap;
-      // IE11 is being very stubborn but this is only protection for topics with
-      // a very excessive number of extra long tags - edge case.
-      -ms-flex: 1 0 0px;
     }
     a.badge-wrapper.box,
     a.discourse-tag.box {

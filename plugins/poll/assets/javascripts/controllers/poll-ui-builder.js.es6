@@ -1,8 +1,5 @@
 import Controller from "@ember/controller";
-import {
-  default as computed,
-  observes
-} from "discourse-common/utils/decorators";
+import computed, { observes } from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 
 export const BAR_CHART_TYPE = "bar";
@@ -62,7 +59,7 @@ export default Controller.extend({
     closedPollResult,
     staffPollResult
   ) {
-    return [
+    let options = [
       {
         name: I18n.t("poll.ui_builder.poll_result.always"),
         value: alwaysPollResult
@@ -74,12 +71,15 @@ export default Controller.extend({
       {
         name: I18n.t("poll.ui_builder.poll_result.closed"),
         value: closedPollResult
-      },
-      {
-        name: I18n.t("poll.ui_builder.poll_result.staff"),
-        value: staffPollResult
       }
     ];
+    if (this.currentUser.staff) {
+      options.push({
+        name: I18n.t("poll.ui_builder.poll_result.staff"),
+        value: staffPollResult
+      });
+    }
+    return options;
   },
 
   @computed("pollType", "regularPollType")

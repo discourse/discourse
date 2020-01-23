@@ -39,20 +39,21 @@ createWidget("topic-admin-menu-button", {
       fixed: attrs.fixed,
       topic: attrs.topic,
       openUpwards: attrs.openUpwards,
-      rightSide: attrs.rightSide,
+      rightSide: !this.site.mobileView && attrs.rightSide,
       actionButtons: []
     });
 
-    // We don't show the button when expanded on the right side
+    // We don't show the button when expanded on the right side on desktop
     if (
       menu.attrs.actionButtons.length &&
-      !(attrs.rightSide && state.expanded)
+      (!(attrs.rightSide && state.expanded) || this.site.mobileView)
     ) {
       result.push(
         this.attach("button", {
           className:
             "btn-default toggle-admin-menu" +
-            (attrs.fixed ? " show-topic-admin" : ""),
+            (attrs.fixed ? " show-topic-admin" : "") +
+            (attrs.addKeyboardTargetClass ? " keyboard-target-admin-menu" : ""),
           title: "topic_admin_menu",
           icon: "wrench",
           action: "showAdminMenu",
@@ -71,13 +72,24 @@ createWidget("topic-admin-menu-button", {
   hideAdminMenu() {
     this.state.expanded = false;
     this.state.position = null;
+
+    if (this.site.mobileView && !this.attrs.rightSide) {
+      $(".header-cloak").css("display", "");
+    }
   },
 
   showAdminMenu(e) {
     this.state.expanded = true;
+    let $button;
 
-    const $button = $(e.target).closest("button");
+    if (e === undefined) {
+      $button = $(".keyboard-target-admin-menu");
+    } else {
+      $button = $(e.target).closest("button");
+    }
+
     const position = $button.position();
+
     const rtl = $("html").hasClass("rtl");
     position.left = position.left;
     position.outerHeight = $button.outerHeight();
@@ -89,7 +101,16 @@ createWidget("topic-admin-menu-button", {
     if (this.attrs.fixed) {
       position.left += $button.width() - 203;
     }
+
+    if (this.site.mobileView && !this.attrs.rightSide) {
+      $(".header-cloak").css("display", "block");
+    }
+
     this.state.position = position;
+  },
+
+  topicToggleActions() {
+    this.state.expanded ? this.hideAdminMenu() : this.showAdminMenu();
   }
 });
 
@@ -108,27 +129,6 @@ export default createWidget("topic-admin-menu", {
     const isPrivateMessage = topic.get("isPrivateMessage");
     const featured = topic.get("pinned_at") || topic.get("isBanner");
     const visible = topic.get("visible");
-
-    if (
-      this.siteSettings.allow_featured_topic_on_user_profiles &&
-      this.currentUser &&
-      topic.user_id === this.currentUser.get("id") &&
-      !topic.isPrivateMessage &&
-      !topic.category.read_restricted
-    ) {
-      let topicFeaturedOnProfile =
-        topic.id === this.currentUser.get("featured_topic.id");
-
-      this.addActionButton({
-        className: "topic-action-feature-on-profile",
-        buttonClass: topicFeaturedOnProfile ? "btn-primary" : "btn-default",
-        action: "toggleFeaturedOnProfile",
-        icon: "id-card",
-        fullLabel: topicFeaturedOnProfile
-          ? "topic.remove_from_profile.title"
-          : "topic.feature_on_profile.title"
-      });
-    }
 
     // Admin actions
     if (this.currentUser && this.currentUser.get("canManageTopic")) {
@@ -259,7 +259,7 @@ export default createWidget("topic-admin-menu", {
 
   buildAttributes(attrs) {
     let { top, left, outerHeight } = attrs.position;
-    const position = attrs.fixed ? "fixed" : "absolute";
+    const position = attrs.fixed || this.site.mobileView ? "fixed" : "absolute";
 
     if (attrs.rightSide) {
       return;
@@ -272,6 +272,11 @@ export default createWidget("topic-admin-menu", {
 
       if (documentHeight > mainHeight) {
         bottom = bottom - (documentHeight - mainHeight) - outerHeight;
+      }
+
+      if (this.site.mobileView) {
+        bottom = 0;
+        left = 0;
       }
 
       return {
@@ -296,7 +301,17 @@ export default createWidget("topic-admin-menu", {
       this.state
     );
     return [
-      h("h3", I18n.t("topic.actions.title")),
+      h("div.header", [
+        h("h3", I18n.t("topic.actions.title")),
+        h(
+          "div",
+          this.attach("button", {
+            action: "clickOutside",
+            icon: "times",
+            className: "close-button"
+          })
+        )
+      ]),
       h(
         "ul",
         attrs.actionButtons

@@ -73,6 +73,16 @@
       padding: 1px 0;
       @include ellipsis;
       color: inherit;
+      .body {
+        max-width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+      }
+      .name {
+        display: inline-block;
+        @include ellipsis;
+      }
     }
 
     .btn-clear {

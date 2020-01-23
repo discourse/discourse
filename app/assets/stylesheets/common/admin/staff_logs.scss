@@ -432,36 +432,4 @@ table.search-logs-list {
       }
     }
   }
-  //IE11 Support
-  @media screen and (max-width: 767px) {
-    tr {
-      display: -ms-grid;
-      -ms-grid-columns: 1fr 1fr 1fr;
-      -ms-grid-rows: auto 2em;
-      td {
-        display: -ms-grid;
-        -ms-grid-rows: auto auto;
-        .label {
-          -ms-grid-row: 2;
-        }
-        &.term {
-          -ms-grid-row: 1;
-          -ms-grid-column: 1;
-          -ms-grid-column-span: 3;
-        }
-        &.col:nth-of-type(2) {
-          -ms-grid-row: 2;
-          -ms-grid-column: 1;
-        }
-        &.col:nth-of-type(3) {
-          -ms-grid-row: 2;
-          -ms-grid-column: 2;
-        }
-        &.col:nth-of-type(4) {
-          -ms-grid-row: 2;
-          -ms-grid-column: 3;
-        }
-      }
-    }
-  }
 }

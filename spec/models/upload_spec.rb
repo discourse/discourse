@@ -358,12 +358,22 @@ describe Upload do
         )
       end
 
-      it 'marks an image upload as not secure when not associated with a post' do
+      it 'does not mark an image upload as not secure when there is no access control post id, to avoid unintentional exposure' do
         upload.update!(secure: true)
-        expect { upload.update_secure_status }
-          .to change { upload.secure }
+        upload.update_secure_status
+        expect(upload.secure).to eq(true)
+      end
 
+      it 'marks the upload as not secure if its access control post is a public post' do
+        upload.update!(secure: true, access_control_post: Fabricate(:post))
+        upload.update_secure_status
         expect(upload.secure).to eq(false)
+      end
+
+      it 'leaves the upload as secure if its access control post is a PM post' do
+        upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
+        upload.update_secure_status
+        expect(upload.secure).to eq(true)
       end
 
       it 'marks an image upload as secure if login_required is enabled' do

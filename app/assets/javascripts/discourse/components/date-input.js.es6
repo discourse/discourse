@@ -2,10 +2,7 @@ import { next } from "@ember/runloop";
 import Component from "@ember/component";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
-import {
-  default as discourseComputed,
-  on
-} from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["d-date-input"],

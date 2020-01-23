@@ -33,6 +33,14 @@ describe ReviewableClaimedTopicsController do
         expect(response.code).to eq("200")
         expect(ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: topic.id).exists?).to eq(true)
       end
+
+      it "won't an error if you claim twice" do
+        SiteSetting.reviewable_claiming = 'optional'
+        post "/reviewable_claimed_topics.json", params: params
+        expect(ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: topic.id).exists?).to eq(true)
+        post "/reviewable_claimed_topics.json", params: params
+        expect(response.code).to eq("200")
+      end
     end
   end
 
