@@ -109,7 +109,9 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
         this.setProperties({ order, ascending: false });
       }
 
-      this.transitionToRoute({ queryParams: { order, ascending: this.ascending }});
+      this.transitionToRoute({
+        queryParams: { order, ascending: this.ascending }
+      });
     },
 
     toggleInfo() {
