@@ -15,7 +15,10 @@ class TopicListItemSerializer < ListableTopicSerializer
              :liked_post_numbers,
              :featured_link,
              :featured_link_root_domain,
-             :allowed_user_count
+             :allowed_user_count,
+             :bookmark_reminder_at,
+             :bookmark_id,
+             :bookmark_name
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
@@ -47,7 +50,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def include_bookmarked_post_numbers?
-    include_post_action? :bookmark
+    SiteSetting.enable_bookmarks_with_reminders? || include_post_action?(:bookmark)
   end
 
   def include_liked_post_numbers?
@@ -65,7 +68,27 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def bookmarked_post_numbers
-    object.user_data.post_action_data[PostActionType.types[:bookmark]]
+    if SiteSetting.enable_bookmarks_with_reminders?
+      object.respond_to?(:bookmark_post_number) ? [object.bookmark_post_number] : []
+    else
+      object.user_data.post_action_data[PostActionType.types[:bookmark]]
+    end
+  end
+
+  def include_bookmark_reminder_at?
+    object.respond_to?(:bookmark_reminder_at)
+  end
+
+  def include_bookmark_name?
+    object.respond_to?(:bookmark_name)
+  end
+
+  def include_bookmark_id?
+    object.respond_to?(:bookmark_id)
+  end
+
+  def bookmarks
+    @bookmarks ||= object.bookmarks
   end
 
   def include_participants?

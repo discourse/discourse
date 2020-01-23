@@ -6,11 +6,10 @@ describe TopicListItemSerializer do
   let(:topic) do
     date = Time.zone.now
 
-    Fabricate.build(:topic,
-      title: 'test',
+    Fabricate(:topic,
+      title: 'This is a test topic title',
       created_at: date - 2.minutes,
-      bumped_at: date,
-      posters: [],
+      bumped_at: date
     )
   end
 
@@ -18,7 +17,7 @@ describe TopicListItemSerializer do
     SiteSetting.topic_featured_link_enabled = true
     serialized = TopicListItemSerializer.new(topic, scope: Guardian.new, root: false).as_json
 
-    expect(serialized[:title]).to eq("test")
+    expect(serialized[:title]).to eq("This is a test topic title")
     expect(serialized[:bumped]).to eq(true)
     expect(serialized[:featured_link]).to eq(nil)
     expect(serialized[:featured_link_root_domain]).to eq(nil)
@@ -83,6 +82,26 @@ describe TopicListItemSerializer do
       ).as_json
 
       expect(json[:tags]).to eq([])
+    end
+  end
+
+  context "when enable_bookmarks_with_reminders is enabled" do
+    before do
+      SiteSetting.enable_bookmarks_with_reminders = true
+    end
+
+    it "includes the bookmark id, name, post_number, and reminder_at" do
+      user = Fabricate(:user)
+      Fabricate(:post, topic: topic, user: user)
+      TopicUser.create(topic: topic, user: user)
+      bookmark = Fabricate(:bookmark_next_business_day_reminder, topic: topic, post: topic.posts.first, name: 'test bookmark', user: user)
+      serializer_topic = TopicQuery.new(user).list_bookmarks.topics.first
+      serialized = TopicListItemSerializer.new(serializer_topic, scope: Guardian.new, root: false).as_json
+
+      expect(serialized[:bookmark_name]).to eq('test bookmark')
+      expect(serialized[:bookmark_id]).to eq(bookmark.id)
+      expect(serialized[:bookmark_reminder_at]).not_to eq(nil)
+      expect(serialized[:bookmarked_post_numbers]).to eq([1])
     end
   end
 end
