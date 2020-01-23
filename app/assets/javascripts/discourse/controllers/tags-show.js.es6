@@ -5,6 +5,7 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import NavItem from "discourse/models/nav-item";
 import FilterModeMixin from "discourse/mixins/filter-mode";
+import { queryParams } from "discourse/controllers/discovery-sortable";
 
 export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
   application: inject(),
@@ -53,15 +54,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     );
   },
 
-  queryParams: [
-    "order",
-    "ascending",
-    "status",
-    "state",
-    "search",
-    "max_posts",
-    "q"
-  ],
+  queryParams: Object.keys(queryParams),
 
   @discourseComputed("category", "tag.id", "filterType", "noSubcategories")
   navItems(category, tagId, filterType, noSubcategories) {
@@ -116,7 +109,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
         this.setProperties({ order, ascending: false });
       }
 
-      this.send("invalidateModel");
+      this.transitionToRoute({ queryParams: { order, ascending: this.ascending }});
     },
 
     toggleInfo() {
