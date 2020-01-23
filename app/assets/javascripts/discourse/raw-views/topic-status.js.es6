@@ -23,16 +23,28 @@ export default EmberObject.extend({
       const postNumbers = topic.get("bookmarked_post_numbers");
       let url = topic.get("url");
       let extraClasses = "";
+      let extraTitleAttributes = {};
       if (postNumbers && postNumbers[0] > 1) {
         url += "/" + postNumbers[0];
       } else {
         extraClasses = "op-bookmark";
       }
 
+      let bookmarkReminderAt = topic.get("bookmark_reminder_at");
+      if (bookmarkReminderAt) {
+        let reminderAtDate = moment(bookmarkReminderAt).tz(
+          this.currentUser ? this.currentUser.timezone : moment.tz.guess()
+        );
+        extraTitleAttributes["bookmarkReminderAt"] = reminderAtDate.format(
+          I18n.t("dates.long_with_year")
+        );
+      }
+
       results.push({
         extraClasses,
-        icon: "bookmark",
-        key: "bookmarked",
+        icon: bookmarkReminderAt ? "discourse-bookmark-clock" : "bookmark",
+        key: bookmarkReminderAt ? "bookmarked_with_reminder" : "bookmarked",
+        extraTitleAttributes,
         href: url
       });
     }
@@ -58,7 +70,10 @@ export default EmberObject.extend({
     }
 
     results.forEach(result => {
-      result.title = I18n.t(`topic_statuses.${result.key}.help`);
+      result.title = I18n.t(
+        `topic_statuses.${result.key}.help`,
+        result.extraTitleAttributes
+      );
       if (
         this.currentUser &&
         (result.key === "pinned" || result.key === "unpinned")

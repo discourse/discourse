@@ -106,8 +106,8 @@ const Topic = RestModel.extend({
     return users;
   },
 
-  @discourseComputed("fancy_title")
-  fancyTitle(title) {
+  @discourseComputed("fancy_title", "bookmark_name")
+  fancyTitle(title, bookmark_name) {
     let fancyTitle = censor(
       emojiUnescape(title) || "",
       Site.currentProp("censored_regexp")
@@ -117,6 +117,7 @@ const Topic = RestModel.extend({
       const titleDir = isRTL(title) ? "rtl" : "ltr";
       return `<span dir="${titleDir}">${fancyTitle}</span>`;
     }
+    fancyTitle = fancyTitle + (bookmark_name ? ' (' + bookmark_name + ')' : '');
     return fancyTitle;
   },
 

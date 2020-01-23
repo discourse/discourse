@@ -4,12 +4,14 @@ import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import LoadMore from "discourse/mixins/load-more";
 import { on } from "@ember/object/evented";
+import { inject as service } from "@ember/service";
 
 export default Component.extend(LoadMore, {
   tagName: "table",
   classNames: ["topic-list"],
   showTopicPostBadges: true,
   listTitle: "topic.title",
+  router: service(),
 
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: alias("topics"),
@@ -29,6 +31,22 @@ export default Component.extend(LoadMore, {
   @discourseComputed
   sortable() {
     return !!this.changeSort;
+  },
+
+  @discourseComputed
+  showBookmarkListItem() {
+    return (
+      this.get("router.currentRoute.name") === "discovery.bookmarks" &&
+      this.siteSettings.enable_bookmarks_with_reminders
+    );
+  },
+
+  @discourseComputed("showBookmarkListItem")
+  listItemComponentName(showBookmarkListItem) {
+    if (showBookmarkListItem) {
+      return "bookmark-topic-list-item";
+    }
+    return "topic-list-item";
   },
 
   skipHeader: reads("site.mobileView"),

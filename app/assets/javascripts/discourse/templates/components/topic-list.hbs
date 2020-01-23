@@ -29,10 +29,11 @@
 
 <tbody>
   {{#each filteredTopics as |topic|}}
-    {{topic-list-item topic=topic
+    {{component listItemComponentName topic=topic
                       bulkSelectEnabled=bulkSelectEnabled
                       showTopicPostBadges=showTopicPostBadges
                       hideCategory=hideCategory
+                      refreshList=refresh
                       showPosters=showPosters
                       showLikes=showLikes
                       showOpLikes=showOpLikes

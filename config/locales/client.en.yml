@@ -2644,6 +2644,10 @@ en:
         name: "Name"
         name_placeholder: "Name the bookmark to help jog your memory"
         set_reminder: "Set a reminder"
+        actions:
+          delete_bookmark:
+            name: "Delete bookmark"
+            description: "Removes the bookmark from your profile and stops all reminders for the bookmark"
 
     category:
       can: "can&hellip; "
@@ -2833,6 +2837,8 @@ en:
         help: "This is an official warning."
       bookmarked:
         help: "You bookmarked this topic"
+      bookmarked_with_reminder:
+        help: "You bookmarked this topic with a reminder at %{bookmarkReminderAt}"
       locked:
         help: "This topic is closed; it no longer accepts new replies"
       archived:
