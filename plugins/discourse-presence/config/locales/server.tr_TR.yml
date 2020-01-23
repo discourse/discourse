@@ -5,4 +5,7 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-tr_TR: {}
+tr_TR:
+  site_settings:
+    presence_enabled: "Geçerli konuyu yanıtlayan veya mevcut gönderiyi düzenleyen kullanıcılar gösterilsin mi?"
+    presence_max_users_shown: "Gösterilen maksimum kullanıcı sayısı."

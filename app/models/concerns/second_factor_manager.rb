@@ -191,7 +191,7 @@ module SecondFactorManager
   def generate_backup_codes
     codes = []
     10.times do
-      codes << SecureRandom.hex(8)
+      codes << SecureRandom.hex(16)
     end
 
     codes_json = codes.map do |code|

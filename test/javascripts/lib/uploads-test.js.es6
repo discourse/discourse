@@ -1,7 +1,7 @@
 import {
   validateUploadedFiles,
   authorizedExtensions,
-  isAnImage,
+  isImage,
   allowsImages,
   allowsAttachments,
   getUploadMarkdown
@@ -122,18 +122,18 @@ QUnit.test("allows valid uploads to go through", assert => {
   assert.not(bootbox.alert.calledOnce);
 });
 
-QUnit.test("isAnImage", assert => {
+QUnit.test("isImage", assert => {
   ["png", "jpg", "jpeg", "gif", "ico"].forEach(extension => {
     var image = "image." + extension;
-    assert.ok(isAnImage(image), image + " is recognized as an image");
+    assert.ok(isImage(image), image + " is recognized as an image");
     assert.ok(
-      isAnImage("http://foo.bar/path/to/" + image),
+      isImage("http://foo.bar/path/to/" + image),
       image + " is recognized as an image"
     );
   });
-  assert.not(isAnImage("file.txt"));
-  assert.not(isAnImage("http://foo.bar/path/to/file.txt"));
-  assert.not(isAnImage(""));
+  assert.not(isImage("file.txt"));
+  assert.not(isImage("http://foo.bar/path/to/file.txt"));
+  assert.not(isImage(""));
 });
 
 QUnit.test("allowsImages", assert => {

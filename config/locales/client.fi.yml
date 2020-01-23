@@ -27,6 +27,7 @@ fi:
         millions: "{{number}}M"
     dates:
       time: "H:mm"
+      time_short_day: "ddd HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D. MMMM[ta] H:mm"
       long_no_year_no_time: "D. MMMM[ta]"
@@ -152,6 +153,7 @@ fi:
       banner:
         enabled: "teki tästä bannerin %{when}. Se näytetään jokaisen sivun ylälaidassa, kunnes käyttäjä kuittaa sen nähdyksi."
         disabled: "poisti tämän bannerin %{when}. Sitä ei enää näytetä jokaisen sivun ylälaidassa."
+    topic_admin_menu: "ketjun työkalut"
     wizard_required: "Tervetuloa uuteen Discourseesi! Aloitetaan <a href='%{url}' data-auto-route='true'>ohjattu asennus</a> ✨"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
     bootstrap_mode_enabled: "Jotta uuden palstan vauhtiin saaminen olisi helpompaa, sivusto on aloitustilassa. Kaikki uudet käyttäjät saavat luottamustason 1 ja heille lähetetään sähköpostitiivistelmät päivittäin. Tila poistetaan automaattisesti, kun %{min_users} käyttäjää on liittynyt."
@@ -261,9 +263,19 @@ fi:
     bookmarks:
       created: "olet lisännyt tämän viestin kirjanmerkkeihisi"
       not_bookmarked: "lisää viesti kirjanmerkkeihin"
+      created_with_reminder: "olet kirjanmerkinnyt tämän viestin ja siitä muistutetaan %{date}"
       remove: "Poista kirjanmerkki"
       confirm_clear: "Haluatko varmasti poistaa kaikki kirjanmerkkisi tästä ketjusta?"
       save: "Tallenna"
+      no_timezone: 'Et ole valinnut aikavyöhykettä, joten et voi asettaa muistutuksia. Aseta se  <a href="%{basePath}/my/preferences/profile">profiilisivullasi</a>.'
+      reminders:
+        at_desktop: "Ensi kerralla kun olen työpöytäympäristössäni"
+        later_today: "Myöhemmin tänään  <br/>{{date}}"
+        next_business_day: "Seuraavana arkipäivänä <br/>{{date}}"
+        tomorrow: "Huomenna <br/>{{date}}"
+        next_week: "Ensi viikolla <br/>{{date}}"
+        next_month: "Ensi kuussa <br/>{{date}}"
+        custom: "Valitse päivämäärä ja kellonaika"
     drafts:
       resume: "Jatka"
       remove: "Poista"
@@ -309,8 +321,14 @@ fi:
       install_banner: "Haluatko <a href>asentaa sivuston %{title} tälle laitteelle?</a>"
     choose_topic:
       none_found: "Yhtään ketjua ei löydetty."
+      title:
+        search: "Etsi ketjua"
+        placeholder: "Syötä ketjun otsikko, url tai id tähän"
     choose_message:
       none_found: "Keskusteluja ei löytynyt."
+      title:
+        search: "Etsi yksityiskeskustelua"
+        placeholder: "Syötä keskustelun otsikko, url tai id tähän"
     review:
       order_by: "Järjestä"
       in_reply_to: "vastauksena"
@@ -558,6 +576,7 @@ fi:
       leave: "Poistu"
       request: "Pyyntö"
       message: "Viesti"
+      confirm_leave: "Haluatko varmasti poistua ryhmästä?"
       allow_membership_requests: "Salli käyttäjän lähettää jäsenhakemuksia ryhmien isännille"
       membership_request_template: "Viestipohja, joka näytetään käyttäjälle, kun hän lähettää jäsenhakemusta ryhmään."
       membership_request:
@@ -737,9 +756,13 @@ fi:
       activity_stream: "Toiminta"
       preferences: "Asetukset"
       feature_topic_on_profile:
+        open_search: "Valitse uusi ketju"
+        title: "Valitse ketju"
+        search_label: "Etsi ketjua nimellä"
         save: "Tallenna"
         clear:
           title: "Tyhjennä"
+          warning: "Haluatko varmasti nollata valikoimasi ketjun?"
       profile_hidden: "Käyttäjän julkinen profiili ei ole nähtävillä."
       expand_profile: "Laajenna"
       collapse_profile: "Supista"
@@ -772,6 +795,7 @@ fi:
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
       enable_defer: "Ota käyttöön lykkäystoiminto, jolla voi merkitä ketjun lukemattomaksi"
       change: "vaihda"
+      featured_topic: "Valikoitu ketju"
       moderator: "{{user}} on valvoja"
       admin: "{{user}} on ylläpitäjä"
       moderator_tooltip: "Tämä käyttäjä on valvoja"
@@ -955,6 +979,9 @@ fi:
       change_card_background:
         title: "Käyttäjäkortin taustakuva"
         instructions: "Taustakuvan leveys on 590 pikseliä."
+      change_featured_topic:
+        title: "Valikoitu ketju"
+        instructions: "Käyttäjäkorttiisi ja profiilisivullesi tulee linkki tähän ketjuun."
       email:
         title: "Sähköposti"
         primary: "Ensisijainen sähköpostiosoite"
@@ -1089,6 +1116,7 @@ fi:
         search: "kirjoita etsiäksesi kutsuja..."
         title: "Kutsut"
         user: "Kutsuttu käyttäjä"
+        sent: "Lähetettiin viimeksi"
         none: "Ei kutsuja, joita näyttää."
         truncated:
           one: "Näytetään ensimmäinen kutsu."
@@ -1731,6 +1759,7 @@ fi:
           title: Etsi vain otsikoista
           likes: joista olen tykännyt
           posted: joihin olen kirjoittanut
+          created: jotka minä aloitin
           watching: joita tarkkailen
           tracking: joita seuraan
           private: yksityiskeskusteluistani
@@ -1747,6 +1776,7 @@ fi:
           label: Ketju/Ketjuun
           open: on avoin
           closed: on suljettu
+          public: ovat julkisia
           archived: on arkistoitu
           noreplies: ei ole vastattu
           single_user: on kirjoittanut vain yksi käyttäjä
@@ -1834,6 +1864,13 @@ fi:
       defer:
         help: "Merkitse lukemattomaksi"
         title: "Lykkää"
+      feature_on_profile:
+        help: "Lisää käyttäjäkorttiisi ja profiilisivullesi linkki tähän ketjuun"
+        title: "Valikoi ketju profiiliisi"
+      remove_from_profile:
+        warning: "Profiilillesi on jo valikoitu ketju. Jos jatkat, tämä ketju korvaa aiemman ketjun."
+        help: "Poista linkki tähän ketjuun käyttäjäprofiilissasi"
+        title: "Poista profiilista"
       list: "Ketjut"
       new: "uusi ketju"
       unread: "lukematta"
@@ -2312,9 +2349,18 @@ fi:
           notify_moderators: "ilmoitti valvojille"
           notify_user: "lähetti viestin"
           bookmark: "lisäsi tämän kirjanmerkkeihin"
+          like:
+            one: "tykkäsi tästä"
+            other: "tykkäsivät tästä"
+          read:
+            one: "luki tämän"
+            other: "lukivat tämän"
           like_capped:
             one: "ja {{count}} muu tykkäsi tästä"
             other: "ja {{count}} muuta tykkäsi tästä"
+          read_capped:
+            one: "ja {{count}} muu lukivat tämän"
+            other: "ja {{count}} muuta lukivat tämän"
         by_you:
           off_topic: "Liputit tämän eksyvän aiheesta"
           spam: "Liputit tämän roskapostiksi"
@@ -2365,7 +2411,10 @@ fi:
             title: "Näytä sähköpostin HTML-osa"
             button: "HTML"
       bookmarks:
+        create: "Luo kirjanmerkki"
         name: "Nimi"
+        name_placeholder: "Anna kirjanmerkille nimi muistisi virkistämiseksi"
+        set_reminder: "Aseta muistutus"
     category:
       can: "voivat&hellip; "
       none: "(ei aluetta)"
@@ -2747,6 +2796,7 @@ fi:
         mark_watching: "%{shortcut} Tarkkaile ketjua"
         print: "%{shortcut} Tulosta ketju"
         defer: "%{shortcut} Lykkää ketjua"
+        topic_admin_actions: "%{shortcut} Avaa ketjun ylläpitotyökalut"
     badges:
       earned_n_times:
         one: "Ansaitsi tämän ansiomerkin yhden kerran"
@@ -3058,14 +3108,14 @@ fi:
         delete: "Poista"
         delete_confirm: "Poista tämä ryhmä?"
         delete_failed: "Ryhmän poistaminen ei onnistu. Jos tämä on automaattinen ryhmä, sitä ei voi poistaa."
-        delete_owner_confirm: "Poista omistajan etuudet käyttäjältä '%{username}'?"
+        delete_owner_confirm: "Peru käyttäjältä '%{username}' isännyys?"
         add: "Lisää"
         custom: "Mukautetut"
         automatic: "Automaattiset"
         default_title: "Oletustitteli"
         default_title_description: "annetaan kaikille ryhmän jäsenille"
-        group_owners: Omistajat
-        add_owners: Lisää omistajia
+        group_owners: Isännät
+        add_owners: Lisää isäntiä
         none_selected: "Aloita valitsemalla ryhmä"
         no_custom_groups: "Luo uusi mukautettu ryhmä"
       api:
@@ -3097,6 +3147,7 @@ fi:
         new_key: Uusi rajapinta-avain
         revoked: Jäädytetty
         delete: Poista pysyvästi
+        not_shown_again: Tätä avainta ei näytetä toista kertaa. Varmistu että otat talteen ennen kuin jatkat.
         continue: Jatka
       web_hooks:
         title: "Webhookit"
@@ -3366,6 +3417,7 @@ fi:
           upload: "Lataa"
           select_component: "Valitse komponentti"
           unsaved_changes_alert: "Et ole tallentanut tekemiäsi muutoksia. Haluatko hylätä ne ja mennä muualle?"
+          unsaved_parent_themes: "Et ole osoittanut komponenttia millekään teemalle. Haluatko siirtyä eteenpäin?"
           discard: "Hylkää"
           stay: "Jää"
           css_html: "Mukautettu CSS/HTML"
@@ -3687,6 +3739,7 @@ fi:
             api_key_create: "loi rajapinta-avaimen"
             api_key_update: "päivitti rajapinta-avainta"
             api_key_destroy: "tuhosi rajapinta-avaimen"
+            override_upload_secure_status: "kävele yli latauksen turvastatuksesta"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."
@@ -4153,6 +4206,14 @@ fi:
           title: "Aloita valitsemalla olemassa oleva ansiomerkki tai luomalla uusi"
           what_are_badges_title: "Mitä ansiomerkit ovat?"
           badge_query_examples_title: "Esimerkkejä ansiomerkin tietokantakyselyistä"
+        mass_award:
+          title: Myönnä useille
+          description: Myönnä sama ansiomerkki useille käyttäjille samalla kertaa.
+          no_badge_selected: Aloita valitsemalla ansiomerkki.
+          perform: "Myönnä ansiomerkki käyttäjille"
+          upload_csv: Lataa CSV sähköpostiosoitteista
+          aborted: "Lataa CSV, jossa on käyttäjien sähköpostiosoitteet"
+          success: CSV tuli perille ja käyttäjät saavat ansiomerkkinsä pian.
       emoji:
         title: "Emoji"
         help: "Lisää uusi emoji joka on kaikkien käytettävissä. (Voit raahata useita tiedostoja kerralla)"

@@ -66,6 +66,11 @@ const Category = RestModel.extend({
   },
 
   @discourseComputed("subcategories")
+  isParent(subcategories) {
+    return subcategories && subcategories.length > 0;
+  },
+
+  @discourseComputed("subcategories")
   isGrandParent(subcategories) {
     return (
       subcategories &&

@@ -29,11 +29,11 @@ es:
     tl2_promotion_message:
       subject_template: "¡Felicitaciones por tu promoción del nivel de confianza!"
       text_body_template: |
-        ¡Ahora que has sido promovido, es tiempo de que aprendas sobre las características avanzadas!
+        Ahora que te han ascendido, ¡es momento de aprender algunas características avanzadas!
 
         Responde a este mensaje con `@%{discobot_username} %{reset_trigger}` para saber más sobre lo que puedes hacer.
 
-        Te invitamos a que sigas participando  – disfrutamos tenerte cerca.
+        Te invitamos a que continúes involucrándote – nos gusta tenerte por aquí.
     timeout:
       message: |-
         Hey, @%{username}, te quería decir que estoy pendiente de ti porque no he tenido noticias tuyas en mucho tiempo.

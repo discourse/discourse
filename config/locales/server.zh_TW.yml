@@ -1761,7 +1761,6 @@ zh_TW:
       category_search_priority:
         very_low_weight_invalid: "您不能將權限設定為大於「category_search_priority_low_weight」"
         low_weight_invalid: "您不能將權限設定為大於、等於1或小於「category_search_priority_very_low_weight」"
-        high_weight_invalid: "您不能將權限設定為大於、等於1或大於「category_search_priority_very_high_weight」"
         very_high_weight_invalid: "您不能將權限設定為小於「category_search_priority_high_weight」"
       unicode_username_whitelist:
         regex_invalid: "正則表達式無效：%{error}"
@@ -1874,7 +1873,6 @@ zh_TW:
     second_factor_backup_title: "二步驟備用碼"
     invalid_second_factor_code: "驗證碼無效，每個驗證碼只能使用一次"
     second_factor_toggle:
-      totp: "請改用身份驗證應用程式"
       backup_code: "請改用備用碼"
   admin:
     email:
@@ -2749,7 +2747,6 @@ zh_TW:
       unsubscribe: "因為你有一段時間沒有來 %{site_link}，因此為你送上論壇近期摘要郵件。如需取消訂閱，請至 %{email_preferences_link} 或點擊 %{unsubscribe_link}。"
       your_email_settings: "你的電子郵件設定"
       click_here: "點擊此處"
-      from: "%{site_name}的摘要"
       preheader: "在你上次於%{last_seen_at}訪問後的新內容摘要"
     forgot_password:
       title: "忘記密碼"
@@ -2784,13 +2781,6 @@ zh_TW:
     admin_login:
       title: "管理員登入"
       subject_template: "[%{email_prefix}] 登入"
-      text_body_template: |
-        有人要求登入你在 [%{site_name}](%{base_url}) 的帳號。
-
-        如果你沒有做此請求，你可以直接忽略本郵件。
-
-        點擊下面的連結以登入：
-        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "建立使用者"
       subject_template: "[%{email_prefix}] 你的新帳號"
@@ -2925,6 +2915,7 @@ zh_TW:
   csv_export:
     boolean_yes: "是"
     boolean_no: "否"
+    rate_limit_error: "每天僅可下載貼文一次，請明天再重試。"
   static_topic_first_reply: |
     編輯本主題的第一帖以改變 %{page_name} 頁面的內容。
   guidelines_topic:
@@ -3287,19 +3278,11 @@ zh_TW:
         該徽章授予給 300 個不同的貼文都收到了至少 5 個讚的你。哇！社群敬仰你在討論中頻繁和高質量的貢獻。
     out_of_love:
       name: 熱情
-      description: 1 天內讚了 50 次
-      long_description: |
-        該徽章授予給一天內讚了 50 次的你。別忘記休息一下。讚你喜歡的貼文能鼓勵成員不斷改進討論的內容。
     higher_love:
       name: 激情
-      description: 5 天都讚過 50 次
-      long_description: |
-        該徽章授予給 5 天讚過 50 次的你。感謝你每天都花點時間鼓勵討論的進行！
     crazy_in_love:
       name: 狂熱
       description: 20 天都讚過 50 次
-      long_description: |
-        該徽章授與給 20 天讚過 50 次的你。哇！你為社群成員們樹立了一個令人鼓舞的模範！
     thank_you:
       name: 感謝你
       description: 有 20 個被讚的貼文，給出過 10 個贊

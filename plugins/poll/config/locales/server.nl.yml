@@ -28,6 +28,8 @@ nl:
       other: "De poll met de naam <strong>%{name}</strong> moet minder dan %{count} opties hebben."
     default_poll_must_have_different_options: "De poll moet verschillende opties hebben."
     named_poll_must_have_different_options: "De poll met de naam <strong>%{name}</strong> moet verschillende opties hebben."
+    default_poll_must_not_have_any_empty_options: "De poll mag geen lege opties hebben."
+    named_poll_must_not_have_any_empty_options: "De poll met de naam <strong>%{name}</strong> mag geen lege opties hebben."
     default_poll_with_multiple_choices_has_invalid_parameters: "De poll met meerdere keuzes heeft ongeldige parameters."
     named_poll_with_multiple_choices_has_invalid_parameters: "De poll met de naam <strong>%{name}</strong> met meerdere keuzes heeft ongeldige parameters."
     requires_at_least_1_valid_option: "Kies minstens 1 geldige optie."

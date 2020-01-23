@@ -1859,7 +1859,6 @@ ur:
       category_search_priority:
         very_low_weight_invalid: "آپ وزن 'category_search_priority_low_weight' سے زیادہ مقرر نہیں کرسکتے۔"
         low_weight_invalid: "آپ وزن زیادہ یا 1 کے برابر یا 'category_search_priority_very_low_weight' سے کم مقرر نہیں کرسکتے۔"
-        high_weight_invalid: "آپ وزن زیادہ یا 1 کے برابر یا 'category_search_priority_very_high_weight' سے زیادہ مقرر نہیں کرسکتے۔"
         very_high_weight_invalid: "آپ وزن 'category_search_priority_high_weight' سے کم مقرر نہیں کرسکتے۔"
       unicode_username_whitelist:
         regex_invalid: "رَیگولر اَیکسپرَیشَ غلط ہے: %{error}"
@@ -2000,7 +1999,6 @@ ur:
     second_factor_backup_title: "دو فیکٹر بیک اپ کوڈ"
     invalid_second_factor_code: "غلط توثیقی کَوڈ۔ ہر کَوڈ صرف ایک بار ہی استعمال کیا جاسکتا ہے۔"
     second_factor_toggle:
-      totp: "بجائے ایک اَوتھینٹیکَیٹر اَیپ کا استعمال کریں"
       backup_code: "بجائے ایک بیک اپ کوڈ استعمال کریں"
   admin:
     email:
@@ -2972,7 +2970,6 @@ ur:
       unsubscribe: "یہ خلاصہ %{site_link} کی طرف سے بھیجا جاتا ہے جب ہم نے کچھ دیر سے آپ کو نہیں دیکھا ہو۔ %{email_preferences_link} کو تبدیل کریں، یا غیر سَبسکرائب کرنے کیلئے %{unsubscribe_link}۔"
       your_email_settings: "آپ کی ای میل ترتیبات"
       click_here: "یہاں کلِک کریں"
-      from: "%{site_name} خلاصہ"
       preheader: "آپ کے %{last_seen_at} کو آخری وِزِٹ کے بعد سے ایک مختصر خلاصہ"
     forgot_password:
       title: "پاسوَرڈ بھول گیا"
@@ -3007,13 +3004,6 @@ ur:
     admin_login:
       title: "ایڈمن لاگ اِن"
       subject_template: "[%{email_prefix}] لاگ اِن"
-      text_body_template: |
-        کسی نے [%{site_name}](%{base_url}) پر آپ کے اکاؤنٹ میں لاگ اِن کرنے کیلئے کہا۔
-
-        اگر آپ نے یہ درخواست نہیں کی، تو آپ اِس ای میل کو آرام سے نظر انداز کر سکتے ہیں۔
-
-        لاگ اِن کرنے کیلئے مندرجہ ذیل لِنک پر کلِک کریں:
-        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "اکاؤنٹ تشکیل"
       subject_template: "[%{email_prefix}] آپ کا نیا اکاؤنٹ"
@@ -3178,6 +3168,7 @@ ur:
   csv_export:
     boolean_yes: "جی ہاں"
     boolean_no: "نہیں "
+    rate_limit_error: "پوسٹس فی دن ایک بار ہی ڈاؤن لوڈ کی جا سکتی ہیں، براہ مہربانی کل دوبارہ کوشش کریں۔"
   static_topic_first_reply: |
     %{page_name} صفحے کے مواد کو تبدیل کرنے کیلئے اس ٹاپک میں پہلی پوسٹ میں ترمیم کریں۔
   guidelines_topic:
@@ -3540,19 +3531,11 @@ ur:
         یہ بَیج آپ کو 300 مختلف پوسٹس پر کم از کم 5 لائیکس موصول ہونے پر عطا کیا جاتا ہے۔ زبردست! کمیونٹی آپ کی یہاں کے مباحثوں میں مسلسل، اعلیٰ معیار کی شراکتوں کی تعریف کرتی ہے۔
     out_of_love:
       name: محبت کی لِمٹ سے باہر
-      description: ایک دن میں 50 لائیکس استعمال کر لیے
-      long_description: |
-        یہ بَیج آپ کے اپنے فی دن کے تمام 50 لائیکس استعمال کرلینے پر عطا کیا جاتا ہے۔ ایک لمحہ کیلئے رُک کر جن اشاعتوں سے آپ لطف اندوز اور جن کی آپ تعریف کرتے ہیں، اُنہیں لائیک کرنا یاد رکھنے سے آپ کے ساتھی کمیونٹی ممبران کی حوصلہ افزائی ہوتی ہے کہ وہ مستقبل میں مذید عمدہ مباحث تخلیق کریں۔
     higher_love:
       name: عظیم تر محبت
-      description: ایک دن میں 50 لائیکس 5 مرتبہ استعمال کر لیے
-      long_description: |
-        یہ بَیج آپ کے اپنے فی دن کے تمام 50 لائیکس 5 دنوں کیلئے استعمال کرلینے پر عطا کیا جاتا ہے۔ بہترین مباحثوں کی ہر دن مسلسل حوصلہ افزائی کرنے کیلئے وقت نکالنے کا شکریہ!
     crazy_in_love:
       name: محبت میں دیوانہ
       description: ایک دن میں 50 لائیکس 20 مرتبہ استعمال کر لیے
-      long_description: |
-        یہ بَیج آپ کے اپنے فی دن کے تمام 50 لائیکس 20 دنوں کیلئے استعمال کرلینے پر عطا کیا جاتا ہے۔ زبردست! آپ آپنے ساتھی کمیونٹی ممبران کی حوصلہ افزائی کرنے کی ایک مثال ہیں!
     thank_you:
       name: آپ کا شکریہ
       description: 20 لائیک کردہ پوسٹس ہیں اور 10 لائیکس دیے

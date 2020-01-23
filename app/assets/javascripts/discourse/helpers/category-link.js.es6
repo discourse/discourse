@@ -75,6 +75,9 @@ export function categoryLinkHTML(category, options) {
     if (options.categoryStyle) {
       categoryOptions.categoryStyle = options.categoryStyle;
     }
+    if (options.recursive) {
+      categoryOptions.recursive = true;
+    }
   }
   return new Handlebars.SafeString(
     categoryBadgeHTML(category, categoryOptions)

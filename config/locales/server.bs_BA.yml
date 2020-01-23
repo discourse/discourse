@@ -874,6 +874,7 @@ bs_BA:
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Ne"
+    rate_limit_error: "Objava može biti preuzeta samo jedanput na dan, molimo vas da pokušate sutra ponovo."
   static_topic_first_reply: |
     Edit the first post in this topic to change the contents of the %{page_name} page.
   guidelines_topic:

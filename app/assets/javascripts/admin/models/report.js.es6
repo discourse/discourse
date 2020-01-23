@@ -22,11 +22,6 @@ const Report = EmberObject.extend({
   percent: false,
   higher_is_better: true,
 
-  @discourseComputed("modes")
-  isTable(modes) {
-    return modes.some(mode => mode === "table");
-  },
-
   @discourseComputed("type", "start_date", "end_date")
   reportUrl(type, start_date, end_date) {
     start_date = moment

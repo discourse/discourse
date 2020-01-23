@@ -139,14 +139,43 @@ export function extractDataAttribute(str) {
   return [key, value];
 }
 
+// videoHTML and audioHTML follow the same HTML syntax
+// as oneboxer.rb when dealing with these formats
+function videoHTML(token) {
+  const src = token.attrGet("src");
+  const origSrc = token.attrGet("data-orig-src");
+  return `<video width="100%" height="100%" controls>
+    <source src="${src}" data-orig-src="${origSrc}">
+    <a href="${src}">${src}</a>
+  </video>`;
+}
+
+function audioHTML(token) {
+  const src = token.attrGet("src");
+  const origSrc = token.attrGet("data-orig-src");
+  return `<audio controls>
+    <source src="${src}" data-orig-src="${origSrc}">
+    <a href="${src}">${src}</a>
+  </audio>`;
+}
+
 const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;
-function renderImage(tokens, idx, options, env, slf) {
+function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   const token = tokens[idx];
   const alt = slf.renderInlineAsText(token.children, options, env);
 
   const split = alt.split("|");
   const altSplit = [];
 
+  // markdown-it supports returning HTML instead of continuing to render the current token
+  // see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
+  if (split[1] === "video") {
+    return videoHTML(token);
+  } else if (split[1] === "audio") {
+    return audioHTML(token);
+  }
+
+  // parsing ![myimage|500x300]() or ![myimage|75%]() or ![myimage|500x300, 75%]
   for (let i = 0, match, data; i < split.length; ++i) {
     if ((match = split[i].match(IMG_SIZE_REGEX)) && match[1] && match[2]) {
       let width = match[1];
@@ -194,8 +223,11 @@ function renderImage(tokens, idx, options, env, slf) {
   return slf.renderToken(tokens, idx, options);
 }
 
-function setupImageDimensions(md) {
-  md.renderer.rules.image = renderImage;
+// we have taken over the ![]() syntax in markdown to
+// be able to render a video or audio URL as well as the
+// image using |video and |audio in the text inside []
+function setupImageAndPlayableMediaRenderer(md) {
+  md.renderer.rules.image = renderImageOrPlayableMedia;
 }
 
 function renderAttachment(tokens, idx, options, env, slf) {
@@ -319,7 +351,7 @@ export function setup(opts, siteSettings, state) {
 
   setupUrlDecoding(opts.engine);
   setupHoister(opts.engine);
-  setupImageDimensions(opts.engine);
+  setupImageAndPlayableMediaRenderer(opts.engine);
   setupAttachments(opts.engine);
   setupBlockBBCode(opts.engine);
   setupInlineBBCode(opts.engine);

@@ -27,8 +27,7 @@ fr:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
-      time_short_day: "dddd [à] HH:MM"
-      month_day_time: "[Le] D MMMM [à] HH:MM"
+      time_short_day: "ddd [à] HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "DD MMM H:mm"
       long_no_year_no_time: "D MMM"
@@ -154,6 +153,7 @@ fr:
       banner:
         enabled: "a mis à la une %{when}. Il sera affiché en haut de chaque page jusqu’à ce qu'il soit ignoré par un utilisateur."
         disabled: "a supprimé de la une %{when}. Il ne sera plus affiché en haut de chaque page."
+    topic_admin_menu: "actions du sujet"
     wizard_required: "Bienvenue sur votre nouveau Discourse ! Démarrons par <a href='%{url}' data-auto-route='true'>l'assistant de configuration</a> ✨"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
     bootstrap_mode_enabled: "Pour rendre le lancement de votre site plus facile, vous êtes en mode 'bootstrap'. Tout nouvel utilisateur sera accordé le niveau de confiance 1 et aura les résumés par courriel hebdomadaires activés. Ceci cessera d'être le cas lorsque %{min_users} utilisateurs auront rejoints le site."
@@ -267,7 +267,7 @@ fr:
       remove: "Retirer le signet"
       confirm_clear: "Êtes-vous sûr de vouloir retirer tous les signets de ce sujet ?"
       save: "Sauvegarder"
-      no_timezone: "Vous n&#39;avez pas encore défini de fuseau horaire. Vous ne pourrez pas définir de rappels. Configurez-en un <a href=\"%{basePath}/my/preferences/profile\">dans votre profil</a>."
+      no_timezone: 'Vous n&#39;avez pas encore défini de fuseau horaire. Vous ne pourrez pas définir de rappels. Configurez-en un <a href="%{basePath}/my/preferences/profile">dans votre profil</a>.'
       reminders:
         at_desktop: "La prochaine fois je suis à mon bureau"
         later_today: "Plus tard dans la journée<br/>{{date}}"
@@ -576,6 +576,7 @@ fr:
       leave: "Quitter"
       request: "Requête"
       message: "Message"
+      confirm_leave: "Êtes-vous sûr(e) de vouloir quitter ce groupe ?"
       allow_membership_requests: "Autoriser les utilisateurs à envoyer des demandes d'adhésion aux propriétaires de groupe"
       membership_request_template: "Modèle personnalisé à afficher aux utilisateurs lors de l'envoi d'une demande d'adhésion"
       membership_request:
@@ -755,9 +756,13 @@ fr:
       activity_stream: "Activité"
       preferences: "Préférences"
       feature_topic_on_profile:
+        open_search: "Sélectionnez un nouveau sujet"
+        title: "Sélectionnez un sujet"
+        search_label: "Rechercher des sujet grâce au titre"
         save: "Sauvegarder"
         clear:
           title: "Vider"
+          warning: "Êtes-vous sûr de vouloir effacer ce sujet à la une ?"
       profile_hidden: "Le profil public de cet usagé est caché."
       expand_profile: "Développer"
       collapse_profile: "Réduire"
@@ -977,6 +982,7 @@ fr:
         instructions: "Les images d'arrière-plan seront centrées avec une largeur par défaut de 590 pixels."
       change_featured_topic:
         title: "Sujet à la une"
+        instructions: "Un lien vers ce sujet sera ajouté sur votre carte d'utilisateur et votre profil."
       email:
         title: "Courriel"
         primary: "Adresse courriel principale"
@@ -1112,6 +1118,7 @@ fr:
         search: "commencer à saisir pour rechercher vos invitations…"
         title: "Invitations"
         user: "Utilisateurs"
+        sent: "Derniers envoyés"
         none: "Il n'y a pas d'invitations en attente à afficher."
         truncated:
           one: "Afficher la première invitation."
@@ -1754,6 +1761,7 @@ fr:
           title: Seuls les titres correspondent
           likes: que j'ai aimé
           posted: auxquels j'ai participé
+          created: J'ai créer
           watching: que je surveille
           tracking: que je suis
           private: qui sont dans mes messages directs
@@ -1770,6 +1778,7 @@ fr:
           label: Dont les sujets
           open: sont ouverts
           closed: sont fermés
+          public: sont publiques
           archived: sont archivés
           noreplies: n'ont aucune réponse
           single_user: contiennent un unique utilisateur
@@ -2342,9 +2351,18 @@ fr:
           notify_moderators: "signalé aux modérateurs"
           notify_user: "a envoyé un message"
           bookmark: "signet ajouté"
+          like:
+            one: "a aimé ceci"
+            other: "ont aimé ceci"
+          read:
+            one: "a lu ceci"
+            other: "ont lu ceci"
           like_capped:
             one: "et {{count}} autre a aimé ça"
             other: "et {{count}} autres ont aimé ça"
+          read_capped:
+            one: "et {{count}} autre a lu ceci"
+            other: "et {{count}} autres ont lu ceci"
         by_you:
           off_topic: "Vous l'avez signalé comme étant hors-sujet"
           spam: "Vous l'avez signalé comme étant du spam"
@@ -2785,6 +2803,7 @@ fr:
         mark_watching: "%{shortcut} Surveiller le sujet"
         print: "%{shortcut} Imprimer le sujet"
         defer: "%{shortcut} Reporter le sujet"
+        topic_admin_actions: "%{shortcut} Ouvrir les actions d'administration sur ce sujet"
     badges:
       earned_n_times:
         one: "A reçu ce badge %{count} fois"
@@ -4204,6 +4223,14 @@ fr:
           title: "Choisir un badge existant ou en créer un nouveau pour commencer"
           what_are_badges_title: "Qu'est-ce que les badges ?"
           badge_query_examples_title: "Exemple de requête de badge"
+        mass_award:
+          title: Accorder en Masse
+          description: Accorder le même badge à plusieurs utilisateurs à la fois.
+          no_badge_selected: Merci de sélectionner un badge pour commencer.
+          perform: "Accorder un Badge aux Utilisateurs"
+          upload_csv: Envoyer un CSV avec les courriels des utilisateurs
+          aborted: Merci d'envoyer un CSV contenant des courriels d'utilisateurs
+          success: Votre CSV a été envoyé et les utilisateurs recevront leur badge rapidement.
       emoji:
         title: "Emoji"
         help: "Ajouter un nouvel emoji qui sera disponible pour tout le monde. (Conseil : glisser-déposer plusieurs fichiers en même temps)"

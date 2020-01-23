@@ -27,8 +27,7 @@ es:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
-      time_short_day: "ddd HH:mm a"
-      month_day_time: "MMM D, HH:mm a"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM HH:mm"
       long_no_year_no_time: "D MMM"
@@ -150,10 +149,11 @@ es:
         disabled: "sin destacar %{when}"
       visible:
         enabled: "listado %{when}"
-        disabled: "removido de la lista %{when}"
+        disabled: "quitado de la lista %{when}"
       banner:
         enabled: "hizo esto un encabezado %{when}. Aparecerá en la parte superior de cada página hasta que el usuario lo descarte."
         disabled: "eliminó este encabezado %{when}. Ya no aparecerá en la parte superior de cada página."
+    topic_admin_menu: "acciones del tema"
     wizard_required: "¡Bienvenido a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a> ✨"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido deshabilitados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
     bootstrap_mode_enabled: "Para facilitar el lanzamiento de tu nuevo sitio, estás en modo de arranque. A todos los usuarios nuevos se les otorgará el nivel de confianza 1 y se tendrán habilitados los correos electrónicos de resumen diarios. Esta función se desactivará automáticamente cuando %{min_users} usuarios se hayan unido."
@@ -267,9 +267,9 @@ es:
       remove: "Eliminar marcador"
       confirm_clear: "¿Estás seguro de que deseas eliminar todos tus marcadores en este tema?"
       save: "Guardar"
-      no_timezone: "No has establecido una zona horaria todavía. No podrás establecer recordatorios. Puedes establecerlo <a href=\"%{basePath}/my/preferences/profile\">en tu perfil</a>."
+      no_timezone: 'No has establecido una zona horaria todavía. No podrás establecer recordatorios. Puedes elegir una <a href="%{basePath}/my/preferences/profile">en tu perfil</a>.'
       reminders:
-        at_desktop: "La próxima vez que este en mi computadora"
+        at_desktop: "La próxima vez que esté en mi ordenador"
         later_today: "Más tarde hoy <br/>{{date}}"
         next_business_day: "El próximo día hábil <br/>{{date}}"
         tomorrow: "Mañana <br/>{{date}}"
@@ -322,7 +322,7 @@ es:
     choose_topic:
       none_found: "No se encontraron temas."
       title:
-        search: "busca un tema"
+        search: "Busca un tema"
         placeholder: "escribe el título, url o ID del tema aquí"
     choose_message:
       none_found: "No se encontraron mensajes."
@@ -755,9 +755,13 @@ es:
       activity_stream: "Actividad"
       preferences: "Preferencias"
       feature_topic_on_profile:
+        open_search: "Selecciona un nuevo tema"
+        title: "Selecciona un tema"
+        search_label: "Buscar tema por título"
         save: "Guardar"
         clear:
           title: "Quitar filtros"
+          warning: "¿Estás seguro de que quieres eliminar tu tema destacado?"
       profile_hidden: "El perfil público de este usuario está oculto."
       expand_profile: "Expandir"
       collapse_profile: "Contraer"
@@ -976,6 +980,7 @@ es:
         instructions: "Las imágenes de fonodo estarán centradas y tendrán una anchura predeterminada de 590 px."
       change_featured_topic:
         title: "Tema destacado"
+        instructions: "Un enlace a este tema estará en tu tarjeta de usuario y perfil."
       email:
         title: "Correo electrónico"
         primary: "Correo electrónico principal"
@@ -1111,6 +1116,7 @@ es:
         search: "escribe para buscar invitaciones..."
         title: "Invitaciones"
         user: "Usuario invitado"
+        sent: "Última vez enviada"
         none: "Sin invitaciones para mostrar."
         truncated:
           one: "Mostrando la primera invitación."
@@ -1302,7 +1308,7 @@ es:
     private_message_info:
       title: "Mensaje"
       invite: "Invitar a otros..."
-      edit: "Agregar o quitar..."
+      edit: "Añadir o quitar..."
       leave_message: "¿Estás seguro de que quieres abandonar este mensaje?"
       remove_allowed_user: "¿Estás seguro de que quieres eliminar a {{name}} de este mensaje?"
       remove_allowed_group: "¿Estás seguro de que quieres eliminar a {{name}} de este mensaje?"
@@ -1509,7 +1515,7 @@ es:
         one: "Al mencionar a {{group}}, estás a punto de notificar a <a href='{{group_link}}'>%{count} persona</a> – ¿seguro que quieres hacerlo?"
         other: "Al mencionar a {{group}}, estás a punto de notificar a <a href='{{group_link}}'>{{count}} personas</a> ¿Estás seguro de que quieres hacerlo?"
       cannot_see_mention:
-        category: "Mencionaste a {{username}} pero no se les notificará porque no tienen acceso a esta categoría. Necesitarás agregarlos a un grupo que tenga acceso a esta categoría."
+        category: "Mencionaste a {{username}} pero no se les notificará porque no tienen acceso a esta categoría. Necesitarás añadirlos a un grupo que tenga acceso a esta categoría."
         private: "Mencionaste a {{username}} pero no se les notificará porque no pueden ver este mensaje personal. Necesitarás invitarlos a este MP."
       duplicate_link: "Parece que tu enlace a <b>{{domain}}</b> ya se publicó en el tema por <b>@{{username}}</b> en <a href='{{post_url}}'>una respuesta el {{ago}}</a>. ¿Estás seguro de que deseas volver a publicarlo?"
       reference_topic_title: "RE: {{title}}"
@@ -1535,7 +1541,7 @@ es:
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar borrador compartido"
       title: "O pulsa Ctrl+Intro"
-      users_placeholder: "Agregar un usuario"
+      users_placeholder: "Añadir un usuario"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
       edit_reason_placeholder: "¿Por qué lo estás editando?"
@@ -1753,6 +1759,7 @@ es:
           title: coincide el título únicamente
           likes: me han gustado
           posted: he publicado en ellos
+          created: Creado por mi
           watching: estoy vigilando
           tracking: estoy siguiendo
           private: en mis mensajes
@@ -1769,6 +1776,7 @@ es:
           label: Donde los temas
           open: están abiertos
           closed: están cerrados
+          public: son públicos
           archived: están archivados
           noreplies: no tienen respuestas
           single_user: contienen un solo usuario
@@ -1857,10 +1865,10 @@ es:
         help: "Marcar como no leído"
         title: "Aplazar"
       feature_on_profile:
-        help: "Agregar un enlace a este tema en tu tarjeta de usuario y perfil"
+        help: "Añadir un enlace a este tema en tu tarjeta de usuario y perfil"
         title: "Destacar en el perfil"
       remove_from_profile:
-        warning: "Tu perfil ya tiene un tema destacado. Si continúas, este tema remplazará el tema ya existente."
+        warning: "Tu perfil ya tiene un tema destacado. Si continúas, este tema remplazará el tema actual."
         help: "Eliminar el enlace a este tema de tu perfil de usuario"
         title: "Eliminar del perfil"
       list: "Temas"
@@ -2350,6 +2358,9 @@ es:
           like_capped:
             one: "y {{count}} otro le gustó esto"
             other: "y {{count}} otros le dieron me gusta a esto"
+          read_capped:
+            one: "y {{count}} otro ha leído"
+            other: "y {{count}} otros han leído"
         by_you:
           off_topic: "Reportaste esto como sin relación con el tema"
           spam: "Reportaste esto como spam"
@@ -2402,7 +2413,7 @@ es:
       bookmarks:
         create: "Crear marcador"
         name: "Nombre"
-        name_placeholder: "Ponle un nombre a la publicación que guardaste en marcadores para ayudarte a recordarla"
+        name_placeholder: "Ponle un nombre a la publicación que has guardado en marcadores para ayudarte a recordarla"
         set_reminder: "Establecer un recordatorio"
     category:
       can: "puede&hellip; "
@@ -2785,7 +2796,7 @@ es:
         mark_watching: "%{shortcut} Vigilar Tema"
         print: "%{shortcut} Imprimir tema"
         defer: "%{shortcut} Aplazar el tema"
-        topic_admin_actions: "%{shortcut} Abrir acciones de administrador para el tema"
+        topic_admin_actions: "%{shortcut} Abrir acciones de administrador del tema"
     badges:
       earned_n_times:
         one: "Ganó esta medalla %{count} vez"
@@ -2843,13 +2854,13 @@ es:
         one: 'Esta etiqueta pertence al grupo: «{{tag_groups}}»'
         other: "Esta etiqueta pertence a estos grupos: {{tag_groups}}."
       category_restrictions:
-        one: "Solo se puede utilizar en esta categoría"
-        other: "Solo se puede utilizar en estas categorías"
-      edit_synonyms: "Administrar sinónimos"
-      add_synonyms_label: "Agregar sinónimos:"
-      add_synonyms: "Agregar"
-      add_synonyms_failed: "No se pudieron agregar las siguientes etiquetas como sinónimos: <b>%{tag_names}</b>. Asegúrate de que no tienen sinónimos y de que no son sinónimos de otra etiqueta."
-      remove_synonym: "Eliminar sinónimo"
+        one: "Solo se puede utilizar en esta categoría:"
+        other: "Solo se puede utilizar en estas categorías:"
+      edit_synonyms: "Gestionar sinónimos"
+      add_synonyms_label: "Añadir sinónimos:"
+      add_synonyms: "Añadir"
+      add_synonyms_failed: "No se han podido añadir las siguientes etiquetas como sinónimos: <b>%{tag_names}</b>. Asegúrate de que no tienen sinónimos y de que no son sinónimos de otra etiqueta."
+      remove_synonym: "Quitar sinónimo"
       delete_synonym_confirm: '¿Estás seguro de que quieres eliminar el sinónimo «%{tag_name}»?'
       delete_tag: "Eliminar etiqueta"
       delete_confirm:
@@ -3407,7 +3418,7 @@ es:
           upload: "Subir"
           select_component: "Seleccionar un componente..."
           unsaved_changes_alert: "No has guardado los cambios aún, ¿los quieres descartar y seguir adelante?"
-          unsaved_parent_themes: "No has asignado este componente a los temas, ¿quieres continuar?"
+          unsaved_parent_themes: "No has asignado este componente a ningún tema, ¿quieres continuar?"
           discard: "Descartar"
           stay: "Permanecer"
           css_html: "Personalizar CSS/HTML"
@@ -3416,7 +3427,7 @@ es:
           delete_upload_confirm: "¿Eliminar este archivo? (¡El tema CSS puede dejar de funcionar!)"
           component_on_themes: "Incluir componentes en estos temas"
           included_components: "Componentes incluidos"
-          add_all: "Agregar todos"
+          add_all: "Añadir todos"
           import_web_tip: "Repositorio que contiene el tema"
           import_web_advanced: "Avanzado..."
           import_file_tip: "archivo .tar.gz, .zip o .dcstyle.json que contiene un tema"
