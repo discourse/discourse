@@ -1044,6 +1044,10 @@ class Post < ActiveRecord::Base
     { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
   end
 
+  def owned_uploads_via_access_control
+    Upload.where(access_control_post_id: self.id)
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
@@ -1070,7 +1074,6 @@ class Post < ActiveRecord::Base
       end
     end
   end
-
 end
 
 # == Schema Information
