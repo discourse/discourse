@@ -70,6 +70,7 @@ class PostMover
     update_statistics
     update_user_actions
     update_last_post_stats
+    update_upload_security_status
 
     if moving_all_posts
       @original_topic.update_status('closed', true, @user)
@@ -494,6 +495,12 @@ class PostMover
       attrs[:bumped_at] = Time.now
       attrs[:updated_at] = Time.now
       destination_topic.update_columns(attrs)
+    end
+  end
+
+  def update_upload_security_status
+    DB.after_commit do
+      Jobs.enqueue(:update_topic_upload_security, topic_id: @destination_topic.id)
     end
   end
 
