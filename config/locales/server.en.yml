@@ -4134,7 +4134,7 @@ en:
   badges:
     mass_award:
       errors:
-        invalid_csv: We couldn't read that CSV file. Please confirm it has one email per line.
+        invalid_csv: We encountered an error on line %{line_number}. Please confirm the CSV has one email per line.
     editor:
       name: Editor
       description: First post edit
