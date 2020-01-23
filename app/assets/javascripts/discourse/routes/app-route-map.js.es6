@@ -48,7 +48,7 @@ export default function() {
       });
     });
 
-    // filters
+    // filters (e.g. bookmarks, posted, read, unread, latest)
     Site.currentProp("filters").forEach(filter => {
       // legacy route
       this.route(filter + "ParentCategory", { path: "/c/:slug/l/" + filter });
