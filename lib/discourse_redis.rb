@@ -3,248 +3,139 @@
 #
 #  A wrapper around redis that namespaces keys with the current site id
 #
-require_dependency 'cache'
-require_dependency 'concurrency'
 
 class DiscourseRedis
-  class RedisStatus
+  class FallbackHandler
+    include Singleton
+
     MASTER_ROLE_STATUS = "role:master".freeze
+    MASTER_LOADING_STATUS = "loading:1".freeze
     MASTER_LOADED_STATUS = "loading:0".freeze
     CONNECTION_TYPES = %w{normal pubsub}.each(&:freeze)
 
-    def initialize(master_config, slave_config)
-      master_config = master_config.dup.freeze unless master_config.frozen?
-      slave_config = slave_config.dup.freeze unless slave_config.frozen?
-
-      @master_config = master_config
-      @slave_config = slave_config
-    end
-
-    def master_alive?
-      master_client = connect(@master_config)
-
-      begin
-        info = master_client.call([:info])
-      rescue Redis::ConnectionError, Redis::CannotConnectError, RuntimeError => ex
-        raise ex if ex.class == RuntimeError && ex.message != "Name or service not known"
-        warn "Master not alive, error connecting"
-        return false
-      ensure
-        master_client.disconnect
-      end
-
-      unless info.include?(MASTER_LOADED_STATUS)
-        warn "Master not alive, status is loading"
-        return false
-      end
-
-      unless info.include?(MASTER_ROLE_STATUS)
-        warn "Master not alive, role != master"
-        return false
-      end
-
-      true
-    end
-
-    def fallback
-      warn "Killing connections to slave..."
-
-      slave_client = connect(@slave_config)
-
-      begin
-        CONNECTION_TYPES.each do |connection_type|
-          slave_client.call([:client, [:kill, 'type', connection_type]])
-        end
-      rescue Redis::ConnectionError, Redis::CannotConnectError, RuntimeError => ex
-        raise ex if ex.class == RuntimeError && ex.message != "Name or service not known"
-        warn "Attempted a redis fallback, but connection to slave failed"
-      ensure
-        slave_client.disconnect
-      end
-    end
-
-    private
-
-    def connect(config)
-      config = config.dup
-      config.delete(:connector)
-      ::Redis::Client.new(config)
-    end
-
-    def log_prefix
-      @log_prefix ||= begin
-        master_string = "#{@master_config[:host]}:#{@master_config[:port]}"
-        slave_string = "#{@slave_config[:host]}:#{@slave_config[:port]}"
-        "RedisStatus master=#{master_string} slave=#{slave_string}"
-      end
-    end
-
-    def warn(message)
-      Rails.logger.warn "#{log_prefix}: #{message}"
-    end
-  end
-
-  class FallbackHandler
-    def initialize(log_prefix, redis_status, execution)
-      @log_prefix = log_prefix
-      @redis_status = redis_status
-      @mutex = execution.new_mutex
-      @execution = execution
+    def initialize
       @master = true
-      @event_handlers = []
+      @running = false
+      @mutex = Mutex.new
+      @slave_config = DiscourseRedis.slave_config
+      @message_bus_keepalive_interval = MessageBus.keepalive_interval
     end
 
-    def add_callbacks(handler)
-      @mutex.synchronize do
-        @event_handlers << handler
-      end
-    end
+    def verify_master
+      synchronize do
+        return if @thread && @thread.alive?
 
-    def start_reset
-      @mutex.synchronize do
-        if @master
-          @master = false
-          trigger(:down)
-          true
-        else
-          false
-        end
-      end
-    end
-
-    def use_master?
-      master = @mutex.synchronize { @master }
-      if !master
-        false
-      elsif safe_master_alive?
-        true
-      else
-        if start_reset
-          @execution.spawn do
-            loop do
-              @execution.sleep 5
-              info "Checking connection to master"
-              if safe_master_alive?
-                @mutex.synchronize do
-                  @master = true
-                  @redis_status.fallback
-                  trigger(:up)
-                end
-                break
-              end
+        @thread = Thread.new do
+          loop do
+            begin
+              thread = Thread.new { initiate_fallback_to_master }
+              thread.join
+              break if synchronize { @master }
+              sleep 5
+            ensure
+              thread.kill
             end
           end
         end
+      end
+    end
 
-        false
+    def initiate_fallback_to_master
+      success = false
+
+      begin
+        redis_config = DiscourseRedis.config.dup
+        redis_config.delete(:connector)
+        master_client = ::Redis::Client.new(redis_config)
+        logger.warn "#{log_prefix}: Checking connection to master server..."
+        info = master_client.call([:info])
+
+        if info.include?(MASTER_LOADED_STATUS) && info.include?(MASTER_ROLE_STATUS)
+          begin
+            logger.warn "#{log_prefix}: Master server is active, killing all connections to slave..."
+
+            self.master = true
+            slave_client = ::Redis::Client.new(@slave_config)
+
+            CONNECTION_TYPES.each do |connection_type|
+              slave_client.call([:client, [:kill, 'type', connection_type]])
+            end
+
+            MessageBus.keepalive_interval = @message_bus_keepalive_interval
+            Discourse.clear_readonly!
+            Discourse.request_refresh!
+            success = true
+          ensure
+            slave_client&.disconnect
+          end
+        end
+      rescue => e
+        logger.warn "#{log_prefix}: Connection to Master server failed with '#{e.message}'"
+      ensure
+        master_client&.disconnect
+      end
+
+      success
+    end
+
+    def master
+      synchronize { @master }
+    end
+
+    def master=(args)
+      synchronize do
+        @master = args
+
+        # Disables MessageBus keepalive when Redis is in readonly mode
+        MessageBus.keepalive_interval = 0 if !@master
       end
     end
 
     private
 
-    attr_reader :log_prefix
-
-    def trigger(event)
-      @event_handlers.each do |handler|
-        begin
-          handler.public_send(event)
-        rescue Exception => e
-          Discourse.warn_exception(e, message: "Error running FallbackHandler callback")
-        end
-      end
+    def synchronize
+      @mutex.synchronize { yield }
     end
 
-    def info(message)
-      Rails.logger.info "#{log_prefix}: #{message}"
+    def logger
+      Rails.logger
     end
 
-    def safe_master_alive?
-      begin
-        @redis_status.master_alive?
-      rescue Exception => e
-        Discourse.warn_exception(e, message: "Error running master_alive?")
-        false
-      end
-    end
-  end
-
-  class MessageBusFallbackCallbacks
-    def down
-      @keepalive_interval, MessageBus.keepalive_interval =
-        MessageBus.keepalive_interval, 0
-    end
-
-    def up
-      MessageBus.keepalive_interval = @keepalive_interval
-    end
-  end
-
-  class MainRedisReadOnlyCallbacks
-    def down
-    end
-
-    def up
-      Discourse.clear_readonly!
-      Discourse.request_refresh!
-    end
-  end
-
-  class FallbackHandlers
-    include Singleton
-
-    def initialize
-      @mutex = Mutex.new
-      @fallback_handlers = {}
-    end
-
-    def handler_for(config)
-      config = config.dup.freeze unless config.frozen?
-
-      @mutex.synchronize do
-        @fallback_handlers[[config[:host], config[:port]]] ||= begin
-          log_prefix = "FallbackHandler #{config[:host]}:#{config[:port]}"
-          slave_config = DiscourseRedis.slave_config(config)
-          redis_status = RedisStatus.new(config, slave_config)
-
-          handler =
-            FallbackHandler.new(
-              log_prefix,
-              redis_status,
-              Concurrency::ThreadedExecution.new
-            )
-
-          if config == GlobalSetting.redis_config
-            handler.add_callbacks(MainRedisReadOnlyCallbacks.new)
-          end
-
-          if config == GlobalSetting.message_bus_redis_config
-            handler.add_callbacks(MessageBusFallbackCallbacks.new)
-          end
-
-          handler
-        end
-      end
-    end
-
-    def self.handler_for(config)
-      instance.handler_for(config)
+    def log_prefix
+      "#{self.class}"
     end
   end
 
   class Connector < Redis::Client::Connector
     def initialize(options)
-      options = options.dup.freeze unless options.frozen?
-
       super(options)
-      @slave_options = DiscourseRedis.slave_config(options).freeze
-      @fallback_handler = DiscourseRedis::FallbackHandlers.handler_for(options)
+      @slave_options = DiscourseRedis.slave_config(options)
+      @fallback_handler = DiscourseRedis::FallbackHandler.instance
     end
 
-    def resolve
-      if @fallback_handler.use_master?
-        @options
-      else
-        @slave_options
+    def resolve(client = nil)
+      if !@fallback_handler.master
+        @fallback_handler.verify_master
+        return @slave_options
+      end
+
+      begin
+        options = @options.dup
+        options.delete(:connector)
+        client ||= Redis::Client.new(options)
+
+        loading = client.call([:info, :persistence]).include?(
+          DiscourseRedis::FallbackHandler::MASTER_LOADING_STATUS
+        )
+
+        loading ? @slave_options : @options
+      rescue Redis::ConnectionError, Redis::CannotConnectError, RuntimeError => ex
+        raise ex if ex.class == RuntimeError && ex.message != "Name or service not known"
+        @fallback_handler.master = false
+        @fallback_handler.verify_master
+        raise ex
+      ensure
+        client.disconnect
       end
     end
   end
@@ -268,6 +159,10 @@ class DiscourseRedis
     @namespace = namespace
   end
 
+  def self.fallback_handler
+    @fallback_handler ||= DiscourseRedis::FallbackHandler.instance
+  end
+
   def without_namespace
     # Only use this if you want to store and fetch data that's shared between sites
     @redis
@@ -281,6 +176,7 @@ class DiscourseRedis
         STDERR.puts "WARN: Redis is in a readonly state. Performed a noop"
       end
 
+      fallback_handler.verify_master if !fallback_handler.master
       Discourse.received_redis_readonly!
       nil
     else
@@ -406,4 +302,5 @@ class DiscourseRedis
   def remove_namespace(key)
     key[(namespace.length + 1)..-1]
   end
+
 end
