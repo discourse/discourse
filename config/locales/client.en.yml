@@ -4505,6 +4505,7 @@ en:
           upload_csv: Upload a CSV with user emails
           aborted: Please upload a CSV containing user emails
           success: Your CSV was received and users will receive their badge shortly.
+          replace_owners: Remove the badge from previous owners
 
       emoji:
         title: "Emoji"
