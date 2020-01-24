@@ -741,6 +741,13 @@ eslint-config-discourse@1.1.0:
     eslint "^4.19"
     prettier "^1.19.1"
 
+eslint-plugin-discourse-ember@0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-discourse-ember/-/eslint-plugin-discourse-ember-0.0.0.tgz#e966a1f6ac4f1d2090c13f42031174364162b369"
+  integrity sha512-upFS2FqHTQCNo0z4tu3IDEQvdZ9Iz7kP5efMCZC28T0BC3e/Lc3/xslNifONhMpk/3ZYm9bKRcP5fYSGrS9MoA==
+  dependencies:
+    requireindex "~1.1.0"
+
 eslint-plugin-lodash@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-lodash/-/eslint-plugin-lodash-6.0.0.tgz#70fa487ab632e62627ecf01ad3e85c228e3ab9d3"
@@ -2074,6 +2081,11 @@ require-uncached@^1.0.3:
   dependencies:
     caller-path "^0.1.0"
     resolve-from "^1.0.0"
+
+requireindex@~1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/requireindex/-/requireindex-1.1.0.tgz#e5404b81557ef75db6e49c5a72004893fe03e162"
+  integrity sha1-5UBLgVV+91225JxacgBIk/4D4WI=
 
 resolve-dir@^1.0.0, resolve-dir@^1.0.1:
   version "1.0.1"

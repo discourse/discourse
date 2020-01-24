@@ -7,6 +7,7 @@ import { computed } from "@ember/object";
 
 export default Component.extend({
   usersTemplates: computed("users.[]", function() {
+    console.log(Ember.Objects)
     return (this.users || []).map(user => {
       let name = "";
       if (user.name && normalize(user.username) !== normalize(user.name)) {
