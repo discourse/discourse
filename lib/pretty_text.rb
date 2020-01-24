@@ -388,7 +388,7 @@ module PrettyText
 
   def self.strip_secure_media(doc)
     doc.css("a[href]").each do |a|
-      if a["href"].include?("/secure-media-uploads/") && FileHelper.is_supported_media?(a["href"])
+      if a["href"].include?("/#{Upload::SECURE_MEDIA_ROUTE}/") && FileHelper.is_supported_media?(a["href"])
         target = %w(video audio).include?(a&.parent&.parent&.name) ? a.parent.parent : a
         target.replace "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
       end

@@ -104,6 +104,16 @@ class BadgeGranter
     end
   end
 
+  def self.revoke_all(badge)
+    custom_badge_names = TranslationOverride.where(translation_key: badge.translation_key).pluck(:value)
+
+    users = User.joins(:user_badges).where(user_badges: { badge_id: badge.id }).where(title: badge.name)
+    users = users.or(User.joins(:user_badges).where(title: custom_badge_names)) unless custom_badge_names.empty?
+    users.update_all(title: nil)
+
+    UserBadge.where(badge: badge).delete_all
+  end
+
   def self.queue_badge_grant(type, opt)
     return unless SiteSetting.enable_badges
     payload = nil

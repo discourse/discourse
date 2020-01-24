@@ -9,6 +9,7 @@ class Upload < ActiveRecord::Base
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/
+  SECURE_MEDIA_ROUTE = "secure-media-uploads".freeze
 
   belongs_to :user
   belongs_to :access_control_post, class_name: 'Post'
@@ -118,6 +119,19 @@ class Upload < ActiveRecord::Base
 
   def short_path
     self.class.short_path(sha1: self.sha1, extension: self.extension)
+  end
+
+  def self.secure_media_url?(url)
+    url.include?(SECURE_MEDIA_ROUTE)
+  end
+
+  def self.signed_url_from_secure_media_url(url)
+    secure_upload_s3_path = url.sub(Discourse.base_url, "").sub("/#{SECURE_MEDIA_ROUTE}/", "")
+    Discourse.store.signed_url_for_path(secure_upload_s3_path)
+  end
+
+  def self.secure_media_url_from_upload_url(url)
+    url.sub(SiteSetting.Upload.absolute_base_url, "/#{SECURE_MEDIA_ROUTE}")
   end
 
   def self.short_path(sha1:, extension:)

@@ -225,6 +225,39 @@ describe BadgeGranter do
     end
   end
 
+  describe 'revoke_all' do
+    it 'deletes every user_badge record associated with that badge' do
+      described_class.grant(badge, user)
+
+      described_class.revoke_all(badge)
+
+      expect(UserBadge.exists?(badge: badge, user: user)).to eq(false)
+    end
+
+    it 'removes titles' do
+      another_title = 'another title'
+      described_class.grant(badge, user)
+      user.update!(title: badge.name)
+      user2 = Fabricate(:user, title: another_title)
+
+      described_class.revoke_all(badge)
+
+      expect(user.reload.title).to be_nil
+      expect(user2.reload.title).to eq(another_title)
+    end
+
+    it 'removes custom badge titles' do
+      custom_badge_title = 'this is a badge title'
+      TranslationOverride.create!(translation_key: badge.translation_key, value: custom_badge_title, locale: 'en_US')
+      described_class.grant(badge, user)
+      user.update!(title: custom_badge_title)
+
+      described_class.revoke_all(badge)
+
+      expect(user.reload.title).to be_nil
+    end
+  end
+
   context "update_badges" do
     fab!(:user) { Fabricate(:user) }
     fab!(:liker) { Fabricate(:user) }

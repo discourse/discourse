@@ -939,7 +939,7 @@ describe PostsController do
         post "/posts.json", params: {
           raw: 'I can haz a test',
           title: 'I loves my test',
-          target_usernames: group.name,
+          target_recipients: group.name,
           archetype: Archetype.private_message
         }
 
@@ -951,7 +951,7 @@ describe PostsController do
         post "/posts.json", params: {
           raw: 'I can haz a test',
           title: 'I loves my test',
-          target_usernames: group.name,
+          target_recipients: group.name,
           archetype: Archetype.private_message
         }
 
@@ -1097,7 +1097,7 @@ describe PostsController do
           raw: 'this is the test content',
           archetype: 'private_message',
           title: "this is some post",
-          target_usernames: "#{user_2.username},#{user_3.username}"
+          target_recipients: "#{user_2.username},#{user_3.username}"
         }
 
         expect(response.status).to eq(200)
@@ -1240,7 +1240,7 @@ describe PostsController do
             raw: 'this is the test content',
             archetype: 'private_message',
             title: "this is some post",
-            target_usernames: user_2.username,
+            target_recipients: user_2.username,
             is_warning: true
           }
 
@@ -1257,7 +1257,7 @@ describe PostsController do
             raw: 'this is the test content',
             archetype: 'private_message',
             title: "this is some post",
-            target_usernames: user_2.username,
+            target_recipients: user_2.username,
             is_warning: false
           }
 
@@ -1277,7 +1277,7 @@ describe PostsController do
             raw: 'this is the test content',
             archetype: 'private_message',
             title: "this is some post",
-            target_usernames: user_2.username,
+            target_recipients: user_2.username,
             is_warning: true
           }
 

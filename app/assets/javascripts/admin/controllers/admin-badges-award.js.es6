@@ -4,6 +4,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
   saving: false,
+  replaceBadgeOwners: false,
 
   actions: {
     massAward() {
@@ -18,6 +19,7 @@ export default Controller.extend({
         };
 
         options.data.append("file", file);
+        options.data.append("replace_badge_owners", this.replaceBadgeOwners);
 
         this.set("saving", true);
 
