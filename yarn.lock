@@ -741,10 +741,10 @@ eslint-config-discourse@1.1.0:
     eslint "^4.19"
     prettier "^1.19.1"
 
-eslint-plugin-discourse-ember@0.0.0:
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-discourse-ember/-/eslint-plugin-discourse-ember-0.0.0.tgz#e966a1f6ac4f1d2090c13f42031174364162b369"
-  integrity sha512-upFS2FqHTQCNo0z4tu3IDEQvdZ9Iz7kP5efMCZC28T0BC3e/Lc3/xslNifONhMpk/3ZYm9bKRcP5fYSGrS9MoA==
+eslint-plugin-discourse-ember@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-discourse-ember/-/eslint-plugin-discourse-ember-0.0.1.tgz#d9833b9eb1a20768e64d4f40e9afc47adcfa6c83"
+  integrity sha512-A86sRU/nDlstFXEvSxcqJnGQvxunilQedYWSll1jtP4meCl++r8+Nsz/cO6l853YQjrliObHnVf5AvPhQtUzvg==
   dependencies:
     requireindex "~1.1.0"
 
