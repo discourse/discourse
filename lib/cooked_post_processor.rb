@@ -284,9 +284,8 @@ class CookedPostProcessor
 
     # we can't direct FastImage to our secure-media-uploads url because it bounces
     # anonymous requests with a 404 error
-    if url&.include?("/secure-media-uploads/")
-      secure_upload_s3_path = absolute_url.sub(Discourse.base_url, "").sub("/secure-media-uploads/", "")
-      absolute_url = Discourse.store.signed_url_for_path(secure_upload_s3_path)
+    if url && Upload.secure_media_url?(url)
+      absolute_url = Upload.signed_url_from_secure_media_url(absolute_url)
     end
 
     return unless is_valid_image_url?(absolute_url)

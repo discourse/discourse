@@ -288,7 +288,7 @@ module Email
 
     def replace_secure_media_urls
       @fragment.css('[href]').each do |a|
-        if a['href'][/secure-media-uploads/]
+        if a['href'][/#{Upload::SECURE_MEDIA_ROUTE}/]
           a.add_next_sibling "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
           a.remove
         end
@@ -296,7 +296,7 @@ module Email
 
       @fragment.search('img').each do |img|
         next unless img['src']
-        if img['src'][/secure-media-uploads/]
+        if img['src'][/#{Upload::SECURE_MEDIA_ROUTE}/]
           img.add_next_sibling "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
           img.remove
         end

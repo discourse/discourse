@@ -125,6 +125,19 @@ describe Jobs::PullHotlinkedImages do
       expect(post.uploads).to contain_exactly(upload)
     end
 
+    context "when secure media enabled" do
+      it "doesnt redownload the secure upload" do
+        enable_secure_media
+        upload = Fabricate(:upload_s3, secure: true)
+        stub_s3(upload)
+        url = Upload.secure_media_url_from_upload_url(upload.url)
+        url = Discourse.base_url + url
+        post = Fabricate(:post, raw: "<img src='#{url}'>")
+        expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+          .not_to change { Upload.count }
+      end
+    end
+
     it 'replaces markdown image' do
       post = Fabricate(:post, raw: <<~MD)
       [![some test](#{image_url})](https://somelink.com)
@@ -260,6 +273,16 @@ describe Jobs::PullHotlinkedImages do
         expect(subject.should_download_image?(Fabricate(:upload).url)).to eq(false)
       end
 
+      context "when secure media enabled" do
+        it 'should return false for secure-media-upload url' do
+          enable_secure_media
+          upload = Fabricate(:upload_s3, secure: true)
+          stub_s3(upload)
+          url = Upload.secure_media_url_from_upload_url(upload.url)
+          expect(subject.should_download_image?(url)).to eq(false)
+        end
+      end
+
       it 'should return true for optimized' do
         src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
         expect(subject.should_download_image?(src)).to eq(true)
@@ -338,4 +361,20 @@ describe Jobs::PullHotlinkedImages do
     end
   end
 
+  def enable_secure_media
+    SiteSetting.enable_s3_uploads = true
+    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+    SiteSetting.s3_access_key_id = "some key"
+    SiteSetting.s3_secret_access_key = "some secrets3_region key"
+    SiteSetting.secure_media = true
+  end
+
+  def stub_s3(upload)
+    stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+    stub_request(
+      :put,
+      "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{upload.sha1}.#{upload.extension}?acl"
+    )
+  end
 end
