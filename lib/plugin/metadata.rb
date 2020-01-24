@@ -70,6 +70,7 @@ class Plugin::Metadata
     "discourse-openid-connect",
     "discourse-restricted-replies",
     "discourse-rss-polling",
+    "discourse-zendesk-plugin",
     "docker_manager",
     "lazy-yt",
     "poll",
