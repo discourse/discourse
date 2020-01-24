@@ -47,6 +47,8 @@ class UsersController < ApplicationController
                                                             :admin_login,
                                                             :confirm_admin]
 
+  after_action :add_noindex_header, only: [:show]
+
   def index
   end
 
@@ -72,8 +74,6 @@ class UsersController < ApplicationController
     if !params[:skip_track_visit] && (@user != current_user)
       track_visit_to_user_profile
     end
-
-    response.headers['X-Robots-Tag'] = 'noindex'
 
     # This is a hack to get around a Rails issue where values with periods aren't handled correctly
     # when used as part of a route.

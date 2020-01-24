@@ -44,6 +44,7 @@ class ApplicationController < ActionController::Base
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
+  after_action  :add_noindex_header, if: -> { is_feed_request? }
 
   layout :set_layout
 
@@ -799,6 +800,14 @@ class ApplicationController < ActionController::Base
 
   def is_asset_path
     request.env['DISCOURSE_IS_ASSET_PATH'] = 1
+  end
+
+  def is_feed_request?
+    request.format.atom? || request.format.rss?
+  end
+
+  def add_noindex_header
+    response.headers['X-Robots-Tag'] = 'noindex'
   end
 
   protected
