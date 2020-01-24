@@ -356,7 +356,7 @@ GEM
     rubocop-discourse (1.0.2)
       rubocop (>= 0.69.0)
     ruby-openid (2.9.2)
-    ruby-prof (1.1.0)
+    ruby-prof (1.2.0)
     ruby-progressbar (1.10.1)
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
