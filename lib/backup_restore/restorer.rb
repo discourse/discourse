@@ -131,7 +131,7 @@ module BackupRestore
 
         SystemMessage.create_from_system_user(
           user, status,
-          logs: Discourse::Utils.pretty_logs(@logs)
+          logs: Discourse::Utils.pretty_logs(@logger.logs)
         )
       else
         log "Could not send notification to '#{@user_info[:username]}' " \
