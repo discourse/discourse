@@ -246,7 +246,7 @@ export default DropdownSelectBoxComponent.extend({
     options.action = CREATE_TOPIC;
     options.categoryId = this.get("composerModel.topic.category.id");
     options.disableScopedCategory = true;
-    options.skipDraftCheck = true;
+    options.skipDraftCheck = false;
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   },
 
@@ -272,7 +272,7 @@ export default DropdownSelectBoxComponent.extend({
     options.action = PRIVATE_MESSAGE;
     options.usernames = usernames;
     options.archetypeId = "private_message";
-    options.skipDraftCheck = true;
+    options.skipDraftCheck = false;
 
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   },
