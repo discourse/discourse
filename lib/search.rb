@@ -237,7 +237,7 @@ class Search
     end
 
     # If the term is a number or url to a topic, just include that topic
-    if @opts[:search_for_id] && (@results.type_filter == 'topic' || @results.type_filter == 'private_messages' || @results.type_filter == 'all_topics')
+    if @opts[:search_for_id] && ['topic', 'private_messages', 'all_topics'].include?(@results.type_filter)
       if @term =~ /^\d+$/
         single_topic(@term.to_i)
       else
@@ -827,7 +827,10 @@ class Search
          posts = posts.private_posts_for_user(@guardian.user)
        end
     elsif opts[:type_filter] === "all_topics"
-        # no need to do any filtering here if we're looking for all topics
+      private_posts = posts.where("topics.archetype = ?", Archetype.private_message)
+      private_posts = private_posts.private_posts_for_user(@guardian.user) unless @guardian.is_admin?
+
+      posts = posts.where("topics.archetype <> ?", Archetype.private_message).or(private_posts)
     else
       posts = posts.where("topics.archetype <> ?", Archetype.private_message)
     end
@@ -894,9 +897,6 @@ class Search
             .joins("LEFT JOIN tags ON tags.id = topic_tags.tag_id")
           posts.where("tags.id = #{@search_context.id}")
         end
-      elsif opts[:type_filter] === "all_topics"
-        posts = categories_ignored(posts) unless @category_filter_matched
-        posts.where("topics.archetype <> ?", Archetype.private_message).or(posts.private_posts_for_user(@guardian.user))
       else
         posts = categories_ignored(posts) unless @category_filter_matched
         posts

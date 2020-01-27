@@ -300,6 +300,7 @@ describe Search do
       let!(:u1) { Fabricate(:user, username: 'fred', name: 'bob jones', email: 'foo+1@bar.baz') }
       let!(:u2) { Fabricate(:user, username: 'bob', name: 'fred jones', email: 'foo+2@bar.baz') }
       let!(:u3) { Fabricate(:user, username: 'jones', name: 'bob fred', email: 'foo+3@bar.baz') }
+      let!(:u4) { Fabricate(:user, username: 'alice', name: 'bob fred', email: 'foo+4@bar.baz', admin: true) }
 
       let!(:public_topic) { Fabricate(:topic, user: u1) }
       let!(:public_post1) { Fabricate(:post, topic: public_topic, raw: "what do you want for breakfast?  ham and eggs?", user: u1) }
@@ -347,6 +348,11 @@ describe Search do
                                 guardian: Guardian.new(u3))
         expect(results.posts.length).to eq(1)
 
+        # Admin
+        results = Search.execute('spam',
+                  type_filter: 'all_topics',
+                  guardian: Guardian.new(u4))
+        expect(results.posts.length).to eq(2)
 
         # same keyword for different users
         results = Search.execute('ham',
