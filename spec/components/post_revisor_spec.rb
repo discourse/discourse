@@ -228,7 +228,7 @@ describe PostRevisor do
     end
 
     describe 'hidden post' do
-      it "created stores the modification value" do
+      it "correctly stores the modification value" do
         post.update(hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached])
         revisor = PostRevisor.new(post)
         revisor.revise!(post.user, { raw: 'hello world' }, revised_at: post.updated_at + 11.minutes)
