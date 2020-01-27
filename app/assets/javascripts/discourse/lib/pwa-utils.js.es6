@@ -26,3 +26,18 @@ export function nativeShare(data) {
     }
   });
 }
+
+export function getNativeContact(properties, multiple) {
+  const caps = Discourse.__container__.lookup("capabilities:main");
+  return new Promise((resolve, reject) => {
+    if (!caps.hasContactPicker) {
+      reject();
+      return;
+    }
+
+    navigator.contacts
+      .select(properties, { multiple })
+      .then(resolve)
+      .catch(reject);
+  });
+}
