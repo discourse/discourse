@@ -227,6 +227,18 @@ describe PostRevisor do
       end
     end
 
+    describe 'hidden post' do
+      it "correctly stores the modification value" do
+        post.update(hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached])
+        revisor = PostRevisor.new(post)
+        revisor.revise!(post.user, { raw: 'hello world' }, revised_at: post.updated_at + 11.minutes)
+        expect(post.revisions.first.modifications.symbolize_keys).to eq(
+          cooked: ["<p>Hello world</p>", "<p>hello world</p>"],
+          raw: ["Hello world", "hello world"]
+        )
+      end
+    end
+
     describe 'revision much later' do
 
       let!(:revised_at) { post.updated_at + 2.minutes }
