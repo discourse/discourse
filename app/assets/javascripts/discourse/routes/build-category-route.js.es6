@@ -9,7 +9,6 @@ import PermissionType from "discourse/models/permission-type";
 import CategoryList from "discourse/models/category-list";
 import Category from "discourse/models/category";
 import { Promise, all } from "rsvp";
-import { isNone } from "@ember/utils";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
@@ -88,10 +87,8 @@ export default (filterArg, params) => {
 
     _createSubcategoryList(category) {
       this._categoryList = null;
-      if (
-        isNone(category.get("parentCategory")) &&
-        category.get("show_subcategory_list")
-      ) {
+
+      if (category.isParent && category.show_subcategory_list) {
         return CategoryList.listForParent(this.store, category).then(
           list => (this._categoryList = list)
         );

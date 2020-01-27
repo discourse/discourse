@@ -104,7 +104,7 @@ class PostCreator
       if names.length > max_allowed_message_recipients
         errors.add(
           :base,
-          I18n.t(:max_pm_recepients, recipients_limit: max_allowed_message_recipients)
+          I18n.t(:max_pm_recipients, recipients_limit: max_allowed_message_recipients)
         )
 
         return false

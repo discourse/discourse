@@ -13,7 +13,10 @@ export function addCategorySortCriteria(criteria) {
 export default buildCategoryPanel("settings", {
   emailInEnabled: setting("email_in"),
   showPositionInput: setting("fixed_category_positions"),
-  isParentCategory: empty("category.parent_category_id"),
+  @discourseComputed("category.isParent", "category.parent_category_id")
+  isParentCategory(isParent, parentCategoryId) {
+    return isParent || !parentCategoryId;
+  },
   showSubcategoryListStyle: and(
     "category.show_subcategory_list",
     "isParentCategory"

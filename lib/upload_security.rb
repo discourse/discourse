@@ -60,7 +60,7 @@ class UploadSecurity
   # if there is no access control post id and the upload is currently secure, we
   # do not want to make it un-secure to avoid unintentionally exposing it
   def access_control_post_has_secure_media?
-    Post.find_by(id: @upload.access_control_post_id).with_secure_media?
+    @upload.access_control_post.with_secure_media?
   end
 
   def public_type?

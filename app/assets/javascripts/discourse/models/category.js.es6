@@ -66,6 +66,11 @@ const Category = RestModel.extend({
   },
 
   @discourseComputed("subcategories")
+  isParent(subcategories) {
+    return subcategories && subcategories.length > 0;
+  },
+
+  @discourseComputed("subcategories")
   isGrandParent(subcategories) {
     return (
       subcategories &&
@@ -261,12 +266,8 @@ Category.reopenClass({
       result = Category.slugFor(parentCategory) + separator;
     }
 
-    const id = get(category, "id"),
-      slug = get(category, "slug");
-
-    return !slug || slug.trim().length === 0
-      ? `${result}${id}-category`
-      : result + slug;
+    const slug = get(category, "slug");
+    return !slug || slug.trim().length === 0 ? `${result}-` : result + slug;
   },
 
   list() {

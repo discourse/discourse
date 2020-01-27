@@ -472,6 +472,18 @@ RSpec.describe Admin::SiteTextsController do
           # Revert
           delete "/admin/customize/site_texts/badges.regular.name.json"
         end
+
+        it 'does not update matching user titles when overriding non-title badge text' do
+          Jobs.expects(:enqueue).with(
+            :bulk_user_title_update,
+            new_title: 'Terminator',
+            granted_badge_id: badge.id,
+            action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
+          ).never
+          put '/admin/customize/site_texts/badges.regular.long_description.json', params: {
+            site_text: { value: 'Terminator' }
+          }
+        end
       end
     end
 

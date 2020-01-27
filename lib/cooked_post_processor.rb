@@ -277,14 +277,17 @@ class CookedPostProcessor
     absolute_url = url
     absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ /^\/[^\/]/
 
-    if url&.start_with?("/secure-media-uploads/")
-      absolute_url = Discourse.store.signed_url_for_path(url.sub("/secure-media-uploads/", ""))
-    end
-
     return unless absolute_url
 
     # FastImage fails when there's no scheme
     absolute_url = SiteSetting.scheme + ":" + absolute_url if absolute_url.start_with?("//")
+
+    # we can't direct FastImage to our secure-media-uploads url because it bounces
+    # anonymous requests with a 404 error
+    if url && Upload.secure_media_url?(url)
+      absolute_url = Upload.signed_url_from_secure_media_url(absolute_url)
+    end
+
     return unless is_valid_image_url?(absolute_url)
 
     # we can *always* crawl our own images
@@ -539,7 +542,10 @@ class CookedPostProcessor
 
       upload_id = downloaded_images[src]
       upload = Upload.find_by_id(upload_id) if upload_id
-      img["src"] = upload.url if upload.present?
+
+      if upload.present?
+        img["src"] = UrlHelper.cook_url(upload.url, secure: @post.with_secure_media?)
+      end
 
       # make sure we grab dimensions for oneboxed images
       # and wrap in a div

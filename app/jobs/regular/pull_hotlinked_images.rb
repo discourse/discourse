@@ -62,6 +62,11 @@ module Jobs
             schemeless_src = remove_scheme(original_src)
 
             unless downloaded_images.include?(schemeless_src) || large_images.include?(schemeless_src) || broken_images.include?(schemeless_src)
+
+              # secure-media-uploads endpoint prevents anonymous downloads, so we
+              # need the presigned S3 URL here
+              src = Upload.signed_url_from_secure_media_url(src) if Upload.secure_media_url?(src)
+
               if hotlinked = download(src)
                 if File.size(hotlinked.path) <= @max_size
                   filename = File.basename(URI.parse(src).path)
@@ -162,8 +167,9 @@ module Jobs
       # make sure we actually have a url
       return false unless src.present?
 
-      # If file is on the forum or CDN domain
-      if Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i
+      # If file is on the forum or CDN domain or already has the
+      # secure media url
+      if Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i || Upload.secure_media_url?(src)
         return false if src =~ /\/images\/emoji\//
 
         # Someone could hotlink a file from a different site on the same CDN,

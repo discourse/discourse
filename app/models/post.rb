@@ -307,7 +307,7 @@ class Post < ActiveRecord::Base
       each_upload_url do |url|
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
-          raw = raw.sub(Discourse.store.s3_upload_host, "#{Discourse.base_url}/secure-media-uploads")
+          raw = raw.sub(Discourse.store.s3_upload_host, "#{Discourse.base_url}/#{Upload::SECURE_MEDIA_ROUTE}")
         end
       end
     end
@@ -1044,6 +1044,10 @@ class Post < ActiveRecord::Base
     { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
   end
 
+  def owned_uploads_via_access_control
+    Upload.where(access_control_post_id: self.id)
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
@@ -1070,7 +1074,6 @@ class Post < ActiveRecord::Base
       end
     end
   end
-
 end
 
 # == Schema Information

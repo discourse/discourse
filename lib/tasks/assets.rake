@@ -78,7 +78,7 @@ def compress_node(from, to)
   assets_additional_path = (d = File.dirname(from)) == "." ? "" : "/#{d}"
   source_map_root = assets + assets_additional_path
   source_map_url = cdn_path "/assets/#{to}.map"
-  base_source_map = 'public/assets' + assets_additional_path
+  base_source_map = assets_path + assets_additional_path
 
   cmd = <<~EOS
     uglifyjs '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}'"

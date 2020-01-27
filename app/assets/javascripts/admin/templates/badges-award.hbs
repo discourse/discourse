@@ -16,6 +16,12 @@
         <h4>{{I18n 'admin.badges.mass_award.upload_csv'}}</h4>
         <input type='file' id='massAwardCSVUpload' accept='.csv' />
       </div>
+      <div>
+        <label>
+          {{input type="checkbox" checked=replaceBadgeOwners}}
+          {{i18n 'admin.badges.mass_award.replace_owners'}}
+        </label>
+      </div>
       {{d-button
           class="btn-primary"
           action=(action 'massAward')
