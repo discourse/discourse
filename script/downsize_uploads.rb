@@ -65,9 +65,9 @@ def downsize_upload(upload, path, max_image_pixels)
   end
 
   if ENV["VERBOSE"]
-    puts "#{original_upload.base62_sha1} -> #{Upload.base62_sha1(sha1)}"
-    puts "#{original_upload.sha1} -> #{sha1}"
-    puts "new file? #{new_file}"
+    puts "base62: #{original_upload.base62_sha1} -> #{Upload.base62_sha1(sha1)}"
+    puts "sha1: #{original_upload.sha1} -> #{sha1}"
+    puts "is a new file: #{new_file}"
   end
 
   upload.save!
