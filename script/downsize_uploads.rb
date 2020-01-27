@@ -21,8 +21,15 @@ def downsize_upload(upload, path, max_image_pixels)
 
   sha1 = Upload.generate_digest(path)
   w, h = FastImage.size(path, timeout: 10, raise_on_failure: true)
-  return if !w || !h
-  return if sha1 == upload.sha1
+  if !w || !h
+    puts "invalid image dimensions after resizing" if ENV["VERBOSE"]
+    return
+  end
+
+  if sha1 == upload.sha1
+    puts "no sha1 change" if ENV["VERBOSE"]
+    return
+  end
 
   ww, hh = ImageSizer.resize(w, h)
 
@@ -35,7 +42,10 @@ def downsize_upload(upload, path, max_image_pixels)
 
   before = upload.filesize
   upload.filesize = File.size(path)
-  return if upload.filesize > before
+  if upload.filesize > before
+    puts "no filesize reduction" if ENV["VERBOSE"]
+    return
+  end
 
   upload.sha1 = sha1
   upload.width = w
@@ -44,7 +54,12 @@ def downsize_upload(upload, path, max_image_pixels)
   upload.thumbnail_height = hh
 
   if new_file
-    return unless url = Discourse.store.store_upload(File.new(path), upload)
+    url = Discourse.store.store_upload(File.new(path), upload)
+    unless url
+      puts "couldn't store the upload" if ENV["VERBOSE"]
+      return
+    end
+
     upload.url = url
   end
 
@@ -107,15 +122,26 @@ scope.find_each do |upload|
   print "\rFixed dimensions: %8d        Downsized: %8d (upload id: #{upload.id})".freeze % [dimensions_count, downsized_count]
   puts "\n" if ENV["VERBOSE"]
 
-  next unless source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
+  source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
+  unless source
+    puts "no path or URL" if ENV["VERBOSE"]
+    next
+  end
 
   w, h = FastImage.size(source, timeout: 10)
-  next if !w || !h
+  if !w || !h
+    puts "invalid image dimensions" if ENV["VERBOSE"]
+    next
+  end
 
   ww, hh = ImageSizer.resize(w, h)
-  next if w == 0 || h == 0 || ww == 0 || hh == 0
+  if w == 0 || h == 0 || ww == 0 || hh == 0
+    puts "invalid image dimensions" if ENV["VERBOSE"]
+    next
+  end
 
   if upload.read_attribute(:width) != w || upload.read_attribute(:height) != h || upload.read_attribute(:thumbnail_width) != ww || upload.read_attribute(:thumbnail_height) != hh
+    puts "Correcting the upload dimensions" if ENV["VERBOSE"]
     dimensions_count += 1
 
     upload.update!(
@@ -126,8 +152,16 @@ scope.find_each do |upload|
     )
   end
 
-  next if w * h < max_image_pixels
-  next unless path = upload.local? ? source : (Discourse.store.download(upload) rescue nil)&.path
+  if w * h < max_image_pixels
+    puts "image size within allowed range" if ENV["VERBOSE"]
+    next
+  end
+
+  path = upload.local? ? source : (Discourse.store.download(upload) rescue nil)&.path
+  unless path
+    puts "no image path" if ENV["VERBOSE"]
+    next
+  end
 
   downsized_count += 1 if downsize_upload(upload, path, max_image_pixels)
 end
