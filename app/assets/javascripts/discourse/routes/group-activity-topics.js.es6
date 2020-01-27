@@ -9,5 +9,12 @@ export default DiscourseRoute.extend({
     return this.store.findFiltered("topicList", {
       filter: `topics/groups/${this.modelFor("group").get("name")}`
     });
+  },
+
+  actions: {
+    didTransition() {
+      this.controllerFor("application").set("showFooter", true);
+      return true;
+    }
   }
 });
