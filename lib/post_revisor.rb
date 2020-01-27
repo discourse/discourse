@@ -335,6 +335,7 @@ class PostRevisor
     update_post
     update_topic if topic_changed?
     create_or_update_revision
+    remove_flags_and_unhide_post
   end
 
   USER_ACTIONS_TO_REMOVE ||= [UserAction::REPLY, UserAction::RESPONSE]
@@ -364,8 +365,6 @@ class PostRevisor
     @post.last_editor_id = @editor.id
     @post.word_count     = @fields[:raw].scan(/[[:word:]]+/).size if @fields.has_key?(:raw)
     @post.self_edits    += 1 if self_edit?
-
-    remove_flags_and_unhide_post
 
     @post.extract_quoted_post_numbers
 
