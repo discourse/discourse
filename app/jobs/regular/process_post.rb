@@ -30,7 +30,7 @@ module Jobs
       if cooked != (recooked || orig_cooked)
 
         if orig_cooked.present? && cooked.blank?
-          # TODO suicide if needed, let's gather a few here first
+          # TODO stop/restart the worker if needed, let's gather a few here first
           Rails.logger.warn("Cooked post processor in FATAL state, bypassing. You need to urgently restart sidekiq\norig: #{orig_cooked}\nrecooked: #{recooked}\ncooked: #{cooked}\npost id: #{post.id}")
         else
           post.update_column(:cooked, cp.html)
