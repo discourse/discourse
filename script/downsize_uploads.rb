@@ -15,24 +15,23 @@ def downsize_upload(upload, path, max_image_pixels)
   upload.filesize = File.size(path)
 
   OptimizedImage.downsize(path, path, "#{max_image_pixels}@", filename: upload.original_filename)
-
-  # Neither #dup or #clone provide a complete copy
-  original_upload = Upload.find(upload.id)
-
   sha1 = Upload.generate_digest(path)
-  w, h = FastImage.size(path, timeout: 10, raise_on_failure: true)
-  if !w || !h
-    puts "invalid image dimensions after resizing" if ENV["VERBOSE"]
-    return
-  end
 
   if sha1 == upload.sha1
     puts "no sha1 change" if ENV["VERBOSE"]
     return
   end
 
-  ww, hh = ImageSizer.resize(w, h)
+  w, h = FastImage.size(path, timeout: 10, raise_on_failure: true)
 
+  if !w || !h
+    puts "invalid image dimensions after resizing" if ENV["VERBOSE"]
+    return
+  end
+
+  # Neither #dup or #clone provide a complete copy
+  original_upload = Upload.find(upload.id)
+  ww, hh = ImageSizer.resize(w, h)
   new_file = true
 
   if existing_upload = Upload.find_by(sha1: sha1)
@@ -42,6 +41,7 @@ def downsize_upload(upload, path, max_image_pixels)
 
   before = upload.filesize
   upload.filesize = File.size(path)
+
   if upload.filesize > before
     puts "no filesize reduction" if ENV["VERBOSE"]
     return
@@ -55,6 +55,7 @@ def downsize_upload(upload, path, max_image_pixels)
 
   if new_file
     url = Discourse.store.store_upload(File.new(path), upload)
+
     unless url
       puts "couldn't store the upload" if ENV["VERBOSE"]
       return
@@ -123,18 +124,21 @@ scope.find_each do |upload|
   puts "\n" if ENV["VERBOSE"]
 
   source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
+
   unless source
     puts "no path or URL" if ENV["VERBOSE"]
     next
   end
 
   w, h = FastImage.size(source, timeout: 10)
+
   if !w || !h
     puts "invalid image dimensions" if ENV["VERBOSE"]
     next
   end
 
   ww, hh = ImageSizer.resize(w, h)
+
   if w == 0 || h == 0 || ww == 0 || hh == 0
     puts "invalid image dimensions" if ENV["VERBOSE"]
     next
@@ -158,6 +162,7 @@ scope.find_each do |upload|
   end
 
   path = upload.local? ? source : (Discourse.store.download(upload) rescue nil)&.path
+
   unless path
     puts "no image path" if ENV["VERBOSE"]
     next
