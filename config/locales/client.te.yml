@@ -93,7 +93,6 @@ te:
     share:
       post: "#%{postNumber} టపా"
       close: "మూసివేయి"
-    topic_admin_menu: "విషయపు అధికార చర్యలు"
     emails_are_disabled: "బయటకు వెళ్లే అన్ని ఈమెయిల్లూ అధికారి నిశేధించాడు. ఇప్పుడు ఎటువంటి ఈమెయిల్ ప్రకటనలూ పంపవీలవదు."
     themes:
       default_description: "అప్రమేయ"
@@ -165,6 +164,7 @@ te:
     bookmarks:
       created: "ఈ టపాకు పేజీక ఉంచారు"
       remove: "పేజీక తొలగించండి"
+      save: "భద్రపరచు"
     drafts:
       remove: "తొలగించు"
       abandon:
@@ -187,8 +187,6 @@ te:
       close: "బ్యానరు తుడువు"
     choose_topic:
       none_found: "ఎటువంటి విషయాలూ కనపడలేదు."
-      title:
-        placeholder: "ఇక్కడ విషయపు శీర్షిక రాయండి"
     review:
       explain:
         total: "మొత్తం"
@@ -352,6 +350,10 @@ te:
         mute_option: "నిశ్శబ్దం"
       activity_stream: "కలాపం"
       preferences: "అభిరుచులు"
+      feature_topic_on_profile:
+        save: "భద్రపరచు"
+        clear:
+          title: "శుభ్రపరుచు"
       bookmarks: "పేజీకలు"
       bio: "నా గురించి"
       invited_by: "ఆహ్వానిచినవారు"
@@ -507,7 +509,6 @@ te:
         search: "ఆహ్వానాలను వెతకడానికి రాయండి ... "
         title: "ఆహ్వానాలు"
         user: "ఆహ్వానించిన సభ్యుడు"
-        sent: "పంపిన"
         redeemed: "మన్నించిన ఆహ్వానాలు"
         redeemed_tab: "మన్నించిన"
         redeemed_at: "మన్నించిన"
@@ -894,6 +895,7 @@ te:
         muted:
           title: "నిశ్శబ్దం"
       actions:
+        title: "చర్యలు"
         recover: "విషయం తొలగింపు రద్దుచేయి"
         delete: "విషయం తొలగించు"
         open: "విషయం తెరువు"
@@ -1039,7 +1041,6 @@ te:
           off_topic: "దీన్ని విషయాంతరంగా కేతనించాము"
           spam: "దీన్ని స్పాముగా కేతనించాము"
           inappropriate: "దీన్ని అసమంజసమైనదిగా కేతనించాము"
-          like: "ఈ టపాను ఇష్టపడ్డారు"
         by_you:
           off_topic: "మీరు దీన్ని విషయాంతరంగా కేతనించారు"
           spam: "మీరు దీన్ని స్పాముగా కేతనించారు"
@@ -1062,6 +1063,8 @@ te:
             title: "పక్క పక్కన తేడాలు చూపుతూ మొత్తం చూపు"
           side_by_side_markdown:
             title: "ముడి మూల తేడాను పక్కపక్కన చూపు"
+      bookmarks:
+        name: "పేరు"
     category:
       can: "can&hellip;"
       none: "(ఏ వర్గం లేదు)"

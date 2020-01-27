@@ -266,6 +266,7 @@ en:
     request_membership: "Request Membership"
     join_group: "Join Group"
   deleted_topic: "Oops! This topic has been deleted and is no longer available."
+  delete_topic_failed: "There was an error deleting that topic. Please contact the site's administrator."
 
   reading_time: "Reading time"
   likes: "Likes"
@@ -334,7 +335,7 @@ en:
   user_is_suspended: "Suspended users are not allowed to post."
   topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
   not_accepting_pms: "Sorry, %{username} is not accepting messages at the moment."
-  max_pm_recepients: "Sorry, you can send a message to maximum %{recipients_limit} recipients."
+  max_pm_recipients: "Sorry, you can send a message to maximum %{recipients_limit} recipients."
   pm_reached_recipients_limit: "Sorry, you can't have more than %{recipients_limit} recipients in a message."
   removed_direct_reply_full_quotes: "Automatically removed quote of whole previous post."
   secure_upload_not_allowed_in_public_topic: "Sorry, the following secure upload(s) cannot be used in a public topic: %{upload_filenames}."
@@ -575,7 +576,6 @@ en:
           attributes:
             word:
               too_many: "Too many words for that action"
-              
 
   uncategorized_category_name: "Uncategorized"
 
@@ -944,6 +944,7 @@ en:
       public_key_error: "The public key verification for the credential failed."
       ownership_error: "The security key is not owned by the user."
       not_found_error: "A security key with the provided credential ID could not be found."
+      unknown_cose_algorithm_error: "The algorithm used for the security key is not recognized."
 
   topic_flag_types:
     spam:
@@ -2200,7 +2201,7 @@ en:
       category_search_priority:
         very_low_weight_invalid: "You cannot set the weight to be greater than 'category_search_priority_low_weight'."
         low_weight_invalid: "You cannot set the weight to be greater or equal to 1 or smaller than 'category_search_priority_very_low_weight'."
-        high_weight_invalid: "You cannot set the weight to be greater or equal to 1 or greater than 'category_search_priority_very_high_weight'."
+        high_weight_invalid: "You cannot set the weight to be smaller or equal to 1 or greater than 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "You cannot set the weight to be smaller than 'category_search_priority_high_weight'."
       unicode_username_whitelist:
         regex_invalid: "The regular expression is invalid: %{error}"
@@ -2231,6 +2232,7 @@ en:
     unknown_error: "There is a problem with your account. Please contact the site's administrator."
     timeout_expired: "Account login timed out, please try logging in again."
     no_email: "No email address was provided. Please contact the site's administrator."
+    blank_id_error: "The `external_id` is required but was blank"
     email_error: "An account could not be registered with the email address <b>%{email}</b>. Please contact the site's administrator."
     missing_secret: "SSO authentication failed due to missing secret. Contact the site administrators to fix this problem."
 
@@ -2318,6 +2320,8 @@ en:
     auto_deleted_by_timer: "Automatically deleted by timer."
 
   login:
+    invalid_second_factor_method: "The selected second factor method is invalid."
+    not_enabled_second_factor_method: "The selected second factor method is not enabled for your account."
     security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
     security_key_alternative: "Try another way"
     security_key_authenticate: "Authenticate with Security Key"
@@ -2363,7 +2367,7 @@ en:
     invalid_second_factor_code: "Invalid authentication code. Each code can only be used once."
     invalid_security_key: "Invalid security key."
     second_factor_toggle:
-      totp: "Use an authenticator app instead"
+      totp: "Use an authenticator app or security key instead"
       backup_code: "Use a backup code instead"
 
   admin:
@@ -2402,6 +2406,7 @@ en:
       fixed_primary_email: "Fixed primary email for staged user"
       same_ip_address: "Same IP address (%{ip_address}) as other users"
       inactive_user: "Inactive user"
+    email_in_spam_header: "User's first email was flagged as spam"
 
   reviewables_reminder:
     submitted:
@@ -2582,7 +2587,7 @@ en:
 
       - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
 
-      - See what's new in the [release notes](https://meta.discourse.org/tags/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
+      - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -2597,7 +2602,7 @@ en:
 
       - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
 
-      - See what's new in the [release notes](https://meta.discourse.org/tags/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
+      - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -3495,7 +3500,7 @@ en:
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. Change %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       your_email_settings: "your email settings"
       click_here: "click here"
-      from: "%{site_name} summary"
+      from: "%{site_name}"
       preheader: "A brief summary since your last visit on %{last_seen_at}"
       custom:
         html:
@@ -3562,7 +3567,7 @@ en:
         If you did not make this request, you can safely ignore this email.
 
         Click the following link to login:
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/session/email-login/%{email_token}
 
     account_created:
       title: "Account Created"
@@ -3760,6 +3765,7 @@ en:
   csv_export:
     boolean_yes: "Yes"
     boolean_no: "No"
+    rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
 
   static_topic_first_reply: |
     Edit the first post in this topic to change the contents of the %{page_name} page.
@@ -4126,6 +4132,9 @@ en:
       This document is CC-BY-SA. It was last updated May 31, 2013.
 
   badges:
+    mass_award:
+      errors:
+        invalid_csv: We encountered an error on line %{line_number}. Please confirm the CSV has one email per line.
     editor:
       name: Editor
       description: First post edit
@@ -4298,19 +4307,19 @@ en:
         This badge is granted when you receive at least 5 likes on 300 different posts. Wow! The community admires your frequent, high quality contributions to the conversations here.
     out_of_love:
       name: Out of Love
-      description: Used 50 likes in a day
+      description: Used %{max_likes_per_day} likes in a day
       long_description: |
-        This badge is granted when you use all 50 of your daily likes. Remembering to take a moment and like the posts you enjoy and appreciate encourages your fellow community members to create even more great discussions in the future.
+        This badge is granted when you use all %{max_likes_per_day} of your daily likes. Remembering to take a moment and like the posts you enjoy and appreciate encourages your fellow community members to create even more great discussions in the future.
     higher_love:
       name: Higher Love
-      description: Used 50 likes in a day 5 times
+      description: Used %{max_likes_per_day} likes in a day 5 times
       long_description: |
-        This badge is granted when you use all 50 of your daily likes for 5 days. Thanks for taking the time actively encouraging the best conversations every day!
+        This badge is granted when you use all %{max_likes_per_day} of your daily likes for 5 days. Thanks for taking the time actively encouraging the best conversations every day!
     crazy_in_love:
       name: Crazy in Love
       description: Used 50 likes in a day 20 times
       long_description: |
-        This badge is granted when you use all 50 of your daily likes for 20 days. Wow! You’re a role model for encouraging your fellow community members!
+        This badge is granted when you use all %{max_likes_per_day} of your daily likes for 20 days. Wow! You’re a role model for encouraging your fellow community members!
     thank_you:
       name: Thank You
       description: Has 20 liked posts and gave 10 likes
@@ -4653,6 +4662,8 @@ en:
       category: "Posts in this category require manual approval by staff. See the category settings."
       must_approve_users: "All new users must be approved by staff. See `must_approve_users`."
       invite_only: "All new users should be invited. See `invite_only`."
+      email_auth_res_enqueue: "This email failed a DMARC check, it most likely isn't from whom it seems to be from. Check the raw email headers for more information."
+      email_spam: "This email was flagged as spam by the header defined in `email_in_spam_header`."
 
     actions:
       agree:

@@ -9,8 +9,10 @@ class Upload < ActiveRecord::Base
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/
+  SECURE_MEDIA_ROUTE = "secure-media-uploads".freeze
 
   belongs_to :user
+  belongs_to :access_control_post, class_name: 'Post'
 
   has_many :post_uploads, dependent: :destroy
   has_many :posts, through: :post_uploads
@@ -117,6 +119,19 @@ class Upload < ActiveRecord::Base
 
   def short_path
     self.class.short_path(sha1: self.sha1, extension: self.extension)
+  end
+
+  def self.secure_media_url?(url)
+    url.include?(SECURE_MEDIA_ROUTE)
+  end
+
+  def self.signed_url_from_secure_media_url(url)
+    secure_upload_s3_path = url.sub(Discourse.base_url, "").sub("/#{SECURE_MEDIA_ROUTE}/", "")
+    Discourse.store.signed_url_for_path(secure_upload_s3_path)
+  end
+
+  def self.secure_media_url_from_upload_url(url)
+    url.sub(SiteSetting.Upload.absolute_base_url, "/#{SECURE_MEDIA_ROUTE}")
   end
 
   def self.short_path(sha1:, extension:)
@@ -232,30 +247,13 @@ class Upload < ActiveRecord::Base
 
   def update_secure_status(secure_override_value: nil)
     return false if self.for_theme || self.for_site_setting
-    mark_secure = secure_override_value.nil? ? should_be_secure? : secure_override_value
+    mark_secure = secure_override_value.nil? ? UploadSecurity.new(self).should_be_secure? : secure_override_value
 
+    secure_status_did_change = self.secure? != mark_secure
     self.update_column("secure", mark_secure)
     Discourse.store.update_upload_ACL(self) if Discourse.store.external?
-  end
 
-  def should_be_secure?
-    mark_secure = false
-    if FileHelper.is_supported_media?(self.original_filename)
-      if SiteSetting.secure_media?
-        mark_secure = true if SiteSetting.login_required?
-        unless SiteSetting.login_required?
-          # first post associated with upload determines secure status
-          # i.e. an already public upload will stay public even if added to a new PM
-          first_post_with_upload = self.posts.order(sort_order: :asc).first
-          mark_secure = first_post_with_upload ? first_post_with_upload.with_secure_media? : false
-        end
-      else
-        mark_secure = false
-      end
-    else
-      mark_secure = SiteSetting.prevent_anons_from_downloading_files?
-    end
-    mark_secure
+    secure_status_did_change
   end
 
   def self.migrate_to_new_scheme(limit: nil)
@@ -392,30 +390,38 @@ end
 #
 # Table name: uploads
 #
-#  id                :integer          not null, primary key
-#  user_id           :integer          not null
-#  original_filename :string           not null
-#  filesize          :integer          not null
-#  width             :integer
-#  height            :integer
-#  url               :string           not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  sha1              :string(40)
-#  origin            :string(1000)
-#  retain_hours      :integer
-#  extension         :string(10)
-#  thumbnail_width   :integer
-#  thumbnail_height  :integer
-#  etag              :string
-#  secure            :boolean          default(FALSE), not null
+#  id                     :integer          not null, primary key
+#  user_id                :integer          not null
+#  original_filename      :string           not null
+#  filesize               :integer          not null
+#  width                  :integer
+#  height                 :integer
+#  url                    :string           not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  sha1                   :string(40)
+#  origin                 :string(1000)
+#  retain_hours           :integer
+#  extension              :string(10)
+#  thumbnail_width        :integer
+#  thumbnail_height       :integer
+#  etag                   :string
+#  secure                 :boolean          default(FALSE), not null
+#  access_control_post_id :bigint
+#  original_sha1          :string
 #
 # Indexes
 #
-#  index_uploads_on_etag        (etag)
-#  index_uploads_on_extension   (lower((extension)::text))
-#  index_uploads_on_id_and_url  (id,url)
-#  index_uploads_on_sha1        (sha1) UNIQUE
-#  index_uploads_on_url         (url)
-#  index_uploads_on_user_id     (user_id)
+#  index_uploads_on_access_control_post_id  (access_control_post_id)
+#  index_uploads_on_etag                    (etag)
+#  index_uploads_on_extension               (lower((extension)::text))
+#  index_uploads_on_id_and_url              (id,url)
+#  index_uploads_on_original_sha1           (original_sha1)
+#  index_uploads_on_sha1                    (sha1) UNIQUE
+#  index_uploads_on_url                     (url)
+#  index_uploads_on_user_id                 (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (access_control_post_id => posts.id)
 #

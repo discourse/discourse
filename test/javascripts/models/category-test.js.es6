@@ -17,13 +17,13 @@ QUnit.test("slugFor", assert => {
   );
   slugFor(
     store.createRecord("category", { id: 123, slug: "" }),
-    "123-category",
-    "It returns id-category for empty strings"
+    "-",
+    "It returns - for empty slugs"
   );
   slugFor(
     store.createRecord("category", { id: 456 }),
-    "456-category",
-    "It returns id-category for undefined slugs"
+    "-",
+    "It returns - for undefined slugs"
   );
   slugFor(
     store.createRecord("category", { slug: "熱帶風暴畫眉" }),
@@ -46,14 +46,14 @@ QUnit.test("slugFor", assert => {
 
   slugFor(
     store.createRecord("category", { id: 555, parentCategory: parentCategory }),
-    "darth/555-category",
+    "darth/-",
     "it uses the parent slug before the child and then uses id"
   );
 
   parentCategory.set("slug", null);
   slugFor(
     store.createRecord("category", { id: 555, parentCategory: parentCategory }),
-    "345-category/555-category",
+    "-/-",
     "it uses the parent before the child and uses ids for both"
   );
 });
@@ -182,6 +182,30 @@ QUnit.test("findSingleBySlug", assert => {
     bah,
     "we can find a category with english slug whose parent slug is CJK"
   );
+});
+
+QUnit.test("findBySlugPathWithID", assert => {
+  const store = createStore();
+
+  const foo = store.createRecord("category", { id: 1, slug: "foo" });
+  const bar = store.createRecord("category", {
+    id: 2,
+    slug: "bar",
+    parentCategory: foo
+  });
+  const baz = store.createRecord("category", {
+    id: 3,
+    slug: "baz",
+    parentCategory: foo
+  });
+
+  const categoryList = [foo, bar, baz];
+  sandbox.stub(Category, "list").returns(categoryList);
+
+  assert.deepEqual(Category.findBySlugPathWithID("foo"), foo);
+  assert.deepEqual(Category.findBySlugPathWithID("foo/bar"), bar);
+  assert.deepEqual(Category.findBySlugPathWithID("foo/bar/"), bar);
+  assert.deepEqual(Category.findBySlugPathWithID("foo/baz/3"), baz);
 });
 
 QUnit.test("search with category name", assert => {

@@ -1,4 +1,4 @@
-{{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount}}
+{{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount as |discoveryTopicList|}}
   {{#if top}}
     <div class='top-lists'>
       {{period-chooser period=period action=(action "changePeriod")}}
@@ -13,16 +13,17 @@
 
   {{#if hasTopics}}
     {{topic-list
-        highlightLastVisited=true
-        showPosters=true
-        hideCategory=model.hideCategory
-        order=order
-        ascending=ascending
-        topics=model.topics
-        expandGloballyPinned=expandGloballyPinned
-        expandAllPinned=expandAllPinned
-        category=category
-        }}
+      highlightLastVisited=true
+      showPosters=true
+      hideCategory=model.hideCategory
+      order=order
+      ascending=ascending
+      topics=model.topics
+      expandGloballyPinned=expandGloballyPinned
+      expandAllPinned=expandAllPinned
+      scrollOnLoad=true
+      onScroll=discoveryTopicList.saveScrollPosition
+      category=category}}
   {{/if}}
 {{/discovery-topics-list}}
 

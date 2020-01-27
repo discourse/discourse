@@ -135,9 +135,10 @@ class DiscourseCLI < Thor
     begin
       puts "Starting restore: #{filename}"
       restorer = BackupRestore::Restorer.new(
-        Discourse.system_user.id,
+        user_id: Discourse.system_user.id,
         filename: filename,
-        disable_emails: options[:disable_emails]
+        disable_emails: options[:disable_emails],
+        factory: BackupRestore::Factory.new(user_id: Discourse.system_user.id)
       )
       restorer.run
       puts 'Restore done.'

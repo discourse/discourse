@@ -14,11 +14,11 @@ export default Component.extend({
 
   @discourseComputed("tagId", "category")
   href(tagId, category) {
-    var url = "/tags";
     if (category) {
-      url += category.url;
+      return "/tags" + category.url + "/" + tagId;
+    } else {
+      return "/tag/" + tagId;
     }
-    return url + "/" + tagId;
   },
 
   @discourseComputed("tagId")

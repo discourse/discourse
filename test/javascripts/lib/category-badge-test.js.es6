@@ -91,3 +91,42 @@ QUnit.test("category names are wrapped in dir-spans", assert => {
   dirSpan = tag.children[1].children[0];
   assert.equal(dirSpan.dir, "ltr");
 });
+
+QUnit.test("recursive", assert => {
+  const store = createStore();
+
+  const foo = store.createRecord("category", {
+    name: "foo",
+    id: 1
+  });
+
+  const bar = store.createRecord("category", {
+    name: "bar",
+    id: 2,
+    parent_category_id: foo.id
+  });
+
+  const baz = store.createRecord("category", {
+    name: "baz",
+    id: 3,
+    parent_category_id: bar.id
+  });
+
+  Discourse.set("SiteSettings.max_category_nesting", 0);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("baz") !== -1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("bar") === -1);
+
+  Discourse.set("SiteSettings.max_category_nesting", 1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("baz") !== -1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("bar") === -1);
+
+  Discourse.set("SiteSettings.max_category_nesting", 2);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("baz") !== -1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("bar") !== -1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("foo") === -1);
+
+  Discourse.set("SiteSettings.max_category_nesting", 3);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("baz") !== -1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("bar") !== -1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("foo") !== -1);
+});

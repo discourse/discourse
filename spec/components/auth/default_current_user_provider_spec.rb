@@ -389,7 +389,10 @@ describe Auth::DefaultCurrentUserProvider do
   end
 
   describe "#current_user" do
-    fab!(:user) { Fabricate(:user) }
+    # careful using fab! here is can lead to an erratic test
+    # we want a distinct user object per test so last_seen_at is
+    # handled correctly
+    let!(:user) { Fabricate(:user) }
 
     let(:unhashed_token) do
       new_provider = provider('/')

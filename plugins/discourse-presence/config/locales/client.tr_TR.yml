@@ -10,3 +10,6 @@ tr_TR:
     presence:
       replying: "yanıtlama"
       editing: "düzenleme"
+      replying_to_topic:
+        one: "yanıtlama"
+        other: "yanıtlama"

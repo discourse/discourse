@@ -1,4 +1,4 @@
-import { default as DiscourseURL, userPath } from "discourse/lib/url";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 
 QUnit.module("lib:url");
 

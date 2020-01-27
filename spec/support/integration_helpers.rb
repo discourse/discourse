@@ -29,4 +29,8 @@ module IntegrationHelpers
     get "/session/#{user.username}/become"
     user
   end
+
+  def read_secure_session
+    SecureSession.new(session[:secure_session_id])
+  end
 end

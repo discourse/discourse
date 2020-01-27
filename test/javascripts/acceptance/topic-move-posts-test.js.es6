@@ -18,28 +18,28 @@ QUnit.test("default", async assert => {
   await click(".selected-posts .move-to-topic");
 
   assert.ok(
-    find(".move-to-modal .title")
+    find(".choose-topic-modal .title")
       .html()
       .includes(I18n.t("topic.move_to.title")),
     "it opens move to modal"
   );
 
   assert.ok(
-    find(".move-to-modal .radios")
+    find(".choose-topic-modal .radios")
       .html()
       .includes(I18n.t("topic.split_topic.radio_label")),
     "it shows an option to move to new topic"
   );
 
   assert.ok(
-    find(".move-to-modal .radios")
+    find(".choose-topic-modal .radios")
       .html()
       .includes(I18n.t("topic.merge_topic.radio_label")),
     "it shows an option to move to existing topic"
   );
 
   assert.ok(
-    find(".move-to-modal .radios")
+    find(".choose-topic-modal .radios")
       .html()
       .includes(I18n.t("topic.move_to_new_message.radio_label")),
     "it shows an option to move to new message"
@@ -54,28 +54,28 @@ QUnit.test("moving all posts", async assert => {
   await click(".selected-posts .move-to-topic");
 
   assert.ok(
-    find(".move-to-modal .title")
+    find(".choose-topic-modal .title")
       .html()
       .includes(I18n.t("topic.move_to.title")),
     "it opens move to modal"
   );
 
   assert.not(
-    find(".move-to-modal .radios")
+    find(".choose-topic-modal .radios")
       .html()
       .includes(I18n.t("topic.split_topic.radio_label")),
     "it does not show an option to move to new topic"
   );
 
   assert.ok(
-    find(".move-to-modal .radios")
+    find(".choose-topic-modal .radios")
       .html()
       .includes(I18n.t("topic.merge_topic.radio_label")),
     "it shows an option to move to existing topic"
   );
 
   assert.not(
-    find(".move-to-modal .radios")
+    find(".choose-topic-modal .radios")
       .html()
       .includes(I18n.t("topic.move_to_new_message.radio_label")),
     "it does not show an option to move to new message"
@@ -99,21 +99,21 @@ QUnit.test("moving posts from personal message", async assert => {
   await click(".selected-posts .move-to-topic");
 
   assert.ok(
-    find(".move-to-modal .title")
+    find(".choose-topic-modal .title")
       .html()
       .includes(I18n.t("topic.move_to.title")),
     "it opens move to modal"
   );
 
   assert.ok(
-    find(".move-to-modal .radios")
+    find(".choose-topic-modal .radios")
       .html()
       .includes(I18n.t("topic.move_to_new_message.radio_label")),
     "it shows an option to move to new message"
   );
 
   assert.ok(
-    find(".move-to-modal .radios")
+    find(".choose-topic-modal .radios")
       .html()
       .includes(I18n.t("topic.move_to_existing_message.radio_label")),
     "it shows an option to move to existing message"

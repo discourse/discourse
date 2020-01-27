@@ -79,7 +79,7 @@ export function translateResults(results, opts) {
       const tagName = Handlebars.Utils.escapeExpression(tag.name);
       return EmberObject.create({
         id: tagName,
-        url: Discourse.getURL("/tags/" + tagName)
+        url: Discourse.getURL("/tag/" + tagName)
       });
     })
     .compact();

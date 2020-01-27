@@ -22,14 +22,14 @@ function wrapImage(tokens, index, state, imgNumber) {
   tokens.splice(
     index,
     0,
-    buildToken(state, "wrap_image_open", "div", "image-wrapper", 1)
+    buildToken(state, "wrap_image_open", "span", "image-wrapper", 1)
   );
 
   const newElements = [];
   const btnWrapper = buildToken(
     state,
     "wrap_button_open",
-    "div",
+    "span",
     "button-wrapper",
     1
   );
@@ -70,22 +70,12 @@ function wrapImage(tokens, index, state, imgNumber) {
       newElements.push(buildToken(state, "separator_close", "span", "", -1));
     }
   });
-  newElements.push(buildToken(state, "wrap_button_close", "div", "", -1));
+  newElements.push(buildToken(state, "wrap_button_close", "span", "", -1));
 
-  newElements.push(buildToken(state, "wrap_image_close", "div", "", -1));
+  newElements.push(buildToken(state, "wrap_image_close", "span", "", -1));
 
   const afterImageIndex = index + 2;
   tokens.splice(afterImageIndex, 0, ...newElements);
-}
-
-function removeParagraph(tokens, imageIndex) {
-  if (
-    tokens[imageIndex - 1] &&
-    tokens[imageIndex - 1].type === "paragraph_open"
-  )
-    tokens.splice(imageIndex - 1, 1);
-  if (tokens[imageIndex] && tokens[imageIndex].type === "paragraph_close")
-    tokens.splice(imageIndex, 1);
 }
 
 function updateIndexes(indexes, name) {
@@ -97,7 +87,6 @@ function wrapImages(tokens, tokenIndexes, state, imgNumberIndexes) {
   //We do this in reverse order because it's easier for #wrapImage to manipulate the tokens array.
   for (let j = tokenIndexes.length - 1; j >= 0; j--) {
     let index = tokenIndexes[j];
-    removeParagraph(tokens, index);
     wrapImage(tokens, index, state, imgNumberIndexes.pop());
   }
 }
@@ -123,7 +112,6 @@ function rule(state) {
       const childrenImage = token.tag === "img";
 
       if (childrenImage && isUpload(blockToken) && hasMetadata(token)) {
-        removeParagraph(state.tokens, i);
         childrenIndexes.push(j);
         updateIndexes(indexNumbers, "childrens");
       }
@@ -144,8 +132,8 @@ export function setup(helper) {
   const opts = helper.getOptions();
   if (opts.previewing) {
     helper.whiteList([
-      "div.image-wrapper",
-      "div.button-wrapper",
+      "span.image-wrapper",
+      "span.button-wrapper",
       "span[class=scale-btn]",
       "span[class=scale-btn active]",
       "span.separator",

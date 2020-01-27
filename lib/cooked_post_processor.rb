@@ -83,7 +83,7 @@ class CookedPostProcessor
   def remove_full_quote_on_direct_reply
     return if !SiteSetting.remove_full_quote
     return if @post.post_number == 1
-    return if @doc.css("aside.quote").size != 1
+    return if @doc.xpath("aside[contains(@class, 'quote')]").size != 1
 
     previous = Post
       .where("post_number < ? AND topic_id = ? AND post_type = ? AND NOT hidden", @post.post_number, @post.topic_id, Post.types[:regular])
@@ -99,7 +99,7 @@ class CookedPostProcessor
 
     return if previous_text.gsub(/(\s){2,}/, '\1') != quoted_text.gsub(/(\s){2,}/, '\1')
 
-    quote_regexp = /\A\s*\[quote.+?\[\/quote\]/im
+    quote_regexp = /\A\s*\[quote.+\[\/quote\]/im
     quoteless_raw = @post.raw.sub(quote_regexp, "").strip
 
     return if @post.raw.strip == quoteless_raw
@@ -277,14 +277,17 @@ class CookedPostProcessor
     absolute_url = url
     absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ /^\/[^\/]/
 
-    if url&.start_with?("/secure-media-uploads/")
-      absolute_url = Discourse.store.signed_url_for_path(url.sub("/secure-media-uploads/", ""))
-    end
-
     return unless absolute_url
 
     # FastImage fails when there's no scheme
     absolute_url = SiteSetting.scheme + ":" + absolute_url if absolute_url.start_with?("//")
+
+    # we can't direct FastImage to our secure-media-uploads url because it bounces
+    # anonymous requests with a 404 error
+    if url && Upload.secure_media_url?(url)
+      absolute_url = Upload.signed_url_from_secure_media_url(absolute_url)
+    end
+
     return unless is_valid_image_url?(absolute_url)
 
     # we can *always* crawl our own images
@@ -539,7 +542,10 @@ class CookedPostProcessor
 
       upload_id = downloaded_images[src]
       upload = Upload.find_by_id(upload_id) if upload_id
-      img["src"] = upload.url if upload.present?
+
+      if upload.present?
+        img["src"] = UrlHelper.cook_url(upload.url, secure: @post.with_secure_media?)
+      end
 
       # make sure we grab dimensions for oneboxed images
       # and wrap in a div

@@ -155,7 +155,6 @@ lv:
       banner:
         enabled: "padarīja šo par baneri %{when}. Tas parādīsies katras lapas augšā, līdz lietotājs to aizvērs."
         disabled: "noņēma šo baneri %{when}. Tas vairs neparādīsies katras lapas augšā."
-    topic_admin_menu: "tēmas pārvaldīšana"
     wizard_required: "Laipni lūgti jūsu jaunajā Discourse! Sāksim ar <a href='%{url}' data-auto-route='true'>uzstādīšanas palīgu</a> ✨"
     emails_are_disabled: "Administrators ir globāli izslēdzis visus izejošos e-pastus. Netiks nosūtīti nekāda veida paziņojumi."
     themes:
@@ -252,6 +251,7 @@ lv:
     bookmarks:
       created: "tu esi pievienojies šim ierakstam grāmatzīmi"
       remove: "Noņemt grāmatzīmi"
+      save: "Saglabāt"
     drafts:
       resume: "Turpināt"
       remove: "Atcelt"
@@ -279,8 +279,6 @@ lv:
       edit: "Rediģēt šo banneri >>"
     choose_topic:
       none_found: "Tēmas netika atrastas."
-      title:
-        placeholder: "ierakstiet tēmas nosaukumu šeit"
     review:
       order_by: "Kārtot pēc"
       explain:
@@ -543,6 +541,10 @@ lv:
         normal_option: "Normāls"
       activity_stream: "Aktivitāte"
       preferences: "Iestatījumi"
+      feature_topic_on_profile:
+        save: "Saglabāt"
+        clear:
+          title: "Notīrīt"
       expand_profile: "Paplašināt"
       collapse_profile: "Sakļaut"
       bookmarks: "Grāmatzīmes"
@@ -794,7 +796,6 @@ lv:
         search: "raksti, lai meklētu ielūgumos..."
         title: "Ielūgumi"
         user: "Ielūgtie lietotāji"
-        sent: "Nosūtīts"
         truncated:
           zero: "Nav ielūgumu."
           one: "Pirmais ielūgums."
@@ -1479,6 +1480,7 @@ lv:
           title: "Klusināts"
           description: "Jūs par šo tēmu nesanemsiet nekādus paziņojumus, un tā neparādīsies pēdējās tēmās."
       actions:
+        title: "Darbības"
         recover: "Atcelt tēmas dzēšanu"
         delete: "Dzēst tēmu"
         open: "Atvērt tēmu"
@@ -1725,7 +1727,6 @@ lv:
           notify_moderators: "paziņoja moderatoriem"
           notify_user: "nosūtīja ziņu"
           bookmark: "pievienoja grāmatzīmēm"
-          like: "patika ieraksts"
         by_you:
           off_topic: "Jūs ziņojāt par šo kā novirzīšanos no tēmas"
           spam: "Jūs ziņojāt par šo kā spamu"
@@ -1765,6 +1766,8 @@ lv:
           html_part:
             title: "Parādīt e-pasta html daļu"
             button: "HTML"
+      bookmarks:
+        name: "Vārds"
     category:
       can: "var&hellip;"
       none: "(nav sadaļas)"
@@ -2320,6 +2323,7 @@ lv:
         show_details: Detaļas
         description: Apraksts
         save: Saglabāt
+        continue: Turpināt
       web_hooks:
         detailed_instruction: "Ja būs signāls par izvēlēto notikumu, uz norādīto URL tiks nosūtīts POST pieprasījums."
         create: "Izveidot"

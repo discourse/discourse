@@ -71,20 +71,20 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     composePrivateMessage(user, post) {
-      const recipient = user ? user.get("username") : "",
-        reply = post
-          ? `${window.location.protocol}//${window.location.host}${post.url}`
-          : null,
-        title = post
-          ? I18n.t("composer.reference_topic_title", {
-              title: post.topic.title
-            })
-          : null;
+      const recipients = user ? user.get("username") : "";
+      const reply = post
+        ? `${window.location.protocol}//${window.location.host}${post.url}`
+        : null;
+      const title = post
+        ? I18n.t("composer.reference_topic_title", {
+            title: post.topic.title
+          })
+        : null;
 
       // used only once, one less dependency
       return this.controllerFor("composer").open({
         action: Composer.PRIVATE_MESSAGE,
-        usernames: recipient,
+        recipients,
         archetypeId: "private_message",
         draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
         reply,
@@ -221,8 +221,8 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       );
     },
 
-    createNewMessageViaParams(username, title, body) {
-      this.openComposerWithMessageParams(username, title, body);
+    createNewMessageViaParams(recipients, title, body) {
+      this.openComposerWithMessageParams(recipients, title, body);
     }
   },
 

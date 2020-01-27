@@ -126,7 +126,6 @@ id:
       banner:
         enabled: "Jadikan ini sebagai spanduk %{when}. Spanduk akan tampil di bagian atas di setiap halaman hingga diturunkan oleh pengguna."
         disabled: "Hilangkan spanduk ini %{when}. Spanduk tidak akan lagi tampil pada bagian teratas di tiap halaman."
-    topic_admin_menu: "topik aksi admin"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
     bootstrap_mode_enabled: "Untuk lebih memudahkan peluncuran situs baru Anda, Anda berada di mode bootstrap. Semua pengguna baru akan mendapat level 1 dan mendapat ringkasan email harian diaktifkan. Hal ini akan otomatis dimatikan ketika pengguna %{min_users} sudah ikut."
     bootstrap_mode_disabled: "Mode bootstrap akan dinonaktifkan dalam 24 jam."
@@ -241,8 +240,6 @@ id:
       edit: "Ubah banner ini >>"
     choose_topic:
       none_found: "Tidak ada topik ditemukan."
-      title:
-        placeholder: "tulis judul topik disini"
     review:
       explain:
         total: "Total"
@@ -672,7 +669,6 @@ id:
         search: "ketik untuk mecari undangan..."
         title: "Undangan"
         user: "Pengguna yang telah diundang"
-        sent: "Terkirim"
         none: "Tidak ada undangan"
         pending: "Undangan yang tertunda"
         pending_tab: "Tertunda"
@@ -970,6 +966,8 @@ id:
           title: "Bisukan"
         muted:
           title: "Bisukan"
+      actions:
+        title: "Aksi"
       reply:
         title: "Balas"
       share:
@@ -1001,6 +999,8 @@ id:
       revisions:
         controls:
           first: "Revisi pertama"
+      bookmarks:
+        name: "Nama"
     category:
       edit: "Ubah"
       name: "Nama Kategori"
@@ -1155,6 +1155,7 @@ id:
         user: "Pengguna"
         created: Dibuat
         show_details: Detil
+        continue: Lanjutkan
       web_hooks:
         destroy: "Hapus"
         active: "Aktif"

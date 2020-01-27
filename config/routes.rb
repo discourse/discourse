@@ -295,6 +295,8 @@ Discourse::Application.routes.draw do
 
     resources :badges, constraints: AdminConstraint.new do
       collection do
+        get "/award/:badge_id" => "badges#award"
+        post "/award/:badge_id" => "badges#mass_award"
         get "types" => "badges#badge_types"
         post "badge_groupings" => "badges#save_badge_groupings"
         post "preview" => "badges#preview"
@@ -393,8 +395,6 @@ Discourse::Application.routes.draw do
     post "#{root_path}/email-login" => "users#email_login"
     get "#{root_path}/admin-login" => "users#admin_login"
     put "#{root_path}/admin-login" => "users#admin_login"
-    get "#{root_path}/admin-login/:token" => "users#admin_login"
-    put "#{root_path}/admin-login/:token" => "users#admin_login"
     post "#{root_path}/toggle-anon" => "users#toggle_anon"
     post "#{root_path}/read-faq" => "users#read_faq"
     get "#{root_path}/search/users" => "users#search_users"
@@ -403,9 +403,9 @@ Discourse::Application.routes.draw do
 
     get "#{root_path}/account-created/resent" => "users#account_created"
     get "#{root_path}/account-created/edit-email" => "users#account_created"
-    get({ "#{root_path}/password-reset/:token" => "users#password_reset" }.merge(index == 1 ? { as: :password_reset_token } : {}))
+    get({ "#{root_path}/password-reset/:token" => "users#password_reset_show" }.merge(index == 1 ? { as: :password_reset_token } : {}))
     get "#{root_path}/confirm-email-token/:token" => "users#confirm_email_token", constraints: { format: 'json' }
-    put "#{root_path}/password-reset/:token" => "users#password_reset"
+    put "#{root_path}/password-reset/:token" => "users#password_reset_update"
     get "#{root_path}/activate-account/:token" => "users#activate_account"
     put({ "#{root_path}/activate-account/:token" => "users#perform_account_activation" }.merge(index == 1 ? { as: 'perform_activate_account' } : {}))
 
@@ -503,16 +503,16 @@ Discourse::Application.routes.draw do
   post "uploads/lookup-urls" => "uploads#lookup_urls"
 
   # used to download original images
-  get "uploads/:site/:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, sha: /\h{40}/, extension: /[a-z0-9\.]+/i }
-  get "uploads/short-url/:base62(.:extension)" => "uploads#show_short", constraints: { site: /\w+/, base62: /[a-zA-Z0-9]+/, extension: /[a-z0-9\.]+/i }, as: :upload_short
+  get "uploads/:site/:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, sha: /\h{40}/, extension: /[a-z0-9\._]+/i }
+  get "uploads/short-url/:base62(.:extension)" => "uploads#show_short", constraints: { site: /\w+/, base62: /[a-zA-Z0-9]+/, extension: /[a-z0-9\._]+/i }, as: :upload_short
   # used to download attachments
-  get "uploads/:site/original/:tree:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, tree: /([a-z0-9]+\/)+/i, sha: /\h{40}/, extension: /[a-z0-9\.]+/i }
+  get "uploads/:site/original/:tree:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, tree: /([a-z0-9]+\/)+/i, sha: /\h{40}/, extension: /[a-z0-9\._]+/i }
   if Discourse.is_parallel_test?
-    get "uploads/:site/:index/original/:tree:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, index: /\d+/, tree: /([a-z0-9]+\/)+/i, sha: /\h{40}/, extension: /[a-z0-9\.]+/i }
+    get "uploads/:site/:index/original/:tree:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, index: /\d+/, tree: /([a-z0-9]+\/)+/i, sha: /\h{40}/, extension: /[a-z0-9\._]+/i }
   end
   # used to download attachments (old route)
   get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /\h{16}/, format: /.*/ }
-  get "secure-media-uploads/*path(.:extension)" => "uploads#show_secure", constraints: { extension: /[a-z0-9\.]+/i }
+  get "secure-media-uploads/*path(.:extension)" => "uploads#show_secure", constraints: { extension: /[a-z0-9\._]+/i }
 
   get "posts" => "posts#latest", id: "latest_posts", constraints: { format: /(json|rss)/ }
   get "private-posts" => "posts#latest", id: "private_posts", constraints: { format: /(json|rss)/ }
@@ -790,7 +790,9 @@ Discourse::Application.routes.draw do
   get "/posts/:id/raw-email" => "posts#raw_email"
   get "raw/:topic_id(/:post_number)" => "posts#markdown_num"
 
-  resources :invites
+  resources :invites, except: [:show]
+  get "/invites/:id" => "invites#show", constraints: { format: :html }
+
   post "invites/upload_csv" => "invites#upload_csv"
   post "invites/rescind-all" => "invites#rescind_all_invites"
   post "invites/reinvite" => "invites#resend_invite"
@@ -845,7 +847,7 @@ Discourse::Application.routes.draw do
 
   scope '/tag/:tag_id' do
     constraints format: :json do
-      get '/' => 'tags#show'
+      get '/' => 'tags#show', as: 'tag_show'
       get '/info' => 'tags#info'
       get '/notifications' => 'tags#notifications'
       put '/notifications' => 'tags#update_notifications'
@@ -855,7 +857,7 @@ Discourse::Application.routes.draw do
       delete '/synonyms/:synonym_id' => 'tags#destroy_synonym'
 
       Discourse.filters.each do |filter|
-        get "/l/#{filter}" => "tags#show_#{filter}"
+        get "/l/#{filter}" => "tags#show_#{filter}", as: "tag_show_#{filter}"
       end
     end
 
@@ -895,7 +897,7 @@ Discourse::Application.routes.draw do
     # legacy routes
     constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
       get '/:tag_id.rss' => 'tags#tag_feed'
-      get '/:tag_id' => 'tags#show', as: 'tag_show'
+      get '/:tag_id' => 'tags#show'
       get '/:tag_id/info' => 'tags#info'
       get '/:tag_id/notifications' => 'tags#notifications'
       put '/:tag_id/notifications' => 'tags#update_notifications'
@@ -905,7 +907,7 @@ Discourse::Application.routes.draw do
       delete '/:tag_id/synonyms/:synonym_id' => 'tags#destroy_synonym'
 
       Discourse.filters.each do |filter|
-        get "/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_show_#{filter}"
+        get "/:tag_id/l/#{filter}" => "tags#show_#{filter}"
       end
     end
   end

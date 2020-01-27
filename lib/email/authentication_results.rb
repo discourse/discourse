@@ -2,8 +2,6 @@
 
 module Email
   class AuthenticationResults
-    attr_reader :results
-
     VERDICT = Enum.new(
       :gray,
       :pass,
@@ -12,11 +10,16 @@ module Email
     )
 
     def initialize(headers)
-      authserv_id = SiteSetting.email_in_authserv_id
-      @results = Array(headers).map do |header|
+      @authserv_id = SiteSetting.email_in_authserv_id
+      @headers = headers
+      @verdict = :gray if @authserv_id.blank?
+    end
+
+    def results
+      @results ||= Array(@headers).map do |header|
         parse_header(header.to_s)
       end.filter do |result|
-        authserv_id.blank? || authserv_id == result[:authserv_id]
+        @authserv_id.blank? || @authserv_id == result[:authserv_id]
       end
     end
 
@@ -32,7 +35,7 @@ module Email
 
     def calc_action
       if verdict == :fail
-        :hide
+        :enqueue
       else
         :accept
       end
@@ -44,7 +47,7 @@ module Email
 
     def calc_dmarc
       verdict = VERDICT[:gray]
-      @results.each do |result|
+      results.each do |result|
         result[:resinfo].each do |resinfo|
           if resinfo[:method] == "dmarc"
             v = VERDICT[resinfo[:result].to_sym].to_i

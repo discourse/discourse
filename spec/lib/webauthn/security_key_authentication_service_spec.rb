@@ -62,6 +62,20 @@ describe Webauthn::SecurityKeyAuthenticationService do
     expect(security_key.reload.last_used).not_to eq(nil)
   end
 
+  context "when params is blank" do
+    let(:params) { nil }
+    it "returns false with no validation" do
+      expect(subject.authenticate_security_key).to eq(false)
+    end
+  end
+
+  context "when params is not blank and not a hash" do
+    let(:params) { 'test' }
+    it "returns false with no validation" do
+      expect(subject.authenticate_security_key).to eq(false)
+    end
+  end
+
   context 'when the credential ID does not match any user security key in the database' do
     let(:credential_id) { 'badid' }
 
@@ -128,6 +142,18 @@ describe Webauthn::SecurityKeyAuthenticationService do
     it 'raises a PublicKeyError' do
       expect { subject.authenticate_security_key }.to raise_error(
         Webauthn::PublicKeyError, I18n.t('webauthn.validation.public_key_error')
+      )
+    end
+  end
+
+  context 'when the COSE algorithm used cannot be found' do
+    before do
+      COSE::Algorithm.expects(:find).returns(nil)
+    end
+
+    it 'raises a UnknownCOSEAlgorithmError' do
+      expect { subject.authenticate_security_key }.to raise_error(
+        Webauthn::UnknownCOSEAlgorithmError, I18n.t('webauthn.validation.unknown_cose_algorithm_error')
       )
     end
   end

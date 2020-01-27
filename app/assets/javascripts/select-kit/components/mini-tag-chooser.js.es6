@@ -2,7 +2,7 @@ import { empty, alias } from "@ember/object/computed";
 import Category from "discourse/models/category";
 import ComboBox from "select-kit/components/combo-box";
 import TagsMixin from "select-kit/mixins/tags";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import renderTag from "discourse/lib/render-tag";
 import { escapeExpression } from "discourse/lib/utilities";
 import { makeArray } from "discourse-common/lib/helpers";

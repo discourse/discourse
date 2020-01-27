@@ -8,10 +8,7 @@ import UserStream from "discourse/models/user-stream";
 import UserPostsStream from "discourse/models/user-posts-stream";
 import Singleton from "discourse/mixins/singleton";
 import { longDate } from "discourse/lib/formatter";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import UserActionStat from "discourse/models/user-action-stat";

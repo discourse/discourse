@@ -2,8 +2,7 @@
 
 desc "Runs the qunit test suite"
 
-task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
-  require "rack"
+task "qunit:test", [:timeout, :qunit_path] do |_, args|
   require "socket"
   require 'rbconfig'
 
@@ -42,14 +41,16 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
     port += 1
   end
 
-  unless pid = fork
-    Discourse.after_fork
-    Rack::Server.start(config: "config.ru",
-                       AccessLog: [],
-                       environment: 'test',
-                       Port: port)
-    exit
-  end
+  pid = Process.spawn(
+    {
+      "RAILS_ENV" => "test",
+      "SKIP_ENFORCE_HOSTNAME" => "1",
+      "UNICORN_PID_PATH" => "#{Rails.root}/tmp/pids/unicorn_test.pid", # So this can run alongside development
+      "UNICORN_PORT" => port.to_s,
+      "UNICORN_SIDEKIQS" => "0"
+    },
+    "#{Rails.root}/bin/unicorn -c config/unicorn.conf.rb"
+  )
 
   begin
     success = true

@@ -29,6 +29,42 @@
     width: 100%;
     margin-bottom: 5px;
   }
+
+  .header {
+    .close-button {
+      display: none;
+    }
+  }
+
+  @include breakpoint(mobile-extra-large) {
+    width: 100%;
+    padding: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 1000;
+
+    @keyframes slideUp {
+      0% {
+        transform: translateY(100%);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    animation: slideUp 0.3s;
+
+    .header {
+      padding: 10px 0 0 10px;
+      display: flex;
+      justify-content: space-between;
+      .close-button {
+        display: block;
+        background: transparent;
+      }
+    }
+    ul {
+      margin-top: 0;
+    }
+  }
 }
 
 .modal-body.feature-topic {

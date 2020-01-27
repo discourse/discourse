@@ -1,10 +1,7 @@
 import { debounce } from "@ember/runloop";
 import { cancel } from "@ember/runloop";
 import Component from "@ember/component";
-import {
-  default as computed,
-  on
-} from "ember-addons/ember-computed-decorators";
+import computed, { on } from "ember-addons/ember-computed-decorators";
 import {
   keepAliveDuration,
   bufferTime

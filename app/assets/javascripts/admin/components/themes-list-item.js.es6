@@ -1,10 +1,7 @@
 import { gt, and } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { escape } from "pretty-text/sanitizer";
 import ENV from "discourse-common/config/environment";

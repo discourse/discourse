@@ -12,6 +12,8 @@ pt_BR:
         today: Hoje %{time}
         tomorrow: Amanhã %{time}
         yesterday: Ontem %{time}
+        countdown:
+          passed: data já passou
       title: Inserir data / hora
       create:
         form:

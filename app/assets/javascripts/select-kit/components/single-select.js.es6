@@ -1,8 +1,5 @@
 import SelectKitComponent from "select-kit/components/select-kit";
-import {
-  default as discourseComputed,
-  on
-} from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 const { get, isNone, isEmpty, isPresent, run, makeArray } = Ember;
 
 import {

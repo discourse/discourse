@@ -1623,6 +1623,7 @@ ko:
   csv_export:
     boolean_yes: "네"
     boolean_no: "아니오"
+    rate_limit_error: "게시글은 하루에 한번만 다운로드할 수 있습니다. 내일 다시 시도해보세요."
   static_topic_first_reply: |2
 
     이 글타래인 %{page_name} 페이지의 첫글 수정.
@@ -1761,16 +1762,8 @@ ko:
         이 배지는 300개의 포스트를 올려서 적어도 5개의 좋아요를 받았을 때 수여됩니다. 와우! 우리 커뮤니티는 당신의 꾸준하고 질높은 기여를 숭배합니다.
     out_of_love:
       name: 사랑꾼
-      description: 하루에 좋아요 50개를 보냈습니다
-      long_description: |2
-
-        이 배지는 하루에 50개의 좋아요를 사용했을 때 수여됩니다. 잠시 시간을 내서 당신이 좋아하는 포스트에 좋아요를 남기면 동료 사용자가 앞으로 더 훌륭한 토론을 하는 것에 힘을 보태줍니다.
     higher_love:
       name: 박애주의자
-      description: 5번이나 좋아요 50개를 보냈습니다
-      long_description: |2
-
-        이 배지는 50개의 좋아요를 사용한 날이 5일 이상일 때 수여됩니다. 매일 훌륭한 대화를 응원해주셔서 감사합니다!
     crazy_in_love:
       name: 사랑밖에 모르는 바보
       description: 20번이나 좋아요 50개를 보냈습니다

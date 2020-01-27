@@ -109,7 +109,13 @@ module Stylesheet
 
     def plugin_assets_refresh(plugin_name)
       Stylesheet::Manager.clear_plugin_cache!(plugin_name)
-      message = Stylesheet::Manager.stylesheet_data(plugin_name.to_sym, Stylesheet::Watcher.theme_id)
+      targets = [plugin_name]
+      targets.push("#{plugin_name}_mobile") if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, :mobile)
+      targets.push("#{plugin_name}_desktop") if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, :desktop)
+
+      message = targets.map! do |name|
+        Stylesheet::Manager.stylesheet_data(name.to_sym, Stylesheet::Watcher.theme_id)
+      end.flatten!
       MessageBus.publish '/file-change', message
     end
 

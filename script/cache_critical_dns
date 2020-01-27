@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'ipaddr'
 require 'resolv'
 require 'time'
 require 'socket'

@@ -1,7 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import { alias, notEmpty } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import getUrl from "discourse-common/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";

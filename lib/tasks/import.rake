@@ -45,7 +45,7 @@ def insert_post_replies
   log "Inserting post replies..."
 
   DB.exec <<-SQL
-    INSERT INTO post_replies (post_id, reply_id, created_at, updated_at)
+    INSERT INTO post_replies (post_id, reply_post_id, created_at, updated_at)
          SELECT p2.id, p.id, p.created_at, p.created_at
            FROM posts p
      INNER JOIN posts p2 ON p2.post_number = p.reply_to_post_number AND p2.topic_id = p.topic_id
@@ -300,7 +300,7 @@ def update_posts
   # WITH X AS (
   #   SELECT pr.post_id, p.user_id
   #     FROM post_replies pr
-  #     JOIN posts p ON p.id = pr.reply_id
+  #     JOIN posts p ON p.id = pr.reply_post_id
   # )
   # UPDATE posts
   #    SET reply_to_user_id = X.user_id

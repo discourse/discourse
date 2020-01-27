@@ -217,6 +217,7 @@ describe PostCreator do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
         creator.opts[:invalidate_oneboxes] = true
         creator.create
@@ -226,6 +227,7 @@ describe PostCreator do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
         creator.opts[:image_sizes] = { 'http://an.image.host/image.jpg' => { 'width' => 17, 'height' => 31 } }
         creator.create
@@ -1357,6 +1359,9 @@ describe PostCreator do
     fab!(:anonymous) { Fabricate(:anonymous) }
 
     it "generates post notices for new users" do
+      post = PostCreator.create!(user, title: "private message topic", raw: "private message post", archetype: Archetype.private_message, target_usernames: user.username)
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+
       post = PostCreator.create!(user, title: "one of my first topics", raw: "one of my first posts")
       expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:new_user])
 
@@ -1367,6 +1372,9 @@ describe PostCreator do
     it "generates post notices for returning users" do
       SiteSetting.returning_users_days = 30
       old_post = Fabricate(:post, user: user, created_at: 31.days.ago)
+
+      post = PostCreator.create!(user, title: "private message topic", raw: "private message post", archetype: Archetype.private_message, target_usernames: user.username)
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
 
       post = PostCreator.create!(user, title: "this is a returning topic", raw: "this is a post")
       expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:returning_user])
@@ -1411,53 +1419,12 @@ describe PostCreator do
       )
     end
 
-    it "does not allow a secure image to be used in a public topic" do
+    it "links post uploads" do
       public_post = PostCreator.create(
         user,
         topic_id: public_topic.id,
         raw: "A public post with an image.\n![](#{image_upload.short_path})"
       )
-
-      expect(public_post.errors.count).to be(1)
-      expect(public_post.errors.full_messages).to include(I18n.t('secure_upload_not_allowed_in_public_topic', upload_filenames: image_upload.original_filename))
-
-      # secure upload CAN be used in another PM
-      pm = PostCreator.create(
-        user,
-        title: 'this is another private message',
-        raw: "with an upload: \n![](#{image_upload.short_path})",
-        archetype: Archetype.private_message,
-        target_usernames: [user2.username].join(',')
-      )
-
-      expect(pm.errors).to be_blank
     end
-
-    it "does not allow a secure video to be used in a public topic" do
-      video_upload = Fabricate(:upload_s3, extension: 'mp4', original_filename: "video.mp4", secure: true)
-
-      public_post = PostCreator.create(
-        user,
-        topic_id: public_topic.id,
-        raw: "A public post with a video onebox:\n#{video_upload.url}"
-      )
-
-      expect(public_post.errors.count).to be(1)
-      expect(public_post.errors.full_messages).to include(I18n.t('secure_upload_not_allowed_in_public_topic', upload_filenames: video_upload.original_filename))
-    end
-
-    it "allows an existing upload to be used again in nonPM topics in login_required sites" do
-      SiteSetting.login_required = true
-
-      public_post = PostCreator.create(
-        user,
-        topic_id: public_topic.id,
-        raw: "Reusing this image on a public topic in a login_required site:\n![](#{image_upload.short_path})"
-      )
-
-      expect(public_post.errors.count).to be(0)
-    end
-
   end
-
 end

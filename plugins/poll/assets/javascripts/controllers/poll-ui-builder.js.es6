@@ -1,8 +1,5 @@
 import Controller from "@ember/controller";
-import {
-  default as computed,
-  observes
-} from "discourse-common/utils/decorators";
+import computed, { observes } from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 
 export const BAR_CHART_TYPE = "bar";

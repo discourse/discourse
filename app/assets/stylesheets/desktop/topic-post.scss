@@ -6,6 +6,12 @@
   margin-left: 0;
 }
 
+.topic-post:first-child {
+  nav.post-controls .post-admin-menu {
+    bottom: -125px;
+  }
+}
+
 .topic-body {
   // this ensures consistent top margin on topic posts even if the first line of a post
   // is a top-margin-less element like a list or image.

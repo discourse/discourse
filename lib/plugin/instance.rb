@@ -127,12 +127,14 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def replace_flags
-    settings = ::FlagSettings.new
-    yield settings
+  def replace_flags(settings: ::FlagSettings.new)
+    next_flag_id = ReviewableScore.types.values.max + 1
+
+    yield(settings, next_flag_id)
 
     reloadable_patch do |plugin|
       ::PostActionType.replace_flag_settings(settings)
+      ::ReviewableScore.reload_types
     end
   end
 
@@ -250,9 +252,9 @@ class Plugin::Instance
   end
 
   # Add a permitted_create_param to Post, respecting if the plugin is enabled
-  def add_permitted_post_create_param(name)
+  def add_permitted_post_create_param(name, type = :string)
     reloadable_patch do |plugin|
-      ::Post.plugin_permitted_create_params[name] = plugin
+      ::Post.plugin_permitted_create_params[name] = { plugin: plugin, type: type }
     end
   end
 

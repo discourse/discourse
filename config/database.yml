@@ -16,10 +16,23 @@ development:
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
+
+<%
+  test_db = ENV["RAILS_DB"]
+  if !test_db.present?
+    test_db = "discourse_test"
+
+    if num = ENV["TEST_ENV_NUMBER"]
+      num = num.presence || "1"
+      test_db += "_#{num}"
+    end
+  end
+%>
+
 test:
   prepared_statements: false
   adapter: postgresql
-  database: <%= ENV["RAILS_DB"] ? ENV["RAILS_DB"] : "discourse_test" %>
+  database: <%= test_db %>
   min_messages: warning
   pool: 5
   timeout: 5000

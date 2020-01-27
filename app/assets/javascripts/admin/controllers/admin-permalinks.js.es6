@@ -1,17 +1,19 @@
 import Controller from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";
 import Permalink from "admin/models/permalink";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   loading: false,
   filter: null,
 
+  @observes("filter")
   show: discourseDebounce(function() {
     Permalink.findAll(this.filter).then(result => {
       this.set("model", result);
       this.set("loading", false);
     });
-  }, 250).observes("filter"),
+  }, 250),
 
   actions: {
     recordAdded(arg) {

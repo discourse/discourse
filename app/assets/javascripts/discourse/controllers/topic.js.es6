@@ -15,10 +15,7 @@ import Topic from "discourse/models/topic";
 import discourseDebounce from "discourse/lib/debounce";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { ajax } from "discourse/lib/ajax";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
@@ -269,7 +266,7 @@ export default Controller.extend(bufferedProperty("model"), {
       this.send("showFeatureTopic");
     },
 
-    selectText(postId, buffer) {
+    selectText(postId, buffer, opts) {
       const loadedPost = this.get("model.postStream").findLoadedPost(postId);
       const promise = loadedPost
         ? Promise.resolve(loadedPost)
@@ -278,7 +275,7 @@ export default Controller.extend(bufferedProperty("model"), {
       return promise.then(post => {
         const composer = this.composer;
         const viewOpen = composer.get("model.viewOpen");
-        const quotedText = Quote.build(post, buffer);
+        const quotedText = Quote.build(post, buffer, opts);
 
         // If we can't create a post, delegate to reply as new topic
         if (!viewOpen && !this.get("model.details.can_create_post")) {
@@ -727,6 +724,10 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     jumpEnd() {
+      this.appEvents.trigger(
+        "topic:jump-to-post",
+        this.get("model.highest_post_number")
+      );
       DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
         jumpEnd: true
       });

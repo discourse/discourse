@@ -47,25 +47,9 @@ describe Admin::ThemesController do
         expect(response.status).to eq(201)
       end
 
-      context "if the file is secure media" do
-        before do
-          uploaded_file.update_secure_status(secure_override_value: true)
-          upload.rewind
-        end
-
-        it "marks the upload as not secure" do
-          post "/admin/themes/upload_asset.json", params: { file: upload }
-          expect(response.status).to eq(201)
-          expect(response_json["upload_id"]).to eq(uploaded_file.id)
-          uploaded_file.reload
-          expect(uploaded_file.secure).to eq(false)
-        end
-
-        it "enqueues a job to rebake the posts for the upload" do
-          Jobs.expects(:enqueue).with(:rebake_posts_for_upload, id: uploaded_file.id)
-          post "/admin/themes/upload_asset.json", params: { file: upload }
-          expect(response.status).to eq(201)
-        end
+      it "reuses the original upload" do
+        expect(response.status).to eq(201)
+        expect(response_json["upload_id"]).to eq(uploaded_file.id)
       end
     end
   end

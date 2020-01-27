@@ -146,7 +146,6 @@ nb_NO:
       banner:
         enabled: "gjorde dette til et banner %{when}. Det vil vises på toppen av hver side inntil brukeren lukker det."
         disabled: "fjernet dette banneret %{when}. Det vil ikke lenger vises på toppen av hver side."
-    topic_admin_menu: "administratorhandlinger for emne"
     wizard_required: "Velkommen til ditt nye Discourse! Kom i gang med <a href='%{url}' data-auto-route='true'>oppstartsveiviseren</a> ✨"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     bootstrap_mode_enabled: "For å gjøre lansering av siden enklere er den nå i oppstartsmodus. Alle nye brukere tildeles tillitsnivå 1 og får daglige oppsummeringer på e-post aktivert. Oppstartsmodus vil bli automatisk slått av når %{min_users} brukere har registrert seg."
@@ -249,6 +248,7 @@ nb_NO:
       created: "du har bokmerket dette innlegget"
       not_bookmarked: "bokmerk dette innlegget"
       remove: "Fjern bokmerke"
+      save: "Lagre"
     drafts:
       resume: "Fortsett"
       remove: "Fjern"
@@ -293,12 +293,8 @@ nb_NO:
       install_banner: "Ønsker du å <a href>installere %{title} på denne enheten</a>?"
     choose_topic:
       none_found: "Ingen emner funnet."
-      title:
-        placeholder: "skriv tittelen på emnet her"
     choose_message:
       none_found: "Ingen meldinger funnet."
-      title:
-        placeholder: "skriv meldingstittelen her"
     review:
       order_by: "Sorter etter"
       in_reply_to: "i svar til"
@@ -618,6 +614,10 @@ nb_NO:
         normal_option: "Normal"
       activity_stream: "Aktivitet"
       preferences: "Innstillinger"
+      feature_topic_on_profile:
+        save: "Lagre"
+        clear:
+          title: "Tøm"
       expand_profile: "Utvid"
       collapse_profile: "Fold sammen"
       bookmarks: "Bokmerker"
@@ -894,7 +894,6 @@ nb_NO:
         search: "skriv for å søke etter invitasjoner…"
         title: "invitasjoner"
         user: "Invitert bruker"
-        sent: "Sendt"
         none: "Ingen invitasjoner å vise."
         truncated:
           one: "Viser den første invitasjonen."
@@ -1709,6 +1708,7 @@ nb_NO:
           title: "Ignorert"
           description: "Du vil aldri bli varslet om noe vedrørende dette emnet, og det vil ikke vises i siste."
       actions:
+        title: "Handlinger"
         recover: "Gjenopprett emne"
         delete: "Slett emne"
         open: "Åpne emne"
@@ -1970,7 +1970,6 @@ nb_NO:
           notify_moderators: "varslet moderatorer"
           notify_user: "sendte en melding"
           bookmark: "bokmerket dette"
-          like: "likte dette"
           like_capped:
             one: "og {{count}} annen likte dette"
             other: "og {{count}} andre likte dette"
@@ -2022,6 +2021,8 @@ nb_NO:
           html_part:
             title: "Vis HTML-delen av e-posten"
             button: "HTML"
+      bookmarks:
+        name: "Navn"
     category:
       can: "kan&hellip;"
       none: "(no category)"
@@ -2640,6 +2641,7 @@ nb_NO:
         show_details: Detaljer
         description: Beskrivelse
         save: Lagre
+        continue: Fortsett
       web_hooks:
         title: "Webhooker"
         none: "Det finnes ingen webhooker for tiden."

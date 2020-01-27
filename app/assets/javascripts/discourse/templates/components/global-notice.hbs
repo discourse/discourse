@@ -1,0 +1,19 @@
+{{#each notices as |notice|}}
+  <div class="row">
+    <div id="global-notice-{{notice.id}}" class="alert alert-{{notice.options.level}} {{notice.id}}">
+      {{#if notice.options.html}}
+        {{{notice.options.html}}}
+      {{/if}}
+      <span class="text">{{{notice.text}}}</span>
+
+      {{#if notice.options.dismissable}}
+        {{d-button
+          class="btn-flat close"
+          icon="times"
+          action=(action "dismissNotice")
+          actionParam=notice
+        }}
+      {{/if}}
+    </div>
+  </div>
+{{/each}}

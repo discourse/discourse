@@ -324,6 +324,18 @@ es:
   edit_conflict: "La publicación ha sido editada por otro usuario y tus cambios no se pueden guardar."
   revert_version_same: "La versión actual es la misma que la versión a la que intentas volver."
   excerpt_image: "imagen"
+  bookmarks:
+    errors:
+      already_bookmarked_post: "No puedes guardar la misma publicación en marcadores dos veces."
+      time_must_be_provided: "se debe especificar la hora para todos los recordatorios excepto '%{reminder_type}'"
+    reminders:
+      at_desktop: "La próxima vez que esté en mi ordenador"
+      later_today: "Más tarde hoy <br/>{{date}}"
+      next_business_day: "El próximo día hábil <br/>{{date}}"
+      tomorrow: "Mañana <br/>{{date}}"
+      next_week: "La próxima semana <br/>{{date}}"
+      next_month: "El mes que viene <br/>{{date}}"
+      custom: "Fecha y hora personalizadas"
   groups:
     success:
       bulk_add:
@@ -838,6 +850,7 @@ es:
       public_key_error: "La verificación de la clave pública para la credencial falló."
       ownership_error: "La clave de seguridad no le pertenece al usuario."
       not_found_error: "No se encontró ninguna clave de seguridad con la ID de la credencial provista."
+      unknown_cose_algorithm_error: "No se reconoce el algoritmo usado para la clave de seguridad."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1406,6 +1419,7 @@ es:
     content_security_policy_collect_reports: "Habilitar la recolección de reportes de violación de CSP en /csp_reports"
     content_security_policy_script_src: "Fuentes de script adicionales en la lista blanca. El host actual y CDN se incluyen por defecto. Leer <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
     invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
+    allow_embedding_site_in_an_iframe: "Habilitar la inserción del sitio en iframes."
     top_menu: "Determinar los elementos que aparecen en el menú de navegación de la página de inicio y su orden. Ejemplo últimos|nuevos|no leídos|categorías|destacados|leídos|publicados|marcadores"
     post_menu: "Determinar los elementos que aparecen en el menú de publicación  y su orden. Ejemplo: me gusta|editar|reportar|eliminar|compartir|guardar en marcadores|responder"
     post_menu_hidden_items: "Los elementos del menú que se ocultan por defecto en el menú de publicación a menos que se haga clic en el botón para expandir las opciones."
@@ -1562,7 +1576,7 @@ es:
     enable_flash_video_onebox: "Habilitar el insertado de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
     default_trust_level: "Nivel de confianza por defecto (0-4) para todos los usuarios nuevos. ¡AVISO! Cambiar esto puede resultar en alto riesgo de spam."
-    tl1_requires_topics_entered: "Cantidad de temas que un usuario nuevo debe agregar antes de que sea promovido al nivel de confianza 1"
+    tl1_requires_topics_entered: "Cantidad de temas a los que un usuario nuevo debe entrar antes de que sea promovido al nivel de confianza 1"
     tl1_requires_read_posts: "Cantidad de publicaciones que debe leer un nuevo usuario antes de ser promovido al nivel de confianza 1."
     tl1_requires_time_spent_mins: "Cantidad de que minutos un usuario nuevo debe permanecer leyendo publicaciones antes de ser promovido al nivel de confianza 1."
     tl2_requires_topics_entered: "Cantidad de temas a los que un usuario debe entrar antes de ser promovido al nivel de confianza 2."
@@ -1648,7 +1662,7 @@ es:
     log_anonymizer_details: "Mantener o no los detalles de un usuario en el registro después de ser anonimizados. Para cumplir con la RGPD, deberás apagarlo."
     newuser_spam_host_threshold: "Cantidad de veces que un usuario nuevo puede publicar un enlace al mismo host dentro del `newuser_spam_host_threshold` de sus publicaciones antes de ser considerado spam."
     white_listed_spam_host_domains: "Una lista de dominios que se excluyen de las pruebas de spam. A los usuarios nuevos no se les restringirá nunca la posibilidad de crear publicaciones con enlaces a estos dominios."
-    staff_like_weight: "Factor de ponderación adicional que otorgan los me gusta dados por los miembros del staff."
+    staff_like_weight: "Factor de peso adicional que otorgan los me gusta dados por los miembros del staff."
     topic_view_duration_hours: "Contar una visita a un nuevo tema por IP/Usuario cada N horas"
     user_profile_view_duration_hours: "Contar una nueva visita de perfil por IP/Usuario cada N horas"
     levenshtein_distance_spammer_emails: "Al revisar coincidencias por correos electrónicos de spammers, cantidad de caracteres diferentes que permiten una coincidencia parcial."
@@ -1754,6 +1768,7 @@ es:
     anonymous_posting_min_trust_level: "Nivel de confianza mínimo requerido para permitir la publicación anónima"
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde la última publicación Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
     hide_user_profiles_from_public: "Desactiva las tarjetas de usuario, los perfiles y el directorio de usuarios para usuarios anónimos."
+    allow_featured_topic_on_user_profiles: "Permitir a los usuarios destacar un enlace a un tema en su tarjeta de usuario y perfil."
     show_inactive_accounts: "Permitir a usuarios con una sesión iniciada visualizar perfiles de cuentas inactivas."
     hide_suspension_reasons: "No mostrar laa razones de suspensión públicamente en el perfil de usuario."
     log_personal_messages_views: "Registrar los mensajes personales vistos por el administrador para otros usuarios/grupos."
@@ -1773,6 +1788,8 @@ es:
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de hacer coincidir los permalinks, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
     global_notice: "Mostrar un anuncio global de URGENCIA o EMERGENCIA que no se pueda ocultar para todos los visitantes. Deja este campo en blanco para ocultarlo (se permite HTML)."
     disable_system_edit_notifications: "Inhabilitar editar notificaciones por el usuario del sistema cuando «download_remote_images_to_local» este activo."
+    notification_consolidation_threshold: "Cantidad de me gusta o notificaciones de solicitud de membresía recibidas antes de que las notificaciones se consoliden en una sola. Establece el valor en 0 para deshabilitar."
+    likes_notification_consolidation_window_mins: "Minutos durante los que las notificaciones se consolidan en una sola notificación una vez que se haya alcanzado el limite. El límite se puede configurar en `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
     read_time_word_count: "Número de palabras por minuto para calcular el tiempo de lectura estimado."
     topic_page_title_includes_category: "La <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta del título</a> de la página del tema incluye el nombre de la categoría."
@@ -1928,7 +1945,7 @@ es:
       category_search_priority:
         very_low_weight_invalid: "No puedes establecer el peso a un valor superior a «category_search_priority_low_weight»."
         low_weight_invalid: "No puedes poner el peso a un valor superior o igual a 1 o menor que «category_search_priority_very_low_weight»."
-        high_weight_invalid: "No puedes poner el peso a un valor superior o igual a 1 o superior a «category_search_priority_very_high_weight»."
+        high_weight_invalid: "No puedes establecer el peso como menor o igual a 1 ni mayor a 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "No puedes poner el peso a un valor inferior a «category_search_priority_high_weight»."
       unicode_username_whitelist:
         regex_invalid: "La expresión regular no es válida: %{error}"
@@ -1956,6 +1973,7 @@ es:
     unknown_error: "Hay un problema con tu cuenta. Por favor, contacta al administrador del sitio."
     timeout_expired: "Se superó el tiempo para el inicio de sesión. Por favor, inténtalo de nuevo."
     no_email: "No se ha provisto ninguna dirección de correo electrónico. Por favor, contacta al administrador del sitio."
+    blank_id_error: "La `external_id` es necesaria pero se encuentra en blanco"
     email_error: "Una cuenta no puede ser registrada con el correo electrónico <b>%{email}</b>. Por favor, contacta al administrador del sitio web."
     missing_secret: "La autentificación del SSO falló porque falta el secreto. Contacta al administrador de la página para solucionar este problema."
   original_poster: "Autor original"
@@ -2079,7 +2097,6 @@ es:
     invalid_second_factor_code: "Código de autentificación inválido. Cada código se puede usar solo una vez."
     invalid_security_key: "Clave de seguridad inválida."
     second_factor_toggle:
-      totp: "Usar una aplicación de verificación en su lugar"
       backup_code: "Usar un código de respaldo en su lugar"
   admin:
     email:
@@ -3109,7 +3126,6 @@ es:
       unsubscribe: "Este resumen se envía desde %{site_link} cuando no te hemos visto durante cierto tiempo. Cambia %{email_preferences_link} o %{unsubscribe_link} para cancelar tu suscripción."
       your_email_settings: "tus configuraciones de correo electrónico"
       click_here: "haz clic aquí"
-      from: "resumen de %{site_name}"
       preheader: "Un resumen breve desde tu última visita el %{last_seen_at}"
     forgot_password:
       title: "Olvidé la contraseña"
@@ -3144,13 +3160,6 @@ es:
     admin_login:
       title: "Incicio de sesión de administrador"
       subject_template: "[%{email_prefix}] Inicio de sesión"
-      text_body_template: |
-        Alguien ha pedido iniciar sesión con tu cuenta en [%{site_name}](%{base_url}).
-
-        Si tú no realizaste esta petición, puedes ignorar este email.
-
-        Haz clic en el siguiente enlace para iniciar sesión:
-        %{base_url}/u/admin-login/%{email_token}
     account_created:
       title: "Cuenta creada"
       subject_template: "[%{email_prefix}] Tu nueva cuenta"
@@ -3326,6 +3335,7 @@ es:
   csv_export:
     boolean_yes: "Sí"
     boolean_no: "No"
+    rate_limit_error: "Solo se pueden descargar las publicaciones una vez al día. Por favor, inténtalo de nuevo mañana."
   static_topic_first_reply: |
     Edita la primera publicación de este tema para cambiar el contenido de la página %{page_name}.
   guidelines_topic:
@@ -3858,19 +3868,19 @@ es:
         Esta medalla se concede cuando recibes al menos 5 me gusta en 300 publicaciones distintas. ¡Bravo! ¡La comunidad admira tus aportes frecuentes y de gran calidad!
     out_of_love:
       name: Dadivoso
-      description: Utilizó 50 me gusta en un día
+      description: "Por usar %{max_likes_per_day} me gusta en un día."
       long_description: |
-        Esta medalla se concede cuando das los 50 me gusta que puedes utilizar al día. Recuerda tomar un momento y dar me gusta a las publicaciones que disfrutas, así incentivas a los demás miembros a crear aún mejores debates en el futuro.
+        Esta medalla se concede cuando usas todos los %{max_likes_per_day}de tus me gusta diarios. Recuerda tomar un momento y dar me gusta a las publicaciones que disfrutas, así incentivas a los demás miembros a crear aún mejores debates en el futuro.
     higher_love:
       name: Generoso
-      description: Utilizó 50 me gusta 5 veces
+      description: "Utilizó %{max_likes_per_day} me gusta en un día 5 veces"
       long_description: |
-        Esta medalla se concede cuando das los 50 me gusta diarios 5 veces. ¡Gracias por tomarte tiempo en incentivar y premiar las mejores conversaciones cada día!
+        Esta medalla se concede cuando usas todos los %{max_likes_per_day} me gusta diarios por 5 días. ¡Gracias por tomarte tiempo en incentivar y premiar las mejores conversaciones cada día!
     crazy_in_love:
       name: Magnánimo
       description: Utilizó 50 me gusta en un día 20 veces
       long_description: |
-        Esta medalla se concede cuando usas los 50 me gusta diarios 20 veces. ¡Genial! Eres un modelo a seguir por animar a los demás miembros de la comunidad.
+        Esta medalla se concede cuando usas todos los %{max_likes_per_day}de tus me gusta diarios por 20 días. ¡Wowl! ¡Eres un modelo a seguir por animar a los demás miembros de la comunidad!
     thank_you:
       name: Agradecido/a
       description: Ha recibido me gusta en 20 publicaciones y dado 10 me gusta
@@ -3953,9 +3963,13 @@ es:
       restricted_to:
         one: '"%{tag_name}" está restringida a la categoría "%{category_names}"'
         other: '«%{tag_name}» está restringida a las siguientes categorías: %{category_names}'
+      synonym: 'Los sinónimos no están permitidos. Utiliza "%{tag_name}" en su lugar.'
+      has_synonyms: '"%{tag_name}" no se puede utilizar porque tiene sinónimos.'
     required_tags_from_group:
       one: "Debes incluir al menos %{count} etiqueta %{tag_group_name}."
       other: "Debes incluir al menos %{count} etiquetas %{tag_group_name}."
+    invalid_target_tag: "no puede ser el sinónimo de un sinónimo"
+    synonyms_exist: "no está permitido mientras existan sinónimos"
   rss_by_tag: "Temas con la etiqueta %{tag}"
   finish_installation:
     congratulations: "¡Felicitaciones, has instalado Discourse!"

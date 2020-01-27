@@ -1,10 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import { not } from "@ember/object/computed";
 import Component from "@ember/component";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Group from "discourse/models/group";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";

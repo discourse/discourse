@@ -152,7 +152,6 @@ fa_IR:
       banner:
         enabled: "این در %{when} یک بنر شد، تا زمانی که کاربر آن را ببندد بالای صفحه خواهد ماند."
         disabled: "این بنر در %{when} حذف شده. و دیگر در بالای صفحات نمایش داده نمی‌شود."
-    topic_admin_menu: "اقدامات مدیریت موضوع"
     wizard_required: "به دیسکورس خوش آمدید! برای شروع نصب <a href='%{url}' data-auto-route='true'>کلیک کنید</a> ✨"
     emails_are_disabled: "تمام ایمیل های خروجی بصورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
     bootstrap_mode_enabled: "برای راه‌اندازی راحت‌تر سایت جدید، حالت خود‌راه‌انداز فعال شده. به تمام کاربران سطح اعتماد 1 اعطا می‌شود و ایمیل خلاصه روزانه به صورت پیشفرض برای ایشان فعال می‌شود. این امکان بصورت خودکار وقتی تعداد کاربران از %{min_users} بیشتر شود، غیر فعال خواهد شد."
@@ -264,6 +263,7 @@ fa_IR:
       not_bookmarked: "این نوشته را نشانک بزنید"
       remove: "پاک کردن نشانک"
       confirm_clear: "آیا مطمئنید می‌خواهید همه‌ی نشانک‌های خود را از این موضوع پاک کنید؟"
+      save: "ذخیره"
     drafts:
       resume: "از سر گیری"
       remove: "پاک کردن"
@@ -309,14 +309,8 @@ fa_IR:
       install_banner: "ایامایل هستید تا <a href>، %{title} را بر‌روی دستگاه شما نصب کند؟</a>"
     choose_topic:
       none_found: "موضوعی یافت نشد."
-      title:
-        search: "جستجوی یک مبحث با عنوان، آی دی و یا لینک "
-        placeholder: "عنوان موضوع را اینجا بنویسید"
     choose_message:
       none_found: "پیامی پیدا نشد"
-      title:
-        search: "جستجوی یک پیام با عنوان"
-        placeholder: "عنوان پیام را اینجا وارد کنید"
     review:
       order_by: "به ترتیب"
       in_reply_to: "در پاسخ به"
@@ -730,6 +724,10 @@ fa_IR:
         normal_option_title: "اگر این کاربر به شما پاسخ دهد، از شما نقل قول کند و یا شما را صدا کند، اگاه سازی دریافت میکنید"
       activity_stream: "فعالیت"
       preferences: "تنظیمات"
+      feature_topic_on_profile:
+        save: "ذخیره"
+        clear:
+          title: "واضح"
       profile_hidden: "صفحه نمایه این کاربر مخفی است"
       expand_profile: "باز کردن"
       collapse_profile: "جمع کردن"
@@ -1071,7 +1069,6 @@ fa_IR:
         search: "بنویسید تا دعوت‌ها را جستجو کنید..."
         title: "دعوت‌ها"
         user: "کاربر دعوت شده"
-        sent: "ارسال شده"
         none: "هیچ دعوتنامه ای برای نمایش نیست"
         truncated:
           one: "نمایش {{count}} دعوت اول."
@@ -1961,6 +1958,7 @@ fa_IR:
           title: "بی‌صدا شد"
           description: "شما هرگز از چیزی درباره این موضوع آگاه نمیشوید، و آن در آخرین ها نمایش داده نخواهد شد."
       actions:
+        title: "عملیات"
         recover: "بازیابی موضوع"
         delete: "پاک کردن موضوع"
         open: "باز کردن موضوع "
@@ -2242,7 +2240,6 @@ fa_IR:
           notify_moderators: "مدیر‌های مطلع شده"
           notify_user: "یک پیام ارسال شد"
           bookmark: "نشانه گذاری کن"
-          like: "پسندیده شد"
           like_capped:
             one: "و {{count}} نفر دیگر این را دوست داشتند"
             other: "و {{count}} نفر دیگر این را پسندیده‌اند."
@@ -2295,6 +2292,8 @@ fa_IR:
           html_part:
             title: "نمایش قسمت HTML ایمیل"
             button: "HTML"
+      bookmarks:
+        name: "نام"
     category:
       can: "can&hellip; "
       none: "(بدون دسته‌بندی)"
@@ -2942,6 +2941,7 @@ fa_IR:
         show_details: جزئیات
         description: توضیح
         save: ذخیره
+        continue: ادامه
       web_hooks:
         title: "webhook ها"
         none: "در حال حاضر webhook‌ی وجود ندارد"

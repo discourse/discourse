@@ -1,5 +1,5 @@
 import componentTest from "helpers/component-test";
-import { default as Theme, THEMES, COMPONENTS } from "admin/models/theme";
+import Theme, { THEMES, COMPONENTS } from "admin/models/theme";
 
 moduleForComponent("themes-list", { integration: true });
 

@@ -104,7 +104,7 @@ class PostCreator
       if names.length > max_allowed_message_recipients
         errors.add(
           :base,
-          I18n.t(:max_pm_recepients, recipients_limit: max_allowed_message_recipients)
+          I18n.t(:max_pm_recipients, recipients_limit: max_allowed_message_recipients)
         )
 
         return false
@@ -177,7 +177,7 @@ class PostCreator
         update_topic_auto_close
         update_user_counts
         create_embedded_topic
-        link_post_uploads
+        @post.link_post_uploads
         update_uploads_secure_status
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message
@@ -372,14 +372,6 @@ class PostCreator
     rollback_from_errors!(embed) unless embed.save
   end
 
-  def link_post_uploads
-    disallowed_uploads = @post.link_post_uploads
-    if disallowed_uploads.is_a? Array
-      @post.errors.add(:base, I18n.t('secure_upload_not_allowed_in_public_topic', upload_filenames: disallowed_uploads.join(", ")))
-      rollback_from_errors!(@post)
-    end
-  end
-
   def update_uploads_secure_status
     if SiteSetting.secure_media? || SiteSetting.prevent_anons_from_downloading_files?
       @post.update_uploads_secure_status
@@ -550,8 +542,12 @@ class PostCreator
 
   def create_post_notice
     return if @opts[:import_mode] || @user.anonymous? || @user.bot? || @user.staged
+    return if @post.topic.archetype != Archetype.default
 
-    last_post_time = Post.where(user_id: @user.id)
+    last_post_time = Post
+      .joins("JOIN topics ON topics.id = posts.topic_id")
+      .where(user_id: @user.id)
+      .where(topics: { archetype: Archetype.default })
       .order(created_at: :desc)
       .limit(1)
       .pluck(:created_at)

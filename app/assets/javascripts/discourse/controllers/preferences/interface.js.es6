@@ -2,10 +2,7 @@ import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { setDefaultHomepage } from "discourse/lib/utilities";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import {
   listThemes,
   previewTheme,

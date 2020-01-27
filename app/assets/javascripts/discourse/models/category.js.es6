@@ -65,6 +65,21 @@ const Category = RestModel.extend({
     return (parentLevel || -1) + 1;
   },
 
+  @discourseComputed("subcategories")
+  isParent(subcategories) {
+    return subcategories && subcategories.length > 0;
+  },
+
+  @discourseComputed("subcategories")
+  isGrandParent(subcategories) {
+    return (
+      subcategories &&
+      subcategories.some(
+        cat => cat.subcategories && cat.subcategories.length > 0
+      )
+    );
+  },
+
   @discourseComputed("notification_level")
   isMuted(notificationLevel) {
     return notificationLevel === NotificationLevels.MUTED;
@@ -251,12 +266,8 @@ Category.reopenClass({
       result = Category.slugFor(parentCategory) + separator;
     }
 
-    const id = get(category, "id"),
-      slug = get(category, "slug");
-
-    return !slug || slug.trim().length === 0
-      ? `${result}${id}-category`
-      : result + slug;
+    const slug = get(category, "slug");
+    return !slug || slug.trim().length === 0 ? `${result}-` : result + slug;
   },
 
   list() {
@@ -298,11 +309,10 @@ Category.reopenClass({
   },
 
   findBySlugAndParent(slug, parentCategory) {
+    if (Discourse.SiteSettings.slug_generation_method === "encoded") {
+      slug = encodeURI(slug);
+    }
     return Category.list().find(category => {
-      if (Discourse.SiteSettings.slug_generation_method === "encoded") {
-        slug = encodeURI(slug);
-      }
-
       return (
         category.slug === slug &&
         (category.parentCategory || null) === parentCategory
@@ -325,7 +335,11 @@ Category.reopenClass({
   },
 
   findBySlugPathWithID(slugPathWithID) {
-    const parts = slugPathWithID.split("/");
+    let parts = slugPathWithID.split("/").filter(Boolean);
+    // slugs found by star/glob pathing in emeber do not automatically url decode - ensure that these are decoded
+    if (Discourse.SiteSettings.slug_generation_method === "encoded") {
+      parts = parts.map(urlPart => decodeURI(urlPart));
+    }
     let category = null;
 
     if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {

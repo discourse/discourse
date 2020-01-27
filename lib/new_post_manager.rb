@@ -80,7 +80,11 @@ class NewPostManager
   def self.post_needs_approval?(manager)
     user = manager.user
 
+    return :email_auth_res_enqueue if manager.args[:email_auth_res_action] == :enqueue
+
     return :skip if exempt_user?(user)
+
+    return :email_spam if manager.args[:email_spam]
 
     return :post_count if (
       user.trust_level <= TrustLevel.levels[:basic] &&
@@ -157,6 +161,8 @@ class NewPostManager
       UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.new_user_typed_too_fast"))
     elsif matches_auto_silence_regex?(manager)
       UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.content_matches_auto_silence_regex"))
+    elsif reason == :email_spam && is_first_post?(manager)
+      UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.email_in_spam_header"))
     end
 
     result

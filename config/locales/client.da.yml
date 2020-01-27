@@ -152,7 +152,6 @@ da:
       banner:
         enabled: "lavede dette til et banner %{when}. Emnet bliver vist på toppen af alle sider indtil det bliver afskediget af brugeren."
         disabled: "fjernede banneret %{when}. Det vil ikke længere vises i toppen af alle sider."
-    topic_admin_menu: "admin handlinger på emne"
     wizard_required: "Velkommen til din nye Discourse! Lad os komme i gang med <a href='%{url}' data-auto-route='true'>konfigurationsguiden</a> ✨"
     emails_are_disabled: "Alle udgående emails er blevet globalt deaktiveret af en administrator. Ingen email notifikationer af nogen slags vil blive sendt."
     bootstrap_mode_enabled: "For at gøre lanceringen af dit nye forum lettere er du i bootstrap-tilstand. Alle nye brugere tildeles tillidsniveau 1 og har dagligt email resume aktiveret. Dette deaktiveres automatisk, når %{min_users} brugere er tilsluttet."
@@ -264,6 +263,7 @@ da:
       not_bookmarked: "bogmærke dette indlæg"
       remove: "Fjern bogmærke"
       confirm_clear: "Er du sikker på, at du vil rydde alle dine bogmærker fra dette emne?"
+      save: "Gem"
     drafts:
       resume: "Genoptag"
       remove: "Fjern"
@@ -307,14 +307,8 @@ da:
       edit: "Rediger dette banner >>"
     choose_topic:
       none_found: "Ingen emner fundet."
-      title:
-        search: "Søg efter emne, filtreret efter titel, url eller id:"
-        placeholder: "indtast emnet's titel her"
     choose_message:
       none_found: "Ingen beskeder fundet."
-      title:
-        search: "Søg efter en besked, filtreret efter titel:"
-        placeholder: "indtast beskeden's titel her"
     review:
       order_by: "Filtrér efter"
       in_reply_to: "som svar til"
@@ -740,6 +734,10 @@ da:
         normal_option_title: "Du vil blive underrettet, hvis denne bruger svarer dig, citerer dig eller nævner dig."
       activity_stream: "Aktivitet"
       preferences: "Indstillinger"
+      feature_topic_on_profile:
+        save: "Gem"
+        clear:
+          title: "Ryd"
       profile_hidden: "Denne brugers offentlige profil er skjult."
       expand_profile: "Udvid"
       collapse_profile: "Fald sammen"
@@ -1079,7 +1077,6 @@ da:
         search: "tast for at søge invitationer…"
         title: "Invitationer"
         user: "Inviteret bruger"
-        sent: "Sendt"
         none: "Ingen invitationer at vise."
         truncated:
           one: "Viser den første invitation."
@@ -1972,6 +1969,7 @@ da:
           title: "Stille!"
           description: "Du vil aldrig få beskeder om noget i indlæggene og de vil ikke vises i seneste."
       actions:
+        title: "Handlinger"
         recover: "Gendan emne"
         delete: "Slet emne"
         open: "Åbn emne"
@@ -2278,7 +2276,6 @@ da:
           notify_moderators: "informerede moderatorer"
           notify_user: "sendte en besked"
           bookmark: "bogmærkede dette"
-          like: "likede dette"
           like_capped:
             one: "og {{count}} anden kunne lide dette"
             other: "og {{count}} andre kunne lide dette"
@@ -2331,6 +2328,8 @@ da:
           html_part:
             title: "Vis html-delen af e-mailen"
             button: "HTML"
+      bookmarks:
+        name: "Navn"
     category:
       can: "kan&hellip; "
       none: "(ingen kategori)"
@@ -3018,6 +3017,7 @@ da:
         show_details: Detaljer
         description: Beskrivelse
         save: Gem
+        continue: Fortsæt
       web_hooks:
         title: "Webhooks"
         none: "Der er ingen webhooks i øjeblikket"

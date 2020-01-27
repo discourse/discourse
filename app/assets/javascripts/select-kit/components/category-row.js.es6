@@ -45,7 +45,7 @@ export default SelectKitRowComponent.extend({
     return categoryBadgeHTML(category, {
       link: this.categoryLink,
       allowUncategorized: this.allowUncategorized,
-      hideParent: parentCategory ? true : false
+      hideParent: !!parentCategory
     }).htmlSafe();
   },
 
@@ -53,7 +53,8 @@ export default SelectKitRowComponent.extend({
   badgeForParentCategory(parentCategory) {
     return categoryBadgeHTML(parentCategory, {
       link: this.categoryLink,
-      allowUncategorized: this.allowUncategorized
+      allowUncategorized: this.allowUncategorized,
+      recursive: true
     }).htmlSafe();
   },
 

@@ -327,11 +327,15 @@ export default function() {
         }
 
         return response({
-          error: "Invalid Second Factor",
+          failed: "FAILED",
+          ok: false,
+          error:
+            "Invalid authentication code. Each code can only be used once.",
           reason: "invalid_second_factor",
           backup_enabled: true,
-          sent_to_email: "eviltrout@example.com",
-          current_email: "current@example.com"
+          security_key_enabled: false,
+          totp_enabled: true,
+          multiple_second_factor_methods: false
         });
       }
 
@@ -341,11 +345,17 @@ export default function() {
         }
 
         return response({
-          error: "Invalid Security Key",
-          reason: "invalid_security_key",
-          backup_enabled: true,
-          sent_to_email: "eviltrout@example.com",
-          current_email: "current@example.com"
+          failed: "FAILED",
+          ok: false,
+          error:
+            "The selected second factor method is not enabled for your account.",
+          reason: "not_enabled_second_factor_method",
+          backup_enabled: false,
+          security_key_enabled: true,
+          totp_enabled: false,
+          multiple_second_factor_methods: false,
+          allowed_credential_ids: ["allowed_credential_ids"],
+          challenge: "challenge"
         });
       }
 

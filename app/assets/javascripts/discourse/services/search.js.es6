@@ -1,9 +1,6 @@
 import { get } from "@ember/object";
 import EmberObject from "@ember/object";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default EmberObject.extend({
   searchContextEnabled: false, // checkbox to scope search

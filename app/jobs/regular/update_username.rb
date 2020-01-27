@@ -164,6 +164,8 @@ module Jobs
 
         username_replaced = false
 
+        aside["data-username"] = @new_username if aside["data-username"] == @old_username
+
         div.children.each do |child|
           if child.text?
             content = child.content

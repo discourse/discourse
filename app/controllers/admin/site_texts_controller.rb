@@ -71,7 +71,7 @@ class Admin::SiteTextsController < Admin::AdminController
     if translation_override.errors.empty?
       StaffActionLogger.new(current_user).log_site_text_change(id, value, old_value)
       system_badge_id = Badge.find_system_badge_id_from_translation_key(id)
-      if system_badge_id.present?
+      if system_badge_id.present? && is_badge_title?(id)
         Jobs.enqueue(
           :bulk_user_title_update,
           new_title: value,
@@ -131,6 +131,11 @@ class Admin::SiteTextsController < Admin::AdminController
   end
 
   protected
+
+  def is_badge_title?(id = "")
+    badge_parts = id.split('.')
+    badge_parts[0] == 'badges' && badge_parts[2] == 'name'
+  end
 
   def record_for(key, value = nil)
     if key.ends_with?("_MF")

@@ -3,8 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe SecondFactorManager do
-  fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp) }
-  let(:user) { user_second_factor_totp.user }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp, user: user) }
+  fab!(:user_security_key) do
+    Fabricate(
+      :user_security_key,
+      user: user,
+      public_key: valid_security_key_data[:public_key],
+      credential_id: valid_security_key_data[:credential_id]
+    )
+  end
   fab!(:another_user) { Fabricate(:user) }
 
   fab!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup) }
@@ -78,7 +86,7 @@ RSpec.describe SecondFactorManager do
 
     describe "when user's second factor record is disabled" do
       it 'should return false' do
-        user.user_second_factors.totps.first.update!(enabled: false)
+        disable_totp
         expect(user.totp_enabled?).to eq(false)
       end
     end
@@ -103,6 +111,252 @@ RSpec.describe SecondFactorManager do
         SiteSetting.enable_local_logins = false
 
         expect(user.totp_enabled?).to eq(false)
+      end
+    end
+  end
+
+  describe "#has_multiple_second_factor_methods?" do
+    context "when security keys and totp are enabled" do
+      it "retrns true" do
+        expect(user.has_multiple_second_factor_methods?).to eq(true)
+      end
+    end
+
+    context "if the totp gets disabled" do
+      it "retrns false" do
+        disable_totp
+        expect(user.has_multiple_second_factor_methods?).to eq(false)
+      end
+    end
+
+    context "if the security key gets disabled" do
+      it "retrns false" do
+        disable_security_key
+        expect(user.has_multiple_second_factor_methods?).to eq(false)
+      end
+    end
+  end
+
+  describe "#only_security_keys_enabled?" do
+    it "returns true if totp disabled and security key enabled" do
+      disable_totp
+      expect(user.only_security_keys_enabled?).to eq(true)
+    end
+  end
+
+  describe "#only_totp_or_backup_codes_enabled?" do
+    it "returns true if totp enabled and security key disabled" do
+      disable_security_key
+      expect(user.only_totp_or_backup_codes_enabled?).to eq(true)
+    end
+  end
+
+  describe "#authenticate_second_factor" do
+    let(:params) { {} }
+    let(:secure_session) { {} }
+
+    context "when neither security keys nor totp/backup codes are enabled" do
+      before do
+        disable_security_key && disable_totp
+      end
+      it "returns OK, because it doesn't need to authenticate" do
+        expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+      end
+    end
+
+    context "when only security key is enabled" do
+      before do
+        disable_totp
+        simulate_localhost_webauthn_challenge
+        Webauthn.stage_challenge(user, secure_session)
+      end
+
+      context "when security key params are valid" do
+        let(:params) { { second_factor_token: valid_security_key_auth_post_data, second_factor_method: UserSecondFactor.methods[:security_key] } }
+        it "returns OK" do
+          expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+        end
+      end
+
+      context "when security key params are invalid" do
+        let(:params) do
+          {
+            second_factor_token: {
+              signature: 'bad',
+              clientData: 'bad',
+              authenticatorData: 'bad',
+              credentialId: 'bad'
+            },
+            second_factor_method: UserSecondFactor.methods[:security_key]
+          }
+        end
+        it "returns not OK" do
+          result = user.authenticate_second_factor(params, secure_session)
+          expect(result.ok).to eq(false)
+          expect(result.error).to eq(I18n.t("webauthn.validation.not_found_error"))
+        end
+      end
+    end
+
+    context "when only totp is enabled" do
+      before do
+        disable_security_key
+      end
+
+      context "when totp is valid" do
+        let(:params) do
+          {
+            second_factor_token: user.user_second_factors.totps.first.totp_object.now,
+            second_factor_method: UserSecondFactor.methods[:totp]
+          }
+        end
+        it "returns OK" do
+          expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+        end
+      end
+
+      context "when totp is invalid" do
+        let(:params) do
+          {
+            second_factor_token: "blah",
+            second_factor_method: UserSecondFactor.methods[:totp]
+          }
+        end
+        it "returns not OK" do
+          result = user.authenticate_second_factor(params, secure_session)
+          expect(result.ok).to eq(false)
+          expect(result.error).to eq(I18n.t("login.invalid_second_factor_code"))
+        end
+      end
+    end
+
+    context "when both security keys and totp are enabled" do
+      let(:invalid_method) { 4 }
+      let(:method) { invalid_method }
+
+      before do
+        simulate_localhost_webauthn_challenge
+        Webauthn.stage_challenge(user, secure_session)
+      end
+
+      context "when method selected is invalid" do
+        it "returns an error" do
+          result = user.authenticate_second_factor(params, secure_session)
+          expect(result.ok).to eq(false)
+          expect(result.error).to eq(I18n.t("login.invalid_second_factor_method"))
+        end
+      end
+
+      context "when method selected is TOTP" do
+        let(:method) { UserSecondFactor.methods[:totp] }
+        let(:token) { user.user_second_factors.totps.first.totp_object.now }
+
+        context "when totp params are provided" do
+          let(:params) do
+            {
+              second_factor_token: token,
+              second_factor_method: method
+            }
+          end
+
+          it "validates totp OK" do
+            expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+          end
+
+          context "when the user does not have TOTP enabled" do
+            let(:token) { 'test' }
+            before do
+              user.totps.destroy_all
+            end
+
+            it "returns an error" do
+              result = user.authenticate_second_factor(params, secure_session)
+              expect(result.ok).to eq(false)
+              expect(result.error).to eq(I18n.t("login.not_enabled_second_factor_method"))
+            end
+          end
+        end
+      end
+
+      context "when method selected is Security Keys" do
+        let(:method) { UserSecondFactor.methods[:security_key] }
+
+        before do
+          simulate_localhost_webauthn_challenge
+          Webauthn.stage_challenge(user, secure_session)
+        end
+
+        context "when security key params are valid" do
+          let(:params) { { second_factor_token: valid_security_key_auth_post_data, second_factor_method: method } }
+          it "returns OK" do
+            expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+          end
+
+          context "when the user does not have security keys enabled" do
+            before do
+              user.security_keys.destroy_all
+            end
+
+            it "returns an error" do
+              result = user.authenticate_second_factor(params, secure_session)
+              expect(result.ok).to eq(false)
+              expect(result.error).to eq(I18n.t("login.not_enabled_second_factor_method"))
+            end
+          end
+        end
+      end
+
+      context "when method selected is Backup Codes" do
+        let(:method) { UserSecondFactor.methods[:backup_codes] }
+        let!(:backup_code) { Fabricate(:user_second_factor_backup, user: user) }
+
+        context "when backup code params are provided" do
+          let(:params) do
+            {
+              second_factor_token: 'iAmValidBackupCode',
+              second_factor_method: method
+            }
+          end
+
+          context "when backup codes enabled" do
+            it "validates codes OK" do
+              expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+            end
+          end
+
+          context "when backup codes disabled" do
+            before do
+              user.user_second_factors.backup_codes.destroy_all
+            end
+
+            it "returns an error" do
+              result = user.authenticate_second_factor(params, secure_session)
+              expect(result.ok).to eq(false)
+              expect(result.error).to eq(I18n.t("login.not_enabled_second_factor_method"))
+            end
+          end
+        end
+      end
+
+      context "when no totp params are provided" do
+        let(:params) { { second_factor_token: valid_security_key_auth_post_data, second_factor_method: UserSecondFactor.methods[:security_key] } }
+
+        it "validates the security key OK" do
+          expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+        end
+      end
+
+      context "when totp params are provided" do
+        let(:params) do
+          {
+            second_factor_token: user.user_second_factors.totps.first.totp_object.now,
+            second_factor_method: UserSecondFactor.methods[:totp]
+          }
+        end
+
+        it "validates totp OK" do
+          expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+        end
       end
     end
   end
@@ -186,5 +440,13 @@ RSpec.describe SecondFactorManager do
         end
       end
     end
+  end
+
+  def disable_totp
+    user.user_second_factors.totps.first.update!(enabled: false)
+  end
+
+  def disable_security_key
+    user.security_keys.first.destroy!
   end
 end

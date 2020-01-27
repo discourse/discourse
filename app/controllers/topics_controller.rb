@@ -557,6 +557,8 @@ class TopicsController < ApplicationController
     PostDestroyer.new(current_user, first_post, context: params[:context]).destroy
 
     render body: nil
+  rescue Discourse::InvalidAccess
+    render_json_error I18n.t("delete_topic_failed")
   end
 
   def recover

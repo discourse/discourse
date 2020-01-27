@@ -115,6 +115,88 @@ describe UsersEmailController do
           expect(user.email).to eq("new.n.cool@example.com")
         end
       end
+
+      context "security key required" do
+        fab!(:user_security_key) do
+          Fabricate(
+            :user_security_key,
+            user: user,
+            credential_id: valid_security_key_data[:credential_id],
+            public_key: valid_security_key_data[:public_key]
+          )
+        end
+
+        before do
+          simulate_localhost_webauthn_challenge
+        end
+
+        it 'requires a security key' do
+          get "/u/confirm-new-email/#{user.email_tokens.last.token}"
+
+          expect(response.status).to eq(200)
+
+          response_body = response.body
+
+          expect(response_body).to include(I18n.t("login.security_key_authenticate"))
+          expect(response_body).to include(I18n.t("login.security_key_description"))
+        end
+
+        context "if the user has a TOTP enabled and wants to use that instead" do
+          before do
+            Fabricate(:user_second_factor_totp, user: user)
+          end
+
+          it 'allows entering the totp code instead' do
+            get "/u/confirm-new-email/#{user.email_tokens.last.token}?show_totp=true"
+
+            expect(response.status).to eq(200)
+
+            response_body = response.body
+
+            expect(response_body).to include(I18n.t("login.second_factor_title"))
+            expect(response_body).not_to include(I18n.t("login.security_key_authenticate"))
+          end
+        end
+
+        it 'adds an error on a security key attempt' do
+          get "/u/confirm-new-email/#{user.email_tokens.last.token}"
+          put "/u/confirm-new-email", params: {
+            token: user.email_tokens.last.token,
+            second_factor_token: "{}",
+            second_factor_method: UserSecondFactor.methods[:security_key]
+          }
+
+          expect(response.status).to eq(302)
+          expect(flash[:invalid_second_factor]).to eq(true)
+        end
+
+        it 'confirms with a correct security key token' do
+          get "/u/confirm-new-email/#{user.email_tokens.last.token}"
+          put "/u/confirm-new-email", params: {
+            second_factor_token: valid_security_key_auth_post_data.to_json,
+            second_factor_method: UserSecondFactor.methods[:security_key],
+            token: user.email_tokens.last.token
+          }
+
+          expect(response.status).to eq(302)
+
+          user.reload
+          expect(user.email).to eq("new.n.cool@example.com")
+        end
+
+        context "if the security key data JSON is garbled" do
+          it "raises an invalid parameters error" do
+            get "/u/confirm-new-email/#{user.email_tokens.last.token}"
+            put "/u/confirm-new-email", params: {
+              second_factor_token: "{someweird: 8notjson}",
+              second_factor_method: UserSecondFactor.methods[:security_key],
+              token: user.email_tokens.last.token
+            }
+
+            expect(response.status).to eq(400)
+          end
+        end
+      end
     end
   end
 

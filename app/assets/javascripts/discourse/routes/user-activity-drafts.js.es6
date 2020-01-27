@@ -12,7 +12,14 @@ export default DiscourseRoute.extend({
 
   setupController(controller, model) {
     controller.set("model", model);
+  },
+
+  activate() {
     this.appEvents.on("draft:destroyed", this, this.refresh);
+  },
+
+  deactivate() {
+    this.appEvents.off("draft:destroyed", this, this.refresh);
   },
 
   actions: {

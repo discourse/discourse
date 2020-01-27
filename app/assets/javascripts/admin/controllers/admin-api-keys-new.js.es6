@@ -1,4 +1,4 @@
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend({

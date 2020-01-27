@@ -188,11 +188,16 @@ class Category < ActiveRecord::Base
 
     DB.exec <<~SQL
       UPDATE categories c
-         SET topic_count = x.topic_count,
-             post_count = x.post_count
-        FROM (#{topics_with_post_count}) x
+         SET topic_count = COALESCE(x.topic_count, 0),
+             post_count = COALESCE(x.post_count, 0)
+        FROM (
+              SELECT ccc.id as category_id, stats.topic_count, stats.post_count
+              FROM categories ccc
+              LEFT JOIN (#{topics_with_post_count}) stats
+              ON stats.category_id = ccc.id
+             ) x
        WHERE x.category_id = c.id
-         AND (c.topic_count <> x.topic_count OR c.post_count <> x.post_count)
+         AND (c.topic_count <> COALESCE(x.topic_count, 0) OR c.post_count <> COALESCE(x.post_count, 0))
     SQL
 
     # Yes, there are a lot of queries happening below.
@@ -265,10 +270,19 @@ class Category < ActiveRecord::Base
   def description_text
     return nil unless self.description
 
-    @@cache ||= LruRedux::ThreadSafeCache.new(1000)
-    @@cache.getset(self.description) do
+    @@cache_text ||= LruRedux::ThreadSafeCache.new(1000)
+    @@cache_text.getset(self.description) do
       text = Nokogiri::HTML.fragment(self.description).text.strip
       Rack::Utils.escape_html(text).html_safe
+    end
+  end
+
+  def description_excerpt
+    return nil unless self.description
+
+    @@cache_excerpt ||= LruRedux::ThreadSafeCache.new(1000)
+    @@cache_excerpt.getset(self.description) do
+      PrettyText.excerpt(description, 300)
     end
   end
 
@@ -930,6 +944,6 @@ end
 #  index_categories_on_reviewable_by_group_id  (reviewable_by_group_id)
 #  index_categories_on_search_priority         (search_priority)
 #  index_categories_on_topic_count             (topic_count)
-#  unique_index_categories_on_name             ((COALESCE(parent_category_id, '-1'::integer)), name) UNIQUE
-#  unique_index_categories_on_slug             ((COALESCE(parent_category_id, '-1'::integer)), slug) UNIQUE WHERE ((slug)::text <> ''::text)
+#  unique_index_categories_on_name             (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
+#  unique_index_categories_on_slug             (COALESCE(parent_category_id, '-1'::integer), slug) UNIQUE WHERE ((slug)::text <> ''::text)
 #

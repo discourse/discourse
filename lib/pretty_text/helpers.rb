@@ -72,7 +72,7 @@ module PrettyText
 
             short_urls.each do |short_url|
               result[short_url] = {
-                url: secure_media ? secure_media_url(url) : Discourse.store.cdn_url(url),
+                url: secure_media ? Upload.secure_media_url_from_upload_url(url) : Discourse.store.cdn_url(url),
                 short_path: Upload.short_path(sha1: sha1, extension: extension),
                 base62_sha1: Upload.base62_sha1(sha1)
               }
@@ -82,10 +82,6 @@ module PrettyText
       end
 
       result
-    end
-
-    def secure_media_url(url)
-      url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
     end
 
     def get_topic_info(topic_id)
@@ -113,7 +109,7 @@ module PrettyText
         [category.url_with_id, text]
       elsif (!is_tag && tag = Tag.find_by(name: text)) ||
             (is_tag && tag = Tag.find_by(name: text.gsub!("#{tag_postfix}", '')))
-        ["#{Discourse.base_url}/tags/#{tag.name}", text]
+        ["#{Discourse.base_url}/tag/#{tag.name}", text]
       else
         nil
       end

@@ -1,9 +1,8 @@
 import { isEmpty } from "@ember/utils";
 import Component from "@ember/component";
-import {
+import discourseComputed, {
   on,
-  observes,
-  default as discourseComputed
+  observes
 } from "discourse-common/utils/decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 

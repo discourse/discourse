@@ -96,6 +96,16 @@ RSpec.describe ReviewableScore, type: :model do
       expect(ReviewableScore.user_accuracy_bonus(user)).to eq(0.0)
     end
 
+    it "returns 0 for a user with no flags" do
+      system_user = Discourse.system_user
+      stats = system_user.user_stat
+
+      stats.flags_agreed = 10
+      stats.flags_disagreed = 42
+
+      expect(ReviewableScore.user_accuracy_bonus(system_user)).to eq(0.0)
+    end
+
     it "returns 0 until the user has made more than 5 flags" do
       user_stat.flags_agreed = 4
       user_stat.flags_disagreed = 1

@@ -1,7 +1,7 @@
 import { equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import {
   allowsAttachments,
   authorizedExtensions,

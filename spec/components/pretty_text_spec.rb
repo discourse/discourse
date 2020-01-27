@@ -33,7 +33,7 @@ describe PrettyText do
 
         topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
         expected = <<~HTML
-          <aside class="quote no-group" data-post="2" data-topic="#{topic.id}">
+          <aside class="quote no-group" data-username="EvilTrout" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" alt="slight_smile" class="emoji"></a>
@@ -109,6 +109,48 @@ describe PrettyText do
 
           expect(cook(md)).to eq(html.strip)
         end
+
+        it "adds an only-emoji class when a line has only one emoji" do
+          md = <<~MD
+            foo 😀
+            foo 😀 bar
+            :smile_cat:
+            :smile_cat: :smile_cat:
+            :smile_cat: :smile_cat: :smile_cat: :smile_cat:
+            baz? :smile_cat:
+            😀
+            😉 foo
+            😉 😉
+             😉 😉
+            😉 😉 😉
+            😉😉😉
+            😉 😉 😉
+            😉d😉 😉
+            😉 😉 😉d
+            😉😉😉😉
+          MD
+
+          html = <<~HTML
+            <p>foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:"><br>
+            foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:"> bar<br>
+            <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:"><br>
+            <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:"><br>
+            <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:"><br>
+            baz? <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:"><br>
+            <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji only-emoji" alt=":grinning:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"> foo<br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:">d​:wink: <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:">d<br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"></p>
+          HTML
+
+          expect(cook(md)).to eq(html.strip)
+        end
       end
 
       it "do off topic quoting of posts from secure categories" do
@@ -116,7 +158,7 @@ describe PrettyText do
         topic = Fabricate(:topic, title: "this is topic with secret category", category: category)
 
         expected = <<~HTML
-          <aside class="quote no-group" data-post="3" data-topic="#{topic.id}">
+          <aside class="quote no-group" data-username="maja" data-post="3" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <a href="http://test.localhost/t/#{topic.id}/3">#{I18n.t("on_another_topic")}</a>
@@ -139,7 +181,7 @@ describe PrettyText do
           [/quote]
         MD
         html = <<~HTML
-          <aside class="quote no-group" data-post="123" data-topic="456" data-full="true">
+          <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -161,7 +203,7 @@ describe PrettyText do
           [/quote]
         MD
         html = <<~HTML
-          <aside class="quote no-group" data-post="123" data-topic="456" data-full="true">
+          <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -182,7 +224,7 @@ describe PrettyText do
         MD
 
         html = <<~HTML
-          <aside class="quote no-group" data-post="555" data-topic="666">
+          <aside class="quote no-group" data-username="#{user.username}" data-post="555" data-topic="666">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -209,7 +251,7 @@ describe PrettyText do
 
         topic = Fabricate(:topic, title: "this is a test topic")
         expected = <<~HTML
-          <aside class="quote group-#{group.name}" data-post="2" data-topic="#{topic.id}">
+          <aside class="quote group-#{group.name}" data-username="#{user.username}" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
@@ -1014,7 +1056,7 @@ describe PrettyText do
     [
       "<span class=\"hashtag\">#unknown::tag</span>",
       "<a class=\"hashtag\" href=\"#{category2.url_with_id}\">#<span>known</span></a>",
-      "<a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a>",
+      "<a class=\"hashtag\" href=\"http://test.localhost/tag/known\">#<span>known</span></a>",
       "<a class=\"hashtag\" href=\"#{category.url_with_id}\">#<span>testing</span></a>"
     ].each do |element|
 
@@ -1035,7 +1077,7 @@ describe PrettyText do
 
     cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag")
     html = <<~HTML
-      <p><a href="/a">test</a> <a class="hashtag" href="http://test.localhost/tags/known">#<span>known</span></a></p>
+      <p><a href="/a">test</a> <a class="hashtag" href="http://test.localhost/tag/known">#<span>known</span></a></p>
     HTML
 
     expect(cooked).to eq(html.strip)
@@ -1064,7 +1106,7 @@ describe PrettyText do
   it "can handle emoji by name" do
 
     expected = <<HTML
-<p><img src="/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}\" title=":smile:" class="emoji" alt=":smile:"><img src="/images/emoji/twitter/sunny.png?v=#{Emoji::EMOJI_VERSION}" title=":sunny:" class="emoji" alt=":sunny:"></p>
+<p><img src="/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}\" title=":smile:" class="emoji only-emoji" alt=":smile:"><img src="/images/emoji/twitter/sunny.png?v=#{Emoji::EMOJI_VERSION}" title=":sunny:" class="emoji only-emoji" alt=":sunny:"></p>
 HTML
     expect(PrettyText.cook(":smile::sunny:")).to eq(expected.strip)
   end
@@ -1076,7 +1118,7 @@ HTML
   end
 
   it "can handle emoji by translation" do
-    expected = "<p><img src=\"/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}\" title=\":wink:\" class=\"emoji\" alt=\":wink:\"></p>"
+    expected = "<p><img src=\"/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}\" title=\":wink:\" class=\"emoji only-emoji\" alt=\":wink:\"></p>"
     expect(PrettyText.cook(";)")).to eq(expected)
   end
 

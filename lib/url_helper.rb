@@ -57,8 +57,7 @@ class UrlHelper
   end
 
   def self.secure_proxy_without_cdn(url)
-    url = url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
-    self.absolute(url, nil)
+    self.absolute(Upload.secure_media_url_from_upload_url(url), nil)
   end
 
   # Prevents double URL encode

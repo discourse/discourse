@@ -141,7 +141,6 @@ sw:
       banner:
         enabled: "aligeuza hili kuwa bango %{when}. Itaonekana juu ya kila ukurasa mpaka itakapo ondolewa na mtumiaji."
         disabled: "aliondoa hili bango %{when}. Halitaonekana tena juu ya kila ukurasa."
-    topic_admin_menu: "vitendo vya viongozi wa mada"
     wizard_required: "Karibu Discourse! Tuanze na <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "Utumaji wa barua pepe umezuiliwa na msimamizi. Hakuna taarifa za utumwaji wa barua pepe zitakazotumwa."
     bootstrap_mode_enabled: "Kurahisisha kuweka tovuti yako hewani, upo kwenye halitumizi ya bootsrap. Watumiaji wapya watapewa kiwango cha 1 cha uaminifu na kuwezeshwa kupata barua pepe mara kwa mara. Hii itazimwa kipindi watumiaji %{min_users} wakijiunga."
@@ -238,6 +237,7 @@ sw:
       not_bookmarked: "alamisha chapisho hili"
       remove: "Ondoa Alamisho"
       confirm_clear: "Una uhakika unataka kuondoa mialamisho ya mada hii?"
+      save: "hifadhi"
     drafts:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
@@ -277,8 +277,6 @@ sw:
       edit: "Hariri bango hili >>"
     choose_topic:
       none_found: "Hakuna mada zilizopatikana."
-      title:
-        placeholder: "andika kichwa cha mada hapa"
     review:
       explain:
         total: "Jumla"
@@ -561,6 +559,10 @@ sw:
         normal_option: "Kawaida"
       activity_stream: "Shughuli"
       preferences: "Mapendekezo"
+      feature_topic_on_profile:
+        save: "hifadhi"
+        clear:
+          title: "Futa"
       expand_profile: "Panua"
       collapse_profile: "Kunja"
       bookmarks: "Mialamisho"
@@ -828,7 +830,6 @@ sw:
         search: "andika kutafuta mualiko..."
         title: "Waliokaribishwa"
         user: "Mtumiaji Aliyekaribishwa"
-        sent: "Imetumwa"
         none: "Hakuna mialiko ya kuonyeshwa."
         truncated:
           one: "Onyesha mwaliko wa kwanza."
@@ -1631,6 +1632,7 @@ sw:
           title: "Imenyamazishwa"
           description: "Hautakaa utajulishwe kuhusu mada hii, na haitatokea kama taarifa za hivi karibuni."
       actions:
+        title: "Vitendo"
         recover: "Rudisha Mada"
         delete: "Futa Mada"
         open: "Fungua Mada"
@@ -1866,7 +1868,6 @@ sw:
           notify_moderators: "wajulishe wasimamizi"
           notify_user: "ujumbe umetumwa"
           bookmark: "alamisha hii"
-          like: "ameipenda hii"
         by_you:
           off_topic: "Umeripoti hii kuwa haihusiki"
           spam: "Umeripoti hii kuwa ni taka"
@@ -1910,6 +1911,8 @@ sw:
           html_part:
             title: "Onyesha sehemu yenye html kwenye barua pepe."
             button: "HTML"
+      bookmarks:
+        name: "Jina"
     category:
       can: "can&hellip; "
       none: "(hakuna kategoria)"
@@ -2443,6 +2446,7 @@ sw:
         show_details: Taarifa
         description: Maelezo
         save: hifadhi
+        continue: Endelea
       web_hooks:
         create: "Tengeneza"
         save: "Hifadhi"

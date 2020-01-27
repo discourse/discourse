@@ -301,7 +301,7 @@ class Admin::UsersController < Admin::AdminController
     @user.deactivate(current_user)
     StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'), params.slice(:context))
     refresh_browser @user
-    render body: nil
+    render json: success_json
   end
 
   def silence
@@ -423,6 +423,8 @@ class Admin::UsersController < Admin::AdminController
       render_serialized(user, AdminDetailedUserSerializer, root: false)
     rescue ActiveRecord::RecordInvalid => ex
       render json: failed_json.merge(message: ex.message), status: 403
+    rescue DiscourseSingleSignOn::BlankExternalId => ex
+      render json: failed_json.merge(message: I18n.t('sso.blank_id_error')), status: 422
     end
   end
 

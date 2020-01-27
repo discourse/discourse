@@ -33,23 +33,13 @@
       color: $primary;
     }
   }
-  .private-message-glyph {
-    display: none;
-  }
+
   .remove-featured-link {
     float: right;
     text-transform: lowercase;
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-size: 0.857rem;
   }
-}
-
-.private-message-glyph {
-  float: left;
-}
-
-.private_message #topic-title .private-message-glyph {
-  display: inline;
 }
 
 .topic-error,

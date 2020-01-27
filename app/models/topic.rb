@@ -705,6 +705,13 @@ class Topic < ActiveRecord::Base
         CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
         CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.try(:id) == new_category.id
       end
+
+      # when a topic changes category we may need to make uploads
+      # linked to posts secure/not secure depending on whether the
+      # category is private
+      DB.after_commit do
+        Jobs.enqueue(:update_topic_upload_security, topic_id: self.id)
+      end
     end
 
     true

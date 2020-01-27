@@ -11,6 +11,8 @@ zh_CN:
     poll_maximum_options: "投票允许的最大选项数。"
     poll_edit_window_mins: "投票创建后多少分钟内可以编辑？"
     poll_minimum_trust_level_to_create: "创建投票所需的最小信任等级。"
+    poll_groupable_user_fields: "一组用户字段名称，可用于分组和过滤投票结果。"
+    poll_export_data_explorer_query_id: "用于导出投票结果的数据资源管理器查询的ID（0为禁用）。"
   poll:
     poll: "投票"
     invalid_argument: "参数“%{argument}”无效值“%{value}”。"
@@ -40,3 +42,5 @@ zh_CN:
     insufficient_rights_to_create: "你不能创建投票。"
     email:
       link_to_poll: "点击查看投票。"
+    user_field:
+      no_data: "没有数据"

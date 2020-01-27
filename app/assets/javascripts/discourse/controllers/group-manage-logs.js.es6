@@ -1,10 +1,7 @@
 import { inject } from "@ember/controller";
 import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   group: inject(),

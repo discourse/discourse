@@ -31,12 +31,11 @@ module Middleware
           fake_controller.response = response
           fake_controller.request = request = ActionDispatch::Request.new(env)
 
+          # We can not re-dispatch bad mime types
           begin
             request.format
           rescue Mime::Type::InvalidMimeType
-            # got to do something here, we can not ship invalid format
-            # to the exception handler cause it will explode
-            request.format = "html"
+            return [400, {}, ["Invalid MIME type"]]
           end
 
           if ApplicationController.rescue_with_handler(exception, object: fake_controller)

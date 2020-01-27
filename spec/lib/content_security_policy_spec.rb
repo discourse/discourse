@@ -123,6 +123,12 @@ describe ContentSecurityPolicy do
     Discourse.plugins.pop
   end
 
+  it 'only includes unsafe-inline for qunit paths' do
+    expect(parse(policy(path_info: "/qunit"))['script-src']).to include("'unsafe-eval'")
+    expect(parse(policy(path_info: "/wizard/qunit"))['script-src']).to include("'unsafe-eval'")
+    expect(parse(policy(path_info: "/"))['script-src']).to_not include("'unsafe-eval'")
+  end
+
   context "with a theme" do
     let!(:theme) {
       Fabricate(:theme).tap do |t|
@@ -174,7 +180,7 @@ describe ContentSecurityPolicy do
     end.to_h
   end
 
-  def policy(theme_ids = [])
-    ContentSecurityPolicy.policy(theme_ids)
+  def policy(theme_ids = [], path_info: "/")
+    ContentSecurityPolicy.policy(theme_ids, path_info: path_info)
   end
 end

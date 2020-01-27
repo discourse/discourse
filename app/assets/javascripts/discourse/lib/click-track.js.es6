@@ -8,21 +8,13 @@ import ENV from "discourse-common/config/environment";
 import User from "discourse/models/user";
 
 export function isValidLink($link) {
-  // Do not track:
-  //  - lightboxes
-  //  - links with disabled tracking
-  //  - category links
-  //  - quote back button
+  // .hashtag == category/tag link
+  // .back == quote back ^ button
   if ($link.is(".lightbox, .no-track-link, .hashtag, .back")) {
     return false;
   }
 
-  // Do not track links in quotes or in elided part
-  if ($link.parents("aside.quote, .elided").length !== 0) {
-    return false;
-  }
-
-  if ($link.parents(".expanded-embed").length !== 0) {
+  if ($link.parents("aside.quote, .elided, .expanded-embed").length !== 0) {
     return false;
   }
 

@@ -5,7 +5,7 @@ acceptance("Tags intersection", {
   site: { can_tag_topics: true },
   settings: { tagging_enabled: true },
   pretend(server, helper) {
-    server.get("/tags/first/notifications", () => {
+    server.get("/tag/first/notifications", () => {
       return helper.response({
         tag_notification: { id: "first", notification_level: 1 }
       });

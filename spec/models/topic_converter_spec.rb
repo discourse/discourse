@@ -108,6 +108,10 @@ describe TopicConverter do
         fab!(:public_topic) { Fabricate(:topic, user: author) }
 
         before do
+          Jobs.run_immediately!
+        end
+
+        before do
           SiteSetting.enable_s3_uploads = true
           SiteSetting.s3_upload_bucket = "s3-upload-bucket"
           SiteSetting.s3_access_key_id = "some key"
