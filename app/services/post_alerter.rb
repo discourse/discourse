@@ -278,6 +278,7 @@ class PostAlerter
     DiscourseEvent.trigger(:before_create_notification, user, type, post, opts)
 
     return if user.blank? || user.bot?
+    return if (topic = post.topic).blank?
 
     is_liked = type == Notification.types[:liked]
     return if is_liked && user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
@@ -285,7 +286,7 @@ class PostAlerter
     # Make sure the user can see the post
     return unless Guardian.new(user).can_see?(post)
 
-    return if user.staged? && post.topic.category&.mailinglist_mirror?
+    return if user.staged? && topic.category&.mailinglist_mirror?
 
     notifier_id = opts[:user_id] || post.user_id # xxxxx look at revision history
 
@@ -303,7 +304,7 @@ class PostAlerter
 
     # skip if muted on the topic
     return if TopicUser.where(
-      topic: post.topic,
+      topic: topic,
       user: user,
       notification_level: TopicUser.notification_levels[:muted]
     ).exists?
@@ -349,7 +350,7 @@ class PostAlerter
     collapsed = false
 
     if COLLAPSED_NOTIFICATION_TYPES.include?(type)
-      destroy_notifications(user, COLLAPSED_NOTIFICATION_TYPES, post.topic)
+      destroy_notifications(user, COLLAPSED_NOTIFICATION_TYPES, topic)
       collapsed = true
     end
 
@@ -357,8 +358,8 @@ class PostAlerter
     original_username = opts[:display_username].presence || post.username
 
     if collapsed
-      post = first_unread_post(user, post.topic) || post
-      count = unread_count(user, post.topic)
+      post = first_unread_post(user, topic) || post
+      count = unread_count(user, topic)
       if count > 1
         I18n.with_locale(user.effective_locale) do
           opts[:display_username] = I18n.t('embed.replies', count: count)
@@ -368,9 +369,9 @@ class PostAlerter
 
     UserActionManager.notification_created(original_post, user, type, opts[:acting_user_id])
 
-    topic_title = post.topic.title
+    topic_title = topic.title
     # when sending a private message email, keep the original title
-    if post.topic.private_message? && modifications = post.revisions.map(&:modifications)
+    if topic.private_message? && modifications = post.revisions.map(&:modifications)
       if first_title_modification = modifications.find { |m| m.has_key?("title") }
         topic_title = first_title_modification["title"][0]
       end
