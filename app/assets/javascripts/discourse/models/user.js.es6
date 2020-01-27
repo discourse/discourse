@@ -538,7 +538,7 @@ const User = RestModel.extend({
     return PreloadStore.getAndRemove(`user_${user.get("username")}`, () => {
       const useCardRoute = options && options.forCard;
 
-      delete options.forCard;
+      if (options) delete options.forCard;
 
       const path = useCardRoute
         ? `${user.get("username")}/card.json`
