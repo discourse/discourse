@@ -164,7 +164,7 @@ module FileStore
       # Exit status `1` in `ls` occurs when e.g. "listing a directory
       # in which entries are actively being removed or renamed".
       # It's safe to ignore it here.
-      unless ls.exitstatus.in?([0, 1]) && processes.all?(&:success?)
+      if ![0, 1].include?(ls.exitstatus) || !processes.all?(&:success?)
         raise "Error clearing old cache"
       end
     end
