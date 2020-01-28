@@ -121,6 +121,11 @@ class Upload < ActiveRecord::Base
     self.class.short_path(sha1: self.sha1, extension: self.extension)
   end
 
+  def self.invalid_secure_upload_reuse?(upload, post)
+    return false if !SiteSetting.secure_media? || upload.blank?
+    upload.access_control_post_id != post.id || upload.original_sha1.blank?
+  end
+
   def self.secure_media_url?(url)
     url.include?(SECURE_MEDIA_ROUTE)
   end

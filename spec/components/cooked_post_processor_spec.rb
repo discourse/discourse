@@ -504,6 +504,7 @@ describe CookedPostProcessor do
         end
 
         context "s3_uploads" do
+          let(:upload) { Fabricate(:secure_upload_s3) }
           before do
             s3_setup
             stored_path = Discourse.store.get_path_for_upload(upload)
@@ -516,13 +517,8 @@ describe CookedPostProcessor do
             )
             stub_request(:get, /#{SiteSetting.s3_upload_bucket}\.s3\.amazonaws\.com/)
 
-            OptimizedImage.expects(:resize).returns(true)
-            FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
-            Discourse.store.class.any_instance.expects(:has_been_uploaded?).at_least_once.returns(true)
-
             SiteSetting.login_required = true
             SiteSetting.secure_media = true
-            upload.update_column(:secure, true)
           end
 
           let(:optimized_size) { "600x500" }
@@ -531,14 +527,42 @@ describe CookedPostProcessor do
             Fabricate(:post, raw: "![large.png|#{optimized_size}](#{upload.short_url})")
           end
 
-          it "handles secure images with the correct lightbox link href" do
-            cpp.post_process
-
-            expect(cpp.html).to match_html <<~HTML
+          let(:cooked_html) do
+            <<~HTML
             <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-media-uploads/original/1X/#{upload.sha1}.png" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
             <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">large.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
             </div></a></div></p>
             HTML
+          end
+
+          context "when the upload is attached to the correct post" do
+            before do
+              OptimizedImage.expects(:resize).returns(true)
+              FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+              Discourse.store.class.any_instance.expects(:has_been_uploaded?).at_least_once.returns(true)
+              upload.update(secure: true, access_control_post: post)
+            end
+
+            it "handles secure images with the correct lightbox link href" do
+              cpp.post_process
+
+              expect(cpp.html).to match_html cooked_html
+            end
+          end
+
+          context "when the upload is attached to a different post" do
+            before do
+              FastImage.size(upload.url)
+              upload.update(secure: true, access_control_post: Fabricate(:post))
+            end
+
+            it "does not create thumbnails or optimize images" do
+              CookedPostProcessor.any_instance.expects(:optimize_image!).never
+              Upload.any_instance.expects(:create_thumbnail!).never
+              cpp.post_process
+
+              expect(cpp.html).not_to match_html cooked_html
+            end
           end
         end
       end
