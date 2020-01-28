@@ -24,7 +24,7 @@ describe ::Jobs::NotifyTagChange do
     notification = Notification.last
     expect(notification.user_id).to eq(user.id)
     expect(notification.topic_id).to eq(post.topic_id)
-    expect(notification.notification_type).to eq(Notification.types[:edited])
+    expect(notification.notification_type).to eq(Notification.types[:posted])
   end
 
   it 'doesnt create notification for user watching category' do

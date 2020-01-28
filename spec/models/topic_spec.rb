@@ -1404,6 +1404,27 @@ describe Topic do
               user_id: user.id,
               topic_id: topic.id,
               post_number: 1,
+              notification_type: Notification.types[:posted]
+            ).exists?).to eq(true)
+
+            expect(Notification.where(
+              user_id: another_user.id,
+              topic_id: topic.id,
+              post_number: 1,
+              notification_type: Notification.types[:watching_first_post]
+            ).exists?).to eq(true)
+          end
+
+          it 'should generate the modified notification for the topic if already seen' do
+            TopicUser.create!(topic_id: topic.id, highest_seen_post_number: topic.posts.first.post_number, user_id: user.id)
+            expect do
+              topic.change_category_to_id(new_category.id)
+            end.to change { Notification.count }.by(2)
+
+            expect(Notification.where(
+              user_id: user.id,
+              topic_id: topic.id,
+              post_number: 1,
               notification_type: Notification.types[:edited]
             ).exists?).to eq(true)
 
