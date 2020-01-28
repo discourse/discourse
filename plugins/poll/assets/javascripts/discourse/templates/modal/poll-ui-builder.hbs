@@ -17,6 +17,14 @@
                     valueAttribute="value"}}
       </div>
 
+      <div class="input-group poll-select">
+        <label class="input-group-label">{{i18n 'poll.ui_builder.poll_groups.label'}}</label>
+        {{combo-box content=siteGroups
+                    value=pollGroups
+                    allowInitialValueMutation=true
+                    valueAttribute="value"}}
+      </div>
+
       {{#unless isNumber}}
         <div class="input-group poll-select">
           <label class="input-group-label">{{i18n 'poll.ui_builder.poll_chart_type.label'}}</label>

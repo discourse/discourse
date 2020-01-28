@@ -71,6 +71,14 @@ after_initialize do
           raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) unless poll
           raise StandardError.new I18n.t("poll.poll_must_be_open_to_vote") if poll.is_closed?
 
+          if poll.groups
+            poll_groups = poll.groups.split(",").map(&:downcase)
+            user_groups = user.groups.map { |g| g.name.downcase }
+            if (poll_groups & user_groups).empty?
+              raise StandardError.new I18n.t("js.poll.results.groups.title", group: poll.groups)
+            end
+          end
+
           # remove options that aren't available in the poll
           available_options = poll.poll_options.map { |o| o.digest }.to_set
           options.select! { |o| available_options.include?(o) }
@@ -322,7 +330,8 @@ after_initialize do
           min: poll["min"],
           max: poll["max"],
           step: poll["step"],
-          chart_type: poll["charttype"] || "bar"
+          chart_type: poll["charttype"] || "bar",
+          groups: poll["groups"]
         )
 
         poll["options"].each do |option|

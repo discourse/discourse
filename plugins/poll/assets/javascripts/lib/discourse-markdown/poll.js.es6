@@ -11,6 +11,7 @@ const WHITELISTED_ATTRIBUTES = [
   "public",
   "results",
   "chartType",
+  "groups",
   "status",
   "step",
   "type"
