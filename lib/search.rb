@@ -828,7 +828,7 @@ class Search
        end
     elsif opts[:type_filter] === "all_topics"
       private_posts = posts.where("topics.archetype = ?", Archetype.private_message)
-      private_posts = private_posts.private_posts_for_user(@guardian.user) unless @guardian.is_admin?
+      private_posts = private_posts.private_posts_for_user(@guardian.user)
 
       posts = posts.where("topics.archetype <> ?", Archetype.private_message).or(private_posts)
     else
