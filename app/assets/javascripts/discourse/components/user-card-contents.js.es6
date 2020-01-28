@@ -140,13 +140,11 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     this._positionCard($target);
     this.setProperties({ visible: true, loading: true });
 
-    const args = {};
+    const args = {
+      forCard: this.siteSettings.enable_new_user_card_route,
+      include_post_count_for: this.get("topic.id")
+    };
 
-    if (this.siteSettings.enable_new_user_card_route) {
-      args.forCard = true;
-    }
-
-    args.include_post_count_for = this.get("topic.id");
     User.findByUsername(username, args)
       .then(user => {
         if (user.topic_post_count) {

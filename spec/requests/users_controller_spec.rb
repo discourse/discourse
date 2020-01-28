@@ -2952,7 +2952,7 @@ describe UsersController do
         expect(response.status).to eq(200)
         parsed = JSON.parse(response.body)["user"]
 
-        expect(parsed['username']).to eq(user.username)
+        expect(parsed["username"]).to eq(user.username)
         expect(parsed["profile_hidden"]).to be_blank
         expect(parsed["trust_level"]).to be_present
       end
