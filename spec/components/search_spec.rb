@@ -294,6 +294,81 @@ describe Search do
         expect(results.posts.size).to eq(0)
       end
     end
+
+    context 'all topics' do
+
+      let!(:u1) { Fabricate(:user, username: 'fred', name: 'bob jones', email: 'foo+1@bar.baz') }
+      let!(:u2) { Fabricate(:user, username: 'bob', name: 'fred jones', email: 'foo+2@bar.baz') }
+      let!(:u3) { Fabricate(:user, username: 'jones', name: 'bob fred', email: 'foo+3@bar.baz') }
+      let!(:u4) { Fabricate(:user, username: 'alice', name: 'bob fred', email: 'foo+4@bar.baz', admin: true) }
+
+      let!(:public_topic) { Fabricate(:topic, user: u1) }
+      let!(:public_post1) { Fabricate(:post, topic: public_topic, raw: "what do you want for breakfast?  ham and eggs?", user: u1) }
+      let!(:public_post2) { Fabricate(:post, topic: public_topic, raw: "ham and spam", user: u2) }
+
+      let!(:private_topic) { Fabricate(:topic, user: u1, category_id: nil, archetype: 'private_message') }
+      let!(:private_post1) { Fabricate(:post, topic: private_topic, raw: "what do you want for lunch?  ham and cheese?", user: u1) }
+      let!(:private_post2) { Fabricate(:post, topic: private_topic, raw: "cheese and spam", user: u2) }
+
+      it 'finds private messages' do
+        TopicAllowedUser.create!(user_id: u1.id, topic_id: private_topic.id)
+        TopicAllowedUser.create!(user_id: u2.id, topic_id: private_topic.id)
+
+        # private only
+        results = Search.execute('cheese',
+                                type_filter: 'all_topics',
+                                guardian: Guardian.new(u1))
+        expect(results.posts.length).to eq(1)
+
+        # public only
+        results = Search.execute('eggs',
+                                type_filter: 'all_topics',
+                                guardian: Guardian.new(u1))
+        expect(results.posts.length).to eq(1)
+
+        # both
+        results = Search.execute('spam',
+                                type_filter: 'all_topics',
+                                guardian: Guardian.new(u1))
+        expect(results.posts.length).to eq(2)
+
+        # nonparticipatory user
+        results = Search.execute('cheese',
+                                type_filter: 'all_topics',
+                                guardian: Guardian.new(u3))
+        expect(results.posts.length).to eq(0)
+
+        results = Search.execute('eggs',
+                                type_filter: 'all_topics',
+                                guardian: Guardian.new(u3))
+        expect(results.posts.length).to eq(1)
+
+        results = Search.execute('spam',
+                                type_filter: 'all_topics',
+                                guardian: Guardian.new(u3))
+        expect(results.posts.length).to eq(1)
+
+        # Admin
+        results = Search.execute('spam',
+                  type_filter: 'all_topics',
+                  guardian: Guardian.new(u4))
+        expect(results.posts.length).to eq(2)
+
+        # same keyword for different users
+        results = Search.execute('ham',
+                                type_filter: 'all_topics',
+                                guardian: Guardian.new(u1))
+        expect(results.posts.length).to eq(2)
+        results = Search.execute('ham',
+                                type_filter: 'all_topics',
+                                guardian: Guardian.new(u2))
+        expect(results.posts.length).to eq(2)
+        results = Search.execute('ham',
+                                type_filter: 'all_topics',
+                                guardian: Guardian.new(u3))
+        expect(results.posts.length).to eq(1)
+      end
+    end
   end
 
   context 'topics' do
