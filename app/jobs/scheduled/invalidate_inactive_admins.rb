@@ -22,6 +22,9 @@ module Jobs
           user.deactivate(Discourse.system_user)
           user.email_tokens.update_all(confirmed: false, expired: true)
 
+          reason = I18n.t("user.deactivated_by_inactivity", count: SiteSetting.invalidate_inactive_admin_email_after_days)
+          StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
+
           Discourse.authenticators.each do |authenticator|
             if authenticator.can_revoke? && authenticator.description_for_user(user).present?
               authenticator.revoke(user)
