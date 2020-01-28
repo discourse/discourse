@@ -28,7 +28,7 @@ class Search
   end
 
   def self.facets
-    %w(topic category user private_messages tags)
+    %w(topic category user private_messages tags all_topics)
   end
 
   def self.ts_config(locale = SiteSetting.default_locale)
@@ -176,6 +176,10 @@ class Search
       @search_context = @guardian.user
     end
 
+    if @search_all_topics
+      @opts[:type_filter] = "all_topics"
+    end
+
     @results = GroupedSearchResults.new(
       @opts[:type_filter],
       clean_term,
@@ -233,7 +237,7 @@ class Search
     end
 
     # If the term is a number or url to a topic, just include that topic
-    if @opts[:search_for_id] && (@results.type_filter == 'topic' || @results.type_filter == 'private_messages')
+    if @opts[:search_for_id] && ['topic', 'private_messages', 'all_topics'].include?(@results.type_filter)
       if @term =~ /^\d+$/
         single_topic(@term.to_i)
       else
@@ -666,6 +670,9 @@ class Search
       elsif word == 'order:likes'
         @order = :likes
         nil
+      elsif word == 'in:all'
+        @search_all_topics = true
+        nil
       elsif %w{in:private in:personal}.include?(word) # remove private after 2.4 release
         @search_pms = true
         nil
@@ -813,12 +820,17 @@ class Search
 
     posts = posts.where("topics.visible") unless is_topic_search
 
-    if opts[:private_messages] || (is_topic_search && @search_context.private_message?)
+    if opts[:type_filter] === "private_messages" || (is_topic_search && @search_context.private_message?)
       posts = posts.where("topics.archetype =  ?", Archetype.private_message)
 
        unless @guardian.is_admin?
          posts = posts.private_posts_for_user(@guardian.user)
        end
+    elsif opts[:type_filter] === "all_topics"
+      private_posts = posts.where("topics.archetype = ?", Archetype.private_message)
+      private_posts = private_posts.private_posts_for_user(@guardian.user) unless @guardian.is_admin?
+
+      posts = posts.where("topics.archetype <> ?", Archetype.private_message).or(private_posts)
     else
       posts = posts.where("topics.archetype <> ?", Archetype.private_message)
     end
@@ -864,7 +876,7 @@ class Search
     posts =
       if @search_context.present?
         if @search_context.is_a?(User)
-          if opts[:private_messages]
+          if opts[:type_filter] === "private_messages"
             @direct_pms_only ? posts : posts.private_posts_for_user(@search_context)
           else
             posts.where("posts.user_id = #{@search_context.id}")
@@ -1018,10 +1030,10 @@ class Search
     query =
       if @order == :likes
         # likes are a pain to aggregate so skip
-        posts_query(limit, private_messages: opts[:private_messages])
+        posts_query(limit, type_filter: opts[:type_filter])
           .select('topics.id', "posts.post_number")
       else
-        posts_query(limit, aggregate_search: true, private_messages: opts[:private_messages])
+        posts_query(limit, aggregate_search: true, type_filter: opts[:type_filter])
           .select('topics.id', "#{min_or_max}(posts.post_number) post_number")
           .group('topics.id')
       end
@@ -1064,7 +1076,11 @@ class Search
   def private_messages_search
     raise Discourse::InvalidAccess.new("anonymous can not search PMs") unless @guardian.user
 
-    aggregate_search(private_messages: true)
+    aggregate_search(type_filter: "private_messages")
+  end
+
+  def all_topics_search
+    aggregate_search(type_filter: "all_topics")
   end
 
   def topic_search
