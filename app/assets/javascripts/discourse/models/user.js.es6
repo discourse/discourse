@@ -536,7 +536,15 @@ const User = RestModel.extend({
     const user = this;
 
     return PreloadStore.getAndRemove(`user_${user.get("username")}`, () => {
-      return ajax(userPath(`${user.get("username")}.json`), { data: options });
+      const useCardRoute = options && options.forCard;
+
+      if (options) delete options.forCard;
+
+      const path = useCardRoute
+        ? `${user.get("username")}/card.json`
+        : `${user.get("username")}.json`;
+
+      return ajax(userPath(path), { data: options });
     }).then(json => {
       if (!isEmpty(json.user.stats)) {
         json.user.stats = User.groupStats(
