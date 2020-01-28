@@ -481,4 +481,41 @@ describe CategoriesController do
       end
     end
   end
+
+  context '#categories_and_topics' do
+    before do
+      10.times.each { Fabricate(:topic) }
+    end
+
+    it 'works when SiteSetting.categories_topics is non-null' do
+      SiteSetting.categories_topics = 5
+
+      get '/categories_and_latest.json'
+      expect(JSON.parse(response.body)['topic_list']['topics'].size).to eq(5)
+    end
+
+    it 'works when SiteSetting.categories_topics is null' do
+      SiteSetting.categories_topics = 0
+
+      get '/categories_and_latest.json'
+      json = JSON.parse(response.body)
+      expect(json['category_list']['categories'].size).to eq(2) # 'Uncategorized' and category
+      expect(json['topic_list']['topics'].size).to eq(5)
+
+      Fabricate(:category, parent_category: category)
+
+      get '/categories_and_latest.json'
+      json = JSON.parse(response.body)
+      expect(json['category_list']['categories'].size).to eq(2)
+      expect(json['topic_list']['topics'].size).to eq(5)
+
+      Fabricate(:category)
+      Fabricate(:category)
+
+      get '/categories_and_latest.json'
+      json = JSON.parse(response.body)
+      expect(json['category_list']['categories'].size).to eq(4)
+      expect(json['topic_list']['topics'].size).to eq(6)
+    end
+  end
 end

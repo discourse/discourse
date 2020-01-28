@@ -135,8 +135,7 @@ basic:
     default: false
   categories_topics:
     default: 20
-    min: 5
-    max: 2000
+    validator: "CategoriesTopicsValidator"
   suggested_topics:
     client: true
     default: 5
