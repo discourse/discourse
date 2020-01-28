@@ -122,7 +122,7 @@ class Upload < ActiveRecord::Base
   end
 
   def self.invalid_secure_upload_reuse?(upload, post)
-    return false if !SiteSetting.secure_media? || upload.blank?
+    return false if !SiteSetting.secure_media? || upload.blank? || post.blank?
     upload.access_control_post_id != post.id || upload.original_sha1.blank?
   end
 

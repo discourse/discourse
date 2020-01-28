@@ -164,7 +164,7 @@ module Jobs
         doc.css(".lightbox img[src]")
     end
 
-    def should_download_image?(src, post)
+    def should_download_image?(src, post = nil)
       # make sure we actually have a url
       return false unless src.present?
 
