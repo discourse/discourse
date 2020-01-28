@@ -219,7 +219,7 @@ GEM
     omniauth (1.9.0)
       hashie (>= 3.4.6, < 3.7.0)
       rack (>= 1.6.2, < 3)
-    omniauth-facebook (5.0.0)
+    omniauth-facebook (6.0.0)
       omniauth-oauth2 (~> 1.2)
     omniauth-github (1.3.0)
       omniauth (~> 1.5)
