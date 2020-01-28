@@ -288,16 +288,16 @@ describe Upload do
     end
   end
 
-  describe ".invalid_secure_upload_reuse?" do
+  describe ".consider_for_reuse" do
     let(:post) { Fabricate(:post) }
     let(:upload) { Fabricate(:upload) }
 
-    it "returns false when the provided upload is blank" do
-      expect(Upload.invalid_secure_upload_reuse?(nil, post)).to eq(false)
+    it "returns nil when the provided upload is blank" do
+      expect(Upload.consider_for_reuse(nil, post)).to eq(nil)
     end
 
-    it "returns false when secure media is disabled" do
-      expect(Upload.invalid_secure_upload_reuse?(upload, post)).to eq(false)
+    it "returns the upload when secure media is disabled" do
+      expect(Upload.consider_for_reuse(upload, post)).to eq(upload)
     end
 
     context "when secure media enabled" do
@@ -310,8 +310,8 @@ describe Upload do
           upload.update(access_control_post_id: Fabricate(:post).id)
         end
 
-        it "returns true" do
-          expect(Upload.invalid_secure_upload_reuse?(upload, post)).to eq(true)
+        it "returns nil" do
+          expect(Upload.consider_for_reuse(upload, post)).to eq(nil)
         end
       end
 
@@ -320,16 +320,16 @@ describe Upload do
           upload.update(original_sha1: nil, access_control_post: post)
         end
 
-        it "returns true" do
-          expect(Upload.invalid_secure_upload_reuse?(upload, post)).to eq(true)
+        it "returns nil" do
+          expect(Upload.consider_for_reuse(upload, post)).to eq(nil)
         end
       end
 
       context "when the upload original_sha1 is present and access control post is correct" do
         let(:upload) { Fabricate(:secure_upload_s3, access_control_post: post) }
 
-        it "returns false" do
-          expect(Upload.invalid_secure_upload_reuse?(upload, post)).to eq(false)
+        it "returns the upload" do
+          expect(Upload.consider_for_reuse(upload, post)).to eq(upload)
         end
       end
     end

@@ -175,14 +175,13 @@ module Jobs
 
         # Someone could hotlink a file from a different site on the same CDN,
         # so check whether we have it in this database
-        upload = Upload.get_from_url(src)
-
+        #
         # if the upload already exists and is attached to a different post,
         # or the original_sha1 is missing meaning it was created before secure
         # media was enabled, then we definitely want to redownload again otherwise
         # we end up reusing existing uploads which may be linked to many posts
         # already.
-        upload = Upload.invalid_secure_upload_reuse?(upload, post) ? nil : upload
+        upload = Upload.consider_for_reuse(Upload.get_from_url(src), post)
 
         return !upload.present?
       end
