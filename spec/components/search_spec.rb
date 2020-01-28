@@ -348,11 +348,11 @@ describe Search do
                                 guardian: Guardian.new(u3))
         expect(results.posts.length).to eq(1)
 
-        # Admin
+        # Admin doesn't see private topic
         results = Search.execute('spam',
                   type_filter: 'all_topics',
                   guardian: Guardian.new(u4))
-        expect(results.posts.length).to eq(2)
+        expect(results.posts.length).to eq(1)
 
         # same keyword for different users
         results = Search.execute('ham',
