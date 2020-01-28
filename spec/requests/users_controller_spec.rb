@@ -2943,6 +2943,57 @@ describe UsersController do
     end
   end
 
+  describe "#show_card" do
+    context "anon" do
+      let(:user) { Discourse.system_user }
+
+      it "returns success" do
+        get "/u/#{user.username}/card.json"
+        expect(response.status).to eq(200)
+        parsed = JSON.parse(response.body)["user"]
+
+        expect(parsed["username"]).to eq(user.username)
+        expect(parsed["profile_hidden"]).to be_blank
+        expect(parsed["trust_level"]).to be_present
+      end
+
+      it "should redirect to login page for anonymous user when profiles are hidden" do
+        SiteSetting.hide_user_profiles_from_public = true
+        get "/u/#{user.username}/card.json"
+        expect(response).to redirect_to '/login'
+      end
+    end
+
+    context "logged in" do
+      before do
+        sign_in(user)
+      end
+
+      fab!(:user) { Fabricate(:user) }
+
+      it 'works correctly' do
+        get "/u/#{user.username}/card.json"
+        expect(response.status).to eq(200)
+
+        json = JSON.parse(response.body)
+
+        expect(json["user"]["associated_accounts"]).to eq(nil) # Not serialized in card
+        expect(json["user"]["username"]).to eq(user.username)
+      end
+
+      it "returns not found when the username doesn't exist" do
+        get "/u/madeuppity/card.json"
+        expect(response).not_to be_successful
+      end
+
+      it "raises an error on invalid access" do
+        Guardian.any_instance.expects(:can_see?).with(user).returns(false)
+        get "/u/#{user.username}/card.json"
+        expect(response).to be_forbidden
+      end
+    end
+  end
+
   describe '#badges' do
     it "renders fine by default" do
       get "/u/#{user.username}/badges"

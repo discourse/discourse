@@ -1976,6 +1976,11 @@ uncategorized:
     default: ""
     hidden: true
 
+  enable_new_user_card_route:
+    default: false
+    client: true
+    hidden: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
