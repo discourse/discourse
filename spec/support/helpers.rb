@@ -147,4 +147,9 @@ module Helpers
       ActionController::Base.config.relative_url_root = old_root
     end
   end
+
+  class StubbedJob
+    def initialize; end
+    def perform(args); end
+  end
 end
