@@ -127,31 +127,23 @@ export class Tag {
   }
 
   static aside() {
-    return class extends Tag {
+    return class extends Tag.block("aside") {
       constructor() {
-        super("aside");
-        this.gap = "\n\n";
-      }
-
-      decorate(text) {
-        const parent = this.element.parent;
-
-        if (this.name === "p" && parent && parent.name === "li") {
-          // fix for google docs
-          this.gap = "";
-        }
-
-        return `${this.gap}${this.prefix}${text}${this.suffix}${this.gap}`;
+        super();
       }
 
       toMarkdown() {
-        if (!this.element.attributes.class.split(" ").includes("quote")) {
+        if (!/\bquote\b/.test(this.element.attributes.class)) {
           return super.toMarkdown();
         }
 
         const blockquote = this.element.children.find(
           child => child.name === "blockquote"
         );
+
+        if (!blockquote) {
+          return super.toMarkdown();
+        }
 
         let text = Element.parse([blockquote], this.element) || "";
         text = text.trim().replace(/^>/g, "");
