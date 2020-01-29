@@ -3938,6 +3938,7 @@ describe UsersController do
         expect(response.status).to eq(200)
         expect(user.user_profile.featured_topic).to eq topic
       end
+
       it 'sets featured_topic correctly for non-user-created topic' do
         sign_in(user)
         put "/u/#{user.username}/feature-topic.json", params: { topic_id: other_topic.id }
