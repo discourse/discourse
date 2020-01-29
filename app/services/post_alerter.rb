@@ -551,7 +551,7 @@ class PostAlerter
     end
   end
 
-  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true, new_record: true)
+  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true)
     return unless post.topic
 
     warn_if_not_sidekiq
@@ -609,9 +609,10 @@ class PostAlerter
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
 
-    notification_type = new_record ? Notification.types[:posted] : Notification.types[:edited]
+    already_seen_users = TopicUser.where(topic_id: post.topic.id).where("highest_seen_post_number >= ?", post.post_number).pluck(:user_id)
 
     notify.pluck(:id).each do |user_id|
+      notification_type = already_seen_users.include?(user_id) ? Notification.types[:edited] : Notification.types[:posted]
       user = User.find_by(id: user_id)
       create_notification(user, notification_type, post)
     end
