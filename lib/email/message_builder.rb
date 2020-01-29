@@ -51,7 +51,10 @@ module Email
     end
 
     def subject
-      if @opts[:use_site_subject]
+      if @opts[:template] &&
+          TranslationOverride.exists?(locale: I18n.locale, translation_key: "#{@opts[:template]}.subject_template")
+        subject = I18n.t("#{@opts[:template]}.subject_template", @template_args)
+      elsif @opts[:use_site_subject]
         subject = String.new(SiteSetting.email_subject)
         subject.gsub!("%{site_name}", @template_args[:email_prefix])
         subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t('subject_re') : '')
