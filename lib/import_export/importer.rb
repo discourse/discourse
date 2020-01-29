@@ -110,8 +110,8 @@ module ImportExport
             post.save!
             post.rebake!
           end
-        rescue
-          next
+        rescue => e
+          puts "Failed to import category (ID = #{id}, name = #{cat_attrs[:name]}): #{e.message}"
         end
       end
 
