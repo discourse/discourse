@@ -986,15 +986,20 @@ describe Topic do
 
     context 'visibility' do
       context 'disable' do
-        before do
+        it 'should not be visible and have correct counts' do
           topic.update_status('visible', false, @user)
           topic.reload
-        end
-
-        it 'should not be visible and have correct counts' do
           expect(topic).not_to be_visible
           expect(topic.moderator_posts_count).to eq(1)
           expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
+        end
+
+        it 'removes itself as featured topic on user profiles' do
+          user.user_profile.update(featured_topic_id: topic.id)
+          expect(user.user_profile.featured_topic).to eq(topic)
+
+          topic.update_status('visible', false, @user)
+          expect(user.user_profile.reload.featured_topic).to eq(nil)
         end
       end
 

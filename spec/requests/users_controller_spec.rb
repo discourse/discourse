@@ -3923,6 +3923,13 @@ describe UsersController do
         expect(response.status).to eq(403)
       end
 
+      it "returns an error if the topic is not visible" do
+        sign_in(user)
+        topic.update_status('visible', false, user)
+        put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(403)
+      end
+
       it "returns an error if the topic's category is read_restricted" do
         sign_in(user)
         category.set_permissions({})
