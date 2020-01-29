@@ -1783,6 +1783,13 @@ describe CookedPostProcessor do
       expect(reply.raw).to eq(raw)
     end
 
+    it "does not generate a blank HTML document" do
+      post = Fabricate(:post, topic: topic, raw: "<sunday><monday>")
+      cp = CookedPostProcessor.new(post)
+      cp.post_process
+      expect(cp.html).to eq("<p></p>")
+    end
+
     it "works only on new posts" do
       Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post after")
       Fabricate(:post, topic: topic, post_type: Post.types[:small_action])

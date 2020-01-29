@@ -116,7 +116,11 @@ module Oneboxer
     end
 
     # strip empty <p> elements
-    doc.css("p").each { |p| p.remove if p.children.empty? }
+    doc.css("p").each do |p|
+      if p.children.empty? && doc.children.count > 1
+        p.remove
+      end
+    end
 
     Result.new(doc, changed)
   end
