@@ -144,10 +144,12 @@ export function extractDataAttribute(str) {
 function videoHTML(token) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
-  return `<video width="100%" height="100%" controls>
-    <source src="${src}" data-orig-src="${origSrc}">
-    <a href="${src}">${src}</a>
-  </video>`;
+  return `<div class="video-container">
+    <video width="100%" height="100%" controls>
+      <source src="${src}" data-orig-src="${origSrc}">
+      <a href="${src}">${src}</a>
+    </video>
+  </div>`;
 }
 
 function audioHTML(token) {
@@ -169,6 +171,7 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
 
   // markdown-it supports returning HTML instead of continuing to render the current token
   // see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
+  // handles |video and |audio alt transformations for image tags
   if (split[1] === "video") {
     return videoHTML(token);
   } else if (split[1] === "audio") {
