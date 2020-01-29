@@ -8,7 +8,7 @@ The following are template configurations for email service providers who offer 
 
 Enter these values when prompted by `./discourse-setup` per the [install guide](https://github.com/discourse/discourse/blob/master/docs/INSTALL-cloud.md#edit-discourse-configuration):
 
-#### [Mailgun][gun] &mdash; 10k emails/month (with credit card)
+#### [Mailgun][gun] &mdash; 5k emails/month on a 3 month trial
 
     SMTP server address? smtp.mailgun.org
     SMTP user name?      [SMTP credentials for your domain under domains tab]
