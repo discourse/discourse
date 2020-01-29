@@ -41,14 +41,15 @@ export default Component.extend(PanEvents, {
           composer = document.getElementById("reply-control"),
           timelineContainer = document.querySelectorAll(
             ".timeline-container"
-          )[0];
+          )[0],
+          headerHeight =
+            document.querySelectorAll(".d-header")[0].offsetHeight || 0;
 
         if (timelineContainer && composer) {
-          const tlRect = timelineContainer.getBoundingClientRect();
-          const tlOffset = tlRect.y + parseInt(tlRect.height, 10);
           renderTimeline =
             width > MIN_WIDTH_TIMELINE &&
-            window.innerHeight - composer.offsetHeight > tlOffset;
+            window.innerHeight - composer.offsetHeight - headerHeight >
+              timelineContainer.offsetHeight;
         }
       }
 
