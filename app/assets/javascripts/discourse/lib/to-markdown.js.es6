@@ -44,7 +44,6 @@ export class Tag {
     return [
       "address",
       "article",
-      "aside",
       "dd",
       "div",
       "dl",
@@ -89,6 +88,7 @@ export class Tag {
       ...Tag.blocks(),
       ...Tag.headings(),
       ...Tag.slices(),
+      "aside",
       "li",
       "td",
       "th",
@@ -122,6 +122,53 @@ export class Tag {
         }
 
         return `${this.gap}${this.prefix}${text}${this.suffix}${this.gap}`;
+      }
+    };
+  }
+
+  static aside() {
+    return class extends Tag {
+      constructor() {
+        super("aside");
+        this.gap = "\n\n";
+      }
+
+      decorate(text) {
+        const parent = this.element.parent;
+
+        if (this.name === "p" && parent && parent.name === "li") {
+          // fix for google docs
+          this.gap = "";
+        }
+
+        return `${this.gap}${this.prefix}${text}${this.suffix}${this.gap}`;
+      }
+
+      toMarkdown() {
+        if (!this.element.attributes.class.split(" ").includes("quote")) {
+          return super.toMarkdown();
+        }
+
+        const blockquote = this.element.children.find(
+          child => child.name === "blockquote"
+        );
+
+        let text = Element.parse([blockquote], this.element) || "";
+        text = text.trim().replace(/^>/g, "");
+        if (text.length === 0) {
+          return "";
+        }
+
+        const username = this.element.attributes["data-username"];
+        const post = this.element.attributes["data-post"];
+        const topic = this.element.attributes["data-topic"];
+
+        const prefix =
+          username && post && topic
+            ? `[quote="${username}, post:${post}, topic:${topic}"]`
+            : "[quote]";
+
+        return `\n\n${prefix}\n${text}\n[/quote]\n\n`;
       }
     };
   }
@@ -484,6 +531,7 @@ function tags() {
     ...Tag.slices().map(s => Tag.slice(s, "\n")),
     ...Tag.emphases().map(e => Tag.emphasis(e[0], e[1])),
     ...Tag.whitelists().map(t => Tag.whitelist(t)),
+    Tag.aside(),
     Tag.cell("td"),
     Tag.cell("th"),
     Tag.replace("br", "\n"),
