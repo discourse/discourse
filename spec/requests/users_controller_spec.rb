@@ -3895,6 +3895,7 @@ describe UsersController do
 
   describe '#feature_topic' do
     fab!(:topic) { Fabricate(:topic) }
+    fab!(:other_topic) { Fabricate(:topic) }
     fab!(:other_user) { Fabricate(:user) }
     fab!(:private_message) { Fabricate(:private_message_topic, user: other_user) }
     fab!(:category) { Fabricate(:category_with_definition) }
@@ -3930,12 +3931,18 @@ describe UsersController do
         expect(response.status).to eq(403)
       end
 
-      it 'sets the user_profiles featured_topic correctly' do
+      it 'sets featured_topic correctly for user created topic' do
         sign_in(user)
         topic.update(user_id: user.id)
         put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
         expect(response.status).to eq(200)
         expect(user.user_profile.featured_topic).to eq topic
+      end
+      it 'sets featured_topic correctly for non-user-created topic' do
+        sign_in(user)
+        put "/u/#{user.username}/feature-topic.json", params: { topic_id: other_topic.id }
+        expect(response.status).to eq(200)
+        expect(user.user_profile.featured_topic).to eq other_topic
       end
 
       describe "site setting disabled" do
