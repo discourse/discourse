@@ -145,7 +145,7 @@ WidgetClickHook.setupDocumentCallback = function() {
   );
 
   $(document).on("dblclick.discourse-widget", e => {
-    nodeCallback(e.target, CLICK_ATTRIBUTE_NAME, w => w.doubleClick(e));
+    nodeCallback(e.target, DOUBLE_CLICK_ATTRIBUTE_NAME, w => w.doubleClick(e));
   });
 
   $(document).on("click.discourse-widget", e => {
@@ -203,11 +203,17 @@ WidgetClickHook.setupDocumentCallback = function() {
   });
 
   $(document).on("mousedown.discourse-widget", e => {
-    nodeCallback(e.target, KEY_DOWN_ATTRIBUTE_NAME, w => w.mousedown(e));
+    nodeCallback(e.target, MOUSE_DOWN_ATTRIBUTE_NAME, w => {
+      w.mouseDown(e);
+    });
   });
 
   $(document).on("mouseup.discourse-widget", e => {
-    nodeCallback(e.target, KEY_DOWN_ATTRIBUTE_NAME, w => w.mouseup(e));
+    nodeCallback(e.target, MOUSE_UP_ATTRIBUTE_NAME, w => w.mouseUp(e));
+  });
+
+  $(document).on("mousemove.discourse-widget", e => {
+    nodeCallback(e.target, MOUSE_MOVE_ATTRIBUTE_NAME, w => w.mouseMove(e));
   });
 
   _watchingDocument = true;
