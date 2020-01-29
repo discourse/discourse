@@ -188,6 +188,7 @@ export const DEFAULT_LIST = [
   "span[lang]",
   "span.excerpt",
   "div.excerpt",
+  "div.video-container",
   "span.hashtag",
   "span.mention",
   "strike",
