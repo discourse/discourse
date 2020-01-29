@@ -3909,14 +3909,7 @@ describe UsersController do
         expect(response.status).to eq(403)
       end
 
-      it 'returns an error if the the current user does not have access' do
-        sign_in(user)
-        topic.update(user_id: other_user.id)
-        put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
-        expect(response.status).to eq(403)
-      end
-
-      it 'returns an error if the user did not create the topic' do
+      it 'returns an error if the user tries to set for another user' do
         sign_in(user)
         topic.update(user_id: other_user.id)
         put "/u/#{other_user.username}/feature-topic.json", params: { topic_id: topic.id }
