@@ -46,6 +46,8 @@ export default {
 
       caps.hasContactPicker =
         "contacts" in navigator && "ContactsManager" in window;
+
+      caps.canVibrate = "vibrate" in navigator;
     }
 
     // We consider high res a device with 1280 horizontal pixels. High DPI tablets like

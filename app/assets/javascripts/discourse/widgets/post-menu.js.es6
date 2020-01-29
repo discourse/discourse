@@ -8,6 +8,7 @@ import { Promise } from "rsvp";
 import ENV from "discourse-common/config/environment";
 
 const LIKE_ACTION = 2;
+const VIBRATE_DURATION = 5;
 
 function animateHeart($elem, start, end, complete) {
   if (ENV.environment === "test") {
@@ -649,6 +650,10 @@ export default createWidget("post-menu", {
       keyValueStore &&
         keyValueStore.set({ key: "likedPostId", value: attrs.id });
       return this.sendWidgetAction("showLogin");
+    }
+
+    if (this.capabilities.canVibrate) {
+      navigator.vibrate(VIBRATE_DURATION);
     }
 
     if (attrs.liked) {
