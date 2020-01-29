@@ -288,6 +288,53 @@ describe Upload do
     end
   end
 
+  describe ".consider_for_reuse" do
+    let(:post) { Fabricate(:post) }
+    let(:upload) { Fabricate(:upload) }
+
+    it "returns nil when the provided upload is blank" do
+      expect(Upload.consider_for_reuse(nil, post)).to eq(nil)
+    end
+
+    it "returns the upload when secure media is disabled" do
+      expect(Upload.consider_for_reuse(upload, post)).to eq(upload)
+    end
+
+    context "when secure media enabled" do
+      before do
+        enable_secure_media
+      end
+
+      context "when the upload access control post is != to the provided post" do
+        before do
+          upload.update(access_control_post_id: Fabricate(:post).id)
+        end
+
+        it "returns nil" do
+          expect(Upload.consider_for_reuse(upload, post)).to eq(nil)
+        end
+      end
+
+      context "when the upload original_sha1 is blank (pre-secure-media upload)" do
+        before do
+          upload.update(original_sha1: nil, access_control_post: post)
+        end
+
+        it "returns nil" do
+          expect(Upload.consider_for_reuse(upload, post)).to eq(nil)
+        end
+      end
+
+      context "when the upload original_sha1 is present and access control post is correct" do
+        let(:upload) { Fabricate(:secure_upload_s3, access_control_post: post) }
+
+        it "returns the upload" do
+          expect(Upload.consider_for_reuse(upload, post)).to eq(upload)
+        end
+      end
+    end
+  end
+
   describe '.update_secure_status' do
     it "respects the secure_override_value parameter if provided" do
       upload.update!(secure: true)
@@ -344,18 +391,7 @@ describe Upload do
 
     context "secure media enabled" do
       before do
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-        SiteSetting.s3_access_key_id = "some key"
-        SiteSetting.s3_secret_access_key = "some secrets3_region key"
-        SiteSetting.secure_media = true
-
-        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-
-        stub_request(
-          :put,
-          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{upload.sha1}.#{upload.extension}?acl"
-        )
+        enable_secure_media
       end
 
       it 'does not mark an image upload as not secure when there is no access control post id, to avoid unintentional exposure' do
@@ -398,5 +434,20 @@ describe Upload do
       expect(upload1.reload.extension).to eq(nil)
       expect(upload2.reload.extension).to eq("png")
     end
+  end
+
+  def enable_secure_media
+    SiteSetting.enable_s3_uploads = true
+    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+    SiteSetting.s3_access_key_id = "some key"
+    SiteSetting.s3_secret_access_key = "some secrets3_region key"
+    SiteSetting.secure_media = true
+
+    stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+    stub_request(
+      :put,
+      "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{upload.sha1}.#{upload.extension}?acl"
+    )
   end
 end

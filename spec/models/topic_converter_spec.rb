@@ -131,6 +131,11 @@ describe TopicConverter do
           public_reply.link_post_uploads
           public_reply.update_uploads_secure_status
 
+          # we need to do this otherwise we get infinite loop shenanigans, as the pull hotlinked
+          # images is never satisfied and keeps calling cooked post processor which in turn runs
+          # pull hotlinked images
+          Jobs::PullHotlinkedImages.stubs(:new).returns(Helpers::StubbedJob.new)
+
           expect(public_reply.uploads[0].secure).to eq(false)
           public_topic.convert_to_private_message(admin)
           expect(public_topic.reload.posts.find(public_reply.id).uploads[0].secure).to eq(true)
