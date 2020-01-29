@@ -21,6 +21,14 @@
                        name=(i18n 'review.user.email')
                        value=reviewable.payload.email}}
     
+    {{reviewable-field classes='reviewable-user-details bio'
+                       name=(i18n 'review.user.bio')
+                       value=reviewable.payload.bio}}
+    
+    {{reviewable-field classes='reviewable-user-details bio'
+                       name=(i18n 'review.user.website')
+                       value=reviewable.payload.website}}
+    
     {{#each userFields as |f|}}
       {{reviewable-field classes='reviewable-user-details user-field'
                          name=f.name

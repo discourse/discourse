@@ -1511,6 +1511,7 @@ en:
     markdown_typographer_quotation_marks: "List of double and single quotes replacement pairs"
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
+    approve_suspect_users: "Staff must approve all suspect accounts"
     pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
     maximum_session_age: "User will remain logged in for n hours since last visit"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -4667,6 +4668,7 @@ en:
       invite_only: "All new users should be invited. See `invite_only`."
       email_auth_res_enqueue: "This email failed a DMARC check, it most likely isn't from whom it seems to be from. Check the raw email headers for more information."
       email_spam: "This email was flagged as spam by the header defined in `email_in_spam_header`."
+      suspect_user: "Users in the suspect list must be examined by staff. See `approve_suspect_users`."
 
     actions:
       agree:
