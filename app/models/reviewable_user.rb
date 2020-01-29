@@ -59,6 +59,10 @@ class ReviewableUser < Reviewable
     if target.present?
       destroyer = UserDestroyer.new(performed_by)
 
+      if reviewable_scores.any? { |rs| rs.reason == 'suspect_user' }
+        DiscourseEvent.trigger(:suspect_user_deleted, target)
+      end
+
       begin
         delete_args = {}
         delete_args[:block_ip] = true if args[:block_ip]
