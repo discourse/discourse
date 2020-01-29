@@ -51,3 +51,9 @@ Fabricator(:upload_s3, from: :upload) do
     end
   end
 end
+
+Fabricator(:secure_upload_s3, from: :upload_s3) do
+  secure { true }
+  sha1 { SecureRandom.hex(20) }
+  original_sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest(n.to_s) } }
+end
