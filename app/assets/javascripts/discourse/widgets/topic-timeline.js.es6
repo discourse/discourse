@@ -12,7 +12,13 @@ const SCROLLER_HEIGHT = 50;
 const LAST_READ_HEIGHT = 20;
 
 function scrollareaHeight() {
-  return $(window).height() < 425 ? 150 : 300;
+  const composer = document.getElementById("reply-control");
+  const availableHeight =
+    composer === null
+      ? window.innerHeight
+      : window.innerHeight - composer.offsetHeight;
+
+  return availableHeight < 500 ? 170 : 300;
 }
 
 function scrollareaRemaining() {

@@ -43,7 +43,7 @@ export default Component.extend(PanEvents, {
           height -= $("#reply-control").height();
         }
 
-        renderTimeline = width > 924 && height > 520;
+        renderTimeline = width > 924 && height > 450;
       }
 
       info.setProperties({
@@ -192,6 +192,7 @@ export default Component.extend(PanEvents, {
         this._checkSize()
       );
       this.appEvents.on("composer:will-open", this, this.composerOpened);
+      this.appEvents.on("composer:resized", this, this._checkSize);
       this.appEvents.on("composer:will-close", this, this.composerClosed);
       $("#reply-control").on("div-resized.discourse-topic-navigation", () =>
         this._checkSize()
@@ -214,6 +215,7 @@ export default Component.extend(PanEvents, {
     if (!this.site.mobileView) {
       $(window).off("resize.discourse-topic-navigation");
       this.appEvents.off("composer:will-open", this, this.composerOpened);
+      this.appEvents.off("composer:resized", this, this._checkSize);
       this.appEvents.off("composer:will-close", this, this.composerClosed);
       $("#reply-control").off("div-resized.discourse-topic-navigation");
     }
