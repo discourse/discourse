@@ -58,6 +58,18 @@ describe ImportExport::Importer do
           .to change { Category.count }.by(6)
           .and change { SiteSetting.max_category_nesting }.from(2).to(3)
       end
+
+      it 'fixes permissions' do
+        data = import_data.dup
+        data[:categories].find { |c| c[:id] == 10 }[:permissions_params] = { custom_group: 1 }
+        data[:categories].find { |c| c[:id] == 15 }[:permissions_params] = { staff: 1 }
+
+        permissions = data[:categories].find { |c| c[:id] == 10 }[:permissions_params]
+
+        expect { import(data) }
+          .to change { Category.count }.by(6)
+          .and change { permissions[:staff] }.from(nil).to(1)
+      end
     end
 
     it 'categories, groups and users' do
