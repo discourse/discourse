@@ -80,8 +80,15 @@ module ImportExport
       existing_categories = CategoryCustomField.where("name = 'import_id' AND value IN (?)", import_ids).select(:category_id, :value).to_a
       existing_category_ids = existing_categories.pluck(:value)
 
+      levels = category_levels(@categories)
+      max_level = levels.values.max
+      if SiteSetting.max_category_nesting < max_level
+        puts "Setting max_category_nesting to #{max_level}..."
+        SiteSetting.max_category_nesting = max_level
+      end
+
       @categories.reject! { |c| existing_category_ids.include? c[:id].to_s }
-      @categories.sort_by! { |c| c[:parent_category_id].presence || 0 }
+      @categories.sort_by! { |c| levels[c[:id]] || 0 }
 
       @categories.each do |cat_attrs|
         begin
@@ -173,5 +180,34 @@ module ImportExport
       @_import_source ||= "#{ENV['IMPORT_SOURCE'] || ''}"
     end
 
+    def category_levels(categories)
+      levels = {}
+
+      # Incomplete backups may lack definitions for some parent categories
+      # which would cause an infinite loop below.
+      parent_ids = categories.map { |category| category[:parent_category_id] }.uniq
+      category_ids = categories.map { |category| category[:id] }.uniq
+      (parent_ids - category_ids).each { |id| levels[id] = 0 }
+
+      loop do
+        changed = false
+
+        categories.each do |category|
+          if !levels[category[:id]]
+            if !category[:parent_category_id]
+              levels[category[:id]] = 1
+            elsif levels[category[:parent_category_id]]
+              levels[category[:id]] = levels[category[:parent_category_id]] + 1
+            end
+
+            changed = true
+          end
+        end
+
+        break if !changed
+      end
+
+      levels
+    end
   end
 end
