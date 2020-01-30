@@ -115,16 +115,15 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
         fake(canonical_url, response('etsy'))
       end
 
-      it 'fetches opengraph data and twitter labels from canonical link' do
+      it 'fetches opengraph data and price from canonical link' do
         onebox = described_class.new(mobile_url)
         expect(onebox.to_html).not_to be_nil
         expect(onebox.to_html).to include("images/favicon.ico")
         expect(onebox.to_html).to include("Etsy")
         expect(onebox.to_html).to include("Personalized Word Pillow Case")
         expect(onebox.to_html).to include("Allow your personality to shine through your decor; this contemporary and modern accent will help you do just that.")
-        expect(onebox.to_html).to include("https://img1.etsystatic.com/028/1/6088772/il_570xN.613262127_e0zl.jpg")
-        expect(onebox.to_html).to include("CAD: $46.00")
-        expect(onebox.to_html).not_to include("Available: 4")
+        expect(onebox.to_html).to include("https://i.etsystatic.com/6088772/r/il/719b4b/1631899982/il_570xN.1631899982_2iay.jpg")
+        expect(onebox.to_html).to include("CAD 52.00")
       end
     end
 
@@ -140,8 +139,8 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
         onebox = described_class.new(discourse_topic_reply_url)
         expect(onebox.to_html).not_to be_nil
         expect(onebox.to_html).to include("Congratulations, most stars in 2013 GitHub Octoverse!")
-        expect(onebox.to_html).to include("Thanks for that link and thank you -- and everyone else who is contributing to the project!")
-        expect(onebox.to_html).to include("https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/codinghorror/200/5297_1.png")
+        expect(onebox.to_html).to include("Thanks for that link and thank you – and everyone else who is contributing to the project!")
+        expect(onebox.to_html).to include("https://d11a6trkgmumsb.cloudfront.net/optimized/2X/d/d063b3b0807377d98695ee08042a9ba0a8c593bd_2_690x362.png")
       end
     end
   end
