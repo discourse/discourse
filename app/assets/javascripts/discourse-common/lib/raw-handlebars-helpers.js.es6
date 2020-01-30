@@ -47,7 +47,32 @@ export function registerRawHelpers(hbs, handlebarsClass) {
       return old.apply(this, [hbs.helpers.get(context, options), options]);
     };
   }
+
+  // HACK: Ensure that the variable is resolved only once.
+  // The "get" function will be called twice because both `if` and `unless`
+  // helpers are patched to resolve the variable and `unless` is implemented
+  // as not `if`. For example, for {{#unless var}} will generate a stack
+  // trace like:
+  //
+  // - patched-unless("var")  "var" is resolved to its value, val
+  // - unless(val)            unless is implemented as !if
+  // - !patched-if(val)       val is already resolved, but it is resolved again
+  // - !if(???)               at this point, ??? usually stands for undefined
+  //
+  // The following code ensures that patched-unless will call `if` directly,
+  // `patched-unless("var")` will return `!if(val)`.
+  const oldIf = hbs.helpers["if"];
+  hbs.helpers["unless"] = function(context, options) {
+    return oldIf.apply(this, [
+      hbs.helpers.get(context, options),
+      {
+        fn: options.inverse,
+        inverse: options.fn,
+        hash: options.hash
+      }
+    ]);
+  };
+
   stringCompatHelper("if");
-  stringCompatHelper("unless");
   stringCompatHelper("with");
 }

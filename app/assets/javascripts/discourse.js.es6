@@ -29,8 +29,8 @@ const Discourse = Ember.Application.extend(FocusEvent, {
     // if it's a non relative URL, return it.
     if (url !== "/" && !/^\/[^\/]/.test(url)) return url;
 
-    if (url.indexOf(Discourse.BaseUri) !== -1) return url;
     if (url[0] !== "/") url = "/" + url;
+    if (url.startsWith(Discourse.BaseUri)) return url;
 
     return Discourse.BaseUri + url;
   },

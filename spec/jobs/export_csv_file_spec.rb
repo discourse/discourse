@@ -42,6 +42,37 @@ describe Jobs::ExportCsvFile do
     end
   end
 
+  context '#user_archive_export' do
+    let(:user) { Fabricate(:user) }
+
+    let(:category) { Fabricate(:category_with_definition) }
+    let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+    let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
+
+    it 'works with sub-sub-categories' do
+      SiteSetting.max_category_nesting = 3
+      topic = Fabricate(:topic, category: subsubcategory)
+      post = Fabricate(:post, topic: topic, user: user)
+
+      exporter = Jobs::ExportCsvFile.new
+      exporter.instance_variable_set(:@current_user, User.find_by(id: user.id))
+
+      rows = []
+      exporter.user_archive_export { |row| rows << row }
+
+      expect(rows.length).to eq(1)
+
+      first_row = Jobs::ExportCsvFile::HEADER_ATTRS_FOR['user_archive'].zip(rows[0]).to_h
+
+      expect(first_row["topic_title"]).to eq(topic.title)
+      expect(first_row["categories"]).to eq("#{category.name}|#{subcategory.name}|#{subsubcategory.name}")
+      expect(first_row["is_pm"]).to eq(I18n.t("csv_export.boolean_no"))
+      expect(first_row["post"]).to eq(post.raw)
+      expect(first_row["like_count"]).to eq(0)
+      expect(first_row["reply_count"]).to eq(0)
+    end
+  end
+
   context '.report_export' do
 
     let(:user) { Fabricate(:admin) }

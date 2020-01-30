@@ -333,16 +333,43 @@ createWidget("discourse-poll-container", {
           : "discourse-poll-pie-chart";
       return this.attach(resultsWidget, attrs);
     } else if (options) {
-      return h(
-        "ul",
-        options.map(option => {
-          return this.attach("discourse-poll-option", {
-            option,
-            isMultiple: attrs.isMultiple,
-            vote: attrs.vote
-          });
-        })
+      const contents = [];
+
+      const pollGroups =
+        poll.groups && poll.groups.split(",").map(g => g.toLowerCase());
+
+      const userGroups =
+        this.currentUser &&
+        this.currentUser.groups &&
+        this.currentUser.groups.map(g => g.name.toLowerCase());
+
+      if (
+        pollGroups &&
+        userGroups &&
+        !pollGroups.some(g => userGroups.includes(g))
+      ) {
+        contents.push(
+          h(
+            "div.alert.alert-danger",
+            I18n.t("poll.results.groups.title", { groups: poll.groups })
+          )
+        );
+      }
+
+      contents.push(
+        h(
+          "ul",
+          options.map(option => {
+            return this.attach("discourse-poll-option", {
+              option,
+              isMultiple: attrs.isMultiple,
+              vote: attrs.vote
+            });
+          })
+        )
       );
+
+      return contents;
     }
   }
 });
@@ -954,6 +981,16 @@ export default createWidget("discourse-poll", {
     this.register.lookup("route:application").send("showLogin");
   },
 
+  _toggleOption(option) {
+    const { vote } = this.attrs;
+    const chosenIdx = vote.indexOf(option.id);
+    if (chosenIdx !== -1) {
+      vote.splice(chosenIdx, 1);
+    } else {
+      vote.push(option.id);
+    }
+  },
+
   toggleOption(option) {
     const { attrs } = this;
 
@@ -961,20 +998,13 @@ export default createWidget("discourse-poll", {
     if (!this.currentUser) return this.showLogin();
 
     const { vote } = attrs;
-    const chosenIdx = vote.indexOf(option.id);
-
     if (!this.isMultiple()) {
       vote.length = 0;
     }
 
-    if (chosenIdx !== -1) {
-      vote.splice(chosenIdx, 1);
-    } else {
-      vote.push(option.id);
-    }
-
+    this._toggleOption(option);
     if (!this.isMultiple()) {
-      return this.castVotes();
+      return this.castVotes().catch(() => this._toggleOption(option));
     }
   },
 

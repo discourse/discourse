@@ -82,6 +82,13 @@ export default Controller.extend({
     return options;
   },
 
+  @computed("site.groups")
+  siteGroups(groups) {
+    const values = [{ name: "", value: null }];
+    groups.forEach(g => values.push({ name: g.name, value: g.name }));
+    return values;
+  },
+
   @computed("pollType", "regularPollType")
   isRegular(pollType, regularPollType) {
     return pollType === regularPollType;
@@ -184,6 +191,7 @@ export default Controller.extend({
     "pollMin",
     "pollMax",
     "pollStep",
+    "pollGroups",
     "autoClose",
     "chartType",
     "date",
@@ -199,6 +207,7 @@ export default Controller.extend({
     pollMin,
     pollMax,
     pollStep,
+    pollGroups,
     autoClose,
     chartType,
     date,
@@ -228,6 +237,7 @@ export default Controller.extend({
     if (publicPoll) pollHeader += ` public=true`;
     if (chartType && pollType !== "number")
       pollHeader += ` chartType=${chartType}`;
+    if (pollGroups) pollHeader += ` groups=${pollGroups}`;
     if (autoClose) {
       let closeDate = moment(
         date + " " + time,
@@ -323,6 +333,7 @@ export default Controller.extend({
       pollStep: 1,
       autoClose: false,
       chartType: BAR_CHART_TYPE,
+      pollGroups: null,
       date: moment()
         .add(1, "day")
         .format("YYYY-MM-DD"),

@@ -212,6 +212,10 @@ describe Email::Styles do
       expect(frag.at('p.secure-media-notice')).to be_present
       expect(frag.at('img')).not_to be_present
     end
-  end
 
+    it "does not replace topic links with secure-media-uploads in the name" do
+      frag = html_fragment("<a href=\"#{Discourse.base_url}\/t/secure-media-uploads/235723\">Visit Topic</a>")
+      expect(frag.at('p.secure-media-notice')).not_to be_present
+    end
+  end
 end

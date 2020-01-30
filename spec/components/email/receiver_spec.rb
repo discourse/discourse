@@ -230,22 +230,6 @@ describe Email::Receiver do
 
       expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
     end
-
-    it "automatically deactive users once they reach the 'bounce_score_threshold_deactivate' threshold" do
-      expect(user.active).to eq(true)
-
-      user.user_stat.bounce_score = SiteSetting.bounce_score_threshold_deactivate - 1
-      user.user_stat.save!
-
-      expect { process(:soft_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
-
-      user.reload
-      email_log.reload
-
-      expect(email_log.bounced).to eq(true)
-      expect(user.active).to eq(false)
-    end
-
   end
 
   context "reply" do

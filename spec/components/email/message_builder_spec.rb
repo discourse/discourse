@@ -257,6 +257,20 @@ describe Email::MessageBuilder do
       expect(templated_builder.subject).to eq(rendered_template)
     end
 
+    context "when use_site_subject is true" do
+      let(:templated_builder) { Email::MessageBuilder.new(to_address, template: 'mystery', use_site_subject: true) }
+
+      it "can use subject override" do
+        override = TranslationOverride.create(
+          locale: I18n.locale,
+          translation_key: "mystery.subject_template",
+          value: "my customized subject"
+        )
+        I18n.expects(:t).with("mystery.subject_template", templated_builder.template_args).returns(override.value)
+        expect(templated_builder.subject).to eq(override.value)
+      end
+    end
+
   end
 
   context "from field" do

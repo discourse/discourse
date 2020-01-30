@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class UserProfile < ActiveRecord::Base
-  self.ignored_columns = %w{
-    card_background
-    profile_background
-  }
-
   belongs_to :user, inverse_of: :user_profile
   belongs_to :card_background_upload, class_name: "Upload"
   belongs_to :profile_background_upload, class_name: "Upload"

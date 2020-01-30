@@ -10,21 +10,22 @@ module Jobs
       badge = Badge.find(Badge::NewUserOfTheMonth)
       return unless SiteSetting.enable_badges? && badge.enabled?
 
-      # Don't award it if a month hasn't gone by
-      return if UserBadge.where("badge_id = ? AND granted_at >= ?",
-        badge.id,
-        (1.month.ago + 1.day)  # give it a day slack just in case
+      previous_month_beginning = 1.month.ago.beginning_of_month
+      previous_month_end = 1.month.ago.end_of_month
+
+      return if UserBadge.where("badge_id = ? AND granted_at BETWEEN ? AND ?",
+        badge.id, previous_month_beginning, Time.zone.now
       ).exists?
 
-      scores.each do |user_id, score|
+      scores(previous_month_beginning).each do |user_id, score|
         # Don't bother awarding to users who haven't received any likes
         if score > 0.0
           user = User.find(user_id)
           if user.badges.where(id: Badge::NewUserOfTheMonth).blank?
-            BadgeGranter.grant(badge, user)
+            BadgeGranter.grant(badge, user, created_at: previous_month_end)
 
             SystemMessage.new(user).create('new_user_of_the_month',
-              month_year: I18n.l(Time.now, format: :no_day),
+              month_year: I18n.l(previous_month_beginning, format: :no_day),
               url: "#{Discourse.base_url}/badges"
             )
           end
@@ -32,7 +33,7 @@ module Jobs
       end
     end
 
-    def scores
+    def scores(user_created_after_date)
       current_owners = UserBadge.where(badge_id: Badge::NewUserOfTheMonth).pluck(:user_id)
       current_owners = [-1] if current_owners.blank?
 
@@ -70,7 +71,7 @@ module Jobs
           AND NOT u.moderator
           AND u.suspended_at IS NULL
           AND u.suspended_till IS NULL
-          AND u.created_at >= CURRENT_TIMESTAMP - '1 month'::INTERVAL
+          AND u.created_at >= :min_user_created_at
           AND t.archetype <> '#{Archetype.private_message}'
           AND t.deleted_at IS NULL
           AND p.deleted_at IS NULL
@@ -82,7 +83,7 @@ module Jobs
         LIMIT #{MAX_AWARDED}
       SQL
 
-      Hash[*DB.query_single(sql)]
+      Hash[*DB.query_single(sql, min_user_created_at: user_created_after_date)]
     end
 
   end

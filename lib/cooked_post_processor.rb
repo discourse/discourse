@@ -23,7 +23,8 @@ class CookedPostProcessor
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
 
-    @doc = Nokogiri::HTML::fragment(post.cook(post.raw, @cooking_options))
+    cooked = post.cook(post.raw, @cooking_options)
+    @doc = Nokogiri::HTML::fragment(cooked)
     @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
 
@@ -330,7 +331,13 @@ class CookedPostProcessor
       img["height"] = height
     end
 
-    if upload = Upload.get_from_url(src)
+    # if the upload already exists and is attached to a different post,
+    # or the original_sha1 is missing meaning it was created before secure
+    # media was enabled. we want to re-thumbnail and re-optimize in this case
+    # to avoid using uploads linked to many other posts
+    upload = Upload.consider_for_reuse(Upload.get_from_url(src), @post)
+
+    if upload.present?
       upload.create_thumbnail!(width, height, crop: crop)
 
       each_responsive_ratio do |ratio|
@@ -351,7 +358,9 @@ class CookedPostProcessor
       add_lightbox!(img, original_width, original_height, upload, cropped: crop)
     end
 
-    optimize_image!(img, upload, cropped: crop) if upload
+    if upload.present?
+      optimize_image!(img, upload, cropped: crop)
+    end
   end
 
   def loading_image(upload)
