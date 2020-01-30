@@ -63,7 +63,12 @@ class UrlHelper
   # Prevents double URL encode
   # https://stackoverflow.com/a/37599235
   def self.escape_uri(uri)
+    return uri if s3_presigned_url?(uri)
     UrlHelper.encode_component(CGI.unescapeHTML(UrlHelper.unencode(uri)))
+  end
+
+  def self.s3_presigned_url?(url)
+    (url.downcase =~ /x-amz-algorithm|x-amz-credential/).present?
   end
 
   def self.cook_url(url, secure: false)
