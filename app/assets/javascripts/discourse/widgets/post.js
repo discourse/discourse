@@ -344,6 +344,22 @@ createWidget("expand-post-button", {
   }
 });
 
+createWidget("post-group-request", {
+  buildKey: attrs => `post-group-request-${attrs.id}`,
+
+  buildClasses() {
+    return ["group-request"];
+  },
+
+  html(attrs) {
+    const href = Discourse.getURL(
+      "/g/" + attrs.requestedGroupName + "/requests?filter=" + attrs.username
+    );
+
+    return h("a", { attributes: { href } }, I18n.t("groups.requests.handle"));
+  }
+});
+
 createWidget("post-contents", {
   buildKey: attrs => `post-contents-${attrs.id}`,
 
@@ -366,6 +382,11 @@ createWidget("post-contents", {
     let result = [
       new PostCooked(attrs, new DecoratorHelper(this), this.currentUser)
     ];
+
+    if (attrs.requestedGroupName) {
+      result.push(this.attach("post-group-request", attrs));
+    }
+
     result = result.concat(applyDecorators(this, "after-cooked", attrs, state));
 
     if (attrs.cooked_hidden) {
