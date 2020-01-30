@@ -777,10 +777,6 @@ class PostsController < ApplicationController
       result[:target_group_names] = groups.join(",")
     end
 
-    if (recipients.blank? || result[:target_usernames].blank?) && params[:archetype] == Archetype.private_message
-      Rails.logger.warn("Missing recipients for PM! result: #{result.inspect} | params: #{params.inspect}")
-    end
-
     result.permit!
     result.to_h
   end
