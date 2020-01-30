@@ -10,9 +10,22 @@ import renderTopicFeaturedLink from "discourse/lib/render-topic-featured-link";
 
 const SCROLLER_HEIGHT = 50;
 const LAST_READ_HEIGHT = 20;
+const MIN_SCROLLAREA_HEIGHT = 170;
+const MAX_SCROLLAREA_HEIGHT = 300;
 
 function scrollareaHeight() {
-  return $(window).height() < 425 ? 150 : 300;
+  const composerHeight =
+      document.getElementById("reply-control").offsetHeight || 0,
+    headerHeight = document.querySelectorAll(".d-header")[0].offsetHeight || 0;
+
+  // scrollarea takes up about half of the timeline's height
+  const availableHeight =
+    (window.innerHeight - composerHeight - headerHeight) / 2;
+
+  return Math.max(
+    MIN_SCROLLAREA_HEIGHT,
+    Math.min(availableHeight, MAX_SCROLLAREA_HEIGHT)
+  );
 }
 
 function scrollareaRemaining() {
