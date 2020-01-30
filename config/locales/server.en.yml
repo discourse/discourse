@@ -1893,7 +1893,6 @@ en:
     soft_bounce_score: "Bounce score added to the user when a temporary bounce happens."
     hard_bounce_score: "Bounce score added to the user when a permanent bounce happens."
     bounce_score_threshold: "Max bounce score before we will stop emailing a user."
-    bounce_score_threshold_deactivate: "Max bounce score before we will deactivate a user."
     reset_bounce_score_after_days: "Automatically reset bounce score after X days."
 
     attachment_content_type_blacklist: "List of keywords used to blacklist attachments based on the content type."
@@ -2378,7 +2377,7 @@ en:
   user:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
-    deactivated_by_inactivity: 
+    deactivated_by_inactivity:
       one: "Automatically deactivated after %{count} day of inactivity"
       other: "Automatically deactivated after %{count} days of inactivity"
     activated_by_staff: "Activated by staff"
