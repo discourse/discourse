@@ -124,17 +124,18 @@ describe TopicConverter do
             :put,
             "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
           )
+
+          # we need to do this otherwise we get infinite loop shenanigans, as the pull hotlinked
+          # images is never satisfied and keeps calling cooked post processor which in turn runs
+          # pull hotlinked images. we need jobs to run immediately for this spec to work correctly
+          # as the job to convert the uploads to secure must be run.
+          Jobs::PullHotlinkedImages.stubs(:new).returns(Helpers::StubbedJob.new)
         end
 
         it "converts regular uploads to secure when making a public post a PM" do
           public_reply = Fabricate(:post, raw: "<img src='#{image_upload.url}'>", user: other_user, topic: public_topic)
           public_reply.link_post_uploads
           public_reply.update_uploads_secure_status
-
-          # we need to do this otherwise we get infinite loop shenanigans, as the pull hotlinked
-          # images is never satisfied and keeps calling cooked post processor which in turn runs
-          # pull hotlinked images
-          Jobs::PullHotlinkedImages.stubs(:new).returns(Helpers::StubbedJob.new)
 
           expect(public_reply.uploads[0].secure).to eq(false)
           public_topic.convert_to_private_message(admin)
