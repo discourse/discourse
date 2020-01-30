@@ -80,8 +80,17 @@ module ImportExport
       existing_categories = CategoryCustomField.where("name = 'import_id' AND value IN (?)", import_ids).select(:category_id, :value).to_a
       existing_category_ids = existing_categories.pluck(:value)
 
+      levels = category_levels
+      max_level = levels.values.max
+      if SiteSetting.max_category_nesting < max_level
+        puts "Setting max_category_nesting to #{max_level}..."
+        SiteSetting.max_category_nesting = max_level
+      end
+
+      fix_permissions
+
       @categories.reject! { |c| existing_category_ids.include? c[:id].to_s }
-      @categories.sort_by! { |c| c[:parent_category_id].presence || 0 }
+      @categories.sort_by! { |c| levels[c[:id]] || 0 }
 
       @categories.each do |cat_attrs|
         begin
@@ -93,18 +102,19 @@ module ImportExport
           category.user_id = new_user_id(cat_attrs[:user_id])
           import_id = "#{id}#{import_source}"
           category.custom_fields["import_id"] = import_id
-          category.permissions = permissions.present? ? permissions : { "everyone" => CategoryGroup.permission_types[:full] }
+          category.permissions = permissions
           category.save!
           existing_categories << { category_id: category.id, value: import_id }
 
           if cat_attrs[:description].present?
             post = category.topic.ordered_posts.first
             post.raw = cat_attrs[:description]
+            post.skip_validation = true
             post.save!
             post.rebake!
           end
-        rescue
-          next
+        rescue => e
+          puts "Failed to import category (ID = #{id}, name = #{cat_attrs[:name]}): #{e.message}"
         end
       end
 
@@ -173,5 +183,62 @@ module ImportExport
       @_import_source ||= "#{ENV['IMPORT_SOURCE'] || ''}"
     end
 
+    def category_levels
+      @levels ||= begin
+        levels = {}
+
+        # Incomplete backups may lack definitions for some parent categories
+        # which would cause an infinite loop below.
+        parent_ids = @categories.map { |category| category[:parent_category_id] }.uniq
+        category_ids = @categories.map { |category| category[:id] }.uniq
+        (parent_ids - category_ids).each { |id| levels[id] = 0 }
+
+        loop do
+          changed = false
+
+          @categories.each do |category|
+            if !levels[category[:id]]
+              if !category[:parent_category_id]
+                levels[category[:id]] = 1
+              elsif levels[category[:parent_category_id]]
+                levels[category[:id]] = levels[category[:parent_category_id]] + 1
+              end
+
+              changed = true
+            end
+          end
+
+          break if !changed
+        end
+
+        levels
+      end
+    end
+
+    def fix_permissions
+      categories_by_id = @categories.to_h { |category| [category[:id], category] }
+
+      @categories.each do |category|
+        if category[:permissions_params].blank?
+          category[:permissions_params] = { "everyone" => CategoryGroup.permission_types[:full] }
+        end
+      end
+
+      max_level = category_levels.values.max
+      max_level.times do
+        @categories.each do |category|
+          parent_category = categories_by_id[category[:parent_category_id]]
+          next if !parent_category || !parent_category[:permissions_params] || parent_category[:permissions_params][:everyone]
+
+          parent_groups = parent_category[:permissions_params].map(&:first)
+          child_groups = category[:permissions_params].map(&:first)
+
+          only_subcategory_groups = child_groups - parent_groups
+          if only_subcategory_groups.present?
+            parent_category[:permissions_params].merge!(category[:permissions_params].slice(*only_subcategory_groups))
+          end
+        end
+      end
+    end
   end
 end
