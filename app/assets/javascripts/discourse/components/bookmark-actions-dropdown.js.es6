@@ -4,7 +4,6 @@ export default DropdownSelectBoxComponent.extend({
   classNames: ["bookmark-actions-dropdown"],
   headerIcon: null,
   title: "...",
-  allowInitialValueMutation: false,
   showFullTitle: true,
 
   computeContent() {

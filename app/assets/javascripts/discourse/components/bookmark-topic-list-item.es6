@@ -1,15 +1,12 @@
 import TopicListItem from "discourse/components/topic-list-item";
 import Bookmark from "discourse/models/bookmark";
-import discourseComputed from "discourse-common/utils/decorators";
+import { readOnly } from "@ember/object/computed";
 
 export default TopicListItem.extend({
-  @discourseComputed("topic.bookmarked_post_numbers")
-  bookmakedPostNumber(bookmarked_post_numbers) {
-    return bookmarked_post_numbers[0];
-  },
+  bookmakedPostNumber: readOnly("topic.bookmarked_post_numbers.firstObject"),
   actions: {
     removeBookmark(id) {
-      let bookmark = new Bookmark({ id: id });
+      let bookmark = new Bookmark({ id });
       bookmark.destroy().then(this.refreshList);
     }
   }
