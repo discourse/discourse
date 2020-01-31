@@ -443,6 +443,8 @@ en:
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
       user:
+        bio: "Bio"
+        website: "Website"
         username: "Username"
         email: "Email"
         name: "Name"

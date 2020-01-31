@@ -31,6 +31,8 @@ en:
         title: "Votes are <strong>public</strong>."
 
       results:
+        groups:
+          title: "You need to be a member of %{groups} to vote in this poll."
         vote:
           title: "Results will be shown on <strong>vote</strong>."
         closed:
@@ -112,6 +114,8 @@ en:
           vote: On vote
           closed: When closed
           staff: Staff only
+        poll_groups:
+          label: Allowed groups
         poll_chart_type:
           label: Chart type
         poll_config:

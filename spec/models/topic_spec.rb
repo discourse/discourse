@@ -986,15 +986,20 @@ describe Topic do
 
     context 'visibility' do
       context 'disable' do
-        before do
+        it 'should not be visible and have correct counts' do
           topic.update_status('visible', false, @user)
           topic.reload
-        end
-
-        it 'should not be visible and have correct counts' do
           expect(topic).not_to be_visible
           expect(topic.moderator_posts_count).to eq(1)
           expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
+        end
+
+        it 'removes itself as featured topic on user profiles' do
+          user.user_profile.update(featured_topic_id: topic.id)
+          expect(user.user_profile.featured_topic).to eq(topic)
+
+          topic.update_status('visible', false, @user)
+          expect(user.user_profile.reload.featured_topic).to eq(nil)
         end
       end
 
@@ -1396,6 +1401,27 @@ describe Topic do
           end
 
           it 'should generate the notification for the topic' do
+            expect do
+              topic.change_category_to_id(new_category.id)
+            end.to change { Notification.count }.by(2)
+
+            expect(Notification.where(
+              user_id: user.id,
+              topic_id: topic.id,
+              post_number: 1,
+              notification_type: Notification.types[:posted]
+            ).exists?).to eq(true)
+
+            expect(Notification.where(
+              user_id: another_user.id,
+              topic_id: topic.id,
+              post_number: 1,
+              notification_type: Notification.types[:watching_first_post]
+            ).exists?).to eq(true)
+          end
+
+          it 'should generate the modified notification for the topic if already seen' do
+            TopicUser.create!(topic_id: topic.id, highest_seen_post_number: topic.posts.first.post_number, user_id: user.id)
             expect do
               topic.change_category_to_id(new_category.id)
             end.to change { Notification.count }.by(2)

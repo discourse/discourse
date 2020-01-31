@@ -1,12 +1,16 @@
 import {
   WidgetClickHook,
+  WidgetDoubleClickHook,
   WidgetClickOutsideHook,
   WidgetKeyUpHook,
   WidgetKeyDownHook,
   WidgetMouseDownOutsideHook,
   WidgetDragHook,
   WidgetInputHook,
-  WidgetChangeHook
+  WidgetChangeHook,
+  WidgetMouseUpHook,
+  WidgetMouseDownHook,
+  WidgetMouseMoveHook
 } from "discourse/widgets/hooks";
 import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
@@ -371,6 +375,9 @@ export default class Widget {
     if (this.click) {
       properties["widget-click"] = new WidgetClickHook(this);
     }
+    if (this.doubleClick) {
+      properties["widget-double-click"] = new WidgetDoubleClickHook(this);
+    }
 
     if (this.mouseDownOutside) {
       properties["widget-mouse-down-outside"] = new WidgetMouseDownOutsideHook(
@@ -388,6 +395,18 @@ export default class Widget {
 
     if (this.change) {
       properties["widget-change"] = new WidgetChangeHook(this);
+    }
+
+    if (this.mouseDown) {
+      properties["widget-mouse-down"] = new WidgetMouseDownHook(this);
+    }
+
+    if (this.mouseUp) {
+      properties["widget-mouse-up"] = new WidgetMouseUpHook(this);
+    }
+
+    if (this.mouseMove) {
+      properties["widget-mouse-move"] = new WidgetMouseMoveHook(this);
     }
 
     const attributes = properties["attributes"] || {};

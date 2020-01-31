@@ -118,6 +118,14 @@ describe UrlHelper do
       url = UrlHelper.escape_uri('http://example.com/foo%20bar/foo bar/')
       expect(url).to eq('http://example.com/foo%20bar/foo%20bar/')
     end
+
+    it "doesn't escape S3 presigned URLs" do
+      # both of these were originally real presigned URLs and have had all
+      # sensitive information stripped
+      presigned_url = "https://test.com/original/3X/b/5/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AK8888999977%2F20200130%2Fus-west-1%2Fs3%2Faws4_request&X-Amz-Date=20200130T064355Z&X-Amz-Expires=15&X-Amz-SignedHeaders=host&X-Amz-Security-Token=blahblah%2Bblahblah%2Fblah%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAR&X-Amz-Signature=test"
+      encoded_presigned_url = "https://test.com/original/3X/b/5/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AK8888999977/20200130/us-west-1/s3/aws4_request&X-Amz-Date=20200130T064355Z&X-Amz-Expires=15&X-Amz-SignedHeaders=host&X-Amz-Security-Token=blahblah+blahblah/blah//////////wEQA==&X-Amz-Signature=test"
+      expect(UrlHelper.escape_uri(presigned_url)).not_to eq(encoded_presigned_url)
+    end
   end
 
   describe "#local_cdn_url" do

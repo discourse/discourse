@@ -186,6 +186,18 @@ describe ::DiscoursePoll::PollsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.poll_must_be_open_to_vote"))
     end
 
+    it "ensures user has required trust level" do
+      poll = create_post(raw: "[poll groups=#{Fabricate(:group).name}]\n- A\n- B\n[/poll]")
+
+      put :vote, params: {
+        post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
+      }, format: :json
+
+      expect(response.status).not_to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json["errors"][0]).to eq(I18n.t("js.poll.results.groups.title", trust_level: 2))
+    end
+
     it "doesn't discard anonymous votes when someone votes" do
       the_poll = poll.polls.first
       the_poll.update_attribute(:anonymous_voters, 17)

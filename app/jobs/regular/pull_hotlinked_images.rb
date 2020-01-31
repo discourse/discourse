@@ -56,7 +56,7 @@ module Jobs
         src = original_src = node['src'] || node['href']
         src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
 
-        if should_download_image?(src)
+        if should_download_image?(src, post)
           begin
             # have we already downloaded that file?
             schemeless_src = remove_scheme(original_src)
@@ -89,6 +89,7 @@ module Jobs
                 has_new_broken_image = true
               end
             end
+
             # have we successfully downloaded that file?
             if downloaded_urls[src].present?
               escaped_src = Regexp.escape(original_src)
@@ -163,7 +164,7 @@ module Jobs
         doc.css(".lightbox img[src]")
     end
 
-    def should_download_image?(src)
+    def should_download_image?(src, post = nil)
       # make sure we actually have a url
       return false unless src.present?
 
@@ -174,7 +175,15 @@ module Jobs
 
         # Someone could hotlink a file from a different site on the same CDN,
         # so check whether we have it in this database
-        return !Upload.get_from_url(src)
+        #
+        # if the upload already exists and is attached to a different post,
+        # or the original_sha1 is missing meaning it was created before secure
+        # media was enabled, then we definitely want to redownload again otherwise
+        # we end up reusing existing uploads which may be linked to many posts
+        # already.
+        upload = Upload.consider_for_reuse(Upload.get_from_url(src), post)
+
+        return !upload.present?
       end
 
       # Don't download non-local images unless site setting enabled

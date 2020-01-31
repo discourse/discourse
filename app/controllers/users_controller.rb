@@ -52,7 +52,7 @@ class UsersController < ApplicationController
   def index
   end
 
-  def show
+  def show(for_card: false)
     return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
 
     @user = fetch_user_from_params(
@@ -61,7 +61,8 @@ class UsersController < ApplicationController
 
     user_serializer = nil
     if guardian.can_see_profile?(@user)
-      user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
+      serializer_class = for_card ? UserCardSerializer : UserSerializer
+      user_serializer = serializer_class.new(@user, scope: guardian, root: 'user')
 
       topic_id = params[:include_post_count_for].to_i
       if topic_id != 0
@@ -92,6 +93,10 @@ class UsersController < ApplicationController
         render_json_dump(user_serializer)
       end
     end
+  end
+
+  def show_card
+    show(for_card: true)
   end
 
   def badges

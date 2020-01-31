@@ -43,6 +43,11 @@ export default {
       caps.isIOS =
         (/iPhone|iPod/.test(navigator.userAgent) || caps.isIpadOS) &&
         !window.MSStream;
+
+      caps.hasContactPicker =
+        "contacts" in navigator && "ContactsManager" in window;
+
+      caps.canVibrate = "vibrate" in navigator;
     }
 
     // We consider high res a device with 1280 horizontal pixels. High DPI tablets like

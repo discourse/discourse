@@ -226,19 +226,23 @@ def migrate_to_s3_all_sites
   end
 end
 
-def migrate_to_s3
+def create_migration
   FileStore::ToS3Migration.new(
     s3_options: FileStore::ToS3Migration.s3_options_from_env,
     dry_run: !!ENV["DRY_RUN"],
     migrate_to_multisite: !!ENV["MIGRATE_TO_MULTISITE"],
     skip_etag_verify: !!ENV["SKIP_ETAG_VERIFY"]
-  ).migrate
+  )
+end
+
+def migrate_to_s3
+  create_migration.migrate
 end
 
 task "uploads:s3_migration_status" => :environment do
   success = true
   RailsMultisite::ConnectionManagement.each_connection do
-    success &&= FileStore::ToS3Migration.new.migration_successful?
+    success &&= create_migration.migration_successful?
   end
 
   queued_jobs = Sidekiq::Stats.new.queues.sum { |_ , x| x }

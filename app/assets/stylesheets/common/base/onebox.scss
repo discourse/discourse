@@ -691,7 +691,8 @@ aside.onebox.stackexchange .onebox-body {
 }
 
 // Force oneboxed videos to 16:9 aspect ratio
-.onebox.video-onebox {
+.onebox.video-onebox,
+.video-container {
   position: relative;
   padding: 0 0 56.25% 0;
   width: 100%;
