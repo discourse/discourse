@@ -16,6 +16,7 @@
       {{input value=name name="name" class="bookmark-name" placeholder=(i18n "post.bookmarks.name_placeholder")}}
     </div>
 
+    {{#if showBookmarkReminderControls}}
     <div class="control-group">
       <label class="control-label" for="set_reminder">
         {{i18n 'post.bookmarks.set_reminder'}}
@@ -40,6 +41,7 @@
         <div class="alert alert-info">{{{i18n "bookmarks.no_timezone" basePath=basePath }}}</div>
       {{/if}}
     </div>
+    {{/if}}
 
     <div class="control-group">
       {{d-button label="bookmarks.save" class="btn-primary" action=(action "saveAndClose")}}
