@@ -1,3 +1,4 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
@@ -12,6 +13,13 @@ export default Controller.extend({
   userActionType: null,
 
   canDownloadPosts: alias("user.viewingSelf"),
+
+  @discourseComputed()
+  bookmarksRoute() {
+    return this.siteSettings.enable_bookmarks_with_reminders
+      ? "discovery.bookmarks"
+      : "userActivity.bookmarks";
+  },
 
   @observes("userActionType", "model.stream.itemsLoaded")
   _showFooter: function() {
