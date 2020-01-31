@@ -90,7 +90,7 @@ describe TopicListItemSerializer do
       SiteSetting.enable_bookmarks_with_reminders = true
     end
 
-    it "includes the bookmark id, name, post_number, and reminder_at" do
+    it "includes the bookmark id, name, post_number, reminder_at, and sets bookmarked to true" do
       user = Fabricate(:user)
       Fabricate(:post, topic: topic, user: user)
       TopicUser.create(topic: topic, user: user)
@@ -102,6 +102,7 @@ describe TopicListItemSerializer do
       expect(serialized[:bookmark_id]).to eq(bookmark.id)
       expect(serialized[:bookmark_reminder_at]).not_to eq(nil)
       expect(serialized[:bookmarked_post_numbers]).to eq([1])
+      expect(serialized[:bookmarked]).to eq(true)
     end
   end
 end

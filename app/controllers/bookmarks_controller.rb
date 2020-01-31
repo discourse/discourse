@@ -30,7 +30,7 @@ class BookmarksController < ApplicationController
     bookmark = Bookmark.find_by(id: params[:id])
     raise Discourse::NotFound if bookmark.blank?
 
-    raise Discourse::InvalidAccess.new("invalid_access") unless guardian.can_delete?(bookmark)
+    raise Discourse::InvalidAccess.new if !guardian.can_delete?(bookmark)
 
     bookmark.destroy
     render json: success_json

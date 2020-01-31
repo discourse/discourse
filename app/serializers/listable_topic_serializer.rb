@@ -45,7 +45,11 @@ class ListableTopicSerializer < BasicTopicSerializer
   end
 
   def bookmarked
-    object.user_data && object.user_data.bookmarked
+    if SiteSetting.enable_bookmarks_with_reminders?
+      object.bookmark_ids.any?
+    else
+      object.user_data && object.user_data.bookmarked
+    end
   end
 
   def include_last_poster?
