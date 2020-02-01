@@ -411,6 +411,10 @@ Category.reopenClass({
       : ajax(`/c/${slug}/find_by_slug.json`);
   },
 
+  reloadBySlugPath(slugPath) {
+    return ajax(`/c/${slugPath}/find_by_slug.json`);
+  },
+
   search(term, opts) {
     var limit = 5;
 
