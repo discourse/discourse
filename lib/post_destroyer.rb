@@ -91,6 +91,7 @@ class PostDestroyer
       user_recovered
     end
     topic = Topic.with_deleted.find @post.topic_id
+    topic.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !topic.user_id
     topic.recover!(@user) if @post.is_first_post?
     topic.update_statistics
     UserActionManager.post_created(@post)
@@ -103,6 +104,7 @@ class PostDestroyer
   end
 
   def staff_recovered
+    @post.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !@post.user_id
     @post.recover!
 
     mark_topic_changed
