@@ -30,7 +30,7 @@ acceptance("Plugin Outlet - Connector Class", {
       @action
       sayHi() {
         this.appEvents.trigger("hi:sayHi");
-      },
+      }
     });
 
     extraConnectorClass("user-profile-primary/dont-render", {
@@ -83,9 +83,5 @@ QUnit.test("Renders a template into the outlet", async assert => {
   );
 
   await click(".say-hi");
-  assert.equal(
-    find(".hi-result").text(),
-    "hi!",
-    "actions delegate properly"
-  );
+  assert.equal(find(".hi-result").text(), "hi!", "actions delegate properly");
 });
