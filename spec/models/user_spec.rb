@@ -67,7 +67,7 @@ describe User do
       end
 
       it "doesn't raise an error if the name is longer than the max password length" do
-        user.name = 'x' * 220
+        user.name = 'x' * (User.max_password_length + 1)
         expect(user).to be_valid
       end
     end
