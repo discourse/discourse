@@ -62,10 +62,6 @@ describe CategoryList do
       SiteSetting.mute_all_categories_by_default = true
     end
 
-    it "removes the category by default" do
-      expect(category_list.categories).not_to include(category)
-    end
-
     it "returns correct notification level for user tracking category" do
       CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:tracking], category.id)
       notification_level = category_list.categories.find { |c| c.id == category.id }.notification_level
