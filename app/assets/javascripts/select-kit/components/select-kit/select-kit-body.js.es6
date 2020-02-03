@@ -14,10 +14,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    this.handleRootMouseDownHandler = bind(
-      this,
-      this.handleRootMouseDown
-    );
+    this.handleRootMouseDownHandler = bind(this, this.handleRootMouseDown);
   },
 
   didInsertElement() {

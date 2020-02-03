@@ -8,7 +8,7 @@ import {
 import Draft from "discourse/models/draft";
 import { computed } from "@ember/object";
 import { camelize } from "@ember/string";
-import {isEmpty } from "@ember/utils";
+import { isEmpty } from "@ember/utils";
 
 // Component can get destroyed and lose state
 let _topicSnapshot = null;
