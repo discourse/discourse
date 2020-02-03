@@ -427,6 +427,8 @@ export default Component.extend(
     },
 
     _onChangeWrapper(value, items) {
+      this.selectKit.set("filter", null);
+
       return new Promise(resolve => {
         if (
           !this.selectKit.valueProperty &&
@@ -444,11 +446,10 @@ export default Component.extend(
             this.selectKit.close();
           }
 
-          this.selectKit.set("filter", null);
-
-          this._focusFilter();
-
-          this._safeAfterRender(() => this.popper && this.popper.update());
+          this._safeAfterRender(() => {
+            this._focusFilter();
+            this.popper && this.popper.update();
+          });
         }
       });
     },
