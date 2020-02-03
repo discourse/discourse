@@ -1095,4 +1095,19 @@ describe PostAlerter do
       end
     end
   end
+
+  describe '#notify_post_users' do
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    it 'creates single edit notification when post is modified' do
+      TopicUser.create!(user_id: user.id, topic_id: topic.id, notification_level: TopicUser.notification_levels[:watching], highest_seen_post_number: post.post_number)
+      PostAlerter.new.notify_post_users(post, [])
+      expect(Notification.count).to eq(1)
+      expect(Notification.last.notification_type).to eq(Notification.types[:edited])
+
+      PostAlerter.new.notify_post_users(post, [])
+      expect(Notification.count).to eq(1)
+    end
+  end
 end

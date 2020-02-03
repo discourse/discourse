@@ -68,7 +68,7 @@ class UrlHelper
   end
 
   def self.s3_presigned_url?(url)
-    (url.downcase =~ /x-amz-algorithm|x-amz-credential/).present?
+    url[/x-amz-(algorithm|credential)/i].present?
   end
 
   def self.cook_url(url, secure: false)
