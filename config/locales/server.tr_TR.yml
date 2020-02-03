@@ -1407,7 +1407,6 @@ tr_TR:
     content_security_policy_collect_reports: "/ Csp_reports adresinde CSP ihlali raporu toplamayı etkinleştir"
     content_security_policy_script_src: "Beyaz listeye eklenen ek komut dosyası kaynakları. Geçerli ana sunucu ve CDN varsayılan olarak dahil edilmiştir. Bkz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>. İçerik Güvenliği İlkesi ile XSS Saldırılarını Azaltma.</a>"
     invalidate_inactive_admin_email_after_days: "Bu günlerde siteyi ziyaret etmeyen yönetici hesaplarının giriş yapmadan önce e-posta adreslerini yeniden doğrulamaları gerekir. Devre dışı bırakmak için 0 olarak ayarlayın."
-    allow_embedding_site_in_an_iframe: "Sitenin iframe'lere yerleştirilmesini etkinleştir."
     top_menu: "Anasayfa gezingesinde nelerin, hangi sırada yer alacağını belirleyin. Örneğin en sonIyeniIokunmamışIkategorilerIgözdeIokunmuşlarIgönderilenlerIimlenenler"
     post_menu: "Gönderi menüsündeki öğelerin hangi sırada yer alacağını belirleyin. Örnek: beğen|düzenle|bildir|sil|paylaş|imle|cevapla"
     post_menu_hidden_items: "Gönderi menüsündeki maddeler, genişletme üç noktasına tıklanmadığı takdirde otomatik olarak gizlenir. "
