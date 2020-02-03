@@ -54,6 +54,12 @@ class SessionController < ApplicationController
         return
       end
 
+      if sso.logout
+        params[:return_url] = sso.return_sso_url
+        destroy
+        return
+      end
+
       if current_user
         sso.name = current_user.name
         sso.username = current_user.username
