@@ -82,7 +82,6 @@ export default Component.extend(
           isHidden: false,
           isExpanded: false,
           isFilterExpanded: false,
-          isDisabled: this.isDisabled,
           hasSelection: false,
           hasNoContent: true,
           highlighted: null,
@@ -167,6 +166,8 @@ export default Component.extend(
 
     didUpdateAttrs() {
       this._super(...arguments);
+
+      this.set("selectKit.isDisabled", this.isDisabled || false);
 
       this.handleDeprecations();
     },
@@ -961,6 +962,7 @@ export default Component.extend(
         allowUncategorized: "options.allowUncategorized",
         none: "options.none",
         rootNone: "options.none",
+        isDisabled: "options.isDisabled",
         rootNoneLabel: "options.none",
         showFullTitle: "options.showFullTitle",
         title: "options.translatedNone",
