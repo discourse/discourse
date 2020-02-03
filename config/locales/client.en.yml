@@ -1756,6 +1756,7 @@ en:
         reply_as_new_topic:
           label: Reply as linked topic
           desc: Create a new topic linked to this topic
+          confirm: You have a new topic draft saved, which will be overwritten if you create a linked topic.
         reply_as_private_message:
           label: New message
           desc: Create a new personal message

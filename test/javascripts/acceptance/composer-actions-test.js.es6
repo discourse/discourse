@@ -2,6 +2,8 @@ import selectKit from "helpers/select-kit-helper";
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import Draft from "discourse/models/draft";
+import { Promise } from "rsvp";
 
 acceptance("Composer Actions", {
   loggedIn: true,
@@ -129,6 +131,35 @@ QUnit.test("replying to post - reply_as_new_topic", async assert => {
       .val()
       .includes(quote)
   );
+});
+
+QUnit.test("reply_as_new_topic with new_topic draft", async assert => {
+  await visit("/");
+  await click("#create-topic");
+  await fillIn(".d-editor-input", "this is the new topic draft");
+  await visit("/t/internationalization-localization/280");
+  await click(".create.reply");
+  await click(".bootbox .btn-default");
+  const composerActions = selectKit(".composer-actions");
+  await composerActions.expand();
+  await composerActions.selectRowByValue("reply_as_new_topic");
+  assert.equal(
+    find(".bootbox .modal-body").text(),
+    I18n.t("composer.composer_actions.reply_as_new_topic.confirm")
+  );
+});
+
+QUnit.test("reply_as_new_topic without a new_topic draft", async assert => {
+  sandbox
+    .stub(Draft, "get")
+    .returns(Promise.resolve({ draft: "", draft_sequence: 0 }));
+
+  await visit("/t/internationalization-localization/280");
+  await click(".create.reply");
+  const composerActions = selectKit(".composer-actions");
+  await composerActions.expand();
+  await composerActions.selectRowByValue("reply_as_new_topic");
+  assert.equal(exists(find(".bootbox")), false);
 });
 
 QUnit.test("shared draft", async assert => {
