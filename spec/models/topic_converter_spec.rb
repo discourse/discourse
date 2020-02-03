@@ -102,57 +102,6 @@ describe TopicConverter do
         expect(Notification.exists?(user_notification.id)).to eq(false)
         expect(Notification.exists?(admin_notification.id)).to eq(true)
       end
-
-      context "secure uploads" do
-        fab!(:image_upload) { Fabricate(:upload) }
-        fab!(:public_topic) { Fabricate(:topic, user: author) }
-
-        before do
-          Jobs.run_immediately!
-        end
-
-        before do
-          SiteSetting.enable_s3_uploads = true
-          SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-          SiteSetting.s3_access_key_id = "some key"
-          SiteSetting.s3_secret_access_key = "some secret key"
-          SiteSetting.secure_media = true
-
-          stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-
-          stub_request(
-            :put,
-            "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
-          )
-
-          # we need to do this otherwise we get infinite loop shenanigans, as the pull hotlinked
-          # images is never satisfied and keeps calling cooked post processor which in turn runs
-          # pull hotlinked images. we need jobs to run immediately for this spec to work correctly
-          # as the job to convert the uploads to secure must be run.
-          Jobs::PullHotlinkedImages.stubs(:new).returns(Helpers::StubbedJob.new)
-        end
-
-        it "converts regular uploads to secure when making a public post a PM" do
-          public_reply = Fabricate(:post, raw: "<img src='#{image_upload.url}'>", user: other_user, topic: public_topic)
-          public_reply.link_post_uploads
-          public_reply.update_uploads_secure_status
-
-          expect(public_reply.uploads[0].secure).to eq(false)
-          public_topic.convert_to_private_message(admin)
-          expect(public_topic.reload.posts.find(public_reply.id).uploads[0].secure).to eq(true)
-        end
-
-        it "converts secure uploads back to public" do
-          first_post
-          second_post = Fabricate(:post, raw: "<img src='#{image_upload.url}'>", user: other_user, topic: private_message)
-          second_post.link_post_uploads
-          second_post.update_uploads_secure_status
-
-          expect(second_post.uploads[0].secure).to eq(true)
-          private_message.convert_to_public_topic(admin)
-          expect(private_message.reload.posts.find(second_post.id).uploads[0].secure).to eq(false)
-        end
-      end
     end
   end
 
