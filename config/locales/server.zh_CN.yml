@@ -1365,7 +1365,6 @@ zh_CN:
     content_security_policy_collect_reports: "在/csp_reports上启用内容安全策略违规报告收集"
     content_security_policy_script_src: "其它脚本来源白名单。默认包含当前主机和CDN。<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略缓解XSS攻击</a>"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问过网站的管理员帐户需要在登录前重新验证邮件地址。设置为0禁用。"
-    allow_embedding_site_in_an_iframe: "启用将网站嵌入iframe中。"
     top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "帖子菜单中默认隐藏的按钮，点击省略号后显示。"
