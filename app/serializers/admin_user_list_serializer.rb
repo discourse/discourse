@@ -109,7 +109,7 @@ class AdminUserListSerializer < BasicUserSerializer
   def include_second_factor_enabled?
     !SiteSetting.enable_sso &&
       SiteSetting.enable_local_logins &&
-      object.totps.present?
+      object.has_any_second_factor_methods_enabled?
   end
 
   def second_factor_enabled
