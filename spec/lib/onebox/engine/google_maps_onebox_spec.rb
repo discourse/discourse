@@ -67,7 +67,7 @@ describe Onebox::Engine::GoogleMapsOnebox do
       expect(subject.url).to eq t[:expect]
       expect(subject.streetview?).to t[:streetview] ? be_truthy : be_falsey
       expect(subject.to_html).to include("<iframe")
-      expect(subject.placeholder_html).to include("<img")
+      expect(subject.placeholder_html).to include("placeholder-icon map")
     end
   end
 
