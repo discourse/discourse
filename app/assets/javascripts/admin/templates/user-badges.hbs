@@ -15,8 +15,13 @@
     {{else}}
     <form class="form-horizontal">
       <div>
-      <label>{{i18n 'admin.badges.badge'}}</label>
-      {{combo-box forceEscape=true filterable=true value=selectedBadgeId content=grantableBadges}}
+        <label>{{i18n 'admin.badges.badge'}}</label>
+        {{combo-box
+          filterable=true
+          value=selectedBadgeId
+          content=grantableBadges
+          onChange=(action (mut selectedBadgeId))
+        }}
       </div>
       <div>
       <label>{{i18n 'admin.badges.reason'}}</label>

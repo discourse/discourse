@@ -4,7 +4,7 @@
       <div class='directory'>
         {{plugin-outlet name="users-top" connectorTagName='div' args=(hash model=model)}}
         <div class='clearfix'>
-          {{period-chooser period=period}}
+          {{period-chooser period=period onChange=(action (mut period))}}
           {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
         </div>
 

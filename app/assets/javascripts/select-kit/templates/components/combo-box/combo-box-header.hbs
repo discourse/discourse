@@ -1,18 +1,17 @@
 {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
 
-<span class="selected-name">
-  {{#if forceEscape}}
-    {{label}}
-  {{else}}
-    {{{label}}}
-  {{/if}}
-</span>
+{{component selectKit.options.selectedNameComponent
+  tabindex=tabindex
+  item=selectedContent
+  selectKit=selectKit
+}}
 
 {{#if shouldDisplayClearableButton}}
   {{d-button
     class="btn-clear"
-    action=(action onClearSelection bubbles=false)
-    icon="times"}}
+    icon="times"
+    action=selectKit.onClearSelection
+  }}
 {{/if}}
 
 {{d-icon caretIcon class="caret-icon"}}

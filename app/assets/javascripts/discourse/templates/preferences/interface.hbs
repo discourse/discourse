@@ -2,7 +2,11 @@
 <div class="control-group theme">
   <label class="control-label">{{i18n 'user.theme'}}</label>
   <div class="controls">
-    {{combo-box content=userSelectableThemes value=themeId}}
+    {{combo-box
+      content=userSelectableThemes
+      value=themeId
+      onChange=(action (mut themeId))
+    }}
   </div>
   {{#if showThemeSetDefault}}
     <div class="controls">
@@ -15,7 +19,12 @@
 <div class="control-group text-size">
   <label class="control-label">{{i18n 'user.text_size.title'}}</label>
   <div class="controls">
-    {{combo-box valueAttribute="value" content=textSizes value=textSize onSelect=(action "selectTextSize")}}
+    {{combo-box
+      valueProperty="value"
+      content=textSizes
+      value=textSize
+      onChange=(action "selectTextSize")
+    }}
   </div>
   {{#if showTextSetDefault}}
     <div class="controls">
@@ -28,7 +37,16 @@
   <div class="control-group pref-locale">
     <label class="control-label">{{i18n 'user.locale.title'}}</label>
     <div class="controls">
-      {{combo-box filterable=true valueAttribute="value" content=availableLocales value=model.locale none="user.locale.default"}}
+      {{combo-box
+        valueProperty="value"
+        content=availableLocales
+        value=model.locale
+        onChange=(action (mut model.locale))
+        options=(hash
+          filterable=true
+          none="user.locale.default"
+        )
+      }}
     </div>
     <div class='instructions'>
       {{i18n 'user.locale.instructions'}}
@@ -40,7 +58,12 @@
 <div class="control-group home">
   <label class="control-label">{{i18n 'user.home'}}</label>
   <div class="controls">
-    {{combo-box content=userSelectableHome valueAttribute="value" value=model.user_option.homepage_id}}
+    {{combo-box
+      content=userSelectableHome
+      valueProperty="value"
+      value=homepageId
+      onChange=(action (mut model.user_option.homepage_id))
+    }}
   </div>
 </div>
 
@@ -60,10 +83,13 @@
   {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.user_option.dynamic_favicon  class="pref-dynamic-favicon"}}
   <div class='controls controls-dropdown pref-page-title'>
     <label for="user-email-level">{{i18n 'user.title_count_mode.title'}}</label>
-    {{combo-box valueAttribute="value"
-                content=titleCountModes
-                value=model.user_option.title_count_mode
-                id="user-title-count-mode"}}
+    {{combo-box
+      valueProperty="value"
+      content=titleCountModes
+      value=model.user_option.title_count_mode
+      id="user-title-count-mode"
+      onChange=(action (mut model.user_option.title_count_mode))
+    }}
   </div>
 </div>
 

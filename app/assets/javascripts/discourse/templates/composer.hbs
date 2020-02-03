@@ -73,16 +73,28 @@
                   {{#if model.showCategoryChooser}}
                     <div class="category-input">
                       {{category-chooser
-                        fullWidthOnMobile=true
                         value=model.categoryId
-                        scopedCategoryId=scopedCategoryId
+                        tabindex="3"
+                        onChange=(action (mut model.categoryId))
                         isDisabled=disableCategoryChooser
-                        tabindex="3"}}
+                        options=(hash
+                          scopedCategoryId=scopedCategoryId
+                        )
+                      }}
                       {{popup-input-tip validation=categoryValidation}}
                     </div>
                   {{/if}}
                   {{#if canEditTags}}
-                    {{mini-tag-chooser tags=model.tags tabindex="4" categoryId=model.categoryId minimum=model.minimumRequiredTags isDisabled=disableTagsChooser}}
+                    {{mini-tag-chooser
+                      value=model.tags
+                      tabindex=4
+                      isDisabled=disableTagsChooser
+                      onChange=(action (mut model.tags))
+                      options=(hash
+                        categoryId=model.categoryId
+                        minimum=model.minimumRequiredTags
+                      )
+                    }}
                     {{popup-input-tip validation=tagValidation}}
                   {{/if}}
                 </div>

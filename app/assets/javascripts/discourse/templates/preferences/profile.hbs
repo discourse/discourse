@@ -9,7 +9,11 @@
 
 <div class="control-group pref-timezone">
   <label class="control-label">{{i18n 'user.timezone'}}</label>
-  {{timezone-input value=model.user_option.timezone onSelect=(action (mut model.user_option.timezone)) class="input-xxlarge"}}
+  {{timezone-input
+    value=model.user_option.timezone
+    onChange=(action (mut model.user_option.timezone))
+    class="input-xxlarge"
+  }}
 </div>
 
 <div class="control-group pref-location">

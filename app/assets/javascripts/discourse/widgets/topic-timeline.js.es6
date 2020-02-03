@@ -386,7 +386,15 @@ createWidget("timeline-footer-controls", {
           {
             value: notificationLevel,
             topic,
-            showFullTitle: false
+            options: {
+              showFullTitle: false,
+              placement: "bottom-end"
+            },
+            onChange: newNotificationLevel => {
+              if (newNotificationLevel !== notificationLevel) {
+                topic.details.updateNotifications(newNotificationLevel);
+              }
+            }
           },
           ["value"]
         )

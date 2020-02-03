@@ -1,5 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import { alias, equal, or } from "@ember/object/computed";
+import { equal, or, readOnly } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseComputed, {
@@ -16,7 +16,7 @@ import {
 } from "discourse/controllers/edit-topic-timer";
 
 export default Component.extend({
-  selection: alias("topicTimer.status_type"),
+  selection: readOnly("topicTimer.status_type"),
   autoOpen: equal("selection", OPEN_STATUS_TYPE),
   autoClose: equal("selection", CLOSE_STATUS_TYPE),
   autoDelete: equal("selection", DELETE_STATUS_TYPE),
@@ -27,16 +27,11 @@ export default Component.extend({
 
   @discourseComputed(
     "topicTimer.updateTime",
-    "loading",
     "publishToCategory",
     "topicTimer.category_id"
   )
-  saveDisabled(updateTime, loading, publishToCategory, topicTimerCategoryId) {
-    return (
-      isEmpty(updateTime) ||
-      loading ||
-      (publishToCategory && !topicTimerCategoryId)
-    );
+  saveDisabled(updateTime, publishToCategory, topicTimerCategoryId) {
+    return isEmpty(updateTime) || (publishToCategory && !topicTimerCategoryId);
   },
 
   @discourseComputed("topic.visible")
@@ -69,6 +64,26 @@ export default Component.extend({
       schedule("afterRender", () => {
         this.set("topicTimer.based_on_last_post", false);
       });
+    }
+  },
+
+  didReceiveAttrs() {
+    this._super(...arguments);
+
+    // TODO: get rid of this hack
+    schedule("afterRender", () => {
+      if (!this.get("topicTimer.status_type")) {
+        this.set(
+          "topicTimer.status_type",
+          this.get("timerTypes.firstObject.id")
+        );
+      }
+    });
+  },
+
+  actions: {
+    onChangeTimerType(value) {
+      this.set("topicTimer.status_type", value);
     }
   }
 });

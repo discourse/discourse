@@ -49,5 +49,22 @@ export default Component.extend(FilterModeMixin, {
       noSubcategories,
       persistedQueryParams: params
     });
+  },
+
+  actions: {
+    changeCategoryNotificationLevel(notificationLevel) {
+      this.category.setNotification(notificationLevel);
+    },
+
+    selectCategoryAdminDropdownAction(actionId) {
+      switch (actionId) {
+        case "create":
+          this.createCategory();
+          break;
+        case "reorder":
+          this.reorderCategories();
+          break;
+      }
+    }
   }
 });

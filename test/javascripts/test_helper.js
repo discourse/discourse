@@ -164,7 +164,9 @@ QUnit.testDone(function() {
   Object.keys(events).forEach(function(eventKey) {
     var event = events[eventKey];
     event.forEach(function(listener) {
-      appEvents.off(eventKey, listener.target, listener.fn);
+      if (appEvents.has(eventKey)) {
+        appEvents.off(eventKey, listener.target, listener.fn);
+      }
     });
   });
 

@@ -100,13 +100,19 @@ export default Controller.extend(ModalFunctionality, {
           });
         }
       })
-      .catch(error => {
-        popupAjaxError(error);
-      })
+      .catch(popupAjaxError)
       .finally(() => this.set("loading", false));
   },
 
   actions: {
+    onChangeStatusType(value) {
+      this.set("topicTimer.status_type", value);
+    },
+
+    onChangeUpdateTime(value) {
+      this.set("topicTimer.updateTime", value);
+    },
+
     saveTimer() {
       if (!this.get("topicTimer.updateTime")) {
         this.flash(

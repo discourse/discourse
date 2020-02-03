@@ -8,11 +8,13 @@
   </div>
   {{future-date-input
     label="user.user_notifications.ignore_duration_when"
-    input=ignoredUntil
+    input=(readonly ignoredUntil)
     includeWeekend=true
     includeDateTime=false
     includeMidFuture=true
-    includeFarFuture=false}}
+    includeFarFuture=false
+    onChangeInput=(action (mut ignoredUntil))
+  }}
   <p>{{i18n "user.user_notifications.ignore_duration_note"}}</p>
 {{/d-modal-body}}
 

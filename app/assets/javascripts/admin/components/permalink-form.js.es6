@@ -20,6 +20,19 @@ export default Component.extend({
     ];
   },
 
+  didInsertElement() {
+    this._super(...arguments);
+
+    schedule("afterRender", () => {
+      $(this.element.querySelector(".external-url")).keydown(e => {
+        // enter key
+        if (e.keyCode === 13) {
+          this.send("submit");
+        }
+      });
+    });
+  },
+
   focusPermalink() {
     schedule("afterRender", () =>
       this.element.querySelector(".permalink-url").focus()
@@ -64,19 +77,10 @@ export default Component.extend({
             }
           );
       }
+    },
+
+    onChangePermalinkType(type) {
+      this.set("permalinkType", type);
     }
-  },
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    schedule("afterRender", () => {
-      $(this.element.querySelector(".external-url")).keydown(e => {
-        // enter key
-        if (e.keyCode === 13) {
-          this.send("submit");
-        }
-      });
-    });
   }
 });

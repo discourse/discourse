@@ -322,8 +322,9 @@ QUnit.test("update in filter through advanced search ui", async assert => {
   await inSelector.expand();
   await inSelector.selectRowByValue("bookmarks");
 
-  assert.ok(
-    inSelector.rowByName("I bookmarked").exists(),
+  assert.equal(
+    inSelector.header().label(),
+    "I bookmarked",
     'has "I bookmarked" populated'
   );
   assert.equal(
@@ -344,8 +345,9 @@ QUnit.test("update status through advanced search ui", async assert => {
   await statusSelector.expand();
   await statusSelector.selectRowByValue("closed");
 
-  assert.ok(
-    statusSelector.rowByName("are closed").exists(),
+  assert.equal(
+    statusSelector.header().label(),
+    "are closed",
     'has "are closed" populated'
   );
   assert.equal(
@@ -375,8 +377,9 @@ QUnit.test("update post time through advanced search ui", async assert => {
   await postTimeSelector.expand();
   await postTimeSelector.selectRowByValue("after");
 
-  assert.ok(
-    postTimeSelector.rowByName("after").exists(),
+  assert.equal(
+    postTimeSelector.header().label(),
+    "after",
     'has "after" populated'
   );
 
@@ -409,7 +412,7 @@ QUnit.test("validate advanced search when initially empty", async assert => {
   await click(".search-advanced-options .in-likes");
 
   assert.ok(
-    exists(".search-advanced-options .in-likes:checked"),
+    selectKit(".search-advanced-options .in-likes:checked"),
     'has "I liked" populated'
   );
   assert.equal(

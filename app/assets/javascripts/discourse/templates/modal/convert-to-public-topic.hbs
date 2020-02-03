@@ -3,7 +3,10 @@
   <div class='instructions'>
     {{i18n "topic.make_public.choose_category"}}
   </div>
-  {{category-chooser value=publicCategoryId}}
+  {{category-chooser
+    value=publicCategoryId
+    onChange=(action (mut publicCategoryId))
+  }}
 
 {{/d-modal-body}}
 

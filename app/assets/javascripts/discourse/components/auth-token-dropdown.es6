@@ -1,13 +1,16 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import { computed } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["auth-token-dropdown"],
-  headerIcon: "wrench",
-  allowInitialValueMutation: false,
-  showFullTitle: false,
 
-  computeContent() {
-    const content = [
+  selectKitOptions: {
+    icon: "wrench",
+    showFullTitle: false
+  },
+
+  content: computed(function() {
+    return [
       {
         id: "notYou",
         icon: "user-times",
@@ -21,12 +24,10 @@ export default DropdownSelectBoxComponent.extend({
         description: ""
       }
     ];
-
-    return content;
-  },
+  }),
 
   actions: {
-    onSelect(id) {
+    onChange(id) {
       switch (id) {
         case "notYou":
           this.showToken(this.token);

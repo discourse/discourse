@@ -16,7 +16,7 @@ const buildTopic = function(level, archetype = "regular") {
 const originalTranslation =
   I18n.translations.en.js.topic.notifications.tracking_pm.title;
 
-moduleForComponent("topic-notifications-button", {
+moduleForComponent("select-kit/topic-notifications-button", {
   integration: true,
 
   afterEach() {
@@ -36,9 +36,9 @@ componentTest("the header has a localized title", {
     assert.equal(
       selectKit()
         .header()
-        .name(),
+        .label(),
       "Normal",
-      "it has the correct title"
+      "it has the correct label"
     );
 
     await this.set("topic", buildTopic(2));
@@ -46,9 +46,9 @@ componentTest("the header has a localized title", {
     assert.equal(
       selectKit()
         .header()
-        .name(),
+        .label(),
       "Tracking",
-      "it correctly changes the title"
+      "it correctly changes the label"
     );
   }
 });
@@ -66,9 +66,9 @@ componentTest("the header has a localized title", {
     assert.equal(
       selectKit()
         .header()
-        .name(),
+        .label(),
       `${originalTranslation} PM`,
-      "it has the correct title for PMs"
+      "it has the correct label for PMs"
     );
   }
 });

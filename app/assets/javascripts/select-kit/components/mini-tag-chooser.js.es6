@@ -1,294 +1,186 @@
-import { empty, alias } from "@ember/object/computed";
-import Category from "discourse/models/category";
+import { empty, or } from "@ember/object/computed";
 import ComboBox from "select-kit/components/combo-box";
 import TagsMixin from "select-kit/mixins/tags";
-import discourseComputed from "discourse-common/utils/decorators";
-import renderTag from "discourse/lib/render-tag";
-import { escapeExpression } from "discourse/lib/utilities";
 import { makeArray } from "discourse-common/lib/helpers";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { get } from "@ember/object";
-import { isEmpty } from "@ember/utils";
-import { debounce } from "@ember/runloop";
+import { computed } from "@ember/object";
+import { setting } from "discourse/lib/computed";
+
+const SELECTED_TAGS_COLLECTION = "MINI_TAG_CHOOSER_SELECTED_TAGS";
+import { ERRORS_COLLECTION } from "select-kit/components/select-kit";
 
 export default ComboBox.extend(TagsMixin, {
-  allowContentReplacement: true,
   headerComponent: "mini-tag-chooser/mini-tag-chooser-header",
   pluginApiIdentifiers: ["mini-tag-chooser"],
-  attributeBindings: ["categoryId"],
+  attributeBindings: ["selectKit.options.categoryId:category-id"],
   classNames: ["mini-tag-chooser"],
   classNameBindings: ["noTags"],
-  verticalOffset: 3,
-  filterable: true,
-  noTags: empty("selection"),
-  allowCreate: null,
-  allowAny: alias("allowCreate"),
-  caretUpIcon: alias("caretIcon"),
-  caretDownIcon: alias("caretIcon"),
-  isAsync: true,
-  fullWidthOnMobile: true,
+  noTags: empty("value"),
+  maxTagSearchResults: setting("max_tag_search_results"),
+  maxTagsPerTopic: setting("max_tags_per_topic"),
+  highlightedTag: null,
+
+  collections: computed(
+    "mainCollection.[]",
+    "errorsCollection.[]",
+    "highlightedTag",
+    function() {
+      return this._super(...arguments);
+    }
+  ),
+
+  selectKitOptions: {
+    fullWidthOnMobile: true,
+    filterable: true,
+    caretDownIcon: "caretIcon",
+    caretUpIcon: "caretIcon",
+    termMatchesForbidden: false,
+    categoryId: null,
+    everyTag: false,
+    none: "tagging.choose_for_topic",
+    closeOnChange: false,
+    maximum: 10,
+    autoInsertNoneItem: false
+  },
+
+  modifyComponentForRow(collection, item) {
+    if (this.getValue(item) === this.selectKit.filter) {
+      return "select-kit/select-kit-row";
+    }
+
+    return "tag-row";
+  },
+
+  modifyComponentForCollection(collection) {
+    if (collection === SELECTED_TAGS_COLLECTION) {
+      return "mini-tag-chooser/selected-collection";
+    }
+  },
+
+  modifyContentForCollection(collection) {
+    if (collection === SELECTED_TAGS_COLLECTION) {
+      return {
+        selectedTags: this.value,
+        highlightedTag: this.highlightedTag
+      };
+    }
+  },
+
+  allowAnyTag: or("allowCreate", "site.can_create_tag"),
+
+  maximumSelectedTags: computed(function() {
+    return parseInt(
+      this.options.limit || this.options.maximum || this.maxTagsPerTopic,
+      10
+    );
+  }),
 
   init() {
     this._super(...arguments);
 
-    this.set("termMatchesForbidden", false);
-    this.selectionSelector = ".selected-tag";
-
-    if (this.allowCreate !== false) {
-      this.set("allowCreate", this.site.get("can_create_tag"));
-    }
-
-    this.set("templateForRow", rowComponent => {
-      const tag = rowComponent.get("computedContent");
-      return renderTag(get(tag, "value"), {
-        count: get(tag, "originalContent.count"),
-        noHref: true
-      });
-    });
-
-    this.set(
-      "maximum",
-      parseInt(
-        this.limit ||
-          this.maximum ||
-          this.get("siteSettings.max_tags_per_topic"),
-        10
-      )
-    );
+    this.insertAfterCollection(ERRORS_COLLECTION, SELECTED_TAGS_COLLECTION);
   },
 
-  @discourseComputed(
-    "computedValue",
-    "filter",
-    "collectionComputedContent.[]",
-    "hasReachedMaximum",
-    "hasReachedMinimum",
-    "categoryId"
-  )
-  shouldDisplayCreateRow() {
-    if (this.categoryId) {
-      const category = Category.findById(this.categoryId);
-      if (
-        (category.allowed_tags && category.allowed_tags.length > 0) ||
-        (category.allowed_tag_groups && category.allowed_tag_groups.length > 0)
-      ) {
-        return category.allow_global_tags && this._super(...arguments);
-      }
-    }
-    return this._super(...arguments);
-  },
+  caretIcon: computed("selectKit.hasReachedMaximum", function() {
+    return this.selectKit.hasReachedMaximum ? null : "plus";
+  }),
 
-  didInsertElement() {
-    this._super(...arguments);
+  modifySelection(content) {
+    let joinedTags = this.value.join(", ");
 
-    $(this.element.querySelector(".select-kit-body")).on(
-      "mousedown touchstart",
-      ".selected-tag",
-      event => {
-        const $button = $(event.target).closest(".selected-tag");
-        this._destroyEvent(event);
-        this.destroyTags(this.computeContentItem($button.attr("data-value")));
-      }
-    );
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
-
-    $(this.element.querySelector(".select-kit-body")).off(
-      "mousedown touchstart"
-    );
-  },
-
-  @discourseComputed("hasReachedMaximum")
-  caretIcon(hasReachedMaximum) {
-    return hasReachedMaximum ? null : "plus";
-  },
-
-  @discourseComputed("tags")
-  selection(tags) {
-    return makeArray(tags).map(c => this.computeContentItem(c));
-  },
-
-  filterComputedContent(computedContent) {
-    return computedContent;
-  },
-
-  // we are directly mutatings tags to define the current selection
-  mutateValue() {},
-
-  didPressTab(event) {
-    if (this.isLoading) {
-      this._destroyEvent(event);
-      return false;
-    }
-
-    if (isEmpty(this.filter) && !this.highlighted) {
-      this.$header().focus();
-      this.close(event);
-      return true;
-    }
-
-    if (this.highlighted && this.isExpanded) {
-      this._destroyEvent(event);
-      this.focus();
-      this.select(this.highlighted);
-      return false;
-    } else {
-      this.close(event);
-    }
-
-    return true;
-  },
-
-  @discourseComputed("tags.[]", "filter", "highlightedSelection.[]")
-  collectionHeader(tags, filter, highlightedSelection) {
-    if (!isEmpty(tags)) {
-      let output = "";
-
-      // if we have more than x tags we will also filter the selection
-      if (tags.length >= 20) {
-        tags = tags.filter(t => t.indexOf(filter) >= 0);
-      }
-
-      tags.map(tag => {
-        tag = escapeExpression(tag);
-        const isHighlighted = highlightedSelection
-          .map(s => get(s, "value"))
-          .includes(tag);
-        output += `
-          <button aria-label="${tag}" title="${tag}" class="selected-tag ${
-          isHighlighted ? "is-highlighted" : ""
-        }" data-value="${tag}">
-            ${tag} ${iconHTML("times")}
-          </button>
-        `;
-      });
-
-      return `<div class="selected-tags">${output}</div>`;
-    }
-  },
-
-  computeHeaderContent() {
-    let content = this._super(...arguments);
-
-    const joinedTags = this.selection
-      .map(s => Ember.get(s, "value"))
-      .join(", ");
-
-    if (isEmpty(this.selection)) {
-      content.label = I18n.t("tagging.choose_for_topic");
-    } else {
-      content.label = joinedTags;
-    }
-
-    if (!this.hasReachedMinimum && isEmpty(this.selection)) {
-      const key = this.minimumLabel || "select_kit.min_content_not_reached";
-      const label = I18n.t(key, { count: this.minimum });
+    if (!this.selectKit.hasReachedMinimum) {
+      const key =
+        this.selectKit.options.minimumLabel ||
+        "select_kit.min_content_not_reached";
+      const label = I18n.t(key, { count: this.selectKit.options.minimum });
       content.title = content.name = content.label = label;
     }
 
-    content.title = content.name = content.value = joinedTags;
+    content.title = content.name = content.value = content.label = joinedTags;
+
+    if (content.label.length > 32) {
+      content.label = `${content.label.slice(0, 32)}...`;
+    }
 
     return content;
   },
 
-  _prepareSearch(query, options) {
+  search(filter) {
     const data = {
-      q: query,
-      limit: this.get("siteSettings.max_tag_search_results"),
-      categoryId: this.categoryId
+      q: filter || "",
+      limit: this.maxTagSearchResults,
+      categoryId: this.selectKit.options.categoryId
     };
 
-    if (this.selection) {
-      data.selected_tags = this.selection
-        .map(s => Ember.get(s, "value"))
-        .slice(0, 100);
+    if (this.value) {
+      data.selected_tags = this.value.slice(0, 100);
     }
 
-    if (!this.everyTag) data.filterForInput = true;
+    if (!this.selectKit.options.everyTag) data.filterForInput = true;
 
-    this.searchTags("/tags/filter/search", data, this._transformJson, options);
+    return this.searchTags("/tags/filter/search", data, this._transformJson);
   },
 
   _transformJson(context, json) {
     let results = json.results;
 
-    context.set("termMatchesForbidden", json.forbidden ? true : false);
-    context.set("termMatchErrorMessage", json.forbidden_message);
+    context.setProperties({
+      termMatchesForbidden: json.forbidden ? true : false,
+      termMatchErrorMessage: json.forbidden_message
+    });
 
     if (context.get("siteSettings.tags_sort_alphabetically")) {
       results = results.sort((a, b) => a.text.localeCompare(b.text));
     }
 
-    results = results.filter(r => !context.get("selection").includes(r.id));
-
-    results = results.map(result => {
-      return { id: result.text, name: result.text, count: result.count };
-    });
+    results = results
+      .filter(r => !makeArray(context.tags).includes(r.id))
+      .map(result => {
+        return { id: result.text, name: result.text, count: result.count };
+      });
 
     return results;
   },
 
-  destroyTags(tags) {
-    tags = makeArray(tags).map(c => get(c, "value"));
+  select(value) {
+    this._reset();
 
-    // work around usage with buffered proxy
-    // it does not listen on array changes, similar hack already on select
-    // TODO: FIX buffered-proxy.js to support arrays
-    this.tags.removeObjects(tags);
-    this.set("tags", this.tags.slice(0));
-    this._tagsChanged();
-
-    this.set(
-      "searchDebounce",
-      debounce(this, this._prepareSearch, this.filter, 350)
-    );
-  },
-
-  didDeselect(tags) {
-    this.destroyTags(tags);
-  },
-
-  didUpdateAttrs() {
-    this._super(...arguments);
-
-    this._prepareSearch(this.filter, { background: true });
-  },
-
-  _tagsChanged() {
-    if (this.attrs.onChangeTags) {
-      this.attrs.onChangeTags({ target: { value: this.tags } });
+    if (!this.validateSelect(value)) {
+      return;
     }
+
+    const tags = [...new Set(makeArray(this.value).concat(value))];
+    this.selectKit.change(tags, tags);
   },
 
-  actions: {
-    onSelect(tag) {
-      this.set("tags", makeArray(this.tags).concat(tag));
-      this._tagsChanged();
+  deselect(value) {
+    this._reset();
 
-      this._prepareSearch(this.filter);
-      this.autoHighlight();
-    },
+    const tags = [...new Set(makeArray(this.value).removeObject(value))];
+    this.selectKit.change(tags, tags);
+  },
 
-    onExpand() {
-      if (isEmpty(this.collectionComputedContent)) {
-        this.set(
-          "searchDebounce",
-          debounce(this, this._prepareSearch, this.filter, 350)
-        );
+  _reset() {
+    this.clearErrors();
+    this.set("highlightedTag", null);
+  },
+
+  _onKeydown(event) {
+    if (event.keyCode === 8) {
+      this._onBackspace(this.value, this.highlightedTag);
+    } else {
+      this.set("highlightedTag", null);
+    }
+
+    return true;
+  },
+
+  _onBackspace(value, highlightedTag) {
+    if (value && value.length) {
+      if (!highlightedTag) {
+        this.set("highlightedTag", value.lastObject);
+      } else {
+        this.deselect(highlightedTag);
       }
-    },
-
-    onFilter(filter) {
-      // we start loading right away so we avoid updating createRow multiple times
-      this.startLoading();
-
-      filter = isEmpty(filter) ? null : filter;
-      this.set(
-        "searchDebounce",
-        debounce(this, this._prepareSearch, filter, 350)
-      );
     }
   }
 });

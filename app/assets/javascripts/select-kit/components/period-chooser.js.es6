@@ -1,34 +1,37 @@
-import { oneWay, alias } from "@ember/object/computed";
+import { oneWay, readOnly } from "@ember/object/computed";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["period-chooser"],
-  rowComponent: "period-chooser/period-chooser-row",
-  headerComponent: "period-chooser/period-chooser-header",
   content: oneWay("site.periods"),
-  value: alias("period"),
-  isHidden: alias("showPeriods"),
+  value: readOnly("period"),
+  isVisible: readOnly("showPeriods"),
+  valueProperty: null,
+  nameProperty: null,
+
+  modifyComponentForRow() {
+    return "period-chooser/period-chooser-row";
+  },
 
   @discourseComputed("isExpanded")
   caretIcon(isExpanded) {
     return isExpanded ? "caret-up" : "caret-down";
   },
 
-  @on("didUpdateAttrs", "init")
-  _setFullDay() {
-    this.headerComponentOptions.setProperties({
-      fullDay: this.fullDay
-    });
-    this.rowComponentOptions.setProperties({
-      fullDay: this.fullDay
-    });
+  selectKitOptions: {
+    filterable: false,
+    autoFilterable: false,
+    fullDay: "fullDay",
+    headerComponent: "period-chooser/period-chooser-header"
   },
 
   actions: {
-    onSelect() {
+    onChange(value) {
       if (this.action) {
-        this.action(this.computedValue);
+        this.action(value);
+      } else {
+        this.attrs.onChange && this.attrs.onChange(value);
       }
     }
   }

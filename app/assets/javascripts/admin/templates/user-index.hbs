@@ -298,7 +298,7 @@
       </div>
       <div class="controls">
         {{d-button href="/admin/api/keys" label="admin.api.manage_keys"}}
-        
+
       </div>
     </div>
   {{/if}}
@@ -350,8 +350,9 @@
     <div class="value">
       {{combo-box
         content=site.trustLevels
-        value=model.trust_level
         nameProperty="detailedName"
+        value=model.trustLevel.id
+        onChange=(action (mut model.trust_level))
       }}
 
       {{#if model.dirty}}
@@ -514,9 +515,10 @@
         <div class="field">{{i18n "admin.groups.custom"}}</div>
         <div class="value">
           {{admin-group-selector
-            selected=model.customGroups
-            available=availableGroups
-            buffer=customGroupIdsBuffer}}
+            content=availableGroups
+            value=customGroupIdsBuffer
+            onChange=(action (mut customGroupIdsBuffer))
+          }}
         </div>
         {{#if customGroupsDirty}}
           <div class="controls">
@@ -532,7 +534,9 @@
             {{combo-box
               content=model.customGroups
               value=model.primary_group_id
-              none="admin.groups.no_primary"}}
+              none="admin.groups.no_primary"
+              onChange=(action (mut model.primary_group_id))
+            }}
           </div>
           {{#if primaryGroupDirty}}
             <div class="controls">
