@@ -11,7 +11,7 @@
     </thead>
     <tbody aria-labelledby="categories-only-category">
       {{#each categories as |c|}}
-        <tr data-category-id={{c.id}} class="{{if c.description_excerpt 'has-description' 'no-description'}} {{if c.uploaded_logo.url 'has-logo' 'no-logo'}}">
+        <tr data-category-id={{c.id}} data-notification-level={{c.notification_level}} class="{{if c.description_excerpt 'has-description' 'no-description'}} {{if c.uploaded_logo.url 'has-logo' 'no-logo'}}">
           <td class="category" style={{border-color c.color}}>
             {{category-title-link category=c}}
             {{#if c.description_excerpt}}
@@ -22,7 +22,7 @@
             {{#if c.isGrandParent}}
               <table class="category-list subcategories-with-subcategories">
                 {{#each c.subcategories as |subcategory|}}
-                  <tr data-category-id={{subcategory.id}} class="{{if subcategory.description_excerpt 'has-description' 'no-description'}} {{if subcategory.uploaded_logo.url 'has-logo' 'no-logo'}}">
+                  <tr data-category-id={{subcategory.id}} data-notification-level={{subcategory.notification_level}} class="{{if subcategory.description_excerpt 'has-description' 'no-description'}} {{if subcategory.uploaded_logo.url 'has-logo' 'no-logo'}}">
                     <td class="category" style={{border-color subcategory.color}}>
                       {{category-title-link tagName="h4" category=subcategory}}
                       {{#if subcategory.description_excerpt}}
