@@ -951,6 +951,11 @@ describe Post do
       expect(p6.reply_ids).to be_empty # quotes itself
     end
 
+    it "ignores posts moved to other topics" do
+      p2.update_column(:topic_id, Fabricate(:topic).id)
+      expect(p1.reply_ids).to be_blank
+    end
+
     it "does not skip any replies" do
       expect(p1.reply_ids(only_replies_to_single_post: false)).to eq([{ id: p2.id, level: 1 }, { id: p4.id, level: 2 }, { id: p5.id, level: 3 }, { id: p6.id, level: 2 }])
       expect(p2.reply_ids(only_replies_to_single_post: false)).to eq([{ id: p4.id, level: 1 }, { id: p5.id, level: 2 }, { id: p6.id, level: 1 }])
