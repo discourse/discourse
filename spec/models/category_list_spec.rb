@@ -53,16 +53,6 @@ describe CategoryList do
       expect(CategoryList.new(Guardian.new(nil), include_topics: true).categories.find { |x| x.name == private_cat.name }).to eq(nil)
     end
 
-    it "properly hide muted categories" do
-      cat_muted = Fabricate(:category_with_definition)
-      CategoryUser.create!(user_id: user.id,
-                           category_id: cat_muted.id,
-                           notification_level: CategoryUser.notification_levels[:muted])
-
-      # uncategorized + cat_muted for admin
-      expect(CategoryList.new(Guardian.new admin).categories.count).to eq(2)
-      expect(CategoryList.new(Guardian.new user).categories.count).to eq(1)
-    end
   end
 
   context "when mute_all_categories_by_default enabled" do
@@ -86,11 +76,6 @@ describe CategoryList do
       SiteSetting.default_categories_watching = category.id.to_s
       notification_level = CategoryList.new(Guardian.new).categories.find { |c| c.id == category.id }.notification_level
       expect(notification_level).to eq(CategoryUser.notification_levels[:regular])
-    end
-
-    it "removes the default muted categories for anonymous" do
-      SiteSetting.default_categories_muted = category.id.to_s
-      expect(CategoryList.new(Guardian.new).categories).not_to include(category)
     end
   end
 
