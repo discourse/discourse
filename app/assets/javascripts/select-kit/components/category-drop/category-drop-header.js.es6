@@ -50,10 +50,12 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
     this._super(...arguments);
 
     schedule("afterRender", () => {
-      this.element.setAttribute("style", this.categoryStyle);
-      this.element
-        .querySelector(".caret-icon")
-        .setAttribute("style", this.categoryStyle);
+      if (this.categoryStyle) {
+        this.element.setAttribute("style", this.categoryStyle);
+        this.element
+          .querySelector(".caret-icon")
+          .setAttribute("style", this.categoryStyle);
+      }
     });
   }
 });
