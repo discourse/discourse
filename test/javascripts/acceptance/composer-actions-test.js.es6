@@ -134,7 +134,7 @@ QUnit.test("replying to post - reply_as_new_topic", async assert => {
       .val()
       .includes(quote)
   );
-  sandbox.restore()
+  sandbox.restore();
 });
 
 QUnit.test("reply_as_new_topic with new_topic draft", async assert => {
@@ -164,7 +164,7 @@ QUnit.test("reply_as_new_topic without a new_topic draft", async assert => {
   await composerActions.expand();
   await composerActions.selectRowByValue("reply_as_new_topic");
   assert.equal(exists(find(".bootbox")), false);
-  sandbox.restore()
+  sandbox.restore();
 });
 
 QUnit.test("shared draft", async assert => {
