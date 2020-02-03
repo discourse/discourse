@@ -1406,7 +1406,6 @@ fi:
     content_security_policy_collect_reports: "Ota käyttöön CSP-seulontojen kerääminen lokiin /csp_reports"
     content_security_policy_script_src: "Muut sallitut skriptien lähteet. Nykyinen webhotelli ja CDN ovat sallittuja oletuksena. Ks. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
     invalidate_inactive_admin_email_after_days: "Ylläpitäjätunnukset jotka eivät ole vierailleet sivustolla näin moneen päivään joutuvat vahvistamaan sähköpostiosoitteensa uudelleen ennen sisäänkirjautumista. Aseta 0 poistaaksesi käytöstä."
-    allow_embedding_site_in_an_iframe: "Salli sivuston upottaminen iframeihin."
     top_menu: "Mitkä painikkeet näytetään kotisivun navigointipalkissa, ja missä järjestyksessä. Esimerkiksi latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Mitkä painikkeet näytetään viestin valikossa, ja missä järjestyksessä. Esimerkiksi like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Piilotettavat painikkeet viestin valikosta, kunnes '...' klikataan."
