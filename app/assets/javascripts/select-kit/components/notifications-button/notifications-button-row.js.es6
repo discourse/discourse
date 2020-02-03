@@ -1,45 +1,32 @@
-import { alias } from "@ember/object/computed";
-import DropdownSelectBoxRoxComponent from "select-kit/components/dropdown-select-box/dropdown-select-box-row";
-import { buttonDetails } from "discourse/lib/notification-levels";
-import discourseComputed from "discourse-common/utils/decorators";
-import { iconHTML } from "discourse-common/lib/icon-library";
+import { readOnly } from "@ember/object/computed";
+import { computed } from "@ember/object";
+import DropdownSelectBoxRowComponent from "select-kit/components/dropdown-select-box/dropdown-select-box-row";
+import { escapeExpression } from "discourse/lib/utilities";
 
-export default DropdownSelectBoxRoxComponent.extend({
-  classNames: "notifications-button-row",
+export default DropdownSelectBoxRowComponent.extend({
+  classNames: ["notifications-button-row"],
+  i18nPrefix: readOnly("selectKit.options.i18nPrefix"),
+  i18nPostfix: readOnly("selectKit.options.i18nPostfix"),
 
-  i18nPrefix: alias("options.i18nPrefix"),
-  i18nPostfix: alias("options.i18nPostfix"),
+  label: computed("_start", function() {
+    return escapeExpression(I18n.t(`${this._start}.title`));
+  }),
 
-  @discourseComputed("computedContent.value", "i18nPrefix", "i18nPostfix")
-  title(value, prefix, postfix) {
-    const key = buttonDetails(value).key;
-    return I18n.t(`${prefix}.${key}${postfix}.title`);
-  },
+  title: readOnly("label"),
 
-  @discourseComputed(
-    "computedContent.name",
-    "computedContent.originalContent.icon"
-  )
-  icon(contentName, icon) {
-    return iconHTML(icon, { class: contentName.dasherize() });
-  },
+  icons: computed("title", "item.icon", function() {
+    return [escapeExpression(this.item.icon)];
+  }),
 
-  @discourseComputed("_start")
-  description(_start) {
+  description: computed("_start", function() {
     if (this.site && this.site.mobileView) {
       return null;
     }
 
-    return Handlebars.escapeExpression(I18n.t(`${_start}.description`));
-  },
+    return escapeExpression(I18n.t(`${this._start}.description`));
+  }),
 
-  @discourseComputed("_start")
-  name(_start) {
-    return Handlebars.escapeExpression(I18n.t(`${_start}.title`));
-  },
-
-  @discourseComputed("i18nPrefix", "i18nPostfix", "computedContent.name")
-  _start(prefix, postfix, contentName) {
-    return `${prefix}.${contentName}${postfix}`;
-  }
+  _start: computed("i18nPrefix", "i18nPostfix", "rowName", function() {
+    return `${this.i18nPrefix}.${this.rowName}${this.i18nPostfix}`;
+  })
 });

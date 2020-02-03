@@ -55,7 +55,12 @@
           <span class='desc'>
             {{i18n "search.sort_by"}}
           </span>
-          {{combo-box value=sortOrder content=sortOrders castInteger=true}}
+          {{combo-box
+            value=sortOrder
+            content=sortOrders
+            castInteger=true
+            onChange=(action (mut sortOrder))
+          }}
         </div>
       </div>
     {{/if}}
@@ -194,12 +199,18 @@
     {{#if site.mobileView}}
       {{#if expanded}}
         <div class="search-advanced-filters">
-          {{search-advanced-options searchTerm=searchTerm isExpanded=expanded}}
+          {{search-advanced-options
+            searchTerm=searchTerm
+            isExpanded=expanded
+          }}
         </div>
       {{/if}}
     {{else}}
       <div class="search-advanced-filters">
-        {{search-advanced-options searchTerm=searchTerm isExpanded=true}}
+        {{search-advanced-options
+          searchTerm=searchTerm
+          isExpanded=true
+        }}
 
         {{d-button
           label="submit"

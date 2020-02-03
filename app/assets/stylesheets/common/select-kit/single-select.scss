@@ -1,0 +1,11 @@
+.select-kit.single-select {
+  .select-kit-filter {
+    display: flex;
+
+    &.is-expanded {
+      padding: 0.25em 0.5em;
+      border-top: 1px solid $primary-low;
+      border-bottom: 1px solid $primary-low;
+    }
+  }
+}

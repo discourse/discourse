@@ -22,18 +22,21 @@
   {{/unless}}
   {{#if editingPermissions}}
     {{#if category.availableGroups}}
-      {{combo-box class="available-groups"
-                  allowInitialValueMutation=true
-                  allowContentReplacement=true
-                  content=category.availableGroups
-                  onSelect=(action "onDropdownChange")
-                  value=selectedGroup}}
-      {{combo-box allowInitialValueMutation=true
-                  class="permission-selector"
-                  nameProperty="description"
-                  content=category.availablePermissions
-                  onSelect=(action "onDropdownChange")
-                  value=selectedPermission}}
+      {{combo-box
+        class="available-groups"
+        content=category.availableGroups
+        onChange=(action "onSelectGroup")
+        value=selectedGroup
+        valueProperty=null
+        nameProperty=null
+      }}
+      {{combo-box
+        class="permission-selector"
+        nameProperty="description"
+        content=category.availablePermissions
+        onChange=(action "onSelectPermission")
+        value=selectedPermission
+      }}
       {{d-button
         action=(action "addPermission" selectedGroup selectedPermission)
         class="btn-primary add-permission"

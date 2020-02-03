@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Admin - User Index", {
@@ -84,15 +85,10 @@ QUnit.test("will clear unsaved groups when switching user", async assert => {
     "the name should be correct"
   );
 
-  await fillIn(".admin-group-selector .filter-input", "Macdonald");
-  await click(".admin-group-selector .filter-input");
-  await keyEvent(".admin-group-selector .filter-input", "keydown", 13);
-
-  assert.equal(
-    find('.admin-group-selector span[title="Macdonald"]').length,
-    1,
-    "group should be set"
-  );
+  const groupSelector = selectKit(".admin-group-selector");
+  await groupSelector.expand();
+  await groupSelector.selectRowByValue(42);
+  assert.equal(groupSelector.header().value(), 42, "group should be set");
 
   await visit("/admin/users/1/eviltrout");
 

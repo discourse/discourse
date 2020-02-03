@@ -637,6 +637,12 @@ registerIconRenderer({
         params.title
       ).replace(/'/g, "&#39;")}'>${html}</span>`;
     }
+    if (params.translatedtitle) {
+      html = `<span class="svg-icon-title" title='${params.translatedtitle.replace(
+        /'/g,
+        "&#39;"
+      )}'>${html}</span>`;
+    }
     return html;
   },
 

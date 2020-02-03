@@ -1,19 +1,18 @@
-{{input
-  tabindex=-1
-  class="filter-input"
-  placeholder=computedPlaceholder
-  key-up=onFilterComputedContent
-  autocomplete="off"
-  autocorrect="off"
-  autocapitalize="off"
-  spellcheck=false
-  value=filter
-}}
+{{#unless isHidden}}
+  {{input
+    tabindex=-1
+    class="filter-input"
+    placeholder=placeholder
+    autocomplete="off"
+    autocorrect="off"
+    autocapitalize="off"
+    spellcheck=false
+    value=(readonly selectKit.filter)
+    input=(action "onInput")
+    keyDown=(action "onKeydown")
+  }}
 
-{{#if isLoading}}
-  {{loading-spinner size="small"}}
-{{else}}
-  {{#if icon}}
-    {{d-icon icon class="filter-icon"}}
+  {{#if selectKit.options.filterIcon}}
+    {{d-icon selectKit.options.filterIcon class="filter-icon"}}
   {{/if}}
-{{/if}}
+{{/unless}}

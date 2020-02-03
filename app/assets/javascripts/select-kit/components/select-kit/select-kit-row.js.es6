@@ -1,8 +1,7 @@
-import { alias, or } from "@ember/object/computed";
 import Component from "@ember/component";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-
-const { run, isPresent, makeArray, isEmpty } = Ember;
+import { propertyEqual } from "discourse/lib/computed";
+import { computed } from "@ember/object";
+import { makeArray } from "discourse-common/lib/helpers";
 import UtilsMixin from "select-kit/mixins/utils";
 
 export default Component.extend(UtilsMixin, {
@@ -13,85 +12,80 @@ export default Component.extend(UtilsMixin, {
   attributeBindings: [
     "tabIndex",
     "title",
-    "value:data-value",
-    "name:data-name",
+    "rowValue:data-value",
+    "rowName:data-name",
     "ariaLabel:aria-label",
     "guid:data-guid"
   ],
   classNameBindings: [
     "isHighlighted",
     "isSelected",
-    "computedContent.originalContent.classNames"
+    "isNone",
+    "isNone:none",
+    "item.classNames"
   ],
 
-  forceEscape: alias("options.forceEscape"),
+  isNone: computed("rowValue", function() {
+    return this.rowValue === this.getValue(this.selectKit.noneItem);
+  }),
 
-  ariaLabel: or("computedContent.ariaLabel", "title"),
+  guid: computed("item", function() {
+    return Ember.guidFor(this.item);
+  }),
 
-  @discourseComputed("computedContent.title", "name")
-  title(computedContentTitle, name) {
-    if (computedContentTitle) return computedContentTitle;
-    if (name) return name;
+  ariaLabel: computed("item.ariaLabel", "title", function() {
+    return this.getProperty(this.item, "ariaLabel") || this.title;
+  }),
 
-    return null;
-  },
+  title: computed("item.title", "rowName", function() {
+    return this.getProperty(this.item, "title") || this.rowName;
+  }),
 
-  @discourseComputed("computedContent")
-  guid(computedContent) {
-    return Ember.guidFor(computedContent);
-  },
+  label: computed("item.label", "title", "rowName", function() {
+    const label =
+      this.getProperty(this.item, "label") || this.title || this.rowName;
+    if (
+      this.selectKit.options.allowAny &&
+      this.rowValue === this.selectKit.filter &&
+      this.getName(this.selectKit.noneItem) !== this.rowName
+    ) {
+      return I18n.t("select_kit.create", { content: label });
+    }
+    return label;
+  }),
 
-  label: or("computedContent.label", "title", "name"),
+  didReceiveAttrs() {
+    this._super(...arguments);
 
-  name: alias("computedContent.name"),
-
-  value: alias("computedContent.value"),
-
-  @discourseComputed("templateForRow")
-  template(templateForRow) {
-    return templateForRow(this);
-  },
-
-  @on("didReceiveAttrs")
-  _setSelectionState() {
     this.setProperties({
-      isSelected: this.computedValue === this.value,
-      isHighlighted: this.get("highlighted.value") === this.value
+      rowName: this.getName(this.item),
+      rowValue: this.getValue(this.item)
     });
   },
 
-  @on("willDestroyElement")
-  _clearDebounce() {
-    const hoverDebounce = this.hoverDebounce;
-    if (isPresent(hoverDebounce)) {
-      run.cancel(hoverDebounce);
-    }
-  },
+  icons: computed("item.{icon,icons}", function() {
+    const icon = makeArray(this.getProperty(this.item, "icon"));
+    const icons = makeArray(this.getProperty(this.item, "icons"));
+    return icon.concat(icons).filter(Boolean);
+  }),
 
-  @discourseComputed(
-    "computedContent.icon",
-    "computedContent.icons",
-    "computedContent.originalContent.icon"
-  )
-  icons(icon, icons, originalIcon) {
-    return makeArray(icon)
-      .concat(icons)
-      .concat(makeArray(originalIcon))
-      .filter(i => !isEmpty(i));
-  },
+  highlightedValue: computed("selectKit.highlighted", function() {
+    return this.getValue(this.selectKit.highlighted);
+  }),
+
+  isHighlighted: propertyEqual("rowValue", "highlightedValue"),
+
+  isSelected: propertyEqual("rowValue", "value"),
 
   mouseEnter() {
-    this.set(
-      "hoverDebounce",
-      run.debounce(this, this._sendMouseoverAction, 32)
-    );
+    if (!this.isDestroying || !this.isDestroyed) {
+      this.selectKit.onHover(this.rowValue, this.item);
+    }
+    return false;
   },
 
   click() {
-    this.onClickRow(this.computedContent);
-  },
-
-  _sendMouseoverAction() {
-    this.onMouseoverRow(this.computedContent);
+    this.selectKit.select(this.rowValue, this.item);
+    return false;
   }
 });

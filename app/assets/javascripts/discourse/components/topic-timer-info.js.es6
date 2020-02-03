@@ -17,15 +17,6 @@ export default Component.extend({
   notice: null,
   showTopicTimer: null,
 
-  rerenderTriggers: [
-    "topicClosed",
-    "statusType",
-    "executeAt",
-    "basedOnLastPost",
-    "duration",
-    "categoryId"
-  ],
-
   @discourseComputed("statusType")
   canRemoveTimer(type) {
     if (type === REMINDER_TYPE) return true;
@@ -38,7 +29,7 @@ export default Component.extend({
   },
 
   renderTopicTimer() {
-    if (!this.executeAt) {
+    if (!this.executeAt || this.executeAt < moment()) {
       this.set("showTopicTimer", null);
       return;
     }
@@ -50,7 +41,6 @@ export default Component.extend({
     const statusUpdateAt = moment(this.executeAt);
     const duration = moment.duration(statusUpdateAt - moment());
     const minutesLeft = duration.asMinutes();
-
     if (minutesLeft > 0) {
       let rerenderDelay = 1000;
       if (minutesLeft > 2160) {
@@ -82,9 +72,11 @@ export default Component.extend({
         );
       }
 
-      this.set("title", `${moment(this.executeAt).format("LLLL")}`.htmlSafe());
-      this.set("notice", `${I18n.t(this._noticeKey(), options)}`.htmlSafe());
-      this.set("showTopicTimer", true);
+      this.setProperties({
+        title: `${moment(this.executeAt).format("LLLL")}`.htmlSafe(),
+        notice: `${I18n.t(this._noticeKey(), options)}`.htmlSafe(),
+        showTopicTimer: true
+      });
 
       // TODO Sam: concerned this can cause a heavy rerender loop
       if (ENV.environment !== "test") {

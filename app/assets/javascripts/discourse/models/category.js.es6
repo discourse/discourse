@@ -120,15 +120,14 @@ const Category = RestModel.extend({
     return topicCount > (this.num_featured_topics || 2);
   },
 
-  @discourseComputed("topic_count", "subcategories")
-  totalTopicCount(topicCount, subcats) {
-    let count = topicCount;
-    if (subcats) {
-      subcats.forEach(s => {
-        count += s.get("topic_count");
+  @discourseComputed("topic_count", "subcategories.[]")
+  totalTopicCount(topicCount, subcategories) {
+    if (subcategories) {
+      subcategories.forEach(subcategory => {
+        topicCount += subcategory.topic_count;
       });
     }
-    return count;
+    return topicCount;
   },
 
   save() {

@@ -20,7 +20,7 @@
     {{/admin-form-row}}
 
     {{#admin-form-row label="admin.api.user_mode"}}
-      {{combo-box content=userModes value=userMode onSelect=(action "changeUserMode")}}
+      {{combo-box content=userModes value=userMode onChange=(action "changeUserMode")}}
     {{/admin-form-row}}
 
     {{#if showUserSelector}}
@@ -28,7 +28,7 @@
         {{user-selector single="true"
           usernames=model.username
           placeholderKey="admin.api.user_placeholder"
-          }}  
+          }}
       {{/admin-form-row}}
     {{/if}}
     {{#admin-form-row}}

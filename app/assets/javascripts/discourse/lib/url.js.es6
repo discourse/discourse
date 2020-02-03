@@ -292,6 +292,10 @@ const DiscourseURL = EmberObject.extend({
     return this.handleURL(path, opts);
   },
 
+  routeToUrl(url, opts = {}) {
+    this.routeTo(Discourse.getURL(url), opts);
+  },
+
   rewrite(regexp, replacement, opts) {
     rewrites.push({ regexp, replacement, opts: opts || {} });
   },

@@ -12,7 +12,9 @@
         {{combo-box
           value=selectedUserBadgeId
           nameProperty="badge.name"
-          content=selectableUserBadges}}
+          content=selectableUserBadges
+          onChange=(action (mut selectedUserBadgeId))
+        }}
       </div>
     </div>
 

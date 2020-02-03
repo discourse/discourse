@@ -1,23 +1,16 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import { computed } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["group-member-dropdown"],
-  classNames: "group-member-dropdown",
-  showFullTitle: false,
-  allowInitialValueMutation: false,
-  allowAutoSelectFirst: false,
+  classNames: ["group-member-dropdown"],
 
-  init() {
-    this._super(...arguments);
-
-    this.headerIcon = ["wrench"];
+  selectKitOptions: {
+    icon: "wrench",
+    showFullTitle: false
   },
 
-  autoHighlight() {},
-
-  @discourseComputed("member.owner")
-  content(isOwner) {
+  content: computed("member.owner", function() {
     const items = [
       {
         id: "removeMember",
@@ -29,8 +22,8 @@ export default DropdownSelectBoxComponent.extend({
       }
     ];
 
-    if (this.currentUser && this.currentUser.admin) {
-      if (isOwner) {
+    if (this.get("currentUser.admin")) {
+      if (this.member.owner) {
         items.push({
           id: "removeOwner",
           name: I18n.t("groups.members.remove_owner"),
@@ -52,19 +45,5 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     return items;
-  },
-
-  mutateValue(id) {
-    switch (id) {
-      case "removeMember":
-        this.removeMember(this.member);
-        break;
-      case "makeOwner":
-        this.makeOwner(this.get("member.username"));
-        break;
-      case "removeOwner":
-        this.removeOwner(this.member);
-        break;
-    }
-  }
+  })
 });

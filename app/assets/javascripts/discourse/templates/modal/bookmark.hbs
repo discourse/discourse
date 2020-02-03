@@ -24,17 +24,17 @@
       {{#if userHasTimezoneSet}}
         {{#tap-tile-grid activeTile=selectedReminderType as |grid|}}
           {{#if usingMobileDevice}}
-            <!-- {{tap-tile icon="desktop" text=(i18n "bookmarks.reminders.at_desktop") tileId=reminderTypes.AT_DESKTOP activeTile=grid.activeTile onSelect=(action "selectReminderType")}} -->
+            <!-- {{tap-tile icon="desktop" text=(i18n "bookmarks.reminders.at_desktop") tileId=reminderTypes.AT_DESKTOP activeTile=grid.activeTile onChange=(action "selectReminderType")}} -->
           {{/if}}
 
           {{#if showLaterToday}}
-            {{tap-tile icon="far-moon" text=laterTodayFormatted tileId=reminderTypes.LATER_TODAY activeTile=grid.activeTile onSelect=(action "selectReminderType")}}
+            {{tap-tile icon="far-moon" text=laterTodayFormatted tileId=reminderTypes.LATER_TODAY activeTile=grid.activeTile onChange=(action "selectReminderType")}}
           {{/if}}
-          {{tap-tile icon="briefcase" text=nextBusinessDayFormatted tileId=reminderTypes.NEXT_BUSINESS_DAY activeTile=grid.activeTile onSelect=(action "selectReminderType")}}
-          {{tap-tile icon="far-sun" text=tomorrowFormatted tileId=reminderTypes.TOMORROW activeTile=grid.activeTile onSelect=(action "selectReminderType")}}
-          {{tap-tile icon="far-clock" text=nextWeekFormatted tileId=reminderTypes.NEXT_WEEK activeTile=grid.activeTile onSelect=(action "selectReminderType")}}
-          {{tap-tile icon="far-calendar-plus" text=nextMonthFormatted tileId=reminderTypes.NEXT_MONTH activeTile=grid.activeTile onSelect=(action "selectReminderType")}}
-          <!-- {{tap-tile icon="calendar-alt" text=(I18n "bookmarks.reminders.custom") tileId=reminderTypes.CUSTOM activeTile=grid.activeTile onSelect=(action "selectReminderType")}} -->
+          {{tap-tile icon="briefcase" text=nextBusinessDayFormatted tileId=reminderTypes.NEXT_BUSINESS_DAY activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+          {{tap-tile icon="far-sun" text=tomorrowFormatted tileId=reminderTypes.TOMORROW activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+          {{tap-tile icon="far-clock" text=nextWeekFormatted tileId=reminderTypes.NEXT_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+          {{tap-tile icon="far-calendar-plus" text=nextMonthFormatted tileId=reminderTypes.NEXT_MONTH activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+          <!-- {{tap-tile icon="calendar-alt" text=(I18n "bookmarks.reminders.custom") tileId=reminderTypes.CUSTOM activeTile=grid.activeTile onChange=(action "selectReminderType")}} -->
         {{/tap-tile-grid}}
       {{else}}
         <div class="alert alert-info">{{{i18n "bookmarks.no_timezone" basePath=basePath }}}</div>

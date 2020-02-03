@@ -23,14 +23,14 @@ export default class ComponentConnector {
         .lookupFactory(`component:${componentName}`)
         .create(opts);
 
-      // component connector is not triggering didReceiveAttrs
-      // so we make sure to compute the component attrs
-      if (view.selectKitComponent) {
-        view._compute();
-      }
-
       if (setOwner) {
         setOwner(view, getOwner(mounted));
+      }
+
+      // component connector is not triggering didReceiveAttrs
+      // we force it for selectKit components
+      if (view.selectKit) {
+        view.didReceiveAttrs();
       }
 
       mounted._connected.push(view);

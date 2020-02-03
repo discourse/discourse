@@ -1,40 +1,30 @@
-import { alias } from "@ember/object/computed";
-import { isEmpty } from "@ember/utils";
+import { readOnly } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
 import ComboBoxSelectBoxHeaderComponent from "select-kit/components/combo-box/combo-box-header";
 import discourseComputed from "discourse-common/utils/decorators";
-import Category from "discourse/models/category";
 
 export default ComboBoxSelectBoxHeaderComponent.extend({
   layoutName:
     "select-kit/templates/components/category-drop/category-drop-header",
-  classNames: "category-drop-header",
-
+  classNames: ["category-drop-header"],
   classNameBindings: ["categoryStyleClass"],
-  categoryStyleClass: alias("site.category_style"),
+  categoryStyleClass: readOnly("site.category_style"),
 
-  @discourseComputed("computedContent.value", "computedContent.name")
-  category(value, name) {
-    if (isEmpty(value)) {
-      const uncat = Category.findUncategorized();
-      if (uncat && uncat.get("name") === name) {
-        return uncat;
-      }
-    } else {
-      return Category.findById(parseInt(value, 10));
-    }
-  },
-
-  @discourseComputed("category.color")
+  @discourseComputed("selectedContent.color")
   categoryBackgroundColor(categoryColor) {
     return categoryColor || "#e9e9e9";
   },
 
-  @discourseComputed("category.text_color")
+  @discourseComputed("selectedContent.text_color")
   categoryTextColor(categoryTextColor) {
     return categoryTextColor || "#333";
   },
 
-  @discourseComputed("category", "categoryBackgroundColor", "categoryTextColor")
+  @discourseComputed(
+    "selectedContent",
+    "categoryBackgroundColor",
+    "categoryTextColor"
+  )
   categoryStyle(category, categoryBackgroundColor, categoryTextColor) {
     const categoryStyle = this.siteSettings.category_style;
 
@@ -56,12 +46,16 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
     }
   },
 
-  didRender() {
+  didInsertElement() {
     this._super(...arguments);
 
-    this.element.setAttribute("style", this.categoryStyle);
-    this.element
-      .querySelector(".caret-icon")
-      .setAttribute("style", this.categoryStyle);
+    schedule("afterRender", () => {
+      if (this.categoryStyle) {
+        this.element.setAttribute("style", this.categoryStyle);
+        this.element
+          .querySelector(".caret-icon")
+          .setAttribute("style", this.categoryStyle);
+      }
+    });
   }
 });

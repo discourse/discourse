@@ -1,23 +1,13 @@
-import NotificationOptionsComponent from "select-kit/components/notifications-button";
-import discourseComputed from "discourse-common/utils/decorators";
+import NotificationsButtonComponent from "select-kit/components/notifications-button";
 
-export default NotificationOptionsComponent.extend({
+export default NotificationsButtonComponent.extend({
   pluginApiIdentifiers: ["tag-notifications-button"],
-  classNames: "tag-notifications-button",
-  i18nPrefix: "tagging.notifications",
-  showFullTitle: false,
-  allowInitialValueMutation: false,
+  classNames: ["tag-notifications-button"],
 
-  mutateValue(value) {
-    this.action(value);
+  selectKitOptions: {
+    showFullTitle: false,
+    i18nPrefix: "i18nPrefix"
   },
 
-  computeValue() {
-    return this.notificationLevel;
-  },
-
-  @discourseComputed("iconForSelectedDetails")
-  headerIcon(iconForSelectedDetails) {
-    return iconForSelectedDetails;
-  }
+  i18nPrefix: "tagging.notifications"
 });
