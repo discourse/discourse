@@ -77,11 +77,6 @@ describe CategoryList do
       notification_level = CategoryList.new(Guardian.new).categories.find { |c| c.id == category.id }.notification_level
       expect(notification_level).to eq(CategoryUser.notification_levels[:regular])
     end
-
-    it "removes the default muted categories for anonymous" do
-      SiteSetting.default_categories_muted = category.id.to_s
-      expect(CategoryList.new(Guardian.new).categories).not_to include(category)
-    end
   end
 
   context "with a category" do
