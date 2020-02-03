@@ -597,6 +597,14 @@ describe Email::Receiver do
       MD
     end
 
+    it "works with removed attachments" do
+      SiteSetting.authorized_extensions = "jpg"
+
+      expect { process(:removed_attachments) }.to change { topic.posts.count }
+      post = topic.posts.last
+      expect(post.uploads).to be_empty
+    end
+
     it "supports eml attachments" do
       SiteSetting.authorized_extensions = "eml"
       expect { process(:attached_eml_file) }.to change { topic.posts.count }
