@@ -101,6 +101,9 @@ QUnit.test("replying to post - toggle_whisper", async assert => {
 });
 
 QUnit.test("replying to post - reply_as_new_topic", async assert => {
+  sandbox
+    .stub(Draft, "get")
+    .returns(Promise.resolve({ draft: "", draft_sequence: 0 }));
   const composerActions = selectKit(".composer-actions");
   const categoryChooser = selectKit(".title-wrapper .category-chooser");
   const categoryChooserReplyArea = selectKit(".reply-area .category-chooser");
@@ -131,6 +134,7 @@ QUnit.test("replying to post - reply_as_new_topic", async assert => {
       .val()
       .includes(quote)
   );
+  sandbox.restore()
 });
 
 QUnit.test("reply_as_new_topic with new_topic draft", async assert => {
@@ -160,6 +164,7 @@ QUnit.test("reply_as_new_topic without a new_topic draft", async assert => {
   await composerActions.expand();
   await composerActions.selectRowByValue("reply_as_new_topic");
   assert.equal(exists(find(".bootbox")), false);
+  sandbox.restore()
 });
 
 QUnit.test("shared draft", async assert => {
