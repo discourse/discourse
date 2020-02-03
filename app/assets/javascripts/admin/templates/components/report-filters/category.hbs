@@ -1,7 +1,5 @@
 {{search-advanced-category-chooser
   filterable=true
   value=category
-  castInteger=true
-  onSelectNone=(action "onChange")
-  onDeselect=(action "onDeselect")
-  onSelect=(action "onChange")}}
+  onChange=(action (mut category))
+}}

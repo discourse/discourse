@@ -45,7 +45,9 @@
               class="pin-until"
               includeFarFuture=true
               clearable=true
-              input=model.pinnedInCategoryUntil}}
+              input=model.pinnedInCategoryUntil
+              onChangeInput=(action (mut model.pinnedInCategoryUntil))
+            }}
             {{popup-input-tip validation=pinInCategoryValidation shownAt=pinInCategoryTipShownAt}}
           </p>
         {{else}}
@@ -56,7 +58,9 @@
               class="pin-until"
               includeFarFuture=true
               clearable=true
-              input=model.pinnedInCategoryUntil}}
+              input=model.pinnedInCategoryUntil
+              onChangeInput=(action (mut model.pinnedInCategoryUntil))
+            }}
             {{popup-input-tip validation=pinInCategoryValidation shownAt=pinInCategoryTipShownAt}}
           </p>
         {{/if}}
@@ -89,7 +93,9 @@
               class="pin-until"
               includeFarFuture=true
               clearable=true
-              input=model.pinnedGloballyUntil}}
+              input=model.pinnedGloballyUntil
+              onChangeInput=(action (mut model.pinnedGloballyUntil))
+            }}
             {{popup-input-tip validation=pinGloballyValidation shownAt=pinGloballyTipShownAt}}
           </p>
         {{else}}
@@ -100,7 +106,9 @@
               class="pin-until"
               includeFarFuture=true
               clearable=true
-              input=model.pinnedGloballyUntil}}
+              input=model.pinnedGloballyUntil
+              onChangeInput=(action (mut model.pinnedGloballyUntil))
+            }}
             {{popup-input-tip validation=pinGloballyValidation shownAt=pinGloballyTipShownAt}}
           </p>
         {{/if}}

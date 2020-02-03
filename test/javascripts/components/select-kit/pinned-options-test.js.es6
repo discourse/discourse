@@ -11,7 +11,7 @@ const buildTopic = function() {
   });
 };
 
-moduleForComponent("pinned-options", {
+moduleForComponent("select-kit/pinned-options", {
   integration: true,
   beforeEach: function() {
     this.set("subject", selectKit());
@@ -24,12 +24,13 @@ componentTest("updating the content refreshes the list", {
   beforeEach() {
     this.siteSettings.automatically_unpin_topics = false;
     this.set("topic", buildTopic());
-    this.set("pinned", true);
+    this.set("pinned", "pinned");
   },
 
   async test(assert) {
     assert.equal(this.subject.header().name(), "pinned");
 
+    // we do it manually as clearPin is an ajax call
     await this.set("pinned", false);
 
     assert.equal(this.subject.header().name(), "unpinned");

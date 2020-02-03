@@ -1,53 +1,44 @@
 import MultiSelectComponent from "select-kit/components/multi-select";
-const { isNone, makeArray } = Ember;
+import { MAIN_COLLECTION } from "select-kit/components/select-kit";
+import { computed } from "@ember/object";
+import { readOnly } from "@ember/object/computed";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["list-setting"],
-  classNames: "list-setting",
-  tokenSeparator: "|",
-  settingValue: "",
+  classNames: ["list-setting"],
   choices: null,
-  filterable: true,
+  nameProperty: null,
+  valueProperty: null,
+  content: readOnly("choices"),
 
-  init() {
+  selectKitOptions: {
+    filterable: true,
+    selectedNameComponent: "selectedNameComponent"
+  },
+
+  modifyComponentForRow(collection) {
+    if (
+      collection === MAIN_COLLECTION &&
+      this.settingName &&
+      this.settingName.indexOf("color") > -1
+    ) {
+      return "create-color-row";
+    }
+  },
+
+  selectedNameComponent: computed("settingName", function() {
+    if (this.settingName && this.settingName.indexOf("color") > -1) {
+      return "selected-color";
+    } else {
+      return "selected-name";
+    }
+  }),
+
+  deselect(value) {
+    this.onChangeChoices &&
+      this.onChangeChoices([...new Set([value, ...makeArray(this.choices)])]);
+
     this._super(...arguments);
-
-    if (!isNone(this.settingName)) {
-      this.set("nameProperty", this.settingName);
-    }
-
-    if (this.nameProperty.indexOf("color") > -1) {
-      this.headerComponentOptions.setProperties({
-        selectedNameComponent: "multi-select/selected-color"
-      });
-    }
-  },
-
-  computeContent() {
-    let content;
-    if (isNone(this.choices)) {
-      content = this.settingValue.split(this.tokenSeparator);
-    } else {
-      content = this.choices;
-    }
-
-    return makeArray(content).filter(c => c);
-  },
-
-  mutateValues(values) {
-    this.set("settingValue", values.join(this.tokenSeparator));
-  },
-
-  computeValues() {
-    return this.settingValue.split(this.tokenSeparator).filter(c => c);
-  },
-
-  _handleTabOnKeyDown(event) {
-    if (this.$highlightedRow().length === 1) {
-      this._super(event);
-    } else {
-      this.close();
-      return false;
-    }
   }
 });

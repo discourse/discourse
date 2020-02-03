@@ -10,10 +10,13 @@
 
   <div class='controls controls-dropdown'>
     <label for="user-email-messages-level">{{i18n 'user.email_messages_level'}}</label>
-    {{combo-box valueAttribute="value"
-                content=emailLevelOptions
-                value=model.user_option.email_messages_level
-                id="user-email-messages-level"}}
+    {{combo-box
+      valueProperty="value"
+      content=emailLevelOptions
+      value=model.user_option.email_messages_level
+      id="user-email-messages-level"
+      onChange=(action (mut model.user_option.email_messages_level))
+    }}
     {{#if emailMessagesLevelAway}}
       <div class='instructions'>{{emailFrequencyInstructions}}</div>
     {{/if}}
@@ -21,10 +24,13 @@
 
   <div class='controls controls-dropdown'>
     <label for="user-email-level">{{i18n 'user.email_level.title'}}</label>
-    {{combo-box valueAttribute="value"
-                content=emailLevelOptions
-                value=model.user_option.email_level
-                id="user-email-level"}}
+    {{combo-box
+      valueProperty="value"
+      content=emailLevelOptions
+      value=model.user_option.email_level
+      id="user-email-level"
+      onChange=(action (mut model.user_option.email_level))
+    }}
     {{#if emailLevelAway}}
       <div class='instructions'>{{emailFrequencyInstructions}}</div>
     {{/if}}
@@ -32,7 +38,12 @@
 
   <div class='controls controls-dropdown'>
     <label>{{i18n 'user.email_previous_replies.title'}}</label>
-    {{combo-box valueAttribute="value" content=previousRepliesOptions value=model.user_option.email_previous_replies}}
+    {{combo-box
+      valueProperty="value"
+      content=previousRepliesOptions
+      value=model.user_option.email_previous_replies
+      onChange=(action (mut model.user_option.email_previous_replies))
+    }}
   </div>
   {{preference-checkbox labelKey="user.email_in_reply_to" checked=model.user_option.email_in_reply_to}}
 
@@ -45,7 +56,13 @@
     {{preference-checkbox labelKey="user.email_digests.title" disabled=model.user_option.mailing_list_mode checked=model.user_option.email_digests}}
     {{#if model.user_option.email_digests}}
       <div class='controls controls-dropdown'>
-        {{combo-box valueAttribute="value" filterable=true content=digestFrequencies value=model.user_option.digest_after_minutes}}
+        {{combo-box
+          valueProperty="value"
+          filterable=true
+          content=digestFrequencies
+          value=model.user_option.digest_after_minutes
+          onChange=(action (mut model.user_option.digest_after_minutes))
+        }}
       </div>
       {{preference-checkbox labelKey="user.include_tl0_in_digests" disabled=model.user_option.mailing_list_mode checked=model.user_option.include_tl0_in_digests}}
     {{/if}}
@@ -59,7 +76,12 @@
     <div class='instructions'>{{{i18n 'user.mailing_list_mode.instructions'}}}</div>
     {{#if model.user_option.mailing_list_mode}}
       <div class='controls controls-dropdown'>
-        {{combo-box valueAttribute="value" content=mailingListModeOptions value=model.user_option.mailing_list_mode_frequency}}
+        {{combo-box
+          valueProperty="value"
+          content=mailingListModeOptions
+          value=model.user_option.mailing_list_mode_frequency
+          onChange=(action (mut model.user_option.mailing_list_mode_frequency))
+        }}
       </div>
     {{/if}}
   </div>

@@ -1,50 +1,42 @@
-import { alias } from "@ember/object/computed";
+import { reads, gte } from "@ember/object/computed";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
-import discourseComputed from "discourse-common/utils/decorators";
+import { computed } from "@ember/object";
+import { setting } from "discourse/lib/computed";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["group-dropdown"],
-  classNames: "group-dropdown",
-  content: alias("groups"),
+  classNames: ["group-dropdown"],
+  content: reads("groupsWithShortcut"),
   tagName: "li",
-  caretDownIcon: "caret-right",
-  caretUpIcon: "caret-down",
-  allowAutoSelectFirst: false,
-  valueAttribute: "name",
+  valueProperty: null,
+  nameProperty: null,
+  hasManyGroups: gte("content.length", 10),
+  enableGroupDirectory: setting("enable_group_directory"),
 
-  @discourseComputed("content")
-  filterable(content) {
-    return content && content.length >= 10;
+  selectKitOptions: {
+    caretDownIcon: "caret-right",
+    caretUpIcon: "caret-down",
+    filterable: "hasManyGroups"
   },
 
-  computeHeaderContent() {
-    let content = this._super(...arguments);
+  groupsWithShortcut: computed("groups.[]", function() {
+    const shortcuts = [];
 
-    if (!this.hasSelection) {
-      content.label = `<span>${I18n.t("groups.index.all")}</span>`;
+    if (this.enableGroupDirectory || this.get("currentUser.staff")) {
+      shortcuts.push(I18n.t("groups.index.all").toLowerCase());
     }
 
-    return content;
-  },
-
-  @discourseComputed
-  collectionHeader() {
-    if (
-      this.siteSettings.enable_group_directory ||
-      (this.currentUser && this.currentUser.get("staff"))
-    ) {
-      return `
-        <a href="${Discourse.getURL("/g")}" class="group-dropdown-filter">
-          ${I18n.t("groups.index.all").toLowerCase()}
-        </a>
-      `.htmlSafe();
-    }
-  },
+    return shortcuts.concat(this.groups);
+  }),
 
   actions: {
-    onSelect(groupName) {
-      DiscourseURL.routeTo(Discourse.getURL(`/g/${groupName}`));
+    onChange(groupName) {
+      if ((this.groups || []).includes(groupName)) {
+        DiscourseURL.routeToUrl(`/g/${groupName}`);
+      } else {
+        DiscourseURL.routeToUrl(`/g`);
+      }
     }
   }
 });

@@ -1,10 +1,9 @@
 {{combo-box
-  castInteger=true
   filterable=true
-  valueAttribute="value"
+  valueProperty="value"
   content=groupOptions
   value=groupId
   allowAny=filter.allow_any
   none="admin.dashboard.reports.groups"
-  onSelectNone=(action "onChange")
-  onSelect=(action "onChange")}}
+  onChange=(action "onChange")
+}}

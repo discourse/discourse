@@ -155,9 +155,8 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
       });
     },
 
-    changeTagNotification(id) {
-      const tagNotification = this.tagNotification;
-      tagNotification.update({ notification_level: id });
+    changeTagNotificationLevel(notificationLevel) {
+      this.tagNotification.update({ notification_level: notificationLevel });
     }
   }
 });

@@ -5,7 +5,11 @@
     <div class='reviewable-score-type'>
       <div class='title'>{{rst.title}}</div>
       <div class='field'>
-        {{combo-box value=rst.reviewable_priority content=settings.reviewable_priorities}}
+        {{combo-box
+          value=rst.reviewable_priority
+          content=settings.reviewable_priorities
+          onChange=(action (mut rst.reviewable_priority))
+        }}
       </div>
     </div>
   {{/each}}

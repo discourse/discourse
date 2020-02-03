@@ -1,67 +1,71 @@
-const { run, get } = Ember;
+import { reads } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
-  willDestroyElement() {
-    this._super(...arguments);
-
-    const searchDebounce = this.searchDebounce;
-    if (searchDebounce) run.cancel(searchDebounce);
-  },
-
-  searchTags(url, data, callback, options) {
-    options = options || {};
-
-    if (!options.background) this.startLoading();
-
+  searchTags(url, data, callback) {
     return ajax(Discourse.getURL(url), {
       quietMillis: 200,
       cache: true,
       dataType: "json",
       data
     })
-      .then(json => {
-        this.set("asyncContent", callback(this, json));
-        if (!options.background) this.autoHighlight();
-      })
-      .catch(error => popupAjaxError(error))
-      .finally(() => {
-        if (!options.background) this.stopLoading();
-      });
+      .then(json => callback(this, json))
+      .catch(popupAjaxError);
   },
 
-  validateCreate(term) {
-    if (this.hasReachedMaximum || !this.site.get("can_create_tag")) {
+  selectKitOptions: {
+    allowAny: "allowAnyTag"
+  },
+
+  allowAnyTag: reads("site.can_create_tag"),
+
+  validateCreate(filter, content) {
+    if (this.selectKit.hasReachedMaximum) {
+      this.addError(
+        I18n.t("select_kit.max_content_reached", {
+          count: this.selectKit.limit
+        })
+      );
       return false;
     }
 
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
-    term = term
+    filter = filter
       .replace(filterRegexp, "")
       .trim()
       .toLowerCase();
 
-    if (!term.length || this.termMatchesForbidden) {
+    if (this.termMatchesForbidden) {
       return false;
     }
 
-    if (this.get("siteSettings.max_tag_length") < term.length) {
+    if (
+      !filter.length ||
+      this.get("siteSettings.max_tag_length") < filter.length
+    ) {
+      this.addError(
+        I18n.t("select_kit.invalid_selection_length", {
+          count: `[1 - ${this.get("siteSettings.max_tag_length")}]`
+        })
+      );
       return false;
     }
 
     const toLowerCaseOrUndefined = string => {
-      return string === undefined ? undefined : string.toLowerCase();
+      return Ember.isEmpty(string) ? undefined : string.toLowerCase();
     };
 
-    const inCollection = this.collectionComputedContent
-      .map(c => toLowerCaseOrUndefined(get(c, "id")))
-      .includes(term);
+    const inCollection = content
+      .map(c => toLowerCaseOrUndefined(this.getValue(c)))
+      .filter(Boolean)
+      .includes(filter);
 
-    const inSelection = this.selection
-      .map(s => toLowerCaseOrUndefined(get(s, "value")))
-      .includes(term);
+    const inSelection = (this.value || [])
+      .map(s => toLowerCaseOrUndefined(s))
+      .filter(Boolean)
+      .includes(filter);
 
     if (inCollection || inSelection) {
       return false;
@@ -72,16 +76,16 @@ export default Mixin.create({
 
   createContentFromInput(input) {
     // See lib/discourse_tagging#clean_tag.
-    let content = input
+    input = input
       .trim()
       .replace(/\s+/g, "-")
       .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/g, "")
       .substring(0, this.siteSettings.max_tag_length);
 
     if (this.siteSettings.force_lowercase_tags) {
-      content = content.toLowerCase();
+      input = input.toLowerCase();
     }
 
-    return content;
+    return input;
   }
 });

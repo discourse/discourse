@@ -1,7 +1,10 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 
 export default Component.extend({
+  tokenSeparator: "|",
+
   init() {
     this._super(...arguments);
 
@@ -17,6 +20,17 @@ export default Component.extend({
     ];
   },
 
+  groupTrustLevel: computed(
+    "model.grant_trust_level",
+    "trustLevelOptions",
+    function() {
+      return (
+        this.model.get("grant_trust_level") ||
+        this.trustLevelOptions.firstObject.value
+      );
+    }
+  ),
+
   @discourseComputed("model.visibility_level", "model.public_admission")
   disableMembershipRequestSetting(visibility_level, publicAdmission) {
     visibility_level = parseInt(visibility_level, 10);
@@ -30,5 +44,11 @@ export default Component.extend({
   disablePublicSetting(visibility_level, allowMembershipRequests) {
     visibility_level = parseInt(visibility_level, 10);
     return allowMembershipRequests || visibility_level > 1;
+  },
+
+  actions: {
+    onChangeEmailDomainsSetting(value) {
+      this.set("model.emailDomains", value.join(this.tokenSeparator));
+    }
   }
 });

@@ -13,7 +13,11 @@
   </td>
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.category"}}</div>
-    {{category-chooser value=categoryId class="small"}}
+    {{category-chooser
+      value=categoryId
+      class="small"
+      onChange=(action (mut categoryId))
+    }}
   </td>
   <td class="editing-controls">
     {{d-button icon="check" action=(action "save") class="btn-primary" disabled=cantSave}}

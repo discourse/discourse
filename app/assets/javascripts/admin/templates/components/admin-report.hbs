@@ -130,7 +130,10 @@
             </span>
 
             <div class="input">
-              {{date-input date=startDate onChange=(action "onChangeStartDate")}}
+              {{date-input
+                date=startDate
+                onChange=(action "onChangeStartDate")
+              }}
             </div>
           </div>
 
@@ -140,7 +143,10 @@
             </span>
 
             <div class="input">
-              {{date-input date=endDate onChange=(action "onChangeEndDate")}}
+              {{date-input
+                date=endDate
+                onChange=(action "onChangeEndDate")
+              }}
             </div>
           </div>
         {{/if}}

@@ -54,7 +54,10 @@
 </div>
 
 {{#if showNotificationsButton}}
-  {{topic-notifications-button notificationLevel=topic.details.notification_level topic=topic}}
+  {{topic-notifications-button
+    notificationLevel=topic.details.notification_level
+    topic=topic
+  }}
 {{/if}}
 
 {{plugin-outlet name="after-topic-footer-buttons"

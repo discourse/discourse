@@ -11,8 +11,8 @@ export default Component.extend({
   },
 
   actions: {
-    updateDestinationCategory(category) {
-      return this.topic.updateDestinationCategory(category.get("id"));
+    updateDestinationCategory(categoryId) {
+      return this.topic.updateDestinationCategory(categoryId);
     },
 
     publish() {

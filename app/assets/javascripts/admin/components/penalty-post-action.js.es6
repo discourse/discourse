@@ -21,13 +21,11 @@ export default Component.extend({
 
   actions: {
     penaltyChanged() {
-      let postAction = this.postAction;
-
       // If we switch to edit mode, jump to the edit textarea
-      if (postAction === "edit") {
+      if (this.postAction === "edit") {
         scheduleOnce("afterRender", () => {
-          let elem = this.element;
-          let body = elem.closest(".modal-body");
+          const elem = this.element;
+          const body = elem.closest(".modal-body");
           body.scrollTop(body.height());
           elem.querySelector(".post-editor").focus();
         });

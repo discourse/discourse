@@ -1,59 +1,157 @@
-import { alias, none, or } from "@ember/object/computed";
+import { computed } from "@ember/object";
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import UtilsMixin from "select-kit/mixins/utils";
+import { schedule } from "@ember/runloop";
+import { makeArray } from "discourse-common/lib/helpers";
 
-const { isEmpty, makeArray } = Ember;
+export default Component.extend(UtilsMixin, {
+  eventType: "click",
 
-export default Component.extend({
-  layoutName: "select-kit/templates/components/select-kit/select-kit-header",
+  click(event) {
+    if (typeof document === "undefined") return;
+    if (this.isDestroyed || !this.selectKit || this.selectKit.isDisabled)
+      return;
+    if (this.eventType !== "click" || event.button !== 0) return;
+    this.selectKit.toggle(event);
+  },
+
   classNames: ["select-kit-header"],
-  classNameBindings: ["isFocused", "isNone"],
+  classNameBindings: ["isFocused"],
   attributeBindings: [
     "tabindex",
-    "ariaLabel:aria-label",
+    "ariaOwns:aria-owns",
     "ariaHasPopup:aria-haspopup",
-    "sanitizedTitle:title",
-    "value:data-value",
-    "name:data-name"
+    "ariaIsExpanded:aria-expanded",
+    "selectKitId:data-select-kit-id",
+    "roleButton:role",
+    "selectedValue:data-value",
+    "selectedNames:data-name",
+    "serializedNames:title"
   ],
 
-  forceEscape: alias("options.forceEscape"),
+  selectedValue: computed("value", function() {
+    return this.value === this.getValue(this.selectKit.noneItem)
+      ? null
+      : makeArray(this.value).join(",");
+  }),
 
-  isNone: none("computedContent.value"),
+  selectedNames: computed("selectedContent.[]", function() {
+    return makeArray(this.selectedContent)
+      .map(s => this.getName(s))
+      .join(",");
+  }),
 
-  ariaHasPopup: "true",
+  icons: computed("selectKit.options.{icon,icons}", function() {
+    const icon = makeArray(this.selectKit.options.icon);
+    const icons = makeArray(this.selectKit.options.icons);
+    return icon.concat(icons).filter(Boolean);
+  }),
 
-  ariaLabel: or("computedContent.ariaLabel", "sanitizedTitle"),
+  selectKitId: computed("selectKit.uniqueID", function() {
+    return `${this.selectKit.uniqueID}-header`;
+  }),
 
-  @discourseComputed("computedContent.title", "name")
-  title(computedContentTitle, name) {
-    if (computedContentTitle) return computedContentTitle;
-    if (name) return name;
+  ariaIsExpanded: computed("selectKit.isExpanded", function() {
+    return this.selectKit.isExpanded ? "true" : "false";
+  }),
 
-    return "";
+  ariaHasPopup: true,
+
+  ariaOwns: computed("selectKit.uniqueID", function() {
+    return `[data-select-kit-id=${this.selectKit.uniqueID}-body]`;
+  }),
+
+  roleButton: "button",
+
+  tabindex: 0,
+
+  keyDown(event) {
+    if (this.selectKit.isDisabled) {
+      return;
+    }
+
+    if (!this.selectKit.onKeydown(event)) {
+      return false;
+    }
+
+    const onlyShiftKey = event.shiftKey && event.keyCode === 16;
+    if (event.metaKey || onlyShiftKey) {
+      return;
+    }
+
+    if (event.keyCode === 13) {
+      // Enter
+      if (this.selectKit.isExpanded && this.selectKit.highlighted) {
+        this.selectKit.select(this.getValue(this.selectKit.highlighted));
+        return false;
+      } else {
+        this.selectKit.toggle(event);
+      }
+    } else if (event.keyCode === 38) {
+      // Up arrow
+      if (this.selectKit.isExpanded) {
+        this.selectKit.highlightPrevious();
+      } else {
+        this.selectKit.open(event);
+      }
+      return false;
+    } else if (event.keyCode === 40) {
+      // Down arrow
+      if (this.selectKit.isExpanded) {
+        this.selectKit.highlightNext();
+      } else {
+        this.selectKit.open(event);
+      }
+      return false;
+    } else if (event.keyCode === 37 || event.keyCode === 39) {
+      // Do nothing for left/right arrow
+      return true;
+    } else if (event.keyCode === 32) {
+      // Space
+      event.preventDefault(); // prevents the space to trigger a scroll page-next
+      this.selectKit.toggle(event);
+    } else if (event.keyCode === 27) {
+      // Escape
+      this.selectKit.close(event);
+    } else if (event.keyCode === 8) {
+      // Backspace
+      this._focusFilterInput();
+    } else if (event.keyCode === 9) {
+      // Tab
+      if (this.selectKit.highlighted && this.selectKit.isExpanded) {
+        this.selectKit.select(this.getValue(this.selectKit.highlighted));
+      }
+      this.selectKit.close(event);
+    } else if (
+      this.selectKit.options.filterable ||
+      this.selectKit.options.autoFilterable ||
+      this.selectKit.options.allowAny
+    ) {
+      if (this.selectKit.isExpanded) {
+        this._focusFilterInput();
+      } else {
+        this.selectKit.open(event);
+        schedule("afterRender", () => this._focusFilterInput());
+      }
+    } else {
+      if (this.selectKit.isExpanded) {
+        return false;
+      } else {
+        return true;
+      }
+    }
   },
 
-  // this might need a more advanced solution
-  // but atm it's the only case we have to handle
-  @discourseComputed("title")
-  sanitizedTitle(title) {
-    return String(title).replace("&hellip;", "");
-  },
+  _focusFilterInput() {
+    const filterContainer = document.querySelector(
+      `[data-select-kit-id=${this.selectKit.uniqueID}-filter]`
+    );
 
-  label: or("computedContent.label", "title", "name"),
+    if (filterContainer) {
+      filterContainer.style.display = "flex";
 
-  name: alias("computedContent.name"),
-
-  value: alias("computedContent.value"),
-
-  @discourseComputed("computedContent.icon", "computedContent.icons")
-  icons(icon, icons) {
-    return makeArray(icon)
-      .concat(icons)
-      .filter(i => !isEmpty(i));
-  },
-
-  click() {
-    this.onToggle();
+      const filterInput = filterContainer.querySelector(".filter-input");
+      filterInput && filterInput.focus();
+    }
   }
 });
