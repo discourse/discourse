@@ -1,5 +1,5 @@
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { alias } from "@ember/object/computed";
+import { reads } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -10,14 +10,36 @@ export default Controller.extend(bufferedProperty("model"), {
   adminBadges: inject(),
   saving: false,
   savingStatus: "",
-
-  badgeTypes: alias("adminBadges.badgeTypes"),
-  badgeGroupings: alias("adminBadges.badgeGroupings"),
-  badgeTriggers: alias("adminBadges.badgeTriggers"),
-  protectedSystemFields: alias("adminBadges.protectedSystemFields"),
-
-  readOnly: alias("buffered.system"),
+  badgeTypes: reads("adminBadges.badgeTypes"),
+  badgeGroupings: reads("adminBadges.badgeGroupings"),
+  badgeTriggers: reads("adminBadges.badgeTriggers"),
+  protectedSystemFields: reads("adminBadges.protectedSystemFields"),
+  readOnly: reads("buffered.system"),
   showDisplayName: propertyNotEqual("name", "displayName"),
+
+  init() {
+    this._super(...arguments);
+
+    // this is needed because the model doesnt have default values
+    // and as we are using a bufferedProperty it's not accessible
+    // in any other way
+    Ember.run.next(() => {
+      if (!this.model.badge_type_id) {
+        this.model.set("badge_type_id", this.get("badgeTypes.firstObject.id"));
+      }
+
+      if (!this.model.badge_grouping_id) {
+        this.model.set(
+          "badge_grouping_id",
+          this.get("badgeGroupings.firstObject.id")
+        );
+      }
+
+      if (!this.model.trigger) {
+        this.model.set("trigger", this.get("badgeTriggers.firstObject.id"));
+      }
+    });
+  },
 
   @discourseComputed("model.query", "buffered.query")
   hasQuery(modelQuery, bufferedQuery) {

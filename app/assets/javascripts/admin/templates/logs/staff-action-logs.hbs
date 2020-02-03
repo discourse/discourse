@@ -30,7 +30,13 @@
     {{/if}}
   </div>
   {{else}}
-    {{i18n "admin.logs.staff_actions.filter"}} {{combo-box content=userHistoryActions value=filterActionId none="admin.logs.staff_actions.all" onSelect=(action "filterActionIdChanged")}}
+    {{i18n "admin.logs.staff_actions.filter"}}
+    {{combo-box
+      content=userHistoryActions
+      value=filterActionId
+      none="admin.logs.staff_actions.all"
+      onChange=(action "filterActionIdChanged")
+    }}
   {{/if}}
 
   {{d-button class="btn-default" action=(action "exportStaffActionLogs") label="admin.export_csv.button_text" icon="download"}}

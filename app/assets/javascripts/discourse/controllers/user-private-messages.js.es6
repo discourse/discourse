@@ -59,6 +59,9 @@ export default Controller.extend({
   },
 
   actions: {
+    changeGroupNotificationLevel(notificationLevel) {
+      this.group.setNotification(notificationLevel, this.get("user.id"));
+    },
     archive() {
       this.bulkOperation("archive_messages");
     },

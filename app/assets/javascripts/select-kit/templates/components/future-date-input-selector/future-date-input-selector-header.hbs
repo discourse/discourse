@@ -4,25 +4,16 @@
   </div>
 {{/if}}
 
-<span class="selected-name" title={{title}}>
-  {{#if forceEscape}}
-    {{label}}
-  {{else}}
-    {{{label}}}
-  {{/if}}
-</span>
+{{component selectKit.options.selectedNameComponent
+  tabindex=tabindex
+  item=selectedContent
+  selectKit=selectKit
+}}
 
-{{#if computedContent.datetime}}
+{{#if selectedContent.datetime}}
   <span class="future-date-input-selector-datetime">
-    {{computedContent.datetime}}
+    {{selectedContent.datetime}}
   </span>
-{{/if}}
-
-{{#if shouldDisplayClearableButton}}
-  {{d-button
-    class="btn-clear"
-    action=(action onClearSelection bubbles=false)
-    icon="times"}}
 {{/if}}
 
 {{d-icon caretIcon class="caret-icon"}}

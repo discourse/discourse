@@ -25,11 +25,12 @@
       </h2>
     {{/if}}
 
-
     {{#if tagNotification}}
       {{#unless additionalTags}}
-        {{tag-notifications-button action=(action "changeTagNotification")
-                                   notificationLevel=tagNotification.notification_level}}
+        {{tag-notifications-button
+          onChange=(action "changeTagNotificationLevel")
+          value=tagNotification.notification_level
+        }}
       {{/unless}}
     {{/if}}
 

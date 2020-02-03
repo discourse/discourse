@@ -3,5 +3,5 @@ import DropdownSelectBoxHeaderomponent from "select-kit/components/dropdown-sele
 export default DropdownSelectBoxHeaderomponent.extend({
   layoutName:
     "select-kit/templates/components/period-chooser/period-chooser-header",
-  classNames: "period-chooser-header"
+  classNames: ["period-chooser-header"]
 });

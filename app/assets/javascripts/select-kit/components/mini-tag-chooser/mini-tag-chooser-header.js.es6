@@ -1,7 +1,7 @@
-import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
+import ComboBoxSelectBoxHeaderComponent from "select-kit/components/combo-box/combo-box-header";
 
-export default SelectKitHeaderComponent.extend({
+export default ComboBoxSelectBoxHeaderComponent.extend({
   layoutName:
     "select-kit/templates/components/mini-tag-chooser/mini-tag-chooser-header",
-  classNames: "mini-tag-chooser-header"
+  classNames: ["mini-tag-chooser-header"]
 });

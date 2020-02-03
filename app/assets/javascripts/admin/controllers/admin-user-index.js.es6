@@ -278,7 +278,7 @@ export default Controller.extend(CanCheckEmails, {
     },
 
     resetCustomGroups() {
-      this.set("customGroupIdsBuffer", null);
+      this.set("customGroupIdsBuffer", this.model.customGroups.mapBy("id"));
     },
 
     savePrimaryGroup() {

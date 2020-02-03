@@ -1,6 +1,8 @@
 .select-kit {
   &.combo-box {
     &.tag-drop {
+      min-width: auto;
+
       .select-kit-row {
         &[data-value="all-tags"],
         &[data-value="no-tags"] {

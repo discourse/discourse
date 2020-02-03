@@ -144,7 +144,9 @@
       {{combo-box
         value=newTitleInput
         content=model.availableTitles
-        none="user.title.none"}}
+        none="user.title.none"
+        onChange=(action (mut newTitleInput))
+      }}
     </div>
   </div>
 {{/if}}

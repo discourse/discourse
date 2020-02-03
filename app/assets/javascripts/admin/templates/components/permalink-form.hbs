@@ -8,7 +8,11 @@
   autocorrect="off"
   autocapitalize="off"}}
 
-{{combo-box content=permalinkTypes value=permalinkType}}
+{{combo-box
+  content=permalinkTypes
+  value=permalinkType
+  onChange=(action (mut permalinkType))
+}}
 
 {{text-field
   value=permalink_type_value

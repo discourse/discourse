@@ -1,47 +1,38 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import { computed } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["tags-admin-dropdown"],
   classNames: "tags-admin-dropdown",
-  showFullTitle: false,
-  allowInitialValueMutation: false,
   actionsMapping: null,
 
-  init() {
-    this._super(...arguments);
-
-    this.headerIcon = ["bars", "caret-down"];
+  selectKitOptions: {
+    icons: ["bars", "caret-down"],
+    showFullTitle: false
   },
 
-  autoHighlight() {},
-
-  computeContent() {
-    const items = [
+  content: computed(function() {
+    return [
       {
         id: "manageGroups",
         name: I18n.t("tagging.manage_groups"),
         description: I18n.t("tagging.manage_groups_description"),
-        icon: "wrench",
-        __sk_row_type: "noopRow"
+        icon: "wrench"
       },
       {
         id: "uploadTags",
         name: I18n.t("tagging.upload"),
         description: I18n.t("tagging.upload_description"),
-        icon: "upload",
-        __sk_row_type: "noopRow"
+        icon: "upload"
       },
       {
         id: "deleteUnusedTags",
         name: I18n.t("tagging.delete_unused"),
         description: I18n.t("tagging.delete_unused_description"),
-        icon: "trash-alt",
-        __sk_row_type: "noopRow"
+        icon: "trash-alt"
       }
     ];
-
-    return items;
-  },
+  }),
 
   actions: {
     onSelect(id) {
