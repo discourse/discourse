@@ -54,9 +54,7 @@ module Onebox
       end
 
       def placeholder_html
-        width  = @placeholder_width  || 690
-        height = @placeholder_height || 400
-        "<img src='#{@placeholder}' width='#{width}' height='#{height}'/>"
+        ::Onebox::Helpers.map_placeholder_html
       end
 
       private

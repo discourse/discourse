@@ -224,6 +224,10 @@ module Onebox
       "<div class='onebox-placeholder-container'><span class='placeholder-icon audio'></span></div>"
     end
 
+    def self.map_placeholder_html
+      "<div class='onebox-placeholder-container'><span class='placeholder-icon map'></span></div>"
+    end
+
     def self.generic_placeholder_html
       "<div class='onebox-placeholder-container'><span class='placeholder-icon generic'></span></div>"
     end
