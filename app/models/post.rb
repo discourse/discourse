@@ -819,9 +819,11 @@ class Post < ActiveRecord::Base
         UNION
         SELECT reply_post_id, level + 1
         FROM post_replies AS r
+          JOIN posts AS p ON p.id = reply_post_id
           JOIN breadcrumb AS b ON (r.post_id = b.id)
         WHERE r.post_id <> r.reply_post_id
-              AND b.level < :max_reply_level
+          AND b.level < :max_reply_level
+          AND p.topic_id = :topic_id
       ), breadcrumb_with_count AS (
           SELECT
             id,
@@ -844,7 +846,7 @@ class Post < ActiveRecord::Base
     # for example it skips a post when it contains 2 quotes (which are replies) from different posts
     builder.where("count = 1") if only_replies_to_single_post
 
-    replies = builder.query_hash(post_id: id, max_reply_level: MAX_REPLY_LEVEL)
+    replies = builder.query_hash(post_id: id, max_reply_level: MAX_REPLY_LEVEL, topic_id: topic_id)
     replies.each { |r| r.symbolize_keys! }
 
     secured_ids = Post.secured(guardian).where(id: replies.map { |r| r[:id] }).pluck(:id).to_set
