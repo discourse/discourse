@@ -65,6 +65,11 @@ describe User do
         expect(user.errors.full_messages.first)
           .to include(user_error_message(:name, :same_as_password))
       end
+
+      it "doesn't raise an error if the name is longer than the max password length" do
+        user.name = 'x' * 220
+        expect(user).to be_valid
+      end
     end
 
     describe 'emails' do

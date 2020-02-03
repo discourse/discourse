@@ -1402,10 +1402,11 @@ class User < ActiveRecord::Base
   end
 
   def name_validator
-    if name.present? &&
-      (confirm_password?(name) || confirm_password?(name&.downcase))
-
-      errors.add(:name, :same_as_password)
+    if name.present?
+      name_pw = name[0...User.max_password_length]
+      if confirm_password?(name_pw) || confirm_password?(name_pw.downcase)
+        errors.add(:name, :same_as_password)
+      end
     end
   end
 

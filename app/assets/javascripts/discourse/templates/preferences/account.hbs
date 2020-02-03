@@ -30,7 +30,7 @@
     <label class="control-label">{{i18n 'user.name.title'}}</label>
     <div class="controls">
       {{#if model.can_edit_name}}
-        {{text-field value=newNameInput classNames="input-xxlarge"}}
+        {{text-field value=newNameInput classNames="input-xxlarge" maxlength="255"}}
       {{else}}
         <span class='static'>{{model.name}}</span>
       {{/if}}
