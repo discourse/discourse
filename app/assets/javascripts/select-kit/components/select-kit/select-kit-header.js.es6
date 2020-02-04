@@ -89,7 +89,10 @@ export default Component.extend(UtilsMixin, {
       // Enter
       if (this.selectKit.isExpanded) {
         if (this.selectKit.highlighted) {
-          this.selectKit.select(this.getValue(this.selectKit.highlighted));
+          this.selectKit.select(
+            this.getValue(this.selectKit.highlighted),
+            this.selectKit.highlighted
+          );
           return false;
         }
       } else {
@@ -127,7 +130,10 @@ export default Component.extend(UtilsMixin, {
     } else if (event.keyCode === 9) {
       // Tab
       if (this.selectKit.highlighted && this.selectKit.isExpanded) {
-        this.selectKit.select(this.getValue(this.selectKit.highlighted));
+        this.selectKit.select(
+          this.getValue(this.selectKit.highlighted),
+          this.selectKit.highlighted
+        );
       }
       this.selectKit.close(event);
     } else if (

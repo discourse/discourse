@@ -80,10 +80,11 @@ export default SelectKitComponent.extend({
   },
 
   selectedContent: computed("value.[]", "content.[]", function() {
-    if (this.value && this.value.length) {
+    const value = Ember.makeArray(this.value);
+    if (value.length) {
       let content = [];
 
-      this.value.forEach(v => {
+      value.forEach(v => {
         if (this.selectKit.valueProperty) {
           const c = makeArray(this.content).findBy(
             this.selectKit.valueProperty,

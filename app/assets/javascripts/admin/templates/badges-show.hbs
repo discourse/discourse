@@ -11,7 +11,15 @@
 
     <div>
       <label for="icon">{{i18n 'admin.badges.icon'}}</label>
-      {{input type="text" name="icon" value=buffered.icon}}
+      {{icon-picker
+        name="icon"
+        value=buffered.icon
+        options=(hash
+          maximum=1
+        )
+        onChange=(action (mut buffered.icon))
+      }}
+
       <p class='help'>{{i18n 'admin.badges.icon_help'}}</p>
     </div>
 
