@@ -1,5 +1,6 @@
 import { acceptance } from "helpers/qunit-helpers";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
+import { action } from "@ember/object";
 
 const PREFIX = "javascripts/single-test/connectors";
 acceptance("Plugin Outlet - Connector Class", {
@@ -9,6 +10,26 @@ acceptance("Plugin Outlet - Connector Class", {
         sayHello() {
           this.set("hello", "hello!");
         }
+      }
+    });
+
+    extraConnectorClass("user-profile-primary/hi", {
+      setupComponent() {
+        this.appEvents.on("hi:sayHi", this, this.say);
+      },
+
+      teardownComponent() {
+        this.appEvents.off("hi:sayHi", this, this.say);
+      },
+
+      @action
+      say() {
+        this.set("hi", "hi!");
+      },
+
+      @action
+      sayHi() {
+        this.appEvents.trigger("hi:sayHi");
       }
     });
 
@@ -26,12 +47,19 @@ acceptance("Plugin Outlet - Connector Class", {
         <span class='hello-result'>{{hello}}</span>`
     );
     Ember.TEMPLATES[
+      `${PREFIX}/user-profile-primary/hi`
+    ] = Ember.HTMLBars.compile(
+      `<button class='say-hi' {{action "sayHi"}}></button>
+        <span class='hi-result'>{{hi}}</span>`
+    );
+    Ember.TEMPLATES[
       `${PREFIX}/user-profile-primary/dont-render`
     ] = Ember.HTMLBars.compile(`I'm not rendered!`);
   },
 
   afterEach() {
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/hello`];
+    delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/hi`];
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/dont-render`];
   }
 });
@@ -53,4 +81,7 @@ QUnit.test("Renders a template into the outlet", async assert => {
     "hello!",
     "actions delegate properly"
   );
+
+  await click(".say-hi");
+  assert.equal(find(".hi-result").text(), "hi!", "actions delegate properly");
 });

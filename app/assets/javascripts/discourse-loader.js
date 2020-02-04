@@ -16,6 +16,7 @@ var define, requirejs;
         inject: Ember.inject.controller
       },
       "@ember/object": {
+        action: Ember._action,
         default: Ember.Object,
         get: Ember.get,
         getProperties: Ember.getProperties,
