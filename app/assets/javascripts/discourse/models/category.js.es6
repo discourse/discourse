@@ -85,6 +85,14 @@ const Category = RestModel.extend({
     return notificationLevel === NotificationLevels.MUTED;
   },
 
+  @discourseComputed("notification_level")
+  notificationLevelString(notificationLevel) {
+    // Get the key from the value
+    return Object.keys(NotificationLevels)
+      .find(key => NotificationLevels[key] === notificationLevel)
+      .toLowerCase();
+  },
+
   @discourseComputed("name")
   url() {
     return Discourse.getURL(`/c/${Category.slugFor(this)}/${this.id}`);
