@@ -170,9 +170,9 @@ module DiscoursePoll
         valid = false
       elsif ((max - min + 1) / step) < 2
         if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
-          @post.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_2_options"))
+          @post.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_1_option"))
         else
-          @post.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_2_options", name: poll["name"]))
+          @post.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_1_option", name: poll["name"]))
         end
         valid = false
       end

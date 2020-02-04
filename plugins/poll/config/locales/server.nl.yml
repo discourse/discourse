@@ -18,8 +18,8 @@ nl:
     invalid_argument: "Ongeldige waarde '%{value}' voor argument '%{argument}'."
     multiple_polls_without_name: "Er zijn meerdere polls zonder naam. Gebruik het attribuut '<code>naam</code>' om uw polls uniek te identificeren."
     multiple_polls_with_same_name: "Er zijn meerdere polls met dezelfde naam : <strong>%{name}</strong>. Gebruik het attribuut '<code>naam</code>' om uw polls uniek te identificeren."
-    default_poll_must_have_at_least_2_options: "De poll moet minimaal 2 opties hebben."
-    named_poll_must_have_at_least_2_options: "De poll met de naam <strong>%{name}</strong> moet minimaal 2 opties hebben."
+    default_poll_must_have_at_least_1_option: "De poll moet minimaal 2 opties hebben."
+    named_poll_must_have_at_least_1_option: "De poll met de naam <strong>%{name}</strong> moet minimaal 2 opties hebben."
     default_poll_must_have_less_options:
       one: "De poll moet minder dan %{count} optie hebben."
       other: "De poll moet minder dan %{count} opties hebben."
