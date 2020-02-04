@@ -1,5 +1,5 @@
 /**
- * @popperjs/core v2.0.0 - MIT License
+ * @popperjs/core v2.0.5 - MIT License
  */
 
 (function (global, factory) {
@@ -22,8 +22,11 @@
     };
   }
 
+  /*:: import type { Window } from '../types'; */
+
+  /*:: declare function getWindow(node: Node | Window): Window; */
   function getWindow(node) {
-    if ({}.toString.call(node) !== '[object Window]') {
+    if (node.toString() !== '[object Window]') {
       var ownerDocument = node.ownerDocument;
       return ownerDocument ? ownerDocument.defaultView : window;
     }
@@ -76,40 +79,30 @@
     return element ? (element.nodeName || '').toLowerCase() : null;
   }
 
-  function getComputedStyle(element) {
-    return getWindow(element).getComputedStyle(element);
+  function getDocumentElement(element) {
+    // $FlowFixMe: assume body is always available
+    return (isElement(element) ? element.ownerDocument : element.document).documentElement;
   }
 
-  function toNumber(cssValue) {
-    return parseFloat(cssValue) || 0;
+  function getWindowScrollBarX(element) {
+    // If <html> has a CSS width greater than the viewport, then this will be
+    // incorrect for RTL.
+    // Popper 1 is broken in this case and never had a bug report so let's assume
+    // it's not an issue. I don't think anyone ever specifies width on <html>
+    // anyway.
+    // Browsers where the left scrollbar doesn't cause an issue report `0` for
+    // this (e.g. Edge 2019, IE11, Safari)
+    return getBoundingClientRect(getDocumentElement(element)).left + getWindowScroll(element).scrollLeft;
   }
 
-  function getBorders(element) {
-    var computedStyle = isHTMLElement(element) ? getComputedStyle(element) : {};
-    return {
-      top: toNumber(computedStyle.borderTopWidth),
-      right: toNumber(computedStyle.borderRightWidth),
-      bottom: toNumber(computedStyle.borderBottomWidth),
-      left: toNumber(computedStyle.borderLeftWidth)
-    };
-  }
-
-  function getInnerOffsets(offsetParent) {
-    var rect = getBoundingClientRect(offsetParent);
-    var borders = getBorders(offsetParent);
-    return {
-      x: rect.x + borders.left,
-      y: rect.y + borders.top
-    };
-  } // Returns the composite rect of an element relative to its offsetParent.
   // Composite means it takes into account transforms as well as layout.
-
 
   function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
     if (isFixed === void 0) {
       isFixed = false;
     }
 
+    var documentElement;
     var rect = getBoundingClientRect(elementOrVirtualElement);
     var scroll = {
       scrollLeft: 0,
@@ -126,7 +119,11 @@
       }
 
       if (isHTMLElement(offsetParent)) {
-        offsets = getInnerOffsets(offsetParent);
+        offsets = getBoundingClientRect(offsetParent);
+        offsets.x += offsetParent.clientLeft;
+        offsets.y += offsetParent.clientTop;
+      } else if (documentElement = getDocumentElement(offsetParent)) {
+        offsets.x = getWindowScrollBarX(documentElement);
       }
     }
 
@@ -162,8 +159,13 @@
     ;
   }
 
+  function getComputedStyle(element) {
+    return getWindow(element).getComputedStyle(element);
+  }
+
   function getScrollParent(node) {
-    if (['html', 'body', '#document'].includes(getNodeName(node))) {
+    if (['html', 'body', '#document'].indexOf(getNodeName(node)) >= 0) {
+      // $FlowFixMe: assume body is always available
       return node.ownerDocument.body;
     }
 
@@ -191,11 +193,12 @@
     var isBody = getNodeName(scrollParent) === 'body';
     var target = isBody ? getWindow(scrollParent) : scrollParent;
     var updatedList = list.concat(target);
-    return isBody ? updatedList : updatedList.concat(listScrollParents(getParentNode(target)));
+    return isBody ? updatedList : // $FlowFixMe: isBody tells us target will be an HTMLElement here
+    updatedList.concat(listScrollParents(getParentNode(target)));
   }
 
   function isTableElement(element) {
-    return ['table', 'td', 'th'].includes(getNodeName(element));
+    return ['table', 'td', 'th'].indexOf(getNodeName(element)) >= 0;
   }
 
   var isFirefox = function isFirefox() {
@@ -353,7 +356,7 @@
             }
 
           case 'phase':
-            if (!modifierPhases.includes(modifier.phase)) {
+            if (modifierPhases.indexOf(modifier.phase) < 0) {
               console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"phase"', "either " + modifierPhases.join(', '), "\"" + String(modifier.phase) + "\""));
             }
 
@@ -511,6 +514,20 @@
               if (!flipModifier) {
                 console.error(['Popper: "auto" placements require the "flip" modifier be', 'present and enabled to work.'].join(' '));
               }
+            }
+
+            var _getComputedStyle = getComputedStyle(popper),
+                marginTop = _getComputedStyle.marginTop,
+                marginRight = _getComputedStyle.marginRight,
+                marginBottom = _getComputedStyle.marginBottom,
+                marginLeft = _getComputedStyle.marginLeft; // We no longer take into account `margins` on the popper, and it can
+            // cause bugs with positioning, so we'll warn the consumer
+
+
+            if ([marginTop, marginRight, marginBottom, marginLeft].some(function (margin) {
+              return parseFloat(margin);
+            })) {
+              console.warn(['Popper: CSS "margin" styles cannot be used to apply padding', 'between the popper and its reference element or boundary.', 'To replicate margin, use the `offset` modifier, as well as', 'the `padding` option in the `preventOverflow` and `flip`', 'modifiers.'].join(' '));
             }
           } // Strip out disabled modifiers
 
@@ -714,7 +731,7 @@
   }
 
   function getMainAxisFromPlacement(placement) {
-    return ['top', 'bottom'].includes(placement) ? 'x' : 'y';
+    return ['top', 'bottom'].indexOf(placement) >= 0 ? 'x' : 'y';
   }
 
   function computeOffsets(_ref) {
@@ -805,10 +822,6 @@
     data: {}
   };
 
-  function getDocumentElement(element) {
-    return element.ownerDocument.documentElement;
-  }
-
   var unsetSides = {
     top: 'auto',
     right: 'auto',
@@ -853,16 +866,21 @@
 
       if (offsetParent === getWindow(popper)) {
         offsetParent = getDocumentElement(popper);
-      }
+      } // $FlowFixMe: force type refinement, we compare offsetParent with window above, but Flow doesn't detect it
+
+      /*:: offsetParent = (offsetParent: Element); */
+
 
       if (placement === top) {
-        y = y - offsetParent.clientHeight + popperRect.height;
         sideY = bottom;
+        y -= offsetParent.clientHeight - popperRect.height;
+        y *= gpuAcceleration ? 1 : -1;
       }
 
       if (placement === left) {
-        x = x - offsetParent.clientWidth + popperRect.width;
         sideX = right;
+        x -= offsetParent.clientWidth - popperRect.width;
+        x *= gpuAcceleration ? 1 : -1;
       }
     }
 
@@ -886,6 +904,13 @@
         gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat,
         _options$adaptive = options.adaptive,
         adaptive = _options$adaptive === void 0 ? true : _options$adaptive;
+
+    {
+      if (adaptive && parseFloat(getComputedStyle(state.elements.popper).transitionDuration)) {
+        console.warn(['Popper: The "computeStyles" modifier\'s `adaptive` option must be', 'disabled if CSS transitions are applied to the popper element.'].join(' '));
+      }
+    }
+
     var commonStyles = {
       placement: getBasePlacement(state.placement),
       popper: state.elements.popper,
@@ -937,9 +962,8 @@
 
 
       Object.assign(element.style, style);
-      Object.entries(attributes).forEach(function (_ref2) {
-        var name = _ref2[0],
-            value = _ref2[1];
+      Object.keys(attributes).forEach(function (name) {
+        var value = attributes[name];
 
         if (value === false) {
           element.removeAttribute(name);
@@ -950,12 +974,13 @@
     });
   }
 
-  function effect$1(_ref3) {
-    var state = _ref3.state;
+  function effect$1(_ref2) {
+    var state = _ref2.state;
     var initialStyles = {
       position: 'absolute',
       left: '0',
-      top: '0'
+      top: '0',
+      margin: '0'
     };
     Object.assign(state.elements.popper.style, initialStyles);
     return function () {
@@ -996,7 +1021,7 @@
 
   function distanceAndSkiddingToXY(placement, rects, offset) {
     var basePlacement = getBasePlacement(placement);
-    var invertDistance = [left, top].includes(basePlacement) ? -1 : 1;
+    var invertDistance = [left, top].indexOf(basePlacement) >= 0 ? -1 : 1;
 
     var _ref = typeof offset === 'function' ? offset(Object.assign({}, rects, {
       placement: placement
@@ -1006,7 +1031,7 @@
 
     skidding = skidding || 0;
     distance = (distance || 0) * invertDistance;
-    return [left, right].includes(basePlacement) ? {
+    return [left, right].indexOf(basePlacement) >= 0 ? {
       x: distance,
       y: skidding
     } : {
@@ -1084,13 +1109,46 @@
     return documentRect;
   }
 
-  function getDecorations(element) {
-    var borders = getBorders(element);
+  function toNumber(cssValue) {
+    return parseFloat(cssValue) || 0;
+  }
+
+  function getBorders(element) {
+    var computedStyle = isHTMLElement(element) ? getComputedStyle(element) : {};
     return {
-      top: borders.top,
-      right: element.offsetWidth - (element.clientWidth + borders.right),
-      bottom: element.offsetHeight - (element.clientHeight + borders.bottom),
-      left: borders.left
+      top: toNumber(computedStyle.borderTopWidth),
+      right: toNumber(computedStyle.borderRightWidth),
+      bottom: toNumber(computedStyle.borderBottomWidth),
+      left: toNumber(computedStyle.borderLeftWidth)
+    };
+  }
+
+  function getDecorations(element) {
+    var win = getWindow(element);
+    var borders = getBorders(element);
+    var isHTML = getNodeName(element) === 'html';
+    var winScrollBarX = getWindowScrollBarX(element);
+    var x = element.clientWidth + borders.right;
+    var y = element.clientHeight + borders.bottom; // HACK:
+    // document.documentElement.clientHeight on iOS reports the height of the
+    // viewport including the bottom bar, even if the bottom bar isn't visible.
+    // If the difference between window innerHeight and html clientHeight is more
+    // than 50, we assume it's a mobile bottom bar and ignore scrollbars.
+    // * A 50px thick scrollbar is likely non-existent (macOS is 15px and Windows
+    //   is about 17px)
+    // * The mobile bar is 114px tall
+
+    if (isHTML && win.innerHeight - element.clientHeight > 50) {
+      y = win.innerHeight - borders.bottom;
+    }
+
+    return {
+      top: isHTML ? 0 : element.clientTop,
+      right: // RTL scrollbar (scrolling containers only)
+      element.clientLeft > borders.left ? borders.right : // LTR scrollbar
+      isHTML ? win.innerWidth - x - winScrollBarX : element.offsetWidth - x,
+      bottom: isHTML ? win.innerHeight - y : element.offsetHeight - y,
+      left: isHTML ? winScrollBarX : element.clientLeft
     };
   }
 
@@ -1105,7 +1163,7 @@
         var next = child;
 
         do {
-          if (next && next.isSameNode(parent)) {
+          if (next && parent.isSameNode(next)) {
             return true;
           } // $FlowFixMe: need a better way to handle this...
 
@@ -1127,15 +1185,6 @@
     });
   }
 
-  function getFreshSideObject() {
-    return {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0
-    };
-  }
-
   function getClientRectFromMixedType(element, clippingParent) {
     return clippingParent === viewport ? rectToClientRect(getViewportRect(element)) : isHTMLElement(clippingParent) ? getBoundingClientRect(clippingParent) : rectToClientRect(getDocumentRect(getDocumentElement(element)));
   } // A "clipping parent" is an overflowable container with the characteristic of
@@ -1145,12 +1194,13 @@
 
   function getClippingParents(element) {
     var clippingParents = listScrollParents(element);
-    var canEscapeClipping = ['absolute', 'fixed'].includes(getComputedStyle(element).position);
+    var canEscapeClipping = ['absolute', 'fixed'].indexOf(getComputedStyle(element).position) >= 0;
     var clipperElement = canEscapeClipping && isHTMLElement(element) ? getOffsetParent(element) : element;
 
     if (!isElement(clipperElement)) {
       return [];
-    }
+    } // $FlowFixMe: https://github.com/facebook/flow/issues/1414
+
 
     return clippingParents.filter(function (clippingParent) {
       return isElement(clippingParent) && contains(clippingParent, clipperElement);
@@ -1165,7 +1215,7 @@
     var firstClippingParent = clippingParents[0];
     var clippingRect = clippingParents.reduce(function (accRect, clippingParent) {
       var rect = getClientRectFromMixedType(element, clippingParent);
-      var decorations = isHTMLElement(clippingParent) ? getDecorations(clippingParent) : getFreshSideObject();
+      var decorations = getDecorations(isHTMLElement(clippingParent) ? clippingParent : getDocumentElement(element));
       accRect.top = Math.max(rect.top + decorations.top, accRect.top);
       accRect.right = Math.min(rect.right - decorations.right, accRect.right);
       accRect.bottom = Math.min(rect.bottom - decorations.bottom, accRect.bottom);
@@ -1177,6 +1227,15 @@
     clippingRect.x = clippingRect.left;
     clippingRect.y = clippingRect.top;
     return clippingRect;
+  }
+
+  function getFreshSideObject() {
+    return {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0
+    };
   }
 
   function mergePaddingObject(paddingObject) {
@@ -1236,8 +1295,8 @@
     if (elementContext === popper && offsetData) {
       var offset = offsetData[placement];
       Object.keys(overflowOffsets).forEach(function (key) {
-        var multiply = [right, bottom].includes(key) ? 1 : -1;
-        var axis = [top, bottom].includes(key) ? 'y' : 'x';
+        var multiply = [right, bottom].indexOf(key) >= 0 ? 1 : -1;
+        var axis = [top, bottom].indexOf(key) >= 0 ? 'y' : 'x';
         overflowOffsets[key] += offset[axis] * multiply;
       });
     }
@@ -1258,7 +1317,7 @@
         flipVariations = _options.flipVariations;
     var variation = getVariation(placement);
     var placements = variation ? flipVariations ? variationPlacements : variationPlacements.filter(function (placement) {
-      return placement.includes(variation);
+      return getVariation(placement) === variation;
     }) : basePlacements; // $FlowFixMe: Flow seems to have problems with two array unions...
 
     var overflows = placements.reduce(function (acc, placement) {
@@ -1302,7 +1361,7 @@
     var preferredPlacement = state.options.placement;
     var basePlacement = getBasePlacement(preferredPlacement);
     var isBasePlacement = basePlacement === preferredPlacement;
-    var fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement ? [getOppositePlacement(preferredPlacement)] : getExpandedFallbackPlacements(preferredPlacement));
+    var fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipVariations ? [getOppositePlacement(preferredPlacement)] : getExpandedFallbackPlacements(preferredPlacement));
     var placements = uniqueBy([preferredPlacement].concat(fallbackPlacements).reduce(function (acc, placement) {
       return getBasePlacement(placement) === auto ? acc.concat(computeAutoPlacement(state, {
         placement: placement,
@@ -1326,7 +1385,7 @@
       var _basePlacement = getBasePlacement(placement);
 
       var isStartVariation = getVariation(placement) === start;
-      var isVertical = [top, bottom].includes(_basePlacement);
+      var isVertical = [top, bottom].indexOf(_basePlacement) >= 0;
       var len = isVertical ? 'width' : 'height';
       var overflow = detectOverflow(state, {
         placement: placement,
@@ -1517,7 +1576,7 @@
     var popperOffsets = state.modifiersData.popperOffsets;
     var basePlacement = getBasePlacement(state.placement);
     var axis = getMainAxisFromPlacement(basePlacement);
-    var isVertical = [left, right].includes(basePlacement);
+    var isVertical = [left, right].indexOf(basePlacement) >= 0;
     var len = isVertical ? 'height' : 'width';
 
     if (!arrowElement) {
