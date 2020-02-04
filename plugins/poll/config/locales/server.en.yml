@@ -30,8 +30,8 @@ en:
     multiple_polls_without_name: "There are multiple polls without a name. Use the '<code>name</code>' attribute to uniquely identify your polls."
     multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
 
-    default_poll_must_have_at_least_2_options: "Poll must have at least 2 options."
-    named_poll_must_have_at_least_2_options: "Poll named <strong>%{name}</strong> must have at least 2 options."
+    default_poll_must_have_at_least_1_option: "Poll must have at least 1 option."
+    named_poll_must_have_at_least_1_option: "Poll named <strong>%{name}</strong> must have at least 1 option."
 
     default_poll_must_have_less_options:
       one: "Poll must have less than %{count} option."
