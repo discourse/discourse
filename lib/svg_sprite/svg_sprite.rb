@@ -312,6 +312,26 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     false
   end
 
+  def self.icon_picker_search(keyword)
+    results = Set.new
+
+    sprite_sources([SiteSetting.default_theme_id]).each do |fname|
+      svg_file = Nokogiri::XML(File.open(fname))
+      svg_filename = "#{File.basename(fname, ".svg")}"
+
+      svg_file.css('symbol').each do |sym|
+        icon_id = prepare_symbol(sym, svg_filename)
+        if keyword.empty? || icon_id.include?(keyword)
+          sym.attributes['id'].value = icon_id
+          sym.css('title').each(&:remove)
+          results.add(id: icon_id, symbol: sym.to_xml)
+        end
+      end
+    end
+
+    results.sort_by { |icon| icon[:id] }
+  end
+
   # For use in no_ember .html.erb layouts
   def self.raw_svg(name)
     get_set_cache("raw_svg_#{name}") do
@@ -404,8 +424,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.process(icon_name)
-    icon_name.strip!
-    FA_ICON_MAP.each { |k, v| icon_name.sub!(k, v) }
+    icon_name = icon_name.strip
+    FA_ICON_MAP.each { |k, v| icon_name = icon_name.sub(k, v) }
     fa4_to_fa5_names[icon_name] || icon_name
   end
 
