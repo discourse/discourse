@@ -5,7 +5,9 @@ module LimitedEdit
 
   def edit_time_limit_expired?(user)
     time_limit = user_time_limit(user)
-    if created_at && time_limit > 0
+    if user.trust_level < SiteSetting.min_trust_to_edit_post
+      true
+    elsif created_at && time_limit > 0
       created_at < time_limit.minutes.ago
     else
       false

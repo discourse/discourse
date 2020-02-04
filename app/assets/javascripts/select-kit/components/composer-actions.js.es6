@@ -5,6 +5,7 @@ import {
   CREATE_SHARED_DRAFT,
   REPLY
 } from "discourse/models/composer";
+import Draft from "discourse/models/draft";
 import { computed } from "@ember/object";
 import { camelize } from "@ember/string";
 
@@ -223,6 +224,21 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   replyAsNewTopicSelected(options) {
+    Draft.get("new_topic").then(response => {
+      if (response.draft) {
+        bootbox.confirm(
+          I18n.t("composer.composer_actions.reply_as_new_topic.confirm"),
+          result => {
+            if (result) this._replyAsNewTopicSelect(options);
+          }
+        );
+      } else {
+        this._replyAsNewTopicSelect(options);
+      }
+    });
+  },
+
+  _replyAsNewTopicSelect(options) {
     options.action = CREATE_TOPIC;
     options.categoryId = this.get("composerModel.topic.category.id");
     options.disableScopedCategory = true;

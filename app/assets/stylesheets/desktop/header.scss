@@ -14,9 +14,10 @@
     margin: 0;
   }
   .extra-info {
-    // header title should not be centered if there's no tags / categories
     &:not(.two-rows) {
-      min-height: 2.75em;
+      .header-title {
+        margin-bottom: 0;
+      }
     }
   }
 }

@@ -65,6 +65,12 @@ export default Component.extend(UtilsMixin, {
 
   tabindex: 0,
 
+  keyUp(event) {
+    if (event.keyCode === 32) {
+      event.preventDefault();
+    }
+  },
+
   keyDown(event) {
     if (this.selectKit.isDisabled) {
       return;

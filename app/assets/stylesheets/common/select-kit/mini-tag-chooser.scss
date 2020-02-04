@@ -27,6 +27,10 @@
           box-shadow: none;
           cursor: pointer;
           max-width: 250px;
+
+          .name {
+            white-space: nowrap;
+          }
         }
       }
 

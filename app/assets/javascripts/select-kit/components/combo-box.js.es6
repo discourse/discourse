@@ -13,5 +13,5 @@ export default SingleSelectComponent.extend({
     headerComponent: "combo-box/combo-box-header"
   },
 
-  autoFilterable: computed.gte("content.length", 5)
+  autoFilterable: computed.gte("content.length", 10)
 });

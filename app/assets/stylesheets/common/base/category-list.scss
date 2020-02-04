@@ -124,8 +124,16 @@
     text-align: center;
     font-size: $font-0;
     color: dark-light-choose($primary-medium, $secondary-high);
+    position: relative;
+
+    //  allow clicks to fall through the description text to the category below...
+    pointer-events: none;
     .overflow {
       max-height: 6em;
+      div a {
+        //  ...but links in description should still be clickable
+        pointer-events: auto;
+      }
     }
   }
 
