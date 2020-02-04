@@ -4503,9 +4503,9 @@ en:
               open:
                 label: "Users can sign up on their own."
               invite_only:
-                label: "Users can sign up on their own, but must be approved by staff."
-              must_approve:
                 label: "Users must be invited by trusted users or staff before they can sign up."
+              must_approve:
+                label: "Users can sign up on their own, but must be approved by staff."
 
       contact:
         title: "Contact"
