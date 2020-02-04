@@ -2,7 +2,8 @@ import selectKit from "helpers/select-kit-helper";
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
-import Draft from "discourse/models/draft"; import { Promise } from "rsvp";
+import Draft from "discourse/models/draft";
+import { Promise } from "rsvp";
 
 acceptance("Composer Actions", {
   loggedIn: true,
