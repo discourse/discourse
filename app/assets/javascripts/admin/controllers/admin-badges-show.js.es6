@@ -24,19 +24,24 @@ export default Controller.extend(bufferedProperty("model"), {
     // and as we are using a bufferedProperty it's not accessible
     // in any other way
     Ember.run.next(() => {
-      if (!this.model.badge_type_id) {
-        this.model.set("badge_type_id", this.get("badgeTypes.firstObject.id"));
-      }
+      if (this.model) {
+        if (!this.model.badge_type_id) {
+          this.model.set(
+            "badge_type_id",
+            this.get("badgeTypes.firstObject.id")
+          );
+        }
 
-      if (!this.model.badge_grouping_id) {
-        this.model.set(
-          "badge_grouping_id",
-          this.get("badgeGroupings.firstObject.id")
-        );
-      }
+        if (!this.model.badge_grouping_id) {
+          this.model.set(
+            "badge_grouping_id",
+            this.get("badgeGroupings.firstObject.id")
+          );
+        }
 
-      if (!this.model.trigger) {
-        this.model.set("trigger", this.get("badgeTriggers.firstObject.id"));
+        if (!this.model.trigger) {
+          this.model.set("trigger", this.get("badgeTriggers.firstObject.id"));
+        }
       }
     });
   },
