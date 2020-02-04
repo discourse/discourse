@@ -74,7 +74,10 @@ export default Component.extend(UtilsMixin, {
 
       // Enter
       if (event.keyCode === 13 && this.selectKit.highlighted) {
-        this.selectKit.select(this.getValue(this.selectKit.highlighted));
+        this.selectKit.select(
+          this.getValue(this.selectKit.highlighted),
+          this.selectKit.highlighted
+        );
         return false;
       }
 
@@ -86,7 +89,10 @@ export default Component.extend(UtilsMixin, {
       // Tab
       if (event.keyCode === 9) {
         if (this.selectKit.highlighted && this.selectKit.isExpanded) {
-          this.selectKit.select(this.getValue(this.selectKit.highlighted));
+          this.selectKit.select(
+            this.getValue(this.selectKit.highlighted),
+            this.selectKit.highlighted
+          );
         }
         this.selectKit.close(event);
         return;
