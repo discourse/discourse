@@ -9,6 +9,7 @@
     "@fortawesome/fontawesome-free": "5.11.2",
     "ace-builds": "1.4.2",
     "bootbox": "3.2.0",
+    "@popperjs/core": "v2.0.5",
     "bootstrap": "v3.4.1",
     "chart.js": "2.9.3",
     "eslint-plugin-lodash": "^6.0.0",
