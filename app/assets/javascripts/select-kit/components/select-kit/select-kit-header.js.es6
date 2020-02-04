@@ -65,6 +65,12 @@ export default Component.extend(UtilsMixin, {
 
   tabindex: 0,
 
+  keyUp(event) {
+    if (event.keyCode === 32) {
+      event.preventDefault();
+    }
+  },
+
   keyDown(event) {
     if (this.selectKit.isDisabled) {
       return;
@@ -81,11 +87,13 @@ export default Component.extend(UtilsMixin, {
 
     if (event.keyCode === 13) {
       // Enter
-      if (this.selectKit.isExpanded && this.selectKit.highlighted) {
-        this.selectKit.select(this.getValue(this.selectKit.highlighted));
-        return false;
+      if (this.selectKit.isExpanded) {
+        if (this.selectKit.highlighted) {
+          this.selectKit.select(this.getValue(this.selectKit.highlighted));
+          return false;
+        }
       } else {
-        this.selectKit.toggle(event);
+        this.selectKit.close(event);
       }
     } else if (event.keyCode === 38) {
       // Up arrow
