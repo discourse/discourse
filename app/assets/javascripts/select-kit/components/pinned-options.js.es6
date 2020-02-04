@@ -27,14 +27,18 @@ export default DropdownSelectBoxComponent.extend({
       {
         id: "pinned",
         name: I18n.t(`topic_statuses.pinned${globally}.title`),
-        description: I18n.t(`topic_statuses.pinned${globally}.help`),
+        description: this.site.mobileView
+          ? null
+          : I18n.t(`topic_statuses.pinned${globally}.help`),
         icon: "thumbtack"
       },
       {
         id: "unpinned",
         name: I18n.t("topic_statuses.unpinned.title"),
         icon: "thumbtack unpinned",
-        description: I18n.t("topic_statuses.unpinned.help")
+        description: this.site.mobileView
+          ? null
+          : I18n.t("topic_statuses.unpinned.help")
       }
     ];
   }),
