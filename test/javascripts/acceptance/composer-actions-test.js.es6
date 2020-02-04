@@ -2,8 +2,7 @@ import selectKit from "helpers/select-kit-helper";
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
-import Draft from "discourse/models/draft";
-import { Promise } from "rsvp";
+import Draft from "discourse/models/draft"; import { Promise } from "rsvp";
 
 acceptance("Composer Actions", {
   loggedIn: true,
@@ -411,5 +410,5 @@ QUnit.test("reply_as_new_topic with new_topic draft", async assert => {
     find(".bootbox .modal-body").text(),
     I18n.t("composer.composer_actions.reply_as_new_topic.confirm")
   );
-  await click(".modal-footer .btn.btn-danger");
+  await click(".modal-footer .btn.btn-default");
 });
