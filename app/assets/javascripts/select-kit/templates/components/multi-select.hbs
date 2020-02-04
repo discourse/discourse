@@ -1,50 +1,34 @@
-{{#component headerComponent
-  tabindex=tabindex
-  isFocused=isFocused
-  isExpanded=isExpanded
-  highlightedSelection=highlightedSelection
-  onClickSelectionItem=(action "onClickSelectionItem")
-  computedContent=headerComputedContent
-  onToggle=(action "onToggle")
-  options=headerComponentOptions
-}}
-  {{component filterComponent
-    icon=filterIcon
-    placeholder=filterPlaceholder
-    filter=filter
-    hasSelection=hasSelection
-    isLoading=isLoading
-    shouldDisplayFilter=shouldDisplayFilter
-    isFocused=isFocused
-    onFilterComputedContent=(action "onFilterComputedContent")
+{{#unless isHidden}}
+  {{component selectKit.options.headerComponent
+    tabindex=tabindex
+    value=value
+    selectedContent=selectedContent
+    selectKit=selectKit
   }}
-{{/component}}
 
-<div class="select-kit-body">
-  {{#if renderedBodyOnce}}
-  {{#unless isLoading}}
-    {{component collectionComponent
-      collectionHeaderComputedContent=collectionHeaderComputedContent
-      hasSelection=hasSelection
-      noneRowComputedContent=noneRowComputedContent
-      createRowComputedContent=createRowComputedContent
-      collectionComputedContent=collectionComputedContent
-      rowComponent=rowComponent
-      noneRowComponent=noneRowComponent
-      createRowComponent=createRowComponent
-      templateForRow=templateForRow
-      templateForNoneRow=templateForNoneRow
-      templateForCreateRow=templateForCreateRow
-      onClickRow=(action "onClickRow")
-      onMouseoverRow=(action "onMouseoverRow")
-      highlighted=highlighted
-      computedValue=computedValue
-      rowComponentOptions=rowComponentOptions
-      noContentRow=noContentRow
-      validationMessage=validationMessage
-    }}
-  {{/unless}}
-  {{/if}}
-</div>
+  {{#select-kit/select-kit-body selectKit=selectKit}}
+    {{#unless selectKit.isLoading}}
+      {{#if selectKit.filter}}
+      {{#if selectKit.hasNoContent}}
+        <span class="no-content">
+          {{i18n "select_kit.no_content"}}
+        </span>
+      {{/if}}
+      {{/if}}
 
-<div class="select-kit-wrapper"></div>
+      {{#each collections as |collection|}}
+        {{component (component-for-collection collection.identifier selectKit)
+          collection=collection
+          selectKit=selectKit
+          value=value
+        }}
+      {{/each}}
+    {{else}}
+      <span class="is-loading">
+        {{loading-spinner size="small"}}
+      </span>
+    {{/unless}}
+  {{/select-kit/select-kit-body}}
+
+  <div class="select-kit-wrapper"></div>
+{{/unless}}

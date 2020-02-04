@@ -42,14 +42,6 @@
       }
     }
 
-    &.is-highlighted {
-      .multi-select-header {
-        border-radius: 0;
-        border-bottom: 1px solid transparent;
-        box-shadow: shadow("focus");
-      }
-    }
-
     &.is-expanded {
       .select-kit-wrapper {
         display: block;
@@ -69,11 +61,10 @@
     }
 
     .choices {
-      margin: 0 2px;
+      margin: 0;
+      padding: 0 0 2px 0;
       box-sizing: border-box;
-      display: flex;
-      justify-content: flex-start;
-      flex-wrap: wrap;
+      display: block;
       width: 100%;
 
       .choice {
@@ -81,19 +72,23 @@
         box-sizing: border-box;
         align-items: center;
         justify-content: space-between;
-        flex-wrap: wrap;
-        flex-direction: row;
-        margin: 1px 0px 2px 2px;
+        margin: 2px 0 0px 3px;
+        padding: 0;
+        float: left;
+        height: 30px;
+
+        &.input-wrapper {
+          min-width: 120px;
+        }
       }
 
       .filter {
-        align-items: center;
-        justify-content: flex-start;
         white-space: nowrap;
         min-width: 50px;
         padding: 0;
         outline: none;
-        flex: 1 0 0px;
+        flex: 1;
+        display: flex;
 
         .filter-input,
         .filter-input:focus {
@@ -147,19 +142,20 @@
       }
 
       .selected-name {
-        .footer {
-          display: flex;
-          width: 100%;
-        }
-
-        .body {
-          background: $primary-low;
-          padding: 4px;
-        }
+        background: $primary-low;
+        padding: 0.25em;
+        flex: 1;
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
 
         .d-icon {
           color: $primary-low-mid;
           vertical-align: middle;
+
+          &:last-child {
+            margin-left: 0.5em;
+          }
         }
         &:hover .d-icon:last-child {
           color: $danger;

@@ -1604,6 +1604,7 @@ en:
       min_content_not_reached:
         one: "Select at least {{count}} item."
         other: "Select at least {{count}} items."
+      invalid_selection_length: "Selection must be at least {{count}} characters."
 
     date_time_picker:
       from: From

@@ -1,6 +1,11 @@
 <p>{{i18n "topics.bulk.choose_new_category"}}</p>
 
-<p>{{category-chooser value=newCategoryId}}</p>
+<p>
+  {{category-chooser
+    value=newCategoryId
+    onChange=(action (mut newCategoryId))
+  }}
+</p>
 
 {{#conditional-loading-spinner condition=loading}}
   {{d-button action=(action "changeCategory") label="topics.bulk.change_category"}}

@@ -52,7 +52,11 @@
                 </li>
                 {{#if canMuteOrIgnoreUser}}
                   <li>
-                    {{user-notifications-dropdown user=model updateNotificationLevel=(action "updateNotificationLevel")}}
+                    {{user-notifications-dropdown
+                      user=model
+                      value=userNotificationLevel
+                      updateNotificationLevel=(action "updateNotificationLevel")
+                    }}
                   </li>
                 {{/if}}
               {{/if}}

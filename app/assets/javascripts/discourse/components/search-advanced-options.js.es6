@@ -553,7 +553,6 @@ export default Component.extend({
     }
   },
 
-  @observes("searchedTerms.time.when", "searchedTerms.time.days")
   updateSearchTermForPostTime() {
     const match = this.filterBlocks(REGEXP_POST_TIME_PREFIX);
     const timeDaysFilter = this.get("searchedTerms.time.days");
@@ -603,5 +602,28 @@ export default Component.extend({
 
   badgeFinder(term) {
     return Badge.findAll({ search: term });
+  },
+
+  actions: {
+    onChangeWhenTime(time) {
+      if (time) {
+        this.set("searchedTerms.time.when", time);
+        this.updateSearchTermForPostTime();
+      }
+    },
+    onChangeWhenDate(date) {
+      if (date) {
+        this.set("searchedTerms.time.days", moment(date).format("YYYY-MM-DD"));
+        this.updateSearchTermForPostTime();
+      }
+    },
+
+    onChangeCategory(categoryId) {
+      if (categoryId) {
+        this.set("searchedTerms.category", Category.findById(categoryId));
+      } else {
+        this.set("searchedTerms.category", null);
+      }
+    }
   }
 });

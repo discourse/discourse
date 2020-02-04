@@ -10,6 +10,16 @@ export default buildCategoryPanel("security", {
   interactedWithDropdowns: false,
 
   @on("init")
+  _setup() {
+    this.setProperties({
+      selectedGroup: this.get("category.availableGroups.firstObject"),
+      selectedPermission: this.get(
+        "category.availablePermissions.firstObject.id"
+      )
+    });
+  },
+
+  @on("init")
   _registerValidator() {
     this.registerValidator(() => {
       if (
@@ -24,8 +34,18 @@ export default buildCategoryPanel("security", {
   },
 
   actions: {
-    onDropdownChange() {
-      this.set("interactedWithDropdowns", true);
+    onSelectGroup(selectedGroup) {
+      this.setProperties({
+        interactedWithDropdowns: true,
+        selectedGroup
+      });
+    },
+
+    onSelectPermission(selectedPermission) {
+      this.setProperties({
+        interactedWithDropdowns: true,
+        selectedPermission
+      });
     },
 
     editPermissions() {
@@ -42,11 +62,8 @@ export default buildCategoryPanel("security", {
         });
       }
 
-      this.set(
-        "selectedGroup",
-        this.get("category.availableGroups.firstObject")
-      );
       this.setProperties({
+        selectedGroup: this.get("category.availableGroups.firstObject"),
         showPendingGroupChangesAlert: false,
         interactedWithDropdowns: false
       });

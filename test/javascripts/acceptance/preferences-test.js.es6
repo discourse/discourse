@@ -414,3 +414,31 @@ QUnit.test("setting featured topic on profile", async assert => {
     "clear button is present"
   );
 });
+
+acceptance("Custom User Fields", {
+  loggedIn: true,
+  site: {
+    user_fields: [
+      {
+        id: 30,
+        name: "What kind of pet do you have?",
+        field_type: "dropdown",
+        options: ["Dog", "Cat", "Hamster"],
+        required: true
+      }
+    ]
+  }
+});
+
+QUnit.test("can select an option from a dropdown", async assert => {
+  await visit("/u/eviltrout/preferences/profile");
+  assert.ok(exists(".user-field"), "it has at least one user field");
+  await click(".user-field.dropdown");
+
+  const field = selectKit(
+    ".user-field-what-kind-of-pet-do-you-have .combo-box"
+  );
+  await field.expand();
+  await field.selectRowByValue("Cat");
+  assert.equal(field.header().value(), "Cat", "it sets the value of the field");
+});

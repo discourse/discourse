@@ -1,20 +1,18 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
-import { empty, alias } from "@ember/object/computed";
+import { empty, reads } from "@ember/object/computed";
 import Component from "@ember/component";
 import { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNameBindings: [":value-list"],
-
   inputInvalid: empty("newValue"),
-
   inputDelimiter: null,
   inputType: null,
   newValue: "",
   collection: null,
   values: null,
-  noneKey: alias("addKey"),
+  noneKey: reads("addKey"),
 
   @on("didReceiveAttrs")
   _setupCollection() {
@@ -47,7 +45,7 @@ export default Component.extend({
     addValue(newValue) {
       if (this.inputInvalid) return;
 
-      this.set("newValue", "");
+      this.set("newValue", null);
       this._addValue(newValue);
     },
 
@@ -62,12 +60,26 @@ export default Component.extend({
 
   _addValue(value) {
     this.collection.addObject(value);
+
+    if (this.choices) {
+      this.set("choices", this.choices.rejectBy("id", value));
+    } else {
+      this.set("choices", []);
+    }
+
     this._saveValues();
   },
 
   _removeValue(value) {
-    const collection = this.collection;
-    collection.removeObject(value);
+    this.collection.removeObject(value);
+
+    const item = { id: value, name: value };
+    if (this.choices) {
+      this.choices.addObject(item);
+    } else {
+      this.set("choices", makeArray(item));
+    }
+
     this._saveValues();
   },
 

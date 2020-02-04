@@ -1,20 +1,16 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { on } from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { computed } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["pinned-options"],
-  classNames: "pinned-options",
-  allowInitialValueMutation: false,
+  classNames: ["pinned-options"],
 
-  autoHighlight() {},
-
-  computeHeaderContent() {
-    let content = this._super(...arguments);
+  modifySelection(content) {
     const pinnedGlobally = this.get("topic.pinned_globally");
-    const pinned = this.computedValue;
+    const pinned = this.value;
     const globally = pinnedGlobally ? "_globally" : "";
-    const state = pinned ? `pinned${globally}` : "unpinned";
+    const state = pinned === "pinned" ? `pinned${globally}` : "unpinned";
     const title = I18n.t(`topic_statuses.${state}.title`);
 
     content.label = `${title}${iconHTML("caret-down")}`.htmlSafe();
@@ -24,15 +20,14 @@ export default DropdownSelectBoxComponent.extend({
     return content;
   },
 
-  @on("init")
-  _setContent() {
-    const globally = this.get("topic.pinned_globally") ? "_globally" : "";
+  content: computed(function() {
+    const globally = this.topic.pinned_globally ? "_globally" : "";
 
-    this.set("content", [
+    return [
       {
         id: "pinned",
-        name: I18n.t("topic_statuses.pinned" + globally + ".title"),
-        description: I18n.t("topic_statuses.pinned" + globally + ".help"),
+        name: I18n.t(`topic_statuses.pinned${globally}.title`),
+        description: I18n.t(`topic_statuses.pinned${globally}.help`),
         icon: "thumbtack"
       },
       {
@@ -41,14 +36,14 @@ export default DropdownSelectBoxComponent.extend({
         icon: "thumbtack unpinned",
         description: I18n.t("topic_statuses.unpinned.help")
       }
-    ]);
-  },
+    ];
+  }),
 
   actions: {
-    onSelect() {
+    onSelect(value) {
       const topic = this.topic;
 
-      if (this.computedValue === "unpinned") {
+      if (value === "unpinned") {
         topic.clearPin();
       } else {
         topic.rePin();

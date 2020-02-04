@@ -447,6 +447,8 @@ QUnit.test("Composer can toggle whispers", async assert => {
 
   await click(".toggle-fullscreen");
 
+  await menu.expand();
+
   assert.ok(
     menu.rowByValue("toggleWhisper").exists(),
     "whisper toggling is still present when going fullscreen"
@@ -638,7 +640,6 @@ QUnit.test("Checks for existing draft", async assert => {
 
 QUnit.test("Can switch states without abandon popup", async assert => {
   try {
-    const composerActions = selectKit(".composer-actions");
     toggleCheckDraftPopup(true);
 
     await visit("/t/internationalization-localization/280");
@@ -659,8 +660,9 @@ QUnit.test("Can switch states without abandon popup", async assert => {
 
     await click("article#post_3 button.reply");
 
+    const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
-    await composerActions.selectRowByValue("reply_to_topic");
+    await composerActions.selectRowByValue("reply_as_private_message");
 
     assert.equal(
       find(".modal-body").text(),
@@ -668,9 +670,10 @@ QUnit.test("Can switch states without abandon popup", async assert => {
       "abandon popup shouldn't come"
     );
 
-    assert.equal(
-      find(".d-editor-input").val(),
-      longText,
+    assert.ok(
+      find(".d-editor-input")
+        .val()
+        .includes(longText),
       "entered text should still be there"
     );
 

@@ -26,7 +26,7 @@ QUnit.test("Updating topic notification level", async assert => {
   await notificationOptions.selectRowByValue("3");
 
   assert.equal(
-    notificationOptions.selectedRow().name(),
+    notificationOptions.header().label(),
     "Watching",
     "it should display the right notification level"
   );

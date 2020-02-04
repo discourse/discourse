@@ -1,3 +1,10 @@
-{{list-setting settingValue=value choices=groupChoices settingName='name'}}
+{{list-setting
+  value=settingValue
+  choices=groupChoices
+  settingName="name"
+  nameProperty=nameProperty
+  valueProperty=valueProperty
+  onChange=(action "onChangeGroupListSetting")
+}}
 {{setting-validation-message message=validationMessage}}
 <div class='desc'>{{{unbound setting.description}}}</div>

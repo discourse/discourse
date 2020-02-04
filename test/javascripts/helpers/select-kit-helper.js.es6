@@ -24,7 +24,10 @@ async function collapseSelectKit(selector) {
 
 async function selectKitFillInFilter(filter, selector) {
   checkSelectKitIsNotCollapsed(selector);
-  await fillIn(`${selector} .filter-input`, filter);
+  await fillIn(
+    `${selector} .filter-input`,
+    find(`${selector} .filter-input`).val() + filter
+  );
 }
 
 async function selectKitSelectRowByValue(value, selector) {
@@ -66,7 +69,11 @@ async function keyboardHelper(value, target, selector) {
       tab: { keyCode: 9 }
     };
 
-    await triggerEvent(target, "keydown", mapping[value]);
+    await triggerEvent(
+      target,
+      "keydown",
+      mapping[value] || { keyCode: value.charCodeAt(0) }
+    );
   }
 }
 
@@ -82,7 +89,8 @@ function rowHelper(row) {
       return row.attr("title");
     },
     value() {
-      return row.attr("data-value");
+      const value = row.attr("data-value");
+      return Ember.isEmpty(value) ? null : value;
     },
     exists() {
       return exists(row);
@@ -96,7 +104,8 @@ function rowHelper(row) {
 function headerHelper(header) {
   return {
     value() {
-      return header.attr("data-value");
+      const value = header.attr("data-value");
+      return Ember.isEmpty(value) ? null : value;
     },
     name() {
       return header.attr("data-name");
@@ -105,7 +114,7 @@ function headerHelper(header) {
       return header.text().trim();
     },
     icon() {
-      return header.find(".icon");
+      return header.find(".d-icon");
     },
     title() {
       return header.attr("title");
@@ -123,6 +132,9 @@ function filterHelper(filter) {
     },
     exists() {
       return exists(filter);
+    },
+    value() {
+      return filter.find("input").val();
     },
     el() {
       return filter;
@@ -192,6 +204,17 @@ export default function selectKit(selector) {
 
     rows() {
       return find(selector).find(".select-kit-row");
+    },
+
+    displayedContent() {
+      return this.rows()
+        .map((_, row) => {
+          return {
+            name: row.getAttribute("data-name"),
+            id: row.getAttribute("data-value")
+          };
+        })
+        .toArray();
     },
 
     rowByValue(value) {

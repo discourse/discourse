@@ -27,15 +27,20 @@ function getTranslations(type = "") {
   });
 }
 
-moduleForComponent("topic-notifications-options", { integration: true });
+moduleForComponent("select-kit/topic-notifications-options", {
+  integration: true
+});
 
 componentTest("regular topic notification level descriptions", {
   template:
     "{{topic-notifications-options value=topic.details.notification_level topic=topic}}",
 
+  beforeEach() {
+    this.set("topic", buildTopic("regular"));
+  },
+
   async test(assert) {
     await selectKit().expand();
-    await this.set("topic", buildTopic("regular"));
 
     const uiTexts = extractDescs(selectKit().rows());
     const descriptions = getTranslations();
@@ -59,9 +64,12 @@ componentTest("PM topic notification level descriptions", {
   template:
     "{{topic-notifications-options value=topic.details.notification_level topic=topic}}",
 
+  beforeEach() {
+    this.set("topic", buildTopic("private_message"));
+  },
+
   async test(assert) {
     await selectKit().expand();
-    await this.set("topic", buildTopic("private_message"));
 
     const uiTexts = extractDescs(selectKit().rows());
     const descriptions = getTranslations("_pm");

@@ -300,8 +300,10 @@ class UsersController < ApplicationController
   end
 
   def is_local_username
-    usernames = params[:usernames]
-    usernames = [params[:username]] if usernames.blank?
+    usernames = params[:usernames] if params[:usernames].present?
+    usernames = [params[:username]] if params[:username].present?
+
+    raise Discourse::InvalidParameters.new(:usernames) if !usernames.kind_of?(Array)
 
     groups = Group.where(name: usernames).pluck(:name)
     mentionable_groups =

@@ -89,7 +89,12 @@
         {{input value=name placeholder=placeholder}}
 
         <div class="label">{{I18n "admin.customize.theme.create_type"}}</div>
-        {{combo-box valueAttribute="value" content=createTypes value=selectedType}}
+        {{combo-box
+          valueProperty="value"
+          content=createTypes
+          value=selectedType
+          onChange=(action (mut selectedType))
+        }}
       </div>
     {{/if}}
   </div>

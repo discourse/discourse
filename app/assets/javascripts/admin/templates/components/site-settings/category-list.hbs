@@ -1,3 +1,7 @@
-{{category-selector categories=selectedCategories}}
+{{category-selector
+  categories=selectedCategories
+  onChange=(action "onChangeSelectedCategories")
+}}
+
 <div class='desc'>{{{unbound setting.description}}}</div>
 {{setting-validation-message message=validationMessage}}

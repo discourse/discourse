@@ -134,7 +134,7 @@ GEM
       rake-compiler
     fast_xs (0.8.0)
     fastimage (2.1.7)
-    ffi (1.12.1)
+    ffi (1.12.2)
     flamegraph (0.9.5)
     fspath (3.1.2)
     gc_tracer (1.5.1)
@@ -243,7 +243,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.9.25)
+    onebox (1.9.26)
       addressable (~> 2.7.0)
       htmlentities (~> 4.3)
       multi_json (~> 1.11)
@@ -256,7 +256,7 @@ GEM
     openssl-signature_algorithm (0.3.0)
     optimist (3.0.0)
     parallel (1.19.1)
-    parallel_tests (2.30.1)
+    parallel_tests (2.31.0)
       parallel
     parser (2.7.0.2)
       ast (~> 2.4.0)
@@ -362,7 +362,7 @@ GEM
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
-    rubyzip (2.1.0)
+    rubyzip (2.2.0)
     safe_yaml (1.0.5)
     sanitize (5.1.0)
       crass (~> 1.0.2)
@@ -412,7 +412,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.6)
     unicode-display_width (1.6.1)
-    unicorn (5.5.2)
+    unicorn (5.5.3)
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.13.0)

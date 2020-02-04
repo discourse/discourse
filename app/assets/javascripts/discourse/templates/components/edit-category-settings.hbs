@@ -33,10 +33,13 @@
       {{i18n "category.search_priority.label"}}
     </label>
     <div class="controls">
-    {{combo-box valueAttribute="value"
-        id="category-search-priority"
-        content=searchPrioritiesOptions
-        value=category.search_priority}}
+    {{combo-box
+      valueProperty="value"
+      id="category-search-priority"
+      content=searchPrioritiesOptions
+      value=category.search_priority
+      onChange=(action (mut category.search_priority))
+    }}
     </div>
   </section>
 
@@ -145,7 +148,7 @@
       {{i18n "category.default_view"}}
     </label>
     <div class="controls">
-      {{combo-box valueAttribute="value" id="category-default-view" content=availableViews value=category.default_view}}
+      {{combo-box valueProperty="value" id="category-default-view" content=availableViews value=category.default_view}}
     </div>
   </section>
 
@@ -154,7 +157,7 @@
       {{i18n "category.default_top_period"}}
     </label>
     <div class="controls">
-      {{combo-box valueAttribute="value" id="category-default-period" content=availableTopPeriods value=category.default_top_period}}
+      {{combo-box valueProperty="value" id="category-default-period" content=availableTopPeriods value=category.default_top_period}}
     </div>
   </section>
 
@@ -163,9 +166,9 @@
       {{i18n "category.sort_order"}}
     </label>
     <div class="controls">
-    {{combo-box valueAttribute="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
+    {{combo-box valueProperty="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
     {{#unless isDefaultSortOrder}}
-      {{combo-box castBoolean=true valueAttribute="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
+      {{combo-box castBoolean=true valueProperty="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
     {{/unless}}
       </div>
   </section>
@@ -184,7 +187,7 @@
         <label for="subcategory-list-style">
           {{i18n "category.subcategory_list_style"}}
         </label>
-              {{combo-box valueAttribute="value" id="subcategory-list-style" content=availableSubcategoryListStyles value=category.subcategory_list_style}}
+              {{combo-box valueProperty="value" id="subcategory-list-style" content=availableSubcategoryListStyles value=category.subcategory_list_style}}
       </section>
     {{/if}}
 

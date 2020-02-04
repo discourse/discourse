@@ -17,7 +17,9 @@
         excludeCategoryId=category.id
         categories=parentCategories
         allowSubCategories=true
-        allowUncategorized=false}}
+        allowUncategorized=false
+        onChange=(action (mut category.parent_category_id))
+      }}
     </section>
   {{/if}}
 

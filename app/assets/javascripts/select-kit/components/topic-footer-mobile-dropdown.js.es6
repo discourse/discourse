@@ -1,36 +1,18 @@
-import { empty } from "@ember/object/computed";
 import ComboBoxComponent from "select-kit/components/combo-box";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["topic-footer-mobile-dropdown"],
-  classNames: "topic-footer-mobile-dropdown",
-  filterable: false,
-  autoFilterable: false,
-  allowInitialValueMutation: false,
-  allowAutoSelectFirst: false,
-  nameProperty: "label",
-  isHidden: empty("content"),
+  classNames: ["topic-footer-mobile-dropdown"],
 
-  computeHeaderContent() {
-    const content = this._super(...arguments);
-
-    content.name = I18n.t("topic.controls");
-    return content;
+  selectKitOptions: {
+    none: "topic.controls",
+    filterable: false,
+    autoFilterable: false
   },
 
-  mutateAttributes() {},
-
-  willComputeContent(content) {
-    content = this._super(content);
-
-    // TODO: this is for backward compat reasons, should be removed
-    // when plugins have been updated for long enough
-    content.forEach(c => {
-      if (c.name) {
-        c.label = c.name;
-      }
-    });
-
-    return content;
+  actions: {
+    onChange(value, item) {
+      item.action && item.action();
+    }
   }
 });

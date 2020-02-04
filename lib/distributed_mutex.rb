@@ -95,7 +95,7 @@ class DistributedMutex
         result =
           redis.multi do
             redis.set key, expire_time.to_s
-            redis.expire key, validity
+            redis.expireat key, expire_time + 1
           end
 
         got_lock = !result.nil?

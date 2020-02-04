@@ -9,7 +9,7 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import User from "discourse/models/user";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { set } from "@ember/object";
+import { set, computed } from "@ember/object";
 
 export default Controller.extend(CanCheckEmails, {
   indexStream: false,
@@ -135,6 +135,21 @@ export default Controller.extend(CanCheckEmails, {
         .compact();
     }
   },
+
+  userNotificationLevel: computed(
+    "currentUser.ignored_ids",
+    "model.ignored",
+    "model.muted",
+    function() {
+      if (this.get("model.ignored")) {
+        return "changeToIgnored";
+      } else if (this.get("model.muted")) {
+        return "changeToMuted";
+      } else {
+        return "changeToNormal";
+      }
+    }
+  ),
 
   actions: {
     collapseProfile() {

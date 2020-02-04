@@ -27,13 +27,13 @@
 
         {{#each reviewable.editable_fields as |f|}}
           <div class='editable-field {{dasherize f.id}}'>
-            {{component
-              (concat "reviewable-field-" f.type)
+            {{component (concat "reviewable-field-" f.type)
               tagName=''
               value=(editable-value reviewable f.id)
               tagCategoryId=reviewable.category.id
               valueChanged=(action "valueChanged" f.id)
-              categoryChanged=(action "categoryChanged")}}
+              categoryChanged=(action "categoryChanged")
+            }}
           </div>
         {{/each}}
       </div>

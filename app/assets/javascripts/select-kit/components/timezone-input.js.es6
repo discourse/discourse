@@ -1,31 +1,25 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
-import discourseComputed from "discourse-common/utils/decorators";
+import { computed } from "@ember/object";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["timezone-input"],
-  classNames: "timezone-input",
-  allowAutoSelectFirst: false,
-  fullWidthOnMobile: true,
-  filterable: true,
-  allowAny: false,
+  classNames: ["timezone-input"],
+  nameProperty: null,
+  valueProperty: null,
 
-  @discourseComputed
-  content() {
-    let timezones;
+  selectKitOptions: {
+    filterable: true,
+    allowAny: false
+  },
 
+  content: computed(function() {
     if (
       moment.locale() !== "en" &&
       typeof moment.tz.localizedNames === "function"
     ) {
-      timezones = moment.tz.localizedNames();
+      return moment.tz.localizedNames().mapBy("value");
+    } else {
+      return moment.tz.names();
     }
-    timezones = moment.tz.names();
-
-    return timezones.map(t => {
-      return {
-        id: t,
-        name: t
-      };
-    });
-  }
+  })
 });

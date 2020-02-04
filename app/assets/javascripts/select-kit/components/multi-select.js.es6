@@ -1,363 +1,157 @@
+import deprecated from "discourse-common/lib/deprecated";
 import SelectKitComponent from "select-kit/components/select-kit";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-const { get, isNone, isEmpty, makeArray, run } = Ember;
-import {
-  applyOnSelectPluginApiCallbacks,
-  applyOnSelectNonePluginApiCallbacks
-} from "select-kit/mixins/plugin-api";
+import { computed } from "@ember/object";
+const { makeArray } = Ember;
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],
   layoutName: "select-kit/templates/components/multi-select",
-  classNames: "multi-select",
-  headerComponent: "multi-select/multi-select-header",
-  headerText: "select_kit.default_header_text",
-  allowAny: true,
-  allowInitialValueMutation: false,
-  autoFilterable: true,
-  selectedNameComponent: "multi-select/selected-name",
-  filterIcon: null,
-  filterComponent: "multi-select/multi-select-filter",
-  computedValues: null,
-  values: null,
+  classNames: ["multi-select"],
+  multiSelect: true,
 
-  init() {
-    this._super(...arguments);
-
-    this.set("computedValues", []);
-
-    if (isNone(this.values)) {
-      this.set("values", []);
-    }
-
-    this.headerComponentOptions.setProperties({
-      selectedNameComponent: this.selectedNameComponent
-    });
+  selectKitOptions: {
+    none: "select_kit.default_header_text",
+    clearable: true,
+    filterable: true,
+    filterIcon: null,
+    clearOnClick: true,
+    closeOnChange: false,
+    autoInsertNoneItem: false,
+    headerComponent: "multi-select/multi-select-header",
+    filterComponent: "multi-select/multi-select-filter"
   },
 
-  @on("didRender")
-  _setChoicesMaxWidth() {
-    const width = this.$body().outerWidth(false);
-    if (width > 0) {
-      this.element.querySelector(".choices").style.maxWidth = `${width}px`;
-    }
+  search(filter) {
+    return this._super(filter).filter(
+      content => !makeArray(this.selectedContent).includes(content)
+    );
   },
 
-  @on("didUpdateAttrs", "init")
-  _compute() {
-    run.scheduleOnce("afterRender", () => {
-      this.willComputeAttributes();
-      let content = this.content || [];
-      let asyncContent = this.asyncContent || [];
-      content = this.willComputeContent(content);
-      asyncContent = this.willComputeAsyncContent(asyncContent);
-      let values = this._beforeWillComputeValues(this.values);
-      content = this.computeContent(content);
-      asyncContent = this.computeAsyncContent(asyncContent);
-      content = this._beforeDidComputeContent(content);
-      asyncContent = this._beforeDidComputeAsyncContent(asyncContent);
-      values = this.willComputeValues(values);
-      values = this.computeValues(values);
-      values = this._beforeDidComputeValues(values);
-      this.didComputeContent(content);
-      this.didComputeAsyncContent(asyncContent);
-      this.didComputeValues(values);
-      this.didComputeAttributes();
-    });
+  deselect(item) {
+    this.clearErrors();
+
+    const newContent = this.selectedContent.filter(
+      content => this.getValue(item) !== this.getValue(content)
+    );
+
+    this.selectKit.change(
+      this.valueProperty ? newContent.mapBy(this.valueProperty) : newContent,
+      newContent
+    );
   },
 
-  @discourseComputed("filter", "shouldDisplayCreateRow")
-  createRowComputedContent(filter, shouldDisplayCreateRow) {
-    if (shouldDisplayCreateRow) {
-      let content = this.createContentFromInput(filter);
-      return this.computeContentItem(content, { created: true });
-    }
-  },
+  select(value, item) {
+    if (!value || !value.length) {
+      if (!this.validateSelect(this.selectKit.highlighted)) {
+        return;
+      }
 
-  @discourseComputed("filter", "computedValues")
-  shouldDisplayCreateRow(filter, computedValues) {
-    return this._super() && !computedValues.includes(filter);
-  },
-
-  @discourseComputed
-  shouldDisplayFilter() {
-    return true;
-  },
-
-  _beforeWillComputeValues(values) {
-    return values.map(v => this._cast(v === "" ? null : v));
-  },
-  willComputeValues(values) {
-    return values;
-  },
-  computeValues(values) {
-    return values;
-  },
-  _beforeDidComputeValues(values) {
-    this.setProperties({ computedValues: values });
-    return values;
-  },
-  didComputeValues(values) {
-    return values;
-  },
-
-  mutateAttributes() {
-    run.next(() => {
-      if (this.isDestroyed || this.isDestroying) return;
-
-      this.mutateContent(this.computedContent);
-      this.mutateValues(this.computedValues);
-    });
-  },
-  mutateValues(computedValues) {
-    this.set("values", computedValues);
-  },
-  mutateContent() {},
-
-  forceValues(values) {
-    this.mutateValues(values);
-    this._compute();
-  },
-
-  filterComputedContent(computedContent, computedValues, filter) {
-    return computedContent.filter(c => {
-      return this._normalize(get(c, "name")).indexOf(filter) > -1;
-    });
-  },
-
-  @discourseComputed("computedAsyncContent.[]", "computedValues.[]")
-  filteredAsyncComputedContent(computedAsyncContent, computedValues) {
-    computedAsyncContent = computedAsyncContent.filter(c => {
-      return !computedValues.includes(get(c, "value"));
-    });
-
-    if (this.limitMatches) {
-      return computedAsyncContent.slice(0, this.limitMatches);
-    }
-
-    return computedAsyncContent;
-  },
-
-  @discourseComputed("computedContent.[]", "computedValues.[]", "filter")
-  filteredComputedContent(computedContent, computedValues, filter) {
-    computedContent = computedContent.filter(c => {
-      return !computedValues.includes(get(c, "value"));
-    });
-
-    if (this.shouldFilter) {
-      computedContent = this.filterComputedContent(
-        computedContent,
-        computedValues,
-        this._normalize(filter)
+      this.selectKit.change(
+        makeArray(this.value).concat(
+          makeArray(this.getValue(this.selectKit.highlighted))
+        ),
+        makeArray(this.selectedContent).concat(
+          makeArray(this.selectKit.highlighted)
+        )
       );
-    }
-
-    if (this.limitMatches) {
-      return computedContent.slice(0, this.limitMatches);
-    }
-
-    return computedContent;
-  },
-
-  computeHeaderContent() {
-    let content = {
-      title: this.title,
-      selection: this.selection
-    };
-
-    if (this.noneLabel) {
-      if (!this.hasSelection) {
-        content.title = content.name = content.label = I18n.t(this.noneLabel);
-      }
     } else {
-      if (!this.hasReachedMinimum) {
-        const key = this.minimumLabel || "select_kit.min_content_not_reached";
-        content.title = content.name = content.label = I18n.t(key, {
-          count: this.minimum
-        });
-      }
-    }
-
-    return content;
-  },
-
-  @discourseComputed("filter")
-  templateForCreateRow() {
-    return rowComponent => {
-      return I18n.t("select_kit.create", {
-        content: rowComponent.get("computedContent.name")
-      });
-    };
-  },
-
-  validateSelect() {
-    return this._super() && !this.hasReachedMaximum;
-  },
-
-  @discourseComputed("computedValues.[]", "computedContent.[]")
-  selection(computedValues, computedContent) {
-    const selected = [];
-
-    computedValues.forEach(v => {
-      const value = computedContent.findBy("value", v);
-      if (value) selected.push(value);
-    });
-
-    return selected;
-  },
-
-  @discourseComputed("selection.[]")
-  hasSelection(selection) {
-    return !isEmpty(selection);
-  },
-
-  didPressTab(event) {
-    if (isEmpty(this.filter) && !this.highlighted) {
-      this.$header().focus();
-      this.close(event);
-      return true;
-    }
-
-    if (this.highlighted && this.isExpanded) {
-      this._destroyEvent(event);
-      this.focus();
-      this.select(this.highlighted);
-      return false;
-    } else {
-      this.close(event);
-    }
-
-    return true;
-  },
-
-  autoHighlight() {
-    run.schedule("afterRender", () => {
-      if (!this.isExpanded) return;
-      if (!this.renderedBodyOnce) return;
-      if (this.highlighted) return;
-
-      if (isEmpty(this.collectionComputedContent)) {
-        if (this.createRowComputedContent) {
-          this.highlight(this.createRowComputedContent);
-        } else if (this.noneRowComputedContent && this.hasSelection) {
-          this.highlight(this.noneRowComputedContent);
+      const existingItem = this.findValue(
+        this.mainCollection,
+        this.selectKit.valueProperty ? item : value
+      );
+      if (existingItem) {
+        if (!this.validateSelect(item)) {
+          return;
         }
-      } else {
-        this.highlight(this.get("collectionComputedContent.firstObject"));
       }
-    });
-  },
 
-  select(computedContentItem) {
-    if (
-      !computedContentItem ||
-      computedContentItem.__sk_row_type === "noneRow"
-    ) {
-      applyOnSelectNonePluginApiCallbacks(this.pluginApiIdentifiers, this);
-      this._boundaryActionHandler("onSelectNone");
-      this.clearSelection();
-      return;
-    }
-
-    if (computedContentItem.__sk_row_type === "noopRow") {
-      applyOnSelectPluginApiCallbacks(
-        this.pluginApiIdentifiers,
-        computedContentItem.value,
-        this
+      const newValues = makeArray(this.value).concat(makeArray(value));
+      const newContent = makeArray(this.selectedContent).concat(
+        makeArray(item)
       );
 
-      this._boundaryActionHandler("onSelect", computedContentItem.value);
-      return;
+      this.selectKit.change(
+        newValues,
+        newContent.length
+          ? newContent
+          : makeArray(this.defaultItem(value, value))
+      );
     }
+  },
 
-    if (computedContentItem.__sk_row_type === "createRow") {
-      if (
-        !this.computedValues.includes(computedContentItem.value) &&
-        this.validateCreate(computedContentItem.value)
-      ) {
-        this.willCreate(computedContentItem);
+  selectedContent: computed("value.[]", "content.[]", function() {
+    if (this.value && this.value.length) {
+      let content = [];
 
-        computedContentItem.__sk_row_type = null;
-        this.computedContent.pushObject(computedContentItem);
+      this.value.forEach(v => {
+        if (this.selectKit.valueProperty) {
+          const c = makeArray(this.content).findBy(
+            this.selectKit.valueProperty,
+            v
+          );
+          if (c) {
+            content.push(c);
+          }
+        } else {
+          if (makeArray(this.content).includes(v)) {
+            content.push(v);
+          }
+        }
+      });
 
-        run.schedule("afterRender", () => {
-          this.didCreate(computedContentItem);
-          this._boundaryActionHandler("onCreate");
-        });
-
-        this.select(computedContentItem);
-        return;
-      } else {
-        this._boundaryActionHandler("onCreateFailure");
-        return;
-      }
+      return this.selectKit.modifySelection(content || []);
+    } else {
+      return this.selectKit.noneItem;
     }
+  }),
 
-    if (this.validateSelect(computedContentItem)) {
-      this.willSelect(computedContentItem);
-      this.clearFilter();
-      this.setProperties({ highlighted: null });
-      this.computedValues.pushObject(computedContentItem.value);
+  _onKeydown(event) {
+    if (event.keyCode === 8) {
+      event.stopPropagation();
 
-      run.next(() => this.mutateAttributes());
-
-      run.schedule("afterRender", () => {
-        this.didSelect(computedContentItem);
-
-        applyOnSelectPluginApiCallbacks(
-          this.pluginApiIdentifiers,
-          computedContentItem.value,
-          this
+      const input = this.getFilterInput();
+      if (input && !input.value.length >= 1) {
+        const selected = this.element.querySelectorAll(
+          ".select-kit-header .choice.select-kit-selected-name"
         );
 
-        this.autoHighlight();
-
-        this._boundaryActionHandler("onSelect", computedContentItem.value);
-      });
-    } else {
-      this._boundaryActionHandler("onSelectFailure");
-    }
-  },
-
-  deselect(rowComputedContentItems) {
-    this.willDeselect(rowComputedContentItems);
-
-    rowComputedContentItems = makeArray(rowComputedContentItems);
-    const generatedComputedContents = this._filterRemovableComputedContents(
-      makeArray(rowComputedContentItems)
-    );
-    this.setProperties({ highlighted: null, highlightedSelection: [] });
-    this.computedValues.removeObjects(
-      rowComputedContentItems.map(r => r.value)
-    );
-    this.computedContent.removeObjects([
-      ...rowComputedContentItems,
-      ...generatedComputedContents
-    ]);
-
-    run.next(() => {
-      this.mutateAttributes();
-
-      run.schedule("afterRender", () => {
-        this.didDeselect(rowComputedContentItems);
-        this.autoHighlight();
-
-        if (!this.isDestroying && !this.isDestroyed) {
-          this._positionWrapper();
+        if (selected.length) {
+          const lastSelected = selected[selected.length - 1];
+          if (lastSelected) {
+            if (lastSelected.classList.contains("is-highlighted")) {
+              this.deselect(this.selectedContent.lastObject);
+            } else {
+              lastSelected.classList.add("is-highlighted");
+            }
+          }
         }
-      });
-    });
+      }
+    } else {
+      const selected = this.element.querySelectorAll(
+        ".select-kit-header .choice.select-kit-selected-name"
+      );
+      selected.forEach(s => s.classList.remove("is-highlighted"));
+    }
+
+    return true;
   },
 
-  close(event) {
-    this.clearHighlightSelection();
+  handleDeprecations() {
+    this._super(...arguments);
 
-    this._super(event);
+    this._deprecateValues();
   },
 
-  unfocus(event) {
-    this.clearHighlightSelection();
+  _deprecateValues() {
+    if (this.values && !this.value) {
+      deprecated(
+        "The `values` property is deprecated for multi-select. Use `value` instead",
+        {
+          since: "v2.4.0"
+        }
+      );
 
-    this._super(event);
+      this.set("value", this.values);
+    }
   }
 });

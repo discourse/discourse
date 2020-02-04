@@ -1,109 +1,122 @@
-import { bool } from "@ember/object/computed";
-import { isEmpty } from "@ember/utils";
+import { reads, bool } from "@ember/object/computed";
 import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
-import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { isNone } from "@ember/utils";
+import { isEmpty, isNone } from "@ember/utils";
+import { computed } from "@ember/object";
+import { setting } from "discourse/lib/computed";
 
 export default SelectKitRowComponent.extend({
   layoutName: "select-kit/templates/components/category-row",
-  classNames: "category-row",
+  classNames: ["category-row"],
+  hideParentCategory: bool("selectKit.options.hideParentCategory"),
+  allowUncategorized: bool("selectKit.options.allowUncategorized"),
+  categoryLink: bool("selectKit.options.categoryLink"),
+  countSubcategories: bool("selectKit.options.countSubcategories"),
+  allowUncategorizedTopics: setting("allow_uncategorized_topics"),
 
-  hideParentCategory: bool("options.hideParentCategory"),
-  allowUncategorized: bool("options.allowUncategorized"),
-  categoryLink: bool("options.categoryLink"),
+  displayCategoryDescription: computed(
+    "selectKit.options.displayCategoryDescription",
+    function() {
+      const option = this.selectKit.options.displayCategoryDescription;
+      if (isNone(option)) {
+        return true;
+      }
 
-  @discourseComputed("options.displayCategoryDescription")
-  displayCategoryDescription(displayCategoryDescription) {
-    if (isNone(displayCategoryDescription)) {
-      return true;
+      return option;
     }
+  ),
 
-    return displayCategoryDescription;
-  },
+  title: computed("descriptionText", "description", "categoryName", function() {
+    return this.descriptionText || this.description || this.categoryName;
+  }),
 
-  @discourseComputed("descriptionText", "description", "category.name")
-  title(descriptionText, description, name) {
-    return descriptionText || description || name;
-  },
+  categoryName: reads("category.name"),
 
-  @discourseComputed("computedContent.value", "computedContent.name")
-  category(value, name) {
-    if (isEmpty(value)) {
+  categoryDescription: reads("category.description"),
+
+  categoryDescriptionText: reads("category.description_text"),
+
+  category: computed("rowValue", "rowName", function() {
+    if (isEmpty(this.rowValue)) {
       const uncat = Category.findUncategorized();
-      if (uncat && uncat.get("name") === name) {
+      if (uncat && uncat.name === this.rowName) {
         return uncat;
       }
     } else {
-      return Category.findById(parseInt(value, 10));
+      return Category.findById(parseInt(this.rowValue, 10));
     }
-  },
+  }),
 
-  @discourseComputed("category", "parentCategory")
-  badgeForCategory(category, parentCategory) {
-    return categoryBadgeHTML(category, {
+  badgeForCategory: computed("category", "parentCategory", function() {
+    return categoryBadgeHTML(this.category, {
       link: this.categoryLink,
-      allowUncategorized: this.allowUncategorized,
-      hideParent: !!parentCategory
+      allowUncategorized:
+        this.allowUncategorizedTopics || this.allowUncategorized,
+      hideParent: !!this.parentCategory
     }).htmlSafe();
-  },
+  }),
 
-  @discourseComputed("parentCategory")
-  badgeForParentCategory(parentCategory) {
-    return categoryBadgeHTML(parentCategory, {
+  badgeForParentCategory: computed("parentCategory", function() {
+    return categoryBadgeHTML(this.parentCategory, {
       link: this.categoryLink,
-      allowUncategorized: this.allowUncategorized,
+      allowUncategorized:
+        this.allowUncategorizedTopics || this.allowUncategorized,
       recursive: true
     }).htmlSafe();
-  },
+  }),
 
-  @discourseComputed("parentCategoryid")
-  parentCategory(parentCategoryId) {
-    return Category.findById(parentCategoryId);
-  },
+  parentCategory: computed("parentCategoryId", function() {
+    return Category.findById(this.parentCategoryId);
+  }),
 
-  @discourseComputed("parentCategoryid")
-  hasParentCategory(parentCategoryid) {
-    return !isNone(parentCategoryid);
-  },
+  hasParentCategory: bool("parentCategoryId"),
 
-  @discourseComputed("category")
-  parentCategoryid(category) {
-    return category.get("parent_category_id");
-  },
+  parentCategoryId: reads("category.parent_category_id"),
 
-  @discourseComputed(
-    "category.totalTopicCount",
-    "category.topic_count",
-    "options.countSubcategories"
-  )
-  topicCount(totalCount, topicCount, countSubcats) {
-    return countSubcats ? totalCount : topicCount;
-  },
+  categoryTotalTopicCount: reads("category.totalTopicCount"),
 
-  @discourseComputed("displayCategoryDescription", "category.description")
-  shouldDisplayDescription(displayCategoryDescription, description) {
-    return displayCategoryDescription && description && description !== "null";
-  },
+  categoryTopicCount: reads("category.topic_count"),
 
-  @discourseComputed("category.description_text")
-  descriptionText(descriptionText) {
-    if (descriptionText) {
-      return this._formatCategoryDescription(descriptionText);
+  topicCount: computed(
+    "categoryTotalTopicCount",
+    "categoryTopicCount",
+    "countSubcategories",
+    function() {
+      return this.countSubcategories
+        ? this.categoryTotalTopicCount
+        : this.categoryTopicCount;
     }
-  },
+  ),
 
-  @discourseComputed("category.description")
-  description(description) {
-    if (description) {
-      return this._formatCategoryDescription(description);
+  shouldDisplayDescription: computed(
+    "displayCategoryDescription",
+    "categoryDescription",
+    function() {
+      return (
+        this.displayCategoryDescription &&
+        this.categoryDescription &&
+        this.categoryDescription !== "null"
+      );
     }
-  },
+  ),
 
-  _formatCategoryDescription(description) {
-    return `${description.substr(0, 200)}${
-      description.length > 200 ? "&hellip;" : ""
+  descriptionText: computed("categoryDescriptionText", function() {
+    if (this.categoryDescriptionText) {
+      return this._formatDescription(this.categoryDescriptionText);
+    }
+  }),
+
+  description: computed("categoryDescription", function() {
+    if (this.categoryDescription) {
+      return this._formatDescription(this.categoryDescription);
+    }
+  }),
+
+  _formatDescription(description) {
+    const limit = 200;
+    return `${description.substr(0, limit)}${
+      description.length > limit ? "&hellip;" : ""
     }`;
   }
 });
