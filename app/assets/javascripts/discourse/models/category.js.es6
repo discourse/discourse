@@ -88,9 +88,10 @@ const Category = RestModel.extend({
   @discourseComputed("notification_level")
   notificationLevelString(notificationLevel) {
     // Get the key from the value
-    return Object.keys(NotificationLevels)
-      .find(key => NotificationLevels[key] === notificationLevel)
-      .toLowerCase();
+    const notificationLevelString = Object.keys(NotificationLevels).find(
+      key => NotificationLevels[key] === notificationLevel
+    );
+    if (notificationLevelString) return notificationLevelString.toLowerCase();
   },
 
   @discourseComputed("name")
