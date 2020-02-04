@@ -13,7 +13,7 @@ export default DropdownSelectBoxComponent.extend({
     const state = pinned === "pinned" ? `pinned${globally}` : "unpinned";
     const title = I18n.t(`topic_statuses.${state}.title`);
 
-    content.label = `${title}${iconHTML("caret-down")}`.htmlSafe();
+    content.label = `<span>${title}</span>${iconHTML("caret-down")}`.htmlSafe();
     content.title = title;
     content.name = state;
     content.icon = `thumbtack${state === "unpinned" ? " unpinned" : ""}`;
