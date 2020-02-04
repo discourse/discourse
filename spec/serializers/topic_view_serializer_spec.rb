@@ -279,4 +279,44 @@ describe TopicViewSerializer do
     end
   end
 
+  describe "bookmarked" do
+    context "when SiteSetting.enable_bookmark_with_reminders" do
+      before do
+        SiteSetting.enable_bookmarks_with_reminders = true
+      end
+      context "if there is a bookmark record for any post in the topic for the user" do
+        before do
+          Fabricate(:bookmark, user: admin, topic: topic, post: Fabricate(:post, topic: topic))
+        end
+        it "returns true" do
+          expect(serialize_topic(topic, admin)[:bookmarked]).to eq(true)
+        end
+      end
+      context "if there is a bookmark record for any post in the topic for a different user" do
+        before do
+          Fabricate(:bookmark, user: Fabricate(:user), topic: topic, post: Fabricate(:post, topic: topic))
+        end
+        it "returns false" do
+          expect(serialize_topic(topic, admin)[:bookmarked]).to eq(false)
+        end
+      end
+      context "if there is no bookmark record for any post in the topic for the user" do
+        it "returns false" do
+          expect(serialize_topic(topic, admin)[:bookmarked]).to eq(false)
+        end
+      end
+    end
+
+    context "when normal bookmarks are enabled" do
+      context "if the topic_user bookmarked is true" do
+        before do
+          TopicUser.create(user: admin, topic: topic, bookmarked: true)
+        end
+
+        it "returns true" do
+          expect(serialize_topic(topic, admin)[:bookmarked]).to eq(true)
+        end
+      end
+    end
+  end
 end
