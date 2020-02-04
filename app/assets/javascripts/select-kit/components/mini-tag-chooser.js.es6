@@ -165,8 +165,30 @@ export default ComboBox.extend(TagsMixin, {
   },
 
   _onKeydown(event) {
+    const value = makeArray(this.value);
+
     if (event.keyCode === 8) {
       this._onBackspace(this.value, this.highlightedTag);
+    } else if (event.keyCode === 37) {
+      if (this.highlightedTag) {
+        const index = value.indexOf(this.highlightedTag);
+        const highlightedTag = value[index - 1]
+          ? value[index - 1]
+          : value.lastObject;
+        this.set("highlightedTag", highlightedTag);
+      } else {
+        this.set("highlightedTag", value.lastObject);
+      }
+    } else if (event.keyCode === 39) {
+      if (this.highlightedTag) {
+        const index = value.indexOf(this.highlightedTag);
+        const highlightedTag = value[index + 1]
+          ? value[index + 1]
+          : value.firstObject;
+        this.set("highlightedTag", highlightedTag);
+      } else {
+        this.set("highlightedTag", value.firstObject);
+      }
     } else {
       this.set("highlightedTag", null);
     }
