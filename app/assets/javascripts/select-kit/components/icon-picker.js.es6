@@ -12,6 +12,10 @@ export default MultiSelectComponent.extend({
     this._super(...arguments);
 
     this._cachedIconsList = null;
+
+    if (Discourse.Environment === "development") {
+      Discourse.disableMissingIconWarning = true;
+    }
   },
 
   content: computed("value.[]", function() {
@@ -70,6 +74,10 @@ export default MultiSelectComponent.extend({
     this._super(...arguments);
 
     this._cachedIconsList = null;
+
+    if (Discourse.Environment === "development") {
+      delete Discourse.disableMissingIconWarning;
+    }
   },
 
   actions: {
