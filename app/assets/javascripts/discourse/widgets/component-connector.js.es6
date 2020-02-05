@@ -1,4 +1,4 @@
-import { next } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
 import { setOwner, getOwner } from "@ember/application";
 
 export default class ComponentConnector {
@@ -16,7 +16,7 @@ export default class ComponentConnector {
     const elem = $elem[0];
     const { opts, widget, componentName } = this;
 
-    next(() => {
+    scheduleOnce("afterRender", this, () => {
       const mounted = widget._findView();
 
       const view = widget.register
