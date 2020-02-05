@@ -61,7 +61,7 @@ export default Component.extend(PanEvents, {
   },
 
   _checkSize() {
-    debounce(this, this._performCheckSize, 300, true);
+    debounce(this, this._performCheckSize, 300);
   },
 
   // we need to store this so topic progress has something to init with
