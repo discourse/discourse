@@ -39,10 +39,8 @@ export default Component.extend(PanEvents, {
       if (renderTimeline) {
         const width = window.innerWidth,
           composer = document.getElementById("reply-control"),
-          timelineContainer = document.querySelectorAll(
-            ".timeline-container"
-          )[0],
-          headerContainer = document.querySelectorAll(".d-header")[0],
+          timelineContainer = document.querySelector(".timeline-container"),
+          headerContainer = document.querySelector(".d-header"),
           headerHeight = (headerContainer && headerContainer.offsetHeight) || 0;
 
         if (timelineContainer && composer) {
