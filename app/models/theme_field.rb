@@ -61,8 +61,11 @@ class ThemeField < ActiveRecord::Base
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
   BASE_COMPILER_VERSION = 14
-  DEPENDENT_CONSTANTS = [BASE_COMPILER_VERSION,
-                        GlobalSetting.cdn_url]
+  DEPENDENT_CONSTANTS = [
+    BASE_COMPILER_VERSION,
+    Ember::VERSION,
+    GlobalSetting.cdn_url
+  ]
   COMPILER_VERSION = Digest::SHA1.hexdigest(DEPENDENT_CONSTANTS.join)
 
   belongs_to :theme
