@@ -10,10 +10,10 @@ export default class ComponentConnector {
   }
 
   init() {
-    const $elem = $(
-      '<div style="display: inline-flex;" class="widget-component-connector"></div>'
-    );
-    this.elem = $elem[0];
+    const elem = document.createElement("div");
+    elem.style.display = "inline-flex";
+    elem.className = "widget-component-connector";
+    this.elem = elem;
     scheduleOnce("afterRender", this, this.connectComponent);
 
     return this.elem;
