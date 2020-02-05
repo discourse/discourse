@@ -1703,7 +1703,7 @@ en:
       view_new_post: "View your new post."
       saving: "Saving"
       saved: "Saved!"
-      saved_draft: "Post draft in progress. Select to resume."
+      saved_draft: "Post draft in progress. Tap to resume."
       uploading: "Uploading..."
       show_preview: "show preview &raquo;"
       hide_preview: "&laquo; hide preview"
