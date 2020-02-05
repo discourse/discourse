@@ -80,14 +80,16 @@ export default ComboBox.extend(TagsMixin, {
     this.insertAfterCollection(ERRORS_COLLECTION, SELECTED_TAGS_COLLECTION);
   },
 
-  caretIcon: computed("selectKit.hasReachedMaximum", function() {
-    return this.selectKit.hasReachedMaximum ? null : "plus";
+  caretIcon: computed("value.[]", function() {
+    return this.selectKit.options.maximum >= makeArray(this.value).length
+      ? null
+      : "plus";
   }),
 
   modifySelection(content) {
-    let joinedTags = this.value.join(", ");
+    let joinedTags = makeArray(this.value).join(", ");
 
-    if (!this.selectKit.hasReachedMinimum) {
+    if (!this.selectKit.options.maximum >= makeArray(this.value).length) {
       const key =
         this.selectKit.options.minimumLabel ||
         "select_kit.min_content_not_reached";
