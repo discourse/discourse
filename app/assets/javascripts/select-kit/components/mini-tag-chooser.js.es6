@@ -84,9 +84,7 @@ export default ComboBox.extend(TagsMixin, {
 
   caretIcon: computed("value.[]", function() {
     const maximum = this.selectKit.options.maximum;
-    return maximum &&
-      makeArray(this.value).length >=
-        parseInt(this.selectKit.options.maximum, 10)
+    return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
       ? null
       : "plus";
   }),
