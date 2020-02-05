@@ -13,7 +13,7 @@
         {{i18n 'post.bookmarks.name'}}
       </label>
 
-      {{input value=name name="name" class="bookmark-name" placeholder=(i18n "post.bookmarks.name_placeholder")}}
+      {{input value=name name="name" class="bookmark-name" enter=(action "saveAndClose") placeholder=(i18n "post.bookmarks.name_placeholder")}}
     </div>
 
     {{#if showBookmarkReminderControls}}
