@@ -4,3 +4,8 @@ package.json
 config/locales/**/*.yml
 !config/locales/**/*.en*.yml
 script/import_scripts/**/*.yml
+**/*.raw.hbs
+
+// atm these files change at each prettier run
+app/assets/javascripts/admin/templates/components/admin-web-hook-event.hbs
+app/assets/javascripts/admin/templates/modal/admin-staff-action-log-details.hbs

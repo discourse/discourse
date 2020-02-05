@@ -1,9 +1,5 @@
 {{date-input date=date onChange=(action "onChangeDate")}}
 
 {{#if showTime}}
-  {{time-input
-    hours=_hours
-    minutes=_minutes
-    onChange=(action "onChangeTime")
-  }}
+  {{time-input hours=_hours minutes=_minutes onChange=(action "onChangeTime")}}
 {{/if}}

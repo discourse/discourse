@@ -1,13 +1,25 @@
 <div id="second-factor">
-  <h3>{{secondFactorTitle}}</h3>
+  <h3>
+    {{secondFactorTitle}}
+  </h3>
   {{#if optionalText}}
-    <p>{{{optionalText}}}</p>
+    <p>
+      {{{optionalText}}}
+    </p>
   {{/if}}
-  <p>{{secondFactorDescription}}</p>
+  <p>
+    {{secondFactorDescription}}
+  </p>
   {{yield}}
   {{#if showToggleMethodLink}}
     <p>
-      <a href="" class="toggle-second-factor-method" {{action "toggleSecondFactorMethod"}}>{{ i18n linkText }}</a>
+      <a
+        href=""
+        class="toggle-second-factor-method"
+        {{action "toggleSecondFactorMethod"}}
+      >
+        {{i18n linkText}}
+      </a>
     </p>
   {{/if}}
 </div>

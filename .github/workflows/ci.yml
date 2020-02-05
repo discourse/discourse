@@ -6,7 +6,7 @@ on:
       - master
   pull_request:
     branches-ignore:
-      - 'tests-passed'
+      - "tests-passed"
 
 jobs:
   build:
@@ -28,12 +28,12 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_types: [ 'BACKEND', 'FRONTEND', 'LINT' ]
-        target: [ 'PLUGINS', 'CORE' ]
-        os: [ ubuntu-latest ]
-        ruby: [ '2.6' ]
-        postgres: [ '10' ]
-        redis: [ '4.x' ]
+        build_types: ["BACKEND", "FRONTEND", "LINT"]
+        target: ["PLUGINS", "CORE"]
+        os: [ubuntu-latest]
+        ruby: ["2.6"]
+        postgres: ["10"]
+        redis: ["4.x"]
 
     services:
       postgres:
@@ -57,7 +57,7 @@ jobs:
           fetch-depth: 1
 
       - name: Setup Git
-        run:  git config --global user.email "ci@ci.invalid" && git config --global user.name "Discourse CI"
+        run: git config --global user.email "ci@ci.invalid" && git config --global user.name "Discourse CI"
 
       - name: Setup packages
         if: env.BUILD_TYPE != 'LINT'
@@ -75,7 +75,7 @@ jobs:
         uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          architecture: 'x64'
+          architecture: "x64"
 
       - name: Setup bundler
         run: gem install bundler -v 2.1.1 --no-doc
@@ -132,7 +132,7 @@ jobs:
         if: env.BUILD_TYPE == 'LINT'
         run: |
           yarn prettier -v
-          yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" "plugins/**/*.scss" "plugins/**/*.es6"
+          yarn prettier --list-different "app/assets/**/*.hbs" "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" "plugins/**/*.scss" "plugins/**/*.es6"
 
       - name: Core RSpec
         if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'CORE'

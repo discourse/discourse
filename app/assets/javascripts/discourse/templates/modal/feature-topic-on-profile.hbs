@@ -1,5 +1,6 @@
-{{#d-modal-body class="feature-topic-on-profile" id='choosing-topic'}}
-  {{choose-topic currentTopicId=model.featured_topic.id
+{{#d-modal-body class="feature-topic-on-profile" id="choosing-topic"}}
+  {{choose-topic
+    currentTopicId=model.featured_topic.id
     selectedTopicId=newFeaturedTopicId
     additionalFilters="status:public"
     label="user.feature_topic_on_profile.search_label"
@@ -9,8 +10,10 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button action=(action "save")
+  {{d-button
+    action=(action "save")
     class="btn-primary save-featured-topic-on-profile"
     disabled=noTopicSelected
-    label="user.feature_topic_on_profile.save"}}
+    label="user.feature_topic_on_profile.save"
+  }}
 </div>

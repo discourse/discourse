@@ -1,5 +1,7 @@
 <div class="content-list color-schemes">
-  <h3>{{i18n "admin.customize.colors.long_title"}}</h3>
+  <h3>
+    {{i18n "admin.customize.colors.long_title"}}
+  </h3>
 
   <ul>
     {{#each model as |scheme|}}
@@ -18,7 +20,8 @@
     class="btn-default"
     action=(action "newColorScheme")
     icon="plus"
-    label="admin.customize.new"}}
+    label="admin.customize.new"
+  }}
 </div>
 
 {{outlet}}

@@ -14,7 +14,9 @@
     {{/if}}
 
     <div class="">
-      <a {{action 'cancel'}}>{{i18n 'cancel'}}</a>
+      <a {{action "cancel"}}>
+        {{i18n "cancel"}}
+      </a>
     </div>
   {{else}}
     <form class="form-vertical group-bulk-add">
@@ -30,9 +32,11 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button action=(action "add")
-      class="add btn-primary"
-      icon="plus"
-      disabled=disableAddButton
-      label="groups.add"}}
+  {{d-button
+    action=(action "add")
+    class="add btn-primary"
+    icon="plus"
+    disabled=disableAddButton
+    label="groups.add"
+  }}
 </div>

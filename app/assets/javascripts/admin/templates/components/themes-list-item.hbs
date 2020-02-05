@@ -1,5 +1,9 @@
 <div class="inner-wrapper">
-  {{plugin-outlet name="admin-customize-themes-list-item" connectorTagName='span' args=(hash theme=theme)}}
+  {{plugin-outlet
+    name="admin-customize-themes-list-item"
+    connectorTagName="span"
+    args=(hash theme=theme)
+  }}
 
   <div class="info">
     <span class="name">
@@ -9,16 +13,32 @@
     <span class="icons">
       {{#unless theme.selected}}
         {{#if theme.default}}
-          {{d-icon "check" class="default-indicator" title="admin.customize.theme.default_theme_tooltip"}}
+          {{d-icon
+            "check"
+            class="default-indicator"
+            title="admin.customize.theme.default_theme_tooltip"
+          }}
         {{/if}}
         {{#if theme.isPendingUpdates}}
-          {{d-icon "sync" title="admin.customize.theme.updates_available_tooltip" class="light-grey-icon"}}
+          {{d-icon
+            "sync"
+            title="admin.customize.theme.updates_available_tooltip"
+            class="light-grey-icon"
+          }}
         {{/if}}
         {{#if theme.isBroken}}
-          {{d-icon "exclamation-circle" class="broken-indicator" title="admin.customize.theme.broken_theme_tooltip"}}
+          {{d-icon
+            "exclamation-circle"
+            class="broken-indicator"
+            title="admin.customize.theme.broken_theme_tooltip"
+          }}
         {{/if}}
         {{#unless theme.enabled}}
-          {{d-icon "ban" class="light-grey-icon" title="admin.customize.theme.disabled_component_tooltip"}}
+          {{d-icon
+            "ban"
+            class="light-grey-icon"
+            title="admin.customize.theme.disabled_component_tooltip"
+          }}
         {{/unless}}
       {{else}}
         {{d-icon "caret-right"}}
@@ -28,10 +48,12 @@
 
   {{#if displayComponents}}
     <div class="components-list">
-      <span class="components">{{{childrenString}}}</span>
+      <span class="components">
+        {{{childrenString}}}
+      </span>
 
       {{#if displayHasMore}}
-        <span {{action "toggleChildrenExpanded"}} class="others-count">
+        <span class="others-count" {{action "toggleChildrenExpanded"}}>
           {{#if childrenExpanded}}
             {{I18n "admin.customize.theme.collapse"}}
           {{else}}

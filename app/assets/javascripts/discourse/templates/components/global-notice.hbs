@@ -1,10 +1,15 @@
 {{#each notices as |notice|}}
   <div class="row">
-    <div id="global-notice-{{notice.id}}" class="alert alert-{{notice.options.level}} {{notice.id}}">
+    <div
+      id="global-notice-{{notice.id}}"
+      class="alert alert-{{notice.options.level}} {{notice.id}}"
+    >
       {{#if notice.options.html}}
         {{{notice.options.html}}}
       {{/if}}
-      <span class="text">{{{notice.text}}}</span>
+      <span class="text">
+        {{{notice.text}}}
+      </span>
 
       {{#if notice.options.dismissable}}
         {{d-button

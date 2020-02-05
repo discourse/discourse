@@ -1,9 +1,15 @@
-{{#d-modal-body title="admin.badges.preview.modal_title" class="badge-query-preview"}}
+{{#d-modal-body
+  title="admin.badges.preview.modal_title"
+  class="badge-query-preview"
+}}
   {{#if errors}}
-    <p class="error-header">{{i18n "admin.badges.preview.sql_error_header"}}</p>
+    <p class="error-header">
+      {{i18n "admin.badges.preview.sql_error_header"}}
+    </p>
 
-    <pre class="badge-errors">{{errors}}</pre>
-
+    <pre class="badge-errors">
+      {{errors}}
+    </pre>
     <!--
     TODO we want some help pages for this, link to those instead
     <p>
@@ -13,7 +19,6 @@
       <li><a href="https://meta.discourse.org/t/triggered-custom-badge-queries/19336">https://meta.discourse.org/t/triggered-custom-badge-queries/19336</a></li>
     </ul>
     -->
-
   {{else}}
     <p class="grant-count">
       {{#if count}}
@@ -41,7 +46,9 @@
       </p>
       <ul>
         {{#each processedSample as |html|}}
-          <li>{{{html}}}</li>
+          <li>
+            {{{html}}}
+          </li>
         {{/each}}
       </ul>
     {{/if}}

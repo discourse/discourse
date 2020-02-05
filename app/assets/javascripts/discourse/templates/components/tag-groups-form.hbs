@@ -1,34 +1,49 @@
 <div class="tag-group-content">
-  <h1>{{text-field value=buffered.name}}</h1>
-  <br/>
+  <h1>
+    {{text-field value=buffered.name}}
+  </h1>
+  <br />
 
   <section class="group-tags-list">
-    <label>{{i18n 'tagging.groups.tags_label'}}</label><br/>
+    <label>
+      {{i18n "tagging.groups.tags_label"}}
+    </label>
+    <br />
     {{tag-chooser
       tags=buffered.tag_names
       everyTag=true
       allowCreate=true
       filterPlaceholder="tagging.groups.tags_placeholder"
       unlimitedTagCount=true
-      excludeSynonyms=true}}
+      excludeSynonyms=true
+    }}
   </section>
 
   <section class="parent-tag-section">
-    <label>{{i18n 'tagging.groups.parent_tag_label'}}</label>
+    <label>
+      {{i18n "tagging.groups.parent_tag_label"}}
+    </label>
     {{tag-chooser
       tags=buffered.parent_tag_name
       everyTag=true
       maximum=1
       allowCreate=true
       excludeSynonyms=true
-      filterPlaceholder="tagging.groups.parent_tag_placeholder"}}
-    <span class="description">{{i18n 'tagging.groups.parent_tag_description'}}</span>
+      filterPlaceholder="tagging.groups.parent_tag_placeholder"
+    }}
+    <span class="description">
+      {{i18n "tagging.groups.parent_tag_description"}}
+    </span>
   </section>
 
   <section class="group-one-per-topic">
     <label>
-      {{input type="checkbox" checked=buffered.one_per_topic name="onepertopic"}}
-      {{i18n 'tagging.groups.one_per_topic_label'}}
+      {{input
+        type="checkbox"
+        checked=buffered.one_per_topic
+        name="onepertopic"
+      }}
+      {{i18n "tagging.groups.one_per_topic_label"}}
     </label>
   </section>
 
@@ -40,10 +55,11 @@
         value="public"
         id="public-permission"
         selection=buffered.permissionName
-        onChange=(action "setPermissions")}}
+        onChange=(action "setPermissions")
+      }}
 
       <label class="radio" for="public-permission">
-        {{i18n 'tagging.groups.everyone_can_use'}}
+        {{i18n "tagging.groups.everyone_can_use"}}
       </label>
     </div>
     <div>
@@ -53,10 +69,11 @@
         value="visible"
         id="visible-permission"
         selection=buffered.permissionName
-        onChange=(action "setPermissions")}}
+        onChange=(action "setPermissions")
+      }}
 
       <label class="radio" for="visible-permission">
-        {{i18n 'tagging.groups.usable_only_by_staff'}}
+        {{i18n "tagging.groups.usable_only_by_staff"}}
       </label>
     </div>
     <div>
@@ -66,10 +83,11 @@
         value="private"
         id="private-permission"
         selection=buffered.permissionName
-        onChange=(action "setPermissions")}}
+        onChange=(action "setPermissions")
+      }}
 
       <label class="radio" for="private-permission">
-        {{i18n 'tagging.groups.visible_only_to_staff'}}
+        {{i18n "tagging.groups.visible_only_to_staff"}}
       </label>
     </div>
   </section>
@@ -78,12 +96,14 @@
     class="btn-default"
     action=(action "save")
     disabled=savingDisabled
-    label="tagging.groups.save"}}
+    label="tagging.groups.save"
+  }}
 
   {{d-button
     class="btn-danger"
     action=(action "destroy")
     disabled=buffered.isNew
     icon="far-trash-alt"
-    label="tagging.groups.delete"}}
+    label="tagging.groups.delete"
+  }}
 </div>

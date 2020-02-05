@@ -3,9 +3,14 @@
     <div class="placeholder-overlay" style={{placeholderStyle}}></div>
   {{/if}}
   <div class="image-upload-controls">
-    <label class="btn btn-default pad-left no-text {{if uploading 'disabled'}}">
+    <label class="btn btn-default pad-left no-text {{if uploading "disabled"}}">
       {{d-icon "far-image"}}
-      <input class="hidden-upload-field" disabled={{uploading}} type="file" accept="image/*" />
+      <input
+        class="hidden-upload-field"
+        disabled={{uploading}}
+        type="file"
+        accept="image/*"
+      />
     </label>
 
     {{#if imageUrl}}
@@ -26,16 +31,18 @@
       }}
     {{/if}}
 
-    <span class="btn {{unless uploading 'hidden'}}">{{i18n 'upload_selector.uploading'}} {{uploadProgress}}%</span>
+    <span class="btn {{unless uploading "hidden"}}">
+      {{i18n "upload_selector.uploading"}} {{uploadProgress}}%
+    </span>
   </div>
 
-
   {{#if imageUrl}}
-    <a class="lightbox"
-       href={{imageCDNURL}}
-       title={{imageFilename}}
-       rel="nofollow ugc noopener">
-
+    <a
+      class="lightbox"
+      href={{imageCDNURL}}
+      title={{imageFilename}}
+      rel="nofollow ugc noopener"
+    >
       <div class="meta">
         <span class="informations">
           {{imageWidth}}x{{imageHeight}} {{imageFilesize}}

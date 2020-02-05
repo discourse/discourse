@@ -1,19 +1,28 @@
-{{plugin-outlet name="advanced-search-options-above" args=(hash searchedTerms=searchedTerms) tagName=""}}
+{{plugin-outlet
+  name="advanced-search-options-above"
+  args=(hash searchedTerms=searchedTerms)
+  tagName=""
+}}
 
 <div class="container advanced-search-posted-by-group">
   <div class="control-group pull-left">
-    <label class="control-label" for="search-posted-by">{{i18n "search.advanced.posted_by.label"}}</label>
+    <label class="control-label" for="search-posted-by">
+      {{i18n "search.advanced.posted_by.label"}}
+    </label>
     <div class="controls">
       {{user-selector
-          excludeCurrentUser=false
-          usernames=searchedTerms.username
-          class="user-selector"
-          single="true"
-          canReceiveUpdates="true"}}
+        excludeCurrentUser=false
+        usernames=searchedTerms.username
+        class="user-selector"
+        single="true"
+        canReceiveUpdates="true"
+      }}
     </div>
   </div>
   <div class="control-group pull-left">
-    <label class="control-label" for="search-in-category">{{i18n "search.advanced.in_category.label"}}</label>
+    <label class="control-label" for="search-in-category">
+      {{i18n "search.advanced.in_category.label"}}
+    </label>
     <div class="controls">
       {{search-advanced-category-chooser
         value=searchedTerms.category.id
@@ -43,7 +52,9 @@
 {{#if siteSettings.tagging_enabled}}
   <div class="container advanced-search-tag-group">
     <div class="control-group">
-      <label class="control-label" for="search-with-tags">{{i18n "search.advanced.with_tags.label"}}</label>
+      <label class="control-label" for="search-with-tags">
+        {{i18n "search.advanced.with_tags.label"}}
+      </label>
       <div class="controls">
         {{tag-chooser
           tags=searchedTerms.tags
@@ -53,9 +64,15 @@
           unlimitedTagCount=true
           onChange=(action (mut searchedTerms.tags))
         }}
-      <section class="field">
-          <label>{{ input type="checkbox" class="all-tags" checked=searchedTerms.special.all_tags}} {{i18n "search.advanced.filters.all_tags"}} </label>
-      </section>
+        <section class="field">
+          <label>
+            {{input
+              type="checkbox"
+              class="all-tags"
+              checked=searchedTerms.special.all_tags
+            }} {{i18n "search.advanced.filters.all_tags"}}
+          </label>
+        </section>
       </div>
     </div>
   </div>
@@ -63,14 +80,40 @@
 
 <div class="container advanced-search-topics-posts-group">
   <div class="control-group pull-left">
-    <label class="control-label" for="search-in-options">{{i18n "search.advanced.filters.label"}}</label>
+    <label class="control-label" for="search-in-options">
+      {{i18n "search.advanced.filters.label"}}
+    </label>
     <div class="controls">
       {{#if currentUser}}
-        <section class='field'>
-          <label>{{input type="checkbox" class="in-title" checked=searchedTerms.special.in.title}} {{i18n "search.advanced.filters.title"}}</label>
-          <label>{{input type="checkbox" class="in-likes" checked=searchedTerms.special.in.likes}} {{i18n "search.advanced.filters.likes"}}</label>
-          <label>{{input type="checkbox" class="in-private" checked=searchedTerms.special.in.personal}} {{i18n "search.advanced.filters.private"}}</label>
-          <label>{{input type="checkbox" class="in-seen" checked=searchedTerms.special.in.seen}} {{i18n "search.advanced.filters.seen"}}</label>
+        <section class="field">
+          <label>
+            {{input
+              type="checkbox"
+              class="in-title"
+              checked=searchedTerms.special.in.title
+            }} {{i18n "search.advanced.filters.title"}}
+          </label>
+          <label>
+            {{input
+              type="checkbox"
+              class="in-likes"
+              checked=searchedTerms.special.in.likes
+            }} {{i18n "search.advanced.filters.likes"}}
+          </label>
+          <label>
+            {{input
+              type="checkbox"
+              class="in-private"
+              checked=searchedTerms.special.in.personal
+            }} {{i18n "search.advanced.filters.private"}}
+          </label>
+          <label>
+            {{input
+              type="checkbox"
+              class="in-seen"
+              checked=searchedTerms.special.in.seen
+            }} {{i18n "search.advanced.filters.seen"}}
+          </label>
         </section>
       {{/if}}
       {{combo-box
@@ -84,7 +127,9 @@
     </div>
   </div>
   <div class="control-group pull-left">
-    <label class="control-label" for="search-status-options">{{i18n "search.advanced.statuses.label"}}</label>
+    <label class="control-label" for="search-status-options">
+      {{i18n "search.advanced.statuses.label"}}
+    </label>
     <div class="controls">
       {{combo-box
         id="status"
@@ -100,7 +145,9 @@
 
 <div class="container advanced-search-date-count-group">
   <div class="control-group pull-left">
-    <label class="control-label" for="search-post-date">{{i18n "search.advanced.post.time.label"}}</label>
+    <label class="control-label" for="search-post-date">
+      {{i18n "search.advanced.post.time.label"}}
+    </label>
     <div class="controls full-search-dates">
       {{combo-box
         id="postTime"
@@ -117,11 +164,22 @@
     </div>
   </div>
   <div class="control-group pull-left">
-    <label class="control-label" for="search-min-post-count">{{i18n "search.advanced.post.count.label"}}</label>
+    <label class="control-label" for="search-min-post-count">
+      {{i18n "search.advanced.post.count.label"}}
+    </label>
     <div class="controls">
-      {{input type="number" value=searchedTerms.min_post_count class="input-small" id='search-min-post-count'}}
+      {{input
+        type="number"
+        value=searchedTerms.min_post_count
+        class="input-small"
+        id="search-min-post-count"
+      }}
     </div>
   </div>
 </div>
 
-{{plugin-outlet name="advanced-search-options-below" args=(hash searchedTerms=searchedTerms) tagName=""}}
+{{plugin-outlet
+  name="advanced-search-options-below"
+  args=(hash searchedTerms=searchedTerms)
+  tagName=""
+}}

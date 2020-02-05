@@ -1,8 +1,8 @@
 {{#d-modal-body
   title="discourse_local_dates.title"
   class="discourse-local-dates-create-modal"
-  style="overflow: auto"}}
-
+  style="overflow: auto"
+}}
   <div class="form">
     {{#unless isValid}}
       <div class="validation-error alert alert-error">
@@ -11,7 +11,9 @@
     {{else}}
       {{#if timezoneIsDifferentFromUserTimezone}}
         <div class="preview alert alert-info">
-          <b>{{formatedCurrentUserTimezone}} </b>{{currentPreview}}
+          <b>
+            {{formatedCurrentUserTimezone}}
+          </b>{{currentPreview}}
         </div>
       {{/if}}
     {{/unless}}
@@ -20,22 +22,44 @@
 
     <div class="date-time-configuration">
       <div class="inputs-panel">
-        <div class="date-time-control from {{if fromSelected 'is-selected'}} {{if fromFilled 'is-filled'}}">
+        <div
+          class="date-time-control from
+
+            {{if fromSelected "is-selected"}}
+
+
+
+            {{if fromFilled "is-filled"}}"
+        >
           {{d-icon "calendar-alt"}}
           {{d-button
             action=(action "focusFrom")
             translatedLabel=formattedFrom
-            class="date-time"}}
+            class="date-time"
+          }}
         </div>
 
-        <div class="date-time-control to {{if toSelected 'is-selected'}} {{if toFilled 'is-filled'}}">
+        <div
+          class="date-time-control to
+
+            {{if toSelected "is-selected"}}
+
+
+
+            {{if toFilled "is-filled"}}"
+        >
           {{d-icon "calendar-alt"}}
           {{d-button
             action=(action "focusTo")
             translatedLabel=formattedTo
-            class="date-time"}}
+            class="date-time"
+          }}
           {{#if toFilled}}
-            {{d-button icon="times" action=(action "eraseToDateTime") class="delete-to-date"}}
+            {{d-button
+              icon="times"
+              action=(action "eraseToDateTime")
+              class="delete-to-date"
+            }}
           {{/if}}
         </div>
 
@@ -55,17 +79,31 @@
         {{#if fromSelected}}
           <div class="time-pickers">
             {{d-icon "far-clock"}}
-            {{input maxlength=5 placeholder="hh:mm" input=(action "setTime") type="time" value=(unbound time) class="time-picker"}}
+            {{input
+              maxlength=5
+              placeholder="hh:mm"
+              input=(action "setTime")
+              type="time"
+              value=(unbound time)
+              class="time-picker"
+            }}
           </div>
         {{/if}}
 
         {{#if toSelected}}
-        {{#if toDate}}
-          <div class="time-pickers">
-            {{d-icon "far-clock"}}
-            {{input maxlength=5 placeholder="hh:mm" input=(action "setToTime") type="time" value=(unbound toTime) class="time-picker"}}
-          </div>
-        {{/if}}
+          {{#if toDate}}
+            <div class="time-pickers">
+              {{d-icon "far-clock"}}
+              {{input
+                maxlength=5
+                placeholder="hh:mm"
+                input=(action "setToTime")
+                type="time"
+                value=(unbound toTime)
+                class="time-picker"
+              }}
+            </div>
+          {{/if}}
         {{/if}}
       </div>
 
@@ -85,23 +123,34 @@
             <label class="control-label">
               {{i18n "discourse_local_dates.create.form.recurring_title"}}
             </label>
-            <p>{{{i18n "discourse_local_dates.create.form.recurring_description"}}}</p>
+            <p>
+              {{{i18n
+                "discourse_local_dates.create.form.recurring_description"
+              }}}
+            </p>
             <div class="controls">
               {{combo-box
                 content=recurringOptions
                 class="recurrence-input"
                 value=recurring
                 onChange=(action (mut recurring))
-                none="discourse_local_dates.create.form.recurring_none"}}
+                none="discourse_local_dates.create.form.recurring_none"
+              }}
             </div>
           </div>
         {{/unless}}
 
         <div class="control-group format">
-          <label>{{i18n "discourse_local_dates.create.form.format_title"}}</label>
+          <label>
+            {{i18n "discourse_local_dates.create.form.format_title"}}
+          </label>
           <p>
             {{i18n "discourse_local_dates.create.form.format_description"}}
-            <a target="_blank" rel="noopener" href="https://momentjs.com/docs/#/parsing/string-format/">
+            <a
+              target="_blank"
+              rel="noopener"
+              href="https://momentjs.com/docs/#/parsing/string-format/"
+            >
               {{d-icon "question-circle"}}
             </a>
           </p>
@@ -113,7 +162,11 @@
           <ul class="formats">
             {{#each previewedFormats as |previewedFormat|}}
               <li class="format">
-                <a class="moment-format" href {{action (mut format) previewedFormat.format}}>
+                <a
+                  class="moment-format"
+                  href
+                  {{action (mut format) previewedFormat.format}}
+                >
                   {{previewedFormat.format}}
                 </a>
                 <span class="previewed-format">
@@ -125,8 +178,12 @@
         </div>
 
         <div class="control-group timezones">
-          <label>{{i18n "discourse_local_dates.create.form.timezones_title"}}</label>
-          <p>{{i18n "discourse_local_dates.create.form.timezones_description"}}</p>
+          <label>
+            {{i18n "discourse_local_dates.create.form.timezones_title"}}
+          </label>
+          <p>
+            {{i18n "discourse_local_dates.create.form.timezones_description"}}
+          </p>
           <div class="controls">
             {{multi-select
               valueProperty=null
@@ -149,7 +206,8 @@
     {{d-button
       class="btn-primary"
       action=(action "save")
-      label="discourse_local_dates.create.form.insert"}}
+      label="discourse_local_dates.create.form.insert"
+    }}
   {{/if}}
 
   <a class="cancel-action" href {{action "cancel"}}>
@@ -160,5 +218,6 @@
     class="btn-default advanced-mode-btn"
     action=(action "advancedMode")
     icon="cog"
-    label=toggleModeBtnLabel}}
+    label=toggleModeBtnLabel
+  }}
 </div>

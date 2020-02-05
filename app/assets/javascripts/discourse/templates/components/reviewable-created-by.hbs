@@ -1,6 +1,8 @@
-<div class='created-by'>
+<div class="created-by">
   {{#if user}}
-    {{#user-link user=user}}{{avatar user imageSize="large"}}{{/user-link}}
+    {{#user-link user=user}}
+      {{avatar user imageSize="large"}}
+    {{/user-link}}
   {{else}}
     {{d-icon "far-trash-alt" class="deleted-user-avatar"}}
   {{/if}}

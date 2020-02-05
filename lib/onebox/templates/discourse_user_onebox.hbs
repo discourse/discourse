@@ -1,14 +1,23 @@
 <aside class="onebox">
   <article class="onebox-body user-onebox">
     {{{avatar}}}
-    <h3><a href="{{original_url}}">{{{username}}}</a></h3>
+    <h3>
+      <a href="{{original_url}}">
+        {{{username}}}
+      </a>
+    </h3>
     <div>
       {{#name}}
-        <span class="full-name">{{name}}</span>
+        <span class="full-name">
+          {{name}}
+        </span>
       {{/name}}
       {{#location}}
         <span class="location">
-          <svg class="fa d-icon d-icon-map-marker-alt svg-icon" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            class="fa d-icon d-icon-map-marker-alt svg-icon"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <use xlink:href="#map-marker-alt"></use>
           </svg>
           {{{location}}}
@@ -16,17 +25,26 @@
       {{/location}}
       {{#website}}
         <span>
-          <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            class="fa d-icon d-icon-globe-americas svg-icon"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <use xlink:href="#globe-americas"></use>
           </svg>
-          <a href="{{website}}">{{{website_name}}}</a>
+          <a href="{{website}}">
+            {{{website_name}}}
+          </a>
         </span>
       {{/website}}
     </div>
     {{#bio}}
-      <p>{{{bio}}}</p>
+      <p>
+        {{{bio}}}
+      </p>
     {{/bio}}
-    <span>{{joined}} {{created_at}}</span>
+    <span>
+      {{joined}} {{created_at}}
+    </span>
   </article>
   <div style="clear: both"></div>
 </aside>

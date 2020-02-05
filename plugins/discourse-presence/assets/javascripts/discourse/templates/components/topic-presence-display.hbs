@@ -2,12 +2,29 @@
   <div class="presence-users">
     <div class="presence-avatars">
       {{#each users as |user|}}
-        {{avatar user avatarTemplatePath="avatar_template" usernamePath="username" imageSize="small"}}
+        {{avatar
+          user
+          avatarTemplatePath="avatar_template"
+          usernamePath="username"
+          imageSize="small"
+        }}
       {{/each}}
     </div>
     <span class="presence-text">
-      <span class="description">{{i18n 'presence.replying_to_topic' count=users.length}}</span>{{!-- (using comment to stop whitespace)
-  --}}<span class="wave"><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></span>
+      <span class="description">
+        {{i18n "presence.replying_to_topic" count=users.length}}
+      </span>{{! (using comment to stop whitespace)
+  }}<span class="wave">
+        <span class="dot">
+          .
+        </span>
+        <span class="dot">
+          .
+        </span>
+        <span class="dot">
+          .
+        </span>
+      </span>
     </span>
   </div>
 {{/if}}

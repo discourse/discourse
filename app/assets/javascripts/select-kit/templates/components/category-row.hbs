@@ -6,13 +6,18 @@
       {{/unless}}
     {{/if}}
     {{badgeForCategory}}
-    <span class="topic-count" aria-label={{i18n "category_row.topic_count" count=topicCount}}>
+    <span
+      class="topic-count"
+      aria-label={{i18n "category_row.topic_count" count=topicCount}}
+    >
       &times; {{topicCount}}
     </span>
   </div>
 
   {{#if shouldDisplayDescription}}
-    <div class="category-desc">{{{dir-span description}}}</div>
+    <div class="category-desc">
+      {{{dir-span description}}}
+    </div>
   {{/if}}
 {{else}}
   {{{label}}}

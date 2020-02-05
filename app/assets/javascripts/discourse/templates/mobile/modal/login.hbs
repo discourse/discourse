@@ -1,37 +1,65 @@
-{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
+{{#login-modal
+  screenX=lastX
+  screenY=lastY
+  loginName=loginName
+  loginPassword=loginPassword
+  secondFactorToken=secondFactorToken
+  action=(action "login")
+}}
   {{#d-modal-body title="login.title" class=modalBodyClasses}}
     {{#if showLoginButtons}}
       {{login-buttons
         showLoginWithEmailLink=showLoginWithEmailLink
         processingEmailLink=processingEmailLink
         emailLogin=(action "emailLogin")
-        externalLogin=(action "externalLogin")}}
+        externalLogin=(action "externalLogin")
+      }}
     {{/if}}
 
     {{#if canLoginLocal}}
-      <form id='login-form' method='post'>
+      <form id="login-form" method="post">
         <div id="credentials" class={{credentialsClass}}>
           <table>
             <tr>
               <td>
-                <label for='login-account-name'>{{i18n 'login.username'}}</label>
+                <label for="login-account-name">
+                  {{i18n "login.username"}}
+                </label>
               </td>
               <td>
-                {{text-field value=loginName type="email" placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" disabled=showSecondFactor}}
+                {{text-field
+                  value=loginName
+                  type="email"
+                  placeholderKey="login.email_placeholder"
+                  id="login-account-name"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  disabled=showSecondFactor
+                }}
               </td>
             </tr>
             <tr>
               <td>
-                <label for='login-account-password'>{{i18n 'login.password'}}</label>
+                <label for="login-account-password">
+                  {{i18n "login.password"}}
+                </label>
               </td>
               <td>
-                {{text-field value=loginPassword type="password" id="login-account-password" maxlength="200" disabled=showSecondFactor}}
+                {{text-field
+                  value=loginPassword
+                  type="password"
+                  id="login-account-password"
+                  maxlength="200"
+                  disabled=showSecondFactor
+                }}
               </td>
             </tr>
             <tr>
               <td></td>
               <td>
-                <a id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n 'forgot_password.action'}}</a>
+                <a id="forgot-password-link" {{action "showForgotPassword"}}>
+                  {{i18n "forgot_password.action"}}
+                </a>
               </td>
             </tr>
           </table>
@@ -41,7 +69,8 @@
           secondFactorToken=secondFactorToken
           class=secondFactorClass
           backupEnabled=backupEnabled
-          isLogin=true}}
+          isLogin=true
+        }}
           {{#if showSecurityKey}}
             {{#security-key-form
               allowedCredentialIds=securityKeyAllowedCredentialIds
@@ -50,34 +79,46 @@
               showSecondFactor=showSecondFactor
               secondFactorMethod=secondFactorMethod
               otherMethodAllowed=otherMethodAllowed
-              action=(action "authenticateSecurityKey")}}
-            {{/security-key-form}}
+              action=(action "authenticateSecurityKey")
+            }}{{/security-key-form}}
           {{else}}
-            {{second-factor-input value=secondFactorToken inputId='login-second-factor' secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+            {{second-factor-input
+              value=secondFactorToken
+              inputId="login-second-factor"
+              secondFactorMethod=secondFactorMethod
+              backupEnabled=backupEnabled
+            }}
           {{/if}}
         {{/second-factor-form}}
       </form>
     {{/if}}
-
   {{/d-modal-body}}
 
   <div class="modal-footer">
     {{#if canLoginLocal}}
-      {{#unless showSecurityKey }}
-        {{d-button action=(action "login")
+      {{#unless showSecurityKey}}
+        {{d-button
+          action=(action "login")
           icon="unlock"
           label=loginButtonLabel
           disabled=loginDisabled
-          class="btn-large btn-primary"}}
+          class="btn-large btn-primary"
+        }}
       {{/unless}}
 
       {{#if showSignupLink}}
-        {{#d-button class="btn-large" id="new-account-link" action=(route-action "showCreateAccount")}}
+        {{#d-button
+          class="btn-large"
+          id="new-account-link"
+          action=(route-action "showCreateAccount")
+        }}
           {{i18n "create_account.title"}}
         {{/d-button}}
       {{/if}}
     {{/if}}
   </div>
 
-  <div id='login-alert' class={{alertClass}}>{{alert}}</div>
+  <div id="login-alert" class={{alertClass}}>
+    {{alert}}
+  </div>
 {{/login-modal}}

@@ -6,9 +6,16 @@
   {{basic-topic-list
     hideCategory="true"
     showPosters="true"
-    topics=topic.relatedMessages}}
+    topics=topic.relatedMessages
+  }}
 </div>
 
 {{#if targetUser}}
-  <h3 class="see-all-pms-message">{{{i18n "related_messages.see_all" path=searchLink username=targetUser.username}}}</h3>
+  <h3 class="see-all-pms-message">
+    {{{i18n
+      "related_messages.see_all"
+      path=searchLink
+      username=targetUser.username
+    }}}
+  </h3>
 {{/if}}

@@ -1,4 +1,9 @@
-<a href {{action "share" source}} title="{{unbound source.title}}" aria-label="{{unbound source.title}}" >
+<a
+  href
+  title="{{unbound source.title}}"
+  aria-label="{{unbound source.title}}"
+  {{action "share" source}}
+>
   {{#if source.icon}}
     {{d-icon source.icon}}
   {{else}}

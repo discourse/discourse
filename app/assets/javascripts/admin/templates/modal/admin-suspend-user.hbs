@@ -1,8 +1,7 @@
 {{#d-modal-body title="admin.user.suspend_modal_title"}}
   {{#conditional-loading-spinner condition=loadingUser}}
-
     {{#if user.canSuspend}}
-      <div class='until-controls'>
+      <div class="until-controls">
         <label>
           {{future-date-input
             class="suspend-until"
@@ -20,17 +19,15 @@
         {{penalty-post-action
           postId=postId
           postAction=postAction
-          postEdit=postEdit}}
+          postEdit=postEdit
+        }}
       {{/if}}
-
     {{else}}
-      <div class='cant-suspend'>
+      <div class="cant-suspend">
         {{i18n "admin.user.cant_suspend"}}
       </div>
     {{/if}}
-
   {{/conditional-loading-spinner}}
-
 {{/d-modal-body}}
 
 <div class="modal-footer">
@@ -39,7 +36,8 @@
     action=(action "suspend")
     disabled=submitDisabled
     icon="ban"
-    label="admin.user.suspend"}}
+    label="admin.user.suspend"
+  }}
   {{d-modal-cancel close=(route-action "closeModal")}}
   {{conditional-loading-spinner condition=loading size="small"}}
 </div>

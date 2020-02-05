@@ -1,5 +1,6 @@
 {{#each collection.content as |item|}}
-  {{component (component-for-row collection.identifier item selectKit)
+  {{component
+    (component-for-row collection.identifier item selectKit)
     item=item
     value=value
     selectKit=selectKit

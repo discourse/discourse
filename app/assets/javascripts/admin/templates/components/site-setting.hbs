@@ -1,14 +1,26 @@
-<div class='setting-label'>
-   <h3>{{unbound settingName}}</h3>
-   {{#if defaultIsAvailable}}
-     <a onClick={{action 'setDefaultValues'}}>{{setting.setDefaultValuesLabel}}</a>
-   {{/if}}
+<div class="setting-label">
+  <h3>
+    {{unbound settingName}}
+  </h3>
+  {{#if defaultIsAvailable}}
+    <a onClick={{action "setDefaultValues"}}>
+      {{setting.setDefaultValuesLabel}}
+    </a>
+  {{/if}}
 </div>
 <div class="setting-value">
-  {{component componentName setting=setting value=buffered.value validationMessage=validationMessage preview=preview isSecret=isSecret allowAny=allowAny}}
+  {{component
+    componentName
+    setting=setting
+    value=buffered.value
+    validationMessage=validationMessage
+    preview=preview
+    isSecret=isSecret
+    allowAny=allowAny
+  }}
 </div>
 {{#if dirty}}
-  <div class='setting-controls'>
+  <div class="setting-controls">
     {{d-button class="ok" action=(action "update") icon="check"}}
     {{d-button class="cancel" action=(action "cancel") icon="times"}}
   </div>
@@ -16,5 +28,10 @@
   {{#if setting.secret}}
     {{d-button action=(action "toggleSecret") icon="far-eye-slash"}}
   {{/if}}
-  {{d-button class="btn-default undo" action=(action "resetDefault") icon="undo" label="admin.settings.reset"}}
+  {{d-button
+    class="btn-default undo"
+    action=(action "resetDefault")
+    icon="undo"
+    label="admin.settings.reset"
+  }}
 {{/if}}

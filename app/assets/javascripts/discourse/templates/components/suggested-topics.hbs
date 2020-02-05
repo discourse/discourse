@@ -7,10 +7,13 @@
     {{basic-topic-list
       hideCategory="true"
       showPosters="true"
-      topics=topic.suggestedTopics}}
+      topics=topic.suggestedTopics
+    }}
   {{else}}
     {{basic-topic-list topics=topic.suggestedTopics}}
   {{/if}}
 </div>
 
-<h3 class="suggested-topics-message">{{{browseMoreMessage}}}</h3>
+<h3 class="suggested-topics-message">
+  {{{browseMoreMessage}}}
+</h3>

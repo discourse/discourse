@@ -8,8 +8,10 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button class="btn-primary"
-             action=(action "performRename")
-             label="tagging.rename_tag"
-             disabled=renameDisabled}}
+  {{d-button
+    class="btn-primary"
+    action=(action "performRename")
+    label="tagging.rename_tag"
+    disabled=renameDisabled
+  }}
 </div>

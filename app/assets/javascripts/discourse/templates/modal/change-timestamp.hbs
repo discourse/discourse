@@ -1,17 +1,18 @@
 {{#d-modal-body class="change-timestamp"}}
   <p>
-    {{i18n 'topic.change_timestamp.instructions'}}
+    {{i18n "topic.change_timestamp.instructions"}}
   </p>
 
-  <p class="alert alert-error {{unless validTimestamp 'hidden'}}">
-    {{i18n 'topic.change_timestamp.invalid_timestamp'}}
+  <p class="alert alert-error {{unless validTimestamp "hidden"}}">
+    {{i18n "topic.change_timestamp.invalid_timestamp"}}
   </p>
 
   <form>
     {{date-picker-past
       value=(unbound date)
       containerId="date-container"
-      onChange=(action (mut date))}}
+      onChange=(action (mut date))
+    }}
 
     {{input type="time" value=time}}
   </form>
@@ -24,5 +25,6 @@
     class="btn-primary"
     disabled=buttonDisabled
     action=(action "changeTimestamp")
-    translatedLabel=buttonTitle}}
+    translatedLabel=buttonTitle
+  }}
 </div>

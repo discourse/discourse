@@ -3,7 +3,7 @@
     <div class="section-title">
       <h2>
         {{d-icon "heart"}}
-        {{i18n 'admin.dashboard.problems_found'}}
+        {{i18n "admin.dashboard.problems_found"}}
       </h2>
     </div>
 
@@ -12,14 +12,21 @@
         <div class="problem-messages">
           <ul>
             {{#each problems as |problem|}}
-              <li>{{{problem}}}</li>
+              <li>
+                {{{problem}}}
+              </li>
             {{/each}}
           </ul>
         </div>
 
         <p class="actions">
-          {{d-button action=(action "refreshProblems") class="btn-default" icon="sync" label="admin.dashboard.refresh_problems"}}
-          {{i18n 'admin.dashboard.last_checked'}}: {{problemsTimestamp}}
+          {{d-button
+            action=(action "refreshProblems")
+            class="btn-default"
+            icon="sync"
+            label="admin.dashboard.refresh_problems"
+          }}
+          {{i18n "admin.dashboard.last_checked"}}: {{problemsTimestamp}}
         </p>
       {{/conditional-loading-section}}
     </div>

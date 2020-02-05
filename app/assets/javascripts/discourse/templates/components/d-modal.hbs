@@ -3,7 +3,11 @@
     <div class="modal-inner-container">
       <div class="modal-header">
         {{#if dismissable}}
-          {{d-button icon="times" action=(route-action "closeModal") class="btn btn-flat modal-close close" }}
+          {{d-button
+            icon="times"
+            action=(route-action "closeModal")
+            class="btn btn-flat modal-close close"
+          }}
         {{/if}}
 
         {{#if panels}}
@@ -13,27 +17,34 @@
                 panel=panel
                 panelsLength=panels.length
                 selectedPanel=selectedPanel
-                onSelectPanel=onSelectPanel}}
+                onSelectPanel=onSelectPanel
+              }}
             {{/each}}
           </ul>
         {{else}}
           <div class="title">
-            <h3>{{title}}</h3>
+            <h3>
+              {{title}}
+            </h3>
 
             {{#if subtitle}}
-              <p>{{subtitle}}</p>
+              <p>
+                {{subtitle}}
+              </p>
             {{/if}}
           </div>
         {{/if}}
       </div>
 
-      <div id='modal-alert'></div>
+      <div id="modal-alert"></div>
 
       {{yield}}
 
       {{#each errors as |error|}}
         <div class="alert alert-error">
-          <button class="close" data-dismiss="alert">×</button>
+          <button class="close" data-dismiss="alert">
+            ×
+          </button>
           {{error}}
         </div>
       {{/each}}

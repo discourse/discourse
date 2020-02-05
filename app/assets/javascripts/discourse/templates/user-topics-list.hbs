@@ -1,15 +1,21 @@
-{{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
-  {{basic-topic-list topicList=model
-                     hideCategory=hideCategory
-                     showPosters=showPosters
-                     bulkSelectEnabled=bulkSelectEnabled
-                     selected=selected
-                     hasIncoming=hasIncoming
-                     incomingCount=incomingCount
-                     showInserted=(action "showInserted")
-                     tagsForUser=tagsForUser
-                     onScroll=saveScrollPosition
-                     scrollOnLoad=true}}
+{{#load-more
+  class="paginated-topics-list"
+  selector=".paginated-topics-list .topic-list tr"
+  action=(action "loadMore")
+}}
+  {{basic-topic-list
+    topicList=model
+    hideCategory=hideCategory
+    showPosters=showPosters
+    bulkSelectEnabled=bulkSelectEnabled
+    selected=selected
+    hasIncoming=hasIncoming
+    incomingCount=incomingCount
+    showInserted=(action "showInserted")
+    tagsForUser=tagsForUser
+    onScroll=saveScrollPosition
+    scrollOnLoad=true
+  }}
 
   {{conditional-loading-spinner condition=model.loadingMore}}
 {{/load-more}}

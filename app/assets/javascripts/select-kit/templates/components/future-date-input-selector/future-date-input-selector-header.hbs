@@ -1,10 +1,13 @@
 {{#if icons}}
   <div class="future-date-input-selector-icons">
-    {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
+    {{#each icons as |icon|}}
+      {{d-icon icon}}
+    {{/each}}
   </div>
 {{/if}}
 
-{{component selectKit.options.selectedNameComponent
+{{component
+  selectKit.options.selectedNameComponent
   tabindex=tabindex
   item=selectedContent
   selectKit=selectKit

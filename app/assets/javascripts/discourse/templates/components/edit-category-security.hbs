@@ -1,20 +1,32 @@
-<section class='field'>
+<section class="field">
   {{#if category.is_special}}
     {{#if category.isUncategorizedCategory}}
-      <p class="warning">{{i18n 'category.uncategorized_security_warning'}}</p>
+      <p class="warning">
+        {{i18n "category.uncategorized_security_warning"}}
+      </p>
     {{else}}
-      <p class="warning">{{i18n 'category.special_warning'}}</p>
+      <p class="warning">
+        {{i18n "category.special_warning"}}
+      </p>
     {{/if}}
   {{/if}}
   {{#unless category.isUncategorizedCategory}}
-    <ul class='permission-list'>
+    <ul class="permission-list">
       {{#each category.permissions as |p|}}
         <li>
-          <span class="name"><span class="badge-group">{{p.group_name}}</span></span>
+          <span class="name">
+            <span class="badge-group">
+              {{p.group_name}}
+            </span>
+          </span>
           {{{i18n "category.can"}}}
-          <span class="permission">{{p.permission.description}}</span>
+          <span class="permission">
+            {{p.permission.description}}
+          </span>
           {{#if editingPermissions}}
-            <a class="remove-permission" href {{action "removePermission" p}}>{{d-icon "times-circle"}}</a>
+            <a class="remove-permission" href {{action "removePermission" p}}>
+              {{d-icon "times-circle"}}
+            </a>
           {{/if}}
         </li>
       {{/each}}
@@ -40,11 +52,15 @@
       {{d-button
         action=(action "addPermission" selectedGroup selectedPermission)
         class="btn-primary add-permission"
-        icon="plus"}}
+        icon="plus"
+      }}
       {{#if showPendingGroupChangesAlert}}
         <div class="pending-permission-change-alert">
           <div class="arrow-div"></div>
-          {{i18n "category.pending_permission_change_alert" group=selectedGroup}}
+          {{i18n
+            "category.pending_permission_change_alert"
+            group=selectedGroup
+          }}
         </div>
       {{/if}}
     {{/if}}
@@ -53,9 +69,15 @@
       {{d-button
         action=(action "editPermissions")
         class="btn-default edit-permission"
-        label="category.edit_permissions"}}
+        label="category.edit_permissions"
+      }}
     {{/unless}}
   {{/if}}
 </section>
 
-{{plugin-outlet name="category-custom-security" args=(hash category=category) connectorTagName="" tagName="section"}}
+{{plugin-outlet
+  name="category-custom-security"
+  args=(hash category=category)
+  connectorTagName=""
+  tagName="section"
+}}

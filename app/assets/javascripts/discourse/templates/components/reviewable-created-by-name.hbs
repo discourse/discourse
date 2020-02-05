@@ -1,7 +1,9 @@
-<div class='names'>
+<div class="names">
   <span class="username">
     {{#if user}}
-      {{#user-link user=user}}{{user.username}}{{/user-link}}
+      {{#user-link user=user}}
+        {{user.username}}
+      {{/user-link}}
       {{#if user.silenced}}
         {{d-icon "ban" title="user.silenced_tooltip"}}
       {{/if}}

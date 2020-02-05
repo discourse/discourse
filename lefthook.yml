@@ -6,7 +6,7 @@ pre-commit:
       run: bundle exec rubocop {staged_files}
     eslint:
       glob: "*.{js,es6}"
-      exclude: 'vendor/*'
+      exclude: "vendor/*"
       run: yarn eslint --ext .es6 -f compact {staged_files}
     yaml-syntax:
       glob: "*.{yaml,yml}"
@@ -39,7 +39,7 @@ lints:
     rubocop:
       run: bundle exec rubocop --parallel
     prettier:
-      glob: "{app/assets/stylesheets/**/*.scss,app/assets/javascripts/**/*.es6,test/javascripts/**/*.es6}"
+      glob: "{app/assets/**/*.hbs,app/assets/stylesheets/**/*.scss,app/assets/javascripts/**/*.es6,test/javascripts/**/*.es6}"
       run: yarn prettier --list-different {all_files}
     eslint-assets:
       run: yarn eslint --ext .es6 app/assets/javascripts

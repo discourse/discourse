@@ -1,7 +1,9 @@
 <div class="container tag-groups-container">
-  <h2>{{i18n "tagging.groups.title"}}</h2>
+  <h2>
+    {{i18n "tagging.groups.title"}}
+  </h2>
 
-  <div class='content-list'>
+  <div class="content-list">
     <ul>
       {{#each model as |tagGroup|}}
         <li>
@@ -17,11 +19,12 @@
         class="btn-default"
         action=(action "newTagGroup")
         icon="plus"
-        label="tagging.groups.new"}}
+        label="tagging.groups.new"
+      }}
     {{/if}}
   </div>
 
   {{outlet}}
 
-  <div class="clearfix" />
+  <div class="clearfix"></div>
 </div>

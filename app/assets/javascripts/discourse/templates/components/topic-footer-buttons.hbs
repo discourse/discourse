@@ -1,4 +1,4 @@
-<div class='topic-footer-main-buttons'>
+<div class="topic-footer-main-buttons">
   {{topic-admin-menu-button
     topic=topic
     openUpwards="true"
@@ -29,26 +29,33 @@
       icon=button.icon
       translatedLabel=button.label
       translatedTitle=button.title
-      disabled=button.disabled}}
+      disabled=button.disabled
+    }}
   {{/each}}
 
-  {{plugin-outlet name="topic-footer-main-buttons-before-create"
-                  args=(hash topic=topic)
-                  tagName=""
-                  connectorTagName="span"}}
+  {{plugin-outlet
+    name="topic-footer-main-buttons-before-create"
+    args=(hash topic=topic)
+    tagName=""
+    connectorTagName="span"
+  }}
 
   {{#if topic.details.can_create_post}}
-    {{d-button class="btn-primary create"
-               icon="reply"
-               action=replyToPost
-               label="topic.reply.title"
-               title="topic.reply.help"}}
+    {{d-button
+      class="btn-primary create"
+      icon="reply"
+      action=replyToPost
+      label="topic.reply.title"
+      title="topic.reply.help"
+    }}
   {{/if}}
 
-  {{plugin-outlet name="after-topic-footer-main-buttons"
-                  args=(hash topic=topic)
-                  tagName=""
-                  connectorTagName="span"}}
+  {{plugin-outlet
+    name="after-topic-footer-main-buttons"
+    args=(hash topic=topic)
+    tagName=""
+    connectorTagName="span"
+  }}
 
   {{pinned-button pinned=topic.pinned topic=topic}}
 </div>
@@ -60,7 +67,9 @@
   }}
 {{/if}}
 
-{{plugin-outlet name="after-topic-footer-buttons"
-                args=(hash topic=topic)
-                tagName=""
-                connectorTagName="span"}}
+{{plugin-outlet
+  name="after-topic-footer-buttons"
+  args=(hash topic=topic)
+  tagName=""
+  connectorTagName="span"
+}}

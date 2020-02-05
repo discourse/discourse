@@ -1,4 +1,4 @@
-<form class='request-group-membership-form'>
+<form class="request-group-membership-form">
   {{#d-modal-body rawTitle=title}}
     <div class="control-group">
       <label>
@@ -10,10 +10,12 @@
   {{/d-modal-body}}
 
   <div class="modal-footer">
-    {{d-button class="btn-primary"
-        disabled=disableSubmit
-        label="groups.membership_request.submit"
-        action=(action "requestMember")}}
+    {{d-button
+      class="btn-primary"
+      disabled=disableSubmit
+      label="groups.membership_request.submit"
+      action=(action "requestMember")
+    }}
 
     {{d-modal-cancel close=(route-action "closeModal")}}
     {{conditional-loading-spinner size="small" condition=loading}}

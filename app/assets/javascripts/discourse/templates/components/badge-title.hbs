@@ -1,9 +1,10 @@
-<section class='user-content'>
+<section class="user-content">
   <form class="form-horizontal">
-
     <div class="control-group">
       <div class="controls">
-        <h3>{{i18n 'badges.select_badge_for_title'}}</h3>
+        <h3>
+          {{i18n "badges.select_badge_for_title"}}
+        </h3>
       </div>
     </div>
 
@@ -24,10 +25,12 @@
           class="btn-primary"
           action=(action "save")
           disabled=saving
-          label=(if saving "saving" "save")}}
-        {{#if saved}}{{i18n 'saved'}}{{/if}}
+          label=(if saving "saving" "save")
+        }}
+        {{#if saved}}
+          {{i18n "saved"}}
+        {{/if}}
       </div>
     </div>
-
   </form>
 </section>
