@@ -191,6 +191,7 @@ describe TagsController do
       expect(json.dig('tag_info', 'name')).to eq(tag.name)
       expect(json.dig('tag_info', 'synonyms')).to be_empty
       expect(json.dig('tag_info', 'category_ids')).to be_empty
+      expect(json.dig('tag_info', 'category_restricted')).to eq(false)
     end
 
     it "can handle a synonym" do
@@ -199,6 +200,7 @@ describe TagsController do
       expect(json.dig('tag_info', 'name')).to eq(synonym.name)
       expect(json.dig('tag_info', 'synonyms')).to be_empty
       expect(json.dig('tag_info', 'category_ids')).to be_empty
+      expect(json.dig('tag_info', 'category_restricted')).to eq(false)
     end
 
     it "can return a tag's synonyms" do
@@ -230,6 +232,7 @@ describe TagsController do
       get "/tag/#{tag.name}/info.json"
       expect(json.dig('tag_info', 'category_ids')).to contain_exactly(category.id, category2.id)
       expect(json['categories']).to be_present
+      expect(json.dig('tag_info', 'category_restricted')).to eq(true)
     end
 
     context 'tag belongs to a tag group' do
@@ -245,6 +248,39 @@ describe TagsController do
         SiteSetting.tags_listed_by_group = false
         get "/tag/#{tag.name}/info.json"
         expect(json['tag_info'].has_key?('tag_group_names')).to eq(false)
+      end
+
+      context "restricted to a private category" do
+        let!(:private_category) do
+          Fabricate(:private_category,
+            group: Fabricate(:group),
+            tag_groups: [tag_group],
+            allow_global_tags: true
+          )
+        end
+
+        it "can return categories to users who can access them" do
+          sign_in(admin)
+          get "/tag/#{tag.name}/info.json"
+          expect(json.dig('tag_info', 'category_ids')).to contain_exactly(private_category.id)
+          expect(json['categories']).to be_present
+          expect(json.dig('tag_info', 'category_restricted')).to eq(true)
+        end
+
+        it "can indicate category restriction to users who can't access them" do
+          sign_in(user)
+          get "/tag/#{tag.name}/info.json"
+          expect(json.dig('tag_info', 'category_ids')).to be_empty
+          expect(json['categories']).to be_blank
+          expect(json.dig('tag_info', 'category_restricted')).to eq(true)
+        end
+
+        it "can indicate category restriction to anon" do
+          get "/tag/#{tag.name}/info.json"
+          expect(json.dig('tag_info', 'category_ids')).to be_empty
+          expect(json['categories']).to be_blank
+          expect(json.dig('tag_info', 'category_restricted')).to eq(true)
+        end
       end
     end
   end

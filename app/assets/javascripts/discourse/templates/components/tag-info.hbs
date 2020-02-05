@@ -22,7 +22,11 @@
         {{/each}}
       {{/if}}
       {{#if nothingToShow}}
-        {{i18n "tagging.default_info"}}
+        {{#if tagInfo.category_restricted}}
+          {{i18n "tagging.category_restricted"}}
+        {{else}}
+          {{i18n "tagging.default_info"}}
+        {{/if}}
       {{/if}}
     </div>
     {{#if tagInfo.synonyms}}

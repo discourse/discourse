@@ -3100,6 +3100,7 @@ en:
       choose_for_topic: "optional tags"
       info: "Info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
+      category_restricted: "This tag is restricted to categories you don't have permission to access."
       synonyms: "Synonyms"
       synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
       tag_groups_info:
