@@ -69,7 +69,9 @@ export default ComboBox.extend(TagsMixin, {
 
   maximumSelectedTags: computed(function() {
     return parseInt(
-      this.options.limit || this.options.maximum || this.maxTagsPerTopic,
+      this.options.limit ||
+        this.selectKit.options.maximum ||
+        this.maxTagsPerTopic,
       10
     );
   }),
@@ -81,7 +83,8 @@ export default ComboBox.extend(TagsMixin, {
   },
 
   caretIcon: computed("value.[]", function() {
-    return this.selectKit.options.maximum >= makeArray(this.value).length
+    const maximum = this.selectKit.options.maximum;
+    return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
       ? null
       : "plus";
   }),
@@ -89,18 +92,19 @@ export default ComboBox.extend(TagsMixin, {
   modifySelection(content) {
     let joinedTags = makeArray(this.value).join(", ");
 
-    if (!this.selectKit.options.maximum >= makeArray(this.value).length) {
+    const minimum = this.selectKit.options.minimum;
+    if (minimum && makeArray(this.value).length < parseInt(minimum, 10)) {
       const key =
         this.selectKit.options.minimumLabel ||
         "select_kit.min_content_not_reached";
       const label = I18n.t(key, { count: this.selectKit.options.minimum });
       content.title = content.name = content.label = label;
-    }
+    } else {
+      content.title = content.name = content.value = content.label = joinedTags;
 
-    content.title = content.name = content.value = content.label = joinedTags;
-
-    if (content.label.length > 32) {
-      content.label = `${content.label.slice(0, 32)}...`;
+      if (content.label.length > 32) {
+        content.label = `${content.label.slice(0, 32)}...`;
+      }
     }
 
     return content;
