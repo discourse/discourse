@@ -42,8 +42,8 @@ export default Component.extend(PanEvents, {
           timelineContainer = document.querySelectorAll(
             ".timeline-container"
           )[0],
-          headerHeight =
-            document.querySelectorAll(".d-header")[0].offsetHeight || 0;
+          headerContainer = document.querySelectorAll(".d-header")[0],
+          headerHeight = (headerContainer && headerContainer.offsetHeight) || 0;
 
         if (timelineContainer && composer) {
           renderTimeline =
@@ -61,7 +61,7 @@ export default Component.extend(PanEvents, {
   },
 
   _checkSize() {
-    debounce(this, this._performCheckSize, 300);
+    debounce(this, this._performCheckSize, 300, true);
   },
 
   // we need to store this so topic progress has something to init with
