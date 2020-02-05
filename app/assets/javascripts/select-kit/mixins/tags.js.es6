@@ -24,7 +24,8 @@ export default Mixin.create({
   allowAnyTag: reads("site.can_create_tag"),
 
   validateCreate(filter, content) {
-    if (this.selectKit.options.maximum >= makeArray(this.value).length) {
+    const maximum = this.selectKit.options.maximum;
+    if (maximum && makeArray(this.value).length >= parseInt(maximum, 10)) {
       this.addError(
         I18n.t("select_kit.max_content_reached", {
           count: this.selectKit.limit
