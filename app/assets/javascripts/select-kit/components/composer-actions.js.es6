@@ -8,6 +8,7 @@ import {
 import Draft from "discourse/models/draft";
 import { computed } from "@ember/object";
 import { camelize } from "@ember/string";
+import { isEmpty } from "@ember/utils";
 
 // Component can get destroyed and lose state
 let _topicSnapshot = null;
@@ -49,7 +50,7 @@ export default DropdownSelectBoxComponent.extend({
       _postSnapshot = this.get("composerModel.post");
     }
 
-    if (Ember.isEmpty(this.content)) {
+    if (isEmpty(this.content)) {
       this.set("selectKit.isHidden", true);
     }
   },

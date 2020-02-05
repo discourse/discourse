@@ -108,6 +108,10 @@ var define, requirejs;
       },
       "@ember/error": {
         default: Ember.error
+      },
+
+      "@ember/object/internals": {
+        guidFor: Ember.guidFor
       }
     };
   }

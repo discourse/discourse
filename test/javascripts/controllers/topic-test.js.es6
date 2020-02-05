@@ -4,6 +4,7 @@ import Topic from "discourse/models/topic";
 import PostStream from "discourse/models/post-stream";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import User from "discourse/models/user";
+import { Promise } from "rsvp";
 
 moduleFor("controller:topic", "controller:topic", {
   needs: [
@@ -534,7 +535,7 @@ QUnit.test(
       reply_count: 3,
       destroy: () => {
         destroyed = true;
-        return Ember.RSVP.Promise.resolve();
+        return Promise.resolve();
       }
     });
 

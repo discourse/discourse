@@ -1,8 +1,10 @@
 import { bufferedProperty } from "discourse/mixins/buffered-content";
+import Controller from "@ember/controller";
+import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { empty } from "@ember/object/computed";
 
-export default Ember.Controller.extend(bufferedProperty("model"), {
+export default Controller.extend(bufferedProperty("model"), {
   isNew: empty("model.id"),
 
   actions: {
@@ -21,7 +23,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
     cancel() {
       const id = this.get("userField.id");
-      if (Ember.isEmpty(id)) {
+      if (isEmpty(id)) {
         this.destroyAction(this.userField);
       } else {
         this.rollbackBuffer();

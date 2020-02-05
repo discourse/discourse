@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
+import { bind } from "@ember/runloop";
 
 export default Component.extend({
   layoutName: "select-kit/templates/components/select-kit/select-kit-body",
@@ -13,10 +14,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    this.handleRootMouseDownHandler = Ember.run.bind(
-      this,
-      this.handleRootMouseDown
-    );
+    this.handleRootMouseDownHandler = bind(this, this.handleRootMouseDown);
   },
 
   didInsertElement() {

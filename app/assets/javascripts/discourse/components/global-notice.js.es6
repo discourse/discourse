@@ -2,6 +2,7 @@ import { bind, cancel } from "@ember/runloop";
 import Component from "@ember/component";
 import LogsNotice from "discourse/services/logs-notice";
 import EmberObject from "@ember/object";
+import { computed } from "@ember/object";
 
 const _pluginNotices = [];
 
@@ -58,7 +59,7 @@ export default Component.extend({
     this._tearDownObservers();
   },
 
-  notices: Ember.computed(
+  notices: computed(
     "site.isReadOnly",
     "siteSettings.disable_emails",
     "logNotice.{id,text,hidden}",

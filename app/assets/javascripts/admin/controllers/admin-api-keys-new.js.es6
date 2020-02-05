@@ -1,7 +1,8 @@
 import discourseComputed from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   userModes: [
     { id: "all", name: I18n.t("admin.api.all_users") },
     { id: "single", name: I18n.t("admin.api.single_user") }
