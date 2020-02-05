@@ -200,7 +200,9 @@ export default EmberObject.extend({
 
   createRecord(type, attrs, opts = {}) {
     attrs = attrs || {};
-    return !!attrs.id ? this._hydrate(type, attrs, null, opts) : this._build(type, attrs, opts);
+    return !!attrs.id
+      ? this._hydrate(type, attrs, null, opts)
+      : this._build(type, attrs, opts);
   },
 
   destroyRecord(type, record) {
@@ -264,7 +266,9 @@ export default EmberObject.extend({
 
     const klass = this.register.lookupFactory("model:" + type) || RestModel;
     const model = klass.create(obj);
-    const mapId = opts.randomMapKey ? Math.floor(Math.random() * 100) + 1 : obj.id;
+    const mapId = opts.randomMapKey
+      ? (Math.floor(Math.random() * 1000) + 1) * -1
+      : obj.id;
     if (opts.randomMapKey) {
       obj.__storeMapId = mapId;
     }

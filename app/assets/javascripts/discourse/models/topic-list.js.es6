@@ -174,7 +174,9 @@ TopicList.reopenClass({
         t.participants.forEach(p => (p.user = users[p.user_id]));
       }
 
-      return store.createRecord("topic", t, { randomMapKey: result.filter === "bookmarks" });
+      return store.createRecord("topic", t, {
+        randomMapKey: result.filter === "bookmarks"
+      });
     });
   },
 

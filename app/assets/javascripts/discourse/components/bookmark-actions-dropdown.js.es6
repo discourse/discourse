@@ -12,7 +12,9 @@ export default DropdownSelectBoxComponent.extend({
         id: "remove",
         icon: "trash-alt",
         name: I18n.t("post.bookmarks.actions.delete_bookmark.name"),
-        description: I18n.t("post.bookmarks.actions.delete_bookmark.description")
+        description: I18n.t(
+          "post.bookmarks.actions.delete_bookmark.description"
+        )
       }
     ];
   },

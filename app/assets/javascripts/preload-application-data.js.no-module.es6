@@ -12,7 +12,7 @@
       if (setupData.debugPreloadedAppData === "true") {
         /* eslint-disable no-console  */
         console.log(key, ps.get(key));
-         /* eslint-enable no-console  */
+        /* eslint-enable no-console  */
       }
     });
   }
