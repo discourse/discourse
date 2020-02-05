@@ -140,7 +140,8 @@ class PostAlerter
     users = User.where(id: user_ids)
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-    users.each do |user|
+    users.pluck(:id).each do |user_id|
+      user = User.find_by(id: user_id)
       create_notification(user, Notification.types[:watching_first_post], post)
     end
   end
