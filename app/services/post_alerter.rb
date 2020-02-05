@@ -627,8 +627,8 @@ class PostAlerter
 
   def each_user_in_batches(users)
     # This is race-condition-safe, unlike #find_in_batches
-    users.pluck(:id).each_slice(USER_BATCH_SIZE) do |user_id_batches|
-      User.where(id: user_id_batches).each { |user| yield(user) }
+    users.pluck(:id).each_slice(USER_BATCH_SIZE) do |user_ids_batch|
+      User.where(id: user_ids_batch).each { |user| yield(user) }
     end
   end
 end
