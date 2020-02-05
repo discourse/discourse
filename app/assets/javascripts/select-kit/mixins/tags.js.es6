@@ -2,6 +2,7 @@ import { reads } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Mixin from "@ember/object/mixin";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default Mixin.create({
   searchTags(url, data, callback) {
@@ -22,7 +23,7 @@ export default Mixin.create({
   allowAnyTag: reads("site.can_create_tag"),
 
   validateCreate(filter, content) {
-    if (this.selectKit.hasReachedMaximum) {
+    if (this.selectKit.options.maximum >= makeArray(this.value).length) {
       this.addError(
         I18n.t("select_kit.max_content_reached", {
           count: this.selectKit.limit
