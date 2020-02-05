@@ -169,7 +169,7 @@ module TopicGuardian
       else
         records = records.where('topics.category_id IS NULL')
       end
-      records = records.references('categories')
+      records = records.references(:categories)
     end
     records
   end
