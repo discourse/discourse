@@ -1,9 +1,12 @@
 import { computed, default as EmberObject } from "@ember/object";
 import Component from "@ember/component";
 import deprecated from "discourse-common/lib/deprecated";
-const { get, isNone, makeArray } = Ember;
+import { makeArray } from "discourse-common/lib/helpers";
+import { get } from "@ember/object";
 import UtilsMixin from "select-kit/mixins/utils";
 import PluginApiMixin from "select-kit/mixins/plugin-api";
+import Mixin from "@ember/object/mixin";
+import { isEmpty, isNone } from "@ember/utils";
 import {
   next,
   debounce,
@@ -26,7 +29,7 @@ export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
 
 const EMPTY_OBJECT = Object.freeze({});
-const SELECT_KIT_OPTIONS = Ember.Mixin.create({
+const SELECT_KIT_OPTIONS = Mixin.create({
   mergedProperties: ["selectKitOptions"],
   selectKitOptions: EMPTY_OBJECT
 });
@@ -220,7 +223,7 @@ export default Component.extend(
       );
 
       this.selectKit.setProperties({
-        hasSelection: !Ember.isEmpty(this.value),
+        hasSelection: !isEmpty(this.value),
         noneItem: this._modifyNoSelectionWrapper()
       });
 
@@ -572,7 +575,7 @@ export default Component.extend(
           }
         }
 
-        const hasNoContent = Ember.isEmpty(content);
+        const hasNoContent = isEmpty(content);
 
         if (
           this.selectKit.hasSelection &&

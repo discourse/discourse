@@ -5,6 +5,7 @@ import {
   NO_CATEGORIES_ID,
   ALL_CATEGORIES_ID
 } from "select-kit/components/category-drop";
+import { set } from "@ember/object";
 
 testSelectKitModule("category-drop");
 
@@ -82,8 +83,8 @@ componentTest("[not staff - TL0] displayCategoryDescription", {
   template: template(),
 
   beforeEach() {
-    Ember.set(this.currentUser, "staff", false);
-    Ember.set(this.currentUser, "trustLevel", 0);
+    set(this.currentUser, "staff", false);
+    set(this.currentUser, "trustLevel", 0);
 
     initCategories(this);
   },
@@ -103,8 +104,8 @@ componentTest("[not staff - TL1] displayCategoryDescription", {
   template: template(),
 
   beforeEach() {
-    Ember.set(this.currentUser, "staff", false);
-    Ember.set(this.currentUser, "trustLevel", 1);
+    set(this.currentUser, "staff", false);
+    set(this.currentUser, "trustLevel", 1);
 
     initCategories(this);
   },
@@ -124,8 +125,8 @@ componentTest("[staff - TL0] displayCategoryDescription", {
   template: template(),
 
   beforeEach() {
-    Ember.set(this.currentUser, "staff", true);
-    Ember.set(this.currentUser, "trustLevel", 0);
+    set(this.currentUser, "staff", true);
+    set(this.currentUser, "trustLevel", 0);
 
     initCategories(this);
   },

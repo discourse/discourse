@@ -43,6 +43,7 @@
     "@arkweid/lefthook": "^0.6.3",
     "chrome-launcher": "^0.12.0",
     "chrome-remote-interface": "^0.25",
+    "eslint-plugin-discourse-ember": "0.0.3",
     "eslint-config-discourse": "1.1.0",
     "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
     "pretender": "^1.6",
