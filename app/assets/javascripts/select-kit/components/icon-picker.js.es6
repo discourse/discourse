@@ -8,14 +8,34 @@ export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["icon-picker"],
   classNames: ["icon-picker"],
 
+  init() {
+    this._super(...arguments);
+
+    this._cachedIconsList = null;
+  },
+
   content: computed("value.[]", function() {
     return makeArray(this.value).map(this._processIcon);
   }),
 
   search(filter = "") {
-    return ajax("/svg-sprite/picker-search", { data: { filter } }).then(icons =>
-      icons.map(this._processIcon)
-    );
+    if (
+      filter === "" &&
+      this._cachedIconsList &&
+      this._cachedIconsList.length
+    ) {
+      return this._cachedIconsList;
+    } else {
+      return ajax("/svg-sprite/picker-search", {
+        data: { filter }
+      }).then(icons => {
+        icons = icons.map(this._processIcon);
+        if (filter === "") {
+          this._cachedIconsList = icons;
+        }
+        return icons;
+      });
+    }
   },
 
   _processIcon(icon) {
@@ -48,6 +68,8 @@ export default MultiSelectComponent.extend({
   willDestroyElement() {
     $("#svg-sprites .ajax-icon-holder").remove();
     this._super(...arguments);
+
+    this._cachedIconsList = null;
   },
 
   actions: {
