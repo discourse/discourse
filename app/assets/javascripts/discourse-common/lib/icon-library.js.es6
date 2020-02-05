@@ -573,6 +573,7 @@ function warnIfMissing(id) {
   if (
     typeof Discourse !== "undefined" &&
     Discourse.Environment === "development" &&
+    !Discourse.disableMissingIconWarning &&
     Discourse.SvgIconList &&
     Discourse.SvgIconList.indexOf(id) === -1
   ) {
