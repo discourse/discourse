@@ -13,31 +13,10 @@ export default class ComponentConnector {
     const $elem = $(
       '<div style="display: inline-flex;" class="widget-component-connector"></div>'
     );
-    const elem = $elem[0];
-    const { opts, widget, componentName } = this;
+    this.elem = $elem[0];
+    scheduleOnce("afterRender", this, this.connectComponent);
 
-    scheduleOnce("afterRender", this, () => {
-      const mounted = widget._findView();
-
-      const view = widget.register
-        .lookupFactory(`component:${componentName}`)
-        .create(opts);
-
-      if (setOwner) {
-        setOwner(view, getOwner(mounted));
-      }
-
-      // component connector is not triggering didReceiveAttrs
-      // we force it for selectKit components
-      if (view.selectKit) {
-        view.didReceiveAttrs();
-      }
-
-      mounted._connected.push(view);
-      view.renderer.appendTo(view, $elem[0]);
-    });
-
-    return elem;
+    return this.elem;
   }
 
   update(prev) {
@@ -55,6 +34,27 @@ export default class ComponentConnector {
     if (shouldInit) return this.init();
 
     return null;
+  }
+
+  connectComponent() {
+    const { elem, opts, widget, componentName } = this;
+
+    const mounted = widget._findView();
+    const view = widget.register
+      .lookupFactory(`component:${componentName}`)
+      .create(opts);
+
+    if (setOwner) {
+      setOwner(view, getOwner(mounted));
+    }
+
+    // component connector is not triggering didReceiveAttrs
+    // we force it for selectKit components
+    if (view.selectKit) {
+      view.didReceiveAttrs();
+    }
+    mounted._connected.push(view);
+    view.renderer.appendTo(view, elem);
   }
 }
 
