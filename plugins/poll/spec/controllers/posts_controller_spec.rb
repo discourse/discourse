@@ -72,14 +72,14 @@ describe PostsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_different_options"))
     end
 
-    it "should have at least 2 options" do
+    it "should have at least 1 options" do
       post :create, params: {
-        title: title, raw: "[poll]\n- A\n[/poll]"
+        title: title, raw: "[poll]\n[/poll]"
       }, format: :json
 
       expect(response).not_to be_successful
       json = ::JSON.parse(response.body)
-      expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_at_least_2_options"))
+      expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_at_least_1_option"))
     end
 
     it "should have at most 'SiteSetting.poll_maximum_options' options" do
@@ -267,14 +267,14 @@ describe PostsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_different_options", name: "foo"))
     end
 
-    it "should have at least 2 options" do
+    it "should have at least 1 option" do
       post :create, params: {
-        title: title, raw: "[poll name='foo']\n- A\n[/poll]"
+        title: title, raw: "[poll name='foo']\n[/poll]"
       }, format: :json
 
       expect(response).not_to be_successful
       json = ::JSON.parse(response.body)
-      expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_at_least_2_options", name: "foo"))
+      expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_at_least_1_option", name: "foo"))
     end
 
   end
