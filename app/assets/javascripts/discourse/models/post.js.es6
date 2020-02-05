@@ -353,6 +353,7 @@ const Post = RestModel.extend({
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
         },
         afterSave: reminderAtISO => {
+          this.set("topic.bookmarked", true);
           this.set("bookmark_reminder_at", reminderAtISO);
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
         }
@@ -360,7 +361,10 @@ const Post = RestModel.extend({
     } else {
       this.set("bookmark_reminder_at", null);
       return Post.destroyBookmark(this.id)
-        .then(() => this.appEvents.trigger("page:bookmark-post-toggled", this))
+        .then(result => {
+          this.set("topic.bookmarked", result.topic_bookmarked);
+          this.appEvents.trigger("page:bookmark-post-toggled", this);
+        })
         .catch(error => {
           this.toggleProperty("bookmarked_with_reminder");
           throw new Error(error);
