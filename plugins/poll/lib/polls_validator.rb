@@ -18,7 +18,7 @@ module DiscoursePoll
         return false unless unique_poll_name?(polls, poll)
         return false unless unique_options?(poll)
         return false unless any_blank_options?(poll)
-        return false unless at_least_two_options?(poll)
+        return false unless at_least_one_option?(poll)
         return false unless valid_number_of_options?(poll)
         return false unless valid_multiple_choice_settings?(poll)
         polls[poll["name"]] = poll
@@ -92,12 +92,12 @@ module DiscoursePoll
       true
     end
 
-    def at_least_two_options?(poll)
-      if poll["options"].size < 2
+    def at_least_one_option?(poll)
+      if poll["options"].size < 1
         if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
-          @post.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_2_options"))
+          @post.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_1_option"))
         else
-          @post.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_2_options", name: poll["name"]))
+          @post.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_1_option", name: poll["name"]))
         end
 
         return false
@@ -170,9 +170,9 @@ module DiscoursePoll
         valid = false
       elsif ((max - min + 1) / step) < 2
         if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
-          @post.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_2_options"))
+          @post.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_1_option"))
         else
-          @post.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_2_options", name: poll["name"]))
+          @post.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_1_option", name: poll["name"]))
         end
         valid = false
       end
