@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PostAlerter
-  USER_BATCH_SIZE = 1000
+  USER_BATCH_SIZE = 100
 
   def self.post_created(post, opts = {})
     PostAlerter.new(opts).after_save_post(post, true)
@@ -611,10 +611,10 @@ class PostAlerter
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
 
-    already_seen_users = TopicUser.where(topic_id: post.topic.id).where("highest_seen_post_number >= ?", post.post_number).pluck(:user_id)
+    already_seen_user_ids = Set.new TopicUser.where(topic_id: post.topic.id).where("highest_seen_post_number >= ?", post.post_number).pluck(:user_id)
 
     each_user_in_batches(notify) do |user|
-      notification_type = already_seen_users.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]
+      notification_type = already_seen_user_ids.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]
       create_notification(user, notification_type, post)
     end
   end
