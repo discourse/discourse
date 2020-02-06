@@ -12,9 +12,5 @@ export function componentTest(name, opts) {
 
     andThen(() => this.render(opts.template));
     andThen(() => opts.test.call(this, assert));
-
-    if (opts.afterEach) {
-      opts.afterEach.call(this);
-    }
   });
 }
