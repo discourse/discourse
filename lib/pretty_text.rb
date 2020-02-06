@@ -340,8 +340,8 @@ module PrettyText
     doc = Nokogiri::HTML.fragment(html)
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
+    strip_oneboxed_media(doc)
     html = doc.to_html
-
     ExcerptParser.get_excerpt(html, max_length, options)
   end
 
@@ -372,6 +372,11 @@ module PrettyText
 
   def self.strip_image_wrapping(doc)
     doc.css(".lightbox-wrapper .meta").remove
+  end
+
+  def self.strip_oneboxed_media(doc)
+    doc.css("audio").remove
+    doc.css("video").remove
   end
 
   def self.convert_vimeo_iframes(doc)
