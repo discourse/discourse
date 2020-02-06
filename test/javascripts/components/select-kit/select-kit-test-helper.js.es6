@@ -3,11 +3,14 @@ import selectKit from "helpers/select-kit-helper";
 export function testSelectKitModule(moduleName, options = {}) {
   moduleForComponent(`select-kit/${moduleName}`, {
     integration: true,
+
     beforeEach() {
       this.set("subject", selectKit());
       options.beforeEach && options.beforeEach.call(this);
     },
+
     afterEach() {
+      this.set("subject", null);
       options.afterEach && options.afterEach.call(this);
     }
   });
