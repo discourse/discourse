@@ -475,6 +475,10 @@ module ApplicationHelper
 
     if Rails.env.development?
       setup_data[:svg_icon_list] = SvgSprite.all_icons(theme_ids)
+
+      if ENV['DEBUG_PRELOADED_APP_DATA']
+        setup_data[:debug_preloaded_app_data] = true
+      end
     end
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]
