@@ -771,6 +771,29 @@ describe PrettyText do
         )).to eq("boom")
       end
     end
+
+    it 'should strip audio/video' do
+      html = <<~HTML
+        <audio controls>
+          <source src="https://awebsite.com/audio.mp3"><a href="https://awebsite.com/audio.mp3">https://awebsite.com/audio.mp3</a></source>
+        </audio>
+        <p>Listen to this!</p>
+      HTML
+
+      expect(PrettyText.excerpt(html, 100)).to eq("Listen to this!")
+
+      html = <<~HTML
+        <div class="onebox video-onebox">
+          <video controlslist="nodownload" width="100%" height="100%" controls="">
+            <source src="http://videosource.com/running.mp4">
+            <a href="http://videosource.com/running.mp4">http://videosource.com/running.mp4</a>
+          </video>
+        </div>
+        <p>Watch this, but not in the excerpt.</p>
+      HTML
+
+      expect(PrettyText.excerpt(html, 100)).to eq("Watch this, but not in the excerpt.")
+    end
   end
 
   describe "strip links" do
