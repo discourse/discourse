@@ -774,6 +774,21 @@ describe CookedPostProcessor do
           post.topic.reload
           expect(post.topic.image_url).to be_present
         end
+
+        it "removes image if post is edited and no longer has an image" do
+          FastImage.stubs(:size)
+
+          cpp.post_process
+          post.topic.reload
+          expect(post.topic.image_url).to be_present
+          expect(post.image_url).to be_present
+
+          post.update!(raw: "This post no longer has an image.")
+          CookedPostProcessor.new(post).post_process
+          post.topic.reload
+          expect(post.topic.image_url).not_to be_present
+          expect(post.image_url).not_to be_present
+        end
       end
 
       context "post image" do
