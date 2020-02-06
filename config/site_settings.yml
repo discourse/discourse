@@ -1436,7 +1436,9 @@ onebox:
     list_type: compact
   enable_inline_onebox_on_all_domains:
     default: false
-
+  force_custom_user_agent_hosts:
+    default: "http://codepen.io"
+    type: list
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
