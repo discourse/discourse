@@ -36,8 +36,14 @@ QUnit.test("createRecord with randomMapKey option specified", assert => {
   const obj = { test: "test" };
   const widget = store.createRecord("widget", obj, { randomMapKey: true });
   const storeMapId = widget.__storeMapId;
-  assert.ok(storeMapId, "a random map Id is create for the the object in the store");
-  assert.ok(storeMapId < 0, "the random Id is negative to distinguish it from real Ids");
+  assert.ok(
+    storeMapId,
+    "a random map Id is create for the the object in the store"
+  );
+  assert.ok(
+    storeMapId < 0,
+    "the random Id is negative to distinguish it from real Ids"
+  );
 });
 
 QUnit.test("createRecord without attributes", assert => {
