@@ -169,7 +169,7 @@ module Discourse
     initializer :fix_sprockets_loose_file_searcher, after: :set_default_precompile do |app|
       app.config.assets.precompile.delete(Sprockets::Railtie::LOOSE_APP_ASSETS)
       start_path = ::Rails.root.join("app/assets").to_s
-      exclude = ['.es6', '.hbs', '.js', '.css', '']
+      exclude = ['.es6', '.hbs', '.hbr', '.js', '.css', '']
       app.config.assets.precompile << lambda do |logical_path, filename|
         filename.start_with?(start_path) &&
         !exclude.include?(File.extname(logical_path))

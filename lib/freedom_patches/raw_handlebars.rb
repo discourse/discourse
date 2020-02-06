@@ -73,6 +73,7 @@ class Ember::Handlebars::Template
   # to find the right template to use.
   def actual_name(input)
     actual_name = input[:name]
-    input[:filename].include?('.raw') ? "#{actual_name}.raw" : actual_name
+    return "#{actual_name}.raw" if input[:filename].include?('.raw')
+    actual_name
   end
 end

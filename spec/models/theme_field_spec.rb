@@ -175,7 +175,8 @@ HTML
     theme = Fabricate(:theme)
     js_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.js.es6", value: "import 'discourse/lib/ajax'; console.log('hello');")
     hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbs", value: "{{hello-world}}")
-    raw_hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.raw.hbs", value: "{{hello-world}}")
+    raw_hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbr", value: "{{hello-world}}")
+    hbr_field = theme.set_field(target: :extra_js, name: "discourse/templates/other_discovery.hbr", value: "{{hello-world}}")
     unknown_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.blah", value: "this wont work")
     theme.save!
 
@@ -195,6 +196,7 @@ HTML
 
     expect(hbs_field.reload.value_baked).to include('Ember.TEMPLATES["discovery"]')
     expect(raw_hbs_field.reload.value_baked).to include('Discourse.RAW_TEMPLATES["discovery"]')
+    expect(hbr_field.reload.value_baked).to include('Discourse.RAW_TEMPLATES["other_discovery"]')
     expect(unknown_field.reload.value_baked).to eq("")
     expect(unknown_field.reload.error).to eq(I18n.t("themes.compile_error.unrecognized_extension", extension: "blah"))
 

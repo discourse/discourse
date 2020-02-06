@@ -20,6 +20,9 @@
   "app/assets/javascripts/discourse/templates/*.hbs": {
     "command": "dtemplate"
   },
+  "app/assets/javascripts/discourse/templates/*.hbr": {
+    "command": "dtemplate"
+  },
   "app/assets/javascripts/discourse/views/*.js": {
     "command": "dview"
   },

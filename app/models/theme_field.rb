@@ -82,7 +82,7 @@ class ThemeField < ActiveRecord::Base
 
     doc.css('script[type="text/x-handlebars"]').each do |node|
       name = node["name"] || node["data-template-name"] || "broken"
-      is_raw = name =~ /\.raw$/
+      is_raw = name =~ /\.raw$/ || name =~ /\.hbr$/
       hbs_template = node.inner_html
 
       begin
@@ -138,6 +138,8 @@ class ThemeField < ActiveRecord::Base
         js_compiler.append_module(content, filename)
       when "hbs"
         js_compiler.append_ember_template(filename.sub("discourse/templates/", ""), content)
+      when "hbr"
+        js_compiler.append_raw_template(filename.sub("discourse/templates/", ""), content)
       when "raw.hbs"
         js_compiler.append_raw_template(filename.sub("discourse/templates/", ""), content)
       else
