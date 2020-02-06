@@ -777,8 +777,7 @@ describe PrettyText do
         <audio controls>
           <source src="https://awebsite.com/audio.mp3"><a href="https://awebsite.com/audio.mp3">https://awebsite.com/audio.mp3</a></source>
         </audio>
-
-        Listen to this!
+        <p>Listen to this!</p>
       HTML
 
       expect(PrettyText.excerpt(html, 100)).to eq("Listen to this!")
@@ -794,7 +793,6 @@ describe PrettyText do
       HTML
 
       expect(PrettyText.excerpt(html, 100)).to eq("Watch this, but not in the excerpt.")
-      expect(PrettyText.excerpt("ignore audio video text items", 100)).to eq("ignore audio video text items")
     end
   end
 
