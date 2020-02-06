@@ -113,7 +113,7 @@ module TopicGuardian
   # Recovery Method
   def can_recover_topic?(topic)
     if is_staff?
-      !!(topic && topic.deleted_at && topic.user)
+      !!(topic && topic.deleted_at)
     else
       topic && can_recover_post?(topic.ordered_posts.first)
     end

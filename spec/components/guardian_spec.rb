@@ -1159,7 +1159,7 @@ describe Guardian do
           PostDestroyer.new(moderator, topic.first_post).destroy
           topic.first_post.user.destroy!
 
-          expect(Guardian.new(moderator).can_recover_topic?(topic.reload)).to be_falsey
+          expect(Guardian.new(moderator).can_recover_topic?(topic.reload)).to be_truthy
         end
       end
     end
@@ -1199,7 +1199,7 @@ describe Guardian do
             PostDestroyer.new(moderator, post).destroy
             post.user.destroy!
 
-            expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_falsey
+            expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_truthy
           end
         end
       end
