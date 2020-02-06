@@ -3,10 +3,6 @@
 require 'rails_helper'
 
 describe Oneboxer do
-  before do
-    SiteSetting.force_custom_user_agent_hosts = "http://codepen.io|https://video.discourse.org/"
-  end
-
   it "returns blank string for an invalid onebox" do
     stub_request(:head, "http://boom.com")
     stub_request(:get, "http://boom.com").to_return(body: "")
@@ -174,6 +170,7 @@ describe Oneboxer do
   end
 
   it "uses the Onebox custom user agent on specified hosts" do
+    SiteSetting.force_custom_user_agent_hosts = "http://codepen.io|https://video.discourse.org/"
     url = 'https://video.discourse.org/presentation.mp4'
 
     stub_request(:head, url).to_return(status: 403, body: "", headers: {})
