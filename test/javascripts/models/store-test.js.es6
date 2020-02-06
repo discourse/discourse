@@ -31,6 +31,15 @@ QUnit.test("createRecord doesn't modify the input `id` field", assert => {
   assert.equal(obj.id, 1, "it does not remove the id from the input");
 });
 
+QUnit.test("createRecord with randomMapKey option specified", assert => {
+  const store = createStore();
+  const obj = { test: "test" };
+  const widget = store.createRecord("widget", obj, { randomMapKey: true });
+  const storeMapId = widget.__storeMapId;
+  assert.ok(storeMapId, "a random map Id is create for the the object in the store");
+  assert.ok(storeMapId < 0, "the random Id is negative to distinguish it from real Ids");
+});
+
 QUnit.test("createRecord without attributes", assert => {
   const store = createStore();
   const widget = store.createRecord("widget");

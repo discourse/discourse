@@ -198,9 +198,11 @@ export default EmberObject.extend({
     });
   },
 
-  createRecord(type, attrs) {
+  createRecord(type, attrs, opts = {}) {
     attrs = attrs || {};
-    return !!attrs.id ? this._hydrate(type, attrs) : this._build(type, attrs);
+    return !!attrs.id
+      ? this._hydrate(type, attrs, null, opts)
+      : this._build(type, attrs, opts);
   },
 
   destroyRecord(type, record) {
@@ -252,7 +254,7 @@ export default EmberObject.extend({
     return ResultSet.create(createArgs);
   },
 
-  _build(type, obj) {
+  _build(type, obj, opts = {}) {
     obj.store = this;
     obj.__type = type;
     obj.__state = obj.id ? "created" : "new";
@@ -262,11 +264,35 @@ export default EmberObject.extend({
     obj.keyValueStore = this.register.lookup("key-value-store:main");
     obj.siteSettings = this.register.lookup("site-settings:main");
 
+    // in some cases we want to use a random value instead
+    // of the object's id, e.g. if we have a list where the
+    // same ID database record shows multiple times but with
+    // different attached data
+    let mapId = null;
+    if (opts.randomMapKey) {
+      mapId = this.generateRandomStoreMapId();
+      obj.__storeMapId = mapId;
+    } else {
+      mapId = obj.id;
+    }
+
     const klass = this.register.lookupFactory("model:" + type) || RestModel;
     const model = klass.create(obj);
 
-    storeMap(type, obj.id, model);
+    storeMap(type, mapId, model);
     return model;
+  },
+
+  generateRandomStoreMapId() {
+    let randomId = (Math.floor(Math.random() * 10000) + 1) * -1;
+
+    // the point of this is to avoid conflicts, so regenrate
+    // the id if we have a conflict
+    if (_identityMap[randomId]) {
+      return this.generateRandomStoreMapId();
+    }
+
+    return randomId;
   },
 
   adapterFor(type) {
@@ -336,12 +362,12 @@ export default EmberObject.extend({
     });
   },
 
-  _hydrate(type, obj, root) {
+  _hydrate(type, obj, root, opts = {}) {
     if (!obj) {
       throw new Error("Can't hydrate " + type + " of `null`");
     }
 
-    const id = obj.id;
+    const id = obj.__storeMapId || obj.id;
     if (!id) {
       throw new Error("Can't hydrate " + type + " without an `id`");
     }
@@ -374,7 +400,7 @@ export default EmberObject.extend({
       return existing;
     }
 
-    return this._build(type, obj);
+    return this._build(type, obj, opts);
   }
 });
 
