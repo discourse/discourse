@@ -37,10 +37,6 @@ componentTest("afterRender", {
     this.set("baz", 0);
   },
 
-  afterEach() {
-    this.registry.unregister("component:foo-component", fooComponent);
-  },
-
   test(assert) {
     assert.ok(exists(document.querySelector(".foo-component")));
     assert.equal(this.baz, 1);

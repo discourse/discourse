@@ -59,7 +59,7 @@ export default function(name, opts) {
         opts.test.call(this, assert);
       } finally {
         if (opts.afterEach) {
-          opts.afterEach.call(this, store);
+          opts.afterEach.call(opts);
         }
       }
     });
