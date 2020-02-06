@@ -87,9 +87,9 @@ export default Controller.extend({
 
   @discourseComputed("site.groups")
   siteGroups(groups) {
-    const values = [{ name: "", value: null }];
-    groups.forEach(g => values.push({ name: g.name, value: g.name }));
-    return values;
+    return groups.map(g => {
+      return { name: g.name, value: g.name };
+    });
   },
 
   @discourseComputed("pollType", "regularPollType")

@@ -26,6 +26,7 @@
         <label class="input-group-label">{{i18n 'poll.ui_builder.poll_groups.label'}}</label>
         {{combo-box content=siteGroups
                     value=pollGroups
+                    options=(hash clearable=true)
                     valueAttribute="value"}}
       </div>
 
