@@ -787,12 +787,12 @@ export default Component.extend({
   },
 
   _registerImageScaleButtonClick($preview) {
-    // original string `![image|690x220, 50%](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
-    // group 1 `image`
+    // original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
+    // group 1 `image|foo=bar`
     // group 2 `690x220`
     // group 3 `, 50%`
-    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png'
-    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
+    // group 4 '|bar=baz'
+    // group 5 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
 
     // Notes:
     // Group 3 is optional. group 4 can match images with or without a markdown title.
