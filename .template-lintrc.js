@@ -1,8 +1,8 @@
 module.exports = {
-  extends: "recommended",
+  // extends: "recommended",
   ignore: ["**/*.raw"],
 
   rules: {
-    quotes: false
+    "self-closing-void-elements": true
   }
 };

@@ -8,7 +8,7 @@
   {{text-field value=filter class="url-input" placeholderKey="admin.permalink.form.filter" autocorrect="off" autocapitalize="off"}}
 </div>
 {{permalink-form action=(action "recordAdded")}}
-<br/>
+<br>
 
 {{#conditional-loading-spinner condition=loading}}
   {{#if model.length}}

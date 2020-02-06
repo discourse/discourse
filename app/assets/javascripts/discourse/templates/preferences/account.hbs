@@ -208,7 +208,7 @@
 
 {{plugin-outlet name="user-preferences-account" args=(hash model=model save=(action "save"))}}
 
-<br/>
+<br>
 
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 
@@ -223,7 +223,7 @@
 
 {{#if model.canDeleteAccount}}
   <div class="control-group delete-account">
-    <br/>
+    <br>
     <div class="controls">
       {{d-button action=(action "delete") disabled=deleteDisabled class="btn-danger" icon="far-trash-alt" label="user.delete_account"}}
     </div>

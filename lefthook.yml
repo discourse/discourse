@@ -6,8 +6,10 @@ pre-commit:
       run: bundle exec rubocop {staged_files}
     eslint:
       glob: "*.{js,es6}"
-      exclude: 'vendor/*'
+      exclude: "vendor/*"
       run: yarn eslint --ext .es6 -f compact {staged_files}
+    ember-template-lint:
+      run: yarn run ember-template-lint app
     yaml-syntax:
       glob: "*.{yaml,yml}"
       # database.yml is an erb file not a yaml file
