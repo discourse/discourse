@@ -1,12 +1,16 @@
+import { computed } from "@ember/object";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["bookmark-actions-dropdown"],
-  headerIcon: null,
-  title: "...",
-  showFullTitle: true,
+  pluginApiIdentifiers: ["bookmark-actions-dropdown"],
+  selectKitOptions: {
+    icon: null,
+    translatedNone: "...",
+    showFullTitle: true
+  },
 
-  computeContent() {
+  content: computed(() => {
     return [
       {
         id: "remove",
@@ -17,10 +21,10 @@ export default DropdownSelectBoxComponent.extend({
         )
       }
     ];
-  },
+  }),
 
   actions: {
-    onSelect(id) {
+    onChange(id) {
       switch (id) {
         case "remove":
           this.removeBookmark(this.bookmarkId);

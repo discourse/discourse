@@ -353,8 +353,10 @@ const Post = RestModel.extend({
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
         },
         afterSave: reminderAtISO => {
-          this.set("topic.bookmarked", true);
-          this.set("bookmark_reminder_at", reminderAtISO);
+          this.setProperties({
+            "topic.bookmarked": true,
+            bookmark_reminder_at: reminderAtISO
+          });
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
         }
       });

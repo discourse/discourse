@@ -107,7 +107,7 @@ const Topic = RestModel.extend({
   },
 
   @discourseComputed("fancy_title", "bookmark_name")
-  fancyTitle(title, bookmark_name) {
+  fancyTitle(title, bookmarkName) {
     let fancyTitle = censor(
       emojiUnescape(title) || "",
       Site.currentProp("censored_regexp")
@@ -117,7 +117,9 @@ const Topic = RestModel.extend({
       const titleDir = isRTL(title) ? "rtl" : "ltr";
       return `<span dir="${titleDir}">${fancyTitle}</span>`;
     }
-    fancyTitle = fancyTitle + (bookmark_name ? " (" + bookmark_name + ")" : "");
+
+    if (bookmarkName) fancyTitle += ` (${bookmarkName})`;
+
     return fancyTitle;
   },
 
@@ -413,14 +415,14 @@ const Topic = RestModel.extend({
             posts.forEach(post => {
               if (post.get("bookmarked")) {
                 post.set("bookmarked", false);
-                updated.push(post.get("id"));
+                updated.push(post.id);
               }
               if (
                 this.siteSettings.enable_bookmarks_with_reminders &&
                 post.get("bookmarked_with_reminder")
               ) {
                 post.set("bookmarked_with_reminder", false);
-                updated.push(post.get("id"));
+                updated.push(post.id);
               }
             });
             return updated;

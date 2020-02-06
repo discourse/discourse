@@ -6,7 +6,7 @@ export default TopicListItem.extend({
   bookmakedPostNumber: readOnly("topic.bookmarked_post_numbers.firstObject"),
   actions: {
     removeBookmark(id) {
-      let bookmark = new Bookmark({ id });
+      let bookmark = Bookmark.create({ id });
       bookmark.destroy().then(this.refreshList);
     }
   }

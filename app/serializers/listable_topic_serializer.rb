@@ -48,7 +48,7 @@ class ListableTopicSerializer < BasicTopicSerializer
     if SiteSetting.enable_bookmarks_with_reminders?
       object.bookmark_ids.any?
     else
-      object.user_data && object.user_data.bookmarked
+      object.user_data&.bookmarked
     end
   end
 

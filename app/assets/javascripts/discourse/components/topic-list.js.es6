@@ -43,10 +43,9 @@ export default Component.extend(LoadMore, {
 
   @discourseComputed("showBookmarkListItem")
   listItemComponentName(showBookmarkListItem) {
-    if (showBookmarkListItem) {
-      return "bookmark-topic-list-item";
-    }
-    return "topic-list-item";
+    return showBookmarkListItem
+      ? "bookmark-topic-list-item"
+      : "topic-list-item";
   },
 
   skipHeader: reads("site.mobileView"),
