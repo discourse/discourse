@@ -8,6 +8,8 @@ module Tilt
   class ES6ModuleTranspilerTemplate < Tilt::Template
     self.default_mime_type = 'application/javascript'
 
+    attr_accessor :skip_module
+
     @mutex = Mutex.new
     @ctx_init = Mutex.new
 
@@ -127,7 +129,7 @@ JS
 
       js_source = ::JSON.generate(source, quirks_mode: true)
 
-      if opts[:module_name] && transpile_into_module?
+      if opts[:module_name] && !@skip_module
         filename = opts[:filename] || 'unknown'
         "Babel.transform(#{js_source}, { moduleId: '#{opts[:module_name]}', filename: '#{filename}', ast: false, presets: ['es2015'], plugins: [['transform-es2015-modules-amd', {noInterop: true}], 'transform-decorators-legacy', exports.WidgetHbsCompiler] }).code"
       else
@@ -136,10 +138,6 @@ JS
     end
 
     private
-
-    def transpile_into_module?
-      file.nil? || file.exclude?('.no-module')
-    end
 
     def module_name(root_path, logical_path)
       path = nil
