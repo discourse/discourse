@@ -1105,6 +1105,15 @@ en:
       xaxis: "Day"
       yaxis: "Number of new contributors"
       description: "Number of users who made their first post during this period."
+    trust_level_growth:
+      title: "Trust Level growth"
+      xaxis:
+        tl1_reached: "Reached TL1"
+        tl2_reached: "Reached TL2"
+        tl3_reached: "Reached TL3"
+        tl4_reached: "Reached TL4"
+      yaxis: "Day"
+      description: "Number of users who increased their Trust Level during this period."
     consolidated_page_views:
       title: "Consolidated Pageviews"
       xaxis:
