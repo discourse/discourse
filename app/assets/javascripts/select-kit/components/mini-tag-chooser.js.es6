@@ -69,7 +69,9 @@ export default ComboBox.extend(TagsMixin, {
 
   maximumSelectedTags: computed(function() {
     return parseInt(
-      this.options.limit || this.options.maximum || this.maxTagsPerTopic,
+      this.options.limit ||
+        this.selectKit.options.maximum ||
+        this.maxTagsPerTopic,
       10
     );
   }),
@@ -80,25 +82,29 @@ export default ComboBox.extend(TagsMixin, {
     this.insertAfterCollection(ERRORS_COLLECTION, SELECTED_TAGS_COLLECTION);
   },
 
-  caretIcon: computed("selectKit.hasReachedMaximum", function() {
-    return this.selectKit.hasReachedMaximum ? null : "plus";
+  caretIcon: computed("value.[]", function() {
+    const maximum = this.selectKit.options.maximum;
+    return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
+      ? null
+      : "plus";
   }),
 
   modifySelection(content) {
-    let joinedTags = this.value.join(", ");
+    let joinedTags = makeArray(this.value).join(", ");
 
-    if (!this.selectKit.hasReachedMinimum) {
+    const minimum = this.selectKit.options.minimum;
+    if (minimum && makeArray(this.value).length < parseInt(minimum, 10)) {
       const key =
         this.selectKit.options.minimumLabel ||
         "select_kit.min_content_not_reached";
       const label = I18n.t(key, { count: this.selectKit.options.minimum });
       content.title = content.name = content.label = label;
-    }
+    } else {
+      content.title = content.name = content.value = content.label = joinedTags;
 
-    content.title = content.name = content.value = content.label = joinedTags;
-
-    if (content.label.length > 32) {
-      content.label = `${content.label.slice(0, 32)}...`;
+      if (content.label.length > 32) {
+        content.label = `${content.label.slice(0, 32)}...`;
+      }
     }
 
     return content;
@@ -165,8 +171,30 @@ export default ComboBox.extend(TagsMixin, {
   },
 
   _onKeydown(event) {
+    const value = makeArray(this.value);
+
     if (event.keyCode === 8) {
       this._onBackspace(this.value, this.highlightedTag);
+    } else if (event.keyCode === 37) {
+      if (this.highlightedTag) {
+        const index = value.indexOf(this.highlightedTag);
+        const highlightedTag = value[index - 1]
+          ? value[index - 1]
+          : value.lastObject;
+        this.set("highlightedTag", highlightedTag);
+      } else {
+        this.set("highlightedTag", value.lastObject);
+      }
+    } else if (event.keyCode === 39) {
+      if (this.highlightedTag) {
+        const index = value.indexOf(this.highlightedTag);
+        const highlightedTag = value[index + 1]
+          ? value[index + 1]
+          : value.firstObject;
+        this.set("highlightedTag", highlightedTag);
+      } else {
+        this.set("highlightedTag", value.firstObject);
+      }
     } else {
       this.set("highlightedTag", null);
     }

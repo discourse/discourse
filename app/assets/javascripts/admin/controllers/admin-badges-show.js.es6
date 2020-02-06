@@ -1,10 +1,10 @@
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject } from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyNotEqual } from "discourse/lib/computed";
+import { run } from "@ember/runloop";
 
 export default Controller.extend(bufferedProperty("model"), {
   adminBadges: inject(),
@@ -23,20 +23,25 @@ export default Controller.extend(bufferedProperty("model"), {
     // this is needed because the model doesnt have default values
     // and as we are using a bufferedProperty it's not accessible
     // in any other way
-    Ember.run.next(() => {
-      if (!this.model.badge_type_id) {
-        this.model.set("badge_type_id", this.get("badgeTypes.firstObject.id"));
-      }
+    run.next(() => {
+      if (this.model) {
+        if (!this.model.badge_type_id) {
+          this.model.set(
+            "badge_type_id",
+            this.get("badgeTypes.firstObject.id")
+          );
+        }
 
-      if (!this.model.badge_grouping_id) {
-        this.model.set(
-          "badge_grouping_id",
-          this.get("badgeGroupings.firstObject.id")
-        );
-      }
+        if (!this.model.badge_grouping_id) {
+          this.model.set(
+            "badge_grouping_id",
+            this.get("badgeGroupings.firstObject.id")
+          );
+        }
 
-      if (!this.model.trigger) {
-        this.model.set("trigger", this.get("badgeTriggers.firstObject.id"));
+        if (!this.model.trigger) {
+          this.model.set("trigger", this.get("badgeTriggers.firstObject.id"));
+        }
       }
     });
   },

@@ -154,10 +154,9 @@ describe ::DiscoursePoll::PollsValidator do
       )
     end
 
-    it "ensure that polls have at least 2 options" do
+    it "ensure that polls have at least 1 option" do
       raw = <<~RAW
       [poll]
-      * 1
       [/poll]
       RAW
 
@@ -165,12 +164,11 @@ describe ::DiscoursePoll::PollsValidator do
       expect(post.valid?).to eq(false)
 
       expect(post.errors[:base]).to include(
-        I18n.t("poll.default_poll_must_have_at_least_2_options")
+        I18n.t("poll.default_poll_must_have_at_least_1_option")
       )
 
       raw = <<~RAW
       [poll name=test]
-      * 1
       [/poll]
       RAW
 
@@ -178,7 +176,7 @@ describe ::DiscoursePoll::PollsValidator do
       expect(post.valid?).to eq(false)
 
       expect(post.errors[:base]).to include(
-        I18n.t("poll.named_poll_must_have_at_least_2_options", name: "test")
+        I18n.t("poll.named_poll_must_have_at_least_1_option", name: "test")
       )
     end
 
@@ -365,7 +363,7 @@ describe ::DiscoursePoll::PollsValidator do
       expect(post.valid?).to eq(false)
       expect(post.errors[:base]).to include("Min #{I18n.t("errors.messages.less_than", count: 2_147_483_647)}")
       expect(post.errors[:base]).to include("Max #{I18n.t("errors.messages.less_than", count: 2_147_483_647)}")
-      expect(post.errors[:base]).to include(I18n.t("poll.default_poll_must_have_at_least_2_options"))
+      expect(post.errors[:base]).to include(I18n.t("poll.default_poll_must_have_at_least_1_option"))
     end
   end
 end

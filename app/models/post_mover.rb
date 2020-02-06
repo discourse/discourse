@@ -282,10 +282,10 @@ class PostMover
 
   def delete_post_replies
     DB.exec <<~SQL
-      DELETE
-      FROM post_replies pr USING moved_posts mp, posts p, posts r
-      WHERE (pr.reply_post_id = mp.old_post_id OR pr.post_id = mp.old_post_id) AND
-        p.id = pr.post_id AND r.id = pr.reply_post_id AND p.topic_id <> r.topic_id
+      DELETE FROM post_replies pr USING moved_posts mp
+      WHERE (SELECT topic_id FROM posts WHERE id = pr.post_id) <>
+            (SELECT topic_id FROM posts WHERE id = pr.reply_post_id)
+        AND (pr.reply_post_id = mp.old_post_id OR pr.post_id = mp.old_post_id)
     SQL
   end
 

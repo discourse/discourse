@@ -74,6 +74,11 @@ describe ThemeJavascriptCompiler do
     # For the Ember (Glimmer) templates, serverside rendering is not trivial,
     # so check the compiled JSON against known working output
     let(:compiler) { described_class.new(theme_id) }
+    let(:helper_opcode) do
+      append = statement("{{dummy-helper 1}}")[0]
+      helper = append[1]
+      helper[0]
+    end
 
     def statement(template)
       compiled = compiler.compile(template)
@@ -82,28 +87,26 @@ describe ThemeJavascriptCompiler do
       block["statements"]
     end
 
-    # might change/break when updating ember
-    EMBER_INTERNAL_ID = 29
     it 'adds the theme id to the helpers' do
       expect(statement("{{theme-prefix 'translation_key'}}")).
-        to eq([[1, [EMBER_INTERNAL_ID, "theme-prefix", [22, "translation_key"], nil], false]])
+        to eq([[1, [helper_opcode, "theme-prefix", [22, "translation_key"], nil], false]])
       expect(statement("{{theme-i18n 'translation_key'}}")).
-        to eq([[1, [EMBER_INTERNAL_ID, "theme-i18n", [22, "translation_key"], nil], false]])
+        to eq([[1, [helper_opcode, "theme-i18n", [22, "translation_key"], nil], false]])
       expect(statement("{{theme-setting 'setting_key'}}")).
-        to eq([[1, [EMBER_INTERNAL_ID, "theme-setting", [22, "setting_key"], nil], false]])
+        to eq([[1, [helper_opcode, "theme-setting", [22, "setting_key"], nil], false]])
 
       # Works when used inside other statements
       expect(statement("{{dummy-helper (theme-prefix 'translation_key')}}")).
-        to eq([[1, [EMBER_INTERNAL_ID, "dummy-helper", [[EMBER_INTERNAL_ID, "theme-prefix", [22, "translation_key"], nil]], nil], false]])
+        to eq([[1, [helper_opcode, "dummy-helper", [[helper_opcode, "theme-prefix", [22, "translation_key"], nil]], nil], false]])
     end
 
     it 'works with the old settings syntax' do
       expect(statement("{{themeSettings.setting_key}}")).
-        to eq([[1, [EMBER_INTERNAL_ID, "theme-setting", [22, "setting_key"], [["deprecated"], [true]]], false]])
+        to eq([[1, [helper_opcode, "theme-setting", [22, "setting_key"], [["deprecated"], [true]]], false]])
 
       # Works when used inside other statements
       expect(statement("{{dummy-helper themeSettings.setting_key}}")).
-        to eq([[1, [EMBER_INTERNAL_ID, "dummy-helper", [[EMBER_INTERNAL_ID, "theme-setting", [22, "setting_key"], [["deprecated"], [true]]]], nil], false]])
+        to eq([[1, [helper_opcode, "dummy-helper", [[helper_opcode, "theme-setting", [22, "setting_key"], [["deprecated"], [true]]]], nil], false]])
     end
   end
 

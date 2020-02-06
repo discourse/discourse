@@ -111,6 +111,8 @@ export default MountWidget.extend(Docking, {
   },
 
   willDestroyElement() {
+    this._super(...arguments);
+
     if (!this.site.mobileView) {
       this.appEvents.off("composer:opened", this, this.queueRerender);
       this.appEvents.off("composer:resized", this, this.queueRerender);

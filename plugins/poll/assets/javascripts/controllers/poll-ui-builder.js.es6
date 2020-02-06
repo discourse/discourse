@@ -272,9 +272,9 @@ export default Controller.extend({
   )
   disableInsert(count, isRegular, isMultiple, isNumber, pollMin, pollMax) {
     return (
-      (isRegular && count < 2) ||
+      (isRegular && count < 1) ||
       (isMultiple && count < pollMin && pollMin >= pollMax) ||
-      (isNumber ? false : count < 2)
+      (isNumber ? false : count < 1)
     );
   },
 

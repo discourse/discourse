@@ -4,7 +4,11 @@ import { h } from "virtual-dom";
 import { headerHeight } from "discourse/components/site-header";
 import { Promise } from "rsvp";
 
-const AVERAGE_ITEM_HEIGHT = 55;
+// even a 2 liner notification should be under 50px in default view
+const AVERAGE_ITEM_HEIGHT = 50;
+
+// our UX usually carries about 100px of padding around the notification excluding header
+const PADDING = 100;
 
 /**
  * This tries to enforce a consistent flow of fetching, caching, refreshing,
@@ -67,7 +71,7 @@ export default createWidget("quick-access-panel", {
   estimateItemLimit() {
     // Estimate (poorly) the amount of notifications to return.
     let limit = Math.round(
-      ($(window).height() - headerHeight()) / AVERAGE_ITEM_HEIGHT
+      ($(window).height() - headerHeight() - PADDING) / AVERAGE_ITEM_HEIGHT
     );
 
     // We REALLY don't want to be asking for negative counts of notifications

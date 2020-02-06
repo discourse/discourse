@@ -1,9 +1,12 @@
 import { computed, default as EmberObject } from "@ember/object";
 import Component from "@ember/component";
 import deprecated from "discourse-common/lib/deprecated";
-const { get, isNone, makeArray } = Ember;
+import { makeArray } from "discourse-common/lib/helpers";
+import { get } from "@ember/object";
 import UtilsMixin from "select-kit/mixins/utils";
 import PluginApiMixin from "select-kit/mixins/plugin-api";
+import Mixin from "@ember/object/mixin";
+import { isEmpty, isNone } from "@ember/utils";
 import {
   next,
   debounce,
@@ -26,7 +29,7 @@ export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
 
 const EMPTY_OBJECT = Object.freeze({});
-const SELECT_KIT_OPTIONS = Ember.Mixin.create({
+const SELECT_KIT_OPTIONS = Mixin.create({
   mergedProperties: ["selectKitOptions"],
   selectKitOptions: EMPTY_OBJECT
 });
@@ -44,9 +47,7 @@ export default Component.extend(
       "selectKit.isExpanded:is-expanded",
       "selectKit.isDisabled:is-disabled",
       "selectKit.isHidden:is-hidden",
-      "selectKit.hasSelection:has-selection",
-      "selectKit.hasReachedMaximum:has-reached-maximum",
-      "selectKit.hasReachedMinimum:has-reached-minimum"
+      "selectKit.hasSelection:has-selection"
     ],
     tabindex: 0,
     content: null,
@@ -222,7 +223,7 @@ export default Component.extend(
       );
 
       this.selectKit.setProperties({
-        hasSelection: !Ember.isEmpty(this.value),
+        hasSelection: !isEmpty(this.value),
         noneItem: this._modifyNoSelectionWrapper()
       });
 
@@ -254,18 +255,16 @@ export default Component.extend(
       icon: null,
       icons: null,
       maximum: null,
+      maximumLabel: null,
       minimum: null,
       minimumLabel: null,
-      maximumLabel: null,
       autoInsertNoneItem: true,
       clearOnClick: false,
       closeOnChange: true,
       limitMatches: null,
       placement: "bottom-start",
       filterComponent: "select-kit/select-kit-filter",
-      selectedNameComponent: "selected-name",
-      hasReachedMaximum: "hasReachedMaximum",
-      hasReachedMinimum: "hasReachedMinimum"
+      selectedNameComponent: "selected-name"
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function() {
@@ -296,34 +295,6 @@ export default Component.extend(
       }
     ),
 
-    hasReachedMaximum: computed(
-      "selectKit.options.maximum",
-      "value",
-      function() {
-        const maximum = parseInt(this.selectKit.options.maximum, 10);
-
-        if (maximum && makeArray(this.value).length >= maximum) {
-          return true;
-        }
-
-        return false;
-      }
-    ),
-
-    hasReachedMinimum: computed(
-      "selectKit.options.minimum",
-      "value",
-      function() {
-        const minimum = parseInt(this.selectKit.options.minimum, 10);
-
-        if (!minimum || makeArray(this.value).length >= minimum) {
-          return true;
-        }
-
-        return false;
-      }
-    ),
-
     createContentFromInput(input) {
       return input;
     },
@@ -345,21 +316,11 @@ export default Component.extend(
       const selection = Ember.makeArray(this.value);
 
       const maximum = this.selectKit.options.maximum;
-
       if (maximum && selection.length >= maximum) {
         const key =
           this.selectKit.options.maximumLabel ||
           "select_kit.max_content_reached";
         this.addError(I18n.t(key, { count: maximum }));
-        return false;
-      }
-
-      const minimum = this.selectKit.options.minimum;
-      if (minimum && selection.length <= minimum) {
-        const key =
-          this.selectKit.options.minimumLabel ||
-          "select_kit.min_content_not_reached";
-        this.addError(I18n.t(key, { count: minimum }));
         return false;
       }
 
@@ -614,7 +575,7 @@ export default Component.extend(
           }
         }
 
-        const hasNoContent = Ember.isEmpty(content);
+        const hasNoContent = isEmpty(content);
 
         if (
           this.selectKit.hasSelection &&

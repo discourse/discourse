@@ -12,7 +12,7 @@ describe Auth::ManagedAuthenticator do
   }
 
   let(:hash) {
-    {
+    OmniAuth::AuthHash.new(
       provider: "myauth",
       uid: "1234",
       info: {
@@ -28,14 +28,14 @@ describe Auth::ManagedAuthenticator do
           randominfo: "some info"
         }
       }
-    }
+    )
   }
 
   let(:create_hash) {
-    {
+    OmniAuth::AuthHash.new(
       provider: "myauth",
       uid: "1234"
-    }
+    )
   }
 
   describe 'after_authenticate' do
@@ -150,6 +150,12 @@ describe Auth::ManagedAuthenticator do
         }.to change { UserAssociatedAccount.count }.by(1)
         expect(UserAssociatedAccount.last.user).to eq(nil)
         expect(UserAssociatedAccount.last.info["nickname"]).to eq("IAmGroot")
+      end
+
+      it 'will ignore name when equal to email' do
+        result = authenticator.after_authenticate(hash.deep_merge(info: { name: hash.info.email }))
+        expect(result.email).to eq(hash.info.email)
+        expect(result.name).to eq(nil)
       end
     end
 

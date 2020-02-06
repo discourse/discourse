@@ -1,5 +1,6 @@
 import EmberObject from "@ember/object";
 import { defaultHomepage } from "discourse/lib/utilities";
+import { guidFor } from "@ember/object/internals";
 let popstateFired = false;
 const supportsHistoryState = window.history && "state" in window.history;
 const popstateCallbacks = [];
@@ -174,7 +175,7 @@ const DiscourseLocation = EmberObject.extend({
     @param callback {Function}
   */
   onUpdateURL(callback) {
-    const guid = Ember.guidFor(this);
+    const guid = guidFor(this);
 
     $(window).on(`popstate.ember-location-${guid}`, () => {
       const url = this.getURL();
@@ -215,7 +216,7 @@ const DiscourseLocation = EmberObject.extend({
   willDestroy() {
     this._super(...arguments);
 
-    const guid = Ember.guidFor(this);
+    const guid = guidFor(this);
     $(window).off(`popstate.ember-location-${guid}`);
   }
 });

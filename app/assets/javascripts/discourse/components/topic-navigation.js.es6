@@ -39,11 +39,9 @@ export default Component.extend(PanEvents, {
       if (renderTimeline) {
         const width = window.innerWidth,
           composer = document.getElementById("reply-control"),
-          timelineContainer = document.querySelectorAll(
-            ".timeline-container"
-          )[0],
-          headerHeight =
-            document.querySelectorAll(".d-header")[0].offsetHeight || 0;
+          timelineContainer = document.querySelector(".timeline-container"),
+          headerContainer = document.querySelector(".d-header"),
+          headerHeight = (headerContainer && headerContainer.offsetHeight) || 0;
 
         if (timelineContainer && composer) {
           renderTimeline =
@@ -61,7 +59,7 @@ export default Component.extend(PanEvents, {
   },
 
   _checkSize() {
-    debounce(this, this._performCheckSize, 300);
+    debounce(this, this._performCheckSize, 300, true);
   },
 
   // we need to store this so topic progress has something to init with
