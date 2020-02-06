@@ -6,7 +6,7 @@ import {
   isWebauthnSupported
 } from "discourse/lib/webauthn";
 
-// model for this controller is user.js.es6
+// model for this controller is user
 export default Controller.extend(ModalFunctionality, {
   loading: false,
   errorMessage: null,
