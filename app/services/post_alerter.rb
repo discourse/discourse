@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PostAlerter
+  USER_BATCH_SIZE = 100
+
   def self.post_created(post, opts = {})
     PostAlerter.new(opts).after_save_post(post, true)
     post
@@ -140,7 +142,7 @@ class PostAlerter
     users = User.where(id: user_ids)
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-    users.each do |user|
+    each_user_in_batches(users) do |user|
       create_notification(user, Notification.types[:watching_first_post], post)
     end
   end
@@ -609,16 +611,24 @@ class PostAlerter
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
 
-    already_seen_users = TopicUser.where(topic_id: post.topic.id).where("highest_seen_post_number >= ?", post.post_number).pluck(:user_id)
+    already_seen_user_ids = Set.new TopicUser.where(topic_id: post.topic.id).where("highest_seen_post_number >= ?", post.post_number).pluck(:user_id)
 
-    notify.pluck(:id).each do |user_id|
-      notification_type = already_seen_users.include?(user_id) ? Notification.types[:edited] : Notification.types[:posted]
-      user = User.find_by(id: user_id)
+    each_user_in_batches(notify) do |user|
+      notification_type = already_seen_user_ids.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]
       create_notification(user, notification_type, post)
     end
   end
 
   def warn_if_not_sidekiq
     Rails.logger.warn("PostAlerter.#{caller_locations(1, 1)[0].label} was called outside of sidekiq") unless Sidekiq.server?
+  end
+
+  private
+
+  def each_user_in_batches(users)
+    # This is race-condition-safe, unlike #find_in_batches
+    users.pluck(:id).each_slice(USER_BATCH_SIZE) do |user_ids_batch|
+      User.where(id: user_ids_batch).each { |user| yield(user) }
+    end
   end
 end
