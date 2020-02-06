@@ -1,6 +1,7 @@
 import handleDescriptor from "ember-addons/utils/handle-descriptor";
 import isDescriptor from "ember-addons/utils/is-descriptor";
 import extractValue from "ember-addons/utils/extract-value";
+import { schedule, next } from "@ember/runloop";
 
 export default function discourseComputedDecorator(...params) {
   // determine if user called as @discourseComputed('blah', 'blah') or @discourseComputed
@@ -11,6 +12,19 @@ export default function discourseComputedDecorator(...params) {
       return handleDescriptor(...arguments, params);
     };
   }
+}
+
+export function afterRender(target, name, descriptor) {
+  const originalFunction = descriptor.value;
+  descriptor.value = function() {
+    next(() => {
+      schedule("afterRender", () => {
+        if (this.element && !this.isDestroying && !this.isDestroyed) {
+          return originalFunction.apply(this, arguments);
+        }
+      });
+    });
+  };
 }
 
 export function readOnly(target, name, desc) {
