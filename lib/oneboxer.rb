@@ -31,7 +31,7 @@ module Oneboxer
   end
 
   def self.force_custom_user_agent_hosts
-    @force_custom_user_agent_hosts ||= SiteSetting.force_custom_user_agent_hosts.split('|')
+    SiteSetting.force_custom_user_agent_hosts.split('|')
   end
 
   def self.allowed_post_types
