@@ -1,16 +1,21 @@
 (function() {
   var ps = require("preload-store").default;
   var preloadedDataElement = document.getElementById("data-preloaded");
+  var setupData = document.getElementById("data-discourse-setup").dataset;
 
   if (preloadedDataElement) {
     var preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
 
     Object.keys(preloaded).forEach(function(key) {
       ps.store(key, JSON.parse(preloaded[key]));
+
+      if (setupData.debugPreloadedAppData === "true") {
+        /* eslint-disable no-console */
+        console.log(key, ps.get(key));
+        /* eslint-enable no-console */
+      }
     });
   }
-
-  var setupData = document.getElementById("data-discourse-setup").dataset;
 
   window.Logster = window.Logster || {};
   window.Logster.enabled = setupData.enableJsErrorReporting === "true";
