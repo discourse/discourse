@@ -124,7 +124,7 @@ export default Component.extend({
 
   @discourseComputed("currentMode")
   modeComponent(currentMode) {
-    return `admin-report-${currentMode}`;
+    return `admin-report-${currentMode.replace(/_/g, "-")}`;
   },
 
   @discourseComputed("startDate")
