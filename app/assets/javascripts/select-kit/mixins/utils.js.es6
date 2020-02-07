@@ -13,9 +13,9 @@ export default Mixin.create({
     }
   },
 
-  itemForValue(value) {
+  itemForValue(value, content) {
     if (this.selectKit.valueProperty) {
-      return this.mainCollection.findBy(this.selectKit.valueProperty, value);
+      return content.findBy(this.selectKit.valueProperty, value);
     } else {
       return value;
     }
