@@ -310,4 +310,14 @@ describe TopicEmbed do
     end
   end
 
+  describe '.absolutize_urls' do
+    let(:invalid_url) { 'http://source.com/#double#anchor' }
+    let(:contents) { "hello world new post <a href='/hello'>hello</a>" }
+
+    it "does not attempt absolutizing on a bad URI" do
+      raw = TopicEmbed.absolutize_urls(invalid_url, contents)
+      expect(raw).to eq(contents)
+    end
+  end
+
 end
