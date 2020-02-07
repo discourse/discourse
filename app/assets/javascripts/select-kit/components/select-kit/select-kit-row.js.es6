@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { propertyEqual } from "discourse/lib/computed";
 import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
 import { guidFor } from "@ember/object/internals";
@@ -74,9 +73,13 @@ export default Component.extend(UtilsMixin, {
     return this.getValue(this.selectKit.highlighted);
   }),
 
-  isHighlighted: propertyEqual("rowValue", "highlightedValue"),
+  isHighlighted: computed("rowValue", "highlightedValue", function() {
+    return this.rowValue === this.highlightedValue;
+  }),
 
-  isSelected: propertyEqual("rowValue", "value"),
+  isSelected: computed("rowValue", "value", function() {
+    return this.rowValue === this.value;
+  }),
 
   mouseEnter() {
     if (!this.isDestroying || !this.isDestroyed) {

@@ -27,7 +27,9 @@
       {{/each}}
     {{else}}
       <span class="is-loading">
-        {{loading-spinner size="small"}}
+        {{#if site}}
+          {{loading-spinner size="small"}}
+        {{/if}}
       </span>
     {{/unless}}
   {{/select-kit/select-kit-body}}
