@@ -64,7 +64,6 @@ class UserAnonymizer
       @user.single_sign_on_record.try(:destroy)
       @user.oauth2_user_infos.try(:destroy_all)
       @user.user_associated_accounts.try(:destroy_all)
-      @user.user_open_ids.find_each { |x| x.destroy }
       @user.api_keys.find_each { |x| x.try(:destroy) }
       @user.user_emails.secondary.destroy_all
 
