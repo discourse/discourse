@@ -3,6 +3,7 @@ module.exports = {
   ignore: ["**/*.raw"],
 
   rules: {
-    "self-closing-void-elements": true
+    "self-closing-void-elements": true,
+    "style-concatenation": true
   }
 };
