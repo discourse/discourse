@@ -14,7 +14,6 @@ class User < ActiveRecord::Base
   has_many :tag_users, dependent: :destroy
   has_many :user_api_keys, dependent: :destroy
   has_many :topics
-  has_many :user_open_ids, dependent: :destroy
 
   # dependent deleting handled via before_destroy
   has_many :user_actions

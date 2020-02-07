@@ -1,10 +1,19 @@
 # frozen_string_literal: true
 
+# This table is no longer used in core, but may be used by unofficial plugins
 class UserOpenId < ActiveRecord::Base
+  after_initialize :raise_deprecation_error
+
   belongs_to :user
 
   validates_presence_of :email
   validates_presence_of :url
+
+  private
+
+  def raise_deprecation_error
+    raise "The user_open_ids table has been deprecated, and will be dropped in v2.5. See https://meta.discourse.org/t/-/113249"
+  end
 end
 
 # == Schema Information

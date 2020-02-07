@@ -299,9 +299,6 @@ module Discourse
       # Ensure that Discourse event triggers for web hooks are loaded
       require_dependency 'web_hook'
 
-      # So open id logs somewhere sane
-      OpenID::Util.logger = Rails.logger
-
       # Load plugins
       plugin_initialization_guard do
         Discourse.plugins.each(&:notify_after_initialize)

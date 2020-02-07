@@ -245,7 +245,7 @@ describe Plugin::Instance do
       plugin.notify_before_auth
       expect(DiscoursePluginRegistry.auth_providers.count).to eq(1)
       auth_provider = DiscoursePluginRegistry.auth_providers.to_a[0]
-      expect(auth_provider.authenticator.name).to eq('ubuntu')
+      expect(auth_provider.authenticator.name).to eq('facebook')
     end
 
     it "finds all the custom assets" do
