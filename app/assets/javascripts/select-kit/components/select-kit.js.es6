@@ -568,8 +568,7 @@ export default Component.extend(
         if (
           this.selectKit.options.allowAny &&
           filter &&
-          this.getName(noneItem) !== filter &&
-          !this.itemForValue(filter, content)
+          this.getName(noneItem) !== filter
         ) {
           filter = this.createContentFromInput(filter);
           if (this.validateCreate(filter, content)) {
