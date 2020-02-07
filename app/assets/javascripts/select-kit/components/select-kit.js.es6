@@ -890,7 +890,7 @@ export default Component.extend(
     },
 
     _deprecateValueAttribute() {
-      if (this.valueAttribute) {
+      if (this.valueAttribute || this.valueAttribute === null) {
         this._deprecated(
           "The `valueAttribute` is deprecated. Use `valueProperty` instead"
         );
