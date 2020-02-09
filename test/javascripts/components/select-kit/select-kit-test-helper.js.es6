@@ -10,7 +10,6 @@ export function testSelectKitModule(moduleName, options = {}) {
     },
 
     afterEach() {
-      this.set("subject", null);
       options.afterEach && options.afterEach.call(this);
     }
   });
