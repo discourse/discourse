@@ -4,7 +4,12 @@ import Component from "@ember/component";
 import Category from "discourse/models/category";
 
 export default Component.extend({
-  classNameBindings: [":tag-list", "categoryClass", "tagGroupNameClass"],
+  classNameBindings: [
+    ":tags-list",
+    ":tag-list",
+    "categoryClass",
+    "tagGroupNameClass"
+  ],
 
   isPrivateMessage: false,
   sortedTags: sort("tags", "sortProperties"),
