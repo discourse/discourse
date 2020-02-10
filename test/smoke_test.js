@@ -162,7 +162,7 @@ const path = require("path");
   });
 
   await exec("user has details", () => {
-    return page.waitForSelector("#user-card .names", { visible: true });
+    return page.waitForSelector(".user-card .names", { visible: true });
   });
 
   if (!process.env.READONLY_TESTS) {

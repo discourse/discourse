@@ -6,12 +6,12 @@ acceptance("User Card - Mobile", { mobileView: true });
 QUnit.skip("user card", async assert => {
   await visit("/t/internationalization-localization/280");
   assert.ok(
-    invisible("#user-card"),
+    invisible(".user-card"),
     "mobile user card is invisible by default"
   );
 
   await click("a[data-user-card=eviltrout]:first");
-  assert.ok(visible("#user-card"), "mobile user card should appear");
+  assert.ok(visible(".user-card"), "mobile user card should appear");
 
   sandbox.stub(DiscourseURL, "routeTo");
   await click(".card-content a.user-profile-link");
