@@ -401,6 +401,18 @@ export default Component.extend(
           items = [];
         }
 
+        items = items.filter(
+          i =>
+            i !== this.newItem &&
+            i !== this.noneItem &&
+            this.getValue(i) !== null
+        );
+
+        if (this.multiSelect && this.selectKit.options.maximum === 1) {
+          value = value.length ? [value[0]] : null;
+          items = items.length ? [items[0]] : null;
+        }
+
         this._boundaryActionHandler("onChange", value, items);
         resolve(items);
       }).finally(() => {

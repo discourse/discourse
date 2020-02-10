@@ -1,0 +1,22 @@
+.user-chooser {
+  .select-kit-row.user-row {
+    .avatar {
+      margin-left: 0;
+      margin-right: 0.5em;
+    }
+
+    .username {
+      color: $primary;
+      white-space: nowrap;
+    }
+
+    .name {
+      color: $primary-high;
+      font-size: $font-down-1;
+      margin-left: 0.5em;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}

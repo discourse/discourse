@@ -14,7 +14,13 @@
       {{d-icon "d-muted" class="icon"}}
       <span>{{i18n 'user.muted_users'}}</span>
     </label>
-    {{user-selector excludeCurrentUser=true usernames=model.muted_usernames class="user-selector"}}
+    {{user-chooser
+      value=mutedUsernames
+      onChange=(action "onChangeMutedUsernames")
+      options=(hash
+        excludeCurrentUser=true
+      )
+    }}
   </div>
   <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
 </div>
