@@ -2,10 +2,8 @@
   {{label}}
 </span>
 
-{{#if colors}}
+{{#if item.colors}}
   <div class="palettes">
-    {{#each colors as |color|}}
-      <span class="palette" style="background-color:{{color}};"></span>
-    {{/each}}
+    {{palettes}}
   </div>
 {{/if}}
