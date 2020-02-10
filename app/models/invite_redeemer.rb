@@ -32,8 +32,14 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
       registration_ip_address: ip_address
     }
 
-    user = User.unstage(user_params)
-    user = User.new(user_params) if user.nil?
+    user = User.where(staged: true).with_email(invite.email.strip.downcase).first
+
+    if user
+      user.attributes = user_params
+      user.unstage!
+    else
+      user = User.new(user_params)
+    end
 
     if !SiteSetting.must_approve_users? || (SiteSetting.must_approve_users? && invite.invited_by.staff?)
       ReviewableUser.set_approved_fields!(user, invite.invited_by)
