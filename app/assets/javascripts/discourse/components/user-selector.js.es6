@@ -8,9 +8,13 @@ export default TextField.extend({
   autocorrect: false,
   autocapitalize: false,
   name: "user-selector",
+  canReceiveUpdates: false,
+  single: false,
+  fullWidthWrap: false,
 
   init() {
-    this._super();
+    this._super(...arguments);
+
     this._paste = e => {
       let pastedText = "";
       if (window.clipboardData && window.clipboardData.getData) {
@@ -26,13 +30,6 @@ export default TextField.extend({
         return false;
       }
     };
-  },
-
-  @observes("usernames")
-  _update() {
-    if (this.canReceiveUpdates === "true") {
-      this._createAutocompleteInstance({ updateData: true });
-    }
   },
 
   @on("willDestroyElement")
@@ -167,7 +164,8 @@ export default TextField.extend({
       }
     });
     this.set("usernames", usernames.uniq().join(","));
-    if (this.canReceiveUpdates !== "true") {
+
+    if (!this.canReceiveUpdates) {
       this._createAutocompleteInstance({ updateData: true });
     }
   },
