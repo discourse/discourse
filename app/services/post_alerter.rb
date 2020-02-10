@@ -332,6 +332,9 @@ class PostAlerter
 
     return if existing_notification_of_same_type && !should_notify_previous?(user, post, existing_notification_of_same_type, opts)
 
+    existing_unread_reply_notification = existing_notifications.find { |n| !n.read && n.notification_type == Notification.types[:replied] }
+    return if existing_unread_reply_notification
+
     notification_data = {}
 
     if is_liked &&
