@@ -324,7 +324,7 @@ class ListController < ApplicationController
       end
 
       # Legacy paths
-      if @category.nil? && parts.last =~ /\A\d+-/
+      if @category.nil? && parts.last =~ /\A\d+-category/
         @category = Category.find_by_id(parts.last.to_i)
       end
     end
