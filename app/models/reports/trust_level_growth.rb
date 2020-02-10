@@ -35,7 +35,6 @@ Report.add_report("trust_level_growth") do |report|
     OR action = #{UserHistory.actions[:auto_trust_level_change]}
   )
   GROUP BY date(created_at)
-  LIMIT #{report.limit || 250}
   SQL
 
   data = Hash[ filters.collect { |x| [x, []] } ]
