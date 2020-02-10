@@ -8,7 +8,9 @@ class ReviewableHistory < ActiveRecord::Base
     @types ||= Enum.new(
       created: 0,
       transitioned: 1,
-      edited: 2
+      edited: 2,
+      claimed: 3,
+      unclaimed: 4
     )
   end
 
