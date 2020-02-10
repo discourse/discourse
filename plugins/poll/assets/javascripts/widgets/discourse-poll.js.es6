@@ -628,7 +628,7 @@ createWidget("discourse-poll-pie-chart", {
 });
 
 function pieChartConfig(data, labels, opts = {}) {
-  const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.0;
+  const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.2;
   const strippedLabels = labels.map(l => l.replace(/<[^>]*>?/gm, "").trim());
   return {
     type: PIE_CHART_TYPE,
