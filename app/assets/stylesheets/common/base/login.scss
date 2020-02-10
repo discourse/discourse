@@ -35,6 +35,9 @@
 
 .login-modal,
 .create-account {
+  tbody {
+    border: none;
+  }
   tr {
     border: none;
   }
