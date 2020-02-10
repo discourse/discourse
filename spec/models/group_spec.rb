@@ -232,8 +232,7 @@ describe Group do
 
       expect(GroupUser.where(user_id: staged.id).count).to eq(0)
 
-      staged.unstage
-      staged.save!
+      staged.unstage!
 
       expect(GroupUser.where(user_id: staged.id).count).to eq(2)
     end
