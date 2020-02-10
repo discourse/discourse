@@ -163,7 +163,11 @@
         label="admin.badges.save"}}
       <span class='saving'>{{savingStatus}}</span>
       {{#unless readOnly}}
-        <a {{action "destroy"}} class='delete-link'>{{i18n 'admin.badges.delete'}}</a>
+        {{d-button
+          action=(action "destroy")
+          class="btn-danger"
+          label="admin.badges.delete"
+        }}
       {{/unless}}
     </div>
   </form>

@@ -13,7 +13,9 @@
     {{#if editingDescription}}
       {{input value=buffered.description maxlength="255" placeholder=(i18n "admin.api.description_placeholder")}}
     {{else}}
-      <span {{action "editDescription"}}>{{if model.description model.description (i18n "admin.api.no_description")}}</span>
+      <span>
+        {{if model.description model.description (i18n "admin.api.no_description")}}
+      </span>
     {{/if}}
 
     <div class='controls'>
