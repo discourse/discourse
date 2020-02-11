@@ -359,7 +359,9 @@ class PostRevisor
     end
 
     POST_TRACKED_FIELDS.each do |field|
-      @post.public_send("#{field}=", @fields[field]) if @fields.has_key?(field) || (should_create_new_version? && field == "edit_reason")
+      if @fields.has_key?(field) || (should_create_new_version? && field == "edit_reason")
+        @post.public_send("#{field}=", @fields[field])
+      end
     end
 
     @post.last_editor_id = @editor.id
