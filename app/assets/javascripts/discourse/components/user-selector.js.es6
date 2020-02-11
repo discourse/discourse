@@ -32,6 +32,14 @@ export default TextField.extend({
     };
   },
 
+  didUpdateAttrs() {
+    this._super(...arguments);
+
+    if (this.canReceiveUpdates) {
+      this._createAutocompleteInstance({ updateData: true });
+    }
+  },
+
   @on("willDestroyElement")
   _destroyAutocompleteInstance() {
     $(this.element).autocomplete("destroy");
