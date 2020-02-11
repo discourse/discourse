@@ -3,9 +3,13 @@
     {{#if editingName}}
       {{text-field value=model.name autofocus="true"}}
       {{d-button action=(action "finishedEditingName") class="btn-primary submit-edit" icon="check"}}
-      {{d-button action=(action "cancelEditingName") class="btn-default cancel-edit" icon="times"}}
+      {{d-button action=(action "cancelEditingName") class="cancel-edit" icon="times"}}
     {{else}}
-      {{model.name}} <a {{action "startEditingName"}}>{{d-icon "pencil-alt"}}</a>
+      <span>{{model.name}}</span>
+      {{d-button
+        action=(action "startEditingName")
+        icon="pencil-alt"
+      }}
     {{/if}}
   </div>
 

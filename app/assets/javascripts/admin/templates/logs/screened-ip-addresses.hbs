@@ -42,13 +42,13 @@
             {{#if item.editing}}
               {{text-field value=item.ip_address autofocus="autofocus"}}
             {{else}}
-              <span {{action "edit" item}}>
+              <a href {{action "edit" item}} class="inline-editable-field">
                 {{#if item.isRange}}
                   <strong>{{item.ip_address}}</strong>
                 {{else}}
                   {{item.ip_address}}
                 {{/if}}
-              </span>
+              </a>
             {{/if}}
           </td>
           <td class="col action">
@@ -108,7 +108,7 @@
                 action=(action "save")
                 actionParam=item
                 label="admin.logs.save"}}
-              <a {{action "cancel" item}}>{{i18n "cancel"}}</a>
+              <a href {{action "cancel" item}}>{{i18n "cancel"}}</a>
             {{/unless}}
           </td>
         </tr>

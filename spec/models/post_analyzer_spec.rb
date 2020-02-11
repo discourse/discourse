@@ -236,6 +236,13 @@ describe PostAnalyzer do
       expect(post_analyzer.raw_mentions).to eq(['finn'])
     end
 
+    it "ignores group mentions in quotes" do
+      Fabricate(:group, name: "team")
+      Fabricate(:group, name: "mods")
+      post_analyzer = PostAnalyzer.new("[quote=\"Evil Trout\"]\n@team\n[/quote]\n @mods", default_topic_id)
+      expect(post_analyzer.raw_mentions).to eq(["mods"])
+    end
+
     it "ignores oneboxes" do
       post_analyzer = PostAnalyzer.new("Hello @Jake\n#{url}", default_topic_id)
       post_analyzer.stubs(:cook).returns("<p>Hello <span class=\"mention\">@Jake</span><br><a href=\"https://twitter.com/evil_trout/status/345954894420787200\" class=\"onebox\" target=\"_blank\" rel=\"nofollow noopener\">@Finn</a></p>")

@@ -186,26 +186,20 @@
     border-bottom: 1px solid $primary-low;
     border-top: 1px solid $primary-low;
     border-right: 1px solid $primary-low;
+    display: flex;
+
     .tab {
-      display: inline-block;
-      padding: 10px;
+      padding: 1em;
       width: 50%;
       box-sizing: border-box;
       text-align: center;
-      border-left: 1px solid $primary-low;
 
       &.active {
-        font-weight: bold;
-        color: $secondary;
-        background: $danger;
+        font-weight: 700;
       }
 
-      &:not(.active) {
-        cursor: pointer;
-
-        &:hover {
-          background-color: $primary-very-low;
-        }
+      &:last-child {
+        border-left: 1px solid $primary-low;
       }
     }
   }
@@ -297,6 +291,7 @@
 
         .others-count,
         .others-count:hover {
+          color: $primary-high;
           text-decoration: underline;
         }
       }

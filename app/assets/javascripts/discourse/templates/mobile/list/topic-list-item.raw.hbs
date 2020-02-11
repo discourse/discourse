@@ -7,6 +7,13 @@
     {{else}}
       <div>
         {{/unless~}}
+        {{!--
+          The `~` syntax strip spaces between the elements, making it produce
+          `<a class=topic-post-badges>Some text</a><span class=topic-post-badges>`,
+          with no space between them.
+          This causes the topic-post-badge to be considered the same word as "text"
+          at the end of the link, preventing it from line wrapping onto its own line.
+        --}}
         <div class='main-link'>
           {{~raw-plugin-outlet name="topic-list-before-status"}}
           {{~raw "topic-status" topic=topic~}}
@@ -15,7 +22,7 @@
           {{~topic-featured-link topic~}}
           {{~/if~}}
           {{~#if topic.unseen~}}
-          &nbsp;<span class="badge-notification new-topic"></span>
+            <span class="topic-post-badges">&nbsp;<span class="badge-notification new-topic"></span></span>
           {{~/if~}}
           {{~#if expandPinned~}}
           {{~raw "list/topic-excerpt" topic=topic~}}
