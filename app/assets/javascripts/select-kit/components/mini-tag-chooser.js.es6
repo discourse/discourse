@@ -18,6 +18,7 @@ export default ComboBox.extend(TagsMixin, {
   maxTagSearchResults: setting("max_tag_search_results"),
   maxTagsPerTopic: setting("max_tags_per_topic"),
   highlightedTag: null,
+  singleSelect: false,
 
   collections: computed(
     "mainCollection.[]",

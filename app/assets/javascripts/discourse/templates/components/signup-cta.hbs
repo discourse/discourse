@@ -10,7 +10,7 @@
     <div class="buttons">
       {{d-button action=(route-action "showCreateAccount") label="signup_cta.sign_up" icon="check" class="btn-primary"}}
       {{d-button action=(action "hideForSession") label="signup_cta.hide_session" class="no-icon"}}
-      <a {{action "neverShow"}}>{{i18n "signup_cta.hide_forever"}}</a>
+      <a href {{action "neverShow"}}>{{i18n "signup_cta.hide_forever"}}</a>
     </div>
   {{/if}}
   <div class="clearfix"></div>

@@ -1,8 +1,11 @@
-import { throttle } from "@ember/runloop";
-import { run } from "@ember/runloop";
-import { cancel } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
-import { later } from "@ember/runloop";
+import {
+  run,
+  cancel,
+  scheduleOnce,
+  later,
+  debounce,
+  throttle
+} from "@ember/runloop";
 import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Composer from "discourse/models/composer";
@@ -67,9 +70,13 @@ export default Component.extend(KeyEnterEscape, {
         return;
       }
 
-      const h = $("#reply-control:not(.saving)").height() || 0;
-      this.movePanels(h);
+      debounce(this, this.debounceMove, 300);
     });
+  },
+
+  debounceMove() {
+    const h = $("#reply-control:not(.saving)").height() || 0;
+    this.movePanels(h);
   },
 
   keyUp() {

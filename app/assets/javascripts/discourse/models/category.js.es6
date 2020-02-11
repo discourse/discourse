@@ -274,8 +274,12 @@ Category.reopenClass({
       result = Category.slugFor(parentCategory) + separator;
     }
 
-    const slug = get(category, "slug");
-    return !slug || slug.trim().length === 0 ? `${result}-` : result + slug;
+    const id = get(category, "id"),
+      slug = get(category, "slug");
+
+    return !slug || slug.trim().length === 0
+      ? `${result}${id}-category`
+      : result + slug;
   },
 
   list() {
@@ -360,7 +364,7 @@ Category.reopenClass({
       if (
         !category &&
         parts.length > 0 &&
-        parts[parts.length - 1].match(/^\d+-/)
+        parts[parts.length - 1].match(/^\d+-category/)
       ) {
         const id = parseInt(parts.pop(), 10);
 

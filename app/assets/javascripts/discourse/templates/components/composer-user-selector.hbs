@@ -10,8 +10,10 @@
                   allowEmails='true'
                   autocomplete="discourse"}}
 {{else}}
-  <div class='ac-wrap composer-user-selector-limited' {{action "toggleSelector"}}>
-    <span>{{limitedUsernames}}</span>
-    <span class='btn btn-primary'>{{hiddenUsersCount}}</span>
-  </div>
+    <a href {{action "toggleSelector"}}>
+    <div class='ac-wrap composer-user-selector-limited'>
+      <span>{{limitedUsernames}}</span>
+      <span class='btn btn-primary'>{{hiddenUsersCount}}</span>
+    </div>
+  </a>
 {{/if}}

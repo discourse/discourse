@@ -1,10 +1,17 @@
 <div class="themes-list-header">
-  <div {{action "changeView" THEMES}} class="themes-tab tab {{if themesTabActive 'active' ''}}">
-    {{I18n "admin.customize.theme.title"}}
-  </div><div {{action "changeView" COMPONENTS}} class="components-tab tab {{if componentsTabActive 'active' ''}}">
-    {{d-icon "puzzle-piece"}}
-    {{I18n "admin.customize.theme.components"}}
-  </div>
+  {{d-button
+    action=(action "changeView")
+    actionParam=THEMES
+    class=(concat "themes-tab " "tab " (if themesTabActive 'btn-danger active' ''))
+    label="admin.customize.theme.title"
+  }}
+  {{d-button
+    action=(action "changeView")
+    actionParam=COMPONENTS
+    class=(concat "components-tab " "tab " (if componentsTabActive 'btn-danger active' ''))
+    label="admin.customize.theme.components"
+    icon="puzzle-piece"
+  }}
 </div>
 
 <div class="themes-list-container">
