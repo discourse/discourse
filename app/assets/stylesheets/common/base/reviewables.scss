@@ -145,7 +145,8 @@
 
 .reviewable-actions .claimed-actions {
   display: flex;
-  width: 100%;
+  flex: 1 1 100%;
+  margin-right: 0;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5em;
@@ -265,6 +266,7 @@
   .reviewable-actions {
     display: flex;
     flex-wrap: wrap;
+    width: 100%;
 
     button {
       white-space: nowrap;
