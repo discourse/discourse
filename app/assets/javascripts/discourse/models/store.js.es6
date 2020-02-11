@@ -198,11 +198,9 @@ export default EmberObject.extend({
     });
   },
 
-  createRecord(type, attrs, opts = {}) {
+  createRecord(type, attrs) {
     attrs = attrs || {};
-    return !!attrs.id
-      ? this._hydrate(type, attrs, null, opts)
-      : this._build(type, attrs, opts);
+    return !!attrs.id ? this._hydrate(type, attrs) : this._build(type, attrs);
   },
 
   destroyRecord(type, record) {
@@ -254,7 +252,7 @@ export default EmberObject.extend({
     return ResultSet.create(createArgs);
   },
 
-  _build(type, obj, opts = {}) {
+  _build(type, obj) {
     obj.store = this;
     obj.__type = type;
     obj.__state = obj.id ? "created" : "new";
@@ -266,13 +264,8 @@ export default EmberObject.extend({
 
     const klass = this.register.lookupFactory("model:" + type) || RestModel;
     const model = klass.create(obj);
-    const mapId = opts.randomMapKey
-      ? (Math.floor(Math.random() * 1000) + 1) * -1
-      : obj.id;
-    if (opts.randomMapKey) {
-      obj.__storeMapId = mapId;
-    }
-    storeMap(type, mapId, model);
+
+    storeMap(type, obj.id, model);
     return model;
   },
 
@@ -343,12 +336,12 @@ export default EmberObject.extend({
     });
   },
 
-  _hydrate(type, obj, root, opts = {}) {
+  _hydrate(type, obj, root) {
     if (!obj) {
       throw new Error("Can't hydrate " + type + " of `null`");
     }
 
-    const id = obj.__storeMapId || obj.id;
+    const id = obj.id;
     if (!id) {
       throw new Error("Can't hydrate " + type + " without an `id`");
     }
@@ -381,7 +374,7 @@ export default EmberObject.extend({
       return existing;
     }
 
-    return this._build(type, obj, opts);
+    return this._build(type, obj);
   }
 });
 

@@ -174,9 +174,15 @@ TopicList.reopenClass({
         t.participants.forEach(p => (p.user = users[p.user_id]));
       }
 
-      return store.createRecord("topic", t, {
-        randomMapKey: result.filter === "bookmarks"
-      });
+      // the same topic can show multiple times in the bookmark
+      // list because each post bookmark can have a different
+      // name + reminder setting, so we use the bookmark_id to make
+      // the topic more unique
+      if (result.filter === "bookmarks" && result.siteSettings.enable_bookmarks_with_reminders) {
+        t.id = t.bookmark_id;
+      }
+
+      return store.createRecord("topic", t);
     });
   },
 
