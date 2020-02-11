@@ -263,6 +263,14 @@ export default function selectKit(selector) {
       return rowHelper(find(selector).find(".select-kit-row.is-highlighted"));
     },
 
+    async deselectItem(value) {
+      await click(
+        find(selector)
+          .find(".select-kit-header")
+          .find(`[data-value=${value}]`)
+      );
+    },
+
     exists() {
       return exists(selector);
     }
