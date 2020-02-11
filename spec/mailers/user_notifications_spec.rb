@@ -207,8 +207,7 @@ describe UserNotifications do
       it "uses theme color" do
         cs = Fabricate(:color_scheme, name: 'Fancy', color_scheme_colors: [
           Fabricate(:color_scheme_color, name: 'header_primary', hex: 'F0F0F0'),
-          Fabricate(:color_scheme_color, name: 'header_background', hex: '1E1E1E'),
-          Fabricate(:color_scheme_color, name: 'tertiary', hex: '858585')
+          Fabricate(:color_scheme_color, name: 'header_background', hex: '1E1E1E')
         ])
         theme = Fabricate(:theme,
                           user_selectable: true,
