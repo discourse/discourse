@@ -39,7 +39,7 @@ export default createWidget("quick-access-panel", {
   },
 
   hasMore() {
-    return this.getItems().length >= this.estimateItemLimit();
+    return true;
   },
 
   findNewItems() {
@@ -69,20 +69,7 @@ export default createWidget("quick-access-panel", {
   },
 
   estimateItemLimit() {
-    // Estimate (poorly) the amount of notifications to return.
-    let limit = Math.round(
-      ($(window).height() - headerHeight() - PADDING) / AVERAGE_ITEM_HEIGHT
-    );
-
-    // We REALLY don't want to be asking for negative counts of notifications
-    // less than 5 is also not that useful.
-    if (limit < 5) {
-      limit = 5;
-    } else if (limit > 40) {
-      limit = 40;
-    }
-
-    return limit;
+    return 40;
   },
 
   refreshNotifications(state) {
@@ -122,9 +109,8 @@ export default createWidget("quick-access-panel", {
       ? this.getItems().map(item => this.itemHtml(item))
       : [this.emptyStatePlaceholderItem()];
 
-    if (this.hasMore()) {
-      items.push(
-        h(
+    const hasMore = this.hasMore()
+      ? h(
           "li.read.last.show-all",
           this.attach("link", {
             title: "view_all",
@@ -132,10 +118,9 @@ export default createWidget("quick-access-panel", {
             href: this.showAllHref()
           })
         )
-      );
-    }
+      : null;
 
-    return [h("ul", items)];
+    return [h("ul", items), hasMore];
   },
 
   getItems() {

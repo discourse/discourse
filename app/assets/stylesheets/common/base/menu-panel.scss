@@ -28,7 +28,10 @@
   z-index: z("header");
   padding: 0.5em;
   width: 300px;
-
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   hr {
     margin: 3px 0;
   }
@@ -45,10 +48,16 @@
   }
 
   .panel-body {
+    display: flex;
     touch-action: pan-y pinch-zoom;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 100vh;
+    overflow: hidden;
+    height: 100% !important;
+  }
+
+  .panel-body-contents {
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   .badge-notification {
@@ -148,7 +157,10 @@
 .user-menu {
   .quick-access-panel {
     width: 100%;
-    display: table;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: 100%;
 
     h3 {
       padding: 0 0.4em;
@@ -163,8 +175,18 @@
     .icon {
       color: $primary-high;
     }
+
+    ul {
+      display: flex;
+      flex-flow: column wrap;
+      overflow: hidden;
+      max-height: 100%;
+    }
+
     li {
       background-color: $tertiary-low;
+      box-sizing: border-box;
+      list-style-type: none;
 
       // This is until other languages remove the HTML from within
       // notifications. It can then be removed
@@ -205,6 +227,8 @@
     }
     li:not(.show-all) {
       padding: 0.25em 0.5em;
+      align-self: flex-start;
+      width: 100%;
       .d-icon {
         float: left;
         margin-right: 5px;
