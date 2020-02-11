@@ -539,7 +539,6 @@ DEPENDENCIES
   stackprof
   test-prof
   thor
-  tilt
   uglifier
   unf
   unicorn
