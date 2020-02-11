@@ -63,16 +63,36 @@ describe InlineOneboxer do
 
   context ".lookup" do
     let(:category) { Fabricate(:private_category, group: Group[:staff]) }
+    let(:category2) { Fabricate(:private_category, group: Group[:staff]) }
+
     let(:admin) { Fabricate(:admin) }
 
-    it "can lookup private topics" do
+    it "can lookup private topics if in same category" do
       topic = Fabricate(:topic, category: category)
-      topic_url = "#{Discourse.base_url}#{topic.relative_url}"
+      topic1 = Fabricate(:topic, category: category)
+      topic2 = Fabricate(:topic, category: category2)
 
-      onebox = InlineOneboxer.lookup(topic_url, user_id: admin.id, category_id: topic.category_id, topic_id: topic.id, skip_cache: true)
+      # Link to `topic` from new topic (same category)
+      onebox = InlineOneboxer.lookup(topic.url, user_id: admin.id, category_id: category.id, skip_cache: true)
       expect(onebox).to be_present
       expect(onebox[:url]).to eq(topic.url)
       expect(onebox[:title]).to eq(topic.title)
+
+      # Link to `topic` from `topic`
+      onebox = InlineOneboxer.lookup(topic.url, user_id: admin.id, category_id: topic.category_id, topic_id: topic.id, skip_cache: true)
+      expect(onebox).to be_present
+      expect(onebox[:url]).to eq(topic.url)
+      expect(onebox[:title]).to eq(topic.title)
+
+      # Link to `topic` from `topic1` (same category)
+      onebox = InlineOneboxer.lookup(topic.url, user_id: admin.id, category_id: topic1.category_id, topic_id: topic1.id, skip_cache: true)
+      expect(onebox).to be_present
+      expect(onebox[:url]).to eq(topic.url)
+      expect(onebox[:title]).to eq(topic.title)
+
+      # Link to `topic` from `topic2` (different category)
+      onebox = InlineOneboxer.lookup(topic.url, user_id: admin.id, category_id: topic2.category_id, topic_id: topic2.id, skip_cache: true)
+      expect(onebox).to be_blank
     end
 
     it "can lookup one link at a time" do
