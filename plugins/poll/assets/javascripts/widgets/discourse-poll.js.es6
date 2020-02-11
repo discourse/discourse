@@ -629,7 +629,7 @@ createWidget("discourse-poll-pie-chart", {
 
 function pieChartConfig(data, labels, opts = {}) {
   const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.2;
-  const strippedLabels = labels.map(l => l.replace(/<[^>]*>?/gm, "").trim());
+  const strippedLabels = labels.map(l => stripHtml(l));
   return {
     type: PIE_CHART_TYPE,
     data: {
@@ -647,20 +647,20 @@ function pieChartConfig(data, labels, opts = {}) {
       animation: { duration: 400 },
       legend: { display: false },
       legendCallback: function(chart) {
-        let text = [];
+        let legends = "";
         for (let i = 0; i < labels.length; i++) {
-          text.push(
-            '<div class="legend"><span class="swatch" style="background-color:' +
-              chart.data.datasets[0].backgroundColor[i] +
-              '"></span>'
-          );
-          text.push(labels[i]);
-          text.push("</div>");
+          legends += `<div class="legend"><span class="swatch" style="background-color:
+            ${chart.data.datasets[0].backgroundColor[i]}"></span>${labels[i]}</div>`;
         }
-        return text.join("");
+        return legends;
       }
     }
   };
+}
+
+function stripHtml(html) {
+  var doc = new DOMParser().parseFromString(html, "text/html");
+  return doc.body.textContent || "";
 }
 
 createWidget("discourse-poll-buttons", {
