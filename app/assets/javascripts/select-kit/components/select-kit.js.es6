@@ -394,23 +394,33 @@ export default Component.extend(
 
       return new Promise(resolve => {
         if (
-          !this.selectKit.valueProperty &&
+          typeof this.selectKit.valueProperty === "undefined" &&
           this.selectKit.noneItem === value
         ) {
           value = null;
           items = [];
         }
 
-        items = items.filter(
-          i =>
-            i !== this.newItem &&
-            i !== this.noneItem &&
-            this.getValue(i) !== null
-        );
+        value = makeArray(value);
+        items = makeArray(items);
 
-        if (this.multiSelect && this.selectKit.options.maximum === 1) {
-          value = value.length ? [value[0]] : null;
-          items = items.length ? [items[0]] : null;
+        if (this.multiSelect) {
+          items = items.filter(
+            i =>
+              i !== this.newItem &&
+              i !== this.noneItem &&
+              this.getValue(i) !== null
+          );
+
+          if (this.selectKit.options.maximum === 1) {
+            value = value.slice(0, 1);
+            items = items.slice(0, 1);
+          }
+        }
+
+        if (this.singleSelect) {
+          value = value.firstObject;
+          items = items.firstObject;
         }
 
         this._boundaryActionHandler("onChange", value, items);
