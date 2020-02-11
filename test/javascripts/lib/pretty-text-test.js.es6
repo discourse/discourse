@@ -973,11 +973,37 @@ QUnit.test("images", assert => {
   );
 });
 
+QUnit.test("video - secure media enabled", assert => {
+  assert.cookedOptions(
+    "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
+    { siteSettings: { secure_media: true } },
+    `<p><div class="video-container">
+    <video width="100%" height="100%" preload="none" controls>
+      <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
+      <a href="/404">/404</a>
+    </video>
+  </div></p>`,
+    "It returns the correct video player HTML"
+  );
+});
+
+QUnit.test("audio - secure media enabled", assert => {
+  assert.cookedOptions(
+    "![young americans|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
+    { siteSettings: { secure_media: true } },
+    `<p><audio preload="none" controls>
+    <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3">
+    <a href="/404">/404</a>
+  </audio></p>`,
+    "It returns the correct audio player HTML"
+  );
+});
+
 QUnit.test("video", assert => {
   assert.cooked(
     "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
     `<p><div class="video-container">
-    <video width="100%" height="100%" controls>
+    <video width="100%" height="100%" preload="metadata" controls>
       <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
       <a href="/404">/404</a>
     </video>
@@ -989,7 +1015,7 @@ QUnit.test("video", assert => {
 QUnit.test("audio", assert => {
   assert.cooked(
     "![young americans|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
-    `<p><audio controls>
+    `<p><audio preload="metadata" controls>
     <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3">
     <a href="/404">/404</a>
   </audio></p>`,
