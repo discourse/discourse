@@ -178,7 +178,10 @@ TopicList.reopenClass({
       // list because each post bookmark can have a different
       // name + reminder setting, so we use the bookmark_id to make
       // the topic more unique
-      if (result.filter === "bookmarks" && result.siteSettings.enable_bookmarks_with_reminders) {
+      if (
+        result.filter === "bookmarks" &&
+        result.siteSettings.enable_bookmarks_with_reminders
+      ) {
         t.id = t.bookmark_id;
       }
 
