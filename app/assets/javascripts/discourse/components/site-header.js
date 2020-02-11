@@ -320,17 +320,12 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
         const menuTop = this.site.mobileView ? headerTop() : headerHeight();
 
-        let height;
         const winHeightOffset = 16;
         let initialWinHeight = window.innerHeight
           ? window.innerHeight
           : $(window).height();
         const winHeight = initialWinHeight - winHeightOffset;
-        if (menuTop + contentHeight < winHeight && !this.site.mobileView) {
-          height = contentHeight + "px";
-        } else {
-          height = winHeight - menuTop;
-        }
+        const height = winHeight - menuTop;
 
         if ($panelBody.prop("style").height !== "100%") {
           $panelBody.height("100%");

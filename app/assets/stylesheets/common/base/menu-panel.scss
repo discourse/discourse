@@ -19,6 +19,7 @@
   // positions are relative to the .d-header .panel div
   top: 100%; // directly underneath .panel
   right: -10px; // 10px to the right of .panel - adjust as needed
+  max-height: 80vh;
 }
 
 .menu-panel {
@@ -28,7 +29,6 @@
   z-index: z("header");
   padding: 0.5em;
   width: 300px;
-  max-height: 80vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -55,7 +55,8 @@
   }
 
   .panel-body-contents {
-    max-height: 100%;
+    max-height: 97%;
+    width: 100%;
     display: flex;
     flex-direction: column;
   }
@@ -279,10 +280,7 @@
 }
 
 div.menu-links-header {
-  width: 100%;
-  display: table;
-  border-collapse: separate;
-  border-spacing: 0 0.5em;
+  margin: 0.25em 0 0.5em 0;
   .menu-links-row {
     border-bottom: 1px solid dark-light-choose($primary-low, $secondary-medium);
     display: flex;
