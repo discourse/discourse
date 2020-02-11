@@ -212,7 +212,6 @@ export const DEFAULT_LIST = [
   "video[crossorigin]",
   "video[height]",
   "video[poster]",
-  "video[preload]",
   "video[width]",
   "video[controls]",
   "video[preload]",
