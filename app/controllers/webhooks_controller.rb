@@ -69,7 +69,7 @@ class WebhooksController < ActionController::Base
 
     message_id = params["MessageID"]
     to_address = params["Email"]
-    type =  params["Type"]
+    type = params["Type"]
     case type
     when "HardBounce", "SpamNotification", "SpamComplaint"
       process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)

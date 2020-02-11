@@ -144,10 +144,10 @@ describe WebhooksController do
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
       post "/webhooks/postmark.json", params: {
-             "Type"=> "HardBounce",
-             "MessageID"=> message_id,
-             "Email"=> email
-           }
+        "Type" => "HardBounce",
+        "MessageID" => message_id,
+        "Email" => email
+      }
       expect(response.status).to eq(200)
 
       email_log.reload
@@ -159,10 +159,10 @@ describe WebhooksController do
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
       post "/webhooks/postmark.json", params: {
-             "Type"=> "SoftBounce",
-             "MessageID"=> message_id,
-             "Email"=> email
-           }
+        "Type" => "SoftBounce",
+        "MessageID" => message_id,
+        "Email" => email
+      }
       expect(response.status).to eq(200)
 
       email_log.reload
@@ -170,7 +170,6 @@ describe WebhooksController do
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
     end
   end
-
 
   context "sparkpost" do
     it "works" do
