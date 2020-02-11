@@ -316,7 +316,7 @@ class Category < ActiveRecord::Base
     end
 
     # only allow to use category itself id.
-    match_id = /^(\d+)-/.match(self.slug)
+    match_id = /^(\d+)-category/.match(self.slug)
     if match_id.present?
       errors.add(:slug, :invalid) if new_record? || (match_id[1] != self.id.to_s)
     end
