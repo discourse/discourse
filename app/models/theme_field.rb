@@ -82,7 +82,7 @@ class ThemeField < ActiveRecord::Base
 
     doc.css('script[type="text/x-handlebars"]').each do |node|
       name = node["name"] || node["data-template-name"] || "broken"
-      is_raw = name =~ /\.raw$/ || name =~ /\.hbr$/
+      is_raw = name =~ /\.(raw|hbr)$/
       hbs_template = node.inner_html
 
       begin
