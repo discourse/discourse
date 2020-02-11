@@ -3,7 +3,9 @@
   {{#if editing}}
     {{text-field value=buffer autofocus="autofocus" autocomplete="discourse"}}
   {{else}}
-    <span {{action "edit"}}>{{value}}</span>
+    <a href {{action "edit"}} class="inline-editable-field">
+      <span>{{value}}</span>
+    </a>
   {{/if}}
 </div>
 <div class='controls'>

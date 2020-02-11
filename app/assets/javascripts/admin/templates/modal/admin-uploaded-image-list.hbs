@@ -1,9 +1,9 @@
 {{#d-modal-body class="uploaded-image-list"}}
   <div class="selectable-avatars">
     {{#each images as |image|}}
-      <div class="selectable-avatar" {{action "remove" image}}>
+      <a href class="selectable-avatar" {{action "remove" image}}>
         {{bound-avatar-template image "huge"}}
-      </div>
+      </a>
     {{else}}
       <p>{{i18n "admin.site_settings.uploaded_image_list.empty"}}</p>
     {{/each}}

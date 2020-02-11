@@ -2,9 +2,9 @@
   {{#if siteSettings.selectable_avatars_enabled}}
     <div class="selectable-avatars">
       {{#each selectableAvatars as |avatar|}}
-        <div class="selectable-avatar" {{action "selectAvatar" avatar}}>
+        <a href class="selectable-avatar" {{action "selectAvatar" avatar}}>
           {{bound-avatar-template avatar "huge"}}
-        </div>
+        </a>
       {{/each}}
     </div>
   {{else}}

@@ -5,6 +5,7 @@ module.exports = {
   rules: {
     "self-closing-void-elements": true,
     "table-groups": true,
-    "style-concatenation": true
+    "style-concatenation": true,
+    "no-invalid-interactive": true
   }
 };
