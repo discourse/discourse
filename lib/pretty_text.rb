@@ -447,7 +447,7 @@ module PrettyText
 
     mentions = lookup_mentions(names, user_id: user_id)
 
-    doc.css("span.mention").each do |element|
+    elements.each do |element|
       name = element.text[1..-1]
       name.downcase!
 
