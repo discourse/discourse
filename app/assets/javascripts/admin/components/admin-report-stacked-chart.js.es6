@@ -101,7 +101,6 @@ export default Component.extend({
               moment(tooltipItem[0].xLabel, "YYYY-MM-DD").format("LL")
           }
         },
-        legend: { display: false },
         layout: {
           padding: {
             left: 0,

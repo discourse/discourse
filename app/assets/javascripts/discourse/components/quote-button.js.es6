@@ -48,23 +48,21 @@ export default Component.extend({
       }
     }
 
-    let opts;
+    let opts = { raw: true };
     for (
       let element = selectedElement();
       element && element.tagName !== "ARTICLE";
       element = element.parentElement
     ) {
       if (element.tagName === "ASIDE" && element.classList.contains("quote")) {
-        opts = {
-          username:
-            element.dataset.username ||
-            element
-              .querySelector(".title")
-              .textContent.trim()
-              .replace(/:$/, ""),
-          post: element.dataset.post,
-          topic: element.dataset.topic
-        };
+        opts.username =
+          element.dataset.username ||
+          element
+            .querySelector(".title")
+            .textContent.trim()
+            .replace(/:$/, "");
+        opts.post = element.dataset.post;
+        opts.topic = element.dataset.topic;
       }
     }
 

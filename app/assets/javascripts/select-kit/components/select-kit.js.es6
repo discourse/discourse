@@ -87,6 +87,7 @@ export default Component.extend(
           hasNoContent: true,
           highlighted: null,
           noneItem: null,
+          newItem: null,
           filter: null,
 
           modifyContent: bind(this, this._modifyContentWrapper),
@@ -224,7 +225,8 @@ export default Component.extend(
 
       this.selectKit.setProperties({
         hasSelection: !isEmpty(this.value),
-        noneItem: this._modifyNoSelectionWrapper()
+        noneItem: this._modifyNoSelectionWrapper(),
+        newItem: null
       });
 
       if (this.selectKit.isExpanded) {
@@ -563,7 +565,6 @@ export default Component.extend(
         }
 
         const noneItem = this.selectKit.noneItem;
-
         if (
           this.selectKit.options.allowAny &&
           filter &&
@@ -571,7 +572,8 @@ export default Component.extend(
         ) {
           filter = this.createContentFromInput(filter);
           if (this.validateCreate(filter, content)) {
-            content.unshift(this.defaultItem(filter, filter));
+            this.selectKit.set("newItem", this.defaultItem(filter, filter));
+            content.unshift(this.selectKit.newItem);
           }
         }
 
@@ -590,7 +592,7 @@ export default Component.extend(
         this.selectKit.setProperties({
           highlighted:
             this.singleSelect && this.value
-              ? this.itemForValue(this.value)
+              ? this.itemForValue(this.value, this.mainCollection)
               : this.mainCollection.firstObject,
           isLoading: false,
           hasNoContent
@@ -774,13 +776,17 @@ export default Component.extend(
           `[data-select-kit-id=${this.selectKit.uniqueID}-body]`
         );
 
-        if (!this.site.mobileView && popper.offsetWidth < anchor.offsetWidth) {
+        if (
+          this.site &&
+          !this.site.mobileView &&
+          popper.offsetWidth < anchor.offsetWidth
+        ) {
           popper.style.minWidth = `${anchor.offsetWidth}px`;
         }
 
         const inModal = $(this.element).parents("#discourse-modal").length;
 
-        if (!this.site.mobileView && inModal) {
+        if (this.site && !this.site.mobileView && inModal) {
           popper.style.width = `${anchor.offsetWidth}px`;
         }
 
@@ -886,7 +892,7 @@ export default Component.extend(
     },
 
     _deprecateValueAttribute() {
-      if (this.valueAttribute) {
+      if (this.valueAttribute || this.valueAttribute === null) {
         this._deprecated(
           "The `valueAttribute` is deprecated. Use `valueProperty` instead"
         );

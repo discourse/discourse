@@ -216,7 +216,9 @@ class CookedPostProcessor
     # minus emojis
     @doc.css("img.emoji") -
     # minus images inside quotes
-    @doc.css(".quote img")
+    @doc.css(".quote img") -
+    # minus onebox site icons
+    @doc.css("img.site-icon")
   end
 
   def oneboxed_images
@@ -488,7 +490,11 @@ class CookedPostProcessor
 
   def update_post_image
     img = extract_images_for_post.first
-    return if img.blank?
+    if img.blank?
+      @post.update_column(:image_url, nil) if @post.image_url
+      @post.topic.update_column(:image_url, nil) if @post.topic.image_url
+      return
+    end
 
     if img["src"].present?
       @post.update_column(:image_url, img["src"][0...255]) # post

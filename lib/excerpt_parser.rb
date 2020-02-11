@@ -123,11 +123,6 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         @current_length = 0
         @start_excerpt = true
       end
-      # Preserve spoilers
-      if attributes.include?(["class", "spoiler"])
-        include_tag("span", attributes)
-        @in_spoiler = true
-      end
 
     when "details"
       @detail_contents = +"" if @in_details_depth == 0

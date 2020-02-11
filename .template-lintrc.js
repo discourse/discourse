@@ -1,8 +1,10 @@
 module.exports = {
-  extends: "recommended",
+  // extends: "recommended",
   ignore: ["**/*.raw"],
 
   rules: {
-    quotes: false
+    "self-closing-void-elements": true,
+    "table-groups": true,
+    "style-concatenation": true
   }
 };

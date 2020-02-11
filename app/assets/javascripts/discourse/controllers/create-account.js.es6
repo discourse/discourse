@@ -69,13 +69,13 @@ export default Controller.extend(
       "formSubmitted"
     )
     submitDisabled() {
-      if (!this.get("emailValidation.failed") && !this.passwordRequired)
-        return false; // 3rd party auth
       if (this.formSubmitted) return true;
       if (this.get("nameValidation.failed")) return true;
       if (this.get("emailValidation.failed")) return true;
-      if (this.get("usernameValidation.failed")) return true;
-      if (this.get("passwordValidation.failed")) return true;
+      if (this.get("usernameValidation.failed") && this.usernameRequired)
+        return true;
+      if (this.get("passwordValidation.failed") && this.passwordRequired)
+        return true;
       if (this.get("userFieldsValidation.failed")) return true;
 
       return false;

@@ -589,11 +589,6 @@ describe PrettyText do
         expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100, markdown_images: true)).to eq("![car](http://cnn.com/a.gif)")
       end
 
-      it "should keep spoilers" do
-        expect(PrettyText.excerpt("<div class='spoiler'><img src='http://cnn.com/a.gif'></div>", 100)).to match_html "<span class='spoiler'>[image]</span>"
-        expect(PrettyText.excerpt("<span class='spoiler'>spoiler</div>", 100)).to match_html "<span class='spoiler'>spoiler</span>"
-      end
-
       it "should keep details if too long" do
         expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 6)).to match_html "<details class='disabled'><summary>expand</summary></details>"
       end
@@ -775,6 +770,29 @@ describe PrettyText do
           "<aside class='quote'><p>a</p><p>b</p></aside>boom", 100, keep_onebox_source: true
         )).to eq("boom")
       end
+    end
+
+    it 'should strip audio/video' do
+      html = <<~HTML
+        <audio controls>
+          <source src="https://awebsite.com/audio.mp3"><a href="https://awebsite.com/audio.mp3">https://awebsite.com/audio.mp3</a></source>
+        </audio>
+        <p>Listen to this!</p>
+      HTML
+
+      expect(PrettyText.excerpt(html, 100)).to eq("Listen to this!")
+
+      html = <<~HTML
+        <div class="onebox video-onebox">
+          <video controlslist="nodownload" width="100%" height="100%" controls="">
+            <source src="http://videosource.com/running.mp4">
+            <a href="http://videosource.com/running.mp4">http://videosource.com/running.mp4</a>
+          </video>
+        </div>
+        <p>Watch this, but not in the excerpt.</p>
+      HTML
+
+      expect(PrettyText.excerpt(html, 100)).to eq("Watch this, but not in the excerpt.")
     end
   end
 

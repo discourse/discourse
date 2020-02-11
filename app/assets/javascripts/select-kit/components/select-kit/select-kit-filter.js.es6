@@ -1,4 +1,3 @@
-import { fmt } from "discourse/lib/computed";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
@@ -11,7 +10,9 @@ export default Component.extend(UtilsMixin, {
   classNames: ["select-kit-filter"],
   classNameBindings: ["isExpanded:is-expanded"],
   attributeBindings: ["selectKitId:data-select-kit-id"],
-  selectKitId: fmt("selectKit.uniqueID", "%@-filter"),
+  selectKitId: computed("selectKit.uniqueID", function() {
+    return `${this.selectKit.uniqueID}-filter`;
+  }),
 
   isHidden: computed(
     "selectKit.options.{filterable,allowAny,autoFilterable}",
