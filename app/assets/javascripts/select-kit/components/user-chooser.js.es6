@@ -41,7 +41,7 @@ export default MultiSelectComponent.extend({
         let usernames = makeArray(this.value);
 
         if (this.currentUser && options.excludeCurrentUser) {
-          usernames.concat([this.currentUser.username]);
+          usernames = usernames.concat([this.currentUser.username]);
         }
 
         return usernames.concat(options.excludedUsernames || []);
