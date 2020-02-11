@@ -220,7 +220,6 @@ describe UserNotifications do
         html = subject.html_part.body.to_s
         expect(html).to include 'F0F0F0'
         expect(html).to include '1E1E1E'
-        expect(html).to include '858585'
       end
 
       it "supports subfolder" do
