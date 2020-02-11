@@ -184,6 +184,7 @@ en:
       banner:
         enabled: "made this a banner %{when}. It will appear at the top of every page until it is dismissed by the user."
         disabled: "removed this banner %{when}. It will no longer appear at the top of every page."
+      forwarded: "forwarded the above email"
 
     topic_admin_menu: "topic actions"
 
