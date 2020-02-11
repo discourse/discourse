@@ -195,7 +195,7 @@
     </div>
 
     {{#if canShowAllAuthTokens}}
-      <a {{action "toggleShowAllAuthTokens"}}>
+      <a href {{action "toggleShowAllAuthTokens"}}>
         {{#if showAllAuthTokens}}
           {{d-icon "caret-up"}} {{i18n 'user.auth_tokens.show_few'}}
         {{else}}
@@ -204,7 +204,7 @@
       </a>
     {{/if}}
 
-    <a {{action "revokeAuthToken"}} class="pull-right text-danger">{{d-icon "sign-out-alt"}} {{i18n 'user.auth_tokens.log_out_all'}}</a>
+    <a href {{action "revokeAuthToken"}} class="pull-right text-danger">{{d-icon "sign-out-alt"}} {{i18n 'user.auth_tokens.log_out_all'}}</a>
   </div>
 {{/if}}
 
