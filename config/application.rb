@@ -238,6 +238,8 @@ module Discourse
     # Our templates shouldn't start with 'discourse/templates'
     config.handlebars.templates_root = 'discourse/templates'
     config.handlebars.raw_template_namespace = "Discourse.RAW_TEMPLATES"
+    Sprockets.register_mime_type 'text/x-handlebars', extensions: ['.hbr'] # or other extension which you like.
+    Sprockets.register_transformer 'text/x-handlebars', 'application/javascript', Ember::Handlebars::Template
 
     require 'discourse_redis'
     require 'logster/redis_store'

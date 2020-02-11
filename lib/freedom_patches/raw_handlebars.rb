@@ -55,6 +55,16 @@ end
 
 class Ember::Handlebars::Template
   include Discourse::Ember::Handlebars::Helper
+  def setup(env)
+    env.register_mime_type 'text/x-handlebars', extensions: with_js_extension(%w(.raw.hbs .raw.hjs .raw.handlebars))
+    env.register_transformer 'text/x-handlebars', 'application/javascript', self
+
+    env.register_mime_type 'text/x-ember-mustache', extensions: with_js_extension(%w(.mustache.hbs .mustache.hjs .mustache.handlebars))
+    env.register_transformer 'text/x-ember-mustache', 'application/javascript', self
+
+    env.register_mime_type 'text/x-ember-handlebars', extensions: with_js_extension(%w(.hbs .hjs .handlebars))
+    env.register_transformer 'text/x-ember-handlebars', 'application/javascript', self
+  end
 
   def precompile_handlebars(string, input = nil)
     "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(string)});"
@@ -75,4 +85,12 @@ class Ember::Handlebars::Template
     actual_name = input[:name]
     input[:filename].include?('.raw') ? "#{actual_name}.raw" : actual_name
   end
+
+  private
+
+  def handlebars?(filename)
+    filename.to_s =~ /\.raw\.(handlebars|hjs|hbs)/ || filename.to_s.ends_with?(".hbr") || filename.to_s.ends_with?(".hbr.erb")
+  end
 end
+
+
