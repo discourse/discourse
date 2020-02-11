@@ -27,7 +27,7 @@ function performSearch(
     return;
   }
 
-  const eagerComplete = term === "" && !!(topicId || categoryId);
+  const eagerComplete = eagerCompleteSearch(term, topicId || categoryId);
 
   if (term === "" && !eagerComplete) {
     // The server returns no results in this case, so no point checking
@@ -138,12 +138,16 @@ function organizeResults(r, options) {
 // we also ignore if we notice a double space or a string that is only a space
 const ignoreRegex = /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*,\/:;<=>?\[\]^`{|}~])|\s\s|^\s$|^[^+]*\+[^@]*$/;
 
-function skipSearch(term, allowEmails) {
+export function skipSearch(term, allowEmails) {
   if (term.indexOf("@") > -1 && !allowEmails) {
     return true;
   }
 
   return !!term.match(ignoreRegex);
+}
+
+export function eagerCompleteSearch(term, scopedId) {
+  return term === "" && !!scopedId;
 }
 
 export default function userSearch(options) {

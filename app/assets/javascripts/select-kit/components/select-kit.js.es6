@@ -58,6 +58,8 @@ export default Component.extend(
     options: null,
     valueProperty: "id",
     nameProperty: "name",
+    singleSelect: false,
+    multiSelect: false,
 
     init() {
       this._super(...arguments);
@@ -399,6 +401,28 @@ export default Component.extend(
         ) {
           value = null;
           items = [];
+        }
+
+        value = makeArray(value);
+        items = makeArray(items);
+
+        if (this.multiSelect) {
+          items = items.filter(
+            i =>
+              i !== this.newItem &&
+              i !== this.noneItem &&
+              this.getValue(i) !== null
+          );
+
+          if (this.selectKit.options.maximum === 1) {
+            value = value.slice(0, 1);
+            items = items.slice(0, 1);
+          }
+        }
+
+        if (this.singleSelect) {
+          value = value.firstObject || null;
+          items = items.firstObject || null;
         }
 
         this._boundaryActionHandler("onChange", value, items);
