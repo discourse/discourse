@@ -734,7 +734,7 @@ export default Controller.extend({
 
         const post = result.target;
         if (post && !staged) {
-          DiscourseURL.routeTo(post.url);
+          DiscourseURL.routeTo(post.url, { skipIfOnScreen: true });
         }
       })
       .catch(error => {
