@@ -75,4 +75,10 @@ class Ember::Handlebars::Template
     actual_name = input[:name]
     input[:filename].include?('.raw') ? "#{actual_name}.raw" : actual_name
   end
+
+  private
+
+  def handlebars?(filename)
+    filename.to_s =~ /\.raw\.(handlebars|hjs|hbs)/ || filename.to_s.ends_with?(".hbr") || filename.to_s.ends_with?(".hbr.erb")
+  end
 end
