@@ -58,6 +58,8 @@ export default Component.extend(
     options: null,
     valueProperty: "id",
     nameProperty: "name",
+    singleSelect: false,
+    multiSelect: false,
 
     init() {
       this._super(...arguments);
@@ -394,7 +396,7 @@ export default Component.extend(
 
       return new Promise(resolve => {
         if (
-          typeof this.selectKit.valueProperty === "undefined" &&
+          !this.selectKit.valueProperty &&
           this.selectKit.noneItem === value
         ) {
           value = null;
@@ -419,8 +421,8 @@ export default Component.extend(
         }
 
         if (this.singleSelect) {
-          value = value.firstObject;
-          items = items.firstObject;
+          value = value.firstObject || null;
+          items = items.firstObject || null;
         }
 
         this._boundaryActionHandler("onChange", value, items);
