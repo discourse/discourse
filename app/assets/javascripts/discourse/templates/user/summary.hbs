@@ -81,7 +81,7 @@
               <a class='domain'
                  href='{{unbound link.url}}'
                  title='{{unbound link.title}}'
-                 rel='{{unless user.removeNoFollow 'nofollow ugc noopener' 'noopener'}}'
+                 rel='noopener {{unless user.removeNoFollow 'nofollow ugc'}}'
                  target='_blank'>
                 {{shorten-url link.url}}
               </a>
