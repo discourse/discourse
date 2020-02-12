@@ -710,7 +710,9 @@ class CookedPostProcessor
   def process_inline_onebox(element)
     inline_onebox = InlineOneboxer.lookup(
       element.attributes["href"].value,
-      invalidate: !!@opts[:invalidate_oneboxes]
+      invalidate: !!@opts[:invalidate_oneboxes],
+      user_id: @post&.user_id,
+      category_id: @post&.topic&.category_id
     )
 
     if title = inline_onebox&.dig(:title)
