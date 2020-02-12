@@ -14,6 +14,7 @@ import { set } from "@ember/object";
 import { getOwner } from "@ember/application";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
+  elementId: "user-card",
   classNames: "user-card",
   triggeringLinkClass: "mention",
   classNameBindings: [
