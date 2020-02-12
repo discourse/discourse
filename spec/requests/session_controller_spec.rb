@@ -1006,7 +1006,7 @@ RSpec.describe SessionController do
       it "it fails to log in if secret is wrong" do
         get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForRandomSite"))
 
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(422)
       end
 
       it "fails with a nice error message if secret is blank" do
