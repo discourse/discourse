@@ -108,7 +108,6 @@ describe ThemeJavascriptCompiler do
       expect(statement("{{dummy-helper themeSettings.setting_key}}")).
         to eq([[1, [helper_opcode, "dummy-helper", [[helper_opcode, "theme-setting", [22, "setting_key"], [["deprecated"], [true]]]], nil], false]])
     end
-
   end
 
   describe "#append_raw_template" do
