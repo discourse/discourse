@@ -674,9 +674,9 @@ export default Component.extend({
         return;
       }
 
-      const { canUpload, canPasteHtml } = clipboardData(e, true);
+      const { canUpload, canPasteHtml, types } = clipboardData(e, true);
 
-      if (!canUpload || canPasteHtml) {
+      if (!canUpload || canPasteHtml || types.includes("text/plain")) {
         e.preventDefault();
       }
     });

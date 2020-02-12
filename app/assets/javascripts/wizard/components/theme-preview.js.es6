@@ -6,17 +6,12 @@ import {
   chooseDarker,
   LOREM
 } from "wizard/lib/preview";
-import { computed } from "@ember/object";
 
 export default createPreviewComponent(305, 165, {
   logo: null,
   avatar: null,
 
   classNameBindings: ["isSelected"],
-
-  canvasStyle: computed("width", "height", function() {
-    return `width:${this.width}px;height:${this.height}px`.htmlSafe();
-  }),
 
   @discourseComputed("selectedId", "colorsId")
   isSelected(selectedId, colorsId) {

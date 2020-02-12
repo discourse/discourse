@@ -17,10 +17,7 @@
             {{t.title}}
           </span>
           <span class="topic-categories">
-            {{#if t.category.parentCategory}}
-              {{bound-category-link t.category.parentCategory}}
-            {{/if}}
-            {{bound-category-link t.category}}
+            {{bound-category-link t.category recursive=true hideParent=true}}
           </span>
         </label>
       </div>
