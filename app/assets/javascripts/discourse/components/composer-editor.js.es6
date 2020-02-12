@@ -180,7 +180,7 @@ export default Component.extend({
       term,
       topicId,
       categoryId,
-      includeMentionableGroups: true
+      includeGroups: true
     });
   },
 
