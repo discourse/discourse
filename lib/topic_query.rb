@@ -862,7 +862,7 @@ class TopicQuery
 
     result = TopicQuery.apply_custom_filters(result, self)
 
-    @guardian.filter_allowed_categories(result, reference_categories: false)
+    @guardian.filter_allowed_categories(result)
   end
 
   def remove_muted_topics(list, user)
