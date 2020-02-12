@@ -5,14 +5,20 @@ import {
 
 const _cache = {};
 
-export function applyInlineOneboxes(inline, ajax) {
+export function applyInlineOneboxes(inline, ajax, opts) {
+  opts = opts || {};
+
   Object.keys(inline).forEach(url => {
     // cache a blank locally, so we never trigger a lookup
     _cache[url] = {};
   });
 
   return ajax("/inline-onebox", {
-    data: { urls: Object.keys(inline) }
+    data: {
+      urls: Object.keys(inline),
+      category_id: opts.categoryId,
+      topic_id: opts.topicId
+    }
   }).then(result => {
     result["inline-oneboxes"].forEach(onebox => {
       if (onebox.title) {
