@@ -208,15 +208,15 @@ module Oneboxer
     end
   end
 
-  def self.local_topic_html(url, route, opts)
-    return unless current_user = User.find_by(id: opts[:user_id])
+  def self.local_topic(url, route, opts)
+    if current_user = User.find_by(id: opts[:user_id])
+      if current_category = Category.find_by(id: opts[:category_id])
+        return unless Guardian.new(current_user).can_see_category?(current_category)
+      end
 
-    if current_category = Category.find_by(id: opts[:category_id])
-      return unless Guardian.new(current_user).can_see_category?(current_category)
-    end
-
-    if current_topic = Topic.find_by(id: opts[:topic_id])
-      return unless Guardian.new(current_user).can_see_topic?(current_topic)
+      if current_topic = Topic.find_by(id: opts[:topic_id])
+        return unless Guardian.new(current_user).can_see_topic?(current_topic)
+      end
     end
 
     topic = Topic.find_by(id: route[:topic_id])
@@ -224,9 +224,15 @@ module Oneboxer
     return unless topic
     return if topic.private_message?
 
-    if current_category&.id != topic.category_id
+    if current_category.blank? || current_category.id != topic.category_id
       return unless Guardian.new.can_see_topic?(topic)
     end
+
+    topic
+  end
+
+  def self.local_topic_html(url, route, opts)
+    return unless topic = local_topic(url, route, opts)
 
     post_number = route[:post_number].to_i
 
@@ -236,7 +242,7 @@ module Oneboxer
 
     return if !post || post.hidden || !allowed_post_types.include?(post.post_type)
 
-    if post_number > 1 && current_topic&.id == topic.id
+    if post_number > 1 && opts[:topic_id] == topic.id
       excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
       excerpt.gsub!(/[\r\n]+/, " ")
       excerpt.gsub!("[/quote]", "[quote]") # don't break my quote
