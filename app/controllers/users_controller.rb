@@ -308,7 +308,7 @@ class UsersController < ApplicationController
     groups = Group.where(name: usernames).pluck(:name)
     mentionable_groups =
       if current_user
-        Group.mentionable
+        Group.mentionable(current_user)
           .where(name: usernames)
           .pluck(:name, :user_count)
           .map do |name, user_count|
