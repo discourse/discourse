@@ -108,6 +108,24 @@ describe ThemeJavascriptCompiler do
       expect(statement("{{dummy-helper themeSettings.setting_key}}")).
         to eq([[1, [helper_opcode, "dummy-helper", [[helper_opcode, "theme-setting", [22, "setting_key"], [["deprecated"], [true]]]], nil], false]])
     end
+
   end
 
+  describe "#append_raw_template" do
+    let(:compiler) { ThemeJavascriptCompiler.new(1, 'marks') }
+    it 'adds the correct template to "Discourse.RAW_TEMPLATES"' do
+      template = "<h1>hello</h1>"
+      name = "/path/to/templates1"
+      compiler.append_raw_template("#{name}.raw", template)
+      expect(compiler.content.to_s).to include("Discourse.RAW_TEMPLATES[\"#{name}\"]")
+
+      name = "/path/to/templates2"
+      compiler.append_raw_template("#{name}.hbr", template)
+      expect(compiler.content.to_s).to include("Discourse.RAW_TEMPLATES[\"#{name}\"]")
+
+      name = "/path/to/templates3"
+      compiler.append_raw_template("#{name}.hbs", template)
+      expect(compiler.content.to_s).to include("Discourse.RAW_TEMPLATES[\"#{name}.hbs\"]")
+    end
+  end
 end
