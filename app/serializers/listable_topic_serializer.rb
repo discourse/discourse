@@ -8,8 +8,9 @@ class ListableTopicSerializer < BasicTopicSerializer
              :created_at,
              :last_posted_at,
              :bumped,
-             :archetype,
              :bumped_at,
+             :archetype,
+             :is_pm,
              :unseen,
              :last_read_post_number,
              :unread,
@@ -71,6 +72,10 @@ class ListableTopicSerializer < BasicTopicSerializer
 
   def include_is_warning?
     is_warning
+  end
+
+  def is_pm
+    object.archetype === "private_message"
   end
 
   def unseen
