@@ -518,8 +518,7 @@ createWidget("discourse-poll-grouped-pies", {
           const data = result.grouped_results[chartIdx].options.mapBy("votes");
           const labels = result.grouped_results[chartIdx].options.mapBy("html");
           const chartConfig = pieChartConfig(data, labels, {
-            aspectRatio: 1.2,
-            displayLegend: false
+            aspectRatio: 1.2
           });
           const canvasId = `pie-${attrs.id}-${chartIdx}`;
           let el = document.querySelector(`#${canvasId}`);
@@ -579,7 +578,10 @@ createWidget("discourse-poll-pie-canvas", {
 
       const el = document.getElementById(`poll-results-chart-${attrs.id}`);
       // eslint-disable-next-line
-      new Chart(el.getContext("2d"), config);
+      let chart = new Chart(el.getContext("2d"), config);
+      document.getElementById(
+        `poll-results-legend-${attrs.id}`
+      ).innerHTML = chart.generateLegend();
     });
   },
 
@@ -620,13 +622,14 @@ createWidget("discourse-poll-pie-chart", {
     }
     contents.push(btn);
     contents.push(chart);
+    contents.push(h(`div#poll-results-legend-${attrs.id}.pie-chart-legends`));
     return contents;
   }
 });
 
 function pieChartConfig(data, labels, opts = {}) {
-  const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.0;
-  const displayLegend = "displayLegend" in opts ? opts.displayLegend : true;
+  const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.2;
+  const strippedLabels = labels.map(l => stripHtml(l));
   return {
     type: PIE_CHART_TYPE,
     data: {
@@ -636,15 +639,28 @@ function pieChartConfig(data, labels, opts = {}) {
           backgroundColor: getColors(data.length)
         }
       ],
-      labels
+      labels: strippedLabels
     },
     options: {
       responsive: true,
       aspectRatio,
       animation: { duration: 400 },
-      legend: { display: displayLegend }
+      legend: { display: false },
+      legendCallback: function(chart) {
+        let legends = "";
+        for (let i = 0; i < labels.length; i++) {
+          legends += `<div class="legend"><span class="swatch" style="background-color:
+            ${chart.data.datasets[0].backgroundColor[i]}"></span>${labels[i]}</div>`;
+        }
+        return legends;
+      }
     }
   };
+}
+
+function stripHtml(html) {
+  var doc = new DOMParser().parseFromString(html, "text/html");
+  return doc.body.textContent || "";
 }
 
 createWidget("discourse-poll-buttons", {

@@ -1,9 +1,9 @@
 {{#conditional-loading-spinner condition=loading}}
   {{#if hasIncoming}}
   <div class="show-mores">
-    <div class='alert alert-info clickable' {{action showInserted}}>
+    <a href class='alert alert-info clickable' {{action showInserted}}>
       {{count-i18n key="topic_count_" suffix="latest" count=incomingCount}}
-    </div>
+    </a>
   </div>
   {{/if}}
 
@@ -17,7 +17,7 @@
               {{topic-status topic=t}}
               {{topic-link t}}
               {{raw "list/unread-indicator" includeUnreadIndicator=showUnreadIndicator
-                                            topicId=t.id 
+                                            topicId=t.id
                                             unreadClass=(if t.unread_by_group_member "" "read")}}
               {{#if t.unseen}}
                 <span class="badge-notification new-topic"></span>

@@ -3,7 +3,7 @@ import { computed } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["tags-admin-dropdown"],
-  classNames: "tags-admin-dropdown",
+  classNames: ["tags-admin-dropdown"],
   actionsMapping: null,
 
   selectKitOptions: {
@@ -35,7 +35,7 @@ export default DropdownSelectBoxComponent.extend({
   }),
 
   actions: {
-    onSelect(id) {
+    onChange(id) {
       const action = this.actionsMapping[id];
 
       if (action) {

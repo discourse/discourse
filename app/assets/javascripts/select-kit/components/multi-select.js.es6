@@ -1,7 +1,7 @@
 import deprecated from "discourse-common/lib/deprecated";
 import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
-const { makeArray } = Ember;
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],
@@ -80,10 +80,11 @@ export default SelectKitComponent.extend({
   },
 
   selectedContent: computed("value.[]", "content.[]", function() {
-    if (this.value && this.value.length) {
+    const value = Ember.makeArray(this.value);
+    if (value.length) {
       let content = [];
 
-      this.value.forEach(v => {
+      value.forEach(v => {
         if (this.selectKit.valueProperty) {
           const c = makeArray(this.content).findBy(
             this.selectKit.valueProperty,

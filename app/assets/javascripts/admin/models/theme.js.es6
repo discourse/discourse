@@ -7,6 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import highlightSyntax from "discourse/lib/highlight-syntax";
+import { url } from "discourse/lib/computed";
 
 const THEME_UPLOAD_VAR = 2;
 const FIELDS_IDS = [0, 1, 5];
@@ -20,6 +21,7 @@ const Theme = RestModel.extend({
   isPendingUpdates: gt("remote_theme.commits_behind", 0),
   hasEditedFields: gt("editedFields.length", 0),
   hasParents: gt("parent_themes.length", 0),
+  diffLocalChangesUrl: url("id", "/admin/themes/%@/diff_local_changes"),
 
   @discourseComputed("theme_fields.[]")
   targets() {
@@ -295,7 +297,7 @@ const Theme = RestModel.extend({
   },
 
   updateToLatest() {
-    return ajax(`/admin/themes/${this.id}/diff_local_changes`).then(json => {
+    return ajax(this.diffLocalChangesUrl).then(json => {
       if (json && json.error) {
         bootbox.alert(
           I18n.t("generic_error_with_reason", {

@@ -110,6 +110,8 @@ task 'javascript:update' do
       source: 'workbox-expiration/build/.',
       destination: 'workbox',
       public: true
+    }, {
+      source: '@popperjs/core/dist/umd/popper.js'
     }
   ]
 

@@ -11,6 +11,7 @@ describe RemoteTheme do
       `cd #{repo_dir} && git init . `
       `cd #{repo_dir} && git config user.email 'someone@cool.com'`
       `cd #{repo_dir} && git config user.name 'The Cool One'`
+      `cd #{repo_dir} && git config commit.gpgsign 'false'`
       files.each do |name, data|
         FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)
         File.write("#{repo_dir}/#{name}", data)

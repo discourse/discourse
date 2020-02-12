@@ -17,13 +17,13 @@ QUnit.test("slugFor", assert => {
   );
   slugFor(
     store.createRecord("category", { id: 123, slug: "" }),
-    "-",
-    "It returns - for empty slugs"
+    "123-category",
+    "It returns id-category for empty strings"
   );
   slugFor(
     store.createRecord("category", { id: 456 }),
-    "-",
-    "It returns - for undefined slugs"
+    "456-category",
+    "It returns id-category for undefined slugs"
   );
   slugFor(
     store.createRecord("category", { slug: "熱帶風暴畫眉" }),
@@ -46,14 +46,14 @@ QUnit.test("slugFor", assert => {
 
   slugFor(
     store.createRecord("category", { id: 555, parentCategory: parentCategory }),
-    "darth/-",
+    "darth/555-category",
     "it uses the parent slug before the child and then uses id"
   );
 
   parentCategory.set("slug", null);
   slugFor(
     store.createRecord("category", { id: 555, parentCategory: parentCategory }),
-    "-/-",
+    "345-category/555-category",
     "it uses the parent before the child and uses ids for both"
   );
 });

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DetailedTagSerializer < TagSerializer
-  attributes :synonyms, :tag_group_names
+  attributes :synonyms, :tag_group_names, :category_restricted
 
   has_many :categories, serializer: BasicCategorySerializer
 
@@ -10,12 +10,11 @@ class DetailedTagSerializer < TagSerializer
   end
 
   def categories
-    Category.secured(scope).where(
-      id: object.categories.pluck(:id) +
-        object.tag_groups.includes(:categories).map do |tg|
-          tg.categories.map(&:id)
-        end.flatten
-    )
+    Category.secured(scope).where(id: category_ids)
+  end
+
+  def category_restricted
+    !category_ids.empty?
   end
 
   def include_tag_group_names?
@@ -24,5 +23,14 @@ class DetailedTagSerializer < TagSerializer
 
   def tag_group_names
     object.tag_groups.map(&:name)
+  end
+
+  private
+
+  def category_ids
+    @_category_ids ||= object.categories.pluck(:id) +
+      object.tag_groups.includes(:categories).map do |tg|
+        tg.categories.map(&:id)
+      end.flatten
   end
 end

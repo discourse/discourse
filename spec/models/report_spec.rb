@@ -1193,4 +1193,43 @@ describe Report do
       end
     end
   end
+
+  describe "trust_level_growth" do
+    before do
+      freeze_time(Time.now.at_midnight)
+      Theme.clear_default!
+    end
+
+    let(:reports) { Report.find('trust_level_growth') }
+
+    context "with no data" do
+      it "works" do
+        reports.data.each do |report|
+          expect(report[:data]).to be_empty
+        end
+      end
+    end
+
+    context "with data" do
+      fab!(:gwen) { Fabricate(:user) }
+      fab!(:martin) { Fabricate(:user) }
+
+      before do
+        UserHistory.create(action: UserHistory.actions[:auto_trust_level_change], target_user_id: gwen.id, new_value: TrustLevel[2], previous_value: 1)
+        UserHistory.create(action: UserHistory.actions[:change_trust_level], target_user_id: martin.id, new_value: TrustLevel[4], previous_value: 0)
+      end
+
+      it "works" do
+        tl1_reached = reports.data.find { |r| r[:req] == "tl1_reached" }
+        tl2_reached = reports.data.find { |r| r[:req] == "tl2_reached" }
+        tl3_reached = reports.data.find { |r| r[:req] == "tl3_reached" }
+        tl4_reached = reports.data.find { |r| r[:req] == "tl4_reached" }
+
+        expect(tl1_reached[:data][0][:y]).to eql(0)
+        expect(tl2_reached[:data][0][:y]).to eql(1)
+        expect(tl3_reached[:data][0][:y]).to eql(0)
+        expect(tl4_reached[:data][0][:y]).to eql(1)
+      end
+    end
+  end
 end

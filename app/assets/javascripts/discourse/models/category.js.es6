@@ -85,6 +85,15 @@ const Category = RestModel.extend({
     return notificationLevel === NotificationLevels.MUTED;
   },
 
+  @discourseComputed("notification_level")
+  notificationLevelString(notificationLevel) {
+    // Get the key from the value
+    const notificationLevelString = Object.keys(NotificationLevels).find(
+      key => NotificationLevels[key] === notificationLevel
+    );
+    if (notificationLevelString) return notificationLevelString.toLowerCase();
+  },
+
   @discourseComputed("name")
   url() {
     return Discourse.getURL(`/c/${Category.slugFor(this)}/${this.id}`);
@@ -265,8 +274,12 @@ Category.reopenClass({
       result = Category.slugFor(parentCategory) + separator;
     }
 
-    const slug = get(category, "slug");
-    return !slug || slug.trim().length === 0 ? `${result}-` : result + slug;
+    const id = get(category, "id"),
+      slug = get(category, "slug");
+
+    return !slug || slug.trim().length === 0
+      ? `${result}${id}-category`
+      : result + slug;
   },
 
   list() {
@@ -351,7 +364,7 @@ Category.reopenClass({
       if (
         !category &&
         parts.length > 0 &&
-        parts[parts.length - 1].match(/^\d+-/)
+        parts[parts.length - 1].match(/^\d+-category/)
       ) {
         const id = parseInt(parts.pop(), 10);
 
@@ -408,6 +421,10 @@ Category.reopenClass({
     return parentSlug
       ? ajax(`/c/${parentSlug}/${slug}/find_by_slug.json`)
       : ajax(`/c/${slug}/find_by_slug.json`);
+  },
+
+  reloadBySlugPath(slugPath) {
+    return ajax(`/c/${slugPath}/find_by_slug.json`);
   },
 
   search(term, opts) {

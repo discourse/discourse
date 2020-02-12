@@ -7,6 +7,7 @@ describe ReviewableClaimedTopicsController do
 
   describe '#create' do
     fab!(:topic) { Fabricate(:topic) }
+    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, topic: topic) }
     let(:params) do
       { reviewable_claimed_topic: { topic_id: topic.id } }
     end
@@ -32,6 +33,7 @@ describe ReviewableClaimedTopicsController do
         post "/reviewable_claimed_topics.json", params: params
         expect(response.code).to eq("200")
         expect(ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: topic.id).exists?).to eq(true)
+        expect(topic.reviewables.first.history.where(reviewable_history_type: ReviewableHistory.types[:claimed]).size).to eq(1)
       end
 
       it "won't an error if you claim twice" do
@@ -45,7 +47,9 @@ describe ReviewableClaimedTopicsController do
   end
 
   describe '#destroy' do
-    fab!(:claimed) { Fabricate(:reviewable_claimed_topic) }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, topic: topic) }
+    fab!(:claimed) { Fabricate(:reviewable_claimed_topic, topic: topic) }
 
     before do
       sign_in(moderator)
@@ -66,6 +70,7 @@ describe ReviewableClaimedTopicsController do
       delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
       expect(response.code).to eq("200")
       expect(ReviewableClaimedTopic.where(topic_id: claimed.topic_id).exists?).to eq(false)
+      expect(topic.reviewables.first.history.where(reviewable_history_type: ReviewableHistory.types[:unclaimed]).size).to eq(1)
     end
   end
 end

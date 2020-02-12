@@ -1,11 +1,12 @@
 import componentTest from "helpers/component-test";
 import { testSelectKitModule } from "./select-kit-test-helper";
 import Site from "discourse/models/site";
+import { set } from "@ember/object";
 
 testSelectKitModule("tag-drop", {
   beforeEach() {
     const site = Site.current();
-    Ember.set(site, "top_tags", ["jeff", "neil", "arpit", "régis"]);
+    set(site, "top_tags", ["jeff", "neil", "arpit", "régis"]);
 
     const response = object => {
       return [200, { "Content-Type": "application/json" }, object];

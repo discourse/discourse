@@ -364,7 +364,7 @@ class TagsController < ::ApplicationController
         end
 
         # Legacy paths
-        if @filter_on_category.nil? && parts.last =~ /\A\d+-/
+        if @filter_on_category.nil? && parts.last =~ /\A\d+-category/
           @filter_on_category = Category.find_by_id(parts.last.to_i)
         end
       end

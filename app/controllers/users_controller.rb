@@ -308,7 +308,7 @@ class UsersController < ApplicationController
     groups = Group.where(name: usernames).pluck(:name)
     mentionable_groups =
       if current_user
-        Group.mentionable(current_user)
+        Group.mentionable
           .where(name: usernames)
           .pluck(:name, :user_count)
           .map do |name, user_count|
@@ -901,22 +901,21 @@ class UsersController < ApplicationController
 
     groups =
       if current_user
-        if params[:include_mentionable_groups] == 'true'
+        if params[:include_groups] == 'true'
+          Group.visible_groups(current_user)
+        elsif params[:include_mentionable_groups] == 'true'
           Group.mentionable(current_user)
         elsif params[:include_messageable_groups] == 'true'
           Group.messageable(current_user)
         end
       end
 
-    include_groups = params[:include_groups] == "true"
-
     # blank term is only handy for in-topic search of users after @
     # we do not want group results ever if term is blank
-    include_groups = groups = nil if term.blank?
+    groups = nil if term.blank?
 
-    if include_groups || groups
+    if groups
       groups = Group.search_groups(term, groups: groups)
-      groups = groups.where(visibility_level: Group.visibility_levels[:public]) if include_groups
       groups = groups.order('groups.name asc')
 
       to_render[:groups] = groups.map do |m|

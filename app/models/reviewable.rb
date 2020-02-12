@@ -472,9 +472,14 @@ class Reviewable < ActiveRecord::Base
     result = result.where(type: type) if type
     result = result.where(category_id: category_id) if category_id
     result = result.where(topic_id: topic_id) if topic_id
-    result = result.where("score >= ?", min_score) if min_score > 0
     result = result.where("created_at >= ?", from_date) if from_date
     result = result.where("created_at <= ?", to_date) if to_date
+
+    if min_score > 0 && status == :pending && type.nil?
+      result = result.where("score >= ? OR type = ?", min_score, ReviewableQueuedPost.name)
+    elsif min_score > 0
+      result = result.where("score >= ?", min_score)
+    end
 
     if !custom_filters.empty?
       result = custom_filters.reduce(result) do |memo, filter|

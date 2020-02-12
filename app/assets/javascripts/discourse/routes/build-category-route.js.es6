@@ -50,6 +50,20 @@ export default (filterArg, params) => {
         modelParams.category_slug_path_with_id
       );
 
+      if (!category) {
+        const parts = modelParams.category_slug_path_with_id.split("/");
+        if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
+          parts.pop();
+        }
+
+        return Category.reloadBySlugPath(parts.join("/")).then(result => {
+          const record = this.store.createRecord("category", result.category);
+          record.setupGroupsAndPermissions();
+          this.site.updateCategory(record);
+          return { category: record };
+        });
+      }
+
       if (category) {
         return { category };
       }

@@ -17,7 +17,7 @@
     <div>
       <h3>
         {{i18n 'user.auth_tokens.latest_post'}}
-        <a {{action "toggleExpanded"}}>{{d-icon (if expanded "caret-up" "caret-down")}}</a>
+        <a href {{action "toggleExpanded"}}>{{d-icon (if expanded "caret-up" "caret-down")}}</a>
       </h3>
 
       {{#if expanded}}

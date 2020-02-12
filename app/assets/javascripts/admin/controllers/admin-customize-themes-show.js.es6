@@ -13,6 +13,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import ThemeSettings from "admin/models/theme-settings";
 import { THEMES, COMPONENTS } from "admin/models/theme";
+import EmberObject from "@ember/object";
 
 const THEME_UPLOAD_VAR = 2;
 
@@ -67,7 +68,7 @@ export default Controller.extend({
 
   @discourseComputed("model.parentThemes.[]")
   relativesSelectorSettingsForComponent() {
-    return Ember.Object.create({
+    return EmberObject.create({
       list_type: "compact",
       type: "list",
       preview: null,
@@ -85,7 +86,7 @@ export default Controller.extend({
 
   @discourseComputed("model.parentThemes.[]")
   relativesSelectorSettingsForTheme() {
-    return Ember.Object.create({
+    return EmberObject.create({
       list_type: "compact",
       type: "list",
       preview: null,

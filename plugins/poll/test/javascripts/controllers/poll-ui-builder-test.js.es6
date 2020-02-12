@@ -195,10 +195,17 @@ test("disableInsert", function(assert) {
 
   controller.setProperties({
     pollType: controller.regularPollType,
-    pollOptionsCount: 1
+    pollOptionsCount: 0
   });
 
   assert.equal(controller.disableInsert, true, "it should be true");
+
+  controller.setProperties({
+    pollType: controller.regularPollType,
+    pollOptionsCount: 1
+  });
+
+  assert.equal(controller.disableInsert, false, "it should be false");
 });
 
 test("number pollOutput", function(assert) {

@@ -1,5 +1,5 @@
 import Mixin from "@ember/object/mixin";
-const { get } = Ember;
+import { get } from "@ember/object";
 
 export default Mixin.create({
   defaultItem(value, name) {
@@ -13,9 +13,9 @@ export default Mixin.create({
     }
   },
 
-  itemForValue(value) {
+  itemForValue(value, content) {
     if (this.selectKit.valueProperty) {
-      return this.mainCollection.findBy(this.selectKit.valueProperty, value);
+      return content.findBy(this.selectKit.valueProperty, value);
     } else {
       return value;
     }
@@ -57,7 +57,7 @@ export default Mixin.create({
   },
 
   findValue(content, item) {
-    const property = Ember.get(this.selectKit, "valueProperty");
+    const property = get(this.selectKit, "valueProperty");
 
     if (!property) {
       if (content.indexOf(item) > -1) {

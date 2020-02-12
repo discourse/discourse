@@ -5,8 +5,10 @@ import {
   CREATE_SHARED_DRAFT,
   REPLY
 } from "discourse/models/composer";
+import Draft from "discourse/models/draft";
 import { computed } from "@ember/object";
 import { camelize } from "@ember/string";
+import { isEmpty } from "@ember/utils";
 
 // Component can get destroyed and lose state
 let _topicSnapshot = null;
@@ -48,7 +50,7 @@ export default DropdownSelectBoxComponent.extend({
       _postSnapshot = this.get("composerModel.post");
     }
 
-    if (Ember.isEmpty(this.content)) {
+    if (isEmpty(this.content)) {
       this.set("selectKit.isHidden", true);
     }
   },
@@ -223,6 +225,21 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   replyAsNewTopicSelected(options) {
+    Draft.get("new_topic").then(response => {
+      if (response.draft) {
+        bootbox.confirm(
+          I18n.t("composer.composer_actions.reply_as_new_topic.confirm"),
+          result => {
+            if (result) this._replyAsNewTopicSelect(options);
+          }
+        );
+      } else {
+        this._replyAsNewTopicSelect(options);
+      }
+    });
+  },
+
+  _replyAsNewTopicSelect(options) {
     options.action = CREATE_TOPIC;
     options.categoryId = this.get("composerModel.topic.category.id");
     options.disableScopedCategory = true;

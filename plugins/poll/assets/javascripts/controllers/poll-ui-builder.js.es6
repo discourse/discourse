@@ -87,9 +87,9 @@ export default Controller.extend({
 
   @discourseComputed("site.groups")
   siteGroups(groups) {
-    const values = [{ name: "", value: null }];
-    groups.forEach(g => values.push({ name: g.name, value: g.name }));
-    return values;
+    return groups.map(g => {
+      return { name: g.name, value: g.name };
+    });
   },
 
   @discourseComputed("pollType", "regularPollType")
@@ -272,9 +272,9 @@ export default Controller.extend({
   )
   disableInsert(count, isRegular, isMultiple, isNumber, pollMin, pollMax) {
     return (
-      (isRegular && count < 2) ||
+      (isRegular && count < 1) ||
       (isMultiple && count < pollMin && pollMin >= pollMax) ||
-      (isNumber ? false : count < 2)
+      (isNumber ? false : count < 1)
     );
   },
 

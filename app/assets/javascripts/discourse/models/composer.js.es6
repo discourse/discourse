@@ -912,6 +912,10 @@ const Composer = RestModel.extend({
   },
 
   createPost(opts) {
+    if (this.action === CREATE_TOPIC) {
+      this.set("topic", null);
+    }
+
     const post = this.post;
     const topic = this.topic;
     const user = this.user;

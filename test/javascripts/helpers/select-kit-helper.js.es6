@@ -1,3 +1,5 @@
+import { isEmpty } from "@ember/utils";
+
 function checkSelectKitIsNotExpanded(selector) {
   if (find(selector).hasClass("is-expanded")) {
     // eslint-disable-next-line no-console
@@ -90,7 +92,7 @@ function rowHelper(row) {
     },
     value() {
       const value = row.attr("data-value");
-      return Ember.isEmpty(value) ? null : value;
+      return isEmpty(value) ? null : value;
     },
     exists() {
       return exists(row);
@@ -105,7 +107,7 @@ function headerHelper(header) {
   return {
     value() {
       const value = header.attr("data-value");
-      return Ember.isEmpty(value) ? null : value;
+      return isEmpty(value) ? null : value;
     },
     name() {
       return header.attr("data-name");
@@ -259,6 +261,14 @@ export default function selectKit(selector) {
 
     highlightedRow() {
       return rowHelper(find(selector).find(".select-kit-row.is-highlighted"));
+    },
+
+    async deselectItem(value) {
+      await click(
+        find(selector)
+          .find(".select-kit-header")
+          .find(`[data-value=${value}]`)
+      );
     },
 
     exists() {

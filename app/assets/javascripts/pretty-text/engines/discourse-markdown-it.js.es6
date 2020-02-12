@@ -141,21 +141,23 @@ export function extractDataAttribute(str) {
 
 // videoHTML and audioHTML follow the same HTML syntax
 // as oneboxer.rb when dealing with these formats
-function videoHTML(token) {
+function videoHTML(token, opts) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
+  const preloadType = opts.secureMedia ? "none" : "metadata";
   return `<div class="video-container">
-    <video width="100%" height="100%" controls>
+    <video width="100%" height="100%" preload="${preloadType}" controls>
       <source src="${src}" data-orig-src="${origSrc}">
       <a href="${src}">${src}</a>
     </video>
   </div>`;
 }
 
-function audioHTML(token) {
+function audioHTML(token, opts) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
-  return `<audio controls>
+  const preloadType = opts.secureMedia ? "none" : "metadata";
+  return `<audio preload="${preloadType}" controls>
     <source src="${src}" data-orig-src="${origSrc}">
     <a href="${src}">${src}</a>
   </audio>`;
@@ -165,17 +167,19 @@ const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,
 function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   const token = tokens[idx];
   const alt = slf.renderInlineAsText(token.children, options, env);
-
   const split = alt.split("|");
   const altSplit = [];
 
   // markdown-it supports returning HTML instead of continuing to render the current token
   // see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
   // handles |video and |audio alt transformations for image tags
+  const mediaOpts = {
+    secureMedia: options.discourse.limitedSiteSettings.secureMedia
+  };
   if (split[1] === "video") {
-    return videoHTML(token);
+    return videoHTML(token, mediaOpts);
   } else if (split[1] === "audio") {
-    return audioHTML(token);
+    return audioHTML(token, mediaOpts);
   }
 
   // parsing ![myimage|500x300]() or ![myimage|75%]() or ![myimage|500x300, 75%]
@@ -333,6 +337,10 @@ export function setup(opts, siteSettings, state) {
 
   opts.discourse = copy;
   getOptions.f = () => opts.discourse;
+
+  opts.discourse.limitedSiteSettings = {
+    secureMedia: siteSettings.secure_media
+  };
 
   opts.engine = window.markdownit({
     discourse: opts.discourse,

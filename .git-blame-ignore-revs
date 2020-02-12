@@ -1,0 +1,9 @@
+# Only add no-op commits to this file
+# To prevent these commits to show in git blame
+# git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# DEV: introduces prettier for es6 files
+03a7d532cf8f09b12573b21ef013c21100d52728
+
+# DEV: enforces no self-closing-void-elements
+dafd3c3b47f116c6c1dc56cb18df614c11747733

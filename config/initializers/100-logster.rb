@@ -150,3 +150,15 @@ if Rails.configuration.multisite
     chained && chained.first.formatter = RailsMultisite::Formatter.new
   end
 end
+
+Logster.config.project_directories = [
+  { path: Rails.root.to_s, url: "https://github.com/discourse/discourse", main_app: true }
+]
+Discourse.plugins.each do |plugin|
+  next if !plugin.metadata.url
+
+  Logster.config.project_directories << {
+    path: "#{Rails.root.to_s}/plugins/#{plugin.directory_name}",
+    url: plugin.metadata.url
+  }
+end

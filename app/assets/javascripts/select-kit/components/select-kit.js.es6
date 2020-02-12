@@ -1,9 +1,12 @@
 import { computed, default as EmberObject } from "@ember/object";
 import Component from "@ember/component";
 import deprecated from "discourse-common/lib/deprecated";
-const { get, isNone, makeArray } = Ember;
+import { makeArray } from "discourse-common/lib/helpers";
+import { get } from "@ember/object";
 import UtilsMixin from "select-kit/mixins/utils";
 import PluginApiMixin from "select-kit/mixins/plugin-api";
+import Mixin from "@ember/object/mixin";
+import { isEmpty, isNone } from "@ember/utils";
 import {
   next,
   debounce,
@@ -26,7 +29,7 @@ export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
 
 const EMPTY_OBJECT = Object.freeze({});
-const SELECT_KIT_OPTIONS = Ember.Mixin.create({
+const SELECT_KIT_OPTIONS = Mixin.create({
   mergedProperties: ["selectKitOptions"],
   selectKitOptions: EMPTY_OBJECT
 });
@@ -44,9 +47,7 @@ export default Component.extend(
       "selectKit.isExpanded:is-expanded",
       "selectKit.isDisabled:is-disabled",
       "selectKit.isHidden:is-hidden",
-      "selectKit.hasSelection:has-selection",
-      "selectKit.hasReachedMaximum:has-reached-maximum",
-      "selectKit.hasReachedMinimum:has-reached-minimum"
+      "selectKit.hasSelection:has-selection"
     ],
     tabindex: 0,
     content: null,
@@ -57,6 +58,8 @@ export default Component.extend(
     options: null,
     valueProperty: "id",
     nameProperty: "name",
+    singleSelect: false,
+    multiSelect: false,
 
     init() {
       this._super(...arguments);
@@ -86,6 +89,7 @@ export default Component.extend(
           hasNoContent: true,
           highlighted: null,
           noneItem: null,
+          newItem: null,
           filter: null,
 
           modifyContent: bind(this, this._modifyContentWrapper),
@@ -222,8 +226,9 @@ export default Component.extend(
       );
 
       this.selectKit.setProperties({
-        hasSelection: !Ember.isEmpty(this.value),
-        noneItem: this._modifyNoSelectionWrapper()
+        hasSelection: !isEmpty(this.value),
+        noneItem: this._modifyNoSelectionWrapper(),
+        newItem: null
       });
 
       if (this.selectKit.isExpanded) {
@@ -254,18 +259,16 @@ export default Component.extend(
       icon: null,
       icons: null,
       maximum: null,
+      maximumLabel: null,
       minimum: null,
       minimumLabel: null,
-      maximumLabel: null,
       autoInsertNoneItem: true,
       clearOnClick: false,
       closeOnChange: true,
       limitMatches: null,
       placement: "bottom-start",
       filterComponent: "select-kit/select-kit-filter",
-      selectedNameComponent: "selected-name",
-      hasReachedMaximum: "hasReachedMaximum",
-      hasReachedMinimum: "hasReachedMinimum"
+      selectedNameComponent: "selected-name"
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function() {
@@ -296,34 +299,6 @@ export default Component.extend(
       }
     ),
 
-    hasReachedMaximum: computed(
-      "selectKit.options.maximum",
-      "value",
-      function() {
-        const maximum = parseInt(this.selectKit.options.maximum, 10);
-
-        if (maximum && makeArray(this.value).length >= maximum) {
-          return true;
-        }
-
-        return false;
-      }
-    ),
-
-    hasReachedMinimum: computed(
-      "selectKit.options.minimum",
-      "value",
-      function() {
-        const minimum = parseInt(this.selectKit.options.minimum, 10);
-
-        if (!minimum || makeArray(this.value).length >= minimum) {
-          return true;
-        }
-
-        return false;
-      }
-    ),
-
     createContentFromInput(input) {
       return input;
     },
@@ -345,21 +320,11 @@ export default Component.extend(
       const selection = Ember.makeArray(this.value);
 
       const maximum = this.selectKit.options.maximum;
-
       if (maximum && selection.length >= maximum) {
         const key =
           this.selectKit.options.maximumLabel ||
           "select_kit.max_content_reached";
         this.addError(I18n.t(key, { count: maximum }));
-        return false;
-      }
-
-      const minimum = this.selectKit.options.minimum;
-      if (minimum && selection.length <= minimum) {
-        const key =
-          this.selectKit.options.minimumLabel ||
-          "select_kit.min_content_not_reached";
-        this.addError(I18n.t(key, { count: minimum }));
         return false;
       }
 
@@ -436,6 +401,28 @@ export default Component.extend(
         ) {
           value = null;
           items = [];
+        }
+
+        value = makeArray(value);
+        items = makeArray(items);
+
+        if (this.multiSelect) {
+          items = items.filter(
+            i =>
+              i !== this.newItem &&
+              i !== this.noneItem &&
+              this.getValue(i) !== null
+          );
+
+          if (this.selectKit.options.maximum === 1) {
+            value = value.slice(0, 1);
+            items = items.slice(0, 1);
+          }
+        }
+
+        if (this.singleSelect) {
+          value = value.firstObject || null;
+          items = items.firstObject || null;
         }
 
         this._boundaryActionHandler("onChange", value, items);
@@ -602,7 +589,6 @@ export default Component.extend(
         }
 
         const noneItem = this.selectKit.noneItem;
-
         if (
           this.selectKit.options.allowAny &&
           filter &&
@@ -610,11 +596,12 @@ export default Component.extend(
         ) {
           filter = this.createContentFromInput(filter);
           if (this.validateCreate(filter, content)) {
-            content.unshift(this.defaultItem(filter, filter));
+            this.selectKit.set("newItem", this.defaultItem(filter, filter));
+            content.unshift(this.selectKit.newItem);
           }
         }
 
-        const hasNoContent = Ember.isEmpty(content);
+        const hasNoContent = isEmpty(content);
 
         if (
           this.selectKit.hasSelection &&
@@ -629,7 +616,7 @@ export default Component.extend(
         this.selectKit.setProperties({
           highlighted:
             this.singleSelect && this.value
-              ? this.itemForValue(this.value)
+              ? this.itemForValue(this.value, this.mainCollection)
               : this.mainCollection.firstObject,
           isLoading: false,
           hasNoContent
@@ -813,13 +800,17 @@ export default Component.extend(
           `[data-select-kit-id=${this.selectKit.uniqueID}-body]`
         );
 
-        if (!this.site.mobileView && popper.offsetWidth < anchor.offsetWidth) {
+        if (
+          this.site &&
+          !this.site.mobileView &&
+          popper.offsetWidth < anchor.offsetWidth
+        ) {
           popper.style.minWidth = `${anchor.offsetWidth}px`;
         }
 
         const inModal = $(this.element).parents("#discourse-modal").length;
 
-        if (!this.site.mobileView && inModal) {
+        if (this.site && !this.site.mobileView && inModal) {
           popper.style.width = `${anchor.offsetWidth}px`;
         }
 
@@ -925,7 +916,7 @@ export default Component.extend(
     },
 
     _deprecateValueAttribute() {
-      if (this.valueAttribute) {
+      if (this.valueAttribute || this.valueAttribute === null) {
         this._deprecated(
           "The `valueAttribute` is deprecated. Use `valueProperty` instead"
         );

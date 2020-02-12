@@ -125,14 +125,21 @@ class ImportScripts::Base
     raise NotImplementedError
   end
 
-  %i{ post_id_from_imported_post_id
-      topic_lookup_from_imported_post_id
-      group_id_from_imported_group_id
-      find_group_by_import_id
-      user_id_from_imported_user_id
-      find_user_by_import_id
-      category_id_from_imported_category_id
-      add_group add_user add_category add_topic add_post
+  %i{
+    add_category
+    add_group
+    add_post
+    add_topic
+    add_user
+    category_id_from_imported_category_id
+    find_group_by_import_id
+    find_user_by_import_id
+    group_id_from_imported_group_id
+    post_already_imported?
+    post_id_from_imported_post_id
+    topic_lookup_from_imported_post_id
+    user_already_imported?
+    user_id_from_imported_user_id
   }.each do |method_name|
     delegate method_name, to: :@lookup
   end
@@ -432,8 +439,13 @@ class ImportScripts::Base
   end
 
   def create_category(opts, import_id)
-    existing = Category.where("LOWER(name) = ?", opts[:name].downcase).first
-    return existing if existing && existing.parent_category.try(:id) == opts[:parent_category_id]
+    existing =
+      Category
+        .where(parent_category_id: opts[:parent_category_id])
+        .where("LOWER(name) = ?", opts[:name].downcase.strip)
+        .first
+
+    return existing if existing
 
     post_create_action = opts.delete(:post_create_action)
 

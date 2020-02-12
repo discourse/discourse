@@ -1,6 +1,4 @@
-{{#if selectKit.options.icon}}
-  {{d-icon selectKit.options.icon}}
-{{/if}}
+{{#each icons as |icon|}} {{d-icon icon}} {{/each}}
 
 {{component selectKit.options.selectedNameComponent
   tabindex=tabindex

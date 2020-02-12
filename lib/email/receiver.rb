@@ -1044,7 +1044,7 @@ module Email
           # create the upload for the user
           opts = { for_group_message: options[:is_group_message] }
           upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(user.id)
-          if upload&.valid?
+          if upload.errors.empty?
             # try to inline images
             if attachment.content_type&.start_with?("image/")
               if raw[attachment.url]

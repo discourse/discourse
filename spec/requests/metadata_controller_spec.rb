@@ -70,10 +70,13 @@ RSpec.describe MetadataController do
     end
 
     it 'uses the short_title if it is set' do
+      title = 'FooBarBaz Forum'
+      SiteSetting.title = title
+
       get "/manifest.webmanifest"
       expect(response.status).to eq(200)
       manifest = JSON.parse(response.body)
-      expect(manifest).to_not have_key("short_name")
+      expect(manifest["short_name"]).to eq("FooBarBaz")
 
       SiteSetting.short_title = "foo"
 

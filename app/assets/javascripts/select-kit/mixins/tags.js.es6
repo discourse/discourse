@@ -2,6 +2,8 @@ import { reads } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Mixin from "@ember/object/mixin";
+import { makeArray } from "discourse-common/lib/helpers";
+import { isEmpty } from "@ember/utils";
 
 export default Mixin.create({
   searchTags(url, data, callback) {
@@ -22,7 +24,8 @@ export default Mixin.create({
   allowAnyTag: reads("site.can_create_tag"),
 
   validateCreate(filter, content) {
-    if (this.selectKit.hasReachedMaximum) {
+    const maximum = this.selectKit.options.maximum;
+    if (maximum && makeArray(this.value).length >= parseInt(maximum, 10)) {
       this.addError(
         I18n.t("select_kit.max_content_reached", {
           count: this.selectKit.limit
@@ -54,7 +57,7 @@ export default Mixin.create({
     }
 
     const toLowerCaseOrUndefined = string => {
-      return Ember.isEmpty(string) ? undefined : string.toLowerCase();
+      return isEmpty(string) ? undefined : string.toLowerCase();
     };
 
     const inCollection = content

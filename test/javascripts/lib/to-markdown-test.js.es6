@@ -386,3 +386,30 @@ QUnit.test("converts image lightboxes to markdown", assert => {
 
   assert.equal(toMarkdown(html), markdown);
 });
+
+QUnit.test("converts quotes to markdown", assert => {
+  let html = `
+  <p>there is a quote below</p>
+  <aside class="quote no-group" data-username="foo" data-post="1" data-topic="2">
+  <div class="title" style="cursor: pointer;">
+  <div class="quote-controls"><span class="svg-icon-title" title="expand/collapse"><svg class="fa d-icon d-icon-chevron-down svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use xlink:href="#chevron-down"></use></svg></span><a href="/t/hello-world-i-am-posting-an-image/158/1" title="go to the quoted post" class="back"><svg class="fa d-icon d-icon-arrow-up svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use xlink:href="#arrow-up"></use></svg></a></div>
+  <img alt="" width="20" height="20" src="" class="avatar"> foo:</div>
+  <blockquote>
+  <p>this is a quote</p>
+  </blockquote>
+  </aside>
+  <p>there is a quote above</p>
+  `;
+
+  let markdown = `
+there is a quote below
+
+[quote="foo, post:1, topic:2"]
+this is a quote
+[/quote]
+
+there is a quote above
+`;
+
+  assert.equal(toMarkdown(html), markdown.trim());
+});

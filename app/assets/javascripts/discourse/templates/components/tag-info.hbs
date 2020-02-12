@@ -16,13 +16,17 @@
       {{/if}}
       {{#if tagInfo.categories}}
         {{categoriesInfo}}
-        <br/>
+        <br>
         {{#each tagInfo.categories as |category|}}
           {{category-link category}}
         {{/each}}
       {{/if}}
       {{#if nothingToShow}}
-        {{i18n "tagging.default_info"}}
+        {{#if tagInfo.category_restricted}}
+          {{i18n "tagging.category_restricted"}}
+        {{else}}
+          {{i18n "tagging.default_info"}}
+        {{/if}}
       {{/if}}
     </div>
     {{#if tagInfo.synonyms}}
@@ -34,10 +38,10 @@
             <div class='tag-box'>
               {{discourse-tag tag.id pmOnly=tag.pmOnly tagName="div"}}
               {{#if editSynonymsMode}}
-                <a {{action "unlinkSynonym" tag}} class="unlink-synonym">
+                <a href {{action "unlinkSynonym" tag}} class="unlink-synonym">
                   {{d-icon "unlink" title="tagging.remove_synonym"}}
                 </a>
-                <a {{action "deleteSynonym" tag}} class="delete-synonym">
+                <a href {{action "deleteSynonym" tag}} class="delete-synonym">
                   {{d-icon "far-trash-alt" title="tagging.delete_tag"}}
                 </a>
               {{/if}}

@@ -72,6 +72,10 @@
       color: inherit;
       display: flex;
 
+      .d-icon + .name {
+        margin-left: 0.5em;
+      }
+
       .name {
         display: inline-block;
       }
@@ -83,6 +87,7 @@
     }
 
     .btn-clear {
+      margin-left: 0.25em;
       padding: 0.25em;
       border: 0;
       background: none;
@@ -137,8 +142,9 @@
       flex: 1 1 0%;
     }
 
-    .d-icon {
-      margin-right: 5px;
+    .d-icon + .name,
+    .svg-icon-title + .name {
+      margin-left: 0.5em;
     }
 
     &.is-highlighted {

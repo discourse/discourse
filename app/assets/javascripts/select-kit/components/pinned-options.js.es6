@@ -13,7 +13,7 @@ export default DropdownSelectBoxComponent.extend({
     const state = pinned === "pinned" ? `pinned${globally}` : "unpinned";
     const title = I18n.t(`topic_statuses.${state}.title`);
 
-    content.label = `${title}${iconHTML("caret-down")}`.htmlSafe();
+    content.label = `<span>${title}</span>${iconHTML("caret-down")}`.htmlSafe();
     content.title = title;
     content.name = state;
     content.icon = `thumbtack${state === "unpinned" ? " unpinned" : ""}`;
@@ -27,14 +27,18 @@ export default DropdownSelectBoxComponent.extend({
       {
         id: "pinned",
         name: I18n.t(`topic_statuses.pinned${globally}.title`),
-        description: I18n.t(`topic_statuses.pinned${globally}.help`),
+        description: this.site.mobileView
+          ? null
+          : I18n.t(`topic_statuses.pinned${globally}.help`),
         icon: "thumbtack"
       },
       {
         id: "unpinned",
         name: I18n.t("topic_statuses.unpinned.title"),
         icon: "thumbtack unpinned",
-        description: I18n.t("topic_statuses.unpinned.help")
+        description: this.site.mobileView
+          ? null
+          : I18n.t("topic_statuses.unpinned.help")
       }
     ];
   }),

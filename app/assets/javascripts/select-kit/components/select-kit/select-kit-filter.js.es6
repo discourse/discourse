@@ -1,4 +1,3 @@
-import { fmt } from "discourse/lib/computed";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
@@ -11,7 +10,9 @@ export default Component.extend(UtilsMixin, {
   classNames: ["select-kit-filter"],
   classNameBindings: ["isExpanded:is-expanded"],
   attributeBindings: ["selectKitId:data-select-kit-id"],
-  selectKitId: fmt("selectKit.uniqueID", "%@-filter"),
+  selectKitId: computed("selectKit.uniqueID", function() {
+    return `${this.selectKit.uniqueID}-filter`;
+  }),
 
   isHidden: computed(
     "selectKit.options.{filterable,allowAny,autoFilterable}",
@@ -74,7 +75,10 @@ export default Component.extend(UtilsMixin, {
 
       // Enter
       if (event.keyCode === 13 && this.selectKit.highlighted) {
-        this.selectKit.select(this.getValue(this.selectKit.highlighted));
+        this.selectKit.select(
+          this.getValue(this.selectKit.highlighted),
+          this.selectKit.highlighted
+        );
         return false;
       }
 
@@ -86,7 +90,10 @@ export default Component.extend(UtilsMixin, {
       // Tab
       if (event.keyCode === 9) {
         if (this.selectKit.highlighted && this.selectKit.isExpanded) {
-          this.selectKit.select(this.getValue(this.selectKit.highlighted));
+          this.selectKit.select(
+            this.getValue(this.selectKit.highlighted),
+            this.selectKit.highlighted
+          );
         }
         this.selectKit.close(event);
         return;
