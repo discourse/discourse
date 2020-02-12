@@ -186,7 +186,7 @@ describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(0)
     end
 
-    it 'does not notify for users with unread new reply notification' do
+    it 'does not notify for users with new reply notification' do
       post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
       notification = Notification.create!(topic: post.topic,
                                           post_number: post.post_number,
@@ -200,7 +200,7 @@ describe PostAlerter do
         PostAlerter.post_created(post)
       }.to change(evil_trout.notifications, :count).by(0)
 
-      notification.update(read: true)
+      notification.destroy
       expect {
         PostAlerter.post_created(post)
       }.to change(evil_trout.notifications, :count).by(1)
