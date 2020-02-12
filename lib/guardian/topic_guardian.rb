@@ -161,7 +161,7 @@ module TopicGuardian
     topic&.access_topic_via_group.present? && authenticated?
   end
 
-  def filter_allowed_categories(records)
+  def filter_allowed_categories(records, reference_categories: true)
     unless is_admin?
       allowed_ids = allowed_category_ids
       if allowed_ids.length > 0
@@ -169,7 +169,10 @@ module TopicGuardian
       else
         records = records.where('topics.category_id IS NULL')
       end
-      records = records.references(:categories)
+
+      if reference_categories
+        records = records.references(:categories)
+      end
     end
     records
   end

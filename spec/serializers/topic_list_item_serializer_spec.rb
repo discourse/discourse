@@ -92,9 +92,9 @@ describe TopicListItemSerializer do
 
     it "includes the bookmark id, name, post_number, reminder_at, and sets bookmarked to true" do
       user = Fabricate(:user)
-      Fabricate(:post, topic: topic, user: user)
+      post_to_bookmark = Fabricate(:post, topic: topic, user: user)
       TopicUser.create(topic: topic, user: user)
-      bookmark = Fabricate(:bookmark_next_business_day_reminder, topic: topic, post: topic.posts.first, name: 'test bookmark', user: user)
+      bookmark = Fabricate(:bookmark_next_business_day_reminder, topic: topic, post: post_to_bookmark, name: 'test bookmark', user: user)
       serializer_topic = TopicQuery.new(user).list_bookmarks.topics.first
       serialized = TopicListItemSerializer.new(serializer_topic, scope: Guardian.new, root: false).as_json
 
