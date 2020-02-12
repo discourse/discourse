@@ -9,9 +9,9 @@
 
   <form>
     {{date-picker-past
-      value=(unbound date)
+      value=(readonly date)
       containerId="date-container"
-      onChange=(action (mut date))}}
+      onSelect=(action (mut date))}}
 
     {{input type="time" value=time}}
   </form>
