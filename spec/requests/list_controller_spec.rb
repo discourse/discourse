@@ -350,7 +350,7 @@ RSpec.describe ListController do
 
       context 'with a link that includes an id' do
         it "succeeds" do
-          get "/c/#{category.id}-#{category.slug}/l/latest"
+          get "/c/#{category.id}-category/l/latest"
           expect(response.status).to eq(200)
         end
       end

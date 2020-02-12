@@ -84,8 +84,20 @@ module FileStore
       end
 
       Discourse::Application.load_tasks
-      Rake::Task['posts:missing_uploads'].invoke('single_site')
-      count = PostCustomField.where(name: Post::MISSING_UPLOADS).count
+      Rake::Task['posts:missing_uploads']
+      count = DB.query_single(<<~SQL, Post::MISSING_UPLOADS, Post::MISSING_UPLOADS_IGNORED).first
+        SELECT COUNT(1)
+        FROM posts p
+        WHERE EXISTS (
+          SELECT 1
+          FROM post_custom_fields f
+          WHERE f.post_id = p.id AND f.name = ?
+        ) AND NOT EXISTS (
+          SELECT 1
+          FROM post_custom_fields f
+          WHERE f.post_id = p.id AND f.name = ?
+        )
+      SQL
       if count > 0
         error_message = "rake posts:missing_uploads identified #{count} issues. #{failure_message}"
         raise_or_log(error_message, should_raise)

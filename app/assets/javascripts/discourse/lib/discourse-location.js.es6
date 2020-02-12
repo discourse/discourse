@@ -18,7 +18,6 @@ const DiscourseLocation = EmberObject.extend({
     this._super(...arguments);
 
     this.set("location", this.location || window.location);
-    this.initOptions();
   },
 
   /**
@@ -26,9 +25,9 @@ const DiscourseLocation = EmberObject.extend({
 
     Used to set state on first call to setURL
 
-    @method initOptions
+    @method initState
   */
-  initOptions() {
+  initState() {
     const history = this.history || window.history;
     if (history && history.scrollRestoration) {
       history.scrollRestoration = "manual";

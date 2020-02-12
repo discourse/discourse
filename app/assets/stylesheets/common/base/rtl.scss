@@ -90,3 +90,33 @@
   border-right: 1px solid #cfcfcf;
   border-left: none !important;
 }
+
+.rtl {
+  $mobile-breakpoint: 700px;
+
+  .admin-detail.mobile-open {
+    @media (max-width: $mobile-breakpoint) {
+      transition: transform 0.3s ease;
+      @include transform(translateX(-250px));
+    }
+    @media (max-width: 500px) {
+      transition: transform 0.3s ease;
+      @include transform(translateX(-50%));
+    }
+  }
+
+  .admin-detail.mobile-closed {
+    @media (max-width: $mobile-breakpoint) {
+      transition: transform 0.3s ease;
+      @include transform(translateX(0));
+      margin-left: -10px !important;
+      padding-left: 10px !important;
+    }
+  }
+
+  .admin-nav {
+    .nav-stacked {
+      margin: 0 -10px 0 10px !important;
+    }
+  }
+}

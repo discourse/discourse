@@ -4,11 +4,11 @@
         {{#each visibleTargets as |target|}}
         <li>
             {{#link-to editRouteName
-                theme.id 
-                target.name 
-                fieldName 
-                replace=true 
-                title=field.title 
+                theme.id
+                target.name
+                fieldName
+                replace=true
+                title=field.title
                 class=(if target.edited 'edited' 'blank')
             }}
             {{#if target.error}}{{d-icon 'exclamation-triangle'}}{{/if}}
@@ -19,14 +19,15 @@
             {{/link-to}}
         </li>
         {{/each}}
-        
+
         {{#if allowAdvanced}}
         <li>
-            <a {{action "toggleShowAdvanced"}} 
-                class='no-text' 
+            <a {{action "toggleShowAdvanced"}}
+                class='no-text'
+                href
                 title="{{i18n (concat "admin.customize.theme." (if showAdvanced "hide_advanced" "show_advanced"))}}"
             >
-                {{d-icon (if showAdvanced "angle-double-left" "angle-double-right")}}   
+                {{d-icon (if showAdvanced "angle-double-left" "angle-double-right")}}
             </a>
         </li>
         {{/if}}
@@ -48,17 +49,17 @@
         {{#each visibleFields as |field|}}
         <li>
             {{#link-to editRouteName
-            theme.id 
-            currentTargetName 
-            field.name 
-            replace=true 
-            title=field.title 
+            theme.id
+            currentTargetName
+            field.name
+            replace=true
+            title=field.title
             class=(if field.edited 'edited' 'blank')
             }}
             {{#if field.error}}{{d-icon 'exclamation-triangle'}}{{/if}}
             {{#if field.icon}}{{d-icon field.icon}}{{/if}}
             {{field.translatedName}}
-            
+
             {{/link-to}}
         </li>
         {{/each}}
@@ -66,11 +67,11 @@
         {{#if showAddField}}
         <li>
             {{#if addingField}}
-            {{input type=text value=newFieldName enter=(action 'addField') escape-press=(action "cancelAddField")}} 
-            {{d-button class="ok" action=(action "addField" newFieldName) icon="check"}} 
+            {{input type=text value=newFieldName enter=(action 'addField') escape-press=(action "cancelAddField")}}
+            {{d-button class="ok" action=(action "addField" newFieldName) icon="check"}}
             {{d-button class="cancel" action=(action "cancelAddField") icon="times"}}
             {{else}}
-            <a {{action "toggleAddField" currentTargetName}} class="no-text">
+            <a href {{action "toggleAddField" currentTargetName}} class="no-text">
             {{d-icon "plus"}}
             </a>
             {{/if}}
@@ -78,8 +79,8 @@
         {{/if}}
         <li class='spacer'></li>
         <li>
-        <a {{action "toggleMaximize"}} class="no-text">
-            {{d-icon maximizeIcon}}
+        <a href {{action "toggleMaximize"}} class="no-text">
+          {{d-icon maximizeIcon}}
         </a>
         </li>
     </ul>

@@ -956,6 +956,11 @@ table#user-badges {
   margin-right: 20px;
 }
 
+a.inline-editable-field {
+  color: $primary;
+  cursor: pointer;
+}
+
 // Styles for subtabs in admin
 @import "common/admin/dashboard";
 @import "common/admin/settings";

@@ -120,6 +120,23 @@ div.poll {
     }
   }
 
+  .pie-chart-legends {
+    text-align: center;
+    margin: 10px 0;
+
+    .legend {
+      display: inline-block;
+      margin: 4px 0 4px 14px;
+
+      .swatch {
+        display: inline-block;
+        width: 24px;
+        height: 12px;
+        margin-right: 4px;
+      }
+    }
+  }
+
   .poll-grouped-pies-controls {
     display: flex;
     justify-content: space-between;

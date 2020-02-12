@@ -48,7 +48,7 @@
           </td>
           <td>{{email.subject}}</td>
           <td class="error">
-            <a {{action "showIncomingEmail" email.id}}>{{email.error}}</a>
+            <a href {{action "showIncomingEmail" email.id}}>{{email.error}}</a>
           </td>
         </tr>
       {{else}}
