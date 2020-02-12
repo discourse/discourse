@@ -41,6 +41,7 @@ export function createPreviewComponent(width, height, obj) {
       height,
       elementWidth: width * scale,
       elementHeight: height * scale,
+      canvasStyle: `width:${width}px;height:${height}px`,
       ctx: null,
       loaded: false,
 
