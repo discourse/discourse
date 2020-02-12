@@ -53,7 +53,8 @@ export default SelectKitRowComponent.extend({
       link: this.categoryLink,
       allowUncategorized:
         this.allowUncategorizedTopics || this.allowUncategorized,
-      hideParent: !!this.parentCategory
+      hideParent: !!this.parentCategory,
+      topicCount: this.topicCount
     }).htmlSafe();
   }),
 

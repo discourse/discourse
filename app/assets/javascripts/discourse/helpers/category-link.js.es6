@@ -151,6 +151,13 @@ function defaultCategoryLinkRenderer(category, opts) {
   }
   html += "</span>";
 
+  if (opts.topicCount) {
+    html += `<span class="topic-count" aria-label="${I18n.t(
+      "category_row.topic_count",
+      { count: opts.topicCount }
+    )}">&times; ${opts.topicCount}</span>`;
+  }
+
   if (href) {
     href = ` href="${href}" `;
   }
