@@ -1,6 +1,6 @@
 /*jshint maxlen:10000000 */
 Discourse.SiteSettingsOriginal = {
-  title: "Discourse Meta",
+  title: "QUnit Discourse Tests",
   site_logo_url: "/assets/logo.png",
   site_logo_url: "/assets/logo.png",
   site_logo_small_url: "/assets/logo-single.png",
