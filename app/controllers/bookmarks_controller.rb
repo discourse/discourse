@@ -13,7 +13,7 @@ class BookmarksController < ApplicationController
 
     bookmark = Bookmark.create(
       user_id: current_user.id,
-      topic_id: params[:topic_id],
+      topic_id: Post.select(:topic_id).find(params[:post_id]).topic_id,
       post_id: params[:post_id],
       name: params[:name],
       reminder_type: Bookmark.reminder_types[params[:reminder_type].to_sym],
