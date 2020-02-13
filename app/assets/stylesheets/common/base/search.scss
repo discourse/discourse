@@ -239,6 +239,16 @@
         line-height: 1;
       }
     }
+    .pm-indicator {
+      display: inline-block;
+      font-size: 1.3em;
+      line-height: $line-height-medium;
+      color: $primary-medium;
+      .d-icon {
+        height: 0.76em;
+        width: 0.75em;
+      }
+    }
   }
   .blurb {
     font-size: $font-0;

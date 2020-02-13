@@ -85,7 +85,8 @@
                   {{/if}}
 
                   <a class='search-link' href='{{unbound result.url}}' {{action "logClick" result.topic_id}}>
-                    {{#if result.topic.is_pm}}{{d-icon "envelope"}}{{/if}} {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
+                    {{#if result.topic.isPrivateMessage}}<span class="pm-indicator">{{d-icon "envelope"}}</span>{{/if}}
+                    {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
                   </a>
 
                   <div class='search-category'>
