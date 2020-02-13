@@ -486,11 +486,15 @@ class TopicsController < ApplicationController
   def remove_bookmarks
     topic = Topic.find(params[:topic_id].to_i)
 
-    PostAction.joins(:post)
-      .where(user_id: current_user.id)
-      .where('topic_id = ?', topic.id).each do |pa|
+    if SiteSetting.enable_bookmarks_with_reminders?
+      Bookmark.where(user_id: current_user.id, topic_id: topic.id).destroy_all
+    else
+      PostAction.joins(:post)
+        .where(user_id: current_user.id)
+        .where('topic_id = ?', topic.id).each do |pa|
 
-      PostActionDestroyer.destroy(current_user, pa.post, :bookmark)
+        PostActionDestroyer.destroy(current_user, pa.post, :bookmark)
+      end
     end
 
     render body: nil
