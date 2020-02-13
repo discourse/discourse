@@ -217,6 +217,7 @@ describe PostCreator do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
         creator.opts[:invalidate_oneboxes] = true
         creator.create
@@ -226,6 +227,7 @@ describe PostCreator do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
         creator.opts[:image_sizes] = { 'http://an.image.host/image.jpg' => { 'width' => 17, 'height' => 31 } }
         creator.create
@@ -1357,9 +1359,6 @@ describe PostCreator do
     fab!(:anonymous) { Fabricate(:anonymous) }
 
     it "generates post notices for new users" do
-      post = PostCreator.create!(user, title: "private message topic", raw: "private message post", archetype: Archetype.private_message, target_usernames: user.username)
-      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
-
       post = PostCreator.create!(user, title: "one of my first topics", raw: "one of my first posts")
       expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:new_user])
 
@@ -1370,9 +1369,6 @@ describe PostCreator do
     it "generates post notices for returning users" do
       SiteSetting.returning_users_days = 30
       old_post = Fabricate(:post, user: user, created_at: 31.days.ago)
-
-      post = PostCreator.create!(user, title: "private message topic", raw: "private message post", archetype: Archetype.private_message, target_usernames: user.username)
-      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
 
       post = PostCreator.create!(user, title: "this is a returning topic", raw: "this is a post")
       expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:returning_user])

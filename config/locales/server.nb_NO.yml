@@ -221,7 +221,7 @@ nb_NO:
   user_is_suspended: "Utestengte brukere kan ikke skrive innlegg."
   topic_not_found: "Noe gikk galt. Kanskje emnet ble lukket eller slettet mens du leste det?"
   not_accepting_pms: "Beklager, %{username} ønsker ikke å motta personlige meldinger for øyeblikket."
-  max_pm_recepients: "Beklager, du kan bare sende en melding til maksimalt %{recipients_limit} mottakere."
+  max_pm_recipients: "Beklager, du kan bare sende en melding til maksimalt %{recipients_limit} mottakere."
   just_posted_that: "er for likt det du nylig publiserte."
   invalid_characters: "inneholder ugyldige tegn"
   is_invalid: "virker uklart, er det en komplett setning?"
@@ -762,6 +762,8 @@ nb_NO:
       title: "Nye Bidragsytere"
       xaxis: "Dag"
       yaxis: "Antall nye bidragsytere"
+    trust_level_growth:
+      yaxis: "Dag"
     consolidated_page_views:
       yaxis: "Dag"
       labels:

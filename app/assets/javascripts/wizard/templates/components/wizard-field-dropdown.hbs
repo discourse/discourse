@@ -1,6 +1,9 @@
-{{combo-box elementId=field.id
-            class=fieldClass
-            value=field.value
-            content=field.choices
-            nameProperty="label"
-            tabindex="9"}}
+{{combo-box
+  id=field.id
+  class=fieldClass
+  value=field.value
+  content=field.choices
+  nameProperty="label"
+  tabindex="9"
+  onChange=(action (mut field.value))
+}}

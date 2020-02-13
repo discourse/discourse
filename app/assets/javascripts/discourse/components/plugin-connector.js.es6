@@ -35,10 +35,14 @@ export default Component.extend({
     });
 
     const connectorClass = this.get("connector.connectorClass");
+    this.set("actions", connectorClass.actions);
+
+    for (const [name, action] of Object.entries(this.actions)) {
+      this.set(name, action);
+    }
+
     const merged = buildArgsWithDeprecations(args, deprecatedArgs);
     connectorClass.setupComponent.call(this, merged, this);
-
-    this.set("actions", connectorClass.actions);
   },
 
   willDestroyElement() {

@@ -57,7 +57,6 @@ ro:
         title: Creează sondaj
         insert: Introdu sondaj
         help:
-          options_count: Trebuie să introduci cel puțin 2 opțiuni
           invalid_values: Valoarea minimă trebuie să fie mai mică decât valoarea maximă.
           min_step_value: Valoarea minimă a pasului este 1
         poll_type:

@@ -2,6 +2,7 @@ import { next } from "@ember/runloop";
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
 import { createWidget } from "discourse/widgets/widget";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { Promise } from "rsvp";
 import hbs from "discourse/widgets/hbs-compiler";
 
 moduleForWidget("base");
@@ -159,7 +160,7 @@ widgetTest("widget update with promise", {
       `,
 
       click() {
-        return new Ember.RSVP.Promise(resolve => {
+        return new Promise(resolve => {
           next(() => {
             this.state.name = "Robin";
             resolve();

@@ -266,11 +266,7 @@ module Email
         user.user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
         user.user_stat.save!
 
-        if user.active && range === SiteSetting.bounce_score_threshold_deactivate
-          user.update!(active: false)
-          reason = I18n.t("user.deactivated", email: user.email)
-          StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
-        elsif range === SiteSetting.bounce_score_threshold
+        if range === SiteSetting.bounce_score_threshold
           # NOTE: we check bounce_score before sending emails
           # So log we revoked the email...
           reason = I18n.t("user.email.revoked", email: user.email, date: user.user_stat.reset_bounce_score_after)
@@ -848,7 +844,7 @@ module Email
                                           embedded_user: lambda { find_or_create_user(email, display_name) })
       return false unless post
 
-      if post&.topic
+      if post.topic
         # mark post as seen for the forwarder
         PostTiming.record_timing(user_id: user.id, topic_id: post.topic_id, post_number: post.post_number, msecs: 5000)
 
@@ -863,6 +859,8 @@ module Email
                        topic: post.topic,
                        post_type: post_type,
                        skip_validations: user.staged?)
+        else
+          post.topic.add_small_action(user, "forwarded")
         end
       end
 
@@ -1048,7 +1046,7 @@ module Email
           # create the upload for the user
           opts = { for_group_message: options[:is_group_message] }
           upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(user.id)
-          if upload&.valid?
+          if upload.errors.empty?
             # try to inline images
             if attachment.content_type&.start_with?("image/")
               if raw[attachment.url]

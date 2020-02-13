@@ -14,8 +14,6 @@ sw:
   poll:
     multiple_polls_without_name: "Kuna chaguzi kadhaa zenye majina sawa. Tumia dhana ya '<code>jina</code>' ili kutambua chaguzi zako."
     multiple_polls_with_same_name: "Kuna chaguzi kadhaa zenye majina sawa: <strong>%{name}</strong>. Tumia dhana ya '<code>jina</code>' ilikutofautisha chaguzi zako."
-    default_poll_must_have_at_least_2_options: "Chaguzi lazima ziwe angalau na machaguo 2."
-    named_poll_must_have_at_least_2_options: "Chaguzi yenye jina <strong>%{name}</strong> lazima iwe na angalau machaguo 2."
     default_poll_must_have_less_options:
       one: "Chaguzi lazima uwe na chaguo chini ya %{count}."
       other: "Uchaguzi lazima uwe na chaguo chini ya %{count}."

@@ -8,6 +8,9 @@ class CategoriesController < ApplicationController
   before_action :initialize_staff_action_logger, only: [:create, :update, :destroy]
   skip_before_action :check_xhr, only: [:index, :categories_and_latest, :categories_and_top, :redirect]
 
+  SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
+  MIN_CATEGORIES_TOPICS = 5
+
   def redirect
     return if handle_permalink("/category/#{params[:path]}")
     redirect_to path("/c/#{params[:path]}")
@@ -46,7 +49,7 @@ class CategoriesController < ApplicationController
 
         style = SiteSetting.desktop_category_page_style
         topic_options = {
-          per_page: SiteSetting.categories_topics,
+          per_page: CategoriesController.topics_per_page,
           no_definitions: true
         }
 
@@ -226,6 +229,15 @@ class CategoriesController < ApplicationController
   end
 
   private
+
+  def self.topics_per_page
+    return SiteSetting.categories_topics if SiteSetting.categories_topics > 0
+
+    count = Category.where(parent_category: nil).count
+    count = (SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR * count).to_i
+    count > MIN_CATEGORIES_TOPICS ? count : MIN_CATEGORIES_TOPICS
+  end
+
   def categories_and_topics(topics_filter)
     discourse_expires_in 1.minute
 
@@ -236,7 +248,7 @@ class CategoriesController < ApplicationController
     }
 
     topic_options = {
-      per_page: SiteSetting.categories_topics,
+      per_page: CategoriesController.topics_per_page,
       no_definitions: true
     }
 

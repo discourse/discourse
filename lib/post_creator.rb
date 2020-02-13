@@ -104,7 +104,7 @@ class PostCreator
       if names.length > max_allowed_message_recipients
         errors.add(
           :base,
-          I18n.t(:max_pm_recepients, recipients_limit: max_allowed_message_recipients)
+          I18n.t(:max_pm_recipients, recipients_limit: max_allowed_message_recipients)
         )
 
         return false
@@ -542,12 +542,8 @@ class PostCreator
 
   def create_post_notice
     return if @opts[:import_mode] || @user.anonymous? || @user.bot? || @user.staged
-    return if @post.topic.archetype != Archetype.default
 
-    last_post_time = Post
-      .joins("JOIN topics ON topics.id = posts.topic_id")
-      .where(user_id: @user.id)
-      .where(topics: { archetype: Archetype.default })
+    last_post_time = Post.where(user_id: @user.id)
       .order(created_at: :desc)
       .limit(1)
       .pluck(:created_at)

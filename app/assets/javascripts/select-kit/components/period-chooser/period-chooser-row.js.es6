@@ -4,10 +4,10 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default DropdownSelectBoxRowComponent.extend({
   layoutName:
     "select-kit/templates/components/period-chooser/period-chooser-row",
-  classNames: "period-chooser-row",
+  classNames: ["period-chooser-row"],
 
-  @discourseComputed("computedContent")
-  title(computedContent) {
-    return I18n.t(`filters.top.${computedContent.name || "this_week"}`).title;
+  @discourseComputed("rowName")
+  title(rowName) {
+    return I18n.t(`filters.top.${rowName || "this_week"}`).title;
   }
 });

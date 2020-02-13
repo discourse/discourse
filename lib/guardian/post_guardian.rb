@@ -187,7 +187,7 @@ module PostGuardian
   # Recovery Method
   def can_recover_post?(post)
     if is_staff?
-      post.deleted_at && post.user
+      !!post.deleted_at
     else
       is_my_own?(post) && post.user_deleted && !post.deleted_at
     end

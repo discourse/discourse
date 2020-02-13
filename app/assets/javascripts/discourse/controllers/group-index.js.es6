@@ -86,6 +86,20 @@ export default Controller.extend({
       this.toggleProperty("showActions");
     },
 
+    actOnGroup(member, actionId) {
+      switch (actionId) {
+        case "removeMember":
+          this.send("removeMember", member);
+          break;
+        case "makeOwner":
+          this.send("makeOwner", member.username);
+          break;
+        case "removeOwner":
+          this.send("removeOwner", member);
+          break;
+      }
+    },
+
     removeMember(user) {
       this.model.removeMember(user, this.memberParams);
     },

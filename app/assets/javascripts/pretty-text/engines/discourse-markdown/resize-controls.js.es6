@@ -15,10 +15,15 @@ function buildToken(state, type, tag, klass, nesting) {
 
 function wrapImage(tokens, index, state, imgNumber) {
   const imgToken = tokens[index];
-  let selectedScale = imgToken.content
-    .split(",")
-    .pop()
-    .trim();
+  const sizePart = imgToken.content
+    .split("|")
+    .find(x => x.match(/\d{1,4}x\d{1,4}(,\s*\d{1,3}%)?/));
+  let selectedScale =
+    sizePart &&
+    sizePart
+      .split(",")
+      .pop()
+      .trim();
   tokens.splice(
     index,
     0,

@@ -62,12 +62,12 @@ describe "S3Inventory" do
     freeze_time
 
     CSV.foreach(csv_filename, headers: false) do |row|
-      Fabricate(:upload, etag: row[S3Inventory::CSV_ETAG_INDEX], created_at: 2.days.ago)
+      Fabricate(:upload, etag: row[S3Inventory::CSV_ETAG_INDEX], updated_at: 2.days.ago)
     end
 
-    upload = Fabricate(:upload, etag: "ETag", created_at: 1.days.ago)
-    Fabricate(:upload, etag: "ETag2", created_at: Time.now)
-    Fabricate(:upload, created_at: 2.days.ago)
+    upload = Fabricate(:upload, etag: "ETag", updated_at: 1.days.ago)
+    Fabricate(:upload, etag: "ETag2", updated_at: Time.now)
+    Fabricate(:upload, updated_at: 2.days.ago)
 
     inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
     inventory.expects(:inventory_date).returns(Time.now)
@@ -100,7 +100,7 @@ describe "S3Inventory" do
     freeze_time
 
     CSV.foreach(csv_filename, headers: false) do |row|
-      Fabricate(:upload, url: File.join(Discourse.store.absolute_base_url, row[S3Inventory::CSV_KEY_INDEX]), etag: row[S3Inventory::CSV_ETAG_INDEX], created_at: 2.days.ago)
+      Fabricate(:upload, url: File.join(Discourse.store.absolute_base_url, row[S3Inventory::CSV_KEY_INDEX]), etag: row[S3Inventory::CSV_ETAG_INDEX], updated_at: 2.days.ago)
     end
 
     upload = Upload.last

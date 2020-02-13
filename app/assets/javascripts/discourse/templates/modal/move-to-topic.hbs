@@ -78,7 +78,11 @@
           {{text-field value=topicName placeholderKey="composer.title_placeholder" elementId='split-topic-name'}}
 
           <label>{{i18n 'categories.category'}}</label>
-          {{category-chooser value=categoryId class="small"}}
+          {{category-chooser
+            value=categoryId
+            class="small"
+            onChange=(action (mut categoryId))
+          }}
           {{#if canAddTags}}
             <label>{{i18n 'tagging.tags'}}</label>
             {{tag-chooser tags=tags filterable=true categoryId=categoryId}}

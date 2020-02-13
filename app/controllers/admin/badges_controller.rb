@@ -43,12 +43,17 @@ class Admin::BadgesController < Admin::AdminController
     badge = Badge.find_by(id: params[:badge_id])
     raise Discourse::InvalidParameters if csv_file.try(:tempfile).nil? || badge.nil?
 
+    replace_badge_owners = params[:replace_badge_owners] == 'true'
+    BadgeGranter.revoke_all(badge) if replace_badge_owners
+
     batch_number = 1
+    line_number = 1
     batch = []
 
     File.open(csv_file) do |csv|
       csv.each_line do |email_line|
         batch.concat CSV.parse_line(email_line)
+        line_number += 1
 
         # Split the emails in batches of 200 elements.
         full_batch = csv.lineno % (BadgeGranter::MAX_ITEMS_FOR_DELTA * batch_number) == 0
@@ -64,7 +69,7 @@ class Admin::BadgesController < Admin::AdminController
 
     head :ok
   rescue CSV::MalformedCSVError
-    render_json_error I18n.t('badges.mass_award.errors.invalid_csv'), status: 400
+    render_json_error I18n.t('badges.mass_award.errors.invalid_csv', line_number: line_number), status: 400
   end
 
   def badge_types

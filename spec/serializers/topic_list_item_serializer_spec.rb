@@ -6,11 +6,10 @@ describe TopicListItemSerializer do
   let(:topic) do
     date = Time.zone.now
 
-    Fabricate.build(:topic,
-      title: 'test',
+    Fabricate(:topic,
+      title: 'This is a test topic title',
       created_at: date - 2.minutes,
-      bumped_at: date,
-      posters: [],
+      bumped_at: date
     )
   end
 
@@ -18,7 +17,7 @@ describe TopicListItemSerializer do
     SiteSetting.topic_featured_link_enabled = true
     serialized = TopicListItemSerializer.new(topic, scope: Guardian.new, root: false).as_json
 
-    expect(serialized[:title]).to eq("test")
+    expect(serialized[:title]).to eq("This is a test topic title")
     expect(serialized[:bumped]).to eq(true)
     expect(serialized[:featured_link]).to eq(nil)
     expect(serialized[:featured_link_root_domain]).to eq(nil)

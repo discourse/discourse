@@ -47,10 +47,24 @@ class SessionController < ApplicationController
       rescue SingleSignOnProvider::BlankSecret
         render plain: I18n.t("sso.missing_secret"), status: 400
         return
+      rescue SingleSignOnProvider::ParseError => e
+        if SiteSetting.verbose_sso_logging
+          Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
+        end
+
+        # Do NOT pass the error text to the client, it would give them the correct signature
+        render plain: I18n.t("sso.login_error"), status: 422
+        return
       end
 
       if sso.return_sso_url.blank?
         render plain: "return_sso_url is blank, it must be provided", status: 400
+        return
+      end
+
+      if sso.logout
+        params[:return_url] = sso.return_sso_url
+        destroy
         return
       end
 

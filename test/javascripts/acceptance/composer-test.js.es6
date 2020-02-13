@@ -447,6 +447,8 @@ QUnit.test("Composer can toggle whispers", async assert => {
 
   await click(".toggle-fullscreen");
 
+  await menu.expand();
+
   assert.ok(
     menu.rowByValue("toggleWhisper").exists(),
     "whisper toggling is still present when going fullscreen"
@@ -638,7 +640,6 @@ QUnit.test("Checks for existing draft", async assert => {
 
 QUnit.test("Can switch states without abandon popup", async assert => {
   try {
-    const composerActions = selectKit(".composer-actions");
     toggleCheckDraftPopup(true);
 
     await visit("/t/internationalization-localization/280");
@@ -659,8 +660,9 @@ QUnit.test("Can switch states without abandon popup", async assert => {
 
     await click("article#post_3 button.reply");
 
+    const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
-    await composerActions.selectRowByValue("reply_to_topic");
+    await composerActions.selectRowByValue("reply_as_private_message");
 
     assert.equal(
       find(".modal-body").text(),
@@ -668,9 +670,10 @@ QUnit.test("Can switch states without abandon popup", async assert => {
       "abandon popup shouldn't come"
     );
 
-    assert.equal(
-      find(".d-editor-input").val(),
-      longText,
+    assert.ok(
+      find(".d-editor-input")
+        .val()
+        .includes(longText),
       "entered text should still be there"
     );
 
@@ -763,13 +766,15 @@ QUnit.test("Image resizing buttons", async assert => {
     // 10 Image with markdown title - should work
     `![image|690x220](upload://test.png "image title")`,
     // 11 bbcode - should not work
-    "[img]http://example.com/image.jpg[/img]"
+    "[img]http://example.com/image.jpg[/img]",
+    // 12 Image with data attributes
+    "![test|foo=bar|690x313,50%|bar=baz](upload://test.png)"
   ];
 
   await fillIn(".d-editor-input", uploads.join("\n"));
 
   assert.ok(
-    find(".button-wrapper").length === 9,
+    find(".button-wrapper").length === 10,
     "it adds correct amount of scaling button groups"
   );
 
@@ -814,6 +819,13 @@ QUnit.test("Image resizing buttons", async assert => {
   uploads[10] = `![image|690x220, 75%](upload://test.png "image title")`;
   await click(
     find(".button-wrapper[data-image-index='8'] .scale-btn[data-scale='75']")
+  );
+  assertImageResized(assert, uploads);
+
+  // Keep data attributes
+  uploads[12] = `![test|foo=bar|690x313, 75%|bar=baz](upload://test.png)`;
+  await click(
+    find(".button-wrapper[data-image-index='9'] .scale-btn[data-scale='75']")
   );
   assertImageResized(assert, uploads);
 

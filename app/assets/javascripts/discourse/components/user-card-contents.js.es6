@@ -15,6 +15,7 @@ import { getOwner } from "@ember/application";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: "user-card",
+  classNames: "user-card",
   triggeringLinkClass: "mention",
   classNameBindings: [
     "visible:show",
@@ -140,8 +141,11 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     this._positionCard($target);
     this.setProperties({ visible: true, loading: true });
 
-    const args = { stats: false };
-    args.include_post_count_for = this.get("topic.id");
+    const args = {
+      forCard: this.siteSettings.enable_new_user_card_route,
+      include_post_count_for: this.get("topic.id")
+    };
+
     User.findByUsername(username, args)
       .then(user => {
         if (user.topic_post_count) {

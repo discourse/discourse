@@ -182,10 +182,13 @@ export default Component.extend({
         .finally(() => this.set("updating", false));
     },
 
-    categoryChanged(category) {
+    categoryChanged(categoryId) {
+      let category = Category.findById(categoryId);
+
       if (!category) {
         category = Category.findUncategorized();
       }
+
       this._updates.category_id = category.id;
     },
 

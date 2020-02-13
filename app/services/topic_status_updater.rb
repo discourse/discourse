@@ -42,6 +42,10 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
       DiscourseEvent.trigger(:topic_closed, topic)
     end
 
+    if status.visible? && status.disabled?
+      UserProfile.remove_featured_topic_from_all_profiles(topic)
+    end
+
     if @topic_status_update
       if status.manually_closing_topic? || status.closing_topic?
         topic.delete_topic_timer(TopicTimer.types[:close])

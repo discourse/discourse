@@ -75,6 +75,9 @@ export function categoryLinkHTML(category, options) {
     if (options.categoryStyle) {
       categoryOptions.categoryStyle = options.categoryStyle;
     }
+    if (options.recursive) {
+      categoryOptions.recursive = true;
+    }
   }
   return new Handlebars.SafeString(
     categoryBadgeHTML(category, categoryOptions)
@@ -147,6 +150,13 @@ function defaultCategoryLinkRenderer(category, opts) {
     html += `<span class="category-name" ${categoryDir}>${categoryName}</span>`;
   }
   html += "</span>";
+
+  if (opts.topicCount) {
+    html += `<span class="topic-count" aria-label="${I18n.t(
+      "category_row.topic_count",
+      { count: opts.topicCount }
+    )}">&times; ${opts.topicCount}</span>`;
+  }
 
   if (href) {
     href = ` href="${href}" `;

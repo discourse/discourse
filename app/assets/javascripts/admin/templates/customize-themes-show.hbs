@@ -3,9 +3,13 @@
     {{#if editingName}}
       {{text-field value=model.name autofocus="true"}}
       {{d-button action=(action "finishedEditingName") class="btn-primary submit-edit" icon="check"}}
-      {{d-button action=(action "cancelEditingName") class="btn-default cancel-edit" icon="times"}}
+      {{d-button action=(action "cancelEditingName") class="cancel-edit" icon="times"}}
     {{else}}
-      {{model.name}} <a {{action "startEditingName"}}>{{d-icon "pencil-alt"}}</a>
+      <span>{{model.name}}</span>
+      {{d-button
+        action=(action "startEditingName")
+        icon="pencil-alt"
+      }}
     {{/if}}
   </div>
 
@@ -255,8 +259,8 @@
         action=(action "enableComponent")
         icon="check"
         label="admin.customize.theme.enable"}}
-      {{/if}}
     {{/if}}
+  {{/if}}
 
-    {{d-button action=(action "destroy") label="admin.customize.delete" icon="trash-alt" class="btn-danger"}}
+  {{d-button action=(action "destroy") label="admin.customize.delete" icon="trash-alt" class="btn-danger"}}
 </div>

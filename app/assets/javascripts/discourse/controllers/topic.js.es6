@@ -242,12 +242,12 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   actions: {
-    topicCategoryChanged(selection) {
-      this.set("buffered.category_id", selection.value);
+    topicCategoryChanged(categoryId) {
+      this.set("buffered.category_id", categoryId);
     },
 
-    topicTagsChanged({ target }) {
-      this.set("buffered.tags", target.value);
+    topicTagsChanged(value) {
+      this.set("buffered.tags", value);
     },
 
     deletePending(pending) {
@@ -266,7 +266,7 @@ export default Controller.extend(bufferedProperty("model"), {
       this.send("showFeatureTopic");
     },
 
-    selectText(postId, buffer) {
+    selectText(postId, buffer, opts) {
       const loadedPost = this.get("model.postStream").findLoadedPost(postId);
       const promise = loadedPost
         ? Promise.resolve(loadedPost)
@@ -275,7 +275,7 @@ export default Controller.extend(bufferedProperty("model"), {
       return promise.then(post => {
         const composer = this.composer;
         const viewOpen = composer.get("model.viewOpen");
-        const quotedText = Quote.build(post, buffer);
+        const quotedText = Quote.build(post, buffer, opts);
 
         // If we can't create a post, delegate to reply as new topic
         if (!viewOpen && !this.get("model.details.can_create_post")) {

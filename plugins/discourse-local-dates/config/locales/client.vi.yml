@@ -12,3 +12,4 @@ vi:
         form:
           date_title: ày
           time_title: Thời gian
+          timezone: Múi giờ

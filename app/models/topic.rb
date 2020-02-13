@@ -96,6 +96,7 @@ class Topic < ActiveRecord::Base
   belongs_to :category
   has_many :category_users, through: :category
   has_many :posts
+  has_many :bookmarks
   has_many :ordered_posts, -> { order(post_number: :asc) }, class_name: "Post"
   has_many :topic_allowed_users
   has_many :topic_allowed_groups
@@ -704,6 +705,13 @@ class Topic < ActiveRecord::Base
       if Topic.update_featured_topics != false
         CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
         CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.try(:id) == new_category.id
+      end
+
+      # when a topic changes category we may need to make uploads
+      # linked to posts secure/not secure depending on whether the
+      # category is private
+      DB.after_commit do
+        Jobs.enqueue(:update_topic_upload_security, topic_id: self.id)
       end
     end
 

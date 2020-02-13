@@ -16,9 +16,9 @@ class SourceURL < Tilt::Template
   end
 
   def evaluate(scope, locals, &block)
-    code = +"\n//# BEGIN sourceURL=#{scope.logical_path}\n"
-    code << data
-    code << "\n//# END sourceURL=#{scope.logical_path}\n"
-    code
+    code = +"eval("
+    code << data.inspect
+    code << " + \"\\n//# sourceURL=#{scope.logical_path}\""
+    code << ");\n"
   end
 end

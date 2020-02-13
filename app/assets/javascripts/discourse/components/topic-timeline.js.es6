@@ -103,5 +103,20 @@ export default MountWidget.extend(Docking, {
 
     this.dispatch("topic:current-post-scrolled", "timeline-scrollarea");
     this.dispatch("topic:toggle-actions", "topic-admin-menu-button");
+    if (!this.site.mobileView) {
+      this.appEvents.on("composer:opened", this, this.queueRerender);
+      this.appEvents.on("composer:resized", this, this.queueRerender);
+      this.appEvents.on("composer:closed", this, this.queueRerender);
+    }
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    if (!this.site.mobileView) {
+      this.appEvents.off("composer:opened", this, this.queueRerender);
+      this.appEvents.off("composer:resized", this, this.queueRerender);
+      this.appEvents.off("composer:closed", this, this.queueRerender);
+    }
   }
 });

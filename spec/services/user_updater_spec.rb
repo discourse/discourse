@@ -273,6 +273,16 @@ describe UserUpdater do
         expect(user.primary_group_id).to eq nil
       end
 
+      it 'does not update when changing other profile data' do
+        SiteSetting.user_selected_primary_groups = true
+        user.groups << new_group
+        user.update(primary_group_id: new_group.id)
+        UserUpdater.new(acting_user, user).update(website: 'http://example.com')
+
+        user.reload
+        expect(user.primary_group_id).to eq new_group.id
+      end
+
       it 'can be removed by the user when setting is enabled' do
         SiteSetting.user_selected_primary_groups = true
         user.groups << new_group

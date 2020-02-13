@@ -333,16 +333,43 @@ createWidget("discourse-poll-container", {
           : "discourse-poll-pie-chart";
       return this.attach(resultsWidget, attrs);
     } else if (options) {
-      return h(
-        "ul",
-        options.map(option => {
-          return this.attach("discourse-poll-option", {
-            option,
-            isMultiple: attrs.isMultiple,
-            vote: attrs.vote
-          });
-        })
+      const contents = [];
+
+      const pollGroups =
+        poll.groups && poll.groups.split(",").map(g => g.toLowerCase());
+
+      const userGroups =
+        this.currentUser &&
+        this.currentUser.groups &&
+        this.currentUser.groups.map(g => g.name.toLowerCase());
+
+      if (
+        pollGroups &&
+        userGroups &&
+        !pollGroups.some(g => userGroups.includes(g))
+      ) {
+        contents.push(
+          h(
+            "div.alert.alert-danger",
+            I18n.t("poll.results.groups.title", { groups: poll.groups })
+          )
+        );
+      }
+
+      contents.push(
+        h(
+          "ul",
+          options.map(option => {
+            return this.attach("discourse-poll-option", {
+              option,
+              isMultiple: attrs.isMultiple,
+              vote: attrs.vote
+            });
+          })
+        )
       );
+
+      return contents;
     }
   }
 });
@@ -491,8 +518,7 @@ createWidget("discourse-poll-grouped-pies", {
           const data = result.grouped_results[chartIdx].options.mapBy("votes");
           const labels = result.grouped_results[chartIdx].options.mapBy("html");
           const chartConfig = pieChartConfig(data, labels, {
-            aspectRatio: 1.2,
-            displayLegend: false
+            aspectRatio: 1.2
           });
           const canvasId = `pie-${attrs.id}-${chartIdx}`;
           let el = document.querySelector(`#${canvasId}`);
@@ -552,7 +578,10 @@ createWidget("discourse-poll-pie-canvas", {
 
       const el = document.getElementById(`poll-results-chart-${attrs.id}`);
       // eslint-disable-next-line
-      new Chart(el.getContext("2d"), config);
+      let chart = new Chart(el.getContext("2d"), config);
+      document.getElementById(
+        `poll-results-legend-${attrs.id}`
+      ).innerHTML = chart.generateLegend();
     });
   },
 
@@ -593,13 +622,14 @@ createWidget("discourse-poll-pie-chart", {
     }
     contents.push(btn);
     contents.push(chart);
+    contents.push(h(`div#poll-results-legend-${attrs.id}.pie-chart-legends`));
     return contents;
   }
 });
 
 function pieChartConfig(data, labels, opts = {}) {
-  const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.0;
-  const displayLegend = "displayLegend" in opts ? opts.displayLegend : true;
+  const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.2;
+  const strippedLabels = labels.map(l => stripHtml(l));
   return {
     type: PIE_CHART_TYPE,
     data: {
@@ -609,15 +639,28 @@ function pieChartConfig(data, labels, opts = {}) {
           backgroundColor: getColors(data.length)
         }
       ],
-      labels
+      labels: strippedLabels
     },
     options: {
       responsive: true,
       aspectRatio,
-      animation: { duration: 400 },
-      legend: { display: displayLegend }
+      animation: { duration: 0 },
+      legend: { display: false },
+      legendCallback: function(chart) {
+        let legends = "";
+        for (let i = 0; i < labels.length; i++) {
+          legends += `<div class="legend"><span class="swatch" style="background-color:
+            ${chart.data.datasets[0].backgroundColor[i]}"></span>${labels[i]}</div>`;
+        }
+        return legends;
+      }
     }
   };
+}
+
+function stripHtml(html) {
+  var doc = new DOMParser().parseFromString(html, "text/html");
+  return doc.body.textContent || "";
 }
 
 createWidget("discourse-poll-buttons", {
@@ -954,6 +997,16 @@ export default createWidget("discourse-poll", {
     this.register.lookup("route:application").send("showLogin");
   },
 
+  _toggleOption(option) {
+    const { vote } = this.attrs;
+    const chosenIdx = vote.indexOf(option.id);
+    if (chosenIdx !== -1) {
+      vote.splice(chosenIdx, 1);
+    } else {
+      vote.push(option.id);
+    }
+  },
+
   toggleOption(option) {
     const { attrs } = this;
 
@@ -961,20 +1014,13 @@ export default createWidget("discourse-poll", {
     if (!this.currentUser) return this.showLogin();
 
     const { vote } = attrs;
-    const chosenIdx = vote.indexOf(option.id);
-
     if (!this.isMultiple()) {
       vote.length = 0;
     }
 
-    if (chosenIdx !== -1) {
-      vote.splice(chosenIdx, 1);
-    } else {
-      vote.push(option.id);
-    }
-
+    this._toggleOption(option);
     if (!this.isMultiple()) {
-      return this.castVotes();
+      return this.castVotes().catch(() => this._toggleOption(option));
     }
   },
 

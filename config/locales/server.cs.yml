@@ -189,7 +189,7 @@ cs:
   user_is_suspended: "Vyloučení uživatelé nemohou přidávat příspěvky."
   topic_not_found: "Něco se pokazilo. Téma mohlo být uzavřeno nebo smazáno během vašeho prohlížení."
   not_accepting_pms: "Bohužel, %{username} v současnosti nepřijímá zprávy."
-  max_pm_recepients: "Bohužel, můžete poslat zprávu maximálně %{recipients_limit} příjemcům."
+  max_pm_recipients: "Bohužel, můžete poslat zprávu maximálně %{recipients_limit} příjemcům."
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
   invalid_characters: "obsahuje neplatné znaky"
   is_invalid: "zdá se to být nejasné, je to kompletní věta?"
@@ -652,6 +652,8 @@ cs:
       xaxis: "Den"
     new_contributors:
       xaxis: "Den"
+    trust_level_growth:
+      yaxis: "Den"
     consolidated_page_views:
       yaxis: "Den"
       labels:

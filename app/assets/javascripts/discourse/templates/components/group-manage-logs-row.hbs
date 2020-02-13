@@ -33,13 +33,12 @@
 
   <td>{{bound-date log.created_at}}</td>
 
-  <td {{action "toggleDetails"}} class="group-manage-logs-expand-details">
+  <td class="group-manage-logs-expand-details">
     {{#if log.prev_value}}
-      {{#if expandDetails}}
-        {{d-icon 'ellipsis-v'}}
-      {{else}}
-        {{d-icon 'ellipsis-h'}}
-      {{/if}}
+      {{d-button
+        action=(action "toggleDetails")
+        icon=(if expandDetails "angle-up" "angle-down")
+      }}
     {{/if}}
   </td>
 </tr>

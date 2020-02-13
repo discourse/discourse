@@ -18,6 +18,7 @@ Discourse::Application.routes.draw do
   post "webhooks/mailgun"  => "webhooks#mailgun"
   post "webhooks/mailjet"  => "webhooks#mailjet"
   post "webhooks/mandrill" => "webhooks#mandrill"
+  post "webhooks/postmark" => "webhooks#postmark"
   post "webhooks/sendgrid" => "webhooks#sendgrid"
   post "webhooks/sparkpost" => "webhooks#sparkpost"
 
@@ -478,6 +479,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/profile-hidden" => "users#profile_hidden"
     put "#{root_path}/:username/feature-topic" => "users#feature_topic", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/clear-featured-topic" => "users#clear_featured_topic", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/card.json" => "users#show_card", format: :json, constraints: { username: RouteFormat.username }
   end
 
   get "user-badges/:username.json" => "user_badges#username", constraints: { username: RouteFormat.username }, defaults: { format: :json }
@@ -491,6 +493,7 @@ Discourse::Application.routes.draw do
 
   get "svg-sprite/:hostname/svg-:theme_ids-:version.js" => "svg_sprite#show", constraints: { hostname: /[\w\.-]+/, version: /\h{40}/, theme_ids: /([0-9]+(,[0-9]+)*)?/, format: :js }
   get "svg-sprite/search/:keyword" => "svg_sprite#search", format: false, constraints: { keyword: /[-a-z0-9\s\%]+/ }
+  get "svg-sprite/picker-search" => "svg_sprite#icon_picker_search", defaults: { format: :json }
 
   get "highlight-js/:hostname/:version.js" => "highlight_js#show", constraints: { hostname: /[\w\.-]+/, format: :js }
 
@@ -596,7 +599,7 @@ Discourse::Application.routes.draw do
     end
   end
 
-  resources :bookmarks, only: %i[create]
+  resources :bookmarks, only: %i[create destroy]
 
   resources :notifications, except: :show do
     collection do

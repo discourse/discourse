@@ -153,6 +153,7 @@ sv:
       banner:
         enabled: "gjorde detta till en banderoll %{when}. Den kommer att visas högst upp på varje sida tills den blir avfärdad av användaren."
         disabled: "tog bort denna banderoll %{when}. Den kommer inte längre att visas högst upp på varje sida."
+      forwarded: "vidarebefordrade ovanstående e-post"
     topic_admin_menu: "ämnesåtgärder"
     wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång genom <a href='%{url}' data-auto-route='true'>uppsättnings guiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postnotifikationer av något slag kommer att skickas ut."
@@ -239,7 +240,7 @@ sv:
     about:
       simple_title: "Om"
       title: "Om %{title}"
-      stats: "Sitestatistik"
+      stats: "Statistik för webbplats"
       our_admins: "Våra administratörer"
       our_moderators: "Våra moderatorer"
       moderators: "Moderatorer"
@@ -339,12 +340,12 @@ sv:
         subtotal: "Delsumma"
         total: "Totalt"
         min_score_visibility: "Lägsta poäng för att synas"
-        score_to_hide: "Poäng för att gömma inlägg"
+        score_to_hide: "Poäng för att dölja inlägg"
         take_action_bonus:
           name: "agerade"
-          title: "När någon ur personalen väljer att agera får flaggningen en ökad bonus."
+          title: "När personal väljer att agera får flaggning en ökad bonus."
         user_accuracy_bonus:
-          name: "användarnas noggrannhet"
+          name: "noggrannhet av användare"
           title: "Användare vars flaggor historiskt har instämts ges en bonus."
         trust_level_bonus:
           name: "förtroendenivå"
@@ -358,7 +359,7 @@ sv:
         claimed_by_you: "Du har gjort anspråk på detta och kan nu granska det."
         claimed_by_other: "Detta föremål kan enbart granskas av <b>{{username}}</b>."
       claim:
-        title: "Gör anspråk på ämnet"
+        title: "Gör anspråk på ämne"
       unclaim:
         help: "ta bort detta anspråk"
       awaiting_approval: "Inväntar godkännande"
@@ -372,7 +373,7 @@ sv:
       moderation_history: "Modereringshistorik"
       view_all: "Visa alla"
       grouped_by_topic: "Gruppera på ämne"
-      none: "Det finns inga föremål för granskning."
+      none: "Det finns inga föremål att granska."
       view_pending: "visa avvaktande"
       topic_has_pending:
         one: "Detta ämne har <b>%{count}</b> inlägg som inväntar godkännande"
@@ -385,6 +386,8 @@ sv:
       deleted_post: "(inlägg raderat)"
       deleted_user: "(användare raderad)"
       user:
+        bio: "Bio"
+        website: "Webbplats"
         username: "Användarnamn"
         email: "E-post"
         name: "Namn"
@@ -441,7 +444,7 @@ sv:
       conversation:
         view_full: "visa hela konversationen"
       scores:
-        about: "Denna poäng beräknas på förtroendenivån av de som rapporterar, deras träffsäkerhet på deras tidigare flaggningar, samt på prioriteringen av föremålet som rapporteras."
+        about: "Denna poäng beräknas på förtroendenivå av de som rapporterar, deras träffsäkerhet på deras tidigare flaggor, samt på prioriteringen av föremål som rapporteras."
         score: "Poäng"
         date: "Datum"
         type: "Typ"
@@ -497,7 +500,7 @@ sv:
     directory:
       filter_name: "Filtrera på användarnamn"
       title: "Användare"
-      likes_given: "Tilldelade"
+      likes_given: "Givna"
       likes_received: "Mottagna"
       topics_entered: "Visade"
       topics_entered_long: "Visade ämnen"
@@ -577,7 +580,7 @@ sv:
       request: "Förfrågning"
       message: "Nytt meddelande"
       confirm_leave: "Är du säker på att du vill lämna den här gruppen?"
-      allow_membership_requests: "Tillåt användare att skicka medlemskapsförfrågan till gruppägare"
+      allow_membership_requests: "Tillåt användare att sända medlemskapsförfrågan till gruppägare (Kräver offentligt synlig grupp)"
       membership_request_template: "Anpassa mallen som visas när användare skickar en medlemsansökan"
       membership_request:
         submit: "Skicka ansökan"
@@ -750,9 +753,9 @@ sv:
         ignore_option_title: "Du kommer inte ta emot notifieringar gällande denna användare och alla ämnen och svar kommer att gömmas."
         add_ignored_user: "Lägg till..."
         mute_option: "Tystad"
-        mute_option_title: "Du kommer inte erhålla några notifieringar från denna användaren."
+        mute_option_title: "Du kommer inte erhålla några notifikationer från denna användaren."
         normal_option: "Normal"
-        normal_option_title: "Du kommer att notifieras om denna användare svarar dig, citerar dig, eller nämner dig."
+        normal_option_title: "Du kommer att bli notifierad om denna användare svarar dig, citerar dig, eller nämner dig."
       activity_stream: "Aktivitet"
       preferences: "Inställningar"
       feature_topic_on_profile:
@@ -788,21 +791,21 @@ sv:
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
       first_notification: "Du har fått din första notifikation! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
-      theme_default_on_all_devices: "Gör detta till standardtema för alla mina enheter"
-      text_size_default_on_all_devices: "Gör detta till standardstorlek för text på alla mina enheter"
+      theme_default_on_all_devices: "Gör detta till standard-tema för alla mina enheter"
+      text_size_default_on_all_devices: "Gör detta till standard-storlek för text på alla mina enheter"
       allow_private_messages: "Tillåt andra användare att skicka mig personliga meddelanden"
       external_links_in_new_tab: "Öppna alla externa länkar i en ny flik"
       enable_quoting: "Aktivera citatsvar för markerad text"
-      enable_defer: "Aktivera uppskjutning för att markera ämnen som olästa"
+      enable_defer: "Aktivera uppskjutning för att markera ämnen som lästa"
       change: "ändra"
       featured_topic: "Utvalt Ämne"
       moderator: "{{user}} är en moderator"
       admin: "{{user}} är en admin"
       moderator_tooltip: "Den här användaren är moderator"
       admin_tooltip: "Den här användaren är administrator"
-      silenced_tooltip: "Den här användaren är tystad."
+      silenced_tooltip: "Denna användare är tystad."
       suspended_notice: "Den här användaren är avstängd till {{date}}."
-      suspended_permanently: "Den här användaren är utesluten."
+      suspended_permanently: "Denna användare är avstängd."
       suspended_reason: "Anledning:"
       github_profile: "Github"
       email_activity_summary: "Aktivitetssammanfattning"
@@ -816,7 +819,7 @@ sv:
         individual_no_echo: "Jag vill ha ett mail när nya poster publiceras"
         many_per_day: "Skicka ett e-postmeddelande för varje nytt inlägg (ungefär {{dailyEmailEstimate}} per dag)"
         few_per_day: "Skicka ett e-postmeddelande för varje nytt inlägg (ungefär 2 per dag)"
-        warning: "Funktion för e-postlista aktiverad. Inställningar för e-postnotifiering är åsidosatta."
+        warning: "Funktion för e-postlista aktiverad. Inställningar för e-post-notifikation är åsidosatta."
       tag_settings: "Taggar"
       watched_tags: "Bevakade"
       watched_tags_instructions: "Du kommer automatiskt att bevaka alla ämnen med de här taggarna. Du blir notifierad om alla nya inlägg och ämnen, och en räknare över antalet nya inlägg visas bredvid ämnet. "
@@ -824,9 +827,9 @@ sv:
       tracked_tags_instructions: "Du kommer automatiskt följa alla ämnen med de här taggarna. Antalet nya inlägg visas bredvid ämnet."
       muted_tags: "Tystad"
       muted_tags_instructions: "Du kommer inte att få notifieringar om nya ämnen som har de här taggarna, och de kommer inte att visas bland dina olästa ämnen."
-      watched_categories: "Tittade på"
+      watched_categories: "Bevakade"
       watched_categories_instructions: "Du kommer automatiskt att bevaka alla ämnen i de här kategorierna. Du blir notifierad om alla nya inlägg och ämnen, och en räknare över antalet nya inlägg visas bredvid ämnet. "
-      tracked_categories: "Bevakade"
+      tracked_categories: "Följd"
       tracked_categories_instructions: "Du kommer automatiskt följa alla ämnen i de här kategorierna. En räknare över nya inlägg kommer att visas bredvid ämnen."
       watched_first_post_categories: "Bevakar första inlägget"
       watched_first_post_categories_instructions: "Du kommer att bli notifierad om första inlägget i varje nytt ämne i den här kategorin."
@@ -852,7 +855,7 @@ sv:
       apps: "Appar"
       revoke_access: "Återkalla åtkomst"
       undo_revoke_access: "Ångra återkallelse av åtkomst"
-      api_approved: "Godkända:"
+      api_approved: "Godkänd:"
       api_last_used_at: "Senast använd vid:"
       theme: "Tema"
       home: "Standard hemsida"
@@ -1170,14 +1173,14 @@ sv:
         time_read: "lästid"
         recent_time_read: "senaste lästid"
         topic_count:
-          one: "ämnet skapades"
-          other: "ämnen skapades"
+          one: "ämne skapat"
+          other: "ämnen skapade"
         post_count:
           one: "inlägg skapat"
           other: "inlägg skapade"
         likes_given:
-          one: "tilldelad"
-          other: "tilldelade"
+          one: "given"
+          other: "givna"
         likes_received:
           one: "mottagen"
           other: "mottagna"
@@ -1208,7 +1211,7 @@ sv:
         most_liked_users: "Gillar mest"
         most_replied_to_users: "Mest svarad till"
         no_likes: "Inga gillningar ännu."
-        top_categories: "Topp kategorier"
+        top_categories: "Toppkategorier"
         topics: "Ämnen"
         replies: "Svar"
       ip_address:
@@ -1280,7 +1283,7 @@ sv:
     first_post: Första inlägget
     mute: Tysta
     unmute: Avtysta
-    last_post: Publicerad
+    last_post: Senaste
     time_read: Läst
     time_read_recently: "%{time_read} nyligen"
     time_read_tooltip: "%{time_read} total lästid"
@@ -1332,8 +1335,8 @@ sv:
       reset: "Återställ lösenord"
       complete_username: "Om ett konto matchar användarnamnet <b>%{username}</b> bör du inom kort få ett e-postmeddelande med instruktioner för hur du återställer ditt lösenord."
       complete_email: "Om ett konto matchar <b>%{email}</b> bör du inom kort få ett e-postmeddelande med instruktioner för hur du återställer ditt lösenord."
-      complete_username_found: "Vi hittade ett konto som matchade användarnamnet <b> %{username} </b>, du kommer snart att få ett e-postmeddelande med instruktioner om hur du ska återställa ditt lösenord."
-      complete_email_found: "Vi hittade ett konto som matchade <b> %{email} </b>, du kommer snart att få ett e-postmeddelande med instruktioner om hur du ska återställa ditt lösenord."
+      complete_username_found: "Vi hittade ett konto som matchar användarnamnet <b>%{username}</b>. Du kommer inom kort att få e-post med instruktioner för hur du återställer ditt lösenord."
+      complete_email_found: "Vi hittade ett konto som matchar <b>%{email}</b>. Du kommer inom kort att få e-post med instruktioner om hur du återställer ditt lösenord."
       complete_username_not_found: "Det finns inget konto som matchar användarnamnet <b>%{username}</b>"
       complete_email_not_found: "Det finns inget konto som matchar <b>%{email}</b>"
       help: "Får du ingen e-post? Kontrollera först din skräppostmapp. <p>Är du inte säker på vilken e-postadress du använde? Ange en e-postadress så meddelar vi dig om den finns här.</p><p>Om du inte längre har tillgång till e-postadressen för ditt konto, vänligen kontakta <a href='%{basePath}/about'>vår trevliga personal.</a></p>"
@@ -1466,6 +1469,7 @@ sv:
       min_content_not_reached:
         one: "Välj åtminstone {{count}} föremål."
         other: "Välj åtminstone {{count}} föremål."
+      invalid_selection_length: "Valet måste vara minst {{count}} tecken."
     date_time_picker:
       from: Från
       to: Till
@@ -1555,7 +1559,7 @@ sv:
       view_new_post: "Visa ditt nya inlägg."
       saving: "Sparar"
       saved: "Sparat!"
-      saved_draft: "Utkast för inlägg. Välj för att fortsätta."
+      saved_draft: "Utkast för inlägg pågår. Klicka för att fortsätta."
       uploading: "Laddar upp..."
       show_preview: "visa förhandsgranskning &raquo;"
       hide_preview: "&laquo; dölj förhandsgranskning"
@@ -1605,6 +1609,7 @@ sv:
         reply_as_new_topic:
           label: Svara som länkat ämne
           desc: Skapa ett nytt ämne länkat till detta ämne
+          confirm: "Du har ett nytt ämnesutkast sparat, vilket kommer att skrivas över om du skapar ett länkat ämne."
         reply_as_private_message:
           label: Nytt meddelande
           desc: Skapa ett nytt personligt meddelande
@@ -1634,7 +1639,7 @@ sv:
       none: "Kan inte ladda notiser just nu."
       empty: "Inga notifieringar hittades."
       post_approved: "Ditt inlägg blev godkänt"
-      reviewable_items: "objekt som kräver granskning"
+      reviewable_items: "föremål som kräver granskning"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -2019,13 +2024,13 @@ sv:
           "0": "Du ignorerar alla notifikationer för detta ämne."
         watching_pm:
           title: "Bevakar"
-          description: "Du kommer att få en notifiering för varje nytt svar i detta meddelande, samt en räknare med antalet nya svar."
+          description: "Du kommer att få en notifiering för varje nytt svar i detta ämne, samt en räknare med antalet nya svar."
         watching:
           title: "Bevakar"
           description: "Du kommer att notifieras om varje nytt svar i detta ämne, och ett räknare över nya svar visas."
         tracking_pm:
           title: "Följer"
-          description: "En räknare över antal nya svar visas för detta meddelande. Du notifieras om någon nämner ditt @namn eller svarar dig."
+          description: "En räknare över antal nya svar visas för detta ämne. Du notifieras om någon nämner ditt @namn eller svarar dig."
         tracking:
           title: "Följer"
           description: "En räknare över antal nya svar visas för detta ämne. Du notifieras om någon nämner ditt @namn eller svarar dig."
@@ -2036,10 +2041,10 @@ sv:
           title: "Normal"
           description: "Du kommer att notifieras om någon nämner ditt @namn eller svarar dig."
         muted_pm:
-          title: "Tystade"
-          description: "Du kommer aldrig bli notifierad om något gällande detta meddelande."
+          title: "Tystat"
+          description: "Du kommer aldrig bli notifierad om något gällande detta ämne."
         muted:
-          title: "Tystade"
+          title: "Tystat"
           description: "Du kommer aldrig att notifieras om någonting som rör det här ämnet, och den kommer inte att visas i din flik med senaste."
       actions:
         title: "Åtgärder"
@@ -2346,7 +2351,7 @@ sv:
           like: "Ångra gillning"
         people:
           off_topic: "flaggade det här som orelevant."
-          spam: "flaggade det här som spam"
+          spam: "flaggade det här som skräppost"
           inappropriate: "flaggade det här som olämpligt"
           notify_moderators: "notifierade moderatorer"
           notify_user: "skickade ett meddelande"
@@ -2365,7 +2370,7 @@ sv:
             other: "och {{count}} andra läste detta"
         by_you:
           off_topic: "Du flaggade detta som orelevant"
-          spam: "Du flaggade detta som spam"
+          spam: "Du flaggade detta som skräppost"
           inappropriate: "Du flaggade detta som olämpligt"
           notify_moderators: "Du flaggade det för moderation."
           notify_user: "Du skickade ett meddelande till denna användare"
@@ -2417,6 +2422,10 @@ sv:
         name: "Namn"
         name_placeholder: "Namnge bokmärket för att underlätta för ditt minne"
         set_reminder: "Skapa påminnelse"
+        actions:
+          delete_bookmark:
+            name: "Radera bokmärke"
+            description: "Tar bort bokmärket från din profil och stoppar alla påminnelser för bokmärket."
     category:
       can: "can&hellip; "
       none: "(ingen kategori)"
@@ -2552,9 +2561,9 @@ sv:
       take_action: "Åtgärda"
       notify_action: "Meddelande"
       official_warning: "Officiell varning"
-      delete_spammer: "Radera spammare"
-      delete_confirm_MF: "Du håller på att radera {POSTS, plural, one {<b>1</b> inlägg} other {<b>#</b> inlägg}} och {TOPICS, plural, one {<b>1</b> ämne} other {<b>#</b> ämnen}} från den här användaren, ta bort användarens konto, blockera registreringar från användarens IP-adress <b>{ip_address}</b>, och lägga till användarens e-postadress <b>{email}</b> till en permanent blockeringslista. Är du säker på att den här användaren verkligen är en spammare?"
-      yes_delete_spammer: "Ja, radera spammare"
+      delete_spammer: "Radera skräppostare"
+      delete_confirm_MF: "Du håller på att radera {POSTS, plural, one {<b>1</b> inlägg} other {<b>#</b> inlägg}} och {TOPICS, plural, one {<b>1</b> ämne} other {<b>#</b> ämnen}} från den här användaren, ta bort användarens konto, blockera registreringar från användarens IP-adress <b>{ip_address}</b>, och lägga till användarens e-postadress <b>{email}</b> till en permanent blockeringslista. Är du säker på att den här användaren verkligen är en skräppostare?"
+      yes_delete_spammer: "Ja, radera skräppostare"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(gömd)"
       submit_tooltip: "Använd den privata flaggan"
@@ -2564,7 +2573,7 @@ sv:
       formatted_name:
         off_topic: "Det är orelevant"
         inappropriate: "Det är olämpligt"
-        spam: "Det är spam"
+        spam: "Det är skräppost"
       custom_placeholder_notify_user: "Var specifik, var konstruktiv och var alltid trevlig."
       custom_placeholder_notify_moderators: "Låt oss veta i detalj vad du är bekymrad över, och skicka med relevanta länkar och exempel om möjligt."
       custom_message:
@@ -2633,8 +2642,8 @@ sv:
       other: "visningar"
     replies: "Svar"
     views_long:
-      one: "detta ämnet har visats %{count} gång"
-      other: "detta ämne har visats {{number}} gånger"
+      one: "Detta ämnet har visats %{count} gång"
+      other: "Detta ämne har visats {{number}} gånger"
     activity: "Aktivitet"
     likes: "Gillningar"
     likes_lowercase:
@@ -2707,7 +2716,7 @@ sv:
         yearly:
           title: "Årsvis"
         quarterly:
-          title: "En gång i kvartalet"
+          title: "Kvartalsvis"
         monthly:
           title: "Månadsvis"
         weekly:
@@ -2720,7 +2729,7 @@ sv:
         this_month: "Månad"
         this_week: "Vecka"
         today: "Idag"
-        other_periods: "se toppen"
+        other_periods: "se toppen för:"
     browser_update: 'Tyvärr, <a href="https://www.discourse.org/faq/#browser">din webbläsare är för gammal för att fungera på den här sidan</a>. Vänligen <a href="https://browsehappy.com">uppgradera din webbläsare</a>. '
     permission_types:
       full: "Skapa / svara / se"
@@ -2850,6 +2859,7 @@ sv:
       choose_for_topic: "alternativa taggar"
       info: "Info"
       default_info: "Denna tagg är inte begränsad till någon kategori, och har inga synonymer."
+      category_restricted: "Denna tagg är begränsad åt kategorier som du inte har tillträde för."
       synonyms: "Synonymer"
       synonyms_description: "När följande taggar används, kommer de att ersättas med <b>%{base_tag_name}</b>."
       tag_groups_info:
@@ -2861,6 +2871,9 @@ sv:
       edit_synonyms: "Hantera synonymer"
       add_synonyms_label: "Lägg till synonymer:"
       add_synonyms: "Lägg till"
+      add_synonyms_explanation:
+        one: "Varje plats som för närvarande använder denna tagg kommer att ändras att använda<b>%{tag_name}</b> istället. Är du säker på att du vill göra denna ändring?"
+        other: "Varje plats som för närvarande använder dessa taggar kommer att ändras att använda <b>%{tag_name}</b> istället. Är du säker på att du vill göra denna ändring?"
       add_synonyms_failed: "Följande tagg kunde inte läggas till som synonym: <b>%{tag_names}</b>. Försäkra att de inte har synonymer eller är synonymer för andra taggar."
       remove_synonym: "Ta bort synonym"
       delete_synonym_confirm: 'Är du säker på att du vill ta bort synonymen "%{tag_name}"?'
@@ -2905,7 +2918,7 @@ sv:
           title: "Bevakar första inlägget"
           description: "Du kommer att notifieras vid nya ämnen för denna tagg men inte svar på ämnen."
         tracking:
-          title: "Bevakade"
+          title: "Följer"
           description: "Du kommer automatiskt följa alla ämnen med den här taggen. En räknare över olästa och nya inlägg kommer att visas bredvid ämnen."
         regular:
           title: "Vanlig"
@@ -2982,7 +2995,7 @@ sv:
         version_check_pending: "Det verkar som att du har uppgraderat nyligen. Utmärkt!"
         installed_version: "Installerad"
         latest_version: "Senaste"
-        problems_found: "Några förslag baserat på din nuvarande sidinställning"
+        problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
         last_checked: "Senast kollad"
         refresh_problems: "Uppdatera"
         no_problems: "Inga problem upptäcktes."
@@ -3752,7 +3765,7 @@ sv:
             allow: "Tillåt"
         screened_urls:
           title: "Granskade URL:er"
-          description: "URL:erna som är listade här har använts i inlägg av användare som är identifierade som spammare."
+          description: "URL:erna som är listade här har använts i inlägg av användare som är identifierade som skräppostare."
           url: "URL"
           domain: "Domän"
         screened_ips:
@@ -3767,7 +3780,7 @@ sv:
             do_nothing: "Tillåt"
             allow_admin: "Tillåt admin"
           form:
-            label: "Nytt:"
+            label: "Ny:"
             ip_address: "IP-adress"
             add: "Lägg till"
             filter: "Sök"
@@ -4106,7 +4119,7 @@ sv:
           all_results: "Alla"
           required: "Krävs"
           branding: "Varumärke"
-          basic: "Grundläggande setup"
+          basic: "Grundläggande inställningar"
           users: "Användare"
           posting: "Publicera inlägg"
           email: "E-post"
@@ -4115,7 +4128,7 @@ sv:
           security: "Säkerhet"
           onebox: "Onebox"
           seo: "Sökmotoroptimering"
-          spam: "Spam"
+          spam: "Skräppost"
           rate_limits: "Begränsningar"
           developer: "Utvecklare"
           embedding: "Inbäddning"
@@ -4218,6 +4231,7 @@ sv:
           upload_csv: Ladda upp en CSV med användarmail
           aborted: Vänligen ladda upp en CSV som innehåller användarmail
           success: Din CSV mottogs och användare kommer att få sin utmärkelse inom kort.
+          replace_owners: Ta bort utmärkelsen från tidigare mottagare
       emoji:
         title: "Emoji"
         help: "Lägg till en ny emoji för andra att använda. (TIPS: dra och släpp flera filer på en och samma gång)"

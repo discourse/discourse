@@ -33,7 +33,7 @@ describe PrettyText do
 
         topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
         expected = <<~HTML
-          <aside class="quote no-group" data-post="2" data-topic="#{topic.id}">
+          <aside class="quote no-group" data-username="EvilTrout" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" alt="slight_smile" class="emoji"></a>
@@ -158,7 +158,7 @@ describe PrettyText do
         topic = Fabricate(:topic, title: "this is topic with secret category", category: category)
 
         expected = <<~HTML
-          <aside class="quote no-group" data-post="3" data-topic="#{topic.id}">
+          <aside class="quote no-group" data-username="maja" data-post="3" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <a href="http://test.localhost/t/#{topic.id}/3">#{I18n.t("on_another_topic")}</a>
@@ -181,7 +181,7 @@ describe PrettyText do
           [/quote]
         MD
         html = <<~HTML
-          <aside class="quote no-group" data-post="123" data-topic="456" data-full="true">
+          <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -203,7 +203,7 @@ describe PrettyText do
           [/quote]
         MD
         html = <<~HTML
-          <aside class="quote no-group" data-post="123" data-topic="456" data-full="true">
+          <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -224,7 +224,7 @@ describe PrettyText do
         MD
 
         html = <<~HTML
-          <aside class="quote no-group" data-post="555" data-topic="666">
+          <aside class="quote no-group" data-username="#{user.username}" data-post="555" data-topic="666">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -251,7 +251,7 @@ describe PrettyText do
 
         topic = Fabricate(:topic, title: "this is a test topic")
         expected = <<~HTML
-          <aside class="quote group-#{group.name}" data-post="2" data-topic="#{topic.id}">
+          <aside class="quote group-#{group.name}" data-username="#{user.username}" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
@@ -589,11 +589,6 @@ describe PrettyText do
         expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100, markdown_images: true)).to eq("![car](http://cnn.com/a.gif)")
       end
 
-      it "should keep spoilers" do
-        expect(PrettyText.excerpt("<div class='spoiler'><img src='http://cnn.com/a.gif'></div>", 100)).to match_html "<span class='spoiler'>[image]</span>"
-        expect(PrettyText.excerpt("<span class='spoiler'>spoiler</div>", 100)).to match_html "<span class='spoiler'>spoiler</span>"
-      end
-
       it "should keep details if too long" do
         expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 6)).to match_html "<details class='disabled'><summary>expand</summary></details>"
       end
@@ -775,6 +770,29 @@ describe PrettyText do
           "<aside class='quote'><p>a</p><p>b</p></aside>boom", 100, keep_onebox_source: true
         )).to eq("boom")
       end
+    end
+
+    it 'should strip audio/video' do
+      html = <<~HTML
+        <audio controls>
+          <source src="https://awebsite.com/audio.mp3"><a href="https://awebsite.com/audio.mp3">https://awebsite.com/audio.mp3</a></source>
+        </audio>
+        <p>Listen to this!</p>
+      HTML
+
+      expect(PrettyText.excerpt(html, 100)).to eq("Listen to this!")
+
+      html = <<~HTML
+        <div class="onebox video-onebox">
+          <video controlslist="nodownload" width="100%" height="100%" controls="">
+            <source src="http://videosource.com/running.mp4">
+            <a href="http://videosource.com/running.mp4">http://videosource.com/running.mp4</a>
+          </video>
+        </div>
+        <p>Watch this, but not in the excerpt.</p>
+      HTML
+
+      expect(PrettyText.excerpt(html, 100)).to eq("Watch this, but not in the excerpt.")
     end
   end
 

@@ -4,12 +4,9 @@ module LimitedEdit
   extend ActiveSupport::Concern
 
   def edit_time_limit_expired?(user)
+    return true if user.trust_level < SiteSetting.min_trust_to_edit_post
     time_limit = user_time_limit(user)
-    if created_at && time_limit > 0
-      created_at < time_limit.minutes.ago
-    else
-      false
-    end
+    created_at && (time_limit > 0) && (created_at < time_limit.minutes.ago)
   end
 
   private

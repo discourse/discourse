@@ -18,8 +18,6 @@ pl_PL:
     invalid_argument: "Nieprawidłowa wartość '%{value}' dla argumentu '%{argument}'."
     multiple_polls_without_name: "Istnieje kilka nienazwanych ankiet. Uzyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
     multiple_polls_with_same_name: "Istnieje kilka ankiet o tej samej nazwie: <strong>%{name}</strong>. Użyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
-    default_poll_must_have_at_least_2_options: "Ankieta musi posiadać co najmniej 2 opcje."
-    named_poll_must_have_at_least_2_options: "Ankieta <strong>%{name}</strong> musi posiadać co najmniej 2 opcje do wyboru."
     default_poll_must_have_less_options:
       one: "Ankieta musi posiadać mniej niż %{count} opcję do wyboru."
       few: "Ankieta musi posiadać co najmniej %{count} pozycje."

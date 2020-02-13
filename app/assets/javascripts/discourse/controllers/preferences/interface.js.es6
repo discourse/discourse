@@ -14,6 +14,7 @@ import {
   isiPad,
   iOSWithVisualViewport
 } from "discourse/lib/utilities";
+import { computed } from "@ember/object";
 
 const USER_HOMES = {
   1: "latest",
@@ -75,6 +76,17 @@ export default Controller.extend(PreferencesTabController, {
       return { name: I18n.t(`user.text_size.${value}`), value };
     });
   },
+
+  homepageId: computed(
+    "model.user_option.homepage_id",
+    "userSelectableHome.[]",
+    function() {
+      return (
+        this.model.user_option.homepage_id ||
+        this.userSelectableHome.firstObject.value
+      );
+    }
+  ),
 
   @discourseComputed
   titleCountModes() {
@@ -195,6 +207,8 @@ export default Controller.extend(PreferencesTabController, {
 
       // Force refresh when leaving this screen
       Discourse.set("assetVersion", "forceRefresh");
+
+      this.set("textSize", newSize);
     }
   }
 });

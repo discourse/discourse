@@ -13,8 +13,6 @@ et:
   poll:
     multiple_polls_without_name: "Mitmed küsitlused on ilma nimeta. Kasuta atribuuti '<code>name</code>' küsitluse unikaalsuse tagamiseks."
     multiple_polls_with_same_name: "Mitu küsitlust on sama nimega: <strong>%{name}</strong>. Kasuta atribuuti '<code>name</code>' küsitluse unikaalsuse tagamiseks."
-    default_poll_must_have_at_least_2_options: "Küsitlusel peab olema vähemalt 2 valikut."
-    named_poll_must_have_at_least_2_options: "Küsitlusel nimega <strong>%{name}</strong> peab olema vähemalt 2 valikut."
     default_poll_must_have_less_options:
       one: "Küsitlusel peab olema vähemalt %{count} valik."
       other: "Küsitlusel peab olema vähem, kui %{count} valikut."

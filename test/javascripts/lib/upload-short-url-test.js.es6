@@ -33,9 +33,22 @@ QUnit.module("lib:pretty-text/upload-short-url", {
       }
     ];
 
+    const otherMediaSrcs = [
+      {
+        short_url: "upload://d.mp4",
+        url: "/uploads/default/original/3X/c/b/4.mp4",
+        short_path: "/uploads/short-url/d.mp4"
+      },
+      {
+        short_url: "upload://e.mp3",
+        url: "/uploads/default/original/3X/c/b/5.mp3",
+        short_path: "/uploads/short-url/e.mp3"
+      }
+    ];
+
     // prettier-ignore
     server.post("/uploads/lookup-urls", () => { //eslint-disable-line
-      return response(imageSrcs.concat(attachmentSrcs));
+      return response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)));
     });
 
     fixture().html(
@@ -78,5 +91,17 @@ QUnit.test("resolveAllShortUrls", async assert => {
   assert.deepEqual(lookup, {
     url: "/uploads/default/original/3X/c/b/3.pdf",
     short_path: "/uploads/short-url/c.pdf"
+  });
+
+  lookup = lookupCachedUploadUrl("upload://d.mp4");
+  assert.deepEqual(lookup, {
+    url: "/uploads/default/original/3X/c/b/4.mp4",
+    short_path: "/uploads/short-url/d.mp4"
+  });
+
+  lookup = lookupCachedUploadUrl("upload://e.mp3");
+  assert.deepEqual(lookup, {
+    url: "/uploads/default/original/3X/c/b/5.mp3",
+    short_path: "/uploads/short-url/e.mp3"
   });
 });

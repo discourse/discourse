@@ -37,6 +37,7 @@ class Post < ActiveRecord::Base
   has_many :uploads, through: :post_uploads
 
   has_one :post_stat
+  has_many :bookmarks
 
   has_one :incoming_email
 
@@ -307,7 +308,7 @@ class Post < ActiveRecord::Base
       each_upload_url do |url|
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
-          raw = raw.sub(Discourse.store.s3_upload_host, "#{Discourse.base_url}/secure-media-uploads")
+          raw = raw.sub(Discourse.store.s3_upload_host, "#{Discourse.base_url}/#{Upload::SECURE_MEDIA_ROUTE}")
         end
       end
     end
@@ -819,9 +820,11 @@ class Post < ActiveRecord::Base
         UNION
         SELECT reply_post_id, level + 1
         FROM post_replies AS r
+          JOIN posts AS p ON p.id = reply_post_id
           JOIN breadcrumb AS b ON (r.post_id = b.id)
         WHERE r.post_id <> r.reply_post_id
-              AND b.level < :max_reply_level
+          AND b.level < :max_reply_level
+          AND p.topic_id = :topic_id
       ), breadcrumb_with_count AS (
           SELECT
             id,
@@ -832,9 +835,10 @@ class Post < ActiveRecord::Base
           WHERE r.reply_post_id <> r.post_id
           GROUP BY id, level
       )
-      SELECT id, level
+      SELECT id, MIN(level) AS level
       FROM breadcrumb_with_count
       /*where*/
+      GROUP BY id
       ORDER BY id
     SQL
 
@@ -844,7 +848,7 @@ class Post < ActiveRecord::Base
     # for example it skips a post when it contains 2 quotes (which are replies) from different posts
     builder.where("count = 1") if only_replies_to_single_post
 
-    replies = builder.query_hash(post_id: id, max_reply_level: MAX_REPLY_LEVEL)
+    replies = builder.query_hash(post_id: id, max_reply_level: MAX_REPLY_LEVEL, topic_id: topic_id)
     replies.each { |r| r.symbolize_keys! }
 
     secured_ids = Post.secured(guardian).where(id: replies.map { |r| r[:id] }).pluck(:id).to_set
@@ -1044,6 +1048,10 @@ class Post < ActiveRecord::Base
     { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
   end
 
+  def owned_uploads_via_access_control
+    Upload.where(access_control_post_id: self.id)
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
@@ -1070,7 +1078,6 @@ class Post < ActiveRecord::Base
       end
     end
   end
-
 end
 
 # == Schema Information

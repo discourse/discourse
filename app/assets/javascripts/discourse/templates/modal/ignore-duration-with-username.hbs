@@ -2,17 +2,19 @@
   <div class="controls tracking-controls">
     <label>{{d-icon "far-eye-slash" class="icon"}} {{i18n "user.user_notifications.ignore_duration_username"}}</label>
     {{user-selector excludeCurrentUser=true
-                    single="true"
-                    usernames=ignoredUsername
-                    class="user-selector"}}
+                    single=true
+                    class="user-selector"
+                    usernames=ignoredUsername}}
   </div>
   {{future-date-input
     label="user.user_notifications.ignore_duration_when"
-    input=ignoredUntil
+    input=(readonly ignoredUntil)
     includeWeekend=true
     includeDateTime=false
     includeMidFuture=true
-    includeFarFuture=false}}
+    includeFarFuture=false
+    onChangeInput=(action (mut ignoredUntil))
+  }}
   <p>{{i18n "user.user_notifications.ignore_duration_note"}}</p>
 {{/d-modal-body}}
 

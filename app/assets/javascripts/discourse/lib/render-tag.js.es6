@@ -6,7 +6,7 @@ export function replaceTagRenderer(fn) {
   _renderer = fn;
 }
 
-function defaultRenderTag(tag, params) {
+export function defaultRenderTag(tag, params) {
   params = params || {};
   const visibleName = Handlebars.Utils.escapeExpression(tag);
   tag = visibleName.toLowerCase();

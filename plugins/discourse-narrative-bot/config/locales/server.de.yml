@@ -267,6 +267,12 @@ de:
           _Psst_… ich habe in diesem Thema eine Überraschung versteckt. Wenn du für eine Herausforderung zu haben bist, dann **wähle das Such-Symbol** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> oben rechts &#8599; aus und suche danach.
 
           Versuche, in diesem Thema nach dem Begriff „Capy&#8203;bara“ zu suchen.
+        hidden_message: |-
+          Wie konntest du das Capybara übersehen? :zwinkern:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Hast du gemerkt, dass du jetzt wieder am Anfang bist? Füttere diesen armen hungrigen Capybara, indem du **mit dem `%{search_answer}` Emoji antwortest**, und du wirst automatisch zum Ende gebracht.
         reply: |-
           Juhu! Du hast es gefunden :tada:
 
@@ -283,7 +289,7 @@ de:
 
           %{certificate}
 
-          Das ist erstmal alles für den Augenblick! Aber schau dir doch [**unsere neuesten Diskussionsthemen**]((%{base_uri}/latest) oder [**Diskussionskategorien**](%{base_uri}/categories) an. :sunglasses:
+          Das ist erstmal alles für den Augenblick! Aber schau dir doch [**unsere neuesten Diskussionsthemen**](%{base_uri}/latest) oder [**Diskussionskategorien**](%{base_uri}/categories) an. :sunglasses:
 
           (Wenn du wieder mit mir sprechen möchtest, um noch mehr zu lernen, schreibe mir einfach eine Nachricht oder erwähne `@%{discobot_username}` zu jeder Zeit!)
       certificate:

@@ -35,6 +35,7 @@ class MetadataController < ApplicationController
 
     manifest = {
       name: SiteSetting.title,
+      short_name: SiteSetting.short_title.presence || SiteSetting.title.truncate(12, separator: ' ', omission: ''),
       display: display,
       start_url: Discourse.base_uri.present? ? "#{Discourse.base_uri}/" : '.',
       background_color: "##{ColorScheme.hex_for_name('secondary', view_context.scheme_id)}",
@@ -63,8 +64,6 @@ class MetadataController < ApplicationController
       icon_entry[:purpose] = "maskable"
       manifest[:icons] << icon_entry
     end
-
-    manifest[:short_name] = SiteSetting.short_title if SiteSetting.short_title.present?
 
     if current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_android
       manifest = manifest.merge(

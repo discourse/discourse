@@ -186,7 +186,11 @@ class TopicEmbed < ActiveRecord::Base
   # Convert any relative URLs to absolute. RSS is annoying for this.
   def self.absolutize_urls(url, contents)
     url = normalize_url(url)
-    uri = URI(UrlHelper.escape_uri(url))
+    begin
+      uri = URI(UrlHelper.escape_uri(url))
+    rescue URI::Error
+      return contents
+    end
     prefix = "#{uri.scheme}://#{uri.host}"
     prefix << ":#{uri.port}" if uri.port != 80 && uri.port != 443
 

@@ -16,10 +16,6 @@
         }
       }
 
-      .select-kit-body {
-        max-width: 32em;
-      }
-
       .select-kit-header {
         height: 30px;
 
@@ -31,6 +27,10 @@
           box-shadow: none;
           cursor: pointer;
           max-width: 250px;
+
+          .name {
+            white-space: nowrap;
+          }
         }
       }
 
@@ -57,39 +57,41 @@
         }
       }
 
-      .select-kit-collection {
-        .collection-header {
-          max-height: 125px;
-          overflow: hidden;
-          flex: 1 0 auto;
-          border-bottom: 1px solid $primary-low;
+      .selected-tags {
+        max-height: 125px;
+        overflow-y: auto;
+        display: flex;
+        border-bottom: 1px solid $primary-low;
+        padding: 0.25em 0 0 0.25em;
+        box-sizing: border-box;
+        flex-wrap: wrap;
+        width: 100%;
 
-          .selected-tags {
-            display: flex;
-            padding: 4px;
-            flex-wrap: wrap;
-            margin: -2px;
-            overflow: hidden;
+        .selected-tag {
+          background: $primary-low;
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0.5em;
+          border: 0;
+          font-size: $font-down-1;
+          margin-right: 0.25em;
+          margin-bottom: 0.25em;
+
+          .tag-icon {
+            margin-right: 0.25em;
           }
 
-          .selected-tag {
-            background: $primary-low;
-            padding: 2px 4px;
-            margin: 2px;
-            border: 0;
+          &.is-highlighted {
+            box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0, 0, 0, 0.05);
+          }
 
-            &.is-highlighted {
-              box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0, 0, 0, 0.05);
-            }
+          .d-icon {
+            color: $primary-low-mid;
+            vertical-align: middle;
+          }
 
-            .d-icon {
-              color: $primary-low-mid;
-              vertical-align: middle;
-            }
-
-            &:hover .d-icon {
-              color: $danger;
-            }
+          &:hover .d-icon.d-icon-times {
+            color: $danger;
           }
         }
       }

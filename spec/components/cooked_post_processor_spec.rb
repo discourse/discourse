@@ -504,6 +504,7 @@ describe CookedPostProcessor do
         end
 
         context "s3_uploads" do
+          let(:upload) { Fabricate(:secure_upload_s3) }
           before do
             s3_setup
             stored_path = Discourse.store.get_path_for_upload(upload)
@@ -516,13 +517,8 @@ describe CookedPostProcessor do
             )
             stub_request(:get, /#{SiteSetting.s3_upload_bucket}\.s3\.amazonaws\.com/)
 
-            OptimizedImage.expects(:resize).returns(true)
-            FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
-            Discourse.store.class.any_instance.expects(:has_been_uploaded?).at_least_once.returns(true)
-
             SiteSetting.login_required = true
             SiteSetting.secure_media = true
-            upload.update_column(:secure, true)
           end
 
           let(:optimized_size) { "600x500" }
@@ -531,14 +527,42 @@ describe CookedPostProcessor do
             Fabricate(:post, raw: "![large.png|#{optimized_size}](#{upload.short_url})")
           end
 
-          it "handles secure images with the correct lightbox link href" do
-            cpp.post_process
-
-            expect(cpp.html).to match_html <<~HTML
+          let(:cooked_html) do
+            <<~HTML
             <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-media-uploads/original/1X/#{upload.sha1}.png" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
             <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">large.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
             </div></a></div></p>
             HTML
+          end
+
+          context "when the upload is attached to the correct post" do
+            before do
+              OptimizedImage.expects(:resize).returns(true)
+              FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+              Discourse.store.class.any_instance.expects(:has_been_uploaded?).at_least_once.returns(true)
+              upload.update(secure: true, access_control_post: post)
+            end
+
+            it "handles secure images with the correct lightbox link href" do
+              cpp.post_process
+
+              expect(cpp.html).to match_html cooked_html
+            end
+          end
+
+          context "when the upload is attached to a different post" do
+            before do
+              FastImage.size(upload.url)
+              upload.update(secure: true, access_control_post: Fabricate(:post))
+            end
+
+            it "does not create thumbnails or optimize images" do
+              CookedPostProcessor.any_instance.expects(:optimize_image!).never
+              Upload.any_instance.expects(:create_thumbnail!).never
+              cpp.post_process
+
+              expect(cpp.html).not_to match_html cooked_html
+            end
           end
         end
       end
@@ -749,6 +773,38 @@ describe CookedPostProcessor do
           cpp.post_process
           post.topic.reload
           expect(post.topic.image_url).to be_present
+        end
+
+        it "removes image if post is edited and no longer has an image" do
+          FastImage.stubs(:size)
+
+          cpp.post_process
+          post.topic.reload
+          expect(post.topic.image_url).to be_present
+          expect(post.image_url).to be_present
+
+          post.update!(raw: "This post no longer has an image.")
+          CookedPostProcessor.new(post).post_process
+          post.topic.reload
+          expect(post.topic.image_url).not_to be_present
+          expect(post.image_url).not_to be_present
+        end
+
+        it "won't remove the original image if another post doesn't have an image" do
+          FastImage.stubs(:size)
+          topic = post.topic
+
+          cpp.post_process
+          topic.reload
+          expect(topic.image_url).to be_present
+          expect(post.image_url).to be_present
+
+          post = Fabricate(:post, topic: topic, raw: "this post doesn't have an image")
+          CookedPostProcessor.new(post).post_process
+          topic.reload
+
+          expect(post.topic.image_url).to be_present
+          expect(post.image_url).to be_blank
         end
       end
 
@@ -976,7 +1032,8 @@ describe CookedPostProcessor do
     let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
 
     before do
-      Oneboxer.expects(:onebox)
+      Oneboxer
+        .expects(:onebox)
         .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
         .returns("<div>GANGNAM STYLE</div>")
 
@@ -988,28 +1045,59 @@ describe CookedPostProcessor do
       expect(cpp.html).to match_html "<div>GANGNAM STYLE</div>"
     end
 
-    it "replaces downloaded onebox image" do
-      url = 'https://image.com/my-avatar'
-      image_url = 'https://image.com/avatar.png'
+    describe "replacing downloaded onebox image" do
+      let(:url) { 'https://image.com/my-avatar' }
+      let(:image_url) { 'https://image.com/avatar.png' }
 
-      Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='#{image_url}' />")
+      it "successfully replaces the image" do
+        Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='#{image_url}' />")
 
-      post = Fabricate(:post, raw: url)
-      upload.update!(url: "https://test.s3.amazonaws.com/something.png")
+        post = Fabricate(:post, raw: url)
+        upload.update!(url: "https://test.s3.amazonaws.com/something.png")
 
-      post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
-      post.save_custom_fields
+        post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
+        post.save_custom_fields
 
-      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
-      cpp.post_process_oneboxes
+        cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+        cpp.post_process_oneboxes
 
-      expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{upload.url}\" width=\"\" height=\"\"></p>")
+        expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{upload.url}\" width=\"\" height=\"\"></p>")
 
-      upload.destroy!
-      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
-      cpp.post_process_oneboxes
+        upload.destroy!
+        cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+        cpp.post_process_oneboxes
 
-      expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{image_url}\" width=\"\" height=\"\"></p>")
+        expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{image_url}\" width=\"\" height=\"\"></p>")
+        Oneboxer.unstub(:onebox)
+      end
+
+      context "when the post is with_secure_media and the upload is secure and secure media is enabled" do
+        before do
+          upload.update(secure: true)
+          SiteSetting.login_required = true
+          s3_setup
+          SiteSetting.secure_media = true
+          stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+        end
+
+        it "does not use the direct URL, uses the cooked URL instead (because of the private ACL preventing w/h fetch)" do
+          Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='#{image_url}' />")
+
+          post = Fabricate(:post, raw: url)
+          upload.update!(url: "https://test.s3.amazonaws.com/something.png")
+
+          post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
+          post.save_custom_fields
+
+          cooked_url = "https://localhost/secure-media-uploads/test.png"
+          UrlHelper.expects(:cook_url).with(upload.url, secure: true).returns(cooked_url)
+
+          cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+          cpp.post_process_oneboxes
+
+          expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{cooked_url}\" width=\"\" height=\"\"></p>")
+        end
+      end
     end
 
     it "replaces large image placeholder" do
@@ -1725,6 +1813,13 @@ describe CookedPostProcessor do
 
       CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
       expect(reply.raw).to eq(raw)
+    end
+
+    it "does not generate a blank HTML document" do
+      post = Fabricate(:post, topic: topic, raw: "<sunday><monday>")
+      cp = CookedPostProcessor.new(post)
+      cp.post_process
+      expect(cp.html).to eq("<p></p>")
     end
 
     it "works only on new posts" do

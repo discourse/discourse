@@ -826,12 +826,14 @@ a.mention-group {
   }
 }
 
-.broken-image,
-.large-image {
+.broken-image {
   color: dark-light-choose($primary-low-mid, $secondary-high);
   border: 1px solid $primary-low;
   font-size: $font-up-5;
-  padding: 16px;
+
+  .d-icon {
+    margin: 16px;
+  }
 }
 
 /* below standard tablet portrait ----------- */

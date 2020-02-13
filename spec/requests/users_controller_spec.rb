@@ -2943,6 +2943,57 @@ describe UsersController do
     end
   end
 
+  describe "#show_card" do
+    context "anon" do
+      let(:user) { Discourse.system_user }
+
+      it "returns success" do
+        get "/u/#{user.username}/card.json"
+        expect(response.status).to eq(200)
+        parsed = JSON.parse(response.body)["user"]
+
+        expect(parsed["username"]).to eq(user.username)
+        expect(parsed["profile_hidden"]).to be_blank
+        expect(parsed["trust_level"]).to be_present
+      end
+
+      it "should redirect to login page for anonymous user when profiles are hidden" do
+        SiteSetting.hide_user_profiles_from_public = true
+        get "/u/#{user.username}/card.json"
+        expect(response).to redirect_to '/login'
+      end
+    end
+
+    context "logged in" do
+      before do
+        sign_in(user)
+      end
+
+      fab!(:user) { Fabricate(:user) }
+
+      it 'works correctly' do
+        get "/u/#{user.username}/card.json"
+        expect(response.status).to eq(200)
+
+        json = JSON.parse(response.body)
+
+        expect(json["user"]["associated_accounts"]).to eq(nil) # Not serialized in card
+        expect(json["user"]["username"]).to eq(user.username)
+      end
+
+      it "returns not found when the username doesn't exist" do
+        get "/u/madeuppity/card.json"
+        expect(response).not_to be_successful
+      end
+
+      it "raises an error on invalid access" do
+        Guardian.any_instance.expects(:can_see?).with(user).returns(false)
+        get "/u/#{user.username}/card.json"
+        expect(response).to be_forbidden
+      end
+    end
+  end
+
   describe '#badges' do
     it "renders fine by default" do
       get "/u/#{user.username}/badges"
@@ -3125,6 +3176,15 @@ describe UsersController do
         )
       end
 
+      let!(:private_group) do
+        Fabricate(:group,
+          mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins],
+          messageable_level: Group::ALIAS_LEVELS[:members_mods_and_admins],
+          visibility_level: Group.visibility_levels[:members],
+          name: 'aaa4'
+        )
+      end
+
       describe 'when signed in' do
         before do
           sign_in(user)
@@ -3147,7 +3207,7 @@ describe UsersController do
           groups = JSON.parse(response.body)["groups"]
 
           expect(groups.map { |group| group['name'] })
-            .to_not include(mentionable_group_2.name)
+            .to_not include(private_group.name)
         end
 
         it "doesn't search for groups" do
@@ -3844,6 +3904,7 @@ describe UsersController do
 
   describe '#feature_topic' do
     fab!(:topic) { Fabricate(:topic) }
+    fab!(:other_topic) { Fabricate(:topic) }
     fab!(:other_user) { Fabricate(:user) }
     fab!(:private_message) { Fabricate(:private_message_topic, user: other_user) }
     fab!(:category) { Fabricate(:category_with_definition) }
@@ -3858,14 +3919,7 @@ describe UsersController do
         expect(response.status).to eq(403)
       end
 
-      it 'returns an error if the the current user does not have access' do
-        sign_in(user)
-        topic.update(user_id: other_user.id)
-        put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
-        expect(response.status).to eq(403)
-      end
-
-      it 'returns an error if the user did not create the topic' do
+      it 'returns an error if the user tries to set for another user' do
         sign_in(user)
         topic.update(user_id: other_user.id)
         put "/u/#{other_user.username}/feature-topic.json", params: { topic_id: topic.id }
@@ -3878,6 +3932,13 @@ describe UsersController do
         expect(response.status).to eq(403)
       end
 
+      it "returns an error if the topic is not visible" do
+        sign_in(user)
+        topic.update_status('visible', false, user)
+        put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(403)
+      end
+
       it "returns an error if the topic's category is read_restricted" do
         sign_in(user)
         category.set_permissions({})
@@ -3886,12 +3947,19 @@ describe UsersController do
         expect(response.status).to eq(403)
       end
 
-      it 'sets the user_profiles featured_topic correctly' do
+      it 'sets featured_topic correctly for user created topic' do
         sign_in(user)
         topic.update(user_id: user.id)
         put "/u/#{user.username}/feature-topic.json", params: { topic_id: topic.id }
         expect(response.status).to eq(200)
         expect(user.user_profile.featured_topic).to eq topic
+      end
+
+      it 'sets featured_topic correctly for non-user-created topic' do
+        sign_in(user)
+        put "/u/#{user.username}/feature-topic.json", params: { topic_id: other_topic.id }
+        expect(response.status).to eq(200)
+        expect(user.user_profile.featured_topic).to eq other_topic
       end
 
       describe "site setting disabled" do

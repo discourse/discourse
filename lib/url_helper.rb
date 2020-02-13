@@ -57,14 +57,18 @@ class UrlHelper
   end
 
   def self.secure_proxy_without_cdn(url)
-    url = url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
-    self.absolute(url, nil)
+    self.absolute(Upload.secure_media_url_from_upload_url(url), nil)
   end
 
   # Prevents double URL encode
   # https://stackoverflow.com/a/37599235
   def self.escape_uri(uri)
+    return uri if s3_presigned_url?(uri)
     UrlHelper.encode_component(CGI.unescapeHTML(UrlHelper.unencode(uri)))
+  end
+
+  def self.s3_presigned_url?(url)
+    url[/x-amz-(algorithm|credential)/i].present?
   end
 
   def self.cook_url(url, secure: false)

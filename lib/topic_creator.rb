@@ -35,8 +35,9 @@ class TopicCreator
   def create
     topic = Topic.new(setup_topic_params)
     setup_tags(topic)
+
     if fields = @opts[:custom_fields]
-      topic.custom_fields = fields
+      topic.custom_fields.merge!(fields)
     end
 
     DiscourseEvent.trigger(:before_create_topic, topic, self)
@@ -171,8 +172,6 @@ class TopicCreator
     topic.subtype = TopicSubtype.user_to_user unless topic.subtype
 
     unless @opts[:target_usernames].present? || @opts[:target_emails].present? || @opts[:target_group_names].present?
-      Rails.logger.warn("Topic PM cannot be created without recipients! opts: #{@opts.inspect}")
-
       rollback_with!(topic, :no_user_selected)
     end
 

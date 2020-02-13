@@ -8,7 +8,7 @@ module Jobs
     sidekiq_options retry: false
 
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
-      user_archive: ['topic_title', 'category', 'sub_category', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
+      user_archive: ['topic_title', 'categories', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
       user_list: ['id', 'name', 'username', 'email', 'title', 'created_at', 'last_seen_at', 'last_posted_at', 'last_emailed_at', 'trust_level', 'approved', 'suspended_at', 'suspended_till', 'silenced_till', 'active', 'admin', 'moderator', 'ip_address', 'staged', 'secondary_emails'],
       user_stats: ['topics_entered', 'posts_read_count', 'time_read', 'topic_count', 'post_count', 'likes_given', 'likes_received'],
       user_profile: ['location', 'website', 'views'],
@@ -308,25 +308,22 @@ module Jobs
       user_archive = user_archive.as_json
       topic_data = Topic.with_deleted.find_by(id: user_archive['topic_id']) if topic_data.nil?
       return user_archive_array if topic_data.nil?
-      category = topic_data.category
-      sub_category_name = "-"
-      if category
-        category_name = category.name
-        if category.parent_category_id.present?
-          # sub category
-          if parent_category = Category.find_by(id: category.parent_category_id)
-            category_name = parent_category.name
-            sub_category_name = category.name
-          end
+
+      all_categories = Category.all.to_h { |category| [category.id, category] }
+
+      categories = "-"
+      if topic_data.category_id && category = all_categories[topic_data.category_id]
+        categories = [category.name]
+        while category.parent_category_id && category = all_categories[category.parent_category_id]
+          categories << category.name
         end
-      else
-        # PM
-        category_name = "-"
+        categories = categories.reverse.join("|")
       end
+
       is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
       url = "#{Discourse.base_url}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
 
-      topic_hash = { "post" => user_archive['raw'], "topic_title" => topic_data.title, "category" => category_name, "sub_category" => sub_category_name, "is_pm" => is_pm, "url" => url }
+      topic_hash = { "post" => user_archive['raw'], "topic_title" => topic_data.title, "categories" => categories, "is_pm" => is_pm, "url" => url }
       user_archive.merge!(topic_hash)
 
       HEADER_ATTRS_FOR['user_archive'].each do |attr|

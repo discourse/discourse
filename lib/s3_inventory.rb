@@ -63,7 +63,7 @@ class S3Inventory
 
             list_missing_post_uploads if type == "original"
 
-            uploads = (model == Upload) ? model.by_users.where("created_at < ?", inventory_date) : model
+            uploads = (model == Upload) ? model.by_users.where("updated_at < ?", inventory_date) : model
             missing_uploads = uploads
               .joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag")
               .where("#{table_name}.etag IS NULL AND #{model.table_name}.etag IS NOT NULL")

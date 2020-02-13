@@ -47,10 +47,12 @@ class UsersController < ApplicationController
                                                             :admin_login,
                                                             :confirm_admin]
 
+  after_action :add_noindex_header, only: [:show]
+
   def index
   end
 
-  def show
+  def show(for_card: false)
     return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
 
     @user = fetch_user_from_params(
@@ -59,7 +61,8 @@ class UsersController < ApplicationController
 
     user_serializer = nil
     if guardian.can_see_profile?(@user)
-      user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
+      serializer_class = for_card ? UserCardSerializer : UserSerializer
+      user_serializer = serializer_class.new(@user, scope: guardian, root: 'user')
 
       topic_id = params[:include_post_count_for].to_i
       if topic_id != 0
@@ -72,8 +75,6 @@ class UsersController < ApplicationController
     if !params[:skip_track_visit] && (@user != current_user)
       track_visit_to_user_profile
     end
-
-    response.headers['X-Robots-Tag'] = 'noindex'
 
     # This is a hack to get around a Rails issue where values with periods aren't handled correctly
     # when used as part of a route.
@@ -92,6 +93,10 @@ class UsersController < ApplicationController
         render_json_dump(user_serializer)
       end
     end
+  end
+
+  def show_card
+    show(for_card: true)
   end
 
   def badges
@@ -295,8 +300,10 @@ class UsersController < ApplicationController
   end
 
   def is_local_username
-    usernames = params[:usernames]
-    usernames = [params[:username]] if usernames.blank?
+    usernames = params[:usernames] if params[:usernames].present?
+    usernames = [params[:username]] if params[:username].present?
+
+    raise Discourse::InvalidParameters.new(:usernames) if !usernames.kind_of?(Array)
 
     groups = Group.where(name: usernames).pluck(:name)
     mentionable_groups =
@@ -894,22 +901,21 @@ class UsersController < ApplicationController
 
     groups =
       if current_user
-        if params[:include_mentionable_groups] == 'true'
+        if params[:include_groups] == 'true'
+          Group.visible_groups(current_user)
+        elsif params[:include_mentionable_groups] == 'true'
           Group.mentionable(current_user)
         elsif params[:include_messageable_groups] == 'true'
           Group.messageable(current_user)
         end
       end
 
-    include_groups = params[:include_groups] == "true"
-
     # blank term is only handy for in-topic search of users after @
     # we do not want group results ever if term is blank
-    include_groups = groups = nil if term.blank?
+    groups = nil if term.blank?
 
-    if include_groups || groups
+    if groups
       groups = Group.search_groups(term, groups: groups)
-      groups = groups.where(visibility_level: Group.visibility_levels[:public]) if include_groups
       groups = groups.order('groups.name asc')
 
       to_render[:groups] = groups.map do |m|

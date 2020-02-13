@@ -1,5 +1,6 @@
 import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
+import EmberObject from "@ember/object";
 
 moduleForComponent("badge-title", { integration: true });
 
@@ -10,10 +11,10 @@ componentTest("badge title", {
   beforeEach() {
     this.set("subject", selectKit());
     this.set("selectableUserBadges", [
-      Ember.Object.create({
+      EmberObject.create({
         badge: { name: "(none)" }
       }),
-      Ember.Object.create({
+      EmberObject.create({
         id: 42,
         badge_id: 102,
         badge: { name: "Test" }

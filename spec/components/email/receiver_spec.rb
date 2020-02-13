@@ -230,22 +230,6 @@ describe Email::Receiver do
 
       expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
     end
-
-    it "automatically deactive users once they reach the 'bounce_score_threshold_deactivate' threshold" do
-      expect(user.active).to eq(true)
-
-      user.user_stat.bounce_score = SiteSetting.bounce_score_threshold_deactivate - 1
-      user.user_stat.save!
-
-      expect { process(:soft_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
-
-      user.reload
-      email_log.reload
-
-      expect(email_log.bounced).to eq(true)
-      expect(user.active).to eq(false)
-    end
-
   end
 
   context "reply" do
@@ -613,6 +597,14 @@ describe Email::Receiver do
       MD
     end
 
+    it "works with removed attachments" do
+      SiteSetting.authorized_extensions = "jpg"
+
+      expect { process(:removed_attachments) }.to change { topic.posts.count }
+      post = topic.posts.last
+      expect(post.uploads).to be_empty
+    end
+
     it "supports eml attachments" do
       SiteSetting.authorized_extensions = "eml"
       expect { process(:attached_eml_file) }.to change { topic.posts.count }
@@ -896,6 +888,18 @@ describe Email::Receiver do
         expect { process(:forwarded_email_3) }.to change(Topic, :count)
       end
 
+      it "adds a small action post to explain who forwarded the email when the sender didn't write anything" do
+        expect { process(:forwarded_email_4) }.to change(Topic, :count)
+
+        forwarded_post, last_post = *Post.last(2)
+
+        expect(forwarded_post.user.email).to eq("some@one.com")
+        expect(forwarded_post.raw).to match(/XoXo/)
+
+        expect(last_post.user.email).to eq("ba@bar.com")
+        expect(last_post.post_type).to eq(Post.types[:small_action])
+        expect(last_post.action_code).to eq("forwarded")
+      end
     end
 
     context "with forwarded emails behaviour set to quote" do

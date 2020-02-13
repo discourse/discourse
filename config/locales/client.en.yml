@@ -184,6 +184,7 @@ en:
       banner:
         enabled: "made this a banner %{when}. It will appear at the top of every page until it is dismissed by the user."
         disabled: "removed this banner %{when}. It will no longer appear at the top of every page."
+      forwarded: "forwarded the above email"
 
     topic_admin_menu: "topic actions"
 
@@ -443,6 +444,8 @@ en:
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
       user:
+        bio: "Bio"
+        website: "Website"
         username: "Username"
         email: "Email"
         name: "Name"
@@ -647,7 +650,7 @@ en:
       request: "Request"
       message: "Message"
       confirm_leave: "Are you sure you want to leave this group?"
-      allow_membership_requests: "Allow users to send membership requests to group owners"
+      allow_membership_requests: "Allow users to send membership requests to group owners (Requires publicly visible group)"
       membership_request_template: "Custom template to display to users when sending a membership request"
       membership_request:
         submit: "Submit Request"
@@ -1456,8 +1459,8 @@ en:
       reset: "Reset Password"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
-      complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
-      complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
+      complete_username_found: "We found an account that matches the username <b>%{username}</b>. You should receive an email with instructions on how to reset your password shortly."
+      complete_email_found: "We found an account that matches <b>%{email}</b>. You should receive an email with instructions on how to reset your password shortly."
 
       complete_username_not_found: "No account matches the username <b>%{username}</b>"
       complete_email_not_found: "No account matches <b>%{email}</b>"
@@ -1602,6 +1605,7 @@ en:
       min_content_not_reached:
         one: "Select at least {{count}} item."
         other: "Select at least {{count}} items."
+      invalid_selection_length: "Selection must be at least {{count}} characters."
 
     date_time_picker:
       from: From
@@ -1700,7 +1704,7 @@ en:
       view_new_post: "View your new post."
       saving: "Saving"
       saved: "Saved!"
-      saved_draft: "Post draft in progress. Select to resume."
+      saved_draft: "Post draft in progress. Tap to resume."
       uploading: "Uploading..."
       show_preview: "show preview &raquo;"
       hide_preview: "&laquo; hide preview"
@@ -1753,6 +1757,7 @@ en:
         reply_as_new_topic:
           label: Reply as linked topic
           desc: Create a new topic linked to this topic
+          confirm: You have a new topic draft saved, which will be overwritten if you create a linked topic.
         reply_as_private_message:
           label: New message
           desc: Create a new personal message
@@ -2644,6 +2649,10 @@ en:
         name: "Name"
         name_placeholder: "Name the bookmark to help jog your memory"
         set_reminder: "Set a reminder"
+        actions:
+          delete_bookmark:
+            name: "Delete bookmark"
+            description: "Removes the bookmark from your profile and stops all reminders for the bookmark"
 
     category:
       can: "can&hellip; "
@@ -3076,16 +3085,6 @@ en:
         posting:
           name: Posting
 
-    google_search: |
-      <h3>Search with Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
-
     tagging:
       all_tags: "All Tags"
       other_tags: "Other Tags"
@@ -3096,6 +3095,7 @@ en:
       choose_for_topic: "optional tags"
       info: "Info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
+      category_restricted: "This tag is restricted to categories you don't have permission to access."
       synonyms: "Synonyms"
       synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
       tag_groups_info:
@@ -3107,6 +3107,9 @@ en:
       edit_synonyms: "Manage Synonyms"
       add_synonyms_label: "Add synonyms:"
       add_synonyms: "Add"
+      add_synonyms_explanation:
+        one: "Any place that currently uses this tag will be changed to use <b>%{tag_name}</b> instead. Are you sure you want to make this change?"
+        other: "Any place that currently uses these tags will be changed to use <b>%{tag_name}</b> instead. Are you sure you want to make this change?"
       add_synonyms_failed: "The following tags couldn't be added as synonyms: <b>%{tag_names}</b>. Ensure they don't have synonyms and aren't synonyms of another tag."
       remove_synonym: "Remove Synonym"
       delete_synonym_confirm: 'Are you sure you want to delete the synonym "%{tag_name}"?'
@@ -4502,6 +4505,7 @@ en:
           upload_csv: Upload a CSV with user emails
           aborted: Please upload a CSV containing user emails
           success: Your CSV was received and users will receive their badge shortly.
+          replace_owners: Remove the badge from previous owners
 
       emoji:
         title: "Emoji"

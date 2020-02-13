@@ -49,7 +49,6 @@ vi:
         title: Tạo thăm dò
         insert: Chèn thăm dò
         help:
-          options_count: Nhập vào ít nhất 2 lựa chọn
           invalid_values: Giá trị nhỏ nhất phải nhỏ hơn giá trị lớn nhất.
           min_step_value: Khoảng cách tối thiểu là 1
         poll_type:

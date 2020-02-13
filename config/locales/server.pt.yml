@@ -229,7 +229,7 @@ pt:
   user_is_suspended: "Utilizadores suspensos não têm permissão para publicar."
   topic_not_found: "Algo de errado ocorreu. Talvez este tópico tenha sido fechado ou eliminado enquanto olhava para ele?"
   not_accepting_pms: "Desculpe, de momento, %{username} não está a aceitar mensagens."
-  max_pm_recepients: "Desculpe, pode enviar uma mensagem para um máximo de %{recipients_limit}destinatários."
+  max_pm_recipients: "Desculpe, pode enviar uma mensagem para um máximo de %{recipients_limit}destinatários."
   just_posted_that: "é demasiado semelhante ao que publicaste recentemente"
   invalid_characters: "contem caracteres inválidos"
   is_invalid: "parece pouco claro, é uma frase completa?"
@@ -651,6 +651,8 @@ pt:
       xaxis: "Dia"
     new_contributors:
       xaxis: "Dia"
+    trust_level_growth:
+      yaxis: "Dia"
     consolidated_page_views:
       yaxis: "Dia"
       labels:
@@ -971,7 +973,6 @@ pt:
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um utilizador pode enviar por dia."
     alert_admins_if_errors_per_minute: "Número de erros por minuto necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
     alert_admins_if_errors_per_hour: "Número de erros por hora necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
-    categories_topics: "Número de tópicos a serem mostrados na página /categories ."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
     limit_suggested_to_category: "Apenas mostrar tópicos da categoria atual nos tópicos sugeridos."
     suggested_topics_max_days_old: "Tópicos sugeridos não devem ter mais de n dias de idade."
@@ -1088,7 +1089,6 @@ pt:
     soft_bounce_score: "Pontuação de redirecionamento adicionada ao utilizador quando um redirecionamento temporário acontece."
     hard_bounce_score: "Pontuação de redirecionamento adicionada ao utilizador quando um redirecionamento permanente acontece."
     bounce_score_threshold: "Pontuação de redirecionamento máxima a partir da qual paramos de mandar email um utilizador."
-    bounce_score_threshold_deactivate: "Pontuação de redirecionamento máxima a partir da qual desactivamos um utilizador."
     reset_bounce_score_after_days: "Automaticamente repor pontuação de redirecionamento após X dias."
     attachment_content_type_blacklist: "Lista de termos-chave usados para bloquear anexos com base no tipo de conteúdo."
     attachment_filename_blacklist: "Lista de termos-chave usados para bloquear anexos com base no nome do ficheiro."

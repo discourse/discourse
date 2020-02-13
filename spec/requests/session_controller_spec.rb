@@ -1006,7 +1006,7 @@ RSpec.describe SessionController do
       it "it fails to log in if secret is wrong" do
         get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForRandomSite"))
 
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(422)
       end
 
       it "fails with a nice error message if secret is blank" do
@@ -1104,6 +1104,32 @@ RSpec.describe SessionController do
         expect(sso2.avatar_url).to start_with("#{SiteSetting.s3_cdn_url}/original")
         expect(sso2.profile_background_url).to start_with(SiteSetting.s3_cdn_url)
         expect(sso2.card_background_url).to start_with(SiteSetting.s3_cdn_url)
+      end
+
+      it "successfully logs out and redirects user to return_sso_url when the user is logged in" do
+        sign_in(@user)
+
+        @sso.logout = true
+        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+
+        location = response.header["Location"]
+        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso$/)
+
+        expect(response.status).to eq(302)
+        expect(session[:current_user_id]).to be_blank
+        expect(response.cookies["_t"]).to be_blank
+      end
+
+      it "successfully logs out and redirects user to return_sso_url when the user is not logged in" do
+        @sso.logout = true
+        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+
+        location = response.header["Location"]
+        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso$/)
+
+        expect(response.status).to eq(302)
+        expect(session[:current_user_id]).to be_blank
+        expect(response.cookies["_t"]).to be_blank
       end
     end
   end

@@ -9,54 +9,48 @@ acceptance("Poll Builder - polls are enabled", {
     poll_enabled: true,
     poll_minimum_trust_level_to_create: 1
   },
-  beforeEach: function() {
+  beforeEach() {
     clearPopupMenuOptionsCallback();
   }
 });
 
-test("regular user - sufficient trust level", assert => {
+test("regular user - sufficient trust level", async assert => {
   updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
-  displayPollBuilderButton();
+  await displayPollBuilderButton();
 
-  andThen(() => {
-    assert.ok(
-      exists(".select-kit-row[title='Build Poll']"),
-      "it shows the builder button"
-    );
-  });
+  assert.ok(
+    exists(".select-kit-row[title='Build Poll']"),
+    "it shows the builder button"
+  );
 });
 
-test("regular user - insufficient trust level", assert => {
+test("regular user - insufficient trust level", async assert => {
   updateCurrentUser({ moderator: false, admin: false, trust_level: 0 });
 
-  displayPollBuilderButton();
+  await displayPollBuilderButton();
 
-  andThen(() => {
-    assert.ok(
-      !exists(".select-kit-row[title='Build Poll']"),
-      "it hides the builder button"
-    );
-  });
+  assert.ok(
+    !exists(".select-kit-row[title='Build Poll']"),
+    "it hides the builder button"
+  );
 });
 
-test("staff - with insufficient trust level", assert => {
+test("staff - with insufficient trust level", async assert => {
   updateCurrentUser({ moderator: true, trust_level: 0 });
 
-  displayPollBuilderButton();
+  await displayPollBuilderButton();
 
-  andThen(() => {
-    assert.ok(
-      exists(".select-kit-row[title='Build Poll']"),
-      "it shows the builder button"
-    );
-  });
+  assert.ok(
+    exists(".select-kit-row[title='Build Poll']"),
+    "it shows the builder button"
+  );
 });
 
 test("poll preview", async assert => {
-  displayPollBuilderButton();
+  await displayPollBuilderButton();
+
   const popupMenu = selectKit(".toolbar-popup-menu-options");
-  await popupMenu.expand();
   await popupMenu.selectRowByValue("showPollBuilder");
 
   await fillIn(".poll-textarea textarea", "First option\nSecond option");

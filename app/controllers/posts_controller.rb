@@ -514,7 +514,8 @@ class PostsController < ApplicationController
     existing_bookmark = Bookmark.find_by(post_id: params[:post_id], user_id: current_user.id)
     existing_bookmark.destroy if existing_bookmark.present?
 
-    render json: success_json
+    topic_bookmarked = Bookmark.exists?(topic_id: existing_bookmark.topic_id, user_id: current_user.id)
+    render json: success_json.merge(topic_bookmarked: topic_bookmarked)
   end
 
   def wiki
@@ -775,10 +776,6 @@ class PostsController < ApplicationController
       result[:target_usernames] = recipients.join(",")
       result[:target_emails] = emails.join(",")
       result[:target_group_names] = groups.join(",")
-    end
-
-    if (recipients.blank? || result[:target_usernames].blank?) && params[:archetype] == Archetype.private_message
-      Rails.logger.warn("Missing recipients for PM! result: #{result.inspect} | params: #{params.inspect}")
     end
 
     result.permit!

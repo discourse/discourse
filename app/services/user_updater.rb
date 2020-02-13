@@ -90,6 +90,7 @@ class UserUpdater
 
       user.primary_group_id = attributes[:primary_group_id]
     elsif SiteSetting.user_selected_primary_groups &&
+      attributes[:primary_group_id] &&
       attributes[:primary_group_id].blank?
 
       user.primary_group_id = nil

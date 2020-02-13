@@ -135,8 +135,7 @@ basic:
     default: false
   categories_topics:
     default: 20
-    min: 5
-    max: 2000
+    validator: "CategoriesTopicsValidator"
   suggested_topics:
     client: true
     default: 5
@@ -856,6 +855,8 @@ posting:
   approve_new_topics_unless_trust_level:
     default: 0
     enum: "TrustLevelSetting"
+  approve_suspect_users:
+    default: false
   approve_unless_staged:
     default: false
   notify_about_queued_posts_after:
@@ -1030,7 +1031,6 @@ email:
     client: true
     default: 4
     min: 1
-  bounce_score_threshold_deactivate: 30
   bounce_score_erode_on_send:
     default: 0.1
     hidden: true
@@ -1413,6 +1413,7 @@ security:
     max: 2000
   allow_embedding_site_in_an_iframe:
     default: false
+    hidden: true
 
 onebox:
   enable_flash_video_onebox: false
@@ -1435,7 +1436,9 @@ onebox:
     list_type: compact
   enable_inline_onebox_on_all_domains:
     default: false
-
+  force_custom_user_agent_hosts:
+    default: "http://codepen.io"
+    type: list
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
@@ -1974,6 +1977,11 @@ uncategorized:
 
   overridden_robots_txt:
     default: ""
+    hidden: true
+
+  enable_new_user_card_route:
+    default: false
+    client: true
     hidden: true
 
 user_preferences:

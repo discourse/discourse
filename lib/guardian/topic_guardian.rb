@@ -113,7 +113,7 @@ module TopicGuardian
   # Recovery Method
   def can_recover_topic?(topic)
     if is_staff?
-      !!(topic && topic.deleted_at && topic.user)
+      !!(topic && topic.deleted_at)
     else
       topic && can_recover_post?(topic.ordered_posts.first)
     end
@@ -154,7 +154,7 @@ module TopicGuardian
 
     category = topic.category
     can_see_category?(category) &&
-      (!category.read_restricted || !is_staged? || topic.user == user)
+      (!category.read_restricted || !is_staged? || secure_category_ids.include?(category.id) || topic.user == user)
   end
 
   def can_get_access_to_topic?(topic)

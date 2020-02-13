@@ -16,8 +16,6 @@ ur:
     invalid_argument: "آرگیومنٹ کیلئے '%{argument}' غلط وَیلِیو '%{value}'۔"
     multiple_polls_without_name: "نام کے بغیر ایک سے زیادہ پولزموجود ہیں۔ اپنے پولز کو منفرد شناخت دینے کیلیے '<code>نام</code>' صفت کا استعمال کریں۔"
     multiple_polls_with_same_name: "ایک ہی نام والے ایک سے زیادہ پولزموجود ہیں: <strong>%{نام}</strong>۔ اپنے پولز کو منفرد شناخت دینے کیلیے '<code>نام</code>' صفت کا استعمال کریں۔"
-    default_poll_must_have_at_least_2_options: "پول کی کم ازکم 2 آپشنز ہونا ضروری ہے۔"
-    named_poll_must_have_at_least_2_options: "پول جس کا نام <strong>%{نام}</strong> ہے، کی کم ازکم 2 آپشنز ہونا ضروری ہے۔"
     default_poll_must_have_less_options:
       one: "پول کی %{count} سے کم آپشن ہونا ضروری ہے۔"
       other: "پول کی %{گنتی} سے کم آپشنز ہونا ضروری ہے۔"

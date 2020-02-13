@@ -1,16 +1,15 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import Category from "discourse/models/category";
+import { computed } from "@ember/object";
 
 export default Component.extend({
-  @discourseComputed("value")
-  selectedCategories: {
-    get(value) {
-      return Category.findByIds(value.split("|"));
-    },
-    set(value) {
-      this.set("value", value.mapBy("id").join("|"));
-      return value;
+  selectedCategories: computed("value", function() {
+    return Category.findByIds(this.value.split("|").filter(Boolean));
+  }),
+
+  actions: {
+    onChangeSelectedCategories(value) {
+      this.set("value", (value || []).mapBy("id").join("|"));
     }
   }
 });

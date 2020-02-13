@@ -33,7 +33,7 @@ export default Mixin.create({
   },
 
   _updateAt(selection) {
-    let details = timeframeDetails(selection);
+    const details = timeframeDetails(selection);
 
     if (details) {
       return {
