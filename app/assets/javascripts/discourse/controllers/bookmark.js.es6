@@ -48,6 +48,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   usingMobileDevice: reads("site.mobileView"),
+  showBookmarkReminderControls: false,
 
   @discourseComputed()
   reminderTypes: () => {

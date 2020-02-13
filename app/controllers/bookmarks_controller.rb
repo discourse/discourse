@@ -13,7 +13,7 @@ class BookmarksController < ApplicationController
 
     bookmark = Bookmark.create(
       user_id: current_user.id,
-      topic_id: params[:topic_id],
+      topic_id: Post.select(:topic_id).find(params[:post_id]).topic_id,
       post_id: params[:post_id],
       name: params[:name],
       reminder_type: Bookmark.reminder_types[params[:reminder_type].to_sym],
@@ -22,5 +22,17 @@ class BookmarksController < ApplicationController
 
     return render json: success_json if bookmark.save
     render json: failed_json.merge(errors: bookmark.errors.full_messages), status: 400
+  end
+
+  def destroy
+    params.require(:id)
+
+    bookmark = Bookmark.find_by(id: params[:id])
+    raise Discourse::NotFound if bookmark.blank?
+
+    raise Discourse::InvalidAccess.new if !guardian.can_delete?(bookmark)
+
+    bookmark.destroy
+    render json: success_json
   end
 end
