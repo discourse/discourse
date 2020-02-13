@@ -891,7 +891,7 @@ export default Component.extend({
       }
     }
 
-    if (handled || canUpload) {
+    if (handled || (canUpload && !plainText)) {
       e.preventDefault();
     }
   },

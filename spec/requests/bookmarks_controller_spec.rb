@@ -5,6 +5,7 @@ require 'rails_helper'
 describe BookmarksController do
   let(:current_user) { Fabricate(:user) }
   let(:bookmark_post) { Fabricate(:post) }
+  let(:bookmark_user) { current_user }
 
   before do
     sign_in(current_user)
@@ -13,7 +14,7 @@ describe BookmarksController do
   describe "#create" do
     context "if the user already has bookmarked the post" do
       before do
-        Fabricate(:bookmark, post: bookmark_post, user: current_user)
+        Fabricate(:bookmark, post: bookmark_post, user: bookmark_user)
       end
 
       it "returns failed JSON with a 422 error" do
@@ -40,6 +41,40 @@ describe BookmarksController do
         expect(response.status).to eq(400)
         expect(JSON.parse(response.body)['errors'].first).to include(
           I18n.t("bookmarks.errors.time_must_be_provided", reminder_type: I18n.t("bookmarks.reminders.at_desktop"))
+        )
+      end
+    end
+  end
+
+  describe "#destroy" do
+    let!(:bookmark) { Fabricate(:bookmark, post: bookmark_post, user: bookmark_user) }
+
+    it "destroys the bookmark" do
+      delete "/bookmarks/#{bookmark.id}.json"
+      expect(Bookmark.find_by(id: bookmark.id)).to eq(nil)
+    end
+
+    context "if the bookmark has already been destroyed" do
+      it "returns failed JSON with a 403 error" do
+        bookmark.destroy!
+        delete "/bookmarks/#{bookmark.id}.json"
+
+        expect(response.status).to eq(404)
+        expect(JSON.parse(response.body)['errors'].first).to include(
+          I18n.t("not_found")
+        )
+      end
+    end
+
+    context "if the bookmark does not belong to the user" do
+      let(:bookmark_user) { Fabricate(:user) }
+
+      it "returns failed JSON with a 403 error" do
+        delete "/bookmarks/#{bookmark.id}.json"
+
+        expect(response.status).to eq(403)
+        expect(JSON.parse(response.body)['errors'].first).to include(
+          I18n.t("invalid_access")
         )
       end
     end

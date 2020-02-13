@@ -599,7 +599,7 @@ Discourse::Application.routes.draw do
     end
   end
 
-  resources :bookmarks, only: %i[create]
+  resources :bookmarks, only: %i[create destroy]
 
   resources :notifications, except: :show do
     collection do

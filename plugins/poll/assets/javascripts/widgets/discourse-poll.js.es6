@@ -644,7 +644,7 @@ function pieChartConfig(data, labels, opts = {}) {
     options: {
       responsive: true,
       aspectRatio,
-      animation: { duration: 400 },
+      animation: { duration: 0 },
       legend: { display: false },
       legendCallback: function(chart) {
         let legends = "";
