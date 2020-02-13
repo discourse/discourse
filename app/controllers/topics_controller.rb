@@ -486,11 +486,15 @@ class TopicsController < ApplicationController
   def remove_bookmarks
     topic = Topic.find(params[:topic_id].to_i)
 
-    PostAction.joins(:post)
-      .where(user_id: current_user.id)
-      .where('topic_id = ?', topic.id).each do |pa|
+    if SiteSetting.enable_bookmarks_with_reminders?
+      Bookmark.where(user_id: current_user.id, topic_id: topic.id).destroy_all
+    else
+      PostAction.joins(:post)
+        .where(user_id: current_user.id)
+        .where('topic_id = ?', topic.id).each do |pa|
 
-      PostActionDestroyer.destroy(current_user, pa.post, :bookmark)
+        PostActionDestroyer.destroy(current_user, pa.post, :bookmark)
+      end
     end
 
     render body: nil
@@ -543,8 +547,15 @@ class TopicsController < ApplicationController
     topic = Topic.find(params[:topic_id].to_i)
     first_post = topic.ordered_posts.first
 
-    result = PostActionCreator.create(current_user, first_post, :bookmark)
-    return render_json_error(result) if result.failed?
+    if SiteSetting.enable_bookmarks_with_reminders?
+      if Bookmark.exists?(user: current_user, post: first_post)
+        return render_json_error(I18n.t("bookmark.topic_already_bookmarked"), status: 403)
+      end
+      Bookmark.create(user: current_user, post: first_post, topic: topic)
+    else
+      result = PostActionCreator.create(current_user, first_post, :bookmark)
+      return render_json_error(result) if result.failed?
+    end
 
     render body: nil
   end

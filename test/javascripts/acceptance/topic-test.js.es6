@@ -333,3 +333,17 @@ QUnit.test("Quoting a quote keeps the original poster name", async assert => {
       .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
   );
 });
+
+acceptance("Topic + Post Bookmarks with Reminders", {
+  loggedIn: true,
+  settings: {
+    enable_bookmarks_with_reminders: true
+  }
+});
+
+QUnit.test("Bookmarks Modal", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click(".topic-post:first-child button.show-more-actions");
+  await click(".topic-post:first-child button.bookmark");
+  assert.ok(exists("#bookmark-reminder-modal"), "it shows the bookmark modal");
+});
