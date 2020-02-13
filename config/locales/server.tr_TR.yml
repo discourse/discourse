@@ -3094,11 +3094,11 @@ tr_TR:
     signup:
       title: "Kaydol"
       subject_template: "[%{email_prefix}] Yeni hesabınızı onaylayın"
-      text_body_template: "%{site_name}&#39;a hoş geldiniz! \n\nYeni hesabınızı onaylamak ve etkinleştirmek için aşağıdaki bağlantıyı tıklayın: \n%{base_url}/u/enable-account/%{email_token} \n\nYukarıdaki bağlantı tıklanabilir değilse, kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin.\n"
+      text_body_template: "%{site_name}&#39;a hoş geldiniz! \n\nYeni hesabınızı onaylamak ve etkinleştirmek için aşağıdaki bağlantıyı tıklayın: \n%{base_url}/u/activate-account/%{email_token} \n\nYukarıdaki bağlantı tıklanabilir değilse, kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin.\n"
     activation_reminder:
       title: "Aktivasyon Hatırlatıcısı"
       subject_template: "[%{email_prefix}] Hesabınızı onaylamanız için hatırlatma"
-      text_body_template: "%{site_name}&#39;a hoş geldiniz! \n\nHesabınızı etkinleştirmeniz kolay bir hatırlatmadır. \n\nYeni hesabınızı onaylamak ve etkinleştirmek için aşağıdaki bağlantıyı tıklayın: \n%{base_url}/u/enable-account/%{email_token} \n\nYukarıdaki bağlantı tıklanabilir değilse, kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin.\n"
+      text_body_template: "%{site_name}&#39;a hoş geldiniz! \n\nHesabınızı etkinleştirmeniz kolay bir hatırlatmadır. \n\nYeni hesabınızı onaylamak ve etkinleştirmek için aşağıdaki bağlantıyı tıklayın: \n%{base_url}/u/activate-account/%{email_token} \n\nYukarıdaki bağlantı tıklanabilir değilse, kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin.\n"
     suspicious_login:
       title: "Yeni Giriş Uyarısı"
       subject_template: "[%{site_name}] %{location}'dan Yeni Giriş"
