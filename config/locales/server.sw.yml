@@ -158,7 +158,7 @@ sw:
   user_is_suspended: "Watumiaji waliosimamishwa hawaruhusiwi kuchapisha."
   topic_not_found: "Kuna tatizo limetokea. Labda hii mada ilifungwa au kufutwa ukiwa unaangalia?"
   not_accepting_pms: "Samahani, %{username}haikubali jumbe kwa sasa"
-  max_pm_recepients: "Samahani, unaweza tuma jumbe kwa kiwango cha %{recipients_limit}kwa wapokeaji"
+  max_pm_recipients: "Samahani, unaweza tuma jumbe kwa kiwango cha %{recipients_limit}kwa wapokeaji"
   just_posted_that: "inalingana na chapisho ulilotuma hivi karibuni"
   invalid_characters: "ina herufi batili"
   is_invalid: "haieleweki, je hii sentensi iko kamili?"
@@ -566,6 +566,8 @@ sw:
       title: "Wachangiaji Wapya"
       xaxis: "Siku"
       yaxis: "Idadi ya wachangiaji wapya"
+    trust_level_growth:
+      yaxis: "Siku"
     consolidated_page_views:
       yaxis: "Siku"
       labels:
@@ -837,7 +839,6 @@ sw:
     max_logins_per_ip_per_minute: "Kiwango cha juu cha uingiaji mtumiaji anaruhusiwa kuendana na anwani yake ya mtandao kila dakika"
     alert_admins_if_errors_per_minute: "Idadi ya hitilafu kila dakika itakayomfanya kiongozi apate taarifa. Namba ya 0 inasitisha kipengele hichi. NOTI: inahitaji uanzishaji upya."
     alert_admins_if_errors_per_hour: "Idadi ya hitilafu kila saa itakayomfanya kiongozi apate taarifa. Namba ya 0 inasitisha kipengele hichi. NOTI: inahitaji uanzishaji upya."
-    categories_topics: "Idadi ya mada kuonyeshwa ndani ya ukurasa wa /kategoria."
     suggested_topics: "Idadi ya mada zilizo chini ya mada watumiaji wanazo shauriwa kutembelea. "
     limit_suggested_to_category: "Onyesha mada pekee kutoka kwenye kategoria za hivi karibuni ndani ya mada wanazo shauriwa kutembelea."
     suggested_topics_max_days_old: "Mada wanazo shauriwa kutembelea ziwe na umri wa siku n."

@@ -18,6 +18,8 @@ sv:
       public:
         title: "Röster är <strong>offentliga</strong>."
       results:
+        groups:
+          title: "Du måste vara medlem i %{groups} för att rösta i denna omröstning."
         vote:
           title: "Resultat kommer att visas vid <strong>röstning</strong>."
         closed:
@@ -73,7 +75,7 @@ sv:
         title: Skapa omröstning
         insert: Lägg till omröstning
         help:
-          options_count: Ange minst 2 alternativ
+          options_count: Ange minst 1 alternativ
           invalid_values: Minimivärde måste vara mindre än det maximala värdet.
           min_step_value: Minsta stegintervall är 1
         poll_type:
@@ -87,6 +89,8 @@ sv:
           vote: Vid röstning
           closed: När stängd
           staff: Endast personal
+        poll_groups:
+          label: Tillåtna grupper
         poll_chart_type:
           label: Diagramtyp
         poll_config:

@@ -298,6 +298,8 @@ gl:
       xaxis: "Día"
     new_contributors:
       xaxis: "Día"
+    trust_level_growth:
+      yaxis: "Día"
     consolidated_page_views:
       yaxis: "Día"
       labels:

@@ -18,8 +18,6 @@ pt_BR:
     invalid_argument: "Valor inválido '%{value}' para o argumento '%{argument}'."
     multiple_polls_without_name: "Existem várias votações sem um nome. Use o atributo '<code>name</code>' para identificar de forma exclusiva as suas votações."
     multiple_polls_with_same_name: "Existem várias enquetes com o mesmo nome: <strong>%{name}</strong>. Use o atributo '<code>name</code>' para identificar de forma exclusiva as suas votações."
-    default_poll_must_have_at_least_2_options: "A votação precisa ter no mínimo 2 opções."
-    named_poll_must_have_at_least_2_options: "A votação de nome <strong>%{name}</strong> precisa ter pelo menos 2 opções."
     default_poll_must_have_less_options:
       one: "A votação precisa ter menos de %{count} opção."
       other: "A votação precisa ter menos de %{count} opções."

@@ -357,6 +357,7 @@ zh_CN:
       deleted_post: "(帖子已删除)"
       deleted_user: "(用户已删除)"
       user:
+        bio: "简介"
         username: "用户名"
         email: "邮箱"
         name: "名称"
@@ -541,7 +542,6 @@ zh_CN:
       request: "请求"
       message: "私信"
       confirm_leave: "你确定你要离开这个团队吗？"
-      allow_membership_requests: "允许用户向群组拥有者发送成员请求"
       membership_request_template: "用户发送会员请求时向其显示的自定义模板"
       membership_request:
         submit: "提交成员申请"
@@ -1280,8 +1280,6 @@ zh_CN:
       reset: "重置密码"
       complete_username: "如果你的账户名 <b>%{username}</b> 存在，你将马上收到一封电子邮件，以重置密码。"
       complete_email: "如果你的账户 <b>%{email}</b> 存在，你将马上收到一封电子邮件，以重置密码。"
-      complete_username_found: "你的账户名 <b>%{username}</b> 存在，你将马上收到一封电子邮件，以重置密码。"
-      complete_email_found: "你的账户 <b>%{email}</b> 存在，你将马上收到一封电子邮件，以重置密码。"
       complete_username_not_found: "没有找到用户 <b>%{username}</b>"
       complete_email_not_found: "没有找到用户 <b>%{email}</b> "
       help: "没收到邮件？请先查看你的垃圾邮件文件夹。<p>不确定使用了哪个邮箱地址？输入邮箱地址来查看是否存在。</p><p>如果你已无法进入你账户的邮箱，请联系<a href='%{basePath}/about'>我们的工作人员。</a></p>"
@@ -1499,7 +1497,6 @@ zh_CN:
       view_new_post: "浏览新帖。"
       saving: "保存中"
       saved: "已保存！"
-      saved_draft: "帖子还没发表，点击继续"
       uploading: "上传中…"
       show_preview: "显示预览 &raquo;"
       hide_preview: "&laquo; 隐藏预览"
@@ -2735,15 +2732,26 @@ zh_CN:
       choose_for_topic: "可选标签"
       info: "详情"
       default_info: "该标签不限于任何类别，并且没有同义词。"
+      synonyms: "同义词"
+      synonyms_description: "使用以下标签时，它们将被替换为<b>%{base_tag_name}</b> 。"
       tag_groups_info:
         other: "此标签属于这些标签组：{{tag_groups}}。"
       category_restrictions:
         other: "只能在这些分类中使用："
+      edit_synonyms: "管理同义词"
+      add_synonyms_label: "添加同义词："
       add_synonyms: "新增"
+      add_synonyms_explanation:
+        other: "当前任何使用了此标签的地方都将被改为使用<b>%{tag_name}</b>代替。你确定要应用此更改吗？"
+      add_synonyms_failed: "不能将以下标记添加为同义词： <b>%{tag_names}</b> 。确保它们没有同义词并且不是其他标签的同义词。"
+      remove_synonym: "删除同义词"
+      delete_synonym_confirm: '您确定要删除同义词“ %{tag_name}”吗？'
       delete_tag: "删除标签"
       delete_confirm:
         other: "你确定你想要删除这个标签以及撤销在{{count}}个主题中的关联么？"
       delete_confirm_no_topics: "你确定你想要删除这个标签吗？"
+      delete_confirm_synonyms:
+        other: "其{{count}}个同义词也将被删除。"
       rename_tag: "重命名标签"
       rename_instructions: "标签的新名称："
       sort_by: "排序方式："
@@ -3286,12 +3294,14 @@ zh_CN:
           upload: "上传"
           select_component: "选择一个组件……"
           unsaved_changes_alert: "你还未保存更改，舍弃并继续？"
+          unsaved_parent_themes: "你尚未将组件分配给主题，是否要继续？"
           discard: "舍去"
           stay: "保留"
           css_html: "自定义 CSS/HTML"
           edit_css_html: "编辑 CSS/HTML"
           edit_css_html_help: "你还未编辑任何 CSS 或 HTML"
           delete_upload_confirm: "删除这个上传？（主题 CSS 可能会出问题！）"
+          component_on_themes: "在这些主题上包括组件"
           included_components: "包含的组件"
           add_all: "添加所有"
           import_web_tip: "目录包含主题"
@@ -4068,8 +4078,13 @@ zh_CN:
           what_are_badges_title: "什么是徽章？"
           badge_query_examples_title: "徽章查询示例"
         mass_award:
+          title: 批量授予
+          description: 一次性将同一个的徽章授予多个用户。
+          perform: "授予徽章给用户"
           upload_csv: 上传包含用户邮箱的csv文件
           aborted: 请上传一个包含用户邮箱的csv文件
+          success: 你的CSV已收到，用户很快就会收到他们的徽章。
+          replace_owners: 从所有者中删除这个徽章
       emoji:
         title: "Emoji"
         help: "增加所有人可用的 emoji。（高端技巧：一次性拖进多个文件）"

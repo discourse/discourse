@@ -285,7 +285,7 @@ fi:
   user_is_suspended: "Hyllytetyt käyttäjät eivät saa luoda viestejä."
   topic_not_found: "Jotain on mennyt pieleen. Ehkä tämä ketju on suljettu tai poistettu sillä välin, kun katselit sitä?"
   not_accepting_pms: "Pahoittelut, %{username} ei ota vastaan yksityisviestejä tällä hetkellä."
-  max_pm_recepients: "Pahoittelut, voit lähettää viestin enintään %{recipients_limit} vastaanottajalle."
+  max_pm_recipients: "Pahoittelut, voit lähettää viestin enintään %{recipients_limit} vastaanottajalle."
   pm_reached_recipients_limit: "Pahoittelut, yksityisviestillä ei voi olla yli %{recipients_limit} vastaanottajaa."
   removed_direct_reply_full_quotes: "Jos edellinen viesti lainataan kokonaan, poista lainaus automaattisesti."
   secure_upload_not_allowed_in_public_topic: "Pahoittelut, näitä suojattuja latauksia ei voi käyttää julkisessa ketjussa: %{upload_filenames}"
@@ -841,7 +841,17 @@ fi:
     validation:
       invalid_type_error: "Annettu webauthn-tyyppi ei kelpaa. Kelvollisia ovat webauthn.get ja webauthn.create."
       challenge_mismatch_error: "Palautettu haaste ei vastaa todennuspalvelimen luomaa haastetta."
-      malformed_attestation_error: "Todennusdatan avaaminen epäonnistui."
+      invalid_origin_error: "Todentautumisen alkuperä (origin) ei vastaa palvelimen alkuperää."
+      malformed_attestation_error: "Todentautumisdatan avaaminen epäonnistui."
+      invalid_relying_party_id_error: "Todennuspyynnön Relying Party ID ei vastaa palvelimen Relying Party ID:tä."
+      user_verification_error: "Käyttäjävahvistus vaaditaan."
+      unsupported_public_key_algorithm_error: "Palvelin ei tue annettua julkisen salauksen algoritmia."
+      unsupported_attestation_format_error: "Palvelin ei tue tätä todentautumistapaa."
+      credential_id_in_use_error: "Annettu pääsytieto-ID on jo käytössä."
+      public_key_error: "Pääsytiedon julkisen salauksen vahvistus epäonnistui."
+      ownership_error: "Käyttäjä ei omista tunnistautumislaitetta."
+      not_found_error: "Tunnistautumislaitetta annetulla pääsytieto-ID:llä ei löytynyt."
+      unknown_cose_algorithm_error: "Tunnistautumislaitteen algoritmia ei tunnistettu."
   topic_flag_types:
     spam:
       title: "Roskaposti"
@@ -993,6 +1003,15 @@ fi:
       xaxis: "Päivä"
       yaxis: "Uusien kirjoittajien lukumäärä"
       description: "Kuinka moni kirjoitti ensimmäisen viestinsä tällä ajanjaksolla."
+    trust_level_growth:
+      title: "Luottamustasojen nousu"
+      xaxis:
+        tl1_reached: "Nousi LT1:lle"
+        tl2_reached: "Nousi LT2:lle"
+        tl3_reached: "Nousi LT3:lle"
+        tl4_reached: "Nousi LT4:lle"
+      yaxis: "Päivä"
+      description: "Kuinka monen käyttäjän luottamustaso nousi tällä ajanjaksolla."
     consolidated_page_views:
       title: "Yhdistetyt sivukatselut"
       xaxis:
@@ -1263,6 +1282,7 @@ fi:
       other: "Sähköpostin pollaus aiheutti %{count} virhettä edellisen 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
     missing_mailgun_api_key: "Palvelin on määritelty lähettämään sähköpostit Mailgunin avulla, muttet ole määritellyt rajapinta-avainta, jolla varmistetaan webhook-viestien aitous."
     bad_favicon_url: "Favicon ei lataudu. Tarkista favicon-asetus <a href='%{base_path}/admin/site_settings'>sivuston asetuksissa</a>."
+    deprecated_api_usage: "Havaitsimme rajapintapyynnön, joka käytti vanhentunutta todennusmenetelmää. Päivitä se käyttämään  <a href='https://meta.discourse.org/t/-/22706'>headeriin perustuvaa todennusta</a>.  Kun olet päivittänyt, voi mennä 24 tuntia ennen kuin tämä viesti katoaa."
     update_mail_receiver: "Huomasimme, että sähköpostipalvelin (mail-receiver) on vanhentunut. Klikkaa <a href='https://meta.discourse.org/t/-/133491'>tästä</a> päivitysohjeet. Kun olet päivittänyt, voi mennä 24 tuntia ennen kuin tämä viesti katoaa."
     poll_pop3_timeout: "Yhteyttä POP3-palvelimelle aikakatkaistaan ja saapuvaa sähköpostia ei voitu hakea. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a> ja palveluntarjoaja."
     poll_pop3_auth_error: "Yhteys POP3-palvelimelle epäonnistuu autentikaatiovirheen vuoksi. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a>."
@@ -1452,6 +1472,7 @@ fi:
     verbose_sso_logging: "Kirjaa runsaat SSO-diagnostiikat lokiin <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     sso_url: "Kertakirjautumisen päätepisteen URL (täytyy sisältää http:// tai https://)"
     sso_secret: "Salausavain, jolla todennetaan SSO tiedot, varmista että se on vähintään 10 merkkiä pitkä"
+    sso_provider_secrets: "Luettelo verkkotunnus-salausavain-pareista, jotka käyttävät Discoursea kertakirjautumistarjoajana. Varmistu, että kertakirjautumissalausavain on vähintään 10 merkin pituinen. Jokerimerkkiä * voi käyttää kelpuuttamaan mikä tahansa verkkotunnus tai sitä voi käyttää verkkotunnuksen osan vapauttamiseen (esim. *.esimerkki.fi)."
     sso_overrides_bio: "Syrjäyttää käyttäjän kuvauksen itsestään käyttäjäprofiilissa ja estää sen muokkaamisen"
     sso_overrides_email: "Ohittaa paikallisen sähköpostiosoitteen SSO:n kautta saatavalla ulkopuolisella osoitteella ja estää paikalliset muutokset (VAROITUS: eroavuuksia saattaa syntyä johtuen paikallisten sähköpostiosoitteiden normalisoinnista)"
     sso_overrides_username: "Ohittaa paikallisen käyttäjänimen SSO:n kautta saatavalla ulkopuolisella nimellä ja estää paikalliset muutokset (VAROITUS: eroavuuksia saattaa syntyä johtuen erilaisista vaatimuksista ja pituudesta)"
@@ -1484,6 +1505,7 @@ fi:
     enable_discord_logins: "Salli käyttäjien kirjautua Discordin avulla?"
     discord_client_id: 'Discordin Client ID (Tarvitsetko? Käy Discordin <a href="https://discordapp.com/developers/applications/me">kehittäjäportaalissa</a>)'
     discord_secret: "Discordin Secret Key"
+    discord_trusted_guilds: 'Salli vain näiden Discord-kiltojen jäsenten kirjautua Discordin avulla. Käytä killan numeerista ID:tä. Jos tarvitset lisätietoa, ohjeet löytyy <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">täältä</a>. Jätä tyhjäksi, jos et halua rajoittaa killan perusteella.'
     readonly_mode_during_backup: "Ota käyttöön vain luku -tila, kun otetaan varmuuskopiota"
     enable_backups: "Salli ylläpitäjien tehdä varmuuskopioita palstasta"
     allow_restore: "Salli palautus, joka korvaa KAIKEN sivuston datan! Jätä valitsematta, jos et aio palauttaa sivuston varmuuskopiota"
@@ -1525,7 +1547,7 @@ fi:
     max_post_deletions_per_day: "Kuinka monta viestiä käyttäjä voi poistaa päivässä."
     alert_admins_if_errors_per_minute: "Virheiden määrä minuutissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     alert_admins_if_errors_per_hour: "Virheiden määrä tunnissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
-    categories_topics: "Kuinka monta ketjua näytetään /keskustelualueet-sivulla"
+    categories_topics: "Kuinka monta ketjua näytetään Alueet-sivulla (/categories). Jos 0, etsitään automaattisesti arvoa, jolla kaksi saraketta pysyvät symmetrisinä (alueet ja ketjut)."
     suggested_topics: "Ehdotettujen ketjujen määrä ketjun alaosassa."
     limit_suggested_to_category: "Ehdota ketjuja vain nykyiseltä alueelta."
     suggested_topics_max_days_old: "Ehdotettujen ketjujen ei tulisi olla yli n päivää vanhoja."
@@ -1682,7 +1704,6 @@ fi:
     soft_bounce_score: "Lisättävät palautuspisteet, kun hetkellinen palautus tapahtuu."
     hard_bounce_score: "Lisättävät palautuspisteet, kun pysyvä palautus tapahtuu."
     bounce_score_threshold: "Palautuspistemäärä, jonka ylityttyä käyttäjälle ei lähetetä sähköpostia."
-    bounce_score_threshold_deactivate: "Palautuspistemäärä, jonka ylityttyä käyttäjätili poistetaan käytöstä."
     reset_bounce_score_after_days: "Nollaa palautuspisteet X päivä kuluttua."
     attachment_content_type_blacklist: "Lista avainsanoja, jota käytetään liitteiden estämisessä niiden sisältötyypin perusteella."
     attachment_filename_blacklist: "Lista avainsanoja, jota käytetään liitteiden estämisessä niiden tiedostonimen perusteella."
@@ -1730,6 +1751,7 @@ fi:
     suppress_digest_email_after_days: "Älä lähetä sähköpostikoostetta käyttäjille, jotka eivät ole vierailleet sivustolla yli (n) päivään."
     digest_suppress_categories: "Älä liitä näiden alueiden viestejä sähköpostikoosteisiin."
     disable_digest_emails: "Poista sähköpostikoosteet kaikilta käyttäjiltä."
+    apply_custom_styles_to_digest: "Mukautettua sähköpostipohjaa ja CSS sovelletaan tiivistelmäsähköposteihin."
     email_accent_bg_color: "Kakkosväri, jota käytetään joidenkin elementtien taustavärinä HTML-sähköpostiviesteissä. Anna värin nimi englanniksi ('red') tai sen Hex-arvo ('#FFF000')."
     email_accent_fg_color: "Sähköpostiviestin taustavärin päällä olevan tekstin väri HTML-sähköpostiviesteissä. Anna värin nimi englanniksi ('white') tai sen Hex-arvo ('#FFFFFF')."
     email_link_color: "Linkkien väri HTML-sähköpostiviesteissä. Anna värin nimi ('blue') tai sen Hex-arvo ('#0000FF')."
@@ -1785,6 +1807,7 @@ fi:
     embed_topics_list: "Tue ketjulistausten HTML-upottamista"
     embed_truncate: "Typistä upotetut viestit."
     embed_support_markdown: "Tue Markdown-muotoilua upotetuissa viesteissä."
+    embed_whitelist_selector: "Pilkuin eroteltu luettelo CSS-elementeistä, jotka on sallittu upotuksissa."
     allowed_href_schemes: "Linkeissä sallitut skeemat http:n ja https:n lisäksi."
     embed_post_limit: "Upotettavien viestien maksimimäärä."
     embed_username_required: "Käyttäjänimi vaaditaan ketjun luomiseksi."
@@ -1816,7 +1839,7 @@ fi:
     returning_users_days: "Kuinka monen päivän kuluttua käyttäjä tulkitaan palaavaksi."
     default_email_digest_frequency: "Kuinka usein käyttäjille lähetetään sähköpostikooste oletuksena."
     default_include_tl0_in_digests: "Sisällytä uusien käyttäjien viestit sähköpostikoosteisiin oletuksena. Tätä voi muuttaa käyttäjäasetuksissa."
-    default_email_level: "Aseta oletusarvo sähköposti-ilmoitustasolle, kun joku lainaa käyttäjää / vastaa hänelle / mainitsee hänet / kutsuu hänet."
+    default_email_level: "Aseta oletusarvo tavallisten ketjujen sähköposti-ilmoitustasolle."
     default_email_messages_level: "Aseta oletusarvo sähköposti-ilmoitustasolle, kun joku lähettää käyttäjälle yksityisviestin."
     default_email_mailing_list_mode: "Lähetä oletuksena sähköposti jokaisesta uudesta viestistä."
     default_email_mailing_list_mode_frequency: "Postituslistatilassa käyttäjä saa sähköpostia oletuksena näin usein."
@@ -2021,6 +2044,8 @@ fi:
     autoclosed_disabled_lastpost: "Tämä ketju on nyt avattu. Uusia vastauksia voi taas kirjoittaa."
     auto_deleted_by_timer: "Poistettiin ajastetusti."
   login:
+    invalid_second_factor_method: "Valittu kaksivaiheinen tunnistautumistapa ei kelpaa."
+    not_enabled_second_factor_method: "Valittu kaksivaiheinen tunnistautumistapa ei ole käytössä käyttäjätililläsi."
     security_key_description: "Kun fyysinen tunnistautumislaite on kätesi ulottuvilla, klikkaa alla olevaa \"Tunnistaudu tunnistautumislaitteella\" -painiketta."
     security_key_alternative: "Kokeile muuta tapaa"
     security_key_authenticate: "Tunnistaudu tunnistautumislaitteen avulla"
@@ -2066,6 +2091,7 @@ fi:
     invalid_second_factor_code: "Todennuskoodi ei kelpaa. Yhtä koodia voi käyttää vain kerran."
     invalid_security_key: "Tunnistautumislaite ei kelpaa."
     second_factor_toggle:
+      totp: "Käytä todennussovellusta tai tunnistautumislaitetta tämän sijaan"
       backup_code: "Käytä varmuuskoodia tämän sijaan"
   admin:
     email:
@@ -2073,6 +2099,9 @@ fi:
   user:
     deactivated: "Käyttäjätili poistettiin käytöstä osoitteesta '%{email}' palautettujen sähköpostien vuoksi."
     deactivated_by_staff: "Henkilökunta poisti käytöstä"
+    deactivated_by_inactivity:
+      one: "Deaktivoitiin automaattisesti %{count} päivän epäaktiivisuuden vuoksi"
+      other: "Deaktivoitiin automaattisesti %{count} päivän epäaktiivisuuden vuoksi"
     activated_by_staff: "Henkilökunta vahvisti"
     new_user_typed_too_fast: "Uusi käyttäjä näppäili liian nopeasti"
     content_matches_auto_block_regex: "Sisältö täyttää automaattisesti estettävän säännöllisen lausekkeen"
@@ -2217,73 +2246,32 @@ fi:
   test_mailer:
     title: "Sähköpostipalvelun testaus"
     subject_template: "[%{email_prefix}] Sähköpostin toimitettavuustesti"
-    text_body_template: |
-      Tämä on testisähköposti sivustolta
-
-      [**%{base_url}**][0]
-
-      Sähköpostien toimittaminen perille on monimutkaista. Tässä muutama tärkeä asia, jotka kannattaa tarkistaa ensimmäiseksi:
-
-      - *Varmista* että olet asettanut lähettäjän (from: address) oikein sivustoasetuksessa `notification email`. **Verkkotunnus jonka määrität sähköpostiesi lähettäjäksi on verkkotunnus, jota vasten viestiä arvioidaan.**.
-
-      - Ota selvää kuinka tarkastellaan sähköpostiviestin raakaversiota sähköpostiohjelmassasi, jotta voit haeskella otsaketietoista merkittäviä vihjeitä. Esimerkiksi Gmailissa on "näytä kokonaan" -valinta minkä tahansa sähköpostin oikean yläkulman pudotusvalikossa.
-
-      - **TÄRKEÄÄ:** Yhdistääko internetpalveluntarjoajasi käänteisnimipalvelutiedot IP-osoitteesi ja verkkotunnuksesi? [Testaa PTR-tietueesi][2] täällä. Jos internetpalveluntarjoajasi ei tarjoile kunnollista käänteisnimipalvelun PTR:ää, on erittäin epätodennäköistä että yhtään mikään sähköposteistasi saapuu perille.
-
-      - Onko verkkotunnuksesi [SPF-tietue][8] oikein? [Testaa SPF-tietueesi][1] täällä. Huomaa, että TXT on SPF:n oikea tietotyyppi.
-
-      - Onko verkkotunnuksesi [DKIM-tietue][3] oikein? Tämä parantaa sähköpostiesi saapuvuutta merkittävästi. [Testaa DKIM-tietueesi][7] täällä.
-
-      - Jos pyörität omaa sähköpostipalvelintasi, varmista ettei sähköpostipalvelimesi IP:t ole [ole millään sähköpostien mustalla listalla][4]. Varmistu myös, että se lähettää pätevän isäntänimen ja määrittää DNS:n HELO-viesteissään. Jollei, monet sähköpostipalvelut hylkäävät sähköpostisi.
-
-      - Suosittelemme lämpimästi **lähettämään testisähköpostin [mail-tester.com][mt]**-palveluun, jotta voit varmuistua että kaikki yllä mainittu toimii niin kuin pitää.
-
-      (*Helppo* tapa on luoda ilmainen tunnus [SendGridiin][sg], [SparkPostiin][sp], [Mailguniin][mg] tai [Mailjetiin][mj], joilla on mainiot ilmaiset sähköpostituspaketit, jotka riittävät hyvin pienelle yhteisölle. Sinun täytyy silti määrittää SPF- ja DKIM-tietueesi DNS:ssäsi kylläkin!)
-
-      Toivon mukaan tämä sähköpostien saapumistesti saapui perille!
-
-      Onnea matkaan,
-
-      Ystäväsi [Discourselta](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Uusi versio"
     subject_template: "[%{email_prefix}] Uusi Discourse-versio, päivitys saatavilla"
     text_body_template: |
-      Hurraa, uusi versio [Discoursesta](https://www.discourse.org) on saatavilla!
+      Hurraa, uusi [Discourse-versio](https://www.discourse.org) on saatavilla!
 
       Sinun versiosi: %{installed_version}
       Uusi versio: **%{new_version}**
 
       - Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
 
-      - Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tags/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/master)
+      - Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tag/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/master)
 
       - Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
   new_version_mailer_with_notes:
     title: "Uusi versio julkaisumuistiolla"
     subject_template: "[%{email_prefix}] päivitys saatavilla"
     text_body_template: |
-      Hurraa, uusi versio [Discoursesta](https://www.discourse.org) on saatavilla!
+      Hurraa, uusi [Discourse-versio](https://www.discourse.org) on saatavilla!
 
       Sinun versiosi: %{installed_version}
       Uusi versio: **%{new_version}**
 
       - Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
 
-      - Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tags/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/master)
+      - Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tag/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/master)
 
       - Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
 
@@ -3092,6 +3080,7 @@ fi:
       unsubscribe: "Tämä kooste lähetettiin sivustolta %{site_link}, koska sinua ei ole näkynyt vähään aikaan. Voit perua tilauksen muuttamalla %{email_preferences_link} tai %{unsubscribe_link} peruaksesi tilauksen."
       your_email_settings: "sähköpostiasetuksiasi"
       click_here: "klikkaa tätä"
+      from: "%{site_name}"
       preheader: "Lyhyt yhteenveto tapahtumista viime vierailusi (%{last_seen_at}) jälkeen"
     forgot_password:
       title: "Unohtunut salasana"
@@ -3126,6 +3115,13 @@ fi:
     admin_login:
       title: "Ylläpitäjäkirjautuminen"
       subject_template: "[%{email_prefix}] Kirjautuminen"
+      text_body_template: |
+        Joku haluaa kirjautua tilillesi sivustolla [%{site_name}](%{base_url}).
+
+        Jos se et ole sinä, voit huoletta jättää tämän viestin huomiotta.
+
+        Kirjaudu sisään klikkaamalla linkkiä:
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Tili luotu"
       subject_template: "[%{email_prefix}] Uusi käyttäjätilisi"
@@ -3489,6 +3485,9 @@ fi:
 
       Tämä tiedosto on CC-BY-SA-lisensoitu. Viimeksi päivitetty 31.5.2013.
   badges:
+    mass_award:
+      errors:
+        invalid_csv: "Rivillä %{line_number} törmättiin virheeseen. Varmistu, että CSV:ssä on yksi sähköpostiosoite riviä kohden."
     editor:
       name: Muokkaaja
       description: Ensimmäinen viestin muokkaus
@@ -3832,9 +3831,9 @@ fi:
               open:
                 label: "Käyttäjä voi liittyä itsenäisesti."
               invite_only:
-                label: "Käyttäjä voi liittyä itsenäisesti, mutta henkilökunnan tulee hyväksyä hänet."
-              must_approve:
                 label: "Luotettujen käyttäjien tai henkilökunnan tulee kutsua käyttäjä, jotta hän voi liittyä."
+              must_approve:
+                label: "Käyttäjä voi liittyä itsenäisesti, mutta henkilökunnan tulee hyväksyä hänet."
       contact:
         title: "Yhteystiedot"
         fields:
@@ -4044,3 +4043,5 @@ fi:
         reason: "Poistettiin hyväksyntäjonon kautta"
   email_style:
     html_missing_placeholder: "HTML-pohjan täytyy sisältää %{placeholder}"
+  discord:
+    not_in_allowed_guild: "Todennus epäonnistui. Et ole sallitun Discord-killan jäsen."

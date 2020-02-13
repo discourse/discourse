@@ -153,6 +153,7 @@ nl:
       banner:
         enabled: "heeft deze banner gemaakt op %{when}. De banner verschijnt bovenaan elke pagina, totdat de gebruiker deze verbergt."
         disabled: "heeft deze banner verwijderd op %{when}. De banner zal niet meer bovenaan elke pagina verschijnen."
+      forwarded: "heeft de bovenstaande e-mail doorgestuurd"
     topic_admin_menu: "topicacties"
     wizard_required: "Welkom bij uw nieuwe Discourse! Laten we beginnen met <a href='%{url}' data-auto-route='true'>de configuratiewizard</a> ✨"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding verstuurd."
@@ -385,6 +386,8 @@ nl:
       deleted_post: "(bericht verwijderd)"
       deleted_user: "(gebruiker verwijderd)"
       user:
+        bio: "Biografie"
+        website: "Website"
         username: "Gebruikersnaam"
         email: "E-mailadres"
         name: "Naam"
@@ -577,7 +580,7 @@ nl:
       request: "Aanvraag"
       message: "Bericht"
       confirm_leave: "Weet u zeker dat u deze groep wilt verlaten?"
-      allow_membership_requests: "Gebruikers mogen lidmaatschapsaanvragen naar groepseigenaren sturen"
+      allow_membership_requests: "Gebruikers mogen lidmaatschapsaanvragen naar groepseigenaren sturen (Vereist openbaar zichtbare groep)"
       membership_request_template: "Aangepaste sjabloon om weer te geven voor gebruikers bij het sturen van een lidmaatschapsaanvraag"
       membership_request:
         submit: "Aanvraag versturen"
@@ -1331,8 +1334,8 @@ nl:
       reset: "Wachtwoord herinitialiseren"
       complete_username: "Als er een account met de gebruikersnaam <b>%{username}<b/> overeenkomt, zou u spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
       complete_email: "Als er een account met het e-mailadres <b>%{email}<b/> overeenkomt, zou u spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
-      complete_username_found: "We hebben een account met de gebruikersnaam <b>%{username}</b> gevonden. U zou spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
-      complete_email_found: "We hebben een account gevonden met het e-mailadres <b>%{email}<b/>. U zou spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
+      complete_username_found: "We hebben een account gevonden die met de gebruikersnaam <b>%{username}</b> overeenkomt. U zou spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
+      complete_email_found: "We hebben een account gevonden die met het e-mailadres <b>%{email}</b> overeenkomt. U zou spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
       complete_username_not_found: "Geen account met de gebruikersnaam <b>%{username}</b> gevonden"
       complete_email_not_found: "Geen account met het e-mailadres <b>%{email}</b> gevonden"
       help: "Komt de e-mail niet aan? Controleer eerst uw spammap.<p>Weet u niet zeker welk e-mailadres u hebt gebruikt? Voer een e-mailadres in en we laten u weten of het hier bestaat.</p><p>Als u geen toegang meer hebt tot het e-mailadres van uw account, neem dan contact op met <a href='%{basePath}/about'>onze behulpzame staf.</a></p>"
@@ -1465,6 +1468,7 @@ nl:
       min_content_not_reached:
         one: "Selecteer minstens {{count}} item."
         other: "Selecteer minstens {{count}} items."
+      invalid_selection_length: "Selectie moet minstens {{count}} tekens bevatten."
     date_time_picker:
       from: Van
       to: Aan
@@ -1554,7 +1558,7 @@ nl:
       view_new_post: "Uw nieuwe bericht bekijken"
       saving: "Opslaan"
       saved: "Opgeslagen!"
-      saved_draft: "U hebt een conceptbericht. Selecteer om te hervatten."
+      saved_draft: "Berichtconcept wordt uitgevoerd. Tik om te hervatten."
       uploading: "Uploaden..."
       show_preview: "voorbeeld tonen &raquo;"
       hide_preview: "&laquo; voorbeeld verbergen"
@@ -1604,6 +1608,7 @@ nl:
         reply_as_new_topic:
           label: Antwoorden als gekoppeld topic
           desc: Een nieuw topic maken dat aan dit topic is gekoppeld
+          confirm: "U hebt een nieuw-topicconcept opgeslagen, dat wordt overschreven als u een gekoppeld topic maakt."
         reply_as_private_message:
           label: Nieuw bericht
           desc: Een nieuw persoonlijk bericht maken
@@ -2416,6 +2421,10 @@ nl:
         name: "Naam"
         name_placeholder: "Geef de bladwijzer een naam als geheugensteuntje"
         set_reminder: "Een herinnering instellen"
+        actions:
+          delete_bookmark:
+            name: "Bladwijzer verwijderen"
+            description: "Verwijdert de bladwijzer uit uw profiel en stopt alle herinneringen voor de bladwijzer"
     category:
       can: "kan&hellip; "
       none: "(geen categorie)"
@@ -2849,6 +2858,7 @@ nl:
       choose_for_topic: "optionele tags"
       info: "Info"
       default_info: "Deze tag is niet beperkt tot categorieën, en heeft geen synoniemen."
+      category_restricted: "Deze tag is beperkt tot categorieën waartoe u geen toegang hebt."
       synonyms: "Synoniemen"
       synonyms_description: "Wanneer de volgende tags worden gebruikt, worden deze vervangen door <b>%{base_tag_name}</b>."
       tag_groups_info:
@@ -2860,6 +2870,9 @@ nl:
       edit_synonyms: "Synoniemen beheren"
       add_synonyms_label: "Synoniemen toevoegen:"
       add_synonyms: "Toevoegen"
+      add_synonyms_explanation:
+        one: "Overal waar deze tag momenteel wordt gebruikt, zal dit worden gewijzigd naar het gebruik van <b>%{tag_name}</b>. Weet u zeker dat u deze wijziging wilt aanbrengen?"
+        other: "Overal waar deze tags momenteel worden gebruikt, zal dit worden gewijzigd naar het gebruik van <b>%{tag_name}</b>. Weet u zeker dat u deze wijziging wilt aanbrengen?"
       add_synonyms_failed: "De volgende tags konden niet worden toegevoegd als synoniemen: <b>%{tag_names}</b>. Zorg dat ze geen synoniemen hebben en geen synoniem van een andere tag zijn."
       remove_synonym: "Synoniem verwijderen"
       delete_synonym_confirm: 'Weet u zeker dat u het synoniem ''%{tag_name}'' wilt verwijderen?'
@@ -4217,6 +4230,7 @@ nl:
           upload_csv: Een CSV met gebruikers-e-mailadressen uploaden
           aborted: Upload een CSV dat gebruikers-e-mailadressen bevat
           success: Uw CSV is ontvangen en gebruikers ontvangen binnenkort hun badge.
+          replace_owners: De badge van vorige eigenaren verwijderen
       emoji:
         title: "Emoji"
         help: "Nieuwe emoji toevoegen die voor iedereen beschikbaar zal zijn. (PROTIP: versleep meerdere bestanden tegelijk)"

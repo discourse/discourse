@@ -378,6 +378,8 @@ te:
       xaxis: "రోజు"
     new_contributors:
       xaxis: "రోజు"
+    trust_level_growth:
+      yaxis: "రోజు"
     consolidated_page_views:
       yaxis: "రోజు"
       labels:

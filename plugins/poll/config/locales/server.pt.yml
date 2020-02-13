@@ -14,8 +14,6 @@ pt:
   poll:
     multiple_polls_without_name: "Há múltiplas sondagens sem nome. Utilize o atributo '<code>nome</code>' para identificar as suas sondagens de maneira única."
     multiple_polls_with_same_name: "Há múltiplas sondagens com o mesmo nome: <strong>%{name}</strong>. Utilize o atributo '<code>nome</code>' para identificar as suas sondagens de maneira única."
-    default_poll_must_have_at_least_2_options: "A sondagem deve ter pelo menos 2 opções."
-    named_poll_must_have_at_least_2_options: "A sondagem com o nome <strong>%{name}</strong> deve ter pelo menos 2 opções."
     default_poll_must_have_less_options:
       one: "A sondagem deve ter menos que %{count} opção."
       other: "A sondagem deve ter menos que %{count} opções."

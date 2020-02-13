@@ -485,6 +485,8 @@ lt:
       xaxis: "Diena"
     new_contributors:
       xaxis: "Diena"
+    trust_level_growth:
+      yaxis: "Diena"
     consolidated_page_views:
       yaxis: "Diena"
       labels:

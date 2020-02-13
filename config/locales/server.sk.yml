@@ -614,6 +614,8 @@ sk:
       xaxis: "Deň"
     new_contributors:
       xaxis: "Deň"
+    trust_level_growth:
+      yaxis: "Deň"
     consolidated_page_views:
       yaxis: "Deň"
       labels:

@@ -287,7 +287,7 @@ pl_PL:
   user_is_suspended: "Zawieszeni użytkownicy nie mogą wysyłać wiadomości."
   topic_not_found: "Coś poszło nie tak. Być może temat został zamknięty lub usunięty w międzyczasie?"
   not_accepting_pms: "Przepraszamy, ale użytkownik %{username} nie akceptuje w tej chwili wiadomości "
-  max_pm_recepients: "Przepraszam, możesz wysłać wiadomość tylko do %{recipients_limit} odbiorców."
+  max_pm_recipients: "Przepraszam, możesz wysłać wiadomość tylko do %{recipients_limit} odbiorców."
   pm_reached_recipients_limit: "Przepraszamy, możesz wysłać wiadomość tylko do %{recipients_limit} odbiorców."
   removed_direct_reply_full_quotes: "Automatycznie usunięto cytowanie całości poprzedzającego wpisu."
   just_posted_that: "jest zbyt podobne do tego co umieściłeś niedawno"
@@ -985,6 +985,8 @@ pl_PL:
       title: "Nowi współtwórcy"
       xaxis: "Dzień"
       yaxis: "Liczba nowych współtwórców"
+    trust_level_growth:
+      yaxis: "Dzień"
     consolidated_page_views:
       title: "Skonsolidowane odsłony"
       xaxis:
@@ -1372,7 +1374,6 @@ pl_PL:
     max_post_deletions_per_day: "Maksymalna liczba wpisów, które użytkownik może usunąć jednego dnia."
     alert_admins_if_errors_per_minute: "Liczba błędów na minutę do zaalarmowania admina. Wartość 0 wyłącza tę funkcjonalność. UWAGA: wymaga restartu."
     alert_admins_if_errors_per_hour: "Liczba błędów na godzinę do zaalarmowania admina. Wartość 0 wyłącza tę funkcjonalność. UWAGA: wymaga restartu."
-    categories_topics: "Liczba wątków do wyświetlenia na stronie /categories."
     suggested_topics: "Liczba sugerowanych tematów widocznych na końcu aktualnego tematu."
     limit_suggested_to_category: "Sugeruj tematy jedynie z tej samej kategorii."
     suggested_topics_max_days_old: "Sugerowane tematy nie powinny być starsze niż n dni."
@@ -1504,7 +1505,6 @@ pl_PL:
     soft_bounce_score: "Wynik odrzucania dodany do użytkownika, gdy ma miejsce tymczasowe odrzucanie."
     hard_bounce_score: "Wynik odrzucania dodany do użytkownika, gdy ma miejsce stałe odrzucanie."
     bounce_score_threshold: "Maksymalny wynik odrzucania przed końcem wysyłania emaili do użytkownika."
-    bounce_score_threshold_deactivate: "Maksymalny wynik odrzucania przed dezaktywacją użytkownika."
     reset_bounce_score_after_days: "Automatyczne resetuj licznik odrzucania po X dniach."
     attachment_content_type_blacklist: "Lista słów kluczowych do blokowania załączników w oparciu o typ zawartości."
     attachment_filename_blacklist: "Lista słów kluczowych do blokowania załączników w oparciu o nazwę pliku."
@@ -2885,9 +2885,9 @@ pl_PL:
               open:
                 label: "Użytkownicy mogą rejestrować się samodzielnie."
               invite_only:
-                label: "Użytkownicy mogą rejestrować się samodzielnie, ale muszą zostać zaakceptowani przez zespół."
-              must_approve:
                 label: "Użytkownicy muszą zostać zaproszeni przez zaufanych użytkowników lub członków zespołu, zanim będą mogli się zarejestrować."
+              must_approve:
+                label: "Użytkownicy mogą rejestrować się samodzielnie, ale muszą zostać zaakceptowani przez zespół."
       contact:
         title: "Dane kontaktowe"
         fields:

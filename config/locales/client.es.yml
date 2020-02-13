@@ -385,6 +385,8 @@ es:
       deleted_post: "(publicación eliminada)"
       deleted_user: "(usuario eliminado)"
       user:
+        bio: "Biografía"
+        website: "Página web"
         username: "Nombre de usuario"
         email: "Correo electrónico"
         name: "Nombre"
@@ -576,7 +578,8 @@ es:
       leave: "Abandonar"
       request: "Solicitar"
       message: "Mensaje"
-      allow_membership_requests: "Permitir a los usuarios enviar solicitudes de membresía a propietarios de grupos"
+      confirm_leave: "¿Estás seguro de que quieres salir de este grupo?"
+      allow_membership_requests: "Permitir a los usuarios enviar solicitudes de membresía a dueños de grupo (el grupo tiene que ser públicamente visible)"
       membership_request_template: "Plantilla personalizada que se muestra a los usuarios cuando envían una solicitud de membresía"
       membership_request:
         submit: "Enviar solicitud"
@@ -1330,8 +1333,6 @@ es:
       reset: "Restablecer contraseña"
       complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con las instrucciones para restablecer tu contraseña."
       complete_email: "Si una cuenta coincide con <b>%{email}</b>, en breve deberías recibir un correo electrónico con las instrucciones para restablecer tu contraseña."
-      complete_username_found: "Encontramos una cuenta que coincide con el usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con instrucciones para restablecer tu contraseña."
-      complete_email_found: "Encontramos una cuenta que coincide con <b>%{email}</b>, deberías recibir en breve un correo electrónico con instrucciones para restablecer tu contraseña."
       complete_username_not_found: "No hay ninguna cuenta que coincida con el nombre de usuario <b>%{username}</b>"
       complete_email_not_found: "No hay ninguna cuenta que coincida con el correo electrónico <b>%{email}</b>"
       help: "¿No te ha llegado el correo? Asegúrate de comprobar primero tu carpeta de correo no deseado. <p>¿No estás seguro de qué correo has usado? Ingresa tu correo electrónico y te avisaremos si lo tenemos registrado.</p><p>Si no tienes acceso al correo electrónico asociado a tu cuenta, por favor, contacta <a href='%{basePath}/about'>a nuestro amable staff.</a></p>"
@@ -1553,7 +1554,7 @@ es:
       view_new_post: "Ver tu publicación nueva."
       saving: "Guardando"
       saved: "¡Guardado!"
-      saved_draft: "Borrador en progreso. Selecciona para continuar."
+      saved_draft: "Publica el borrador en progreso. Escribe para reanudar."
       uploading: "Subiendo..."
       show_preview: "mostrar vista previa &raquo;"
       hide_preview: "&laquo; ocultar vista previa"
@@ -2859,6 +2860,9 @@ es:
       edit_synonyms: "Gestionar sinónimos"
       add_synonyms_label: "Añadir sinónimos:"
       add_synonyms: "Añadir"
+      add_synonyms_explanation:
+        one: "Se cambiarán la etiqueta en cualquier sitio que esté en uso, sustituyéndose por <b>%{tag_name}</b> en su lugar. ¿Seguro que quieres hacer el cambio?"
+        other: "Se cambiarán las etiquetas en todos los lugares en los que estén en uso y se sustituirán por <b>%{tag_name}</b> en su lugar. ¿Seguro de que quieres hacer este cambio?"
       add_synonyms_failed: "No se han podido añadir las siguientes etiquetas como sinónimos: <b>%{tag_names}</b>. Asegúrate de que no tienen sinónimos y de que no son sinónimos de otra etiqueta."
       remove_synonym: "Quitar sinónimo"
       delete_synonym_confirm: '¿Estás seguro de que quieres eliminar el sinónimo «%{tag_name}»?'
@@ -4208,6 +4212,15 @@ es:
           title: "Selecciona una medalla existente o crea una para empezar"
           what_are_badges_title: "¿Qué son las medallas?"
           badge_query_examples_title: "Ejemplos de consultas de medallas"
+        mass_award:
+          title: Conceder medalla en masa
+          description: Concede la misma medalla a muchos usuarios a la vez.
+          no_badge_selected: "Por favor, selecciona una medalla para empezar."
+          perform: "Conceder medalla a los usuarios"
+          upload_csv: Subir archivo CSV con los correos electrónicos de los usuarios
+          aborted: "Por favor, sube un archivo CSV que contenga los correos electrónicos de los usuarios"
+          success: Se recibió el CSV y los usuarios recibirán la medalla dentro de poco.
+          replace_owners: Quitar medalla de los anteriores portadores
       emoji:
         title: "Emoji"
         help: "Añade emojis nuevos que estarán disponibles para todos. (CONSEJO: arrasta varios archivos a la vez)"

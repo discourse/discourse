@@ -13,8 +13,6 @@ bg:
   poll:
     multiple_polls_without_name: "Има много анкети без име. Използвай '<code>име</code>' атрибута за да идентифицирате вашата публикация."
     multiple_polls_with_same_name: "Има много анкети с това име: <strong>%{name}</strong>. Използвайте '<code>name</code>' за да се отличат вашите анкети."
-    default_poll_must_have_at_least_2_options: "Анкетата трябва да има поне 2 опции."
-    named_poll_must_have_at_least_2_options: "Анкетата <strong>%{name}</strong> трябва да има поне 2 опции."
     default_poll_must_have_less_options:
       one: "Анкетата трябва да има по-малко от %{count} опция."
       other: "Анкетата трябва да има по-малко от %{count} опции."

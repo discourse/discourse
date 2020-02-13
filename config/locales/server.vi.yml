@@ -473,6 +473,8 @@ vi:
     new_contributors:
       xaxis: "Ngày"
       description: "Số thành viên thực hiện bài đăng đầu tiên của họ trong giai đoạn này."
+    trust_level_growth:
+      yaxis: "Ngày"
     consolidated_page_views:
       title: "Số lượt xem hợp nhất"
       yaxis: "Ngày"

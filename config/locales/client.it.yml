@@ -367,6 +367,7 @@ it:
       deleted_post: "(messaggio eliminato)"
       deleted_user: "(utente eliminato)"
       user:
+        bio: "Biografia"
         username: "Nome utente"
         email: "Email"
         name: "Nome"
@@ -558,7 +559,6 @@ it:
       leave: "Abbandona"
       request: "Richiesta"
       message: "Messaggio"
-      allow_membership_requests: "Permetti agli utenti di richiedere l'invito ai proprietari del gruppo"
       membership_request_template: "Modello personalizzato da mostrare agli utenti quando inviano una richiesta di adesione"
       membership_request:
         submit: "Invia Richiesta"
@@ -1300,8 +1300,6 @@ it:
       reset: "Azzera Password"
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere un'email con le istruzioni per ripristinare la tua password."
       complete_email: "Se un account corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email contenente le istruzioni per ripristinare la password."
-      complete_username_found: "C'è un account che corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere una email con le istruzioni per reimpostare la tua password. "
-      complete_email_found: "C'è un account che corrisponde alla email <b>%{email}</b>, a breve dovresti ricevere una email con le istruzioni per reimpostare la tua password. "
       complete_username_not_found: "Nessun account corrisponde al nome utente <b>%{username}</b>"
       complete_email_not_found: "Nessun account corrisponde alla email <b>%{email}</b>"
       help: "Le email non arrivano? Per prima cosa assicurati di controllare la cartella spam.<p>Non sei sicuro di quale indirizzo email hai usato? Inserisci un indirizzo email e ti faremo sapere se esiste.</p><p>Se non hai più accesso all'indirizzo email del tuo account, per favore contatta <a href='%{basePath}/about'>il nostro staff.</a></p>"
@@ -1521,7 +1519,6 @@ it:
       view_new_post: "Visualizza il tuo nuovo messaggio."
       saving: "Salvataggio"
       saved: "Salvato!"
-      saved_draft: "Hai un messaggio in bozza in sospeso. Seleziona per riprendere la modifica."
       uploading: "In caricamento..."
       show_preview: "visualizza anteprima &raquo;"
       hide_preview: "&laquo; nascondi anteprima"
