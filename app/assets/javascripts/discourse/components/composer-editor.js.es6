@@ -180,7 +180,7 @@ export default Component.extend({
       term,
       topicId,
       categoryId,
-      includeMentionableGroups: true
+      includeGroups: true
     });
   },
 
@@ -542,7 +542,10 @@ export default Component.extend({
   },
 
   _loadInlineOneboxes(inline) {
-    applyInlineOneboxes(inline, ajax);
+    applyInlineOneboxes(inline, ajax, {
+      categoryId: this.get("composer.category.id"),
+      topicId: this.get("composer.topic.id")
+    });
   },
 
   _loadOneboxes(oneboxes) {
@@ -671,9 +674,9 @@ export default Component.extend({
         return;
       }
 
-      const { canUpload, canPasteHtml } = clipboardData(e, true);
+      const { canUpload, canPasteHtml, types } = clipboardData(e, true);
 
-      if (!canUpload || canPasteHtml) {
+      if (!canUpload || canPasteHtml || types.includes("text/plain")) {
         e.preventDefault();
       }
     });

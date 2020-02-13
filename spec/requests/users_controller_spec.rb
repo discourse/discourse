@@ -3176,6 +3176,15 @@ describe UsersController do
         )
       end
 
+      let!(:private_group) do
+        Fabricate(:group,
+          mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins],
+          messageable_level: Group::ALIAS_LEVELS[:members_mods_and_admins],
+          visibility_level: Group.visibility_levels[:members],
+          name: 'aaa4'
+        )
+      end
+
       describe 'when signed in' do
         before do
           sign_in(user)
@@ -3198,7 +3207,7 @@ describe UsersController do
           groups = JSON.parse(response.body)["groups"]
 
           expect(groups.map { |group| group['name'] })
-            .to_not include(mentionable_group_2.name)
+            .to_not include(private_group.name)
         end
 
         it "doesn't search for groups" do

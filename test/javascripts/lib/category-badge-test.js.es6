@@ -46,6 +46,21 @@ QUnit.test("undefined color", assert => {
   );
 });
 
+QUnit.test("topic count", assert => {
+  const store = createStore();
+  const category = store.createRecord("category", { name: "hello", id: 123 });
+
+  assert.equal(
+    categoryBadgeHTML(category).indexOf("topic-count"),
+    -1,
+    "it does not include topic count by default"
+  );
+  assert.ok(
+    categoryBadgeHTML(category, { topicCount: 20 }).indexOf("topic-count") > 20,
+    "is included when specified"
+  );
+});
+
 QUnit.test("allowUncategorized", assert => {
   const store = createStore();
   const uncategorized = store.createRecord("category", {
