@@ -385,6 +385,8 @@ fi:
       deleted_post: "(viesti poistettu)"
       deleted_user: "(käyttäjä poistettu)"
       user:
+        bio: "Käyttäjätiedot"
+        website: "Nettisivu"
         username: "Käyttäjätunnus"
         email: "Sähköposti"
         name: "Nimi"
@@ -577,7 +579,7 @@ fi:
       request: "Pyyntö"
       message: "Viesti"
       confirm_leave: "Haluatko varmasti poistua ryhmästä?"
-      allow_membership_requests: "Salli käyttäjän lähettää jäsenhakemuksia ryhmien isännille"
+      allow_membership_requests: "Salli käyttäjän lähettää jäsenhakemuksia ryhmien isännille (Vaatii sen, että ryhmä on julkinen)"
       membership_request_template: "Viestipohja, joka näytetään käyttäjälle, kun hän lähettää jäsenhakemusta ryhmään."
       membership_request:
         submit: "Lähetä hakemus"
@@ -1330,8 +1332,6 @@ fi:
       reset: "Uusi salasana"
       complete_username: "Jos käyttäjätunnusta <b>%{username}</b> vastaava tili löytyy, saat kohta sähköpostin, jossa on lisäohjeet salasanan uusimiseen."
       complete_email: "Jos sähköpostiosoitetta <b>%{email}</b> vastaava tili löytyy, saat kohta sähköpostin, jossa on lisäohjeet salasanan uusimiseen."
-      complete_username_found: "Käyttäjätunnusta <b>%{username}</b> vastaava tili löytyi. Saat kohta sähköpostin, jossa on lisäohjeet salasanan uusimiseen."
-      complete_email_found: "Sähköpostiosoitetta <b>%{email}</b> vastaava tili löytyi. Saat kohta sähköpostin, jossa on lisäohjeet salasanan uusimiseen."
       complete_username_not_found: "Käyttäjänimeä <b>%{username}</b> ei ole rekisteröity"
       complete_email_not_found: "Sähköpostiosoitetta <b>%{email}</b> vastaavaa tiliä ei ole"
       help: "Eikö sähköposti saavu? Ensiksi tarkasta roskapostikansiosi.<p>Etkö ole varma sähköpostiosoitteesta? Syötä sähköpostiosoite niin saat tietää onko sillä luotu tunnusta.</p><p>Jos et enää hallitse sähköpostiosoitettasi, ota yhteyttä <a href='%{basePath}/about'>avuliaaseen henkilökuntaamme.</a></p>"
@@ -1464,6 +1464,7 @@ fi:
       min_content_not_reached:
         one: "Valitse ainakin {{count}} kohde."
         other: "Valitse ainakin {{count}} kohdetta."
+      invalid_selection_length: "Täytyy valita ainakin {{count}} merkkiä."
     date_time_picker:
       from: Mistä
       to: Vastaanottaja
@@ -1553,7 +1554,7 @@ fi:
       view_new_post: "Katsele uutta viestiäsi."
       saving: "Tallennetaan"
       saved: "Tallennettu!"
-      saved_draft: "Viestiluonnos kesken. Jatka klikkaamalla tästä."
+      saved_draft: "Viestiluonnos kesken. Jatka klikkaamalla."
       uploading: "Lähettää..."
       show_preview: "näytä esikatselu &raquo;"
       hide_preview: "&laquo; piilota esikatselu"
@@ -1603,6 +1604,7 @@ fi:
         reply_as_new_topic:
           label: Vastaa sivuavassa ketjussa
           desc: "Aloita uusi, tähän ketjuun linkittyvä ketju"
+          confirm: "Tallennettuna on yksi sinun ketjunaloitusluonnos, joka poistetaan, jos vastaat uudessa ketjussa."
         reply_as_private_message:
           label: Uusi viesti
           desc: Aloita uusi yksityiskeskustelu
@@ -2848,6 +2850,7 @@ fi:
       choose_for_topic: "ei-pakolliset tunnisteet"
       info: "Tietoa"
       default_info: "Tätä tunnistetta ei ole rajattu millekään alueelle eikä sillä ole synonyymejä."
+      category_restricted: "Tämä tunniste on rajoitettu alueille, joille sinulla ei ole pääsyoikeutta."
       synonyms: "Synonyymit"
       synonyms_description: "Kun näitä tunnisteita käytetään, ne korvataan pääsynonyymillä <b>%{base_tag_name}</b>."
       tag_groups_info:
@@ -2859,6 +2862,9 @@ fi:
       edit_synonyms: "Hallinnoi synonyymejä"
       add_synonyms_label: "Lisää synonyymejä:"
       add_synonyms: "Lisää"
+      add_synonyms_explanation:
+        one: "Kaikkialla missä tätä tunnistetta käytetään, vaihdetaan tunnisteeksi <b>%{tag_name}</b>. Haluatko varmasti tehdä tämän vaihdoksen?"
+        other: "Kaikkialla missä näitä tunnisteita nykyisin käytetään, vaihdetaan tunnisteeksi <b>%{tag_name}</b>. Haluatko varmasti tehdä tämän vaihdoksen?"
       add_synonyms_failed: "Näitä tunnisteita ei voitu lisätä synonyymeiksi: <b>%{tag_names}</b>. Varmistu, ettei niillä itsellään ole synonyymejä ja ettei ne ole synonyymejä muulle tunnisteelle."
       remove_synonym: "Poista synonyymi"
       delete_synonym_confirm: 'Haluatko varmasti poistaa synonyymin "%{tag_name}"?'
@@ -3380,6 +3386,7 @@ fi:
           mobile: "Mobiili"
           settings: "Asetukset"
           translations: "Käännökset"
+          extra_scss: "Lisä-SCSS"
           preview: "Esikatselu"
           show_advanced: "Näytä lisäasetukset"
           hide_advanced: "Piilota lisäasetukset"
@@ -3549,6 +3556,7 @@ fi:
           reset: "Palauta oletus"
           reset_confirm: "Oletko varma että haluat palauttaa oletus %{fieldName} ja hylätä kaikki tekemästi muutokset?"
           save_error_with_reason: "Muutoksia ei tallennettu. %{error}"
+          instructions: "Muotoile CSS:n keinoin HTML-pohjaa, jolle kaikkien HTML-sähköpostit rakennetaan."
       email:
         title: "Sähköpostit"
         settings: "Asetukset"
@@ -4214,6 +4222,7 @@ fi:
           upload_csv: Lataa CSV sähköpostiosoitteista
           aborted: "Lataa CSV, jossa on käyttäjien sähköpostiosoitteet"
           success: CSV tuli perille ja käyttäjät saavat ansiomerkkinsä pian.
+          replace_owners: Poista ansiomerkki aiemmilta omistajilta
       emoji:
         title: "Emoji"
         help: "Lisää uusi emoji joka on kaikkien käytettävissä. (Voit raahata useita tiedostoja kerralla)"

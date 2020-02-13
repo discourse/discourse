@@ -371,6 +371,8 @@ bs_BA:
       xaxis: "Day"
     new_contributors:
       xaxis: "Day"
+    trust_level_growth:
+      yaxis: "Day"
     consolidated_page_views:
       yaxis: "Day"
       labels:

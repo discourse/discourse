@@ -165,6 +165,9 @@ zh_CN:
       s3_backup_requires_s3_settings: "除非你提供了'%{setting_name}'，否则无法将S3用作备份位置。"
       s3_bucket_reused: "您不可把同一个 bucket 既用作 ‘s3_upload_bucket’ 又用作 ‘s3_backup_bucket’。请选择不同的 bucket 或为每个 bucket 使用不同的路径。"
       secure_media_requirements: "在启用安全媒体之前，必须先启用S3上传。"
+      second_factor_cannot_be_enforced_with_disabled_local_login: "如果禁用本地登录则无法强制启用2FA。"
+      local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制启用2FA则不能禁用本地登录。在禁用本地登录之前，请禁用强制启用2FA。"
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "你无法启用S3上传，因为S3上载已经全局启用了，另外此网站级别的启用可能会导致严重的上传问题"
     conflicting_google_user_id: '此帐户的Google帐户ID已更改; 出于安全原因，需要管理人员干预。请联系工作人员并将其指向<a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
@@ -215,6 +218,7 @@ zh_CN:
     request_membership: "申请会员"
     join_group: "加入群组"
   deleted_topic: "糟糕！该主题已被删除且不再可用。"
+  delete_topic_failed: "删除该主题时出错。请与网站管理员联系。"
   reading_time: "阅读时间"
   likes: "赞"
   too_many_replies:
@@ -266,7 +270,7 @@ zh_CN:
   user_is_suspended: "被封禁的用户不允许发贴。"
   topic_not_found: "出现问题。或许这个主题在你看的时候已经被关闭或删除了。"
   not_accepting_pms: "对不起，%{username} 目前不接收讯息。"
-  max_pm_recepients: "抱歉，你至多可以向%{recipients_limit}个收件人发送私信。"
+  max_pm_recipients: "抱歉，你至多可以向%{recipients_limit}个收件人发送私信。"
   pm_reached_recipients_limit: "抱歉，私信中的收信人不能超过%{recipients_limit}。"
   removed_direct_reply_full_quotes: "自动删除整个上篇帖子的引用。"
   secure_upload_not_allowed_in_public_topic: "抱歉，无法在公开的主题中使用以下安全上传：%{upload_filenames}。"
@@ -387,13 +391,13 @@ zh_CN:
 
       这样其它人会更容易地看一个长的回复，而不是多个分开的回复。
     dominating_topic: |
-      ###让其他人加入讨论
+      ### 让其他人加入讨论
 
       很明显这个主题对你很重要 &ndash; 你已经发表的帖子占该主题 %{percent}% 的回复。
 
       如果你能留出空间让其他人来分享他们的观点，那可能会更好。你可以邀请他们过来吗？
     get_a_room: |
-      ###鼓励大家参与讨论
+      ### 鼓励大家参与讨论
 
       你已经@%{reply_username}并在这个特定话题回复了%{count}次了！
 
@@ -407,7 +411,7 @@ zh_CN:
 
       与其添加另一个回复不如考虑编辑你以前的回复，或访问其他主题。
     reviving_old_topic: |
-      ###重新激活这个主题？
+      ### 重新激活这个主题？
 
       这个主题的最后一个回复距今已有**%{time_ago}**。你的回复将让主题重新出现在列表的顶端并通知原先参与讨论的人。
 
@@ -801,6 +805,7 @@ zh_CN:
       public_key_error: "凭据的公钥验证失败。"
       ownership_error: "安全密钥不归用户所有。"
       not_found_error: "找不到具有提供凭据ID的安全密钥。"
+      unknown_cose_algorithm_error: "无法识别安全密钥所使用的算法。"
   topic_flag_types:
     spam:
       title: "垃圾"
@@ -952,6 +957,8 @@ zh_CN:
       xaxis: "天"
       yaxis: "新贡献者数"
       description: "此期间首次发布帖子的用户数。"
+    trust_level_growth:
+      yaxis: "天"
     consolidated_page_views:
       title: "合并的页面访问量"
       xaxis:
@@ -1025,7 +1032,7 @@ zh_CN:
         silenced: 禁言
       description: "按管理员，主持人，冻结和禁言分组的用户数。"
     trending_search:
-      title: 趋势搜索条件
+      title: 热门搜寻字词
       labels:
         term: 术语
         searches: 搜索
@@ -1343,6 +1350,7 @@ zh_CN:
     markdown_typographer_quotation_marks: "双引号和单引号替换对的列表"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
     must_approve_users: "新注册用户必须获得职员批准方能访问"
+    approve_suspect_users: "工作人员必须批准所有可疑账户"
     pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"
     maximum_session_age: "用户自访问后可维持登录 n 小时"
     ga_universal_tracking_code: "Google Universal Analytics（analytics.js）跟踪代码ID，例如：UA-12345678-9; 请参阅<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1488,7 +1496,6 @@ zh_CN:
     max_post_deletions_per_day: "用户每天可以删除的最大帖子数。"
     alert_admins_if_errors_per_minute: "激活管理员警告的每分钟错误的数量。0 会禁用这个特性。注意：需要重启。"
     alert_admins_if_errors_per_hour: "激活管理员警告的每小时错误的数量。0 会禁用这个特性。注意：需要重启。"
-    categories_topics: "/categories 页面中显示的主题数。"
     suggested_topics: "在一个主题底部显示的推荐主题的数量。"
     limit_suggested_to_category: "只在当前分类的推荐帖子列表中显示帖子。"
     suggested_topics_max_days_old: "推荐主题创建时间不能大于 n 天。"
@@ -1646,7 +1653,6 @@ zh_CN:
     soft_bounce_score: "当碰到临时拒信时，增加用户的累计退信分值。"
     hard_bounce_score: "当碰到永久拒信时，增加用户的累计退信分值。"
     bounce_score_threshold: "停止发送邮件给用户的累计退信分值。"
-    bounce_score_threshold_deactivate: "取消激活用户的累计退信分值。"
     reset_bounce_score_after_days: "自动在 X 天后重置累计退信分值。"
     attachment_content_type_blacklist: "基于 content type 禁止附件的黑名单列表。"
     attachment_filename_blacklist: "基于文件名禁止附件的黑名单列表。"
@@ -1710,6 +1716,7 @@ zh_CN:
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最小信任等级"
     anonymous_account_duration_minutes: "为了匿名性，为每个用户每 N 分钟创建一个匿名账户。例如：如果设置为 600，只要发帖后 600 分钟到了，并且用户切换至了匿名模式，就会创建一个新的匿名账户。"
     hide_user_profiles_from_public: "不对来访用户显示用户信息卡、用户资料和用户目录。"
+    allow_featured_topic_on_user_profiles: "允许用户在其用户卡片和个人资料上显示指向主题的链接。"
     show_inactive_accounts: "允许已登录用户查看不活跃账户。"
     hide_suspension_reasons: "不在用户页面公开显示封禁原因。"
     log_personal_messages_views: "管理员为其他用户/组记录个人消息查看数。"
@@ -1781,7 +1788,6 @@ zh_CN:
     returning_users_days: "在用户被认为回归之前应该经过多少天。"
     default_email_digest_frequency: "用户收到摘要邮件的默认频率。"
     default_include_tl0_in_digests: "在摘要邮件中默认包含新用户帖子。用户可以自行在参数设置中更改这个设置。"
-    default_email_level: "设置当有人引用、回复、提及或邀请用户时的默认邮件提醒等级。"
     default_email_messages_level: "设置当有人发消息给用户时的默认邮件提醒等级"
     default_email_mailing_list_mode: "默认为每一个新帖子发送一封邮件通知。"
     default_email_mailing_list_mode_frequency: "邮件列表模式下，用户收到邮件的默认频率。"
@@ -1905,6 +1911,7 @@ zh_CN:
     unknown_error: "你的账户发生了问题。请联系站点管理人员。"
     timeout_expired: "账户登录超时，请重新尝试登录。"
     no_email: "没有找到邮件地址。请联系站点管理员。"
+    blank_id_error: "`external_id`是必需的，但现在空缺"
     email_error: "不能注册邮箱为<b>%{email}</b>的账户。请联系站点管理员。"
   original_poster: "原始作者"
   most_posts: "大部分帖子"
@@ -1963,6 +1970,8 @@ zh_CN:
     autoclosed_disabled_lastpost: "本主题现在开放了。可以添加新的回复。"
     auto_deleted_by_timer: "由计时器自动删除。"
   login:
+    invalid_second_factor_method: "所选的双因素方法无效。"
+    not_enabled_second_factor_method: "你的帐户未启用所选的第二因素方法。"
     security_key_description: "当你准备好物理安全密钥后，请按下面的“使用安全密钥进行身份验证”按钮。"
     security_key_alternative: "尝试另一种方式"
     security_key_authenticate: "使用安全密钥进行身份验证"
@@ -2008,6 +2017,7 @@ zh_CN:
     invalid_second_factor_code: "验证码无效。每个代码只能使用一次。"
     invalid_security_key: "无效的安全密钥。"
     second_factor_toggle:
+      totp: "请改用身份验证器应用或安全密钥"
       backup_code: "使用备份码"
   admin:
     email:
@@ -2015,6 +2025,8 @@ zh_CN:
   user:
     deactivated: "因发送至“%{email}”的邮件被多次退信，取消激活"
     deactivated_by_staff: "被管理人员禁用"
+    deactivated_by_inactivity:
+      other: "%{count}天不活动后自动停用"
     activated_by_staff: "被管理人员激活"
     new_user_typed_too_fast: "新用户打字太快了"
     content_matches_auto_block_regex: "内容符合自动封禁的正则表达式"
@@ -2044,6 +2056,7 @@ zh_CN:
       fixed_primary_email: "为暂存用户固定主要邮箱"
       same_ip_address: "同一IP地址(%{ip_address})如其他用户"
       inactive_user: "非活跃用户"
+    email_in_spam_header: "用户的第一封电子邮件已被标记为垃圾邮件"
   reviewables_reminder:
     submitted:
       other: "项目提交于1%{count}小时前。[请审核](%{base_path}/review)。"
@@ -2152,82 +2165,40 @@ zh_CN:
   admin_confirmation_mailer:
     title: "管理员确认"
     subject_template: "[%{site_name}] 确认新管理员账户"
+    text_body_template: "请确认你要添加**%{target_username}（%{target_email}）**作为你的论坛的管理员。 \n\n[确认管理员帐户](%{admin_confirm_url})\n"
   test_mailer:
     title: "测试发件人"
     subject_template: "[%{email_prefix}] 邮件可达性测试"
-    text_body_template: |
-      这是来自
-
-      [**%{base_url}**][0]
-
-      的测试电子邮件
-
-      电子邮件传送能力很复杂。以下是您应该首先检查的一些重要事项：
-
-       - 确保*在您的站点设置中正确设置“通知电子邮件”：地址。 **您发送的电子邮件的“发件人”地址中指定的域名是您的电子邮件将被验证的域名**。
-
-       - 了解如何在邮件客户端中查看电子邮件的原始来源，以便查看电子邮件标题以获取重要线索。在Gmail中，它是每个邮件右上角下拉菜单中的“显示原始”选项。
-
-       - **重要事项：**您的ISP是否输入了反向DNS记录，以便将您发送邮件的域名和IP地址关联起来？ [在此测试您的反向PTR记录] [2]。如果您的ISP没有输入正确的反向DNS指针记录，则您的电子邮件发送的可能性很小。
-
-       - 您的域名[SPF记录] [8]是否正确？ [测试您的SPF记录] [1]。请注意，TXT是SPF的正确官方记录类型。
-
-       - 您的域名[DKIM记录] [3]是否正确？这将显着提高电子邮件的可传递性。 [测试你的DKIM记录] [7]在这里。
-
-       - 如果您运行自己的邮件服务器，请检查以确保您的邮件服务器的IP [不在任何电子邮件黑名单] [4]。还要验证它是否肯定在其HELO消息中发送了在DNS中解析的完全限定主机名。如果没有，这将导致您的电子邮件被许多邮件服务拒绝。
-
-       - 我们强烈建议您**发送测试电子邮件到[mail-tester.com] [mt] **以验证以上所有内容是否正常工作。
-
-      （*简单的*方式是在[SendGrid] [sg]，[SparkPost] [sp]，[Mailgun] [mg]或[Mailjet] [mj]上创建免费帐户，这些帐户拥有丰厚的免费邮寄计划，适用于小型社区。但您仍需要在DNS中设置SPF和DKIM记录！）
-
-      我们希望您收到此电子邮件的可传递性测试OK！
-
-      祝好运，
-
-      您在[discourse](https://www.discourse.org)的朋友
-
-      [0]：%{base_url}
-      [1]：https://www.kitterman.com/spf/validate.html
-      [2]：https://mxtoolbox.com/ReverseLookup.aspx
-      [3]：http://www.dkim.org/
-      [4]：https://whatismyipaddress.com/blacklist-check
-      [7]：https://www.mail-tester.com/spf-dkim-check
-      [8]：http://www.openspf.org/SPF_Record_Syntax
-      [sg]：https://goo.gl/r1WMF6
-      [sp]：https://www.sparkpost.com/
-      [mg]：https://www.mailgun.com/
-      [mj]：https://www.mailjet.com/pricing/
-      [mt]：https://www.mail-tester.com/
   new_version_mailer:
     title: "新版本发件人"
     subject_template: "[%{email_prefix}] 新 Discourse 版本可供升级"
     text_body_template: |
-      哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升级！
+      Hooray，[Discourse](https://www.discourse.org)的新版本现已发布！
 
-      你的版本：%{installed_version}
-      新的版本：**%{new_version}**
+      您的版本：%{installed_version}
+      新版本：**%{new_version}**
 
-      - 浏览器访问**[一键更新工具](%{base_url}/admin/upgrade)**升级。
+      - 轻松使用我们的** [浏览器一键式升级](%{base_url}/admin/upgrade)**进行升级
 
-      - 查看 [发行注记（英文）](https://meta.discourse.org/tags/release-notes) 或查看 [GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中更新的内容。
+      - 查看[发行说明](https://meta.discourse.org/tag/release-notes)中的新功能或查看[原始GitHub更新日志](https://github.com/discourse/discourse/commits/master)
 
-      - 访问 [meta.discourse.org（英文）](https://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](https://meta.discoursecn.org) 获得支持。
+      -访问[meta.discourse.org](https://meta.discourse.org)获取资讯、讨论以及对Discourse的支持
   new_version_mailer_with_notes:
     title: "带注解的新版本发件人"
     subject_template: "[%{email_prefix}] 可以升级"
     text_body_template: |
-      哇哦，有新版本的 [Discourse](https://www.discourse.org) 可以升级！
+      Hooray，[Discourse](https://www.discourse.org)的新版本现已发布！
 
-      你的版本：%{installed_version}
-      新的版本：**%{new_version}**
+      您的版本：%{installed_version}
+      新版本：**%{new_version}**
 
-      - 浏览器访问**[一键更新工具](%{base_url}/admin/upgrade)**升级。
+      - 轻松使用我们的**[浏览器一键式升级](%{base_url}/admin/ upgrade)*进行升级
 
-      - 查看 [发行注记（英文）](https://meta.discourse.org/tags/release-notes) 或查看 [GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中更新的内容。
+      - 查看[发行说明](https://meta.discourse.org/tag/release-notes)中的新功能或查看[原始GitHub更新日志](https://github.com/discourse/discourse/commits/master)
 
-      - 访问 [meta.discourse.org（英文）](https://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](https://meta.discoursecn.org) 获得支持。
+      -访问[meta.discourse.org](https://meta.discourse.org)获取资讯、讨论以及对Discourse的支持
 
-      ### 发行注记
+      ###发布说明
 
       %{notes}
   flag_reasons:
@@ -2335,7 +2306,14 @@ zh_CN:
 
         我们很高兴你和我们共度时光，我们很想知道更多关于你的事情。花一点时间[填写你的个人资料](%{base_url}/我的/设置/个人信息)，或随时[开始一个新主题](%{base_url}/categories)。
     welcome_staff:
+      title: "欢迎工作人员"
       subject_template: "恭喜，你已获得%{role}身份！"
+      text_body_template: |
+        一位管理员已授予你%{role}身份。
+
+        作为一名%{role}，现在你可以访问<a href='%{base_url}/admin' target='_blank'>管理面板</a>。
+
+        拥有权利的同时也被赋予了重大的责任。如果你不熟悉管理，请参考[管理指南](https://meta.discourse.org/t/discourse-moderation-guide/63116)。
     welcome_invite:
       title: "欢迎邀请"
       subject_template: "欢迎来到 %{site_name}！"
@@ -3014,6 +2992,7 @@ zh_CN:
       unsubscribe: "这是来自%{site_link}的摘要邮件，因为你长时间没有访问站点而发送。修改你的邮件设置%{email_preferences_link}，或%{unsubscribe_link}取消订阅。"
       your_email_settings: "你的邮件设置"
       click_here: "点击此处"
+      from: "%{site_name}"
       preheader: "在你上次于%{last_seen_at}访问后的新内容摘要"
     forgot_password:
       title: "忘记密码"
@@ -3921,9 +3900,9 @@ zh_CN:
               open:
                 label: "用户可以自行注册。"
               invite_only:
-                label: "用户可以自行注册，但需经过员工同意。"
-              must_approve:
                 label: "用户需经过信任用户或员工邀请才能注册。"
+              must_approve:
+                label: "用户可以自行注册，但需经过员工同意。"
       contact:
         title: "联系"
         fields:
@@ -4056,6 +4035,9 @@ zh_CN:
       category: "此分类的帖子需要管理员批准。查看分类设置。"
       must_approve_users: "所有新用户需由管理员批准。参阅`must_approve_users`。"
       invite_only: "所有新用户应该是被邀请的。参阅`invite_only`。"
+      email_auth_res_enqueue: "此电子邮件未通过DMARC检查，很可能不是来自其所声称的来源。检查原始电子邮件的标头以获取更多信息。"
+      email_spam: "该电子邮件被`email_in_spam_header`中定义的标头标记为垃圾邮件。"
+      suspect_user: "可疑列表中的用户必须经过工作人员的检查。参见`approve_suspect_users`。"
     actions:
       agree:
         title: "同意......"

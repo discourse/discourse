@@ -18,6 +18,8 @@ tr_TR:
       public:
         title: "Oylar <strong>halka açıktır</strong>."
       results:
+        groups:
+          title: "Bu ankette oy kullanabilmek için %{groups} üyesi olmanız gerekiyor."
         vote:
           title: "Sonuçlar <strong>oylamada</strong> gösterilecektir."
         closed:
@@ -73,7 +75,7 @@ tr_TR:
         title: Anket Oluştur
         insert: Anket Ekle
         help:
-          options_count: En az 2 seçenek ekleyin
+          options_count: En az 1 seçenek girin
           invalid_values: Minimum değer maksimum değerden küçük olmalıdır.
           min_step_value: Minimum adım değeri 1
         poll_type:
@@ -87,6 +89,8 @@ tr_TR:
           vote: Oylamada
           closed: Kapatıldığında
           staff: Yalnızca moderatörler
+        poll_groups:
+          label: İzin verilen gruplar
         poll_chart_type:
           label: Grafik tipi
         poll_config:

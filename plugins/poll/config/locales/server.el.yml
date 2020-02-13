@@ -14,8 +14,6 @@ el:
   poll:
     multiple_polls_without_name: "Υπάρχουν πολλές ψηφοφορίες χωρίς όνομα. Χρησιμοποίησε την ιδιότητα '<code>name</code>' για να κάνεις τις ψηφοφορίες σου μοναδικά αναγνωρίσιμες."
     multiple_polls_with_same_name: "Υπάρχουν πολλές ψηφοφορίες με το ίδιο όνομα: <strong>%{name}</strong>. Χρησιμοποίησε την ιδιότητα '<code>name</code>' για να κάνεις τις ψηφοφορίες σου μοναδικά αναγνωρίσιμες."
-    default_poll_must_have_at_least_2_options: "Μια ψηφοφορία πρέπει να έχει τουλάχιστον 2 επιλογές."
-    named_poll_must_have_at_least_2_options: "Η ψηφοφορία <strong>%{name}</strong> πρέπει να έχει τουλάχιστον 2 επιλογές."
     default_poll_must_have_less_options:
       one: "Η Δημοσκόπηση πρέπει να έχει λιγότερη από %{count} επιλογή."
       other: "Η ψηφοφορία πρέπει να έχει λιγότερες από %{count} επιλογές."

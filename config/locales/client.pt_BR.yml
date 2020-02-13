@@ -385,6 +385,7 @@ pt_BR:
       deleted_post: "(postagem excluída)"
       deleted_user: "(usuário excluído)"
       user:
+        bio: "Bio"
         username: "Nome de Usuário"
         email: "E-mail"
         name: "Nome"
@@ -576,7 +577,6 @@ pt_BR:
       leave: "Sair"
       request: "Solicitar"
       message: "Mensagem"
-      allow_membership_requests: "Permitir que usuários solicitem para entrar no grupo a proprietários do grupo"
       membership_request_template: "Modelo personalizado para exibir aos usuários ao enviar uma solicitação de associação"
       membership_request:
         submit: "Enviar Solicitação"
@@ -1330,8 +1330,6 @@ pt_BR:
       reset: "Redefinir Senha"
       complete_username: "Se uma conta corresponder ao nome de usuário <b>%{username}</b>, você deverá receber um e-mail com instruções de como redefinir sua senha rapidamente."
       complete_email: "Se uma conta corresponder à <b>%{email}</b>, você deverá receber um e-mail com instruções de como redefinir sua senha rapidamente."
-      complete_username_found: "Encontramos uma conta que corresponde ao nome de usuário <b>%{username}</b>, você deverá receber um e-mail com instruções de como redefinir sua senha em breve."
-      complete_email_found: "Encontramos uma conta que corresponde à <b>%{email}</b>, você deverá receber um e-mail com instruções de como redefinir sua senha em breve."
       complete_username_not_found: "Nenhuma conta corresponde ao nome de usuário <b>%{username}</b>"
       complete_email_not_found: "Nenhuma conta corresponde à <b>%{email}</b>"
       help: "E-mail não está chegando? Certifique-se de verificar sua pasta de spam primeiro.<p>Não tem certeza de qual endereço de e-mail você usou? Digite um endereço de e-mail e informaremos se ele existe aqui.</p><p>Se você não tiver mais acesso ao endereço de e-mail da sua conta, entre em contato com <a href='%{basePath}/about'>nossa prestativa staff.</a></p>"
@@ -1553,7 +1551,6 @@ pt_BR:
       view_new_post: "Veja a sua nova postagem."
       saving: "Salvando"
       saved: "Salvo!"
-      saved_draft: "Rascunho da postagem em progresso. Selecione para resumir."
       uploading: "Enviando..."
       show_preview: "mostrar pré-visualização &raquo;"
       hide_preview: "&laquo; ocultar pré-visualização"

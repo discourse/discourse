@@ -25,43 +25,44 @@ vi:
         thousands: "{{number}}k"
         millions: "{{number}}M"
     dates:
-      time: "h:mm a"
+      time: "HH:mm"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
-      long_no_year_no_time: "MMM D"
-      full_no_year_no_time: "MMMM Do"
-      long_with_year: "MMM D, YYYY h:mm a"
-      long_with_year_no_time: "MMM D, YYYY"
-      full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
-      long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
-      long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      long_no_year: "D MMM HH:mm"
+      long_no_year_no_time: "D MMM"
+      full_no_year_no_time: "Do MMMM"
+      long_with_year: "D MMM YYYY HH:mm"
+      long_with_year_no_time: "D MMM YYYY"
+      full_with_year_no_time: "D MMMM YYYY"
+      long_date_with_year: "D MMM 'YY LT"
+      long_date_without_year: "D MMM LT"
+      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_without_year_with_linebreak: "D MMM <br/>LT"
+      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} ngày trước"
       tiny:
         half_a_minute: "< 1 phút"
         less_than_x_seconds:
-          other: "< %{count}s"
+          other: "< %{count}giây"
         x_seconds:
-          other: "%{count}s"
+          other: "%{count}giây"
         less_than_x_minutes:
           other: "< %{count} phút"
         x_minutes:
-          other: "%{count}m"
+          other: "%{count}phút"
         about_x_hours:
-          other: "%{count}h"
+          other: "%{count}giờ"
         x_days:
-          other: "%{count}d"
+          other: "%{count}ngày"
         x_months:
           other: "%{count} tháng"
         about_x_years:
-          other: "%{count}y"
+          other: "%{count}năm"
         over_x_years:
-          other: "> %{count}y"
+          other: "> %{count}năm"
         almost_x_years:
-          other: "%{count}y"
-        date_month: "MMM D"
+          other: "%{count}năm"
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -70,7 +71,7 @@ vi:
           other: "%{count} giờ"
         x_days:
           other: "%{count} ngày"
-        date_year: "MMM D, 'YY"
+        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           other: " %{count} phút trước"
@@ -105,10 +106,10 @@ vi:
       split_topic: "tách chủ đề này lúc %{when}"
       invited_user: "đã mời %{who} lúc %{when}"
       invited_group: "đã mời %{who} lúc %{when}"
-      user_left: "%{who}đã tự xóa mình khỏi tin nhắn này %{when}"
+      user_left: "%{who}đã tự xóa mình khỏi tin nhắn này lúc %{when}"
       removed_user: "đã xoá %{who} lúc %{when}"
       removed_group: "đã xoá %{who} lúc %{when}"
-      autobumped: "tự động đẩy %{when}"
+      autobumped: "tự động đẩy lúc%{when}"
       autoclosed:
         enabled: "bị đóng lúc %{when}"
         disabled: "được mở lúc %{when}"
@@ -116,24 +117,24 @@ vi:
         enabled: "bị đóng lúc %{when}"
         disabled: "được mở lúc %{when}"
       archived:
-        enabled: "đưa vào lưu trữ lúc %{when}"
-        disabled: "bỏ lưu trữ lúc %{when}"
+        enabled: "được đưa vào lưu trữ lúc %{when}"
+        disabled: "được đưa ra khỏi lưu trữ lúc %{when}"
       pinned:
-        enabled: "được gắn lúc %{when}"
-        disabled: "bỏ ghim lúc %{when}"
+        enabled: "được ghim lúc %{when}"
+        disabled: "được bỏ ghim lúc %{when}"
       pinned_globally:
-        enabled: "đã gắn toàn trang lúc %{when}"
-        disabled: "đã bỏ gắn lúc %{when}"
+        enabled: "được ghim lên toàn trang lúc %{when}"
+        disabled: "được bỏ ghim lúc %{when}"
       visible:
-        enabled: "được hiển thị lúc %{when}"
-        disabled: "bỏ hiển thị lúc %{when}"
+        enabled: "được liệt kê lúc %{when}"
+        disabled: "được bỏ liệt kê lúc %{when}"
       banner:
-        enabled: "chọn đây làm banner %{when}. Nó sẽ xuất hiện ở đầu mỗi trang đến khi bị ẩn đi bởi người dùng,"
-        disabled: "xoá banner này %{when}. Nó sẽ không còn xuất hiện ở đầu mỗi trang."
-    topic_admin_menu: "hành động chủ đề"
+        enabled: "chọn đây làm banner lúc %{when}. Nó sẽ xuất hiện ở đầu mỗi trang cho đến khi bị ẩn đi bởi người dùng."
+        disabled: "xoá banner này lúc %{when}. Nó sẽ không còn xuất hiện ở đầu mỗi trang."
+    topic_admin_menu: "hành động cho chủ đề"
     wizard_required: "Chào mừng bạn đến với Discourse! Hãy bắt đầu với <a href='%{url}' data-auto-route='true'>hướng dẫn cài đặt</a> ✨"
     emails_are_disabled: "Ban quản trị đã tắt mọi email gửi đi. Sẽ không có bất kỳ thông báo nào qua email được gửi đi."
-    bootstrap_mode_enabled: "Để đơn giản hoá quá trình triển khai, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có mức độ tin cậy 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{min_users}"
+    bootstrap_mode_enabled: "Để đơn giản hoá quá trình triển khai trang web, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có mức độ tin cậy 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{min_users}"
     bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị vô hiệu trong 24 giờ tới."
     themes:
       default_description: "Mặc định"
@@ -161,7 +162,7 @@ vi:
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "sửa tiêu đề và chuyên mục của chủ đề"
-    expand: "Mở"
+    expand: "Mở rộng"
     not_implemented: "Tính năng này chưa được hoàn thiện, xin lỗi!"
     no_value: "Không"
     yes_value: "Có"
@@ -199,7 +200,7 @@ vi:
     every_hour: "mỗi giờ"
     daily: "hàng ngày"
     weekly: "hàng tuần"
-    every_month: "mỗi tháng"
+    every_month: "hàng tháng"
     every_six_months: "mỗi sáu tháng"
     max_of_count: "tối đa trong {{count}}"
     alternation: "hoặc"
@@ -356,6 +357,8 @@ vi:
       deleted_post: "(bài viết đã bị xóa)"
       deleted_user: "(người dùng đã bị xóa)"
       user:
+        bio: "Tiểu sử"
+        website: "Trang web"
         username: "Tên đăng nhập"
         email: "Email"
         name: "Tên"
@@ -539,7 +542,7 @@ vi:
       leave: "Rời nhóm"
       request: "Yêu cầu"
       message: "Tin nh"
-      allow_membership_requests: "Cho phép người dùng gửi đơn xin gia nhập nhóm đến người quản lí nhóm."
+      confirm_leave: "Bạn có chắc muốn rời khỏi nhóm này?"
       membership_request_template: "đã tùy chỉnh để hiển thị cho người dùng khi gửi yêu cầu thành viên"
       membership_request:
         submit: "Gửi yêu c"
@@ -615,8 +618,10 @@ vi:
           description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn"
         muted:
           title: "Im lặng"
+          description: "Bạn sẽ không được thông báo về bất kì tin nhắn nào trong nhóm này nữa."
       flair_url: "Ảnh đại diện"
       flair_url_placeholder: "(Tuỳ chọn) Link đến hình ảnh hoặc lớp Font Awesome"
+      flair_url_description: 'Ảnh hình vuông của bạn không được nhỏ hơn 20px x 20px hoặc FontAwesome không hợp lệ (chấp nhận: "fa-icon", "far fa-icon" hoặc "fab fa-icon").'
       flair_bg_color: "Màu nền ảnh đại diện"
       flair_bg_color_placeholder: "(Tuỳ chọn) Giá trị mã màu Hexa"
       flair_color: "Màu ảnh đại diện"
@@ -636,6 +641,7 @@ vi:
       "12": "Bài đã gửi"
       "13": "Hộp thư"
       "14": "Đang chờ xử lý"
+      "15": "Nháp"
     categories:
       all: "tất cả chuyên mục"
       all_subcategories: "Tất cả"
@@ -656,6 +662,11 @@ vi:
       subcategories: "Phân loại phụ"
       topic_sentence:
         other: "%{count} chủ đề"
+      topic_stat_sentence_week:
+        other: "%{count}chủ đề mới trong tuần qua."
+      topic_stat_sentence_month:
+        other: "%{count}chủ đề mới trong tháng qua."
+      n_more: "Chuyên mục (thêm %{count} ) ..."
     ip_lookup:
       title: Tìm kiếm địa chỉ IP
       hostname: Hostname
@@ -671,6 +682,7 @@ vi:
       topics_entered: "chủ để đã xem"
       post_count: "# bài viết"
       confirm_delete_other_accounts: "Bạn có muốn xóa những tài khoản này không?"
+      powered_by: "sử dụng <a href='https://maxmind.com'> MaxMindDB </a>"
       copied: "đã sao chép"
     user_fields:
       none: "(chọn một tùy chọn)"
@@ -688,7 +700,9 @@ vi:
       private_message: "Tin nhắn"
       private_messages: "Tin nhắn"
       user_notifications:
+        ignore_duration_title: "Bỏ qua bộ đếm giờ"
         ignore_duration_username: "Tên đăng nhập"
+        ignore_duration_when: "Thời lượng:"
         ignore_duration_save: "Bỏ qua"
         ignore_no_users: "Bạn không có thành viên bị chặn nào."
         ignore_option: "Đã bỏ qua"
@@ -698,12 +712,17 @@ vi:
       activity_stream: "Hoạt động"
       preferences: "Tùy chỉnh"
       feature_topic_on_profile:
+        open_search: "Chọn chủ đề mới"
+        title: "Chọn chủ đề"
+        search_label: "Tìm kiếm chủ đề theo tiêu đề"
         save: "Lưu"
         clear:
           title: "Xóa"
       expand_profile: "Mở"
+      collapse_profile: "Thu gọn"
       bookmarks: "Theo dõi"
       bio: "Về tôi"
+      timezone: "Múi giờ"
       invited_by: "Được mời bởi"
       trust_level: "Độ tin tưởng"
       notifications: "Thông báo"
@@ -776,6 +795,7 @@ vi:
       revoke_access: "Lấy lại quyền"
       undo_revoke_access: "Cấp lại quyền"
       api_approved: "Chấp thuận:"
+      api_last_used_at: "Sử dụng lần cuối lúc:"
       theme: "Giao diện"
       home: "Trang chủ mặc định"
       staff_counters:
@@ -822,12 +842,15 @@ vi:
         copied_to_clipboard: "Sao chép vào Clipboard"
         copy_to_clipboard_error: "Lỗi sao chép dữ liệu vào Clipboard"
         remaining_codes: "Bạn có <strong>{{count}}</strong> mã sao lưu còn lại."
+        use: "Sử dụng mã dự phòng"
       second_factor:
         title: "Xác minh hai bước"
         name: "Tên"
         show_key_description: "Nhập thủ công"
         oauth_enabled_warning: "Xin lưu ý rằng thông tin đăng nhập xã hội sẽ bị vô hiệu hóa khi xác thực hai yếu tố đã được bật trên tài khoản của bạn."
         edit: "Sửa"
+        totp:
+          default_name: "Authenticator của bạn"
         security_key:
           delete: "Xóa"
       change_about:
@@ -976,6 +999,7 @@ vi:
         search: "gõ để tìm kiếm thư mời "
         title: "Lời mời"
         user: "User được mời"
+        sent: "Gửi lần cuối"
         none: "Không tìm thấy lời mời nào."
         truncated:
           other: "Hiện {{count}} thư mời đầu tiên"
@@ -1156,8 +1180,6 @@ vi:
       reset: "Tạo lại mật khẩu"
       complete_username: "Nếu một tài khoản phù hợp với tên thành viên <b>%{username} </b>, bạn sẽ nhận được một email với hướng dẫn về cách đặt lại mật khẩu của bạn trong thời gian ngắn."
       complete_email: "Nếu một trận đấu tài khoản <b>%{email} </b>, bạn sẽ nhận được một email với hướng dẫn về cách đặt lại mật khẩu của bạn trong thời gian ngắn."
-      complete_username_found: "Chúng tôi tìm thấy một tài khoản phù hợp với tên thành viên <b>%{username} </b>, bạn sẽ nhận được một email với hướng dẫn về cách đặt lại mật khẩu của bạn trong thời gian ngắn."
-      complete_email_found: "Chúng tôi tìm thấy một tài khoản phù hợp với <b>%{email} </b>, bạn sẽ nhận được một email với hướng dẫn về cách đặt lại mật khẩu của bạn trong thời gian ngắn."
       complete_username_not_found: "Không có tài khoản phù hợp với tên thành viên <b>%{username} </b>"
       complete_email_not_found: "Không tìm thấy tài khoản nào tương ứng với <b>%{email}</b>"
       button_ok: "OK"
@@ -1183,6 +1205,7 @@ vi:
       caps_lock_warning: "Phím Caps Lock đang được bật"
       error: "Không xác định được lỗi"
       rate_limit: "Xin đợi trước khi đăng nhập lại lần nữa."
+      blank_username: "Nhập địa chỉ email và tên người dùng của bạn."
       blank_username_or_password: "Bạn phải nhập email hoặc username, và mật khẩu"
       reset_password: "Khởi tạo mật khẩu"
       logging_in: "Đăng nhập..."
@@ -1219,6 +1242,8 @@ vi:
       github:
         name: "GitHub"
         title: "với GitHub"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Lời mời"
       welcome_to: "Chào mừng bạn đến với %{site_name}!"
@@ -1261,6 +1286,7 @@ vi:
       to: Tới
     emoji_picker:
       filter_placeholder: Tìm kiếm emoji
+      activities: Hoạt động
       objects: Vật th
       flags: Dấu cờ - Flags
     shared_drafts:
@@ -1301,7 +1327,6 @@ vi:
       view_new_post: "Xem bài đăng mới của bạn. "
       saving: "Đang lưu"
       saved: "Đã lưu"
-      saved_draft: "Bài nháp đang lưu. Chọn để tiếp tục."
       uploading: "Đang đăng "
       show_preview: "Xem trước &raquo;"
       hide_preview: "&laquo;ẩn xem trước"
@@ -2456,6 +2481,7 @@ vi:
           edit: "Sửa"
           mobile: "Điện thoại"
           settings: "Xác lập"
+          collapse: Thu gọn
           upload: "Tải lên"
           import_web_tip: "Kho chứa chủ đề"
           is_private: "Theme nằm trong kho git riêng"

@@ -28,7 +28,7 @@ fr:
   topics: "Sujets"
   posts: "messages"
   loading: "Chargement"
-  powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, le rendu est meilleur avec le JavaScript activé '
+  powered_by_html: 'Propulsé par <a href="https://www.discourse.org">Discourse</a>, le rendu est meilleur quand JavaScript est activé.'
   sign_up: "S'inscrire"
   log_in: "Se connecter"
   submit: "Envoyer"
@@ -56,6 +56,7 @@ fr:
       component_no_default: "Les composants du thème ne peuvent pas être un thème par défaut"
       component_no_color_scheme: "Les composants de thème ne peuvent pas avoir de palette de couleur"
       no_multilevels_components: "Les thèmes incluant d'autres thèmes ne peuvent pas être inclus eux-mêmes"
+      optimized_link: Les liens optimisés d'images sont éphémères et ne devraient pas être inclus dans le code source d'un thème.
     settings_errors:
       invalid_yaml: "Le YAML est invalide"
       data_type_not_a_number: "Le type du paramètre `%{name}` n'est pas supporté. Les types supportés sont `integer`, `bool`, `list` et `enum`"
@@ -92,6 +93,7 @@ fr:
         from_reply_by_address_error: "Survient quand l'entête 'From' correspond à l'adresse courriel 'Reply by'."
         inactive_user_error: "Se produit quand l'expéditeur n'est pas actif."
         silenced_user_error: "Se produit lorsque l'expéditeur a été mis sous silence."
+        bad_destination_address: "Se produit quand aucune des adresses courriel des champs To/Cc ne correspond à une adresse de courriel entrante configurée."
         strangers_not_allowed_error: "Se produit quand un utilisateur a essayé de créer un nouveau sujet dans une catégorie dans laquelle il n'est pas membre."
         insufficient_trust_level_error: "Se produit quand un utilisateur a essayé de créer un nouveau sujet dans une catégorie pour laquelle il n'a pas le niveau de confiance nécessaire."
         reply_user_not_matching_error: "Se produit quand une réponse est venue d'une adresse de courriel différente de celle où a été envoyée la notification."
@@ -102,6 +104,7 @@ fr:
         unsubscribe_not_allowed: "Se produit lorsque le désabonnement via courriel n'est pas autorisé pour cet utilisateur."
         email_not_allowed: "Se produit quand l'adresse courriel n'est pas dans la liste autorisée ou est dans la liste des indésirables."
       unrecognized_error: "Erreur non reconnue"
+    secure_media_placeholder: "Expurgé: ce site a activé la sécurisation des médias, visitez le sujet pour visualiser le fichier image/audio/vidéo correspondant."
   errors: &errors
     format: "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b> : %{message}"
@@ -166,6 +169,10 @@ fr:
       enable_s3_uploads_is_required: "Vous ne pouvez pas activer l'inventaire sur S3 avant d'avoir activer les envois S3."
       s3_backup_requires_s3_settings: "Il n'est pas possible d'utiliser le lieu de sauvegarde S3 sans renseigner le '%{setting_name}'."
       s3_bucket_reused: "Il n'est pas possible d'utiliser le même bucket pour 's3_upload_bucket' and 's3_backup_bucket'. Choisir un autre bucket ou utiliser un chemin d'accès différent pour chaque bucket."
+      secure_media_requirements: "Les téléversements sur S3 doivent être activés avant d'activer la sécurisation des médias."
+      second_factor_cannot_be_enforced_with_disabled_local_login: "Il n'est pas possible de render obligatoire le 2FA (authentification à deux facteurs) si les connexions locales sont désactivée."
+      local_login_cannot_be_disabled_if_second_factor_enforced: "Il n'est pas possible de désactiver les connexions locales si le 2FA (authentification à deux facteurs) est obligatoire. Désactiver l'obligation du 2FA avant de désactiver les connexions locales."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "Il n'est pas possible d'activer les téléversements S3 car ils sont déjà activés globalement, et les activer au niveau d'un site pourrait provoquer des problèmes critiques avec les téléversements."
     conflicting_google_user_id: 'Le Google Account ID a changé pour ce compte ; un responsable doit intervenir pour des raisons de sécurité. Merci de contacter les responsables et les renvoyer vers <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
@@ -216,6 +223,7 @@ fr:
     request_membership: "Demande d'adhésion"
     join_group: "Rejoindre le groupe"
   deleted_topic: "Ce sujet a été supprimé et n'est plus disponible."
+  delete_topic_failed: "Une erreur est survenue pendant l'effacement de ce sujet. Merci de contacter l'Administrateur du site."
   reading_time: "Temps de lecture"
   likes: "J'aime"
   too_many_replies:
@@ -243,8 +251,12 @@ fr:
     replies:
       one: "%{count} réponse"
       other: "%{count} réponses"
+    likes:
+      one: "%{count}J'aime"
+      other: "%{count}J'aime"
     last_reply: "Dernière réponse"
     created: "Créé"
+    new_topic: "Créer un nouveau sujet"
   no_mentions_allowed: "Désolé, vous ne pouvez pas mentionner d'autres utilisateurs."
   too_many_mentions:
     one: "Désolé, vous ne pouvez mentionner qu'un utilisateur dans un message."
@@ -273,7 +285,7 @@ fr:
   user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à poster de messages."
   topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez ?"
   not_accepting_pms: "Désolé, %{username} n'accepte pas de messages pour le moment."
-  max_pm_recepients: "Désolé, vous pouvez envoyer un message à un maximum de %{recipients_limit} destinataires."
+  max_pm_recipients: "Désolé, vous pouvez envoyer un message à un maximum de %{recipients_limit} destinataires."
   pm_reached_recipients_limit: "Désolé, vous ne pouvez pas avoir plus de %{recipients_limit} destinataires dans un message direct."
   removed_direct_reply_full_quotes: "La citation de l'entier du message précédent a été supprimé automatiquement."
   just_posted_that: "est trop similaire à ce que vous avez récemment posté"
@@ -978,6 +990,8 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux contributeurs"
       description: "Nombre d'utilisateurs qui ont fait leur première contribution durant cette période."
+    trust_level_growth:
+      yaxis: "Jour"
     consolidated_page_views:
       title: "Pages vues unifiées"
       xaxis:
@@ -1515,7 +1529,6 @@ fr:
     max_post_deletions_per_day: "Nombre maximum de sujet qu'un utilisateur peut supprimer par jour."
     alert_admins_if_errors_per_minute: "Nombre d'erreurs par minute nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. N. B. : nécessite un redémarrage."
     alert_admins_if_errors_per_hour: "Nombre d'erreurs par heure nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. N. B. : nécessite un redémarrage."
-    categories_topics: "Nombre de sujets à afficher dans la page /categories."
     suggested_topics: "Nombre de sujets suggérés affichés en bas d'un sujet."
     limit_suggested_to_category: "Afficher uniquement les sujets de la catégorie courante dans les sujets similaires."
     suggested_topics_max_days_old: "Les sujets suggérés ne devraient pas être plus anciens que n jours."
@@ -1673,7 +1686,6 @@ fr:
     soft_bounce_score: "Score de rejet ajouté à l'utilisateur lorsqu'un rejet temporaire se produit."
     hard_bounce_score: "Score de rejet ajouté à l'utilisateur lorsqu'un rejet permanent se produit."
     bounce_score_threshold: "Score de rejet maximum à partir duquel nous arrêterons d'envoyer des courriels à un utilisateur."
-    bounce_score_threshold_deactivate: "Score de rejet maximum à partir duquel nous allons désactiver un utilisateur."
     reset_bounce_score_after_days: "Rétablir automatiquement le score de rejet après X jours."
     attachment_content_type_blacklist: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du type de contenu."
     attachment_filename_blacklist: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du nom de fichier."
@@ -1808,7 +1820,6 @@ fr:
     returning_users_days: "Combien de jours doivent s'écouler avant qu'un utilisateur soit considéré comme étant de retour."
     default_email_digest_frequency: "Par défaut, à quelle fréquence les utilisateurs reçoivent les résumés par courriel."
     default_include_tl0_in_digests: "Par défaut, inclure les messages des nouveaux utilisateurs dans les résumés par courriel. Les utilisateurs peuvent changer cela dans leurs préférences."
-    default_email_level: "Définissez le niveau de notification courriel par défaut quand quelqu'un cite, répond, mentionne ou invite un utilisateur."
     default_email_messages_level: "Définissez le niveau de notification courriel par défaut quand quelqu'un envoie un message direct à un utilisateur."
     default_email_mailing_list_mode: "Envoyer un courriel pour chaque nouveau message."
     default_email_mailing_list_mode_frequency: "Par défaut, les utilisateurs ayant activé la liste de diffusion recevront des courriels à cette fréquence."
@@ -2215,79 +2226,12 @@ fr:
   test_mailer:
     title: "Envoyer un courriel de test"
     subject_template: "[%{email_prefix}] Test de délivrabilité courriel"
-    text_body_template: |
-      Ceci est un courriel de test de
-
-      [**%{base_url}**][0]
-
-      Assurer la distribution de courriel est compliqué. Voici un certain nombre de points importants que vous devez vérifier au préalable :
-
-      - Soyez *certain* de renseigner l'adresse `notification email` dans les paramètres. **Le nom de domaine renseigné dans l'addresse "from" des courriels que vous envoyez sera le nom de domaine utilisé pour la validation**.
-
-      - Sachez comment consulter le format brut d'un courriel dans votre client de courriel et vérifier les entêtes pour obtenir des indices importants. Dans Gmail, il s'agit de l'option "show original" dans le menu contextuel situé en haut à droite de chaque courriel.
-
-      - **IMPORTANT :** Votre FAI a-t-il un enregistrement DNS inverse renseigné pour associer les noms de domaine et les adresses IP depuis lesquelles vous envoyez des courriels ? [Testez votre enregistrement inverse PTR][2] ici. Si votre FAI n'a pas renseigné correctement votre enregistrement DNS inverse, il est très improbable que vos courriels soient délivrés.
-
-      - L'[enregistrement SPF][8] de votre nom de domaine est-il correct ? [Testez votre enregistrement SPF][1] ici. Veuillez noter que le type officiel d'enregistrement est TXT pour le SPF.
-
-      - L'[enregistrement DKIM][3] de votre nom de domaine est-il correct ? Ceci augmentera de manière significative la bonne distribution de vos courriels. [Testez votre enregistrement DKIM][7] ici.
-
-      - Si vous maintenez votre propre serveur de courriel, assurez-vous que les IPs de votre serveur ne sont sur [aucune liste noire de courriel][4]. Vérifiez également qu'il envoie un "fully qualified hostname" résolvable en DNS dans son message HELO. Si ce n'est pas le cas, vos courriels seront rejetés par de nombreux services de courriel.
-
-      - Nous vous recommandons d'**envoyer un courriel de test à [mail-tester.com][mt]** pour vérifier que tout ce qui est mentionné ci-dessus fonctionne bien.
-
-      (La manière *la plus facile* est de créer un compte gratuit sur [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], qui ont des options gratuites et qui seront suffisants pour de petites communautés. Vous devrez malgré tout configurer les entrées SPF et DKIM dans votre DNS !)
-
-      Nous espérons que vous avez bien reçu ce courriel de test de distribution !
-
-      Bonne chance,
-
-      vos amis de [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Avertissement de nouvelle version"
     subject_template: "[%{email_prefix}] Nouvelle version de Discourse, mise à jour disponible"
-    text_body_template: |
-      Hourra, une nouvelle version de [Discourse](https://www.discourse.org) est disponible !
-
-      Votre version : %{installed_version}
-      Nouvelle version : **%{new_version}**
-
-      - Mettez à jour depuis le navigateur avec notre **[mise à jour en 1 clic](%{base_url}/admin/upgrade)**
-
-      - Consultez les nouveautés dans les [notes de version](https://meta.discourse.org/tags/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions et de l'aide concernant Discourse
   new_version_mailer_with_notes:
     title: "Avertissement de nouvelle version avec notes"
     subject_template: "[%{email_prefix}] mise à jour disponible"
-    text_body_template: |
-      Hourra, une nouvelle version de [Discourse](https://www.discourse.org) est disponible !
-
-      Votre version : %{installed_version}
-      Nouvelle version : **%{new_version}**
-
-      - Mettez à jour depuis le navigateur avec notre **[mise à jour en 1 clic](%{base_url}/admin/upgrade)**
-
-      - Consultez les nouveautés dans les [notes de version](https://meta.discourse.org/tags/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions et de l'aide concernant Discourse
-
-      ### Notes de version
-
-      %{notes}
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond au sujet en discussion qui est défini par son titre et son premier message."
     inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté considère que son contenu est offensif, abusif ou enfreint notre [charte](%{base_path}/guidelines)."
@@ -2370,7 +2314,7 @@ fr:
       text_body_template: |
         Salut ! Nous avons vu que vous lisez beaucoup, ce qui est super, alors nous vous avons monté d'un [niveau de confiance !](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 
-        Nous sommes ravis que vous passez du temps avec nous, et on adorerez en savoir plus sur vous. Prenez un moment pour [remplir votre profil](%{base_url}/my/preferences/profile), ou sentez-vous libre de [démarrer un nouveau sujet](%{base_url}/categories).
+        Nous sommes ravis que vous passiez du temps avec nous, et nous adorerions en savoir plus sur vous. Prenez un moment pour [remplir votre profil](%{base_url}/my/preferences/profile) ou sentez-vous libre de [démarrer un nouveau sujet](%{base_url}/categories).
     welcome_staff:
       subject_template: "Félicitations, le statut de %{role} vous a été accordé !"
     welcome_invite:
@@ -3959,9 +3903,9 @@ fr:
               open:
                 label: "Les utilisateurs peuvent s'inscrire eux-mêmes."
               invite_only:
-                label: "Les utilisateurs peuvent s'inscrire eux-mêmes, mais doivent être approuvés par un responsable."
-              must_approve:
                 label: "Les utilisateurs doivent être invités par des utilisateurs de confiance ou un responsable avant de pouvoir s'inscrire."
+              must_approve:
+                label: "Les utilisateurs peuvent s'inscrire eux-mêmes, mais doivent être approuvés par un responsable."
       contact:
         title: "Contact"
         fields:

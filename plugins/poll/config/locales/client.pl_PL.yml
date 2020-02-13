@@ -83,7 +83,6 @@ pl_PL:
         title: Utwórz ankietę
         insert: Wstaw ankietę
         help:
-          options_count: Wprowadź przynajmniej 2 opcje
           invalid_values: Wartość minimalna musi być mniejsza niż maksymalna.
           min_step_value: Minimalna wartość kroku to 1
         poll_type:

@@ -18,8 +18,8 @@ sv:
     invalid_argument: "Ogiltigt värde '%{value}' för argument '%{argument}'."
     multiple_polls_without_name: "Det finns flera omröstningar utan ett namn. Använd attributet '<code>namn</code>' för att unikt identifiera dina omröstningar."
     multiple_polls_with_same_name: "Det finns flera omröstningar med samma namn: <strong>%{name}</strong>. Använd attributet '<code>namn</code>' för att unikt identifiera din omröstningar."
-    default_poll_must_have_at_least_2_options: "Omröstningen måste ha minst 2 alternativ."
-    named_poll_must_have_at_least_2_options: "Omröstningen med namnet <strong>%{name}</strong> måste ha minst 2 alternativ."
+    default_poll_must_have_at_least_1_option: "Omröstning måste ha minst 1 alternativ."
+    named_poll_must_have_at_least_1_option: "Omröstning med namnet <strong>%{name}</strong> måste ha minst 1 alternativ."
     default_poll_must_have_less_options:
       one: "Omröstningen måste ha mindre än %{count} alternativ."
       other: "Omröstningen måste ha mindre än %{count} alternativ."

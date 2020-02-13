@@ -54,7 +54,6 @@ fa_IR:
         title: ساخت نظرسنجی
         insert: درج نظر سنجی
         help:
-          options_count: حداقل 2 گزینه وارد کنید
           invalid_values: مقدار حداقل می بایست کمتر از مقدار حداکثر باشد.
         poll_type:
           label: نوع

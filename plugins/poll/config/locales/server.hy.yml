@@ -15,8 +15,6 @@ hy:
     invalid_argument: "'%{argument}' արգումենտի %{value} արժեքը սխալ է:"
     multiple_polls_without_name: "Կան առանց անվան բազմակի հարցումներ: Օգտագործեք '<code>անուն</code>' հատկանիշը՝ Ձեր հարցումները եզակիորեն նույնականացնելու համար:"
     multiple_polls_with_same_name: "Կան նույն անվամբ բազմակի հարցումներ՝ <strong>%{name}</strong>: Օգտագործեք '<code>անուն</code>' ատրիբուտը՝ Ձեր հարցւոմները եզակիորեն նույնականացնելու համար:"
-    default_poll_must_have_at_least_2_options: "Հարցումը պետք է ունենա ընտրության առնվազն 2 տարբերակ:"
-    named_poll_must_have_at_least_2_options: "<strong>%{name}</strong> անվամբ հարցումը պետք է ունենա ընտրության առնվազն 2 տարբերակներ:"
     default_poll_must_have_less_options:
       one: "Հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ"
       other: "Հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ"
