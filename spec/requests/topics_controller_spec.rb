@@ -2327,6 +2327,64 @@ RSpec.describe TopicsController do
       put "/t/#{pm.topic_id}/bookmark.json"
       expect(response).to be_forbidden
     end
+
+    context "when SiteSetting.enable_bookmarks_with_reminders is true" do
+      before do
+        SiteSetting.enable_bookmarks_with_reminders = true
+      end
+      it "deletes all the bookmarks for the user in the topic" do
+        sign_in(user)
+        post = create_post
+        Fabricate(:bookmark, post: post, topic: post.topic, user: user)
+        put "/t/#{post.topic_id}/remove_bookmarks.json"
+        expect(Bookmark.where(user: user, topic: topic).count).to eq(0)
+      end
+    end
+  end
+
+  describe "#bookmark" do
+    before do
+      sign_in(user)
+    end
+
+    it "should create a new post action for the bookmark on the first post of the topic" do
+      post = create_post
+      post2 = create_post(topic_id: post.topic_id)
+      put "/t/#{post.topic_id}/bookmark.json"
+
+      expect(PostAction.find_by(user_id: user.id, post_action_type: PostActionType.types[:bookmark]).post_id).to eq(post.id)
+    end
+
+    it "errors if the topic is already bookmarked for the user" do
+      post = create_post
+      PostActionCreator.new(user, post, PostActionType.types[:bookmark]).perform
+
+      put "/t/#{post.topic_id}/bookmark.json"
+      expect(response).to be_forbidden
+    end
+
+    context "when SiteSetting.enable_bookmarks_with_reminders is true" do
+      before do
+        SiteSetting.enable_bookmarks_with_reminders = true
+      end
+      it "should create a new bookmark on the first post of the topic" do
+        post = create_post
+        post2 = create_post(topic_id: post.topic_id)
+        put "/t/#{post.topic_id}/bookmark.json"
+
+        bookmarks_for_topic = Bookmark.where(topic: post.topic, user: user)
+        expect(bookmarks_for_topic.count).to eq(1)
+        expect(bookmarks_for_topic.first.post_id).to eq(post.id)
+      end
+
+      it "errors if the topic is already bookmarked for the user" do
+        post = create_post
+        Bookmark.create(post: post, topic: post.topic, user: user)
+
+        put "/t/#{post.topic_id}/bookmark.json"
+        expect(response).to be_forbidden
+      end
+    end
   end
 
   describe '#reset_new' do
