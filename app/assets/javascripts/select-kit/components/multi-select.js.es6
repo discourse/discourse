@@ -41,7 +41,7 @@ export default SelectKitComponent.extend({
   },
 
   select(value, item) {
-    if (!value || !value.length) {
+    if (!Ember.isPresent(value)) {
       if (!this.validateSelect(this.selectKit.highlighted)) {
         return;
       }

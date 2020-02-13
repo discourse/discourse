@@ -421,8 +421,8 @@ export default Component.extend(
         }
 
         if (this.singleSelect) {
-          value = value.firstObject || null;
-          items = items.firstObject || null;
+          value = Ember.isPresent(value.firstObject) ? value.firstObject : null;
+          items = Ember.isPresent(items.firstObject) ? items.firstObject : null;
         }
 
         this._boundaryActionHandler("onChange", value, items);
@@ -703,7 +703,7 @@ export default Component.extend(
     },
 
     select(value, item) {
-      if (!value) {
+      if (!Ember.isPresent(value)) {
         if (!this.validateSelect(this.selectKit.highlighted)) {
           return;
         }
