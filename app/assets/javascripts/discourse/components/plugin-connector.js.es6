@@ -4,15 +4,16 @@ import deprecated from "discourse-common/lib/deprecated";
 import { buildArgsWithDeprecations } from "discourse/lib/plugin-connectors";
 import { afterRender } from "discourse-common/utils/decorators";
 
-let _decorators = [];
+let _decorators = {};
 
 // Don't call this directly: use `plugin-api/decoratePluginOutlet`
 export function addPluginOutletDecorator(outletName, callback) {
-  _decorators.push({ outletName, callback });
+  _decorators[outletName] = _decorators[outletName] || [];
+  _decorators[outletName].push(callback);
 }
 
 export function resetDecorators() {
-  _decorators = [];
+  _decorators = {};
 }
 
 export default Component.extend({
@@ -66,7 +67,7 @@ export default Component.extend({
   @afterRender
   _decoratePluginOutlets() {
     (_decorators[this.connector.outletName] || []).forEach(dec =>
-      dec.callback(this.element, this.args)
+      dec(this.element, this.args)
     );
   },
 
