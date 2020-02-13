@@ -169,7 +169,7 @@ export default function selectKit(selector) {
     },
 
     async selectRowByName(name) {
-      await selectKitSelectRowByValue(name, selector);
+      await selectKitSelectRowByName(name, selector);
     },
 
     async selectNoneRow() {
