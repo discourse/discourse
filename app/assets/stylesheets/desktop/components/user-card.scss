@@ -1,6 +1,6 @@
 // shared styles for user and group cards
-#user-card,
-#group-card {
+.user-card,
+.group-card {
   position: absolute;
   z-index: z("usercard");
   &.fixed {
@@ -35,7 +35,7 @@
 }
 
 // styles for user cards only
-#user-card {
+.user-card {
   // badges
   .badge-section {
     .user-badge {
