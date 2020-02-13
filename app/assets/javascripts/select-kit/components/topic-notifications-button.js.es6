@@ -6,11 +6,35 @@ export default Component.extend({
   appendReason: true,
   showFullTitle: true,
 
+  didInsertElement() {
+    this._super(...arguments);
+
+    this.appEvents.on(
+      "topic-notifications-button:changed",
+      this,
+      "_changeTopicNotificationLevel"
+    );
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this.appEvents.off(
+      "topic-notifications-button:changed",
+      this,
+      "_changeTopicNotificationLevel"
+    );
+  },
+
+  _changeTopicNotificationLevel(level) {
+    if (level.id !== this.notificationLevel) {
+      this.topic.details.updateNotifications(level.id);
+    }
+  },
+
   actions: {
-    changeTopicNotificationLevel(newNotificationLevel) {
-      if (newNotificationLevel !== this.notificationLevel) {
-        this.topic.details.updateNotifications(newNotificationLevel);
-      }
+    changeTopicNotificationLevel(level, notification) {
+      this._changeTopicNotificationLevel(notification);
     }
   }
 });
