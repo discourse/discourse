@@ -492,7 +492,7 @@ class CookedPostProcessor
     img = extract_images_for_post.first
     if img.blank?
       @post.update_column(:image_url, nil) if @post.image_url
-      @post.topic.update_column(:image_url, nil) if @post.topic.image_url
+      @post.topic.update_column(:image_url, nil) if @post.topic.image_url && @post.is_first_post?
       return
     end
 

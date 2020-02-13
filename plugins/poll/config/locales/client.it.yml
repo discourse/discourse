@@ -64,7 +64,6 @@ it:
         title: Crea Sondaggio
         insert: Inserisci Sondaggio
         help:
-          options_count: Inserisci almeno 2 opzioni
           invalid_values: Il valore minimo deve essere minore del valore massimo.
           min_step_value: Il valore minimo di un passo è 1
         poll_type:

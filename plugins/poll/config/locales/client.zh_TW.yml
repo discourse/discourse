@@ -47,7 +47,6 @@ zh_TW:
         title: 創建投票
         insert: 插入投票
         help:
-          options_count: 輸入至少 2 個選項
           invalid_values: 最小值必須比最大值小。
           min_step_value: 最小梯級階值為 1
         poll_type:

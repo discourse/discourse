@@ -223,6 +223,7 @@ tr_TR:
     request_membership: "Üyelik İste"
     join_group: "Gruba katıl"
   deleted_topic: "Hata! Bu konu silindi ve artık kullanılamıyor."
+  delete_topic_failed: "Bu konu silinirken bir hata oluştu. Lütfen sitenin yöneticisine başvurun."
   reading_time: "Okuma Zamanı"
   likes: "Beğeniler"
   too_many_replies:
@@ -284,7 +285,7 @@ tr_TR:
   user_is_suspended: "Uzaklaştırılmış kullanıcılar gönderi yapamazlar."
   topic_not_found: "Bir şeyler ters gitti. Muhtemelen siz konuya bakarken bu konu kapatıldı ya da silindi."
   not_accepting_pms: "Üzgünüz, %{username} şu anda mesaj kabul etmiyor."
-  max_pm_recepients: "Üzgünüz, maksimum %{recipients_limit} alıcıya mesaj gönderebilirsiniz."
+  max_pm_recipients: "Üzgünüz, maksimum %{recipients_limit} alıcıya mesaj gönderebilirsiniz."
   pm_reached_recipients_limit: "Maalesef bir mesajı %{recipients_limit} alıcıdan daha fazlasına gönderemezsiniz."
   removed_direct_reply_full_quotes: "Otomatik olarak önceki tüm gönderilerin alıntıları kaldırıldı."
   secure_upload_not_allowed_in_public_topic: "Maalesef, aşağıdaki güvenli yükleme (ler) herkese açık bir konuda kullanılamaz: %{upload_filenames}."
@@ -990,6 +991,15 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Yeni katılımcı sayısı"
       description: "Bu dönemde ilk gönderisini paylaşan kullanıcı sayısı."
+    trust_level_growth:
+      title: "Güven Düzeyinde büyüme"
+      xaxis:
+        tl1_reached: "TL1'e ulaştı"
+        tl2_reached: "TL2'ye ulaştı"
+        tl3_reached: "TL3'e ulaştı"
+        tl4_reached: "TL4'e ulaştı"
+      yaxis: "Gün"
+      description: "Bu dönemde Güven Düzeylerini artıran kullanıcı sayısı."
     consolidated_page_views:
       title: "Konsolide Sayfa Görüntüleme Sayısı"
       xaxis:
@@ -1333,6 +1343,7 @@ tr_TR:
     onebox_domains_blacklist: "Asla yayınlanmayacak alanların listesi."
     inline_onebox_domains_whitelist: "Başlıksız bağlanırsa minyatür formda yayınlanacak alanların listesi"
     enable_inline_onebox_on_all_domains: "İnline_onebox_domain_whitelist site ayarını yoksay ve tüm alan adlarında inline onebox'a izin ver."
+    force_custom_user_agent_hosts: "Tüm isteklerde özel onebox kullanıcı aracısını kullanacak ana makineler. (Özellikle kullanıcı aracısıyla erişimi sınırlayan ana bilgisayarlar için kullanışlıdır)."
     max_oneboxes_per_post: "Gönderide olabilecek en fazla kutulama sayısı"
     logo: "Sitenizin sol üst tarafındaki logo resmi. Yüksekliği 120 ve en boy oranı 3: 1 den büyük olan geniş dikdörtgen bir görüntü kullanın. Boş bırakılırsa, site başlığı metni gösterilir."
     logo_small: "Aşağı kaydırırken sitenizin sol üst köşesinde görülen küçük logo resmi. 120 × 120 kare bir görüntü kullanın. Boş bırakılırsa, bir ev glifi gösterilir."
@@ -1385,6 +1396,7 @@ tr_TR:
     markdown_typographer_quotation_marks: "Çift ve tek tırnak değiştirme çiftlerinin listesi"
     post_undo_action_window_mins: "Bir gönderide yapılan yeni eylemlerin (beğenme, bildirme vb) geri alınabileceği zaman, dakika olarak"
     must_approve_users: "Siteye erişimlerine izin verilmeden önce tüm yeni kullanıcı hesaplarının görevliler tarafından onaylanması gerekir."
+    approve_suspect_users: "Personel tüm şüpheli hesapları onaylamalıdır"
     pending_users_reminder_delay: "Belirtilen saatten daha uzun bir süredir onay bekleyen yeni kullanıcılar mevcutsa moderatörleri bilgilendir. Bilgilendirmeyi devre dışı bırakmak için -1 girin."
     maximum_session_age: "Kullanıcı son ziyaretinden bu yana n saat boyunca giriş yapmış olarak kalacak"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) takip kodu, örn: UA-12345678-9; bkz. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1532,7 +1544,7 @@ tr_TR:
     max_post_deletions_per_day: "Bir kullanıcının günde silebileceği maksimum gönderi sayısı."
     alert_admins_if_errors_per_minute: "Bir yönetici uyarısını tetiklemek için dakika başına hata sayısı. 0 değeri bu özelliği devre dışı bırakır. NOT: yeniden başlatma gerektirir."
     alert_admins_if_errors_per_hour: "Bir yönetici uyarısını tetiklemek için saat başına hata sayısı. 0 değeri bu özelliği devre dışı bırakır. NOT: yeniden başlatma gerektirir."
-    categories_topics: "/categories sayfasında gösterilecek olan konu sayısı."
+    categories_topics: " Kategoriler sayfasında gösterilecek konu sayısı. 0 olarak ayarlanırsa, iki sütunu simetrik (kategoriler ve konular) tutmak için otomatik olarak bir değer bulmaya çalışır."
     suggested_topics: "Konunun en altında yer alan, önerilen konu sayısı. "
     limit_suggested_to_category: "Önerilen konularda sadece kullanıcının bulunduğu kategoriye ait konuları göster."
     suggested_topics_max_days_old: "Önerilen konular n günden daha eski olmamalı."
@@ -1690,7 +1702,6 @@ tr_TR:
     soft_bounce_score: "Geçici bir geri sekme olduğunda kullanıcıya hemen geri sekme puanı eklenir."
     hard_bounce_score: "Kalıcı bir geri sekme olduğunda kullanıcıya hemen geri sekme puanı eklenir."
     bounce_score_threshold: "Kullanıcıya e-posta gönderimi durdurmak için gereken en fazla geri seken posta sayısı"
-    bounce_score_threshold_deactivate: "Bir kullanıcıyı devre dışı bırakmadan önce maksimum hemen geri sekme puanı."
     reset_bounce_score_after_days: "X gün sonra sekme puanını otomatik olarak sıfırlayın."
     attachment_content_type_blacklist: "İçerik türüne göre ekleri kara listeye almak için kullanılan anahtar kelimelerin listesi."
     attachment_filename_blacklist: "Dosya adına göre ekleri kara listeye almak için kullanılan anahtar kelimelerin listesi."
@@ -1833,7 +1844,7 @@ tr_TR:
     returning_users_days: "Bir kullanıcının geri döneceği düşünülmeden önce kaç gün geçmesi gerekir."
     default_email_digest_frequency: "Öntanımlı olarak kullanıcılar ne sıklıkla e-posta özeti alacak."
     default_include_tl0_in_digests: "Yeni kullanıcılardan gelen gönderileri varsayılan olarak özet e-postalara dahil et. Kullanıcılar bunu kendi tercihlerine göre değiştirebilirler."
-    default_email_level: "Birisi kullanıcıya alıntı yaptığında / yanıt verdiğinde veya bahsettiğinde varsayılan e-posta bildirim seviyesini ayarlayın."
+    default_email_level: "Normal konular için varsayılan e-posta bildirim seviyesini ayarlayın."
     default_email_messages_level: "Birisi kullanıcıya mesaj gönderdiğinde varsayılan e-posta bildirim seviyesini ayarlayın."
     default_email_mailing_list_mode: "Öntanımlı olarak her yeni gönderi için bir e-posta gönder."
     default_email_mailing_list_mode_frequency: "Posta listesi modunu etkinleştiren kullanıcılar varsayılan olarak bu e-postaları alır."
@@ -1960,6 +1971,7 @@ tr_TR:
     unknown_error: "Hesabınızda bir sorun var. Lütfen site yöneticisi ile iletişime geçin."
     timeout_expired: "Hesabınız zaman aşımına uğradı, lütfen tekrar giriş yapmayı deneyin."
     no_email: "Hiçbir e-posta adresi verilmedi. Lütfen sitenin yöneticisine başvurun."
+    blank_id_error: "`External_id` gerekli ancak boştu"
     email_error: "<b>%{email}</b> e-posta adresiyle bir hesap kaydedilemedi. Lütfen sitenin yöneticisine başvurun."
     missing_secret: "Gizlililik eksikliği nedeniyle SSO kimlik doğrulaması başarısız oldu. Bu sorunu çözmek için site yöneticilerine başvurun."
   original_poster: "Özgün Gönderici"
@@ -2038,6 +2050,8 @@ tr_TR:
     autoclosed_disabled_lastpost: "Konu şimdi açıldı. Yeni cevaplara izin var."
     auto_deleted_by_timer: "Zamanlayıcı tarafından otomatik olarak silinir."
   login:
+    invalid_second_factor_method: "Seçilen ikinci faktör yöntemi geçersiz."
+    not_enabled_second_factor_method: "Seçilen ikinci faktör yöntemi hesabınız için etkinleştirilmedi."
     security_key_description: "Fiziksel güvenlik anahtarınızı hazırladığınızda, aşağıdaki Güvenlik Anahtarıyla Kimlik Doğrula düğmesine basın."
     security_key_alternative: "Başka bir yol dene"
     security_key_authenticate: "Güvenlik Anahtarı ile Kimlik Doğrulama"
@@ -2083,6 +2097,7 @@ tr_TR:
     invalid_second_factor_code: "Geçersiz kimlik doğrulama kodu. Her kod yalnızca bir kez kullanılabilir."
     invalid_security_key: "Geçersiz güvenlik anahtarı."
     second_factor_toggle:
+      totp: "Bunun yerine bir kimlik doğrulama uygulaması veya güvenlik anahtarı kullanın"
       backup_code: "Bunun yerine bir yedekleme kodu kullanın"
   admin:
     email:
@@ -2090,6 +2105,9 @@ tr_TR:
   user:
     deactivated: "'%{email}' adresine çok fazla 'geri dönen' e-posta nedeniyle devre dışı bırakıldı."
     deactivated_by_staff: "Yetkili tarafından devre dışı bırakıldı"
+    deactivated_by_inactivity:
+      one: "%{count} gün işlem yapılmadığında otomatik olarak devre dışı bırakıldı"
+      other: "%{count} gün işlem yapılmazsa otomatik olarak devre dışı bırakılır"
     activated_by_staff: "Yetkili tarafından etkinleştirildi"
     new_user_typed_too_fast: "Yeni kullanıcı çok hızlı yazmış"
     content_matches_auto_block_regex: "Otomatik blok regex içerik ifadesiyle eşleşiyor"
@@ -2119,6 +2137,7 @@ tr_TR:
       fixed_primary_email: "Aşamalı kullanıcı için birincil e-posta düzeltildi"
       same_ip_address: "Diğer kullanıcılarla aynı IP adresi (%{ip_address})"
       inactive_user: "Etkin olmayan kullanıcı"
+    email_in_spam_header: "Kullanıcının ilk e-postası spam olarak işaretlendi"
   reviewables_reminder:
     submitted:
       one: "Öğeler bir saat önce gönderildi %{count} saat. [Lütfen onları inceleyin] (%{base_path} / review)."
@@ -3029,6 +3048,7 @@ tr_TR:
       unsubscribe: "Siz bir süredir göremediğimiz için bu özet %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirebilir veya %{unsubscribe_link} aboneliği iptal edebilirsiniz."
       your_email_settings: "e-posta ayarlarınız"
       click_here: "buraya tıklayın"
+      from: "%{site_name}"
       preheader: "%{last_seen_at} tarihindeki ziyaretinizden bu yana olanların kısa bir özeti"
     forgot_password:
       title: "Parolamı Unuttum"
@@ -3057,6 +3077,7 @@ tr_TR:
     admin_login:
       title: "Yönetici Girişi"
       subject_template: "[%{email_prefix}] Giriş"
+      text_body_template: "Birisi [%{site_name}] (%{base_url}) adresinden hesabınıza giriş yapmak istedi. Bu isteği siz yapmadıysanız, bu e-postayı güvenle yok sayabilirsiniz. \n\nGiriş yapmak için aşağıdaki bağlantıyı tıklayın:\n\n %{base_url} / session / email-login / %{email_token}\n"
     account_created:
       title: "Hesap oluşturuldu"
       subject_template: "[%{email_prefix}] Yeni Hesabınız"
@@ -3094,11 +3115,11 @@ tr_TR:
     signup:
       title: "Kaydol"
       subject_template: "[%{email_prefix}] Yeni hesabınızı onaylayın"
-      text_body_template: "%{site_name}&#39;a hoş geldiniz! \n\nYeni hesabınızı onaylamak ve etkinleştirmek için aşağıdaki bağlantıyı tıklayın: \n%{base_url}/u/enable-account/%{email_token} \n\nYukarıdaki bağlantı tıklanabilir değilse, kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin.\n"
+      text_body_template: "%{site_name}&#39;a hoş geldiniz! \n\nYeni hesabınızı onaylamak ve etkinleştirmek için aşağıdaki bağlantıyı tıklayın: \n%{base_url}/u/activate-account/%{email_token}\n\nYukarıdaki bağlantı tıklanabilir değilse, kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin.\n"
     activation_reminder:
       title: "Aktivasyon Hatırlatıcısı"
       subject_template: "[%{email_prefix}] Hesabınızı onaylamanız için hatırlatma"
-      text_body_template: "%{site_name}&#39;a hoş geldiniz! \n\nHesabınızı etkinleştirmeniz kolay bir hatırlatmadır. \n\nYeni hesabınızı onaylamak ve etkinleştirmek için aşağıdaki bağlantıyı tıklayın: \n%{base_url}/u/enable-account/%{email_token} \n\nYukarıdaki bağlantı tıklanabilir değilse, kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin.\n"
+      text_body_template: "%{site_name}&#39;a hoş geldiniz! \n\nHesabınızı etkinleştirmeniz kolay bir hatırlatmadır. \n\nYeni hesabınızı onaylamak ve etkinleştirmek için aşağıdaki bağlantıyı tıklayın: \n%{base_url}/u/activate-account/%{email_token} \n\nYukarıdaki bağlantı tıklanabilir değilse, kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin.\n"
     suspicious_login:
       title: "Yeni Giriş Uyarısı"
       subject_template: "[%{site_name}] %{location}'dan Yeni Giriş"
@@ -3201,6 +3222,9 @@ tr_TR:
     title: "Gizlilik İlkeleri"
     body: "<a name=\"collect\"></a> ## [Hangi bilgileri topluyoruz?] (# Toplamak) Sitemize kayıt olduğunuzda sizden bilgi topluyor ve burada paylaşılan içeriği okuyarak, yazarak ve değerlendirerek foruma katıldığınızda veri topluyoruz. \n\nSitemize kayıt olurken adınızı ve e-posta adresinizi girmeniz istenebilir. Ancak kayıt olmadan sitemizi ziyaret edebilirsiniz. \n\nE-posta adresiniz benzersiz bir bağlantı içeren bir e-posta ile doğrulanacaktır. Bu bağlantı ziyaret edilirse, e-posta adresini kontrol ettiğinizi biliyoruz. \n\nKayıt olurken ve posta gönderirken, postanın kaynaklandığı IP adresini kaydederiz. \n\nAyrıca, sunucumuza yapılan her isteğin IP adresini içeren sunucu günlüklerini tutabiliriz. <a name=\"use\"></a> ## [Bilgilerinizi ne için kullanıyoruz?] (# Kullanım) Sizden topladığımız bilgilerden herhangi biri aşağıdaki yollardan biriyle kullanılabilir: * Deneyiminizi kişiselleştirmek için \n- bilgileriniz, bireyinize daha iyi yanıt vermemize yardımcı olur ihtiyacı vardır. * Sitemizi geliştirmek için - sizden aldığımız bilgilere ve geri bildirimlere dayanarak site tekliflerimizi sürekli olarak geliştirmeye çalışıyoruz. * Müşteri hizmetlerini iyileştirmek için - bilgileriniz, müşteri hizmetleri istek ve destek ihtiyaçlarınızı daha etkin bir şekilde yanıtlamamıza yardımcı olur. * Periyodik e-postalar göndermek için \n- Verdiğiniz e-posta adresi size bilgi, konu değişiklikleri hakkında veya kullanıcı adınıza yanıt olarak talep ettiğiniz bildirimler, sorulara yanıt ve / veya diğer istek veya soruları göndermek için kullanılabilir. <a name=\"protect\"></a> ## [Bilgilerinizi nasıl koruyoruz?] (# Koru) Kişisel bilgilerinizi girerken, gönderirken veya bu bilgilere erişirken kişisel bilgilerinizin güvenliğini sağlamak için çeşitli güvenlik önlemleri uygularız. <a name=\"data-retention\"></a> ## [Veri saklama politikanız nedir?] (# Veri saklama) Aşağıdakiler için iyi niyetle gayret göstereceğiz: \n\n* Bu sunucuya yapılan tüm isteklerin IP adresini içeren sunucu günlüklerini 90 günden fazla tutmayın. \n\n* Kayıtlı kullanıcılarla ve yayınlarıyla ilişkili IP adreslerini en fazla 5 yıl saklayın. <a name=\"cookies\"></a> ## [Çerez kullanıyor muyuz?] (# Çerezler) Evet. Çerezler, bir sitenin veya servis sağlayıcısının Web tarayıcınız aracılığıyla bilgisayarınızın sabit diskine aktardığı küçük dosyalardır (izin verirseniz). \n\nBu çerezler, sitenin tarayıcınızı tanımasını sağlar ve kayıtlı bir hesabınız varsa, kayıtlı hesabınızla ilişkilendirir. \n\nGelecekte daha iyi site deneyimleri ve araçları sunabilmemiz için, gelecekteki ziyaretler için tercihlerinizi anlamak ve kaydetmek ve site trafiği ve site etkileşimi hakkında toplu veriler derlemek için çerezleri kullanıyoruz. \n\nSite ziyaretçilerimizi daha iyi anlamamıza yardımcı olması için üçüncü taraf hizmet sağlayıcılarla sözleşme yapabiliriz. Bu hizmet sağlayıcıların, işimizi yürütmemize ve geliştirmemize yardımcı olmak dışında, bizim adımıza toplanan bilgileri kullanmasına izin verilmez. <a name=\"disclose\"></a> ## [Dış taraflara herhangi bir bilgi ifşa ediyor muyuz?] (# İfşa) Kişisel olarak tanımlanabilir bilgilerinizi satmıyor, ticaretini yapmıyor veya dış taraflara başka bir şekilde aktarmıyoruz. Bu, bu bilgileri gizli tutmayı kabul ettikleri sürece, sitemizi işletmemize, işimizi yürütmemize veya size hizmet etmemize yardımcı olan güvenilir üçüncü tarafları kapsamaz. Ayrıca, sürümün yasalara uymak, site politikalarımızı uygulamak veya bizim veya diğer haklarımızı, mülkümüzü veya güvenliğimizi korumak için uygun olduğuna inandığımızda bilgilerinizi de yayınlayabiliriz. Bununla birlikte, kişisel olarak tanımlanamayan ziyaretçi bilgileri, pazarlama, reklam veya diğer kullanımlar için diğer taraflara verilebilir. <a name=\"third-party\"></a> ## [Üçüncü taraf bağlantıları] (# üçüncü taraf) Bazen, kendi takdirimize bağlı olarak, sitemize üçüncü taraf ürünleri veya hizmetleri ekleyebilir veya sunabiliriz. Bu üçüncü taraf sitelerinin ayrı ve bağımsız gizlilik politikaları vardır. Dolayısıyla, bu bağlantılı sitelerin içeriği ve faaliyetleri için hiçbir sorumluluğumuz veya yükümlülüğümüz yoktur. Bununla birlikte, sitemizin bütünlüğünü korumaya ve bu siteler hakkında her türlü geri bildirimi memnuniyetle karşılamaya çalışıyoruz. <a name=\"coppa\"></a> ## [Çocukların Çevrimiçi Gizliliğini Koruma Yasası Uyumluluğu] (# coppa) Sitemiz, ürünlerimiz ve hizmetlerimiz en az 13 yaşında veya daha büyük olan kişilere yöneliktir. Bu sunucu ABD&#39;deyse ve 13 yaşın altındaysanız, COPPA ([Çocukların Çevrimiçi Gizliliğini Koruma Yasası] (https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) uyarınca bu site. <a name=\"online\"></a> ## [Yalnızca Çevrimiçi Gizlilik İlkesi] (# çevrimiçi) Bu çevrimiçi gizlilik ilkesi, yalnızca sitemiz aracılığıyla toplanan bilgiler için geçerlidir, çevrimdışı toplanan bilgiler için geçerli değildir. <a name=\"consent\"></a> ## [Onayınız] (# onay) Sitemizi kullanarak web sitemizin gizlilik politikamızı kabul etmiş olursunuz. <a name=\"changes\"></a> ## [Gizlilik Politikamızdaki Değişiklikler] (# değişiklik) Gizlilik politikamızı değiştirmeye karar verirsek, bu değişiklikleri bu sayfaya göndeririz. Bu belge CC-BY-SA&#39;dır. Son güncelleme tarihi: 31 Mayıs 2013.\n"
   badges:
+    mass_award:
+      errors:
+        invalid_csv: "%{line_number} satırında bir hatayla karşılaştık. Lütfen CSV'nin her satırında bir e-posta olduğunu doğrulayın."
     editor:
       name: Düzenleyici
       description: İlk gönderini düzenledin
@@ -3543,9 +3567,9 @@ tr_TR:
               open:
                 label: "Kullanıcılar kendi kendilerine kaydolabilirler."
               invite_only:
-                label: "Kullanıcılar kendi kendilerine kaydolabilir, ancak görevliler tarafından onaylanmalıdır."
-              must_approve:
                 label: "Kullanıcıların kaydolmadan önce güvenilir kullanıcılar veya görevliler tarafından davet edilmesi gerekir."
+              must_approve:
+                label: "Kullanıcılar kendi kendilerine kaydolabilir, ancak görevliler tarafından onaylanmalıdır."
       contact:
         title: "İletişim"
         fields:
@@ -3680,6 +3704,9 @@ tr_TR:
       category: "Bu kategorideki gönderiler, moderatör tarafından manuel onay gerektirir. Kategori ayarlarına bakın."
       must_approve_users: "Tüm yeni kullanıcılar yetkili tarafından onaylanmalıdır. Bkz. “must_approve_users`."
       invite_only: "Tüm yeni kullanıcılar davet edilmelidir. Bkz.`invite_only`"
+      email_auth_res_enqueue: "Bu e-posta DMARC kontrolünde başarısız oldu, büyük olasılıkla kimden geldiği belli değil. Daha fazla bilgi için satır e-posta başlıklarına bakın."
+      email_spam: "Bu e-posta, 'email_in_spam_header' içinde tanımlanan başlık tarafından spam olarak işaretlendi."
+      suspect_user: "Şüpheli listesindeki kullanıcılar personel tarafından kontrol edilmelidir. Bkz."
     actions:
       agree:
         title: "Kabul..."

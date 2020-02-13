@@ -584,6 +584,8 @@ et:
       xaxis: "Päev"
     new_contributors:
       xaxis: "Päev"
+    trust_level_growth:
+      yaxis: "Päev"
     consolidated_page_views:
       yaxis: "Päev"
       labels:

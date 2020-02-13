@@ -351,6 +351,8 @@ id:
       xaxis: "Hari"
     new_contributors:
       xaxis: "Hari"
+    trust_level_growth:
+      yaxis: "Hari"
     consolidated_page_views:
       yaxis: "Hari"
       labels:

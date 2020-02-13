@@ -27,6 +27,7 @@ de:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D. MMM [um] HH:mm"
       long_no_year_no_time: "D. MMM"
@@ -152,6 +153,7 @@ de:
       banner:
         enabled: "hat dieses Banner erstellt, %{when}. Es wird oberhalb jeder Seite angezeigt, bis es vom Benutzer weggeklickt wird."
         disabled: "hat dieses Banner entfernt, %{when}. Es wird nicht mehr oberhalb jeder Seite angezeigt."
+    topic_admin_menu: "Themen Aktionen"
     wizard_required: "Willkommen bei deinem neuen Discourse! Lass uns mit dem <a href='%{url}' data-auto-route='true'>Setup-Assistenten</a> ✨ starten"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     bootstrap_mode_enabled: "Damit du mit deiner Seite einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald die Gesamtanzahl der Benutzer den Wert %{min_users} überschreitet."
@@ -261,6 +263,7 @@ de:
     bookmarks:
       created: "du hast ein Lesezeichen zu diesem Beitrag hinzugefügt"
       not_bookmarked: "Lesezeichen auf diesen Beitrag setzen"
+      created_with_reminder: "Du hast diesem Beitrag ein Lesezeichen hinzugefügt mit einer Erinnerung am %{date}"
       remove: "Lesezeichen entfernen"
       confirm_clear: "Bist du sicher, dass du alle Lesezeichen in diesem Thema entfernen möchtest? "
       save: "Speichern"
@@ -382,6 +385,8 @@ de:
       deleted_post: "Beitrag gelöscht"
       deleted_user: "Benutzer gelöscht"
       user:
+        bio: "Bio"
+        website: "Website"
         username: "Benutzername"
         email: "E-Mail"
         name: "Name"
@@ -573,7 +578,7 @@ de:
       leave: "Verlassen"
       request: "Anfrage"
       message: "Nachricht"
-      allow_membership_requests: "Erlaube Benutzern, eine Mitgliedschaftsanfrage an Gruppen-Eigentümer zu senden."
+      confirm_leave: "Willst du die Gruppe wirklich verlassen?"
       membership_request_template: "Benutzerdefinierte Vorlage, das Benutzern angezeigt wird, die eine Mitgliedschaftsanfrage senden"
       membership_request:
         submit: "Anfrage abschicken"
@@ -752,9 +757,13 @@ de:
       activity_stream: "Aktivität"
       preferences: "Einstellungen"
       feature_topic_on_profile:
+        open_search: "Wähle ein neues Thema"
+        title: "Wähle ein Thema"
+        search_label: "Suche nach einem Thema anhand der Überschrift"
         save: "Speichern"
         clear:
           title: "Filter zurücksetzen"
+          warning: "Willst du wirklich dein Thema entfernen? "
       profile_hidden: "Das öffentliche Profil des Benutzers ist ausgeblendet."
       expand_profile: "Erweitern"
       collapse_profile: "Zuklappen"
@@ -973,6 +982,7 @@ de:
         instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 590px."
       change_featured_topic:
         title: "Hervorgehobenes Thema"
+        instructions: "Eine Verknüpfung zu diesem Thema wird auf deiner Benutzerkarte und deinem Profil sein."
       email:
         title: "E-Mail"
         primary: "Primäre E-Mail-Adresse"
@@ -1108,6 +1118,7 @@ de:
         search: "zum Suchen nach Einladungen hier eingeben…"
         title: "Einladungen"
         user: "Eingeladener Benutzer"
+        sent: "zuletzt gesendet"
         none: "Keine Einladungen anzuzeigen."
         truncated:
           one: "Zeige die erste Einladung."
@@ -1321,8 +1332,6 @@ de:
       reset: "Passwort zurücksetzen"
       complete_username: "Wenn ein Benutzerkonto dem Benutzernamen <b>%{username}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_email: "Wenn ein Benutzerkonto der E-Mail <b>%{email}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
-      complete_username_found: "Wir haben ein zum Benutzername <b>%{username}</b> gehörendes Konto gefunden. Du solltest in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
-      complete_email_found: "Wir haben ein zu <b>%{email}</b> gehörendes Benutzerkonto gefunden. Du solltest in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_username_not_found: "Es gibt kein Konto mit dem Benutzernamen <b>%{username}</b>"
       complete_email_not_found: "Es gibt kein Benutzerkonto für <b>%{email}</b>"
       help: "E-Mail nicht angekommen? Bitte prüfe zuerst deinen Spam-Ordner. <p>Nicht sicher, welche E-Mail-Adresse du verwendet hast? Gib eine E-Mail-Adresse ein und wir werden dir sagen, ob sie hier existiert.</p><p>Falls du keinen Zugriff mehr auf die hinterlegte E-Mail-Adresse deines Kontos hast, kontaktiere bitte <a href='%{basePath}/about'>unser hilfsbereites Team. </a></p>"
@@ -1544,7 +1553,6 @@ de:
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Wird gespeichert"
       saved: "Gespeichert!"
-      saved_draft: "Ein Beitrag ist in Arbeit. Zum Fortsetzen hier klicken."
       uploading: "Wird hochgeladen…"
       show_preview: "Vorschau anzeigen &raquo;"
       hide_preview: "&laquo; Vorschau ausblenden"
@@ -1750,6 +1758,7 @@ de:
           title: mit Treffer im Titel
           likes: "Themen/Beiträge, die mir gefallen"
           posted: Themen mit Beiträgen von mir
+          created: von mir erstellt
           watching: "Themen, die ich beobachte"
           tracking: "Themen, denen ich folge"
           private: Beiträge in meinen Unterhaltungen
@@ -1766,6 +1775,7 @@ de:
           label: "Themen einschränken:"
           open: Offene Themen
           closed: Geschlossene Themen
+          public: sind öffentlich
           archived: Archivierte Themen
           noreplies: Themen ohne Antwort
           single_user: Themen mit nur einem Benutzer
@@ -1854,8 +1864,10 @@ de:
         help: "Als ungelesen markieren"
         title: "Ignorieren"
       feature_on_profile:
+        help: "Füge eine Verknüpfung zu diesem Thema zu deiner Benutzerkarte und deinem Profil hinzu"
         title: "Auf Profil hervorheben"
       remove_from_profile:
+        warning: "Dein Profil hat bereits ein hervorgehobenes Thema. Wenn du fortfährst, wird dieses das bestehende Thema ersetzen."
         help: "Entferne diesen Link zum Thema aus deinem Profil"
         title: "Vom Profil entfernen"
       list: "Themen"
@@ -2336,9 +2348,18 @@ de:
           notify_moderators: "informierte/n die Moderatoren"
           notify_user: "hat eine Nachricht gesendet"
           bookmark: "hat/haben ein Lesezeichen gesetzt"
+          like:
+            one: "gefällt dies"
+            other: "gefällt dies"
+          read:
+            one: "hat dies gelesen"
+            other: "hat dies gelesen"
           like_capped:
             one: "und {{count}} anderen gefällt das"
             other: "und {{count}} anderen gefällt das"
+          read_capped:
+            one: "and {{count}} anderer haben dies gelesen"
+            other: "und {{count}} andere haben dies gelesen"
         by_you:
           off_topic: "Du hast das als „am Thema vorbei“ gemeldet"
           spam: "Du hast das als Spam gemeldet"
@@ -2391,6 +2412,7 @@ de:
       bookmarks:
         create: "Lesezeichen erstellen"
         name: "Name"
+        name_placeholder: "Gib dem Lesezeichen einen Namen, um dein Gedächtnis zu unterstützen"
         set_reminder: "Erstelle eine Erinnerung"
     category:
       can: "kann&hellip; "
@@ -2769,6 +2791,7 @@ de:
         mark_watching: "%{shortcut} Thema beobachten"
         print: "%{shortcut} Thema ausdrucken"
         defer: "%{shortcut} Thema ignorieren"
+        topic_admin_actions: "%{shortcut} Themen-Administration öffnen"
     badges:
       earned_n_times:
         one: "Abzeichen %{count}-mal erhalten"
@@ -2831,6 +2854,9 @@ de:
       edit_synonyms: "Synonyme Verwalten"
       add_synonyms_label: "Synonyme hinzufügen:"
       add_synonyms: "Hinzufügen"
+      add_synonyms_explanation:
+        one: "Jede Stelle, die dieses Schlagwort aktuell verwendet, wird auf die Verwendung von <b>%{tag_name}</b> geändert. Bist du sicher, dass diese Änderung erfolgen soll?"
+        other: "Jede Stelle, die dieses Schlagwort aktuell verwendet, wird auf die Verwendung von <b>%{tag_name}</b> geändert. Bist du sicher, dass diese Änderung erfolgen soll?"
       add_synonyms_failed: "Die folgenden Schlagwörter konnten nicht als Synonyme hinzugefügt werden: <b>%{tag_names}</b> . Stellen Sie sicher, dass sie keine Synonyme und keine Synonyme eines anderen Schlagwortes bereits haben."
       remove_synonym: "Synonym entfernen"
       delete_synonym_confirm: 'Bist du dir sicher das du das folgende Synonym entfernen möchtest "%{tag_name}" ?'
@@ -3119,6 +3145,7 @@ de:
         new_key: Neuer API Schlüssel
         revoked: Widerrufen
         delete: Endgültig gelöscht
+        not_shown_again: "Dieser Schlüssel wird nicht noch einmal angezeigt. Stelle sicher, dass du eine Kopie hast, bevor du fortfährst."
         continue: Weiter
       web_hooks:
         title: "Webhooks"
@@ -3389,6 +3416,7 @@ de:
           upload: "Hochladen"
           select_component: "Komponente auswählen..."
           unsaved_changes_alert: "Du hast deine Änderungen noch nicht gespeichert, möchtest du sie verwerfen und weitermachen?"
+          unsaved_parent_themes: "Du hast die Komponente keinen Themes zugewiesen, willst du fortfahren?"
           discard: "Verwerfen"
           stay: "Bleiben"
           css_html: "Benutzerdefiniertes CSS/HTML"
@@ -4178,6 +4206,15 @@ de:
           title: "Wähle ein bestehendes Abzeichen oder erstelle ein neues, um loszulegen"
           what_are_badges_title: "Was sind Abzeichen?"
           badge_query_examples_title: "Beispiele für Abzeichen-Abfragen"
+        mass_award:
+          title: Massen-Auszeichnung
+          description: Das gleiche Abzeichen vielen Benutzern auf einmal verleihen.
+          no_badge_selected: "Bitte wähle ein Abzeichen, um anzufangen."
+          perform: "Verleihe Abzeichen an Benutzer"
+          upload_csv: Lade eine CSV Datei mit Benutzer E-Mails hoch
+          aborted: "Bitte lade eine CSV-Datei hoch, die Benutzer E-Mails enthält"
+          success: Deine CSV Datei wurde empfangen und die Benutzer werden ihr Abzeichen in Kürzle bekommen.
+          replace_owners: Entferne das Abzeichen von vorherigen Eigentümern
       emoji:
         title: "Emoji"
         help: "Neues Emoji hinzufügen, das für alle verfügbar sein wird. (Tipp: per Drag & Drop kannst du gleichzeitig mehrere Dateien hinzufügen)"

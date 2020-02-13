@@ -789,6 +789,23 @@ describe CookedPostProcessor do
           expect(post.topic.image_url).not_to be_present
           expect(post.image_url).not_to be_present
         end
+
+        it "won't remove the original image if another post doesn't have an image" do
+          FastImage.stubs(:size)
+          topic = post.topic
+
+          cpp.post_process
+          topic.reload
+          expect(topic.image_url).to be_present
+          expect(post.image_url).to be_present
+
+          post = Fabricate(:post, topic: topic, raw: "this post doesn't have an image")
+          CookedPostProcessor.new(post).post_process
+          topic.reload
+
+          expect(post.topic.image_url).to be_present
+          expect(post.image_url).to be_blank
+        end
       end
 
       context "post image" do

@@ -22,6 +22,8 @@ he:
       public:
         title: "ההצבעות הן <strong>ציבוריות</strong>."
       results:
+        groups:
+          title: "עליך להיות חבר בקבוצה %{groups} כדי להצביע לסקר הזה."
         vote:
           title: "התוצאות יופיעו לאחר <strong>ההצבעה</strong>."
         closed:
@@ -83,7 +85,7 @@ he:
         title: בניית סקר
         insert: הכנסת סקר
         help:
-          options_count: יש להכניס 2 אפשרויות לפחות
+          options_count: יש למלא אפשרות אחת לפחות
           invalid_values: הערך המזערי חייב להיות קטן מהערך המרבי.
           min_step_value: ערך הצעד המזערי הוא 1
         poll_type:
@@ -97,6 +99,8 @@ he:
           vote: בהליכי הצבעה
           closed: כאשר סגור
           staff: סגל בלבד
+        poll_groups:
+          label: קבוצות מורשות
         poll_chart_type:
           label: סוג תרשים
         poll_config:
@@ -106,6 +110,6 @@ he:
         poll_public:
           label: להציג מי המצביעים
         poll_options:
-          label: נא להכניס אפשרות בחירה אחת בכל שורה
+          label: נא למלא אפשרות בחירה אחת בכל שורה
         automatic_close:
           label: לסגור את הסקר אוטומטית

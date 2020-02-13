@@ -51,8 +51,6 @@ sq:
       ui_builder:
         title: Krijo Sondazh
         insert: Shto Sondazh
-        help:
-          options_count: Zgjidh të paktën 2 alternativa
         poll_type:
           label: Lloji
           regular: Pa Alternativa
