@@ -1,6 +1,7 @@
 import deprecated from "discourse-common/lib/deprecated";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { addDecorator } from "discourse/widgets/post-cooked";
+import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import ComposerEditor from "discourse/components/composer-editor";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import { addButton } from "discourse/widgets/post-menu";
@@ -51,7 +52,7 @@ import Composer from "discourse/models/composer";
 import { on } from "@ember/object/evented";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.37";
+const PLUGIN_API_VERSION = "0.8.38";
 
 class PluginApi {
   constructor(version, container) {
@@ -982,6 +983,29 @@ class PluginApi {
    **/
   addGlobalNotice(id, text, options) {
     addGlobalNotice(id, text, options);
+  }
+
+  /**
+   * Used for decorating the rendered HTML content of a plugin-outlet after it's been rendered
+   *
+   * `callback` will be called when it is time to decorate it.
+   *
+   * For example, to add a yellow background to a connector:
+   *
+   * ```
+   * api.decoratePluginOutlet(
+   *   "discovery-list-container-top",
+   *   (elem, args) => {
+   *     if (elem.classList.contains("foo")) {
+   *       elem.style.backgroundColor = "yellow";
+   *     }
+   *   }
+   * );
+   * ```
+   *
+   **/
+  decoratePluginOutlet(outletName, callback, opts) {
+    addPluginOutletDecorator(outletName, callback, opts || {});
   }
 }
 
