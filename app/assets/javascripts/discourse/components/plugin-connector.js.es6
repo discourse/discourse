@@ -6,7 +6,7 @@ import { afterRender } from "discourse-common/utils/decorators";
 
 let _decorators = [];
 
-// Don't call this directly: use `plugin-api/decoratePluginConnector`
+// Don't call this directly: use `plugin-api/decoratePluginOutlet`
 export function addPluginOutletDecorator(outletName, callback) {
   _decorators.push({ outletName, callback });
 }

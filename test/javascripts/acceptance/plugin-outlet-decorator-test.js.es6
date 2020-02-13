@@ -14,7 +14,7 @@ acceptance("Plugin Outlet - Decorator", {
     ] = Ember.HTMLBars.compile("BAR");
 
     withPluginApi("0.8.38", api => {
-      api.decoratePluginConnector(
+      api.decoratePluginOutlet(
         "discovery-list-container-top",
         (elem, args) => {
           if (elem.classList.contains("foo")) {
