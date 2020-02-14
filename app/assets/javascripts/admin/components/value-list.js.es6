@@ -73,11 +73,10 @@ export default Component.extend({
   _removeValue(value) {
     this.collection.removeObject(value);
 
-    const item = { id: value, name: value };
     if (this.choices) {
-      this.choices.addObject(item);
+      this.set("choices", this.choices.push(value).uniq());
     } else {
-      this.set("choices", makeArray(item));
+      this.set("choices", makeArray(value));
     }
 
     this._saveValues();
