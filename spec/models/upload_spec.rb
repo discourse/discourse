@@ -419,7 +419,17 @@ describe Upload do
         expect { upload.update_secure_status }
           .to change { upload.secure }
 
-        expect(upload.secure).to eq(true)
+        expect(upload.reload.secure).to eq(true)
+      end
+
+      it 'does not mark an upload used for a custom emoji as secure' do
+        SiteSetting.login_required = true
+        upload.update!(secure: false)
+        CustomEmoji.create(name: 'meme', upload: upload)
+        expect { upload.update_secure_status }
+          .not_to change { upload.secure }
+
+        expect(upload.reload.secure).to eq(false)
       end
     end
   end
