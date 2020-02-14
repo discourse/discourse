@@ -122,15 +122,29 @@ describe Notification do
   end
 
   describe 'message bus' do
+    fab!(:user) { Fabricate(:user) }
 
     it 'updates the notification count on create' do
       Notification.any_instance.expects(:refresh_notification_count).returns(nil)
       Fabricate(:notification)
     end
 
+    it 'works' do
+      messages = MessageBus.track_publish do
+        user.notifications.create!(notification_type: Notification.types[:mentioned], data: '{}')
+        user.notifications.create!(notification_type: Notification.types[:mentioned], data: '{}')
+      end
+
+      expect(messages.size).to eq(2)
+      expect(messages[0].channel).to eq("/notification/#{user.id}")
+      expect(messages[0].data[:unread_notifications]).to eq(1)
+      expect(messages[1].channel).to eq("/notification/#{user.id}")
+      expect(messages[1].data[:unread_notifications]).to eq(2)
+    end
+
     it 'works for partial model instances' do
       NotificationEmailer.disable
-      partial_user = User.select(:id).find_by(id: Fabricate(:user).id)
+      partial_user = User.select(:id).find_by(id: user.id)
       partial_user.notifications.create!(notification_type: Notification.types[:mentioned], data: '{}')
     end
 
