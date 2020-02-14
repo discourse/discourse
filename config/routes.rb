@@ -349,7 +349,6 @@ Discourse::Application.routes.draw do
   get "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
   post "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
   get "composer_messages" => "composer_messages#index"
-  post "composer/parse_html" => "composer#parse_html"
 
   resources :static
   post "login" => "static#enter"
