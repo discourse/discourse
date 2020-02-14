@@ -51,6 +51,9 @@ class Admin::BadgesController < Admin::AdminController
     batch = []
 
     File.open(csv_file) do |csv|
+      mode = Email.is_valid?(CSV.parse_line(csv.first).first) ? 'email' : 'username'
+      csv.rewind
+
       csv.each_line do |email_line|
         batch.concat CSV.parse_line(email_line)
         line_number += 1
@@ -60,7 +63,7 @@ class Admin::BadgesController < Admin::AdminController
         last_batch_item = full_batch || csv.eof?
 
         if last_batch_item
-          Jobs.enqueue(:mass_award_badge, user_emails: batch, badge_id: badge.id)
+          Jobs.enqueue(:mass_award_badge, users_batch: batch, badge_id: badge.id, mode: mode)
           batch = []
           batch_number += 1
         end
