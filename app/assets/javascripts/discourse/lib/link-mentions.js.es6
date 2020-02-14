@@ -51,6 +51,8 @@ function updateFound($mentions, usernames) {
           group: true,
           mentionable: mentionableGroups[username]
         });
+      } else if (foundGroups[username]) {
+        replaceSpan($e, username, { group: true });
       } else if (checked[username]) {
         $e.addClass("mention-tested");
       }

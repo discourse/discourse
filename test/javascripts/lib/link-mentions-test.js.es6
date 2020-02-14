@@ -55,7 +55,7 @@ QUnit.test("linkSeenMentions replaces users and groups", async assert => {
   });
 
   assert.equal($("a", $root)[0].text, "@valid_user");
-  assert.equal($("a", $root)[1].text, "@mentionable_group");
+  assert.equal($("a", $root)[1].text, "@valid_group");
+  assert.equal($("a.notify", $root).text(), "@mentionable_group");
   assert.equal($("span.mention", $root)[0].innerHTML, "@invalid");
-  assert.equal($("span.mention", $root)[1].innerHTML, "@valid_group");
 });
