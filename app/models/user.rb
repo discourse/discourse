@@ -1093,16 +1093,17 @@ class User < ActiveRecord::Base
 
   USER_FIELD_PREFIX ||= "user_field_"
 
-  def user_fields
-    return @user_fields if @user_fields
-    user_field_ids = UserField.pluck(:id)
-    if user_field_ids.present?
-      @user_fields = {}
-      user_field_ids.each do |fid|
-        @user_fields[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
+  def user_fields(field_ids = nil)
+    if field_ids.nil?
+      field_ids = (@all_user_field_ids ||= UserField.pluck(:id))
+    end
+
+    {}.tap do |hash|
+      field_ids.each do |fid|
+        # The hash keys are strings for backwards compatibility
+        hash[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
       end
     end
-    @user_fields
   end
 
   def number_of_deleted_posts
