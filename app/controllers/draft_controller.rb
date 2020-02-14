@@ -6,6 +6,8 @@ class DraftController < ApplicationController
   skip_before_action :check_xhr, :preload_json
 
   def show
+    raise Discourse::NotFound.new if params[:draft_key].blank?
+
     seq = params[:sequence] || DraftSequence.current(current_user, params[:draft_key])
     render json: { draft: Draft.get(current_user, params[:draft_key], seq), draft_sequence: seq }
   end
