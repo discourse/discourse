@@ -100,6 +100,7 @@ var define, requirejs;
         htmlSafe: Ember.String.htmlSafe
       },
       "@ember/application": {
+        default: Ember.Application,
         setOwner: Ember.setOwner,
         getOwner: Ember.getOwner
       },
