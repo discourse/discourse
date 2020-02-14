@@ -1,6 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
+import { notEmpty } from "@ember/object/computed";
 /* global Pikaday:true */
 import { propertyNotEqual } from "discourse/lib/computed";
 import loadScript from "discourse/lib/load-script";
@@ -24,9 +25,9 @@ export default Component.extend({
   isValid: true,
   timezone: null,
   fromSelected: null,
-  fromFilled: Ember.computed.notEmpty("date"),
+  fromFilled: notEmpty("date"),
   toSelected: null,
-  toFilled: Ember.computed.notEmpty("toDate"),
+  toFilled: notEmpty("toDate"),
 
   init() {
     this._super(...arguments);
