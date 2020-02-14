@@ -361,11 +361,12 @@ class PostRevisor
     end
 
     POST_TRACKED_FIELDS.each do |field|
-      if @fields.has_key?(field) || (field == "edit_reason" && should_create_new_version?)
+      if @fields.has_key?(field)
         @post.public_send("#{field}=", @fields[field])
       end
     end
 
+    @post.edit_reason    = @fields[:edit_reason] if should_create_new_version?
     @post.last_editor_id = @editor.id
     @post.word_count     = @fields[:raw].scan(/[[:word:]]+/).size if @fields.has_key?(:raw)
     @post.self_edits    += 1 if self_edit?
