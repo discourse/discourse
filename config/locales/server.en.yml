@@ -4650,6 +4650,7 @@ en:
       restored: Restored
 
   reviewables:
+    already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
     priorities:
       low: "Low"
       medium: "Medium"

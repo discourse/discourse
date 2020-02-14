@@ -266,7 +266,7 @@ RSpec.describe Reviewable, type: :model do
     end
 
     it "triggers a notification on update" do
-      reviewable = PostActionCreator.spam(moderator, post).reviewable
+      reviewable = PostActionCreator.create(moderator, post, :inappropriate).reviewable
       reviewable.perform(moderator, :disagree)
 
       expect { PostActionCreator.spam(Fabricate(:user), post) }
