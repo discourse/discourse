@@ -114,9 +114,13 @@ module UserGuardian
 
   def allowed_user_field_ids(user)
     @allowed_user_field_ids ||= {}
-    @allowed_user_field_ids[user.id] ||=
+
+    is_staff_or_is_me = is_staff? || is_me?(user)
+    cache_key = is_staff_or_is_me ? :staff_or_me : :other
+
+    @allowed_user_field_ids[cache_key] ||=
       begin
-        if is_staff? || is_me?(user)
+        if is_staff_or_is_me
           UserField.pluck(:id)
         else
           UserField.where("show_on_profile OR show_on_user_card").pluck(:id)
