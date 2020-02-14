@@ -268,7 +268,8 @@ export default Component.extend(
       limitMatches: null,
       placement: "bottom-start",
       filterComponent: "select-kit/select-kit-filter",
-      selectedNameComponent: "selected-name"
+      selectedNameComponent: "selected-name",
+      castInteger: false
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function() {
@@ -961,7 +962,8 @@ export default Component.extend(
         maximum: "options.maximum",
         minimum: "options.minimum",
         i18nPostfix: "options.i18nPostfix",
-        i18nPrefix: "options.i18nPrefix"
+        i18nPrefix: "options.i18nPrefix",
+        castInteger: "options.castInteger"
       };
 
       Object.keys(migrations).forEach(from => {
