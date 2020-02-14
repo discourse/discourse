@@ -74,7 +74,7 @@ export default Component.extend({
     this.collection.removeObject(value);
 
     if (this.choices) {
-      this.set("choices", this.choices.push(value).uniq());
+      this.set("choices", this.choices.concat([value]).uniq());
     } else {
       this.set("choices", makeArray(value));
     }
