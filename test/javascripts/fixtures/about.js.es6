@@ -19,7 +19,7 @@ export default {
       },
       description:
         "Discussion about the next-generation open source Discourse forum software",
-      title: "Discourse Meta",
+      title: "QUnit Discourse Tests",
       locale: "en_US",
       version: "2.2.0.beta8",
       https: true,
