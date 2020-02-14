@@ -28,7 +28,7 @@ class UploadSecurity
   private
 
   def uploading_in_public_context?
-    @upload.for_theme || @upload.for_site_setting || @upload.for_gravatar || public_type?
+    @upload.for_theme || @upload.for_site_setting || @upload.for_gravatar || public_type? || used_for_custom_emoji?
   end
 
   def supported_media?
@@ -69,5 +69,10 @@ class UploadSecurity
 
   def uploading_in_composer?
     @upload_type == "composer"
+  end
+
+  def used_for_custom_emoji?
+    return false if @upload.id.blank?
+    CustomEmoji.exists?(upload_id: @upload.id)
   end
 end
