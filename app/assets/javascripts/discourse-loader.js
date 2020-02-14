@@ -80,6 +80,7 @@ var define, requirejs;
         inject: Ember.inject.service
       },
       "@ember/utils": {
+        isBlank: Ember.isBlank,
         isEmpty: Ember.isEmpty,
         isNone: Ember.isNone
       },
