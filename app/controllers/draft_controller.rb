@@ -11,6 +11,8 @@ class DraftController < ApplicationController
   end
 
   def update
+    raise Discourse::NotFound.new if params[:draft_key].blank?
+
     sequence =
       begin
         Draft.set(

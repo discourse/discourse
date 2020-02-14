@@ -21,6 +21,12 @@ describe DraftController do
     expect(Draft.get(user, 'xyz', 0)).to eq(%q({"my":"data"}))
   end
 
+  it "returns 404 when the key is missing" do
+    user = sign_in(Fabricate(:user))
+    post "/draft.json", params: { data: { my: "data" }.to_json, sequence: 0 }
+    expect(response.status).to eq(404)
+  end
+
   it 'checks for an conflict on update' do
     user = sign_in(Fabricate(:user))
     post = Fabricate(:post, user: user)
