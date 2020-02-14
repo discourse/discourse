@@ -254,7 +254,6 @@ class Upload < ActiveRecord::Base
   end
 
   def update_secure_status(secure_override_value: nil)
-    return false if self.for_theme || self.for_site_setting
     mark_secure = secure_override_value.nil? ? UploadSecurity.new(self).should_be_secure? : secure_override_value
 
     secure_status_did_change = self.secure? != mark_secure
