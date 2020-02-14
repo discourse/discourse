@@ -27,6 +27,19 @@ describe DraftController do
     expect(response.status).to eq(404)
   end
 
+  it "returns a draft if requested" do
+    user = sign_in(Fabricate(:user))
+    Draft.set(user, 'hello', 0, 'test')
+
+    get "/draft.json", params: { draft_key: 'hello' }
+    expect(response.status).to eq(200)
+    json = ::JSON.parse(response.body)
+    expect(json['draft']).to eq('test')
+
+    get "/draft.json"
+    expect(response.status).to eq(404)
+  end
+
   it 'checks for an conflict on update' do
     user = sign_in(Fabricate(:user))
     post = Fabricate(:post, user: user)
