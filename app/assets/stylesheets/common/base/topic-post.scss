@@ -758,7 +758,16 @@ blockquote > *:last-child {
   }
 }
 
-a.mention,
+a.mention {
+  font-weight: bold;
+  font-size: 0.93em;
+  color: $primary;
+  color: dark-light-choose($primary-high, $secondary-low);
+  padding: 2px 4px;
+  background: $primary-low;
+  border-radius: 8px;
+}
+
 a.mention-group {
   font-weight: bold;
   font-size: 0.93em;
