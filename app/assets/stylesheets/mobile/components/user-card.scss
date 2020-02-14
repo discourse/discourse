@@ -73,6 +73,17 @@ $avatar_width: 120px;
       width: 100%;
     }
   }
+
+  .public-user-fields {
+    @media screen and (max-height: 550px) {
+      max-height: 12vh;
+    }
+    max-height: 40vh;
+    overflow-y: auto;
+    .public-user-field {
+      @include line-clamp(3);
+    }
+  }
 }
 
 // mobile card cloak
