@@ -66,6 +66,13 @@ class PostActionCreator
 
     PostAction.limit_action!(@created_by, @post, @post_action_type_id)
 
+    reviewable = Reviewable.includes(:reviewable_scores).find_by(target: @post)
+
+    if reviewable && flagging_post? && cannot_flag_again?(reviewable)
+      result.add_error(I18n.t("reviewables.already_handled"))
+      return result
+    end
+
     # create meta topic / post if needed
     if @message.present? && [:notify_moderators, :notify_user, :spam].include?(@post_action_name)
       creator = create_message_creator
@@ -114,6 +121,19 @@ class PostActionCreator
   end
 
 private
+
+  def flagging_post?
+    PostActionType.notify_flag_type_ids.include?(@post_action_type_id)
+  end
+
+  def cannot_flag_again?(reviewable)
+    return false if @post_action_type_id == PostActionType.types[:notify_moderators]
+    flag_type_already_used = reviewable.reviewable_scores.any? { |rs| rs.reviewable_score_type == @post_action_type_id }
+    not_edited_since_last_review = @post.last_version_at.blank? || reviewable.updated_at > @post.last_version_at
+    handled_recently = reviewable.updated_at > 24.hours.ago
+
+    !reviewable.pending? && flag_type_already_used && not_edited_since_last_review && handled_recently
+  end
 
   def notify_subscribers
     if self.class.notify_types.include?(@post_action_name)
@@ -261,7 +281,7 @@ private
   end
 
   def create_reviewable(result)
-    return unless PostActionType.notify_flag_type_ids.include?(@post_action_type_id)
+    return unless flagging_post?
     return if @post.user_id.to_i < 0
 
     result.reviewable = ReviewableFlaggedPost.needs_review!(

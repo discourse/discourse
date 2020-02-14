@@ -115,6 +115,38 @@ describe PostActionCreator do
         expect(score.reviewed_by).to be_blank
         expect(score.reviewed_at).to be_blank
       end
+
+      describe "When the post was already reviewed by staff" do
+        fab!(:admin) { Fabricate(:admin) }
+
+        before { reviewable.perform(admin, :ignore) }
+
+        it "fails because the post was recently reviewed" do
+          result = PostActionCreator.create(user, post, :inappropriate)
+
+          expect(result.success?).to eq(false)
+        end
+
+        it "succesfully flags the post if it was edited after being reviewed" do
+          reviewable.update!(updated_at: 25.hours.ago)
+          post.last_version_at = 30.hours.ago
+
+          result = PostActionCreator.create(user, post, :inappropriate)
+
+          expect(result.success?).to eq(true)
+          expect(result.reviewable).to be_present
+        end
+
+        it 'succesfully flags the post if it was reviewed more than 24 hours ago' do
+          reviewable.update!(updated_at: 10.minutes.ago)
+          post.last_version_at = 1.minute.ago
+
+          result = PostActionCreator.create(user, post, :inappropriate)
+
+          expect(result.success?).to eq(true)
+          expect(result.reviewable).to be_present
+        end
+      end
     end
   end
 
