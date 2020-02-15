@@ -11,6 +11,7 @@ var define, requirejs;
     EMBER_MODULES = {
       jquery: { default: $ },
       "@ember/array": {
+        default: Ember.Array,
         A: Ember.A,
       },
       "@ember/component": { default: Ember.Component },
