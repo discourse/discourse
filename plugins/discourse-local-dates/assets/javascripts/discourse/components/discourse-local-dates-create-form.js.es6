@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
@@ -114,7 +115,7 @@ export default Component.extend({
       format = "LL";
     }
 
-    return Ember.Object.create({
+    return EmberObject.create({
       date: dateTime.format(this.dateFormat),
       time,
       dateTime,
@@ -147,7 +148,7 @@ export default Component.extend({
       format = "LL";
     }
 
-    return Ember.Object.create({
+    return EmberObject.create({
       date: dateTime.format(this.dateFormat),
       time,
       dateTime,
@@ -158,7 +159,7 @@ export default Component.extend({
 
   @computed("recurring", "timezones", "timezone", "format")
   options(recurring, timezones, timezone, format) {
-    return Ember.Object.create({
+    return EmberObject.create({
       recurring,
       timezones,
       timezone,
@@ -172,7 +173,7 @@ export default Component.extend({
     "options.{recurring,timezones,timezone,format}"
   )
   computedConfig(fromConfig, toConfig, options) {
-    return Ember.Object.create({
+    return EmberObject.create({
       from: fromConfig,
       to: toConfig,
       options
