@@ -10,6 +10,9 @@ var define, requirejs;
   if (typeof Ember !== "undefined") {
     EMBER_MODULES = {
       jquery: { default: $ },
+      "@ember/array": {
+        A: Ember.A,
+      },
       "@ember/component": { default: Ember.Component },
       "@ember/controller": {
         default: Ember.Controller,

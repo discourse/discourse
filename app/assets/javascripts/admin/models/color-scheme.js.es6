@@ -1,3 +1,4 @@
+import { A } from "@ember/array";
 import discourseComputed from "discourse-common/utils/decorators";
 import { not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
@@ -33,7 +34,7 @@ const ColorScheme = EmberObject.extend(Ember.Copyable, {
     const newScheme = ColorScheme.create({
       name: this.name,
       can_edit: true,
-      colors: Ember.A()
+      colors: A()
     });
     this.colors.forEach(c => {
       newScheme.colors.pushObject(
