@@ -1,4 +1,5 @@
 import { A } from "@ember/array";
+import ArrayProxy from "@ember/array/proxy";
 import discourseComputed from "discourse-common/utils/decorators";
 import { not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
@@ -112,7 +113,7 @@ const ColorScheme = EmberObject.extend(Ember.Copyable, {
   }
 });
 
-const ColorSchemes = Ember.ArrayProxy.extend({});
+const ColorSchemes = ArrayProxy.extend({});
 
 ColorScheme.reopenClass({
   findAll() {

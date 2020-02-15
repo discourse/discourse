@@ -14,6 +14,9 @@ var define, requirejs;
         default: Ember.Array,
         A: Ember.A,
       },
+      "@ember/array/proxy": {
+        default: Ember.ArrayProxy
+      },
       "@ember/component": { default: Ember.Component },
       "@ember/controller": {
         default: Ember.Controller,

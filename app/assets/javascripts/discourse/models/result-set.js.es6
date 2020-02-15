@@ -1,7 +1,8 @@
+import ArrayProxy from "@ember/array/proxy";
 import discourseComputed from "discourse-common/utils/decorators";
 import { Promise } from "rsvp";
 
-export default Ember.ArrayProxy.extend({
+export default ArrayProxy.extend({
   loading: false,
   loadingMore: false,
   totalRows: 0,
