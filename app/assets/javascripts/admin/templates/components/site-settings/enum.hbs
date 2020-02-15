@@ -3,7 +3,10 @@
   content=setting.validValues
   value=value
   onChange=(action (mut value))
-  allowAny=setting.allowsNone
+  options=(hash
+    castInteger=true
+    allowAny=setting.allowsNone
+  )
 }}
 
 {{preview}}

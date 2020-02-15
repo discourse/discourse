@@ -1376,6 +1376,16 @@ describe Post do
           expect(image_upload.access_control_post_id).to eq(post.id)
           expect(video_upload.access_control_post_id).not_to eq(post.id)
         end
+
+        context "for custom emoji" do
+          before do
+            CustomEmoji.create(name: "meme", upload: image_upload)
+          end
+          it "never sets an access control post because they should not be secure" do
+            post.link_post_uploads
+            expect(image_upload.reload.access_control_post_id).to eq(nil)
+          end
+        end
       end
     end
 

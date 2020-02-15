@@ -261,6 +261,7 @@ class PostAlerter
   end
 
   def should_notify_previous?(user, post, notification, opts)
+    return false unless notification
     case notification.notification_type
     when Notification.types[:edited] then should_notify_edit?(notification, post, opts)
     when Notification.types[:liked]  then should_notify_like?(user, notification)
@@ -330,7 +331,7 @@ class PostAlerter
     # Don't notify the same user about the same type of notification on the same post
     existing_notification_of_same_type = existing_notifications.find { |n| n.notification_type == type }
 
-    return if existing_notification_of_same_type && !should_notify_previous?(user, post, existing_notification_of_same_type, opts)
+    return if existing_notifications.present? && !should_notify_previous?(user, post, existing_notification_of_same_type, opts)
 
     notification_data = {}
 

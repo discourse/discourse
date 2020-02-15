@@ -80,7 +80,10 @@ export default SelectKitComponent.extend({
   },
 
   selectedContent: computed("value.[]", "content.[]", function() {
-    const value = Ember.makeArray(this.value);
+    const value = Ember.makeArray(this.value).map(v =>
+      this.selectKit.options.castInteger && this._isNumeric(v) ? Number(v) : v
+    );
+
     if (value.length) {
       let content = [];
 

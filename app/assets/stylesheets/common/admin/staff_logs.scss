@@ -133,6 +133,10 @@
   td.subject,
   td.details {
     max-width: 20vw;
+    > div {
+      max-height: 100px;
+      overflow-y: auto;
+    }
   }
 }
 

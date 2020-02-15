@@ -63,6 +63,15 @@ $breakpoints: (
   text-overflow: ellipsis;
 }
 
+@mixin line-clamp($lines) {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+}
+
 //
 // --------------------------------------------------
 
