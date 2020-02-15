@@ -22,6 +22,9 @@ var define, requirejs;
         default: Ember.Controller,
         inject: Ember.inject.controller
       },
+      "@ember/debug": {
+        warn: Ember.warn
+      },
       "@ember/object": {
         action: Ember._action,
         default: Ember.Object,
@@ -118,7 +121,6 @@ var define, requirejs;
       "@ember/error": {
         default: Ember.error
       },
-
       "@ember/object/internals": {
         guidFor: Ember.guidFor
       }
