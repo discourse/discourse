@@ -73,6 +73,7 @@ var define, requirejs;
       "@ember/object/proxy": { default: Ember.ObjectProxy },
       "@ember/object/evented": { on: Ember.on },
       "@ember/routing/route": { default: Ember.Route },
+      "@ember/routing/router": { default: Ember.Router },
       "@ember/runloop": {
         bind: Ember.run.bind,
         cancel: Ember.run.cancel,
