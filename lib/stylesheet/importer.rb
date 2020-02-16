@@ -207,10 +207,13 @@ module Stylesheet
         end
       elsif callback = Importer.special_imports[asset]
         instance_eval(&callback)
-      elsif (path, source = match_theme_import(asset, parent_path))
-        Import.new(path, source: source)
       else
-        Import.new(asset + ".scss")
+        path, source = match_theme_import(asset, parent_path)
+        if path && source
+          Import.new(path, source: source)
+        else
+          Import.new(asset + ".scss")
+        end
       end
     end
   end
