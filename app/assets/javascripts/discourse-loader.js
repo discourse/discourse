@@ -13,6 +13,7 @@ var define, requirejs;
       "@ember/array": {
         default: Ember.Array,
         A: Ember.A,
+        isArray: Ember.isArray
       },
       "@ember/array/proxy": {
         default: Ember.ArrayProxy

@@ -1,6 +1,4 @@
-import Ember from "ember";
-
-const isArray = Ember.isArray;
+import { isArray } from "@ember/array";
 
 export default function(str, formats) {
   let cachedFormats = formats;
