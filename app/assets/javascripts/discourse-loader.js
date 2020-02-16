@@ -18,7 +18,10 @@ var define, requirejs;
       "@ember/array/proxy": {
         default: Ember.ArrayProxy
       },
-      "@ember/component": { default: Ember.Component },
+      "@ember/component": {
+        default: Ember.Component,
+        TextField: Ember.TextField
+      },
       "@ember/controller": {
         default: Ember.Controller,
         inject: Ember.inject.controller
