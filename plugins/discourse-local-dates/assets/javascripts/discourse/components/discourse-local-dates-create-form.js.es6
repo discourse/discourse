@@ -3,6 +3,7 @@ import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { notEmpty } from "@ember/object/computed";
+import { Promise } from "rsvp";
 /* global Pikaday:true */
 import { propertyNotEqual } from "discourse/lib/computed";
 import loadScript from "discourse/lib/load-script";
@@ -374,7 +375,7 @@ export default Component.extend({
   },
 
   _setupPicker() {
-    return new Ember.RSVP.Promise(resolve => {
+    return new Promise(resolve => {
       loadScript("/javascripts/pikaday.js").then(() => {
         const options = {
           field: this.$(`.fake-input`)[0],
