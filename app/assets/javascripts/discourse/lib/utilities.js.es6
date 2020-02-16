@@ -1,4 +1,5 @@
 import { escape } from "pretty-text/sanitizer";
+import { ajax } from "discourse/lib/ajax";
 import toMarkdown from "discourse/lib/to-markdown";
 
 const homepageSelector = "meta[name=discourse_current_homepage]";
@@ -389,7 +390,7 @@ function reportToLogster(name, error) {
     stacktrace: error.stack
   };
 
-  Ember.$.ajax(`${Discourse.BaseUri}/logs/report_js_error`, {
+  ajax("/logs/report_js_error", {
     data,
     type: "POST",
     cache: false
