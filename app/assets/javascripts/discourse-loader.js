@@ -20,6 +20,7 @@ var define, requirejs;
       },
       "@ember/component": {
         default: Ember.Component,
+        TextArea: Ember.TextArea,
         TextField: Ember.TextField
       },
       "@ember/controller": {
