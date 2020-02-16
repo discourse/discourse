@@ -10,7 +10,7 @@ const MISSING = "missing";
 
 export function lookupUncachedUploadUrls(urls, ajax) {
   return ajax("/uploads/lookup-urls", {
-    method: "POST",
+    type: "POST",
     data: { short_urls: urls }
   }).then(uploads => {
     uploads.forEach(upload => {

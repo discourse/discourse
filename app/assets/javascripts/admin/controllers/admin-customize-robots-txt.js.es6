@@ -18,7 +18,7 @@ export default Controller.extend(bufferedProperty("model"), {
       });
 
       ajax("robots.json", {
-        method: "PUT",
+        type: "PUT",
         data: { robots_txt: this.buffered.get("robots_txt") }
       })
         .then(data => {
@@ -34,7 +34,7 @@ export default Controller.extend(bufferedProperty("model"), {
         isSaving: true,
         saved: false
       });
-      ajax("robots.json", { method: "DELETE" })
+      ajax("robots.json", { type: "DELETE" })
         .then(data => {
           this.buffered.set("robots_txt", data.robots_txt);
           this.commitBuffer();

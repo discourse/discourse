@@ -31,7 +31,7 @@ export default Controller.extend(ModalFunctionality, {
           category_ids: this._extractSelectedIds(this.categories),
           topic_ids: this._extractSelectedIds(this.topics)
         },
-        method: "POST"
+        type: "POST"
       })
         .then(
           () => this.send("closeModal"),

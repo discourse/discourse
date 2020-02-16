@@ -15,7 +15,7 @@ export default Controller.extend({
 
       this.set("saving", true);
       ajax("/review/settings", {
-        method: "PUT",
+        type: "PUT",
         data: { reviewable_priorities: priorities }
       })
         .then(() => {

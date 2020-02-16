@@ -26,7 +26,7 @@ createWidget("priority-faq-link", {
   click(e) {
     e.preventDefault();
     if (this.siteSettings.faq_url === this.attrs.href) {
-      ajax(userPath("read-faq"), { method: "POST" }).then(() => {
+      ajax(userPath("read-faq"), { type: "POST" }).then(() => {
         this.currentUser.set("read_faq", true);
         DiscourseURL.routeToTag($(e.target).closest("a")[0]);
       });

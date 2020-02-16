@@ -31,7 +31,7 @@ export default Controller.extend(ModalFunctionality, {
 
       ajax("/admin/groups/bulk", {
         data: { users, group_id: this.get("model.id") },
-        method: "PUT"
+        type: "PUT"
       })
         .then(result => {
           this.set("result", result);

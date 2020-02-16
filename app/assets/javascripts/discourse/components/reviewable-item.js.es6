@@ -88,7 +88,7 @@ export default Component.extend({
       return ajax(
         `/review/${reviewable.id}/perform/${action.id}?version=${version}`,
         {
-          method: "PUT"
+          type: "PUT"
         }
       )
         .then(result => {
