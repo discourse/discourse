@@ -93,7 +93,8 @@ var define, requirejs;
       "@ember/utils": {
         isBlank: Ember.isBlank,
         isEmpty: Ember.isEmpty,
-        isNone: Ember.isNone
+        isNone: Ember.isNone,
+        isPresent: Ember.isPresent
       },
       rsvp: {
         default: Ember.RSVP,

@@ -1,6 +1,7 @@
 import deprecated from "discourse-common/lib/deprecated";
 import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
+import { isPresent } from "@ember/utils";
 import { makeArray } from "discourse-common/lib/helpers";
 
 export default SelectKitComponent.extend({
@@ -41,7 +42,7 @@ export default SelectKitComponent.extend({
   },
 
   select(value, item) {
-    if (!Ember.isPresent(value)) {
+    if (!isPresent(value)) {
       if (!this.validateSelect(this.selectKit.highlighted)) {
         return;
       }
