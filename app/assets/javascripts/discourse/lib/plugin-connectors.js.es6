@@ -73,6 +73,7 @@ function buildConnectorCache() {
     _connectorCache[outletName] = _connectorCache[outletName] || [];
 
     _connectorCache[outletName].push({
+      outletName,
       templateName: resource.replace("javascripts/", ""),
       template: Ember.TEMPLATES[resource],
       classNames: `${outletName}-outlet ${uniqueName}`,

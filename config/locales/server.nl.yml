@@ -285,7 +285,7 @@ nl:
   user_is_suspended: "Geschorste gebruikers mogen geen berichten plaatsen."
   topic_not_found: "Er is iets fout gegaan. Misschien is het topic gesloten of verwijderd terwijl u het bekeek?"
   not_accepting_pms: "Sorry, %{username} accepteert momenteel geen berichten."
-  max_pm_recepients: "Sorry, u kunt naar maximaal %{recipients_limit} ontvangers een bericht sturen."
+  max_pm_recipients: "Sorry, u kunt naar maximaal %{recipients_limit} ontvangers een bericht sturen."
   pm_reached_recipients_limit: "Sorry, u kunt niet meer dan %{recipients_limit} ontvangers in een bericht hebben."
   removed_direct_reply_full_quotes: "Citaat van hele voorgaande bericht is automatisch verwijderd."
   secure_upload_not_allowed_in_public_topic: "Sorry, de volgende beveiligde upload(s) kan/kunnen niet in een publiek topic wordt gebruikt: %{upload_filenames}."
@@ -1002,7 +1002,16 @@ nl:
       title: "Nieuwe bijdragers"
       xaxis: "Dag"
       yaxis: "Aantal nieuwe bijdragers"
-      description: "Aantal gebruikers dat tijdens deze periode een eerste bericht heeft gemaakt."
+      description: "Aantal gebruikers die tijdens deze periode hun eerste bericht hebben gemaakt."
+    trust_level_growth:
+      title: "Groei van vertrouwensniveau"
+      xaxis:
+        tl1_reached: "TL1 bereikt"
+        tl2_reached: "TL2 bereikt"
+        tl3_reached: "TL3 bereikt"
+        tl4_reached: "TL4 bereikt"
+      yaxis: "Dag"
+      description: "Aantal gebruikers die tijdens deze periode hun vertrouwensniveau hebben doen toenemen."
     consolidated_page_views:
       title: "Samengevoegde paginaweergaven"
       xaxis:
@@ -1212,7 +1221,7 @@ nl:
       title: "Gebruikersbezoeken (mobiel)"
       xaxis: "Dag"
       yaxis: "Aantal bezoeken"
-      description: "Aantal unieke gebruikers dat de website heeft bezocht met een mobiel apparaat."
+      description: "Aantal unieke gebruikers die de website hebben bezocht met een mobiel apparaat."
     web_crawlers:
       title: "Webcrawler-useragents"
       labels:
@@ -1346,6 +1355,7 @@ nl:
     onebox_domains_blacklist: "Een lijst van domeinen die nooit in een onebox worden omgezet."
     inline_onebox_domains_whitelist: "Een lijst van domeinen die in een onebox als miniatuur worden omgezet wanneer gekoppeld zonder titel"
     enable_inline_onebox_on_all_domains: "Website-instelling inline_onebox_domain_whitelist negeren en inline onebox op alle domeinen toestaan."
+    force_custom_user_agent_hosts: "Hosts waarvoor bij alle aanvragen de aangepaste onebox-useragent wordt gebruikt. (Met name handig voor hosts die toegang beperken via de useragent)."
     max_oneboxes_per_post: "Maximale aantal oneboxes in een bericht."
     logo: "De logoafbeelding links bovenaan op uw website. Gebruik een brede rechthoekige afbeelding met een hoogte van 120 en een hoogte-breedteverhouding groter dan 3:1. Bij leeg laten wordt de titeltekst van de website getoond."
     logo_small: "De kleine logoafbeelding links bovenaan op uw website, zichtbaar bij omlaag scrollen. Gebruik een vierkante afbeelding van 120 × 120. Bij leeg laten wordt een startpaginasymbool getoond."
@@ -1398,6 +1408,7 @@ nl:
     markdown_typographer_quotation_marks: "Lijst van vervangingsparen voor dubbele en enkele aanhalingstekens"
     post_undo_action_window_mins: "Het aantal minuten dat gebruikers recente acties op een bericht ongedaan mogen maken (liken, markeren, etc)."
     must_approve_users: "Stafleden moeten alle nieuwe gebruikersaccounts goedkeuren voordat ze de website mogen bezoeken."
+    approve_suspect_users: "Stafleden moeten alle verdachte accounts goedkeuren"
     pending_users_reminder_delay: "Moderators inlichten als nieuwe gebruikers langer dan dit aantal uren op goedkeuring wachten. Stel dit in op -1 om meldingen uit te schakelen."
     maximum_session_age: "Gebruikers blijven (n) uur na hun laatste bezoek aangemeld"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js)-trackingcode-ID, bv. UA-12345678-9; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1545,7 +1556,7 @@ nl:
     max_post_deletions_per_day: "Maximale aantal berichten dat een gebruiker per dag kan verwijderen."
     alert_admins_if_errors_per_minute: "Aantal foutmeldingen per minuut waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
     alert_admins_if_errors_per_hour: "Aantal foutmeldingen per uur waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
-    categories_topics: "Aantal getoonde topics op de /categories-pagina."
+    categories_topics: "Aantal topics dat in de /categories-pagina wordt getoond. Als dit op 0 is ingesteld, wordt automatisch naar een waarde gezocht die de twee kolommen symmetrisch houdt (categorieën en topics)."
     suggested_topics: "Aantal aanbevolen topics onderaan een topic."
     limit_suggested_to_category: "Alleen topics van de huidige categorie weergeven in aanbevolen topics."
     suggested_topics_max_days_old: "Aanbevolen topics mogen niet meer dan n dagen oud zijn."
@@ -1703,7 +1714,6 @@ nl:
     soft_bounce_score: "Bouncescore die aan de gebruiker wordt toegevoegd wanneer een tijdelijke bounce optreedt."
     hard_bounce_score: "Bouncescore die aan de gebruiker wordt toegevoegd wanneer een permanente bounce optreedt."
     bounce_score_threshold: "Maximale bouncescore voordat we stoppen met het e-mailen van een gebruiker."
-    bounce_score_threshold_deactivate: "Maximale bouncescore voordat we een gebruiker deactiveren."
     reset_bounce_score_after_days: "Bouncescore na X dagen automatisch terugzetten."
     attachment_content_type_blacklist: "Lijst van trefwoorden voor het blacklisten van bijlagen op basis van het inhoudstype."
     attachment_filename_blacklist: "Lijst van trefwoorden voor het blacklisten van bijlagen op basis van de bestandsnaam."
@@ -1846,7 +1856,7 @@ nl:
     returning_users_days: "Het aantal dagen dat voorbij moet gaan voordat een gebruiker als terugkerend wordt beschouwd."
     default_email_digest_frequency: "Hoe vaak gebruikers standaard e-mailsamenvattingen ontvangen."
     default_include_tl0_in_digests: "Standaard berichten van nieuwe gebruikers in e-mailsamenvattingen opnemen. Gebruikers kunnen dit in hun voorkeuren wijzigen."
-    default_email_level: "Standaard e-mailmeldingsniveau wanneer iemand een gebruiker citeert/beantwoordt/vermeldt of uitnodigt."
+    default_email_level: "Standaard e-mailmeldingsniveau voor normale topics."
     default_email_messages_level: "Standaard e-mailmeldingsniveau wanneer iemand een gebruiker bericht."
     default_email_mailing_list_mode: "Standaard een e-mail sturen voor elk nieuw bericht."
     default_email_mailing_list_mode_frequency: "Gebruikers die de mailinglijstmodus inschakelen, ontvangen standaard dit aantal keren e-mails."
@@ -2107,6 +2117,9 @@ nl:
   user:
     deactivated: "Gedeactiveerd vanwege te veel gebouncete e-mails naar '%{email}'."
     deactivated_by_staff: "Gedeactiveerd door staf"
+    deactivated_by_inactivity:
+      one: "Automatisch gedeactiveerd na %{count} dag inactiviteit"
+      other: "Automatisch gedeactiveerd na %{count} dagen inactiviteit"
     activated_by_staff: "Geactiveerd door staf"
     new_user_typed_too_fast: "Nieuwe gebruiker typte te snel"
     content_matches_auto_block_regex: "Inhoud komt overeen met regex voor auto-blokkeren"
@@ -2134,6 +2147,7 @@ nl:
     destroy_reasons:
       same_ip_address: "Zelfde IP-adres (%{ip_address}) als andere gebruikers"
       inactive_user: "Inactieve gebruiker"
+    email_in_spam_header: "Eerste e-mail van gebruiker is als spam gemarkeerd"
   reviewables_reminder:
     subject_template:
       one: "%{count} item moet worden beoordeeld"
@@ -2178,6 +2192,34 @@ nl:
       Bevestig dat u **%{target_username} (%{target_email})** als een beheerder voor uw forum wilt toevoegen.
 
       [Beheerdersaccount bevestigen](%{admin_confirm_url})
+  new_version_mailer:
+    text_body_template: |
+      Hoera, er is een nieuwe versie van [Discourse](https://www.discourse.org) beschikbaar!
+
+      Uw versie: %{installed_version}
+      Nieuwe versie: **%{new_version}**
+
+      - Upgrade via onze eenvoudige **[browserupgrade via één klik](%{base_url}/admin/upgrade)**
+
+      - Lees wat er nieuw is in de [uitgaveopmerkingen](https://meta.discourse.org/tag/release-notes), of bekijk de [groffe GitHub-changelog](https://github.com/discourse/discourse/commits/master)
+
+      - Bezoek [meta.discourse.org](https://meta.discourse.org) voor nieuws, discussie en ondersteuning voor Discourse
+  new_version_mailer_with_notes:
+    text_body_template: |
+      Hoera, er is een nieuwe versie van [Discourse](https://www.discourse.org) beschikbaar!
+
+      Uw versie: %{installed_version}
+      Nieuwe versie: **%{new_version}**
+
+      - Upgrade via onze eenvoudige **[browserupgrade via één klik](%{base_url}/admin/upgrade)**
+
+      - Lees wat er nieuw is in de [uitgaveopmerkingen](https://meta.discourse.org/tag/release-notes), of bekijk de [groffe GitHub-changelog](https://github.com/discourse/discourse/commits/master)
+
+      - Bezoek [meta.discourse.org](https://meta.discourse.org) voor nieuws, discussie en ondersteuning voor Discourse
+
+      ### Uitgaveopmerkingen
+
+      %{notes}
   flag_reasons:
     off_topic: "Uw bericht is gemarkeerd als **off-topic**: de gemeenschap vindt dat het niet goed bij het onderwerp past, zoals momenteel bepaald door de titel en het eerste bericht."
     inappropriate: "Uw bericht is gemarkeerd als **ongepast**: de gemeenschap vindt het bericht beledigend, grof, of een schending van [onze gemeenschapsrichtlijnen](%{base_path}/guidelines)."
@@ -2492,12 +2534,30 @@ nl:
     user_email_post_deleted: "bericht is verwijderd door de schrijver"
     user_email_user_suspended: "gebruiker was geschorst"
     user_email_already_read: "gebruiker heeft dit bericht al gelezen"
+    user_email_access_denied: "gebruiker mag dit bericht niet zien"
     sender_message_blank: "bericht is leeg"
     sender_message_to_blank: "message.to is leeg"
     sender_text_part_body_blank: "text_part.body is leeg"
     sender_body_blank: "geen tekst"
+    sender_post_deleted: "bericht is verwijderd"
+    sender_message_to_invalid: "ontvanger heeft een ongeldig e-mailadres"
   color_schemes:
     base_theme_name: "Basis"
+    light: "Licht"
+    dark: "Donker"
+    neutral: "Neutraal"
+    shades_of_blue: "Blauwtinten"
+    latte: "Latte"
+    summer: "Zomer"
+    dark_rose: "Donkerroze"
+    default_theme_name: "Licht"
+    light_theme_name: "Licht"
+    dark_theme_name: "Donker"
+    neutral_theme_name: "Neutraal"
+    shades_of_blue_theme_name: "Blauwtinten"
+    latte_theme_name: "Latte"
+    summer_theme_name: "Zomer"
+    dark_rose_theme_name: "Donkerroze"
   edit_this_page: "Deze pagina bewerken"
   csv_export:
     boolean_yes: "Ja"
@@ -2514,7 +2574,7 @@ nl:
   badges:
     mass_award:
       errors:
-        invalid_csv: Dat CSV-bestand kon niet worden gelezen. Bevestig dat het één e-mailadres per regel bevat.
+        invalid_csv: "Er is een fout ontdekt op regel %{line_number}. Bevestig dat het CSV-bestand één e-mailadres per regel bevat."
     editor:
       name: Bewerker
       description: Eerste berichtbewerking
@@ -2671,6 +2731,12 @@ nl:
               restricted:
                 label: "Privé"
                 description: "Alleen aangemelde gebruikers hebben toegang tot deze gemeenschap"
+          privacy_options:
+            choices:
+              invite_only:
+                label: "Gebruikers moeten door vertrouwde gebruikers of een staflid worden uitgenodigd voordat ze kunnen registreren."
+              must_approve:
+                label: "Gebruikers kunnen zelf registreren, maar moeten door een staflid worden goedgekeurd."
       contact:
         title: "Contact"
         fields:
@@ -2782,12 +2848,18 @@ nl:
     user_claimed: "Dit item is door een andere gebruiker opgeëist."
     missing_version: "U moet een versieparameter opgeven"
     conflict: "Een updateconflict heeft ervoor gezorgd dat u dit niet kon doen."
+    reasons:
+      email_auth_res_enqueue: "Een DMARC-controle op deze e-mail is mislukt; het bericht komt zeer waarschijnlijk niet van wie het lijkt te komen. Controleer de onbewerkte e-mailheader voor meer informatie."
+      email_spam: "Deze e-mail is als spam gemarkeerd door de header zoals gedefinieerd in `email_in_spam_header`."
+      suspect_user: "Gebruikers in de verdachtenlijst moeten door een staflid worden onderzocht. Zie `approve_suspect_users`."
     actions:
       agree:
         title: "Akkoord..."
       agree_and_keep:
         title: "Bericht behouden"
         description: "Akkoord met markering en het bericht ongewijzigd laten."
+      agree_and_keep_hidden:
+        title: "Bericht verborgen houden"
       agree_and_suspend:
         title: "Gebruiker schorsen"
         description: "Akkoord met markering en de gebruiker schorsen."

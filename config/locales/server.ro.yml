@@ -598,6 +598,8 @@ ro:
       xaxis: "Zi"
     new_contributors:
       xaxis: "Zi"
+    trust_level_growth:
+      yaxis: "Zi"
     consolidated_page_views:
       yaxis: "Zi"
       labels:
@@ -928,7 +930,6 @@ ro:
     max_topic_invitations_per_day: "Numărul maxim de invitații la subiect pe care un utilizator le poate trimite pe zi."
     alert_admins_if_errors_per_minute: "Numărul de erori pe minut la care să se declanșeze o alerta admin. Valoarea 0 dezactivează această funcționalitate. NOTĂ: necesită restart."
     alert_admins_if_errors_per_hour: "Numărul de erori pe oră la care să se declanșeze o alertă admin. Valoarea 0 dezactivează această funcționalitate. NOTĂ: necesită restart."
-    categories_topics: "Numărul de subiecte care să fie afișat în pagina /categories ."
     suggested_topics: "Numărul de subiecte sugerate în partea de jos a unui subiect."
     limit_suggested_to_category: "Arată doar subiectele din aceeași categorie, în subiecte sugerate."
     suggested_topics_max_days_old: "Subiectele sugerate nu trebuie să fie mai vechi de n zile."
@@ -1044,7 +1045,6 @@ ro:
     soft_bounce_score: "Rata de ricoșeu adăugată unui utilizator atunci când se produce un ricoșeu temporar."
     hard_bounce_score: "Rata de ricoșeu adăugată unui utilizator atunci când se produce un ricoșeu permanent."
     bounce_score_threshold: "Rata maximă de ricoșeu înainte să nu îi mai trimitem emailuri utilizatorului."
-    bounce_score_threshold_deactivate: "Rata maximă de ricoșeu înainte să dezactivăm utilizatorul."
     reset_bounce_score_after_days: "Resetează automat rata de ricoșeu după X zile."
     attachment_content_type_blacklist: "Lista cuvintelor cheie folosite pentru filtrarea atașamentelor în funcție de tipul de conținut."
     attachment_filename_blacklist: "Lista cuvintelor cheie folosite la filtrarea atașamentelor în funcție de numele fișierului."

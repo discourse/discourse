@@ -723,6 +723,8 @@ ar:
       xaxis: "اليوم"
     new_contributors:
       xaxis: "اليوم"
+    trust_level_growth:
+      yaxis: "اليوم"
     consolidated_page_views:
       yaxis: "اليوم"
       labels:
@@ -1033,7 +1035,6 @@ ar:
     max_invites_per_day: "أقصى عدد للدعوات التي يمكن للعضو إرسالها باليوم."
     max_topic_invitations_per_day: "أقصى عدد لدعوات الموضوع التي يمكن للعضو إرسالها باليوم."
     alert_admins_if_errors_per_minute: "عدد الأخطاء في الدقيقة الواحدة لكى يرسل تنبيه للمدير. قيمة 0 تعطل هذه الميزة. ملاحظة: تتطلب إعادة تشغيل."
-    categories_topics: "عدد الموضوعات التي تظهر في صفحة الأقسام."
     suggested_topics: "عدد الموضوعات المقترحة التي تظهر في أسفل الموضوع."
     limit_suggested_to_category: "أظهر فقط الموضوعات من القسم الحالي في الموضوعات المقترحة."
     suggested_topics_max_days_old: "الموضوعات المقترحة لا يجب ان تكون اقدم من هذا العدد من الايام."

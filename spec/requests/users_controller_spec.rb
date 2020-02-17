@@ -2402,7 +2402,10 @@ describe UsersController do
 
   describe '#is_local_username' do
     fab!(:user) { Fabricate(:user) }
-    fab!(:group) { Fabricate(:group, name: "Discourse") }
+    fab!(:group) { Fabricate(:group, name: "Discourse", mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+    let(:unmentionable) {
+      Fabricate(:group, name: "Unmentionable", mentionable_level: Group::ALIAS_LEVELS[:nobody])
+    }
     fab!(:topic) { Fabricate(:topic) }
     fab!(:allowed_user) { Fabricate(:user) }
     let(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
@@ -2416,11 +2419,21 @@ describe UsersController do
     end
 
     it "finds the group" do
+      sign_in(user)
       get "/u/is_local_username.json", params: { username: group.name }
-
       expect(response.status).to eq(200)
       json = JSON.parse(response.body)
-      expect(json["valid_groups"][0]).to eq(group.name)
+      expect(json["valid_groups"]).to include(group.name)
+      expect(json["mentionable_groups"].find { |g| g['name'] == group.name }).to be_present
+    end
+
+    it "finds unmentionable groups" do
+      sign_in(user)
+      get "/u/is_local_username.json", params: { username: unmentionable.name }
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      expect(json["valid_groups"]).to include(unmentionable.name)
+      expect(json["mentionable_groups"]).to be_blank
     end
 
     it "supports multiples usernames" do

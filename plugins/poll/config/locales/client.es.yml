@@ -18,6 +18,8 @@ es:
       public:
         title: "Los votos son <strong>públicos</strong>."
       results:
+        groups:
+          title: "Necesitas ser parte del grupo %{groups} para votar en esta encuesta."
         vote:
           title: "Los resultados se mostrarán cuando <strong>votes</strong>."
         closed:
@@ -73,7 +75,7 @@ es:
         title: Crear encuesta
         insert: Insertar encuesta
         help:
-          options_count: Ingresar al menos 2 opciones
+          options_count: Ingresa al menos 1 opción
           invalid_values: El valor mínimo debe ser menor que el valor máximo.
           min_step_value: El valor mínimo es 1
         poll_type:
@@ -87,6 +89,8 @@ es:
           vote: En votación
           closed: Cuando esté cerrada
           staff: Solo staff
+        poll_groups:
+          label: Grupos permitidos
         poll_chart_type:
           label: Tipo de gráfico
         poll_config:

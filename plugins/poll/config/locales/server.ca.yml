@@ -17,8 +17,6 @@ ca:
     invalid_argument: "El valor '%{value}' no és vàlid per a l'argument '%{argument}'."
     multiple_polls_without_name: "Hi ha múltiples enquestes sense nom. Empreu l'atribut '<code>nom</code>' per a identificar inequívocament les enquestes."
     multiple_polls_with_same_name: "Hi ha múltiples enquestes amb el mateix nom: <strong>%{name}</strong>. Empreu l'atribut '<code>nom</code>' per a identificar inequívocament les enquestes."
-    default_poll_must_have_at_least_2_options: "L'enquesta ha de tenir 2 opcions com a mínim."
-    named_poll_must_have_at_least_2_options: "L'enquesta anomenada <strong>%{name}</strong> ha de tenir com a mínim 2 opcions."
     default_poll_must_have_less_options:
       one: "L'enquesta ha de tenir menys d'%{count} opció."
       other: "L'enquesta ha de tenir menys de %{count} opcions."

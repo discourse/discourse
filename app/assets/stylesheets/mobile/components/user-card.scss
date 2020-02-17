@@ -1,8 +1,8 @@
 $avatar_width: 120px;
 
 // shared styles for user and group cards
-#user-card,
-#group-card {
+.user-card,
+.group-card {
   position: fixed;
   // mobile cards should always be on top of everything - 1102
   z-index: z("mobile-composer") + 2;
@@ -48,7 +48,7 @@ $avatar_width: 120px;
 }
 
 // styles for user cards only
-#user-card {
+.user-card {
   // badges
   .badge-section {
     flex-wrap: wrap;
@@ -71,6 +71,17 @@ $avatar_width: 120px;
       display: flex;
       margin: 0;
       width: 100%;
+    }
+  }
+
+  .public-user-fields {
+    @media screen and (max-height: 550px) {
+      max-height: 12vh;
+    }
+    max-height: 40vh;
+    overflow-y: auto;
+    .public-user-field {
+      @include line-clamp(3);
     }
   }
 }

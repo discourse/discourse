@@ -315,7 +315,7 @@ he:
   user_is_suspended: "משתמשים מושעים אינם מורשים לפרסם."
   topic_not_found: "משהו השתבש אולי נושא זה נסגר או נמחק בזמן שקראת אותו?"
   not_accepting_pms: "מצטעים, %{username} לא מקבל הודעות כרגע."
-  max_pm_recepients: "ניתן לשלוח הודעה ל־%{recipients_limit} נמענים לכל היותר, עמך הסליחה."
+  max_pm_recipients: "ניתן לשלוח הודעה ל־%{recipients_limit} נמענים לכל היותר, עמך הסליחה."
   pm_reached_recipients_limit: "להודעה לא יכולים להיות למעלה מ־%{recipients_limit} נמענים, עמך הסליחה."
   removed_direct_reply_full_quotes: "הוסר ציטוט של כל הפוסט הקודם אוטומטית."
   secure_upload_not_allowed_in_public_topic: "לא ניתן להשתמש בהעלאות המאובטחות הבאות בנושא ציבורי: %{upload_filenames}, עמך הסליחה."
@@ -1071,6 +1071,15 @@ he:
       xaxis: "יום"
       yaxis: "מספר תורמים חדשים."
       description: "מספר המשתמשים שכתבו את הפוסט הראשון שלהם במהלך התקופה הזו."
+    trust_level_growth:
+      title: "עלייה בדרגת האמון"
+      xaxis:
+        tl1_reached: "עלייה לדרגת אמון 1"
+        tl2_reached: "עלייה לדרגת אמון 2"
+        tl3_reached: "עלייה לדרגת אמון 3"
+        tl4_reached: "עלייה לדרגת אמון 4"
+      yaxis: "יום"
+      description: "מספר המשתמשים שעלו בדרגת אמון במהלך תקופה זו."
     consolidated_page_views:
       title: "תצוגות דף מאוחדות"
       xaxis:
@@ -1416,6 +1425,7 @@ he:
     onebox_domains_blacklist: "רשימת מתחמים (דומיינים) שלעולם לא יופיעו בתיבות תחימה."
     inline_onebox_domains_whitelist: "רשימת שמות מתחם שיופיעו בתיבות תחימה בתצורה המזערית שלהם אם הקישור מופיע ללא כותרת"
     enable_inline_onebox_on_all_domains: "להתעלם מהגדרות אתר inline_onebox_domain_whitelist ולאפשר תיבות תחימה לכל שמות המתחם."
+    force_custom_user_agent_hosts: "מארחים שמולם משתמשים בסוכן משתמש onebox בהתאמה אישית לכל הבקשות. (חיוני במיוחד למארחים שמגבילים גישה בהתאם לסוכן משתמש)."
     max_oneboxes_per_post: "מספר מרבי של תיבות תחימה בפוסט."
     logo: "תמונת הלוגו בפינה הימנית העליונה באתר שלך. מוטב להשתמש בתמונה מלבנית בגובה של 120 ויחס תצוגה שעולה על 3:1. במקרה של העדר בחירה, יופיע הטקסט של כותרת האתר."
     logo_small: "תמונת הלוגו הקטנה בפינה הימנית של האתר שלך, מופיעה בעת גלילה כלפי מטה. יש להשתמש בתמונה ריבועית בגודל של 120 × 120. במקרה של העדר בחירה, תופיע אות הבית."
@@ -1468,6 +1478,7 @@ he:
     markdown_typographer_quotation_marks: "רשימה של צמדי החלפות מירכאות כפולות ובודדות"
     post_undo_action_window_mins: "מספר הדקות בהן מתאפשר למשתמשים לבטל פעולות אחרות בפוסט (לייק, סימון, וכו')."
     must_approve_users: "על הסגל לאשר את כל חשבונות המשתמשים החדשים בטרם מתאפשרת כניסתם לאתר."
+    approve_suspect_users: "על חברי הסגל לאשר את כל החשבונות החשודים"
     pending_users_reminder_delay: "יש להודיע למפקחים אם משתמשים חדשים ממתינים לעדכון מעבר לכמות כזו של שעות. יש להגדיר ל־‎-1 כדי לנטרל את ההתראות."
     maximum_session_age: "משתמשים ישארו מחוברים ל n שעות מאז ביקורם האחרון"
     ga_universal_tracking_code: "מזהה קוד מעקב של Google Universal Analytics (analytics.js), למשל: UA-12345678-9; ניתן לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1615,7 +1626,7 @@ he:
     max_post_deletions_per_day: "מספר הפוסטים המרבי שמשתמש יכול למחוק ביום."
     alert_admins_if_errors_per_minute: "מספר השגיאות בדקה לפני ששולחים התראה למנהל. ערך של 0 מנטרל אפשרות זו. שימו לב: מצריך הרצה מחדש."
     alert_admins_if_errors_per_hour: "מספר השגיאות בשעה לפני ששולחים התראה למנהל. ערך של 0 מנטרל אפשרות זו. שימו לב: מצריך הרצה מחדש."
-    categories_topics: "מספר נושאים להצגה בדף /categories."
+    categories_topics: "מספר הנושאים להציג בעמוד ה־‎/categories (קטגוריות). אם הוגדר ל־0, יתבצע ניסיון למצוא ערך שישאיר את שתי העמודות סימטריות (קטגוריות ונושאים)."
     suggested_topics: "מספר הנושאים המוצעים שיופיעו בתחתית הנושא המוצג."
     limit_suggested_to_category: "הצגת רק נושאים מהקטגוריה הנוכחית ברשימת הנושאים המומלצים."
     suggested_topics_max_days_old: "נושאים מוצעים לא אמורים להיות בני יותר מ n ימים."
@@ -1773,7 +1784,6 @@ he:
     soft_bounce_score: "ניקוד-החזר מתווסף למשתמש כאשר מתרחשת החזרה זמנית."
     hard_bounce_score: "ניקוד-החזר מתווסף למשתמש כאשר מתרחשת החזרה קבועה."
     bounce_score_threshold: "ניקוד-החזר מקסימלי לפני שנפסיק לשלוח מיילים למשתמש."
-    bounce_score_threshold_deactivate: "ניקוד-החזר מקסימלי לפני שאנחנו משביתים משתמש."
     reset_bounce_score_after_days: "איפוס אוטומטי של ניקוד-החזר לאחר X ימים."
     attachment_content_type_blacklist: "רשימת מילות מפתח שמשמשות להכנסת צירופים לרשימה שחורה על בסיס סוג התוכן."
     attachment_filename_blacklist: "רשימת מילות מפתח לרשימה שחורה של שמות קבצים מצורפים."
@@ -1916,7 +1926,7 @@ he:
     returning_users_days: "כמה ימים אמורים לעבור לפני שמשתמש נחשב למשתמש חוזר."
     default_email_digest_frequency: "באיזו תדירות משתמשים יקבלו סיכומי מיילים כברירת מחדל."
     default_include_tl0_in_digests: "כללו פוסטים ממשתמשים חדשים בדוא\"ל מסכם כברירת מחדל. משתמשים יוכלו לשנות זאת בהעדפות האישיות."
-    default_email_level: "הגדרת רמת ההתראה בדוא״ל כבררת מחדל בעת ציטוט/תגובה/אזכורים או הזמנות של משתמשים."
+    default_email_level: "הגדרת רמת ההתראה בדוא״ל כבררת מחדל לנושאים רגילים."
     default_email_messages_level: "הגדרת רמת ההתראה בדוא״ל כבררת מחדל בעת שליחת הודעה למשתמש."
     default_email_mailing_list_mode: "שלח מייל עבור כל פוסט חדש בתור ברירת מחדל. "
     default_email_mailing_list_mode_frequency: "משתמשים שאיפשרו את מצב רשימת התפוצה יקבלו מיילים בתדירות זו כברירת מחדל."
@@ -1946,7 +1956,7 @@ he:
     retain_web_hook_events_period_days: "מספר הימים לשמירת רשומות אירועי התלייה."
     retry_web_hook_events: "לנסות מחדש אירועי התליה שנכשלו במשך 4 פעמים. פרקי הזמן שבין הניסיונות החוזרים הם 1, 5, 25 ו־125 דקות."
     revoke_api_keys_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API שלא היה בשימוש (0 - לעולם לא)."
-    allow_user_api_keys: "איפשור יצירת מפתחות API למשתמשים"
+    allow_user_api_keys: "לאפשר למשתמשים ליצור מפתחות API"
     allow_user_api_key_scopes: "רשימת אזורים מותרים למפתחות API של משתמשים"
     max_api_keys_per_user: "מספר מקסימלי של מפתחות API של משתמש לכל משתמש"
     min_trust_level_for_user_api_key: "רמת אמון נדרשת לייצור של מפתחות API של משתמש"
@@ -2215,6 +2225,11 @@ he:
   user:
     deactivated: "הושבת בעקבות מיילים רבים מידי שהוחזרו ל '%{email}'."
     deactivated_by_staff: "הושבת על ידי הצוות"
+    deactivated_by_inactivity:
+      one: "להשבית אוטומטית לאחר יום (%{count}) ללא פעילות"
+      two: "להשבית אוטומטית לאחר יומיים (%{count}) ללא פעילות"
+      many: "להשבית אוטומטית לאחר %{count} ימים ללא פעילות"
+      other: "להשבית אוטומטית לאחר %{count} ימים ללא פעילות"
     activated_by_staff: "הופעל על ידי הצוות"
     new_user_typed_too_fast: "משתמש חדש הקליד מהר מידי"
     content_matches_auto_block_regex: "ביטוי רגולרי לחסימת תוכן אטוטמטית"
@@ -2244,6 +2259,7 @@ he:
       fixed_primary_email: "כתובת דוא״ל קבועה למשתמשים מבוימים"
       same_ip_address: "אותה כתובת ה־IP (%{ip_address}) כמו משתמשים אחרים"
       inactive_user: "משתמש בלתי פעיל"
+    email_in_spam_header: "כתובת הדוא״ל הראשונה של המשתמש סומנה כזבל"
   reviewables_reminder:
     submitted:
       one: "הוגשו פריטים לפני למעלה משעה (%{count}). [נא לסקור אותם](%{base_path}/review)."
@@ -2384,7 +2400,7 @@ he:
 
       - אנו ממליצים לך בחום **לשלוח הודעת בדיקה אל [mail-tester.com][mt]** כדי לאמת שכל ההגדרות שצוינו עובדות כראוי.
 
-      (הדרך ה*קלה* היא ליצור חשבון חינמי ב־[SendGrid][sg],‏ [SparkPost][sp],‏ [Mailgun][mg] או [Mailjet][mj], שמציעות תכניות חינמיות נדיבות ומתאימות לקהילות קטנות. בכל אופן יהיה עליך להגדיר את רשומות ה־SPF ו־DKIM ב־DNS שלך, ליתר ביטחון!)
+      (הדרך ה*קלה* היא ליצור חשבון ב־[SendGrid][sg],‏ [SparkPost][sp],‏ [Mailgun][mg] או [Mailjet][mj], שמציעות תכניות נדיבות וזולות ומתאימות לקהילות קטנות. בכל אופן יהיה עליך להגדיר את רשומות ה־SPF ו־DKIM ב־DNS שלך, ליתר ביטחון!)
 
       אנו מקווים שקיבלת את בדיקת העברת הדוא״ל בצורה תקינה!
 
@@ -2426,7 +2442,7 @@ he:
 
       - אפשר לשדרג בעזרת **[עדכון בלחיצה אחת דרך הדפדפן](%{base_url}/admin/upgrade)**
 
-      - צפייה ב[הערות המהדורה](https://meta.discourse.org/tags/release-notes) יציגו בפניך את כל השינויים או צפייה ב[יומן השינויים הגולמי של GitHub](https://github.com/discourse/discourse/commits/master)
+      - צפייה ב[הערות המהדורה](https://meta.discourse.org/tag/release-notes) יציגו בפניך את כל השינויים או צפייה ב[יומן השינויים הגולמי של GitHub](https://github.com/discourse/discourse/commits/master)
 
       - ניתן לבקר ב־[meta.discourse.org](https://meta.discourse.org) לחדשות, דיונים ותמיכה ב־Discourse
   new_version_mailer_with_notes:
@@ -2440,7 +2456,7 @@ he:
 
       - אפשר לשדרג בעזרת **[עדכון בלחיצה אחת דרך הדפדפן](%{base_url}/admin/upgrade)**
 
-      - צפייה ב[הערות המהדורה](https://meta.discourse.org/tags/release-notes) יציגו בפניך את כל השינויים או צפייה ב[יומן השינויים הגולמי של GitHub](https://github.com/discourse/discourse/commits/master)
+      - צפייה ב[הערות המהדורה](https://meta.discourse.org/tag/release-notes) יציגו בפניך את כל השינויים או צפייה ב[יומן השינויים הגולמי של GitHub](https://github.com/discourse/discourse/commits/master)
 
       - ניתן לבקר ב־[meta.discourse.org](https://meta.discourse.org) לחדשות, דיונים ותמיכה ב־Discourse
 
@@ -3241,6 +3257,7 @@ he:
       unsubscribe: "סיכום זה נשלח ממערכת %{site_link} כאשר לא נרשמת פעילות במשך זה מה. ניתן לשנות את %{email_preferences_link} או %{unsubscribe_link} כדי לבטל את המינוי. "
       your_email_settings: "הגדרות הדוא״ל שלך"
       click_here: "ללחוץ כאן"
+      from: "%{site_name}"
       preheader: "סיכום קצר מאז ביקורכם האחרון ב-%{last_seen_at}"
     forgot_password:
       title: "שכח/ה סיסמה"
@@ -3659,7 +3676,7 @@ he:
   badges:
     mass_award:
       errors:
-        invalid_csv: לא הצלחנו לקרוא את ה־CSV הזה. נא לוודא שמופיעה בו כתובת דוא״ל אחת בלבד בכל שורה.
+        invalid_csv: "נתקלנו בשגיאה בשורה מס׳ %{line_number}. נא לוודא שב־CSV יש כתובת דוא״ל אחת בכל שורה."
     editor:
       name: עורכים
       description: עריכת פוסט ראשונה
@@ -4011,9 +4028,9 @@ he:
               open:
                 label: "למשתמשים יש אפשרות להירשם עצמאית."
               invite_only:
-                label: "משתמשים יכולים להירשם עצמאית אך אישור ההרשמה נתון לאישור הסגל."
-              must_approve:
                 label: "משתמשים חייבים לקבל הזמנה ממשתמשים מהימנים או סגל בטרם ההרשמה."
+              must_approve:
+                label: "משתמשים יכולים להירשם עצמאית אך אישור ההרשמה נתון לאישור הסגל."
       contact:
         title: "איש/אשת קשר"
         fields:
@@ -4151,6 +4168,9 @@ he:
       category: "פוסטים בקטגוריה זו דורשים אימות ידני של הסגל. יש לעיין בהגדרות הקטגוריה."
       must_approve_users: "כל המשתמשים החדשים חייבים לעבור את אישור הסגל. יש לעיין בנושא `must_approve_users` (חובת אישור משתמשים)."
       invite_only: "על כל המשתמשים החדשים לקבל הזמנה. יש לעיין ב־`invite_only` (הזמנה בלבד)"
+      email_auth_res_enqueue: "הודעת דוא״ל זו נפסלה בבדיקת DMARC, כנראה שאינה נשלחה מהנמען שצוין. מוטב להתעמק בכותרות הגולמיות של הודעת הדוא״ל כדי להבין יותר לעומק."
+      email_spam: "הודעת דוא״ל זו סומנה כספאם עקב הכותרת שהוגדרה תחת `email_in_spam_header` (כותרת דוא״ל לספאם)."
+      suspect_user: "משתמשים ברשימת החשודים חייבים לעבור את סקירת הסגל. נא לעיין ב־`approve_suspect_users` (אישור משתמשים חשודים)."
     actions:
       agree:
         title: "הסכמה…"

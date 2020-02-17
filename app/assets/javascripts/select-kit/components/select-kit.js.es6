@@ -268,7 +268,8 @@ export default Component.extend(
       limitMatches: null,
       placement: "bottom-start",
       filterComponent: "select-kit/select-kit-filter",
-      selectedNameComponent: "selected-name"
+      selectedNameComponent: "selected-name",
+      castInteger: false
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function() {
@@ -421,8 +422,8 @@ export default Component.extend(
         }
 
         if (this.singleSelect) {
-          value = value.firstObject || null;
-          items = items.firstObject || null;
+          value = Ember.isPresent(value.firstObject) ? value.firstObject : null;
+          items = Ember.isPresent(items.firstObject) ? items.firstObject : null;
         }
 
         this._boundaryActionHandler("onChange", value, items);
@@ -703,7 +704,7 @@ export default Component.extend(
     },
 
     select(value, item) {
-      if (!value) {
+      if (!Ember.isPresent(value)) {
         if (!this.validateSelect(this.selectKit.highlighted)) {
           return;
         }
@@ -961,7 +962,8 @@ export default Component.extend(
         maximum: "options.maximum",
         minimum: "options.minimum",
         i18nPostfix: "options.i18nPostfix",
-        i18nPrefix: "options.i18nPrefix"
+        i18nPrefix: "options.i18nPrefix",
+        castInteger: "options.castInteger"
       };
 
       Object.keys(migrations).forEach(from => {

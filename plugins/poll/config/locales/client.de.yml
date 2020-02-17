@@ -44,7 +44,15 @@ de:
         label: "Ergebnisse anzeigen"
       hide-results:
         title: "Zurück zur Umfrage"
+        label: "Zeige Stimme"
+      group-results:
+        title: "Gruppen-Stimmen nach Benutzer-Feld"
+        label: "Zeige Aufgliederung"
+      ungroup-results:
+        title: "Kombiniere alle Stimmen"
+        label: "Aufgliederung ausblenden"
       export-results:
+        title: "Abstimmungsergebnisse exportieren"
         label: "Exportieren"
       open:
         title: "Umfrage starten"
@@ -64,7 +72,7 @@ de:
         title: Umfrage erstellen
         insert: Umfrage einfügen
         help:
-          options_count: Gib mindestens 2 Optionen ein
+          options_count: Geben Sie mindestens 1 Option ein
           invalid_values: Der Minimalwert muss kleiner sein als der Maximalwert.
           min_step_value: Die minimale Schrittweite beträgt 1.
         poll_type:

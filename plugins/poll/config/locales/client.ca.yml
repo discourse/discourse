@@ -71,7 +71,6 @@ ca:
         title: Crea una enquesta
         insert: Insereix una enquesta
         help:
-          options_count: Introduïu almenys 2 opcions
           invalid_values: El valor mínim ha de ser més petit que el valor màxim.
           min_step_value: L'increment mínim és 1
         poll_type:

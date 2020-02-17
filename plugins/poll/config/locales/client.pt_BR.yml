@@ -73,7 +73,6 @@ pt_BR:
         title: Criar Votação
         insert: Inserir Votação
         help:
-          options_count: Insira pelo menos 2 opções
           invalid_values: O valor mínimo precisa ser menor que o valor máximo.
           min_step_value: O valor mínimo de intervalo é 1
         poll_type:

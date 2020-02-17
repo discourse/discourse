@@ -385,6 +385,8 @@ tr_TR:
       deleted_post: "(gönderi silindi)"
       deleted_user: "(kullanıcı silindi)"
       user:
+        bio: "Profil"
+        website: "İnternet sitesi"
         username: "Kullanıcı Adı"
         email: "Eposta"
         name: "İsim"
@@ -576,7 +578,8 @@ tr_TR:
       leave: "Ayrıl"
       request: "İstek"
       message: "Mesaj"
-      allow_membership_requests: "Tüm kullanıcıların grup sahiplerine üyelik talebi göndermesine izin ver"
+      confirm_leave: "Bu gruptan ayrılmak istediğinizden emin misiniz?"
+      allow_membership_requests: "Kullanıcıların grup sahiplerine üyelik istekleri göndermesine izin ver (Genel olarak görünür grup gerektirir)"
       membership_request_template: "Üyelik talebi gönderirken kullanıcılara gösterilen özel şablon"
       membership_request:
         submit: "Talep gönderimi"
@@ -1328,8 +1331,6 @@ tr_TR:
       reset: "Şifre Sıfırlama "
       complete_username: " <b>%{username}</b> kullanıcı adı ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde şifreni nasıl sıfırlayacağını açıklayan bir e-posta alacaksın. "
       complete_email: " <b>%{email}</b> adresi ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde şifreni nasıl sıfırlayacağını açıklayan bir e-posta alacaksın. "
-      complete_username_found: "<b>%{username}</b> kullanıcı adı ile eşleşen bir hesap bulduk. Kısa bir süre içerisinde şifreni nasıl sıfırlayacağını açıklayan bir e-posta alacaksın."
-      complete_email_found: "<b>%{email}</b> adresi ile eşleşen bir hesap bulduk. Kısa bir süre içerisinde şifreni nasıl sıfırlayacağını açıklayan bir e-posta alacaksın. "
       complete_username_not_found: "Hiçbir hesap kullanıcı adı <b>%{username}</b> ile eşleşmiyor"
       complete_email_not_found: "Hiçbir hesap <b>%{email}</b> adresi ile eşleşmiyor"
       help: "Email ulaşmadı mı? Öncelikle spam kutunuza düşmediğinden emin olun. <p> Hangi email adresini kullandığınızdan emin değil misiniz? Bir email adresi girin, kayıtlı olup olmadığını size bildirelim.</p><p> Eğer hesabınızla ilişkili email adresini kullanamıyorsanız, lütfen<a href='%{basePath}/about'> yardımsever ekibimizle</a> iletişime geçin.</p>"
@@ -1462,6 +1463,7 @@ tr_TR:
       min_content_not_reached:
         one: "En azından {{count}} konu seçiniz"
         other: "En azından {{count}}konuları seçiniz"
+      invalid_selection_length: "Seçim en az {{count}} karakter olmalıdır."
     date_time_picker:
       from: Kimden
       to: Kime
@@ -1551,7 +1553,7 @@ tr_TR:
       view_new_post: "Yeni gönderini görüntüle."
       saving: "Kaydediliyor"
       saved: "Kaydedildi!"
-      saved_draft: "Gönderi taslağı işleniyor. Geri almak için seç. "
+      saved_draft: "Gönderi taslağı devam ediyor. Devam etmek için dokunun."
       uploading: "Yükleniyor..."
       show_preview: "önizlemeyi göster &raquo;"
       hide_preview: "&laquo; önizlemeyi gizle"
@@ -1601,6 +1603,7 @@ tr_TR:
         reply_as_new_topic:
           label: Bağlantılı konu olarak yanıtla
           desc: Bu konuyla bağlantılı yeni bir konu oluştur
+          confirm: Bağlantılı bir konu oluşturduğunuzda üzerine yazılacak yeni bir konu taslağınız var.
         reply_as_private_message:
           label: Yeni Mesaj
           desc: Kişisel bir mesaj oluştur
@@ -2846,6 +2849,7 @@ tr_TR:
       choose_for_topic: "opsiyonel etiketler"
       info: "Bilgi"
       default_info: "Bu etiket hiçbir kategoriyle sınırlandırılmamıştır, ve eş anlamlısı yoktur."
+      category_restricted: "Bu etiket, erişim izniniz olmayan kategorilerle sınırlıdır."
       synonyms: "Eş Anlamlılar"
       synonyms_description: "İlgili etiketler kullanılıyorsa, <b>%{base_tag_name}</b> ile değiştirilecektir."
       tag_groups_info:
@@ -2857,6 +2861,9 @@ tr_TR:
       edit_synonyms: "Eş anlamlıları Yönet"
       add_synonyms_label: "Eş anlamlılarını ekle:"
       add_synonyms: "Ekle"
+      add_synonyms_explanation:
+        one: "Şu anda bu etiketi kullanan herhangi bir yer, bunun yerine <b>%{tag_name}</b> kullanacak şekilde değiştirilecektir. Bu değişikliği yapmak istediğinizden emin misiniz?"
+        other: "Şu anda bu etiketleri kullanan herhangi bir yer, bunun yerine <b>%{tag_name}</b> kullanacak şekilde değiştirilecektir. Bu değişikliği yapmak istediğinizden emin misiniz?"
       add_synonyms_failed: "Bu etiketler eş anlamlı olarak eklenemedi: <b>%{tag_names}</b>. Eş anlamlıları olmadığından veya başka bir etiketin eş anlamlısı olmadığından emin olun."
       remove_synonym: "Eş anlamlıları Kaldır"
       delete_synonym_confirm: '"%{tag_name}" Eş anlamlıları silmek istediğinizden emin misiniz ?'
@@ -4206,6 +4213,15 @@ tr_TR:
           title: "Başlamak için var olan bir rozeti seç veya yeni bir tane oluştur."
           what_are_badges_title: "Rozetler nedir?"
           badge_query_examples_title: "Rozet sorgusu örnekleri"
+        mass_award:
+          title: Toplu Ödül
+          description: Aynı rozeti aynı anda birçok kullanıcıya verin.
+          no_badge_selected: Başlamak için lütfen bir rütbe seçin.
+          perform: "Kullanıcılara Ödül Rozeti"
+          upload_csv: Kullanıcı e-postaları içeren bir CSV yükleyin
+          aborted: Lütfen kullanıcı e-postaları içeren bir CSV yükleyin
+          success: CSV&#39;niz alındı ve kullanıcılar kısa süre içinde rozetlerini alacaklar.
+          replace_owners: Rozeti önceki sahiplerden kaldır
       emoji:
         title: "Emoji"
         help: "Herkese açık yeni bir emoji ekle. (PROTIP: birden çok dosyayı tek seferde sürükleyip bırakabilirsin)"

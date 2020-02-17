@@ -274,7 +274,7 @@ pt_BR:
   user_is_suspended: "Usuários suspensos não tem permissão para postar."
   topic_not_found: "Ocorreu um erro. Talvez este tópico foi fechado ou removido enquanto você estava visualizando?"
   not_accepting_pms: "Desculpe, %{username} não está aceitando mensagens no momento."
-  max_pm_recepients: "Desculpe, você pode enviar uma mensagem para o máximo %{recipients_limit} destinatários."
+  max_pm_recipients: "Desculpe, você pode enviar uma mensagem para o máximo %{recipients_limit} destinatários."
   pm_reached_recipients_limit: "Desculpe, você não pode ter mais de %{recipients_limit} destinatários em uma mensagem."
   removed_direct_reply_full_quotes: "Citação removida automaticamente de todo a postagem anterior."
   just_posted_that: "é demasiado similar ao que postaste recentemente"
@@ -965,6 +965,8 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Número de novos colaboradores"
       description: "Número de usuários que fizeram sua primeira postagem durante este período."
+    trust_level_growth:
+      yaxis: "Dia"
     consolidated_page_views:
       title: "Visualizações de Página Consolidadas"
       xaxis:
@@ -1494,7 +1496,6 @@ pt_BR:
     max_post_deletions_per_day: "Número máximo de postagens que um usuário pode excluir por dia."
     alert_admins_if_errors_per_minute: "Número de erros por minutos para desencadear um alerta aos administradores. Um valor igual a 0 desabilita esse recurso. NOTA: requer reinicialização."
     alert_admins_if_errors_per_hour: "Número de erros por hora para desencadear um alerta aos administradores. Um valor igual a 0 desabilita esse recurso. NOTA: requer reinicialização."
-    categories_topics: "Números de tópicos a serem mostrados na página /categorias."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
     limit_suggested_to_category: "Mostrar apenas tópicos da categoria atual em tópicos sugeridos."
     suggested_topics_max_days_old: "Tópicos sugeridos não devem ter mais de n dias."
@@ -1652,7 +1653,6 @@ pt_BR:
     soft_bounce_score: "Pontuação de rejeição adicionada ao usuário quando ocorre uma rejeição temporária."
     hard_bounce_score: "Pontuação de rejeição adicionada ao usuário quando ocorre uma rejeição permanente."
     bounce_score_threshold: "Pontuação máxima de rejeição antes de deixarmos de enviar um email a um usuário."
-    bounce_score_threshold_deactivate: "Pontuação máxima de rejeição antes de desativarmos um usuário."
     reset_bounce_score_after_days: "Redefinir automaticamente a pontuação de rejeição após X dias."
     attachment_content_type_blacklist: "Lista de palavras-chave usadas para anexos de lista negra com base no tipo de conteúdo."
     attachment_filename_blacklist: "Lista de palavras-chave usadas para anexos de lista negra com base no nome do arquivo."
@@ -1777,7 +1777,6 @@ pt_BR:
     returning_users_days: "Quantos dias devem passar antes que um usuário seja considerado como retornando."
     default_email_digest_frequency: "Com que frequência os usuários recebem e-mails de resumo por padrão."
     default_include_tl0_in_digests: "Inclua mensagens de novos usuários em e-mails de resumo por padrão. Os usuários podem mudar isso em suas preferências."
-    default_email_level: "Definir o nível de notificação de e-mail padrão quando alguém cita/responde/menciona ou convida o usuário."
     default_email_messages_level: "Definir o nível de notificação por e-mail padrão quando alguém envia uma mensagem ao usuário."
     default_email_mailing_list_mode: "Envie um e-mail para cada nova postagem por padrão."
     default_email_mailing_list_mode_frequency: "Os usuários que ativam o modo de lista de e-mails receberão e-mails com frequência por padrão."
@@ -2155,79 +2154,12 @@ pt_BR:
   test_mailer:
     title: "Teste de remetente"
     subject_template: "[%{email_prefix}] Teste de entrega de e-mail"
-    text_body_template: |
-      Este é um e-mail de teste de
-
-      [**%{base_url}**][0]
-
-      A entrega de e-mails é complicada. Aqui estão algumas coisas importantes que você deveria verificar primeiro:
-
-      - *Certifique-se* de definir o endereço `e-mail de notificação` from: corretamente nas configurações do seu site. **O domínio especificado no endereço "from:" dos e-mails que você envia é o domínio no qual seu e-mail será validado**.
-
-      - Saiba como visualizar a origem bruta do e-mail em seu cliente de e-mail, para que você possa examinar os cabeçalhos de e-mail em busca de dicas importantes. No Gmail, é a opção "mostrar original" no menu suspenso no canto superior direito de cada e-mail.
-
-      - **IMPORTANTE:** Seu ISP possui um registro DNS reverso inserido para associar os nomes de domínio e os endereços IP dos quais você envia e-mails? [Teste seu registro PTR Reverso][2] aqui. Se o seu ISP não inserir o registro de ponteiro DNS reverso adequado, é muito improvável que qualquer um de seus e-mails seja entregue.
-
-      - O [registro SPF][8] do seu domínio está correto? [Teste seu registro SPF][1] aqui. Observe que o TXT é o tipo de registro oficial correto para o SPF.
-
-      - O [registro DKIM][3] do seu domínio está correto? Isto irá melhorar significativamente a capacidade de entrega de e-mail. [Teste seu registro DKIM][7] aqui.
-
-      - Se você tiver o seu próprio servidor de e-mail, verifique se os IPs do seu servidor de e-mail não estão [em listas negras de e-mail][4]. Verifique também se está enviando definitivamente um nome de host totalmente qualificado que resolve no DNS em sua mensagem HELO. Caso contrário, isto fará com que seu e-mail seja rejeitado por muitos serviços de e-mail.
-
-      - É altamente recomendável que você **envie um e-mail de teste para [mail-tester.com][mt]** para verificar se tudo isso está funcionando corretamente.
-
-      (A maneira *fácil* é criar uma conta gratuita no [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que tem planos generosos de envio gratuito e são ótimos para pequenas comunidades. Você ainda precisará configurar os registros SPF e DKIM no seu DNS, no entanto!)
-
-      Esperamos que você tenha recebido este teste de entrega de e-mail.
-
-      Boa sorte,
-
-      seus amigos do [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Nova versão do remetente"
     subject_template: "[%{email_prefix}] Nova versão do discurso, atualização disponível"
-    text_body_template: |
-      Hooray, uma nova versão do [Discourse](https://www.discourse.org) está disponível!
-
-      Sua versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      - Atualize usando nosso fácil **[upgrade de navegador com um clique](%{base_url}/admin/upgrade)**
-
-      - Veja o que há de novo nas [notas de lançamento](https://meta.discourse.org/tags/release-notes) ou veja o [changelog bruto do GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visite [meta.discourse.org](https://meta.discourse.org) para notícias, discussões e suporte sobre o Discourse
   new_version_mailer_with_notes:
     title: "Nova versão do remetente com notas"
     subject_template: "[%{email_prefix}] atualização disponível"
-    text_body_template: |
-      Hooray, uma nova versão do [Discourse](https://www.discourse.org) está disponível!
-
-      Sua versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      - Atualize usando nosso fácil **[upgrade de navegador com um clique](%{base_url}/admin/upgrade)**
-
-      - Veja o que há de novo nas [notas de lançamento](https://meta.discourse.org/tags/release-notes) ou veja o [changelog bruto do GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visite [meta.discourse.org](https://meta.discourse.org) para notícias, discussões e suporte sobre o Discourse
-
-      ### Notas de lançamento
-
-      %{notes}
   flag_reasons:
     off_topic: "Sua postagem foi sinalizada como **off-topic**: a comunidade sente que não é uma boa adequação ao tópico, como atualmante definido de acordo com o título e o primeiro post."
     inappropriate: "Sua postagem foi sinalizada como **não apropriada**: a comunidade sente que ela é ofensiva, abusiva, ou uma violação das [nossas orientações da comunidade](%{base_path}/guidelines)."
@@ -3524,9 +3456,9 @@ pt_BR:
               open:
                 label: "Usuários podem se cadastrar por conta própria."
               invite_only:
-                label: "Usuários podem se cadastrar por conta própria, mas devem ser aprovados pela staff."
-              must_approve:
                 label: "Usuários precisam ser convidados por usuários confiáveis ou pela staff antes de poderem se cadastrar."
+              must_approve:
+                label: "Usuários podem se cadastrar por conta própria, mas devem ser aprovados pela staff."
       contact:
         title: "Contato"
         fields:

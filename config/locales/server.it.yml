@@ -265,7 +265,7 @@ it:
   user_is_suspended: "Agli utenti sospesi non è permesso creare messaggi."
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
   not_accepting_pms: "Spiacenti, %{username} non accetta messaggi al momento."
-  max_pm_recepients: "Spiacenti, puoi inviare un messaggio ad un massimo di %{recipients_limit} destinatari."
+  max_pm_recipients: "Spiacenti, puoi inviare un messaggio ad un massimo di %{recipients_limit} destinatari."
   pm_reached_recipients_limit: "Spiacente, non sono consentiti più di %{recipients_limit} destinatari in un messaggio."
   removed_direct_reply_full_quotes: "La citazione completa del messaggio precedente è stata rimossa automaticamente."
   just_posted_that: "è troppo simile a ciò che hai appena pubblicato"
@@ -920,6 +920,8 @@ it:
       xaxis: "Giorno"
       yaxis: "Numero di nuovi contributori"
       description: "Numero di utenti che hanno inviato il loro primo messaggio durante questo periodo."
+    trust_level_growth:
+      yaxis: "Giorno"
     consolidated_page_views:
       title: "Visualizzazioni pagine consolidato"
       xaxis:
@@ -1452,7 +1454,6 @@ it:
     max_post_deletions_per_day: "Numero massimo di post che un utente può eliminare al giorno."
     alert_admins_if_errors_per_minute: "Soglia di errori al minuto che scatena un allarme agli amministratori. Un valore pari a 0 disabilita questa caratteristica. NOTA: richiede un riavvio."
     alert_admins_if_errors_per_hour: "Soglia di errori all'ora che scatena un allarme agli amministratori. Un valore pari a 0 disabilita questa caratteristica. NOTA: richiede un riavvio."
-    categories_topics: "Numero di argomenti da mostrare nella pagina /categorie."
     suggested_topics: "Numero di argomenti suggeriti mostrati in fondo ad un argomento."
     limit_suggested_to_category: "Negli argomenti suggeriti, mostra soltanto argomenti della categoria corrente. "
     suggested_topics_max_days_old: "Gli argomenti suggeriti non dovrebbero essere più vecchi di n giorni."
@@ -1610,7 +1611,6 @@ it:
     soft_bounce_score: "Punteggio di rimbalzo aggiunto all'utente quando si verifica un rimbalzo temporaneo."
     hard_bounce_score: "Punteggio di rimbalzo aggiunto all'utente quando si verifica un rimbalzo permanente."
     bounce_score_threshold: "Punto di rimbalzo massimo prima di interrompere l'invio di email ad un utente."
-    bounce_score_threshold_deactivate: "Punto di rimbalzo massimo prima di disattivare un utente."
     reset_bounce_score_after_days: "Ripristina automaticamente il punteggio di rimbalzo dopo X giorni."
     attachment_content_type_blacklist: "Elenco delle parole chiave utilizzate per mettere in lista nera gli allegati in base al tipo di contenuto."
     attachment_filename_blacklist: "Elenco delle parole chiave utilizzate per mettere in lista nera gli allegati in base al nome del file."
@@ -1741,7 +1741,6 @@ it:
     returning_users_days: "Quanti giorni devono trascorrere prima che un utente venga considerato come il ritorno."
     default_email_digest_frequency: "Con quale frequenza gli utenti ricevono email riepilogative di default."
     default_include_tl0_in_digests: "Per impostazione predefinita, includi i messaggi dei nuovi utenti nelle email riepilogative. Gli utenti possono modificare questa impostazione nelle loro preferenze"
-    default_email_level: "Imposta il livello di notifica email predefinito quando qualcuno cita / risponde a / menziona o invita l'utente."
     default_email_messages_level: "Imposta il livello di notifica email predefinito quando un utente invia messaggi all'utente."
     default_email_mailing_list_mode: "Invia una email per ogni nuovo messaggio di default."
     default_email_mailing_list_mode_frequency: "Con quale frequenza gli utenti che hanno attivato la modalità mailing list riceveranno email di default."
@@ -2115,35 +2114,9 @@ it:
   new_version_mailer:
     title: "Mailer Nuova Versione"
     subject_template: "[%{email_prefix}] Nuova versione di Discourse, aggiornamento disponibile"
-    text_body_template: |
-      Evviva, una nuova versione di [Discourse](https://www.discourse.org) è disponibile!
-
-      Versione corrente: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      - Aggiorna con il nostro semplice **[one-click browser upgrade](%{base_url}/admin/upgrade)**
-
-      - Cosa c'è di nuovo nelle [release notes](https://meta.discourse.org/tags/release-notes) o guarda il [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) per informazioni, discussioni o supporto su Discourse
   new_version_mailer_with_notes:
     title: "Mailer Nuova Versione con Note"
     subject_template: "[%{email_prefix}] aggiornamento disponibile"
-    text_body_template: |
-      Evviva, una nuova versione di [Discourse](https://www.discourse.org) è disponibile!
-
-      Versione corrente: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      - Aggiorna con il nostro semplice **[one-click browser upgrade](%{base_url}/admin/upgrade)**
-
-      - Cosa c'è di nuovo nelle [release notes](https://meta.discourse.org/tags/release-notes) o guarda il [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) per informazioni, discussioni o supporto su Discourse
-
-      ### Note di rilascio
-
-      %{notes}
   flag_reasons:
     off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](%{base_path}/guidelines)."
@@ -3496,9 +3469,9 @@ it:
               open:
                 label: "Gli utenti possono registrarsi autonomamente."
               invite_only:
-                label: "Gli utenti possono registrarsi autonomamente, ma devono essere approvati dallo staff."
-              must_approve:
                 label: "Gli utenti devono essere invitati da utenti o dallo staff prima che possano registrarsi."
+              must_approve:
+                label: "Gli utenti possono registrarsi autonomamente, ma devono essere approvati dallo staff."
       contact:
         title: "Contatto"
         fields:

@@ -14,8 +14,6 @@ ro:
   poll:
     multiple_polls_without_name: "Există mai multe sondaje fără nume. Folosește atributul '<code>name</code>' pentru a identifica sondajele proprii"
     multiple_polls_with_same_name: "Există mai multe sondaje cu același nume: <strong>%{name}</strong>. Folosește atributul '<code>name</code>' pentru a identifica sondajele."
-    default_poll_must_have_at_least_2_options: "Sondajul trebuie să aibă cel puțin 2 opțiuni."
-    named_poll_must_have_at_least_2_options: "Sondajul numit <strong>%{name}</strong> trebuie să aibă cel puțin 2 opțiuni."
     default_poll_must_have_less_options:
       one: "Sondajul trebuie să aibă mai puțin de o opțiune."
       few: "Sondajul trebuie să conțină cel mult %{count} opțiuni."

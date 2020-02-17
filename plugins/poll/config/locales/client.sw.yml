@@ -54,7 +54,6 @@ sw:
         title: Jenga uchaguzi
         insert: Ingiza uchaguzi
         help:
-          options_count: Weka angalau machaguo mawili
           invalid_values: Kiwango cha chini lazima kiwe kidogo kuliko kiwango cha juu.
           min_step_value: Kiasi cha Kipimo cha chini ni 1
         poll_type:

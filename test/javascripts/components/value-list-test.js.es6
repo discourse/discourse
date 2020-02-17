@@ -45,6 +45,14 @@ componentTest("removing a value", {
     );
 
     assert.equal(this.values, "osama", "it removes the expected value");
+
+    await selectKit().expand();
+
+    assert.ok(
+      find(".select-kit-collection li.select-kit-row span.name")[0]
+        .innerText === "vinkas",
+      "it adds the removed value to choices"
+    );
   }
 });
 

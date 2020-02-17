@@ -52,7 +52,6 @@ da:
         title: Opret afstemning
         insert: Indsæt afstemning
         help:
-          options_count: Vælg mindst 2 muligheder
           invalid_values: Minimumsværdien skal være mindre end maksimumværdien.
         poll_type:
           label: Type

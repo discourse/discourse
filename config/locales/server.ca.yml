@@ -277,7 +277,7 @@ ca:
   user_is_suspended: "Els usuaris suspesos no tenen permís per a publicar."
   topic_not_found: "Alguna cosa ha fallat. Potser el tema ha estat tancat o suprimit mentre el consultàveu."
   not_accepting_pms: "De moment %{username} no accepta missatges."
-  max_pm_recepients: "Sols podeu enviar un missatge a un màxim de %{recipients_limit} destinataris."
+  max_pm_recipients: "Sols podeu enviar un missatge a un màxim de %{recipients_limit} destinataris."
   pm_reached_recipients_limit: "No podeu tenir més de %{recipients_limit} destinataris en un missatge."
   removed_direct_reply_full_quotes: "Citació de tota la publicació anterior eliminada automàticament."
   just_posted_that: "és massa semblant al que heu publicat recentment"
@@ -979,6 +979,8 @@ ca:
       xaxis: "Dia"
       yaxis: "Nombre de col·laboradors nous"
       description: "Nombre d'usuaris que han fet la seva primera publicació en aquest període."
+    trust_level_growth:
+      yaxis: "Dia"
     consolidated_page_views:
       title: "Pàgines vistes consolidades"
       xaxis:
@@ -1518,7 +1520,6 @@ ca:
     max_post_deletions_per_day: "Nombre màxim de publicacions que pot suprimir un usuari per dia."
     alert_admins_if_errors_per_minute: "Nombre d'errors per minut que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
     alert_admins_if_errors_per_hour: "Nombre d'errors per hora que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
-    categories_topics: "Nombre de temes que es mostren en la pàgina de categories."
     suggested_topics: "Nombre de temes recomanats que es mostren a baix d'un tema."
     limit_suggested_to_category: "Mostra solament temes de la categoria actual en els temes recomanats."
     suggested_topics_max_days_old: "Els temes recomanats no haurien de tenir més de n dies."
@@ -1676,7 +1677,6 @@ ca:
     soft_bounce_score: "Puntuació de rebot afegida a l'usuari quan hi ha un rebot temporal."
     hard_bounce_score: "Puntuació de rebot afegida a l'usuari quan hi ha un rebot permanent."
     bounce_score_threshold: "Puntuació màxima de rebot a partir de la qual es deixaran d'enviar correus a un usuari."
-    bounce_score_threshold_deactivate: "Puntuació màxima de rebot abans de desactivar un usuari."
     reset_bounce_score_after_days: "Restableix automàticament la puntuació de rebot després de X dies."
     attachment_content_type_blacklist: "Llista de paraules clau emprades per a blocar adjunts basant-se en el tipus de contingut."
     attachment_filename_blacklist: "Llista de paraules clau emprades per a blocar adjunts basant-se en el nom de fitxer."
@@ -1814,7 +1814,6 @@ ca:
     returning_users_days: "Quants dies han de passar abans que es consideri que un usuari torna."
     default_email_digest_frequency: "Amb quina freqüència els usuaris rebran els correus de resum per defecte."
     default_include_tl0_in_digests: "Inclou publicacions d'usuaris nous en correus de resum per defecte. Els usuaris poden canviar-ho en les seves preferències."
-    default_email_level: "Defineix el nivell predeterminat de notificació per correu electrònic quan algú cita, respon a, menciona o convida l'usuari."
     default_email_messages_level: "Definiu el nivell de notificació per correu electrònic predeterminat quan algú envia un missatge a l'usuari."
     default_email_mailing_list_mode: "Envia un correu per cada nova publicació per defecte."
     default_email_mailing_list_mode_frequency: "Els usuaris que activin el mode de llista de correu rebran correus amb aquesta freqüència per defecte."
@@ -2151,39 +2150,12 @@ ca:
   test_mailer:
     title: "Test"
     subject_template: "[%{email_prefix}] Test de lliurament de correu electrònic"
-    text_body_template: "Això és un test de correu electrònic de [**%{base_url}**][0] \n\nLa capacitat de lliurament de correu electrònic és una qüestió complexa. Vet aquí algunes coses importants que heu de comprovar: \n\n- **Assegureu-vos** que configureu correctament l'adreça \"de:\" del `correu de notificació` en la configuració del lloc web. **El domini especificat en l'adreça \"de:\" dels correus que envieu és el domini contra el qual es validarà el vostre correu**. \n\n- Aprengueu com visualitzar el codi font del correu en el vostre client de correu, de manera que pugueu examinar les capçaleres de correu per a obtenir pistes importants. En Gmail és l'opció \"Mostra l'original\" en el menú desplegable a la part superior dreta de cada correu. -\n\n** IMPORTANT:** ¿El vostre ISP té un registre DNS invers per a associar els noms de domini i les adreces IP des de les quals envieu correu? [Verifiqueu aquí el vostre registre PTR invers][2]. Si el vostre ISP no introdueix el registre adequat de DNS invers adequat, és molt poc probable que es lliuri cap correu.\n\n- ¿És correcte el [registre SPF][8] del vostre domini? [Comproveu el vostre registre SPF][1] aquí. Tingueu en compte que TXT és el tipus de registre oficial correcte per a SPF. \n\n- ¿És correcte el [registre DKIM][3] del domini? Això millorarà significativament la capacitat de lliurament de correu electrònic. [Comproveu el vostre registre DKIM][7] aquí. \n\n- Si gestioneu el vostre propi servidor de correu, comproveu que les adreces IP del servidor de correu [no formin part de les llistes negres de correu electrònic][4]. Verifiqueu també que s'envia un nom d'amfitrió (hostname) completament qualificat que resol en DNS en el seu missatge HELO. Si no és així, molts serveis de correu rebutjaran els vostres correus. \n\n- Us recomanem que envieu **un correu electrònic de test a [mail-tester.com][mt]** per a verificar que tot funciona correctament. (La manera *fàcil* és crear un compte gratuït a [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] o [Mailjet][mj], que tenen generosos plans de correu gratuït i estan bé per a comunitats petites. Així i tot, caldrà que configureu els registres SPF i DKIM en el vostre DNS!) \n\nEsperem que hàgiu rebut bé aquest test de lliurament de correu electrònic!\n\nBona sort, \n\nEls vostres amics de [Discourse](https://www.discourse.org)\n\n[0]: %{base_url} \n[1]: https://www.kitterman.com/spf/validate.html \n[2]: https: //mxtoolbox.com/ReverseLookup.aspx \n[3]: http://www.dkim.org/ \n[4]: https://whatismyipaddress.com/blacklist-check \n[7]: https: //www.mail- tester.com/spf-dkim-check \n[8]: http://www.openspf.org/SPF_Record_Syntax \n[sg]: https://goo.gl/r1WMF6 \n[sp]: https://www.sparkpost.com / [mg]: https://www.mailgun.com/ \n[mj]: https://www.mailjet.com/pricing/ \n[mt]: https://www.mail-tester.com/\n"
   new_version_mailer:
     title: "Nova versió"
     subject_template: "[%{email_prefix}] Nova versió de Discourse, actualització disponible"
-    text_body_template: |
-      Hurra, hi ha una nova versió de [Discourse](https://www.discourse.org)!
-
-      La vostra versió: %{installed_version}
-      La nova versió: **%{new_version}**
-
-      - Actualitzeu fàcilment amb l'**[actualització amb un clic](%{base_url}/admin/upgrade)**
-
-      - Vegeu les novetats en [notes de la versió](https://meta.discourse.org/tags/release-notes) o vegeu  [el registre de canvis en GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visiteu [meta.discourse.org](https://meta.discourse.org) per a notícies, discussions i ajuda per a Discourse
   new_version_mailer_with_notes:
     title: "Nova versió amb notes"
     subject_template: "[%{email_prefix}] actualització disponible"
-    text_body_template: |
-      Hurra, hi ha una nova versió disponible de [Discourse](https://www.discourse.org)!
-
-      La vostra versió: %{installed_version}
-      La nova versió: **%{new_version}**
-
-      - Actualitzeu fàcilment amb l'**[actualització amb un clic](%{base_url}/admin/upgrade)**
-
-      - Vegeu les novetats en [notes de la versió](https://meta.discourse.org/tags/release-notes) o vegeu  [el registre de canvis en GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visiteu [meta.discourse.org](https://meta.discourse.org) per a notícies, discussions i ajuda per a Discourse
-
-      ### Notes de la versió
-
-      %{notes}
   flag_reasons:
     off_topic: "La vostra publicació ha estat marcada amb bandera com a **fora de context**: la comunitat troba que no encaixa amb el tema, tal com el defineix el títol i la primera publicació."
     inappropriate: "La vostra publicació ha estat marcada amb bandera com a **inapropiada**: la comunitat troba que és ofensiva, abusiva o una violació de [les directrius de la comunitat](%{base_path}/guidelines)."
@@ -3224,9 +3196,9 @@ ca:
               open:
                 label: "Els usuaris poden registrar-se per si mateixos."
               invite_only:
-                label: "Els usuaris poden registrar-se per si mateixos, però han de ser aprovats per l'equip responsable. "
-              must_approve:
                 label: "Els usuaris han de ser convidats per usuaris de confiança o l'equip responsable abans de poder registrar-se."
+              must_approve:
+                label: "Els usuaris poden registrar-se per si mateixos, però han de ser aprovats per l'equip responsable. "
       contact:
         title: "Contacte"
         fields:

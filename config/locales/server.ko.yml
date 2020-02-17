@@ -183,7 +183,7 @@ ko:
   user_is_suspended: "가입이 보류된 회원은 글을 쓸 수 없습니다."
   topic_not_found: "뭔가 잘못됐네요. 아마 읽려는 도중에 토픽이 닫혔거나 지워진 건 아닐까요?"
   not_accepting_pms: "죄송합니다. %{username} 님이 당분간 메시지를 받지 않습니다."
-  max_pm_recepients: "죄송합니다. 최대 %{recipients_limit} 명의 수신자에게만 메시지를 보낼 수 있습니다."
+  max_pm_recipients: "죄송합니다. 최대 %{recipients_limit} 명의 수신자에게만 메시지를 보낼 수 있습니다."
   removed_direct_reply_full_quotes: "이전 전체 게시물의 인용을 자동으로 제거했습니다."
   just_posted_that: "당신이 이전에 게시한 것과 너무 비슷합니다."
   invalid_characters: "사용할 수 없는 문자를 포함하고 있습니다."
@@ -682,6 +682,8 @@ ko:
     new_contributors:
       title: "새로운 기여자들"
       xaxis: "일"
+    trust_level_growth:
+      yaxis: "일"
     consolidated_page_views:
       xaxis:
         page_view_anon: "익명 사용자"
@@ -1045,7 +1047,6 @@ ko:
     max_logins_per_ip_per_minute: "1분 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
     alert_admins_if_errors_per_minute: "관리자 경고를 발생시키기 위한 1분당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
     alert_admins_if_errors_per_hour: "관리자 경고를 발생시키기 위한 시간당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
-    categories_topics: "/categories 페이지에서 표시할 토픽의 수"
     suggested_topics: "글타래 아랫부분에 몇개의 글타래를 제안하여 보여준다."
     limit_suggested_to_category: "제안된 글타래는 현재의 카테고리에 있는 글타래 중에서만 보여준다."
     suggested_topics_max_days_old: "설정된 일수 이상의 토픽은 추천하지 않음"
@@ -1166,7 +1167,6 @@ ko:
     soft_bounce_score: "임시 반송이 일어났을 때 사용자에게 반송 스코어 추가."
     hard_bounce_score: "영구 반송이 일어났을 때 사용자에게 반송 스코어 추가."
     bounce_score_threshold: "사용자에게 메일을 보낼 최대 반송 스코어."
-    bounce_score_threshold_deactivate: "사용자를 비활성화 할 최대 반송 스코어."
     reset_bounce_score_after_days: "X 일 이후 반송 스코어 자동 초기화."
     attachment_content_type_blacklist: "콘텐츠 타입을 기준으로 첨부를 차단할 키워드 블랙리스트."
     attachment_filename_blacklist: "파일 이름을 기준으로 첨부를 차단할 키워드 블랙리스트."
