@@ -8,6 +8,10 @@ $poll-margin: 10px;
     flex-shrink: 0;
     width: 280px;
   }
+  .combo-box {
+    min-width: 180px;
+    width: 180px;
+  }
 
   .d-editor-preview {
     margin-left: $poll-margin * 2;
@@ -36,6 +40,11 @@ $poll-margin: 10px;
     min-width: 85px;
   }
 
+  .input-group {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .poll-number {
     margin: $poll-margin 0;
     display: flex;
@@ -44,6 +53,10 @@ $poll-margin: 10px;
     input {
       width: 70px;
     }
+  }
+
+  .poll-textarea {
+    flex-direction: column;
   }
 
   .poll-textarea textarea {
