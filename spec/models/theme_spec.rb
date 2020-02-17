@@ -385,7 +385,7 @@ HTML
             try {
               alert(settings.name);var a = function a() {};
             } catch (err) {
-              var rescue = require("discourse/lib/utilities").rescueThemeError;
+              var rescue = require("discourse/lib/rescue-theme-error");
               rescue(__theme_name__, err, api);
             }
           });
@@ -421,7 +421,7 @@ HTML
             try {
               alert(settings.name);var a = function a() {};
             } catch (err) {
-              var rescue = require("discourse/lib/utilities").rescueThemeError;
+              var rescue = require("discourse/lib/rescue-theme-error");
               rescue(__theme_name__, err, api);
             }
           });

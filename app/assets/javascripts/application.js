@@ -10,13 +10,13 @@
 
 // Stuff we need to load first
 //= require ./discourse/lib/to-markdown
-//= require ./discourse/lib/ajax
 //= require ./discourse/lib/utilities
 //= require ./discourse/lib/page-visible
 //= require ./discourse/lib/logout
 //= require ./discourse/mixins/singleton
 //= require ./discourse/models/rest
 //= require ./discourse/models/session
+//= require ./discourse/lib/ajax
 //= require ./discourse/lib/text
 //= require ./discourse/lib/hash
 //= require ./discourse/lib/load-script
@@ -33,6 +33,7 @@
 //= require ./discourse/lib/text-direction
 //= require ./discourse/lib/eyeline
 //= require ./discourse/lib/show-modal
+//= require ./discourse/lib/rescue-theme-error
 //= require ./discourse/mixins/scrolling
 //= require ./discourse/lib/ajax-error
 //= require ./discourse/models/result-set

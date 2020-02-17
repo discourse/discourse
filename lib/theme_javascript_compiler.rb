@@ -244,7 +244,7 @@ class ThemeJavascriptCompiler
             try {
             #{es6_source}
             } catch(err) {
-              const rescue = require("discourse/lib/utilities").rescueThemeError;
+              const rescue = require("discourse/lib/rescue-theme-error");
               rescue(__theme_name__, err, api);
             }
           });
