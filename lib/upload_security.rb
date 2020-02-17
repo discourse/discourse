@@ -28,7 +28,7 @@ class UploadSecurity
   private
 
   def uploading_in_public_context?
-    @upload.for_theme || @upload.for_site_setting || @upload.for_gravatar || public_type? || used_for_custom_emoji?
+    @upload.for_theme || @upload.for_site_setting || @upload.for_gravatar || public_type? || used_for_custom_emoji? || based_on_regular_emoji?
   end
 
   def supported_media?
@@ -72,7 +72,12 @@ class UploadSecurity
   end
 
   def used_for_custom_emoji?
-    return false if @upload.id.blank?
-    CustomEmoji.exists?(upload_id: @upload.id)
+    @upload.id.present? && CustomEmoji.exists?(upload_id: @upload.id)
+  end
+
+  def based_on_regular_emoji?
+    return false if @upload.origin.blank?
+    uri = URI.parse(@upload.origin)
+    Emoji.all.map(&:url).include?("#{uri.path}?#{uri.query}")
   end
 end
