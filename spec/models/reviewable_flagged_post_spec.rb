@@ -144,18 +144,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "delete_and_ignore_replies ignores the flags and deletes post + replies" do
-      reply = PostCreator.create(
-        Fabricate(:user),
-        raw: 'this is the reply text',
-        reply_to_post_number: post.post_number,
-        topic_id: post.topic_id
-      )
-      nested_reply = PostCreator.create(
-        Fabricate(:user),
-        raw: 'this is the reply text2',
-        reply_to_post_number: reply.post_number,
-        topic_id: post.topic_id
-      )
+      reply = create_reply(post)
+      nested_reply = create_reply(reply)
       post.reload
 
       reviewable.perform(moderator, :delete_and_ignore_replies)
@@ -174,18 +164,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "delete_and_agree_replies agrees w/ the flags and deletes post + replies" do
-      reply = PostCreator.create(
-        Fabricate(:user),
-        raw: 'this is the reply text',
-        reply_to_post_number: post.post_number,
-        topic_id: post.topic_id
-      )
-      nested_reply = PostCreator.create(
-        Fabricate(:user),
-        raw: 'this is the reply text2',
-        reply_to_post_number: reply.post_number,
-        topic_id: post.topic_id
-      )
+      reply = create_reply(post)
+      nested_reply = create_reply(reply)
       post.reload
 
       reviewable.perform(moderator, :delete_and_agree_replies)
@@ -287,6 +267,19 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
+  describe "#perform_delete_and_agree_replies" do
+    it 'ignore flagged replies' do
+      flagged_post = Fabricate(:reviewable_flagged_post)
+      reply = create_reply(flagged_post.target)
+      flagged_post.target.update(reply_count: 1)
+      flagged_reply = Fabricate(:reviewable_flagged_post, target: reply)
+
+      flagged_post.perform(moderator, :delete_and_agree_replies)
+
+      expect(flagged_reply.reload.status).to eq(Reviewable.statuses[:ignored])
+    end
+  end
+
   describe "#perform_disagree_and_restore" do
     it "notifies the user about the flagged post being restored" do
       reviewable = Fabricate(:reviewable_flagged_post)
@@ -303,5 +296,14 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       job = Jobs::SendSystemMessage.jobs[0]
       expect(job["args"][0]["user_id"]).to eq(user_id)
       expect(job["args"][0]["message_type"]).to eq(pm_type)
+  end
+
+  def create_reply(post)
+    PostCreator.create(
+      Fabricate(:user),
+      raw: 'this is the reply text',
+      reply_to_post_number: post.post_number,
+      topic_id: post.topic
+    )
   end
 end
