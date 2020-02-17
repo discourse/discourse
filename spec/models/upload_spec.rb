@@ -431,6 +431,14 @@ describe Upload do
 
         expect(upload.reload.secure).to eq(false)
       end
+
+      it 'does not mark an upload whose origin matches a regular emoji as secure (sometimes emojis are downloaded in pull_hotlinked_images)' do
+        SiteSetting.login_required = true
+        grinning = Emoji.all.last
+        upload.update!(secure: false, origin: "http://localhost:3000#{grinning.url}")
+        expect { upload.update_secure_status }
+          .not_to change { upload.secure }
+      end
     end
   end
 
