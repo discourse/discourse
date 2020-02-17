@@ -706,7 +706,7 @@ task "uploads:ensure_correct_acl" => :environment do
 
       mark_specific_uploads_as_secure_no_login_required(upload_ids_to_mark_as_secure)
 
-      post_rebake_errors = rebake_upload_posts(posts_to_rebake) 
+      post_rebake_errors = rebake_upload_posts(posts_to_rebake)
       log_rebake_errors(post_rebake_errors)
     end
   end
