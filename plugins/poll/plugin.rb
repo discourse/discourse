@@ -75,7 +75,7 @@ after_initialize do
             poll_groups = poll.groups.split(",").map(&:downcase)
             user_groups = user.groups.map { |g| g.name.downcase }
             if (poll_groups & user_groups).empty?
-              raise StandardError.new I18n.t("js.poll.results.groups.title", group: poll.groups)
+              raise StandardError.new I18n.t("js.poll.results.groups.title", groups: poll.groups)
             end
           end
 

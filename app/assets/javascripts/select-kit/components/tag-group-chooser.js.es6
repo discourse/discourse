@@ -47,7 +47,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     ).then(results => {
       if (results && results.length) {
         return results.filter(r => {
-          return !this.tagGroups.includes(this.getValue(r));
+          return !makeArray(this.tagGroups).includes(this.getValue(r));
         });
       }
     });

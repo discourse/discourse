@@ -195,7 +195,7 @@ describe ::DiscoursePoll::PollsController do
 
       expect(response.status).not_to eq(200)
       json = ::JSON.parse(response.body)
-      expect(json["errors"][0]).to eq(I18n.t("js.poll.results.groups.title", trust_level: 2))
+      expect(json["errors"][0]).to eq(I18n.t("js.poll.results.groups.title", groups: poll.polls.first.groups))
     end
 
     it "doesn't discard anonymous votes when someone votes" do
