@@ -439,6 +439,13 @@ describe Upload do
         expect { upload.update_secure_status }
           .not_to change { upload.secure }
       end
+
+      it 'does not mark any upload with origin containing images/emoji in the URL' do
+        SiteSetting.login_required = true
+        upload.update!(secure: false, origin: "http://localhost:3000/images/emoji/test.png")
+        expect { upload.update_secure_status }
+          .not_to change { upload.secure }
+      end
     end
   end
 
