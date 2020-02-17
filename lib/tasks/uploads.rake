@@ -668,6 +668,15 @@ task "uploads:ensure_correct_acl" => :environment do
     Upload.transaction do
       mark_secure_in_loop_because_no_login_required = false
 
+      # If secure media is enabled we need to first set the access control post of
+      # all post uploads (even uploads that are linked to multiple posts). If the
+      # upload is not set to secure media then this has no other effect on the upload,
+      # but we _must_ know what the access control post is because the with_secure_media?
+      # method is on the post, and this knows about the category security & PM status
+      if SiteSetting.secure_media?
+        update_uploads_access_control_post
+      end
+
       # First of all only get relevant uploads (supported media).
       #
       # Also only get uploads that are not for a theme or a site setting, so only
@@ -684,19 +693,21 @@ task "uploads:ensure_correct_acl" => :environment do
       else
 
         # If NOT login_required, then we have to go for the other slower flow, where in the loop
-        # we mark the upload as secure if the first post it is used in is with_secure_media?
+        # we mark the upload secure based on UploadSecurity.should_be_secure?
         mark_secure_in_loop_because_no_login_required = true
         puts "Marking posts as secure in the next step because login_required is false."
       end
 
-      puts "", "Rebaking #{uploads_with_supported_media.count} upload posts and updating ACLs in S3.", ""
+      puts "", "Determining which of #{uploads_with_supported_media.count} upload posts need to be marked secure and be rebaked.", ""
 
-      upload_ids_to_mark_as_secure, uploads_skipped_because_of_error = update_acls_and_rebake_upload_posts(
+      upload_ids_to_mark_as_secure, posts_to_rebake = determine_upload_security_and_posts_to_rebake(
         uploads_with_supported_media, mark_secure_in_loop_because_no_login_required
       )
 
-      log_rebake_errors(uploads_skipped_because_of_error)
       mark_specific_uploads_as_secure_no_login_required(upload_ids_to_mark_as_secure)
+
+      post_rebake_errors = rebake_upload_posts(posts_to_rebake)
+      log_rebake_errors(post_rebake_errors)
     end
   end
   puts "", "Done"
@@ -708,48 +719,83 @@ def mark_all_as_secure_login_required(uploads_with_supported_media)
   puts "Finished marking upload(s) as secure."
 end
 
-def log_rebake_errors(uploads_skipped_because_of_error)
-  return if uploads_skipped_because_of_error.empty?
-  puts "Skipped the following uploads due to error:", ""
-  uploads_skipped_because_of_error.each do |message|
+def log_rebake_errors(rebake_errors)
+  return if rebake_errors.empty?
+  puts "The following post rebakes failed with error:", ""
+  rebake_errors.each do |message|
     puts message
   end
 end
 
 def mark_specific_uploads_as_secure_no_login_required(upload_ids_to_mark_as_secure)
   return if upload_ids_to_mark_as_secure.empty?
-  puts "Marking #{upload_ids_to_mark_as_secure.length} uploads as secure because their first post contains secure media."
+  puts "Marking #{upload_ids_to_mark_as_secure.length} uploads as secure because UploadSecurity determined them to be secure."
   Upload.where(id: upload_ids_to_mark_as_secure).update_all(secure: true)
   puts "Finished marking uploads as secure."
 end
 
-def update_acls_and_rebake_upload_posts(uploads_with_supported_media, mark_secure_in_loop_because_no_login_required)
+def update_uploads_access_control_post
+  access_control_post_updates = []
+  uploads_with_post_ids = DB.query(<<-SQL
+    SELECT upload_id, (
+      SELECT string_agg(CAST(post_uploads.post_id AS varchar), ',' ORDER BY post_uploads.id) as post_ids
+      FROM post_uploads
+      WHERE pu.upload_id = post_uploads.upload_id
+    ) FROM post_uploads pu
+  SQL
+  )
+  uploads_with_post_ids.each do |row|
+    first_post_id = row.post_ids.split(",").first.to_i
+    access_control_post_updates << "UPDATE uploads SET access_control_post_id = #{first_post_id} WHERE id = #{row.upload_id};"
+  end
+  DB.exec(access_control_post_updates.join("\n"))
+end
+
+def rebake_upload_posts(posts_to_rebake)
+  post_rebake_errors = []
+  puts "", "Rebaking #{posts_to_rebake.length} posts with affected uploads.", ""
+  begin
+    i = 0
+    posts_to_rebake.each do |post|
+      RakeHelpers.print_status_with_label("Determining which uploads to mark secure and rebake.....", i, posts_to_rebake.length)
+      post.rebake!
+      i += 1
+    end
+
+    RakeHelpers.print_status_with_label("Rebaking complete!            ", i, posts_to_rebake.length)
+    puts ""
+  rescue => e
+    post_rebake_errors << e.message
+  end
+  post_rebake_errors
+end
+
+def determine_upload_security_and_posts_to_rebake(uploads_with_supported_media, mark_secure_in_loop_because_no_login_required)
   upload_ids_to_mark_as_secure = []
-  uploads_skipped_because_of_error = []
+  posts_to_rebake = []
 
   i = 0
   uploads_with_supported_media.find_each(batch_size: 50) do |upload_with_supported_media|
     RakeHelpers.print_status_with_label("Updating ACL for upload.......", i, uploads_with_supported_media.count)
 
+    # we just need to determine the post security here so the ACL is set to the correct thing,
+    # because the update_upload_ACL method uses upload.secure?
+    upload_with_supported_media.secure = UploadSecurity.new(upload_with_supported_media).should_be_secure?
     Discourse.store.update_upload_ACL(upload_with_supported_media)
 
-    RakeHelpers.print_status_with_label("Rebaking posts for upload.....", i, uploads_with_supported_media.count)
-    begin
-      upload_with_supported_media.posts.each { |post| post.rebake! }
+    RakeHelpers.print_status_with_label("Determining which uploads to mark secure and rebake.....", i, uploads_with_supported_media.count)
+    upload_with_supported_media.posts.each { |post| posts_to_rebake << post }
 
-      if mark_secure_in_loop_because_no_login_required
-        upload_ids_to_mark_as_secure << UploadSecurity.new(upload_with_supported_media).should_be_secure?
-      end
-    rescue => e
-      uploads_skipped_because_of_error << "#{upload_with_supported_media.original_filename} (#{upload_with_supported_media.url}) #{e.message}"
+    if mark_secure_in_loop_because_no_login_required && upload_with_supported_media.secure?
+      upload_ids_to_mark_as_secure << upload_with_supported_media.id
     end
 
     i += 1
   end
-  RakeHelpers.print_status_with_label("Rebaking complete!            ", i, uploads_with_supported_media.count)
+  RakeHelpers.print_status_with_label("Determination complete!            ", i, uploads_with_supported_media.count)
   puts ""
 
-  [upload_ids_to_mark_as_secure, uploads_skipped_because_of_error]
+  [upload_ids_to_mark_as_secure, posts_to_rebake]
 end
 
 def inline_uploads(post)
