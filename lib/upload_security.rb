@@ -78,6 +78,7 @@ class UploadSecurity
   def based_on_regular_emoji?
     return false if @upload.origin.blank?
     uri = URI.parse(@upload.origin)
-    Emoji.all.map(&:url).include?("#{uri.path}?#{uri.query}")
+    return true if Emoji.all.map(&:url).include?("#{uri.path}?#{uri.query}")
+    uri.path.include?("images/emoji")
   end
 end
