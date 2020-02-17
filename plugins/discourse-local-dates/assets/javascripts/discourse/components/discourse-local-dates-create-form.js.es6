@@ -7,10 +7,9 @@ import { Promise } from "rsvp";
 /* global Pikaday:true */
 import { propertyNotEqual } from "discourse/lib/computed";
 import loadScript from "discourse/lib/load-script";
-import computed from "ember-addons/ember-computed-decorators";
+import computed, { observes } from "discourse-common/utils/decorators";
 import { cookAsync } from "discourse/lib/text";
 import discourseDebounce from "discourse/lib/debounce";
-import { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   timeFormat: "HH:mm:ss",

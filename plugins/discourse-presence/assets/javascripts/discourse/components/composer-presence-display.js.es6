@@ -5,7 +5,7 @@ import Component from "@ember/component";
 import { equal, gt } from "@ember/object/computed";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import computed, { observes, on } from "ember-addons/ember-computed-decorators";
+import computed, { observes, on } from "discourse-common/utils/decorators";
 
 export const keepAliveDuration = 10000;
 export const bufferTime = 3000;
