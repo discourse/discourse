@@ -376,7 +376,7 @@ module PrettyText
 
   def self.strip_oneboxed_media(doc)
     doc.css("audio").remove
-    doc.css("video").remove
+    doc.css(".video-onebox,video").remove
   end
 
   def self.convert_vimeo_iframes(doc)
