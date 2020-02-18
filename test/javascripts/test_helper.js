@@ -103,6 +103,7 @@ function resetSite(siteSettings, extras) {
 
 QUnit.testStart(function(ctx) {
 
+  let server = pretender.default;
   if (ctx.module.startsWith(acceptanceModulePrefix)) {
     var helper = {
       parsePostData: pretender.parsePostData,
@@ -112,7 +113,7 @@ QUnit.testStart(function(ctx) {
 
     applyPretender(
       ctx.module.replace(acceptanceModulePrefix, ""),
-      pretender.default,
+      server,
       helper
     );
   }
@@ -152,7 +153,6 @@ QUnit.testDone(function() {
   $(".modal-backdrop").remove();
   flushMap();
 
-  console.log(pretender)
   pretender.default.shutdown();
 
   // ensures any event not removed is not leaking between tests
