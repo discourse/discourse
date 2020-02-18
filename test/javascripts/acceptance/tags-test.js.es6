@@ -1,4 +1,6 @@
 import { updateCurrentUser, acceptance } from "helpers/qunit-helpers";
+import server from "helpers/create-pretender";
+
 acceptance("Tags", { loggedIn: true });
 
 QUnit.test("list the tags", async assert => {
@@ -19,7 +21,6 @@ acceptance("Tags listed by group", {
 });
 
 QUnit.test("list the tags in groups", async assert => {
-  // prettier-ignore
   server.get("/tags", () => { // eslint-disable-line no-undef
     return [
       200,
@@ -102,7 +103,6 @@ QUnit.test("list the tags in groups", async assert => {
 });
 
 test("new topic button is not available for staff-only tags", async assert => {
-  /* global server */
   server.get("/tag/regular-tag/notifications", () => [
     200,
     { "Content-Type": "application/json" },
@@ -186,14 +186,14 @@ acceptance("Tag info", {
   settings: {
     tags_listed_by_group: true
   },
-  pretend(server, helper) {
-    server.get("/tag/planters/notifications", () => {
+  pretend(pretender, helper) {
+    pretender.get("/tag/planters/notifications", () => {
       return helper.response({
         tag_notification: { id: "planters", notification_level: 1 }
       });
     });
 
-    server.get("/tag/planters/l/latest.json", () => {
+    pretender.get("/tag/planters/l/latest.json", () => {
       return helper.response({
         users: [],
         primary_groups: [],
@@ -215,7 +215,7 @@ acceptance("Tag info", {
       });
     });
 
-    server.get("/tag/planters/info", () => {
+    pretender.get("/tag/planters/info", () => {
       return helper.response({
         __rest_serializer: "1",
         tag_info: {

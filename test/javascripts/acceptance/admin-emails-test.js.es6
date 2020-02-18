@@ -1,4 +1,5 @@
 import { acceptance } from "helpers/qunit-helpers";
+import server from "helpers/create-pretender";
 
 acceptance("Admin - Emails", { loggedIn: true });
 

@@ -1,4 +1,5 @@
 import componentTest from "helpers/component-test";
+import server from "helpers/create-pretender";
 
 moduleForComponent("admin-report", {
   integration: true
@@ -137,7 +138,6 @@ componentTest("rate limited", {
       return [429, { "Content-Type": "application/json" }, object];
     };
 
-    // prettier-ignore
     server.get("/admin/reports/bulk", () => { //eslint-disable-line
       return response({"errors":["You’ve performed this action too many times. Please wait 10 seconds before trying again."],"error_type":"rate_limit","extras":{"wait_seconds":10}});
     });

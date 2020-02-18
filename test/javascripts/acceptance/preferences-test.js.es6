@@ -1,6 +1,5 @@
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import selectKit from "helpers/select-kit-helper";
-
 import User from "discourse/models/user";
 
 acceptance("User Preferences", {

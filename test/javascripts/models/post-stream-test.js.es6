@@ -2,6 +2,7 @@ import Post from "discourse/models/post";
 import createStore from "helpers/create-store";
 import User from "discourse/models/user";
 import { Promise } from "rsvp";
+import server from "helpers/create-pretender";
 
 QUnit.module("model:post-stream");
 
@@ -753,7 +754,6 @@ QUnit.test("triggerRecoveredPost", async assert => {
     return [200, { "Content-Type": "application/json" }, object];
   };
 
-  // prettier-ignore
   server.get("/posts/4", () => { // eslint-disable-line no-undef
     return response({ id: 4, post_number: 4 });
   });

@@ -2,17 +2,18 @@ import { run } from "@ember/runloop";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import server from "helpers/create-pretender";
 
 acceptance("Composer", {
   loggedIn: true,
-  pretend(server, helper) {
-    server.get("/draft.json", () => {
+  pretend(pretender, helper) {
+    pretender.get("/draft.json", () => {
       return helper.response({
         draft: null,
         draft_sequence: 42
       });
     });
-    server.post("/uploads/lookup-urls", () => {
+    pretender.post("/uploads/lookup-urls", () => {
       return helper.response([]);
     });
   },
@@ -617,7 +618,6 @@ QUnit.test("Checks for existing draft", async assert => {
   try {
     toggleCheckDraftPopup(true);
 
-    // prettier-ignore
     server.get("/draft.json", () => { // eslint-disable-line no-undef
       return [ 200, { "Content-Type": "application/json" }, {
         draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
@@ -650,7 +650,6 @@ QUnit.test("Can switch states without abandon popup", async assert => {
 
     await fillIn(".d-editor-input", longText);
 
-    // prettier-ignore
     server.get("/draft.json", () => { // eslint-disable-line no-undef
       return [ 200, { "Content-Type": "application/json" }, {
         draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
@@ -692,7 +691,6 @@ QUnit.test("Loading draft also replaces the recipients", async assert => {
   try {
     toggleCheckDraftPopup(true);
 
-    // prettier-ignore
     server.get("/draft.json", () => { // eslint-disable-line no-undef
       return [ 200, { "Content-Type": "application/json" }, {
          "draft":"{\"reply\":\"hello\",\"action\":\"privateMessage\",\"title\":\"hello\",\"categoryId\":null,\"archetypeId\":\"private_message\",\"metaData\":null,\"usernames\":\"codinghorror\",\"composerTime\":9159,\"typingTime\":2500}",
@@ -847,7 +845,6 @@ QUnit.test("Image resizing buttons", async assert => {
 QUnit.test("can reply to a private message", async assert => {
   let submitted;
 
-  /* global server */
   server.post("/posts", () => {
     submitted = true;
     return [200, { "Content-Type": "application/json" }, {}];

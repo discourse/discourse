@@ -1,4 +1,5 @@
 import { acceptance } from "helpers/qunit-helpers";
+
 acceptance("About");
 
 QUnit.test("viewing", async assert => {

@@ -1,6 +1,7 @@
 import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
 import EmberObject from "@ember/object";
+import server from "helpers/create-pretender";
 
 moduleForComponent("badge-title", { integration: true });
 
@@ -23,7 +24,6 @@ componentTest("badge title", {
   },
 
   async test(assert) {
-    /* global server */
     server.put("/u/eviltrout/preferences/badge_title", () => [
       200,
       { "Content-Type": "application/json" },

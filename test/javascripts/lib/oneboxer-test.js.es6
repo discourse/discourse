@@ -2,6 +2,7 @@ import { load } from "pretty-text/oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import { failedCache, localCache } from "pretty-text/oneboxer-cache";
 import { stringToHTML } from "helpers/html-helper";
+import server from "helpers/create-pretender";
 
 function loadOnebox(element) {
   return load({
@@ -20,7 +21,6 @@ QUnit.test("load - failed onebox", async assert => {
   let element = document.createElement("A");
   element.setAttribute("href", "http://somebadurl.com");
 
-  // prettier-ignore
   server.get("/onebox", () => { //eslint-disable-line
     return [404, {}, {}];
   });
@@ -55,7 +55,6 @@ QUnit.test("load - successful onebox", async assert => {
     </aside>
   `;
 
-  // prettier-ignore
   server.get("/onebox", () => { //eslint-disable-line
     return [200, {}, html];
   });

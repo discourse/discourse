@@ -1,12 +1,13 @@
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
+import server from "helpers/create-pretender";
 
 let groupArgs = {
   settings: {
     enable_group_directory: true
   },
-  pretend(server, helper) {
-    server.post("/groups/Macdonald/request_membership", () => {
+  pretend(pretender, helper) {
+    pretender.post("/groups/Macdonald/request_membership", () => {
       return helper.response({
         relative_url: "/t/internationalization-localization/280"
       });
@@ -127,7 +128,6 @@ QUnit.test("User Viewing Group", async assert => {
 QUnit.test(
   "Admin viewing group messages when there are no messages",
   async assert => {
-    // prettier-ignore
     server.get("/topics/private-messages-group/eviltrout/discourse.json", () => { // eslint-disable-line no-undef
       return response({ topic_list: { topics: [] } });
     });
@@ -146,7 +146,6 @@ QUnit.test(
 );
 
 QUnit.test("Admin viewing group messages", async assert => {
-  // prettier-ignore
   server.get("/topics/private-messages-group/eviltrout/discourse.json", () => { // eslint-disable-line no-undef
     return response({
       users: [

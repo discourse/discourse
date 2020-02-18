@@ -35,8 +35,8 @@ const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
 export let fixturesByUrl;
 
-export default function() {
-  const server = new Pretender(function() {
+export function server() {
+  const pretender = new Pretender(function() {
     // Autoload any `*-pretender` files
     Object.keys(requirejs.entries).forEach(e => {
       let m = e.match(/^.*helpers\/([a-z-]+)\-pretender$/);
@@ -736,21 +736,23 @@ export default function() {
     });
   });
 
-  server.prepareBody = function(body) {
+  pretender.prepareBody = function(body) {
     if (body && typeof body === "object") {
       return JSON.stringify(body);
     }
     return body;
   };
 
-  server.unhandledRequest = function(verb, path) {
+  pretender.unhandledRequest = function(verb, path) {
     const error =
       "Unhandled request in test environment: " + path + " (" + verb + ")";
     window.console.error(error);
     throw error;
   };
 
-  server.checkPassthrough = request =>
+  pretender.checkPassthrough = request =>
     request.requestHeaders["Discourse-Script"];
-  return server;
+  return pretender;
 }
+
+export default exports.server();

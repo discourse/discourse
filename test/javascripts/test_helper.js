@@ -102,7 +102,6 @@ function resetSite(siteSettings, extras) {
 }
 
 QUnit.testStart(function(ctx) {
-  server = pretender.default();
 
   if (ctx.module.startsWith(acceptanceModulePrefix)) {
     var helper = {
@@ -113,7 +112,7 @@ QUnit.testStart(function(ctx) {
 
     applyPretender(
       ctx.module.replace(acceptanceModulePrefix, ""),
-      server,
+      pretender.default,
       helper
     );
   }
@@ -153,9 +152,8 @@ QUnit.testDone(function() {
   $(".modal-backdrop").remove();
   flushMap();
 
-  server.shutdown();
-
-  window.server = null;
+  console.log(pretender)
+  pretender.default.shutdown();
 
   // ensures any event not removed is not leaking between tests
   // most likely in intialisers, other places (controller, component...)

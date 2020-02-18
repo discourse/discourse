@@ -1,6 +1,7 @@
 import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
 import { fixture, logIn } from "helpers/qunit-helpers";
+import server from "helpers/create-pretender";
 
 QUnit.module("lib:click-track-profile-page", {
   beforeEach() {
@@ -55,7 +56,6 @@ QUnit.skip("tracks internal URLs", async assert => {
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   const done = assert.async();
-  /* global server */
   server.post("/clicks/track", request => {
     assert.equal(request.requestBody, "url=http%3A%2F%2Fdiscuss.domain.com");
     done();
@@ -68,7 +68,6 @@ QUnit.skip("tracks external URLs", async assert => {
   assert.expect(2);
 
   const done = assert.async();
-  /* global server */
   server.post("/clicks/track", request => {
     assert.equal(
       request.requestBody,
@@ -84,7 +83,6 @@ QUnit.skip("tracks external URLs in other posts", async assert => {
   assert.expect(2);
 
   const done = assert.async();
-  /* global server */
   server.post("/clicks/track", request => {
     assert.equal(
       request.requestBody,

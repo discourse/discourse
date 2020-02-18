@@ -1,10 +1,11 @@
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
+import server from "helpers/create-pretender";
 
 acceptance("Admin - User Index", {
   loggedIn: true,
-  pretend(server, helper) {
-    server.get("/groups/search.json", () => {
+  pretend(pretender, helper) {
+    pretender.get("/groups/search.json", () => {
       return helper.response([
         {
           id: 42,
@@ -35,7 +36,6 @@ acceptance("Admin - User Index", {
 });
 
 QUnit.test("can edit username", async assert => {
-  /* global server */
   server.put("/users/sam/preferences/username", () => [
     200,
     { "Content-Type": "application/json" },

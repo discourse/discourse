@@ -1,5 +1,6 @@
 import userSearch from "discourse/lib/user-search";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import server from "helpers/create-pretender";
 
 QUnit.module("lib:user-search", {
   beforeEach() {
@@ -7,7 +8,6 @@ QUnit.module("lib:user-search", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    // prettier-ignore
     server.get("/u/search/users", request => { //eslint-disable-line
 
       // special responder for per category search
