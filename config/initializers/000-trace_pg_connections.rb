@@ -44,11 +44,11 @@ if ENV["TRACE_PG_CONNECTIONS"]
 
             #{@accessor_thread} was using the connection. Backtrace:
 
-            #{@accessor_thread.backtrace.join("\n")}
+            #{@accessor_thread&.backtrace&.join("\n")}
 
             #{Thread.current} is now attempting to use the connection. Backtrace:
 
-            #{Thread.current.backtrace.join("\n")}
+            #{Thread.current&.backtrace&.join("\n")}
           STRING
         end
         @accessor_thread = Thread.current
