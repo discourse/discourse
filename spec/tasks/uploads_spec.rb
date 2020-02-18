@@ -6,6 +6,7 @@ RSpec.describe "tasks/uploads" do
   before do
     Rake::Task.clear
     Discourse::Application.load_tasks
+    disable_puts_stdout
   end
 
   describe "uploads:ensure_correct_acl" do

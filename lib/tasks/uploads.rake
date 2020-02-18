@@ -681,7 +681,7 @@ task "uploads:ensure_correct_acl" => :environment do
       #
       # Also only get uploads that are not for a theme or a site setting, so only
       # get post related uploads.
-      uploads_with_supported_media = Upload.includes(:posts, :optimized_images).where(
+      uploads_with_supported_media = Upload.includes(:posts, :access_control_post, :optimized_images).where(
         "LOWER(original_filename) SIMILAR TO '%\.(jpg|jpeg|png|gif|svg|ico|mp3|ogg|wav|m4a|mov|mp4|webm|ogv)'"
       ).joins(:post_uploads)
 

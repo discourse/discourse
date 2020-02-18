@@ -182,7 +182,6 @@
 
   .with-tags {
     .category-input {
-      flex-basis: auto;
       flex: 1 0 0px;
       margin: 0;
       width: 45%;
@@ -195,6 +194,21 @@
       margin-left: 5px;
       margin-bottom: 5px;
       z-index: z("base");
+    }
+
+    .selected-name {
+      overflow: hidden;
+      .name {
+        @include ellipsis;
+        font-size: $font-down-1;
+        .badge-wrapper {
+          font-size: $font-0;
+        }
+      }
+    }
+
+    .title-and-category .select-kit {
+      min-width: unset;
     }
   }
 

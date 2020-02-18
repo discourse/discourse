@@ -12,11 +12,19 @@ class DiskSpace
   end
 
   def self.free(path)
-    `df -Pk #{path} | awk 'NR==2 {print $4;}'`.to_i * 1024
+    output = Discourse::Utils.execute_command('df', '-Pk', path)
+    size_line = output.split("\n")[1]
+    size_line.split(/\s+/)[3].to_i * 1024
+  end
+
+  def self.percent_free(path)
+    output = Discourse::Utils.execute_command('df', '-P', path)
+    size_line = output.split("\n")[1]
+    size_line.split(/\s+/)[4].to_i
   end
 
   def self.used(path)
-    `du -s #{path}`.to_i * 1024
+    Discourse::Utils.execute_command("du", "-s", path).to_i * 1024
   end
 
   def self.uploads_path

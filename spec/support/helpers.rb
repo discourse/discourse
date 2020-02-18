@@ -138,6 +138,10 @@ module Helpers
     $stdout = old_stdout
   end
 
+  def disable_puts_stdout
+    IO.any_instance.stubs(:puts)
+  end
+
   def set_subfolder(f)
     global_setting :relative_url_root, f
     old_root = ActionController::Base.config.relative_url_root

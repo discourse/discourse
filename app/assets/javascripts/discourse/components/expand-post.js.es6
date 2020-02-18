@@ -16,19 +16,21 @@ export default Component.extend({
       if (this.expanded) {
         this.set("expanded", false);
         item.set("expandedExcerpt", null);
-        return;
+        return false;
       }
 
       const topicId = item.get("topic_id");
       const postNumber = item.get("post_number");
 
       this._loading = true;
-      return ajax(`/posts/by_number/${topicId}/${postNumber}.json`)
+      ajax(`/posts/by_number/${topicId}/${postNumber}.json`)
         .then(result => {
           this.set("expanded", true);
           item.set("expandedExcerpt", result.cooked);
         })
         .finally(() => (this._loading = false));
+
+      return false;
     }
   }
 });
