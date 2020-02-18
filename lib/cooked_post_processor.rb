@@ -685,7 +685,7 @@ class CookedPostProcessor
   end
 
   def available_disk_space
-    100 - `df -P #{Rails.root}/public/uploads | tail -1 | tr -s ' ' | cut -d ' ' -f 5`.to_i
+    100 - DiskSpace.percent_free("#{Rails.root}/public/uploads")
   end
 
   def dirty?

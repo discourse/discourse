@@ -312,6 +312,24 @@ module Discourse
     end
   end
 
+  # hostname of the server, operating system level
+  # called os_hostname so we do no confuse it with current_hostname
+  def self.os_hostname
+    @os_hostname ||=
+      begin
+        require 'socket'
+        Socket.gethostname
+      rescue => e
+        warn_exception(e, message: 'Socket.gethostname is not working')
+        begin
+          `hostname`.strip
+        rescue => e
+          warn_exception(e, message: 'hostname command is not working')
+          'unknown_host'
+        end
+      end
+  end
+
   # Get the current base URL for the current site
   def self.current_hostname
     SiteSetting.force_hostname.presence || RailsMultisite::ConnectionManagement.current_hostname

@@ -107,7 +107,19 @@ export default ComboBoxComponent.extend(TagsMixin, {
     return shortcuts;
   }),
 
-  topTags: readOnly("site.top_tags.[]"),
+  topTags: computed(
+    "firstCategory",
+    "secondCategory",
+    "site.category_top_tags.[]",
+    "site.top_tags.[]",
+    function() {
+      if (this.currentCategory && this.site.category_top_tags) {
+        return this.site.category_top_tags;
+      }
+
+      return this.site.top_tags;
+    }
+  ),
 
   content: computed("topTags.[]", "shortcuts.[]", function() {
     if (this.sortTagsAlphabetically && this.topTags) {
