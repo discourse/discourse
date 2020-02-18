@@ -103,7 +103,7 @@ function resetSite(siteSettings, extras) {
 
 QUnit.testStart(function(ctx) {
 
-  let server = pretender.default;
+  server = pretender.default;
   if (ctx.module.startsWith(acceptanceModulePrefix)) {
     var helper = {
       parsePostData: pretender.parsePostData,
@@ -153,7 +153,8 @@ QUnit.testDone(function() {
   $(".modal-backdrop").remove();
   flushMap();
 
-  pretender.default.shutdown();
+  server.shutdown();
+  window.server = null;
 
   // ensures any event not removed is not leaking between tests
   // most likely in intialisers, other places (controller, component...)
