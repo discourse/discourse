@@ -31,7 +31,7 @@ module FreedomPatches
       )
 SQL
 
-      hostname = `hostname` rescue ""
+      hostname = Discourse.os_hostname
       sql = ActiveRecord::Base.public_send(:sanitize_sql_array, [sql, {
         version: version || "",
         duration: (time.real * 1000).to_i,

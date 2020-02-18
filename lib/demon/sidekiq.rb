@@ -39,7 +39,7 @@ class Demon::Sidekiq < ::Demon::Base
     [['critical', 8], ['default', 4], ['low', 2], ['ultra_low', 1]].each do |queue_name, weight|
       custom_queue_hostname = ENV["UNICORN_SIDEKIQ_#{queue_name.upcase}_QUEUE_HOSTNAME"]
 
-      if !custom_queue_hostname || custom_queue_hostname.split(',').include?(`hostname`.strip)
+      if !custom_queue_hostname || custom_queue_hostname.split(',').include?(Discourse.os_hostname)
         options << "-q"
         options << "#{queue_name},#{weight}"
       end
