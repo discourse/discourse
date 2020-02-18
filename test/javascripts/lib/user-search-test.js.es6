@@ -8,12 +8,11 @@ QUnit.module("lib:user-search", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.get("/u/search/users", request => { //eslint-disable-line
-
+    server.get("/u/search/users", request => {
       // special responder for per category search
       const categoryMatch = request.url.match(/category_id=([0-9]+)/);
       if (categoryMatch) {
-        if(categoryMatch[1] === "3"){
+        if (categoryMatch[1] === "3") {
           return response({});
         }
         return response({
@@ -24,11 +23,12 @@ QUnit.module("lib:user-search", {
               avatar_template:
                 "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png"
             }
-          ]});
+          ]
+        });
       }
 
-      if(request.url.match(/no-results/)){
-        return response({users: []});
+      if (request.url.match(/no-results/)) {
+        return response({ users: [] });
       }
 
       return response({

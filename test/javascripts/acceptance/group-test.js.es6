@@ -128,9 +128,12 @@ QUnit.test("User Viewing Group", async assert => {
 QUnit.test(
   "Admin viewing group messages when there are no messages",
   async assert => {
-    server.get("/topics/private-messages-group/eviltrout/discourse.json", () => { // eslint-disable-line no-undef
-      return response({ topic_list: { topics: [] } });
-    });
+    server.get(
+      "/topics/private-messages-group/eviltrout/discourse.json",
+      () => {
+        return response({ topic_list: { topics: [] } });
+      }
+    );
 
     await visit("/g/discourse");
     await click(".nav-pills li a[title='Messages']");
@@ -146,7 +149,7 @@ QUnit.test(
 );
 
 QUnit.test("Admin viewing group messages", async assert => {
-  server.get("/topics/private-messages-group/eviltrout/discourse.json", () => { // eslint-disable-line no-undef
+  server.get("/topics/private-messages-group/eviltrout/discourse.json", () => {
     return response({
       users: [
         {

@@ -4,7 +4,7 @@ import server from "helpers/create-pretender";
 acceptance("User", { loggedIn: true });
 
 QUnit.test("Invalid usernames", async assert => {
-  server.get("/u/eviltrout%2F..%2F..%2F.json", () => { // eslint-disable-line no-undef
+  server.get("/u/eviltrout%2F..%2F..%2F.json", () => {
     return [400, { "Content-Type": "application/json" }, {}];
   });
 
@@ -67,11 +67,16 @@ QUnit.test("Viewing Summary", async assert => {
 });
 
 QUnit.test("Viewing Drafts", async assert => {
-  server.get("/draft.json", () => { // eslint-disable-line no-undef
-    return [ 200, { "Content-Type": "application/json" }, {
-      draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
-      draft_sequence: 42
-    } ];
+  server.get("/draft.json", () => {
+    return [
+      200,
+      { "Content-Type": "application/json" },
+      {
+        draft:
+          '{"reply":"This is a draft of the first post","action":"reply","categoryId":1,"archetypeId":"regular","metaData":null,"composerTime":2863,"typingTime":200}',
+        draft_sequence: 42
+      }
+    ];
   });
 
   await visit("/u/eviltrout/activity/drafts");

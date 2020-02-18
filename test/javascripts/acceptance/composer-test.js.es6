@@ -618,11 +618,16 @@ QUnit.test("Checks for existing draft", async assert => {
   try {
     toggleCheckDraftPopup(true);
 
-    server.get("/draft.json", () => { // eslint-disable-line no-undef
-      return [ 200, { "Content-Type": "application/json" }, {
-        draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
-        draft_sequence: 42
-      } ];
+    server.get("/draft.json", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        {
+          draft:
+            '{"reply":"This is a draft of the first post","action":"reply","categoryId":1,"archetypeId":"regular","metaData":null,"composerTime":2863,"typingTime":200}',
+          draft_sequence: 42
+        }
+      ];
     });
 
     await visit("/t/internationalization-localization/280");
@@ -650,11 +655,16 @@ QUnit.test("Can switch states without abandon popup", async assert => {
 
     await fillIn(".d-editor-input", longText);
 
-    server.get("/draft.json", () => { // eslint-disable-line no-undef
-      return [ 200, { "Content-Type": "application/json" }, {
-        draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
-        draft_sequence: 42
-      } ];
+    server.get("/draft.json", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        {
+          draft:
+            '{"reply":"This is a draft of the first post","action":"reply","categoryId":1,"archetypeId":"regular","metaData":null,"composerTime":2863,"typingTime":200}',
+          draft_sequence: 42
+        }
+      ];
     });
 
     await click("article#post_3 button.reply");
@@ -691,11 +701,16 @@ QUnit.test("Loading draft also replaces the recipients", async assert => {
   try {
     toggleCheckDraftPopup(true);
 
-    server.get("/draft.json", () => { // eslint-disable-line no-undef
-      return [ 200, { "Content-Type": "application/json" }, {
-         "draft":"{\"reply\":\"hello\",\"action\":\"privateMessage\",\"title\":\"hello\",\"categoryId\":null,\"archetypeId\":\"private_message\",\"metaData\":null,\"usernames\":\"codinghorror\",\"composerTime\":9159,\"typingTime\":2500}",
-         "draft_sequence":0
-      } ];
+    server.get("/draft.json", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        {
+          draft:
+            '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"usernames":"codinghorror","composerTime":9159,"typingTime":2500}',
+          draft_sequence: 0
+        }
+      ];
     });
 
     await visit("/u/charlie");

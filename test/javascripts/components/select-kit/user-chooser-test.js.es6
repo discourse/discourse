@@ -43,8 +43,8 @@ componentTest("can add a username", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.get("/u/search/users", () => { //eslint-disable-line
-      return response({users:[{username: "maja", name: "Maja"}]});
+    server.get("/u/search/users", () => {
+      return response({ users: [{ username: "maja", name: "Maja" }] });
     });
   },
 

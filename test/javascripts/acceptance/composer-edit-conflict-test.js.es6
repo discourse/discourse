@@ -1,12 +1,15 @@
 import { acceptance } from "helpers/qunit-helpers";
+import server from "helpers/create-pretender";
 
 acceptance("Composer - Edit conflict", {
   loggedIn: true
 });
 
 QUnit.test("Edit a post that causes an edit conflict", async assert => {
-  server.put("/posts/398", () => [ // eslint-disable-line no-undef
-    409, { "Content-Type": "application/json" }, { errors: ["edit conflict"] }
+  server.put("/posts/398", () => [
+    409,
+    { "Content-Type": "application/json" },
+    { errors: ["edit conflict"] }
   ]);
 
   await visit("/t/internationalization-localization/280");
@@ -30,10 +33,13 @@ QUnit.test("Edit a post that causes an edit conflict", async assert => {
 QUnit.test(
   "Should not send originalText when posting a new reply",
   async assert => {
-
-    server.post("/draft.json", request => { // eslint-disable-line no-undef
-      assert.equal(request.requestBody.indexOf("originalText"), -1, request.requestBody);
-      return [ 200, { "Content-Type": "application/json" }, { success: true } ];
+    server.post("/draft.json", request => {
+      assert.equal(
+        request.requestBody.indexOf("originalText"),
+        -1,
+        request.requestBody
+      );
+      return [200, { "Content-Type": "application/json" }, { success: true }];
     });
 
     await visit("/t/internationalization-localization/280");
@@ -46,11 +52,11 @@ QUnit.test(
 );
 
 QUnit.test("Should send originalText when editing a reply", async assert => {
-  server.post("/draft.json", request => { // eslint-disable-line no-undef
+  server.post("/draft.json", request => {
     if (request.requestBody.indexOf("%22reply%22%3A%22%22") === -1) {
       assert.notEqual(request.requestBody.indexOf("originalText"), -1);
     }
-    return [ 200, { "Content-Type": "application/json" }, { success: true } ];
+    return [200, { "Content-Type": "application/json" }, { success: true }];
   });
 
   await visit("/t/internationalization-localization/280");

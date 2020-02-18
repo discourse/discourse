@@ -1,4 +1,5 @@
 import { acceptance } from "helpers/qunit-helpers";
+import server from "helpers/create-pretender";
 
 acceptance("Login with email - hide email address taken", {
   settings: {
@@ -11,7 +12,7 @@ acceptance("Login with email - hide email address taken", {
     };
 
     // prettier-ignore
-    server.post("/u/email-login", () => { // eslint-disable-line no-undef
+    server.post("/u/email-login", () => {
       return response({ success: "OK" });
     });
   }

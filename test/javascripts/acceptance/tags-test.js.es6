@@ -21,7 +21,7 @@ acceptance("Tags listed by group", {
 });
 
 QUnit.test("list the tags in groups", async assert => {
-  server.get("/tags", () => { // eslint-disable-line no-undef
+  server.get("/tags", () => {
     return [
       200,
       { "Content-Type": "application/json" },

@@ -21,7 +21,7 @@ QUnit.test("load - failed onebox", async assert => {
   let element = document.createElement("A");
   element.setAttribute("href", "http://somebadurl.com");
 
-  server.get("/onebox", () => { //eslint-disable-line
+  server.get("/onebox", () => {
     return [404, {}, {}];
   });
 
@@ -55,7 +55,7 @@ QUnit.test("load - successful onebox", async assert => {
     </aside>
   `;
 
-  server.get("/onebox", () => { //eslint-disable-line
+  server.get("/onebox", () => {
     return [200, {}, html];
   });
 
