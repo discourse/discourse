@@ -426,26 +426,22 @@ describe Upload do
         SiteSetting.login_required = true
         upload.update!(secure: false)
         CustomEmoji.create(name: 'meme', upload: upload)
-        expect { upload.update_secure_status }
-          .not_to change { upload.secure }
-
+        upload.update_secure_status
         expect(upload.reload.secure).to eq(false)
       end
 
       it 'does not mark an upload whose origin matches a regular emoji as secure (sometimes emojis are downloaded in pull_hotlinked_images)' do
         SiteSetting.login_required = true
-        grinning = Emoji.all.last
-        upload.update!(secure: false, origin: "http://localhost:3000#{grinning.url}")
-        expect { upload.update_secure_status }
-          .not_to change { upload.secure }
+        falafel = Emoji.all.find { |e| e.url == '/images/emoji/twitter/falafel.png?v=9' } 
+        upload.update!(secure: false, origin: "http://localhost:3000#{falafel.url}")
+        upload.update_secure_status
         expect(upload.reload.secure).to eq(false)
       end
 
       it 'does not mark any upload with origin containing images/emoji in the URL' do
         SiteSetting.login_required = true
         upload.update!(secure: false, origin: "http://localhost:3000/images/emoji/test.png")
-        expect { upload.update_secure_status }
-          .not_to change { upload.secure }
+        upload.update_secure_status
         expect(upload.reload.secure).to eq(false)
       end
     end
