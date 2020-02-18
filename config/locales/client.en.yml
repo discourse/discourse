@@ -4502,8 +4502,8 @@ en:
           description: Award the same badge to many users at once.
           no_badge_selected: Please select a badge to get started.
           perform: "Award Badge to Users"
-          upload_csv: Upload a CSV with user emails
-          aborted: Please upload a CSV containing user emails
+          upload_csv: Upload a CSV with either user emails or usernames
+          aborted: Please upload a CSV containing either user emails or usernames
           success: Your CSV was received and users will receive their badge shortly.
           replace_owners: Remove the badge from previous owners
 
