@@ -53,11 +53,11 @@ if ENV["TRACE_PG_CONNECTIONS"]
         end
         @accessor_thread = Thread.current
       end
-      result = yield
+      yield
+    ensure
       @access_log_mutex.synchronize do
         @accessor_thread = nil
       end
-      result
     end
 
   end)
