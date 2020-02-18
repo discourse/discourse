@@ -24,9 +24,9 @@ if ENV["TRACE_PG_CONNECTIONS"]
         FileUtils.mkdir_p(TRACE_DIR)
         @trace_filename = "#{TRACE_DIR}/#{Process.pid}_#{self.object_id}.txt"
         trace File.new(@trace_filename, "w")
-        @access_log_mutex = Mutex.new
-        @accessor_thread = nil
       end
+      @access_log_mutex = Mutex.new
+      @accessor_thread = nil
     end
 
     def close
