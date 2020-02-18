@@ -851,7 +851,6 @@ export default Component.extend(
                   }
 
                   wrapper.style.width = `${this.element.offsetWidth}px`;
-                  body.style.width = `${this.element.offsetWidth}px`;
                   wrapper.style.height = `${height}px`;
                 }
               }
