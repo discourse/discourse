@@ -4,6 +4,11 @@
       .select-kit-body {
         max-width: 400px;
         width: 400px;
+
+        @media screen and (max-width: 767px) {
+          max-width: 100%;
+          width: auto;
+        }
       }
 
       .select-kit-row {
