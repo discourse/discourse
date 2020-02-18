@@ -24,6 +24,8 @@ if ENV["TRACE_PG_CONNECTIONS"]
         FileUtils.mkdir_p(TRACE_DIR)
         @trace_filename = "#{TRACE_DIR}/#{Process.pid}_#{self.object_id}.txt"
         trace File.new(@trace_filename, "w")
+        @access_log_mutex = Mutex.new
+        @accessor_thread = nil
       end
     end
 
@@ -34,5 +36,47 @@ if ENV["TRACE_PG_CONNECTIONS"]
       end
     end
 
+    def log_access(&blk)
+      @access_log_mutex.synchronize do
+        if !@accessor_thread.nil?
+          Rails.logger.error <<~STRING
+            PG Clash: A connection is being accessed from two locations
+
+            #{@accessor_thread} was using the connection. Backtrace:
+
+            #{@accessor_thread.backtrace.join("\n")}
+
+            #{Thread.current} is now attempting to use the connection. Backtrace:
+
+            #{Thread.current.backtrace.join("\n")}
+          STRING
+        end
+        @accessor_thread = Thread.current
+      end
+      result = yield
+      @access_log_mutex.synchronize do
+        @accessor_thread = nil
+      end
+      result
+    end
+
   end)
+
+  class PG::Connection
+    LOG_ACCESS_METHODS = [:exec, :sync_exec, :async_exec,
+                          :sync_exec_params, :async_exec_params,
+                          :sync_prepare, :async_prepare,
+                          :sync_exec_prepared, :async_exec_prepared,
+                        ]
+
+    LOG_ACCESS_METHODS.each do |method|
+      new_method = "#{method}_without_logging".to_sym
+      alias_method new_method, method
+
+      define_method(method) do |*args, &blk|
+        log_access { send(new_method, *args, &blk) }
+      end
+    end
+  end
+
 end
