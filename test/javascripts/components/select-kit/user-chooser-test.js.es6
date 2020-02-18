@@ -1,6 +1,6 @@
 import componentTest from "helpers/component-test";
 import { testSelectKitModule } from "./select-kit-test-helper";
-import server from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 testSelectKitModule("user-chooser");
 
@@ -43,7 +43,7 @@ componentTest("can add a username", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.get("/u/search/users", () => {
+    pretender.get("/u/search/users", () => {
       return response({ users: [{ username: "maja", name: "Maja" }] });
     });
   },

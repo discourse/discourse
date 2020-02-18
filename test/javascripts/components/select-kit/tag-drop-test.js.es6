@@ -2,7 +2,7 @@ import componentTest from "helpers/component-test";
 import { testSelectKitModule } from "./select-kit-test-helper";
 import Site from "discourse/models/site";
 import { set } from "@ember/object";
-import server from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 testSelectKitModule("tag-drop", {
   beforeEach() {
@@ -13,7 +13,7 @@ testSelectKitModule("tag-drop", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.get("/tags/filter/search", params => {
+    pretender.get("/tags/filter/search", params => {
       if (params.queryParams.q === "rég") {
         return response({
           results: [{ id: "régis", text: "régis", count: 2, pm_count: 0 }]

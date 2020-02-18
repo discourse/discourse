@@ -2,18 +2,18 @@ import { run } from "@ember/runloop";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
-import server from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 acceptance("Composer", {
   loggedIn: true,
-  pretend(pretender, helper) {
-    pretender.get("/draft.json", () => {
+  pretend(pretenderServer, helper) {
+    pretenderServer.get("/draft.json", () => {
       return helper.response({
         draft: null,
         draft_sequence: 42
       });
     });
-    pretender.post("/uploads/lookup-urls", () => {
+    pretenderServer.post("/uploads/lookup-urls", () => {
       return helper.response([]);
     });
   },
@@ -618,7 +618,7 @@ QUnit.test("Checks for existing draft", async assert => {
   try {
     toggleCheckDraftPopup(true);
 
-    server.get("/draft.json", () => {
+    pretender.get("/draft.json", () => {
       return [
         200,
         { "Content-Type": "application/json" },
@@ -655,7 +655,7 @@ QUnit.test("Can switch states without abandon popup", async assert => {
 
     await fillIn(".d-editor-input", longText);
 
-    server.get("/draft.json", () => {
+    pretender.get("/draft.json", () => {
       return [
         200,
         { "Content-Type": "application/json" },
@@ -701,7 +701,7 @@ QUnit.test("Loading draft also replaces the recipients", async assert => {
   try {
     toggleCheckDraftPopup(true);
 
-    server.get("/draft.json", () => {
+    pretender.get("/draft.json", () => {
       return [
         200,
         { "Content-Type": "application/json" },
@@ -860,7 +860,7 @@ QUnit.test("Image resizing buttons", async assert => {
 QUnit.test("can reply to a private message", async assert => {
   let submitted;
 
-  server.post("/posts", () => {
+  pretender.post("/posts", () => {
     submitted = true;
     return [200, { "Content-Type": "application/json" }, {}];
   });

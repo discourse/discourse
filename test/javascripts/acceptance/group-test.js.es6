@@ -1,13 +1,13 @@
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
-import server from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 let groupArgs = {
   settings: {
     enable_group_directory: true
   },
-  pretend(pretender, helper) {
-    pretender.post("/groups/Macdonald/request_membership", () => {
+  pretend(pretenderServer, helper) {
+    pretenderServer.post("/groups/Macdonald/request_membership", () => {
       return helper.response({
         relative_url: "/t/internationalization-localization/280"
       });
@@ -128,7 +128,7 @@ QUnit.test("User Viewing Group", async assert => {
 QUnit.test(
   "Admin viewing group messages when there are no messages",
   async assert => {
-    server.get(
+    pretender.get(
       "/topics/private-messages-group/eviltrout/discourse.json",
       () => {
         return response({ topic_list: { topics: [] } });
@@ -149,7 +149,7 @@ QUnit.test(
 );
 
 QUnit.test("Admin viewing group messages", async assert => {
-  server.get("/topics/private-messages-group/eviltrout/discourse.json", () => {
+  pretender.get("/topics/private-messages-group/eviltrout/discourse.json", () => {
     return response({
       users: [
         {

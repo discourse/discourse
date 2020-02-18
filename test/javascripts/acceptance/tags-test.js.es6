@@ -1,5 +1,5 @@
 import { updateCurrentUser, acceptance } from "helpers/qunit-helpers";
-import server from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 acceptance("Tags", { loggedIn: true });
 
@@ -21,7 +21,7 @@ acceptance("Tags listed by group", {
 });
 
 QUnit.test("list the tags in groups", async assert => {
-  server.get("/tags", () => {
+  pretender.get("/tags", () => {
     return [
       200,
       { "Content-Type": "application/json" },
@@ -103,13 +103,13 @@ QUnit.test("list the tags in groups", async assert => {
 });
 
 test("new topic button is not available for staff-only tags", async assert => {
-  server.get("/tag/regular-tag/notifications", () => [
+  pretender.get("/tag/regular-tag/notifications", () => [
     200,
     { "Content-Type": "application/json" },
     { tag_notification: { id: "regular-tag", notification_level: 1 } }
   ]);
 
-  server.get("/tag/regular-tag/l/latest.json", () => [
+  pretender.get("/tag/regular-tag/l/latest.json", () => [
     200,
     { "Content-Type": "application/json" },
     {
@@ -133,13 +133,13 @@ test("new topic button is not available for staff-only tags", async assert => {
     }
   ]);
 
-  server.get("/tag/staff-only-tag/notifications", () => [
+  pretender.get("/tag/staff-only-tag/notifications", () => [
     200,
     { "Content-Type": "application/json" },
     { tag_notification: { id: "staff-only-tag", notification_level: 1 } }
   ]);
 
-  server.get("/tag/staff-only-tag/l/latest.json", () => [
+  pretender.get("/tag/staff-only-tag/l/latest.json", () => [
     200,
     { "Content-Type": "application/json" },
     {
@@ -186,14 +186,14 @@ acceptance("Tag info", {
   settings: {
     tags_listed_by_group: true
   },
-  pretend(pretender, helper) {
-    pretender.get("/tag/planters/notifications", () => {
+  pretend(pretenderServer, helper) {
+    pretenderServer.get("/tag/planters/notifications", () => {
       return helper.response({
         tag_notification: { id: "planters", notification_level: 1 }
       });
     });
 
-    pretender.get("/tag/planters/l/latest.json", () => {
+    pretenderServer.get("/tag/planters/l/latest.json", () => {
       return helper.response({
         users: [],
         primary_groups: [],
@@ -215,7 +215,7 @@ acceptance("Tag info", {
       });
     });
 
-    pretender.get("/tag/planters/info", () => {
+    pretenderServer.get("/tag/planters/info", () => {
       return helper.response({
         __rest_serializer: "1",
         tag_info: {
@@ -286,7 +286,7 @@ test("tag info can show synonyms", async assert => {
 });
 
 test("admin can manage tags", async assert => {
-  server.delete("/tag/planters/synonyms/containers", () => [
+  pretender.delete("/tag/planters/synonyms/containers", () => [
     200,
     { "Content-Type": "application/json" },
     { success: true }

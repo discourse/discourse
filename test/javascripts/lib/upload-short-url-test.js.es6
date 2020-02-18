@@ -5,7 +5,7 @@ import {
 } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { fixture } from "helpers/qunit-helpers";
-import server from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 QUnit.module("lib:pretty-text/upload-short-url", {
   beforeEach() {
@@ -47,7 +47,7 @@ QUnit.module("lib:pretty-text/upload-short-url", {
       }
     ];
 
-    server.post("/uploads/lookup-urls", () => {
+    pretender.post("/uploads/lookup-urls", () => {
       //eslint-disable-line
       return response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)));
     });
