@@ -318,7 +318,7 @@ export default Component.extend(
     validateSelect() {
       this.clearErrors();
 
-      const selection = Ember.makeArray(this.value);
+      const selection = makeArray(this.value);
 
       const maximum = this.selectKit.options.maximum;
       if (maximum && selection.length >= maximum) {
