@@ -5,7 +5,7 @@ class MessageBusDiags
   @host_info = {}
 
   def self.my_id
-    @my_id ||= "#{`hostname`}-#{Process.pid}"
+    @my_id ||= "#{Discourse.os_hostname}-#{Process.pid}"
   end
 
   def self.seen_host(name)
