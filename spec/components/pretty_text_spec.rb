@@ -347,12 +347,8 @@ describe PrettyText do
         Fabricate(:user, username: username)
       end
 
-      ['Group', 'group2'].each do |name|
-        Fabricate(:group,
-          name: name,
-          mentionable_level: Group::ALIAS_LEVELS[:everyone]
-        )
-      end
+      Fabricate(:group, name: 'Group', mentionable_level: Group::ALIAS_LEVELS[:everyone])
+      Fabricate(:group, name: 'Group2', mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins])
 
       [
         [
@@ -361,7 +357,7 @@ describe PrettyText do
         ],
         [
           "hi\n@user. @GROUP @somemention @group2",
-          %Q|<p>hi<br>\n<a class="mention" href="/u/user">@user</a>. <a class="mention-group" href="/groups/group">@GROUP</a> <span class="mention">@somemention</span> <a class="mention-group" href="/groups/group2">@group2</a></p>|
+          %Q|<p>hi<br>\n<a class="mention" href="/u/user">@user</a>. <a class="mention-group notify" href="/groups/group">@GROUP</a> <span class="mention">@somemention</span> <a class="mention-group" href="/groups/group2">@group2</a></p>|
         ]
       ].each do |input, expected|
         expect(PrettyText.cook(input)).to eq(expected)
@@ -376,20 +372,31 @@ describe PrettyText do
         Fabricate(:group, name: 'groupA', mentionable_level: Group::ALIAS_LEVELS[:everyone])
 
         input = 'hi there @user1 and @groupA'
-        expected = '<p>hi there <a class="mention" href="/forum/u/user1">@user1</a> and <a class="mention-group" href="/forum/groups/groupa">@groupA</a></p>'
+        expected = '<p>hi there <a class="mention" href="/forum/u/user1">@user1</a> and <a class="mention-group notify" href="/forum/groups/groupa">@groupA</a></p>'
 
         expect(PrettyText.cook(input)).to eq(expected)
       end
     end
 
-    it "does not create mention for a non mentionable group" do
+    it "does not assign the notify class to a group that can't be mentioned" do
       group = Fabricate(:group,
         visibility_level: Group.visibility_levels[:members],
         mentionable_level: Group::ALIAS_LEVELS[:nobody]
       )
 
       expect(PrettyText.cook("test @#{group.name} test")).to eq(
-        %Q|<p>test <span class="mention">@#{group.name}</span> test</p>|
+        %Q|<p>test <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a> test</p>|
+      )
+    end
+
+    it "assigns the notify class if the user can mention" do
+      group = Fabricate(:group,
+        visibility_level: Group.visibility_levels[:members],
+        mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins]
+      )
+
+      expect(PrettyText.cook("test @#{group.name} test", user_id: Fabricate(:admin).id)).to eq(
+        %Q|<p>test <a class="mention-group notify" href="/groups/#{group.name}">@#{group.name}</a> test</p>|
       )
     end
 
