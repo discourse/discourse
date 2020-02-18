@@ -6,7 +6,7 @@ import { get } from "@ember/object";
 import UtilsMixin from "select-kit/mixins/utils";
 import PluginApiMixin from "select-kit/mixins/plugin-api";
 import Mixin from "@ember/object/mixin";
-import { isEmpty, isNone } from "@ember/utils";
+import { isPresent, isEmpty, isNone } from "@ember/utils";
 import {
   next,
   debounce,
@@ -422,8 +422,8 @@ export default Component.extend(
         }
 
         if (this.singleSelect) {
-          value = Ember.isPresent(value.firstObject) ? value.firstObject : null;
-          items = Ember.isPresent(items.firstObject) ? items.firstObject : null;
+          value = isPresent(value.firstObject) ? value.firstObject : null;
+          items = isPresent(items.firstObject) ? items.firstObject : null;
         }
 
         this._boundaryActionHandler("onChange", value, items);
@@ -704,7 +704,7 @@ export default Component.extend(
     },
 
     select(value, item) {
-      if (!Ember.isPresent(value)) {
+      if (!isPresent(value)) {
         if (!this.validateSelect(this.selectKit.highlighted)) {
           return;
         }
