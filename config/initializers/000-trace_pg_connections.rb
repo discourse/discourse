@@ -53,7 +53,7 @@ if ENV["TRACE_PG_CONNECTIONS"]
 
           if ENV["ON_PG_CLASH"] == "byebug"
             require "byebug"
-            byebug
+            byebug # rubocop:disable Lint/Debugger
           end
         end
         @accessor_thread = Thread.current
