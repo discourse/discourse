@@ -2,7 +2,7 @@ import { load } from "pretty-text/oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import { failedCache, localCache } from "pretty-text/oneboxer-cache";
 import { stringToHTML } from "helpers/html-helper";
-import { pretender } from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 function loadOnebox(element) {
   return load({

@@ -1,6 +1,6 @@
 import userSearch from "discourse/lib/user-search";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
-import { pretender } from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 QUnit.module("lib:user-search", {
   beforeEach() {

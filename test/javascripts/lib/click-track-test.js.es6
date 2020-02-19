@@ -3,7 +3,7 @@ import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
 import { fixture, logIn } from "helpers/qunit-helpers";
 import User from "discourse/models/user";
-import { pretender } from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 QUnit.module("lib:click-track", {
   beforeEach() {

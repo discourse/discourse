@@ -3,7 +3,7 @@ import {
   linkSeenMentions
 } from "discourse/lib/link-mentions";
 import { Promise } from "rsvp";
-import { pretender } from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 QUnit.module("lib:link-mentions");
 

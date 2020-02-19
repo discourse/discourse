@@ -1,5 +1,5 @@
 import componentTest from "helpers/component-test";
-import { pretender } from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 moduleForComponent("admin-report", {
   integration: true

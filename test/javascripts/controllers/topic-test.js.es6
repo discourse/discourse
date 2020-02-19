@@ -5,7 +5,7 @@ import PostStream from "discourse/models/post-stream";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import User from "discourse/models/user";
 import { Promise } from "rsvp";
-import { pretender } from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 moduleFor("controller:topic", "controller:topic", {
   needs: [

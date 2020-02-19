@@ -2,7 +2,7 @@ import Post from "discourse/models/post";
 import createStore from "helpers/create-store";
 import User from "discourse/models/user";
 import { Promise } from "rsvp";
-import { pretender } from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 QUnit.module("model:post-stream");
 

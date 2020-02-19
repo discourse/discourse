@@ -2,7 +2,7 @@ import { run } from "@ember/runloop";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
-import { pretender } from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 acceptance("Composer", {
   loggedIn: true,
