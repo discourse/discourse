@@ -50,6 +50,11 @@ if ENV["TRACE_PG_CONNECTIONS"]
 
             #{Thread.current&.backtrace&.join("\n")}
           STRING
+
+          if ENV["ON_PG_CLASH"] == "byebug"
+            require "byebug"
+            byebug
+          end
         end
         @accessor_thread = Thread.current
       end
