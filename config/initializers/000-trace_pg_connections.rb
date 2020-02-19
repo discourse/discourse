@@ -50,14 +50,19 @@ if ENV["TRACE_PG_CONNECTIONS"]
 
             #{Thread.current&.backtrace&.join("\n")}
           STRING
+
+          if ENV["ON_PG_CLASH"] == "byebug"
+            require "byebug"
+            byebug # rubocop:disable Lint/Debugger
+          end
         end
         @accessor_thread = Thread.current
       end
-      result = yield
+      yield
+    ensure
       @access_log_mutex.synchronize do
         @accessor_thread = nil
       end
-      result
     end
 
   end)
