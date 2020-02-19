@@ -10,19 +10,19 @@ describe EmailUpdater do
     Fabricate(:user, staged: true, email: new_email)
 
     user = Fabricate(:user, email: old_email)
-    updater = EmailUpdater.new(user.guardian, user)
+    updater = EmailUpdater.new(guardian: user.guardian, user: user)
     updater.change_to(new_email)
 
     expect(updater.errors).to be_present
     expect(updater.errors.messages[:base].first).to be I18n.t("change_email.error_staged")
   end
 
-  context "when an admin is changing the email of a user" do
-    let(:email_change_requesting_user) { Fabricate(:admin) }
-    let(:updater) { EmailUpdater.new(user.guardian, user, email_change_requesting_user) }
+  context "when an admin is changing the email of another user" do
+    let(:admin) { Fabricate(:admin) }
+    let(:updater) { EmailUpdater.new(guardian: user.guardian, user: user, initiating_user: admin) }
 
     def expect_old_email_job
-      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(to_address: "old.email@example.com", type: :notify_old_email, user_id: user.id))
+      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(to_address: old_email, type: :notify_old_email, user_id: user.id))
     end
 
     def expect_forgot_password_job
@@ -76,10 +76,10 @@ describe EmailUpdater do
     end
 
     context "when changing their own email" do
-      let(:user) { email_change_requesting_user }
+      let(:user) { admin }
 
       before do
-        email_change_requesting_user.update(email: old_email)
+        admin.update(email: old_email)
         Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :confirm_old_email, to_address: old_email))
         updater.change_to(new_email)
         @change_req = user.email_change_requests.first
@@ -105,7 +105,7 @@ describe EmailUpdater do
 
   context 'as a regular user' do
     let(:user) { Fabricate(:user, email: old_email) }
-    let(:updater) { EmailUpdater.new(user.guardian, user) }
+    let(:updater) { EmailUpdater.new(guardian: user.guardian, user: user) }
 
     before do
       Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :confirm_new_email, to_address: new_email))
@@ -149,7 +149,7 @@ describe EmailUpdater do
 
   context 'as a staff user' do
     let(:user) { Fabricate(:moderator, email: old_email) }
-    let(:updater) { EmailUpdater.new(user.guardian, user) }
+    let(:updater) { EmailUpdater.new(guardian: user.guardian, user: user) }
 
     before do
       Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :confirm_old_email, to_address: old_email))
@@ -226,7 +226,7 @@ describe EmailUpdater do
 
     let(:user) { Fabricate(:user, email: old_email) }
     let(:existing) { Fabricate(:user, email: new_email) }
-    let(:updater) { EmailUpdater.new(user.guardian, user) }
+    let(:updater) { EmailUpdater.new(guardian: user.guardian, user: user) }
 
     it "doesn't error if user exists with new email" do
       updater.change_to(existing.email)

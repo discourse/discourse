@@ -5,7 +5,7 @@ class EmailUpdater
 
   attr_reader :user
 
-  def initialize(guardian = nil, user = nil, initiating_user = nil)
+  def initialize(guardian: nil, user: nil, initiating_user: nil)
     @guardian = guardian
     @user = user
     @initiating_user = initiating_user
