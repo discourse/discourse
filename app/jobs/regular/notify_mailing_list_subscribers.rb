@@ -53,6 +53,14 @@ module Jobs
                      WHERE cu.category_id = ? AND cu.user_id = users.id AND cu.notification_level = ?
                   )', post.topic.category_id, CategoryUser.notification_levels[:muted])
 
+      if SiteSetting.tagging_enabled?
+        users = users.where('NOT EXISTS (
+           SELECT 1
+           FROM tag_users tu
+           WHERE tu.tag_id in (:tag_ids) AND tu.user_id = users.id AND tu.notification_level = :muted
+        )', tag_ids: post.topic.tag_ids, muted: TagUser.notification_levels[:muted])
+      end
+
       if SiteSetting.must_approve_users
         users = users.where(approved: true)
       end
