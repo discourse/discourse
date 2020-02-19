@@ -380,7 +380,7 @@ RSpec.describe SessionController do
           end
         end
         context "when the security key params are invalid" do
-          it" shows an error message and denies login" do
+          it "shows an error message and denies login" do
 
             post "/session/email-login/#{email_token.token}.json", params: {
               second_factor_token: {
@@ -1317,7 +1317,7 @@ RSpec.describe SessionController do
           end
         end
         context "when the security key params are invalid" do
-          it" shows an error message and denies login" do
+          it "shows an error message and denies login" do
 
             post "/session.json", params: {
               login: user.username,
