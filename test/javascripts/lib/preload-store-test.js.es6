@@ -32,9 +32,7 @@ asyncTestDiscourse(
 asyncTestDiscourse(
   "getAndRemove returns a promise that resolves to the result of the finder",
   async assert => {
-    const finder = function() {
-      return "batdance";
-    };
+    const finder = () => "batdance";
     const result = await PreloadStore.getAndRemove("joker", finder);
 
     assert.equal(result, "batdance");
@@ -44,13 +42,9 @@ asyncTestDiscourse(
 asyncTestDiscourse(
   "getAndRemove returns a promise that resolves to the result of the finder's promise",
   async assert => {
-    const finder = function() {
-      return new Promise(function(resolve) {
-        resolve("hahahah");
-      });
-    };
-
+    const finder = () => Promise.resolve("hahahah");
     const result = await PreloadStore.getAndRemove("joker", finder);
+
     assert.equal(result, "hahahah");
   }
 );
@@ -58,11 +52,7 @@ asyncTestDiscourse(
 asyncTestDiscourse(
   "returns a promise that rejects with the result of the finder's rejected promise",
   async assert => {
-    const finder = function() {
-      return new Promise(function(resolve, reject) {
-        reject("error");
-      });
-    };
+    const finder = () => Promise.reject("error");
 
     await PreloadStore.getAndRemove("joker", finder).catch(result => {
       assert.equal(result, "error");
