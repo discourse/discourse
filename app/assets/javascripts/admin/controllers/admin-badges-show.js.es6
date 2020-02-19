@@ -1,13 +1,13 @@
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { run } from "@ember/runloop";
 
 export default Controller.extend(bufferedProperty("model"), {
-  adminBadges: inject(),
+  adminBadges: controller(),
   saving: false,
   savingStatus: "",
   badgeTypes: reads("adminBadges.badgeTypes"),

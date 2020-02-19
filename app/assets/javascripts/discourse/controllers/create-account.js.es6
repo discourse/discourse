@@ -1,7 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import { notEmpty, or, not } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { setting } from "discourse/lib/computed";
@@ -26,7 +25,7 @@ export default Controller.extend(
   NameValidation,
   UserFieldsValidation,
   {
-    login: inject(),
+    login: controller(),
 
     complete: false,
     accountChallenge: 0,

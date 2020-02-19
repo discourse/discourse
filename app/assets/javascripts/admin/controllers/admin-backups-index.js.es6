@@ -1,12 +1,11 @@
 import { alias, equal } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import { setting, i18n } from "discourse/lib/computed";
 
 export default Controller.extend({
-  adminBackups: inject(),
+  adminBackups: controller(),
   status: alias("adminBackups.model"),
   uploadLabel: i18n("admin.backups.upload.label"),
   backupLocation: setting("backup_location"),

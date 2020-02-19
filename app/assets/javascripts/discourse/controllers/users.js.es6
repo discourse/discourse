@@ -1,11 +1,10 @@
 import { equal } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";
 import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
-  application: inject(),
+  application: controller(),
   queryParams: ["period", "order", "asc", "name", "group", "exclude_usernames"],
   period: "weekly",
   order: "likes_received",

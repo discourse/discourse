@@ -1,15 +1,14 @@
-import { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import EmberObject from "@ember/object";
-import Controller from "@ember/controller";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
+  application: controller(),
   queryParams: ["username"],
   noMoreBadges: false,
   userBadges: null,
-  application: inject(),
   hiddenSetTitle: true,
 
   @discourseComputed("userBadgesAll")
