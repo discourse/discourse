@@ -12,6 +12,9 @@ export default Controller.extend({
   userActionType: null,
 
   canDownloadPosts: alias("user.viewingSelf"),
+  bookmarksWithRemindersEnabled: alias(
+    "siteSettings.enable_bookmarks_with_reminders"
+  ),
 
   @observes("userActionType", "model.stream.itemsLoaded")
   _showFooter: function() {

@@ -1,0 +1,49 @@
+{{#if model.noContent}}
+  <div class='alert alert-info'>{{ model.noResultsHelp }}</div>
+{{else}}
+  {{#conditional-loading-spinner condition=model.loading}}
+  <table class="topic-list">
+    <thead>
+      <th>Topic</th>
+      <th>Bookmarked</th>
+      <th>Activity</th>
+      <th>&nbsp;</th>
+    </thead>
+    <tbody>
+    {{#each model.content as |bookmark|}}
+      <tr class="topic-list-item">
+        <td class="main-link">
+          <span class="link-top-line">
+            {{topic-status topic=bookmark}}
+            <a class="title" href="/t/{{bookmark.topic_id}}/{{bookmark.bookmark_post_number}}">{{bookmark.title}}
+              {{#if bookmark.bookmark_name}}
+                ({{bookmark.bookmark_name}})
+              {{/if}}
+            </a>
+          </span>
+          {{#if bookmark.excerpt}}
+            <p class="post-excerpt">{{bookmark.excerpt}}</p>
+          {{/if}}
+          <div class="link-bottom-line">
+            {{#if bookmark.bookmark_reminder_at}}
+            <div class="badge-wrapper" style="margin-right: 5px;">
+              <span class="badge-category">
+                {{d-icon "far-clock"}}{{bookmark.formattedReminder}}
+              </span>
+            </div>
+            {{/if}}
+            {{category-link bookmark.category}}
+            {{discourse-tags bookmark mode="list" tagsForUser=tagsForUser}}
+         </div>
+        </td>
+        <td>{{format-date bookmark.created_at format="tiny"}}</td>
+        {{raw "list/activity-column" topic=bookmark class="num" tagName="td"}}
+        <td>
+          {{bookmark-actions-dropdown bookmark=bookmark removeBookmark=(action "removeBookmark")}}
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+  {{/conditional-loading-spinner}}
+{{/if}}
