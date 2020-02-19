@@ -47,7 +47,7 @@ const assertMultipleSecondary = assert => {
 };
 
 QUnit.test("viewing self without secondary emails", async assert => {
-  pretender.get("/admin/users/1.json", () => {
+  pretender().get("/admin/users/1.json", () => {
     return responseWithSecondary([]);
   });
 
@@ -57,7 +57,7 @@ QUnit.test("viewing self without secondary emails", async assert => {
 });
 
 QUnit.test("viewing self with multiple secondary emails", async assert => {
-  pretender.get("/admin/users/1.json", () => {
+  pretender().get("/admin/users/1.json", () => {
     return responseWithSecondary([
       "eviltrout1@example.com",
       "eviltrout2@example.com"
@@ -83,7 +83,7 @@ QUnit.test("viewing another user with no secondary email", async assert => {
 });
 
 QUnit.test("viewing another account with secondary emails", async assert => {
-  pretender.get("/u/regular/emails.json", () => {
+  pretender().get("/u/regular/emails.json", () => {
     return [
       200,
       { "Content-Type": "application/json" },

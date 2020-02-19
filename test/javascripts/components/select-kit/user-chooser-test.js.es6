@@ -43,7 +43,7 @@ componentTest("can add a username", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    pretender.get("/u/search/users", () => {
+    pretender().get("/u/search/users", () => {
       return response({ users: [{ username: "maja", name: "Maja" }] });
     });
   },

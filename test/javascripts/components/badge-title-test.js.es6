@@ -24,7 +24,7 @@ componentTest("badge title", {
   },
 
   async test(assert) {
-    pretender.put("/u/eviltrout/preferences/badge_title", () => [
+    pretender().put("/u/eviltrout/preferences/badge_title", () => [
       200,
       { "Content-Type": "application/json" },
       {}

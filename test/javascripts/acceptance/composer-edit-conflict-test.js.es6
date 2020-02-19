@@ -6,7 +6,7 @@ acceptance("Composer - Edit conflict", {
 });
 
 QUnit.test("Edit a post that causes an edit conflict", async assert => {
-  pretender.put("/posts/398", () => [
+  pretender().put("/posts/398", () => [
     409,
     { "Content-Type": "application/json" },
     { errors: ["edit conflict"] }
@@ -33,7 +33,7 @@ QUnit.test("Edit a post that causes an edit conflict", async assert => {
 QUnit.test(
   "Should not send originalText when posting a new reply",
   async assert => {
-    pretender.post("/draft.json", request => {
+    pretender().post("/draft.json", request => {
       assert.equal(
         request.requestBody.indexOf("originalText"),
         -1,
@@ -52,7 +52,7 @@ QUnit.test(
 );
 
 QUnit.test("Should send originalText when editing a reply", async assert => {
-  pretender.post("/draft.json", request => {
+  pretender().post("/draft.json", request => {
     if (request.requestBody.indexOf("%22reply%22%3A%22%22") === -1) {
       assert.notEqual(request.requestBody.indexOf("originalText"), -1);
     }

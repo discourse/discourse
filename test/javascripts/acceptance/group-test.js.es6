@@ -128,7 +128,7 @@ QUnit.test("User Viewing Group", async assert => {
 QUnit.test(
   "Admin viewing group messages when there are no messages",
   async assert => {
-    pretender.get(
+    pretender().get(
       "/topics/private-messages-group/eviltrout/discourse.json",
       () => {
         return response({ topic_list: { topics: [] } });
@@ -149,7 +149,7 @@ QUnit.test(
 );
 
 QUnit.test("Admin viewing group messages", async assert => {
-  pretender.get(
+  pretender().get(
     "/topics/private-messages-group/eviltrout/discourse.json",
     () => {
       return response({

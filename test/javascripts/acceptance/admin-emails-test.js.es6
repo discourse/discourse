@@ -17,7 +17,7 @@ Hello, this is a test!
 This part should be elided.`.trim();
 
 QUnit.test("shows selected and elided text", async assert => {
-  pretender.post("/admin/email/advanced-test", () => {
+  pretender().post("/admin/email/advanced-test", () => {
     return [
       200,
       { "Content-Type": "application/json" },

@@ -21,7 +21,7 @@ acceptance("Tags listed by group", {
 });
 
 QUnit.test("list the tags in groups", async assert => {
-  pretender.get("/tags", () => {
+  pretender().get("/tags", () => {
     return [
       200,
       { "Content-Type": "application/json" },
@@ -103,13 +103,13 @@ QUnit.test("list the tags in groups", async assert => {
 });
 
 test("new topic button is not available for staff-only tags", async assert => {
-  pretender.get("/tag/regular-tag/notifications", () => [
+  pretender().get("/tag/regular-tag/notifications", () => [
     200,
     { "Content-Type": "application/json" },
     { tag_notification: { id: "regular-tag", notification_level: 1 } }
   ]);
 
-  pretender.get("/tag/regular-tag/l/latest.json", () => [
+  pretender().get("/tag/regular-tag/l/latest.json", () => [
     200,
     { "Content-Type": "application/json" },
     {
@@ -133,13 +133,13 @@ test("new topic button is not available for staff-only tags", async assert => {
     }
   ]);
 
-  pretender.get("/tag/staff-only-tag/notifications", () => [
+  pretender().get("/tag/staff-only-tag/notifications", () => [
     200,
     { "Content-Type": "application/json" },
     { tag_notification: { id: "staff-only-tag", notification_level: 1 } }
   ]);
 
-  pretender.get("/tag/staff-only-tag/l/latest.json", () => [
+  pretender().get("/tag/staff-only-tag/l/latest.json", () => [
     200,
     { "Content-Type": "application/json" },
     {
@@ -286,7 +286,7 @@ test("tag info can show synonyms", async assert => {
 });
 
 test("admin can manage tags", async assert => {
-  pretender.delete("/tag/planters/synonyms/containers", () => [
+  pretender().delete("/tag/planters/synonyms/containers", () => [
     200,
     { "Content-Type": "application/json" },
     { success: true }

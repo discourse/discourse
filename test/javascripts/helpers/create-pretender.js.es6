@@ -35,9 +35,7 @@ const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
 export let fixturesByUrl;
 
-export default server();
-
-export function server() {
+export default function() {
   const pretender = new Pretender(function() {
     // Autoload any `*-pretender` files
     Object.keys(requirejs.entries).forEach(e => {

@@ -85,8 +85,8 @@ var createPretender = require("helpers/create-pretender", null, null, false),
   _DiscourseURL = require("discourse/lib/url", null, null, false).default,
   applyPretender = require("helpers/qunit-helpers", null, null, false)
     .applyPretender,
+  server,
   acceptanceModulePrefix = "Acceptance: ";
-let server;
 
 function dup(obj) {
   return jQuery.extend(true, {}, obj);
@@ -102,7 +102,7 @@ function resetSite(siteSettings, extras) {
 }
 
 QUnit.testStart(function(ctx) {
-  server = createPretender.default;
+  server = createPretender.default();
   if (ctx.module.startsWith(acceptanceModulePrefix)) {
     var helper = {
       parsePostData: createPretender.parsePostData,
