@@ -74,7 +74,7 @@
   }
   .feature-section {
     display: block;
-    padding: 1em 0.667em;
+    padding: 1em 0;
     &:not(:last-of-type) {
       border-bottom: 1px solid $primary-low;
     }
@@ -118,6 +118,7 @@
 }
 
 .mobile-view .feature-topic .feature-section {
+  padding: 1em 0.667em;
   .desc {
     display: block;
     clear: both;
