@@ -28,7 +28,6 @@ RSpec.describe GroupMentionsUpdater do
         group.update!(name: new_group_name)
         post.reload
 
-        puts post.raw
         expect(post.raw_mentions).to eq([new_group_name])
         expect(post.raw).to eq(expected_raw)
 
