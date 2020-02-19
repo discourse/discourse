@@ -29,6 +29,11 @@ export default Controller.extend({
     },
 
     save() {
+      if (this.showUserSelector && !this.model.username) {
+        bootbox.alert(I18n.t("admin.api.no_user_single_key"));
+        return;
+      }
+
       this.model.save().catch(popupAjaxError);
     },
 

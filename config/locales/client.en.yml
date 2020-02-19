@@ -3413,6 +3413,7 @@ en:
         description_placeholder: What will this key be used for?
         save: Save
         new_key: New API Key
+        no_user_single_key: Single User keys must have a user specified.
         revoked: Revoked
         delete: Permenantly Delete
         not_shown_again: This key will not be displayed again. Make sure you take a copy before continuing.
