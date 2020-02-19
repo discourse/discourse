@@ -768,11 +768,19 @@ a.mention {
   border-radius: 8px;
 }
 
+span.mention {
+  font-weight: bold;
+  font-size: 0.93em;
+  color: $primary;
+}
+
 a.mention-group {
   font-weight: bold;
   font-size: 0.93em;
   color: $primary;
-  &.notify {
+
+  &.notify,
+  .small-action-desc & {
     color: dark-light-choose($primary-high, $secondary-low);
     padding: 2px 4px;
     background: $primary-low;
