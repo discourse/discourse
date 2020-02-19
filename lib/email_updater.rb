@@ -5,9 +5,10 @@ class EmailUpdater
 
   attr_reader :user
 
-  def initialize(guardian = nil, user = nil)
+  def initialize(guardian: nil, user: nil, initiating_user: nil)
     @guardian = guardian
     @user = user
+    @initiating_user = initiating_user
   end
 
   def self.human_attribute_name(name, options = {})
@@ -40,16 +41,13 @@ class EmailUpdater
         new_email: email,
       }
 
-      if authorize_both?
-        args[:change_state] = EmailChangeRequest.states[:authorizing_old]
-        email_token = @user.email_tokens.create!(email: args[:old_email])
-        args[:old_email_token] = email_token
-      else
-        args[:change_state] = EmailChangeRequest.states[:authorizing_new]
-        email_token = @user.email_tokens.create!(email: args[:new_email])
-        args[:new_email_token] = email_token
-      end
+      args, email_token = prepare_change_request(args)
       @user.email_change_requests.create!(args)
+
+      if initiating_admin_changing_another_user_email?
+        auto_confirm_and_send_password_reset(email_token)
+        return
+      end
 
       if args[:change_state] == EmailChangeRequest.states[:authorizing_new]
         send_email(:confirm_new_email, email_token)
@@ -117,4 +115,30 @@ class EmailUpdater
                  email_token: email_token.token
   end
 
+  def prepare_change_request(args)
+    # regular users or changes requested by admin are always
+    # authorizing new only (as long as they are not changing their
+    # own email!)
+    if !authorize_both? || initiating_admin_changing_another_user_email?
+      args[:change_state] = EmailChangeRequest.states[:authorizing_new]
+      email_token = @user.email_tokens.create!(email: args[:new_email])
+      args[:new_email_token] = email_token
+    else
+      args[:change_state] = EmailChangeRequest.states[:authorizing_old]
+      email_token = @user.email_tokens.create!(email: args[:old_email])
+      args[:old_email_token] = email_token
+    end
+
+    [args, email_token]
+  end
+
+  def initiating_admin_changing_another_user_email?
+    @initiating_user&.admin? && @initiating_user != @user
+  end
+
+  def auto_confirm_and_send_password_reset(email_token)
+    confirm(email_token.token)
+    reset_email_token = @user.email_tokens.create(email: @user.email)
+    send_email(:forgot_password, reset_email_token)
+  end
 end
