@@ -1,7 +1,7 @@
 .share-and-invite.modal {
   .modal-body {
-    max-width: 475px;
-    min-width: 320px;
+    overflow-y: visible;
+    width: 475px;
   }
 
   .modal-header {
