@@ -24,79 +24,53 @@ QUnit.test("remove", assert => {
 
 asyncTestDiscourse(
   "getAndRemove returns a promise that resolves to null",
-  function(assert) {
-    assert.expect(1);
-
-    const done = assert.async();
-    PreloadStore.getAndRemove("joker").then(function(result) {
-      assert.blank(result);
-      done();
-    });
+  async assert => {
+    assert.blank(await PreloadStore.getAndRemove("joker"));
   }
 );
 
 asyncTestDiscourse(
   "getAndRemove returns a promise that resolves to the result of the finder",
-  function(assert) {
-    assert.expect(1);
-
-    const done = assert.async();
+  async assert => {
     const finder = function() {
       return "batdance";
     };
-    PreloadStore.getAndRemove("joker", finder).then(function(result) {
-      assert.equal(result, "batdance");
-      done();
-    });
+    const result = await PreloadStore.getAndRemove("joker", finder);
+
+    assert.equal(result, "batdance");
   }
 );
 
 asyncTestDiscourse(
   "getAndRemove returns a promise that resolves to the result of the finder's promise",
-  function(assert) {
-    assert.expect(1);
-
+  async assert => {
     const finder = function() {
       return new Promise(function(resolve) {
         resolve("hahahah");
       });
     };
 
-    const done = assert.async();
-    PreloadStore.getAndRemove("joker", finder).then(function(result) {
-      assert.equal(result, "hahahah");
-      done();
-    });
+    const result = await PreloadStore.getAndRemove("joker", finder);
+    assert.equal(result, "hahahah");
   }
 );
 
 asyncTestDiscourse(
   "returns a promise that rejects with the result of the finder's rejected promise",
-  function(assert) {
-    assert.expect(1);
-
+  async assert => {
     const finder = function() {
       return new Promise(function(resolve, reject) {
         reject("error");
       });
     };
 
-    const done = assert.async();
-    PreloadStore.getAndRemove("joker", finder).then(null, function(result) {
+    await PreloadStore.getAndRemove("joker", finder).catch(result => {
       assert.equal(result, "error");
-      done();
     });
   }
 );
 
-asyncTestDiscourse("returns a promise that resolves to 'evil'", function(
-  assert
-) {
-  assert.expect(1);
-
-  const done = assert.async();
-  PreloadStore.getAndRemove("bane").then(function(result) {
-    assert.equal(result, "evil");
-    done();
-  });
+asyncTestDiscourse("returns a promise that resolves to 'evil'", async assert => {
+  const result = await PreloadStore.getAndRemove("bane");
+  assert.equal(result, "evil");
 });
