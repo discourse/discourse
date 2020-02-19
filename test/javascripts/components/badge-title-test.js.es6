@@ -1,7 +1,7 @@
 import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
 import EmberObject from "@ember/object";
-import pretender from "helpers/create-pretender";
+import { pretender } from "helpers/create-pretender";
 
 moduleForComponent("badge-title", { integration: true });
 

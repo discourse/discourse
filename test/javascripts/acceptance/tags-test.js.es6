@@ -1,5 +1,5 @@
 import { updateCurrentUser, acceptance } from "helpers/qunit-helpers";
-import pretender from "helpers/create-pretender";
+import { pretender } from "helpers/create-pretender";
 
 acceptance("Tags", { loggedIn: true });
 

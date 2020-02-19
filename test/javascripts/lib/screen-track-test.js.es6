@@ -1,7 +1,7 @@
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import Session from "discourse/models/session";
 import ScreenTrack from "discourse/lib/screen-track";
-import pretender from "helpers/create-pretender";
+import { pretender } from "helpers/create-pretender";
 
 let clock;
 

@@ -1,4 +1,4 @@
-import pretender from "helpers/create-pretender";
+import { pretender } from "helpers/create-pretender";
 import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Admin - User Emails", { loggedIn: true });

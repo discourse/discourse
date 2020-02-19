@@ -77,7 +77,7 @@ if (window.Logster) {
   window.Logster = { enabled: false };
 }
 
-var pretender = require("helpers/create-pretender", null, null, false),
+var createPretender = require("helpers/create-pretender", null, null, false),
   fixtures = require("fixtures/site-fixtures", null, null, false).default,
   flushMap = require("discourse/models/store", null, null, false).flushMap,
   ScrollingDOMMethods = require("discourse/mixins/scrolling", null, null, false)
@@ -102,13 +102,13 @@ function resetSite(siteSettings, extras) {
 }
 
 QUnit.testStart(function(ctx) {
+  server = createPretender.pretender;
 
-  server = pretender.default;
   if (ctx.module.startsWith(acceptanceModulePrefix)) {
     var helper = {
-      parsePostData: pretender.parsePostData,
-      response: pretender.response,
-      success: pretender.success
+      parsePostData: createPretender.parsePostData,
+      response: createPretender.response,
+      success: createPretender.success
     };
 
     applyPretender(
@@ -154,6 +154,7 @@ QUnit.testDone(function() {
   flushMap();
 
   server.shutdown();
+
   window.server = null;
 
   // ensures any event not removed is not leaking between tests

@@ -1,5 +1,5 @@
 import { acceptance } from "helpers/qunit-helpers";
-import pretender from "helpers/create-pretender";
+import { pretender } from "helpers/create-pretender";
 
 acceptance("Composer - Edit conflict", {
   loggedIn: true
