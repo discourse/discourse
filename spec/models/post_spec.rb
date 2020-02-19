@@ -1046,13 +1046,13 @@ describe Post do
       end
 
       describe 'when user can not mention a group' do
-        it "should not create the mention" do
+        it "should not create the mention with the notify class" do
           post = Fabricate(:post, raw: "hello @#{group.name}")
           post.trigger_post_process
           post.reload
 
           expect(post.cooked).to eq(
-            %Q|<p>hello <span class="mention">@#{group.name}</span></p>|
+            %Q|<p>hello <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a></p>|
           )
         end
       end
@@ -1068,7 +1068,7 @@ describe Post do
           post.reload
 
           expect(post.cooked).to eq(
-            %Q|<p>hello <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a></p>|
+            %Q|<p>hello <a class="mention-group notify" href="/groups/#{group.name}">@#{group.name}</a></p>|
           )
         end
       end
@@ -1085,7 +1085,7 @@ describe Post do
           post.reload
 
           expect(post.cooked).to eq(
-            %Q|<p>hello <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a></p>|
+            %Q|<p>hello <a class="mention-group notify" href="/groups/#{group.name}">@#{group.name}</a></p>|
           )
         end
       end

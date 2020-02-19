@@ -199,11 +199,22 @@ describe Admin::BadgesController do
         expect(response.status).to eq(400)
       end
 
-      it 'creates the badge for an existing user' do
+      it 'awards the badge using a list of user emails' do
         Jobs.run_immediately!
 
         user = Fabricate(:user, email: 'user1@test.com')
         file = file_from_fixtures('user_emails.csv', 'csv')
+
+        post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(UserBadge.exists?(user: user, badge: badge)).to eq(true)
+      end
+
+      it 'awards the badge using a list of usernames' do
+        Jobs.run_immediately!
+
+        user = Fabricate(:user, username: 'username1')
+        file = file_from_fixtures('usernames.csv', 'csv')
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 

@@ -191,9 +191,6 @@
   }
 
   .modal-body {
-    position: relative;
-    box-sizing: border-box;
-    width: 100%;
     overflow-y: auto;
     max-height: 400px;
 
@@ -248,8 +245,9 @@
       }
     }
     textarea {
-      width: 99%;
+      width: 100%;
       height: 80px;
+      box-sizing: border-box;
     }
     p {
       font-size: $font-0;
