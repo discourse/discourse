@@ -84,7 +84,6 @@
     .desc {
       display: inline-block;
       vertical-align: middle;
-      margin-left: 10px;
       p:first-of-type {
         margin: 0;
       }
@@ -96,7 +95,9 @@
       position: relative;
     }
   }
+}
 
+.feature-topic-modal {
   .d-modal-cancel {
     margin-left: 0;
   }
