@@ -10,9 +10,12 @@
       width: 2em;
     }
   }
+  #rc-scroll-anchor {
+    padding: 0;
+  }
   table {
-    width: 100%;
     padding-bottom: 150px;
+    margin: 0 0.667em;
     td {
       padding: 0.5em 0.5em 0.5em 0;
       @include breakpoint(mobile, min-width) {

@@ -68,16 +68,16 @@
 }
 
 .modal-body.feature-topic {
-  padding: 5px;
   max-height: 500px;
   input.date-picker {
     margin: 0;
   }
-  hr {
-    margin: 10px 0;
-  }
   .feature-section {
     display: block;
+    padding: 1em 0.667em;
+    &:not(:last-of-type) {
+      border-bottom: 1px solid $primary-low;
+    }
     .badge-wrapper {
       margin-right: 0;
     }
@@ -95,6 +95,10 @@
     .with-validation {
       position: relative;
     }
+  }
+
+  .d-modal-cancel {
+    margin-left: 0;
   }
 }
 
@@ -118,7 +122,7 @@
     display: block;
     clear: both;
     max-width: 90%;
-    margin: 0 10px;
+    margin: 0;
   }
 }
 
