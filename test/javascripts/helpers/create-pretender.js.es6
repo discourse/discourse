@@ -753,6 +753,6 @@ export default function() {
   server.checkPassthrough = request =>
     request.requestHeaders["Discourse-Script"];
   return server;
-};
+}
 
 export const pretender = exports.default();
