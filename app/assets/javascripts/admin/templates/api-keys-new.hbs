@@ -32,7 +32,7 @@
       {{/admin-form-row}}
     {{/if}}
     {{#admin-form-row}}
-      {{d-button icon="check" label="admin.api.save" action=(action "save") class="btn-primary"}}
+      {{d-button icon="check" label="admin.api.save" action=(action "save") class="btn-primary" disabled=saveDisabled}}
     {{/admin-form-row}}
   {{/if}}
 </div>
