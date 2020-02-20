@@ -15,7 +15,7 @@ class EmailUpdater
     User.human_attribute_name(name, options)
   end
 
-  def authorize_both?
+  def changing_staff_user_email?
     @user.staff?
   end
 
@@ -44,7 +44,7 @@ class EmailUpdater
       args, email_token = prepare_change_request(args)
       @user.email_change_requests.create!(args)
 
-      if initiating_admin_changing_another_user_email?
+      if initiating_admin_changing_another_user_email? && !changing_staff_user_email?
         auto_confirm_and_send_password_reset(email_token)
         return
       end
@@ -115,20 +115,22 @@ class EmailUpdater
                  email_token: email_token.token
   end
 
+  # regular users or changes requested by admin are always
+  # authorizing new only (as long as they are not changing their
+  # own email!)
+  #
+  # however even if an admin requests an email change for another
+  # admin the other admin must always confirm their old email
   def prepare_change_request(args)
-    # regular users or changes requested by admin are always
-    # authorizing new only (as long as they are not changing their
-    # own email!)
-    if !authorize_both? || initiating_admin_changing_another_user_email?
-      args[:change_state] = EmailChangeRequest.states[:authorizing_new]
-      email_token = @user.email_tokens.create!(email: args[:new_email])
-      args[:new_email_token] = email_token
-    else
+    if changing_staff_user_email?
       args[:change_state] = EmailChangeRequest.states[:authorizing_old]
       email_token = @user.email_tokens.create!(email: args[:old_email])
       args[:old_email_token] = email_token
+    else
+      args[:change_state] = EmailChangeRequest.states[:authorizing_new]
+      email_token = @user.email_tokens.create!(email: args[:new_email])
+      args[:new_email_token] = email_token
     end
-
     [args, email_token]
   end
 
