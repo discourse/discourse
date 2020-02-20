@@ -214,8 +214,9 @@
 // Small
 
 .btn-small {
-  padding: 3px 6px;
+  padding: 6px;
   font-size: $font-down-1;
+  min-height: 20px;
 }
 
 // Large

@@ -40,7 +40,7 @@ module Jobs
         self.class.mutex.synchronize do
           @data = {}
 
-          @data["hostname"] = `hostname`.strip # Hostname
+          @data["hostname"] = Discourse.os_hostname
           @data["pid"] = Process.pid # Pid
           @data["database"] = db # DB name - multisite db name it ran on
           @data["job_id"] = jid # Job unique ID

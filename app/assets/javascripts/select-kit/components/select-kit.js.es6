@@ -6,7 +6,7 @@ import { get } from "@ember/object";
 import UtilsMixin from "select-kit/mixins/utils";
 import PluginApiMixin from "select-kit/mixins/plugin-api";
 import Mixin from "@ember/object/mixin";
-import { isEmpty, isNone, isPresent } from "@ember/utils";
+import { isPresent, isEmpty, isNone } from "@ember/utils";
 import {
   next,
   debounce,
@@ -318,7 +318,7 @@ export default Component.extend(
     validateSelect() {
       this.clearErrors();
 
-      const selection = Ember.makeArray(this.value);
+      const selection = makeArray(this.value);
 
       const maximum = this.selectKit.options.maximum;
       if (maximum && selection.length >= maximum) {

@@ -1,5 +1,6 @@
 import Mixin from "@ember/object/mixin";
 import { isNone } from "@ember/utils";
+import { makeArray } from "discourse-common/lib/helpers";
 
 let _appendContentCallbacks = {};
 function appendContent(pluginApiIdentifiers, contentFunction) {
@@ -109,10 +110,10 @@ export function applyContentPluginApiCallbacks(
 ) {
   identifiers.forEach(key => {
     (_prependContentCallbacks[key] || []).forEach(c => {
-      content = Ember.makeArray(c(selectKit, content)).concat(content);
+      content = makeArray(c(selectKit, content)).concat(content);
     });
     (_appendContentCallbacks[key] || []).forEach(c => {
-      content = content.concat(Ember.makeArray(c(selectKit, content)));
+      content = content.concat(makeArray(c(selectKit, content)));
     });
     const filterCallbacks = _filterContentCallbacks[key] || [];
     if (filterCallbacks.length) {

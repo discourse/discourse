@@ -28,7 +28,7 @@ class UploadSecurity
   private
 
   def uploading_in_public_context?
-    @upload.for_theme || @upload.for_site_setting || @upload.for_gravatar || public_type? || used_for_custom_emoji?
+    @upload.for_theme || @upload.for_site_setting || @upload.for_gravatar || public_type? || used_for_custom_emoji? || based_on_regular_emoji?
   end
 
   def supported_media?
@@ -60,6 +60,9 @@ class UploadSecurity
   # if there is no access control post id and the upload is currently secure, we
   # do not want to make it un-secure to avoid unintentionally exposing it
   def access_control_post_has_secure_media?
+    # if the post is deleted the access_control_post will be blank...
+    # TODO: deal with this in a better way
+    return false if @upload.access_control_post.blank?
     @upload.access_control_post.with_secure_media?
   end
 
@@ -72,7 +75,13 @@ class UploadSecurity
   end
 
   def used_for_custom_emoji?
-    return false if @upload.id.blank?
-    CustomEmoji.exists?(upload_id: @upload.id)
+    @upload.id.present? && CustomEmoji.exists?(upload_id: @upload.id)
+  end
+
+  def based_on_regular_emoji?
+    return false if @upload.origin.blank?
+    uri = URI.parse(@upload.origin)
+    return true if Emoji.all.map(&:url).include?("#{uri.path}?#{uri.query}")
+    uri.path.include?("images/emoji")
   end
 end

@@ -1,4 +1,4 @@
-import { isEmpty, isPresent } from "@ember/utils";
+import { isPresent, isEmpty } from "@ember/utils";
 import { or, and, not, alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";

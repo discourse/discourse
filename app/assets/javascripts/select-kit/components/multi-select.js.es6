@@ -3,6 +3,7 @@ import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
 import { isPresent } from "@ember/utils";
 import { makeArray } from "discourse-common/lib/helpers";
+import { isPresent } from "@ember/utils";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],
@@ -81,7 +82,7 @@ export default SelectKitComponent.extend({
   },
 
   selectedContent: computed("value.[]", "content.[]", function() {
-    const value = Ember.makeArray(this.value).map(v =>
+    const value = makeArray(this.value).map(v =>
       this.selectKit.options.castInteger && this._isNumeric(v) ? Number(v) : v
     );
 
