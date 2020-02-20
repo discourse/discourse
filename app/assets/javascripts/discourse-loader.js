@@ -61,7 +61,10 @@ var define, requirejs;
       },
       "@ember/object/mixin": { default: Ember.Mixin },
       "@ember/object/proxy": { default: Ember.ObjectProxy },
-      "@ember/object/evented": { on: Ember.on },
+      "@ember/object/evented": {
+        default: Ember.Evented,
+        on: Ember.on
+      },
       "@ember/routing/route": { default: Ember.Route },
       "@ember/runloop": {
         bind: Ember.run.bind,
