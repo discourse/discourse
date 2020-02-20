@@ -55,23 +55,26 @@ describe EmailUpdater do
     context "for a staff user" do
       let(:user) { Fabricate(:moderator, email: old_email) }
 
-      it "does not send an email to the user for them to confirm their new email but still sends the notification to the old email" do
-        Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :confirm_new_email, to_address: new_email)).never
-        expect_old_email_job
-        expect_forgot_password_job
+      before do
+        Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :confirm_old_email, to_address: old_email))
         updater.change_to(new_email)
+        @change_req = user.email_change_requests.first
       end
 
-      it "creates a change request authorizing the new email and immediately confirms it " do
-        updater.change_to(new_email)
-        change_req = user.email_change_requests.first
-        expect(change_req.change_state).to eq(EmailChangeRequest.states[:complete])
+      it "starts the old confirmation process" do
+        expect(updater.errors).to be_blank
+
+        expect(@change_req.old_email).to eq(old_email)
+        expect(@change_req.new_email).to eq(new_email)
+        expect(@change_req).to be_present
+        expect(@change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_old])
+
+        expect(@change_req.old_email_token.email).to eq(old_email)
+        expect(@change_req.new_email_token).to be_blank
       end
 
-      it "sends a reset password email to the user so they can set a password for their new email" do
-        expect_old_email_job
-        expect_forgot_password_job
-        updater.change_to(new_email)
+      it "does not immediately confirm the request" do
+        expect(@change_req.change_state).not_to eq(EmailChangeRequest.states[:complete])
       end
     end
 
