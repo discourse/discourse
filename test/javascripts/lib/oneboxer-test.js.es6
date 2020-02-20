@@ -2,7 +2,7 @@ import { load } from "pretty-text/oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import { failedCache, localCache } from "pretty-text/oneboxer-cache";
 import { stringToHTML } from "helpers/html-helper";
-import pretender from "helpers/create-pretender";
+import { acceptance } from "helpers/qunit-helpers";
 
 function loadOnebox(element) {
   return load({
@@ -15,15 +15,23 @@ function loadOnebox(element) {
   });
 }
 
-QUnit.module("lib:oneboxer");
+let html;
+
+acceptance("oneboxer", {
+  pretend(server, helper) {
+    server.get("/onebox", request => {
+      if (request.queryParams.url === "http://somegoodurl.com/") {
+        return helper.response(200, html);
+      } else {
+        return helper.response(404, {});
+      }
+    });
+  }
+});
 
 QUnit.test("load - failed onebox", async assert => {
   let element = document.createElement("A");
   element.setAttribute("href", "http://somebadurl.com");
-
-  pretender.get("/onebox", () => {
-    return [404, {}, {}];
-  });
 
   await loadOnebox(element);
 
@@ -40,7 +48,7 @@ QUnit.test("load - failed onebox", async assert => {
 });
 
 QUnit.test("load - successful onebox", async assert => {
-  const html = `
+  html = `
     <aside class="onebox whitelistedgeneric">
       <header class="source">
           <a href="http://test.com/somepage" target="_blank">test.com</a>
@@ -54,10 +62,6 @@ QUnit.test("load - successful onebox", async assert => {
       <div style="clear: both"></div>
     </aside>
   `;
-
-  pretender.get("/onebox", () => {
-    return [200, {}, html];
-  });
 
   let element = document.createElement("A");
   element.setAttribute("href", "http://somegoodurl.com");
