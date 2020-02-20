@@ -173,14 +173,17 @@ RSpec.describe UploadCreator do
     describe 'secure attachments' do
       let(:filename) { "small.pdf" }
       let(:file) { file_from_fixtures(filename, "pdf") }
+      let(:opts) { { type: "composer" } }
 
       before do
+        enable_s3_uploads
+        SiteSetting.secure_media = true
         SiteSetting.prevent_anons_from_downloading_files = true
         SiteSetting.authorized_extensions = 'pdf|svg|jpg'
       end
 
       it 'should mark attachments as secure' do
-        upload = UploadCreator.new(file, filename).create_for(user.id)
+        upload = UploadCreator.new(file, filename, opts).create_for(user.id)
         stored_upload = Upload.last
 
         expect(stored_upload.secure?).to eq(true)
@@ -208,6 +211,7 @@ RSpec.describe UploadCreator do
       let(:file) { file_from_fixtures(filename) }
       let(:pdf_filename) { "small.pdf" }
       let(:pdf_file) { file_from_fixtures(pdf_filename, "pdf") }
+      let(:opts) { { type: "composer" } }
 
       before do
         enable_s3_uploads
@@ -226,8 +230,9 @@ RSpec.describe UploadCreator do
       it 'should return signed URL for secure attachments in S3' do
         SiteSetting.prevent_anons_from_downloading_files = true
         SiteSetting.authorized_extensions = 'pdf'
+        SiteSetting.secure_media = true
 
-        upload = UploadCreator.new(pdf_file, pdf_filename).create_for(user.id)
+        upload = UploadCreator.new(pdf_file, pdf_filename, opts).create_for(user.id)
         stored_upload = Upload.last
         signed_url = Discourse.store.url_for(stored_upload)
 
