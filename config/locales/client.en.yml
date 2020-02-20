@@ -184,6 +184,7 @@ en:
       banner:
         enabled: "made this a banner %{when}. It will appear at the top of every page until it is dismissed by the user."
         disabled: "removed this banner %{when}. It will no longer appear at the top of every page."
+      forwarded: "forwarded the above email"
 
     topic_admin_menu: "topic actions"
 
@@ -1458,8 +1459,8 @@ en:
       reset: "Reset Password"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
-      complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
-      complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
+      complete_username_found: "We found an account that matches the username <b>%{username}</b>. You should receive an email with instructions on how to reset your password shortly."
+      complete_email_found: "We found an account that matches <b>%{email}</b>. You should receive an email with instructions on how to reset your password shortly."
 
       complete_username_not_found: "No account matches the username <b>%{username}</b>"
       complete_email_not_found: "No account matches <b>%{email}</b>"
@@ -2648,6 +2649,10 @@ en:
         name: "Name"
         name_placeholder: "Name the bookmark to help jog your memory"
         set_reminder: "Set a reminder"
+        actions:
+          delete_bookmark:
+            name: "Delete bookmark"
+            description: "Removes the bookmark from your profile and stops all reminders for the bookmark"
 
     category:
       can: "can&hellip; "
@@ -3079,16 +3084,6 @@ en:
           name: Other
         posting:
           name: Posting
-
-    google_search: |
-      <h3>Search with Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
 
     tagging:
       all_tags: "All Tags"
@@ -4507,8 +4502,8 @@ en:
           description: Award the same badge to many users at once.
           no_badge_selected: Please select a badge to get started.
           perform: "Award Badge to Users"
-          upload_csv: Upload a CSV with user emails
-          aborted: Please upload a CSV containing user emails
+          upload_csv: Upload a CSV with either user emails or usernames
+          aborted: Please upload a CSV containing either user emails or usernames
           success: Your CSV was received and users will receive their badge shortly.
           replace_owners: Remove the badge from previous owners
 

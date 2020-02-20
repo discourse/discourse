@@ -13,8 +13,6 @@ ar:
   poll:
     multiple_polls_without_name: "توجد بضعة تصويتات بلا اسم. استخدم خاصية '<code>name</code>' لتمييزها."
     multiple_polls_with_same_name: "توجد بضعة تصويتات بالاسم <strong>%{name}</strong> نفسه. استخدم خاصية '<code>name</code>' لتمييزها."
-    default_poll_must_have_at_least_2_options: "يجب ان يكون التصويت بين خيارين على الأقل."
-    named_poll_must_have_at_least_2_options: "على التصويت ذو الاسم <strong>%{name}</strong> توفير خيارين على الأقل."
     default_poll_must_have_less_options:
       zero: "على التصويت ألا يوفّر أي خيار."
       one: "على التصويت توفير خيار واحد على الأقل."

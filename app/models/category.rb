@@ -316,7 +316,7 @@ class Category < ActiveRecord::Base
     end
 
     # only allow to use category itself id.
-    match_id = /^(\d+)-/.match(self.slug)
+    match_id = /^(\d+)-category/.match(self.slug)
     if match_id.present?
       errors.add(:slug, :invalid) if new_record? || (match_id[1] != self.id.to_s)
     end
@@ -692,7 +692,7 @@ class Category < ActiveRecord::Base
   end
 
   def url_with_id
-    self.parent_category ? "#{url}/#{self.id}" : "#{Discourse.base_uri}/c/#{self.id}-#{self.slug}"
+    self.parent_category ? "#{url}/#{self.id}" : "#{Discourse.base_uri}/c/#{self.slug}/#{self.id}"
   end
 
   # If the name changes, try and update the category definition topic too if it's

@@ -18,6 +18,8 @@ fi:
       public:
         title: "Äänet ovat <strong>julkisia</strong>."
       results:
+        groups:
+          title: "Täytyy olla ryhmien %{groups} jäsen, jotta voi äänestää tässä äänestyksessä."
         vote:
           title: "Näet äänet, kun <strong>olet äänestänyt</strong>."
         closed:
@@ -73,7 +75,6 @@ fi:
         title: Luo äänestys
         insert: Lisää äänestys
         help:
-          options_count: Valitse vähintään 2 vaihtoehtoa
           invalid_values: Vähimmäisarvon täytyy olla enimmäisarvoa pienempi.
           min_step_value: Askelvälin on oltava vähintään 1
         poll_type:
@@ -87,6 +88,8 @@ fi:
           vote: Kun on äänestänyt
           closed: Kun äänestys suljettu
           staff: Vain henkilökunta
+        poll_groups:
+          label: Sallitut ryhmät
         poll_chart_type:
           label: Kuvaajan tyyppi
         poll_config:

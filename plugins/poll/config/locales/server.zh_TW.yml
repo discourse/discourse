@@ -12,8 +12,6 @@ zh_TW:
   poll:
     multiple_polls_without_name: "有多個投票沒有名字。使用“<code>name</code>”屬性區分各投票。"
     multiple_polls_with_same_name: "有多個投票的名字相同：<strong>%{name}</strong>。使用“<code>name</code>”屬性區分各投票。"
-    default_poll_must_have_at_least_2_options: "投票至少要有 2 個選項。"
-    named_poll_must_have_at_least_2_options: "投票“<strong>%{name}</strong>”必須要有 2 個選項。"
     default_poll_must_have_less_options:
       other: "投票選項必須少於%{count}個。"
     named_poll_must_have_less_options:

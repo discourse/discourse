@@ -18,6 +18,8 @@ nl:
       public:
         title: "Stemmen zijn <strong>openbaar</strong>."
       results:
+        groups:
+          title: "U dient lid van %{groups} te zijn om in deze poll te stemmen."
         vote:
           title: "Resultaten worden getoond bij <strong>stemmen</strong>."
         closed:
@@ -73,7 +75,7 @@ nl:
         title: Poll aanmaken
         insert: Poll invoegen
         help:
-          options_count: Voer ten minste 2 opties in
+          options_count: Voer minstens 1 optie in
           invalid_values: Minimale waarde moet kleiner zijn dan de maximale waarde.
           min_step_value: De minimale waarde voor stap is 1
         poll_type:
@@ -87,6 +89,8 @@ nl:
           vote: Bij stemmen
           closed: Wanneer gesloten
           staff: Alleen stafleden
+        poll_groups:
+          label: Toegestane groepen
         poll_chart_type:
           label: Diagramtype
         poll_config:

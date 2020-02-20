@@ -16,17 +16,23 @@ export default SelectKitComponent.extend({
     if (!isEmpty(this.value)) {
       let content;
 
+      const value =
+        this.selectKit.options.castInteger && this._isNumeric(this.value)
+          ? Number(this.value)
+          : this.value;
+
       if (this.selectKit.valueProperty) {
         content = (this.content || []).findBy(
           this.selectKit.valueProperty,
-          this.value
+          value
         );
+
         return this.selectKit.modifySelection(
-          content || this.defaultItem(this.value, this.value)
+          content || this.defaultItem(value, value)
         );
       } else {
         return this.selectKit.modifySelection(
-          (this.content || []).filter(c => c === this.value)
+          (this.content || []).filter(c => c === value)
         );
       }
     } else {

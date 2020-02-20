@@ -564,7 +564,7 @@ export default Controller.extend({
               max: group.max_mentions,
               group_link: groupLink
             });
-          } else {
+          } else if (group.user_count > 0) {
             body = I18n.t("composer.group_mentioned", {
               group: `@${group.name}`,
               count: group.user_count,
@@ -572,11 +572,13 @@ export default Controller.extend({
             });
           }
 
-          this.appEvents.trigger("composer-messages:create", {
-            extraClass: "custom-body",
-            templateName: "custom-body",
-            body
-          });
+          if (body) {
+            this.appEvents.trigger("composer-messages:create", {
+              extraClass: "custom-body",
+              templateName: "custom-body",
+              body
+            });
+          }
         });
       }
     },
@@ -734,7 +736,7 @@ export default Controller.extend({
 
         const post = result.target;
         if (post && !staged) {
-          DiscourseURL.routeTo(post.url);
+          DiscourseURL.routeTo(post.url, { skipIfOnScreen: true });
         }
       })
       .catch(error => {

@@ -33,11 +33,11 @@ class InlineOneboxer
     return unless url
 
     if route = Discourse.route_for(url)
-      if route[:controller] == "topics" &&
-        route[:action] == "show" &&
-        topic = Topic.where(id: route[:topic_id].to_i).first
-
-        return onebox_for(url, topic.title, opts) if Guardian.new.can_see?(topic)
+      if route[:controller] == "topics"
+        if topic = Oneboxer.local_topic(url, route, opts)
+          opts[:skip_cache] = true
+          return onebox_for(url, topic.title, opts)
+        end
       end
     end
 

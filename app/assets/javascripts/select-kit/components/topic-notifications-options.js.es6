@@ -16,17 +16,5 @@ export default NotificationsButtonComponent.extend({
 
   i18nPostfix: computed("topic.archetype", function() {
     return this.topic.archetype === "private_message" ? "_pm" : "";
-  }),
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    this.appEvents.on("topic-notifications-button:changed", this, "onSelect");
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
-
-    this.appEvents.off("topic-notifications-button:changed", this, "onSelect");
-  }
+  })
 });

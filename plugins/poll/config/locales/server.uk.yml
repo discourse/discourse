@@ -18,8 +18,6 @@ uk:
     invalid_argument: "Неправильне значення '%{value}' для аргументу '%{argument}'."
     multiple_polls_without_name: "Існує кілька опитувань без імені. Використовуйте атрибут '<code>name</code>', щоб однозначно визначити свої опитування."
     multiple_polls_with_same_name: "Існує кілька опитувань з однаковою назвою: <strong>%{name}</strong> . Використовуйте атрибут '<code>name</code>', щоб однозначно визначити свої опитування."
-    default_poll_must_have_at_least_2_options: "Голосування повинно мати щонайменше 2 варіанти."
-    named_poll_must_have_at_least_2_options: "Голосування під назвою <strong>%{name}</strong> повинно мати щонайменше 2 варіанти."
     default_poll_must_have_less_options:
       one: "Опитування повинно мати менше опції %{count}."
       few: "Опитування повинно мати менше варіантів %{count}."

@@ -87,9 +87,14 @@ export default Controller.extend({
 
   @discourseComputed("site.groups")
   siteGroups(groups) {
-    return groups.map(g => {
-      return { name: g.name, value: g.name };
-    });
+    return groups
+      .map(g => {
+        // prevents group "everyone" to be listed
+        if (g.id !== 0) {
+          return { name: g.name, value: g.name };
+        }
+      })
+      .filter(Boolean);
   },
 
   @discourseComputed("pollType", "regularPollType")

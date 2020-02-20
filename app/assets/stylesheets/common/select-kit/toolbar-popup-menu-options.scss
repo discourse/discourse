@@ -17,8 +17,8 @@
         background: $primary-low;
         transition: all 0.25s;
 
-        .name,
-        .d-icon {
+        .texts .name,
+        .icons .d-icon {
           font-size: $font-0;
           font-weight: normal;
           color: $primary;

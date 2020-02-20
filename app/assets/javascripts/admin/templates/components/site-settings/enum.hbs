@@ -1,9 +1,13 @@
 {{combo-box
-  valueProperty="value"
   content=setting.validValues
   value=value
   onChange=(action (mut value))
-  allowAny=setting.allowsNone
+  valueProperty=setting.computedValueProperty
+  nameProperty=setting.computedNameProperty
+  options=(hash
+    castInteger=true
+    allowAny=setting.allowsNone
+  )
 }}
 
 {{preview}}

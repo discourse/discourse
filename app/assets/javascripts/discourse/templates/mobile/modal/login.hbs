@@ -1,4 +1,5 @@
 {{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
+  {{plugin-outlet name="login-before-modal-body" tagName=""}}
   {{#d-modal-body title="login.title" class=modalBodyClasses}}
     {{#if showLoginButtons}}
       {{login-buttons
@@ -32,7 +33,7 @@
               <tr>
                 <td></td>
                 <td>
-                  <a id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n 'forgot_password.action'}}</a>
+                  <a href id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n 'forgot_password.action'}}</a>
                 </td>
               </tr>
             </tbody>
@@ -80,6 +81,8 @@
       {{/if}}
     {{/if}}
   </div>
+
+  {{plugin-outlet name="login-after-modal-footer" tagName=""}}
 
   <div id='login-alert' class={{alertClass}}>{{alert}}</div>
 {{/login-modal}}

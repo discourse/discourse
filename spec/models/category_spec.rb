@@ -686,7 +686,7 @@ describe Category do
     fab!(:category) { Fabricate(:category_with_definition, name: 'cats') }
 
     it "includes the id in the URL" do
-      expect(category.url_with_id).to eq("/c/#{category.id}-cats")
+      expect(category.url_with_id).to eq("/c/cats/#{category.id}")
     end
 
     context "child category" do

@@ -1,9 +1,6 @@
 {{#if inviteModel.error}}
   <div class="alert alert-error">
-    <button class="close" data-dismiss="alert">×</button>
-    <div class="error-message">
-      {{{errorMessage}}}
-    </div>
+    {{{errorMessage}}}
   </div>
 {{/if}}
 
@@ -31,9 +28,9 @@
             usernames=emailOrUsername
             placeholderKey=placeholderKey
             allowEmails=true
-            canReceiveUpdates=(if showContactPicker "true" "false")
             class="invite-user-input"
-            autocomplete="discourse"}}
+            autocomplete="discourse"
+          }}
         {{else}}
           {{text-field
             class="email-or-username-input"

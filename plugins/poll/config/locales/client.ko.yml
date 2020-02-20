@@ -47,7 +47,6 @@ ko:
         title: 투표 만들기
         insert: 투표 삽입하기
         help:
-          options_count: 최소 2가지 이상의 선택지를 입력하세요
           invalid_values: 최소값은 최대값보다는 작아야 합니다.
         poll_type:
           label: 유형

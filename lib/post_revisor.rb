@@ -287,8 +287,10 @@ class PostRevisor
   end
 
   def diff_size(before, after)
-    ONPDiff.new(before, after).short_diff.sum do |str, type|
-      type == :common ? 0 : str.size
+    @diff_size ||= begin
+      ONPDiff.new(before, after).short_diff.sum do |str, type|
+        type == :common ? 0 : str.size
+      end
     end
   end
 
@@ -359,9 +361,12 @@ class PostRevisor
     end
 
     POST_TRACKED_FIELDS.each do |field|
-      @post.public_send("#{field}=", @fields[field]) if @fields.has_key?(field) || (should_create_new_version? && field == "edit_reason")
+      if @fields.has_key?(field)
+        @post.public_send("#{field}=", @fields[field])
+      end
     end
 
+    @post.edit_reason    = @fields[:edit_reason] if should_create_new_version?
     @post.last_editor_id = @editor.id
     @post.word_count     = @fields[:raw].scan(/[[:word:]]+/).size if @fields.has_key?(:raw)
     @post.self_edits    += 1 if self_edit?

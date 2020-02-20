@@ -424,6 +424,9 @@ module DiscourseTagging
     end
     successful = existing.select { |t| !t.errors.present? }
     TopicTag.where(tag_id: successful.map(&:id)).update_all(tag_id: target_tag.id)
+    Scheduler::Defer.later "Update tag topic counts" do
+      Tag.ensure_consistency!
+    end
     (existing - successful).presence || true
   end
 

@@ -574,6 +574,8 @@ hu:
       yaxis: "Feliratkozások száma"
     new_contributors:
       xaxis: "Nap"
+    trust_level_growth:
+      yaxis: "Nap"
     consolidated_page_views:
       yaxis: "Nap"
       labels:

@@ -39,6 +39,20 @@ function _fetchVoters(data) {
   });
 }
 
+function checkUserGroups(user, poll) {
+  const pollGroups =
+    poll && poll.groups && poll.groups.split(",").map(g => g.toLowerCase());
+
+  if (!pollGroups) {
+    return true;
+  }
+
+  const userGroups =
+    user && user.groups && user.groups.map(g => g.name.toLowerCase());
+
+  return userGroups && pollGroups.some(g => userGroups.includes(g));
+}
+
 createWidget("discourse-poll-option", {
   tagName: "li",
 
@@ -335,19 +349,7 @@ createWidget("discourse-poll-container", {
     } else if (options) {
       const contents = [];
 
-      const pollGroups =
-        poll.groups && poll.groups.split(",").map(g => g.toLowerCase());
-
-      const userGroups =
-        this.currentUser &&
-        this.currentUser.groups &&
-        this.currentUser.groups.map(g => g.name.toLowerCase());
-
-      if (
-        pollGroups &&
-        userGroups &&
-        !pollGroups.some(g => userGroups.includes(g))
-      ) {
+      if (!checkUserGroups(this.currentUser, poll)) {
         contents.push(
           h(
             "div.alert.alert-danger",
@@ -518,8 +520,7 @@ createWidget("discourse-poll-grouped-pies", {
           const data = result.grouped_results[chartIdx].options.mapBy("votes");
           const labels = result.grouped_results[chartIdx].options.mapBy("html");
           const chartConfig = pieChartConfig(data, labels, {
-            aspectRatio: 1.2,
-            displayLegend: false
+            aspectRatio: 1.2
           });
           const canvasId = `pie-${attrs.id}-${chartIdx}`;
           let el = document.querySelector(`#${canvasId}`);
@@ -579,7 +580,10 @@ createWidget("discourse-poll-pie-canvas", {
 
       const el = document.getElementById(`poll-results-chart-${attrs.id}`);
       // eslint-disable-next-line
-      new Chart(el.getContext("2d"), config);
+      let chart = new Chart(el.getContext("2d"), config);
+      document.getElementById(
+        `poll-results-legend-${attrs.id}`
+      ).innerHTML = chart.generateLegend();
     });
   },
 
@@ -620,13 +624,14 @@ createWidget("discourse-poll-pie-chart", {
     }
     contents.push(btn);
     contents.push(chart);
+    contents.push(h(`div#poll-results-legend-${attrs.id}.pie-chart-legends`));
     return contents;
   }
 });
 
 function pieChartConfig(data, labels, opts = {}) {
-  const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.0;
-  const displayLegend = "displayLegend" in opts ? opts.displayLegend : true;
+  const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.2;
+  const strippedLabels = labels.map(l => stripHtml(l));
   return {
     type: PIE_CHART_TYPE,
     data: {
@@ -636,15 +641,28 @@ function pieChartConfig(data, labels, opts = {}) {
           backgroundColor: getColors(data.length)
         }
       ],
-      labels
+      labels: strippedLabels
     },
     options: {
       responsive: true,
       aspectRatio,
-      animation: { duration: 400 },
-      legend: { display: displayLegend }
+      animation: { duration: 0 },
+      legend: { display: false },
+      legendCallback: function(chart) {
+        let legends = "";
+        for (let i = 0; i < labels.length; i++) {
+          legends += `<div class="legend"><span class="swatch" style="background-color:
+            ${chart.data.datasets[0].backgroundColor[i]}"></span>${labels[i]}</div>`;
+        }
+        return legends;
+      }
     }
   };
+}
+
+function stripHtml(html) {
+  var doc = new DOMParser().parseFromString(html, "text/html");
+  return doc.body.textContent || "";
 }
 
 createWidget("discourse-poll-buttons", {
@@ -996,6 +1014,7 @@ export default createWidget("discourse-poll", {
 
     if (this.isClosed()) return;
     if (!this.currentUser) return this.showLogin();
+    if (!checkUserGroups(this.currentUser, this.attrs.poll)) return;
 
     const { vote } = attrs;
     if (!this.isMultiple()) {

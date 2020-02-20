@@ -169,7 +169,7 @@ export default function selectKit(selector) {
     },
 
     async selectRowByName(name) {
-      await selectKitSelectRowByValue(name, selector);
+      await selectKitSelectRowByName(name, selector);
     },
 
     async selectNoneRow() {
@@ -261,6 +261,14 @@ export default function selectKit(selector) {
 
     highlightedRow() {
       return rowHelper(find(selector).find(".select-kit-row.is-highlighted"));
+    },
+
+    async deselectItem(value) {
+      await click(
+        find(selector)
+          .find(".select-kit-header")
+          .find(`[data-value=${value}]`)
+      );
     },
 
     exists() {

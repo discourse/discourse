@@ -380,7 +380,7 @@ RSpec.describe SessionController do
           end
         end
         context "when the security key params are invalid" do
-          it" shows an error message and denies login" do
+          it "shows an error message and denies login" do
 
             post "/session/email-login/#{email_token.token}.json", params: {
               second_factor_token: {
@@ -1006,7 +1006,7 @@ RSpec.describe SessionController do
       it "it fails to log in if secret is wrong" do
         get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForRandomSite"))
 
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(422)
       end
 
       it "fails with a nice error message if secret is blank" do
@@ -1317,7 +1317,7 @@ RSpec.describe SessionController do
           end
         end
         context "when the security key params are invalid" do
-          it" shows an error message and denies login" do
+          it "shows an error message and denies login" do
 
             post "/session.json", params: {
               login: user.username,

@@ -175,6 +175,26 @@ RSpec.describe Reviewable, type: :model do
           expect(list[0].id).to eq(r0.id)
           expect(list[1].id).to eq(r1.id)
         end
+
+        describe "Including pending queued posts even if they don't pass the minimum priority threshold" do
+          before do
+            SiteSetting.reviewable_default_visibility = :high
+            Reviewable.set_priorities(high: 10)
+            @queued_post = Fabricate(:reviewable_queued_post, score: 0, target: post)
+          end
+
+          it 'includes queued posts when searching for pending reviewables' do
+            expect(Reviewable.list_for(user)).to contain_exactly(@queued_post)
+          end
+
+          it 'excludes pending queued posts when applying a different status filter' do
+            expect(Reviewable.list_for(user, status: :deleted)).to be_empty
+          end
+
+          it 'excludes pending queued posts when applying a different type filter' do
+            expect(Reviewable.list_for(user, type: ReviewableFlaggedPost.name)).to be_empty
+          end
+        end
       end
     end
 
@@ -203,7 +223,6 @@ RSpec.describe Reviewable, type: :model do
         expect(Reviewable.list_for(moderator)).to include(reviewable)
       end
     end
-
   end
 
   it "valid_types returns the appropriate types" do
@@ -247,7 +266,7 @@ RSpec.describe Reviewable, type: :model do
     end
 
     it "triggers a notification on update" do
-      reviewable = PostActionCreator.spam(moderator, post).reviewable
+      reviewable = PostActionCreator.create(moderator, post, :inappropriate).reviewable
       reviewable.perform(moderator, :disagree)
 
       expect { PostActionCreator.spam(Fabricate(:user), post) }

@@ -492,7 +492,7 @@ class CookedPostProcessor
     img = extract_images_for_post.first
     if img.blank?
       @post.update_column(:image_url, nil) if @post.image_url
-      @post.topic.update_column(:image_url, nil) if @post.topic.image_url
+      @post.topic.update_column(:image_url, nil) if @post.topic.image_url && @post.is_first_post?
       return
     end
 
@@ -685,7 +685,7 @@ class CookedPostProcessor
   end
 
   def available_disk_space
-    100 - `df -P #{Rails.root}/public/uploads | tail -1 | tr -s ' ' | cut -d ' ' -f 5`.to_i
+    100 - DiskSpace.percent_free("#{Rails.root}/public/uploads")
   end
 
   def dirty?
@@ -710,7 +710,9 @@ class CookedPostProcessor
   def process_inline_onebox(element)
     inline_onebox = InlineOneboxer.lookup(
       element.attributes["href"].value,
-      invalidate: !!@opts[:invalidate_oneboxes]
+      invalidate: !!@opts[:invalidate_oneboxes],
+      user_id: @post&.user_id,
+      category_id: @post&.topic&.category_id
     )
 
     if title = inline_onebox&.dig(:title)

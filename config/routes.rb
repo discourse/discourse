@@ -18,6 +18,7 @@ Discourse::Application.routes.draw do
   post "webhooks/mailgun"  => "webhooks#mailgun"
   post "webhooks/mailjet"  => "webhooks#mailjet"
   post "webhooks/mandrill" => "webhooks#mandrill"
+  post "webhooks/postmark" => "webhooks#postmark"
   post "webhooks/sendgrid" => "webhooks#sendgrid"
   post "webhooks/sparkpost" => "webhooks#sparkpost"
 
@@ -348,7 +349,6 @@ Discourse::Application.routes.draw do
   get "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
   post "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
   get "composer_messages" => "composer_messages#index"
-  post "composer/parse_html" => "composer#parse_html"
 
   resources :static
   post "login" => "static#enter"
@@ -598,7 +598,7 @@ Discourse::Application.routes.draw do
     end
   end
 
-  resources :bookmarks, only: %i[create]
+  resources :bookmarks, only: %i[create destroy]
 
   resources :notifications, except: :show do
     collection do

@@ -215,3 +215,26 @@ componentTest("content is a basic array", {
     assert.equal(this.value, null);
   }
 });
+
+componentTest("selected value can be 0", {
+  template: template(),
+
+  beforeEach() {
+    setDefaultState(this, {
+      value: 1,
+      content: [
+        { id: 0, name: "foo" },
+        { id: 1, name: "bar" }
+      ]
+    });
+  },
+
+  async test(assert) {
+    assert.equal(this.subject.header().value(), 1);
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue(0);
+
+    assert.equal(this.subject.header().value(), 0);
+  }
+});

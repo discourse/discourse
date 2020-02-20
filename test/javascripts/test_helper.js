@@ -33,6 +33,7 @@
 
 //= require helpers/assertions
 
+//= require break_string
 //= require helpers/qunit-helpers
 //= require_tree ./fixtures
 //= require_tree ./lib

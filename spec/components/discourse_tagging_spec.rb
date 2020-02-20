@@ -568,6 +568,8 @@ describe DiscourseTagging do
       topic = Fabricate(:topic, tags: [tag2])
       expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name])).to eq(true)
       expect_same_tag_names(topic.reload.tags, [tag1])
+      expect(tag1.reload.topic_count).to eq(1)
+      expect(tag2.reload.topic_count).to eq(0)
     end
   end
 end

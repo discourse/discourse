@@ -2,6 +2,19 @@ import Component from "@ember/component";
 import { defineProperty, computed } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 import { buildArgsWithDeprecations } from "discourse/lib/plugin-connectors";
+import { afterRender } from "discourse-common/utils/decorators";
+
+let _decorators = {};
+
+// Don't call this directly: use `plugin-api/decoratePluginOutlet`
+export function addPluginOutletDecorator(outletName, callback) {
+  _decorators[outletName] = _decorators[outletName] || [];
+  _decorators[outletName].push(callback);
+}
+
+export function resetDecorators() {
+  _decorators = {};
+}
 
 export default Component.extend({
   init() {
@@ -43,6 +56,19 @@ export default Component.extend({
 
     const merged = buildArgsWithDeprecations(args, deprecatedArgs);
     connectorClass.setupComponent.call(this, merged, this);
+  },
+
+  didReceiveAttrs() {
+    this._super(...arguments);
+
+    this._decoratePluginOutlets();
+  },
+
+  @afterRender
+  _decoratePluginOutlets() {
+    (_decorators[this.connector.outletName] || []).forEach(dec =>
+      dec(this.element, this.args)
+    );
   },
 
   willDestroyElement() {

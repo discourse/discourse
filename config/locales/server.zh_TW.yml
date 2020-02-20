@@ -242,7 +242,7 @@ zh_TW:
   user_is_suspended: "被停權的使用者無法張貼貼文。"
   topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
   not_accepting_pms: "對不起，%{username} 目前不接收訊息。"
-  max_pm_recepients: "抱歉，您只能一次只能傳送訊息給最多%{recipients_limit}位收件者。"
+  max_pm_recipients: "抱歉，您只能一次只能傳送訊息給最多%{recipients_limit}位收件者。"
   pm_reached_recipients_limit: "抱歉，在一個訊息中不能含有多於%{recipients_limit}位收件者。"
   removed_direct_reply_full_quotes: "自動刪除上篇貼文引用"
   just_posted_that: "與你最近發表的內容太相似"
@@ -871,6 +871,8 @@ zh_TW:
       xaxis: "天"
       yaxis: "新的參與者數量"
       description: "這段期間第一次發文的使用者數量。"
+    trust_level_growth:
+      yaxis: "天"
     consolidated_page_views:
       title: "綜合瀏覽量"
       xaxis:
@@ -1390,7 +1392,6 @@ zh_TW:
     max_post_deletions_per_day: "每日每個使用者可刪除的貼文數上限"
     alert_admins_if_errors_per_minute: "觸發管理員警示的每分鐘錯誤數量。設為 0 會停用這個功能。注意：需要重啟。"
     alert_admins_if_errors_per_hour: "觸發管理員警示的每小時錯誤數量。設為 0 會停用這個功能。注意：需要重新啟動。"
-    categories_topics: "/categories 頁面中顯示的主題數。"
     suggested_topics: "討論話題下的推薦話題數量"
     limit_suggested_to_category: "目前的話題下只顯示同分類的推薦話題"
     suggested_topics_max_days_old: "推薦主題創建時間不能大於 n 天。"
@@ -1546,7 +1547,6 @@ zh_TW:
     soft_bounce_score: "當碰到臨時拒信時，增加使用者的累計退信分值。"
     hard_bounce_score: "當碰到永久拒信時，增加使用者的累計退信分值。"
     bounce_score_threshold: "停止發送郵件給使用者的累計退信分值。"
-    bounce_score_threshold_deactivate: "取消激活使用者的累計退信分值。"
     reset_bounce_score_after_days: "自動在 X 天后重置累計退信分值。"
     attachment_content_type_blacklist: "基于 content type 禁止附件的黑名單列表。"
     attachment_filename_blacklist: "基于檔案名禁止附件的黑名單列表。"
@@ -1671,7 +1671,6 @@ zh_TW:
     returning_users_days: "在使用者被認為返回（returning）之前應該經過多少天。"
     default_email_digest_frequency: "使用者收到摘要郵件的預設頻率。"
     default_include_tl0_in_digests: "在摘要郵件中預設包含新使用者的貼文。使用者可以自行在參數設置中更改這個設定。"
-    default_email_level: "當有人引用、回覆、提及或邀請使用者時，設定預設電子郵件通知等級"
     default_email_messages_level: "當有人向使用者發送訊息時，設定預設電子郵件通知等級"
     default_email_mailing_list_mode: "預設為每一個新貼文發送一封郵件通知。"
     default_email_mailing_list_mode_frequency: "郵件列表模式下，使用者收到郵件的預設頻率。"
@@ -2014,64 +2013,12 @@ zh_TW:
   test_mailer:
     title: "測試 Mailer"
     subject_template: "[%{email_prefix}] 電子郵件發送測試"
-    text_body_template: |
-      這是一封 Discourse 從後台發出的測試電子郵件
-
-      [**%{base_url}**][0]
-
-      傳送電子郵件給使用者的設定非常複雜，以下將列出你必須要注意的重要事項：
-
-      - 確認在後台設定中「正確設定」了通知電子郵件地址。**寄件人的郵件地址必須是您指定的域名，並已通過驗證**。
-
-      - 了解如何在郵件 Client 端中查看電子郵件的原始來源，以便檢查電子郵件標題（Email Headers）以獲取重要線索。在Gmail中，查看標題可以在每封郵件右上角下拉選單中的“顯示原始”選項。
-
-      - **非常重要，一定要必看:**您的ISP是否輸入了反向DNS記錄，以便將您發送郵件的域名和IP地址關聯起來？ [在此測試您的反向PTR記錄] [2]。如果您的ISP沒有輸入正確的反向DNS指針記錄，則您的電子郵件發送的可能性很小。
-
-      - 您的網域[SPF記錄] [8]是否正確？ [測試你的SPF記錄] [1]。請注意，TXT是SPF的正確官方記錄類型。
-
-      - 您的域名[DKIM記錄] [3]是否正確？這將顯著提高電子郵件的可傳遞性。 [測試你的DKIM記錄] [7]在這裡。
-
-      - 如果您是使用自己架設的郵件服務器，請檢查以確保您的郵件服務器的IP [不在任何電子郵件黑名單] [4]。還要驗證它是否肯定在其HELO消息中發送了在DNS中解析的完全限定主機名。如果沒有，這將導致您的電子郵件被許多郵件服務拒絕。
-
-      - 我們強烈建議您**發送測試電子郵件到[mail-tester.com] [mt] **以驗證以上所有內容是否正常工作。
-
-      （* easy *方式是在[SendGrid] [sg]，[SparkPost] [sp]，[Mailgun] [mg]或[Mailjet] [mj]上創建一個免費帳戶，這些帳戶有免費寄送電子郵件計劃，適用於小型論壇。但您仍需要在網域商（例：GoDaddy、NameCheap）的DNS中設定SPF和DKIM記錄！
-
-      我們希望您收到此電子郵件的可傳遞性測試OK！
-      祝好運
-
-       [Discourse](https://www.discourse.org) 永遠在你背後 support 你。
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "新版本 Mailer"
     subject_template: "[%{email_prefix}] 有可用的 Discourse 更新"
-    text_body_template: |
-      哈囉，[Discourse](https://www.discourse.org) 目前已推出新的版本可以使用啦！
-
-      您目前 Discourse論壇的版本： %{installed_version}
-      Discourse 最新的版本： **%{new_version}**
-
-      - 使用一鍵超無腦簡單升級 **[一鍵式升級](%{base_url}/admin/upgrade)**
-
-      - 看看新版本更新了哪些東西？[release notes](https://meta.discourse.org/tags/release-notes) 或著更專業一點，到 Github 上看原始程式碼更動了哪些？[raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
-
-      - 訪問你的好朋友 [meta.discourse.org](https://meta.discourse.org) 獲得最新的資訊、討論，Discourse 永遠在你背後 support 你。
   new_version_mailer_with_notes:
     title: "包含提醒的新版本 Mailer"
     subject_template: "[%{email_prefix}] 有得更新了"
-    text_body_template: "哈囉，[Discourse](https://www.discourse.org) 目前已推出新的版本可以使用啦！\n\n您目前 Discourse論壇的版本： \nDiscourse 最新的版本： ****\n\n- 使用一鍵超無腦簡單升級 **[一鍵式升級](/admin/upgrade)**\n\n- 看看新版本更新了哪些東西？[release notes](https://meta.discourse.org/tags/release-notes) 或著更專業一點，到 Github 上看原始程式碼更動了哪些？[raw GitHub changelog](https://github.com/discourse/discourse/commits/master)\n\n- 訪問你的好朋友 [meta.discourse.org](https://meta.discourse.org) 獲得最新的資訊、討論，Discourse 永遠在你背後 support 你。\n\n### Discourse 發行新版本說明（Release notes）\n"
   flag_reasons:
     off_topic: "你的貼文被標記為 **偏離主題**：鑒於當前的主題標題和第一個貼文，社群成員們感覺它不適合處于這個主題中。"
     inappropriate: "你的貼文被標記為 **不恰當**：社群成員感覺它有冒犯或者侮辱的意味，亦或是它違反了[社群準則](%{base_path}/guidelines)。"
@@ -3429,9 +3376,9 @@ zh_TW:
               open:
                 label: "使用者可以自行註冊"
               invite_only:
-                label: "使用者可以自行註冊，但必須得到管理員的批准。"
-              must_approve:
                 label: "使用者必須先受信任的使用者或管理員的邀請才能註冊。"
+              must_approve:
+                label: "使用者可以自行註冊，但必須得到管理員的批准。"
       contact:
         title: "聯繫"
         fields:

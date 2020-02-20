@@ -4,7 +4,6 @@ import {
   relativeAge,
   autoUpdatingRelativeAge,
   updateRelativeAge,
-  breakUp,
   number,
   longDate,
   durationTiny
@@ -209,23 +208,6 @@ QUnit.test("updateRelativeAge", assert => {
   updateRelativeAge($elem);
 
   assert.equal($elem.html(), "2 mins ago");
-});
-
-QUnit.test("breakUp", assert => {
-  var b = function(s, hint) {
-    return breakUp(s, hint);
-  };
-
-  assert.equal(b("hello"), "hello");
-  assert.equal(b("helloworld"), "helloworld");
-  assert.equal(b("HeMans11"), "He<wbr>&#8203;Mans<wbr>&#8203;11");
-  assert.equal(b("he_man"), "he_<wbr>&#8203;man");
-  assert.equal(b("he11111"), "he<wbr>&#8203;11111");
-  assert.equal(b("HRCBob"), "HRC<wbr>&#8203;Bob");
-  assert.equal(
-    b("bobmarleytoo", "Bob Marley Too"),
-    "bob<wbr>&#8203;marley<wbr>&#8203;too"
-  );
 });
 
 QUnit.test("number", assert => {

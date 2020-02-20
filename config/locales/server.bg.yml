@@ -483,6 +483,8 @@ bg:
       xaxis: "Ден"
     new_contributors:
       xaxis: "Ден"
+    trust_level_growth:
+      yaxis: "Ден"
     consolidated_page_views:
       yaxis: "Ден"
       labels:

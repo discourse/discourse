@@ -37,6 +37,7 @@ class Post < ActiveRecord::Base
   has_many :uploads, through: :post_uploads
 
   has_one :post_stat
+  has_many :bookmarks
 
   has_one :incoming_email
 
@@ -915,7 +916,11 @@ class Post < ActiveRecord::Base
       end
 
       if SiteSetting.secure_media?
-        Upload.where(id: upload_ids, access_control_post_id: nil).update_all(
+        Upload.where(
+          id: upload_ids, access_control_post_id: nil
+        ).where.not(
+          id: CustomEmoji.pluck(:upload_id)
+        ).update_all(
           access_control_post_id: self.id
         )
       end

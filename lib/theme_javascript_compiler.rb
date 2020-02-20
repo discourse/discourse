@@ -187,7 +187,9 @@ class ThemeJavascriptCompiler
   end
 
   def append_raw_template(name, hbs_template)
-    name = name.sub(/\.raw$/, '').inspect
+    name = name.sub(/\.raw$/, '')
+    name = name.sub(/\.hbr$/, '.hbs')
+    name = name.inspect
     compiled = RawTemplatePrecompiler.new(@theme_id).compile(hbs_template)
     @content << <<~JS
       (function() {

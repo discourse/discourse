@@ -67,7 +67,11 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
     }
     Session.currentProp("topicList", list);
     if (list.topic_list && list.topic_list.top_tags) {
-      Site.currentProp("top_tags", list.topic_list.top_tags);
+      if (list.filter.startsWith("c/")) {
+        Site.currentProp("category_top_tags", list.topic_list.top_tags);
+      } else {
+        Site.currentProp("top_tags", list.topic_list.top_tags);
+      }
     }
     return list;
   });

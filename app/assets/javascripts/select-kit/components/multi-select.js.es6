@@ -1,7 +1,8 @@
 import deprecated from "discourse-common/lib/deprecated";
 import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
-const { makeArray } = Ember;
+import { makeArray } from "discourse-common/lib/helpers";
+import { isPresent } from "@ember/utils";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],
@@ -41,7 +42,7 @@ export default SelectKitComponent.extend({
   },
 
   select(value, item) {
-    if (!value || !value.length) {
+    if (!isPresent(value)) {
       if (!this.validateSelect(this.selectKit.highlighted)) {
         return;
       }
@@ -80,7 +81,10 @@ export default SelectKitComponent.extend({
   },
 
   selectedContent: computed("value.[]", "content.[]", function() {
-    const value = Ember.makeArray(this.value);
+    const value = makeArray(this.value).map(v =>
+      this.selectKit.options.castInteger && this._isNumeric(v) ? Number(v) : v
+    );
+
     if (value.length) {
       let content = [];
 

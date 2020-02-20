@@ -10,6 +10,7 @@ import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "preload-store";
 import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
 import { hash } from "rsvp";
+import Site from "discourse/models/site";
 
 const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   renderTemplate() {
@@ -51,6 +52,10 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
         wrappedCategoriesList && wrappedCategoriesList.category_list;
 
       if (categoriesList && topicsList) {
+        if (topicsList.topic_list && topicsList.topic_list.top_tags) {
+          Site.currentProp("top_tags", topicsList.topic_list.top_tags);
+        }
+
         return EmberObject.create({
           categories: CategoryList.categoriesFrom(
             this.store,
@@ -66,6 +71,10 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
       }
       // Otherwise, return the ajax result
       return ajax(`/categories_and_${filter}`).then(result => {
+        if (result.topic_list && result.topic_list.top_tags) {
+          Site.currentProp("top_tags", result.topic_list.top_tags);
+        }
+
         return EmberObject.create({
           categories: CategoryList.categoriesFrom(this.store, result),
           topics: TopicList.topicsFrom(this.store, result),
