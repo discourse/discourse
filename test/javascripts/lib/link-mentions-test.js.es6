@@ -38,7 +38,7 @@ QUnit.test("linkSeenMentions replaces users and groups", async assert => {
         <span class="mention">@valid_user</span>
         <span class="mention">@valid_group</span>
         <span class="mention">@mentionable_group</span>
-    </div
+    </div>
   `);
 
   await linkSeenMentions($root);
