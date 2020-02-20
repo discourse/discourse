@@ -10,4 +10,10 @@ class RakeHelpers
     return if Rails.env.test? && !ENV['RAILS_ENABLE_TEST_LOG']
     print "\r\033[K%9d / %d (%5.1f%%)" % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
   end
+
+  def self.print_message(*messages)
+    messages = "" if messages.blank?
+    return if Rails.env.test? && !ENV['RAILS_ENABLE_TEST_LOG']
+    puts messages
+  end
 end

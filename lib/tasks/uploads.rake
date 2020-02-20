@@ -28,7 +28,7 @@ def gather_uploads
   public_directory = "#{Rails.root}/public"
   current_db = RailsMultisite::ConnectionManagement.current_db
 
-  puts "", "Gathering uploads for '#{current_db}'...", ""
+  RakeHelpers.print_message "", "Gathering uploads for '#{current_db}'...", ""
 
   Upload.where("url ~ '^\/uploads\/'")
     .where("url !~ '^\/uploads\/#{current_db}'")
@@ -58,7 +58,7 @@ def gather_uploads
     end
   end
 
-  puts "", "Done!"
+  RakeHelpers.print_message "", "Done!"
 
 end
 
@@ -68,7 +68,7 @@ end
 
 task "uploads:backfill_shas" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|
-    puts "Backfilling #{db}..."
+    RakeHelpers.print_message "Backfilling #{db}..."
     Upload.where(sha1: nil).find_each do |u|
       begin
         path = Discourse.store.path_for(u)
@@ -78,11 +78,11 @@ task "uploads:backfill_shas" => :environment do
         u.save!
         putc "."
       rescue => e
-        puts "Skipping #{u.original_filename} (#{u.url}) #{e.message}"
+        RakeHelpers.print_message "Skipping #{u.original_filename} (#{u.url}) #{e.message}"
       end
     end
   end
-  puts "", "Done"
+  RakeHelpers.print_message "", "Done"
 end
 
 ################################################################################
@@ -119,13 +119,13 @@ def migrate_from_s3
 
   # make sure S3 is disabled
   if SiteSetting.Upload.enable_s3_uploads
-    puts "You must disable S3 uploads before running that task."
+    RakeHelpers.print_message "You must disable S3 uploads before running that task."
     return
   end
 
   db = RailsMultisite::ConnectionManagement.current_db
 
-  puts "Migrating uploads from S3 to local storage for '#{db}'..."
+  RakeHelpers.print_message "Migrating uploads from S3 to local storage for '#{db}'..."
 
   max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
@@ -201,7 +201,7 @@ def migrate_from_s3
     end
   end
 
-  puts "Done!"
+  RakeHelpers.print_message "Done!"
 end
 
 ################################################################################
@@ -218,7 +218,7 @@ def migrate_to_s3_all_sites
       migrate_to_s3
     rescue RuntimeError => e
       if ENV["SKIP_FAILED"]
-        puts e
+        RakeHelpers.print_message e
       else
         raise e unless ENV["SKIP_FAILED"]
       end
@@ -247,16 +247,16 @@ task "uploads:s3_migration_status" => :environment do
 
   queued_jobs = Sidekiq::Stats.new.queues.sum { |_ , x| x }
   if queued_jobs > 50
-    puts "WARNING: There are #{queued_jobs} jobs queued! Wait till Sidekiq clears backlog prior to migrating site to a new host"
+    RakeHelpers.print_message "WARNING: There are #{queued_jobs} jobs queued! Wait till Sidekiq clears backlog prior to migrating site to a new host"
     exit 1
   end
 
   if !success
-    puts "Site is not ready for migration"
+    RakeHelpers.print_message "Site is not ready for migration"
     exit 1
   end
 
-  puts "All sites appear to have uploads in order!"
+  RakeHelpers.print_message "All sites appear to have uploads in order!"
 end
 
 ################################################################################
@@ -274,21 +274,21 @@ end
 def clean_up_uploads
   db = RailsMultisite::ConnectionManagement.current_db
 
-  puts "Cleaning up uploads and thumbnails for '#{db}'..."
+  RakeHelpers.print_message "Cleaning up uploads and thumbnails for '#{db}'..."
 
   if Discourse.store.external?
-    puts "This task only works for internal storages."
+    RakeHelpers.print_message "This task only works for internal storages."
     exit 1
   end
 
-  puts <<~OUTPUT
+  RakeHelpers.print_message <<~OUTPUT
   This task will remove upload records and files permanently.
 
   Would you like to take a full backup before the clean up? (Y/N)
   OUTPUT
 
   if STDIN.gets.chomp.downcase == 'y'
-    puts "Starting backup..."
+    RakeHelpers.print_message "Starting backup..."
     backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
     backuper.run
     exit 1 unless backuper.success
@@ -350,10 +350,10 @@ def clean_up_uploads
     end
   end
 
-  puts "Removing empty directories..."
-  puts `find #{uploads_directory} -type d -empty -exec rmdir {} \\;`
+  RakeHelpers.print_message "Removing empty directories..."
+  RakeHelpers.print_message `find #{uploads_directory} -type d -empty -exec rmdir {} \\;`
 
-  puts "Done!"
+  RakeHelpers.print_message "Done!"
 end
 
 ################################################################################
@@ -367,14 +367,14 @@ task "uploads:missing_files" => :environment do
   else
     RailsMultisite::ConnectionManagement.each_connection do |db|
       if ENV["SKIP_EXTERNAL"] == "1" && Discourse.store.external?
-        puts "#{RailsMultisite::ConnectionManagement.current_db} has uploads stored externally skipping!"
+        RakeHelpers.print_message "#{RailsMultisite::ConnectionManagement.current_db} has uploads stored externally skipping!"
       else
         if Discourse.store.external?
-          puts "-" * 80
-          puts "WARNING! WARNING! WARNING!"
-          puts "-" * 80
-          puts
-          puts <<~TEXT
+          RakeHelpers.print_message "-" * 80
+          RakeHelpers.print_message "WARNING! WARNING! WARNING!"
+          RakeHelpers.print_message "-" * 80
+          RakeHelpers.print_message
+          RakeHelpers.print_message <<~TEXT
             #{RailsMultisite::ConnectionManagement.current_db} has uploads on S3!
             validating without inventory is likely to take an enormous amount of time.
             We recommend you run SKIP_EXTERNAL=1 rake uploads:missing to skip validating if on a multisite.
@@ -410,10 +410,10 @@ end
 def regenerate_missing_optimized
   db = RailsMultisite::ConnectionManagement.current_db
 
-  puts "Regenerating missing optimized images for '#{db}'..."
+  RakeHelpers.print_message "Regenerating missing optimized images for '#{db}'..."
 
   if Discourse.store.external?
-    puts "This task only works for internal storages."
+    RakeHelpers.print_message "This task only works for internal storages."
     return
   end
 
@@ -476,11 +476,11 @@ def regenerate_missing_optimized
     end
   end
 
-  puts "", "Done"
+  RakeHelpers.print_message "", "Done"
 
   if missing_uploads.size > 0
-    puts "Missing uploads:"
-    missing_uploads.sort.each { |u| puts u }
+    RakeHelpers.print_message "Missing uploads:"
+    missing_uploads.sort.each { |u| RakeHelpers.print_message u }
   end
 end
 
@@ -490,19 +490,19 @@ end
 
 task "uploads:start_migration" => :environment do
   SiteSetting.migrate_to_new_scheme = true
-  puts "Migration started!"
+  RakeHelpers.print_message "Migration started!"
 end
 
 task "uploads:stop_migration" => :environment do
   SiteSetting.migrate_to_new_scheme = false
-  puts "Migration stoped!"
+  RakeHelpers.print_message "Migration stoped!"
 end
 
 task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
   now = Time.zone.now
   current_db = RailsMultisite::ConnectionManagement.current_db
 
-  puts "Analyzing uploads for '#{current_db}'... This may take awhile...\n"
+  RakeHelpers.print_message "Analyzing uploads for '#{current_db}'... This may take awhile...\n"
   cache_path = args[:cache_path]
 
   current_db = RailsMultisite::ConnectionManagement.current_db
@@ -536,7 +536,7 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
   uploads_count = Upload.count
   optimized_images_count = OptimizedImage.count
 
-  puts <<~REPORT
+  RakeHelpers.print_message <<~REPORT
   Report for '#{current_db}'
   -----------#{'-' * current_db.length}
   Number of `Upload` records in DB: #{uploads_count}
@@ -555,13 +555,13 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
   helper = helper.new
 
   printf "%-15s | %-15s | %-15s\n", 'extname', 'total size', 'count'
-  puts "-" * 45
+  RakeHelpers.print_message "-" * 45
 
   extensions.sort_by { |_, value| value['size'] }.reverse.each do |extname, value|
     printf "%-15s | %-15s | %-15s\n", extname, helper.number_to_human_size(value['size']), value['count']
   end
 
-  puts "\n"
+  RakeHelpers.print_message "\n"
 
   limit = args[:limit] || 10
 
@@ -579,18 +579,18 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
     LIMIT #{limit}
   SQL
 
-  puts "Users using the most disk space"
-  puts "-------------------------------\n"
+  RakeHelpers.print_message "Users using the most disk space"
+  RakeHelpers.print_message "-------------------------------\n"
   printf "%-25s | %-25s | %-25s | %-25s\n", 'username', 'total size of uploads', 'number of uploads', 'number of optimized images'
-  puts "-" * 110
+  RakeHelpers.print_message "-" * 110
 
   DB.query_single(sql).each do |username, num_of_uploads, total_size_of_uploads, num_of_optimized_images|
     printf "%-25s | %-25s | %-25s | %-25s\n", username, helper.number_to_human_size(total_size_of_uploads), num_of_uploads, num_of_optimized_images
   end
 
-  puts "\n"
-  puts "List of file paths @ #{path}"
-  puts "Duration: #{Time.zone.now - now} seconds"
+  RakeHelpers.print_message "\n"
+  RakeHelpers.print_message "List of file paths @ #{path}"
+  RakeHelpers.print_message "Duration: #{Time.zone.now - now} seconds"
 end
 
 task "uploads:fix_incorrect_extensions" => :environment do
@@ -618,11 +618,11 @@ end
 task "uploads:disable_secure_media" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|
     unless Discourse.store.external?
-      puts "This task only works for external storage."
+      RakeHelpers.print_message "This task only works for external storage."
       exit 1
     end
 
-    puts "Disabling secure media and resetting uploads to not secure in #{db}...", ""
+    RakeHelpers.print_message "Disabling secure media and resetting uploads to not secure in #{db}...", ""
 
     SiteSetting.secure_media = false
 
@@ -646,10 +646,10 @@ task "uploads:disable_secure_media" => :environment do
     end
 
     RakeHelpers.print_status_with_label("Rebaking and updating complete!            ", i, secure_upload_count)
-    puts ""
+    RakeHelpers.print_message ""
   end
 
-  puts "Secure media is now disabled!", ""
+  RakeHelpers.print_message "Secure media is now disabled!", ""
 end
 
 ##
@@ -659,11 +659,11 @@ end
 task "uploads:ensure_correct_acl" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|
     unless Discourse.store.external?
-      puts "This task only works for external storage."
+      RakeHelpers.print_message "This task only works for external storage."
       exit 1
     end
 
-    puts "Ensuring correct ACL for uploads in #{db}...", ""
+    RakeHelpers.print_message "Ensuring correct ACL for uploads in #{db}...", ""
 
     Upload.transaction do
       mark_secure_in_loop_because_no_login_required = false
@@ -685,7 +685,7 @@ task "uploads:ensure_correct_acl" => :environment do
         "LOWER(original_filename) SIMILAR TO '%\.(jpg|jpeg|png|gif|svg|ico|mp3|ogg|wav|m4a|mov|mp4|webm|ogv)'"
       ).joins(:post_uploads)
 
-      puts "There are #{uploads_with_supported_media.count} upload(s) with supported media that could be marked secure.", ""
+      RakeHelpers.print_message "There are #{uploads_with_supported_media.count} upload(s) with supported media that could be marked secure.", ""
 
       # Simply mark all these uploads as secure if login_required because no anons will be able to access them
       if SiteSetting.login_required?
@@ -695,10 +695,10 @@ task "uploads:ensure_correct_acl" => :environment do
         # If NOT login_required, then we have to go for the other slower flow, where in the loop
         # we mark the upload secure based on UploadSecurity.should_be_secure?
         mark_secure_in_loop_because_no_login_required = true
-        puts "Marking posts as secure in the next step because login_required is false."
+        RakeHelpers.print_message "Marking posts as secure in the next step because login_required is false."
       end
 
-      puts "", "Determining which of #{uploads_with_supported_media.count} upload posts need to be marked secure and be rebaked.", ""
+      RakeHelpers.print_message "", "Determining which of #{uploads_with_supported_media.count} upload posts need to be marked secure and be rebaked.", ""
 
       upload_ids_to_mark_as_secure, posts_to_rebake = determine_upload_security_and_posts_to_rebake(
         uploads_with_supported_media, mark_secure_in_loop_because_no_login_required
@@ -710,28 +710,28 @@ task "uploads:ensure_correct_acl" => :environment do
       log_rebake_errors(post_rebake_errors)
     end
   end
-  puts "", "Done"
+  RakeHelpers.print_message "", "Done"
 end
 
 def mark_all_as_secure_login_required(uploads_with_supported_media)
-  puts "Marking #{uploads_with_supported_media.count} upload(s) as secure because login_required is true.", ""
+  RakeHelpers.print_message "Marking #{uploads_with_supported_media.count} upload(s) as secure because login_required is true.", ""
   uploads_with_supported_media.update_all(secure: true)
-  puts "Finished marking upload(s) as secure."
+  RakeHelpers.print_message "Finished marking upload(s) as secure."
 end
 
 def log_rebake_errors(rebake_errors)
   return if rebake_errors.empty?
-  puts "The following post rebakes failed with error:", ""
+  RakeHelpers.print_message "The following post rebakes failed with error:", ""
   rebake_errors.each do |message|
-    puts message
+    RakeHelpers.print_message message
   end
 end
 
 def mark_specific_uploads_as_secure_no_login_required(upload_ids_to_mark_as_secure)
   return if upload_ids_to_mark_as_secure.empty?
-  puts "Marking #{upload_ids_to_mark_as_secure.length} uploads as secure because UploadSecurity determined them to be secure."
+  RakeHelpers.print_message "Marking #{upload_ids_to_mark_as_secure.length} uploads as secure because UploadSecurity determined them to be secure."
   Upload.where(id: upload_ids_to_mark_as_secure).update_all(secure: true)
-  puts "Finished marking uploads as secure."
+  RakeHelpers.print_message "Finished marking uploads as secure."
 end
 
 def update_uploads_access_control_post
@@ -753,7 +753,7 @@ end
 
 def rebake_upload_posts(posts_to_rebake)
   post_rebake_errors = []
-  puts "", "Rebaking #{posts_to_rebake.length} posts with affected uploads.", ""
+  RakeHelpers.print_message "", "Rebaking #{posts_to_rebake.length} posts with affected uploads.", ""
   begin
     i = 0
     posts_to_rebake.each do |post|
@@ -763,7 +763,7 @@ def rebake_upload_posts(posts_to_rebake)
     end
 
     RakeHelpers.print_status_with_label("Rebaking complete!            ", i, posts_to_rebake.length)
-    puts ""
+    RakeHelpers.print_message ""
   rescue => e
     post_rebake_errors << e.message
   end
@@ -793,7 +793,7 @@ def determine_upload_security_and_posts_to_rebake(uploads_with_supported_media, 
     i += 1
   end
   RakeHelpers.print_status_with_label("Determination complete!            ", i, uploads_with_supported_media.count)
-  puts ""
+  RakeHelpers.print_message ""
 
   [upload_ids_to_mark_as_secure, posts_to_rebake]
 end
@@ -823,13 +823,13 @@ def inline_uploads(post)
       result.sub!($2, upload.short_url)
       replaced = true
     else
-      puts "Upload not found #{$2} in Post #{post.id} - #{post.url}"
+      RakeHelpers.print_message "Upload not found #{$2} in Post #{post.id} - #{post.url}"
     end
     result
   end
 
   if replaced
-    puts "Corrected image urls in #{post.full_url} raw backup stored in custom field"
+    RakeHelpers.print_message "Corrected image urls in #{post.full_url} raw backup stored in custom field"
     post.custom_fields["BACKUP_POST_RAW"] = original_raw
     post.save_custom_fields
     post.save!(validate: false)
@@ -864,13 +864,13 @@ def inline_img_tags(post)
       replaced = true
       "![image](#{upload.short_url})"
     else
-      puts "skipping missing upload in #{post.full_url} #{$1}"
+      RakeHelpers.print_message "skipping missing upload in #{post.full_url} #{$1}"
       $1
     end
   end
 
   if replaced
-    puts "Corrected image urls in #{post.full_url} raw backup stored in custom field"
+    RakeHelpers.print_message "Corrected image urls in #{post.full_url} raw backup stored in custom field"
     post.custom_fields["BACKUP_POST_RAW"] = original_raw
     post.save_custom_fields
     post.save!(validate: false)
