@@ -2,7 +2,6 @@ import { load } from "pretty-text/oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import { failedCache, localCache } from "pretty-text/oneboxer-cache";
 import { stringToHTML } from "helpers/html-helper";
-import { acceptance } from "helpers/qunit-helpers";
 
 function loadOnebox(element) {
   return load({
@@ -15,19 +14,7 @@ function loadOnebox(element) {
   });
 }
 
-let html;
-
-acceptance("oneboxer", {
-  pretend(server, helper) {
-    server.get("/onebox", request => {
-      if (request.queryParams.url === "http://somegoodurl.com/") {
-        return helper.response(200, html);
-      } else {
-        return helper.response(404, {});
-      }
-    });
-  }
-});
+QUnit.module("lib:oneboxer");
 
 QUnit.test("load - failed onebox", async assert => {
   let element = document.createElement("A");
@@ -48,7 +35,7 @@ QUnit.test("load - failed onebox", async assert => {
 });
 
 QUnit.test("load - successful onebox", async assert => {
-  html = `
+  const html = `
     <aside class="onebox whitelistedgeneric">
       <header class="source">
           <a href="http://test.com/somepage" target="_blank">test.com</a>
@@ -75,7 +62,7 @@ QUnit.test("load - successful onebox", async assert => {
   );
   assert.equal(
     loadOnebox(element),
-    stringToHTML(html).outerHTML,
+    html.trim(),
     "it returns the html from the cache"
-  );
+ );
 });

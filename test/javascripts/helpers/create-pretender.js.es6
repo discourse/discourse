@@ -730,6 +730,26 @@ export default new Pretender(function() {
         '<aside class="onebox"><article class="onebox-body"><h3><a href="/internal-page.html">Internal Page 4 U</a></h3></article></aside>'
       ];
     }
+    if (request.queryParams.url === "http://somegoodurl.com/") {
+      return [
+        200,
+        { "Content-Type": "application/html" },
+        `
+    <aside class="onebox whitelistedgeneric">
+      <header class="source">
+          <a href="http://test.com/somepage" target="_blank">test.com</a>
+      </header>
+      <article class="onebox-body">
+      <div class="aspect-image" style="--aspect-ratio:690/362;"><img src="https://test.com/image.png" class="thumbnail"></div>
+      <h3><a href="http://test.com/somepage" target="_blank">Test Page</a></h3>
+      <p>Yet another collaboration tool</p>
+      </article>
+      <div class="onebox-metadata"></div>
+      <div style="clear: both"></div>
+    </aside>
+  `
+      ];
+    }
     return [404, { "Content-Type": "application/html" }, ""];
   });
 });
