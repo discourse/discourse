@@ -3,7 +3,6 @@ import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
 import { isPresent } from "@ember/utils";
 import { makeArray } from "discourse-common/lib/helpers";
-import { isPresent } from "@ember/utils";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],
