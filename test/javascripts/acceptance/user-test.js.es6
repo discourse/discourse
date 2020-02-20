@@ -4,7 +4,7 @@ import pretender from "helpers/create-pretender";
 acceptance("User", { loggedIn: true });
 
 QUnit.test("Invalid usernames", async assert => {
-  pretender().get("/u/eviltrout%2F..%2F..%2F.json", () => {
+  pretender.get("/u/eviltrout%2F..%2F..%2F.json", () => {
     return [400, { "Content-Type": "application/json" }, {}];
   });
 
@@ -67,7 +67,7 @@ QUnit.test("Viewing Summary", async assert => {
 });
 
 QUnit.test("Viewing Drafts", async assert => {
-  pretender().get("/draft.json", () => {
+  pretender.get("/draft.json", () => {
     return [
       200,
       { "Content-Type": "application/json" },

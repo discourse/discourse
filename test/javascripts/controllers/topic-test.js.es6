@@ -523,7 +523,7 @@ QUnit.test("topVisibleChanged", function(assert) {
 QUnit.test(
   "deletePost - no modal is shown if post does not have replies",
   function(assert) {
-    pretender().get("/posts/2/reply-ids.json", () => {
+    pretender.get("/posts/2/reply-ids.json", () => {
       return [200, { "Content-Type": "application/json" }, []];
     });
 

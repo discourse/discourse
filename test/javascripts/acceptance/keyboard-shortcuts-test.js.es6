@@ -4,13 +4,13 @@ import pretender from "helpers/create-pretender";
 acceptance("Keyboard Shortcuts", { loggedIn: true });
 
 test("go to first suggested topic", async assert => {
-  pretender().get("/t/27331/4.json", () => [
+  pretender.get("/t/27331/4.json", () => [
     200,
     { "Content-Type": "application/json" },
     {}
   ]);
 
-  pretender().get("/t/27331.json", () => [
+  pretender.get("/t/27331.json", () => [
     200,
     { "Content-Type": "application/json" },
     {}
@@ -20,7 +20,7 @@ test("go to first suggested topic", async assert => {
    * No suggested topics exist.
    */
 
-  pretender().get("/t/9/last.json", () => [
+  pretender.get("/t/9/last.json", () => [
     200,
     { "Content-Type": "application/json" },
     {}
@@ -44,7 +44,7 @@ test("go to first suggested topic", async assert => {
    * Suggested topic is returned by server.
    */
 
-  pretender().get("/t/28830/last.json", () => [
+  pretender.get("/t/28830/last.json", () => [
     200,
     { "Content-Type": "application/json" },
     {

@@ -754,7 +754,7 @@ QUnit.test("triggerRecoveredPost", async assert => {
     return [200, { "Content-Type": "application/json" }, object];
   };
 
-  pretender().get("/posts/4", () => {
+  pretender.get("/posts/4", () => {
     // eslint-disable-line no-undef
     return response({ id: 4, post_number: 4 });
   });

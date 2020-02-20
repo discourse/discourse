@@ -11,7 +11,7 @@ acceptance("Login with email - hide email address taken", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    pretender().post("/u/email-login", () => {
+    pretender.post("/u/email-login", () => {
       return response({ success: "OK" });
     });
   }

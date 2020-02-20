@@ -4,7 +4,7 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("Click Track", {});
 
 QUnit.test("Do not track mentions", async assert => {
-  pretender().post("/clicks/track", () => assert.ok(false));
+  pretender.post("/clicks/track", () => assert.ok(false));
 
   await visit("/t/internationalization-localization/280");
   assert.ok(invisible(".user-card"), "card should not appear");

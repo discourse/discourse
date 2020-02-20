@@ -21,7 +21,7 @@ QUnit.test("load - failed onebox", async assert => {
   let element = document.createElement("A");
   element.setAttribute("href", "http://somebadurl.com");
 
-  pretender().get("/onebox", () => {
+  pretender.get("/onebox", () => {
     return [404, {}, {}];
   });
 
@@ -55,7 +55,7 @@ QUnit.test("load - successful onebox", async assert => {
     </aside>
   `;
 
-  pretender().get("/onebox", () => {
+  pretender.get("/onebox", () => {
     return [200, {}, html];
   });
 

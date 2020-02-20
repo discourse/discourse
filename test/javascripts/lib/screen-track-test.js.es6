@@ -19,7 +19,7 @@ QUnit.module("lib:screen-track", {
 QUnit.skip("Correctly flushes posts as needed", assert => {
   const timings = [];
 
-  pretender().post("/topics/timings", t => {
+  pretender.post("/topics/timings", t => {
     timings.push(t);
     return [200, {}, ""];
   });

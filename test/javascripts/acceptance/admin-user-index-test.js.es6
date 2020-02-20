@@ -36,7 +36,7 @@ acceptance("Admin - User Index", {
 });
 
 QUnit.test("can edit username", async assert => {
-  pretender().put("/users/sam/preferences/username", () => [
+  pretender.put("/users/sam/preferences/username", () => [
     200,
     { "Content-Type": "application/json" },
     { id: 2, username: "new-sam" }

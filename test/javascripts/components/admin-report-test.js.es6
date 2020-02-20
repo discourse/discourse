@@ -138,7 +138,7 @@ componentTest("rate limited", {
       return [429, { "Content-Type": "application/json" }, object];
     };
 
-    pretender().get("/admin/reports/bulk", () => {
+    pretender.get("/admin/reports/bulk", () => {
       return response({
         errors: [
           "You’ve performed this action too many times. Please wait 10 seconds before trying again."

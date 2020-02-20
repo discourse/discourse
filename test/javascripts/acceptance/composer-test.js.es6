@@ -618,7 +618,7 @@ QUnit.test("Checks for existing draft", async assert => {
   try {
     toggleCheckDraftPopup(true);
 
-    pretender().get("/draft.json", () => {
+    pretender.get("/draft.json", () => {
       return [
         200,
         { "Content-Type": "application/json" },
@@ -655,7 +655,7 @@ QUnit.test("Can switch states without abandon popup", async assert => {
 
     await fillIn(".d-editor-input", longText);
 
-    pretender().get("/draft.json", () => {
+    pretender.get("/draft.json", () => {
       return [
         200,
         { "Content-Type": "application/json" },
@@ -701,7 +701,7 @@ QUnit.test("Loading draft also replaces the recipients", async assert => {
   try {
     toggleCheckDraftPopup(true);
 
-    pretender().get("/draft.json", () => {
+    pretender.get("/draft.json", () => {
       return [
         200,
         { "Content-Type": "application/json" },
@@ -860,7 +860,7 @@ QUnit.test("Image resizing buttons", async assert => {
 QUnit.test("can reply to a private message", async assert => {
   let submitted;
 
-  pretender().post("/posts", () => {
+  pretender.post("/posts", () => {
     submitted = true;
     return [200, { "Content-Type": "application/json" }, {}];
   });

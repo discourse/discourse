@@ -13,7 +13,7 @@ testSelectKitModule("tag-drop", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    pretender().get("/tags/filter/search", params => {
+    pretender.get("/tags/filter/search", params => {
       if (params.queryParams.q === "rég") {
         return response({
           results: [{ id: "régis", text: "régis", count: 2, pm_count: 0 }]

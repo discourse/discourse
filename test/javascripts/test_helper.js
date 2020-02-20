@@ -102,7 +102,25 @@ function resetSite(siteSettings, extras) {
 }
 
 QUnit.testStart(function(ctx) {
-  server = createPretender.default();
+  server = createPretender.default;
+
+  server.prepareBody = function(body) {
+    if (body && typeof body === "object") {
+      return JSON.stringify(body);
+    }
+    return body;
+  };
+
+  server.unhandledRequest = function(verb, path) {
+    const error =
+      "Unhandled request in test environment: " + path + " (" + verb + ")";
+    window.console.error(error);
+    throw error;
+  };
+
+  server.checkPassthrough = request =>
+    request.requestHeaders["Discourse-Script"];
+
   if (ctx.module.startsWith(acceptanceModulePrefix)) {
     var helper = {
       parsePostData: createPretender.parsePostData,

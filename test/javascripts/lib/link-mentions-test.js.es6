@@ -8,7 +8,7 @@ import pretender from "helpers/create-pretender";
 QUnit.module("lib:link-mentions");
 
 QUnit.test("linkSeenMentions replaces users and groups", async assert => {
-  pretender().get("/u/is_local_username", () => [
+  pretender.get("/u/is_local_username", () => [
     200,
     { "Content-Type": "application/json" },
     {

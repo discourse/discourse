@@ -8,7 +8,7 @@ QUnit.module("lib:user-search", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    pretender().get("/u/search/users", request => {
+    pretender.get("/u/search/users", request => {
       // special responder for per category search
       const categoryMatch = request.url.match(/category_id=([0-9]+)/);
       if (categoryMatch) {
