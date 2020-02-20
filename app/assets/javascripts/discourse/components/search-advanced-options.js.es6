@@ -1,5 +1,4 @@
-import { debounce } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
+import { debounce, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { observes } from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";

@@ -1,6 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import { alias, gte, and, gt, not, or } from "@ember/object/computed";
-import EmberObject from "@ember/object";
+import EmberObject, { set } from "@ember/object";
 import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import User from "discourse/models/user";
@@ -10,7 +10,6 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { set } from "@ember/object";
 import { getOwner } from "@ember/application";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {

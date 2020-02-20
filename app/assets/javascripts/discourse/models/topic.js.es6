@@ -1,6 +1,5 @@
-import { get } from "@ember/object";
+import EmberObject, { get } from "@ember/object";
 import { not, notEmpty, equal, and, or } from "@ember/object/computed";
-import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { flushMap } from "discourse/models/store";
 import RestModel from "discourse/models/rest";
