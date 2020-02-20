@@ -99,10 +99,10 @@ var define, requirejs;
         inject: Ember.inject.service
       },
       "@ember/utils": {
+        isPresent: Ember.isPresent,
         isBlank: Ember.isBlank,
         isEmpty: Ember.isEmpty,
-        isNone: Ember.isNone,
-        isPresent: Ember.isPresent
+        isNone: Ember.isNone
       },
       rsvp: {
         default: Ember.RSVP,
