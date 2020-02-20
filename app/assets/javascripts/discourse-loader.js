@@ -12,8 +12,7 @@ var define, requirejs;
       jquery: { default: $ },
       "@ember/array": {
         default: Ember.Array,
-        A: Ember.A,
-        isArray: Ember.isArray
+        A: Ember.A
       },
       "@ember/array/proxy": {
         default: Ember.ArrayProxy
