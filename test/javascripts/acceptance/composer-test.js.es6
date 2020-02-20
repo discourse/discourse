@@ -7,12 +7,6 @@ import pretender from "helpers/create-pretender";
 acceptance("Composer", {
   loggedIn: true,
   pretend(pretenderServer, helper) {
-    pretenderServer.get("/draft.json", () => {
-      return helper.response({
-        draft: null,
-        draft_sequence: 42
-      });
-    });
     pretenderServer.post("/uploads/lookup-urls", () => {
       return helper.response([]);
     });
@@ -618,18 +612,6 @@ QUnit.test("Checks for existing draft", async assert => {
   try {
     toggleCheckDraftPopup(true);
 
-    pretender.get("/draft.json", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          draft:
-            '{"reply":"This is a draft of the first post","action":"reply","categoryId":1,"archetypeId":"regular","metaData":null,"composerTime":2863,"typingTime":200}',
-          draft_sequence: 42
-        }
-      ];
-    });
-
     await visit("/t/internationalization-localization/280");
 
     await click(".topic-post:eq(0) button.show-more-actions");
@@ -654,18 +636,6 @@ QUnit.test("Can switch states without abandon popup", async assert => {
     await click(".btn-primary.create.btn");
 
     await fillIn(".d-editor-input", longText);
-
-    pretender.get("/draft.json", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          draft:
-            '{"reply":"This is a draft of the first post","action":"reply","categoryId":1,"archetypeId":"regular","metaData":null,"composerTime":2863,"typingTime":200}',
-          draft_sequence: 42
-        }
-      ];
-    });
 
     await click("article#post_3 button.reply");
 

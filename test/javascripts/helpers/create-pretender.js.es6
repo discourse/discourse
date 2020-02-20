@@ -276,8 +276,8 @@ export default new Pretender(function() {
   this.get("/draft.json", request => {
     if (request.queryParams.draft_key === "new_topic") {
       return response(fixturesByUrl["/draft.json"]);
-    }
-
+    } else if (request.queryParams.draft_key.startsWith("topic_"))
+      return response(fixturesByUrl[request.url]);
     return response({});
   });
 
@@ -289,9 +289,7 @@ export default new Pretender(function() {
 
   this.get("/queued_posts", function() {
     return response({
-      queued_posts: [
-        { id: 1, raw: "queued post text", can_delete_user: true }
-      ]
+      queued_posts: [{ id: 1, raw: "queued post text", can_delete_user: true }]
     });
   });
 
@@ -328,8 +326,7 @@ export default new Pretender(function() {
       return response({
         failed: "FAILED",
         ok: false,
-        error:
-          "Invalid authentication code. Each code can only be used once.",
+        error: "Invalid authentication code. Each code can only be used once.",
         reason: "invalid_second_factor",
         backup_enabled: true,
         security_key_enabled: false,
@@ -490,9 +487,7 @@ export default new Pretender(function() {
     });
   });
 
-  this.post("/user_badges", () =>
-    response(200, fixturesByUrl["/user_badges"])
-  );
+  this.post("/user_badges", () => response(200, fixturesByUrl["/user_badges"]));
   this.delete("/user_badges/:badge_id", success);
 
   this.post("/posts", function(request) {
@@ -690,9 +685,7 @@ export default new Pretender(function() {
 
   this.get("/inline-onebox", request => {
     if (
-      request.queryParams.urls.includes(
-        "http://www.example.com/has-title.html"
-      )
+      request.queryParams.urls.includes("http://www.example.com/has-title.html")
     ) {
       return [
         200,
