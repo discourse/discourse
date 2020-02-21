@@ -13,6 +13,17 @@ QUnit.test("footer edit button", async assert => {
   );
 });
 
+QUnit.test("suggested messages", async assert => {
+  await visit("/t/pm-for-testing/12");
+
+  assert.equal(
+    find("#suggested-topics .suggested-topics-title")
+      .text()
+      .trim(),
+    I18n.t("suggested_topics.pm_title")
+  );
+});
+
 acceptance("Personal Message Tagging", {
   loggedIn: true,
   site: { can_tag_pms: true }
