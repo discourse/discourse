@@ -30,6 +30,26 @@ export default DiscourseRoute.extend({
     });
   },
 
+  activate() {
+    this.messageBus.subscribe("/reviewable_claimed", data => {
+      const reviewables = this.controller.reviewables;
+      if (reviewables) {
+        const user = data.user
+          ? this.store.createRecord("user", data.user)
+          : null;
+        reviewables.forEach(reviewable => {
+          if (data.topic_id === reviewable.topic.id) {
+            reviewable.set("claimed_by", user);
+          }
+        });
+      }
+    });
+  },
+
+  deactivate() {
+    this.messageBus.unsubscribe("/reviewable_claimed");
+  },
+
   actions: {
     refreshRoute() {
       this.refresh();
