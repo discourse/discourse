@@ -193,6 +193,7 @@
   .modal-body {
     overflow-y: auto;
     max-height: 400px;
+    padding: 1em;
 
     &.full-height-modal {
       max-height: calc(100vh - 150px);
