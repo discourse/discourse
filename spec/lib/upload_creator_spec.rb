@@ -79,12 +79,12 @@ RSpec.describe UploadCreator do
         expect(upload.original_filename).to eq('png_as.png')
       end
 
-      describe 'for webp format' do
+      describe 'for tiff format' do
         before do
-          SiteSetting.authorized_extensions = '.webp|.bin'
+          SiteSetting.authorized_extensions = '.tiff|.bin'
         end
 
-        let(:filename) { "webp_as.bin" }
+        let(:filename) { "tiff_as.bin" }
         let(:file) { file_from_fixtures(filename) }
 
         it 'should not correct the coerce filename' do
@@ -96,7 +96,7 @@ RSpec.describe UploadCreator do
 
           expect(upload.extension).to eq('bin')
           expect(File.extname(upload.url)).to eq('.bin')
-          expect(upload.original_filename).to eq('webp_as.bin')
+          expect(upload.original_filename).to eq('tiff_as.bin')
         end
       end
     end
