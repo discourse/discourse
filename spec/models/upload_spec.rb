@@ -359,7 +359,8 @@ describe Upload do
     it 'marks a local attachment as secure if prevent_anons_from_downloading_files is enabled' do
       SiteSetting.prevent_anons_from_downloading_files = true
       SiteSetting.authorized_extensions = "pdf"
-      upload.update!(original_filename: "small.pdf", extension: "pdf")
+      upload.update!(original_filename: "small.pdf", extension: "pdf", secure: false, access_control_post: Fabricate(:private_message_post))
+      enable_secure_media
 
       expect { upload.update_secure_status }
         .to change { upload.secure }
