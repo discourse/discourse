@@ -796,10 +796,15 @@ describe PrettyText do
             <a href="http://videosource.com/running.mp4">http://videosource.com/running.mp4</a>
           </video>
         </div>
-        <p>Watch this, but not in the excerpt.</p>
+        <p>Watch this, but do not include the video in the excerpt.</p>
       HTML
 
-      expect(PrettyText.excerpt(html, 100)).to eq("Watch this, but not in the excerpt.")
+      ellipsis = "&hellip;"
+      excerpt_size = 40
+      excerpt = PrettyText.excerpt(html, excerpt_size)
+
+      expect(excerpt.size).to eq(excerpt_size + ellipsis.size)
+      expect(excerpt).to eq("Watch this, but do not include the video#{ellipsis}")
     end
   end
 
