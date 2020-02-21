@@ -8,12 +8,13 @@ class ReviewableClaimedTopicsController < ApplicationController
     guardian.ensure_can_claim_reviewable_topic!(topic)
 
     begin
-      ReviewableClaimedTopic.create(user_id: current_user.id, topic_id: topic.id)
-      topic.reviewables.find_each do |reviewable|
-        reviewable.log_history(:claimed, current_user)
-      end
-    rescue ActiveRecord::RecordNotUnique
-      # This is just in case the validation fails under concurrency
+      ReviewableClaimedTopic.create!(user_id: current_user.id, topic_id: topic.id)
+    rescue ActiveRecord::RecordInvalid
+      return render_json_error(I18n.t('reviewables.conflict'), status: 409)
+    end
+
+    topic.reviewables.find_each do |reviewable|
+      reviewable.log_history(:claimed, current_user)
     end
 
     notify_users(topic, current_user)
