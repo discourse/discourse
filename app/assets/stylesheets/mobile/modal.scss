@@ -23,7 +23,10 @@
   top: 50%;
 }
 .modal-body {
-  padding: 10px;
+  > * {
+    box-sizing: border-box;
+    padding: 0.667em;
+  }
 }
 
 // we need a little extra room on mobile for the
@@ -46,6 +49,7 @@
 #choosing-topic {
   p {
     margin-top: 0;
+    padding-bottom: 0;
   }
 
   input[type="radio"] {

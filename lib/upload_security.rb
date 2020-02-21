@@ -21,8 +21,9 @@ class UploadSecurity
   end
 
   def should_be_secure?
+    return false if !SiteSetting.secure_media?
     return false if uploading_in_public_context?
-    secure_attachment? || secure_media?
+    (secure_attachment? || supported_media?) && uploading_in_secure_context?
   end
 
   private
@@ -37,10 +38,6 @@ class UploadSecurity
 
   def secure_attachment?
     !supported_media? && SiteSetting.prevent_anons_from_downloading_files
-  end
-
-  def secure_media?
-    SiteSetting.secure_media? && supported_media? && uploading_in_secure_context?
   end
 
   def uploading_in_secure_context?
@@ -60,6 +57,9 @@ class UploadSecurity
   # if there is no access control post id and the upload is currently secure, we
   # do not want to make it un-secure to avoid unintentionally exposing it
   def access_control_post_has_secure_media?
+    # if the post is deleted the access_control_post will be blank...
+    # TODO: deal with this in a better way
+    return false if @upload.access_control_post.blank?
     @upload.access_control_post.with_secure_media?
   end
 

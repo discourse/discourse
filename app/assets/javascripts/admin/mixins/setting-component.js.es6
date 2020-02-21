@@ -246,6 +246,7 @@ export default Mixin.create({
           .uniq()
           .join("|")
       );
+      return false;
     }
   }
 });
