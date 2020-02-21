@@ -39,7 +39,7 @@ export default ComboBox.extend(TagsMixin, {
     everyTag: false,
     none: "tagging.choose_for_topic",
     closeOnChange: false,
-    maximum: 10,
+    maximum: "maximumSelectedTags",
     autoInsertNoneItem: false
   },
 
@@ -91,8 +91,6 @@ export default ComboBox.extend(TagsMixin, {
   }),
 
   modifySelection(content) {
-    let joinedTags = makeArray(this.value).join(", ");
-
     const minimum = this.selectKit.options.minimum;
     if (minimum && makeArray(this.value).length < parseInt(minimum, 10)) {
       const key =
@@ -101,7 +99,8 @@ export default ComboBox.extend(TagsMixin, {
       const label = I18n.t(key, { count: this.selectKit.options.minimum });
       content.title = content.name = content.label = label;
     } else {
-      content.title = content.name = content.value = content.label = joinedTags;
+      content.name = content.value = makeArray(this.value).join(",");
+      content.title = content.label = makeArray(this.value).join(", ");
 
       if (content.label.length > 32) {
         content.label = `${content.label.slice(0, 32)}...`;
