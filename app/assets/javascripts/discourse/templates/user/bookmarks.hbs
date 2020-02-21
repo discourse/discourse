@@ -11,27 +11,29 @@
     </thead>
     <tbody>
     {{#each model.content as |bookmark|}}
-      <tr class="topic-list-item">
+      <tr class="topic-list-item bookmark-list-item">
         <td class="main-link">
           <span class="link-top-line">
-            {{topic-status topic=bookmark}}
-            <a class="title" href="/t/{{bookmark.topic_id}}/{{bookmark.bookmark_post_number}}">{{bookmark.title}}
+            <div class="bookmark-metadata">
               {{#if bookmark.bookmark_name}}
-                ({{bookmark.bookmark_name}})
+                <span class="bookmark-metadata-item">
+                  {{d-icon "info-circle"}}{{bookmark.bookmark_name}}
+                </span>
               {{/if}}
-            </a>
+              {{#if bookmark.bookmark_reminder_at}}
+                <span class="bookmark-metadata-item">
+                  {{d-icon "far-clock"}}{{bookmark.formattedReminder}}
+                </span>
+              {{/if}}
+            </div>
+
+            {{topic-status topic=bookmark}}
+            <a class="title" href="/t/{{bookmark.topic_id}}/{{bookmark.bookmark_post_number}}">{{bookmark.title}}</a>
           </span>
           {{#if bookmark.excerpt}}
             <p class="post-excerpt">{{bookmark.excerpt}}</p>
           {{/if}}
           <div class="link-bottom-line">
-            {{#if bookmark.bookmark_reminder_at}}
-            <div class="badge-wrapper" style="margin-right: 5px;">
-              <span class="badge-category">
-                {{d-icon "far-clock"}}{{bookmark.formattedReminder}}
-              </span>
-            </div>
-            {{/if}}
             {{category-link bookmark.category}}
             {{discourse-tags bookmark mode="list" tagsForUser=tagsForUser}}
          </div>
