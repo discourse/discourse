@@ -634,6 +634,13 @@ QUnit.test("Can switch states without abandon popup", async assert => {
 
     const longText = "a".repeat(256);
 
+    sandbox.stub(Draft, "get").returns(
+      Promise.resolve({
+        draft: null,
+        draft_sequence: 0
+      })
+    );
+
     await click(".btn-primary.create.btn");
 
     await fillIn(".d-editor-input", longText);
@@ -666,6 +673,7 @@ QUnit.test("Can switch states without abandon popup", async assert => {
   } finally {
     toggleCheckDraftPopup(false);
   }
+  sandbox.restore();
 });
 
 QUnit.test("Loading draft also replaces the recipients", async assert => {
