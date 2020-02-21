@@ -130,6 +130,10 @@ module Helpers
 
   def capture_stdout
     old_stdout = $stdout
+    if ENV['RAILS_ENABLE_TEST_LOG']
+      yield
+      return
+    end
     io = StringIO.new
     $stdout = io
     yield
