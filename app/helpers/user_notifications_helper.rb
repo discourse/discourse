@@ -49,7 +49,7 @@ module UserNotificationsHelper
 
     # If there is no first paragaph with text, return the first paragraph with
     # something else (an image) or div (a onebox).
-    doc.css('body > p, body > div').first
+    doc.css('body > p:not(:empty), body > div:not(:empty), body > p > div.lightbox-wrapper img').first
   end
 
   def email_excerpt(html_arg, post = nil)
