@@ -30,10 +30,14 @@ describe ReviewableClaimedTopicsController do
 
       it "will return 200 if the user can claim the topic" do
         SiteSetting.reviewable_claiming = 'optional'
-        post "/reviewable_claimed_topics.json", params: params
+        messages = MessageBus.track_publish { post "/reviewable_claimed_topics.json", params: params }
         expect(response.code).to eq("200")
         expect(ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: topic.id).exists?).to eq(true)
         expect(topic.reviewables.first.history.where(reviewable_history_type: ReviewableHistory.types[:claimed]).size).to eq(1)
+        expect(messages.size).to eq(1)
+        expect(messages[0].channel).to eq("/reviewable_claimed")
+        expect(messages[0].data[:topic_id]).to eq(topic.id)
+        expect(messages[0].data[:user][:id]).to eq(moderator.id)
       end
 
       it "won't an error if you claim twice" do
@@ -67,10 +71,14 @@ describe ReviewableClaimedTopicsController do
 
     it "works when the feature is enabled" do
       SiteSetting.reviewable_claiming = 'optional'
-      delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
+      messages = MessageBus.track_publish { delete "/reviewable_claimed_topics/#{claimed.topic_id}.json" }
       expect(response.code).to eq("200")
       expect(ReviewableClaimedTopic.where(topic_id: claimed.topic_id).exists?).to eq(false)
       expect(topic.reviewables.first.history.where(reviewable_history_type: ReviewableHistory.types[:unclaimed]).size).to eq(1)
+      expect(messages.size).to eq(1)
+      expect(messages[0].channel).to eq("/reviewable_claimed")
+      expect(messages[0].data[:topic_id]).to eq(topic.id)
+      expect(messages[0].data[:user]).to eq(nil)
     end
   end
 end
