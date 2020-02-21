@@ -1,4 +1,3 @@
-import User from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
@@ -35,7 +34,9 @@ export default DiscourseRoute.extend({
     this.messageBus.subscribe("/reviewable_claimed", data => {
       const reviewables = this.controller.reviewables;
       if (reviewables) {
-        const user = data.user ? User.create(data.user) : null;
+        const user = data.user
+          ? this.store.createRecord("user", data.user)
+          : null;
         reviewables.forEach(reviewable => {
           if (data.topic_id === reviewable.topic.id) {
             reviewable.set("claimed_by", user);
