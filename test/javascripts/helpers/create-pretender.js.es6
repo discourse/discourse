@@ -610,17 +610,11 @@ export default new Pretender(function() {
 
   this.get("/tag_groups", () => response(200, { tag_groups: [] }));
 
-  this.get("/admin/users/1234.json", () => {
-    return response(200, {
-      id: 1234,
-      username: "regular"
-    });
-  });
-
   this.get("/admin/users/1.json", () => {
     return response(200, {
       id: 1,
       username: "eviltrout",
+      email: "eviltrout@example.com",
       admin: true
     });
   });
@@ -630,6 +624,30 @@ export default new Pretender(function() {
       id: 2,
       username: "sam",
       admin: true
+    });
+  });
+
+  this.get("/admin/users/3.json", () => {
+    return response(200, {
+      id: 3,
+      username: "markvanlan",
+      email: "markvanlan@example.com",
+      secondary_emails: ["markvanlan1@example.com", "markvanlan2@example.com"]
+    });
+  });
+
+  this.get("/admin/users/1234.json", () => {
+    return response(200, {
+      id: 1234,
+      username: "regular"
+    });
+  });
+
+  this.get("/admin/users/1235.json", () => {
+    return response(200, {
+      id: 1235,
+      username: "regular2",
+      email: "regular2@example.com"
     });
   });
 

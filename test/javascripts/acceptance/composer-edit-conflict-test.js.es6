@@ -30,17 +30,33 @@ QUnit.test("Edit a post that causes an edit conflict", async assert => {
   await click(".modal .btn-primary");
 });
 
-QUnit.test(
-  "Should not send originalText when posting a new reply",
-  async assert => {
-    pretender.post("/draft.json", request => {
+function handleDraftPretender(assert) {
+  pretender.post("/draft.json", request => {
+    if (
+      request.requestBody.indexOf("%22reply%22%3A%22%22") === -1 &&
+      request.requestBody.indexOf("Any+plans+to+support+localization") !== -1
+    ) {
+      assert.notEqual(request.requestBody.indexOf("originalText"), -1);
+    }
+    if (
+      request.requestBody.indexOf(
+        "draft_key=topic_280&sequence=4&data=%7B%22reply%22%3A%22hello+world+hello+world+hello+world+hello+world+hello+world%22%2C%22action%22%3A%22reply%22%2C%22categoryId%22%3A2%2C%22archetypeId%22%3A%22regular%22%2C%22metaData"
+      ) !== -1
+    ) {
       assert.equal(
         request.requestBody.indexOf("originalText"),
         -1,
         request.requestBody
       );
-      return [200, { "Content-Type": "application/json" }, { success: true }];
-    });
+    }
+    return [200, { "Content-Type": "application/json" }, { success: true }];
+  });
+}
+
+QUnit.test(
+  "Should not send originalText when posting a new reply",
+  async assert => {
+    handleDraftPretender(assert);
 
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:eq(0) button.reply");
@@ -52,12 +68,7 @@ QUnit.test(
 );
 
 QUnit.test("Should send originalText when editing a reply", async assert => {
-  pretender.post("/draft.json", request => {
-    if (request.requestBody.indexOf("%22reply%22%3A%22%22") === -1) {
-      assert.notEqual(request.requestBody.indexOf("originalText"), -1);
-    }
-    return [200, { "Content-Type": "application/json" }, { success: true }];
-  });
+  handleDraftPretender(assert);
 
   await visit("/t/internationalization-localization/280");
   await click(".topic-post:eq(0) button.show-more-actions");
