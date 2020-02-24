@@ -138,6 +138,13 @@
   flex: 0;
 }
 
+.edit-category-tab-topic-template {
+  .emoji.btn,
+  .local-dates.btn {
+    display: none;
+  }
+}
+
 .user-preferences .bio-composer,
 .group-form-bio,
 .edit-category-tab-topic-template {
