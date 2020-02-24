@@ -97,11 +97,14 @@ export default ComboBoxComponent.extend(TagsMixin, {
     const shortcuts = [];
 
     if (this.tagId !== NONE_TAG_ID) {
-      shortcuts.push(NO_TAG_ID);
+      shortcuts.push({
+        id: NO_TAG_ID,
+        name: this.noTagsLabel
+      });
     }
 
     if (this.tagId) {
-      shortcuts.push(ALL_TAGS_ID);
+      shortcuts.push({ id: ALL_TAGS_ID, name: this.allTagsLabel });
     }
 
     return shortcuts;
@@ -138,7 +141,12 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
       return this.searchTags("/tags/filter/search", data, this._transformJson);
     } else {
-      return (this.content || []).map(tag => this.defaultItem(tag, tag));
+      return (this.content || []).map(tag => {
+        if (tag.id && tag.name) {
+          return tag;
+        }
+        return this.defaultItem(tag, tag);
+      });
     }
   },
 
