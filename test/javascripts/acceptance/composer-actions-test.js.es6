@@ -350,18 +350,25 @@ acceptance("Composer Actions With New Topic Draft", {
   beforeEach() {
     _clearSnapshots();
   },
-  pretend(server, helper) {
-    server.get("draft.json", () => {
-      return helper.response({
-        draft:
-          '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
-        draft_sequence: 0
-      });
-    });
-  }
+  // pretend(server, helper) {
+  // server.get("draft.json", () => {
+  // return helper.response({
+  draft:
+    '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
+  draft_sequence: 0
+  // });
+  // });
+  // }
 });
 
 QUnit.test("shared draft", async assert => {
+  sandbox.stub(Draft, "get").returns(
+    Promise.resolve({
+      draft:
+        '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
+      draft_sequence: 0
+    })
+  );
   try {
     toggleCheckDraftPopup(true);
 
@@ -399,6 +406,7 @@ QUnit.test("shared draft", async assert => {
   } finally {
     toggleCheckDraftPopup(false);
   }
+  sandbox.restore();
 });
 
 QUnit.test("reply_as_new_topic with new_topic draft", async assert => {
