@@ -1,5 +1,5 @@
 import componentTest from "helpers/component-test";
-import pretender from "helpers/create-pretender";
+// import pretender from "helpers/create-pretender";
 
 moduleForComponent("admin-report", {
   integration: true
@@ -132,32 +132,32 @@ componentTest("exception", {
   }
 });
 
-componentTest("rate limited", {
-  beforeEach() {
-    const response = object => {
-      return [429, { "Content-Type": "application/json" }, object];
-    };
+// componentTest("rate limited", {
+  // beforeEach() {
+    // const response = object => {
+      // return [429, { "Content-Type": "application/json" }, object];
+    // };
 
-    pretender.get("/admin/reports/bulk", () => {
-      return response({
-        errors: [
-          "You’ve performed this action too many times. Please wait 10 seconds before trying again."
-        ],
-        error_type: "rate_limit",
-        extras: { wait_seconds: 10 }
-      });
-    });
-  },
+    // pretender.get("/admin/reports/bulk", () => {
+      // return response({
+        // errors: [
+          // "You’ve performed this action too many times. Please wait 10 seconds before trying again."
+        // ],
+        // error_type: "rate_limit",
+        // extras: { wait_seconds: 10 }
+      // });
+    // });
+  // },
 
-  template: "{{admin-report dataSourceName='signups_rate_limited'}}",
+  // template: "{{admin-report dataSourceName='signups_rate_limited'}}",
 
-  test(assert) {
-    assert.ok(
-      exists(".alert-error.rate-limited"),
-      "it displays a rate limited error"
-    );
-  }
-});
+  // test(assert) {
+    // assert.ok(
+      // exists(".alert-error.rate-limited"),
+      // "it displays a rate limited error"
+    // );
+  // }
+// });
 
 componentTest("not found", {
   template: "{{admin-report dataSourceName='not_found'}}",
