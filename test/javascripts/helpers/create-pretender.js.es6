@@ -277,10 +277,12 @@ export default new Pretender(function() {
     if (request.queryParams.draft_key === "new_topic") {
       return response(fixturesByUrl["/draft.json"]);
     } else if (request.queryParams.draft_key.startsWith("topic_"))
-      return response((fixturesByUrl[request.url] || {
-        draft: null,
-        draft_sequence: 0
-      }));
+      return response(
+        fixturesByUrl[request.url] || {
+          draft: null,
+          draft_sequence: 0
+        }
+      );
     return response({});
   });
 

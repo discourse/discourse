@@ -64,5 +64,5 @@ QUnit.test("load - successful onebox", async assert => {
     loadOnebox(element),
     html.trim(),
     "it returns the html from the cache"
- );
+  );
 });
