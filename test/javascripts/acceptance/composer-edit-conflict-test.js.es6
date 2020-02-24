@@ -5,30 +5,25 @@ acceptance("Composer - Edit conflict", {
   loggedIn: true
 });
 
-// QUnit.test("Edit a post that causes an edit conflict", async assert => {
-// pretender.put("/posts/398", () => [
-// 409,
-// { "Content-Type": "application/json" },
-// { errors: ["edit conflict"] }
-// ]);
-
-// await visit("/t/internationalization-localization/280");
-// await click(".topic-post:eq(0) button.show-more-actions");
-// await click(".topic-post:eq(0) button.edit");
-// await click("#reply-control button.create");
-// assert.equal(
-// find("#reply-control button.create")
-// .text()
-// .trim(),
-// I18n.t("composer.overwrite_edit"),
-// "it shows the overwrite button"
-// );
-// assert.ok(
-// find("#draft-status .d-icon-user-edit"),
-// "error icon should be there"
-// );
-// await click(".modal .btn-primary");
-// });
+QUnit.test("Edit a post that causes an edit conflict", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click(".topic-post:eq(0) button.show-more-actions");
+  await click(".topic-post:eq(0) button.edit");
+  await fillIn(".d-editor-input", "this will 409");
+  await click("#reply-control button.create");
+  assert.equal(
+    find("#reply-control button.create")
+      .text()
+      .trim(),
+    I18n.t("composer.overwrite_edit"),
+    "it shows the overwrite button"
+  );
+  assert.ok(
+    find("#draft-status .d-icon-user-edit"),
+    "error icon should be there"
+  );
+  await click(".modal .btn-primary");
+});
 
 function handleDraftPretender(assert) {
   pretender.post("/draft.json", request => {

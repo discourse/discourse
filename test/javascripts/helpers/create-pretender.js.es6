@@ -438,6 +438,13 @@ export default new Pretender(function() {
 
   this.put("/posts/:post_id", request => {
     const data = parsePostData(request.requestBody);
+    if (data.post.raw === "this will 409") {
+      return [
+        409,
+        { "Content-Type": "application/json" },
+        { errors: ["edit conflict"] }
+      ];
+    }
     data.post.id = request.params.post_id;
     data.post.version = 2;
     return response(200, data.post);
