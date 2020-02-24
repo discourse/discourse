@@ -137,11 +137,9 @@ class PostCreator
     else
       @topic = Topic.find_by(id: @opts[:topic_id])
 
-      if @topic.present?
-        if @opts[:archetype] == Archetype.private_message
-          errors.add(:base, I18n.t(:create_pm_on_existing_topic))
-          return false
-        end
+      if @topic.present? && @opts[:archetype] == Archetype.private_message
+        errors.add(:base, I18n.t(:create_pm_on_existing_topic))
+        return false
       end
 
       unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
