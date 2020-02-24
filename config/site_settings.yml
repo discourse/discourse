@@ -592,6 +592,8 @@ users:
   user_selected_primary_groups:
     default: false
     client: true
+  max_notifications_per_user:
+    default: 10000
 
 groups:
   enable_group_directory:
