@@ -52,11 +52,15 @@ componentTest("with scopedCategoryId", {
       "My idea here is to have mini specs for features we would like built but have no bandwidth to build"
     );
     assert.equal(this.subject.rowByIndex(1).value(), 26);
-    assert.equal(this.subject.rows().length, 2);
+    assert.equal(this.subject.rows().length, 2, "default content is scoped");
 
-    await this.subject.fillInFilter("spec");
+    await this.subject.fillInFilter("bug");
 
-    assert.equal(this.subject.rows().length, 1);
+    assert.equal(
+      this.subject.rowByIndex(0).name(),
+      "bug",
+      "search finds outside of scope"
+    );
   }
 });
 
