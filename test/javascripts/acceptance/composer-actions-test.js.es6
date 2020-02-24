@@ -349,19 +349,10 @@ acceptance("Composer Actions With New Topic Draft", {
   },
   beforeEach() {
     _clearSnapshots();
-  },
-  // pretend(server, helper) {
-  // server.get("draft.json", () => {
-  // return helper.response({
-  draft:
-    '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
-  draft_sequence: 0
-  // });
-  // });
-  // }
+  }
 });
 
-QUnit.test("shared draft", async assert => {
+const stubDraftResponse = () => {
   sandbox.stub(Draft, "get").returns(
     Promise.resolve({
       draft:
@@ -369,6 +360,10 @@ QUnit.test("shared draft", async assert => {
       draft_sequence: 0
     })
   );
+};
+
+QUnit.test("shared draft", async assert => {
+  stubDraftResponse();
   try {
     toggleCheckDraftPopup(true);
 
@@ -414,10 +409,12 @@ QUnit.test("reply_as_new_topic with new_topic draft", async assert => {
   await click(".create.reply");
   const composerActions = selectKit(".composer-actions");
   await composerActions.expand();
+  stubDraftResponse();
   await composerActions.selectRowByValue("reply_as_new_topic");
   assert.equal(
     find(".bootbox .modal-body").text(),
     I18n.t("composer.composer_actions.reply_as_new_topic.confirm")
   );
   await click(".modal-footer .btn.btn-default");
+  sandbox.restore();
 });
