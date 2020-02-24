@@ -125,6 +125,61 @@ RSpec.describe "tasks/uploads" do
     end
   end
 
+  describe "uploads:disable_secure_media" do
+    def invoke_task
+      capture_stdout do
+        Rake::Task['uploads:disable_secure_media'].invoke
+      end
+    end
+
+    before do
+      enable_s3_uploads(uploads)
+      SiteSetting.secure_media = true
+      PostUpload.create(post: post1, upload: upload1)
+      PostUpload.create(post: post1, upload: upload2)
+      PostUpload.create(post: post2, upload: upload3)
+      PostUpload.create(post: post2, upload: upload4)
+    end
+
+    let!(:uploads) do
+      [
+        upload1, upload2, upload3, upload4, upload5
+      ]
+    end
+    let(:post1) { Fabricate(:post) }
+    let(:post2) { Fabricate(:post) }
+    let(:upload1) { Fabricate(:upload_s3, secure: true, access_control_post: post1) }
+    let(:upload2) { Fabricate(:upload_s3, secure: true, access_control_post: post1) }
+    let(:upload3) { Fabricate(:upload_s3, secure: true, access_control_post: post2) }
+    let(:upload4) { Fabricate(:upload_s3, secure: true, access_control_post: post2) }
+    let(:upload5) { Fabricate(:upload_s3, secure: false) }
+
+    it "disables the secure media setting" do
+      invoke_task
+      expect(SiteSetting.secure_media).to eq(false)
+    end
+
+    it "updates all secure uploads to secure: false" do
+      invoke_task
+      [upload1, upload2, upload3, upload4].each do |upl|
+        expect(upl.reload.secure).to eq(false)
+      end
+    end
+
+    it "rebakes the associated posts" do
+      baked_post1 = post1.baked_at
+      baked_post2 = post2.baked_at
+      invoke_task
+      expect(post1.reload.baked_at).not_to eq(baked_post1)
+      expect(post2.reload.baked_at).not_to eq(baked_post2)
+    end
+
+    it "updates the affected ACLs" do
+      FileStore::S3Store.any_instance.expects(:update_upload_ACL).times(4)
+      invoke_task
+    end
+  end
+
   def enable_s3_uploads(uploads)
     SiteSetting.enable_s3_uploads = true
     SiteSetting.s3_upload_bucket = "s3-upload-bucket"

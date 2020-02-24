@@ -628,25 +628,30 @@ task "uploads:disable_secure_media" => :environment do
 
     secure_uploads = Upload.includes(:posts).where(secure: true)
     secure_upload_count = secure_uploads.count
+    uploads_to_adjust_acl_for = []
+    posts_to_rebake = {}
 
     i = 0
     secure_uploads.find_each(batch_size: 20).each do |upload|
-      Upload.transaction do
-        upload.secure = false
+      uploads_to_adjust_acl_for << upload
 
-        RakeHelpers.print_status_with_label("Updating ACL for upload #{upload.id}.......", i, secure_upload_count)
-        Discourse.store.update_upload_ACL(upload)
-
-        RakeHelpers.print_status_with_label("Rebaking posts for upload #{upload.id}.......", i, secure_upload_count)
-        upload.posts.each(&:rebake!)
-        upload.save
-
-        i += 1
+      upload.posts.each do |post|
+        # don't want unnecessary double-ups
+        next if posts_to_rebake.key?(post.id)
+        posts_to_rebake[post.id] = post
       end
+
+      i += 1
     end
 
+    puts "", "Marking #{secure_upload_count} uploads as not secure.", ""
+    secure_uploads.update_all(secure: false)
+
+    adjust_acls(uploads_to_adjust_acl_for)
+    post_rebake_errors = rebake_upload_posts(posts_to_rebake)
+    log_rebake_errors(post_rebake_errors)
+
     RakeHelpers.print_status_with_label("Rebaking and updating complete!            ", i, secure_upload_count)
-    puts ""
   end
 
   puts "Secure media is now disabled!", ""
@@ -732,16 +737,20 @@ task "uploads:secure_upload_analyse_and_update" => :environment do
     # Also do this AFTER upload transaction complete so we don't end up with any
     # errors leaving ACLs in a bad state (the ACL sync task can be run to fix any
     # outliers at any time).
-    puts "", "Updating ACL for #{uploads_to_adjust_acl_for.length} uploads.", ""
-    i = 0
-    uploads_to_adjust_acl_for.each do |upload|
-      RakeHelpers.print_status_with_label("Updating ACL for upload.......", i, uploads_to_adjust_acl_for.length)
-      Discourse.store.update_upload_ACL(upload)
-      i += 1
-    end
-    RakeHelpers.print_status_with_label("Updaing ACLs complete!        ", i, uploads_to_adjust_acl_for.count)
+    adjust_acls(uploads_to_adjust_acl_for) 
   end
   puts "", "", "Done!"
+end
+
+def adjust_acls(uploads_to_adjust_acl_for)
+  puts "", "Updating ACL for #{uploads_to_adjust_acl_for.length} uploads.", ""
+  i = 0
+  uploads_to_adjust_acl_for.each do |upload|
+    RakeHelpers.print_status_with_label("Updating ACL for upload.......", i, uploads_to_adjust_acl_for.length)
+    Discourse.store.update_upload_ACL(upload)
+    i += 1
+  end
+  RakeHelpers.print_status_with_label("Updaing ACLs complete!        ", i, uploads_to_adjust_acl_for.count)
 end
 
 def mark_all_as_secure_login_required(uploads_to_update)
