@@ -86,6 +86,13 @@ export function categoryLinkHTML(category, options) {
 
 registerUnbound("category-link", categoryLinkHTML);
 
+function buildTopicCount(count) {
+  return `<span class="topic-count" aria-label="${I18n.t(
+    "category_row.topic_count",
+    { count }
+  )}">&times; ${count}</span>`;
+}
+
 function defaultCategoryLinkRenderer(category, opts) {
   let descriptionText = get(category, "description_text");
   let restricted = get(category, "read_restricted");
@@ -151,11 +158,8 @@ function defaultCategoryLinkRenderer(category, opts) {
   }
   html += "</span>";
 
-  if (opts.topicCount) {
-    html += `<span class="topic-count" aria-label="${I18n.t(
-      "category_row.topic_count",
-      { count: opts.topicCount }
-    )}">&times; ${opts.topicCount}</span>`;
+  if (opts.topicCount && categoryStyle !== "box") {
+    html += buildTopicCount(opts.topicCount);
   }
 
   if (href) {
@@ -163,5 +167,10 @@ function defaultCategoryLinkRenderer(category, opts) {
   }
 
   extraClasses = categoryStyle ? categoryStyle + extraClasses : extraClasses;
-  return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>`;
+
+  let afterBadgeWrapper = "";
+  if (opts.topicCount && categoryStyle === "box") {
+    afterBadgeWrapper += buildTopicCount(opts.topicCount);
+  }
+  return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
 }
