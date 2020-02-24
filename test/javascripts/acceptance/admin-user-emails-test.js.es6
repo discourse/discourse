@@ -1,4 +1,3 @@
-import pretender from "helpers/create-pretender";
 import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Admin - User Emails", { loggedIn: true });
@@ -19,16 +18,16 @@ const assertNoSecondary = assert => {
   );
 };
 
-const assertMultipleSecondary = assert => {
+const assertMultipleSecondary = (assert, firstEmail, secondEmail) => {
   assert.equal(
     find(".display-row.secondary-emails .value li:first-of-type a").text(),
-    "markvanlan1@example.com",
+    firstEmail,
     "it should display the first secondary email"
   );
 
   assert.equal(
     find(".display-row.secondary-emails .value li:last-of-type a").text(),
-    "markvanlan2@example.com",
+    secondEmail,
     "it should display the second secondary email"
   );
 };
@@ -48,7 +47,11 @@ QUnit.test("viewing self with multiple secondary emails", async assert => {
     "it should display the user's primary email"
   );
 
-  assertMultipleSecondary(assert);
+  assertMultipleSecondary(
+    assert,
+    "markvanlan1@example.com",
+    "markvanlan2@example.com"
+  );
 });
 
 QUnit.test("viewing another user with no secondary email", async assert => {
@@ -59,19 +62,12 @@ QUnit.test("viewing another user with no secondary email", async assert => {
 });
 
 QUnit.test("viewing another account with secondary emails", async assert => {
-  pretender.get("/u/regular/emails.json", () => {
-    return [
-      200,
-      { "Content-Type": "application/json" },
-      {
-        email: "markvanlan@example.com",
-        secondary_emails: ["markvanlan1@example.com", "markvanlan2@example.com"]
-      }
-    ];
-  });
-
-  await visit("/admin/users/1234/regular");
+  await visit("/admin/users/1235/regular1");
   await click(`.display-row.secondary-emails button`);
 
-  assertMultipleSecondary(assert);
+  assertMultipleSecondary(
+    assert,
+    "regular2alt1@example.com",
+    "regular2alt2@example.com"
+  );
 });

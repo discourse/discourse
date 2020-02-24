@@ -121,7 +121,16 @@ export default new Pretender(function() {
     return response({ results: [{ text: "monkey", count: 1 }] });
   });
 
-  this.get(`/u/:username/emails.json`, () => {
+  this.get(`/u/:username/emails.json`, request => {
+    if (request.params.username === "regular2") {
+      return response({
+        email: "regular2@example.com",
+        secondary_emails: [
+          "regular2alt1@example.com",
+          "regular2alt2@example.com"
+        ]
+      });
+    }
     return response({ email: "eviltrout@example.com" });
   });
 
@@ -682,8 +691,7 @@ export default new Pretender(function() {
   this.get("/admin/users/1235.json", () => {
     return response(200, {
       id: 1235,
-      username: "regular2",
-      email: "regular2@example.com"
+      username: "regular2"
     });
   });
 
