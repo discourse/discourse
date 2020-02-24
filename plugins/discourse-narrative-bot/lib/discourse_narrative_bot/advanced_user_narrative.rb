@@ -176,12 +176,12 @@ module DiscourseNarrativeBot
       if @post &&
          @post.topic.private_message? &&
          @post.topic.topic_allowed_users.pluck(:user_id).include?(@user.id)
-
-        opts = opts.merge(topic_id: @post.topic_id)
       end
 
       if @data[:topic_id]
-        opts = opts.merge(topic_id: @data[:topic_id])
+        opts = opts
+          .merge(topic_id: @data[:topic_id])
+          .except(:title, :target_usernames, :archetype)
       end
       post = reply_to(@post, raw, opts)
 
