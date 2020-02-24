@@ -831,21 +831,3 @@ QUnit.test("Image resizing buttons", async assert => {
     "it does not unescapes script tags in code blocks"
   );
 });
-
-QUnit.test("can reply to a private message", async assert => {
-  // let submitted;
-
-  // FIX ME
-  // pretender.post("/posts", () => {
-  // submitted = true;
-  // return [200, { "Content-Type": "application/json" }, {}];
-  // });
-
-  await visit("/t/34");
-  await click(".topic-post:eq(0) button.reply");
-  await fillIn(".d-editor-input", "this is the *content* of the reply");
-  await click("#reply-control button.create");
-
-  // assert.ok(submitted);
-  assert.ok(true);
-});
